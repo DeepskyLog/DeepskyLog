@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangListQueryObjectsMessage17", "Wissel namen en alternatieve namen");
 define("LangPublicList", "Publiek: ");
 define("LangNewNameList", "Nieuwe naam voor de waarneemlijst");
 define("LangChangeName", "Verander naam");
@@ -1275,7 +1276,6 @@ define("LangListQueryObjectsMessage13"										,"Toon geassocieerde objecten");
 define("LangListQueryObjectsMessage14"										,"Gelieve de titel in te geven");
 define("LangListQueryObjectsMessage15"										,"DeepskyLog Objecten");
 define("LangListQueryObjectsMessage16"										,"&nbsp;De observatie&nbsp;");
-define("LangListQueryObjectsMessage17"										,"Wissel namen");
 
 // content/register.php
 

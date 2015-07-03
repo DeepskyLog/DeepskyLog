@@ -1,5 +1,6 @@
 <?php //SV
 // This is version 5.0
+define("LangListQueryObjectsMessage17", "Switch names");
 define("LangPublicList", "Public: ");
 define("LangNewNameList", "New name for the observing list");
 define("LangChangeName", "Change name");
@@ -1289,7 +1290,6 @@ define("LangListQueryObjectsMessage13"										,"Show associated objects");
 define("LangListQueryObjectsMessage14"										,"Please enter the title");
 define("LangListQueryObjectsMessage15"										,"DeepskyLog Objects");
 define("LangListQueryObjectsMessage16"										,"&nbsp;The observation&nbsp;");
-define("LangListQueryObjectsMessage17"										,"Switch names");
 
 // content/register.php
 

@@ -71,14 +71,13 @@ function tolist() {
 			$name .= $objObserver->getObserverProperty ( $listowner, 'firstname' ) . ' ' . $objObserver->getObserverProperty ( $listowner, 'name' ) . "</a>";
 			$content1 = "(" . $name . ")";
 		}
-		$content1 .= "  <a class=\"btn btn-success\" href=\"" . $link . "&amp;noShowName=noShowName\">" . LangListQueryObjectsMessage17 . "</a>";
 		
 		echo $content1;
 		
 		echo "<br /><br /><br />";
 		if (count ( $_SESSION ['Qobj'] ) > 0) { // OUTPUT RESULT
 			echo "<hr />";
-			$objObject->showObjects ( $link, '', 1, "removePageObjectsFromList", "tolist" );
+			$objObject->showObjects ( $link, '', 1, "removePageObjectsFromList", "tolist", true );
 			echo "<hr />";
 		} else {
 			echo "<hr />";

@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("LangListQueryObjectsMessage17", "Switch names and alternative names");
 define("LangPublicList", "Public: ");
 define("LangNewNameList", "New name for the observing list");
 define("LangChangeName", "Change name");
@@ -737,7 +738,6 @@ $atlasPageText=array(
        'atlasPageStarLM'                                 =>'Sterne bis mag:'
 
 );
-// LangListQueryObjectsMessage17
 
 
 
@@ -1290,7 +1290,6 @@ define("LangListQueryObjectsMessage13"										,"Zeige assoziierte Objekte");
 define("LangListQueryObjectsMessage14"										,"Bitte geben Sie den Titel an");
 define("LangListQueryObjectsMessage15"										,"DeepskyLog Objekte");
 define("LangListQueryObjectsMessage16"										,"&nbsp;Die Beobachtung&nbsp;");
-define("LangListQueryObjectsMessage17"										,"Switch names");
 
 // content/register.php
 

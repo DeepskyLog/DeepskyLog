@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("LangListQueryObjectsMessage17", "Switch names");
 define("LangPublicList", "Public: ");
 define("LangNewNameList", "New name for the observing list");
 define("LangChangeName", "Change name");
@@ -693,8 +694,6 @@ define("LangDetailDSColor4"                               ,"jaune");
 define("LangDetailDSColor5"                               ,"vert");
 define("LangDetailDSColor6"                               ,"bleu");
 
-// LangListQueryObjectsMessage17;
-
 
 
 define("LangGeneralObservations"													,"observations");
@@ -1248,7 +1247,6 @@ define("LangListQueryObjectsMessage13"										,"Montrer les objets associ&#233
 define("LangListQueryObjectsMessage14"										,"Veuillez rentrer le titre");
 define("LangListQueryObjectsMessage15"										,"Objets DeepskyLog");
 define("LangListQueryObjectsMessage16"										,"&nbsp;L'observation&nbsp;");
-define("LangListQueryObjectsMessage17"										,"Changer les noms");
 
 // content/register.php
 

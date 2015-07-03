@@ -249,7 +249,6 @@ class Lists {
 				
 				echo "</td>";
 				
-				// TODO: When showing a (Public) list, change the 'Switch Names' button: Issue #294. (in tolist.php)
 				// TODO: Make DeepskyLog work without the 'Public' string in front of the name -> search for "Public: " in the sourcecode and TEST, TEST, TEST
 
 				// TODO: Check if we change the name, that a public list stays a public list.
