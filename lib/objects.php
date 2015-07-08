@@ -255,10 +255,7 @@ class Objects {
 {
 		global $objDatabase, $loggedUser;
 		if (substr ( $catalog, 0, 5 ) == "List:")
-			if (substr ( $catalog, 5, 7 ) == "Public:")
-				$sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\"";
-			else
-				$sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\" AND observerobjectlist.observerid = \"" . $loggedUser . "\"";
+			$sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\"";
 		else
 			$sql = "SELECT COUNT(DISTINCT catindex) AS number FROM objectnames WHERE catalog = \"$catalog\"";
 		return $objDatabase->selectSingleValue ( $sql, 'number', 0 );

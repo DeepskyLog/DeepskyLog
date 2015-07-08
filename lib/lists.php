@@ -166,22 +166,30 @@ class Lists {
 	public function getLists() {
 		global $objDatabase, $loggedUser;
 		$result = array ();
+		
 		if (array_key_exists ( 'deepskylog_id', $_SESSION )) {
-			$run = $objDatabase->selectRecordset ( "SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid=\"" . $loggedUser . "\" OR listname LIKE \"Public: %\" ORDER BY observerobjectlist.listname" );
+			$run = $objDatabase->selectRecordset ( "SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid=\"" . $loggedUser . "\" ORDER BY observerobjectlist.listname" );
 			$get = $run->fetch ( PDO::FETCH_OBJ );
+			$result1 = array ();
 			if ($get) {
-				$result1 = array ();
-				$result2 = array ();
 				while ( $get ) {
-					if (substr ( $get->listname, 0, 7 ) == "Public:")
-						$result2 [] = $get->listname;
-					else
-						$result1 [] = $get->listname;
+					$result1 [] = $get->listname;
 					$get = $run->fetch ( PDO::FETCH_OBJ );
 				}
-				$result = array_merge ( $result1, $result2 );
 			}
+			
+			$run = $objDatabase->selectRecordset ( "SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE public=\"1%\" ORDER BY observerobjectlist.listname" );
+			$get = $run->fetch ( PDO::FETCH_OBJ );
+			$result2 = array ();
+			if ($get) {
+				while ( $get ) {
+					$result2 [] = $get->listname;
+					$get = $run->fetch ( PDO::FETCH_OBJ );
+				}
+			}
+			$result = array_merge ( $result1, $result2 );
 		}
+		
 		return $result;
 	}
 	public function getMyLists() {
@@ -249,8 +257,6 @@ class Lists {
 				
 				echo "</td>";
 				
-				// TODO: Most active observers -> Does not work to change the catalog or list to see how much objects you have observed.
-				//      -> Has nothing to do with the lists... 
 				// TODO: Make DeepskyLog work without the 'Public' string in front of the name -> search for "Public: " in the sourcecode and TEST, TEST, TEST
 				// TODO: Add a button to make Public / private
 				// TODO: Make the button to change 'public' / 'private' work in tolist.php
