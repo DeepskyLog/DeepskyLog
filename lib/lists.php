@@ -255,7 +255,6 @@ class Lists {
 				
 				echo "</td>";
 				
-				// TODO: Check if we change the name, that we can change the list from public to private. (SEE tolist.php)
 				// TODO: Add a button to make Public / private
 				// TODO: Make the button to change 'public' / 'private' work in tolist.php
 				// TODO: Add a button to remove the list.
@@ -402,6 +401,7 @@ class Lists {
 			$pos = $newPublic;
 			$posOld = $this->isPublic($nameFrom);
 			
+			// TODO: Check sending the mail...
 			if (! ($posOld !== false)) {
 				if ($pos !== false) {
 					$username = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
