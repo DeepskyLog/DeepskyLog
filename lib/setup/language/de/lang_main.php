@@ -1,5 +1,7 @@
 <?php //GE
 // This is version 5.0
+define("LangMakePrivate", "Make private");
+define("LangMakePublic", "Make public");
 define("LangNewList", "Add new list");
 define("LangListQueryObjectsMessage17", "Switch names and alternative names");
 define("LangPublicList", "Public: ");

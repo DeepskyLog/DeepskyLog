@@ -553,11 +553,15 @@ function instructions() {
 		}
 		unset ( $_GET ['addList'] );
 	}
+	if ($objUtil->checkGetKey ( 'switchPublicPrivate' ) && ($listname = $objUtil->checkGetKey ( 'listname' ))) {
+		$objList->switchPublicPrivate ( $listname );
+		$_GET ['indexAction'] = 'view_lists';
+	}
 	if ($objUtil->checkGetKey ( 'renameList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' ))) {
 		unset ( $_SESSION ['QobjParams'] );
 		$listNameFrom = $_GET ['listnamefrom'];
 		$listnameTo = $_GET ['addlistname'];
-		if ($objList->checkList ( $listnameTo ) != 0 && $objUtil->checkGetKey ( "PublicList", false ) === $objList->isPublic($listNameFrom)) {
+		if ($objList->checkList ( $listnameTo ) != 0 && $objUtil->checkGetKey ( "PublicList", false ) === $objList->isPublic ( $listNameFrom )) {
 			$entryMessage .= LangToListList . stripslashes ( $listnameTo ) . LangToListExists;
 		} else {
 			$objList->renameList ( $listNameFrom, $listnameTo, $objUtil->checkGetKey ( "PublicList", false ) );

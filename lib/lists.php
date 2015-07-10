@@ -101,7 +101,7 @@ class Lists {
 	public function checkList($name) {
 		global $loggedUser, $objDatabase;
 		$retval = 0;
-		if ($this->isPublic( $name ) ) {
+		if ($this->isPublic ( $name )) {
 			$sql = "SELECT listname FROM observerobjectlist WHERE listname=\"" . $name . "\"";
 			$run = $objDatabase->selectRecordset ( $sql );
 			if ($get = $run->fetch ( PDO::FETCH_OBJ ))
@@ -133,7 +133,7 @@ class Lists {
 	}
 	public function getListObjectDescription($object) {
 		global $loggedUser, $listname, $objDatabase;
-		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.description FROM observerobjectlist WHERE " . ($this->isPublic( $listname) ? "" : "observerid = \"" . $loggedUser . "\" AND ") . "objectname=\"" . $object . "\" AND listname=\"" . $listname . "\"", 'description', '' );
+		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.description FROM observerobjectlist WHERE " . ($this->isPublic ( $listname ) ? "" : "observerid = \"" . $loggedUser . "\" AND ") . "objectname=\"" . $object . "\" AND listname=\"" . $listname . "\"", 'description', '' );
 	}
 	public function getListOwner() {
 		global $listname, $objDatabase;
@@ -228,6 +228,13 @@ class Lists {
 		echo "</th>";
 		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
 		echo LangChangeName;
+		echo "</th>";
+		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
+		if ($public) {
+			echo LangMakePrivate;
+		} else {
+			echo LangMakePublic;
+		}
 		echo "</th></tr>";
 		echo "</thead>";
 		echo "<tbody>";
@@ -255,10 +262,26 @@ class Lists {
 				
 				echo "</td>";
 				
-				// TODO: Add a button to make Public / private
+				// Add a button to make Public / private
+				echo "<td style=\"vertical-align: middle\">";
+				
+				if ($public) {
+					echo "<a title=\"" . LangMakePrivate . "\" class=\"btn btn-default\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivate=switchPublicPrivate&amp;listname=" . $listname . "\">
+                       <span class=\"glyphicon glyphicon-user\"></span>
+                      </a>";
+				} else {
+					echo "<a title=\"" . LangMakePublic . "\" class=\"btn btn-default\"  href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivate=switchPublicPrivate&amp;listname=" . $listname . "\">
+                       <span class=\"glyphicon glyphicon-share\"></span>
+                      </a>";
+				}
+				
+				echo "</td>";
+				// <span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\">
+				
 				// TODO: Make the button to change 'public' / 'private' work in tolist.php
 				// TODO: Add a button to remove the list.
-
+				// TODO: Speed up all pages. Takes a while to get the lists...
+				
 				// TODO: Update the database for Docker to use the new 'public field'
 				echo "</tr>";
 			}
@@ -309,6 +332,16 @@ class Lists {
                        </div><!-- /.modal-dialog -->
                       </div><!-- /.modal -->";
 			}
+		}
+	}
+	public function switchPublicPrivate($listName) {
+		global $objDatabase;
+
+		$public = $this->isPublic ( $listName );
+		if ($public) {
+			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"0\" where listname=\"" . $listName . "\"");
+		} else {
+			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"1\" where listname=\"" . $listName . "\"");
 		}
 	}
 	public function getObjectsFromList($theListname) {
@@ -399,7 +432,7 @@ class Lists {
 		if ($loggedUser && $myList) {
 			// Send mail when we are creating a public list
 			$pos = $newPublic;
-			$posOld = $this->isPublic($nameFrom);
+			$posOld = $this->isPublic ( $nameFrom );
 			
 			if ($posOld == false) {
 				if ($pos) {

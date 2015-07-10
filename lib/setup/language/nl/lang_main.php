@@ -1,5 +1,7 @@
 <?php //NL
 // This is version 5.0
+define("LangMakePrivate", "Maak privaat");
+define("LangMakePublic", "Maak publiek");
 define("LangNewList", "Maak nieuwe lijst aan");
 define("LangListQueryObjectsMessage17", "Wissel namen en alternatieve namen");
 define("LangPublicList", "Publiek: ");

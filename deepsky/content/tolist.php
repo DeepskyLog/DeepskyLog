@@ -45,9 +45,9 @@ function tolist() {
 			// Add a button to change from private to public or vice-versa
 			// TODO: Make this button work!
 			if ($objList->isPublic ( $listname )) {
-				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>&nbsp;Make private</a>  ";
+				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>&nbsp;" . LangMakePrivate . "</a>  ";
 			} else {
-				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-share\" aria-hidden=\"true\"></span>&nbsp;Make public</a>  ";
+				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-share\" aria-hidden=\"true\"></span>&nbsp;" . LangMakePublic . "</a>  ";
 			}
 			
 			// Add a button to create a new list
