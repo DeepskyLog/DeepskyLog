@@ -561,7 +561,7 @@ function instructions() {
 		$objList->switchPublicPrivate ( $listname );
 		$_GET ['indexAction'] = 'listaction';
 		$_GET ['listname'] = $listname;
-		unset ($_GET ['switchPublicPrivateList']);
+		unset ( $_GET ['switchPublicPrivateList'] );
 	}
 	if ($objUtil->checkGetKey ( 'renameList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' ))) {
 		unset ( $_SESSION ['QobjParams'] );
@@ -579,16 +579,22 @@ function instructions() {
 		}
 		unset ( $_GET ['renameList'] );
 	}
-	if ($objUtil->checkGetKey ( 'removeList' ) && $myList) {
+	if ($objUtil->checkGetKey ( 'removeList' )) {
 		unset ( $_SESSION ['QobjParams'] );
-		$objList->removeList ( $listname );
-		$entryMessage .= LangToListRemoved . stripslashes ( $_SESSION ['listname'] ) . ".";
+		if ($objUtil->checkGetKey ( 'listname' ) != "" && $objUtil->checkGetKey ( 'listname' ) != "----------") {
+			$listname = $objUtil->checkGetKey ( 'listname' );
+			$objList->removeList ( $listname );
+			$entryMessage .= LangToListRemoved . stripslashes ( $listname ) . ".";
+		} else {
+			$objList->removeList ( $listname );
+			$listname = '';
+			$listname_ss = '';
+			$myList = False;
+			$entryMessage .= LangToListRemoved . stripslashes ( $_SESSION ['listname'] ) . ".";
+			$_SESSION ['listname'] = "----------";
+		}
 		unset ( $_GET ['removeList'] );
-		$_SESSION ['listname'] = "----------";
-		$listname = '';
-		$listname_ss = '';
-		$myList = False;
-		unset ( $_GET ['removeList'] );
+		$_GET ['indexAction'] = 'view_lists';
 	}
 	if ($objUtil->checkGetKey ( 'addobservationstolist' ) && $myList) {
 		$objList->addObservations ( $objUtil->checkGetKey ( 'addobservationstolist' ) );

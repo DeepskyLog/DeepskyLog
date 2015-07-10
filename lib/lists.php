@@ -235,6 +235,9 @@ class Lists {
 		} else {
 			echo LangMakePublic;
 		}
+		echo "</th>";
+		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
+		echo LangToListMyListsRemove;
 		echo "</th></tr>";
 		echo "</thead>";
 		echo "<tbody>";
@@ -277,7 +280,12 @@ class Lists {
 				
 				echo "</td>";
 
-				// TODO: Add a button to remove the list.
+				// Add a button to remove the list.
+				echo "<td style=\"vertical-align: middle\">";
+				echo "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList&amp;listname=" . $listname . "\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a>  ";
+				echo "</td>";
+
+				// TODO: Rename list does not yet work when there are objects in the list...
 				// TODO: Adapt update script to make the messiers lists private
 				// TODO: Speed up all pages. Takes a while to get the lists...
 				
@@ -412,7 +420,7 @@ class Lists {
 	}
 	public function removeList($name) {
 		global $objDatabase, $loggedUser, $myList;
-		if ($loggedUser && $myList) {
+		if ($loggedUser) {
 			$objDatabase->execSQL ( "DELETE FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $name . "\"" );
 			if (array_key_exists ( 'QobjParams', $_SESSION ) && array_key_exists ( 'source', $_SESSION ['QobjParams'] ) && ($_SESSION ['QobjParams'] ['source'] == 'tolist'))
 				unset ( $_SESSION ['QobjParams'] );
