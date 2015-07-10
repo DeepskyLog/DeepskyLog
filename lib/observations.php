@@ -709,10 +709,7 @@ class Observations {
 	public function getObservedFromCatalog($id, $catalog) {
 		global $objDatabase, $loggedUser;
 		if (substr ( $catalog, 0, 5 ) == "List:")
-			if (substr ( $catalog, 5, 7 ) == "Public:")
-				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . "INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " . "WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") " . "AND (observations.observerid = \"" . $id . "\") " . "AND (observations.visibility != 7))";
-			else
-				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . "INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " . "WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") AND (observerobjectlist.observerid = \"" . $loggedUser . "\") " . "AND (observations.observerid = \"" . $id . "\") " . "AND (observations.visibility != 7))";
+			$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . "INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " . "WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") " . "AND (observations.observerid = \"" . $id . "\") " . "AND (observations.visibility != 7))";
 		else
 			$sql = "SELECT DISTINCT CONCAT(objectnames.catindex,' ',objectnames.objectname) AS Temp, objectnames.objectname FROM objectnames " . "INNER JOIN observations ON observations.objectname = objectnames.objectname " . "WHERE ((objectnames.catalog = \"$catalog\") " . "AND (observations.observerid=\"$id\") " . "AND (observations.visibility != 7))";
 		return $objDatabase->selectSingleArray ( $sql, 'objectname' );

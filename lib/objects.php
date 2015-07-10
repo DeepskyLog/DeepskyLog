@@ -390,10 +390,7 @@ class Objects {
 	public function getObjectsFromCatalog($cat) {
 		global $objDatabase, $loggedUser;
 		if (substr ( $cat, 0, 5 ) == "List:")
-			if (substr ( $cat, 5, 7 ) == "Public:")
-				$sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex  FROM observerobjectlist " . "WHERE (observerobjectlist.listname = \"" . substr ( $cat, 5 ) . "\")";
-			else
-				$sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex FROM observerobjectlist " . "WHERE (observerobjectlist.listname = \"" . substr ( $cat, 5 ) . "\") AND (observerobjectlist.observerid = \"" . $loggedUser . "\")";
+			$sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex  FROM observerobjectlist " . "WHERE (observerobjectlist.listname = \"" . substr ( $cat, 5 ) . "\")";
 		else
 			$sql = "SELECT DISTINCT objectnames.objectname, objectnames.catindex, objectnames.altname " . "FROM objectnames WHERE objectnames.catalog = \"$cat\"";
 		$run = $objDatabase->selectRecordset ( $sql );
