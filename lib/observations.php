@@ -717,16 +717,13 @@ class Observations {
 	public function getObservedFromCatalogPartOf($id, $catalog) {
 		global $objDatabase, $loggedUser;
 		if (substr ( $catalog, 0, 5 ) == "List:")
-			if (substr ( $catalog, 5, 7 ) == "Public:")
-				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " . " JOIN observations ON observations.objectname = objectpartof.objectname " . " WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") " . " AND (observations.observerid = \"" . $id . "\") " . " AND (observations.visibility != 7))";
-			else
-				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " . " JOIN observations ON observations.objectname = objectpartof.objectname " . " WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") AND (observerobjectlist.observerid = \"" . $loggedUser . "\") " . " AND (observations.observerid = \"" . $id . "\") " . " AND (observations.visibility != 7))";
+			$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " . " JOIN observations ON observations.objectname = objectpartof.objectname " . " WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") " . " AND (observations.observerid = \"" . $id . "\") " . " AND (observations.visibility != 7))";
 		else
 			$sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " . " JOIN objectpartof ON objectpartof.partofname = objectnames.objectname " . " JOIN observations ON observations.objectname = objectpartof.objectname " . " WHERE ((objectnames.catalog = \"$catalog\") " . " AND (observations.observerid=\"$id\") " . " AND (observations.visibility != 7))";
 		return $objDatabase->selectSingleArray ( $sql, 'objectname' );
 	}
-	public function getPopularObservations() // returns the number of observations of the objects
-{
+	public function getPopularObservations() {
+		// returns the number of observations of the objects
 		global $objDatabase;
 		$run = $objDatabase->selectRecordset ( "SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC" );
 		$i = 1;
@@ -737,8 +734,8 @@ class Observations {
 			);
 		return $numberOfObservations;
 	}
-	public function getPopularObservers() // returns the number of observations of the observers
-{
+	public function getPopularObservers() {
+		// returns the number of observations of the observers
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT observations.observerid, COUNT(observations.id) As Cnt FROM observations GROUP BY observations.observerid ORDER BY Cnt DESC", 'observerid' );
 	}
