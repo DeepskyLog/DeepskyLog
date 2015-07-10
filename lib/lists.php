@@ -277,7 +277,6 @@ class Lists {
 				
 				echo "</td>";
 
-				// TODO: Make the button to change 'public' / 'private' work in tolist.php
 				// TODO: Add a button to remove the list.
 				// TODO: Adapt update script to make the messiers lists private
 				// TODO: Speed up all pages. Takes a while to get the lists...
@@ -335,13 +334,21 @@ class Lists {
 		}
 	}
 	public function switchPublicPrivate($listName) {
-		global $objDatabase;
+		global $objDatabase, $objMessages, $objObserver, $loggedUser;
 
 		$public = $this->isPublic ( $listName );
 		if ($public) {
 			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"0\" where listname=\"" . $listName . "\"");
 		} else {
 			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"1\" where listname=\"" . $listName . "\"");
+			
+			$username = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
+			$subject = LangMessagePublicList1 . $listName . LangMessagePublicList2 . $username;
+			$message = LangMessagePublicList3;
+			$message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $listName ) . "\">" . $listName . "</a><br /><br />";
+			$message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listName ) . "\">" . $username . "</a>";
+				
+			$objMessages->sendMessage ( "DeepskyLog", "all", $subject, $message );
 		}
 	}
 	public function getObjectsFromList($theListname) {
