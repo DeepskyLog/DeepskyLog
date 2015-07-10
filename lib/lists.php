@@ -255,13 +255,11 @@ class Lists {
 				
 				echo "</td>";
 				
-				// TODO: Check if we change the name, that a public list stays a public list. (SEE tolist.php)
-				// TODO: Check if we change the name, that the name is indeed changed. (SEE tolist.php)
 				// TODO: Check if we change the name, that we can change the list from public to private. (SEE tolist.php)
 				// TODO: Add a button to make Public / private
 				// TODO: Make the button to change 'public' / 'private' work in tolist.php
 				// TODO: Add a button to remove the list.
-				
+
 				// TODO: Update the database for Docker to use the new 'public field'
 				echo "</tr>";
 			}
@@ -287,7 +285,8 @@ class Lists {
                           <!-- Ask for the new name of the list. -->
                           <h1 class=\"text-center login-title\">" . LangNewNameList . "</h1>
                           <form action=\"" . $baseURL . "index.php?indexAction=listaction\">
-                           <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
+                           <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />
+                           <input type=\"hidden\" name=\"listnamefrom\" value=\"" . $listname . "\" />";
 				if ($this->isPublic ( $listname )) {
 					$publicList = true;
 				} else {
@@ -396,28 +395,34 @@ class Lists {
 		$sql = "SELECT public from observerobjectlist where listname=\"" . $listName . "\" AND public=\"1\";";
 		return $objDatabase->selectSingleValue ( $sql, "public", 0 );
 	}
-	public function renameList($nameFrom, $nameTo) {
+	public function renameList($nameFrom, $nameTo, $newPublic) {
 		global $loggedUser, $objDatabase, $myList, $objMessages, $objObserver, $baseURL;
 		if ($loggedUser && $myList) {
 			// Send mail when we are creating a public list
-			$pos = strpos ( $nameTo, "Public" );
-			$posOld = strpos ( $nameFrom, "Public" );
+			$pos = $newPublic;
+			$posOld = $this->isPublic($nameFrom);
 			
 			if (! ($posOld !== false)) {
 				if ($pos !== false) {
 					$username = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
 					// Remove the public from the list
-					$listname = substr ( $nameTo, 8 );
+					$listname = $nameTo;
 					
 					$subject = LangMessagePublicList1 . $listname . LangMessagePublicList2 . $username;
 					$message = LangMessagePublicList3;
-					$message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=Public:%20" . urlencode ( $listname ) . "\">" . $listname . "</a><br /><br />";
+					$message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $listname ) . "\">" . $listname . "</a><br /><br />";
 					$message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listname ) . "\">" . $username . "</a>";
 					
 					$objMessages->sendMessage ( "DeepskyLog", "all", $subject, $message );
 				}
 			}
 			$objDatabase->execSQL ( "UPDATE observerobjectlist SET listname=\"" . $nameTo . "\" WHERE observerid=\"" . $loggedUser . "\" AND listname=\"" . $nameFrom . "\"" );
+			if ($newPublic) {
+				$public = 1;
+			} else {
+				$public = 0;
+			}
+			$objDatabase->execSQL ( "UPDATE observerobjectlist SET public=\"" . $public . "\" WHERE observerid=\"" . $loggedUser . "\" AND listname=\"" . $nameFrom . "\"" );
 			if (array_key_exists ( 'QobjParams', $_SESSION ) && array_key_exists ( 'source', $_SESSION ['QobjParams'] ) && ($_SESSION ['QobjParams'] ['source'] == 'tolist'))
 				unset ( $_SESSION ['QobjParams'] );
 		}

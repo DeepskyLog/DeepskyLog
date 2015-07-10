@@ -544,7 +544,7 @@ function instructions() {
 		if ($objList->checkList ( $listnameToAdd ) != 0) {
 			$entryMessage .= LangToListList . stripslashes ( $listnameToAdd ) . LangToListExists;
 		} else {
-			$objList->addList ( $listnameToAdd, $objUtil->checkGetKey("PublicList", false) );
+			$objList->addList ( $listnameToAdd, $objUtil->checkGetKey ( "PublicList", false ) );
 			$_SESSION ['listname'] = $listnameToAdd;
 			$listname = $_SESSION ['listname'];
 			$listname_ss = stripslashes ( $listname );
@@ -555,11 +555,12 @@ function instructions() {
 	}
 	if ($objUtil->checkGetKey ( 'renameList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' )) && $myList) {
 		unset ( $_SESSION ['QobjParams'] );
+		$listNameFrom = $_GET ['listnamefrom'];
 		$listnameTo = $_GET ['addlistname'];
 		if ($objList->checkList ( $listnameTo ) != 0)
 			$entryMessage .= LangToListList . stripslashes ( $listnameTo ) . LangToListExists;
 		else {
-			$objList->renameList ( $listname, $listnameTo );
+			$objList->renameList ( $listNameFrom, $listnameTo, $objUtil->checkGetKey ( "PublicList", false ) );
 			$_SESSION ['listname'] = $listnameTo;
 			$listname = $_SESSION ['listname'];
 			$listname_ss = stripslashes ( $listname );
