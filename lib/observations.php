@@ -741,32 +741,9 @@ class Observations {
 	}
 	public function getPopularObserversOverviewCatOrList($sort, $cat = "") {
 		global $objDatabase, $loggedUser;
-		if ($sort == "jaar") {
-			$t = getdate ();
-			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt, observers.name " . "FROM observations " . "JOIN observers on observations.observerid = observers.id " . "WHERE observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != \"7\" ";
-		} elseif ($sort == "jaardrawings") {
-			$t = getdate ();
-			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt, observers.name " . "FROM observations " . "JOIN observers on observations.observerid = observers.id " . "WHERE observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != \"7\" AND hasDrawing=1 ";
-		} elseif ($sort == "catalog") {
-			if (substr ( $cat, 0, 5 ) == "List:")
-				if (substr ( $cat, 5, 7 ) == "Public:")
-					$sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt, observers.name " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $cat, 5 ) . "\" " . "AND observations.visibility != 7 ";
-				else
-					$sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt, observers.name " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $cat, 5 ) . "\" " . "AND observerobjectlist.observerid = \"" . $loggedUser . "\" " . "AND observations.visibility != 7 ";
-			else
-				$sql = "SELECT observations.observerid, COUNT(DISTINCT objectnames.catindex) AS Cnt, observers.name " . "FROM observations " . "JOIN objectnames on observations.objectname=objectnames.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE objectnames.catalog=\"$cat\" AND observations.visibility != 7 ";
-		} elseif ($sort == "objecten") {
-			$sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt " . "FROM observations " . "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
-		} elseif ($sort == "totaaldrawings") {
-			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt " . "FROM observations " . "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 and observations.hasDrawing=1 ";
-		} else {
-			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt " . "FROM observations " . "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
-		}
+		$sql = "SELECT observations.observerid, COUNT(*) AS Cnt " . "FROM observations " . "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
 		$sql .= "GROUP BY observations.observerid, observers.name ";
-		if ($sort == "observer")
-			$sql .= "ORDER BY observers.name ASC ";
-		else
-			$sql .= "ORDER BY Cnt DESC, observers.name ASC ";
+		$sql .= "ORDER BY Cnt DESC, observers.name ASC ";
 		return $objDatabase->selectKeyValueArray ( $sql, 'observerid', 'Cnt' );
 	}
 	public function setDsObservationProperty($id, $property, $propertyValue) // sets the property to the specified value for the given observation
