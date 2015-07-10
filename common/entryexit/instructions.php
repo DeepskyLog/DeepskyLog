@@ -567,6 +567,7 @@ function instructions() {
 		unset ( $_SESSION ['QobjParams'] );
 		$listNameFrom = $_GET ['listnamefrom'];
 		$listnameTo = $_GET ['addlistname'];
+		
 		if ($objList->checkList ( $listnameTo ) != 0 && $objUtil->checkGetKey ( "PublicList", false ) === $objList->isPublic ( $listNameFrom )) {
 			$entryMessage .= LangToListList . stripslashes ( $listnameTo ) . LangToListExists;
 		} else {

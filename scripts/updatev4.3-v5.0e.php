@@ -35,5 +35,10 @@ foreach ($publicList as $listName) {
 	$objDatabase->execSQL ( $sql );
 }
 
+// We move some Messier lists from public to private
+$objDatabase->execSQL("UPDATE observerobjectlist set public=\"0\" where listname like \"De Messie%\";");
+$objDatabase->execSQL("UPDATE observerobjectlist set public=\"0\" where listname like \"Messier\";");
+$objDatabase->execSQL("UPDATE observerobjectlist set public=\"0\" where listname like \"Messier -%\";");
+
 print "Database update successful.\n";
 ?>

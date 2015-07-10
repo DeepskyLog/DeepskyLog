@@ -285,10 +285,7 @@ class Lists {
 				echo "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList&amp;listname=" . $listname . "\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a>  ";
 				echo "</td>";
 
-				// TODO: Rename list does not yet work when there are objects in the list...
-				// TODO: Adapt update script to make the messiers lists private
 				// TODO: Speed up all pages. Takes a while to get the lists...
-				
 				// TODO: Update the database for Docker to use the new 'public field'
 				echo "</tr>";
 			}
