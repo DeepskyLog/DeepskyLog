@@ -101,7 +101,7 @@ class Lists {
 	public function checkList($name) {
 		global $loggedUser, $objDatabase;
 		$retval = 0;
-		if (substr ( $name, 0, 7 ) == "Public:") {
+		if ($this->isPublic( $name ) ) {
 			$sql = "SELECT listname FROM observerobjectlist WHERE listname=\"" . $name . "\"";
 			$run = $objDatabase->selectRecordset ( $sql );
 			if ($get = $run->fetch ( PDO::FETCH_OBJ ))
@@ -121,7 +121,7 @@ class Lists {
 	}
 	public function checkObjectMyOrPublicList($value, $list) {
 		global $objDatabase, $loggedUser;
-		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.objectplace FROM observerobjectlist WHERE " . ((substr ( $list, 0, 7 ) == 'Public:') ? "" : ("observerid = \"" . $loggedUser . "\" AND ")) . "objectname=\"" . $value . "\" AND listname=\"" . $list . "\"", 'objectplace', 0 );
+		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.objectplace FROM observerobjectlist WHERE " . ($this->isPublic ( $list ) ? "" : ("observerid = \"" . $loggedUser . "\" AND ")) . "objectname=\"" . $value . "\" AND listname=\"" . $list . "\"", 'objectplace', 0 );
 	}
 	public function emptyList($listname) {
 		global $objDatabase, $loggedUser, $myList;
@@ -133,7 +133,7 @@ class Lists {
 	}
 	public function getListObjectDescription($object) {
 		global $loggedUser, $listname, $objDatabase;
-		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.description FROM observerobjectlist WHERE " . ((substr ( $listname, 0, 7 ) == 'Public:') ? "" : "observerid = \"" . $loggedUser . "\" AND ") . "objectname=\"" . $object . "\" AND listname=\"" . $listname . "\"", 'description', '' );
+		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.description FROM observerobjectlist WHERE " . ($this->isPublic( $listname) ? "" : "observerid = \"" . $loggedUser . "\" AND ") . "objectname=\"" . $object . "\" AND listname=\"" . $listname . "\"", 'description', '' );
 	}
 	public function getListOwner() {
 		global $listname, $objDatabase;
@@ -155,7 +155,7 @@ class Lists {
 		global $objDatabase, $loggedUser;
 		$result = '';
 		$results = array ();
-		$sql = 'SELECT listname FROM observerobjectlist WHERE objectname="' . $theobject . '" AND listname LIKE "Public:%"';
+		$sql = 'SELECT listname FROM observerobjectlist WHERE objectname="' . $theobject . '" AND public = "1"';
 		$results = $objDatabase->selectSingleArray ( $sql, 'listname' );
 		while ( list ( $key, $value ) = each ( $results ) )
 			$result .= "/" . substr ( $value, 8 );
@@ -255,14 +255,11 @@ class Lists {
 				
 				echo "</td>";
 				
-				// TODO: Make DeepskyLog work without the 'Public' string in front of the name -> search for "Public: " in the sourcecode and TEST, TEST, TEST
-				// TODO: Add a button to make Public / private
-				// TODO: Make the button to change 'public' / 'private' work in tolist.php
-				
 				// TODO: Check if we change the name, that a public list stays a public list. (SEE tolist.php)
 				// TODO: Check if we change the name, that the name is indeed changed. (SEE tolist.php)
 				// TODO: Check if we change the name, that we can change the list from public to private. (SEE tolist.php)
-				
+				// TODO: Add a button to make Public / private
+				// TODO: Make the button to change 'public' / 'private' work in tolist.php
 				// TODO: Add a button to remove the list.
 				
 				// TODO: Update the database for Docker to use the new 'public field'
