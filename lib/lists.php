@@ -48,24 +48,22 @@ class Lists {
 			$entryMessage .= LangToListMyListsRemovedObsDescription;
 		}
 	}
-	public function addList($name) {
+	public function addList($name, $isPublic) {
 		global $objDatabase, $objUtil, $loggedUser, $objObserver, $objMessages, $baseURL;
 		if ($loggedUser && $name && (! ($this->checkList ( $name )))) { // Send mail when we are creating a public list
-			$pos = strpos ( $name, "Public" );
-			
-			if ($pos !== false) {
+			if ($isPublic) {
 				$username = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
-				// Remove the public from the list
-				$listname = substr ( $name, 8 );
 				
-				$subject = LangMessagePublicList1 . $listname . LangMessagePublicList2 . $username;
+				$subject = LangMessagePublicList1 . $name . LangMessagePublicList2 . $username;
 				$message = LangMessagePublicList3;
-				$message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=Public:%20" . urlencode ( $listname ) . "\">" . $listname . "</a><br /><br />";
-				$message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listname ) . "\">" . $username . "</a>";
-				
+				$message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $name ) . "\">" . $name . "</a><br /><br />";
+				$message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $name ) . "\">" . $username . "</a>";
+				$public = 1;
 				$objMessages->sendMessage ( "DeepskyLog", "all", $subject, $message );
+			} else {
+				$public = 0;
 			}
-			$objDatabase->execSQL ( "INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname) VALUES (\"" . $loggedUser . "\", \"\", \"" . $name . "\", '0', \"\")" );
+			$objDatabase->execSQL ( "INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, public) VALUES (\"" . $loggedUser . "\", \"\", \"" . $name . "\", '0', \"\", \"" . $public . "\")" );
 			if (array_key_exists ( 'QobjParams', $_SESSION ) && array_key_exists ( 'source', $_SESSION ['QobjParams'] ) && ($_SESSION ['QobjParams'] ['source'] == 'tolist'))
 				unset ( $_SESSION ['QobjParams'] );
 		}
@@ -197,7 +195,7 @@ class Lists {
 		return $objDatabase->selectSingleArray ( "SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\"", 'listname' );
 	}
 	public function showLists($public = false) {
-		global $objUtil;
+		global $objUtil, $baseURL;
 		
 		// Get all the lists of the observer
 		$lists = $this->getMyLists ();
