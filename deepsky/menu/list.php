@@ -30,11 +30,22 @@ function menu_list() {
 	$sql = "SELECT DISTINCT observerobjectlist.listname " . "FROM observerobjectlist " . "WHERE observerid <> \"" . $loggedUser . "\"" . "AND public=\"1\" ORDER BY observerobjectlist.listname";
 	$run = $objDatabase->selectRecordset ( $sql );
 	$get = $run->fetch ( PDO::FETCH_OBJ );
+	
 	echo "&nbsp;&nbsp;";
 	while ( $get ) {
 		$result2 [] = $get->listname;
 		$get = $run->fetch ( PDO::FETCH_OBJ );
 	}
+	
+	$sql = "SELECT DISTINCT observerobjectlist.listname " . "FROM observerobjectlist " . "WHERE public=\"1\"";
+	$run = $objDatabase->selectRecordset ( $sql );
+	$get = $run->fetch ( PDO::FETCH_OBJ );
+	$publicLists = array ();
+	while ( $get ) {
+		$publicLists [] = $get->listname;
+		$get = $run->fetch ( PDO::FETCH_OBJ );
+	}	
+	
 	$result1 [] = '----------';
 	$result = array_merge ( $result1, $result2 );
 	if (count ( $result ) > 0) {
@@ -43,9 +54,9 @@ function menu_list() {
 			$_SESSION ['listname'] = "----------";
 		while ( list ( $key, $value ) = each ( $result ) ) {
 			// If the list is a Public list, we add 'Public: ' to the name of the list.
-			if ($objList->isPublic($value)) {
-				$listname = LangPublicList . $value;
-			} else {
+ 			if (in_array($value, $publicLists)) {
+ 				$listname = LangPublicList . $value;
+ 			} else {
 				$listname = $value;
 			}
 			if ((($value == $_SESSION ['listname']) && $myList) || ((! $myList) && ($value == "----------")))

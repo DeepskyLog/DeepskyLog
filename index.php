@@ -11,6 +11,7 @@ try {
 	require_once 'common/entryexit/globals.php'; // Includes of all classes and assistance files
 	require_once 'common/entryexit/preludes.php'; // Includes of all classes and assistance files
 	require_once 'common/entryexit/instructions.php'; // Execution of all non-layout related instructions (login, add objects to lists, etc.)
+	
 	$includeFile = $objUtil->utilitiesDispatchIndexAction (); // Determine the page to show
 	require_once 'common/entryexit/data.php'; // Get data for the form, object data, observation data, etc.
 	echo "<!DOCTYPE html>";
@@ -24,7 +25,7 @@ try {
 	echo "<script type=\"text/javascript\" 
               src=\"http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js\"></script>";
 	require_once 'common/menu/headmenu.php'; // div1&2 = Page Title and welcome line - modules choices
-	                                         
+	
 	// Container-fluid makes the container the full width of the screen.
 	echo "<div class=\"container-fluid\">
          <div class=\"row\">";
