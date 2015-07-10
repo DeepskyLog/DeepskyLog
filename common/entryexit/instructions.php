@@ -553,7 +553,7 @@ function instructions() {
 		}
 		unset ( $_GET ['addList'] );
 	}
-	if ($objUtil->checkGetKey ( 'renameList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' )) && $myList) {
+	if ($objUtil->checkGetKey ( 'renameList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' ))) {
 		unset ( $_SESSION ['QobjParams'] );
 		$listNameFrom = $_GET ['listnamefrom'];
 		$listnameTo = $_GET ['addlistname'];

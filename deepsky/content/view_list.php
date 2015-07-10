@@ -3,7 +3,7 @@ global $loggedUser, $loggedUserName, $objList;
 
 // Show the list that is currently activated
 echo "<h2>" . LangActiveList . "</h2>";
-if ($_SESSION ['listname'] != '') {
+if ($_SESSION ['listname'] != '' && $_SESSION ['listname'] != '----------') {
 	echo "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . $_SESSION ['listname'] . "\">";
 	echo $_SESSION ['listname'];
 	echo "</a>";

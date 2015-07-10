@@ -102,7 +102,7 @@ if ($_SESSION ['module'] == 'deepsky' && $loggedUser) {
              <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />
              <input type=\"text\" name=\"addlistname\" class=\"form-control\" required autofocus>
              <br /><br />
-             <input type=\"checkbox\" name=\"PublicList\" value=\"" . LangToListPublic . "\" />&nbsp;" . LangToListPublic . "
+             <input type=\"checkbox\" name=\"PublicList\" value=\"1\" />&nbsp;" . LangToListPublic . "
             </div>
             <div class=\"modal-footer\">
             <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>

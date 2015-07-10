@@ -298,7 +298,7 @@ class Lists {
 				if ($publicList) {
 					echo "checked ";
 				}
-				echo "    name=\"PublicList\" value=\"" . LangToListPublic . "\" />&nbsp;" . LangToListPublic . "
+				echo "    name=\"PublicList\" value=\"1\" />&nbsp;" . LangToListPublic . "
                           </div>
                           <div class=\"modal-footer\">
                            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
@@ -401,9 +401,8 @@ class Lists {
 			$pos = $newPublic;
 			$posOld = $this->isPublic($nameFrom);
 			
-			// TODO: Check sending the mail...
-			if (! ($posOld !== false)) {
-				if ($pos !== false) {
+			if ($posOld == false) {
+				if ($pos) {
 					$username = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
 					// Remove the public from the list
 					$listname = $nameTo;

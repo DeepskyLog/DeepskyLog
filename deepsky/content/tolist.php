@@ -110,7 +110,7 @@ function tolist() {
 		if ($publicList) {
 			echo "checked ";
 		}
-		echo "    name=\"PublicList\" value=\"" . LangToListPublic . "\" />&nbsp;" . LangToListPublic . "
+		echo "    name=\"PublicList\" value=\"1\" />&nbsp;" . LangToListPublic . "
                           </div>
                           <div class=\"modal-footer\">
                            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
