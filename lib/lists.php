@@ -285,7 +285,6 @@ class Lists {
 				echo "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList&amp;listname=" . $listname . "\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a>  ";
 				echo "</td>";
 
-				// TODO: Update the database for Docker to use the new 'public field'
 				echo "</tr>";
 			}
 		}
