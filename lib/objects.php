@@ -270,7 +270,7 @@ class Objects {
 	                                                                                     // "uranonew" => "111", "sky" => "11", "msa" => "222",
 	                                                                                     // "taki" => "11", "psa" => "12", "torresB" => "11", "torresBC" => "13",
 	                                                                                     // "torresC" => "31", "mindiam1" => "12.2", "maxdiam1" => "13.2",
-	                                                                                     // "mindiam2" => "11.1", "maxdiam2" => "22.2", "inList" => "Public: Edge-ons", "notInList" => "My observed Edge-ons");
+	                                                                                     // "mindiam2" => "11.1", "maxdiam2" => "22.2", "inList" => "Edge-ons", "notInList" => "My observed Edge-ons");
 		global $loggedUser, $objDatabase, $objCatalog;
 		$obs = array ();
 		$sql = "";
@@ -278,25 +278,13 @@ class Objects {
 		$sql1 = "SELECT DISTINCT (objectnames.objectname) AS name, " . "(objectnames.altname) AS showname " . "FROM objectnames " . "JOIN objects ON objects.name = objectnames.objectname ";
 		$sql2 = "SELECT DISTINCT (objectpartof.objectname) AS name, " . "CONCAT((objectnames.altname), \"-\", (objectpartof.objectname)) As showname  " . "FROM objectpartof " . "JOIN objects ON (objects.name = objectpartof.objectname) " . "JOIN objectnames ON (objectnames.objectname = objectpartof.partofname) ";
 		if (array_key_exists ( 'inList', $queries ) && $queries ['inList']) {
-			if (substr ( $queries ['inList'], 0, 7 ) == "Public:") {
-				$sql1 .= "JOIN observerobjectlist AS A " . "ON A.objectname = objects.name ";
-				$sql2 .= "JOIN observerobjectlist AS A " . "ON A.objectname = objects.name ";
-				$sqland .= "AND A.listname = \"" . $queries ['inList'] . "\" AND A.objectname <>\"\" ";
-			} elseif ($loggedUser) {
-				$sql1 .= "JOIN observerobjectlist AS A " . "ON A.objectname = objects.name ";
-				$sql2 .= "JOIN observerobjectlist AS A " . "ON A.objectname = objects.name ";
-				$sqland .= "AND A.observerid = \"" . $loggedUser . "\" AND A.listname = \"" . $queries ['inList'] . "\" AND A.objectname <>\"\" ";
-			}
+			$sql1 .= "JOIN observerobjectlist AS A " . "ON A.objectname = objects.name ";
+			$sql2 .= "JOIN observerobjectlist AS A " . "ON A.objectname = objects.name ";
+			$sqland .= "AND A.listname = \"" . $queries ['inList'] . "\" AND A.objectname <>\"\" ";
 		}
 		
 		if (array_key_exists ( 'notInList', $queries ) && $queries ['notInList']) {
-			if (substr ( $queries ['notInList'], 0, 7 ) == "Public:") {
-				$sql1 .= " LEFT JOIN observerobjectlist AS B " . "ON B.objectname = objects.name ";
-				$sql2 .= " LEFT JOIN observerobjectlist AS B " . "ON B.objectname = objects.name ";
-				$sqland .= " AND B.listname = \"" . $queries ['notInList'] . "\" AND B.objectname IS NULL ";
-			} elseif (array_key_exists ( 'deepskylog_id', $_SESSION ) && $loggedUser) {
-				$sqland .= " AND (objectnames.objectname NOT IN (SELECT objectname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $queries ['notInList'] . "\" ) ) ";
-			}
+			$sqland .= " AND (objectnames.objectname NOT IN (SELECT objectname FROM observerobjectlist WHERE listname = \"" . $queries ['notInList'] . "\" ) ) ";
 		}
 		
 		$sql1 .= "WHERE ";
