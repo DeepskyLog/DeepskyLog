@@ -557,6 +557,12 @@ function instructions() {
 		$objList->switchPublicPrivate ( $listname );
 		$_GET ['indexAction'] = 'view_lists';
 	}
+	if ($objUtil->checkGetKey ( 'switchPublicPrivateList' ) && ($listname = $objUtil->checkGetKey ( 'listname' ))) {
+		$objList->switchPublicPrivate ( $listname );
+		$_GET ['indexAction'] = 'listaction';
+		$_GET ['listname'] = $listname;
+		unset ($_GET ['switchPublicPrivateList']);
+	}
 	if ($objUtil->checkGetKey ( 'renameList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' ))) {
 		unset ( $_SESSION ['QobjParams'] );
 		$listNameFrom = $_GET ['listnamefrom'];

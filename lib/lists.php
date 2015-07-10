@@ -276,10 +276,10 @@ class Lists {
 				}
 				
 				echo "</td>";
-				// <span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\">
-				
+
 				// TODO: Make the button to change 'public' / 'private' work in tolist.php
 				// TODO: Add a button to remove the list.
+				// TODO: Adapt update script to make the messiers lists private
 				// TODO: Speed up all pages. Takes a while to get the lists...
 				
 				// TODO: Update the database for Docker to use the new 'public field'
