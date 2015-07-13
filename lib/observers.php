@@ -192,7 +192,7 @@ class Observers {
 		$outputtable .= "</table>";
 		echo $outputtable;
 		echo $objUtil->addTablePager ();
-		
+
 		echo $objUtil->addTableJavascript ();
 		
 		echo "</div><hr />";

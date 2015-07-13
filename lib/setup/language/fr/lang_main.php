@@ -1,7 +1,25 @@
 <?php //FR
 // This is version 5.0
+define("LangMakePrivate", "Make private");
+define("LangMakePublic", "Make public");
+define("LangNewList", "Add new list");
+define("LangListQueryObjectsMessage17", "Switch names");
+define("LangPublicList", "Public: ");
+define("LangNewNameList", "New name for the observing list");
+define("LangChangeName", "Change name");
+define("LangActiveList", "Active list");
+define("LangActiveList1", " is your active list. You can search for objects and add these objects to this list.");
+define("LangActiveList2", "There is no active list. Select one of the lists to make that list active. You can search for objects and add these objects to your active lists.");
+define("LangListName", "Name");
+define("LangPrivateLists", "Private lists of ");
+define("LangPublicLists", "Public lists of ");
+define("LangViewLists", "My observing lists");
+define("LangToListPublic", "Make this list a public list");
+define("LangNameNewList", "Name for the new observing list");
+define("LangAddNewList", "Observing list");
 define("LangNewDrawings", "New drawings");
 define("LangAddList", "Create list");
+define("LangAddObservingList", "Create a new observing list");
 define("LangViewLenses", "My lenses");
 define("LangViewFilters", "My filters");
 define("LangViewEyepieces", "My eyepieces");
@@ -679,8 +697,6 @@ define("LangDetailDSColor4"                               ,"jaune");
 define("LangDetailDSColor5"                               ,"vert");
 define("LangDetailDSColor6"                               ,"bleu");
 
-// LangListQueryObjectsMessage17;
-
 
 
 define("LangGeneralObservations"													,"observations");
@@ -817,7 +833,6 @@ define("LangToListNotExists"															,"\" n'existe pas.");
 define("LangToListAddNew"																	,"Nouvelle liste: ");
 define("LangToListAdd"																		,"Rajoutez");
 define("LangToListRename"																	,"Renommer");
-define("LangToListPublic"																	,"Liste publique");
 define("LangToListEmpty"																	,"Vider la liste");
 define("LangToListMyLists"																,"Mes listes: ");
 define("LangToListMyListsView"														,"Consulter");
@@ -1235,7 +1250,6 @@ define("LangListQueryObjectsMessage13"										,"Montrer les objets associ&#233
 define("LangListQueryObjectsMessage14"										,"Veuillez rentrer le titre");
 define("LangListQueryObjectsMessage15"										,"Objets DeepskyLog");
 define("LangListQueryObjectsMessage16"										,"&nbsp;L'observation&nbsp;");
-define("LangListQueryObjectsMessage17"										,"Changer les noms");
 
 // content/register.php
 

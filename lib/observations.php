@@ -89,12 +89,12 @@ class Observations {
 					if (! in_array ( $i, $errorlist ))
 						$errorlist [] = $i;
 				}
-			
+				
 				// Check for the correctness of dates
 			for($i = 0, $j = 0, $k = 0; $i < count ( $dates ); $i ++) {
-				$parsed_date = date_parse($dates[$i]);
-
-				if ($parsed_date["error_count"] > 0 || $parsed_date["year"] < 1900) {
+				$parsed_date = date_parse ( $dates [$i] );
+				
+				if ($parsed_date ["error_count"] > 0 || $parsed_date ["year"] < 1900) {
 					if (! in_array ( trim ( $dates [$i] ), $wrongDates ))
 						$wrongDates [$k ++] = trim ( $dates [$i] );
 					if (! in_array ( $i, $errorlist ))
@@ -158,7 +158,7 @@ class Observations {
 				$messageLines [] = "<h4>" . LangCSVError0 . "</h4>" . "<p>" . LangCSVError0 . "</p>" . $errormessage . "<p>" . LangCSVError10 . "<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">" . LangCSVError10a . "</a>" . LangCSVError10b . "</p><hr /><p>" . LangCSVError10e . "<a href=\"" . $baseURL . "observationserrors.csv\">" . LangCSVError10c . "</a>" . LangCSVError10d . "</p><hr /><p>" . LangCSVMessage4 . "</p>";
 				$_GET ['indexAction'] = 'message';
 			}
-
+			
 			$username = $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' );
 			$added = 0;
 			$double = 0;
@@ -169,8 +169,8 @@ class Observations {
 						$instrum = $objInstrument->getInstrumentId ( htmlentities ( trim ( $parts_array [$i] [5] ), ENT_COMPAT, "UTF-8", 0 ), $loggedUser );
 						$locat = $objLocation->getLocationId ( htmlentities ( trim ( $parts_array [$i] [4] ), ENT_COMPAT, "UTF-8", 0 ), $loggedUser );
 						
-						$parsed_date = date_parse($dates[$i]);
-						$date = sprintf ( "%04d%02d%02d", $parsed_date["year"], $parsed_date["month"], $parsed_date["day"] );
+						$parsed_date = date_parse ( $dates [$i] );
+						$date = sprintf ( "%04d%02d%02d", $parsed_date ["year"], $parsed_date ["month"], $parsed_date ["day"] );
 						if ($parts_array [$i] [3]) {
 							$times = sscanf ( trim ( $parts_array [$i] [3] ), "%2d%c%2d" );
 							$time = sprintf ( "%02d%02d", $times [0], $times [2] );
@@ -278,8 +278,8 @@ class Observations {
 			// Return the obsid
 		return $objDatabase->selectSingleValue ( "SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id' );
 	}
-	public function getAllInfoDsObservation($id) 	// returns all information of an observation
-	{
+	public function getAllInfoDsObservation($id) // returns all information of an observation
+{
 		global $objDatabase;
 		$obs = $objDatabase->selectRecordArray ( "SELECT * FROM observations WHERE id=\"$id\"" );
 		$obs ["localdate"] = $this->getDsObservationLocalDate ( $id );
@@ -294,8 +294,8 @@ class Observations {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT observations.id FROM observations WHERE objectname=\"" . $object . "\" AND id!=\"" . $notobservation . "\" ORDER BY id DESC", 'id' );
 	}
-	public function getDsObservationLocalDate($id) 	// returns the date of the given observation in local time
-	{
+	public function getDsObservationLocalDate($id) // returns the date of the given observation in local time
+{
 		global $objDatabase, $objLocation;
 		$run = $objDatabase->selectRecordset ( "SELECT date,time,locationid FROM observations WHERE id=\"" . $id . "\"" );
 		if ($get = $run->fetch ( PDO::FETCH_OBJ )) {
@@ -343,8 +343,8 @@ class Observations {
 			return $date;
 		}
 	}
-	public function getDsObservationLocalTime($id) 	// returns the time of the given observation in local time
-	{
+	public function getDsObservationLocalTime($id) // returns the time of the given observation in local time
+{
 		global $objDatabase, $objLocation;
 		if ($get = $objDatabase->selectrecordset ( "SELECT date, time, locationid FROM observations WHERE id=\"$id\"" )->fetch ( PDO::FETCH_OBJ )) {
 			$date = $get->date;
@@ -385,8 +385,8 @@ class Observations {
 		} else
 			throw new Exception ( "Error in getDsObservationLocalTime of observations.php" );
 	}
-	public function getDsObservationProperty($id, $property, $defaultvalue = '') 	// returns the property of the observation
-	{
+	public function getDsObservationProperty($id, $property, $defaultvalue = '') // returns the property of the observation
+{
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT " . $property . " FROM observations WHERE id=\"" . $id . "\"", $property, $defaultvalue );
 	}
@@ -410,28 +410,28 @@ class Observations {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT observations.id FROM observations WHERE objectname=\"" . $object . "\" and observerid=\"" . $userid . "\" AND id!=\"" . $notobservation . "\" ORDER BY id DESC", 'id' );
 	}
-	public function getNumberOfDifferentObservedDSObjects() 	// Returns the number of different objects observed
-	{
+	public function getNumberOfDifferentObservedDSObjects() // Returns the number of different objects observed
+{
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt' );
 	}
-	public function getNumberOfDsDrawings() 	// returns the total number of observations
-	{
+	public function getNumberOfDsDrawings() // returns the total number of observations
+{
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 AND hasDrawing=1", 'Cnt', 0 );
 	}
-	public function getNumberOfDsObservations() 	// returns the total number of observations
-	{
+	public function getNumberOfDsObservations() // returns the total number of observations
+{
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt', 0 );
 	}
-	public function getNumberOfObjects($id) 	// return the number of different objects seen by the observer
-	{
+	public function getNumberOfObjects($id) // return the number of different objects seen by the observer
+{
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"" . $id . "\" AND visibility != 7 ", 'Cnt', 0 );
 	}
-	public function getNumberOfObjectDrawings($id) 	// return the number of different objects seen by the observer
-	{
+	public function getNumberOfObjectDrawings($id) // return the number of different objects seen by the observer
+{
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"" . $id . "\" AND visibility != 7 and hasDrawing = 1", 'Cnt', 0 );
 	}
@@ -449,8 +449,8 @@ class Observations {
 			$objects = $objObject->getPartOfs ( $objects );
 		return $objects;
 	}
-	public function getObservationFromQuery($queries, $seenpar = "A", $exactinstrumentlocation = "0") 	// returns an array with the names of all observations where the queries are defined in an array.
-	{ // An example of an array :
+	public function getObservationFromQuery($queries, $seenpar = "A", $exactinstrumentlocation = "0") // returns an array with the names of all observations where the queries are defined in an array.
+{ // An example of an array :
 	  // $q = array("object" => "NGC 7293", "observer" => "wim",
 	  // "instrument" => "3", "location" => "24",
 	  // "mindate" => "20040512", "maxdate" => "20040922",
@@ -694,13 +694,11 @@ class Observations {
 	}
 	public function getObservedCountFromCatalogOrList($id, $catalog) {
 		global $objDatabase, $loggedUser;
-		if (substr ( $catalog, 0, 5 ) == 'List:')
-			if (substr ( $catalog, 5, 7 ) == "Public:")
-				$sql = "SELECT COUNT(DISTINCT observations.objectname) AS CatCnt " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $catalog, 5 ) . "\" " . "AND observations.observerid=\"" . $id . "\" " . "AND observations.visibility != 7 ";
-			else
-				$sql = "SELECT COUNT(DISTINCT observations.objectname) AS CatCnt " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $catalog, 5 ) . "\" " . "AND observerobjectlist.observerid = \"" . $loggedUser . "\" " . "AND observations.observerid=\"" . $id . "\" " . "AND observations.visibility != 7 ";
-		else
+		if (substr ( $catalog, 0, 5 ) == 'List:') {
+			$sql = "SELECT COUNT(DISTINCT observations.objectname) AS CatCnt " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $catalog, 5 ) . "\" " . "AND observations.observerid=\"" . $id . "\" " . "AND observations.visibility != 7 ";
+		} else {
 			$sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " . "INNER JOIN observations ON observations.objectname = objectnames.objectname " . "WHERE objectnames.catalog = \"" . $catalog . "\" " . "AND observations.observerid=\"" . $id . "\" " . "AND observations.visibility != 7 ";
+		}
 		return $objDatabase->selectSingleValue ( $sql, 'CatCnt', 0 );
 	}
 	public function getDrawingsCountFromCatalog($id, $catalog) {
@@ -711,10 +709,7 @@ class Observations {
 	public function getObservedFromCatalog($id, $catalog) {
 		global $objDatabase, $loggedUser;
 		if (substr ( $catalog, 0, 5 ) == "List:")
-			if (substr ( $catalog, 5, 7 ) == "Public:")
-				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . "INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " . "WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") " . "AND (observations.observerid = \"" . $id . "\") " . "AND (observations.visibility != 7))";
-			else
-				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . "INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " . "WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") AND (observerobjectlist.observerid = \"" . $loggedUser . "\") " . "AND (observations.observerid = \"" . $id . "\") " . "AND (observations.visibility != 7))";
+			$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . "INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " . "WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") " . "AND (observations.observerid = \"" . $id . "\") " . "AND (observations.visibility != 7))";
 		else
 			$sql = "SELECT DISTINCT CONCAT(objectnames.catindex,' ',objectnames.objectname) AS Temp, objectnames.objectname FROM objectnames " . "INNER JOIN observations ON observations.objectname = objectnames.objectname " . "WHERE ((objectnames.catalog = \"$catalog\") " . "AND (observations.observerid=\"$id\") " . "AND (observations.visibility != 7))";
 		return $objDatabase->selectSingleArray ( $sql, 'objectname' );
@@ -722,16 +717,13 @@ class Observations {
 	public function getObservedFromCatalogPartOf($id, $catalog) {
 		global $objDatabase, $loggedUser;
 		if (substr ( $catalog, 0, 5 ) == "List:")
-			if (substr ( $catalog, 5, 7 ) == "Public:")
-				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " . " JOIN observations ON observations.objectname = objectpartof.objectname " . " WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") " . " AND (observations.observerid = \"" . $id . "\") " . " AND (observations.visibility != 7))";
-			else
-				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " . " JOIN observations ON observations.objectname = objectpartof.objectname " . " WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") AND (observerobjectlist.observerid = \"" . $loggedUser . "\") " . " AND (observations.observerid = \"" . $id . "\") " . " AND (observations.visibility != 7))";
+			$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " . " JOIN observations ON observations.objectname = objectpartof.objectname " . " WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") " . " AND (observations.observerid = \"" . $id . "\") " . " AND (observations.visibility != 7))";
 		else
 			$sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " . " JOIN objectpartof ON objectpartof.partofname = objectnames.objectname " . " JOIN observations ON observations.objectname = objectpartof.objectname " . " WHERE ((objectnames.catalog = \"$catalog\") " . " AND (observations.observerid=\"$id\") " . " AND (observations.visibility != 7))";
 		return $objDatabase->selectSingleArray ( $sql, 'objectname' );
 	}
-	public function getPopularObservations() 	// returns the number of observations of the objects
-	{
+	public function getPopularObservations() {
+		// returns the number of observations of the objects
 		global $objDatabase;
 		$run = $objDatabase->selectRecordset ( "SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC" );
 		$i = 1;
@@ -742,48 +734,25 @@ class Observations {
 			);
 		return $numberOfObservations;
 	}
-	public function getPopularObservers() 	// returns the number of observations of the observers
-	{
+	public function getPopularObservers() {
+		// returns the number of observations of the observers
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT observations.observerid, COUNT(observations.id) As Cnt FROM observations GROUP BY observations.observerid ORDER BY Cnt DESC", 'observerid' );
 	}
 	public function getPopularObserversOverviewCatOrList($sort, $cat = "") {
 		global $objDatabase, $loggedUser;
-		if ($sort == "jaar") {
-			$t = getdate ();
-			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt, observers.name " . "FROM observations " . "JOIN observers on observations.observerid = observers.id " . "WHERE observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != \"7\" ";
-		} elseif ($sort == "jaardrawings") {
-			$t = getdate ();
-			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt, observers.name " . "FROM observations " . "JOIN observers on observations.observerid = observers.id " . "WHERE observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != \"7\" AND hasDrawing=1 ";
-		} elseif ($sort == "catalog") {
-			if (substr ( $cat, 0, 5 ) == "List:")
-				if (substr ( $cat, 5, 7 ) == "Public:")
-					$sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt, observers.name " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $cat, 5 ) . "\" " . "AND observations.visibility != 7 ";
-				else
-					$sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt, observers.name " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $cat, 5 ) . "\" " . "AND observerobjectlist.observerid = \"" . $loggedUser . "\" " . "AND observations.visibility != 7 ";
-			else
-				$sql = "SELECT observations.observerid, COUNT(DISTINCT objectnames.catindex) AS Cnt, observers.name " . "FROM observations " . "JOIN objectnames on observations.objectname=objectnames.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE objectnames.catalog=\"$cat\" AND observations.visibility != 7 ";
-		} elseif ($sort == "objecten") {
-			$sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt " . "FROM observations " . "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
-		} elseif ($sort == "totaaldrawings") {
-			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt " . "FROM observations " . "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 and observations.hasDrawing=1 ";
-		} else {
-			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt " . "FROM observations " . "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
-		}
+		$sql = "SELECT observations.observerid, COUNT(*) AS Cnt " . "FROM observations " . "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
 		$sql .= "GROUP BY observations.observerid, observers.name ";
-		if ($sort == "observer")
-			$sql .= "ORDER BY observers.name ASC ";
-		else
-			$sql .= "ORDER BY Cnt DESC, observers.name ASC ";
+		$sql .= "ORDER BY Cnt DESC, observers.name ASC ";
 		return $objDatabase->selectKeyValueArray ( $sql, 'observerid', 'Cnt' );
 	}
-	public function setDsObservationProperty($id, $property, $propertyValue) 	// sets the property to the specified value for the given observation
-	{
+	public function setDsObservationProperty($id, $property, $propertyValue) // sets the property to the specified value for the given observation
+{
 		global $objDatabase;
 		return $objDatabase->execSQL ( "UPDATE observations SET " . $property . " = " . (($propertyValue == "NULL") ? "NULL" : "\"" . $propertyValue . "\"") . " WHERE id = \"" . $id . "\"" );
 	}
-	public function setLocalDateAndTime($id, $date, $time) 	// sets the date and time for the given observation when the time is given in local time
-	{
+	public function setLocalDateAndTime($id, $date, $time) // sets the date and time for the given observation when the time is given in local time
+{
 		global $objDatabase, $objLocation;
 		if ($time >= 0) {
 			$timezone = $objLocation->getLocationPropertyFromId ( $this->getDsObservationProperty ( $id, 'locationid' ), 'timezone' );
@@ -823,17 +792,17 @@ class Observations {
 		$objDatabase->execSQL ( "UPDATE observations SET date = \"" . $date . "\" WHERE id = \"" . $id . "\"" );
 		$objDatabase->execSQL ( "UPDATE observations SET time = \"" . $time . "\" WHERE id = \"" . $id . "\"" );
 	}
-	public function getLastObservations( $number = 10) {
+	public function getLastObservations($number = 10) {
 		// TODO : Implement
-// 		global $objDatabase;
-// 		$run = $objDatabase->selectRecordset("select count(DISTINCT id) from observations order by id desc LIMIT " . $number . ";");
-// 		$get = $run->fetch ( PDO::FETCH_OBJ );
+		// global $objDatabase;
+		// $run = $objDatabase->selectRecordset("select count(DISTINCT id) from observations order by id desc LIMIT " . $number . ";");
+		// $get = $run->fetch ( PDO::FETCH_OBJ );
 		
-// 		return $get->ObsCnt;
+		// return $get->ObsCnt;
 	}
 	public function showListObservation($link, $lco) {
 		global $lastReadObservation, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations, $objObservation;
-
+		
 		// Add a google translate button
 		echo "<script>
 		       function googleSectionalElementInit() {
@@ -874,19 +843,17 @@ class Observations {
 		if ($lco != "O") {
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">&nbsp;</th>";
 		} else {
-			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangOverviewObservationsHeader8 . "</th>" .
-		         "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangOverviewObservationsHeader9 . "</th>" . 
-		         "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangOverviewObservationsHeader5 . "</th>";
+			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangOverviewObservationsHeader8 . "</th>" . "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangOverviewObservationsHeader9 . "</th>" . "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangOverviewObservationsHeader5 . "</th>";
 		}
 		echo "</tr>";
 		echo "</thead>";
 		echo "<tbody id=\"obs_list\" class=\"tbody_obs\">";
 		$count = 0;
-		if (!array_key_exists('Qobs', $_SESSION)) {
+		if (! array_key_exists ( 'Qobs', $_SESSION )) {
 			// TODO : Get the new observations.
-			//$_SESSION ['Qobs'] = $objObservation->get
+			// $_SESSION ['Qobs'] = $objObservation->get
 			// TODO : If this array is empty, get the 10 last observations
-			$_SESSION ['Qobs'] = $objObservation->getLastObservations (  );
+			$_SESSION ['Qobs'] = $objObservation->getLastObservations ();
 		}
 		while ( list ( $key, $value ) = each ( $_SESSION ['Qobs'] ) ) {
 			$obsKey = $key;
@@ -1418,8 +1385,8 @@ class Observations {
 			echo $bottomline . "<br /><br />";
 		}
 	}
-	public function validateDeleteDSObservation() 	// removes the observation with id = $id
-	{
+	public function validateDeleteDSObservation() // removes the observation with id = $id
+{
 		global $objDatabase, $objAccomplishments, $objUtil;
 		if (! $_GET ['observationid'])
 			throw new Exception ( "No observation to delete." );
@@ -1460,8 +1427,8 @@ class Observations {
 			}
 			$entryMessage .= LangValidateObservationMessage1;
 			$_GET ['indexAction'] = 'add_observation';
-		} else 		// all fields filled in
-		{
+		} else // all fields filled in
+{
 			$time = - 9999;
 			if (strlen ( $_POST ['hours'] )) {
 				if (isset ( $_POST ['minutes'] ))
@@ -1469,8 +1436,8 @@ class Observations {
 				else
 					$time = ($_POST ['hours'] * 100);
 			}
-			if ($_FILES ['drawing'] ['size'] > $maxFileSize) 			// file size of drawing too big
-			{
+			if ($_FILES ['drawing'] ['size'] > $maxFileSize) // file size of drawing too big
+{
 				$entryMessage .= LangValidateObservationMessage6;
 				$_GET ['indexAction'] = 'add_observation';
 			} elseif ((! is_numeric ( $_POST ['month'] )) || (! is_numeric ( $_POST ['day'] )) || (! is_numeric ( $_POST ['year'] )) || (! checkdate ( $_POST ['month'], $_POST ['day'], $_POST ['year'] )) || ((sprintf ( "%04d", $_POST ['year'] ) . sprintf ( "%02d", $_POST ['month'] ) . sprintf ( "%02d", $_POST ['day'] )) < '19500000') || ((sprintf ( "%04d", $_POST ['year'] ) . sprintf ( "%02d", $_POST ['month'] ) . sprintf ( "%02d", $_POST ['day'] )) > date ( 'Ymd', strtotime ( '+1 day' ) ))) {
@@ -1589,8 +1556,8 @@ class Observations {
 				$objObservation->setDsObservationProperty ( $current_observation, 'clusterType', $objUtil->checkPostKey ( 'clusterType' ) );
 				$objObservation->setDsObservationProperty ( $current_observation, 'component1', $objUtil->checkPostKey ( 'component1', - 1 ) );
 				$objObservation->setDsObservationProperty ( $current_observation, 'component2', $objUtil->checkPostKey ( 'component2', - 1 ) );
-				if ($_FILES ['drawing'] ['tmp_name'] != "") 				// drawing to upload
-				{
+				if ($_FILES ['drawing'] ['tmp_name'] != "") // drawing to upload
+{
 					$upload_dir = $instDir . 'deepsky/drawings';
 					$dir = opendir ( $upload_dir );
 					$original_image = $_FILES ['drawing'] ['tmp_name'];
@@ -1626,7 +1593,7 @@ class Observations {
 	}
 	public function getLastObservationsWithDrawing($numberOfObservations = 4) {
 		global $objDatabase;
-		return $objDatabase->selectRecordsetArray( "SELECT id, objectname, observerid, date FROM observations WHERE hasDrawing=\"1\" ORDER BY id DESC LIMIT 4", 'id' );
+		return $objDatabase->selectRecordsetArray ( "SELECT id, objectname, observerid, date FROM observations WHERE hasDrawing=\"1\" ORDER BY id DESC LIMIT 4", 'id' );
 	}
 }
 ?>
