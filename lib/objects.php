@@ -255,10 +255,7 @@ class Objects {
 {
 		global $objDatabase, $loggedUser;
 		if (substr ( $catalog, 0, 5 ) == "List:")
-			if (substr ( $catalog, 5, 7 ) == "Public:")
-				$sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\"";
-			else
-				$sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\" AND observerobjectlist.observerid = \"" . $loggedUser . "\"";
+			$sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\"";
 		else
 			$sql = "SELECT COUNT(DISTINCT catindex) AS number FROM objectnames WHERE catalog = \"$catalog\"";
 		return $objDatabase->selectSingleValue ( $sql, 'number', 0 );
@@ -273,7 +270,7 @@ class Objects {
 	                                                                                     // "uranonew" => "111", "sky" => "11", "msa" => "222",
 	                                                                                     // "taki" => "11", "psa" => "12", "torresB" => "11", "torresBC" => "13",
 	                                                                                     // "torresC" => "31", "mindiam1" => "12.2", "maxdiam1" => "13.2",
-	                                                                                     // "mindiam2" => "11.1", "maxdiam2" => "22.2", "inList" => "Public: Edge-ons", "notInList" => "My observed Edge-ons");
+	                                                                                     // "mindiam2" => "11.1", "maxdiam2" => "22.2", "inList" => "Edge-ons", "notInList" => "My observed Edge-ons");
 		global $loggedUser, $objDatabase, $objCatalog;
 		$obs = array ();
 		$sql = "";
@@ -281,25 +278,13 @@ class Objects {
 		$sql1 = "SELECT DISTINCT (objectnames.objectname) AS name, " . "(objectnames.altname) AS showname " . "FROM objectnames " . "JOIN objects ON objects.name = objectnames.objectname ";
 		$sql2 = "SELECT DISTINCT (objectpartof.objectname) AS name, " . "CONCAT((objectnames.altname), \"-\", (objectpartof.objectname)) As showname  " . "FROM objectpartof " . "JOIN objects ON (objects.name = objectpartof.objectname) " . "JOIN objectnames ON (objectnames.objectname = objectpartof.partofname) ";
 		if (array_key_exists ( 'inList', $queries ) && $queries ['inList']) {
-			if (substr ( $queries ['inList'], 0, 7 ) == "Public:") {
-				$sql1 .= "JOIN observerobjectlist AS A " . "ON A.objectname = objects.name ";
-				$sql2 .= "JOIN observerobjectlist AS A " . "ON A.objectname = objects.name ";
-				$sqland .= "AND A.listname = \"" . $queries ['inList'] . "\" AND A.objectname <>\"\" ";
-			} elseif ($loggedUser) {
-				$sql1 .= "JOIN observerobjectlist AS A " . "ON A.objectname = objects.name ";
-				$sql2 .= "JOIN observerobjectlist AS A " . "ON A.objectname = objects.name ";
-				$sqland .= "AND A.observerid = \"" . $loggedUser . "\" AND A.listname = \"" . $queries ['inList'] . "\" AND A.objectname <>\"\" ";
-			}
+			$sql1 .= "JOIN observerobjectlist AS A " . "ON A.objectname = objects.name ";
+			$sql2 .= "JOIN observerobjectlist AS A " . "ON A.objectname = objects.name ";
+			$sqland .= "AND A.listname = \"" . $queries ['inList'] . "\" AND A.objectname <>\"\" ";
 		}
 		
 		if (array_key_exists ( 'notInList', $queries ) && $queries ['notInList']) {
-			if (substr ( $queries ['notInList'], 0, 7 ) == "Public:") {
-				$sql1 .= " LEFT JOIN observerobjectlist AS B " . "ON B.objectname = objects.name ";
-				$sql2 .= " LEFT JOIN observerobjectlist AS B " . "ON B.objectname = objects.name ";
-				$sqland .= " AND B.listname = \"" . $queries ['notInList'] . "\" AND B.objectname IS NULL ";
-			} elseif (array_key_exists ( 'deepskylog_id', $_SESSION ) && $loggedUser) {
-				$sqland .= " AND (objectnames.objectname NOT IN (SELECT objectname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $queries ['notInList'] . "\" ) ) ";
-			}
+			$sqland .= " AND (objectnames.objectname NOT IN (SELECT objectname FROM observerobjectlist WHERE listname = \"" . $queries ['notInList'] . "\" ) ) ";
 		}
 		
 		$sql1 .= "WHERE ";
@@ -393,10 +378,7 @@ class Objects {
 	public function getObjectsFromCatalog($cat) {
 		global $objDatabase, $loggedUser;
 		if (substr ( $cat, 0, 5 ) == "List:")
-			if (substr ( $cat, 5, 7 ) == "Public:")
-				$sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex  FROM observerobjectlist " . "WHERE (observerobjectlist.listname = \"" . substr ( $cat, 5 ) . "\")";
-			else
-				$sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex FROM observerobjectlist " . "WHERE (observerobjectlist.listname = \"" . substr ( $cat, 5 ) . "\") AND (observerobjectlist.observerid = \"" . $loggedUser . "\")";
+			$sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex  FROM observerobjectlist " . "WHERE (observerobjectlist.listname = \"" . substr ( $cat, 5 ) . "\")";
 		else
 			$sql = "SELECT DISTINCT objectnames.objectname, objectnames.catindex, objectnames.altname " . "FROM objectnames WHERE objectnames.catalog = \"$cat\"";
 		$run = $objDatabase->selectRecordset ( $sql );
@@ -616,7 +598,7 @@ class Objects {
 		global $loggedUser, $objDatabase, $baseURL, $dateformat;
 		
 		$ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' );
-
+		
 		echo "<div class=\"row\">
 		       <div class=\"col-md-6\">";
 		echo "<table class=\"table table-bordered table-condensed table-striped table-hover table-responsive\">";
@@ -1618,8 +1600,9 @@ class Objects {
 		$theEphemerides ['altitude'] = $ristraset [3];
 		return $theEphemerides;
 	}
-	public function showObjects($link, $ownShow = '', $showRank = 0, $pageListAction = "addAllObjectsFromPageToList", $columnSource = "") // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
-{
+	public function showObjects($link, $ownShow = '', $showRank = 0, $pageListAction = "addAllObjectsFromPageToList", $columnSource = "", $observingList = false) 
+	// ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
+	{
 		global $objFormLayout, $objAtlas, $objObserver, $objLocation, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil, $objPresentations, $objList;
 		$atlas = '';
 		$c = 0;
@@ -1641,6 +1624,9 @@ class Objects {
 			}
 		}
 		
+		if ($observingList) {
+			echo "  <a class=\"btn btn-success\" href=\"" . $link . "&amp;noShowName=noShowName\">" . LangListQueryObjectsMessage17 . "</a>";
+		}
 		echo "<table class=\"table sort-tableobjectlist table-condensed table-striped table-hover tablesorter custom-popup\"  data-sortlist=\"[[" . $nameLocation . ",0]]\">";
 		echo "<thead>";
 		echo "<tr>";
@@ -1654,7 +1640,7 @@ class Objects {
 			elseif ($myList)
 				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangList . "</td>");
 		}
-
+		
 		echo "<th data-priority=\"critical\" id=\"showname\">" . LangOverviewObjectsHeader1 . "</th>";
 		echo "<th data-priority=\"5\" id=\"objectconstellationfull\">" . LangOverviewObjectsHeader2 . "</th>";
 		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objectconstellationfull\">" . LangOverviewObjectsHeader2Short . "</th>";

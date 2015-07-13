@@ -1,7 +1,25 @@
 <?php //NL
 // This is version 5.0
+define("LangMakePrivate", "Maak privaat");
+define("LangMakePublic", "Maak publiek");
+define("LangNewList", "Maak nieuwe lijst aan");
+define("LangListQueryObjectsMessage17", "Wissel namen en alternatieve namen");
+define("LangPublicList", "Publiek: ");
+define("LangNewNameList", "Nieuwe naam voor de waarneemlijst");
+define("LangChangeName", "Verander naam");
+define("LangActiveList", "Actieve lijst");
+define("LangActiveList1", " is jouw actieve lijst. Je kan objecten zoeken en deze toevoegen aan deze lijst.");
+define("LangActiveList2", "Je hebt geen actieve lijst geselecteerd. Kies &eacute;&eacute;n van de lijsten om deze lijst actief te maken. Je kan objecten zoeken en deze toevoegen aan jouw actieve lijsten.");
+define("LangListName", "Naam");
+define("LangPrivateLists", "Private lijsten van ");
+define("LangPublicLists", "Publieke lijsten van ");
+define("LangViewLists", "Mijn waarneemlijsten");
+define("LangToListPublic", "Maak van deze lijst een publieke lijst");
+define("LangNameNewList", "Naam voor de nieuwe waarneemlijst");
+define("LangAddNewList", "Waarneemlijst");
 define("LangNewDrawings", "Nieuwe tekeningen");
 define("LangAddList", "Maak lijst aan");
+define("LangAddObservingList", "Maak een nieuwe waarneemlijst aan");
 define("LangViewLenses", "Mijn lenzen");
 define("LangViewFilters", "Mijn filers");
 define("LangViewEyepieces", "Mijn oculairs");
@@ -842,7 +860,6 @@ define("LangToListRenamed"																, "De lijst noemt nu \"");
 define("LangToListAddNew"																	, "Nieuwe lijst: ");
 define("LangToListAdd"																		, "Voeg toe");
 define("LangToListRename"																	, "Hernoem");
-define("LangToListPublic"																	, "Publieke lijst");
 define("LangToListEmpty"																	, "Lijst leeg maken");
 define("LangToListMyLists"																, "Mijn lijsten: ");
 define("LangToListMyListsView"														, "Bekijk");
@@ -1262,7 +1279,6 @@ define("LangListQueryObjectsMessage13"										,"Toon geassocieerde objecten");
 define("LangListQueryObjectsMessage14"										,"Gelieve de titel in te geven");
 define("LangListQueryObjectsMessage15"										,"DeepskyLog Objecten");
 define("LangListQueryObjectsMessage16"										,"&nbsp;De observatie&nbsp;");
-define("LangListQueryObjectsMessage17"										,"Wissel namen");
 
 // content/register.php
 

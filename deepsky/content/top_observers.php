@@ -10,7 +10,7 @@ function topobservers()
 	$catalog=$objUtil->checkGetKey('catalog','');
 	if(!(in_array(stripslashes($catalog),$DSOcatalogsLists)))
 	  $catalog="M";
-	$rank=$objObservation->getPopularObserversOverviewCatOrList('totaal', $catalog);
+	$rank=$objObservation->getPopularObserversOverviewCatOrList($catalog);
 	$link=$baseURL."index.php?indexAction=rank_observers&amp;catalog=".urlencode($catalog);
 	echo "<div id=\"main\">";
 	echo "<h4>".LangTopObserversTitle."</h4>";

@@ -1,7 +1,24 @@
 <?php //EN
 // This is version 5.0
+define("LangMakePrivate", "Make private");
+define("LangMakePublic", "Make public");
+define("LangNewList", "Add new list");
+define("LangListQueryObjectsMessage17"										,"Switch names and alternative names");
+define("LangPublicList", "Public: ");
+define("LangNewNameList", "New name for the observing list");
+define("LangChangeName", "Change name");
+define("LangActiveList", "Active list");
+define("LangActiveList1", " is your active list. You can search for objects and add these objects to this list.");
+define("LangActiveList2", "There is no active list. Select one of the lists to make that list active. You can search for objects and add these objects to your active lists.");
+define("LangListName", "Name");
+define("LangPrivateLists", "Private lists of ");
+define("LangPublicLists", "Public lists of ");
+define("LangViewLists", "My observing lists");
+define("LangNameNewList", "Name for the new observing list");
+define("LangAddNewList", "Observing list");
 define("LangNewDrawings", "New drawings");
 define("LangAddList", "Create list");
+define("LangAddObservingList", "Create a new observing list");
 define("LangViewLenses", "My lenses");
 define("LangViewFilters", "My filters");
 define("LangViewEyepieces", "My eyepieces");
@@ -854,7 +871,7 @@ define("LangToListNotExists"															,"\" does not exist.");
 define("LangToListAddNew"																	,"New list: ");
 define("LangToListAdd"																		,"Add");
 define("LangToListRename"																	,"Rename");
-define("LangToListPublic"																	,"Public List");
+define("LangToListPublic"																	,"Make this list a public list");
 define("LangToListEmpty"																	,"Empty the List");
 define("LangToListMyLists"																,"My lists: ");
 define("LangToListMyListsView"														,"Consult");
@@ -1267,7 +1284,6 @@ define("LangListQueryObjectsMessage13"										,"Show associated objects");
 define("LangListQueryObjectsMessage14"										,"Please enter the title");
 define("LangListQueryObjectsMessage15"										,"DeepskyLog Objects");
 define("LangListQueryObjectsMessage16"										,"&nbsp;The observation&nbsp;");
-define("LangListQueryObjectsMessage17"										,"Switch names");
 
 // content/register.php
 

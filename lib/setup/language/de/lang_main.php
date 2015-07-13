@@ -1,7 +1,25 @@
 <?php //GE
 // This is version 5.0
+define("LangMakePrivate", "Make private");
+define("LangMakePublic", "Make public");
+define("LangNewList", "Add new list");
+define("LangListQueryObjectsMessage17", "Switch names and alternative names");
+define("LangPublicList", "Public: ");
+define("LangNewNameList", "New name for the observing list");
+define("LangChangeName", "Change name");
+define("LangActiveList", "Active list");
+define("LangActiveList1", " is your active list. You can search for objects and add these objects to this list.");
+define("LangActiveList2", "There is no active list. Select one of the lists to make that list active. You can search for objects and add these objects to your active lists.");
+define("LangListName", "Name");
+define("LangPrivateLists", "Private lists of ");
+define("LangPublicLists", "Public lists of ");
+define("LangViewLists", "My observing lists");
+define("LangToListPublic", "Make this list a public list");
+define("LangNameNewList", "Name for the new observing list");
+define("LangAddNewList", "Observing list");
 define("LangNewDrawings", "New drawings");
 define("LangAddList", "Create list");
+define("LangAddObservingList", "Create a new observing list");
 define("LangViewLenses", "My lenses");
 define("LangViewFilters", "My filters");
 define("LangViewEyepieces", "My eyepieces");
@@ -723,7 +741,6 @@ $atlasPageText=array(
        'atlasPageStarLM'                                 =>'Sterne bis mag:'
 
 );
-// LangListQueryObjectsMessage17
 
 
 
@@ -863,7 +880,6 @@ define("LangToListRenamed"																,"The list is renamed in \"");
 define("LangToListAddNew"																	,"Neue Liste: ");
 define("LangToListAdd"																		,"Hinzuf&uuml;gen");
 define("LangToListRename"																	,"Umbenennen");
-define("LangToListPublic"																	,"&Ouml;ffentliche Liste");
 define("LangToListEmpty"																	,"Liste l&Ouml;schen");
 define("LangToListMyLists"																,"Meine Listen: ");
 define("LangToListMyListsView"														,"Bearbeiten");
@@ -1277,7 +1293,6 @@ define("LangListQueryObjectsMessage13"										,"Zeige assoziierte Objekte");
 define("LangListQueryObjectsMessage14"										,"Bitte geben Sie den Titel an");
 define("LangListQueryObjectsMessage15"										,"DeepskyLog Objekte");
 define("LangListQueryObjectsMessage16"										,"&nbsp;Die Beobachtung&nbsp;");
-define("LangListQueryObjectsMessage17"										,"Switch names");
 
 // content/register.php
 
