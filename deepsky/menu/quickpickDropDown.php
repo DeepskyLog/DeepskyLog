@@ -1,4 +1,4 @@
-<?php 
+<?php
 // quickpick.php
 // allows the user to quiclky enter the name of an object and search it, its observations or make a new observation
 
@@ -17,6 +17,9 @@ function menu_quickpickDropDown()
 	echo " <ul class=\"dropdown-menu\">";
 	echo "  <li><a href=\"".$baseURL."index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObjectQuickPickQuickPick=Zoek object\">".LangQuickPickSearchObject."</a></li>";
 	echo "  <li><a href=\"".$baseURL."index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObservationsQuickPick=Zoek waarnemingen\">".LangQuickPickSearchObservations."</a></li>";
+	if (($loggedUser) && ($loggedUser != "admin")) { // admin doesn't have own observations
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_sessions\">" . LangSearchMenuItem12 . "</a></li>";
+	}
 	echo " </ul>";
 	echo "</li>
 			  </ul>";
