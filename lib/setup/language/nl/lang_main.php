@@ -21,7 +21,7 @@ define("LangNewDrawings", "Nieuwe tekeningen");
 define("LangAddList", "Maak lijst aan");
 define("LangAddObservingList", "Maak een nieuwe waarneemlijst aan");
 define("LangViewLenses", "Mijn lenzen");
-define("LangViewFilters", "Mijn filers");
+define("LangViewFilters", "Mijn filters");
 define("LangViewEyepieces", "Mijn oculairs");
 define("LangViewLocations", "Mijn locaties");
 define("LangViewInstruments", "Mijn instrumenten");
@@ -457,7 +457,7 @@ define("ReportMoonUp",           'Maan op: ');
 
 define("ReportPreparedForDate"    ," voor waarnemen op ");
 
-define("ReportLink"               ,"Rapport"); 
+define("ReportLink"               ,"Rapport");
 define("ReportQueryOfObjects"     ,"objectenoverzicht");
 
 define("ReportTitle"              ,"Gekende layouts voor ");
@@ -696,7 +696,7 @@ define("LangDetailDSColor6"                               ,"blauw");
 
 $atlasPageText=array(
        'atlasPageUpBtnTxt'                               =>"Pagina Noord",
-       'atlasPageSmallUpBtnTxt'                          =>"Sectie Noord",  
+       'atlasPageSmallUpBtnTxt'                          =>"Sectie Noord",
        'atlasPageDownBtnTxt'                             =>"Pagina Zuid",
        'atlasPageSmallDownBtnTxt'                        =>"Sectie Zuid",
        'atlasPageLeftBtnTxt'                             =>"Pagina Oost",
@@ -719,7 +719,7 @@ $atlasPageText=array(
        'atlasPageStarsFetching'                          =>'Ophalen stargegevens tot magnitude ...',
        'atlasPageFoV'                                    =>'FoV:',
        'atlasPageDSLM'                                   =>'Objecten tot mag:',
-       'atlasPageStarLM'                                 =>'Sterren tot mag:'         
+       'atlasPageStarLM'                                 =>'Sterren tot mag:'
 );
 
 
