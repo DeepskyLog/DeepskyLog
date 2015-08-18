@@ -21,3 +21,16 @@ At this moment, DeepskyLog can be accessed using the following sites:
 | http://www.deepskylog.se/ | English |
 
 If you want to add your own localised version of the DeepskyLog database, please contact us.
+
+## Leads
+
++ Development: WimDeMeester
++ Project management: WimDeMeester
++ Testing, issues: TomCorstjens
++ Deepsky database: Ericvdj
++ Documentation: janvanautgaerden
++ Popularisation: ?
++ Translation: ?
++ Vela: WimDeMeester
+
+If you are interested in helping or taking the lead in one of the categories, just let us know!
