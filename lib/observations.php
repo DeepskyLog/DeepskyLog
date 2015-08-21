@@ -975,7 +975,7 @@ class Observations {
 					echo "<tr class=\"type" . (2 - ($count % 2)) . " tablesorter-childRow\">";
 					echo "<td valign=\"top\">" . $alt . "</td>";
 					if ($lco == "C") {
-						echo "<td colspan=\"6\">";
+						echo "<td colspan=\"5\">";
 						$toClose = false;
 						if ($loggedUser != "") {
 							if ($usedLang != $this->getDsObservationProperty ( $value ['observationid'], 'language' )) {

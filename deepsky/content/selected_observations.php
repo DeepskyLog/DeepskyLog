@@ -28,6 +28,7 @@ function selected_observations() {
 		// while(list($key,$value)=each($usedLanguages))
 		// $link2=$link2.'&amp;'.$value.'='.$value;
 	$link = $link2;
+
 	// ====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
 	// =============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
 	if ($object && $objObject->getExactDsObject ( $object )) {
@@ -65,7 +66,7 @@ function selected_observations() {
 	}
 	if ((! (array_key_exists ( 'Qobs', $_SESSION ))) || count ( $_SESSION ['Qobs'] ) == 0) 	// ================================================================================================== no reult present =======================================================================================
 	{
-		echo "<h4>" . LangObservationNoResults . (($objUtil->checkGetKey ( 'myLanguages' )) ? (" (" . LangSelectedObservationsSelectedLanguagesIndication . ")") : (" (" . LangSelectedObservationsAllLanguagesIndication . ")")) . "</h4>";
+		echo LangObservationNoResults . (($objUtil->checkGetKey ( 'myLanguages' )) ? (" (" . LangSelectedObservationsSelectedLanguagesIndication . ")") : (" (" . LangSelectedObservationsAllLanguagesIndication . ")")) . "</h4>";
 		if ($objUtil->checkGetKey ( 'myLanguages' ))
 			echo "<p>" . "<a href=\"" . $link2 . "\">" . LangSearchAllLanguages . "</a>&nbsp;</p>";
 		echo "<p>" . "<a href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangSearchDetailPage . "</a>" . "</p>";
