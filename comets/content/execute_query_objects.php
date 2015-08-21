@@ -17,7 +17,7 @@ function comets_execute_query_objects() {
 		// SETUP SEARCH QUERY
 		$query = array (
 				"name" => $name,
-				"icqname" => $icqname 
+				"icqname" => $icqname
 		);
 		$sort = "name"; // standard sort on name
 		                // SELECT OBJECTS
@@ -65,10 +65,9 @@ function comets_execute_query_objects() {
 			}
 			$_SESSION ['object_query'] = $result;
 			echo "</table>";
-			echo $objUtil->addTablePager ( "cometobjects" );
-			
-			echo $objUtil->addTableJavascript ( "cometobjects" );
-			
+
+			$objUtil->addPager ( "cometobjects", $count );
+
 			echo "<hr />";
 		} else 		// no results found
 		{

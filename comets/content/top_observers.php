@@ -46,9 +46,8 @@ function top_observers() {
 	}
 	echo "</tbody><tfoot><tr><td>" . LangTopObservers1 . "</td><td></td><td>$numberOfObservations</td><td>$numberOfObservationsThisYear</td><td>$numberOfDifferentObjects</td></tr></tfoot>";
 	echo "</table>";
-	echo $objUtil->addTablePager ( "cometobservers" );
-	
-	echo $objUtil->addTableJavascript ( "cometobservers" );
+	$objUtil->addPager ( "cometobservers", $count );
+
 	echo "<hr />";
 	echo "</div>";
 }

@@ -143,7 +143,7 @@ class Filters {
 		$filts = $objFilter->getSortedFilters ( 'id', $loggedUser );
 		if (count ( $filts ) > 0) { // Add the button to select which columns to show
 			$objUtil->addTableColumSelector ();
-			
+
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewActive . "</th>";
@@ -155,6 +155,7 @@ class Filters {
 			echo "<th>" . LangRemove . "</th>";
 			echo "<th>" . LangTopObserversHeader3 . "</th>";
 			echo "</tr></thead>";
+			$count=0;
 			while ( list ( $key, $value ) = each ( $filts ) ) {
 				$filterProperties = $objFilter->getFilterPropertiesFromId ( $value );
 				echo "<tr>";
@@ -180,11 +181,10 @@ class Filters {
 				}
 				echo "</td>";
 				echo "</tr>";
+				$count++;
 			}
 			echo "</table>";
-			echo $objUtil->addTablePager ();
-			
-			echo $objUtil->addTableJavascript ();
+			$objUtil->addPager ( "", $count );
 			echo "<hr />";
 		}
 	}

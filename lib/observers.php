@@ -69,9 +69,9 @@ class Observers {
 	public function getSortedObserversAdmin($sort) 	// getSortedObservers returns an array with the ids of all observers, sorted by the column specified in $sort
 	{
 		global $objDatabase;
-		return $objDatabase->selectRecordsetArray ( "SELECT observers.*, A.maxLogDate, B.instrumentCount, C.listCount, D.obsCount, E.cometobsCount, (IFNULL(B.instrumentCount,0) + IFNULL(C.listCount,0) + IFNULL(D.obsCount,0) + IFNULL(E.cometobsCount,0)) AS maxMax FROM observers 
-     LEFT JOIN (SELECT logging.loginid, MAX(logging.logdate) as maxLogDate FROM logging GROUP BY logging.loginid) AS A ON observers.id=A.loginid 
-     LEFT JOIN (SELECT instruments.observer, COUNT(instruments.id) AS instrumentCount FROM instruments GROUP BY instruments.observer) AS B ON observers.id=B.observer 
+		return $objDatabase->selectRecordsetArray ( "SELECT observers.*, A.maxLogDate, B.instrumentCount, C.listCount, D.obsCount, E.cometobsCount, (IFNULL(B.instrumentCount,0) + IFNULL(C.listCount,0) + IFNULL(D.obsCount,0) + IFNULL(E.cometobsCount,0)) AS maxMax FROM observers
+     LEFT JOIN (SELECT logging.loginid, MAX(logging.logdate) as maxLogDate FROM logging GROUP BY logging.loginid) AS A ON observers.id=A.loginid
+     LEFT JOIN (SELECT instruments.observer, COUNT(instruments.id) AS instrumentCount FROM instruments GROUP BY instruments.observer) AS B ON observers.id=B.observer
      LEFT JOIN (SELECT observerobjectlist.observerid, COUNT(DISTINCT observerobjectlist.listname) AS listCount FROM observerobjectlist GROUP BY observerobjectlist.observerid) AS C on observers.id=C.observerid
      LEFT JOIN (SELECT observations.observerid, COUNT(observations.id) AS obsCount FROM observations GROUP BY observations.observerid) AS D on observers.id=D.observerid
      LEFT JOIN (SELECT cometobservations.observerid, COUNT(cometobservations.id) AS cometobsCount FROM cometobservations GROUP BY cometobservations.observerid) AS E on observers.id=E.observerid
@@ -124,7 +124,7 @@ class Observers {
 			$catalog = "M";
 		}
 		$objectsInCatalog = $objObject->getNumberOfObjectsInCatalog ( $catalog );
-		
+
 		echo "<thead>";
 		echo "<tr>";
 		echo "<th>" . LangTopObserversHeader1 . "</th>";
@@ -173,14 +173,14 @@ class Observers {
 			else
 				$percentObservations = 0;
 			$outputtable .= "<td>" . $observationsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", $percentObservations ) . "%)</td>";
-			
+
 			$drawingsThisYear = $objObservation->getDrawingsLastYear ( $key );
 			if ($numberOfDrawingsThisYear != 0)
 				$percentDrawings = ($drawingsThisYear / $numberOfDrawingsThisYear) * 100;
 			else
 				$percentDrawings = 0;
 			$outputtable .= "<td>" . $drawingsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", $percentDrawings ) . "%)</td>";
-			
+
 			$objectsCount = $objObservation->getObservedCountFromCatalogOrList ( $key, $catalog );
 			$outputtable .= "<td> <a href=\"" . $baseURL . "index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode ( $catalog ) . "&amp;user=" . urlencode ( $key ) . "\">" . $objectsCount . "</a> (" . sprintf ( "%.2f", (($objectsCount / $objectsInCatalog) * 100) ) . "%)</td>";
 			$numberOfObjects = $objObservation->getNumberOfObjects ( $key );
@@ -191,15 +191,14 @@ class Observers {
 		$outputtable .= "</tbody>";
 		$outputtable .= "</table>";
 		echo $outputtable;
-		echo $objUtil->addTablePager ();
 
-		echo $objUtil->addTableJavascript ();
-		
+		$objUtil->addPager ( "", $count );
+
 		echo "</div><hr />";
 	}
 	public function valideAccount() {
 		global $entryMessage, $objUtil, $objLanguage, $developversion, $loggedUser, $allLanguages, $mailTo, $mailFrom, $objMessages, $baseURL;
-		
+
 		if (! $_POST ['email'] || ! $_POST ['firstname'] || ! $_POST ['name'] || ! $_POST ['passwd'] || ! $_POST ['passwd_again']) {
 			$entryMessage .= LangValidateAccountMessage1;
 			if ($objUtil->checkPostKey ( 'change' ))
@@ -251,7 +250,7 @@ class Observers {
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'registrationDate', date ( "Ymd H:i" ) );
 				$body = LangValidateAccountEmailLine1 . "\n" . 				// send mail to administrator
 				"\n" . LangValidateAccountEmailLine1bis . $_POST ['deepskylog_id'] . "\n" . LangValidateAccountEmailLine2 . $_POST ['email'] . "\n" . LangValidateAccountEmailLine3 . html_entity_decode ( $_POST ['firstname'] ) . " " . html_entity_decode ( $_POST ['name'] ) . "\n\n" . LangValidateAccountEmailLine4 . "\n\n" . html_entity_decode ( $_POST ['motivation'] );
-				
+
 				if (isset ( $developversion ) && ($developversion == true))
 					$entryMessage .= "On the live server, a mail would be sent with the subject: " . LangValidateAccountEmailTitle . ".<p>";
 				else
@@ -343,14 +342,14 @@ class Observers {
 			$entryMessage .= "On the live server, a mail would be sent with the subject: " . LangValidateSubject . ".<br />";
 		else
 			mail ( $this->getObserverProperty ( $id, 'email' ) . ";" . $mailTo, LangValidateSubject, $body, $mailFrom );
-			
+
 			// After registration, all old messages are removed
 		$objMessages->removeAllMessages ( $id );
 		// After registration, a welcome message is sent
 		$objMessages->sendMessage ( "DeepskyLog", $id, LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!", LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!<br /><br />" . LangMessageWelcome1 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_instrument\">" . LangMessageWelcome2 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_site\">" . LangMessageWelcome3 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=change_account\">" . LangMessageWelcome4 );
-		
+
 		$objAccomplishments->addObserver ( $id );
-		
+
 		return LangValidateObserverMessage1 . ' ' . LangValidateObserverMessage2;
 	}
 }

@@ -63,7 +63,7 @@ function overview_locations() {
 				echo "<td>" . $observer . "</td>";
 				// check if there are no observations made from this location
 				$queries = array (
-						"location" => $value 
+						"location" => $value
 				);
 				$obs = $objObservation->getObservationFromQuery ( $queries, "", "1", "False" );
 				// $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
@@ -80,8 +80,6 @@ function overview_locations() {
 	echo "</table>";
 	echo "<hr />";
 	echo "</div>";
-	echo $objUtil->addTablePager ();
-	
-	echo $objUtil->addTableJavascript ();
+	$objUtil->addPager ( "", $count );
 }
 ?>

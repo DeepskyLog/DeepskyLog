@@ -12,7 +12,7 @@ function top_objects() {
 	$rank = $objCometObservation->getPopularObservations ();
 	$link = $baseURL . "index.php?indexAction=comets_rank_objects";
 	echo "<h4>" . LangTopObjectsTitle . "</h4>";
-	
+
 	echo "<hr />";
 	echo "<table class=\"table sort-tablecometobjects table-condensed table-striped table-hover tablesorter custom-popup\">";
 	echo "<thead><tr>";
@@ -31,10 +31,8 @@ function top_objects() {
 	}
 	echo "</table>";
 
-	echo $objUtil->addTablePager ( "cometobjects" );
-	
-	echo $objUtil->addTableJavascript ( "cometobjects" );
-	
+	$objUtil->addPager ( "cometobjects", $count );
+
 	echo "<hr />";
 	echo "</div>";
 }

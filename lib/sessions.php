@@ -29,17 +29,17 @@ class Sessions {
 		global $loggedUser, $instDir, $_FILES;
 		if (! ($loggedUser))
 			throw new Exception ( LangMessageNotLoggedIn );
-			
+
 			// The observers
 		$observers = Array ();
-		
+
 		$count = array_count_values ( $_POST ['addedObserver'] );
 		if (isset ( $_POST ['deletedObserver'] )) {
 			$countRemoved = array_count_values ( $_POST ['deletedObserver'] );
 		} else {
 			$countRemoved = Array ();
 		}
-		
+
 		foreach ( $count as $k => $v ) {
 			$val = $v;
 			$val2 = 0;
@@ -51,7 +51,7 @@ class Sessions {
 			}
 		}
 		$current_session = $this->addSession ( $_POST ['sessionname'], $_POST ['beginday'], $_POST ['beginmonth'], $_POST ['beginyear'], $_POST ['beginhours'], $_POST ['beginminutes'], $_POST ['endday'], $_POST ['endmonth'], $_POST ['endyear'], $_POST ['endhours'], $_POST ['endminutes'], $_POST ['site'], $_POST ['weather'], $_POST ['equipment'], $_POST ['comments'], $_POST ['description_language'], $observers, - 1 );
-		
+
 		if ($_FILES ['picture'] ['tmp_name'] != "") 		// picture to upload
 		{
 			$upload_dir = $instDir . 'deepsky/sessions';
@@ -68,18 +68,18 @@ class Sessions {
 		// Make sure not to insert bad code in the database
 		$name = preg_replace ( "/(\")/", "", $sessionname );
 		$name = preg_replace ( "/;/", ",", $name );
-		
+
 		$begindate = date ( 'Y-m-d H:i:s', mktime ( $beginhours, $beginminutes, 0, $beginmonth, $beginday, $beginyear ) );
 		$enddate = date ( 'Y-m-d H:i:s', mktime ( $endhours, $endminutes, 0, $endmonth, $endday, $endyear ) );
-		
+
 		// Check if the date already is used in another session.
 		$existing_sessions = $this->getAllActiveSessionsForUser ( $loggedUser );
 		$return = false;
 		for($i = 0; $i < count ( $existing_sessions ); $i ++) {
 			$session_begindate = $existing_sessions [$i] ['begindate'];
 			$session_enddate = $existing_sessions [$i] ['enddate'];
-			
-			
+
+
 			// Check if the begindate of the new session is in one of the other existing sessions
 			$start_ts = strtotime($session_begindate);
 			$end_ts = strtotime($session_enddate);
@@ -91,7 +91,7 @@ class Sessions {
 
 			// Check if the enddate of the new session is in one of the other existing sessions
 			$user_ts = strtotime($enddate);
-				
+
 			// Check that user date is between start & end
 			if (($user_ts >= $start_ts) && ($user_ts <= $end_ts)) {
 				$return = true;
@@ -111,16 +111,16 @@ class Sessions {
 				$name = LangSessionTitle1 . date ( $dateformat, mktime ( 0, 0, 0, $beginmonth, $beginday, $beginyear ) ) . LangSessionTitle2 . date ( $dateformat, mktime ( 0, 0, 0, $endmonth, $endday, $endyear ) );
 			}
 		}
-		
+
 		$weather = preg_replace ( "/(\")/", "", $weather );
 		$weather = preg_replace ( "/;/", ",", $weather );
-		
+
 		$equipment = preg_replace ( "/(\")/", "", $equipment );
 		$equipment = preg_replace ( "/;/", ",", $equipment );
-		
+
 		$comments = preg_replace ( "/(\")/", "", $comments );
 		$comments = preg_replace ( "/;/", ",", $comments );
-		
+
 		// First check whether the session already exists
 		if ($sessionid > 0) {
 			// Check if there is a deleted observer
@@ -132,12 +132,12 @@ class Sessions {
 			}
 			// Update the session
 			$this->updateSession ( $sessionid, $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language );
-			
+
 			// First make sure to remove all old observations
 			$objDatabase->execSQL ( "DELETE from sessionObservations where sessionid=\"" . $sessionid . "\"" );
 			// Add observations to the session
 			$this->addObservations ( $sessionid, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers );
-			
+
 			// Check if there is a new observer
 			$observersFromDatabase = $objDatabase->selectSingleArray ( "SELECT observer from sessionObservers where sessionid=\"" . $sessionid . "\";", "observer" );
 			// Add the logged user to the list of the observers
@@ -146,7 +146,7 @@ class Sessions {
 				if (! in_array ( $observers [$i], $observersFromDatabase )) {
 					// The observer is not in the database. We have to add a new user.
 					$this->addObserver ( $sessionid, $observers [$i] );
-					
+
 					$objDatabase->execSQL ( "INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)" );
 					$newId = $objDatabase->insert_id ();
 					// Also add the extra observers to the sessionObservers table
@@ -164,11 +164,11 @@ class Sessions {
 			$objDatabase->execSQL ( "INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)" );
 			$sessionid = $objDatabase->selectSingleValue ( "SELECT id FROM sessions ORDER BY id DESC LIMIT 1", 'id' );
 			// Get the id of the new session
-			
+
 			for($i = 1; $i < count ( $observers ); $i ++) {
 				// Add the observers to the sessionObservers table
 				$this->addObserver ( $sessionid, $observers [$i] );
-				
+
 				// Add the new session also for the other observers (and set to inactive)
 				$objDatabase->execSQL ( "INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)" );
 				$newId = $objDatabase->insert_id ();
@@ -186,7 +186,7 @@ class Sessions {
 	private function addObserver($id, $observer) {
 		global $objDatabase, $objMessages, $loggedUser, $objObserver, $baseURL;
 		$objDatabase->execSQL ( "INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $id . "\", \"" . $observer . "\");" );
-		
+
 		$observername = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
 		$subject = $observername . LangAddSessionMessageTitle;
 		$sessionname = $this->getSessionPropertyFromId ( $id, "name" );
@@ -203,7 +203,7 @@ class Sessions {
 		$begindate = sprintf ( "%4d%02d%02d", $beginyear, $beginmonth, $beginday );
 		$enddate = sprintf ( "%4d%02d%02d", $endyear, $endmonth, $endday );
 		// Add all observations to the sessionObservations table
-		
+
 		for($i = 0; $i < count ( $observers ); $i ++) {
 			// Select the observations of the observers in this session
 			$obsids = $objDatabase->selectSingleArray ( "SELECT id from observations where observerid=\"" . $observers [$i] . "\" and date>=\"" . $begindate . "\" and date<=\"" . $enddate . "\";", "id" );
@@ -220,7 +220,7 @@ class Sessions {
 		$name = html_entity_decode ( $name, ENT_COMPAT, "ISO-8859-15" );
 		$name = preg_replace ( "/(\")/", "", $name );
 		$name = preg_replace ( "/;/", ",", $name );
-		
+
 		// Auto-generate the session name
 		if ($name == "") {
 			$beginyear = substr ( $begindate, 0, 4 );
@@ -299,6 +299,7 @@ class Sessions {
 			echo "<th>" . LangAddSessionField5a . "</th>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\"></th>";
 			echo "</thead>";
+			$count=0;
 			while ( list ( $key, $value ) = each ( $sessions ) ) {
 				$session = $this->getSessionPropertiesFromId ( $value ['id'] );
 				echo "<tr>";
@@ -322,11 +323,11 @@ class Sessions {
 				// Remove the session
 				echo ("<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_existingsession&amp;sessionid=" . urlencode ( $value ['id'] ) . "\" class=\"btn btn-primary\" title=\"" . LangDeleteSessionButton . "\"><span class=\"glyphicon glyphicon-minus\"></span></a>");
 				echo "</td></tr>";
+				$count++;
 			}
 			echo "</table>";
-			echo $objUtil->addTablePager ();
-			
-			echo $objUtil->addTableJavascript ();
+
+			$objUtil->addPager ( "", $count );
 			echo "<hr />";
 		}
 	}
@@ -374,20 +375,18 @@ class Sessions {
 				} else {
 					echo "</td><td> &nbsp; </td>";
 				}
-				
+
 				echo "</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&sessionid=" . $allSessions [$cnt] ["id"] . "\">";
-				
+
 				// the number of observations
 				$numberOfObservations = $objDatabase->selectRecordsetArray ( "SELECT COUNT(sessionid) from sessionObservations where sessionid = \"" . $allSessions [$cnt] ["id"] . "\";" );
 				echo $numberOfObservations [0] ['COUNT(sessionid)'] . " " . LangGeneralObservations;
 				echo "</a></td></tr>";
 			}
 			echo "</table>";
-			
-			echo $objUtil->addTablePager ();
-			
-			echo $objUtil->addTableJavascript ();
-			
+
+			$objUtil->addPager ( "", count ( $sessions ) );
+
 			echo "<hr />";
 		}
 	}
@@ -416,11 +415,11 @@ class Sessions {
 		} else {
 			$date = $date . "00:00:00";
 		}
-		
+
 		// First remove the observation from the existing sessions
 		$objDatabase->execSQL ( "DELETE from sessionObservations where observationid =  \"" . $current_observation . "\"" );
 		$sessions = $objDatabase->selectRecordsetArray ( "SELECT * from sessions where begindate <= \"" . $date . "\" and enddate >= \"" . $date . "\" and active = 1" );
-		
+
 		// We now have a list with all sessions, but we only have one observer. Get the other observers from the sessionObservers table
 		for($i = 0; $i < count ( $sessions ); $i ++) {
 			$users [] = $sessions [$i] ['observerid'];
@@ -438,19 +437,19 @@ class Sessions {
 		global $loggedUser, $objUtil, $objLocation;
 		if (! ($loggedUser))
 			throw new Exception ( LangMessageNotLoggedIn );
-		
+
 		$sessionid = $objUtil->checkRequestKey ( 'sessionid' );
-		
+
 		// The observers
 		$observers = Array ();
-		
+
 		$count = array_count_values ( $_POST ['addedObserver'] );
 		if (isset ( $_POST ['deletedObserver'] )) {
 			$countRemoved = array_count_values ( $_POST ['deletedObserver'] );
 		} else {
 			$countRemoved = Array ();
 		}
-		
+
 		foreach ( $count as $k => $v ) {
 			$val = $v;
 			$val2 = 0;
@@ -461,7 +460,7 @@ class Sessions {
 				$observers [] = $k;
 			}
 		}
-		
+
 		// Add the new location if needed
 		// Location of the session
 		$sites = $objLocation->getSortedLocationsList ( "name", $loggedUser, 1 );
@@ -488,9 +487,9 @@ class Sessions {
 		} else {
 			$site = $_POST ['site'];
 		}
-		
+
 		$current_session = $this->addSession ( $_POST ['sessionname'], $_POST ['beginday'], $_POST ['beginmonth'], $_POST ['beginyear'], $_POST ['beginhours'], $_POST ['beginminutes'], $_POST ['endday'], $_POST ['endmonth'], $_POST ['endyear'], $_POST ['endhours'], $_POST ['endminutes'], $site, $_POST ['weather'], $_POST ['equipment'], $_POST ['comments'], $_POST ['description_language'], $observers, $sessionid );
-		
+
 		if ($_FILES ['picture'] ['tmp_name'] != "") 		// picture to upload
 		{
 			$upload_dir = $instDir . 'deepsky/sessions';
