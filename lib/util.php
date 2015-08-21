@@ -2153,7 +2153,7 @@ class Utils {
 		}
 		$pdf->ezStream ();
 	}
-	public function recordsetSort(array $data /*$name, $order, $mode*/) 
+	public function recordsetSort(array $data /*$name, $order, $mode*/)
   {
 		$_argList = func_get_args ();
 		$_data = array_shift ( $_argList );
@@ -2701,7 +2701,7 @@ class Utils {
                 format: function(s, table, cell, cellIndex) {
                   // format your data for normalization
 				  s = s.replace(/\(|\'\)/g, '');
-			      
+
                   var degrees = s.split(\"°\");
 				  var minutes = degrees[1];
                   return \"\" + degrees[0] + minutes;
@@ -2729,7 +2729,7 @@ class Utils {
 				  } else if (months[0] == \"" . LangMonthMid . "\") {
 				    fraction = 0.5;
 				  }
-				  		
+
 				  var month = 1;
 				  if (months[1] == \"" . $GLOBALS ['Month2Short'] . "\") {
 				    month = 2;
@@ -2754,7 +2754,7 @@ class Utils {
 				  } else if (months[1] == \"" . $GLOBALS ['Month12Short'] . "\") {
 				    month = 12;
 				  }
-				  		
+
                   return \"\" + month + fraction;
                 },
                 // set type, either numeric or text
@@ -2764,6 +2764,8 @@ class Utils {
 		echo "$(function(){
 			$(\".sort-table" . $id . "\").tablesorter({
 		       theme: \"bootstrap\",
+					 delayInit: \"true\",
+					 filter_searchFiltered: \"true\",
 			   stringTo: \"bottom\",
                dateFormat : \"";
 		
@@ -2773,8 +2775,8 @@ class Utils {
 			echo "mmddyyyy";
 		}
 		echo "\", // set the default date format
-               headerTemplate: '{content} {icon}',	
-               widgets: [\"reorder\", \"uitheme\", \"columnSelector\", \"filter\", \"zebra\", \"stickyHeaders\"],
+               headerTemplate: '{content} {icon}',
+               widgets: [\"reorder\", \"uitheme\", \"columnSelector\", \"filter\", \"stickyHeaders\"],
                widgetOptions : {
                  // target the column selector markup
                  columnSelector_container : $('.columnSelector'),
@@ -2808,7 +2810,7 @@ class Utils {
                  // duplicates how jQuery mobile uses priorities:
                  // http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/
                  columnSelector_priority : 'data-priority',
-				
+
                  reorder_axis        : 'x', // 'x' or 'xy'
                  reorder_delay       : 300,
                  reorder_helperClass : 'tablesorter-reorder-helper',
@@ -2818,35 +2820,35 @@ class Utils {
                  reorder_complete    : null // callback
 	}
 	})
-				
+
 	// Add the sort order to a cookie to read out when needed...
 	// Shows id of sorted column and the number to see if we sort from high to low or from low to high.
 	.bind(\"sortEnd\", function(sorter) {
 		currentSort = sorter.target.config.sortList;
 		var columns = \"\|\";
 		for (column = 0;column < currentSort.length;column++) {
-			columns = columns + $(sorter.target.config.headerList[currentSort[column][0]])[0].id + 
+			columns = columns + $(sorter.target.config.headerList[currentSort[column][0]])[0].id +
 				\"(\"+ (currentSort[column][1]) + \")\" + \",\";
 		}
-		columns = columns.substring(0, columns.length - 1);	
+		columns = columns.substring(0, columns.length - 1);
 		columns = columns + \"\|\";
         var date = new Date();
         date.setTime(date.getTime()+(24*60*60*1000));
         var expires = \"; expires=\"+date.toGMTString();
 	    document.cookie = \"sortOrder=\"+columns+expires+\"; path=/\";
 	});
-				
+
     var pagerOptions = {
-  
+
     // target the pager markup - see the HTML block below
     container: $(\"#pager" . $id . "\"),
-  
+
     // use this url format \"http:/mydatabase.com?page={page}&size={size}&{sortList:col}\"
     ajaxUrl: null,
-  
+
     // modify the url after all processing has been applied
     customAjaxUrl: function(table, url) { return url; },
-  
+
     // process ajax so that the data object is returned along with the total number of rows
     // example: { \"data\" : [{ \"ID\": 1, \"Name\": \"Foo\", \"Last\": \"Bar\" }], \"total_rows\" : 100 }
     ajaxProcessing: function(ajax){
@@ -2855,56 +2857,56 @@ class Utils {
         return [ ajax.total_rows, ajax.data ];
       }
     },
-  
+
     // output string - default is '{page}/{totalPages}'
     // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
     output: '{startRow} to {endRow} ({totalRows})',
-  
+
     // apply disabled classname to the pager arrows when the rows at either extreme is visible - default is true
     updateArrows: true,
-  
+
     // starting page of the pager (zero based index)
     page: 0,
-  
+
     // Number of visible rows - default is 10
     size: 10,
-  
+
     // Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
     savePages : true,
-  
+
     //defines custom storage key
     storageKey:'tablesorter-pager',
-  
+
     // if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
     // table row set to a height to compensate; default is false
     fixedHeight: false,
-  
+
     // remove rows from the table to speed up the sort of large tables.
     // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
-    removeRows: false,
-  
+    removeRows: true,
+
     // css class names of pager arrows
     cssNext: '.next', // next page arrow
     cssPrev: '.prev', // previous page arrow
     cssFirst: '.first', // go to first page arrow
     cssLast: '.last', // go to last page arrow
     cssGoto: '.gotoPage', // select dropdown to allow choosing a page
-  
+
     cssPageDisplay: '.pagedisplay', // location of where the output is displayed
     cssPageSize: '.pagesize', // page size selector - select dropdown that sets the size option
-  
+
     // class added to arrows when at the extremes (i.e. prev/first arrows are disabled when on the first page)
     cssDisabled: 'disabled', // Note there is no period " . " in front of this class name
     cssErrorRow: 'tablesorter-errorRow' // ajax error information row
-  
-  };    		
+
+  };
 
   // initialize column selector using default settings
   // note: no container is defined!
   $(\".bootstrap-popup\").tablesorter({
     theme: 'blue',
-    widgets: ['zebra', 'columnSelector', 'stickyHeaders']
-  });    		
+    widgets: ['columnSelector', 'stickyHeaders']
+  });
 
 		// bind to pager events
 		// *********************
@@ -2915,14 +2917,29 @@ class Utils {
 			.append('<li><span class=\"str\">\"' + e.type + msg + '</li>')
 			.find('li:first').remove();
   })
-    		
+
   // initialize the pager plugin
   // ****************************
   $(\".sort-table" . $id . "\").tablesorterPager(pagerOptions);
-    		
+
 	});";
 		
 		echo "</script>";
+	}
+	function addPager($name, $count) {
+		// We limit the number of rows in a table to 3000.
+		$max = 3500;
+		
+		// For internet explorer, we limit the number of rows in the tables to 500 items.
+		if(preg_match('/(?i)msie [2-9]/',$_SERVER['HTTP_USER_AGENT'])) {
+			$max = 500;
+		}
+		
+		if ($count < $max) {
+			echo $this->addTablePager ( $name );
+			
+			echo $this->addTableJavascript ( $name );
+		}
 	}
 }
 ?>

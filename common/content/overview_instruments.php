@@ -13,10 +13,10 @@ function overview_instruments() {
 	global $baseURL, $step, $min, $objInstrument, $objObserver, $objPresentations, $objUtil;
 	$telescopes = $objInstrument->getSortedInstruments ( 'name', '%' );
 	$insts = $objObserver->getListOfInstruments ();
-	
+
 	echo "<div id=\"main\">";
 	echo "<h4>" . LangOverviewInstrumentsTitle1 . "</h4>";
-	
+
 	echo "<hr />";
 	echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 	echo "<thead><tr>";
@@ -88,8 +88,7 @@ function overview_instruments() {
 	echo "</table>";
 	echo "<hr />";
 	echo "</div>";
-	echo $objUtil->addTablePager ();
-	
-	echo $objUtil->addTableJavascript ();
+
+	$objUtil->addPager ( "", $count );
 }
 ?>

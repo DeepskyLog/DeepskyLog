@@ -15,7 +15,7 @@ function top_objects() {
 	// Objects seen
 	echo "<h4>" . LangTopObjectsTitle . "</h4>";
 	echo "<hr />";
-
+	
 	// We make some tabs.
 	echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">
           <li class=\"active\"><a href=\"#seen\" data-toggle=\"tab\">" . LangTopObjectsTitle . "</a></li>
@@ -42,9 +42,7 @@ function top_objects() {
 	}
 	echo "</table>";
 	
-	echo $objUtil->addTablePager ( "objectlist" );
-	
-	echo $objUtil->addTableJavascript ( "objectlist" );
+	$objUtil->addPager ( "objectlist", $count );
 	
 	echo "</div>";
 	
@@ -63,18 +61,17 @@ function top_objects() {
 		echo "<tr>";
 		echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $run2 [$count] ['objectname'] ) . "\" >" . $run2 [$count] ['objectname'] . "</a></td>";
 		$run3 = $objDatabase->selectRecordsetArray ( "select catalog, catindex from objectnames where objectname=\"" . $run2 [$count] ['objectname'] . "\";" );
-
-		echo "<td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&title=Overzicht+geselecteerde+waarnemingen&myLanguages=true&query=Zoek+waarnemingen&seen=A&catalog=" . urlencode($run3[0]['catalog']) . "&number=" . urlencode($run3[0]['catindex']) . "&drawings=on\">" . $run2 [$count] ['count'] . "</a></td>";
+		
+		echo "<td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&title=Overzicht+geselecteerde+waarnemingen&myLanguages=true&query=Zoek+waarnemingen&seen=A&catalog=" . urlencode ( $run2 [0] ['catalog'] ) . "&number=" . urlencode ( $run2 [0] ['catindex'] ) . "&drawings=on\">" . $run2 [$count] ['count'] . "</a></td>";
 		echo "</tr>";
 		$count ++;
 	}
 	echo "</table>";
 	
-	echo $objUtil->addTablePager ( "objectsdrawn" );
-	
-	echo $objUtil->addTableJavascript ( "objectsdrawn" );
+	$objUtil->addPager ( "objectsdrawn", $count );
 	
 	echo "<hr />";
 	echo "</div></div></div>";
 }
+
 ?>

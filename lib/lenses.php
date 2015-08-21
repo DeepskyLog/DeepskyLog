@@ -51,7 +51,7 @@ class Lenses {
 		$lns = $objLens->getSortedLenses ( 'id', $loggedUser );
 		if ($lns != null) { // Add the button to select which columns to show
 			$objUtil->addTableColumSelector ();
-			
+
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewActive . "</td>";
@@ -60,6 +60,7 @@ class Lenses {
 			echo "<th>" . LangRemove . "</th>";
 			echo "<th>" . LangTopObserversHeader3 . "</th>";
 			echo "</tr></thead>";
+			$count = 0;
 			while ( list ( $key, $value ) = each ( $lns ) ) {
 				$name = stripslashes ( $objLens->getLensPropertyFromId ( $value, 'name' ) );
 				$factor = $objLens->getLensPropertyFromId ( $value, 'factor' );
@@ -83,11 +84,10 @@ class Lenses {
 				}
 				echo "</td>";
 				echo "</tr>";
+				$count++;
 			}
 			echo "</table>";
-			echo $objUtil->addTablePager ();
-			
-			echo $objUtil->addTableJavascript ();
+			$objUtil->addPager ( "", $count );
 			echo "<hr />";
 		}
 	}

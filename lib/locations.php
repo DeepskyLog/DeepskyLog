@@ -47,7 +47,7 @@ class Locations {
 		$exclude = array (
 				"index.php",
 				".",
-				".." 
+				".."
 		);
 		$countries = array ();
 		while ( $fn = readdir ( $mydir ) ) {
@@ -143,7 +143,7 @@ class Locations {
 	public function getNotcheckedLocations($observer) {
 		global $objDatabase;
 		$sites = $objDatabase->selectRecordsetArray ( "SELECT id FROM locations where observer = \"" . $observer . "\" AND checked=\"0\"", 'id' );
-		
+
 		return $sites;
 	}
 	public function showLocationsObserver() {
@@ -156,13 +156,13 @@ class Locations {
 					// We adapt the timezone, elevation and country
 					$latitude = $objLocation->getLocationPropertyFromId ( $location ['id'], "latitude" );
 					$longitude = $objLocation->getLocationPropertyFromId ( $location ['id'], "longitude" );
-					
+
 					$url = "https://maps.googleapis.com/maps/api/timezone/json?location=" . $latitude . "," . $longitude . "&timestamp=0";
 					$json = file_get_contents ( $url );
 					$obj = json_decode ( $json );
 					if ($obj->status == "OK") {
 						$objLocation->setLocationProperty ( $location ['id'], "timezone", $obj->timeZoneId );
-						
+
 						// Get the elevation
 						$url = "https://maps.googleapis.com/maps/api/elevation/json?locations=" . $latitude . "," . $longitude;
 						$json = file_get_contents ( $url );
@@ -170,7 +170,7 @@ class Locations {
 						if ($obj->status == "OK") {
 							$results = $obj->results [0];
 							$objLocation->setLocationProperty ( $location ['id'], "elevation", (( int ) $results->elevation) );
-							
+
 							// Get the country
 							$url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&key=AIzaSyDGQJvhs1ItqmrFfYPRrh3vNpBzNbWntis";
 							$json = file_get_contents ( $url );
@@ -189,18 +189,18 @@ class Locations {
 					}
 				}
 			}
-			
+
 			echo "<form action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 			echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 			echo "<input type=\"hidden\" name=\"adaptStandardLocation\" value=\"1\" />";
-			
+
 			// Add the button to select which columns to show
 			$objUtil->addTableColumSelector ();
-			
+
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewActive . "</td>";
-			
+
 			echo "<th data-priority=\"critical\">" . LangViewLocationLocation . "</th>";
 			echo "<th>" . LangViewLocationWeatherPrediction . "</th>";
 			echo "<th>" . LangViewLocationCountry . "</th>";
@@ -211,6 +211,7 @@ class Locations {
 			echo "<th>" . LangRemove . "</th>";
 			echo "<th>" . LangTopObserversHeader3 . "</th>";
 			echo "</tr></thead>";
+			$count = 0;
 			while ( list ( $key, $value ) = each ( $sites ) ) {
 				$sitename = stripslashes ( $objLocation->getLocationPropertyFromId ( $value, 'name' ) );
 				$country = $objLocation->getLocationPropertyFromId ( $value, 'country' );
@@ -262,12 +263,12 @@ class Locations {
 					echo "</td>";
 					echo "</tr>";
 				}
+				$count++;
 			}
 			echo "</table>";
-			echo $objUtil->addTablePager ();
-			
-			echo $objUtil->addTableJavascript ();
-			
+
+			$objUtil->addPager ( "", $count );
+
 			echo "</div></form>";
 		}
 	}
@@ -292,7 +293,7 @@ class Locations {
 			$locationname = $objUtil->checkPostKey ( 'locationname' );
 			$country = $objUtil->checkPostKey ( 'country' );
 			$elevation = $objUtil->checkPostKey ( 'elevation' );
-			
+
 			if ($objUtil->checkPostKey ( 'add' )) {
 				$id = $this->addLocation ( $locationname, $longitude, $latitude, $country, $timezone, $elevation );
 				if (array_key_exists ( 'lm', $_POST ) && $_POST ['lm']) {
@@ -306,7 +307,7 @@ class Locations {
 					$this->setLocationProperty ( $id, 'limitingMagnitude', - 999 );
 				}
 				$this->setLocationProperty ( $id, 'observer', $loggedUser );
-				
+
 				return LangValidateSiteMessage2;
 			}
 			if ($objUtil->checkPostKey ( 'change' ) && $objUtil->checkAdminOrUserID ( $this->getLocationPropertyFromId ( $objUtil->checkPostKey ( 'id' ), 'observer' ) )) {

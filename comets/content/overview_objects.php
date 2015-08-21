@@ -53,9 +53,8 @@ function overview_objects() {
 			$count ++; // increase line counter
 		}
 		echo "</table>";
-		echo $objUtil->addTablePager ( "allcomets" );
-		
-		echo $objUtil->addTableJavascript ( "allcomets" );
+
+		$objUtil->addPager ( "allcomets", $count );
 		
 		echo "<hr />";
 	}

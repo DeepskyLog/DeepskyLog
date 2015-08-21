@@ -90,11 +90,11 @@ class Instruments {
 			echo "<input type=\"hidden\" name=\"adaption\" value=\"1\" />";
 			// Add the button to select which columns to show
 			$objUtil->addTableColumSelector ();
-			
+
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewActive . "</td>";
-			
+
 			echo "<th data-priority=\"critical\">" . LangOverviewInstrumentsName . "</th>";
 			echo "<th>" . LangOverviewInstrumentsDiameter . "</th>";
 			echo "<th>" . LangOverviewInstrumentsFD . "</th>";
@@ -104,6 +104,7 @@ class Instruments {
 			echo "<th>" . LangRemove . "</th>";
 			echo "<th>" . LangTopObserversHeader3 . "</th>";
 			echo "</thead>";
+			$count=0;
 			while ( list ( $key, $value ) = each ( $insts ) ) {
 				$name = $objInstrument->getInstrumentPropertyFromId ( $value, 'name' );
 				$diameter = round ( $objInstrument->getInstrumentPropertyFromId ( $value, 'diameter' ), 0 );
@@ -130,14 +131,14 @@ class Instruments {
 				echo $objInstrument->getInstrumentEchoType ( $type );
 				echo "</td>";
 				echo "<td>";
-				
+
 				// Radio button for the standard instrument
 				if ($value == $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ))
 					echo ("<input type=\"radio\" name=\"stdtelescope\" value=\"" . $value . "\" checked=\"checked\" onclick=\"submit();\" />&nbsp;<br />");
 				else
 					echo ("<input type=\"radio\" name=\"stdtelescope\" value=\"" . $value . "\" onclick=\"submit();\"/>&nbsp;<br />");
 				echo "</td>";
-				
+
 				// Make it possible to delete the instrument.
 				echo "<td>";
 				if (! ($obsCnt = $objInstrument->getInstrumentUsedFromId ( $value ))) {
@@ -154,12 +155,11 @@ class Instruments {
 				}
 				echo "</td>";
 				echo "</tr>";
+				$count++;
 			}
 			echo "</table>";
-			echo $objUtil->addTablePager ();
-			
-			echo $objUtil->addTableJavascript ();
-			
+			$objUtil->addPager ( "", $count );
+
 			echo "</div></form>";
 			echo "<hr />";
 		}

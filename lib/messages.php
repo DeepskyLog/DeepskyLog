@@ -16,12 +16,12 @@ class Messages {
 	public function getIdsNewMails($user) {
 		global $objDatabase;
 		$listOfAllMails = $this->getIdsAllMails ( $user );
-		
+
 		// Read mails should not be counted in the first part
 		$readMails = $objDatabase->selectSingleArray ( "select id from messagesRead where receiver = \"" . $user . "\"", "id" );
-		
+
 		$cnt = 0;
-		
+
 		for($i = 0; $i < count ( $listOfAllMails ); $i ++) {
 			if (! in_array ( $listOfAllMails [$i], $readMails )) {
 				$listOfMails [$cnt] = $listOfAllMails [$i];
@@ -31,32 +31,32 @@ class Messages {
 		if (isset ( $listOfMails )) {
 			// Swap the array
 			$listOfMails = array_reverse ( $listOfMails );
-			
+
 			return $listOfMails;
 		} else {
 			return Array ();
 		}
 	}
-	
+
 	// Returns a list of all mails. The deleted mails are not included in the list of id's.
 	public function getIdsAllMails($user) {
 		global $objDatabase;
 		$listOfAllMails = $objDatabase->selectSingleArray ( "select id from messages where receiver = \"" . $user . "\" or receiver = \"all\"", "id" );
-		
+
 		$listOfMails = Array ();
-		
+
 		// Removed mails should not be counted
 		$removedMails = $objDatabase->selectSingleArray ( "select id from messagesDeleted where receiver = \"" . $user . "\"", "id" );
-		
+
 		$cnt = 0;
-		
+
 		for($i = 0; $i < count ( $listOfAllMails ); $i ++) {
 			if (! in_array ( $listOfAllMails [$i], $removedMails )) {
 				$listOfMails [$cnt] = $listOfAllMails [$i];
 				$cnt ++;
 			}
 		}
-		
+
 		return $listOfMails;
 	}
 	public function getSubject($id) {
@@ -147,45 +147,45 @@ class Messages {
 		global $loggedUser;
 		if (! ($loggedUser))
 			throw new Exception ( LangMessageNotLoggedIn );
-		
+
 		if (array_key_exists ( 'send_mail', $_POST ) && ($_POST ['send_mail'] == "on")) {
 			$this->sendRealMessage ( $loggedUser, $_POST ['receiver'], $_POST ['subject'], nl2br ( addslashes ( $_POST ['message'] ) ) );
 		} else {
 			$this->sendMessage ( $loggedUser, $_POST ['receiver'], $_POST ['subject'], nl2br ( addslashes ( $_POST ['message'] ) ) );
 		}
 	}
-	
+
 	// Returns a list of all read mails.
 	public function getIdsReadMails($user) {
 		global $objDatabase;
 		$listOfAllMails = $this->getIdsAllMails ( $user );
 		$listOfNewMails = $this->getIdsNewMails ( $user );
-		
+
 		$listOfReadMails = Array ();
-		
+
 		$cnt = 0;
-		
+
 		for($i = 0; $i < count ( $listOfAllMails ); $i ++) {
 			if (! in_array ( $listOfAllMails [$i], $listOfNewMails )) {
 				$listOfReadMails [$cnt] = $listOfAllMails [$i];
 				$cnt ++;
 			}
 		}
-		
+
 		// Swap the array
 		$listOfReadMails = array_reverse ( $listOfReadMails );
-		
+
 		return $listOfReadMails;
 	}
 	public function sendMessage($sender, $receiver, $subject, $message) {
 		global $objDatabase, $objObserver;
 		$date = $mysqldate = date ( 'Y-m-d H:i:s' );
-		
+
 		// We check whether the observer wants to receive the DeepskyLog messages as email. If so, we send an email.
 		if ($objObserver->getObserverProperty ( $receiver, 'sendMail' )) {
 			mail ( $objObserver->getObserverProperty ( $receiver, 'email' ), $subject, $message, $objObserver->getObserverProperty ( $sender, 'email' ) );
 		}
-		
+
 		if ($receiver == "all") {
 			// We loop over all observers and send all observers who wants to receive the messages as email a mail.
 			$toMail = $objDatabase->selectSingleArray ( "select * from observers where sendMail=\"1\" and role=\"1\"", "email" );
@@ -200,7 +200,7 @@ class Messages {
 	public function sendRealMessage($sender, $receiver, $subject, $message) {
 		global $objDatabase, $objObserver;
 		$date = $mysqldate = date ( 'Y-m-d H:i:s' );
-		
+
 		// We loop over all observers and send all observers who wants to receive the messages as email a mail.
 		$toMail = $objDatabase->selectSingleArray ( "select * from observers where role=\"1\"", "email" );
 		if (sizeof ( $toMail ) > 0) {
@@ -212,12 +212,12 @@ class Messages {
 	}
 	public function showListMails($newMails, $readMails) {
 		global $baseURL, $baseURL, $objPresentations, $objObserver, $dateformat, $loggedUser, $objUtil;
-		
+
 		// Add the button to select which columns to show
 		$objUtil->addTableColumSelector ();
-		
+
 		echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">\n";
-		
+
 		// Making the header for the mails
 		echo "<thead><tr>";
 		echo "<th data-priority=\"critical\">";
@@ -226,16 +226,18 @@ class Messages {
 		echo "<th>";
 		echo LangMessageSender;
 		echo "</th>";
-		
+
 		echo "<th>";
 		echo LangMessageDate;
 		echo "</th>";
-		
+
 		echo "</tr></thead>";
 		echo "<tbody>";
 		// Combining all mails
 		$allMails = array_merge ( $newMails, $readMails );
-		
+
+		$count = 0;
+
 		// Showing the mails, loop over the id's of the combined array of new and read mails.
 		for($cnt = 0; $cnt < count ( $allMails ); $cnt ++) {
 			if ($loggedUser == "") {
@@ -244,7 +246,7 @@ class Messages {
 				echo "<tr>";
 			}
 			echo "<td>";
-			
+
 			if (! in_array ( $allMails [$cnt], $readMails )) {
 				echo "<span class=\"label label-success\">New</span>&nbsp;";
 			}
@@ -258,19 +260,18 @@ class Messages {
 				$senderName = "<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . $senderId . "\">" . $senderName . "</a>";
 			}
 			echo "<td>" . $senderName . "</td>";
-			
+
 			// Use the date format from databaseInfo
 			$phpdate = strtotime ( $this->getDate ( $allMails [$cnt] ) );
 			echo "<td>" . date ( $dateformat . " G:i:s", $phpdate ) . "</td>";
-			
+
 			echo "</tr>";
+			$count++;
 		}
 		echo "</tbody>
            </table>";
-		
-		echo $objUtil->addTablePager ();
-		
-		echo $objUtil->addTableJavascript ();
+
+	 $objUtil->addPager ( "", $count );
 	}
 }
 ?>

@@ -55,7 +55,7 @@ class Observations {
 						$errorlist [] = $i;
 				} else
 					$temploc = trim ( $locations [$i] );
-				
+
 				// Check for existence of instruments
 			for($i = 0, $j = 0, $tempinst = ''; $i < count ( $instruments ); $i ++)
 				if ((! trim ( $instruments [$i] )) || ($objInstrument->getInstrumentId ( trim ( $instruments [$i] ), $loggedUser ) == - 1)) {
@@ -89,11 +89,11 @@ class Observations {
 					if (! in_array ( $i, $errorlist ))
 						$errorlist [] = $i;
 				}
-				
+
 				// Check for the correctness of dates
 			for($i = 0, $j = 0, $k = 0; $i < count ( $dates ); $i ++) {
 				$parsed_date = date_parse ( $dates [$i] );
-				
+
 				if ($parsed_date ["error_count"] > 0 || $parsed_date ["year"] < 1900) {
 					if (! in_array ( trim ( $dates [$i] ), $wrongDates ))
 						$wrongDates [$k ++] = trim ( $dates [$i] );
@@ -158,7 +158,7 @@ class Observations {
 				$messageLines [] = "<h4>" . LangCSVError0 . "</h4>" . "<p>" . LangCSVError0 . "</p>" . $errormessage . "<p>" . LangCSVError10 . "<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">" . LangCSVError10a . "</a>" . LangCSVError10b . "</p><hr /><p>" . LangCSVError10e . "<a href=\"" . $baseURL . "observationserrors.csv\">" . LangCSVError10c . "</a>" . LangCSVError10d . "</p><hr /><p>" . LangCSVMessage4 . "</p>";
 				$_GET ['indexAction'] = 'message';
 			}
-			
+
 			$username = $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' );
 			$added = 0;
 			$double = 0;
@@ -168,7 +168,7 @@ class Observations {
 					if (trim ( $parts_array [$i] [1] ) == $username) {
 						$instrum = $objInstrument->getInstrumentId ( htmlentities ( trim ( $parts_array [$i] [5] ), ENT_COMPAT, "UTF-8", 0 ), $loggedUser );
 						$locat = $objLocation->getLocationId ( htmlentities ( trim ( $parts_array [$i] [4] ), ENT_COMPAT, "UTF-8", 0 ), $loggedUser );
-						
+
 						$parsed_date = date_parse ( $dates [$i] );
 						$date = sprintf ( "%04d%02d%02d", $parsed_date ["year"], $parsed_date ["month"], $parsed_date ["day"] );
 						if ($parts_array [$i] [3]) {
@@ -203,7 +203,7 @@ class Observations {
 			$limmag = "$limmag";
 		}
 		$description = preg_replace ( "/(\")/", "", $description );
-		
+
 		$objDatabase->execSQL ( "INSERT INTO observations (objectname, observerid, instrumentid, locationid, date, time, description, seeing, limmag, visibility, language) " . "VALUES (\"$objectname\", \"$observerid\", \"$instrumentid\", \"$locationid\", \"$date\", \"$time\", \"$description\", $seeing, $limmag, $visibility, \"$language\")" );
 		return $objDatabase->selectSingleValue ( "SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id' );
 	}
@@ -227,52 +227,52 @@ class Observations {
 		$description = preg_replace ( "/(\")/", "", $description );
 		$description = preg_replace ( "/;/", ",", $description );
 		$description = htmlentities ( $description, ENT_COMPAT, "UTF-8" );
-		
-		if ($id = $objDatabase->selectSingleValue ( "SELECT id FROM observations WHERE objectname=\"$objectname\" AND 
-		                                                                          observerid=\"$observerid\" AND 
-    	          	                                                            instrumentid=\"$instrumentid\" AND 
-		                                                                          locationid=\"$locationid\" AND 
-		                                                                          date=\"$date\" AND 
-		                                                                          time=\"$time\" AND 
-		                                                                          description=\"$description\" AND 
-		                                                                          seeing=$seeing AND 
-		                                                                          ROUND(limmag)=ROUND($limmag) AND 
-          		                                                                ROUND(SQM)=ROUND($sqm) AND  
-          		                                                                visibility=$visibility AND 
-		                                                                          language=\"$language\" AND 
-		                                                                          eyepieceid=$eyepieceid AND 
-		                                                                          filterid=$filterid AND 
+
+		if ($id = $objDatabase->selectSingleValue ( "SELECT id FROM observations WHERE objectname=\"$objectname\" AND
+		                                                                          observerid=\"$observerid\" AND
+    	          	                                                            instrumentid=\"$instrumentid\" AND
+		                                                                          locationid=\"$locationid\" AND
+		                                                                          date=\"$date\" AND
+		                                                                          time=\"$time\" AND
+		                                                                          description=\"$description\" AND
+		                                                                          seeing=$seeing AND
+		                                                                          ROUND(limmag)=ROUND($limmag) AND
+          		                                                                ROUND(SQM)=ROUND($sqm) AND
+          		                                                                visibility=$visibility AND
+		                                                                          language=\"$language\" AND
+		                                                                          eyepieceid=$eyepieceid AND
+		                                                                          filterid=$filterid AND
 		                                                                          lensid=$lensid", 'id', 0 ))
 			return 0;
 		else
-			$objDatabase->execSQL ( "INSERT INTO observations (objectname, 
-		                                                 observerid, 
-		                                                 instrumentid, 
-		                                                 locationid, 
-		                                                 date, 
-		                                                 time, 
-		                                                 description, 
-		                                                 seeing, 
-		                                                 limmag, 
-		                                                 visibility, 
-		                                                 language, 
-		                                                 eyepieceid, 
-		                                                 filterid, 
+			$objDatabase->execSQL ( "INSERT INTO observations (objectname,
+		                                                 observerid,
+		                                                 instrumentid,
+		                                                 locationid,
+		                                                 date,
+		                                                 time,
+		                                                 description,
+		                                                 seeing,
+		                                                 limmag,
+		                                                 visibility,
+		                                                 language,
+		                                                 eyepieceid,
+		                                                 filterid,
 		                                                 lensid,
 		                                                 SQM)
-		                                       VALUES (  \"$objectname\", 
-		                                                 \"$observerid\", 
-		                                                 \"$instrumentid\", 
-		                                                 \"$locationid\", 
-		                                                 \"$date\", 
-		                                                 \"$time\", 
+		                                       VALUES (  \"$objectname\",
+		                                                 \"$observerid\",
+		                                                 \"$instrumentid\",
+		                                                 \"$locationid\",
+		                                                 \"$date\",
+		                                                 \"$time\",
 		                                                 \"$description\",
-		                                                 $seeing, 
-		                                                 $limmag, 
-		                                                 $visibility, 
-		                                                 \"$language\", 
-		                                                 $eyepieceid, 
-		                                                 $filterid, 
+		                                                 $seeing,
+		                                                 $limmag,
+		                                                 $visibility,
+		                                                 \"$language\",
+		                                                 $eyepieceid,
+		                                                 $filterid,
 		                                                 $lensid,
 		                                                 $sqm)" );
 			// Return the obsid
@@ -443,7 +443,7 @@ class Observations {
 			if (! array_key_exists ( $observation ['objectname'], $objects ))
 				$objects [$observation ['objectname']] = array (
 						$i ++,
-						$observation ['objectname'] 
+						$observation ['objectname']
 				);
 		if ($showPartOfs)
 			$objects = $objObject->getPartOfs ( $objects );
@@ -473,17 +473,17 @@ class Observations {
 		$sqland = "";
 		$alternative = "";
 		if (! array_key_exists ( 'countquery', $queries ))
-			$sql1 = "SELECT DISTINCT observations.id as observationid, 
+			$sql1 = "SELECT DISTINCT observations.id as observationid,
 									                       observations.objectname as objectname,
 												  							 observations.date as observationdate,
-																				 observations.description as observationdescription, 
+																				 observations.description as observationdescription,
 						  													 observers.id as observerid,
 																				 CONCAT(observers.firstname , ' ' , observers.name) as observername,
 						  													 CONCAT(observers.name , ' ' , observers.firstname) as observersortname,
-																				 objects.con as objectconstellation, 
-																				 objects.type as objecttype, 
-																				 objects.mag as objectmagnitude, 
-																				 objects.subr as objectsurfacebrigthness, 
+																				 objects.con as objectconstellation,
+																				 objects.type as objecttype,
+																				 objects.mag as objectmagnitude,
+																				 objects.subr as objectsurfacebrigthness,
 																				 instruments.id as instrumentid,
 																				 instruments.name as instrumentname,
 																				 instruments.diameter as instrumentdiameter,
@@ -730,7 +730,7 @@ class Observations {
 		while ( $run->fetch ( PDO::FETCH_OBJ ) )
 			$numberOfObservations [$get->objectname] = array (
 					$i ++,
-					$get->objectname 
+					$get->objectname
 			);
 		return $numberOfObservations;
 	}
@@ -797,12 +797,12 @@ class Observations {
 		// global $objDatabase;
 		// $run = $objDatabase->selectRecordset("select count(DISTINCT id) from observations order by id desc LIMIT " . $number . ";");
 		// $get = $run->fetch ( PDO::FETCH_OBJ );
-		
+
 		// return $get->ObsCnt;
 	}
 	public function showListObservation($link, $lco) {
 		global $lastReadObservation, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations, $objObservation;
-		
+
 		// Add a google translate button
 		echo "<script>
 		       function googleSectionalElementInit() {
@@ -815,13 +815,13 @@ class Observations {
 		       </script>";
 		$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
 		echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=" . $usedLang . "\"></script>";
-		
+
 		$parsed = parse_url ( htmlspecialchars_decode ( $link ), PHP_URL_QUERY );
 		parse_str ( $parsed, $query );
-		
+
 		if (array_key_exists ( 'object', $query )) {
 			$queries = array (
-					"object" => $query ['object'] 
+					"object" => $query ['object']
 			);
 			$_SESSION ['Qobs'] = $objObservation->getObservationFromQuery ( $queries );
 		}
@@ -872,7 +872,7 @@ class Observations {
 			$explanation = "(" . $GLOBALS [$value ['objecttype']] . " " . LangOverviewObservations12 . " " . $GLOBALS [$value ['objectconstellation']] . (($value ['objectmagnitude'] != '') && ($value ['objectmagnitude'] < 99.9) ? ", " . LangOverviewObservations13 . " " . sprintf ( "%.1f", $value ['objectmagnitude'] ) : "") . (($value ['objectsurfacebrigthness'] != '') && ($value ['objectsurfacebrigthness'] < 99.9) ? ", " . LangOverviewObservations14 . " " . sprintf ( "%.1f", $value ['objectsurfacebrigthness'] ) : "") . (($alt) ? (", " . LangOverviewObservations15 . " ") . $objPresentations->br2dash ( $alt ) : "") . ")";
 			$explantation1 = LangOverviewObservations16 . " " . ($seen = $objObject->getseen ( $value ['objectname'] ));
 			$title = trim ( $value ['objectname'] . " " . LangMessageBy . $value ['observername'] );
-			
+
 			if (($LOid = $this->getLOObservationId ( $value ['objectname'], $loggedUser, $value ['observationid'] )) && ($lco == "O")) {
 				$LOdescription = $objPresentations->searchAndLinkCatalogsInText ( preg_replace ( "/&amp;/", "&", $this->getDsObservationProperty ( $LOid, 'description' ) ) );
 				$LOinstrumentId = $this->getDsObservationProperty ( $LOid, 'instrumentid' );
@@ -980,7 +980,7 @@ class Observations {
 						if ($loggedUser != "") {
 							if ($usedLang != $this->getDsObservationProperty ( $value ['observationid'], 'language' )) {
 								$toClose = true;
-								
+
 								// Make the google translate control node
 								echo "<div class=\"goog-trans-section\">";
 								echo "<div class=\"goog-trans-control\">";
@@ -991,7 +991,7 @@ class Observations {
 						if ($toClose) {
 							echo "</div>";
 						}
-						
+
 						echo "</td>";
 					} elseif ($lco == "O") {
 						echo "<td colspan=\"4\">";
@@ -1009,7 +1009,7 @@ class Observations {
 						if ($toClose) {
 							echo "</div>";
 						}
-						
+
 						echo "</td>";
 						echo "<td colspan=\"4\">";
 						$toClose = false;
@@ -1064,11 +1064,11 @@ class Observations {
 				echo "<tr class=\"copyright tablesorter-childRow\"><td colspan=\"" . (($lco == "O") ? 8 : 6) . "\">" . $copyright . "</td></tr>";
 			$count ++;
 		}
-		
+
 		echo "</tbody>";
 		echo "</table>";
-		$objUtil->addTablePager ( "Object" );
-		$objUtil->addTableJavascript ( "Object" );
+
+		$objUtil->addPager ( "Object", $count );
 	}
 	public function showObservation($LOid) {
 		global $objUtil, $dateformat, $myList, $listname, $listname_ss, $baseURL, $objAstroCalc, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations, $objDatabase, $objLocation, $instDir;
@@ -1178,16 +1178,16 @@ class Observations {
 				"AA3STAR",
 				"AA4STAR",
 				"AA8STAR",
-				"GLOCL" 
+				"GLOCL"
 		) ))
 			$charTypeText = (($clusterType = $this->getDsObservationProperty ( $LOid, 'clusterType' )) ? $clusterType . ': ' . $GLOBALS ['ClusterType' . $clusterType] : "-");
-		
+
 		echo "<table class=\"table\">";
 		echo "<tr>";
 		echo "<td>" . LangViewObservationField2 . "</td>";
 		$observer = $this->getDsObservationProperty ( $LOid, 'observerid' );
 		echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode ( $observer ) . "&amp;back=index.php?indexAction=detail_observation\">" . $objObserver->getObserverProperty ( $this->getDsObservationProperty ( $LOid, 'observerid' ), 'firstname' ) . "&nbsp;" . $objObserver->getObserverProperty ( $this->getDsObservationProperty ( $LOid, 'observerid' ), 'name' ) . "</a>";
-		
+
 		// Show the picture of the sender
 		$dir = opendir ( $instDir . 'common/observer_pics' );
 		while ( FALSE !== ($file = readdir ( $dir )) ) {
@@ -1197,18 +1197,18 @@ class Observations {
 				echo "<img height=\"72\" src=\"" . $baseURL . "/common/observer_pics/" . $file . "\" class=\"img-rounded pull-right\">";
 			}
 		}
-		
+
 		echo "</td>";
-		
+
 		echo "<td>" . LangViewObservationField3 . "</td>";
 		echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $this->getDsObservationProperty ( $LOid, 'instrumentid' ) ) . "\">" . $inst . "</a>";
-		
+
 		// Show the moon during the observation
 		$year = $date [0];
 		$month = $date [1];
 		$day = $date [2];
 		$date = $date [0] . "-" . $date [1] . "-" . $date [2];
-		
+
 		$realTime = $this->getDsObservationProperty ( $LOid, 'time' );
 		if ($realTime < 0) {
 			$time = "23:59:59";
@@ -1223,7 +1223,7 @@ class Observations {
 		$MoonIllum = round ( $MoonIllum, 2 );
 		$MoonIllum *= 100;
 		$file = "m" . round ( ($MoonAge / SYNMONTH) * 40 ) . ".gif";
-		
+
 		// Moon is above the horizon
 		if ($realTime < 0) {
 			$moon = "<img src=\"" . $baseURL . "/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" />";
@@ -1231,26 +1231,26 @@ class Observations {
 			// Get location
 			$longitude = $objLocation->getLocationPropertyFromId ( $this->getDsObservationProperty ( $LOid, 'locationid' ), 'longitude' );
 			$latitude = $objLocation->getLocationPropertyFromId ( $this->getDsObservationProperty ( $LOid, 'locationid' ), 'latitude' );
-			
+
 			// Calculate altitude of the moon for this date, time and location
-			
+
 			// Get the julian day of the observation...
 			$jd = gregoriantojd ( $month, $day, $year );
-			
+
 			$timezone = $objLocation->getLocationPropertyFromId ( $this->getDsObservationProperty ( $LOid, 'locationid' ), 'timezone' );
 			$dateTimeZone = new DateTimeZone ( $timezone );
-			
+
 			$datestr = sprintf ( "%02d", $month ) . "/" . sprintf ( "%02d", $day ) . "/" . $year;
 			$dateTime = new DateTime ( $datestr, $dateTimeZone );
 			// Geeft tijdsverschil terug in seconden
 			$timedifference = $dateTimeZone->getOffset ( $dateTime );
 			$timedifference = $timedifference / 3600.0;
-			
+
 			if (strncmp ( $timezone, "Etc/GMT", 7 ) == 0)
 				$timedifference = - $timedifference;
 				// Calculate the rise and set time of the moon
 			$moonCalc = $objAstroCalc->calculateMoonRiseTransitSettingTime ( $jd, $longitude, $latitude, $timedifference );
-			
+
 			// Now we know when the moon rises and sets. We have to convert the time and compare with the time of the observation.
 			// $moonCalc[0] = rise
 			// $moonCalc[2] = set
@@ -1258,7 +1258,7 @@ class Observations {
 			$moonsetArray = sscanf ( $moonCalc [2], "%d:%d" );
 			$moonRise = $moonriseArray [0] * 100.0 + $moonriseArray [1];
 			$moonSet = $moonsetArray [0] * 100.0 + $moonsetArray [1];
-			
+
 			$moonAboveHorizon = true;
 			if ($moonRise > $moonSet) {
 				if ($time <= $moonRise && $time >= $moonSet) {
@@ -1269,7 +1269,7 @@ class Observations {
 					$moonAboveHorizon = false;
 				}
 			}
-			
+
 			if ($moonAboveHorizon) {
 				// Moon is above the horizon
 				$moon = "<img src=\"" . $baseURL . "/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" />";
@@ -1279,7 +1279,7 @@ class Observations {
 			}
 		}
 		echo "<td></td><td>" . $moon . "</td>";
-		
+
 		echo "</tr>";
 		echo "<tr>";
 		echo "<td>" . LangViewObservationField5 . $dateTimeLabelText . "</td>";
@@ -1289,7 +1289,7 @@ class Observations {
 		echo "<td></td>";
 		echo "<td></td>";
 		echo "</tr>";
-		
+
 		echo "<tr>";
 		echo "<td>" . LangViewObservationField7 . "/" . LangViewObservationField34 . "</td>";
 		echo "<td>" . (($limmag = $this->getDsObservationProperty ( $LOid, 'limmag' )) ? sprintf ( "%1.1f", $limmag ) : "-") . "/" . ((($sqm = $this->getDsObservationProperty ( $LOid, 'SQM' )) != - 1) ? sprintf ( "%2.1f", $sqm ) : '-') . "</td>";
@@ -1298,7 +1298,7 @@ class Observations {
 		echo "<td></td>";
 		echo "<td></td>";
 		echo "</tr>";
-		
+
 		echo "<tr>";
 		echo "<td>" . LangViewObservationField30 . "</td>";
 		echo "<td>" . (((($eyepiece = $this->getDsObservationProperty ( $LOid, 'eyepieceid' )) == "") || ($eyepiece == 0)) ? "-" : "<a  href=\"" . $baseURL . "index.php?indexAction=detail_eyepiece&amp;eyepiece=" . urlencode ( $eyepiece ) . "\">" . stripslashes ( $objEyepiece->getEyepiecePropertyFromId ( $eyepiece, 'name' ) ) . "</a>") . (((($mag = $this->getDsObservationProperty ( $LOid, 'magnification' )) == "")) ? "" : " (" . $mag . "x)") . "</td>";
@@ -1307,10 +1307,10 @@ class Observations {
 		echo "<td>" . LangViewObservationField32 . "</td>";
 		echo "<td>" . (((($lens = $this->getDsObservationProperty ( $LOid, 'lensid' )) == "") || ($lens == 0)) ? "-" : "<a  href=\"" . $baseURL . "index.php?indexAction=detail_lens&amp;lens=" . urlencode ( $lens ) . "\">" . $objLens->getLensPropertyFromId ( $lens, 'name' ) . "</a>") . "</td>";
 		echo "</tr>";
-		
+
 		if (in_array ( $objObject->getDsoProperty ( $object, 'type' ), array (
 				"DS",
-				"AA2STAR" 
+				"AA2STAR"
 		) )) {
 			echo "<tr>";
 			echo "<td>" . LangViewObservationField22 . "</td>";
@@ -1323,7 +1323,7 @@ class Observations {
 			echo "</table>";
 			echo $details1Text . " " . $details2Text;
 		} else if (in_array ( $objObject->getDsoProperty ( $object, 'type' ), array (
-				"OPNCL" 
+				"OPNCL"
 		) ) && $this->getDsObservationProperty ( $LOid, 'resolved' ) > 0) {
 			echo "<tr>";
 			echo "<td>" . LangViewObservationField22 . "</td>";
@@ -1346,7 +1346,7 @@ class Observations {
 			echo "</tr>";
 			echo "</table>";
 		}
-		
+
 		$toClose = false;
 		if ($loggedUser != "") {
 			$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
@@ -1362,9 +1362,9 @@ class Observations {
 		if ($toClose) {
 			echo "</div>";
 		}
-		
+
 		$title = $object . " " . LangMessageBy . $this->getDsObservationProperty ( $LOid, 'observerid' );
-		
+
 		if ($this->getDsObservationProperty ( $LOid, 'hasDrawing' ))
 			echo "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $LOid . ".jpg" . "\" data-lightbox=\"image-1\" data-title=\"\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"" . $title . "\"></img></a></p>";
 		if ($copyright = $objObserver->getObserverProperty ( $this->getDsObservationProperty ( $LOid, 'observerid' ), 'copyright' ))
@@ -1491,7 +1491,7 @@ class Observations {
 						$_POST ['smallDiam'] = (($matches [1]) ? $matches [1] : "0") . "." . (($matches [2]) ? $matches [2] : "0");
 					else // clear current large diameter
 						$_POST ['smallDiam'] = "";
-				
+
 				if ($_POST ['smallDiam'] > $_POST ['largeDiam']) {
 					$tmp = $_POST ['largeDiam'];
 					$_POST ['largeDiam'] = $_POST ['smallDiam'];
@@ -1567,13 +1567,13 @@ class Observations {
 					move_uploaded_file ( $_FILES ['drawing'] ['tmp_name'], $upload_dir . "/" . $current_observation . ".jpg" );
 					$objObservation->setDsObservationProperty ( $current_observation, 'hasDrawing', 1 );
 				}
-				
+
 				// Add the observation to all the sessions
 				$objSession->addObservationToSessions ( $current_observation );
-				
+
 				// Recalculate the accomplishments
 				$objAccomplishments->recalculateDeepsky ( $loggedUser );
-				
+
 				$_SESSION ['newObsYear'] = $_POST ['year']; // save current details for faster submission of multiple observations
 				$_SESSION ['newObsMonth'] = $_POST ['month'];
 				$_SESSION ['newObsDay'] = $_POST ['day'];

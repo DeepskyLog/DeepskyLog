@@ -11,25 +11,25 @@ function overview_observations() {
 	$objects = new CometObjects ();
 	$instruments = new Instruments ();
 	$observers = new Observers ();
-	
+
 	$sort = "date"; // standard sort on date
 	$obs = $objCometObservation->getSortedObservations ( $sort );
 	if (sizeof ( $obs ) > 0)
 		krsort ( $obs );
-		
+
 		// save $obs as a session variable
 	$_SESSION ['obs'] = $obs;
 	$_SESSION ['observation_query'] = $obs;
-	
+
 	echo "<div id=\"main\">";
 	$link = $baseURL . "index.php?indexAction=comets_all_observations";
-	
+
 	echo "<h4>" . LangOverviewObservationsTitle . "</h4>";
 	echo "<hr />";
-	
+
 	if (sizeof ( $obs ) > 0) {
 		// OBJECT TABLE HEADERS
-		
+
 		echo "<table class=\"table sort-tableallcometobservations table-condensed table-striped table-hover tablesorter custom-popup\">
 	      <thead>
 		  <tr>
@@ -47,41 +47,41 @@ function overview_observations() {
 		while ( list ( $key, $value ) = each ( $obs ) ) 		// go through observations array
 		{
 			// OBJECT
-			
+
 			$object = $objCometObservation->getObjectId ( $value );
-			
+
 			// OBSERVER
-			
+
 			$observer = $objCometObservation->getObserverId ( $value );
-			
+
 			// DATE
-			
+
 			if ($objObserver->getObserverProperty ( $loggedUser, 'UT' )) {
 				$date = sscanf ( $objCometObservation->getDate ( $value ), "%4d%2d%2d" );
 			} else {
 				$date = sscanf ( $objCometObservation->getLocalDate ( $value ), "%4d%2d%2d" );
 			}
-			
+
 			// TIME
 			if ($objObserver->getObserverProperty ( $loggedUser, 'UT' )) {
 				$time = sscanf ( sprintf ( "%04d", $objCometObservation->getTime ( $value ) ), "%2d%2d" );
 			} else {
 				$time = sscanf ( sprintf ( "%04d", $objCometObservation->getLocalTime ( $value ) ), "%2d%2d" );
 			}
-			
+
 			// INSTRUMENT
-			
+
 			$temp = $objCometObservation->getInstrumentId ( $value );
 			$instrument = $objInstrument->getInstrumentPropertyFromId ( $temp, 'name' );
 			$instrumentsize = round ( $objInstrument->getInstrumentPropertyFromId ( $temp, 'diameter' ), 0 );
 			if ($instrument == "Naked eye") {
 				$instrument = InstrumentsNakedEye;
 			}
-			
+
 			// MAGNITUDE
-			
+
 			$mag = $objCometObservation->getMagnitude ( $value );
-			
+
 			if ($mag < - 90) {
 				$mag = '';
 			} else {
@@ -93,53 +93,53 @@ function overview_observations() {
 					$mag = $mag . ":";
 				}
 			}
-			
+
 			// COMA
-			
+
 			$coma = $objCometObservation->getComa ( $value );
 			if ($coma < - 90) {
 				$coma = '';
 			} else {
 				$coma = $coma . "'";
 			}
-			
+
 			// DC
-			
+
 			$dc = $objCometObservation->getDc ( $value );
-			
+
 			if ($dc < - 90) {
 				$dc = '';
 			}
-			
+
 			// TAIL
-			
+
 			$tail = $objCometObservation->getTail ( $value );
 			if ($tail < - 90) {
 				$tail = '';
 			} else {
 				$tail = $tail . "'";
 			}
-			
+
 			// OUTPUT
-			
+
 			echo ("<tr>
 	            <td><a href=\"" . $baseURL . "index.php?indexAction=comets_detail_object&amp;object=" . urlencode ( $object ) . "\">" . $objCometObject->getName ( $object ) . "</a></td>
 	            <td><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode ( $observer ) . "\">" . $objObserver->getObserverProperty ( $observer, 'firstname' ) . "&nbsp;" . $objObserver->getObserverProperty ( $observer, 'name' ) . "</a></td><td>");
-			
+
 			echo date ( $dateformat, mktime ( 0, 0, 0, $date [1], $date [2], $date [0] ) );
-			
+
 			echo ("&nbsp;(");
-			
+
 			printf ( "%02d", $time [0] );
-			
+
 			echo (":");
-			
+
 			printf ( "%02d", $time [1] );
-			
+
 			if ($instrument != InstrumentsNakedEye && $instrumentsize != "0" && $instrumentsize != "1") {
 				$instrument = $instrument . "(" . $instrumentsize . "&nbsp;mm" . ")";
 			}
-			
+
 			echo (")</td>
 	            <td>$mag</td>
 	            <td>$instrument</td>
@@ -147,9 +147,9 @@ function overview_observations() {
 	            <td>$dc</td>
 	            <td>$tail</td>
 	            <td><a href=\"" . $baseURL . "index.php?indexAction=comets_detail_observation&amp;observation=" . $value . "\">details");
-			
+
 			// LINK TO DRAWING (IF AVAILABLE)
-			
+
 			$upload_dir = 'cometdrawings';
 			$dir = opendir ( $instDir . 'comets/' . $upload_dir );
 			while ( FALSE !== ($file = readdir ( $dir )) ) {
@@ -160,14 +160,12 @@ function overview_observations() {
 					echo LangDrawing;
 				}
 			}
-			
+
 			echo ("</a></td></tr>");
 		}
-		
+
 		echo "</table>";
-		echo $objUtil->addTablePager ( "allcometobservations" );
-		
-		echo $objUtil->addTableJavascript ( "allcometobservations" );
+		$objUtil->addPager ( "allcometobservations", sizeof ( $obs ) );
 	}
 	echo "<hr />";
 	echo "</div>";

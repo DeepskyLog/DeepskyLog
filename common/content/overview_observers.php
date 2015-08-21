@@ -66,8 +66,6 @@ function overview_observers() {
 	echo "</table>";
 	echo "<hr />";
 	echo "</div>";
-	echo $objUtil->addTablePager ();
-	
-	echo $objUtil->addTableJavascript ();
+	$objUtil->addPager ( "",  100);
 }
 ?>
