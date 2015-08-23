@@ -1068,7 +1068,7 @@ class Observations {
 		echo "</tbody>";
 		echo "</table>";
 
-		$objUtil->addPager ( "Object", $count );
+		$objUtil->addPager ( "Object", $count, false );
 	}
 	public function showObservation($LOid) {
 		global $objUtil, $dateformat, $myList, $listname, $listname_ss, $baseURL, $objAstroCalc, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations, $objDatabase, $objLocation, $instDir;
