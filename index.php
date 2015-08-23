@@ -107,7 +107,7 @@ if ($_SESSION ['module'] == 'deepsky' && $loggedUser) {
             </div>
             <div class=\"modal-footer\">
             <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-            <input class=\"btn btn-success\" type=\"submit\" name=\"addList\" value=\"" . LangAddList . "\" /></button>
+            <input class=\"btn btn-success\" type=\"submit\" name=\"addList\" value=\"" . LangAddList . "\" />
 		   </form>
           </div>
          </div><!-- /.modal-content -->
