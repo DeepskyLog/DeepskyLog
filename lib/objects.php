@@ -1627,7 +1627,8 @@ class Objects {
 		if ($observingList) {
 			echo "  <a class=\"btn btn-success\" href=\"" . $link . "&amp;noShowName=noShowName\">" . LangListQueryObjectsMessage17 . "</a>";
 		}
-		echo "<table class=\"table sort-tableobjectlist table-condensed table-striped table-hover tablesorter custom-popup\"  data-sortlist=\"[[" . $nameLocation . ",0]]\">";
+		echo "<table class=\"table sort-tablenearobjectlist table-condensed table-striped table-hover custom-popup\"  data-sortlist=\"[[" . $nameLocation . ",0]]\">";
+//		echo "<table class=\"table sort-tablenearobjectlist table-condensed table-striped table-hover tablesorter custom-popup\"  data-sortlist=\"[[" . $nameLocation . ",0]]\">";
 		echo "<thead>";
 		echo "<tr>";
 		if ($loggedUser) {
@@ -1748,8 +1749,8 @@ class Objects {
 			$count ++;
 		}
 		echo "</tbody></table>";
-
-		$objUtil->addPager ( "objectlist", $count );
+		echo "<table>";
+		$objUtil->addPager ( "nearobjectlist", $count );
 
 		if ($loggedUser) {
 			$content1 = LangObjectsFilter . ": <a href=\"" . (($objUtil->checkRequestKey ( 'filteron' ) == 'location') ? $objUtil->removeFromLink ( $link, 'filteron=location' ) . "\" title=\"" . LangObjectsFilterLocationOffExpl . "\"" : $link . "&amp;filteron=location" . "\" title=\"" . LangObjectsFilterLocationExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterLocation . "</a>" . "&nbsp;";

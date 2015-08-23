@@ -158,7 +158,7 @@ class Lists {
 		$sql = 'SELECT listname FROM observerobjectlist WHERE objectname="' . $theobject . '" AND public = "1"';
 		$results = $objDatabase->selectSingleArray ( $sql, 'listname' );
 		while ( list ( $key, $value ) = each ( $results ) )
-			$result .= "/" . substr ( $value, 8 );
+			$result .= "/" . $value;
 		return substr ( $result, 1 );
 	}
 	public function getLists() {

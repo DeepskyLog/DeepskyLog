@@ -975,7 +975,7 @@ class Observations {
 					echo "<tr class=\"type" . (2 - ($count % 2)) . " tablesorter-childRow\">";
 					echo "<td valign=\"top\">" . $alt . "</td>";
 					if ($lco == "C") {
-						echo "<td colspan=\"6\">";
+						echo "<td colspan=\"5\">";
 						$toClose = false;
 						if ($loggedUser != "") {
 							if ($usedLang != $this->getDsObservationProperty ( $value ['observationid'], 'language' )) {
@@ -1068,7 +1068,7 @@ class Observations {
 		echo "</tbody>";
 		echo "</table>";
 
-		$objUtil->addPager ( "Object", $count );
+		$objUtil->addPager ( "Object", $count, false );
 	}
 	public function showObservation($LOid) {
 		global $objUtil, $dateformat, $myList, $listname, $listname_ss, $baseURL, $objAstroCalc, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations, $objDatabase, $objLocation, $instDir;

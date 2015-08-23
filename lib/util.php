@@ -2661,7 +2661,7 @@ class Utils {
           </div>";
 	}
 	// Add the javascript for the table
-	public function addTableJavascript($id = "") {
+	public function addTableJavascript($id = "", $columSelect = true) {
 		global $dateformat;
 		// Make the table sorter, add the pager and add the column chooser
 		echo "<script type=\"text/javascript\">";
@@ -2774,9 +2774,14 @@ class Utils {
 		} else {
 			echo "mmddyyyy";
 		}
+		// Make sure the columnSelector module is only loaded when the columnSelector is indeed used.
 		echo "\", // set the default date format
                headerTemplate: '{content} {icon}',
-               widgets: [\"reorder\", \"uitheme\", \"columnSelector\", \"filter\", \"stickyHeaders\"],
+               widgets: [\"reorder\", \"uitheme\", ";
+		if ($columSelect) {
+			echo "\"columnSelector\", ";
+		}
+		echo "\"filter\", \"stickyHeaders\"],
                widgetOptions : {
                  // target the column selector markup
                  columnSelector_container : $('.columnSelector'),
@@ -2926,19 +2931,19 @@ class Utils {
 		
 		echo "</script>";
 	}
-	function addPager($name, $count) {
+	function addPager($name, $count, $tableSelector = true) {
 		// We limit the number of rows in a table to 3000.
 		$max = 3500;
 		
 		// For internet explorer, we limit the number of rows in the tables to 500 items.
-		if(preg_match('/(?i)msie [2-9]/',$_SERVER['HTTP_USER_AGENT'])) {
+		if (preg_match ( '/(?i)msie [2-9]/', $_SERVER ['HTTP_USER_AGENT'] )) {
 			$max = 500;
 		}
 		
 		if ($count < $max) {
 			echo $this->addTablePager ( $name );
 			
-			echo $this->addTableJavascript ( $name );
+			echo $this->addTableJavascript ( $name, $tableSelector );
 		}
 	}
 }

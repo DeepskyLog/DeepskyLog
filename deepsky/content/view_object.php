@@ -352,7 +352,7 @@ function showObjectObservations() {
 	echo $content5;
 	echo $content6; 
 	echo "<hr />";
-	
+
 	$objObservation->showListObservation ( $link, $_SESSION ['lco'] );
 	echo "<hr />";
 	if ($_SESSION ['lco'] == "O") {

@@ -85,6 +85,7 @@ function headmenu() {
 	// Closing the menu
 	echo "	</div>
         </div>
+			</div>
       </nav>";
 	
 	// The navbar with the date and the lists
