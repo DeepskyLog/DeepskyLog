@@ -358,7 +358,7 @@ class Lists {
 	public function getObjectsFromList($theListname) {
 		global $objObject, $objDatabase, $loggedUser;
 		$obs = array ();
-		$sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " . "JOIN objects ON observerobjectlist.objectname = objects.name " . "WHERE listname = \"" . $theListname . "\" AND objectname <>\"\"";
+		$sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " . "JOIN objects ON observerobjectlist.objectname = objects.name " . "WHERE listname = \"" . $theListname . "\" AND objectname <>\"\" AND (observerobjectlist.observerid=\"" . $loggedUser . "\" OR observerobjectlist.public=\"1\")";
 		$run = $objDatabase->selectRecordset ( $sql );
 		while ( $get = $run->fetch ( PDO::FETCH_OBJ ) )
 			if (! in_array ( $get->objectname, $obs ))
