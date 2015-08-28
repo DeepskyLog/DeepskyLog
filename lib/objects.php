@@ -1628,7 +1628,6 @@ class Objects {
 			echo "  <a class=\"btn btn-success\" href=\"" . $link . "&amp;noShowName=noShowName\">" . LangListQueryObjectsMessage17 . "</a>";
 		}
 		echo "<table class=\"table sort-tablenearobjectlist table-condensed table-striped table-hover custom-popup\"  data-sortlist=\"[[" . $nameLocation . ",0]]\">";
-//		echo "<table class=\"table sort-tablenearobjectlist table-condensed table-striped table-hover tablesorter custom-popup\"  data-sortlist=\"[[" . $nameLocation . ",0]]\">";
 		echo "<thead>";
 		echo "<tr>";
 		if ($loggedUser) {
