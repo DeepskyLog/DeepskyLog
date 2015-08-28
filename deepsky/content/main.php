@@ -11,10 +11,10 @@ if (! $loggedUser) {
 	echo "<br /><br />";
 }
 
-// Show the icons with to search, add a new observation, download.
+// Show the icons.
 // Add icon for 'Search observations'
 echo "<div class=\"row\">";
-echo " <div class=\"col-sm-2 col-md-2\">";
+echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObservationsQuickPick=Zoek�waarnemingen\">";
 echo "    <img src=\"" . $baseURL . "images/findObservation.png\">";
 echo "    <div class=\"caption\">";
@@ -23,7 +23,7 @@ echo "    </div>";
 echo "   </a>";
 echo " </div>";
 // Add icon for 'Search objects'
-echo " <div class=\"col-sm-2 col-md-2\">";
+echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObjectQuickPickQuickPick=Zoek%C2%A0object\">";
 echo "    <img src=\"" . $baseURL . "images/findObject.png\">";
 echo "    <div class=\"caption\">";
@@ -32,7 +32,7 @@ echo "    </div>";
 echo "   </a>";
 echo " </div>";
 // Add icon for 'See new observations'
-echo " <div class=\"col-sm-2 col-md-2\">";
+echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObjectQuickPickQuickPick=Zoek%C2%A0object\">";
 echo "    <img src=\"" . $baseURL . "images/new_badge.png\">";
 echo "    <div class=\"caption\">";
@@ -41,7 +41,7 @@ echo "    </div>";
 echo "   </a>";
 echo " </div>";
 // Add icon for 'Download atlases'
-echo " <div class=\"col-sm-2 col-md-2\">";
+echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=view_atlaspages\">";
 echo "    <img src=\"" . $baseURL . "images/downloadAtlas.png\">";
 echo "    <div class=\"caption\">";
@@ -51,7 +51,7 @@ echo "   </a>";
 echo " </div>";
 if ($loggedUser) {
     // Add icon for 'Add observation'
-	echo " <div class=\"col-sm-2 col-md-2\">";
+	echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 	echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming\">";
 	echo "    <img src=\"" . $baseURL . "images/pencil.png\">";
 	echo "    <div class=\"caption\">";
@@ -61,7 +61,7 @@ if ($loggedUser) {
 	echo " </div>";
 
 	// Add icon for 'Create list'
-	echo " <div class=\"col-sm-2 col-md-2\">";
+	echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 	echo "   <a class=\"thumbnail thumbnail-no-border\" data-toggle=\"modal\" data-target=\"#addList\">";
 	echo "    <img src=\"" . $baseURL . "images/clipboard.png\">";
 	echo "    <div class=\"caption\">";
@@ -76,7 +76,7 @@ echo "<h2>" . LangNewDrawings . "</h2>";
 $drawings = $objObservation->getLastObservationsWithDrawing ();
 echo "<div class=\"row\">";
 foreach ( $drawings as $drawing => $key ) {
-	echo " <div class=\"col-sm-3 col-md-3\">";
+	echo " <div class=\"col-xs-3 col-sm-3 col-md-3\">";
 	echo "  <div class=\"thumbnail\">";
 	echo "   <a href=\"" . $baseURL . "index.php?indexAction=detail_observation&observation=" . $key ["id"] . "&amp;dalm=D\">";
 	echo "    <img class=\"img-rounded\" src=\"" . $baseURL . "deepsky/drawings/" . $key ["id"] . ".jpg\">";
