@@ -139,6 +139,10 @@ class Lists {
 		global $listname, $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.observerid FROM observerobjectlist WHERE listname=\"" . $listname . "\" AND objectplace=0", 'observerid', '' );
 	}
+	public function getListOwnerName($listname, $observerId) {
+		global $objDatabase;
+		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.observerid FROM observerobjectlist WHERE listname=\"" . $listname . "\" AND objectplace=0 AND observerid=\"" . $observerId . "\"", 'observerid', '' );
+	}
 	public function getInPrivateLists($theobject) {
 		global $objDatabase, $loggedUser;
 		$result = '';
@@ -440,6 +444,7 @@ class Lists {
 	}
 	public function renameList($nameFrom, $nameTo, $newPublic) {
 		global $loggedUser, $objDatabase, $myList, $objMessages, $objObserver, $baseURL;
+		$isMyList = $this->getListOwnerName($nameFrom, $loggedUser);
 		if ($loggedUser && $myList) {
 			// Send mail when we are creating a public list
 			$pos = $newPublic;
@@ -460,6 +465,7 @@ class Lists {
 				}
 			}
 			$objDatabase->execSQL ( "UPDATE observerobjectlist SET listname=\"" . $nameTo . "\" WHERE observerid=\"" . $loggedUser . "\" AND listname=\"" . $nameFrom . "\"" );
+			
 			if ($newPublic) {
 				$public = 1;
 			} else {
