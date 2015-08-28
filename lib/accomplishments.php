@@ -1689,7 +1689,7 @@ class Accomplishments {
   	return LangNewCertificat . $numberOfObjects . ' ' . $catalog . LangObserved;
   }
 
-  public function getSeenMessage($catalog, $numberOfObjects) {
+  public function getSeenMessage($catalog, $numberOfObjects, $observerId) {
   	return LangCongrats . $numberOfObjects . " " . $catalog . LangCheckout . " http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"";
   }
   
@@ -1697,7 +1697,7 @@ class Accomplishments {
   	return LangNewCertificat . $numberOfObjects . ' ' . $catalog . LangAccomplishmentsDrawn;
   }
 
-  public function getDrawMessage($catalog, $numberOfObjects) {
+  public function getDrawMessage($catalog, $numberOfObjects, $observerId) {
   	return LangDrawCongrats . $numberOfObjects . " " . $catalog . LangDrawCheckout . " http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"";
   }
   
@@ -1711,7 +1711,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	
   	if ($oldMessierBronze == 0 && $newMessierBronze == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangMessier, 25), $this->getSeenMessage(LangMessier, 25));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangMessier, 25), $this->getSeenMessage(LangMessier, 25, $observerId));
   	}
   	 
   	$oldMessierSilver = $this->getMessierSilver($observerId);
@@ -1720,7 +1720,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	
   	if ($oldMessierSilver == 0 && $newMessierSilver == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangMessier, 50), $this->getSeenMessage(LangMessier, 50));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangMessier, 50), $this->getSeenMessage(LangMessier, 50, $observerId));
   	}
   	 
   	$oldMessierGold = $this->getMessierGold($observerId);
@@ -1729,7 +1729,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	 
   	if ($oldMessierGold == 0 && $newMessierGold == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangMessier, 110), $this->getSeenMessage(LangMessier, 110));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangMessier, 110), $this->getSeenMessage(LangMessier, 110, $observerId));
   	}
 
   	// MESSIER DRAWINGS
@@ -1772,7 +1772,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	
   	if ($oldCaldwellBronze == 0 && $newCaldwellBronze == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangCaldwell, 25), $this->getSeenMessage(LangCaldwell, 25));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangCaldwell, 25), $this->getSeenMessage(LangCaldwell, 25, $observerId));
   	}
   	 
   	$oldCaldwellSilver = $this->getCaldwellSilver($observerId);
@@ -1781,7 +1781,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	
   	if ($oldCaldwellSilver == 0 && $newCaldwellSilver == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangCaldwell, 50), $this->getSeenMessage(LangCaldwell, 50));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangCaldwell, 50), $this->getSeenMessage(LangCaldwell, 50, $observerId));
   	}
   	 
   	$oldCaldwellGold = $this->getCaldwellGold($observerId);
@@ -1790,7 +1790,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	 
   	if ($oldCaldwellGold == 0 && $newCaldwellGold == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangCaldwell, 110), $this->getSeenMessage(LangCaldwell, 110));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangCaldwell, 110), $this->getSeenMessage(LangCaldwell, 110, $observerId));
   	}
   	 
   	// CALDWELL DRAWINGS
@@ -1834,7 +1834,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	 
   	if ($oldHerschelBronze == 0 && $newHerschelBronze == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 25), $this->getSeenMessage(LangHerschel400, 25));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 25), $this->getSeenMessage(LangHerschel400, 25, $observerId));
   	}
   
   	$oldHerschelSilver = $this->getHerschelSilver($observerId);
@@ -1843,7 +1843,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	 
   	if ($oldHerschelSilver == 0 && $newHerschelSilver == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 50), $this->getSeenMessage(LangHerschel400, 50));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 50), $this->getSeenMessage(LangHerschel400, 50, $observerId));
   	}
   
   	$oldHerschelGold = $this->getHerschelGold($observerId);
@@ -1852,7 +1852,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelGold == 0 && $newHerschelGold == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 100), $this->getSeenMessage(LangHerschel400, 100));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 100), $this->getSeenMessage(LangHerschel400, 100, $observerId));
   	}
   
     $oldHerschelDiamond = $this->getHerschelDiamond($observerId);
@@ -1861,7 +1861,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelDiamond == 0 && $newHerschelDiamond == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 200), $this->getSeenMessage(LangHerschel400, 200));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 200), $this->getSeenMessage(LangHerschel400, 200, $observerId));
   	}
   
     $oldHerschelPlatina = $this->getHerschelPlatina($observerId);
@@ -1870,7 +1870,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelPlatina == 0 && $newHerschelPlatina == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 400), $this->getSeenMessage(LangHerschel400, 400));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 400), $this->getSeenMessage(LangHerschel400, 400, $observerId));
   	}
   
   	// Herschel DRAWINGS
@@ -1881,7 +1881,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	 
   	if ($oldHerschelDrawingsBronze == 0 && $newHerschelDrawingsBronze == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangHerschel400, 25), $this->getDrawMessage(LangHerschel400, 25));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangHerschel400, 25), $this->getDrawMessage(LangHerschel400, 25, $observerId));
   	}
   
   	$oldHerschelDrawingsSilver = $this->getHerschelDrawingsSilver($observerId);
@@ -1890,7 +1890,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	 
   	if ($oldHerschelDrawingsSilver == 0 && $newHerschelDrawingsSilver == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangHerschel400, 50), $this->getDrawMessage(LangHerschel400, 50));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangHerschel400, 50), $this->getDrawMessage(LangHerschel400, 50, $observerId));
   	}
   
   	$oldHerschelDrawingsGold = $this->getHerschelDrawingsGold($observerId);
