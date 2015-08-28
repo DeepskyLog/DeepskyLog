@@ -54,7 +54,7 @@ class Lenses {
 
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
-			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewActive . "</td>";
+			echo "<th>" . LangViewActive . "</td>";
 			echo "<th data-priority=\"critical\">" . LangViewLensName . "</th>";
 			echo "<th>" . LangViewLensFactor . "</th>";
 			echo "<th>" . LangRemove . "</th>";
@@ -65,7 +65,8 @@ class Lenses {
 				$name = stripslashes ( $objLens->getLensPropertyFromId ( $value, 'name' ) );
 				$factor = $objLens->getLensPropertyFromId ( $value, 'factor' );
 				echo "<tr>";
-				echo "<td>" . "<input id=\"lensactive" . $value . "\" type=\"checkbox\" " . ($objLens->getLensPropertyFromId ( $value, 'lensactive' ) ? " checked=\"checked\" " : "") . " onclick=\"setactivation('lens'," . $value . ");\" />" . "</td>";
+				
+				echo "<td>" . "<span class=\"hidden\">" . $objLens->getLensPropertyFromId ( $value, 'lensactive' ) . "</span><input id=\"lensactive" . $value . "\" type=\"checkbox\" " . ($objLens->getLensPropertyFromId ( $value, 'lensactive' ) ? " checked=\"checked\" " : "") . " onclick=\"setactivation('lens'," . $value . ");;var order = this.checked ? '1' : '0'; $(this).prev().html(order);$(this).parents('table').trigger('update');\" />" . "</td>";
 				echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_lens&amp;lens=" . urlencode ( $value ) . "\">" . $name . "</a></td>";
 				echo "<td>" . $factor . "</td>";
 				// Make it possible to delete the lenses

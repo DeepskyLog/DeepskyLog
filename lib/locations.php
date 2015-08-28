@@ -199,7 +199,7 @@ class Locations {
 
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
-			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewActive . "</td>";
+			echo "<th>" . LangViewActive . "</td>";
 
 			echo "<th data-priority=\"critical\">" . LangViewLocationLocation . "</th>";
 			echo "<th>" . LangViewLocationWeatherPrediction . "</th>";
@@ -237,7 +237,8 @@ class Locations {
 					$sb = sprintf ( "%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude ( $limmag ) );
 				if ($value != "1") {
 					echo "<tr>";
-					echo "<td>" . "<input id=\"locationactive" . $value . "\" type=\"checkbox\" " . ($objLocation->getLocationPropertyFromId ( $value, 'locationactive' ) ? " checked=\"checked\" " : "") . " onclick=\"setactivation('location'," . $value . ");\" />" . "</td>";
+						
+					echo "<td>" . "<span class=\"hidden\">" . $objLocation->getLocationPropertyFromId ( $value, 'locationactive' ) . "</span><input id=\"locationactive" . $value . "\" type=\"checkbox\" " . ($objLocation->getLocationPropertyFromId ( $value, 'locationactive' ) ? " checked=\"checked\" " : "") . " onclick=\"setactivation('location'," . $value . ");var order = this.checked ? '1' : '0'; $(this).prev().html(order);$(this).parents('table').trigger('update');\" />" . "</td>";
 					echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_site&amp;location=" . urlencode ( $value ) . "\">" . $sitename . "</a></td>";
 					echo "<td><a href=\"http://clearoutside.com/forecast/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'latitude' ), 2 ) . "/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'longitude' ), 2 ) . "\">
 							  <img src=\"http://clearoutside.com/forecast_image_small/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'latitude' ), 2 ) . "/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'longitude' ), 2 ) . "/forecast.png\" /></a></td>";

@@ -60,7 +60,7 @@ class Eyepieces {
 
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
-			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewActive . "</td>";
+			echo "<th>" . LangViewActive . "</td>";
 			echo "<th data-priority=\"critical\">" . LangViewEyepieceName . "</th>";
 			echo "<th>" . LangViewEyepieceFocalLength . "</th>";
 			echo "<th>" . LangViewEyepieceMaxFocalLength . "</th>";
@@ -72,7 +72,7 @@ class Eyepieces {
 			while ( list ( $key, $value ) = each ( $eyeps ) ) {
 				$eyepiece = $objEyepiece->getEyepiecePropertiesFromId ( $value );
 				echo "<tr>";
-				echo "<td>" . "<input id=\"eyepieceactive" . $value . "\" type=\"checkbox\" " . ($eyepiece ['eyepieceactive'] ? " checked=\"checked\" " : "") . " onclick=\"setactivation('eyepiece'," . $value . ");\" />" . "</td>";
+				echo "<td>" . "<span class=\"hidden\">" . $eyepiece ['eyepieceactive'] . "</span><input id=\"eyepieceactive" . $value . "\" type=\"checkbox\" " . ($eyepiece ['eyepieceactive'] ? " checked=\"checked\" " : "") . " onclick=\"setactivation('eyepiece'," . $value . ");var order = this.checked ? '1' : '0'; $(this).prev().html(order);$(this).parents('table').trigger('update');\" />" . "</td>";
 				echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_eyepiece&amp;eyepiece=" . urlencode ( $value ) . "\">" . stripslashes ( $eyepiece ['name'] ) . "</a></td>";
 				echo "<td>" . $eyepiece ['focalLength'] . "</td>";
 				echo "<td>" . (($eyepiece ['maxFocalLength'] != - 1) ? $eyepiece ['maxFocalLength'] : "-") . "</td>";

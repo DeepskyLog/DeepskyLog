@@ -146,7 +146,7 @@ class Filters {
 
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
-			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewActive . "</th>";
+			echo "<th>" . LangViewActive . "</th>";
 			echo "<th data-priority=\"critical\">" . LangViewFilterName . "</th>";
 			echo "<th>" . LangViewFilterType . "</th>";
 			echo "<th>" . LangViewFilterColor . "</th>";
@@ -159,7 +159,8 @@ class Filters {
 			while ( list ( $key, $value ) = each ( $filts ) ) {
 				$filterProperties = $objFilter->getFilterPropertiesFromId ( $value );
 				echo "<tr>";
-				echo "<td>" . "<input id=\"filteractive" . $value . "\" type=\"checkbox\" " . ($filterProperties ['filteractive'] ? " checked=\"checked\" " : "") . " onclick=\"setactivation('filter'," . $value . ");\" />" . "</td>";
+						
+				echo "<td>" . "<span class=\"hidden\">" . $filterProperties ['filteractive'] . "</span><input id=\"filteractive" . $value . "\" type=\"checkbox\" " . ($filterProperties ['filteractive'] ? " checked=\"checked\" " : "") . " onclick=\"setactivation('filter'," . $value . ");var order = this.checked ? '1' : '0'; $(this).prev().html(order);$(this).parents('table').trigger('update');\" />" . "</td>";
 				echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_filter&amp;filter=" . urlencode ( $value ) . "\">" . stripslashes ( $filterProperties ['name'] ) . "</a></td>";
 				echo "<td>" . $objFilter->getEchoType ( $filterProperties ['type'] ) . "</td>";
 				echo "<td>" . $objFilter->getEchoColor ( $filterProperties ['color'] ) . "</td>";
