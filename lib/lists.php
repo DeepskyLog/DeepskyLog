@@ -139,6 +139,10 @@ class Lists {
 		global $listname, $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.observerid FROM observerobjectlist WHERE listname=\"" . $listname . "\" AND objectplace=0", 'observerid', '' );
 	}
+	public function getListOwnerName($listname, $observerId) {
+		global $objDatabase;
+		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.observerid FROM observerobjectlist WHERE listname=\"" . $listname . "\" AND objectplace=0 AND observerid=\"" . $observerId . "\"", 'observerid', '' );
+	}
 	public function getInPrivateLists($theobject) {
 		global $objDatabase, $loggedUser;
 		$result = '';
@@ -358,7 +362,7 @@ class Lists {
 	public function getObjectsFromList($theListname) {
 		global $objObject, $objDatabase, $loggedUser;
 		$obs = array ();
-		$sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " . "JOIN objects ON observerobjectlist.objectname = objects.name " . "WHERE listname = \"" . $theListname . "\" AND objectname <>\"\"";
+		$sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " . "JOIN objects ON observerobjectlist.objectname = objects.name " . "WHERE listname = \"" . $theListname . "\" AND objectname <>\"\" AND (observerobjectlist.observerid=\"" . $loggedUser . "\" OR observerobjectlist.public=\"1\")";
 		$run = $objDatabase->selectRecordset ( $sql );
 		while ( $get = $run->fetch ( PDO::FETCH_OBJ ) )
 			if (! in_array ( $get->objectname, $obs ))
@@ -440,6 +444,7 @@ class Lists {
 	}
 	public function renameList($nameFrom, $nameTo, $newPublic) {
 		global $loggedUser, $objDatabase, $myList, $objMessages, $objObserver, $baseURL;
+		$isMyList = $this->getListOwnerName($nameFrom, $loggedUser);
 		if ($loggedUser && $myList) {
 			// Send mail when we are creating a public list
 			$pos = $newPublic;
@@ -460,6 +465,7 @@ class Lists {
 				}
 			}
 			$objDatabase->execSQL ( "UPDATE observerobjectlist SET listname=\"" . $nameTo . "\" WHERE observerid=\"" . $loggedUser . "\" AND listname=\"" . $nameFrom . "\"" );
+			
 			if ($newPublic) {
 				$public = 1;
 			} else {

@@ -93,7 +93,7 @@ class Instruments {
 
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead>";
-			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewActive . "</td>";
+			echo "<th>" . LangViewActive . "</td>";
 
 			echo "<th data-priority=\"critical\">" . LangOverviewInstrumentsName . "</th>";
 			echo "<th>" . LangOverviewInstrumentsDiameter . "</th>";
@@ -114,7 +114,8 @@ class Instruments {
 				$type = $objInstrument->getInstrumentPropertyFromId ( $value, 'type' );
 				$fixedMagnification = $objInstrument->getInstrumentPropertyFromId ( $value, 'fixedMagnification' );
 				echo "<tr>";
-				echo "<td>" . "<input id=\"instrumentactive" . $value . "\" type=\"checkbox\" " . ($objInstrument->getInstrumentPropertyFromId ( $value, 'instrumentactive' ) ? " checked=\"checked\" " : "") . " onclick=\"setactivation('instrument'," . $value . ");\" />" . "</td>";
+				
+				echo "<td>" . "<span class=\"hidden\">" .  $objInstrument->getInstrumentPropertyFromId ( $value, 'instrumentactive' ) . "</span><input id=\"instrumentactive" . $value . "\" type=\"checkbox\" " . ($objInstrument->getInstrumentPropertyFromId ( $value, 'instrumentactive' ) ? " checked=\"checked\" " : "") . " onclick=\"setactivation('instrument'," . $value . ");var order = this.checked ? '1' : '0'; $(this).prev().html(order);$(this).parents('table').trigger('update');\" />" . "</td>";
 				if ($name == "Naked eye")
 					echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $value ) . "\">" . InstrumentsNakedEye . "</a></td>";
 				else
