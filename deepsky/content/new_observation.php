@@ -41,9 +41,9 @@ function new_observation() {
 	      }
 	      </script>";
 	
-	$eyeps = $objEyepiece->getSortedEyepieces ( "focalLength", $loggedUser, $activeSites );
-	$instruments = $objInstrument->getSortedInstruments ( "name", $loggedUser, $activeSites );
-	$lns = $objLens->getSortedLenses ( "name", $loggedUser, $activeSites );
+	$eyeps = $objEyepiece->getSortedEyepieces ( "focalLength", $loggedUser, "" );
+	$instruments = $objInstrument->getSortedInstruments ( "name", $loggedUser, "" );
+	$lns = $objLens->getSortedLenses ( "name", $loggedUser, "" );
 	
 	echo "<script type=\"text/javascript\">
 			var eyePieces = [";
