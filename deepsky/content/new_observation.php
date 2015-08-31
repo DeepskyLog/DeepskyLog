@@ -41,6 +41,77 @@ function new_observation() {
 	      }
 	      </script>";
 	
+	$eyeps = $objEyepiece->getSortedEyepieces ( "focalLength", $loggedUser, $activeSites );
+	$instruments = $objInstrument->getSortedInstruments ( "name", $loggedUser, $activeSites );
+	$lns = $objLens->getSortedLenses ( "name", $loggedUser, $activeSites );
+	
+	echo "<script type=\"text/javascript\">
+			var eyePieces = [";
+	$num_rows = count($eyeps);
+	$i = 0;
+	while ( list ( $key, $value ) = each ( $eyeps ) ){
+		$i++;
+		echo "{";
+		echo "\"id\" : \"".$objEyepiece->getEyepiecePropertyFromId ( $value, 'id' )."\",";
+		echo "\"focalLength\" : \"".$objEyepiece->getEyepiecePropertyFromId ( $value, 'focalLength' )."\"";
+		echo "}";
+		echo ($i < $num_rows) ? "," : "";
+		
+	}
+	echo "];";	
+
+	echo "var instruments = [";
+	$num_rows = count($instruments);
+	$i = 0;
+	while ( list ( $key, $value ) = each ( $instruments ) ){
+		$i++;
+		echo "{";
+		echo "\"id\" : \"". $objInstrument->getInstrumentPropertyFromId( $value, 'id' ) ."\",";
+		echo "\"diameter\" : \"". $objInstrument->getInstrumentPropertyFromId( $value, 'diameter' ) ."\",";
+		echo "\"fd\" : \"". $objInstrument->getInstrumentPropertyFromId( $value, 'fd' ) ."\",";	
+		echo "\"fixedMagnification\" : \"". $objInstrument->getInstrumentPropertyFromId( $value, 'fixedMagnification' ) ."\"";
+		echo "}";
+		echo ($i < $num_rows) ? "," : "";
+		
+	}
+	echo "];";	
+
+	echo "var lenses = [";
+	$num_rows = count($lns);
+	$i = 0;
+	while ( list ( $key, $value ) = each ( $lns ) ){
+		$i++;
+		echo "{";
+		echo "\"id\" : \"". $objLens->getLensPropertyFromId( $value, 'id' ) ."\",";
+		echo "\"factor\" : \"". $objLens->getLensPropertyFromId( $value, 'factor' ) ."\"";
+		echo "}";
+		echo ($i < $num_rows) ? "," : "";
+	
+	}
+	echo "];";
+					
+	echo"function fillMagnification(){
+			var instrument = $.grep(instruments, function(e){return e.id == $('#instrumentSelect').val()})[0];
+	       	var focalLengthInstrument = instrument.fd * instrument.diameter;
+			var eyepiece = $.grep(eyePieces, function(e){return e.id == $('#eyepieceSelect').val()})[0];
+			var lens = $.grep(lenses, function(e){return e.id == $('#lensSelect').val()})[0];
+			var magnification;
+			
+			if(eyepiece != null){
+				var magnification = focalLengthInstrument/eyepiece.focalLength;
+			}
+			if(lens != null){ 
+				magnification = magnification * lens.factor; 
+			}
+			if(instrument.fixedMagnification != 0){
+				magnification = instrument.fixedMagnification;
+			}
+			
+			magnification = Math.round(magnification * 10 ) / 10;
+			
+			$('#magnificationInput').val(magnification);
+	      }
+	      </script>";	
 	echo "<div id=\"main\">";
 	if (($observationid = $objUtil->checkGetKey ( 'observation' )) && ($objUtil->checkAdminOrUserID ( $objObservation->getDsObservationProperty ( $_GET ['observation'], 'observerid' ) )))
 		$object = $objObservation->getDsObservationProperty ( $observationid, 'objectname' );
@@ -126,9 +197,9 @@ function new_observation() {
 		$contentTime .= "<input type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" name=\"minutes\" value=\"" . $theMinute . "\" />&nbsp;&nbsp;";
 		// Instrument =====================================================================================================================================================================
 
-		$instr = $objInstrument->getSortedInstrumentsList ( "name", $loggedUser, $activeSites );
+		$instr = $objInstrument->getSortedInstrumentsList ( "name", $loggedUser, $activeSites );		
 		$theInstrument = (($observationid) ? $objObservation->getDsObservationProperty ( $observationid, 'instrumentid' ) : $objUtil->checkPostKey ( 'instrument', 0 ));
-		$contentInstrument = "<select name=\"instrument\" class=\"form-control\">";
+		$contentInstrument = "<select id=\"instrumentSelect\" onChange=\"fillMagnification();\" name=\"instrument\" class=\"form-control\">";
 		while ( list ( $key, $value ) = each ( $instr ) )
 			$contentInstrument .= "<option " . (($theInstrument == $key) ? "selected=\"selected\"" : '') . " value=\"" . $key . "\">" . $value . "</option>";
 		$contentInstrument .= "</select>&nbsp;";
@@ -157,7 +228,7 @@ function new_observation() {
 		// Eyepiece =====================================================================================================================================================================
 		$theEyepiece = (($observationid) ? $objObservation->getDsObservationProperty ( $observationid, 'eyepieceid' ) : $objUtil->checkPostKey ( 'eyepiece' ));
 		$eyeps = $objEyepiece->getSortedEyepieces ( "focalLength", $loggedUser, $activeSites );
-		$contentEyepiece = "<select name=\"eyepiece\" class=\"form-control\">";
+		$contentEyepiece = "<select id=\"eyepieceSelect\" onChange=\"fillMagnification();\" name=\"eyepiece\" class=\"form-control\">";
 		$contentEyepiece .= "<option value=\"\">-----</option>";
 		while ( list ( $key, $value ) = each ( $eyeps ) )
 			$contentEyepiece .= "<option value=\"" . $value . "\" " . (($value == $theEyepiece) ? " selected=\"selected\" " : '') . ">" . stripslashes ( $objEyepiece->getEyepiecePropertyFromId ( $value, 'name' ) ) . "</option>";
@@ -165,7 +236,7 @@ function new_observation() {
 		// Lens =====================================================================================================================================================================
 		$theLens = (($observationid) ? $objObservation->getDsObservationProperty ( $observationid, 'lensid' ) : $objUtil->checkPostKey ( 'lens' ));
 		$lns = $objLens->getSortedLenses ( "name", $loggedUser, $activeSites );
-		$contentLens = "<select name=\"lens\" class=\"form-control\">";
+		$contentLens = "<select id=\"lensSelect\" onChange=\"fillMagnification();\" name=\"lens\" class=\"form-control\">";
 		$contentLens .= "<option value=\"\">-----</option>";
 		while ( list ( $key, $value ) = each ( $lns ) )
 			$contentLens .= "<option value=\"" . $value . "\" " . (($value == $theLens) ? " selected=\"selected\" " : '') . ">" . stripslashes ( $objLens->getLensPropertyFromId ( $value, 'name' ) ) . "</option>";
@@ -180,7 +251,7 @@ function new_observation() {
 		$contentFilter .= "</select>&nbsp;";
 		// Magnification =====================================================================================================================================================================
 		$theMagnification = ($observationid ? $objObservation->getDsObservationProperty ( $observationid, 'magnification' ) : (($tempMag = $objUtil->checkPostKey ( 'magnification' )) ? sprintf ( "%2d", $tempMag ) : ''));
-		$contentMagnification = "<input type=\"number\" min=\"1\" step=\"0.01\" class=\"form-control\" maxlength=\"4\" name=\"magnification\" size=\"4\"  value=\"" . $theMagnification . "\" /> x";
+		$contentMagnification = "<input id=\"magnificationInput\" type=\"number\" min=\"1\" step=\"0.01\" class=\"form-control\" maxlength=\"4\" name=\"magnification\" size=\"4\"  value=\"" . $theMagnification . "\" /> x";
 		// Visibility =====================================================================================================================================================================
 		$theVisibility = ($observationid ? $objObservation->getDsObservationProperty ( $observationid, 'visibility' ) : $objUtil->checkPostKey ( 'visibility' ));
 		$contentVisibility = "<select name=\"visibility\" id=\"visibility\" class=\"form-control\">";
