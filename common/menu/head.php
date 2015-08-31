@@ -37,7 +37,7 @@ function head() {
         <script src=\"lib/javascript/widget-columnSelector.js\"></script>
         <script src=\"lib/javascript/widget-reorder.js\"></script>
 		<link href=\"styles/tablesorter.theme.bootstrap.css\" rel=\"stylesheet\">";
-	echo "<link href=\"" . $baseURL . "styles/deepskylog.css\" rel=\"stylesheet\" type=\"text/css\" />";
+	echo "<link href=\"" . $baseURL . "styles/deepskylog50.css\" rel=\"stylesheet\" type=\"text/css\" />";
 	
 	$TitleText = "";
 	$theDispatch = $objUtil->checkRequestKey ( 'indexAction' );
