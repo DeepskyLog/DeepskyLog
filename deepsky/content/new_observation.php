@@ -107,6 +107,8 @@ function new_observation() {
 				magnification = instrument.fixedMagnification;
 			}
 			
+			magnification = Math.round(magnification * 10 ) / 10;
+			
 			$('#magnificationInput').val(magnification);
 	      }
 	      </script>";	
