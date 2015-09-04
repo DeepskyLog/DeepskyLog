@@ -2877,7 +2877,7 @@ class Utils {
     size: 10,
 
     // Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
-    savePages : true,
+    savePages : false,
 
     //defines custom storage key
     storageKey:'tablesorter-pager',
