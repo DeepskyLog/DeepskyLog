@@ -137,9 +137,6 @@ function menu_moon()
 	echo "</p>";
 	if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))
 	{ echo "<table class=\"table table-condensed\">";
-	  echo "<tr>";
-	  echo "<th>".LangMoonNight."</th>"."<th>".LangFrom."</th>"."<th>".LangTo."</th>";
-	  echo "</tr>";
     if (isset($_SESSION['efemerides'])) {
 	    echo "<tr>";
 	    echo "<td>".LangMoon."</td>"."<td>".$_SESSION['efemerides']['moon0']."</td>"."<td>".$_SESSION['efemerides']['moon2']."</td>";
