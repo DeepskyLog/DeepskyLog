@@ -1,4 +1,4 @@
-<?php 
+<?php
 // moon.php
 // menu which shows the moon phase
 
@@ -44,7 +44,7 @@ function menu_moon()
 	  elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
 	    $dateTimeText0=substr($dateTimeText0,0,6);
 	}
-	
+
 	$moondata = phase(strtotime($date . ' ' . $time . ' ' . $tzone));
 	$MoonIllum  = $moondata[1];
 	$MoonAge    = $moondata[2];
@@ -52,19 +52,19 @@ function menu_moon()
 	$phases = array();
 	$phases = phasehunt(strtotime($date));
 	$nextNewMoonText.=date("j M", $phases[4]);
-	
+
 	// Convert $MoonIllum to percent and round to whole percent.
 	$MoonIllum = round( $MoonIllum, 2 );
 	$MoonIllum *= 100;
 	// 1) Check if logged in
-	if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) 
+	if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))
 	{ // 2) Get the julian day of today...
 	  $jd = gregoriantojd($theMonth, $theDay, $theYear);
 	  // 3) Get the standard location of the observer
 	  $longitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'longitude');
 	  $latitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'latitude');
 	  if((!($objUtil->checkSessionKey('efemerides'))) || ($_SESSION['efemerides']['base']!=$jd."/".$longitude."/".$latitude))
-	  { if ($longitude > -199) 
+	  { if ($longitude > -199)
 	    { $timezone=$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'),'timezone');
 	      $dateTimeZone=new DateTimeZone($timezone);
 	      $datestr=sprintf("%02d",$_SESSION['globalMonth'])."/".sprintf("%02d",$_SESSION['globalDay'])."/".$_SESSION['globalYear'];
@@ -72,7 +72,7 @@ function menu_moon()
 	      // Geeft tijdsverschil terug in seconden
 	      $timedifference = $dateTimeZone->getOffset($dateTime);
 	      $timedifference = $timedifference / 3600.0;
-	      if (strncmp($timezone, "Etc/GMT", 7)==0) 
+	      if (strncmp($timezone, "Etc/GMT", 7)==0)
 	        $timedifference = -$timedifference;
 	      // Calculate the rise and set time of the moon
 	      $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude, $timedifference);
@@ -81,32 +81,32 @@ function menu_moon()
 	      $timestr = $theYear . "-" . $theMonth . "-" . $theDay;
 	      $sun_info = date_sun_info(strtotime($timestr), $latitude, $longitude);
 	      $srise = $sun_info["sunrise"];
-	      if ($srise > 1) 
+	      if ($srise > 1)
 	        $srise = date("H:i", $srise + $timedifference * 60 * 60);
 	       else
 	        $srise = "-";
 	      $sset = $sun_info["sunset"];
 	      if ($sset > 1)
 	        $sset = date("H:i", $sset + $timedifference * 60 * 60);
-	      else 
+	      else
 	        $sset = "-";
 	      $nautb = $sun_info["nautical_twilight_begin"];
 	      if ($nautb > 1)
 	        $nautb = date("H:i", $nautb + $timedifference * 60 * 60);
-	      else 
+	      else
 	        $nautb = "-";
 	      $naute = $sun_info["nautical_twilight_end"];
-	      if ($naute > 1) 
+	      if ($naute > 1)
 	        $naute = date("H:i", $naute + $timedifference * 60 * 60);
-	      else 
+	      else
 	        $naute = "-";
 	      $astrob = $sun_info["astronomical_twilight_begin"];
 	      if ($astrob > 1)
 	        $astrob = date("H:i", $astrob + $timedifference * 60 * 60);
-	      else 
+	      else
 	        $astrob = "-";
 	      $astroe = $sun_info["astronomical_twilight_end"];
-	      if ($astroe > 1) 
+	      if ($astroe > 1)
 	        $astroe = date("H:i", $astroe + $timedifference * 60 * 60);
 	      else
 	        $astroe = "-";
@@ -118,9 +118,9 @@ function menu_moon()
 	      $_SESSION['efemerides']['srise']=$srise;
 	      $_SESSION['efemerides']['sset']=$sset;
 	      $_SESSION['efemerides']['moon0']=$moon[0];
-	      $_SESSION['efemerides']['moon2']=$moon[2];  
+	      $_SESSION['efemerides']['moon2']=$moon[2];
 	    }
-	  }     
+	  }
 	}
 
 	echo "<li>";
@@ -130,41 +130,35 @@ function menu_moon()
 	  if($key!="menuMoon")
 	    $link.="&amp;".$key."=".urlencode($value);
 	reset($_GET);
-	echo "<p>";
-	if($menuMoon=="collapsed")
-	  echo "<a href=\"".$baseURL."index.php?menuMoon=expanded".$link."\" title=\"".LangMenuExpand."\">+</a> ";
-	else
-	  echo "<a href=\"".$baseURL."index.php?menuMoon=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
+	echo "<p><br /><h4>";
 	echo (($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))?LangMoonSunMenuTitle:LangMoonMenuTitle)."<br />";
-	if($menuMoon!="collapsed")
-	  echo"<span style=\"font-weight:normal;\">".LangOn." ".$dateTimeText0."&gt;&lt;".$dateTimeText1."</span>";
+  echo "</h4>";
+	echo"<span style=\"font-weight:normal;\">".LangOn." ".$dateTimeText0."&gt;&lt;".$dateTimeText1."</span>";
 	echo "</p>";
-	if($menuMoon!="collapsed") 
-	{ if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) 
-	  { echo "<table class=\"table table-condensed\">";
+	if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))
+	{ echo "<table class=\"table table-condensed\">";
+	  echo "<tr>";
+	  echo "<th>".LangMoonNight."</th>"."<th>".LangFrom."</th>"."<th>".LangTo."</th>";
+	  echo "</tr>";
+    if (isset($_SESSION['efemerides'])) {
 	    echo "<tr>";
-	    echo "<th>".LangMoonNight."</th>"."<th>".LangFrom."</th>"."<th>".LangTo."</th>";
+	    echo "<td>".LangMoon."</td>"."<td>".$_SESSION['efemerides']['moon0']."</td>"."<td>".$_SESSION['efemerides']['moon2']."</td>";
 	    echo "</tr>";
-        if (isset($_SESSION['efemerides'])) {
-	      echo "<tr>";
-	      echo "<td>".LangMoon."</td>"."<td>".$_SESSION['efemerides']['moon0']."</td>"."<td>".$_SESSION['efemerides']['moon2']."</td>";
-	      echo "</tr>";
-	      echo "<tr>";
-	      echo "<td>".LangMoonSun."</td>"."<td>".$_SESSION['efemerides']['sset']."</td>"."<td>".$_SESSION['efemerides']['srise']."</td>";
-	      echo "</tr>";
-	      echo "<tr>";
-	      echo "<td>".LangMoonNaut."</td>"."<td>".$_SESSION['efemerides']['naute']."</td>"."<td>".$_SESSION['efemerides']['nautb']."</td>";
-	      echo "</tr>";
-	      echo "<tr>";
-	      echo "<td>".LangMoonAstro."</td>"."<td>".$_SESSION['efemerides']['astroe']."</td>"."<td>".$_SESSION['efemerides']['astrob']."</td>";
-	      echo "</tr>";
-        }
-	    echo "</table>";
-	  }
-	  $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
-	  echo "<p>".LangMoonMenuActualMoon."&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /></p>";
-	  echo $nextNewMoonText."<br />";
+	    echo "<tr>";
+	    echo "<td>".LangMoonSun."</td>"."<td>".$_SESSION['efemerides']['sset']."</td>"."<td>".$_SESSION['efemerides']['srise']."</td>";
+	    echo "</tr>";
+	    echo "<tr>";
+	    echo "<td>".LangMoonNaut."</td>"."<td>".$_SESSION['efemerides']['naute']."</td>"."<td>".$_SESSION['efemerides']['nautb']."</td>";
+	    echo "</tr>";
+	    echo "<tr>";
+	    echo "<td>".LangMoonAstro."</td>"."<td>".$_SESSION['efemerides']['astroe']."</td>"."<td>".$_SESSION['efemerides']['astrob']."</td>";
+	    echo "</tr>";
+    }
+	  echo "</table>";
 	}
+	$file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
+	echo "<p>".LangMoonMenuActualMoon."&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /></p>";
+	echo $nextNewMoonText."<br />";
 	echo "</li>";
 }
 ?>
