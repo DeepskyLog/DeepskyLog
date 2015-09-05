@@ -23,10 +23,11 @@ function menu_quickpick() {
 	echo "<input type=\"hidden\" name=\"source\"      value=\"quickpick\" />";
 	echo "<input type=\"hidden\" name=\"myLanguages\" value=\"true\" />";
 	echo "<input type=\"search\" class=\"form-control\" placeholder=\"M 45\" id=\"quickpickobject\" name=\"object\" title=\"" . LangQuickPickHelp . "\" value=\"" . ((array_key_exists ( 'object', $_GET ) && ($_GET ['object'] != '* ')) ? $_GET ['object'] : "") . "\" />";
-	echo "<div class=\"form group\"><input class=\"btn btn-default btn-sm\" type=\"submit\" name=\"searchObjectQuickPickQuickPick\" value=\"" . LangQuickPickSearchObject . "\" /></div>";
-	echo "<div class=\"form group\"><input class=\"btn btn-default btn-sm\" type=\"submit\" name=\"searchObservationsQuickPick\" value=\"" . LangQuickPickSearchObservations . "\" /></div>";
+	echo "<br /><br />";
+	echo "<div class=\"form group\"><input class=\"btn btn-default btn-block btn-sm\" type=\"submit\" name=\"searchObjectQuickPickQuickPick\" value=\"" . LangQuickPickSearchObject . "\" /></div>";
+	echo "<div class=\"form group\"><input class=\"btn btn-default btn-block btn-sm\" type=\"submit\" name=\"searchObservationsQuickPick\" value=\"" . LangQuickPickSearchObservations . "\" /></div>";
 	if ($loggedUser) {
-		echo "<div class=\"form group\"><input class=\"btn btn-default btn-sm\" type=\"submit\" name=\"newObservationQuickPick\" value=\"" . LangQuickPickNewObservation . "\" /></div>";
+		echo "<div class=\"form group\"><input class=\"btn btn-default btn-block btn-sm\" type=\"submit\" name=\"newObservationQuickPick\" value=\"" . LangQuickPickNewObservation . "\" /></div>";
 	}
 	echo "</form></li>";
 }
