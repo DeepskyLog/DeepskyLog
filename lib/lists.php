@@ -465,7 +465,7 @@ class Lists {
 				}
 			}
 			$objDatabase->execSQL ( "UPDATE observerobjectlist SET listname=\"" . $nameTo . "\" WHERE observerid=\"" . $loggedUser . "\" AND listname=\"" . $nameFrom . "\"" );
-			
+
 			if ($newPublic) {
 				$public = 1;
 			} else {
