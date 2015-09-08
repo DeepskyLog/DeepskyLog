@@ -1660,7 +1660,7 @@ class Objects {
 			echo "<th data-priority=\"6\" id=\"objecttransitorder\" class=\"columnSelector-false sorter-astrotime\">" . LangTransit . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectsetorder\" class=\"columnSelector-false sorter-astrotime\">" . LangMoonSet . "</th>";
 			echo "<th data-priority=\"5\" id=\"objectbestorder\" class=\"sorter-astrotime\">" . LangBest . "</th>";
-			echo "<th data-priority=\"6\" id=\"objectmaxaltitude\" class=\"sorter-degrees\">" . LangMaxAltitude . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectmaxaltitude\" class=\"string-max sorter-degrees\">" . LangMaxAltitude . "</th>";
 			echo "<th data-priority=\"3\" id=\"objectseen\">" . LangOverviewObjectsHeader7 . "</th>";
 			echo "<th data-priority=\"4\" id=\"objectlastseen\">" . LangOverviewObjectsHeader8 . "</th>";
 		}
@@ -1732,8 +1732,8 @@ class Objects {
 				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectrisepopup'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectrise'] . "</td>";
 				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objecttransitpopup'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objecttransit'] . "</td>";
 				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectsetpopup'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectset'] . "</td>";
-				echo "<td onmouseover=\"Tip('" . LangBest . ": " . substr ( $_SESSION ['Qobj'] [$count] ['objectbest'], 0, - 6 ) . "')\">" . $_SESSION ['Qobj'] [$count] ['objectbest'] . "</td>";
-				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectmaxaltitudepopup'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectmaxaltitude'] . "</td>";
+				echo "<td onmouseover=\"Tip('" . LangBest . ": " . $_SESSION ['Qobj'] [$count] ['objectbest'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectbest'] . "</td>";
+				echo "<td onmouseover=\"Tip('" . str_replace("'","\'",$_SESSION ['Qobj'] [$count] ['objectmaxaltitudepopup']) . "')\">" . $_SESSION ['Qobj'] [$count] ['objectmaxaltitude'] . "</td>";
 				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectseen'] . "')\"><span class=\"" . $seenclass . "\">" . $_SESSION ['Qobj'] [$count] ['objectseenlink'] . "</span></td>";
 				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectlastseen'] . "')\"><span class=\"" . $seenclass . "\">" . $_SESSION ['Qobj'] [$count] ['objectlastseenlink'] . "</span></td>";
 			}
@@ -1748,7 +1748,6 @@ class Objects {
 			$count ++;
 		}
 		echo "</tbody></table>";
-		echo "<table>";
 		$objUtil->addPager ( "nearobjectlist", $count );
 
 		if ($loggedUser) {
