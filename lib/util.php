@@ -2702,7 +2702,9 @@ class Utils {
                   // format your data for normalization
 				  s = s.replace('°', '.');
 				  s = s.replace(/[^0-9-.]/g, '');	
-
+				
+				  if(s == '-'){s = '0'};
+				
                   return s;
                 },
                 // set type, either numeric or text
