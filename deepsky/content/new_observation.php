@@ -9,7 +9,7 @@ else
 	new_observation ();
 function new_observation() {
 	global $baseURL, $loggedUser, $DSOcatalogs, $ClusterTypeA, $ClusterTypeB, $ClusterTypeC, $ClusterTypeD, $ClusterTypeE, $ClusterTypeF, $ClusterTypeG, $ClusterTypeH, $ClusterTypeI, $ClusterTypeX, $objObservation, $objObject, $objFilter, $objLens, $objEyepiece, $objLanguage, $objObserver, $objInstrument, $objLocation, $objPresentations, $objUtil;
-	
+
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/checkUtils.js\"></script>";
 	// Script to change the visibility when we are observing a resolved open cluster
 	echo "<script type=\"text/javascript\">
@@ -40,11 +40,11 @@ function new_observation() {
 	        }
 	      }
 	      </script>";
-	
+
 	$eyeps = $objEyepiece->getSortedEyepieces ( "focalLength", $loggedUser, "" );
 	$instruments = $objInstrument->getSortedInstruments ( "name", $loggedUser, "" );
 	$lns = $objLens->getSortedLenses ( "name", $loggedUser, "" );
-	
+
 	echo "<script type=\"text/javascript\">
 			var eyePieces = [";
 	$num_rows = count($eyeps);
@@ -56,9 +56,9 @@ function new_observation() {
 		echo "\"focalLength\" : \"".$objEyepiece->getEyepiecePropertyFromId ( $value, 'focalLength' )."\"";
 		echo "}";
 		echo ($i < $num_rows) ? "," : "";
-		
+
 	}
-	echo "];";	
+	echo "];";
 
 	echo "var instruments = [";
 	$num_rows = count($instruments);
@@ -68,13 +68,13 @@ function new_observation() {
 		echo "{";
 		echo "\"id\" : \"". $objInstrument->getInstrumentPropertyFromId( $value, 'id' ) ."\",";
 		echo "\"diameter\" : \"". $objInstrument->getInstrumentPropertyFromId( $value, 'diameter' ) ."\",";
-		echo "\"fd\" : \"". $objInstrument->getInstrumentPropertyFromId( $value, 'fd' ) ."\",";	
+		echo "\"fd\" : \"". $objInstrument->getInstrumentPropertyFromId( $value, 'fd' ) ."\",";
 		echo "\"fixedMagnification\" : \"". $objInstrument->getInstrumentPropertyFromId( $value, 'fixedMagnification' ) ."\"";
 		echo "}";
 		echo ($i < $num_rows) ? "," : "";
-		
+
 	}
-	echo "];";	
+	echo "];";
 
 	echo "var lenses = [";
 	$num_rows = count($lns);
@@ -86,32 +86,32 @@ function new_observation() {
 		echo "\"factor\" : \"". $objLens->getLensPropertyFromId( $value, 'factor' ) ."\"";
 		echo "}";
 		echo ($i < $num_rows) ? "," : "";
-	
+
 	}
 	echo "];";
-					
+
 	echo"function fillMagnification(){
 			var instrument = $.grep(instruments, function(e){return e.id == $('#instrumentSelect').val()})[0];
 	       	var focalLengthInstrument = instrument.fd * instrument.diameter;
 			var eyepiece = $.grep(eyePieces, function(e){return e.id == $('#eyepieceSelect').val()})[0];
 			var lens = $.grep(lenses, function(e){return e.id == $('#lensSelect').val()})[0];
 			var magnification;
-			
+
 			if(eyepiece != null){
 				var magnification = focalLengthInstrument/eyepiece.focalLength;
 			}
-			if(lens != null){ 
-				magnification = magnification * lens.factor; 
+			if(lens != null){
+				magnification = magnification * lens.factor;
 			}
 			if(instrument.fixedMagnification != 0){
 				magnification = instrument.fixedMagnification;
 			}
-			
+
 			magnification = Math.round(magnification * 10 ) / 10;
-			
+
 			$('#magnificationInput').val(magnification);
 	      }
-	      </script>";	
+	      </script>";
 	echo "<div id=\"main\">";
 	if (($observationid = $objUtil->checkGetKey ( 'observation' )) && ($objUtil->checkAdminOrUserID ( $objObservation->getDsObservationProperty ( $_GET ['observation'], 'observerid' ) )))
 		$object = $objObservation->getDsObservationProperty ( $observationid, 'objectname' );
@@ -197,7 +197,7 @@ function new_observation() {
 		$contentTime .= "<input type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" name=\"minutes\" value=\"" . $theMinute . "\" />&nbsp;&nbsp;";
 		// Instrument =====================================================================================================================================================================
 
-		$instr = $objInstrument->getSortedInstrumentsList ( "name", $loggedUser, $activeSites );		
+		$instr = $objInstrument->getSortedInstrumentsList ( "name", $loggedUser, $activeSites );
 		$theInstrument = (($observationid) ? $objObservation->getDsObservationProperty ( $observationid, 'instrumentid' ) : $objUtil->checkPostKey ( 'instrument', 0 ));
 		$contentInstrument = "<select id=\"instrumentSelect\" onChange=\"fillMagnification();\" name=\"instrument\" class=\"form-control\">";
 		while ( list ( $key, $value ) = each ( $instr ) )
@@ -302,10 +302,10 @@ function new_observation() {
 				"AA3STAR",
 				"AA4STAR",
 				"AA8STAR",
-				"GLOCL" 
+				"GLOCL"
 		) )) {
 			if (in_array ( $objObject->getDsoProperty ( $object, 'type' ), array (
-					"OPNCL" 
+					"OPNCL"
 			) )) {
 				$opn = true;
 			} else {
@@ -316,7 +316,7 @@ function new_observation() {
 			$contentMisc2 .= "<input type=\"checkbox\" name=\"partlyUnresolved\" />" . LangViewObservationField42 . "&nbsp;";
 			$contentMisc2 .= "<input type=\"checkbox\" name=\"colorContrasts\" />" . LangViewObservationField43;
 			if ($objObject->getDsoProperty ( $object, 'type' ) != "GLOCL") {
-				$contentMisc3 .= "<a href=\"http://redmine.deepskylog.org/projects/deepskylog/wiki/CharacterType" . $objObserver->getObserverProperty ( $loggedUser, 'language' ) . "\" rel=\"external\" title=\"" . LangViewObservationField40Expl . "\" >" . LangViewObservationField40 . "</a>";
+				$contentMisc3 .= "<a href=\"" . OpenClustersLink . "\" rel=\"external\" title=\"" . LangViewObservationField40Expl . "\" >" . LangViewObservationField40 . "</a>";
 				$theClustertype = ($observationid ? $objObservation->getDsObservationProperty ( $observationid, 'clusterType' ) : $objUtil->checkPostKey ( 'clusterType' ));
 				$contentMisc4 = "<select class=\"form-control\" name=\"clusterType\" class=\"form-control\">";
 				$contentMisc4 .= "<option value=\"\">-----</option>";
@@ -334,7 +334,7 @@ function new_observation() {
 			}
 		} else if (in_array ( $objObject->getDsoProperty ( $object, 'type' ), array (
 				"DS",
-				"AA2STAR" 
+				"AA2STAR"
 		) )) {
 			$contentMisc2 .= "<input type=\"checkbox\" name=\"equalBrightness\" />" . LangDetailDS1 . "&nbsp;";
 			$contentMisc2 .= "<input type=\"checkbox\" name=\"niceField\" />" . LangDetailDS2;
@@ -350,7 +350,7 @@ function new_observation() {
 				$contentMisc4 .= "<option value=\"5\"" . (($theComponent1Color == '5') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor5 . "</option>";
 				$contentMisc4 .= "<option value=\"6\"" . (($theComponent1Color == '6') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor6 . "</option>";
 				$contentMisc4 .= "</select>&nbsp;";
-				
+
 				$contentMisc4 .= "&nbsp;" . LangDetailDS4 . "&nbsp;";
 				$theComponent2Color = ($observationid ? $objObservation->getDsObservationProperty ( $observationid, 'component2' ) : $objUtil->checkPostKey ( 'component2' ));
 				$contentMisc4 .= "<select name=\"component2\" class=\"form-control\">";
@@ -371,95 +371,95 @@ function new_observation() {
 		echo $contentLoc;
 		echo "</div>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField5 . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $contentDate;
 		echo "</div>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
 	               <label>" . (($objObserver->getObserverProperty ( $loggedUser, 'UT' )) ? LangViewObservationField9 : LangViewObservationField9lt) . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $contentTime . LangViewObservationField11;
 		echo "</div>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
 	               <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_instrument\" title=\"" . LangChangeAccountField8Expl . "\" >" . LangViewObservationField3 . "</a></label>";
 		echo "<div class=\"form-inline\">";
 		echo $contentInstrument;
 		echo "</div>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField8 . "</label>";
 		echo $contentDescription;
 		echo "<span class=\"help-block\">" . "<a href=\"http://www.distant-targets.be/beschrijven\" rel=\"external\">" . LangViewObservationFieldHelpDescription . "</a>" . "</span>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField12 . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo "<input type=\"file\" name=\"drawing\" />";
 		echo "</div>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField29 . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $contentLanguage;
 		echo "</div>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField6 . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $contentSeeing;
 		echo "</div>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField7 . " / " . LangViewObservationField34 . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $contentLM . " / " . $contentSQM;
 		echo "</div>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
 	               <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_eyepiece\" title=\"" . LangViewObservationField30Expl . "\">" . LangViewObservationField30 . "</a></label>";
 		echo "<div class=\"form-inline\">";
 		echo $contentEyepiece;
 		echo "</div>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
 				<label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_lens\" title=\"" . LangViewObservationField32Expl . "\" >" . LangViewObservationField32 . "</a></label>";
 		echo "<div class=\"form-inline\">";
 		echo $contentLens;
 		echo "</div>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
 				<label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_filter\" title=\"" . LangViewObservationField31Expl . "\" >" . LangViewObservationField31 . "</a></label>";
-		
+
 		echo "<div class=\"form-inline\">";
 		echo $contentFilter;
 		echo "</div>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField39 . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $contentMagnification;
 		echo "</div>";
 		echo "</div>";
-		
+
 		// Check if we are observing a double star. If it is the case, us VisibilityDs
 		if (in_array ( $objObject->getDsoProperty ( $object, 'type' ), array (
 				"DS",
-				"AA2STAR" 
+				"AA2STAR"
 		) )) {
 			echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField22 . "</label>";
@@ -467,7 +467,7 @@ function new_observation() {
 			echo $contentVisibilityDs;
 			echo "</div>";
 			echo "</div>";
-			
+
 			echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField33 . "</label>";
 			echo "<div class=\"form-inline\">";
@@ -481,7 +481,7 @@ function new_observation() {
 			echo $contentVisibility;
 			echo "</div>";
 			echo "</div>";
-			
+
 			echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField33 . "</label>";
 			echo "<div class=\"form-inline\">";
@@ -494,14 +494,14 @@ function new_observation() {
 		echo $contentMisc1 . $contentMisc2;
 		echo "</div>";
 		echo "</div>";
-		
+
 		echo "<div class=\"form-group\">
                <label>" . $contentMisc3 . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $contentMisc4;
 		echo "</div>";
 		echo "</div>";
-		
+
 		if ($observationid) {
 			$content = "<input class=\"btn btn-primary pull-right\" type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />&nbsp;";
 			echo $content;
@@ -509,13 +509,13 @@ function new_observation() {
 			$content = "<input class=\"btn btn-primary pull-right\" type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
 			echo $content;
 		}
-		
+
 		echo "</div>";
 		echo "</div></form>";
-		
+
 		echo "<hr />";
 		$seen = $objObject->getDSOseenLink ( $object );
-		
+
 		echo "<h4>" . LangViewObjectTitle . "&nbsp;" . $object . "&nbsp;:&nbsp;" . $seen . "</h4>";
 		echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
 		echo $objPresentations->getDSSDeepskyLiveLinks2 ( $object );
