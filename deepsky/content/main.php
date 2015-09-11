@@ -16,7 +16,7 @@ if (! $loggedUser) {
 echo "<div class=\"row\">";
 echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObservationsQuickPick=Zoek�waarnemingen\">";
-echo "    <img src=\"" . $baseURL . "images/findObservation.png\">";
+echo "    <img title=\"" . LangSearchMenuItem3 . "\" src=\"" . $baseURL . "images/findObservation.png\">";
 echo "    <div class=\"caption\">";
 echo "     <h4 class=\"text-center\">" . LangSearchMenuItem3 . "</h4>";
 echo "    </div>";
@@ -25,7 +25,7 @@ echo " </div>";
 // Add icon for 'Search objects'
 echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObjectQuickPickQuickPick=Zoek%C2%A0object\">";
-echo "    <img src=\"" . $baseURL . "images/findObject.png\">";
+echo "    <img title=\"" . LangSearchMenuItem5 . "\" src=\"" . $baseURL . "images/findObject.png\">";
 echo "    <div class=\"caption\">";
 echo "     <h4 class=\"text-center\">" . LangSearchMenuItem5 . "</h4>";
 echo "    </div>";
@@ -39,7 +39,7 @@ $lastMinYear = substr ( $theDate, 0, 4 );
 $lastMinMonth = substr ( $theDate, 4, 2 );
 $lastMinDay = substr ( $theDate, 6, 2 );
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay&amp;newobservations=true\">";
-echo "    <img src=\"" . $baseURL . "images/new_badge.png\">";
+echo "    <img title=\"" . LangSearchMenuItem9 . "\" src=\"" . $baseURL . "images/new_badge.png\">";
 echo "    <div class=\"caption\">";
 echo "     <h4 class=\"text-center\">" . LangSearchMenuItem9 . "</h4>";
 echo "    </div>";
@@ -48,7 +48,7 @@ echo " </div>";
 // Add icon for 'Download atlases'
 echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=view_atlaspages\">";
-echo "    <img src=\"" . $baseURL . "images/downloadAtlas.png\">";
+echo "    <img title=\"" . LangDownloadAtlasses . "\" src=\"" . $baseURL . "images/downloadAtlas.png\">";
 echo "    <div class=\"caption\">";
 echo "     <h4 class=\"text-center\">" . LangDownloadAtlasses . "</h4>";
 echo "    </div>";
@@ -58,7 +58,7 @@ if ($loggedUser) {
     // Add icon for 'Add observation'
 	echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 	echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming\">";
-	echo "    <img src=\"" . $baseURL . "images/pencil.png\">";
+	echo "    <img title=\"" . LangViewObservationButton1 . "\" src=\"" . $baseURL . "images/pencil.png\">";
 	echo "    <div class=\"caption\">";
 	echo "     <h4 class=\"text-center\">" . LangViewObservationButton1 . "</h4>";
 	echo "    </div>";
@@ -68,7 +68,7 @@ if ($loggedUser) {
 	// Add icon for 'Create list'
 	echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 	echo "   <a class=\"thumbnail thumbnail-no-border\" data-toggle=\"modal\" data-target=\"#addList\">";
-	echo "    <img src=\"" . $baseURL . "images/clipboard.png\">";
+	echo "    <img title=\"" . LangAddList . "\" src=\"" . $baseURL . "images/clipboard.png\">";
 	echo "    <div class=\"caption\">";
 	echo "     <h4 class=\"text-center\">" . LangAddList . "</h4>";
 	echo "    </div>";
