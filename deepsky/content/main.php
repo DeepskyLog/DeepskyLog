@@ -1,10 +1,17 @@
 <?php
 global $baseURL, $objObservations, $objObserver, $objUtil;
 
-echo "<div class=\"container-fluid\">
-		<a title=\"" . LangWhatsNew . "\" href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog\">
-		  <img class=\"img-responsive img-rounded\" src=\"" . $baseURL . "images/logo.png\">
+echo "<div class=\"container-fluid\">";
+    if ($loggedUser) {
+			// TODO: Check if the version in the database is the same as the version of DeepskyLog. If not, we show the logo.
+		  echo "<a title=\"" . LangWhatsNew . LangSinceVersion . $objObserver->getLastVersion($loggedUser) . " \" href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog\">";
+			echo "<img class=\"img-responsive img-rounded\" src=\"" . $baseURL . "images/logo.png\">
 		</a>";
+		} else {
+			echo "<a title=\"" . LangWhatsNew . " \" href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog\">";
+			echo "<img class=\"img-responsive img-rounded\" src=\"" . $baseURL . "images/logo.png\">
+		</a>";
+		}
 echo "</div>";
 echo "<br />";
 

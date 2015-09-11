@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangSinceVersion", " sinds versie ");
 define("LangWhatsNew", "Nieuw in DeepskyLog");
 define("LangMakePrivate", "Maak privaat");
 define("LangMakePublic", "Maak publiek");
