@@ -768,6 +768,7 @@ define("LangMenuExpand"																		,"Menu uitplooien");
 define("LangMenuCollapse"																	,"Menu samenplooien");
 
 define("DreyerDescriptionLink"														,"https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-beschrijvingen");
+define("OpenClustersLink"                                 ,"https://github.com/DeepskyLog/DeepskyLog/wiki/Types-van-open-clusters");
 
 define("LangYouAreHere"																		,"U bevindt zich hier:");
 define("LangHome"																					,"Home");
