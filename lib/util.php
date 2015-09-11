@@ -2700,11 +2700,12 @@ class Utils {
                 },
                 format: function(s, table, cell, cellIndex) {
                   // format your data for normalization
-				  s = s.replace(/\(|\'\)/g, '');
-
-                  var degrees = s.split(\"°\");
-				  var minutes = degrees[1];
-                  return \"\" + degrees[0] + minutes;
+				  s = s.replace('°', '.');
+				  s = s.replace(/[^0-9-.]/g, '');	
+				
+				  if(s == '-'){s = '0'};
+				
+                  return s;
                 },
                 // set type, either numeric or text
                 type: 'numeric'

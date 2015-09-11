@@ -13,7 +13,7 @@ else
 	menu_list ();
 function menu_list() {
 	global $baseURL, $loggedUser, $myList, $objDatabase, $objList;
-	echo "<form class=\"nav navbar-nav form-inline\">";
+	echo "<form id=\"listsSelectForm\" class=\"nav navbar-nav form-inline\">";
 	echo "<div class=\"form-group\">";
 	echo "<p class=\"navbar-text\">" . LangListsTitle;
 	if ($loggedUser)

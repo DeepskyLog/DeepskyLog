@@ -408,6 +408,7 @@ table.tablesorter tr.type2 td {
   border-style     : solid;
   border-width     : 1px;
   padding          : 2px;
+  margin-right	   : 5px;
 }
 .view_catalogs_right {
   background-color : #FFFFFF;
@@ -458,5 +459,22 @@ table.tablesorter tr.type2 td {
         border: 1px solid #333;
         margin-top: 0.6em;
 }
+#datepicker{
+		text-align:center;
+}
 
 .img-responsive { width:100%; }
+
+@media (max-width: 1100px){ #listsSelectForm .form-group .form-control{
+		width: 100px
+		} 
+}
+
+@media (max-width: 767px){ #listsSelectForm .form-group .form-control{
+		width: 100%
+		} 
+}
+
+.tablesorter-pager {
+	font-size: 18px;	
+}
