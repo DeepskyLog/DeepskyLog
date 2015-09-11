@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("LangWhatsNew", "What's new in DeepskyLog");
 define("LangMakePrivate", "Make private");
 define("LangMakePublic", "Make public");
 define("LangNewList", "Add new list");
