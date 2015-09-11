@@ -1,12 +1,15 @@
 <?php
-global $baseURL, $objObservations, $objObserver, $objUtil;
+global $baseURL, $objDatabase, $objObservations, $objObserver, $objUtil, $versionInfo;
 
 echo "<div class=\"container-fluid\">";
     if ($loggedUser) {
-			// TODO: Check if the version in the database is the same as the version of DeepskyLog. If not, we show the logo.
-		  echo "<a title=\"" . LangWhatsNew . LangSinceVersion . $objObserver->getLastVersion($loggedUser) . " \" href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog\">";
-			echo "<img class=\"img-responsive img-rounded\" src=\"" . $baseURL . "images/logo.png\">
-		</a>";
+			// Check if the version in the database is the same as the version of DeepskyLog. If not, we show the logo.
+			if ($objObserver->getLastVersion($loggedUser) != $versionInfo) {
+		  	echo "<a title=\"" . LangWhatsNew . LangSinceVersion . $objObserver->getLastVersion($loggedUser) . " \" href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog\">";
+				echo "<img class=\"img-responsive img-rounded\" src=\"" . $baseURL . "images/logo.png\">
+				</a>";
+				$objDatabase->execSQL ( "UPDATE observers SET version=\"" . $versionInfo . "\" WHERE id=\"" . $loggedUser . "\"" );
+			}
 		} else {
 			echo "<a title=\"" . LangWhatsNew . " \" href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog\">";
 			echo "<img class=\"img-responsive img-rounded\" src=\"" . $baseURL . "images/logo.png\">
