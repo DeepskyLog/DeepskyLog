@@ -787,7 +787,7 @@ define("LangCounter"																			,"Z&auml;hler");
 define("LangMenuExpand"																		,"Menu aufklappen");
 define("LangMenuCollapse"																	,"Menu zusammenklappen");
 
-define("DreyerDescriptionLink"														,"https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions);
+define("DreyerDescriptionLink"														,"https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions");
 define("OpenClustersLink"                                 ,"https://github.com/DeepskyLog/DeepskyLog/wiki/Sternhaufen");
 
 define("LangYouAreHere"																		,"Sie sind hier:");
