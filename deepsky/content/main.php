@@ -2,7 +2,9 @@
 global $baseURL, $objObservations, $objObserver, $objUtil;
 
 echo "<div class=\"container-fluid\">
-		<img class=\"img-responsive img-rounded\" src=\"" . $baseURL . "images/logo.png\">";
+		<a title=\"" . LangWhatsNew . "\" href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog\">
+		  <img class=\"img-responsive img-rounded\" src=\"" . $baseURL . "images/logo.png\">
+		</a>";
 echo "</div>";
 echo "<br />";
 
