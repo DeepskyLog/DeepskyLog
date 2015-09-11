@@ -442,7 +442,7 @@ define("Langpdfseriesclickok"   ,'Dr&uuml;cken Sie "Ok", nur wenn ');
 define("Langpdfserieswhenfinished",' Sie wirklich fertig sind!');
 define("LangpdfseriesGenerating",'Generiere ');
 define("Langpdfserieschoselayout","Bitte w&auml;hlen Sie ein Layout f&uuml;r den Index.");
- 
+
 define("LangStoredQueries"      ,"Gespeicherte Abfragen:");
 define("LangSaveAs"             ,"Speichern als...");
 define("LangRemoveQuery"        ,"Entfernen");
@@ -787,7 +787,7 @@ define("LangCounter"																			,"Z&auml;hler");
 define("LangMenuExpand"																		,"Menu aufklappen");
 define("LangMenuCollapse"																	,"Menu zusammenklappen");
 
-define("DreyerDescriptionLink"														,"http://redmine.deepskylog.org/projects/deepskylog/wiki/DreyerDescriptionen");
+define("DreyerDescriptionLink"														,"https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions);
 
 define("LangYouAreHere"																		,"Sie sind hier:");
 define("LangHome"																					,"Startseite");
@@ -1266,7 +1266,7 @@ define("LangExecuteQueryObjectsMessage10"									,"&lt;OAL&gt;");
 define("LangExecuteQueryObjectsMessage11"	  							,"Maps");
 define("LangInvalidCSVfile"																,"Sie haben keine g&uuml;ltige CSV Datei angegeben!");
 define("LangSeenDontCare"																	,"Egal");                                                          // TO TRANSLATE: should be:  All objects, seen or not
-define("LangSeenByMe"																			,"Bereits von mir beobachtet");                                    // TO TRANSLATE: should be: Only objects that have been seen by me    
+define("LangSeenByMe"																			,"Bereits von mir beobachtet");                                    // TO TRANSLATE: should be: Only objects that have been seen by me
 define("LangDrawnByMe"																	  ,"Bereits von mir drawn");                                         // TO TRANSLATE: should be: Only objects that have been dawn by me
 define("LangSeenSomeoneElse"															,"Bereits von Anderen beobachtet, aber nicht bei mir");
 define("LangSeenByMeOrSomeoneElse"												,"Bereits beobachtet");                                            // TO TRANSLATE: should be: Only objects that have been seen
