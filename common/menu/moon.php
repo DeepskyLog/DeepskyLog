@@ -154,7 +154,7 @@ function menu_moon()
 	  echo "</table>";
 	}
 	$file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
-	echo "<p>".LangMoonMenuActualMoon."&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" title=\"" . $MoonIllum . "%\" height=\"100\%\" width=\"100\%\" alt=\"" . $MoonIllum . "%\" /></p>";
+	echo "<p><img src=\"".$baseURL."/lib/moonpics/" . $file . "\" title=\"" . $MoonIllum . "%\" height=\"100\%\" width=\"100\%\" alt=\"" . $MoonIllum . "%\" /></p>";
 	echo $nextNewMoonText."<br />";
 	echo "</li>";
 }
