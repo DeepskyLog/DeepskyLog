@@ -491,4 +491,5 @@ table.tablesorter tr.type2 td {
 
 .second-navbar{
   top:50px;
+  z-index: 2;
 }
