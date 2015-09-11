@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("LangWhatsNew", "What's new in DeepskyLog");
 define("LangMakePrivate", "Make private");
 define("LangMakePublic", "Make public");
 define("LangNewList", "Add new list");
@@ -455,7 +456,7 @@ define("ReportMoonUp",           'Lever lune: ');
 
 define("ReportPreparedForDate"    ," pour les observations du ");
 
-define("ReportLink"               ,"Rapport"); 
+define("ReportLink"               ,"Rapport");
 define("ReportQueryOfObjects"     ,"aper&ccedil;u des objets");
 
 define("ReportTitle"              ,"Mises en page pour ");
@@ -580,7 +581,7 @@ define('DetailChart'                                     ,'D&eacute;tail');
 define('atlasPageFoV'                                    ,'Champ de vue:');
 define('atlasPageDSLM'                                   ,"Objets jusqu'&agrave; mag.:");
 define('atlasPageStarLM'                                 ,"Etoiles jusqu'&agrave; mag:");
-            
+
 
 define("LangShowObjectDetails"                            ,"Montrer del d&eacute;tails de l'objet");
 define("LangHideObjectDetails"                            ,"Cacher les d&eacute;tails de l'objet");
@@ -740,7 +741,8 @@ define("LangCounter"																			,"Compteur");
 define("LangMenuExpand"																		,"D&eacute;rouler le menu");
 define("LangMenuCollapse"																	,"Plier le menu");
 
-define("DreyerDescriptionLink"														,"http://redmine.deepskylog.org/projects/deepskylog/wiki/DreyerDescriptionen");
+define("DreyerDescriptionLink"														,"https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions");
+define("OpenClustersLink"                                 ,"https://github.com/DeepskyLog/DeepskyLog/wiki/Open-Cluster-types");
 
 define("LangYouAreHere"																		,"Vous &ecirc;tes ici:");
 define("LangHome"																					,"Acceuil");
@@ -811,7 +813,7 @@ define("LangDrawing"																			,"dessin");
 define("LangRegisterTitle"																,"Confirmation de l'enregistrement");
 define("LangRegisterNotify"																,"Merci, vos donn&eacute;es ont &eacute;t&eacute; envoy&eacute;es &agrave; l'administrateur.<br />Vous allez recevoir un email pour confirmer votre demande.");
 
-// Google Maps 
+// Google Maps
 
 define("LangGooglemaps"																		,"Cliquez sur la carte pour voir l'endroit en Google Maps");
 
@@ -837,7 +839,7 @@ define("LangToListEmpty"																	,"Vider la liste");
 define("LangToListMyLists"																,"Mes listes: ");
 define("LangToListMyListsView"														,"Consulter");
 define("LangToListMyListsRemove"													,"Enlever la liste");
-define("LangToListMyListsAddLongestObsDescription"				,"Rajouter une observation (la plus longue)");                                
+define("LangToListMyListsAddLongestObsDescription"				,"Rajouter une observation (la plus longue)");
 define("LangToListMyListsAddedLongestObsDescription"		  ,"Les observations sont rajout&eacute;s (les plus longues)");
 define("LangToListMyListsRemoveObsDescription"		     		,"Enlever les observations");
 define("LangToListMyListsRemovedObsDescription"		        ,"Les observations sont enlev&eacute;es");
@@ -905,15 +907,15 @@ define("LangEditObjectDescription"												,"Adapter la description");
 define("LangChangeAccountField1"													,"Nom de l'utilisateur");
 define("LangChangeAccountField1Expl"											,"C'est par ce nom que vous pouvez rentrer en Deepskylog");
 define("LangChangeAccountField2"													,"Adresse &eacute;mail");
-define("LangChangeAccountField2Expl"											,"Votre adresse &eacute;mail n'est sera pas communiqu&eacute;e aux autres"); 
+define("LangChangeAccountField2Expl"											,"Votre adresse &eacute;mail n'est sera pas communiqu&eacute;e aux autres");
 define("LangChangeAccountField3"													,"Pr&eacute;nom");
-define("LangChangeAccountField3Expl"											,""); 
+define("LangChangeAccountField3Expl"											,"");
 define("LangChangeAccountField4"													,"Nom de famille");
 define("LangChangeAccountField4Expl"											,"");
 define("LangChangeAccountField5"													,"Mot de passe");
 define("LangChangeAccountField5Expl"											,"Ceci n'est pas le mot de passe de votre fournisseur d'internet");
 define("LangChangeAccountField6"													,"Confirmation de votre mot de passe");
-define("LangChangeAccountField6Expl"											,"");                                      
+define("LangChangeAccountField6Expl"											,"");
 define("LangChangeAccountField7"													,"Endroit standard d'observation");
 define("LangChangeAccountField7Expl"											,"Rajoutez un nouvel endroit");
 define("LangChangeAccountField8"													,"Instrument standard");
@@ -991,15 +993,15 @@ define("LangAddEyepieceExisting"													,"S&eacute;lectionnez les donn&eacu
 define("LangAddEyepieceManually"													,"specifiez manuellement les d&eacute;tails de l'oculaire");
 define("LangAddEyepieceTitle"															,"Rajoutez un novel oculaire");
 define("LangAddEyepieceField1"														,"Nom");
-define("LangAddEyepieceField1Expl"												,"(ex Televue 31mm Nagler)"); 
+define("LangAddEyepieceField1Expl"												,"(ex Televue 31mm Nagler)");
 define("LangAddEyepieceField2"														,"Distance focal (mm)");
-define("LangAddEyepieceField2Expl"												,"ex 31"); 
+define("LangAddEyepieceField2Expl"												,"ex 31");
 define("LangAddEyepieceField3"														,"Champs apparent (en &deg;)");
-define("LangAddEyepieceField3Expl"												,"ex 82"); 
+define("LangAddEyepieceField3Expl"												,"ex 82");
 define("LangAddEyepieceField4"														,"Longeur focal maximum (en mm)");
-define("LangAddEyepieceField4Expl"												,"Uniquement pour oculaires zoom"); 
-define("LangAddEyepieceButton"														,"Rajoutez oculaire"); 
-define("LangAddEyepieceButton2"														,"Modifiez oculaire"); 
+define("LangAddEyepieceField4Expl"												,"Uniquement pour oculaires zoom");
+define("LangAddEyepieceButton"														,"Rajoutez oculaire");
+define("LangAddEyepieceButton2"														,"Modifiez oculaire");
 define("LangDetailEyepiece"                               ,"D&#233;tails de l'oculaire");
 
 define("LangOverviewLensTitle"														,"Lentilles Barlow de");
@@ -1033,7 +1035,7 @@ define("LangAddFilterTitle"																,"Rajoutez un nouveau filtre");
 define("LangAddFilterExisting"														,"rajoutez un filtre existant");
 define("LangAddFilterFieldManually"												,"Specifiez manuellement les d&eacute;tails du filtre");
 define("LangAddFilterField1"															,"Nom");
-define("LangAddFilterField1Expl"													,"(ex Lumicon O-III)"); 
+define("LangAddFilterField1Expl"													,"(ex Lumicon O-III)");
 define("LangAddFilterField2"															,"Type");
 define("LangAddFilterField3"															,"Couleur");
 define("LangAddFilterField4"															,"Num&#233;ro Wratten");
@@ -1070,7 +1072,7 @@ define("FiltersCorrective"																,"Filtre correcteur");
 
 define("LangAddSiteTitle"																	,"Rajoutez un nouvel endroit d'observation");
 define("LangAddSiteField1"																,"Nom");
-define("LangAddSiteField1Expl"														,"(ex Mons)"); 
+define("LangAddSiteField1Expl"														,"(ex Mons)");
 define("LangAddSiteField2"																,"Province / Etat");
 define("LangAddSiteField2Expl"														,"(ex Hainaut)");
 define("LangAddSiteField3"																,"Pays");
@@ -1117,11 +1119,11 @@ define("LangGetLocation11"																,"rentrer les donn&eacute;es vous m&ec
 
 define("LangAddInstrumentTitle"														,"Rajoutez un nouvel instrument");
 define("LangAddInstrumentField1"													,"Nom de l'instrument");
-define("LangAddInstrumentField1Expl"											,""); 
+define("LangAddInstrumentField1Expl"											,"");
 define("LangAddInstrumentField2"													,"Diam&egrave;tre");
 define("LangAddInstrumentField2Expl"											,"(ex 1500mm ou 6 inch)");
 define("LangAddInstrumentField3"													,"F/D");
-define("LangAddInstrumentField3Expl"											,""); 
+define("LangAddInstrumentField3Expl"											,"");
 define("LangAddInstrumentField4"													,"Distance focale (en mm)");
 define("LangAddInstrumentField4Expl"											,"(ex 1200mm)");
 define("LangAddInstrumentField5"													,"Type");
@@ -1182,7 +1184,7 @@ define("LangValidateObjectMessage7"												,"Veuillez remplir les unit&eacut
 define("LangValidateObjectMessage8"												,"Magnitude erron&eacute;e!");
 
 // content/overview_objects.php
- 
+
 define("LangOverviewObjectsTitle"													,"Aper&ccedil;u de tous les objets");
 define("LangOverviewObjectsFirstlink"											,"DEBUT");
 define("LangOverviewObjectsLastlink"											,"FIN");
@@ -1256,7 +1258,7 @@ define("LangListQueryObjectsMessage16"										,"&nbsp;L'observation&nbsp;");
 define("LangRegisterNewTitle"															,"Enregistrer");
 
 // content/view_object.php
- 
+
 define("LangViewObjectTitle"															,"D&eacute;tail objet");
 define("LangViewObjectField1"															,"Nom");
 define("LangViewObjectField2"															,"Nom alternatif");
@@ -1453,7 +1455,7 @@ define("LangCompactObservationsLO"									 			,"Comparer");
 define("LangOverviewObservationTitle"											,"Aper&ccedil;u avec une seule ligne d'information par observation");
 define("LangCompactObservationsTitle"											,"Aper&ccedil;u, avec &eacute;gallement la description &agrave; c&ocirc;t&eacute; de la ligne d'information");
 define("LangCompactObservationsLOTitle"										,"Aper&ccedil;u avec la ligne d'information, la description et votre derni&egrave;re observation");
- 
+
 // content/change_observation.php
 
 define("LangChangeObservationTitle"												,"Changez l'observation");
@@ -1468,7 +1470,7 @@ define("LangViewDSSImageTitle"														,"Image DSS - ");
 // content/selected_observations.php
 
 define("LangSelectedObservationsTitle"										,"Aper&ccedil;u de toutes les observations de ");
-define("LangNoObservations"																,"Aucune observation de disponible"); 
+define("LangNoObservations"																,"Aucune observation de disponible");
 
 // content/overview_observations.php
 
@@ -1639,7 +1641,7 @@ define("LangValidateInstrumentMessage5"										,"L'instrument a &eacute;t&eacu
 define("LangValidateInstrumentMessage"										,"Message");
 
 // content/setup_query_objects.php
- 
+
 define("LangQueryObjectsTitle"														,"Recherche d'objet");
 define("LangQueryObjectsField1"														,"Nom de l'objet");
 define("LangQueryObjectsField2"														,"Constellation");
@@ -1651,9 +1653,9 @@ define("LangQueryObjectsField6"														,"Magnitude de surface plus &#233;l
 define("LangQueryObjectsField6Explanation"								,"");
 define("LangQueryObjectsField7"														,"Ascension droite minimale");
 define("LangQueryObjectsField8"														,"Ascension droite maximale");
-define("LangQueryObjectsField9"														,"D&eacute;clinaison minimale"); 
+define("LangQueryObjectsField9"														,"D&eacute;clinaison minimale");
 define("LangQueryObjectsField10"													,"D&eacute;clinaison maximale");
-define("LangQueryObjectsField11"													,"Type"); 
+define("LangQueryObjectsField11"													,"Type");
 define("LangQueryObjectsField12"													,"Page de l'atlas");
 define("LangQueryObjectsField13"													,"Taille minimale");
 define("LangQueryObjectsField14"													,"Taille maximale");
@@ -1725,9 +1727,9 @@ define("LangTopObjectsHeader4"														,"Constellation");
 define("LangTopObjectsHeader5"														,"Nombre d'observations");
 
 // new variables defined from version 1.1 onwards
- 
+
 // content/setup_observations_query.php
- 
+
 define("LangQueryObservationsTitle"												,"Recherche d'observations");
 define("LangQueryObservationsMessage1"										,"Uniquement les observations avec dessin");
 define("LangQueryObservationsMessage1b"										,"sans dessin");
@@ -1751,11 +1753,11 @@ define("LangCSVTitle"																			,"Importez les observations a partir d'u
 define("LangCSVMessage1"																	,"Ce formulaire vous donne la possibilit&eacute; de rentrer plusieures observations &agrave; la fois &agrave; l'aide d'un fichier csv (comma seperated value). Cette fa&ccedil;on facile et rapide vous permet de rentrer plusieures observations &agrave; la fois. Le formulaire vous permet &eacute;galement de copier facilement vos observations que vous auriez stock&eacute;es dans une autre base de donn&eacute;es et de les enregistrer dans DeepskyLog. A titre d'information: juste les observations avec votre nom et pr&eacute;nom seront rajout&eacute;es.");
 define("LangCSVMessage2"																	,"Le fichier csv utilse le format suivant: <span class=\"bold\">(NOUVEAU FORMAT!!!)</span>");
 define("LangCSVMessage3"																	,"<span class=\"bold\"><i> 1-Objet; 2-Observateur; 3-Date; 4-TU; 5-Endroit; 6-Instrument; 7-Oculaire; 8-Filtre; 9-Lentille; 10-Seeing; 11-LimMag ou SQM comme vous voulez; 12-Visibilit&eacute;; 13-Langue; 14-Description</i></span>");
-define("LangCSVMessage4"																	,"<span class=\"bold\">Attention!</span> Contrairement &agrave; la version 3.3 et pr&eacute;c&eacute;dentes, le fichier <span class=\"bold\">ne peut plus</span> contenir <span class=\"underline\">une ligne de t&ecirc;te</span>, 
+define("LangCSVMessage4"																	,"<span class=\"bold\">Attention!</span> Contrairement &agrave; la version 3.3 et pr&eacute;c&eacute;dentes, le fichier <span class=\"bold\">ne peut plus</span> contenir <span class=\"underline\">une ligne de t&ecirc;te</span>,
                            																	la premi&egrave;re ligne contient directement des observations dans le format mentionn&eacute;, par exemple: <br /><br />
                            																	NGC 2392;Jean Leduc;21-01-2005;20:45;Mons;Obsession 15\";31mm Nagler;Lumicon O-III filter;2;4.0;3;nl;Une belle n&eacute;bulosit&eacute; plan&eacute;taire avec &eacute;toile centrale visible!<br />M 35;Jean Leduc;21-01-2005;20:53;Mons;Obsession 15\";;;2;4.0;1;nl;Plus ou moins trente membres dans des lignes courb&eacute;es.<br />...<br /><br />Le seeing est indiqu&eacute; avec un num&eacute;ro entre 1 et 5 (1=excellent, 2=bien, 3=m&eacute;diocre, 4=faible, 5=mauvais).<br />La visibilit&eacute; est indiqu&eacute;e avec un num&eacute;ro entre 1 et 7 (1=Objet tr&egrave;s facile et clair, 2=Objet facilement visible &agrave; vision direct, 3=Objet visible &agrave; vision direct, 4=Vision p&eacute;riph&eacute;rique n&eacute;cessaire pour voir  l'objet, 5=Objet difficilement visible en vision p&eacute;riph&eacute;rique, 6=Visibilit&eacute; de l'objet est douteuse, 7=L'objet n'est pas visible).<br />Une observation &agrave; l'oeil nu doit &ecirc;tre enregistr&eacute;e avec l'
 instrument 'Naked Eye' (en anglais!).<br />Indiquez 'fr' dans le champs 'langue'");
-define("LangCSVMessage5"																	,"Attention!<br />Les instruments, les endroits, les oculaires, filters et les objets dans le fichier csv doivent d&eacute;j&agrave; &ecirc;tre connus par DeepskyLog. 
+define("LangCSVMessage5"																	,"Attention!<br />Les instruments, les endroits, les oculaires, filters et les objets dans le fichier csv doivent d&eacute;j&agrave; &ecirc;tre connus par DeepskyLog.
                            																	Si ceci n'est pas le cas, un message d'erreur sera affich&eacute; et ces observation ne seront pas enregistr&eacute;es.<br />
                            																	L'information manquante ou erroneuse doit &ecirc;tre remplie &agrave; la main ou adapt&eacute;e jusqu'au moment o&ugrave; il n'y a plus de messages d'erreur.<br />&nbsp;<br />
                            																	Si tout se passe bien, les observations rentr&eacute;es seront affich&eacute;es utilisant 'Toutes les observations'.");
@@ -1848,13 +1850,13 @@ define("LangVisibility6"																	,"Visibilit&eacute; de l'objet est dout
 define("LangVisibility7"																	,"L'objet n'est pas visible");
 
 // content/selected_observations.php
- 
+
 define("LangSelectedObservationsTitle2"										,"Aper&ccedil;u des observations s&eacute;lectionn&eacute;es");
 define("LangSelectedObservationsTitle3"										,"Aper&ccedil;u des observations de la derni&egrave;re ann&eacute;e");
-define("LangSelectedObservationsSelectedLanguagesIndication"	
+define("LangSelectedObservationsSelectedLanguagesIndication"
  																													,"languages s&eacute;lection&eacute;es");
 define("LangSelectedObservationsAllLanguagesIndication"		,"toutes les languages");
- 
+
 // lib/objects
 define("LangNewPlaceInList"																,"Pri&egrave;re de rentrer la nouvelle position dans la liste.");
 
