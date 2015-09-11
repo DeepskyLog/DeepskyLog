@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("LangSinceVersion", " depuis version ");
 define("LangWhatsNew", "What's new in DeepskyLog");
 define("LangMakePrivate", "Make private");
 define("LangMakePublic", "Make public");
