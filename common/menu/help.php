@@ -11,10 +11,11 @@ function help() {
 	        <a href=\"http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"] . "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">Help<b class=\"caret\"></b></a>";
 	echo "  <ul class=\"dropdown-menu\">";
 	if ($_SESSION ['lang'] == "nl") {
-		echo "  <li><a href=\"http://redmine.deepskylog.org/projects/deepskylog/wiki/DeepskylogManualNL39\" rel=\"external\">Handleiding</a></li>";
+		echo "  <li><a href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/Handleidinghttps://github.com/DeepskyLog/DeepskyLog/wiki/Handleiding\" rel=\"external\">Handleiding</a></li>";
 	}
 	echo "   <li>" . LangMailtoLink . "</li>";
 	echo "   <li><a href=\"https://github.com/DeepskyLog/DeepskyLog/issues\">" . LangReportIssue . "</a></li>";
+	echo "   <li><a href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog\">" . LangWhatsNew . "</a></li>";
 	echo "  </ul>";
 	echo " </li>
           </ul>";

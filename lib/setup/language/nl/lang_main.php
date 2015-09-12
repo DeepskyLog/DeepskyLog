@@ -1,5 +1,7 @@
 <?php //NL
 // This is version 5.0
+define("LangSinceVersion", " sinds versie ");
+define("LangWhatsNew", "Nieuw in DeepskyLog");
 define("LangMakePrivate", "Maak privaat");
 define("LangMakePublic", "Maak publiek");
 define("LangNewList", "Maak nieuwe lijst aan");
@@ -767,7 +769,8 @@ define("LangCounter"																			,"Teller");
 define("LangMenuExpand"																		,"Menu uitplooien");
 define("LangMenuCollapse"																	,"Menu samenplooien");
 
-define("DreyerDescriptionLink"														,"http://redmine.deepskylog.org/projects/deepskylog/wiki/DreyerDescriptionnl");
+define("DreyerDescriptionLink"														,"https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-beschrijvingen");
+define("OpenClustersLink"                                 ,"https://github.com/DeepskyLog/DeepskyLog/wiki/Types-van-open-clusters");
 
 define("LangYouAreHere"																		,"U bevindt zich hier:");
 define("LangHome"																					,"Home");

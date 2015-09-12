@@ -3,8 +3,6 @@
 // manages and shows lists
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
-elseif (! $loggedUser)
-	throw new Exception ( LangException002 );
 else
 	tolist ();
 function tolist() {

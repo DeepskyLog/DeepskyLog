@@ -1,5 +1,7 @@
 <?php //EN
 // This is version 5.0
+define("LangSinceVersion", " since version ");
+define("LangWhatsNew", "What's new in DeepskyLog");
 define("LangMakePrivate", "Make private");
 define("LangMakePublic", "Make public");
 define("LangNewList", "Add new list");
@@ -778,7 +780,8 @@ define("LangCounter"																			,"Counter");
 define("LangMenuExpand"																		,"Expand menu");
 define("LangMenuCollapse"																	,"Collapse menu");
 
-define("DreyerDescriptionLink"														,"http://redmine.deepskylog.org/projects/deepskylog/wiki/DreyerDescriptionen");
+define("DreyerDescriptionLink"														,"https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions");
+define("OpenClustersLink"                                 ,"https://github.com/DeepskyLog/DeepskyLog/wiki/Open-Cluster-types");
 
 define("LangYouAreHere"																		,"You are here:");
 define("LangHome"																					,"Home");

@@ -24,6 +24,10 @@ class Observers {
 		global $objObservation;
 		return array_search ( $observer, $objObservation->getPopularObservers () );
 	}
+	public function getLastVersion($observer) {
+		global $objDatabase;
+		return $objDatabase->selectSingleValue ( "SELECT version FROM observers WHERE id=\"" . $observer . "\"", 'version', '5.0.0');
+	}
 	public function getLastReadObservation($observerid) {
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT lastReadObservationId FROM observers WHERE id=\"" . $observerid . "\"", 'lastReadObservationId', 0 );

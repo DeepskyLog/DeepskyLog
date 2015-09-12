@@ -37,8 +37,8 @@ function head() {
         <script src=\"lib/javascript/widget-columnSelector.js\"></script>
         <script src=\"lib/javascript/widget-reorder.js\"></script>
 		<link href=\"styles/tablesorter.theme.bootstrap.css\" rel=\"stylesheet\">";
-	echo "<link href=\"" . $baseURL . "styles/deepskylog50.css\" rel=\"stylesheet\" type=\"text/css\" />";
-	
+	echo "<link href=\"" . $baseURL . "styles/deepskylog507.css\" rel=\"stylesheet\" type=\"text/css\" />";
+
 	$TitleText = "";
 	$theDispatch = $objUtil->checkRequestKey ( 'indexAction' );
 	$theObject = $objUtil->checkRequestKey ( 'object' );
@@ -136,10 +136,10 @@ function head() {
 		$TitleText = LangViewLocationTitle;
 	elseif ($includeFile == 'common/content/overview_observers.php')
 		$TitleText = LangViewObserverTitle;
-	
+
 	elseif ($includeFile == 'deepsky/control/admincheckobjects.php')
 		$TitleText = "Checking objects";
-	
+
 	elseif ($includeFile == 'comets/content/overview_observations.php')
 		$TitleText = LangOverviewObservationsTitle;
 	elseif ($includeFile == 'comets/content/view_object.php')
@@ -201,7 +201,7 @@ function head() {
 	}
 	echo "<title>" . $TitleText . "</title>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
-	
+
 	echo "<script type=\"text/javascript\">
 
      var _gaq = _gaq || [];

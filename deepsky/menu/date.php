@@ -5,10 +5,8 @@ global $inIndex, $loggedUser, $objUtil;
 
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
-elseif (! ($loggedUser))
-	throw new Exception ( LangExcpetion001 );
 elseif (! ($objUtil->checkAdminOrUserID ( $loggedUser )))
-	throw new Exception ( LangExcpetion012 );
+	throw new Exception ( LangException012 );
 else
 	menu_date ();
 function menu_date() {
@@ -19,7 +17,7 @@ function menu_date() {
 		if (! (in_array ( $key, array (
 				'changeDay',
 				'changeMonth',
-				'changeYear' 
+				'changeYear'
 		) )))
 			$link .= $key . '=' . urlencode ( $value ) . '&amp;';
 	$link2 = "index.php?";
@@ -28,25 +26,25 @@ function menu_date() {
 		if (! (in_array ( $key, array (
 				'changeDay',
 				'changeMonth',
-				'changeYear' 
+				'changeYear'
 		) )))
 			$link2 .= $key . '=' . urlencode ( $value ) . '&';
 	$link2 = substr ( $link2, 0, strlen ( $link2 ) - 1 );
-	
+
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/degrees.js\"></script>
           <script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/astro.js\"></script>
           <script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/moon.js\"></script>
-	
+
 		  <script>
 			// Here we set the dates of the new moon.
 			// How can we be sure that we only calculate the new moon for the displayed month?
             var eventDates = {};
-			
+
 
 			$(function() {
-			
+
 			// An array of dates
-			
+
               $( \"#datepicker\" ).datepicker({
 	  		    showButtonPanel: true,
                 changeMonth: true,
@@ -57,7 +55,7 @@ function menu_date() {
                   var moon = new MoonQuarters(year, month, 1);
                   var date = jdtocd(moon[0]);
                   eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
-          		
+
           		  if (month - 1 < 1) {
           		    var moon = new MoonQuarters(year - 1, 12, 1);
           		  } else {
@@ -83,7 +81,7 @@ function menu_date() {
 			      $newmoon = date("m/d/Y", $phases[4]);
 			      echo "
 			      eventDates[ new Date( '" . $newmoon . "' )] = 1;";
-			      
+
 			      $phases = array();
 			      $date = $_SESSION['globalYear'] . "-" . $_SESSION ['globalMonth'] . "-15";
 			      $phases = phasehunt(strtotime($date));
@@ -113,7 +111,7 @@ function menu_date() {
         	});
 	  		</script>";
 	echo "<form class=\"nav navbar-nav navbar-right\">";
-	
+
  	echo "<div class=\"form-group\">";
  	echo "<p class=\"navbar-text\">" . LangDate . " ";
     echo "<span class=\"form-inline\">";
