@@ -25,7 +25,7 @@ class catalogs
     $t=count($result2);
     while(list($key,$value)=each($result2))
       $result3[]=$value;
-    return $result3;  
+    return $result3;
   }
   private function formatIndex($theformat,$theindex)
   { if($theformat=="2MASX")
@@ -47,7 +47,7 @@ class catalogs
 	    for($i=$temp;$i<7;$i++)
 	      $returnindex.="0";
 
-	    return $returnindex.$theindex;  
+	    return $returnindex.$theindex;
     }
     if($theformat=="MCG")
 	  { $nextindex=0;
@@ -93,7 +93,7 @@ class catalogs
 	      $returnindex.="0";
 	    $returnindex.=substr($theindex,0,$temp+1);
 	    $theindex=substr($theindex,$temp+1);
-	    
+
 	    $temp=strpos($theindex,'+');
 	    if($temp===FALSE)
 	      $temp=strpos($theindex,'-');
@@ -103,7 +103,7 @@ class catalogs
 	      $returnindex.="0";
 	    $returnindex.=substr($theindex,0,$temp+1);
 	    $theindex=substr($theindex,$temp+1);
-	    
+
 	    $temp=strpos($theindex,'.');
 	    if($temp===FALSE)
 	      return $returnindex.$theindex;
@@ -111,11 +111,11 @@ class catalogs
 	      $returnindex.="0";
 	    $returnindex.=substr($theindex,0,$temp+1);
 	    $theindex=substr($theindex,$temp+1);
-	    
+
 	    $temp=strlen($theindex);
 	    for($i=$temp;$i<1;$i++)
 	      $returnindex.="0";
-	    return $returnindex.$theindex;  
+	    return $returnindex.$theindex;
 	  }
 	  if($theformat=="BD")
 	  { $temp=substr($theindex,0,1);
@@ -123,7 +123,7 @@ class catalogs
 	      return $theindex;
 	    $returnindex=$temp;
 	    $theindex=substr($theindex,1);
-	      
+
 	  	$temp=strpos($theindex,' ');
 	    if($temp===FALSE)
 	      return $returnindex.$theindex;
@@ -131,12 +131,12 @@ class catalogs
 	      $returnindex.="0";
 	    $returnindex.=substr($theindex,0,$temp+1);
 	    $theindex=substr($theindex,$temp+1);
-	    
+
 	    $temp=strlen($theindex);
 	    for($i=$temp;$i<5;$i++)
 	      $returnindex.="0";
-	    return $returnindex.$theindex; 
-	  	
+	    return $returnindex.$theindex;
+
 	  }
 	  if($theformat=="CGCG")
 	  { $returnindex='';
@@ -154,7 +154,7 @@ class catalogs
 	    for($i=$temp;$i<3;$i++)
 	      $returnindex.="0";
 
-	    return $returnindex.$theindex;  
+	    return $returnindex.$theindex;
 	  }
 	  if($theformat=="IRAS")
 	  { $returnindex='';
@@ -172,7 +172,7 @@ class catalogs
 	    for($i=$temp;$i<4;$i++)
 	      $returnindex.="0";
 
-	    return $returnindex.$theindex;  
+	    return $returnindex.$theindex;
 	  }
 	  if($theformat=="KUG")
 	  { $returnindex='';
@@ -191,7 +191,7 @@ class catalogs
 	      $returnindex.="0";
       if(($temp<4)&&substr($theindex,-1)>"9")
 	      $returnindex.="0";
-      return $returnindex.$theindex;  
+      return $returnindex.$theindex;
 	  }
 	  if($theformat=="MAC")
 	  { $returnindex='';
@@ -210,7 +210,7 @@ class catalogs
 	      $returnindex.="0";
       if(($temp<5)&&substr($theindex,-1)>"9")
 	      $returnindex.="0";
-      return $returnindex.$theindex;  
+      return $returnindex.$theindex;
 	  }
 	  if($theformat=="NPM1G")
 	  { $temp=substr($theindex,0,1);
@@ -218,7 +218,7 @@ class catalogs
 	      return $theindex;
 	    $returnindex=$temp;
 	    $theindex=substr($theindex,1);
-	      
+
 	  	$temp=strpos($theindex,'.');
 	    if($temp===FALSE)
 	      return $returnindex.$theindex;
@@ -226,12 +226,12 @@ class catalogs
 	      $returnindex.="0";
 	    $returnindex.=substr($theindex,0,$temp+1);
 	    $theindex=substr($theindex,$temp+1);
-	    
+
 	    $temp=strlen($theindex);
 	    for($i=$temp;$i<4;$i++)
 	      $returnindex.="0";
-	    return $returnindex.$theindex; 
-	  	
+	    return $returnindex.$theindex;
+
 	  }
 	  if($theformat=="PK")
 	  { $returnindex='';
@@ -251,11 +251,11 @@ class catalogs
 	      $returnindex.="0";
 	    $returnindex.=substr($theindex,0,$temp+1);
 	    $theindex=substr($theindex,$temp+1);
-	    
+
 	    $temp=strlen($theindex);
 	    for($i=$temp;$i<2;$i++)
 	      $returnindex.="0";
-	    return $returnindex.$theindex; 
+	    return $returnindex.$theindex;
  	  }
 	  if($theformat=="PKS")
 	  { $returnindex='';
@@ -273,7 +273,7 @@ class catalogs
 	    for($i=$temp;$i<2;$i++)
 	      $returnindex.="0";
 
-	    return $returnindex.$theindex;  
+	    return $returnindex.$theindex;
 	  }
     if($theformat=="QSO")
     { $returnindex='';
@@ -299,7 +299,7 @@ class catalogs
 	    for($i=$temp;$i<4;$i++)
 	      $returnindex.="0";
 
-	    return $returnindex.$theindex;  
+	    return $returnindex.$theindex;
     }
     if($theformat=="SAO")
     { $returnindex='';
@@ -307,7 +307,7 @@ class catalogs
 	    for($i=$temp;$i<6;$i++)
 	      $returnindex.="0";
 
-	    return $returnindex.$theindex;  
+	    return $returnindex.$theindex;
     }
 	  if($theformat=="SBS")
 	  { $returnindex='';
@@ -325,7 +325,7 @@ class catalogs
 	    for($i=$temp;$i<3;$i++)
 	      $returnindex.="0";
 
-	    return $returnindex.$theindex;  
+	    return $returnindex.$theindex;
 	  }
 	  if($theformat=="SDSS")
 	  { $returnindex='J';
@@ -339,7 +339,7 @@ class catalogs
 	      $returnindex.="0";
 	    $returnindex.=substr($theindex,0,$temp+1);
 	    $theindex=substr($theindex,$temp+1);
-	    
+
 	    $temp=strpos($theindex,'+');
 	    if($temp===FALSE)
 	      $temp=strpos($theindex,'-');
@@ -349,7 +349,7 @@ class catalogs
 	      $returnindex.="0";
 	    $returnindex.=substr($theindex,0,$temp+1);
 	    $theindex=substr($theindex,$temp+1);
-	    
+
 	    $temp=strpos($theindex,'.');
 	    if($temp===FALSE)
 	      return $returnindex.$theindex;
@@ -357,11 +357,11 @@ class catalogs
 	      $returnindex.="0";
 	    $returnindex.=substr($theindex,0,$temp+1);
 	    $theindex=substr($theindex,$temp+1);
-	    
+
 	    $temp=strlen($theindex);
 	    for($i=$temp;$i<1;$i++)
 	      $returnindex.="0";
-	    return $returnindex.$theindex;  
+	    return $returnindex.$theindex;
 	  }
 	  if($theformat=="WRAY")
 	  { $returnindex='';
@@ -370,35 +370,35 @@ class catalogs
 	      $temp=strlen($theindex);
 	      for($i=$temp;$i<4;$i++)
 	        $returnindex.="0";
-	      return '15-'.$returnindex.$theindex;  
+	      return '15-'.$returnindex.$theindex;
 	    }
       if(strtoupper(substr($theindex,0,3))=="16-")
 	    { $theindex=substr($theindex,3);
 	      $temp=strlen($theindex);
 	      for($i=$temp;$i<3;$i++)
 	        $returnindex.="0";
-	      return '16-'.$returnindex.$theindex;  
+	      return '16-'.$returnindex.$theindex;
 	    }
 	    if(strtoupper(substr($theindex,0,3))=="17-")
 	    { $theindex=substr($theindex,3);
 	      $temp=strlen($theindex);
 	      for($i=$temp;$i<3;$i++)
 	        $returnindex.="0";
-	      return '17-'.$returnindex.$theindex;  
+	      return '17-'.$returnindex.$theindex;
 	    }
 	    if(strtoupper(substr($theindex,0,3))=="18-")
 	    { $theindex=substr($theindex,3);
 	      $temp=strlen($theindex);
 	      for($i=$temp;$i<3;$i++)
 	        $returnindex.="0";
-	      return '18-'.$returnindex.$theindex;  
+	      return '18-'.$returnindex.$theindex;
 	    }
 	    if(strtoupper(substr($theindex,0,3))=="19-")
 	    { $theindex=substr($theindex,3);
 	      $temp=strlen($theindex);
 	      for($i=$temp;$i<2;$i++)
 	        $returnindex.="0";
-	      return '19-'.$returnindex.$theindex;  
+	      return '19-'.$returnindex.$theindex;
 	    }
 	    return $theindex;
 	  }
@@ -442,10 +442,6 @@ class catalogs
       $thenewcatalog0='DoDz';
     if($thenewcatalog=='FEINSTEIN')
       $thenewcatalog0='Fein';
-    if($thenewcatalog=='HGC')
-      $thenewcatalog0='Hickson';
-    if($thenewcatalog=='HCG')
-      $thenewcatalog0='Hickson';
     if($thenewcatalog=='MESSIER')
       $thenewcatalog0='M';
     //if($thenewcatalog=='MARKARIAN')
@@ -467,9 +463,9 @@ class catalogs
     if($thenewcatalog=='TRUMPLER')
       $thenewcatalog0='Tr';
     if($thenewcatalog=='WRAY')
-      $thenewcatalog0='Wray';  
-      
-      
+      $thenewcatalog0='Wray';
+
+
     if((strpos($theobject,"%")!==FALSE)||(strpos($theobject,"?")!==FALSE))
       return trim($thenewcatalog0.' '.$theindex);
   	else
