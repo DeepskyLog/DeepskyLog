@@ -5,8 +5,6 @@ global $inIndex, $loggedUser, $objUtil;
 
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
-elseif (! ($loggedUser))
-	throw new Exception ( LangExcpetion001 );
 elseif (! ($objUtil->checkAdminOrUserID ( $loggedUser )))
 	throw new Exception ( LangExcpetion012 );
 else
@@ -30,13 +28,13 @@ function menu_list() {
 	$sql = "SELECT DISTINCT observerobjectlist.listname " . "FROM observerobjectlist " . "WHERE observerid <> \"" . $loggedUser . "\"" . "AND public=\"1\" ORDER BY observerobjectlist.listname";
 	$run = $objDatabase->selectRecordset ( $sql );
 	$get = $run->fetch ( PDO::FETCH_OBJ );
-	
+
 	echo "&nbsp;&nbsp;";
 	while ( $get ) {
 		$result2 [] = $get->listname;
 		$get = $run->fetch ( PDO::FETCH_OBJ );
 	}
-	
+
 	$sql = "SELECT DISTINCT observerobjectlist.listname " . "FROM observerobjectlist " . "WHERE public=\"1\"";
 	$run = $objDatabase->selectRecordset ( $sql );
 	$get = $run->fetch ( PDO::FETCH_OBJ );
@@ -44,8 +42,8 @@ function menu_list() {
 	while ( $get ) {
 		$publicLists [] = $get->listname;
 		$get = $run->fetch ( PDO::FETCH_OBJ );
-	}	
-	
+	}
+
 	$result1 [] = '----------';
 	$result = array_merge ( $result1, $result2 );
 	if (count ( $result ) > 0) {

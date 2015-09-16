@@ -89,34 +89,34 @@ function headmenu() {
       </nav>";
 
 	// The navbar with the date and the lists
+	echo "<nav class=\"navbar navbar-default navbar-lower navbar-fixed-top second-navbar\" role=\"navigation\">
+         <div class=\"container-fluid\">
+          <div class=\"navbar-header\">
+            <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-2\">
+              <span class=\"sr-only\">Toggle navigation</span>
+              <span class=\"icon-bar\"></span>
+              <span class=\"icon-bar\"></span>
+              <span class=\"icon-bar\"></span>
+            </button>
+          </div>
+		      <div class=\"collapse navbar-collapse \" id=\"bs-example-navbar-collapse-2\">";
+
+	echo "<div class=\"container-fluid\">";
+
 	if ($loggedUser) {
-		echo "<nav class=\"navbar navbar-default navbar-lower navbar-fixed-top second-navbar\" role=\"navigation\">
-           <div class=\"container-fluid\">
-            <div class=\"navbar-header\">
-              <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-2\">
-                <span class=\"sr-only\">Toggle navigation</span>
-                <span class=\"icon-bar\"></span>
-                <span class=\"icon-bar\"></span>
-                <span class=\"icon-bar\"></span>
-              </button>
-            </div>
-		        <div class=\"collapse navbar-collapse \" id=\"bs-example-navbar-collapse-2\">";
-
-		echo "<div class=\"container-fluid\">";
-
 		// Select the standard location and instrument
 		if (array_key_exists ( 'admin', $_SESSION ) && ($_SESSION ['admin'] != 'yes')) {
 			require_once 'common/menu/location.php';
 			require_once 'common/menu/instrument.php';
 		}
-		require_once $_SESSION ['module'] . '/menu/date.php';
-		require_once $_SESSION ['module'] . '/menu/list.php';
-
-		echo "</div>";
-		echo "	</div>
-          </div>
-        </nav>";
-	} else {
+	}
+	require_once $_SESSION ['module'] . '/menu/date.php';
+	require_once $_SESSION ['module'] . '/menu/list.php';
+	echo "</div>";
+	echo "	</div>
+        </div>
+      </nav>";
+	if (!$loggedUser) {
 		// The log in modal box
 		echo "<div class=\"modal fade\" id=\"login\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">
             <div class=\"modal-dialog\">

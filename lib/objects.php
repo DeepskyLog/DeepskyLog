@@ -1630,9 +1630,9 @@ class Objects {
 		echo "<table class=\"table sort-tablenearobjectlist table-condensed table-striped table-hover custom-popup\"  data-sortlist=\"[[" . $nameLocation . ",0]]\">";
 		echo "<thead>";
 		echo "<tr>";
+		if ($showRank)
+			echo "<th id=\"objectpositioninlist\">#</th>";
 		if ($loggedUser) {
-			if ($showRank)
-				echo "<th id=\"objectpositioninlist\">#</th>";
 			if (($myList) && ($pageListAction == "addAllObjectsFromPageToList"))
 				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\"><a href=\"" . $link . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
 			elseif (($myList) && ($pageListAction == "removePageObjectsFromList"))
