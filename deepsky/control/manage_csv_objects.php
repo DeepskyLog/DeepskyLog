@@ -10,12 +10,12 @@ elseif($_SESSION['admin']!="yes") throw new Exception(LangException001);
 else manage_csv_objects();
 
 function manage_csv_objects()
-{ global $objObject;
+{ global $objObject, $loggedUser;
 	if($_FILES['csv']['tmp_name'] != "")
 	  $csvfile = $_FILES['csv']['tmp_name'];
-	$data_array=file($csvfile); 
-	for($i=0;$i<count($data_array);$i++ ) 
-	  $parts_array[$i]=explode(";",$data_array[$i]); 
+	$data_array=file($csvfile);
+	for($i=0;$i<count($data_array);$i++ )
+	  $parts_array[$i]=explode(";",$data_array[$i]);
 	for($i=0;$i<count($parts_array);$i++)
 	{ $instruction[$i]=trim($parts_array[$i][0]);
 	  $object[$i]=trim($parts_array[$i][1]);
@@ -58,7 +58,7 @@ function manage_csv_objects()
 	  	elseif ($instruction[$i] == "NN")
 	  	{ $objObject->newName($object[$i], $cat[$i],$catindex_data[$i]);
 	  		$_GET['object'] = trim($cat[$i] . " " . ucwords(trim($catindex_data[$i])));
-	    }	
+	    }
 	  	elseif ($instruction[$i] == "RAN")
 	  	  $objObject->removeAltName($object[$i], $cat[$i], $catindex_data[$i]);
 	  	elseif ($instruction[$i] == "PO")
@@ -68,7 +68,7 @@ function manage_csv_objects()
 	  	elseif ($instruction[$i] == "RRO")
 	    { $objObject->removeAndReplaceObjectBy($object[$i], $cat[$i], $catindex_data[$i]);
 	  		$_GET['object'] = trim($cat[$i] . " " . ucwords(trim($catindex_data[$i])));
-	  	}			
+	  	}
 	  	elseif ($instruction[$i] == "RA")
 	  	{	$objObject->setDsoProperty($object[$i],'ra', $catindex_data[$i]);
 	  	  $objObject->setDsObjectAtlasPages($object[$i]);
