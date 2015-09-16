@@ -14,8 +14,8 @@
 }
 
 .accomplishmentText {
- position: relative; 
-  top: 25px; 
+ position: relative;
+  top: 25px;
   font-size: 32px;
   text-align: center;
   color: red;
@@ -110,6 +110,7 @@
 
 body{
   margin-top: 50px;
+  padding-top: 75px;
 }
 .divide-text{
     color:#fff;
@@ -132,7 +133,7 @@ body{
 }
 
 .navbar-collapse{
-   padding-left:0; 
+   padding-left:0;
 }
 
 /*** custom css only popup ***/
@@ -222,34 +223,34 @@ td.tablesorter-pager {
   filter: alpha(opacity=50);
   cursor: default;
 }
-.typeDifficult { 
+.typeDifficult {
   background-color : #CC0000;
   padding          : 2px;
   color            : #000000;
 }
-.typeEasy { 
+.typeEasy {
   background-color : #339900;
   padding          : 2px;
   color            : #000000;
 }
-.typeNotVisible { 
+.typeNotVisible {
   background-color : #777777;
   padding          : 2px;
   color            : #000000;
 }
-.typeQuestionable { 
+.typeQuestionable {
   background-color : #999999;
   padding          : 2px;
   color            : #000000;
 }
 
-.typeQuiteDifficult { 
+.typeQuiteDifficult {
   background-color : #FF6600;
   padding          : 2px;
   color            : #000000;
 }
 
-.typeVeryEasy { 
+.typeVeryEasy {
   background-color : #66FF00;
   padding          : 2px;
   color            : #000000;
@@ -297,7 +298,7 @@ td.tablesorter-pager {
 .ephemeridesyellow {
   background-color      : #DDDD00;
 }
-.type10 { 
+.type10 {
   background-color : #F0F0F0;
   color            : #000000;
   border           : #FFFFFF thin solid;
@@ -312,7 +313,7 @@ td.tablesorter-pager {
 }
 .current {
     background-color: #FFAAAA;
-} 
+}
 table.tablesorter tr.green td {
     background-color: green;
 }
@@ -320,12 +321,12 @@ table.tablesorter tr.copyright td {
   font-size        : 80%;
   background-color : #FFAAAA;
 }
-table.tablesorter tr.type1 td { 
+table.tablesorter tr.type1 td {
   background-color : #F0F0F0;
   padding          : 2px;
   color            : #000000;
 }
-table.tablesorter tr.type2 td { 
+table.tablesorter tr.type2 td {
   background-color : #E0E6EC;
   padding          : 2px;
   color            : #000000;
@@ -424,33 +425,33 @@ table.tablesorter tr.type2 td {
 }
 #div5 {
   margin           : 0px;         border : 0px;
-  padding-left     : 0px;         padding-right : 2px; 
+  padding-left     : 0px;         padding-right : 2px;
   padding-top       : 0px;        padding-bottom: 0px;
   background-color : #FFFFFF;
   overflow         : auto;
 }
 .observercatalogbackground {
-  background       : #FFFFFF; 
+  background       : #FFFFFF;
   color            : #000000;
-  padding          : 5px 5px 5px 5px; 
+  padding          : 5px 5px 5px 5px;
   text-align       : right;
 }
 .observercataloggreen {
-  background       : #33FF00; 
+  background       : #33FF00;
   color            : #000000;
-  padding          : 5px 5px 5px 5px; 
+  padding          : 5px 5px 5px 5px;
   text-align       : center;
 }
 .observercatalogred {
-  background       : #FF0000; 
+  background       : #FF0000;
   color            : #000000;
-  padding          : 5px 5px 5px 5px; 
+  padding          : 5px 5px 5px 5px;
   text-align       : center;
 }
 .observercatalogyellow {
-  background       : #FFFF00; 
+  background       : #FFFF00;
   color            : #000000;
-  padding          : 5px 5px 5px 5px; 
+  padding          : 5px 5px 5px 5px;
   text-align       : center;
 }
  #map {
@@ -467,14 +468,28 @@ table.tablesorter tr.type2 td {
 
 @media (max-width: 1100px){ #listsSelectForm .form-group .form-control{
 		width: 100px
-		} 
+		}
 }
 
 @media (max-width: 767px){ #listsSelectForm .form-group .form-control{
 		width: 100%
-		} 
+		}
 }
 
 .tablesorter-pager {
-	font-size: 18px;	
+	font-size: 18px;
+}
+
+.sidebar-outer {
+    position: relative;
+}
+@media (min-width: 768px) {
+    .sidebar {
+        position: fixed;
+    }
+}
+
+.second-navbar{
+  top:50px;
+  z-index: 2;
 }

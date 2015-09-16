@@ -8,8 +8,8 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 class AstroCalc
 {
   public  function __construct()                                                // Constructor initialises the public astroCalc property
-  { 
-    
+  {
+
   }
 
   // This function calculates the rise, transit and setting time of an object (not the sun of the moon).
@@ -29,12 +29,12 @@ class AstroCalc
   // This function does the calculations for the rise and setting of moon and stars
   // Returns Rise time, transit time, setting time and transit altitude
   private function calculateRiseTransitSettingTimeCommon($jd, $longitude, $latitude, $ra1, $ra2, $ra3, $dec1, $dec2, $dec3, $moonHorParallax, $timedifference)
-  { 
+  {
     // Step 1 : Calculate the apparent siderial time at Greenwich at 0h UT.
     $jd = floor($jd) - 0.5;
-    
+
     $T = ($jd - 2451545.0) / 36525.0;
-    
+
     $theta0 = 100.46061837 + 36000.770053608 * $T + 0.000387933 * $T * $T - $T * $T * $T / 38710000.0;
 
     if($theta0 < 0.0)
@@ -49,8 +49,8 @@ class AstroCalc
     }
     $theta0 = $theta0 / 15.0;
 
-    $nutat = $this->calculateNutation($jd);    
-    
+    $nutat = $this->calculateNutation($jd);
+
     $theta0 = $theta0 + (($nutat[0] *
         cos(deg2rad($nutat[3])) / 15.0) / 3600.0);
 
@@ -72,52 +72,52 @@ class AstroCalc
       $ra1 = $ra1 + 360.0;
     }
     $longitude = -$longitude;
-    
+
     if ($moonHorParallax == -99.99) {
       $h0 = -0.5667;
     } else {
       $h0 = 0.7275 * $moonHorParallax - 0.566667;
     }
 
-    
+
     $Hcap0 = rad2deg(acos((sin(deg2rad($h0)) - sin(deg2rad($latitude)) * sin(deg2rad($dec2)))
               / (cos(deg2rad($latitude)) * cos(deg2rad($dec2)))));
-                  
+
     $m0 = ($ra2 + $longitude - $theta0 * 15.0) / 360.0;
     $m0 = $m0 - floor($m0);
-    
+
     if(is_nan($Hcap0))
     { $m1=99;
       $m2=99;
     }
     else
     { $m1 = $m0 - $Hcap0 / 360.0;
-      $m1 = $m1 - floor($m1);    
+      $m1 = $m1 - floor($m1);
       $m2 = $m0 + $Hcap0 / 360.0;
       $m2 = $m2 - floor($m2);
     }
-    
+
     // STEP 3 : Extra calculation to work for moving bodies...
     // 3.1 : transit time
     $theta = $theta0 * 15.0 + 360.985647 * $m0;
     $theta = $theta / 360.0;
     $theta = $theta - floor($theta);
     $theta = $theta * 360.0;
-    
+
     // deltaT is 70 for 2010
     $n = $m0 + 70 / 86400;
-    
+
     $a = $ra2 - $ra1;
     $b = $ra3 - $ra2;
     $c = $b - $a;
     $alphaInterpol = $ra2 + $n / 2.0 * ($a + $b + $n * $c);
     $H = $theta - $longitude - $alphaInterpol;
     $deltaM = - $H / 360.0;
-    
+
     $m0 = ($deltaM + $m0) * 24.0;
-    
+
     if(is_nan($Hcap0))
-    { 
+    {
     }
     else
     { // 3.2 : rise time
@@ -125,50 +125,50 @@ class AstroCalc
 	    $theta = $theta / 360.0;
 	    $theta = $theta - floor($theta);
 	    $theta = $theta * 360.0;
-	 
-	       
+
+
 	    $n = $m1 + 56 / 86400;
-	    
+
 	    $a = $ra2 - $ra1;
 	    $b = $ra3 - $ra2;
 	    $c = $b - $a;
 	    $alphaInterpol = $ra2 + $n / 2.0 * ($a + $b + $n * $c);
-	
+
 	    $a = $dec2 - $dec1;
 	    $b = $dec3 - $dec2;
 	    $c = $b - $a;
 	    $deltaInterpol = $dec2 + $n / 2.0 * ($a + $b + $n * $c);
-	
+
 	    $H = $theta - $longitude - $alphaInterpol;
-	    $h = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($deltaInterpol)) + cos(deg2rad($latitude)) * cos(deg2rad($deltaInterpol)) * cos(deg2rad($H)))); 
+	    $h = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($deltaInterpol)) + cos(deg2rad($latitude)) * cos(deg2rad($deltaInterpol)) * cos(deg2rad($H))));
 	    $deltaM = ($h - $h0) / (360.0 * cos(deg2rad($deltaInterpol)) * cos(deg2rad($latitude)) * sin(deg2rad($H)));
-	    
+
 	    $m1 = ($deltaM + $m1) * 24.0;
-	    
+
 	    // 3.3 : set time
 	    $theta = $theta0 * 15.0 + 360.985647 * $m2;
 	    $theta = $theta / 360.0;
 	    $theta = $theta - floor($theta);
 	    $theta = $theta * 360.0;
-	    
+
 	    $n = $m2 + 56 / 86400;
-	    
+
 	    $a = $ra2 - $ra1;
 	    $b = $ra3 - $ra2;
 	    $c = $b - $a;
 	    $alphaInterpol = $ra2 + $n / 2.0 * ($a + $b + $n * $c);
-	
+
 	    $a = $dec2 - $dec1;
 	    $b = $dec3 - $dec2;
 	    $c = $b - $a;
 	    $deltaInterpol = $dec2 + $n / 2.0 * ($a + $b + $n * $c);
-	
+
 	    $H = $theta - $longitude - $alphaInterpol;
-	    $h = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($deltaInterpol)) + cos(deg2rad($latitude)) * cos(deg2rad($deltaInterpol)) * cos(deg2rad($H)))); 
+	    $h = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($deltaInterpol)) + cos(deg2rad($latitude)) * cos(deg2rad($deltaInterpol)) * cos(deg2rad($H))));
 	    $deltaM = ($h - $h0) / (360.0 * cos(deg2rad($deltaInterpol)) * cos(deg2rad($latitude)) * sin(deg2rad($H)));
-	    
+
 	    $m2 = ($deltaM + $m2) * 24.0;
-    }    
+    }
     $ris_tra_set[0] = $m1;
     $ris_tra_set[1] = $m0;
     $ris_tra_set[2] = $m2;
@@ -194,7 +194,11 @@ class AstroCalc
       if ($minutes < 10) {
         $minutes = "0" . $minutes;
       }
-      $ris_tra_set[0] = floor($ris_tra_set[0]) + $toAdd . ":" . $minutes;
+      if (floor($ris_tra_set[0]) + $toAdd < 10) {
+        $ris_tra_set[0] = "0" . (floor($ris_tra_set[0]) + $toAdd) . ":" . $minutes;
+      } else {
+        $ris_tra_set[0] = floor($ris_tra_set[0]) + $toAdd . ":" . $minutes;
+      }
     }
 
     $transit = $ris_tra_set[1];
@@ -218,7 +222,11 @@ class AstroCalc
     if ($minutes < 10) {
       $minutes = "0" . $minutes;
     }
-    $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ":" . $minutes;
+    if (floor($ris_tra_set[1]) + $toAdd < 10) {
+      $ris_tra_set[1] = "0" . (floor($ris_tra_set[1]) + $toAdd) . ":" . $minutes;
+    } else {
+      $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ":" . $minutes;
+    }
     }
 
     $set = $ris_tra_set[2];
@@ -242,7 +250,11 @@ class AstroCalc
       if ($minutes < 10) {
         $minutes = "0" . $minutes;
       }
-      $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ":" . $minutes;
+      if (floor($ris_tra_set[2]) + $toAdd < 10) {
+        $ris_tra_set[2] = "0" . (floor($ris_tra_set[2]) + $toAdd) . ":" . $minutes;
+      } else {
+        $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ":" . $minutes;
+      }
     }
     $ris_tra_set[4] = 0;
     $ra2 = $ra2 / 15;
@@ -255,9 +267,9 @@ class AstroCalc
     $temppos=strpos($temptime,"/");
     $tempday=substr($temptime,0,$temppos);
     $tempyear=substr($temptime,$temppos+1);
-    
+
     $timestr = $tempyear . "-" . $tempmonth . "-" . $tempday;
-  
+
     $sun_info = date_sun_info(strtotime($timestr), $latitude, -$longitude);
     $astrobegin = date("H:i", $sun_info["astronomical_twilight_begin"]);
     sscanf($astrobegin, "%d:%d", $hour, $minute);
@@ -274,7 +286,7 @@ class AstroCalc
     $nautend = date("H:i", $sun_info["nautical_twilight_end"]);
     sscanf($nautend, "%d:%d", $hour, $minute);
     $nautend = ($hour + $minute / 60.0);
-    
+
     if ($transit > 0) {
       $transit = $transit % 24.0 + ($transit - floor($transit));
     } else {
@@ -293,7 +305,7 @@ class AstroCalc
         // Check the rise time for $astroend and for $astrobegin
         $theta0w = $theta0 + ($astrobegin * 1.00273790935);
         if ($theta0w > 0) {
-          $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w)); 
+          $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w));
         } else {
           $toAdd = floor(-$theta0w / 24.0) + 1;
           $theta0w = $theta0w + 24.0 * $toAdd;
@@ -313,7 +325,7 @@ class AstroCalc
 
       $theta0 = $theta0 + ($transit * 1.00273790935);
       if ($theta0 > 0) {
-        $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0)); 
+        $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0));
       } else {
         $toAdd = floor(-$theta0 / 24.0) + 1;
         $theta0 = $theta0 + 24.0 * $toAdd;
@@ -337,24 +349,27 @@ class AstroCalc
       } else {
         $ris_tra_set[4] = $transit;
       }
-      
+
       $minutes = round(($ris_tra_set[3] - floor($ris_tra_set[3])) * 60);
       if ($minutes == 60) {
         $minutes = 0;
         $toAdd = 1;
       } else {
         $toAdd = 0;
-      } 
+      }
       if ($minutes < 10) {
         $minutes = "0" . $minutes;
       }
       if ($ris_tra_set[3] < 0) {
         $ris_tra_set[3] = "-";
       } else {
-        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "'";
-        
+        if (floor($ris_tra_set[3]) + $toAdd < 10) {
+          $ris_tra_set[3] = "0" . (floor($ris_tra_set[3]) + $toAdd) . "&deg;" . $minutes . "'";
+        } else {
+          $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "'";
+        }
       }
-      
+
       if ($ris_tra_set[4] > 24 || $ris_tra_set[4] < 0 || $ris_tra_set[3] == "-") {
         $ris_tra_set[4] = "-";
       } else {
@@ -375,13 +390,17 @@ class AstroCalc
         if ($minutes < 10) {
           $minutes = "0" . $minutes;
         }
-        $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd . ":" . $minutes;
+        if (floor($ris_tra_set[4]) + $toAdd < 10) {
+          $ris_tra_set[4] = "0" . (floor($ris_tra_set[4]) + $toAdd) . ":" . $minutes;
+        } else {
+          $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd . ":" . $minutes;
+        }
       }
     } else {
       $ris_tra_set[3] = "-";
       $ris_tra_set[4] = "-";
-    }  
-    
+    }
+
 // if no astro twilight, or no best astro time for object
 //   if($ris_tra_set[3]=="-")
     if(!(($astroend > 0 && $astrobegin > 0)))
@@ -397,7 +416,7 @@ class AstroCalc
 	        // Check the rise time for $nautend and for $nautbegin
 	        $theta0w = $theta0 + ($nautbegin * 1.00273790935);
 	        if ($theta0w > 0) {
-	          $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w)); 
+	          $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w));
 	        } else {
 	          $toAdd = floor(-$theta0w / 24.0) + 1;
 	          $theta0w = $theta0w + 24.0 * $toAdd;
@@ -409,15 +428,15 @@ class AstroCalc
 	          $toAdd = floor(-$H / 360.0) + 1;
 	          $H = $H + 360.0 * $toAdd;
 	        }
-	
+
 	        $tocompare = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
-	
+
 	        $transit = $nautend;
 	      }
-	
+
 	      $theta0 = $theta0 + ($transit * 1.00273790935);
 	      if ($theta0 > 0) {
-	        $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0)); 
+	        $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0));
 	      } else {
 	        $toAdd = floor(-$theta0 / 24.0) + 1;
 	        $theta0 = $theta0 + 24.0 * $toAdd;
@@ -429,9 +448,9 @@ class AstroCalc
 	        $toAdd = floor(-$H / 360.0) + 1;
 	        $H = $H + 360.0 * $toAdd;
 	      }
-	
+
 	      $ris_tra_set[3] = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
-	      
+
 	      if ($tocompare != -999) {
 	        if ($tocompare > $ris_tra_set[3]) {
 	          $ris_tra_set[3] = $tocompare;
@@ -442,23 +461,27 @@ class AstroCalc
 	      } else {
 	        $ris_tra_set[4] = $transit;
 	      }
-	
+
 	      $minutes = round(($ris_tra_set[3] - floor($ris_tra_set[3])) * 60);
 	      if ($minutes == 60) {
 	        $minutes = 0;
 	        $toAdd = 1;
 	      } else {
 	        $toAdd = 0;
-	      } 
+	      }
 	      if ($minutes < 10) {
 	        $minutes = "0" . $minutes;
 	      }
 	      if ($ris_tra_set[3] < 0) {
 	        $ris_tra_set[3] = "-";
 	      } else {
-	        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "'";
+          if (floor($ris_tra_set[3]) + $toAdd < 10) {
+            $ris_tra_set[3] = "0" . (floor($ris_tra_set[3]) + $toAdd) . "&deg;" . $minutes . "'";
+          } else {
+            $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "'";
+          }
 	      }
-	
+
 	      if ($ris_tra_set[4] > 24 || $ris_tra_set[4] < 0 || $ris_tra_set[3] == "-") {
 	        $ris_tra_set[4] = "-";
 	      } else {
@@ -479,12 +502,16 @@ class AstroCalc
 	        if ($minutes < 10) {
 	          $minutes = "0" . $minutes;
 	        }
-	        $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd . ":" . $minutes;
+          if (floor($ris_tra_set[4]) + $toAdd < 10.0) {
+            $ris_tra_set[4] = "0" . (floor($ris_tra_set[4]) + $toAdd) . ":" . $minutes;
+          } else {
+	          $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd . ":" . $minutes;
+          }
 	      }
 	    } else {
 	      $ris_tra_set[3] = "-";
 	      $ris_tra_set[4] = "-";
-	    }  
+	    }
 	    if($ris_tra_set[3]!="-")
 	      $ris_tra_set[3]="(".$ris_tra_set[3].")";
     }
@@ -504,50 +531,50 @@ class AstroCalc
     $radec3 = $this->calculateMoonCoordinates($jd + 1, $longitude, $latitude);
     return $this->calculateRiseTransitSettingTimeCommon($jd, $longitude, $latitude, $radec1[0], $radec2[0], $radec3[0], $radec1[1], $radec2[1], $radec3[1], $radec2[2], $timedifference);
   }
-  
+
   private function calculateMoonCoordinates($jd, $longitude, $latitude) {
     $T = ($jd - 2451545.0) / 36525.0;
-    
+
     /* Moon's mean longitude */
     $L_accent = 218.3164591 + 481267.88134236 * $T - 0.0013268 * pow($T, 2) +
           pow($T, 3) / 538841.0 - pow($T, 4) / 65194000.0;
-    
+
     $L_accent = $L_accent - floor($L_accent / 360.0) * 360.0;
-    
+
     /* Mean elongation of the moon */
     $D = 297.8502042 + 445267.1115168 * $T - 0.0016300 * pow($T, 2) +
           pow($T, 3) / 545868.0 - pow($T, 4) / 113065000.0;
-    
+
     $D = $D - floor($D / 360.0) * 360.0;
-    
+
     /* Sun's mean anomaly */
     $M = 357.5291092 + 35999.0502909 * $T - 0.0001536 * pow($T, 2) + pow($T, 3) / 24490000.0;
-    
+
     $M = $M - floor($M / 360.0) * 360.0;
-    
+
     /* Moon's mean anomaly */
     $M_accent = 134.9634114 + 477198.8676313 * $T + 0.0089970 * pow($T, 2) +
           pow($T, 3) / 69699.0 - pow($T, 4) / 14712000.0;
-    
+
     $M_accent = $M_accent - floor($M_accent / 360.0) * 360.0;
-    
+
     /*Moon's argument of latitude */
     $F = 93.2720993 + 483202.0175273 * $T - 0.0034029 * pow($T, 2) -
           pow($T, 3) / 3526000.0 + pow($T, 4) / 863310000.0;
-    
+
     $F = $F - floor($F / 360.0) * 360.0;
 
     $A1 = 119.75 + 131.849 * $T;
     $A1 = $A1 - floor($A1 / 360.0) * 360.0;
-    
+
     $A2 =  53.09 + 479264.290 * $T;
     $A2 = $A2 - floor($A2 / 360.0) * 360.0;
-    
+
     $A3 = 313.45 + 481266.484 * $T;
     $A3 = $A3 - floor($A3 / 360.0) * 360.0;
-    
+
     $E = 1 - 0.002516 * $T - 0.0000074 * pow($T, 2);
-                
+
     $L = 6288774.0 * sin(deg2rad($M_accent))
             +1274027.0 * sin(deg2rad(2 * $D - $M_accent))
             +658314.0 * sin(deg2rad(2 * $D))
@@ -607,13 +634,13 @@ class AstroCalc
             -323 * sin(deg2rad(2 * $M + $M_accent)) * pow($E, 2)
             +299 * sin(deg2rad($D + $M - $M_accent)) * $E
             +294 * sin(deg2rad(2 * $D + 3 * $M_accent));
-    
+
     $L = $L + 3958 * sin(deg2rad($A1))
                 + 1962 * sin(deg2rad($L_accent - $F))
                 +  318 * sin(deg2rad($A2));
-    
+
     $eclLongitude = $L_accent + $L / 1000000.0;
-    
+
     $B = 5128122.0 * sin(deg2rad($F))
              +280602.0 * sin(deg2rad($M_accent + $F))
              +277693.0 * sin(deg2rad($M_accent - $F))
@@ -674,16 +701,16 @@ class AstroCalc
              -119 * sin(deg2rad($D - $M_accent - $F))
              +115 * sin(deg2rad(4 * $D - $M - $F)) * $E
              +107 * sin(deg2rad(2 * $D - 2 * $M + $F)) * pow($E, 2);
-    
+
     $B = $B - 2235 * sin(deg2rad($L_accent))
                 +  382 * sin(deg2rad($A3))
                 +  175 * sin(deg2rad($A1 - $F))
                 +  175 * sin(deg2rad($A1 + $F))
                 +  127 * sin(deg2rad($L_accent - $M_accent))
                 -  115 * sin(deg2rad($L_accent + $M_accent));
-    
+
     $eclLatitude = $B / 1000000.0;
-    
+
     $R = -20905355.0 * cos(deg2rad($M_accent))
              - 3699111.0 * cos(deg2rad(2 * $D - $M_accent))
              - 2955968.0 * cos(deg2rad(2 * $D))
@@ -730,34 +757,34 @@ class AstroCalc
              -    4421.0 * cos(deg2rad(2 * $M_accent - 2 * $F))
              +    1165.0 * cos(deg2rad(2 * $M + $M_accent)) * pow($E, 2)
              +    8752.0 * cos(deg2rad(2 * $D - $M_accent - 2 * $F));
-    
+
     $moonR = 385000.56 + $R / 1000.0;
 
     $pi = rad2deg(asin(6378.14 / $moonR));
 
     $nutat = $this->calculateNutation($jd);
-        
+
     $eclLongitude = $eclLongitude + $nutat[0] / 3600.0;
-    
+
     $ecl[0] = $eclLongitude;
     $ecl[1] = $eclLatitude;
-    
+
     // Now we transform from ecliptical to equatorial coordinates
     $equa = $this->convertFromEclipticalToEquatorialCoordinates($ecl, $nutat[3]);
-    
+
     $moonRa = $equa[0] / 15;
     $moonDecl = $equa[1];
-    
+
     $moon[0] = $moonRa;
     $moon[1] = $moonDecl;
     $moon[2] = $pi;
-    
+
     return $moon;
   }
 
   private function calculateNutation($jd) {
     $T = ($jd - 2451545.0) / 36525.0;
-    
+
     /* D stands for mean elongation of the moon from the sun. */
     $D = 297.85036 + 445267.111480 * $T - 0.0019142 * pow($T, 2) + pow($T, 3)
       / 189474.0;
@@ -852,10 +879,10 @@ class AstroCalc
                     +(-3) * sin(deg2rad(2 * $D - $M - $M_accent + 2 * $F + 2 * $omega))
                     +(-3) * sin(deg2rad(3 * $M_accent + 2 * $F + 2 * $omega))
                     +(-3) * sin(deg2rad(2 * $D - $M + 2 * $F + 2 * $omega));
-    
-    
+
+
     $nutLongitude = $nutLongitude / 10000.0;
-    
+
     // This is a very accurate calculation of the nutation in longitude
     $nutObliquity = (92025.0 + 8.9 * $T) * cos(deg2rad($omega))
                     +(5736 - 3.1 * $T) * cos(deg2rad(-2 * $D + 2 * $F + 2 * $omega))
@@ -897,8 +924,8 @@ class AstroCalc
                     +(3) * cos(deg2rad(2 * $M_accent + 2 * $F + $omega));
 
     $nutObliquity = $nutObliquity / 10000.0;
-    
-    
+
+
     $U = $T / 100.0;
     /* For the obliquity, we have an accuracy of 0.01 arcseconds after
      1000 years. (A.D. 1000 - 3000). The accuracy is still a few seconds of
@@ -920,7 +947,7 @@ class AstroCalc
     $nutat[1] = $nutObliquity;
     $nutat[2] = $meanObliquity;
     $nutat[3] = $trueObliquity;
-    
+
     return $nutat;
   }
   private function convertFromEclipticalToEquatorialCoordinates($coords, $nutObliquity)
