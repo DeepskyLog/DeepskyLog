@@ -259,6 +259,7 @@ define("LangpdfOrientationPortrait"     ,"Portrait");
 define("LangpdfOrientationLandscape"    ,"Landschaft");
 define("LangSearchMenuItem14"           ,"Bildb&auml;nde");
 define("LangSearchMenuItem13"           ,"Atlanten");
+define("LangSearchMenuItem15"           ,"Formulieren");
 define('LangAtlassesIntro00'            ,'DeepskyLog Atlanten');
 define('LangAtlassesIntro01'            ,"<b>&Uuml;bersicht</b>s Atlanten haben Seiten mit je 20 Grad und Sternen bis zu Mag 10");
 define('LangAtlassesIntro01a'           ,"<b>Nachschlage</b> Atlanten haben Seiten mit je 12 Grad und Sternen bis zu Mag 12");
@@ -276,6 +277,17 @@ define('LangAtlassesIntro05'            ,'W&auml;hlen Sie eines der drei Formate
 define('LangAtlassesIntro06'            ,'Personalisierte Atlanten');
 define('LangAtlassesIntro07'            ,"Sie k&ouml;nnen eine individuelle Seite downloaden, dabei geben Sie die Koordinaten in der Ecke oben-links vor,<br />
                                          oder Sie k&ouml;nnen alle Seiten der kompletten Hemisphere downloaded.");
+
+define('LangDownloadFormsIntro00'       ,'Sketch and obeservation forms');
+define('LangDownloadFormsIntro02'       ,'Compact sketch form');
+define('LangDownloadFormsIntro03'       ,'A compact sketch form that folds in half so you can do two sketches on one piece of paper. <br/>This format allows you to sketch on top of a book like your PSA.');
+define('LangDownloadFormsIntro04'       ,'Big sketch form');
+define('LangDownloadFormsIntro05'       ,'Utilizes the maximum amount of drawing space for your sketch. With a 17cm sketch circle and simplified details area.');
+define('LangDownloadFormsIntro06'       ,'Obeservation log form');
+define('LangDownloadFormsIntro07'       ,'If you want to jot down multiple brief observation notes one one piece of paper.');
+
+define('LangDownloadFormsDownload'       ,'Download');
+
 define("LangDownloadsMenuTitle"         ,"Downloads");
 define("LangChangeAccountField13"       ,"Motivation");
 define("LangChangeAccountField13Expl"   ,"Bitte beschreiben Sie uns kurz, warum Sie sich registrieren. Dies erm&ouml;glicht uns automatische Registrierungen zu erkennen.");

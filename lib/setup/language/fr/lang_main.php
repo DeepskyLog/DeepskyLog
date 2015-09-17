@@ -260,6 +260,7 @@ define("LangpdfOrientationPortrait"     ,"portrait");
 define("LangpdfOrientationLandscape"    ,"paysage");
 define("LangSearchMenuItem14"           ,"Catalogues d'images");
 define("LangSearchMenuItem13"           ,"Atlas");
+define("LangSearchMenuItem15"           ,"Formulaires");
 define('LangAtlassesIntro00'            ,'DeepskyLog Atlas');
 define('LangAtlassesIntro01'            ,"<b>Aper&ccirc;u</b> : des pages de 20 degr&eacutes, et &eacute;toiles jusqu'&agrave; la magnitude 10.");
 define('LangAtlassesIntro01a'           ,"<b>Chercher</b> : des pages de 12 degr&eacute;s, et &eacute;toiles jusqu'&agrave; la magnitude 12.");
@@ -271,6 +272,17 @@ define('LangAtlassesIntro04'            ,'Atlas g&eacute;n&eacute;rales');
 define('LangAtlassesIntro05'            ,'Choisissez un des trois formats disponibles; ils se t&eacute;l&eacute;chargent en pdf:');
 define('LangAtlassesIntro06'            ,'Atlas personnalis&eacute;s');
 define('LangAtlassesIntro07'            ,"Vous pouvez t&eacute;l&eacute;charger une page individuelle avec le coordonn&eacute; en haut &agrave; gauche d&eacute;fini par vous, <br /> ou vous pouvez t&eacute;l&eacute;charger toute les pages de l'h&eacute;liosph&egrave;re complet.");
+
+define('LangDownloadFormsIntro00'       ,'Sketch and obeservation forms');
+define('LangDownloadFormsIntro02'       ,'Compact sketch form');
+define('LangDownloadFormsIntro03'       ,'A compact sketch form that folds in half so you can do two sketches on one piece of paper. <br/>This format allows you to sketch on top of a book like your PSA.');
+define('LangDownloadFormsIntro04'       ,'Big sketch form');
+define('LangDownloadFormsIntro05'       ,'Utilizes the maximum amount of drawing space for your sketch. With a 17cm sketch circle and simplified details area.');
+define('LangDownloadFormsIntro06'       ,'Obeservation log form');
+define('LangDownloadFormsIntro07'       ,'If you want to jot down multiple brief observation notes one one piece of paper.');
+
+define('LangDownloadFormsDownload'       ,'Download');
+
 define("LangAddSessionField12"					,"Image");
 define("LangAddSessionField12Expl"			,"Une image montrant l'endroit de la session, une image d'un satellite m&eacute;t&eacute;o, ...");
 define("LangDownloadsMenuTitle"         ,"T&eacute;l&eacute;chargements");

@@ -15,6 +15,7 @@ function menu_downloads() {
 	echo " <ul class=\"dropdown-menu\">";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=downloadAstroImageCatalogs\">" . LangSearchMenuItem14 . "</a></li>";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=view_atlaspages\">" . LangSearchMenuItem13 . "</a></li>";
+	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=downloadForms\">" . LangSearchMenuItem15 . "</a></li>";
 	echo " </ul>";
 	echo "</li>
 			  </ul>";

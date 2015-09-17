@@ -2562,8 +2562,9 @@ class Utils {
 																																																																																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_query_observations', 'comets/content/setup_observations_query.php' )))
 																																																																																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionall ( 'comets_query_objects', 'comets/content/setup_objects_query.php' )))
 																																																																																					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'main', 'deepsky/content/main.php' )))
-																																																																																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionDSquickPick ()))
-																																																																																							$indexActionInclude = $this->utilitiesGetIndexActionDefaultAction ();
+																																																																																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'downloadForms', 'common/content/downloadForms.php' )))
+																																																																																							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionDSquickPick ()))
+																																																																																								$indexActionInclude = $this->utilitiesGetIndexActionDefaultAction ();
 		return $indexActionInclude;
 	}
 	private function utilitiesGetIndexActionDefaultAction() {

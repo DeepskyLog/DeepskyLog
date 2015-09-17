@@ -262,6 +262,7 @@ define("LangpdfOrientationPortrait"     ,"portrait");
 define("LangpdfOrientationLandscape"    ,"landscape");
 define("LangSearchMenuItem14"           ,"Image Catalogs");
 define("LangSearchMenuItem13"           ,"Atlases");
+define("LangSearchMenuItem15"           ,"Forms");
 define('LangAtlassesIntro00'            ,'DeepskyLog atlases');
 define('LangAtlassesIntro01'            ,"The <b>overview</b> atlases have pages of 20 degrees, and show stars to magnitude 10.");
 define('LangAtlassesIntro01a'           ,"The <b>lookup</b> atlases have pages of 12 degrees, and show stars to magnitude 12.");
@@ -279,6 +280,17 @@ define('LangAtlassesIntro05'            ,'Choose one of the three available form
 define('LangAtlassesIntro06'            ,'Personalised Atlases');
 define('LangAtlassesIntro07'            ,"You can download an individual page, with top-left coordinates to be specified by you,<br />
                                           or you can download all the pages of the complete helisphere.");
+
+define('LangDownloadFormsIntro00'       ,'Sketch and obeservation forms');
+define('LangDownloadFormsIntro02'       ,'Compact sketch form');
+define('LangDownloadFormsIntro03'       ,'A compact sketch form that folds in half so you can do two sketches on one piece of paper. <br/>This format allows you to sketch on top of a book like your PSA.');
+define('LangDownloadFormsIntro04'       ,'Big sketch form');
+define('LangDownloadFormsIntro05'       ,'Utilizes the maximum amount of drawing space for your sketch. With a 17cm sketch circle and simplified details area.');
+define('LangDownloadFormsIntro06'       ,'Obeservation log form');
+define('LangDownloadFormsIntro07'       ,'If you want to jot down multiple brief observation notes on one piece of paper.');
+
+define('LangDownloadFormsDownload'       ,'Download');
+
 define("LangAddSessionField12"					,"Picture");
 define("LangAddSessionField12Expl"			,"A picture showing the location of the session, a weather satellite picture, ...");
 define("LangDownloadsMenuTitle"         ,"Downloads");
