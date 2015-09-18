@@ -273,12 +273,12 @@ define('LangAtlassesIntro05'            ,'Choisissez un des trois formats dispon
 define('LangAtlassesIntro06'            ,'Atlas personnalis&eacute;s');
 define('LangAtlassesIntro07'            ,"Vous pouvez t&eacute;l&eacute;charger une page individuelle avec le coordonn&eacute; en haut &agrave; gauche d&eacute;fini par vous, <br /> ou vous pouvez t&eacute;l&eacute;charger toute les pages de l'h&eacute;liosph&egrave;re complet.");
 
-define('LangDownloadFormsIntro00'       ,'Sketch and obeservation forms');
+define('LangDownloadFormsIntro00'       ,'Sketch and observation forms');
 define('LangDownloadFormsIntro02'       ,'Compact sketch form');
 define('LangDownloadFormsIntro03'       ,'A compact sketch form that folds in half so you can do two sketches on one piece of paper. <br/>This format allows you to sketch on top of a book like your PSA.');
 define('LangDownloadFormsIntro04'       ,'Big sketch form');
 define('LangDownloadFormsIntro05'       ,'Utilizes the maximum amount of drawing space for your sketch. With a 17cm sketch circle and simplified details area.');
-define('LangDownloadFormsIntro06'       ,'Obeservation log form');
+define('LangDownloadFormsIntro06'       ,'Observation log form');
 define('LangDownloadFormsIntro07'       ,'If you want to jot down multiple brief observation notes one one piece of paper.');
 
 define('LangDownloadFormsDownload'       ,'Download');

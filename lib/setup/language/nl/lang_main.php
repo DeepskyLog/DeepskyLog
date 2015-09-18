@@ -278,7 +278,7 @@ define('LangDownloadFormsIntro00'       ,'Schets- en observatieformulieren');
 define('LangDownloadFormsIntro02'       ,'Compact schetsformulier');
 define('LangDownloadFormsIntro03'       ,'Een compact schetsformulier dat je dubbel kan vouwen zodat je twee schetsen op een vel papier kunt maken. <br/>Het formaat past gemakkelijk op een boek zoals je PSA.');
 define('LangDownloadFormsIntro04'       ,'Groot schetsformulier');
-define('LangDownloadFormsIntro05'       ,'Gebruikt de maximale grootte voor een je schets. Bevat een 17cm schetscirkel en een vereenvoudigd details formulier.');
+define('LangDownloadFormsIntro05'       ,'Gebruikt de maximale grootte voor je schets. Bevat een 17cm schetscirkel en een vereenvoudigd details formulier.');
 define('LangDownloadFormsIntro06'       ,'Observatie logformulier');
 define('LangDownloadFormsIntro07'       ,'Voor als je snelle aantekeningen over meerdere objecten op papier wil zetten.');
 

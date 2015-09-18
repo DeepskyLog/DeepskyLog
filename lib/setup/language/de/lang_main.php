@@ -278,12 +278,12 @@ define('LangAtlassesIntro06'            ,'Personalisierte Atlanten');
 define('LangAtlassesIntro07'            ,"Sie k&ouml;nnen eine individuelle Seite downloaden, dabei geben Sie die Koordinaten in der Ecke oben-links vor,<br />
                                          oder Sie k&ouml;nnen alle Seiten der kompletten Hemisphere downloaded.");
 
-define('LangDownloadFormsIntro00'       ,'Sketch and obeservation forms');
+define('LangDownloadFormsIntro00'       ,'Sketch and observation forms');
 define('LangDownloadFormsIntro02'       ,'Compact sketch form');
 define('LangDownloadFormsIntro03'       ,'A compact sketch form that folds in half so you can do two sketches on one piece of paper. <br/>This format allows you to sketch on top of a book like your PSA.');
 define('LangDownloadFormsIntro04'       ,'Big sketch form');
 define('LangDownloadFormsIntro05'       ,'Utilizes the maximum amount of drawing space for your sketch. With a 17cm sketch circle and simplified details area.');
-define('LangDownloadFormsIntro06'       ,'Obeservation log form');
+define('LangDownloadFormsIntro06'       ,'Observation log form');
 define('LangDownloadFormsIntro07'       ,'If you want to jot down multiple brief observation notes one one piece of paper.');
 
 define('LangDownloadFormsDownload'       ,'Download');
