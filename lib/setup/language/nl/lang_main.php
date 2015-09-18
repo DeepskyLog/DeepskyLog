@@ -255,6 +255,7 @@ define("LangpdfOrientationPortrait"     ,"portrait");
 define("LangpdfOrientationLandscape"    ,"landscape");
 define("LangSearchMenuItem14"           ,"Beeldencatalogi");
 define("LangSearchMenuItem13"           ,"Atlassen");
+define("LangSearchMenuItem15"           ,"Formulieren");
 define('LangAtlassesIntro00'            ,'DeepskyLog atlassen');
 define('LangAtlassesIntro01'            ,"De <b>overzicht</b> atlassen hebben paginas van 20 graden, en tonen sterren tot magnitude 10.");
 define('LangAtlassesIntro01a'           ,"De <b>opzoek</b> atlassen hebben paginas van 12 graden, en tonen sterren tot magnitude 12.");
@@ -272,6 +273,17 @@ define('LangAtlassesIntro05'            ,'Kies een van de drie beschikbare forma
 define('LangAtlassesIntro06'            ,'Gepersonaliseerde atlassen');
 define('LangAtlassesIntro07'            ,"Je kan een individuele pagina downloaden,met de door jou gespecifieerde co&ouml;rdinaten,<br />
                                           of je kan alle bladzijden van de hele hemel laten genereren.");
+
+define('LangDownloadFormsIntro00'       ,'Schets- en observatieformulieren');
+define('LangDownloadFormsIntro02'       ,'Compact schetsformulier');
+define('LangDownloadFormsIntro03'       ,'Een compact schetsformulier dat je dubbel kan vouwen zodat je twee schetsen op een vel papier kunt maken. <br/>Het formaat past gemakkelijk op een boek zoals je PSA.');
+define('LangDownloadFormsIntro04'       ,'Groot schetsformulier');
+define('LangDownloadFormsIntro05'       ,'Gebruikt de maximale grootte voor een je schets. Bevat een 17cm schetscirkel en een vereenvoudigd details formulier.');
+define('LangDownloadFormsIntro06'       ,'Observatie logformulier');
+define('LangDownloadFormsIntro07'       ,'Voor als je snelle aantekeningen over meerdere objecten op papier wil zetten.');
+
+define('LangDownloadFormsDownload'       ,'Download');
+
 define("LangAddSessionField12"          ,"Afbeelding");
 define("LangAddSessionField12Expl"      ,"Een foto van de waarneemlocatie, van de waarnemers, ...");
 define("LangDownloadsMenuTitle"         ,"Downloads");
