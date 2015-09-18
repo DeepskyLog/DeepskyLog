@@ -565,7 +565,6 @@ class Objects {
 				$obs [$j] ['objectmaxaltitudepopup'] = "-";
 			}
 		}
-
 		return $obs;
 	}
 	private function getPartOfNames($name) {
@@ -768,6 +767,7 @@ class Objects {
 					$result2 [$j] ['objectmaxalt'] = "-";
 					$result2 [$j] ['objectmaxaltstart'] = "-";
 					$result2 [$j] ['objectmaxaltend'] = "-";
+
 					if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'stdLocation' )) {
 						$theLocation = $objObserver->getObserverProperty ( $loggedUser, 'stdLocation' );
 						$longitude = 1.0 * $objLocation->getLocationPropertyFromId ( $theLocation, 'longitude' );
@@ -777,61 +777,59 @@ class Objects {
 						$maxalt = '-';
 						$maxaltstart = '-';
 						$maxaltend = '-';
-						if ($obscnt < 401) {
-							for($i = 1; $i < 13; $i ++) {
-								$datestr = sprintf ( "%02d", $i ) . "/" . sprintf ( "%02d", 1 ) . "/" . $_SESSION ['globalYear'];
-								$dateTime = new DateTime ( $datestr, $dateTimeZone );
-								$timedifference = $dateTimeZone->getOffset ( $dateTime );
-								if (strncmp ( $timezone, "Etc/GMT", 7 ) == 0)
-									$timedifference = - $timedifference;
-								date_default_timezone_set ( "UTC" );
-								$theTimeDifference1 [$i] = $timedifference;
-								$theEphemerides1 [$i] = $this->getEphemerides ( $object, 1, $i, 2010 );
-								$theNightEphemerides1 [$i] = date_sun_info ( strtotime ( "2010" . "-" . $i . "-" . "1" ), $latitude, $longitude );
-								$datestr = sprintf ( "%02d", $i ) . "/" . sprintf ( "%02d", 1 ) . "/" . $_SESSION ['globalYear'];
-								$dateTime = new DateTime ( $datestr, $dateTimeZone );
-								$timedifference = $dateTimeZone->getOffset ( $dateTime );
-								if (strncmp ( $timezone, "Etc/GMT", 7 ) == 0)
-									$timedifference = - $timedifference;
-								date_default_timezone_set ( "UTC" );
-								$theTimeDifference15 [$i] = $timedifference;
-								$theEphemerides15 [$i] = $this->getEphemerides ( $object, 15, $i, 2010 );
-								$theNightEphemerides15 [$i] = date_sun_info ( strtotime ( "2010" . "-" . $i . "-" . "15" ), $latitude, $longitude );
-							}
-							for($i = 1; $i < 13; $i ++) {
-								if ($i == 1) {
-									if (($theEphemerides1 [$i] ['altitude'] != '-') && (($theEphemerides1 [$i] ['altitude'] == $theEphemerides15 [$i] ['altitude']) || ($theEphemerides1 [$i] ['altitude'] == $theEphemerides15 [12] ['altitude']))) {
-										$maxalt = $theEphemerides1 [$i] ['altitude'];
-										if ($theEphemerides1 [$i] ['altitude'] > $theEphemerides15 [12] ['altitude'])
-											$maxaltstart = 0;
-										else if ($theEphemerides1 [$i] ['altitude'] > $theEphemerides15 [$i] ['altitude'])
-											$maxaltend = 0;
-									}
-								} else {
-									if (($theEphemerides1 [$i] ['altitude'] != '-') && (($theEphemerides1 [$i] ['altitude'] == $theEphemerides15 [$i] ['altitude']) || ($theEphemerides1 [$i] ['altitude'] == $theEphemerides15 [$i - 1] ['altitude']))) {
-										$maxalt = $theEphemerides1 [$i] ['altitude'];
-										if ($theEphemerides1 [$i] ['altitude'] > $theEphemerides15 [$i - 1] ['altitude'])
-											$maxaltstart = $i - 1;
-										else if ($theEphemerides1 [$i] ['altitude'] > $theEphemerides15 [$i] ['altitude'])
-											$maxaltend = $i - 1;
-									}
+						for($i = 1; $i < 13; $i ++) {
+							$datestr = sprintf ( "%02d", $i ) . "/" . sprintf ( "%02d", 1 ) . "/" . $_SESSION ['globalYear'];
+							$dateTime = new DateTime ( $datestr, $dateTimeZone );
+							$timedifference = $dateTimeZone->getOffset ( $dateTime );
+							if (strncmp ( $timezone, "Etc/GMT", 7 ) == 0)
+							$timedifference = - $timedifference;
+							date_default_timezone_set ( "UTC" );
+							$theTimeDifference1 [$i] = $timedifference;
+							$theEphemerides1 [$i] = $this->getEphemerides ( $object, 1, $i, 2010 );
+							$theNightEphemerides1 [$i] = date_sun_info ( strtotime ( "2010" . "-" . $i . "-" . "1" ), $latitude, $longitude );
+							$datestr = sprintf ( "%02d", $i ) . "/" . sprintf ( "%02d", 1 ) . "/" . $_SESSION ['globalYear'];
+							$dateTime = new DateTime ( $datestr, $dateTimeZone );
+							$timedifference = $dateTimeZone->getOffset ( $dateTime );
+							if (strncmp ( $timezone, "Etc/GMT", 7 ) == 0)
+							$timedifference = - $timedifference;
+							date_default_timezone_set ( "UTC" );
+							$theTimeDifference15 [$i] = $timedifference;
+							$theEphemerides15 [$i] = $this->getEphemerides ( $object, 15, $i, 2010 );
+							$theNightEphemerides15 [$i] = date_sun_info ( strtotime ( "2010" . "-" . $i . "-" . "15" ), $latitude, $longitude );
+						}
+						for($i = 1; $i < 13; $i ++) {
+							if ($i == 1) {
+								if (($theEphemerides1 [$i] ['altitude'] != '-') && (($theEphemerides1 [$i] ['altitude'] == $theEphemerides15 [$i] ['altitude']) || ($theEphemerides1 [$i] ['altitude'] == $theEphemerides15 [12] ['altitude']))) {
+									$maxalt = $theEphemerides1 [$i] ['altitude'];
+									if ($theEphemerides1 [$i] ['altitude'] > $theEphemerides15 [12] ['altitude'])
+									$maxaltstart = 0;
+									else if ($theEphemerides1 [$i] ['altitude'] > $theEphemerides15 [$i] ['altitude'])
+									$maxaltend = 0;
 								}
-								if ($i == 12) {
-									if (($theEphemerides15 [$i] ['altitude'] != '-') && (($theEphemerides15 [$i] ['altitude'] == $theEphemerides1 [$i] ['altitude']) || ($theEphemerides15 [$i] ['altitude'] == $theEphemerides1 [1] ['altitude']))) {
-										$maxalt = $theEphemerides15 [$i] ['altitude'];
-										if ($theEphemerides15 [$i] ['altitude'] > $theEphemerides1 [$i] ['altitude'])
-											$maxaltstart = $i + .5 - 1;
-										else if ($theEphemerides15 [$i] ['altitude'] > $theEphemerides1 [1] ['altitude'])
-											$maxaltend = $i + .5 - 1;
-									}
-								} else {
-									if (($theEphemerides15 [$i] ['altitude'] != '-') && (($theEphemerides15 [$i] ['altitude'] == $theEphemerides1 [$i] ['altitude']) || ($theEphemerides15 [$i] ['altitude'] == $theEphemerides1 [$i + 1] ['altitude']))) {
-										$maxalt = $theEphemerides15 [$i] ['altitude'];
-										if ($theEphemerides15 [$i] ['altitude'] > $theEphemerides1 [$i] ['altitude'])
-											$maxaltstart = $i + .5 - 1;
-										else if ($theEphemerides15 [$i] ['altitude'] > $theEphemerides1 [$i + 1] ['altitude'])
-											$maxaltend = $i + .5 - 1;
-									}
+							} else {
+								if (($theEphemerides1 [$i] ['altitude'] != '-') && (($theEphemerides1 [$i] ['altitude'] == $theEphemerides15 [$i] ['altitude']) || ($theEphemerides1 [$i] ['altitude'] == $theEphemerides15 [$i - 1] ['altitude']))) {
+									$maxalt = $theEphemerides1 [$i] ['altitude'];
+									if ($theEphemerides1 [$i] ['altitude'] > $theEphemerides15 [$i - 1] ['altitude'])
+									$maxaltstart = $i - 1;
+									else if ($theEphemerides1 [$i] ['altitude'] > $theEphemerides15 [$i] ['altitude'])
+									$maxaltend = $i - 1;
+								}
+							}
+							if ($i == 12) {
+								if (($theEphemerides15 [$i] ['altitude'] != '-') && (($theEphemerides15 [$i] ['altitude'] == $theEphemerides1 [$i] ['altitude']) || ($theEphemerides15 [$i] ['altitude'] == $theEphemerides1 [1] ['altitude']))) {
+									$maxalt = $theEphemerides15 [$i] ['altitude'];
+									if ($theEphemerides15 [$i] ['altitude'] > $theEphemerides1 [$i] ['altitude'])
+									$maxaltstart = $i + .5 - 1;
+									else if ($theEphemerides15 [$i] ['altitude'] > $theEphemerides1 [1] ['altitude'])
+									$maxaltend = $i + .5 - 1;
+								}
+							} else {
+								if (($theEphemerides15 [$i] ['altitude'] != '-') && (($theEphemerides15 [$i] ['altitude'] == $theEphemerides1 [$i] ['altitude']) || ($theEphemerides15 [$i] ['altitude'] == $theEphemerides1 [$i + 1] ['altitude']))) {
+									$maxalt = $theEphemerides15 [$i] ['altitude'];
+									if ($theEphemerides15 [$i] ['altitude'] > $theEphemerides1 [$i] ['altitude'])
+									$maxaltstart = $i + .5 - 1;
+									else if ($theEphemerides15 [$i] ['altitude'] > $theEphemerides1 [$i + 1] ['altitude'])
+									$maxaltend = $i + .5 - 1;
 								}
 							}
 						}
