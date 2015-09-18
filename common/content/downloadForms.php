@@ -17,10 +17,10 @@ function downloadForms()
 
   echo "<script type=\"text/javascript\" src=\"".$baseURL."common/content/atlasPages.js\"></script>";
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
-	
+
   $exampleText = AtlasExample;
   echo"<h3>".LangDownloadFormsIntro00."</h3>";
-  
+
   echo "<div id=\"carousel-example-generic\" class=\"carousel slide\" data-ride=\"carousel\"  data-interval=\"5000\">
        <!-- Indicators -->
        <ol class=\"carousel-indicators\">
@@ -28,7 +28,7 @@ function downloadForms()
         <li data-target=\"#carousel-example-generic\" data-slide-to=\"1\"></li>
         <li data-target=\"#carousel-example-generic\" data-slide-to=\"2\"></li>
   		</ol>
-  
+
        <!-- Wrapper for slides -->
        <div class=\"carousel-inner\">
         <div class=\"item active\">
@@ -53,7 +53,7 @@ function downloadForms()
          </div>
         </div>
        </div>
-  
+
       	<!-- Controls -->
         <a class=\"left carousel-control\" href=\"#carousel-example-generic\" data-slide=\"prev\">
          <span class=\"glyphicon glyphicon-chevron-left\"></span>
@@ -62,20 +62,20 @@ function downloadForms()
          <span class=\"glyphicon glyphicon-chevron-right\"></span>
         </a>";
   echo "</div>";
-  
-  
-  
+
+
+
 	echo "<h3>".LangDownloadFormsIntro02."</h3>";
 	echo "<p>".LangDownloadFormsIntro03."</p>";
-	echo "<a class=\"btn btn-success\" href=\"/downloads/Sketch.pdf\"><span class=\"glyphicon glyphicon-download\"></span>".LangDownloadFormsDownload."</a>";
-	
+	echo "<a class=\"btn btn-success\" href=\"/downloads/Sketch.pdf\"><span class=\"glyphicon glyphicon-download\"></span>&nbsp;".LangDownloadFormsDownload."</a>";
+
 	echo "<h3>".LangDownloadFormsIntro04."</h3>";
 	echo "<p>".LangDownloadFormsIntro05."</p>";
-	echo "<a class=\"btn btn-success\" href=\"/downloads/Sketch big.pdf\"><span class=\"glyphicon glyphicon-download\"></span>".LangDownloadFormsDownload."</a>";
-	
-	
+	echo "<a class=\"btn btn-success\" href=\"/downloads/Sketch big.pdf\"><span class=\"glyphicon glyphicon-download\"></span>&nbsp;".LangDownloadFormsDownload."</a>";
+
+
 	echo "<h3>".LangDownloadFormsIntro06."</h3>";
 	echo "<p>".LangDownloadFormsIntro07."</p>";
-	echo "<a class=\"btn btn-success\" href=\"/downloads/Observation log.pdf\"><span class=\"glyphicon glyphicon-download\"></span>".LangDownloadFormsDownload."</a>";
+	echo "<a class=\"btn btn-success\" href=\"/downloads/Observation log.pdf\"><span class=\"glyphicon glyphicon-download\"></span>&nbsp;".LangDownloadFormsDownload."</a>";
 }
 ?>
