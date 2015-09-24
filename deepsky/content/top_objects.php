@@ -1,46 +1,35 @@
-<script type="text/javascript" src="lib/javascript/bootstrap.min.js"></script>
-<script type="text/javascript" src="lib/javascript/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="lib/javascript/dataTables.bootstrap.min.js"></script>
-<link rel="stylesheet" type="text/css" href="styles/dataTables.bootstrap.css">
+<?php require_once 'lib/datatables_setup.php'; ?>
 
 <script type="text/javascript">		 
 		$(document).ready(function() {
+		
 		    $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
 		        $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
 		    } );
 
-		    //TODO: move default values to js include
-		    $('#table1').DataTable( {
-		    	"language": {
-		    	    "search": 		"<?=LangSearch?>",
-		    	    "lengthMenu":	"_MENU_"
-		   		 }, 
-		        "ajax": 'rank_objects_json.php',
-		        "lengthMenu": [[10, 25, 50, 100, 1000, -1], [10, 25, 50, 100, 1000, "<?=LangShowAll?>"]],
-		        "order": [[1, 'desc']],
-		        "columns": [
-			    	//format of data columns
-			        { "data": "objectname" },
-			        { "data": "count"}
-			    ]
-		    } );
-		    $('#table2').DataTable( {
-		    	"language": {
-		    	    "search": "<?=LangSearch?>",
-		    	    "lengthMenu":	"_MENU_"
-		    	},
-		        "ajax": 'rank_objects_json.php?type=sketched',
-		        "lengthMenu": [[10, 25, 50, 100, 1000, -1], [10, 25, 50, 100, 1000, "<?=LangShowAll?>"]],
-		        "order": [[1, 'desc']],
-		        "columns": [
-			    	//format of data columns
-			        { "data": "objectname" },
-			        { "data": "count"}
-			    ]
-		    } );
-					    
+		  	//from datatables_setup.php
+		    datatablesConfig.ajax = 'rank_objects_json.php';
+		    datatablesConfig.columns = [
+		       	{ "data": "objectname",
+			      "render": function (data, type, row) { return '<a href="index.php?indexAction=detail_object&object=' + row.objectname + '">' + row.objectname + '</a>'; }},
+		        { "data": "count",
+		          "render": function (data, type, row) { return '<a href="index.php?indexAction=result_selected_observations&title=Overzicht+geselecteerde+waarnemingen&myLanguages=true&query=Zoek+waarnemingen&seen=A&object=' + row.objectname + '">' + row.count + '</a>'; }},                    	
+		    ];
+		    
+		    $('#table1').DataTable( datatablesConfig );	    
+		    
+		    datatablesConfig.aoColumns = [
+                { "data": "objectname",
+  			      "render": function (data, type, row) { return '<a href="index.php?indexAction=detail_object&object=' + row.objectname + '">' + row.objectname + '</a>'; }},
+                { "data": "count",
+                  "render": function (data, type, row) { return '<a href="index.php?indexAction=result_selected_observations&title=Overzicht+geselecteerde+waarnemingen&myLanguages=true&query=Zoek+waarnemingen&seen=A&drawings=on&object=' + row.objectname + '">' + row.count + '</a>'; }},                    	
+            ];		    
+
+		    datatablesConfig.ajax = 'rank_objects_json.php?type=sketched';
+		    $('#table2').DataTable( datatablesConfig );				    
 		} );
 </script>
+
 
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
