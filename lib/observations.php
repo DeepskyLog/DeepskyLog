@@ -657,7 +657,7 @@ class Observations {
 			$sql .= " ORDER BY observationid DESC";
 		$sql = $sql . ";";
 		
-		echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
+		//echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
 		$run = $objDatabase->selectRecordset ( $sql );
 		if (! array_key_exists ( 'countquery', $queries )) {
 			$j = 0;
