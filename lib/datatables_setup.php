@@ -1,4 +1,3 @@
-<script type="text/javascript" src="lib/javascript/bootstrap.min.js"></script>
 <script type="text/javascript" src="lib/javascript/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="lib/javascript/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript" src="lib/javascript/deepskylog.datatables.config.js"></script>
