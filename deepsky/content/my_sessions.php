@@ -11,9 +11,8 @@ function selected_sessions() {
 	reset ( $_GET );
 
 	// First check the number of sessions for the observer
-	$sessions = $objSession->getListWithAllActiveSessions ();
-	$observer = "-1";
+	$sessions = $objSession->getListWithActiveSessions ( $loggedUser );
 
-	$objSession->showListSessions ( $sessions, $observer );
+  $objSession->showListSessions ( $sessions, $loggedUser );
 }
 ?>
