@@ -2578,7 +2578,7 @@ class Utils {
 			$lastReadObservation = ($loggedUser ? $objObserver->getLastReadObservation ( $loggedUser ) : - 1);
 			return 'deepsky/content/main.php';
 		} else if ($_SESSION ['module'] == 'comets') {
-			$theDate = date ( 'Ymd', strtotime ( '-1 month' ) );
+			$theDate = date ( 'Ymd', strtotime ( '-1 year' ) );
 			$_GET ['minyear'] = substr ( $theDate, 0, 4 );
 			$_GET ['minmonth'] = substr ( $theDate, 4, 2 );
 			$_GET ['minday'] = substr ( $theDate, 6, 2 );
@@ -2702,10 +2702,10 @@ class Utils {
                 format: function(s, table, cell, cellIndex) {
                   // format your data for normalization
 				  s = s.replace('°', '.');
-				  s = s.replace(/[^0-9-.]/g, '');	
-				
+				  s = s.replace(/[^0-9-.]/g, '');
+
 				  if(s == '-'){s = '0'};
-				
+
                   return s;
                 },
                 // set type, either numeric or text
