@@ -22,7 +22,7 @@ function menu_search() {
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay&amp;newobservations=true\">" . LangSearchMenuItem9 . "</a></li>";
 	if (($loggedUser) && ($loggedUser != "admin")) { // admin doesn't have own observations
 		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . urlencode ( $loggedUser ) . "\">" . LangSearchMenuItem1 . "</a></li>";
-		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_sessions&amp;observer=" . urlencode ( $loggedUser ) . "\">" . LangSearchMenuItem11 . "</a></li>";
+		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=result_my_sessions\">" . LangSearchMenuItem11 . "</a></li>";
  		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_lists\">" . LangViewLists . "</a></li>";
 		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_instruments\">" . LangViewInstruments . "</a></li>";
 		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_sites\">" . LangViewLocations . "</a></li>";
