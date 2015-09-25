@@ -839,7 +839,7 @@ class Observations {
 		echo "<th id=\"objectname\">" . LangOverviewObservationsHeader1 . "</th>";
 		echo "<th id=\"objectconstellation\">" . LangViewObservationField1b . "</th>";
 		echo "<th id=\"observername\">" . LangOverviewObservationsHeader2 . "</th>";
-		echo "<th id=\"instrumentname\">" . LangOverviewObservationsHeader3 . "</th>";
+		echo "<th class=\"sorter-instruments\" id=\"instrumentname\">" . LangOverviewObservationsHeader3 . "</th>";
 		echo "<th id=\"observationdate\">" . LangOverviewObservationsHeader4 . "</th>";
 		if ($lco != "O") {
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">&nbsp;</th>";

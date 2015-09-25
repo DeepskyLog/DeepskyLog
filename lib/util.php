@@ -2713,6 +2713,28 @@ class Utils {
                 type: 'numeric'
               });";
 
+							echo "// add instrument parser. Use with class=sorter-instruments
+					              $.tablesorter.addParser({
+					                // set a unique id
+					                id: 'instruments',
+					                is: function(s, table, cell, \$cell) {
+					                  // return false so this parser is not auto detected
+					                  return false;
+					                },
+					                format: function(s, table, cell, cellIndex) {
+					                  // format your data for normalization
+									  s = s.replace('°', '.');
+										s = s.replace(/.+\(/, '');
+									  s = s.replace(/[^0-9-.]/g, '');
+
+									  if(s == '-'){s = '0'};
+
+					                  return s;
+					                },
+					                // set type, either numeric or text
+					                type: 'numeric'
+					              });";
+
 		echo "// add astrotime parser. Use with class=sorter-months
               $.tablesorter.addParser({
                 // set a unique id
