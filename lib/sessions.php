@@ -76,25 +76,27 @@ class Sessions {
 		$existing_sessions = $this->getAllActiveSessionsForUser ( $loggedUser );
 		$return = false;
 		for($i = 0; $i < count ( $existing_sessions ); $i ++) {
-			$session_begindate = $existing_sessions [$i] ['begindate'];
-			$session_enddate = $existing_sessions [$i] ['enddate'];
+			if ($existing_sessions[$i]["id"] != $sessionid) {
+				$session_begindate = $existing_sessions [$i] ['begindate'];
+				$session_enddate = $existing_sessions [$i] ['enddate'];
 
+				// Check if the begindate of the new session is in one of the other existing sessions
+				$start_ts = strtotime($session_begindate);
+				$end_ts = strtotime($session_enddate);
+				$user_ts = strtotime($begindate);
+				// Check that user date is between start & end
+				if (($user_ts >= $start_ts) && ($user_ts <= $end_ts)) {
+					$return = true;
+				}
 
-			// Check if the begindate of the new session is in one of the other existing sessions
-			$start_ts = strtotime($session_begindate);
-			$end_ts = strtotime($session_enddate);
-			$user_ts = strtotime($begindate);
-			// Check that user date is between start & end
-			if (($user_ts >= $start_ts) && ($user_ts <= $end_ts)) {
-				$return = true;
-			}
+				// Check if the enddate of the new session is in one of the other existing sessions
+				$user_ts = strtotime($enddate);
 
-			// Check if the enddate of the new session is in one of the other existing sessions
-			$user_ts = strtotime($enddate);
-
-			// Check that user date is between start & end
-			if (($user_ts >= $start_ts) && ($user_ts <= $end_ts)) {
-				$return = true;
+				// Check that user date is between start & end
+				if (($user_ts >= $start_ts) && ($user_ts <= $end_ts)) {
+					// Don't take into account the session that will be adapted
+					$return = true;
+				}
 			}
 		}
 		if ($return) {
