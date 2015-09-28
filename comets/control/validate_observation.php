@@ -1,4 +1,4 @@
-<?php 
+<?php
 // validate_observation.php
 // checks if the add new observation form is correctly filled in
 
@@ -40,7 +40,7 @@ function validate_observation()
 	        $objCometObservation->setTail($current_observation, $objUtil->checkRequestKey('tail_length',-99));
 	        $objCometObservation->setPa($current_observation, $objUtil->checkRequestKey('position_angle',-99));
 	        // MAGNITUDE AND RELATED FIELDS
-	        if($_POST['mag']) // magnitude given
+	        if(array_key_exists('mag', $_POST)) // magnitude given
 	        { if(ereg('^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$', $_POST['mag'], $matches)) // correct magnitude
 	          { $magnitude = "" . $matches[1] . ".";
 	            if($matches[2] != "")
@@ -48,7 +48,7 @@ function validate_observation()
 	            else
 	              $magnitude = $magnitude . "0";
 	            $objCometObservation->setMagnitude($current_observation, $magnitude);
-	            if($_POST['uncertain'])
+	            if(array_key_exists('uncertain', $_POST))
 	              $objCometObservation->setMagnitudeUncertain($current_observation, 1);
 	            else
 	              $objCometObservation->setMagnitudeUncertain($current_observation, 0);
@@ -86,12 +86,12 @@ function validate_observation()
 	        $_SESSION['day'] = $_POST['day']; // save current day
 	        $_SESSION['instrument'] = $_POST['instrument']; // save current instrument for new observations
 	        $_SESSION['location'] = $_POST['site']; // save current location
-	        $_SESSION['savedata'] = "yes"; // session variable to tag multiple observations 
+	        $_SESSION['savedata'] = "yes"; // session variable to tag multiple observations
 	        $_SESSION['observation_query'] = "";
 	        $_GET['indexAction']='comets_detail_observation';
 	        $_GET['observation']=$current_observation;
 	        $_GET['new']="yes";
-	      }  
+	      }
 	    }
 	  }
 	  elseif($_POST['clearfields']) // pushed clear fields button
