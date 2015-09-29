@@ -969,7 +969,8 @@ define("LangEditObjectDescription"												,"Edit Description");
 
 // content/change_account.php
 
-define("LangChangeAccountTitle"														,"Settings for ");
+define("LangChangeAccountTitle"														,"Settings");
+define("LangChangeAccountTitleFor"," for ");
 define("LangChangeAccountField1"													,"Username");
 define("LangChangeAccountField1Expl"											,"This is the name you will use to log in");
 define("LangChangeAccountField2"													,"Email address");

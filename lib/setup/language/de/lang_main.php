@@ -210,7 +210,8 @@ define('GraphAccomplishments'			,'DeepskyLog Sternen');
 define('LangSelectColumns'        ,'Kies kolommen');
 define('LangNewMessage'           ,'Nieuw bericht');
 define('LangSendMessage'          ,'Zend bericht');
-define("LangChangeAccountTitle"		,"Settings for ");
+define("LangChangeAccountTitle"		,"Settings");
+define("LangChangeAccountTitleFor"," for ");
 define("LangChangeMenuItem1"			,"Settings");
 
 define('LangUnderHorizon'				,'unter dem Horizont');

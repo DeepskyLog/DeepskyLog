@@ -948,7 +948,8 @@ define("LangEditObjectDescription"												,"DESC-Beschrijving aanpassen");
 
 // content/change_account.php
 
-define("LangChangeAccountTitle"														,"Instellingen voor ");
+define("LangChangeAccountTitle"														,"Instellingen");
+define("LangChangeAccountTitleFor"," voor ");
 define("LangChangeAccountField1"													,"Gebruikersnaam");
 define("LangChangeAccountField1Expl"											,"Onder deze naam kan je inloggen op Deepskylog");
 define("LangChangeAccountField2"													,"Emailadres");

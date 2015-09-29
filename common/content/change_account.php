@@ -71,7 +71,7 @@ function change_account()
 	echo "<form class=\"form-horizontal\" role=\"form\" action=\"".$baseURL."index.php\" enctype=\"multipart/form-data\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\" />";
 
-	echo "<h4>" . LangChangeAccountTitle .
+	echo "<h4>" . LangChangeAccountTitle . LangChangeAccountTitleFor . 
                 $objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'firstname') . " " .
                 $objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name') . "</h4>";
 	$content="<input class=\"pull-right btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
@@ -90,54 +90,55 @@ function change_account()
   echo "<div id=\"my-tab-content\" class=\"tab-content\">";
   echo "<div class=\"tab-pane active\" id=\"info\">";
 
-	// echo "<div class=\"form-group\">";
-	// echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField1 . "</label>";
-	// echo "<div class=\"col-sm-6\">
-	// 		<input type=\"text\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />";
-	// echo "</div><p class=\"form-control-static\">" .
-  //       LangChangeAccountField1Expl . "</p></div>";
+  echo "<br />";
+	echo "<div class=\"form-group\">";
+	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField1 . "</label>";
+	echo "<div class=\"col-sm-6\">
+			<input type=\"text\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />";
+	echo "</div><p class=\"form-control-static\">" .
+        LangChangeAccountField1Expl . "</p></div>";
 
-	// echo "<div class=\"form-group\">";
-	// echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField2 . "</label>";
-	// echo "<div class=\"col-sm-6\">
-	// 		<input type=\"email\" required class=\"inputfield form-control requiredField\" maxlength=\"80\" name=\"email\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'email')."\" />";
-	// echo "</div><p class=\"form-control-static\">" .
-  //       LangChangeAccountField2Expl . "</p></div>";
+	echo "<div class=\"form-group\">";
+	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField2 . "</label>";
+	echo "<div class=\"col-sm-6\">
+			<input type=\"email\" required class=\"inputfield form-control requiredField\" maxlength=\"80\" name=\"email\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'email')."\" />";
+	echo "</div><p class=\"form-control-static\">" .
+        LangChangeAccountField2Expl . "</p></div>";
 
-	// echo "<div class=\"form-group\">";
-	// echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField3 . "</label>";
-	// echo "<div class=\"col-sm-6\">
-	// 		<input type=\"text\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'firstname')."\" />";
-	// echo "</div><p class=\"form-control-static\">" .
-  //       LangChangeAccountField3Expl . "</p></div>";
+	echo "<div class=\"form-group\">";
+	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField3 . "</label>";
+	echo "<div class=\"col-sm-6\">
+			<input type=\"text\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'firstname')."\" />";
+	echo "</div><p class=\"form-control-static\">" .
+        LangChangeAccountField3Expl . "</p></div>";
 
-	// echo "<div class=\"form-group\">";
-	// echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField4 . "</label>";
-	// echo "<div class=\"col-sm-6\">
-	// 		<input type=\"text\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')."\" />";
-	// echo "</div><p class=\"form-control-static\">" .
-  //       LangChangeAccountField4Expl . "</p></div>";
+	echo "<div class=\"form-group\">";
+	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField4 . "</label>";
+	echo "<div class=\"col-sm-6\">
+			<input type=\"text\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')."\" />";
+	echo "</div><p class=\"form-control-static\">" .
+        LangChangeAccountField4Expl . "</p></div>";
 
-	// echo "<div class=\"form-group\">";
-	// echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField5 . "</label>";
-	// echo "<div class=\"col-sm-6\">
-	// 		<input type=\"password\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"\" />";
-	// echo "</div><p class=\"form-control-static\">" .
-  //       LangChangeAccountField5Expl . "</p></div>";
+	echo "<div class=\"form-group\">";
+	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField5 . "</label>";
+	echo "<div class=\"col-sm-6\">
+			<input type=\"password\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"\" />";
+	echo "</div><p class=\"form-control-static\">" .
+        LangChangeAccountField5Expl . "</p></div>";
 
-	// echo "<div class=\"form-group\">";
-	// echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField6 . "</label>";
-	// echo "<div class=\"col-sm-6\">
-	// 		<input type=\"password\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"\" />";
-	// echo "</div><p class=\"form-control-static\">" .
-  //       LangChangeAccountField6Expl . "</p></div>";
+	echo "<div class=\"form-group\">";
+	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField6 . "</label>";
+	echo "<div class=\"col-sm-6\">
+			<input type=\"password\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"\" />";
+	echo "</div><p class=\"form-control-static\">" .
+        LangChangeAccountField6Expl . "</p></div>";
 
-	// echo "<div class=\"form-group\">";
-	// echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountSendMail . "</label>";
-	// echo "<div class=\"col-sm-6\">
-	// 		<input type=\"checkbox\" class=\"inputfield\" name=\"send_mail\"".(($objObserver->getObserverProperty($loggedUser,'sendMail'))?"checked":"")." />";
-	// echo "</div><p class=\"form-control-static\">" .
-  //       LangChangeAccountSendMailExpl . "</p></div>";
+	echo "<div class=\"form-group\">";
+	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountSendMail . "</label>";
+	echo "<div class=\"col-sm-6\">
+			<input type=\"checkbox\" class=\"inputfield\" name=\"send_mail\"".(($objObserver->getObserverProperty($loggedUser,'sendMail'))?"checked":"")." />";
+	echo "</div><p class=\"form-control-static\">" .
+        LangChangeAccountSendMailExpl . "</p></div>";
 
 	// echo "<div class=\"form-group\">";
 	// echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField11 . "</label>";

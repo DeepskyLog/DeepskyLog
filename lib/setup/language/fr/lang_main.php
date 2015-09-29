@@ -208,7 +208,8 @@ define('GraphAccomplishments'			,'&Eacute;toiles de DeepskyLog');
 define('LangSelectColumns'        ,'Kies kolommen');
 define('LangNewMessage'           ,'Nieuw bericht');
 define('LangSendMessage'          ,'Zend bericht');
-define("LangChangeAccountTitle"		,"Settings for ");
+define("LangChangeAccountTitle"		,"Settings");
+define("LangChangeAccountTitleFor"," for ");
 define("LangChangeMenuItem1"		  ,"Settings");
 
 define('LangUnderHorizon'				,'au-dessus de l\'horizon');
