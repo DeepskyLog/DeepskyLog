@@ -1,5 +1,9 @@
 <?php //NL
 // This is version 5.0
+define("PersonalInfo", "Persoonlijk");
+define("ObservingDetails", "Waarnemen");
+define("Atlases", "Atlassen");
+define("Languages", "Talen");
 define("LangSinceVersion", " sinds versie ");
 define("LangWhatsNew", "Nieuw in DeepskyLog");
 define("LangMakePrivate", "Maak privaat");
@@ -944,7 +948,7 @@ define("LangEditObjectDescription"												,"DESC-Beschrijving aanpassen");
 
 // content/change_account.php
 
-define("LangChangeAccountTitle"														,"Instellingen");
+define("LangChangeAccountTitle"														,"Instellingen voor ");
 define("LangChangeAccountField1"													,"Gebruikersnaam");
 define("LangChangeAccountField1Expl"											,"Onder deze naam kan je inloggen op Deepskylog");
 define("LangChangeAccountField2"													,"Emailadres");

@@ -1,5 +1,9 @@
 <?php //GE
 // This is version 5.0
+define("PersonalInfo", "Personal");
+define("ObservingDetails", "Observing");
+define("Atlases", "Atlases");
+define("Languages", "Languages");
 define("LangSinceVersion", " seit Version ");
 define("LangWhatsNew", "What's new in DeepskyLog");
 define("LangMakePrivate", "Make private");
@@ -206,7 +210,7 @@ define('GraphAccomplishments'			,'DeepskyLog Sternen');
 define('LangSelectColumns'        ,'Kies kolommen');
 define('LangNewMessage'           ,'Nieuw bericht');
 define('LangSendMessage'          ,'Zend bericht');
-define("LangChangeAccountTitle"		,"Settings");
+define("LangChangeAccountTitle"		,"Settings for ");
 define("LangChangeMenuItem1"			,"Settings");
 
 define('LangUnderHorizon'				,'unter dem Horizont');

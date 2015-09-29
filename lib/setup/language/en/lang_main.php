@@ -1,5 +1,9 @@
 <?php //EN
 // This is version 5.0
+define("PersonalInfo", "Personal");
+define("ObservingDetails", "Observing");
+define("Atlases", "Atlases");
+define("Languages", "Languages");
 define("LangSinceVersion", " since version ");
 define("LangWhatsNew", "What's new in DeepskyLog");
 define("LangMakePrivate", "Make private");
@@ -956,7 +960,7 @@ define("LangEditObjectDescription"												,"Edit Description");
 
 // content/change_account.php
 
-define("LangChangeAccountTitle"														,"Settings");
+define("LangChangeAccountTitle"														,"Settings for ");
 define("LangChangeAccountField1"													,"Username");
 define("LangChangeAccountField1Expl"											,"This is the name you will use to log in");
 define("LangChangeAccountField2"													,"Email address");
