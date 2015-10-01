@@ -7,11 +7,11 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else validate_delete_observation();
 
 function validate_delete_observation()
-{ global $objObserver;
+{ global $objObserver,$loggedUser;
 	$util = new Utils();
-	
+
 	$cometobservations = new CometObservations;
-	
+
 	if (!$_GET['observationid']) // not logged in
 	{
 	  unset($_SESSION['deepskylog_id']);
@@ -20,15 +20,15 @@ function validate_delete_observation()
 	elseif($_GET['observationid']) // observationid given
 	{
 	  // only admins may delete a comet observation
-	
 	  $role = $objObserver->getObserverProperty($_SESSION['deepskylog_id'],'role',2);
-	
-	  if ($role == RoleAdmin || $role == RoleCometAdmin)
+
+	  if ($role == RoleAdmin || $role == RoleCometAdmin || $loggedUser == $cometobservations->getObserverId($_GET['observationid']))
 	  {
 	    $cometobservations->deleteObservation($_GET['observationid']);
-	    $_GET['indexAction']='comets_all_observations';
+			unset($_SESSION['deepskylog_id']);
+		  $_GET['indexAction']='default_action';
 	  }
-	  else // not logged in as admin 
+	  else // not logged in as admin
 	  {
 	    unset($_SESSION['deepskylog_id']);
 	    header("Location: ../index.php"); // back to entrance page
