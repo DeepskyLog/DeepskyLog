@@ -163,7 +163,8 @@ function view_observation() {
 		}
 		$role = $objObserver->getObserverProperty ( $loggedUser, 'role', 2 );
 		if (($loggedUser == $objCometObservation->getObserverId ( $_GET ['observation'] )) || ($role == RoleAdmin) || ($role == RoleCometAdmin)) {
-			echo "<p><a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_adapt_observation&amp;observation=" . $_GET ['observation'] . "\">" . LangChangeObservationTitle . "</a></p>";
+			echo "<p><a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_adapt_observation&amp;observation=" . $_GET ['observation'] . "\">" . LangChangeObservationTitle . "</a>";
+			echo "&nbsp;&nbsp;<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=comets_delete_observation&amp;observation=" . $_GET ['observation'] . "\">" . LangDeleteObservation . "</a></p>";
 		}
 		if ($loggedUser != "") {
 			$observerid = $objCometObservation->getObserverId ( $_GET ['observation'] );
