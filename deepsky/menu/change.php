@@ -6,9 +6,9 @@ global $inIndex, $loggedUser, $objUtil;
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! ($loggedUser))
-	throw new Exception ( LangExcpetion001 );
+	throw new Exception ( LangException001 );
 elseif (! ($objUtil->checkAdminOrUserID ( $loggedUser )))
-	throw new Exception ( LangExcpetion012 );
+	throw new Exception ( LangException012 );
 else
 	menu_change ();
 function menu_change() {
