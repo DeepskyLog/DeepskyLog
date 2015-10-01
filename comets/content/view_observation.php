@@ -10,12 +10,12 @@ function view_observation() {
 	global $instDir, $baseURL, $loggedUser, $dateformat, $objCometObservation, $objCometObject, $objInstrument, $objLocation, $objObserver, $objPresentations;
 	$ICQMETHODS = new ICQMETHOD ();
 	$ICQREFERENCEKEYS = new ICQREFERENCEKEY ();
-	
+
 	if (! $_GET ['observation']) 	// no observation defined
 	{
 		header ( "Location: " . $baseURL . "index.php" );
 	}
-	
+
 	if ($objCometObservation->getObjectId ( $_GET ['observation'] )) 	// check if observation exists
 	{
 		echo "<div id=\"main\">";
@@ -33,12 +33,12 @@ function view_observation() {
 				$content .= "<a href=\"" . $baseURL . "index.php?indexAction=comets_detail_observation&amp;observation=" . $nextObservation . "\">&gt;</a> ";
 		}
 		echo "<h4>" . LangViewObservationTitle . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $content . "</h4>";
-		
+
 		echo "<table class=\"table\">";
 		echo "<tr><td><strong>" . LangViewObservationField1 . "</strong></td>";
 		echo "<td><a href=\"" . $baseURL . "index.php?indexAction=comets_detail_object&amp;object=" . urlencode ( $objCometObservation->getObjectId ( $_GET ['observation'] ) ) . "\">" . $objCometObject->getName ( $objCometObservation->getObjectId ( $_GET ['observation'] ) ) . "</a></td>";
 		echo "</tr>";
-		
+
 		echo "<tr><td><strong>" . LangViewObservationField2 . "</strong></td>";
 		echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode ( $objCometObservation->getObserverId ( $_GET ['observation'] ) ) . "\">" . $objObserver->getObserverProperty ( $objCometObservation->getObserverId ( $_GET ['observation'] ), 'firstname' ) . "&nbsp;" . $objObserver->getObserverProperty ( $objCometObservation->getObserverId ( $_GET ['observation'] ), 'name' ) . "</a></td>";
 		echo "</tr>";
@@ -49,7 +49,7 @@ function view_observation() {
 		echo "<tr><td><strong>" . LangViewObservationField5 . "</strong></td>";
 		echo "<td>" . date ( $dateformat, mktime ( 0, 0, 0, $date [1], $date [2], $date [0] ) ) . "</td>";
 		echo "</tr>";
-		
+
 		if ($objCometObservation->getTime ( $_GET ['observation'] ) >= 0) {
 			if (! ($objObserver->getObserverProperty ( $loggedUser, 'UT' ))) {
 				$content1 = LangViewObservationField9lt;
@@ -162,15 +162,16 @@ function view_observation() {
 			}
 		}
 		$role = $objObserver->getObserverProperty ( $loggedUser, 'role', 2 );
-		if (($role == RoleAdmin) || ($role == RoleCometAdmin))
+		if (($loggedUser == $objCometObservation->getObserverId ( $_GET ['observation'] )) || ($role == RoleAdmin) || ($role == RoleCometAdmin)) {
 			echo "<p><a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_adapt_observation&amp;observation=" . $_GET ['observation'] . "\">" . LangChangeObservationTitle . "</a></p>";
+		}
 		if ($loggedUser != "") {
 			$observerid = $objCometObservation->getObserverId ( $_GET ['observation'] );
 			$name = $objObserver->getObserverProperty ( $observerid, 'firstname' ) . " " . $objObserver->getObserverProperty ( $observerid, 'name' ) . " ";
-			
+
 			$date = sscanf ( $objCometObservation->getDate ( $_GET ['observation'] ), "%4d%2d%2d" );
 			$object = $objCometObject->getName ( $objCometObservation->getObjectId ( $_GET ['observation'] ) );
-			
+
 			$subject = LangMessageYourObservation . $object . LangMessageOn . $date [2] . "/" . $date [1] . "/" . $date [0];
 			echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=new_message&amp;receiver=" . urlencode ( $observerid ) . "&amp;subject=" . urlencode ( $subject ) . "\"><span class=\"glyphicon glyphicon-envelope\"></span> " . $name . LangMessageAboutObservation . "</a>";
 			echo "<br /><br />";
