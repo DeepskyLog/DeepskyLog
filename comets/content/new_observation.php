@@ -14,7 +14,8 @@ function new_observation() {
 	$adapt = false;
 	echo "<div id=\"main\">";
 	echo "<form action=\"" . $baseURL . "index.php\" method=\"post\" enctype=\"multipart/form-data\"><div>";
-	if (($objUtil->checkGetKey ( 'indexAction' ) == "comets_adapt_observation") && (($role == RoleAdmin) || ($role == RoleCometAdmin)) && ($obsid = $objUtil->checkRequestKey ( 'observation', 0 ))) {
+	$obsid = $objUtil->checkRequestKey ( 'observation', 0 );
+	if (($objUtil->checkGetKey ( 'indexAction' ) == "comets_adapt_observation") && (($role == RoleAdmin) || ($role == RoleCometAdmin) || ($loggedUser == $objCometObservation->getObserverId ( $obsid )))) {
 		$adapt = true;
 		echo "<input type=\"hidden\" name=\"observation\" value=\"" . $obsid . "\" />";
 	}
