@@ -25,6 +25,12 @@ function change_site() {
 	echo "<a href=\"http://clearoutside.com/forecast/" . round ( $latitude, 2 ) . "/" . round ( $longitude, 2 ) . "\">
 				<img src=\"http://clearoutside.com/forecast_image_small/" . round ( $latitude, 2 ) . "/" . round ( $longitude, 2 ) . "/forecast.png\" /></a>";
 	echo "<br /><br />";
+	echo "<form>
+			<div class=\"form-inline\">
+	         <input type=\"text\" class=\"form-control\" id=\"address\" onkeypress=\"searchKeyPress(event);\" placeholder=\"" . stripslashes ( $objLocation->getLocationPropertyFromId ( $locationid, 'name' ) ) . "\" autofocus></input>
+             <input type=\"button\" class=\"btn btn-success\" id=\"btnSearch\" value=\"" . LangSearchLocations0 . "\" onclick=\"codeAddress();\" ></input>
+	        </div>
+	      </form>";
 	echo "<div id=\"map\"></div>";
 	
 	echo "<br /><form action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
@@ -36,7 +42,8 @@ function change_site() {
 	echo "<input type=\"hidden\" name=\"elevation\" id=\"elevation\" />";
 	echo "<input type=\"hidden\" name=\"timezone\" id=\"timezone\" />";
 	echo "<div class=\"form-inline\">
-    		<input type=\"text\" required class=\"form-control\" name=\"locationname\" placeholder=\"" . LangAddSiteField1 . "\" value=\"" . stripslashes ( $objLocation->getLocationPropertyFromId ( $locationid, 'name' ) ) . "\"  " . $disabled . "></input>";
+    		<input type=\"text\" required class=\"form-control\" name=\"locationname\" placeholder=\"" . LangAddSiteField1 . "\" value=\"" . stripslashes ( $objLocation->getLocationPropertyFromId ( $locationid, 'name' ) ) . "\"  " . $disabled . "></input>
+             ";
 	$content = ($disabled ? "" : "  <input type=\"submit\" class=\"btn btn-primary tour4\" name=\"change\" value=\"" . LangAddSiteButton2 . "\" />");
 	echo $content;
 	
@@ -91,6 +98,47 @@ function change_site() {
 			fillHiddenFields(evt.latLng);
 		  });
       		
+      }
+
+      function codeAddress() {
+         var address = document.getElementById(\"address\").value;
+         geocoder.geocode( { 'address': address}, function(results, status) {
+           if (status == google.maps.GeocoderStatus.OK) {
+             map.setCenter(results[0].geometry.location);
+			 document.getElementById('latitude').value = results[0].geometry.location.lat();
+ 		     document.getElementById('longitude').value = results[0].geometry.location.lng();
+			 fillHiddenFields(results[0].geometry.location);
+			
+	         // Remove old marker
+		     myLocationMarker.setMap(null);
+             myLocationMarker = new google.maps.Marker({
+               map: map,
+               position: results[0].geometry.location,
+			   draggable: true
+           });
+	     }
+        });
+      }
+
+      function createMarker(place) {
+        var placeLoc = place.geometry.location;
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location
+        });
+
+        google.maps.event.addListener(marker, 'mouseover', function() {
+          infowindow.setContent(place.name);
+          infowindow.open(map, this);
+        });
+      }
+
+      function callback(results, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+          }
+        }
       }
       		
 	  function fillHiddenFields(latLng) {
