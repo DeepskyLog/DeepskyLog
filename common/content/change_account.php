@@ -3,8 +3,8 @@
 // allows the user to view and change his account's details
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
-elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangExcpetion012);
+elseif(!($loggedUser)) throw new Exception(LangException001);
+elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangException012);
 else change_account();
 
 function change_account()

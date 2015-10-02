@@ -1,4 +1,4 @@
-<?php 
+<?php
 // validate_change_observation.php
 // checks if the change new observation form is correctly filled in
 
@@ -7,12 +7,12 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else validate_change_observation();
 
 function validate_change_observation()
-{ global $instDir,$entryMessage,$maxFileSize,$loggedUser, 
+{ global $instDir,$entryMessage,$maxFileSize,$loggedUser,
          $objObserver,$objCometObservation,$objUtil;
 	if((!$_POST['day'])||
 	   (!$_POST['month'])||
 	   (!$_POST['year'])||
-	   ((!$_POST['hours']) && 
+	   ((!$_POST['hours']) &&
 	     strcmp($_POST['hours'],0)!="0")||(!$_POST['minutes']&& strcmp($_POST['minutes'], 0)!="0"))
 	{ $entryMessage=LangValidateObservationMessage1;
 	  $_GET['indexAction']='default_action';
@@ -24,7 +24,7 @@ function validate_change_observation()
 	elseif($_POST['observation']) // all fields filled in and observationid given
 	{ // only admins may change a comet observation
 	  $role = $objObserver->getObserverProperty($loggedUser,'role',2);
-	  if(($role==RoleAdmin)||($role==RoleCometAdmin))
+	  if(($role==RoleAdmin)||($role==RoleCometAdmin)||($loggedUser == $objCometObservation->getObserverId($_POST['observation'])))
 	  { $date = $_POST['year'] . sprintf("%02d", $_POST['month']) . sprintf("%02d", $_POST['day']);
 	    $time = ($_POST['hours'] * 100) + $_POST['minutes'];
 	    $objCometObservation->setDescription($_POST['observation'], nl2br(htmlentities($_POST['description'])));
@@ -36,7 +36,7 @@ function validate_change_observation()
 	      $objCometObservation->setDate($_POST['observation'], $date);
 	    }
 	    $objCometObservation->setInstrumentId($_POST['observation'], $_POST['instrument']);
-	    $objCometObservation->setComa($_POST['observation'], $objUtil('coma',-99));
+	    $objCometObservation->setComa($_POST['observation'], $objUtil->checkRequestKey('coma',-99));
 	    $objCometObservation->setTail($_POST['observation'], $objUtil->checkRequestKey('tail_length',-99));
 	    $objCometObservation->setPa($_POST['observation'], $objUtil->checkRequestKey('position_angle',-99));
 	    $objCometObservation->setChart($_POST['observation'], $objUtil->checkRequestKey('icq_reference_key'));
