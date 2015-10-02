@@ -3,7 +3,7 @@
 // allows to specify a report layout
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
+elseif(!($loggedUser)) throw new Exception(LangException001);
 else reportsLayout();
 
 function reportsLayout()
@@ -45,7 +45,7 @@ function reportsLayout()
   echo "<div id=\"reportlayout\">";
   echo "</div>";
 	echo "<script type=\"text/javascript\">
-	      /* <![CDATA[ */ 
+	      /* <![CDATA[ */
 	      var titles=new Array();
         titles['ReportFieldname']='".ReportFieldname."';
 	      titles['ReportFieldlineposition']='".ReportFieldlineposition."';
@@ -113,10 +113,10 @@ function reportsLayout()
         titles['objectmaxaltstarttext']='".LangReportObjectHighestFrom."';
         titles['objectmaxaltmidtext']='".LangReportObjectHighestAround."';
         titles['objectmaxaltendtext']='".LangReportObjectHighestTo."';
-        
+
         thereport='".$reportName."';
 	      setLayoutPage();
-	      /* ]]> */ 
+	      /* ]]> */
 	      </script>";
 	echo "</div>";
 }
