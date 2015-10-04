@@ -91,6 +91,21 @@ function change_account()
   echo "<div class=\"tab-pane active\" id=\"info\">";
 
   echo "<br />";
+
+  $upload_dir = 'common/observer_pics';
+	$dir = opendir($instDir.$upload_dir);
+	while (FALSE!==($file=readdir($dir)))
+	{ if(("."==$file)||(".."==$file))                                            // skip current directory and directory above
+	    continue;
+	  if(fnmatch($loggedUser.".gif",$file)||fnmatch($loggedUser.".jpg",$file)||fnmatch($loggedUser.".png",$file))
+	  { echo "<div class=\"row text-right\">";
+		  echo "  <img class=\"img-thumbnail account\" width=\"200px\" height=\"200px\" src=\"".$baseURL.$upload_dir."/".$file."\" alt=\"".$loggedUser."/".$file."\"></img>";
+      echo "  <button id=\"upload\" class=\"btn btn-success\"><span class=\"glyphicon glyphicon-plus\"></span>&nbsp;<span class=\"upload\">Change profile picture</span></button>";
+
+      echo "</div>";
+		}
+	}
+
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField1 . "</label>";
 	echo "<div class=\"col-sm-6\">
@@ -173,17 +188,6 @@ function change_account()
          "<input type=\"text\" class=\"inputfield form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'copyright')."\" />";
 	echo "</div></div>";
 
-	$upload_dir = 'common/observer_pics';
-	$dir = opendir($instDir.$upload_dir);
-	while (FALSE!==($file=readdir($dir)))
-	{ if(("."==$file)||(".."==$file))                                            // skip current directory and directory above
-	    continue;
-	  if(fnmatch($loggedUser.".gif",$file)||fnmatch($loggedUser.".jpg",$file)||fnmatch($loggedUser.".png",$file))
-	  { echo "<div class=\"row text-center\">";
-		  echo "<img class=\"img-thumbnail account\" src=\"".$baseURL.$upload_dir."/".$file."\" alt=\"".$loggedUser."/".$file."\"></img>";
-			echo "</div>";
-		}
-	}
 	echo "<p>&nbsp;</p>";
 
   echo "</div>";
