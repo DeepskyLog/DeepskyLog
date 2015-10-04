@@ -947,7 +947,7 @@ define("LangChangeAccountCopyright"                       ,"Notice de copyright"
 define("LangChangeAccountCopyrightExpl"                   ,"Vous pouvez rentrer une notice de copyright qui apparait en dessous de vos observations et dessins.");
 define("LangChangeVisibleLanguages"												,"Les langues des descriptions");
 define("LangChangeVisibleLanguagesExpl"										,"Choissisez les langues des observations que vous d&eacute;sirez lire");
-define("LangChangeAccountPicture"													,"Photo");
+define("LangChangeAccountPicture"													,"Modifier la photo de profil");
 define("LangChangeAccountButton"													,"Modifiez");
 define("LangChangeAccountField10"													,"Code ICQ de l'observateur");
 define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code pour les observations de com&egrave;tes");

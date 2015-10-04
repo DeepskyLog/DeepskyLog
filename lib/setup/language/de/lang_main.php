@@ -992,7 +992,7 @@ define("LangChangeAccountObservationLanguage"							,"Standard Sprache f&uuml;r 
 define("LangChangeAccountObservationLanguageExpl"					,"Die Standard Sprache um Beobachtungen einzugeben");
 define("LangChangeVisibleLanguages"												,"Sprache f&uuml;r Beobachtungen");
 define("LangChangeVisibleLanguagesExpl"										,"Definieren Sie, welche Sprache Sie in den Beschreibungen sehen wollen");
-define("LangChangeAccountPicture"													,"Icon");
+define("LangChangeAccountPicture"													,"Profilbild &auml;ndern");
 define("LangChangeAccountButton"													,"&Auml;ndern");
 define("LangChangeAccountField10"													,"ICQ Beobachtercode");
 define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> Code f&uuml;r Kometen Beobachtungen");

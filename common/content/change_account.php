@@ -94,17 +94,21 @@ function change_account()
 
   $upload_dir = 'common/observer_pics';
 	$dir = opendir($instDir.$upload_dir);
+
+  // TODO: Add an empty picture if no picture is uploaded yet.
+  // TODO: Make sure that the picture is uploaded directly and that we return to the same page.
 	while (FALSE!==($file=readdir($dir)))
 	{ if(("."==$file)||(".."==$file))                                            // skip current directory and directory above
 	    continue;
 	  if(fnmatch($loggedUser.".gif",$file)||fnmatch($loggedUser.".jpg",$file)||fnmatch($loggedUser.".png",$file))
-	  { echo "<div class=\"row text-right\">";
+	  { echo "<div class=\"row\">";
 		  echo "  <img class=\"img-thumbnail account\" width=\"200px\" height=\"200px\" src=\"".$baseURL.$upload_dir."/".$file."\" alt=\"".$loggedUser."/".$file."\"></img>";
-      echo "  <button id=\"upload\" class=\"btn btn-success\"><span class=\"glyphicon glyphicon-plus\"></span>&nbsp;<span class=\"upload\">Change profile picture</span></button>";
-
       echo "</div>";
 		}
 	}
+  echo "<span class=\"btn btn-success btn-file\"><span class=\"glyphicon glyphicon-plus\"></span>&nbsp;" . LangChangeAccountPicture . "
+          <input type=\"file\" name=\"picture\" class=\"inputfield tour6\">
+        </span>";
 
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField1 . "</label>";
@@ -175,12 +179,6 @@ function change_account()
 	    "<input type=\"number\" min=\"-5.0\" max=\"5.0\" step=\"0.1\" class=\"inputfield centered form-control\" maxlength=\"4\" name=\"fstOffset\" size=\"4\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'fstOffset')."\" />";
 	echo "</div><p class=\"form-control-static\">" .
 			  LangChangeAccountField12Expl . "</p></div>";
-
-	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountPicture . "</label>";
-	echo "<div class=\"col-sm-6\"><p class=\"form-control-static\">" .
-	    "<input type=\"file\" name=\"picture\" class=\"inputfield tour6\"/>";
-	echo "</p></div></div>";
 
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountCopyright . "</label>";

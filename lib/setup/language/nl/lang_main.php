@@ -975,7 +975,7 @@ define("LangChangeAccountCopyright"                       ,"Copyright melding");
 define("LangChangeAccountCopyrightExpl"                   ,"U kan een copyright bericht ingeven dat onder uw waarnemingen en tekeningen verschijnt");
 define("LangChangeVisibleLanguages"												,"Talen voor beschrijvingen");
 define("LangChangeVisibleLanguagesExpl"										,"Kies uit deze lijst welke waarnemingen je wilt zien");
-define("LangChangeAccountPicture"													,"Foto");
+define("LangChangeAccountPicture"													,"Wijzig profiel foto");
 define("LangChangeAccountButton"													,"Pas aan");
 define("LangChangeAccountField10"													,"ICQ waarnemercode");
 define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code voor komeetwaarnemingen");

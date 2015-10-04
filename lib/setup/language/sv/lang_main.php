@@ -996,7 +996,7 @@ define("LangChangeAccountCopyright"                       ,"Copyright notice");
 define("LangChangeAccountCopyrightExpl"                   ,"You can specify a copyright notice that will appear under your observations and drawings.");
 define("LangChangeVisibleLanguages"												,"Languages for observations");
 define("LangChangeVisibleLanguagesExpl"										,"Define which languages you want to see in the descriptions");
-define("LangChangeAccountPicture"													,"Picture");
+define("LangChangeAccountPicture"													,"Change profile picture");
 define("LangChangeAccountButton"													,"Change");
 define("LangChangeAccountField10"													,"ICQ observercode");
 define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code for comet observations");
