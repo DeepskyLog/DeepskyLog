@@ -97,18 +97,38 @@ function change_account()
 
   // TODO: Add an empty picture if no picture is uploaded yet.
   // TODO: Make sure that the picture is uploaded directly and that we return to the same page.
+echo "<div class=\"row\">";
+  echo "<span class=\"btn btn-success btn-file\"><span class=\"glyphicon glyphicon-plus\"></span>&nbsp;" . LangChangeAccountPicture . "
+          <input type=\"file\" name=\"picture\" class=\"inputfield tour6\">
+        </span>";
 	while (FALSE!==($file=readdir($dir)))
 	{ if(("."==$file)||(".."==$file))                                            // skip current directory and directory above
 	    continue;
 	  if(fnmatch($loggedUser.".gif",$file)||fnmatch($loggedUser.".jpg",$file)||fnmatch($loggedUser.".png",$file))
-	  { echo "<div class=\"row\">";
+	  {
 		  echo "  <img class=\"img-thumbnail account\" width=\"200px\" height=\"200px\" src=\"".$baseURL.$upload_dir."/".$file."\" alt=\"".$loggedUser."/".$file."\"></img>";
-      echo "</div>";
 		}
 	}
-  echo "<span class=\"btn btn-success btn-file\"><span class=\"glyphicon glyphicon-plus\"></span>&nbsp;" . LangChangeAccountPicture . "
-          <input type=\"file\" name=\"picture\" class=\"inputfield tour6\">
-        </span>";
+  echo "</div>";
+
+  echo "<br /><br />";
+// TODO: Make sure this works:
+// $(document).on('change', '.btn-file :file', function() {
+//     var input = $(this),
+//         numFiles = input.get(0).files ? input.get(0).files.length : 1,
+//         label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+//     input.trigger('fileselect', [numFiles, label]);
+// });
+
+// TODO: This just prints the number of files and the filenames.
+// $(document).ready( function() {
+//     $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+//         console.log(numFiles);
+//         console.log(label);
+//     });
+// });
+
+
 
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField1 . "</label>";
