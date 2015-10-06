@@ -95,40 +95,61 @@ function change_account()
   $upload_dir = 'common/observer_pics';
 	$dir = opendir($instDir.$upload_dir);
 
-  // TODO: Add an empty picture if no picture is uploaded yet.
   // TODO: Make sure that the picture is uploaded directly and that we return to the same page.
-echo "<div class=\"row\">";
-  echo "<span class=\"btn btn-success btn-file\"><span class=\"glyphicon glyphicon-plus\"></span>&nbsp;" . LangChangeAccountPicture . "
-          <input type=\"file\" name=\"picture\" class=\"inputfield tour6\">
-        </span>";
-	while (FALSE!==($file=readdir($dir)))
-	{ if(("."==$file)||(".."==$file))                                            // skip current directory and directory above
-	    continue;
-	  if(fnmatch($loggedUser.".gif",$file)||fnmatch($loggedUser.".jpg",$file)||fnmatch($loggedUser.".png",$file))
-	  {
-		  echo "  <img class=\"img-thumbnail account\" width=\"200px\" height=\"200px\" src=\"".$baseURL.$upload_dir."/".$file."\" alt=\"".$loggedUser."/".$file."\"></img>";
-		}
-	}
-  echo "</div>";
+  // TODO: For password: Use http://plugins.krajee.com/strength-meter
+  echo "<label class=\"control-label\">" . LangChangeAccountPicture . "</label>
+        <input id=\"images\" name=\"image\" type=\"file\" data-show-remove=\"false\" accept=\"image/*\" class=\"file-loading\">
+        <input id=\"userid\" name=\"userid\" value=\"" . $loggedUser . "\" type=\"hidden\">";
+
+  // Check existence of avatar for the observer
+  $imaLocation = $baseURL."/images/noAvatar.jpg";
+  $oldFile = '';
+  while (FALSE!==($file=readdir($dir)))
+  { if(("."==$file)||(".."==$file))                                            // skip current directory and directory above
+    continue;
+  	if(fnmatch($loggedUser.".gif",$file)||fnmatch($loggedUser.".jpg",$file)||fnmatch($loggedUser.".png",$file))
+  	{
+      $oldFile = $upload_dir."/".$file;
+  	  $imaLocation = $baseURL.$upload_dir."/".$file;
+  	}
+  }
+  echo "<input id=\"oldFile\" name=\"oldFile\" value=\"" . $oldFile . "\" type=\"hidden\">";
+
+  // The javascript for the fileinput plugins
+  echo "<script type=\"text/javascript\">";
+  echo "$(document).on(\"ready\", function() {
+  			$(\"#images\").fileinput({
+  					initialPreview: [
+  						// Show the correct file.
+  						'<img src=\"" . $imaLocation . "\" class=\"file-preview-image\">'
+  					],
+            maxFileCount: 1,
+            validateInitialCount: true,
+  					overwriteInitial: true,
+            maxImageWidth: 500,
+            resizeImage: true,
+            autoReplace: true,
+            showRemove: false,
+            removeLabel: '',
+            removeIcon: '',
+            removeTitle: '',
+            layoutTemplates: {actionDelete: ''},
+            allowedFileTypes: [\"image\"],
+  					initialCaption: \"Profile picture\",
+  					uploadAsync: false,
+  					uploadUrl: \"" . $baseURL . "uploadAvatar.php\",
+          	uploadExtraData: function() {
+              return {
+                  userid: $(\"#userid\").val(),
+                  oldFile: $(\"#oldFile\").val()
+              };
+          }
+  			});
+  		});";
+  echo "</script>";
+
 
   echo "<br /><br />";
-// TODO: Make sure this works:
-// $(document).on('change', '.btn-file :file', function() {
-//     var input = $(this),
-//         numFiles = input.get(0).files ? input.get(0).files.length : 1,
-//         label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-//     input.trigger('fileselect', [numFiles, label]);
-// });
-
-// TODO: This just prints the number of files and the filenames.
-// $(document).ready( function() {
-//     $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-//         console.log(numFiles);
-//         console.log(label);
-//     });
-// });
-
-
 
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField1 . "</label>";
@@ -317,5 +338,8 @@ echo "<div class=\"row\">";
   echo "</div>";
 
   echo "</div></form>";
+
+
+
 }
 ?>

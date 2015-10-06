@@ -303,14 +303,6 @@ class Observers {
 				if ($_POST ['icq_name'] != "")
 					$this->setObserverProperty ( $loggedUser, 'icqname', $_POST ['icq_name'] );
 				$_SESSION ['lang'] = $_POST ['language'];
-				if ($_FILES ['picture'] ['tmp_name'] != "") {
-					$upload_dir = 'common/observer_pics';
-					$dir = opendir ( $upload_dir );
-					require_once $instDir . "common/control/resize.php"; // resize code
-					$original_image = $_FILES ['picture'] ['tmp_name'];
-					$destination_image = $upload_dir . "/" . $loggedUser . ".jpg";
-					$new_image = image_createThumb ( $original_image, $destination_image, 300, 300, 75 );
-				}
 				$entryMessage .= LangValidateAccountMessage5;
 				$_GET ['user'] = $loggedUser;
 				$_GET ['indexAction'] = 'change_account';

@@ -132,10 +132,11 @@ if (isset ( $entryMessage ) && $entryMessage) { // dispays $entryMessage if any
 	echo "<script type=\"text/javascript\">";
 	echo "$(document).ready(function() {
           $('#errorModal').modal('show')
-        });";
-
+				});";
 	echo "</script>";
 }
+
+
 echo "</body>";
 echo "</html>";
 ?>
