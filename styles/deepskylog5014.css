@@ -485,11 +485,6 @@ table.tablesorter tr.type2 td {
 .sidebar-outer {
     position: relative;
 }
-@media (min-width: 768px) {
-    .sidebar {
-        position: fixed;
-    }
-}
 
 .second-navbar{
   top:50px;

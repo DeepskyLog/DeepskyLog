@@ -110,7 +110,7 @@ function headmenu() {
 			require_once 'common/menu/instrument.php';
 		}
 	}
-	require_once $_SESSION ['module'] . '/menu/date.php';
+	require_once 'deepsky/menu/date.php';
 	require_once $_SESSION ['module'] . '/menu/list.php';
 	echo "</div>";
 	echo "	</div>

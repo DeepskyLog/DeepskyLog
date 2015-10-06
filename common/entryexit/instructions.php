@@ -22,7 +22,7 @@ function instructions() {
 		$lastReadObservation = ($loggedUser ? $objObserver->getLastReadObservation ( $loggedUser ) : - 1);
 	else
 		$lastReadObservation = - 1;
-	
+
 	if ($objUtil->checkGetKey ( 'indexAction' ) == "logout") // logout
 		require_once $instDir . "common/control/logout.php";
 		// listnames
@@ -359,12 +359,12 @@ function instructions() {
 	if ($objUtil->checkGetKey ( 'indexAction' ) == "validate_delete_existingsession") // delete existing session
 {
 		$entryMessage .= $objSession->validateDeleteSession ();
-		$_GET ['indexAction'] = 'add_session';
+		$_GET ['indexAction'] = 'result_my_sessions';
 	}
 	if ($objUtil->checkGetKey ( 'indexAction' ) == "change_session") // change existing session
 {
 		$entryMessage .= $objSession->validateChangeSession ();
-		$_GET ['indexAction'] = 'result_selected_sessions';
+		$_GET ['indexAction'] = 'result_my_sessions';
 	}
 	if ($objUtil->checkGetKey ( 'indexAction' ) == "validate_delete_filter") // delete filter
 {
@@ -501,7 +501,7 @@ function instructions() {
 				$_SESSION ["Qobj"] [$key] ["showname"] = substr ( $_SESSION ["Qobj"] [$key] ["showname"], strpos ( $_SESSION ["Qobj"] [$key] ["showname"], "(" ) + 1, strpos ( $_SESSION ["Qobj"] [$key] ["showname"], ")" ) - strpos ( $_SESSION ["Qobj"] [$key] ["showname"], "(" ) - 1 ) . " (" . substr ( $_SESSION ["Qobj"] [$key] ["showname"], 0, strpos ( $_SESSION ["Qobj"] [$key] ["showname"], "(" ) - 1 ) . ")";
 		reset ( $_SESSION ["Qobj"] );
 	}
-	
+
 	// ============================================================================ LIST COMMANDS
 	if ($objUtil->checkGetKey ( 'emptyList' ) && $myList) {
 		$objList->emptyList ( $listname );
@@ -521,7 +521,7 @@ function instructions() {
 		$entryMessage .= LangToListMoved1 . $_GET ['ObjectUpInList'] . LangToListMoved2 . "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;manage=manage\">" . $listname_ss . "</a>.";
 		unset ( $_GET ['ObjectUpInList'] );
 	}
-	
+
 	if ($objUtil->checkGetKey ( 'ObjectToPlaceInList' ) && $myList) {
 		$entryMessage .= $objList->ObjectFromToInList ( $_GET ['ObjectFromPlaceInList'], $_GET ['ObjectToPlaceInList'] );
 		unset ( $_SESSION ['QobjParams'] );
@@ -567,7 +567,7 @@ function instructions() {
 		unset ( $_SESSION ['QobjParams'] );
 		$listNameFrom = $_GET ['listnamefrom'];
 		$listnameTo = $_GET ['addlistname'];
-		
+
 		if ($objList->checkList ( $listnameTo ) != 0 && $objUtil->checkGetKey ( "PublicList", false ) === $objList->isPublic ( $listNameFrom )) {
 			$entryMessage .= LangToListList . stripslashes ( $listnameTo ) . LangToListExists;
 		} else {
@@ -632,7 +632,7 @@ function instructions() {
 		$entryMessage .= LangListQueryObjectsMessage8 . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['removeObjectFromList'] ) . "\">" . $_GET ['removeObjectFromList'] . "</a>" . LangListQueryObjectsMessage7 . "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;manage=manage\">" . $listname_ss . "</a>.";
 		unset ( $_GET ['removeObjectFromList'] );
 	}
-	
+
 	if (array_key_exists ( 'addAllObjectsFromPageToList', $_GET ) && $_GET ['addAllObjectsFromPageToList'] && $myList) {
 		$count = $objUtil->checkRequestKey ( 'min' );
 		while ( ($count < $objUtil->checkRequestKey ( 'max' )) && ($count < count ( $_SESSION ['Qobj'] )) ) {
@@ -655,10 +655,12 @@ function instructions() {
 		$objList->setListObjectDescription ( $_GET ['object'], $_GET ['description'] );
 		unset ( $_GET ['addAllObjectsFromPageToList'] );
 	}
-	
+
 	// =========================================================================== COMET COMMANDS
 	if (array_key_exists ( 'indexAction', $_GET ) && $_GET ['indexAction'] == "comets_validate_change_observation")
 		include_once 'comets/control/validate_change_observation.php';
+	if (array_key_exists ( 'indexAction', $_GET ) && $_GET ['indexAction'] == "comets_validate_delete_observation")
+		include_once 'comets/control/validate_delete_observation.php';
 	if (array_key_exists ( 'indexAction', $_GET ) && $_GET ['indexAction'] == "comets_validate_observation")
 		include_once 'comets/control/validate_observation.php';
 	if (array_key_exists ( 'indexAction', $_GET ) && $_GET ['indexAction'] == "comets_validate_object")
@@ -686,7 +688,7 @@ function instructions() {
 		}
 		$_GET ['indexAction'] = "detail_observer";
 	}
-	
+
 	if (($objUtil->checkSessionKey ( 'admin' ) == 'yes') && ($objUtil->checkGetKey ( 'indexAction' ) == "change_emailNameFirstname_Password")) {
 		if (($_SESSION ['admin'] == "yes") && ($theuser = $objUtil->checkGetKey ( 'user' )) && $objUtil->checkGetKey ( 'change_email_name_firstname' )) {
 			$email = $objUtil->checkGetKey ( 'email', 2 );
@@ -706,7 +708,7 @@ function instructions() {
 		}
 		$_GET ['indexAction'] = "detail_observer";
 	}
-	
+
 	if (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes") {
 		if (array_key_exists ( "newaction", $_GET )) {
 			if ($_GET ['newaction'] == "NewName") {

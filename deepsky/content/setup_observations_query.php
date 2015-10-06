@@ -35,7 +35,7 @@ function setup_observations_query() {
 		$atlas = $objAtlas->atlasCodes [$objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' )];
 	else
 		$atlas = "";
-	
+
 	echo "<div id=\"main\">";
 	echo "<form action=\"" . $baseURL . "index.php\" method=\"get\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\"   value=\"result_selected_observations\" />";
@@ -290,20 +290,6 @@ function setup_observations_query() {
 	$obs = $objObserver->getPopularObserversByName ();
 	while ( list ( $key, $value ) = each ( $obs ) )
 		echo "<option" . ($key == $observer ? ' selected="selected"' : '') . " value=\"" . $key . "\">" . $value . "</option>";
-	echo "</select>";
-	echo "</td>";
-	// INSTRUMENT
-	echo "<td><strong>" . LangViewObservationField3 . "</strong></td>";
-	echo "<td colspan=\"2\" class=\"form-inline\">";
-	$inst = $objInstrument->getSortedInstrumentsList ( 'name' );
-	$instrument = $objUtil->checkGetKey ( 'instrument' );
-	if ($instrument == '')
-		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
-			$instrument = $_SESSION ['QobsParams'] ['instrument'];
-	echo "<select id=\"instrument\" name=\"instrument\" class=\"form-control\">";
-	echo "<option value=\"\">-----</option>";
-	while ( list ( $key, $value ) = each ( $inst ) )
-		echo "<option" . ($key == $instrument ? ' selected="selected"' : '') . " value=\"" . $key . "\">" . $value . "</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "</tr>";
@@ -621,7 +607,7 @@ function setup_observations_query() {
 		$content .= '<select id="observerqueries" class="form-control" onchange="restoreQuery();"><option value="-----">-----</option></select>' . '&nbsp;';
 		$content .= '<input id="savequeryas" class="btn btn-success" type="button" value="' . LangSaveAs . '" onclick="saveObserverQueryAs();"/>' . '&nbsp;';
 		$content .= '<input id="deletequery" class="btn btn-danger" type="button" value="' . LangRemoveQuery . '" class="hidden" onclick="removeQuery();"/>' . '&nbsp;';
-		
+
 		echo $content;
 	}
 	echo "</div>";

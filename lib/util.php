@@ -2498,6 +2498,7 @@ class Utils {
 																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_query_objects', 'deepsky/content/selected_objects.php' )))
 																					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_selected_observations', 'deepsky/content/selected_observations.php' )))
 																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_selected_sessions', 'deepsky/content/selected_sessions.php' )))
+																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_my_sessions', 'deepsky/content/my_sessions.php' )))
 																							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_observer_catalog', 'deepsky/content/details_observer_catalog.php' )))
 																								if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'objectsSets', 'common/content/objectsSets.php' )))
 																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_atlaspages', 'common/content/atlasPages.php' )))
@@ -2578,7 +2579,7 @@ class Utils {
 			$lastReadObservation = ($loggedUser ? $objObserver->getLastReadObservation ( $loggedUser ) : - 1);
 			return 'deepsky/content/main.php';
 		} else if ($_SESSION ['module'] == 'comets') {
-			$theDate = date ( 'Ymd', strtotime ( '-1 month' ) );
+			$theDate = date ( 'Ymd', strtotime ( '-1 year' ) );
 			$_GET ['minyear'] = substr ( $theDate, 0, 4 );
 			$_GET ['minmonth'] = substr ( $theDate, 4, 2 );
 			$_GET ['minday'] = substr ( $theDate, 6, 2 );
@@ -2702,15 +2703,37 @@ class Utils {
                 format: function(s, table, cell, cellIndex) {
                   // format your data for normalization
 				  s = s.replace('°', '.');
-				  s = s.replace(/[^0-9-.]/g, '');	
-				
+				  s = s.replace(/[^0-9-.]/g, '');
+
 				  if(s == '-'){s = '0'};
-				
+
                   return s;
                 },
                 // set type, either numeric or text
                 type: 'numeric'
               });";
+
+							echo "// add instrument parser. Use with class=sorter-instruments
+					              $.tablesorter.addParser({
+					                // set a unique id
+					                id: 'instruments',
+					                is: function(s, table, cell, \$cell) {
+					                  // return false so this parser is not auto detected
+					                  return false;
+					                },
+					                format: function(s, table, cell, cellIndex) {
+					                  // format your data for normalization
+									  s = s.replace('°', '.');
+										s = s.replace(/.+\(/, '');
+									  s = s.replace(/[^0-9-.]/g, '');
+
+									  if(s == '-'){s = '0'};
+
+					                  return s;
+					                },
+					                // set type, either numeric or text
+					                type: 'numeric'
+					              });";
 
 		echo "// add astrotime parser. Use with class=sorter-months
               $.tablesorter.addParser({
