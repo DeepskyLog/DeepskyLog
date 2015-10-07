@@ -345,11 +345,11 @@ function change_account()
            <form action=\"".$baseURL."index.php?indexAction=changepassword\">
              <input type=\"hidden\" name=\"indexAction\" value=\"changePassword\" />" .
              LangCurrentPassword . "
-             <input type=\"password\" name=\"currentPassword\" class=\"strength\" required autofocus>" .
+             <input type=\"password\" name=\"currentPassword\" class=\"strength\" required autofocus data-show-meter=\"false\">" .
              LangNewPassword . "
              <input type=\"password\" name=\"newPassword\" class=\"strength\" required>" .
              LangChangeAccountField6 . "
-             <input type=\"password\" name=\"confirmPassword\" class=\"strength\" required>
+             <input type=\"password\" name=\"confirmPassword\" class=\"strength\" required data-show-meter=\"false\">
              <br /><br />
             </div>
             <div class=\"modal-footer\">
