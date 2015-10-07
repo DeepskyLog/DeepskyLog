@@ -342,6 +342,7 @@ function change_account()
           <div class=\"modal-body\">
            <!-- Ask for the name of the list. -->
            <!-- TODO: Make sure the password can be changed. -->
+           <!-- TODO: Watch out: make sure the passwords are not visible in the url. -->
            <form action=\"".$baseURL."index.php?indexAction=changepassword\">
              <input type=\"hidden\" name=\"indexAction\" value=\"changePassword\" />" .
              LangCurrentPassword . "
@@ -354,7 +355,7 @@ function change_account()
             </div>
             <div class=\"modal-footer\">
             <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-            <input class=\"btn btn-danger\" type=\"submit\" name=\"addList\" value=\"" . LangChangePassword . "\" />
+            <input class=\"btn btn-danger\" type=\"submit\" name=\"changePassword\" value=\"" . LangChangePassword . "\" />
 		      </form>
           </div>
          </div><!-- /.modal-content -->
