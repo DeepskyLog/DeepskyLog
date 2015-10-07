@@ -95,8 +95,6 @@ function change_account()
   $upload_dir = 'common/observer_pics';
 	$dir = opendir($instDir.$upload_dir);
 
-  // TODO: Make sure that the picture is uploaded directly and that we return to the same page.
-  // TODO: For password: Use http://plugins.krajee.com/strength-meter
   echo "<label class=\"control-label\">" . LangChangeAccountPicture . "</label>
         <input id=\"images\" name=\"image\" type=\"file\" data-show-remove=\"false\" accept=\"image/*\" class=\"file-loading\">
         <input id=\"userid\" name=\"userid\" value=\"" . $loggedUser . "\" type=\"hidden\">";
@@ -153,10 +151,19 @@ function change_account()
 
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField1 . "</label>";
-	echo "<div class=\"col-sm-6\">
-			<input type=\"text\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />";
-	echo "</div><p class=\"form-control-static\">" .
+	echo "<div class=\"col-sm-3\">
+			    <input type=\"text\" required disabled class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />
+        </div>";
+  echo "<div class=\"col-sm-3\">
+          <button type=\"button\" class=\"btn btn-danger\" data-toggle=\"modal\" data-target=\"#changePassword\">" . LangChangePassword . "</button>
+        </div>";
+	echo "<p class=\"form-control-static\">" .
         LangChangeAccountField1Expl . "</p></div>";
+
+  // TODO: Upload picture directly, without pushing the upload button.
+  // TODO: Change password
+  // TODO: Make sure we can still change the settings, even with the changes for the picture and the password
+  // TODO: Use bootstrap-fileinput for setting a picture for comet observations, deepsky observations and sessions.
 
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField2 . "</label>";
@@ -178,20 +185,6 @@ function change_account()
 			<input type=\"text\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')."\" />";
 	echo "</div><p class=\"form-control-static\">" .
         LangChangeAccountField4Expl . "</p></div>";
-
-	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField5 . "</label>";
-	echo "<div class=\"col-sm-6\">
-			<input type=\"password\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"\" />";
-	echo "</div><p class=\"form-control-static\">" .
-        LangChangeAccountField5Expl . "</p></div>";
-
-	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField6 . "</label>";
-	echo "<div class=\"col-sm-6\">
-			<input type=\"password\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"\" />";
-	echo "</div><p class=\"form-control-static\">" .
-        LangChangeAccountField6Expl . "</p></div>";
 
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountSendMail . "</label>";
@@ -339,6 +332,34 @@ function change_account()
 
   echo "</div></form>";
 
+  echo "<div class=\"modal fade\" id=\"changePassword\">
+        <div class=\"modal-dialog\">
+         <div class=\"modal-content\">
+          <div class=\"modal-header\">
+           <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
+           <h4 class=\"modal-title\">" . LangChangePassword . "</h4>
+          </div>
+          <div class=\"modal-body\">
+           <!-- Ask for the name of the list. -->
+           <!-- TODO: Make sure the password can be changed. -->
+           <form action=\"".$baseURL."index.php?indexAction=changepassword\">
+             <input type=\"hidden\" name=\"indexAction\" value=\"changePassword\" />" .
+             LangCurrentPassword . "
+             <input type=\"password\" name=\"currentPassword\" class=\"strength\" required autofocus>" .
+             LangNewPassword . "
+             <input type=\"password\" name=\"newPassword\" class=\"strength\" required>" .
+             LangChangeAccountField6 . "
+             <input type=\"password\" name=\"confirmPassword\" class=\"strength\" required>
+             <br /><br />
+            </div>
+            <div class=\"modal-footer\">
+            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
+            <input class=\"btn btn-danger\" type=\"submit\" name=\"addList\" value=\"" . LangChangePassword . "\" />
+		      </form>
+          </div>
+         </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+       </div><!-- /.modal -->";
 
 
 }

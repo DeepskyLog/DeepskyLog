@@ -40,9 +40,12 @@ function head() {
 	echo "<link href=\"" . $baseURL . "styles/deepskylog5019.css\" rel=\"stylesheet\" type=\"text/css\" />";
 	// Load the needed javascript file for bootstrap-fileinput
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/fileinput.min.js\"></script>";
+	// Load the needed javascript file for bootstrap-strengtmeter
+	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/strength-meter.min.js\"></script>";
 	// Load the needed css file for bootstrap-fileinput
 	echo "<link rel=\"stylesheet\" href=\"styles/fileinput.min.css\"></script>";
-  // TODO: Load the needed files for the correct language of the fileinput
+  // Load the needed css file for bootstrap-strengthmeter
+	echo "<link rel=\"stylesheet\" href=\"styles/strength-meter.min.css\"></script>";
 
 	$TitleText = "";
 	$theDispatch = $objUtil->checkRequestKey ( 'indexAction' );

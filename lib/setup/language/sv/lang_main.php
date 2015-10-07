@@ -1,5 +1,6 @@
 <?php //SV
 // This is version 5.0
+define("LangChangePassword", "Change password");
 define("PersonalInfo", "Personal");
 define("ObservingDetails", "Observing");
 define("Atlases", "Atlases");

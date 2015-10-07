@@ -1,5 +1,7 @@
 <?php //GE
 // This is version 5.0
+define("LangChangePassword", "Passwort &auml;ndern");
+define("LangCurrentPassword", "Current password");
 define("PersonalInfo", "Personal");
 define("ObservingDetails", "Observing");
 define("Atlases", "Atlases");
