@@ -342,9 +342,8 @@ function change_account()
           <div class=\"modal-body\">
            <!-- Ask for the name of the list. -->
            <!-- TODO: Make sure the password can be changed. -->
-           <!-- TODO: Watch out: make sure the passwords are not visible in the url. -->
-           <form action=\"".$baseURL."index.php?indexAction=changepassword\">
-             <input type=\"hidden\" name=\"indexAction\" value=\"changePassword\" />" .
+           <form action=\"".$baseURL."index.php?indexAction=changepassword\" method=\"post\">
+             <input type=\"hidden\" name=\"userid\" value=\"" . $loggedUser . "\" />" .
              LangCurrentPassword . "
              <input type=\"password\" name=\"currentPassword\" class=\"strength\" required autofocus data-show-meter=\"false\">" .
              LangNewPassword . "

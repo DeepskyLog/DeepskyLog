@@ -2488,7 +2488,6 @@ class Utils {
 										if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'downloadAstroImageCatalogs', 'deepsky/content/downloadastroimagecatalogs.php' )))
 											if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'import_csv_list', 'deepsky/content/new_listdatacsv.php' )))
 												if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'listaction', 'deepsky/content/tolist.php' )))
-                        if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'changePassword', 'common/control/change_password.php' )))
 													if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAdmin ( 'manage_csv_object', 'deepsky/content/manage_objects_csv.php' )))
 														if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'query_objects', 'deepsky/content/setup_objects_query.php' )))
 															if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'query_observations', 'deepsky/content/setup_observations_query.php' )))

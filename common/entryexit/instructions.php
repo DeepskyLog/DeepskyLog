@@ -563,6 +563,35 @@ function instructions() {
 		$_GET ['listname'] = $listname;
 		unset ( $_GET ['switchPublicPrivateList'] );
 	}
+	if ($objUtil->checkPostKey ( 'changePassword' )) {
+		$login = $objUtil->checkPostKey( 'userid' ); // get password from form and encrypt
+		$passwd = md5 ( $objUtil->checkPostKey( 'currentPassword'] ) );
+		$passwd_db = $objObserver->getObserverPropertyCS ( $login, 'password' ); // get password from database
+
+		if ($passwd_db == $passwd) {
+
+		} else {
+			// Current password is not correct, show an error message
+		}
+		print $login . "<br />" . $passwd;
+
+		exit;
+		// TODO: Implement
+		$listNameFrom = $_GET ['listnamefrom'];
+		$listnameTo = $_GET ['addlistname'];
+
+		if ($objList->checkList ( $listnameTo ) != 0 && $objUtil->checkGetKey ( "PublicList", false ) === $objList->isPublic ( $listNameFrom )) {
+			$entryMessage .= LangToListList . stripslashes ( $listnameTo ) . LangToListExists;
+		} else {
+			$objList->renameList ( $listNameFrom, $listnameTo, $objUtil->checkGetKey ( "PublicList", false ) );
+			$_SESSION ['listname'] = $listnameTo;
+			$listname = $_SESSION ['listname'];
+			$listname_ss = stripslashes ( $listname );
+			$myList = true;
+			$entryMessage .= LangToListRenamed . $listname_ss . "\".";
+		}
+		unset ( $_GET ['renameList'] );
+	}
 	if ($objUtil->checkGetKey ( 'renameList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' ))) {
 		unset ( $_SESSION ['QobjParams'] );
 		$listNameFrom = $_GET ['listnamefrom'];
