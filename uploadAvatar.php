@@ -1,6 +1,8 @@
 <?php
 // upload.php
 // 'images' refers to your file input name attribute
+global $instDir;
+
 if (empty($_FILES['image'])) {
     echo json_encode(['error'=>'No files found for upload.']);
     // or you can throw an exception
@@ -28,8 +30,6 @@ $filename = $image['name'];
 $ext = explode('.', basename($filename));
 $upload_dir = 'common/observer_pics';
 $target = $upload_dir . DIRECTORY_SEPARATOR . $userid . "." . array_pop($ext);
-
-require_once $instDir . "common/control/resize.php"; // resize code
 
 // First, we remove the old file
 if ($oldFile != '') {
