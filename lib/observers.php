@@ -201,7 +201,7 @@ class Observers {
 		echo "</div><hr />";
 	}
 	public function valideAccount() {
-		global $entryMessage, $objUtil, $objLanguage, $developversion, $loggedUser, $allLanguages, $mailTo, $mailFrom, $objMessages, $baseURL;
+		global $entryMessage, $objUtil, $objLanguage, $developversion, $loggedUser, $allLanguages, $mailTo, $mailFrom, $objMessages, $baseURL, $instDir;
 
 		if (! $_POST ['email'] || ! $_POST ['firstname'] || ! $_POST ['name']) {
 			$entryMessage .= LangValidateAccountMessage1;
@@ -271,9 +271,11 @@ class Observers {
 				$_GET ['indexAction'] = 'change_account';
 			} else {
 				$usedLanguages = array ();
-				while ( list ( $key, $value ) = each ( $allLanguages ) )
-					if (array_key_exists ( $key, $_POST ))
+				while ( list ( $key, $value ) = each ( $allLanguages ) ) {
+					if (array_key_exists ( $key, $_POST )) {
 						$usedLanguages [] = $key;
+					}
+				}
 				$this->setUsedLanguages ( $loggedUser, $usedLanguages );
 				$this->setObserverProperty ( $loggedUser, 'name', $_POST ['name'] );
 				$this->setObserverProperty ( $loggedUser, 'firstname', $_POST ['firstname'] );
@@ -299,9 +301,22 @@ class Observers {
 				$this->setObserverProperty ( $loggedUser, 'copyright', $_POST ['copyright'] );
 				$this->setObserverProperty ( $loggedUser, 'UT', ((array_key_exists ( 'local_time', $_POST ) && ($_POST ['local_time'] == "on")) ? "0" : "1") );
 				$this->setObserverProperty ( $loggedUser, 'sendMail', ((array_key_exists ( 'send_mail', $_POST ) && ($_POST ['send_mail'] == "on")) ? "1" : "0") );
-				if ($_POST ['icq_name'] != "")
+				if ($_POST ['icq_name'] != "") {
 					$this->setObserverProperty ( $loggedUser, 'icqname', $_POST ['icq_name'] );
+				}
 				$_SESSION ['lang'] = $_POST ['language'];
+				if ($_FILES ['image'] ['tmp_name'] != "") {
+					if ($_POST['oldFile'] != '') {
+					  unlink($_POST['oldFile']);
+					}
+					$upload_dir = 'common/observer_pics';
+					$dir = opendir ( $upload_dir );
+					require_once $instDir . "common/control/resize.php"; // resize code
+					$original_image = $_FILES ['image'] ['tmp_name'];
+					$destination_image = $upload_dir . "/" . $loggedUser . ".jpg";
+					$new_image = image_createThumb ( $original_image, $destination_image, 300, 300, 75 );
+				}
+
 				$entryMessage .= LangValidateAccountMessage5;
 				$_GET ['user'] = $loggedUser;
 				$_GET ['indexAction'] = 'change_account';
