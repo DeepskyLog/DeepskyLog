@@ -1,5 +1,8 @@
 <?php //EN
 // This is version 5.0
+define("LangCurrentPasswordIncorrect", "The current password you entered is incorrect. Unable to change the password.");
+define("LangNewPasswordNotCorrect", "The new password and the confirmed password are not the same. Unable to change the password.");
+define("LangPasswordChanged", "The password is successfully changed.");
 define("LangChangePassword", "Change password");
 define("LangCurrentPassword", "Current password");
 define("LangNewPassword", "New password");
@@ -820,10 +823,10 @@ define("LangManageDots"																		,"Manage...");
 define("LangAccountSubscribed1"														,"Your DeepskyLog account has been created. ");  // javascript strings, please no html encoding
 define("LangAccountSubscribed2"														,"One of our developers will validate your account as soon as possible. ");  // javascript strings, please no html encoding
 define("LangAccountSubscribed3"														,"You will receive an email confirmation when this happens. ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed4"														,"Please remember that DeepskyLog is the work of only a very small group of volonteers, ");  // javascript strings, please no html encoding
+define("LangAccountSubscribed4"														,"Please remember that DeepskyLog is the work of only a very small group of volunteers, ");  // javascript strings, please no html encoding
 define("LangAccountSubscribed5"														,"and that it can take up to a day or so to get validated. ");  // javascript strings, please no html encoding
 define("LangAccountSubscribed6"														,"On very rare occasions, all developers are on an astronomical observing ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed7"														,"session for a week. Normally, there is a backup person in those periods. ");  // javascript strings, please no html encoding
+define("LangAccountSubscribed7"														,"session for a week. Normally, there is a backup person in these periods. ");  // javascript strings, please no html encoding
 define("LangAccountSubscribed8"														,"If your account is not validated within 24 hours, you can send an email to ");  // javascript strings, please no html encoding
 define("LangAccountSubscribed9"														,"developers at deepskylog.be to be sure.");
 

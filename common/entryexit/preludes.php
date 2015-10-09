@@ -6,14 +6,15 @@ if ((! isset ( $inIndex )) || (! $inIndex))
 else {
 	preludesA ();
 	require_once "lib/setup/" . $language;
+	global $loginErrorText, $loginErrorCode;
 	if ($loginErrorCode || $loginErrorText) {
-		$entryMessage = constant ( $loginErrorCode ) . " " . $loginErrorText;
+		$entryMessage = $loginErrorCode . " " . $loginErrorText;
 	}
 	preludesB ();
 }
 function preludesA() {
 	global $language, $objDatabase, $objLanguage, $objObserver, $objSession, $objUtil, $objMessages;
-	
+
 	if (! session_id ())
 		session_start ();
 	require_once "lib/setup/vars.php";
@@ -34,7 +35,7 @@ function preludesA() {
 }
 function preludesB() {
 	global $FF, $MSIE, $leftmenu, $topmenu, $thisYear, $thisMonth, $thisDay, $DSOcatalogsLists, $DSOcatalogs, $objAstroCalc, $objAtlas, $objCatalog, $objCometObject, $objCometObservation, $objConstellation, $objContrast, $objDatabase, $objEyepiece, $objFilter, $objFormLayout, $objInstrument, $objLanguage, $objLens, $objList, $objLocation, $objObject, $objObjectOutlines, $objObservation, $objObserverQueries, $objObserver, $objPresentations, $objPrintAtlas, $objReportLayout, $objStar, $objAccomplishments, $objUtil;
-	
+
 	require_once "lib/observerqueries.php";
 	$objObserverQueries = new Observerqueries ();
 	require_once "lib/atlasses.php";
@@ -86,7 +87,7 @@ function preludesB() {
 	include_once "lib/class.ezpdf.php";
 	include_once "lib/icqmethod.php";
 	include_once "lib/icqreferencekey.php";
-	
+
 	if (strpos ( ($browser = $objUtil->checkArrayKey ( $_SERVER, 'HTTP_USER_AGENT', '' )), 'Firefox' ) === false)
 		$FF = false;
 	else
@@ -95,7 +96,7 @@ function preludesB() {
 		$MSIE = false;
 	else
 		$MSIE = true;
-	
+
 	if (array_key_exists ( 'globalMonth', $_SESSION ) && $_SESSION ['globalMonth']) {
 	} else {
 		$_SESSION ['globalYear'] = $thisYear;
@@ -155,7 +156,7 @@ if (! function_exists ( 'fnmatch' )) // definition of the php fnmatch function f
 	function fnmatch($pattern, $string) {
 		return @preg_match ( '/^' . strtr ( addcslashes ( $pattern, '\\.+^$(){}=!<>|' ), array (
 				'*' => '.*',
-				'?' => '.?' 
+				'?' => '.?'
 		) ) . '$/i', $string );
 	}
 }

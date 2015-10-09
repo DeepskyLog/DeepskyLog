@@ -1,5 +1,8 @@
 <?php //SV
 // This is version 5.0
+define("LangCurrentPasswordIncorrect", "The current password you entered is incorrect. Unable to change the password.");
+define("LangNewPasswordNotCorrect", "The new password and the confirmed password are not the same. Unable to change the password.");
+define("LangPasswordChanged", "The password is successfully changed.");
 define("LangChangePassword", "Change password");
 define("PersonalInfo", "Personal");
 define("ObservingDetails", "Observing");

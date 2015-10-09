@@ -160,11 +160,7 @@ function change_account()
 	echo "<p class=\"form-control-static\">" .
         LangChangeAccountField1Expl . "</p></div>";
 
-  // TODO: Upload picture directly, without pushing the upload button.
-  // TODO: Change password
-  // TODO: Make sure we can still change the settings, even with the changes for the picture and the password
   // TODO: Use bootstrap-fileinput for setting a picture for comet observations, deepsky observations and sessions.
-
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField2 . "</label>";
 	echo "<div class=\"col-sm-6\">
@@ -251,41 +247,41 @@ function change_account()
   echo profilefovmagnitude;
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . profilefovmagnitudeselect . "</label>";
-	echo "<div class=\"col-sm-6 form-inline\">" .
-			   " <input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" maxlength=\"5\" name=\"overviewFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewFoV')."\" />".
-	       " / <input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" maxlength=\"5\" name=\"lookupFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupFoV')."\" />".
-	       " / <input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" maxlength=\"5\" name=\"detailFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailFoV')."\" />";
-	echo "</div></div>";
+	echo "<div class=\"col-sm-2 form\">" .
+			   "<input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" name=\"overviewFoV\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewFoV')."\" /></div>".
+	       "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" name=\"lookupFoV\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupFoV')."\" /></div>".
+	       "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" name=\"detailFoV\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailFoV')."\" /></div>";
+	echo "</div>";
 
 	echo profiledsosmagnitude;
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . profiledsosmagnitudeselect . "</label>";
-	echo "<div class=\"col-sm-6 form-inline\">" .
-        " <input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" maxlength=\"5\" name=\"overviewdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewdsos')."\" />".
-	      " / <input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" maxlength=\"5\" name=\"lookupdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupdsos')."\" />".
-	      " / <input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" maxlength=\"5\" name=\"detaildsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detaildsos')."\" />";
+	echo "<div class=\"col-sm-2 form\">" .
+        " <input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" name=\"overviewdsos\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewdsos')."\" /></div>".
+	      "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" name=\"lookupdsos\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupdsos')."\" /></div>".
+	      "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" name=\"detaildsos\" value=\"".$objObserver->getObserverProperty($loggedUser,'detaildsos')."\" />";
 	echo "</div></div>";
 
 	echo profilestarsmagnitude;
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . profilestarsmagnitudeselect . "</label>";
-	echo "<div class=\"col-sm-6 form-inline\">" .
-        "<input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" maxlength=\"5\" name=\"overviewstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewstars')."\" />".
-        " / <input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" maxlength=\"5\" name=\"lookupstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupstars')."\" />".
-        " / <input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" maxlength=\"5\" name=\"detailstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailstars')."\" />";
+	echo "<div class=\"col-sm-2 form\">" .
+        "<input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" name=\"overviewstars\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewstars')."\" /></div>".
+        "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" name=\"lookupstars\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupstars')."\" /></div>".
+        "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" name=\"detailstars\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailstars')."\" />";
 	echo "</div></div>";
 
 	echo profilephotosizes;
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . profilephotosizesselect . "</label>";
-	echo "<div class=\"col-sm-6 form-inline\">" .
-			  "<input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" maxlength=\"5\" name=\"photosize1\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'photosize1')."\" />".
-	      " / <input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" maxlength=\"5\" name=\"photosize2\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'photosize2')."\" />";
+	echo "<div class=\"col-sm-2 form\">" .
+			  "<input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" name=\"photosize1\" value=\"".$objObserver->getObserverProperty($loggedUser,'photosize1')."\" /></div>".
+	      "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" name=\"photosize2\" value=\"".$objObserver->getObserverProperty($loggedUser,'photosize2')."\" />";
 	echo "</div></div>";
 
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . AtlasPageFont . "</label>";
-	echo "<div class=\"col-sm-6 form-inline\">" .
+	echo "<div class=\"col-sm-2 form\">" .
          "<input type=\"number\" min=\"6\" max=\"9\" class=\"inputfield centered form-control\" maxlength=\"1\" name=\"atlaspagefont\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'atlaspagefont')."\" />";
 	echo "</div></div>";
 
@@ -341,7 +337,6 @@ function change_account()
           </div>
           <div class=\"modal-body\">
            <!-- Ask for the name of the list. -->
-           <!-- TODO: Make sure the password can be changed. -->
            <form action=\"".$baseURL."index.php?indexAction=changepassword\" method=\"post\">
              <input type=\"hidden\" name=\"userid\" value=\"" . $loggedUser . "\" />" .
              LangCurrentPassword . "
