@@ -96,8 +96,7 @@ function change_account()
 	$dir = opendir($instDir.$upload_dir);
 
   echo "<label class=\"control-label\">" . LangChangeAccountPicture . "</label>
-        <input id=\"images\" name=\"image\" type=\"file\" data-show-remove=\"false\" accept=\"image/*\" class=\"file-loading\">
-        <input id=\"userid\" name=\"userid\" value=\"" . $loggedUser . "\" type=\"hidden\">";
+        <input id=\"images\" name=\"image\" type=\"file\" data-show-remove=\"false\" accept=\"image/*\" class=\"file-loading\">";
 
   // Check existence of avatar for the observer
   $imaLocation = $baseURL."/images/noAvatar.jpg";
@@ -128,20 +127,13 @@ function change_account()
             resizeImage: true,
             autoReplace: true,
             showRemove: false,
+            showUpload: false,
             removeLabel: '',
             removeIcon: '',
             removeTitle: '',
             layoutTemplates: {actionDelete: ''},
             allowedFileTypes: [\"image\"],
   					initialCaption: \"Profile picture\",
-  					uploadAsync: false,
-  					uploadUrl: \"" . $baseURL . "uploadAvatar.php\",
-          	uploadExtraData: function() {
-              return {
-                  userid: $(\"#userid\").val(),
-                  oldFile: $(\"#oldFile\").val()
-              };
-          }
   			});
   		});";
   echo "</script>";
