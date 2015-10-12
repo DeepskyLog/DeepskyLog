@@ -2451,7 +2451,7 @@ class Utils {
 				if ($temp = $objObject->getExactDsObject ( $_GET ['object'] )) {
 					$_GET ['object'] = $temp;
 					if (array_key_exists ( 'searchObservationsQuickPick', $_GET ))
-						return 'deepsky/content/selected_observations.php';
+						return 'deepsky/content/observations_new.php';
 					elseif (array_key_exists ( 'newObservationQuickPick', $_GET ))
 						return 'deepsky/content/new_observation.php';
 					else {
