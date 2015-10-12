@@ -1,6 +1,4 @@
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" />
-
+<?php require_once 'lib/datatables_setup.php'; ?>
 <script type="text/javascript">
 
 	function format ( d ) {
@@ -45,9 +43,8 @@
 		}
 		 
 		$(document).ready(function() {
-		    var dt = $('#example').DataTable( {
+		    var dt = $('#observations').DataTable( {
 		        "ajax": "observations_json.php?object=<?=$_GET['object']?>",
-	        "lengthMenu": [[10, 25, 50, 100, 1000, -1], [10, 25, 50, 100, 1000, "all"]],
 	        "columns": [
 	            {
 	                "class":          "details-control",
@@ -70,7 +67,7 @@
 	    // Array to track the ids of the details displayed rows
 	    var detailRows = [];
 	 
-	    $('#example tbody').on( 'click', 'tr td.details-control', function () {
+	    $('#observations tbody').on( 'click', 'tr td.details-control', function () {
 	        var tr = $(this).closest('tr');
 	        var row = dt.row( tr );
 	        var idx = $.inArray( tr.attr('id'), detailRows );
@@ -102,7 +99,7 @@
 	} );
 </script>
 
-<table id="example" class="display">
+<table id="observations" class="table table-striped table-bordered">
 	<thead>
     	<tr>
           <th></th>
