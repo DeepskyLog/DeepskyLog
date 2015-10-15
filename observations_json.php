@@ -5,6 +5,7 @@ header('Content-Type: application/json');
 
 $inIndex = true;
 $language = "nl";
+
 if (! array_key_exists ( 'indexAction', $_GET ) && array_key_exists ( 'indexAction', $_POST ))
 	$_GET ['indexAction'] = $_POST ['indexAction'];
 	date_default_timezone_set ( 'UTC' );
@@ -37,9 +38,12 @@ global $loggedUser;
 	$constellations = $objObject->getConstellations();
 	
 	//need to translate here
+	//probably better to move this to the bottom part
 	$whenQuery = '';
 	while(list($key, $value) = each($constellations))
 		$whenQuery = $whenQuery . " WHEN objects.con = '{$value}' THEN '{$GLOBALS [$value]}' ";
+	
+	$objectname = mysql_real_escape_string($_GET['object']);
 
 	$query = "SELECT 
 				observations.id,
@@ -64,7 +68,8 @@ global $loggedUser;
 				IF(observations.time < 0, '-', INSERT(LPAD(observations.time, 4, '0'), 3, 0, ':')) as displaytime,
 				observers.firstname,
 				observers.name,
-				IF(observations.smalldiameter = 0, '-',  CONCAT(observations.smalldiameter, ' x ', observations.largediameter)) as size,
+				observations.smalldiameter,
+				observations.largediameter,
 				IF(eyepieces.id = 0, '-', CONCAT(eyepieces.name, ' (', observations.magnification, 'x)')) as eyepiecedescription,
 				IF(lenses.id = 0, '-', CONCAT(lenses.name, ' (', lenses.factor, ')')) as lensdescription,
 				IF(filters.id = 0, '-', filters.name) as filterdescription,
@@ -88,8 +93,8 @@ global $loggedUser;
 			JOIN lenses ON observations.lensid = lenses.id
 			JOIN filters ON observations.filterid = filters.id
 			JOIN eyepieces ON observations.eyepieceid = eyepieces.id
-			WHERE observations.objectname='{$_GET['object']}'
-			";
+			WHERE observations.objectname='{$objectname}'
+			";			
 					
 	$result = $objDatabase->selectRecordsetArray ($query);
 	
@@ -97,7 +102,7 @@ global $loggedUser;
 	
 	while(list($key, $value) = each($result)){
 		while(list($k, $v) = each($value)){
-			//add profilpic
+			//add profilepic
 			if($k == "observerid"){
 				$result[$key]['observerimage'] = getObserverImage($v);				
 			}
@@ -122,6 +127,17 @@ global $loggedUser;
 			$clustertypevar = "ClusterType".$clustertype;
 			$result[$key]['clustertype'] = $$clustertypevar;
 		}		
+		
+		//add size
+		if($result[$key]['largediameter'] == 0){
+			$result[$key]['size'] = '-';
+		} else {
+			if($result[$key]['largediameter'] > 60){
+				$result[$key]['size'] = number_format($result[$key]['largediameter']/60, 1)." x ".number_format($result[$key]['smalldiameter']/60, 1)." ".LangNewObjectSizeUnits1;
+			} else {
+				$result[$key]['size'] = number_format($result[$key]['largediameter'], 1)." x ".number_format($result[$key]['smalldiameter'], 1)." ".LangNewObjectSizeUnits2;
+			}
+		}
 		
 		//add moonpic
 		$result[$key]['moonpic'] = getMoonPic($result[$key]['moondate'], $result[$key]['time'], $result[$key]['lat'], $result[$key]['lon'], $result[$key]['timezone']);

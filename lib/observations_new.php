@@ -68,6 +68,7 @@
 		$(document).ready(function() {
 		  
 		    datatablesConfig.ajax = "observations_json.php?object=<?=$_GET['object']?>",
+		    datatablesConfig.order = [[6, 'desc']], 
 		    datatablesConfig.columns = [
 	            {
 	                "class":          "details-control",
