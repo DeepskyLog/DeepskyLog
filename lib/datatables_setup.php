@@ -1,6 +1,5 @@
 <script type="text/javascript" src="lib/javascript/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="lib/javascript/dataTables.bootstrap.min.js"></script>
-<script type="text/javascript" src="lib/javascript/deepskylog.datatables.config.js"></script>
 <link rel="stylesheet" type="text/css" href="styles/dataTables.bootstrap.css">
 
 <script>
@@ -10,7 +9,7 @@
     	    "lengthMenu":	  "_MENU_",
     	    "info":           "_START_ - _END_ (_TOTAL_)",
     	    "infoEmpty":      "",
-    	    "loadingRecords": "<?=LangIndexPleaseWait?>",
+    	    "loadingRecords": '<img src="/img/loading.gif">&nbsp;<?=LangIndexPleaseWait?>',
     	    "emptyTable":     "<?=LangObservationNoResults?>",
     	    "zeroRecords":    "<?=LangObservationNoResults?>",
     	    "paginate": {

@@ -13,6 +13,7 @@ require_once 'common/entryexit/globals.php'; // Includes of all classes and assi
 require_once 'common/entryexit/preludes.php'; // Includes of all classes and assistance files
 require_once 'common/entryexit/instructions.php'; // Execution of all non-layout related instructions (login, add objects to lists, etc.)
 require_once 'common/entryexit/data.php'; // Get data for the form, object data, observation data, etc.
+require_once 'lib/moonpic.php'; //gets the appropriate image for the moonphase at observing time
 
 global $loggedUser;
 
@@ -41,22 +42,26 @@ global $loggedUser;
 		$whenQuery = $whenQuery . " WHEN objects.con = '{$value}' THEN '{$GLOBALS [$value]}' ";
 
 	$query = "SELECT 
+				observations.id,
 				observations.objectname,
 				observations.observerid,
 				observations.instrumentid,
 				observations.locationid,
 				observations.description,
 				observations.seeing,
-				observations.limmag,
-				observations.sqm,
+				IF((observations.limmag = 0 || observations.limmag IS NULL) , '-', observations.limmag) as limmag,
+				IF(observations.sqm = 0, '-', observations.sqm) as sqm,
 				observations.lensid,
 				observations.filterid,
 				observations.eyepieceid,
 				observations.magnification,
-				observations.visibility,
-				observations.clustertype,
+				IF(observations.visibility = 0, '-', observations.visibility) as visibility,				
+				IF(observations.clustertype = '', '-', observations.clustertype) as clustertype,
 				DATE_FORMAT(STR_TO_DATE( observations.date, '%Y%m%d'), '%e/%c/%Y') as date,
+				DATE_FORMAT(STR_TO_DATE( observations.date, '%Y%m%d'), '%Y-%c-%e') as moondate,
 				observations.date as sortdate,
+				observations.time as time,
+				IF(observations.time < 0, '-', INSERT(LPAD(observations.time, 4, '0'), 3, 0, ':')) as displaytime,
 				observers.firstname,
 				observers.name,
 				IF(observations.smalldiameter = 0, '-',  CONCAT(observations.smalldiameter, ' x ', observations.largediameter)) as size,
@@ -66,7 +71,12 @@ global $loggedUser;
 				CONCAT(observers.firstname, ' ', observers.name) as observername,
 				instruments.name as instrumentname,
 				instruments.diameter as instrumentdiameter,
+				instruments.id as instrumentid,
 				locations.name as locationname,
+				locations.id as locationid,
+				locations.latitude as lat,
+				locations.longitude as lon,
+				locations.timezone as timezone,
 				CASE 
 					{$whenQuery}
 					ELSE ' ' END AS constellation
@@ -87,10 +97,34 @@ global $loggedUser;
 	
 	while(list($key, $value) = each($result)){
 		while(list($k, $v) = each($value)){
-			if($k == "observername"){
-				$result[$key]['observerimage'] = getObserverImage($v);
+			//add profilpic
+			if($k == "observerid"){
+				$result[$key]['observerimage'] = getObserverImage($v);				
 			}
 		}
+		//add seeing
+		$seeing = $result[$key]['seeing'];
+		if($seeing >= 0){
+			$seeingvar = "Seeing".$seeing;
+			$result[$key]['seeing'] = $$seeingvar;
+		}
+		
+		//add visibility
+		$visibility = $result[$key]['visibility'];
+		if($visibility != '-'){
+			$visibilityvar = "Visibility".$visibility;
+			$result[$key]['visibility'] = $$visibilityvar;
+		}	
+		
+		//add clustertype
+		$clustertype = $result[$key]['clustertype'];
+		if($clustertype != '-'){
+			$clustertypevar = "ClusterType".$clustertype;
+			$result[$key]['clustertype'] = $$clustertypevar;
+		}		
+		
+		//add moonpic
+		$result[$key]['moonpic'] = getMoonPic($result[$key]['moondate'], $result[$key]['time'], $result[$key]['lat'], $result[$key]['lon'], $result[$key]['timezone']);
 	}
 
 	$dataTablesObject->data = $result;

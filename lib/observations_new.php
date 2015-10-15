@@ -1,14 +1,19 @@
 <?php require_once 'lib/datatables_setup.php'; ?>
+
 <script type="text/javascript">
 
 	function format ( d ) {
-		var result = '<table width="100%" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+		var result = '<table class="details" width="100%" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	        '<tr>';
 
-	    result += (d.observerimage == null)? '' : '<td colspan="2"><img height="72" src="'+d.observerimage+'" class="img-rounded pull-left"></td>';
-		
-	    result +='<td><?=LangViewObservationField4?></td>'+
-            		 '<td>'+d.locationname+'</td>'+
+	    result += (d.observerimage == null)? '<td colspan="2"></td>' : '<td colspan="2"><img height="72" src="'+d.observerimage+'" class="img-rounded pull-left"></td>';
+		result += '<td colspan="4">'+d.moonpic+'</td>'+
+			'</tr>'+
+			'<tr>'+
+		    	'<td><?=LangViewObservationField4?></td>'+
+            	'<td><a href="/index.php?indexAction=detail_location&location='+d.locationid+'">'+d.locationname+'</a></td>'+
+		    	'<td><?=LangViewObservationField9?></td>'+
+            	'<td>'+d.displaytime+'</td>'+
             '</tr>'+
 		        '<tr>'+
 		            '<td><?=LangViewObservationField7?> / <?=LangViewObservationField34?></td>'+
@@ -20,11 +25,29 @@
 		        '</tr>'+
 		        '<tr>'+
 		            '<td><?=LangViewObservationField30?></td>'+
-		            '<td>'+d.eyepiecedescription+'</td>'+
-		            '<td><?=LangViewObservationField31?></td>'+
-		            '<td>'+d.filterdescription+'</td>'+		
+		            '<td>';					
+						if(d.eyepieceid != 0){
+			            	result += '<a href="index.php?indexAction=detail_eyepiece&eyepiece='+d.eyepieceid+'">'+d.eyepiecedescription+'</a>';
+						} else {
+							result += d.eyepiecedescription;
+						}	
+		            result += '</td>'+
+			        '<td><?=LangViewObservationField31?></td>'+
+		            '<td>';					
+						if(d.filterid != 0){
+			            	result += '<a href="index.php?indexAction=detail_filter&filter='+d.filterid+'">'+d.filterdescription+'</a>';
+						} else {
+							result += d.filterdescription;
+						}	
+	            	result += '</td>'+	
 		            '<td><?=LangViewObservationField32?></td>'+
-		            '<td>'+d.lensdescription+'</td>'+	            
+		            '<td>';					
+					if(d.lensid != 0){
+		            	result += '<a href="index.php?indexAction=detail_lens&lens='+d.lensid+'">'+d.lensdescription+'</a>';
+					} else {
+						result += d.lensdescription;
+					}	
+            	result += '</td>'+		            
 	        	'</tr>'+	
 		        '<tr>'+
 		            '<td><?=LangViewObservationField22?></td>'+
@@ -34,36 +57,37 @@
 		            '<td><?=LangViewObservationField40?></td>'+
 		            '<td>'+d.clustertype+'</td>'+	            
 	        	'</tr>'+		        			        
-		        '<tr>'+
-		            '<td colspan="6">'+d.description+'</td>'+
+		        '<tr >'+
+		            '<td style="padding: 20px 0 20px 0" colspan="6">'+d.description+'</td>'+
 		        '</tr>'+
 	    	'</table>';
 
 	    	return result;
 		}
-		 
+
 		$(document).ready(function() {
-		    var dt = $('#observations').DataTable( {
-		        "ajax": "observations_json.php?object=<?=$_GET['object']?>",
-	        "columns": [
+		  
+		    datatablesConfig.ajax = "observations_json.php?object=<?=$_GET['object']?>",
+		    datatablesConfig.columns = [
 	            {
 	                "class":          "details-control",
 	                "orderable":      false,
 	                "data":           null,
-	                "defaultContent": "",
+	                "defaultContent": "&nbsp;&nbsp;",
 	                
 	            },
 	            //format of data columns
-	            { "data": "objectname" },
+	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_object&object='+row.objectname+'">'+row.objectname+'</a>'}},
 	            { "data": "constellation"},
-	            { "data": function ( row, type, val, meta ) { return '<a href="?indexAction=detail_observer&user='+row.observerid+'">'+row.firstname+' '+row.name+'</a>' }},
-	            { "data": function ( row, type, val, meta ) { return row.instrumentname+' ('+row.instrumentdiameter+')' } },
+	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observer&user='+row.observerid+'">'+row.firstname+' '+row.name+'</a>' }},
+	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_instrument&instrument='+row.instrumentid+'">'+row.instrumentname+'('+row.instrumentdiameter+')</a>' }},
 	            { "data": "sortdate", "visible": false},
-		        { "data": "date", "orderData": 5 }
-	        ],
-	        "order": [[1, 'asc']]
-	    } );
-	 
+		        { "data": "date", "orderData": 5 },
+		        { "orderable" : false, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observation&observation='+row.id+'&dalm=D" title="<?=LangDetail ?>"><img src="/styles/images/details.png"/></a>' }}		      
+	        ];
+
+		var dt = $('#observations').DataTable( datatablesConfig );
+		 	
 	    // Array to track the ids of the details displayed rows
 	    var detailRows = [];
 	 
@@ -109,6 +133,7 @@
           <th><?= LangOverviewObservationsHeader3 ?></th>
           <th></th>
           <th><?= LangOverviewObservationsHeader4 ?></th>
+          <th></th>
         </tr>
 	</thead>
     <tfoot>
@@ -120,6 +145,7 @@
 			<th><?= LangOverviewObservationsHeader3 ?></th>
 			<th></th>
 			<th><?= LangOverviewObservationsHeader4 ?></th>
+			<th></th>
 		</tr>
 	</tfoot>
 </table>	
