@@ -81,8 +81,9 @@
 	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_object&object='+row.objectname+'">'+row.objectname+'</a>'}},
 	            { "data": "constellation"},
 	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observer&user='+row.observerid+'">'+row.firstname+' '+row.name+'</a>' }},
-	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_instrument&instrument='+row.instrumentid+'">'+row.instrumentname+'('+row.instrumentdiameter+')</a>' }},
+	            { "orderData": 6, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_instrument&instrument='+row.instrumentid+'">'+row.instrumentname+'('+row.instrumentdiameter+')</a>' }},
 	            { "data": "sortdate", "visible": false},
+	            { "data": "instrumentdiameter", "visible": false},
 		        { "data": "date", "orderData": 5 },
 		        { "orderable" : false, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observation&observation='+row.id+'&dalm=D" title="<?=LangDetail ?>"><img src="/styles/images/details.png"/></a>' }}		      
 	        ];
@@ -133,6 +134,7 @@
           <th><?= LangOverviewObservationsHeader2 ?></th>
           <th><?= LangOverviewObservationsHeader3 ?></th>
           <th></th>
+          <th></th>
           <th><?= LangOverviewObservationsHeader4 ?></th>
           <th></th>
         </tr>
@@ -144,6 +146,7 @@
 			<th><?= LangViewObservationField1b ?></th>
 			<th><?= LangOverviewObservationsHeader2 ?></th>
 			<th><?= LangOverviewObservationsHeader3 ?></th>
+			<th></th>
 			<th></th>
 			<th><?= LangOverviewObservationsHeader4 ?></th>
 			<th></th>
