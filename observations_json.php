@@ -46,12 +46,12 @@ global $loggedUser;
 	$objectname = mysql_real_escape_string($_GET['object']);
 
 	$query = "SELECT 
-				observations.id,
+				observations.id as observationid,
 				observations.objectname,
 				observations.observerid,
 				observations.instrumentid,
 				observations.locationid,
-				observations.description,
+				observations.description as observationdescription,
 				observations.seeing,
 				observations.hasdrawing,
 				IF((observations.limmag = 0 || observations.limmag IS NULL) , '-', observations.limmag) as limmag,
@@ -65,6 +65,7 @@ global $loggedUser;
 				DATE_FORMAT(STR_TO_DATE( observations.date, '%Y%m%d'), '%e/%c/%Y') as date,
 				DATE_FORMAT(STR_TO_DATE( observations.date, '%Y%m%d'), '%Y-%c-%e') as moondate,
 				observations.date as sortdate,
+				observations.date as observationdate,
 				observations.time as time,
 				IF(observations.time < 0, '-', INSERT(LPAD(observations.time, 4, '0'), 3, 0, ':')) as displaytime,
 				observers.firstname,
@@ -75,14 +76,20 @@ global $loggedUser;
 				IF(lenses.id = 0, '-', CONCAT(lenses.name, ' (', lenses.factor, ')')) as lensdescription,
 				IF(filters.id = 0, '-', filters.name) as filterdescription,
 				CONCAT(observers.firstname, ' ', observers.name) as observername,
+				CONCAT(observers.name, ' ', observers.firstname) as observersortname,
 				instruments.name as instrumentname,
 				instruments.diameter as instrumentdiameter,
+				CONCAT(instruments.diameter, ' ', instruments.name) as instrumentsort,
 				instruments.id as instrumentid,
 				locations.name as locationname,
 				locations.id as locationid,
 				locations.latitude as lat,
 				locations.longitude as lon,
 				locations.timezone as timezone,
+				objects.con as objectconstellation,
+				objects.type as objecttype,
+				objects.mag as objectmagnitude,
+				objects.subr as objectsurfacebrigthness,
 				CASE 
 					{$whenQuery}
 					ELSE ' ' END AS constellation
@@ -145,6 +152,12 @@ global $loggedUser;
 	}
 
 	$dataTablesObject->data = $result;
+	
+	//print_r($_SESSION['Qobs']);
+	
+	$_SESSION['Qobs'] = $result;
+	
+	
 	
 	print json_encode($dataTablesObject);	
 ?>

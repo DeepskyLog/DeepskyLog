@@ -58,7 +58,7 @@
 		            '<td>'+d.clustertype+'</td>'+	            
 	        	'</tr>'+		        			        
 		        '<tr >'+
-		            '<td style="padding: 20px 0 20px 0" colspan="6">'+d.description;
+		            '<td style="padding: 20px 0 20px 0" colspan="6">'+d.observationdescription;
 		            if(d.hasdrawing == 1){
 		            	result += '<br/><br/><a data-lightbox="image-1" href="/deepsky/drawings/'+d.id+'.jpg"><img src="/deepsky/drawings/'+d.id+'_resized.jpg"/></a>';
 		            }
