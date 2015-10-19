@@ -53,6 +53,7 @@ global $loggedUser;
 				observations.locationid,
 				observations.description,
 				observations.seeing,
+				observations.hasdrawing,
 				IF((observations.limmag = 0 || observations.limmag IS NULL) , '-', observations.limmag) as limmag,
 				IF(observations.sqm = 0, '-', observations.sqm) as sqm,
 				observations.lensid,

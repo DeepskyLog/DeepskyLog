@@ -58,8 +58,13 @@
 		            '<td>'+d.clustertype+'</td>'+	            
 	        	'</tr>'+		        			        
 		        '<tr >'+
-		            '<td style="padding: 20px 0 20px 0" colspan="6">'+d.description+'</td>'+
-		        '</tr>'+
+		            '<td style="padding: 20px 0 20px 0" colspan="6">'+d.description;
+		            if(d.hasdrawing == 1){
+		            	result += '<br/><br/><a data-lightbox="image-1" href="/deepsky/drawings/'+d.id+'.jpg"><img src="/deepsky/drawings/'+d.id+'_resized.jpg"/></a>';
+		            }
+		        	result += 
+		        	'</td>'+ 
+			    '</tr>'+
 	    	'</table>';
 
 	    	return result;
@@ -67,8 +72,8 @@
 
 		$(document).ready(function() {
 		  
-		    datatablesConfig.ajax = "observations_json.php?object=<?=$_GET['object']?>",
-		    datatablesConfig.order = [[6, 'desc']], 
+		    datatablesConfig.ajax = "observations_json.php?object=<?=$_GET['object']?>",		    
+		    datatablesConfig.order = [[7, 'desc']], 
 		    datatablesConfig.columns = [
 	            {
 	                "class":          "details-control",
@@ -153,3 +158,9 @@
 		</tr>
 	</tfoot>
 </table>	
+
+<a class="btn btn-primary" href="index.php?indexAction=query_objects&source=observation_query"><?=LangExecuteQueryObjectsMessage9?></a>
+<a class="btn btn-primary" href="observations.pdf.php?SID=Qobs"><span class="glyphicon glyphicon-download"></span>&nbsp;<?=LangExecuteQueryObjectsMessage4a?></a>
+<a class="btn btn-primary" href="observations.csv"><span class="glyphicon glyphicon-download"></span>&nbsp;<?=LangExecuteQueryObjectsMessage5?></a>
+<a class="btn btn-primary" href="observations.xml"><span class="glyphicon glyphicon-download"></span>&nbsp;<?=LangExecuteQueryObjectsMessage10?></a>
+
