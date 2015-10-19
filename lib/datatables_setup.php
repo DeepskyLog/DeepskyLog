@@ -17,6 +17,11 @@
     	        "next":       "<?=LangResultNext?>",
     	        "previous":   "<?=LangResultPrevious?>" }   	    
    		 },   		 
+   		"stateSave": true,
+   		"stateLoadParams": function (settings, data) {
+   		    data.search.search = "";
+   		 	data.start = 0;
+   		},
    		"order": [[1, 'desc']], 
         "lengthMenu": [[10, 25, 50, 100, 1000, -1], [10, 25, 50, 100, 1000, "<?=LangShowAll?>"]]
 
