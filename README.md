@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/DeepskyLog/DeepskyLog.png?label=ready&title=Ready)](https://waffle.io/DeepskyLog/DeepskyLog)
 # DeepskyLog
 DeepskyLog is a web application to prepare, log and compare Deep-Sky and comet observations.
 
