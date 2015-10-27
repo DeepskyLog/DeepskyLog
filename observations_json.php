@@ -43,7 +43,7 @@ global $loggedUser;
 	while(list($key, $value) = each($constellations))
 		$whenQuery = $whenQuery . " WHEN objects.con = '{$value}' THEN '{$GLOBALS [$value]}' ";
 	
-	$objectname = mysql_real_escape_string($_GET['object']);
+	$objectname = $_GET['object'];
 
 	$query = "SELECT 
 				observations.id as observationid,
@@ -101,10 +101,10 @@ global $loggedUser;
 			JOIN lenses ON observations.lensid = lenses.id
 			JOIN filters ON observations.filterid = filters.id
 			JOIN eyepieces ON observations.eyepieceid = eyepieces.id
-			WHERE observations.objectname='{$objectname}'
+			WHERE observations.objectname=:objectname
 			";			
 					
-	$result = $objDatabase->selectRecordsetArray ($query);
+	$result = $objDatabase->prepareAndSelectRecordsetArray ($query, array(':objectname'=>$objectname));
 	
 	$dataTablesObject = new stdClass();
 	
