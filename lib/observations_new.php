@@ -90,7 +90,7 @@
 	            { "data": "sortdate", "visible": false},
 	            { "data": "instrumentdiameter", "visible": false},
 		        { "data": "date", "orderData": 5 },
-		        { "orderable" : false, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observation&observation='+row.id+'&dalm=D" title="<?=LangDetail ?>"><img src="/styles/images/details.png"/></a>' }}		      
+		        { "orderable" : false, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observation&observation='+row.observationid+'&dalm=D" title="<?=LangDetail ?>"><img src="/styles/images/details.png"/></a>' }}		      
 	        ];
 
 		var dt = $('#observations').DataTable( datatablesConfig );
