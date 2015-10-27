@@ -490,3 +490,20 @@ table.tablesorter tr.type2 td {
   top:50px;
   z-index: 2;
 }
+
+td.details-control {
+    background: url('/styles/images/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.details td.details-control {
+    background: url('/styles/images/details_close.png') no-repeat center center;
+}
+
+.details tr{
+	border-bottom: #eeeeee 1px solid; 
+}	
+
+.moonpic {
+	float: right;
+	border-radius: 6px;	
+}
