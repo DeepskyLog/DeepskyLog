@@ -61,6 +61,30 @@ class Database {
 				$result [$key] = $value;
 		return $result;
 	}
+	public function prepareAndSelectRecordsetArray($sql, $values) {
+		if (! $this->databaseId) {
+			echo "Database connection lost...";
+			$this->newLogin ();
+		}
+	
+		try {
+			$run = $this->databaseId->prepare ( $sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY) );
+			$run->execute($values);
+		} catch ( PDOException $ex ) {
+			$entryMessage = "A database error occured!"; // user friendly message
+		}
+	
+		$result = array ();
+		while ( $get = $run->fetch ( PDO::FETCH_OBJ ) ) {
+			$resultparts = array ();
+			while ( list ( $key, $value ) = each ( $get ) )
+				$resultparts [$key] = $value;
+				$result [] = $resultparts;
+		}
+	
+		return $result;
+	}	
+	
 	public function selectRecordsetArray($sql) {
 		if (! $this->databaseId) {
 			echo "Database connection lost...";
