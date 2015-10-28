@@ -491,6 +491,26 @@ table.tablesorter tr.type2 td {
   z-index: 2;
 }
 
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
 td.details-control {
     background: url('/styles/images/details_open.png') no-repeat center center;
     cursor: pointer;
@@ -500,10 +520,14 @@ tr.details td.details-control {
 }
 
 .details tr{
-	border-bottom: #eeeeee 1px solid; 
-}	
+	border-bottom: #eeeeee 1px solid;
+}
 
 .moonpic {
 	float: right;
-	border-radius: 6px;	
+	border-radius: 6px;
+}
+
+.borderless tbody tr td, .borderless tbody tr th, .borderless thead tr th {
+    border: none;
 }

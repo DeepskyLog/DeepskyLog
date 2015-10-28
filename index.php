@@ -37,7 +37,7 @@ try {
   		     </div>
   		    </div>";
 
-	echo "<div class=\"navbar navbar-default navbar-fixed-bottom\">
+	echo "<div class=\"navbar navbar-default navbar-bottom\">
   		   <div class=\"container-fluid\">
   		    <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">
   		     <ul class=\"nav navbar-nav navbar-left\">
@@ -132,10 +132,11 @@ if (isset ( $entryMessage ) && $entryMessage) { // dispays $entryMessage if any
 	echo "<script type=\"text/javascript\">";
 	echo "$(document).ready(function() {
           $('#errorModal').modal('show')
-        });";
-
+				});";
 	echo "</script>";
 }
+
+
 echo "</body>";
 echo "</html>";
 ?>
