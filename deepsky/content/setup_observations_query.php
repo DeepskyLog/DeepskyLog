@@ -8,9 +8,13 @@ else
 function setup_observations_query() {
 	global $baseURL, $loggedUser, $allLanguages, $usedLanguages, $usedLanguages, $DSOcatalogs, $objPresentations, $objUtil, $objObserver, $objAtlas, $objObject, $objInstrument, $objLocation;
 	$QobsParamsCount = 0;
-	if (array_key_exists ( 'QobsParams', $_SESSION ))
-		if (! (($_SESSION ['QobsParams'] ['mindate'] == date ( 'Ymd', strtotime ( '-1 year' ) )) && ($_SESSION ['QobsParams'] ['catalog'] == '%')))
-			$QobsParamsCount = 41;
+	if (array_key_exists ( 'QobsParams', $_SESSION )) {
+		if (isset($_SESSION ['QobsParams']['mindate'])) {
+			if (! (($_SESSION ['QobsParams'] ['mindate'] == date ( 'Ymd', strtotime ( '-1 year' ) )) && ($_SESSION ['QobsParams'] ['catalog'] == '%'))) {
+				$QobsParamsCount = 41;
+			}
+		}
+	}
 	echo "	<script type=\"text/javascript\" >";
 	echo "	var cal = new CalendarPopup();";
 	echo "  function SetMultipleValuesFromDate(y,m,d)";

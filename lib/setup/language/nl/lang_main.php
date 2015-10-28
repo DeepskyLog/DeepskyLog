@@ -1,5 +1,13 @@
 <?php //NL
 // This is version 5.0
+define("LangCurrentPasswordIncorrect", "Het huidige wachtwoord is incorrect ingegeven. Onmogelijk om het wachtwoord aan te passen.");
+define("LangNewPasswordNotCorrect", "Het nieuwe wachtwoord en de bevestiging zijn niet gelijk. Onmogelijk om het wachtwoord aan te passen.");
+define("LangPasswordChanged", "Het wachtwoord is gewijzigd.");
+define("LangChangePassword", "Wijzig wachtwoord");
+define("PersonalInfo", "Persoonlijk");
+define("ObservingDetails", "Waarnemen");
+define("Atlases", "Atlassen");
+define("Languages", "Talen");
 define("LangSinceVersion", " sinds versie ");
 define("LangWhatsNew", "Nieuw in DeepskyLog");
 define("LangMakePrivate", "Maak privaat");
@@ -813,7 +821,7 @@ define("LangAccountSubscribed9"														,"developers at deepskylog.be om ze
 define("LangValidateSubject"															,"DeepskyLog - account aanvraag goedgekeurd");
 define("LangValidateAdmin"																,"\nEen van de administrators heeft je administrator rechten gegeven.\n");
 define("LangValidateMail1"																,"Beste ");
-define("LangValidateMail2"																,"\n\nJe deepskylog account aanvraag is goedgekeurd.\nJe kan nu inloggen met je userid en paswoord.\n");
+define("LangValidateMail2"																,"\n\nJe deepskylog account aanvraag is goedgekeurd.\nJe kan nu inloggen met je userid en wachtwoord.\n");
 define("LangValidateMail3"																,"\nGroeten,\n\nDe deepskylog administrators");
 
 
@@ -945,6 +953,7 @@ define("LangEditObjectDescription"												,"DESC-Beschrijving aanpassen");
 // content/change_account.php
 
 define("LangChangeAccountTitle"														,"Instellingen");
+define("LangChangeAccountTitleFor"," voor ");
 define("LangChangeAccountField1"													,"Gebruikersnaam");
 define("LangChangeAccountField1Expl"											,"Onder deze naam kan je inloggen op Deepskylog");
 define("LangChangeAccountField2"													,"Emailadres");
@@ -953,9 +962,9 @@ define("LangChangeAccountField3"													,"Voornaam");
 define("LangChangeAccountField3Expl"											,"");
 define("LangChangeAccountField4"													,"Familienaam");
 define("LangChangeAccountField4Expl"											,"");
-define("LangChangeAccountField5"													,"Paswoord");
-define("LangChangeAccountField5Expl"											,"Dit is niet het paswoord van je provider");
-define("LangChangeAccountField6"													,"Bevestig paswoord");
+define("LangChangeAccountField5"													,"Wachtwoord");
+define("LangChangeAccountField5Expl"											,"Dit is niet het wachtwoord van je provider");
+define("LangChangeAccountField6"													,"Bevestig wachtwoord");
 define("LangChangeAccountField6Expl"											,"");
 define("LangChangeAccountField7"													,"Standaard waarneemplaats");
 define("LangChangeAccountField7Expl"											,"Nieuwe plaats");
@@ -970,7 +979,7 @@ define("LangChangeAccountCopyright"                       ,"Copyright melding");
 define("LangChangeAccountCopyrightExpl"                   ,"U kan een copyright bericht ingeven dat onder uw waarnemingen en tekeningen verschijnt");
 define("LangChangeVisibleLanguages"												,"Talen voor beschrijvingen");
 define("LangChangeVisibleLanguagesExpl"										,"Kies uit deze lijst welke waarnemingen je wilt zien");
-define("LangChangeAccountPicture"													,"Foto");
+define("LangChangeAccountPicture"													,"Wijzig profiel foto");
 define("LangChangeAccountButton"													,"Pas aan");
 define("LangChangeAccountField10"													,"ICQ waarnemercode");
 define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code voor komeetwaarnemingen");
@@ -982,7 +991,7 @@ define("LangChangeAccountField13Expl"											,"Geef kort even op waarom je wi
 define("LangLoginMenuTitle"																,"Log in");
 define("LangLoginMenuTitle1"															," of ");
 define("LangLoginMenuItem1"																,"Gebruikersnaam");
-define("LangLoginMenuItem2"																,"Paswoord");
+define("LangLoginMenuItem2"																,"Wachtwoord");
 define("LangLoginMenuButton"															,"Log in");
 define("LangLoginMenuRegister"														,"Registreer");
 
@@ -1598,7 +1607,7 @@ define("LangNewComet13"																		,"boogminuten");
 // control/validate_account.php
 
 define("LangValidateAccountMessage1"											,"Gelieve alle velden in te vullen!");
-define("LangValidateAccountMessage2"											,"Gelieve uw paswoord te bevestigen!");
+define("LangValidateAccountMessage2"											,"Gelieve uw wachtwoord te bevestigen!");
 define("LangValidateAccountMessage3"											,"Fout emailadres!");
 define("LangValidateAccountEmailLine1"										,"Details deepskylog account: ");
 define("LangValidateAccountEmailLine1bis"									,"Gebruikersnaam: ");
@@ -1877,8 +1886,8 @@ define("LangValidateCSVObjectMessage"											,"Importeren CSV bestand succesv
 
 // control/check_login.php
 
-define("LangErrorWrongPassword"														,"Verkeerd paswoord, probeer opnieuw!");
-define("LangErrorEmptyPassword"														,"Gelieve uw paswoord en/of gebruikersnaam in te vullen!");
+define("LangErrorWrongPassword"														,"Verkeerd wachtwoord, probeer opnieuw!");
+define("LangErrorEmptyPassword"														,"Gelieve uw wachtwoord en/of gebruikersnaam in te vullen!");
 define("LangErrorPasswordNotValidated"										,"Uw account is nog niet gevalideerd door een administrator!");
 
 // Visibility for objects

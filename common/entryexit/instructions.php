@@ -563,6 +563,15 @@ function instructions() {
 		$_GET ['listname'] = $listname;
 		unset ( $_GET ['switchPublicPrivateList'] );
 	}
+	if ($objUtil->checkPostKey ( 'changePassword' )) {
+		$login = $objUtil->checkPostKey( 'userid' ); // get password from form and encrypt
+		$passwd = md5 ( $objUtil->checkPostKey( 'currentPassword' ) );
+
+		$newPassword =  md5 ( $objUtil->checkPostKey( 'newPassword' ) );
+		$confirmNewPassword =  md5 ( $objUtil->checkPostKey( 'confirmPassword' ) );
+
+		$objObserver->updatePassword($login, $passwd, $newPassword, $confirmNewPassword);
+	}
 	if ($objUtil->checkGetKey ( 'renameList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' ))) {
 		unset ( $_SESSION ['QobjParams'] );
 		$listNameFrom = $_GET ['listnamefrom'];

@@ -13,7 +13,7 @@ elseif (strcmp ( $objSession->getSessionPropertyFromId ( $sessionid, 'observerid
 else
 	view_session ();
 function change_session() {
-	global $baseURL, $loggedUserName, $objSession, $loggedUser, $objObserver, $objLocation, $objPresentations, $objUtil, $objLanguage;
+	global $baseURL, $loggedUserName, $objSession, $loggedUser, $objObserver, $objLocation, $objPresentations, $objUtil, $objLanguage, $instDir;
 
 	echo "	<script type=\"text/javascript\" >";
 	echo "	var calBegin = new CalendarPopup();";
@@ -358,14 +358,43 @@ function change_session() {
 	// Pictures
 	echo "<div class=\"form-group\">
 	       <label>" . LangAddSessionField12 . "</label>";
-	echo "<div class=\"form-inline\">";
-	echo "<input type=\"file\" name=\"picture\" />";
+	echo "<div class=\"form\">";
+	echo "<input type=\"file\" id=\"picture\" name=\"picture\" data-show-remove=\"false\" accept=\"image/*\" class=\"file-loading\"/>";
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddSessionField12Expl . "</span>";
 	echo "</div>";
 
 	echo "</div></form>";
 	echo "</div>";
+
+	// The javascript for the fileinput plugins
+	// Make sure to show the correct image.
+	$imaLocation = "";
+	if (file_exists ( $instDir . 'deepsky/sessions/' . $objUtil->checkRequestKey ( 'sessionid' ) . ".jpg" )) {
+		$imaLocation = $baseURL . "deepsky/sessions/" . $objUtil->checkRequestKey ( 'sessionid' ) . ".jpg";
+	}
+	echo "<script type=\"text/javascript\">";
+	echo "$(document).on(\"ready\", function() {
+				$(\"#picture\").fileinput({";
+	if ($imaLocation != "") {
+		echo "    initialPreview: [
+							// Show the correct file.
+							'<img src=\"" . $imaLocation . "\" class=\"file-preview-image\">'
+						],";
+	}
+	echo "    maxFileCount: 1,
+						validateInitialCount: true,
+						autoReplace: true,
+						showRemove: false,
+						showUpload: false,
+						removeLabel: '',
+						removeIcon: '',
+						removeTitle: '',
+						layoutTemplates: {actionDelete: ''},
+						allowedFileTypes: [\"image\"],
+				});
+			});";
+	echo "</script>";
 }
 function view_session() {
 	global $baseURL, $loggedUserName, $objSession, $loggedUser, $objObserver, $objLocation, $objPresentations, $objUtil, $objLanguage, $instDir;
