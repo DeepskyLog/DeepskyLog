@@ -298,7 +298,7 @@ function change_account()
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeVisibleLanguagesExpl . "</label>";
 	echo "<div class=\"col-sm-6\">";
-	echo "<table class=\"table table-condensed table-bordered\">";
+	echo "<table class=\"table table-condensed borderless\">";
 
 	$j = 0;
 	echo "<tr>";
