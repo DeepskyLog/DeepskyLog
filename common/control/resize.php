@@ -1,4 +1,4 @@
-<?php 
+<?php
 //resize.php
 // utility functions in resizing
 

@@ -1,5 +1,14 @@
 <?php //GE
 // This is version 5.0
+define("LangCurrentPasswordIncorrect", "Die von Ihnen gew&auml;hlte aktuelle Passwort ist nicht korrekt. Die password is nicht ver&auml;ndert.");
+define("LangNewPasswordNotCorrect", "Das neue Passwort und die Passwort Best&auml;tigung sind nicht dasselbe. Die password is nicht ver&auml;ndert.");
+define("LangPasswordChanged", "Das Passwort ist erfolgreich ge&auml;ndert.");
+define("LangChangePassword", "Passwort &auml;ndern");
+define("LangCurrentPassword", "Current password");
+define("PersonalInfo", "Personal");
+define("ObservingDetails", "Observing");
+define("Atlases", "Atlases");
+define("Languages", "Languages");
 define("LangSinceVersion", " seit Version ");
 define("LangWhatsNew", "What's new in DeepskyLog");
 define("LangMakePrivate", "Make private");
@@ -207,6 +216,7 @@ define('LangSelectColumns'        ,'Kies kolommen');
 define('LangNewMessage'           ,'Nieuw bericht');
 define('LangSendMessage'          ,'Zend bericht');
 define("LangChangeAccountTitle"		,"Settings");
+define("LangChangeAccountTitleFor"," for ");
 define("LangChangeMenuItem1"			,"Settings");
 
 define('LangUnderHorizon'				,'unter dem Horizont');
@@ -987,7 +997,7 @@ define("LangChangeAccountObservationLanguage"							,"Standard Sprache f&uuml;r 
 define("LangChangeAccountObservationLanguageExpl"					,"Die Standard Sprache um Beobachtungen einzugeben");
 define("LangChangeVisibleLanguages"												,"Sprache f&uuml;r Beobachtungen");
 define("LangChangeVisibleLanguagesExpl"										,"Definieren Sie, welche Sprache Sie in den Beschreibungen sehen wollen");
-define("LangChangeAccountPicture"													,"Icon");
+define("LangChangeAccountPicture"													,"Profilbild &auml;ndern");
 define("LangChangeAccountButton"													,"&Auml;ndern");
 define("LangChangeAccountField10"													,"ICQ Beobachtercode");
 define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> Code f&uuml;r Kometen Beobachtungen");

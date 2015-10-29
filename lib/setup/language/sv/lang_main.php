@@ -1,5 +1,13 @@
 <?php //SV
 // This is version 5.0
+define("LangCurrentPasswordIncorrect", "The current password you entered is incorrect. Unable to change the password.");
+define("LangNewPasswordNotCorrect", "The new password and the confirmed password are not the same. Unable to change the password.");
+define("LangPasswordChanged", "The password is successfully changed.");
+define("LangChangePassword", "Change password");
+define("PersonalInfo", "Personal");
+define("ObservingDetails", "Observing");
+define("Atlases", "Atlases");
+define("Languages", "Languages");
 define("LangSinceVersion", " since version ");
 define("LangWhatsNew", "What's new in DeepskyLog");
 define("LangMakePrivate", "Make private");
@@ -966,6 +974,7 @@ define("LangEditObjectDescription"												,"Edit Description");
 // content/change_account.php
 
 define("LangChangeAccountTitle"														,"Settings");
+define("LangChangeAccountTitleFor"," for ");
 define("LangChangeAccountField1"													,"Username");
 define("LangChangeAccountField1Expl"											,"This is the name you will use to log in");
 define("LangChangeAccountField2"													,"Email address");
@@ -991,7 +1000,7 @@ define("LangChangeAccountCopyright"                       ,"Copyright notice");
 define("LangChangeAccountCopyrightExpl"                   ,"You can specify a copyright notice that will appear under your observations and drawings.");
 define("LangChangeVisibleLanguages"												,"Languages for observations");
 define("LangChangeVisibleLanguagesExpl"										,"Define which languages you want to see in the descriptions");
-define("LangChangeAccountPicture"													,"Picture");
+define("LangChangeAccountPicture"													,"Change profile picture");
 define("LangChangeAccountButton"													,"Change");
 define("LangChangeAccountField10"													,"ICQ observercode");
 define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code for comet observations");

@@ -6,9 +6,9 @@ global $inIndex, $loggedUser, $objUtil;
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! ($loggedUser))
-	throw new Exception ( LangExcpetion001 );
+	throw new Exception ( LangException001 );
 elseif (! ($objUtil->checkAdminOrUserID ( $loggedUser )))
-	throw new Exception ( LangExcpetion012 );
+	throw new Exception ( LangException012 );
 else
 	menu_location ();
 function menu_location() {
@@ -21,13 +21,13 @@ function menu_location() {
 		}
 		$result = $objLocation->getSortedLocations ( 'name', $loggedUser, 1 );
 		$loc = $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' );
-		
+
 		if ($result) {
 			echo "<ul class=\"nav navbar-nav\">
 			      <li class=\"dropdown\">
 					<a href=\"http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"] . "#\" class=\"dropdown-toggle navbar-btn\" data-toggle=\"dropdown\">" . $objLocation->getLocationPropertyFromId ( $loc, 'name' ) . "<b class=\"caret\"></b></a>";
 			echo " <ul class=\"dropdown-menu\">";
-			
+
 			$url = "http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"];
 			if ($url == $baseURL || $url == $baseURL . "#" || $url = $baseURL . "index.php") {
 				$url = $baseURL . "index.php?title=Home";
@@ -35,7 +35,7 @@ function menu_location() {
 			while ( list ( $key, $value ) = each ( $result ) ) {
 				echo "  <li><a href=\"" . $url . "&amp;activeLocationId=" . $value . "\">" . $objLocation->getLocationPropertyFromId ( $value, 'name' ) . "</a></li>";
 			}
-			
+
 			echo " </ul>";
 			echo "</li>
 			    </ul>";

@@ -452,7 +452,7 @@ class Sessions {
 		}
 	}
 	public function validateChangeSession() {
-		global $loggedUser, $objUtil, $objLocation;
+		global $loggedUser, $objUtil, $objLocation, $instDir;
 		if (! ($loggedUser))
 			throw new Exception ( LangMessageNotLoggedIn );
 

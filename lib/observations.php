@@ -631,7 +631,7 @@ class Observations {
 			$sqland .= "AND observations.SQM >= \"" . $queries ["minSQM"] . "\" ";
 		if (isset ( $queries ["maxSQM"] ) && ($queries ["maxSQM"] != ""))
 			$sqland .= "AND observations.SQM <= \"" . $queries ["minSQM"] . "\" ";
-		if ((isset ( $queries ["hasDrawing"] ) && ($queries ["hasDrawing"] == 'on')) || (isset ( $_GET['drawings']) && ($_GET['drawings']=='on'))) //added this test here, not sure if this is the right way, but this will be refactored later anyway
+		if (isset ( $queries ["hasDrawing"] ) && ($queries ["hasDrawing"] == 'on'))
 			$sqland .= "AND observations.hasDrawing=TRUE ";
 		if (isset ( $queries ["hasNoDrawing"] ) && ($queries ["hasNoDrawing"] == 'on'))
 			$sqland .= "AND observations.hasDrawing=FALSE ";
@@ -656,8 +656,7 @@ class Observations {
 		if (! array_key_exists ( 'countquery', $queries ))
 			$sql .= " ORDER BY observationid DESC";
 		$sql = $sql . ";";
-
-		//echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
+		// echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
 		$run = $objDatabase->selectRecordset ( $sql );
 		if (! array_key_exists ( 'countquery', $queries )) {
 			$j = 0;
@@ -839,7 +838,7 @@ class Observations {
 		echo "<th id=\"objectname\">" . LangOverviewObservationsHeader1 . "</th>";
 		echo "<th id=\"objectconstellation\">" . LangViewObservationField1b . "</th>";
 		echo "<th id=\"observername\">" . LangOverviewObservationsHeader2 . "</th>";
-		echo "<th class=\"sorter-instruments\" id=\"instrumentname\">" . LangOverviewObservationsHeader3 . "</th>";
+		echo "<th id=\"instrumentname\">" . LangOverviewObservationsHeader3 . "</th>";
 		echo "<th id=\"observationdate\">" . LangOverviewObservationsHeader4 . "</th>";
 		if ($lco != "O") {
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">&nbsp;</th>";
