@@ -121,8 +121,11 @@ function headmenu() {
 		echo "<div class=\"modal fade\" id=\"login\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">
             <div class=\"modal-dialog\">
               <div class=\"modal-content\">
+							<div class=\"modal-header\">
+								<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
+								<h1 class=\"text-center login-title\">DeepskyLog</h1>
+							</div>
   		        <div class=\"modal-body\">
-  		          <h1 class=\"text-center login-title\">DeepskyLog</h1>
                   <div class=\"account-wall\">
                     <form class=\"form-signin\" action=\"" . $baseURL . "index.php\" method=\"post\">
                     	<input type=\"hidden\" name=\"indexAction\" value=\"check_login\" />
