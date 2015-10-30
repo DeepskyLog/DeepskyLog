@@ -133,8 +133,11 @@ function headmenu() {
                       <input type=\"text\" class=\"form-control\" placeholder=\"" . LangLoginMenuItem1 . "\" required autofocus maxlength=\"64\" name=\"deepskylog_id\" id=\"deepskylog_id\">
                       <input type=\"password\" class=\"form-control\" placeholder=\"" . LangLoginMenuItem2 . "\" required maxlength=\"64\" name=\"passwd\" id=\"passwd\">
                       <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">" . LangLoginMenuTitle . "</button>
-
+											<br /><br />
                     </form>
+										<div class=\"text-center\">
+											<a href=\"" . $baseURL . "index.php?indexAction=subscribe&amp;title=" . urlencode ( LangLoginMenuRegister ) . "\">" . LangLoginMenuRegister . "</a>&nbsp;&nbsp;-&nbsp;&nbsp;<a href=\"\">Wachtwoord vergeten?</a>
+										</div>
   		          </div>
   	  	        </div>
               </div>
