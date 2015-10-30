@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("LangForgotPassword", "Passwort vergessen?");
 define("LangCurrentPasswordIncorrect", "Die von Ihnen gew&auml;hlte aktuelle Passwort ist nicht korrekt. Die password is nicht ver&auml;ndert.");
 define("LangNewPasswordNotCorrect", "Das neue Passwort und die Passwort Best&auml;tigung sind nicht dasselbe. Die password is nicht ver&auml;ndert.");
 define("LangPasswordChanged", "Das Passwort ist erfolgreich ge&auml;ndert.");
