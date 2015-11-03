@@ -392,17 +392,35 @@ class Observers {
 		$_GET ['indexAction'] = 'change_account';
 	}
 	public function requestNewPassword() {
-		global $entryMessage;
-		// Show message:
-		$entryMessage = LangTokenMailed;
+		global $entryMessage, $objUtil;
 
-		// TODO: Add token in the database
-		//print "TEST";
-		//print_r($_POST);
+		// First check if we are indeed using the correct indexAction
+		if (strcmp($objUtil->checkPostKey('indexAction'), "requestPassword") == 0) {
+			// Check for the userid or the mail address
+			$userid = $objUtil->checkPostKey('deepskylog_id');
 
-		// TODO: Send a mail
-		//exit;
+			if ($userid != "") {
+				// Check if the userid exists in the database, if this is not the case, show a message that the userid is not known by DeepskyLog.
+				$mail = $this->getObserverProperty ( $userid, 'email' );
 
+				// TODO: Check. If mail is empty, show message that the userid is not correct.
+
+			} else {
+				$mail = $objUtil->checkPostKey('mail');
+				if ($mail != "") {
+					print "TEST2";
+				}
+			}
+			print "|" . $userid . "|" . $mail ."|";
+
+			// TODO: Add token in the database
+
+			// TODO: Send a mail
+			//exit;
+
+			// Show message
+			$entryMessage = LangTokenMailed;
+		}
 	}
 }
 ?>
