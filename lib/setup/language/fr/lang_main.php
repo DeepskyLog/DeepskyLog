@@ -1,6 +1,7 @@
 <?php //FR
 // This is version 5.0
-define("LangForgotPassword", "Mot de passe oublié?");
+define("LangTokenMailed", "Un token pour changer votre mot de passe a &eacute;t&eacute; envoy&eacute; par &eacute;mail. Suivez les instructions dans ce message pour changer votre mot de passe.");
+define("LangForgotPassword", "Mot de passe oubli&eacute;?");
 define("LangForgotPasswordText1", "Veuillez entrez votre nom d'utilisateur DeepskyLog <strong> ou </strong> votre adresse &eacute;mail.");
 define("LangUserId", "Nom d'utilisateur DeepskyLog");
 define("LangRequestNewPassword", "Nouveau mot de passe");

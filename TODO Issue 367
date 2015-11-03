@@ -1,7 +1,6 @@
 // TODO: Recover password
 // 1) The user enters his username and hits "forgot password" or the email address instead of the username,
 //     because usernames are sometimes forgotten too.
-//    Show: A token for changing your password has been emailed to you. Follow the instructions in that email to change your password.
 //    TODO: Send nice looking html email, with html showing the DeepskyLog logo, ...
 //    Content: You have (or someone impersonating you has) requested to change your
       Bugzilla password. To complete the change, visit the following link:
@@ -21,14 +20,14 @@
         1) Show:  Your request has been canceled.
         2) Send mail:
            A request was canceled from 10.33.178.31.
-           If you did not request this, it could be either an honestmistake or someone attempting to break into your Bugzilla account.
+           If you did not request this, it could be either an honest mistake or someone attempting to break into your Bugzilla account.
       B) When clicking Change password:
         1) Show: To change your password, enter a new password twice:...   Submit
 //    TODO: Adapt the other mails that are sent to use html.
 // 2) The system has a table password_change_requests with the columns ID, Time and UserID. When the new user presses the button, a record is created
       in the table. The Time column contains the time when the user pressed the "Forgot Password" button. The ID is a string. A long random string is
       created (say, a GUID) and then hashed like a password (which is a separate topic in and of itself). This hash is then used as the 'ID' in the
-      table.
+      table: DONE
 // 3) The system sends an email to the user which contains a link in it. The link also contains the original ID string (before the hashing). The link
       will be something like this: http://www.mysite.com/forgotpassword.jsp?ID=01234567890ABCDEF. The forgotpassword.jsp page should be able to retrieve
       the ID parameter.

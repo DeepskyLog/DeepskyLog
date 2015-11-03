@@ -1,5 +1,6 @@
 <?php //SV
 // This is version 5.0
+define("LangTokenMailed", "A token for changing your password has been emailed to you. Follow the instructions in that email to change your password.");
 define("LangForgotPassword", "Forgot password?");
 define("LangForgotPasswordText1", "Please enter your DeepskyLog username <strong>or</strong> your email.");
 define("LangUserId", "DeepskyLog username");

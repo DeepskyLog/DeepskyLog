@@ -391,5 +391,18 @@ class Observers {
 		// Return to the change account page.
 		$_GET ['indexAction'] = 'change_account';
 	}
+	public function requestNewPassword() {
+		global $entryMessage;
+		// Show message:
+		$entryMessage = LangTokenMailed;
+
+		// TODO: Add token in the database
+		//print "TEST";
+		//print_r($_POST);
+
+		// TODO: Send a mail
+		//exit;
+
+	}
 }
 ?>

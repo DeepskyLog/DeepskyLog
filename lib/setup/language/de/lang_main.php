@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("LangTokenMailed", "Ein Token zum &auml;ndern Ihr Passwort wurde Ihnen per E-Mail geschickt. Folgen Sie den Anweisungen in dieser E-Mail um Ihr Passwort zu &auml;ndern.");
 define("LangForgotPassword", "Passwort vergessen?");
 define("LangForgotPasswordText1", "Bitte geben Sie Ihren Benutzernamen <strong> oder </strong> Ihre E-Mail ein.");
 define("LangUserId", "DeepskyLog Benutzernamen");
