@@ -1,5 +1,8 @@
 <?php //FR
 // This is version 5.0
+define("LangUnknownUsername", "Le nom d'utilisateur donn&eacute; n'est pas connu par DeepskyLog. Impossible de demander un nouveau mot de passe.");
+define("LangUnknownMailAddress", "L'&eacute;mail n'est pas connu par DeepskyLog. Impossible de demander un nouveau mot de passe.");
+define("LangUnknownMailAndUsername", "Le nom d'utilisateur donn&eacute; et l'&eacute;mail ne sont pas connus par DeepskyLog. Impossible de demander un nouveau mot de passe.");
 define("LangTokenMailed", "Un token pour changer votre mot de passe a &eacute;t&eacute; envoy&eacute; par &eacute;mail. Suivez les instructions dans ce message pour changer votre mot de passe.");
 define("LangForgotPassword", "Mot de passe oubli&eacute;?");
 define("LangForgotPasswordText1", "Veuillez entrez votre nom d'utilisateur DeepskyLog <strong> ou </strong> votre adresse &eacute;mail.");

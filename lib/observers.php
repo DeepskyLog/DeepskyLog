@@ -398,20 +398,31 @@ class Observers {
 		if (strcmp($objUtil->checkPostKey('indexAction'), "requestPassword") == 0) {
 			// Check for the userid or the mail address
 			$userid = $objUtil->checkPostKey('deepskylog_id');
+			$mail = $objUtil->checkPostKey('mail');
 
 			if ($userid != "") {
 				// Check if the userid exists in the database, if this is not the case, show a message that the userid is not known by DeepskyLog.
 				$mail = $this->getObserverProperty ( $userid, 'email' );
 
-				// TODO: Check. If mail is empty, show message that the userid is not correct.
-
-			} else {
-				$mail = $objUtil->checkPostKey('mail');
-				if ($mail != "") {
-					print "TEST2";
+				// If mail is empty, show message that the userid is not correct.
+				if (strcmp($mail, "") == 0) {
+					$entryMessage = LangUnknownUsername;
+					return;
 				}
+
+				// We have a username and a password, prepare the mail to send.
+			} elseif ($mail != "") {
+				// TODO: We have a mail address, but no username
+				// TODO: get $userid
+				if (strcmp($userid, "") == 0) {
+					$entryMessage = LangUnknownMailAddress;
+					return;
+				}
+			} else {
+				$entryMessage = LangUnknownMailAndUsername;
+				return;
 			}
-			print "|" . $userid . "|" . $mail ."|";
+			//print "|" . $userid . "|" . $mail ."|";
 
 			// TODO: Add token in the database
 
