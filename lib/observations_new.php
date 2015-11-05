@@ -1,5 +1,9 @@
 <?php require_once 'lib/datatables_setup.php'; 
-$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );?>
+$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
+if ($loggedUser == ""){
+	$usedLang = $_SESSION['lang'];
+};
+?>
 <script type="text/javascript">
 
 	function removeAll(){

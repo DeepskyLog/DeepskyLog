@@ -108,7 +108,10 @@ global $loggedUser;
 	$result = $objDatabase->prepareAndSelectRecordsetArray ($query, array(':objectname'=>$objectname));
 	
 	$dataTablesObject = new stdClass();
-	$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
+	$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );		
+	if ($loggedUser == ""){
+		$usedLang = $_SESSION['lang'];
+	};
 	
 	while(list($key, $value) = each($result)){
 		while(list($k, $v) = each($value)){
@@ -140,7 +143,7 @@ global $loggedUser;
 		
 		//add translate
 		$lang = $result[$key]['observerationlanguage'];
-		$result[$key]['translate'] = (($loggedUser != "") && ($usedLang != $lang ));
+		$result[$key]['translate'] = (($usedLang != null) && ($usedLang != $lang ));
 		
 		//add size
 		if($result[$key]['largediameter'] == 0){
@@ -159,7 +162,6 @@ global $loggedUser;
 
 	$dataTablesObject->data = $result;
 	
-	//print_r($_SESSION['Qobs']);
 	
 	$_SESSION['Qobs'] = $result;
 	
