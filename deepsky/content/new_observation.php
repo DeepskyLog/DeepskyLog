@@ -401,10 +401,42 @@ function new_observation() {
 
 		echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField12 . "</label>";
-		echo "<div class=\"form-inline\">";
-		echo "<input type=\"file\" name=\"drawing\" />";
+		echo "<div class=\"form\">";
+		echo "<input type=\"file\" id=\"drawing\" name=\"drawing\" data-show-remove=\"false\" accept=\"image/*\" class=\"file-loading\"/>";
+
 		echo "</div>";
 		echo "</div>";
+
+		// The javascript for the fileinput plugins
+		// Make sure to show the correct image.
+		$imaLocation = "";
+		if ($observationid) {
+			if ($objObservation->getDsObservationProperty ($observationid , 'hasDrawing' )) {
+				$imaLocation = $baseURL . "deepsky/drawings/" . $observationid . ".jpg";
+			}
+		}
+	  echo "<script type=\"text/javascript\">";
+	  echo "$(document).on(\"ready\", function() {
+	  			$(\"#drawing\").fileinput({";
+		if ($imaLocation != "") {
+	  	echo "    initialPreview: [
+	  						// Show the correct file.
+	  						'<img src=\"" . $imaLocation . "\" class=\"file-preview-image\">'
+	  					],";
+		}
+	  echo "    maxFileCount: 1,
+	            validateInitialCount: true,
+	            autoReplace: true,
+	            showRemove: false,
+	            showUpload: false,
+	            removeLabel: '',
+	            removeIcon: '',
+	            removeTitle: '',
+	            layoutTemplates: {actionDelete: ''},
+	            allowedFileTypes: [\"image\"],
+	  			});
+	  		});";
+	  echo "</script>";
 
 		echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField29 . "</label>";
