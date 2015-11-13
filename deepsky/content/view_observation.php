@@ -35,32 +35,35 @@ function view_observation() {
 	$objObject->showObject ( $object );
 	$content = '';
 	if ($loggedUser) // LOGGED IN
-{
-		if ($_GET ['dalm'] != "D")
-			$content = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText . "</a>" . "&nbsp;";
-		if ($_GET ["dalm"] != "AO")
-			$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=AO\" title=\"" . LangAO . "\">" . LangAOText . "</a>" . "&nbsp;";
-		if ($objObservation->getObservationsUserObject ( $loggedUser, $object ) > 0) {
-			if ($_GET ['dalm'] != "MO")
-				$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=MO\" title=\"" . LangMO . "\">" . LangMOText . "</a>" . "&nbsp;";
-			if ($_GET ['dalm'] != "LO")
-				$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=LO\" title=\"" . LangLO . "\">" . LangLOText . "</a>" . "&nbsp;";
+	{
+		if (array_key_exists("dalm", $_GET)) {
+			if ($_GET ['dalm'] != "D")
+				$content = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText . "</a>" . "&nbsp;";
+			if ($_GET ["dalm"] != "AO")
+				$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=AO\" title=\"" . LangAO . "\">" . LangAOText . "</a>" . "&nbsp;";
+			if ($objObservation->getObservationsUserObject ( $loggedUser, $object ) > 0) {
+				if ($_GET ['dalm'] != "MO")
+					$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=MO\" title=\"" . LangMO . "\">" . LangMOText . "</a>" . "&nbsp;";
+				if ($_GET ['dalm'] != "LO")
+					$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=LO\" title=\"" . LangLO . "\">" . LangLOText . "</a>" . "&nbsp;";
+			}
 		}
 		$content .= LangOverviewObservationsHeader5a;
 		echo $content;
 		echo "<br /><br />";
 	}
 	$objObservation->showObservation ( $_GET ['observation'] );
-	if ($_GET ['dalm'] == "AO") {
-		$AOid = $objObservation->getAOObservationsId ( $object, $_GET ['observation'] );
-	} elseif ($_GET ['dalm'] == "MO") {
-		$AOid = $objObservation->getMOObservationsId ( $object, $loggedUser, $_GET ['observation'] );
-	} elseif ($_GET ['dalm'] == "LO") {
-		$AOid = array (
-				$objObservation->getLOObservationId ( $object, $loggedUser, $_GET ['observation'] ) 
-		);
-	} else {
-		$AOid = array ();
+	$AOid = array ();
+	if (array_key_exists("dalm", $_GET)) {
+		if ($_GET ['dalm'] == "AO") {
+			$AOid = $objObservation->getAOObservationsId ( $object, $_GET ['observation'] );
+		} elseif ($_GET ['dalm'] == "MO") {
+			$AOid = $objObservation->getMOObservationsId ( $object, $loggedUser, $_GET ['observation'] );
+		} elseif ($_GET ['dalm'] == "LO") {
+			$AOid = array (
+				$objObservation->getLOObservationId ( $object, $loggedUser, $_GET ['observation'] )
+					);
+		}
 	}
 	while ( list ( $key, $LOid ) = each ( $AOid ) ) {
 		echo "<strong>" . LangObservationOf . $object . "</strong>";
@@ -69,9 +72,9 @@ function view_observation() {
 	if ($loggedUser != "") {
 		$observerid = $objObservation->getDsObservationProperty ( $_GET ['observation'], 'observerid' );
 		$name = $objObserver->getObserverProperty ( $observerid, 'firstname' ) . " " . $objObserver->getObserverProperty ( $observerid, 'name' ) . " ";
-		
+
 		$date = sscanf ( $objObservation->getDsObservationProperty ( $_GET ['observation'], 'date' ), "%4d%2d%2d" );
-		
+
 		$subject = LangMessageYourObservation . $objObservation->getDsObservationProperty ( $_GET ['observation'], 'objectname' ) . LangMessageOn . $date [2] . "/" . $date [1] . "/" . $date [0];
 		echo "&nbsp;<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=new_message&amp;receiver=" . urlencode ( $observerid ) . "&amp;subject=" . urlencode ( $subject ) . "\"><span class=\"glyphicon glyphicon-envelope\"></span> " . $name . LangMessageAboutObservation . "</a>";
 	}
