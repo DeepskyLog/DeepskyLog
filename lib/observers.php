@@ -430,6 +430,7 @@ class Observers {
 			//exit;
 
 			// Show message
+			// TODO: Show which username and which email we use for requesting the new password
 			$entryMessage = LangTokenMailed;
 		}
 	}
