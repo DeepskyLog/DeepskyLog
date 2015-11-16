@@ -10,6 +10,10 @@ class Observers {
 		global $objDatabase;
 		return $objDatabase->execSQL ( "INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"" . RoleWaitlist . "\", \"" . $_SESSION ['lang'] . "\")" );
 	}
+	public function getUserIdFromEmail($mail) {
+		global $objDatabase;
+		return $objDatabase->selectSingleValue ( "SELECT id FROM observers WHERE email = \"" . $mail . "\"", 'id' );
+	}
 	public function getAdministrators() {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT id FROM observers WHERE role = \"RoleAdmin\"", 'id' );
@@ -410,8 +414,9 @@ class Observers {
 					return;
 				}
 			} elseif ($mail != "") {
-				// TODO: We have a mail address, but no username
-				// TODO: get $userid
+				// We have a mail address, but no username. Get the userid which belongs to the mailaddress.
+				$userid = $this->getUserIdFromEmail($mail);
+
 				if (strcmp($userid, "") == 0) {
 					$entryMessage = LangUnknownMailAddress1 . "<strong>" . $mail . "</strong>" . LangUnknownMailAddress2;
 					return;
