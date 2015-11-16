@@ -406,11 +406,9 @@ class Observers {
 
 				// If mail is empty, show message that the userid is not correct.
 				if (strcmp($mail, "") == 0) {
-					$entryMessage = LangUnknownUsername;
+					$entryMessage = LangUnknownUsername1 . "<strong>" . $userid . "</strong>" . LangUnknownUsername2;
 					return;
 				}
-
-				// We have a username and a password, prepare the mail to send.
 			} elseif ($mail != "") {
 				// TODO: We have a mail address, but no username
 				// TODO: get $userid
@@ -422,16 +420,16 @@ class Observers {
 				$entryMessage = LangUnknownMailAndUsername;
 				return;
 			}
-			//print "|" . $userid . "|" . $mail ."|";
 
 			// TODO: Add token in the database
 
+			// We have a username and a password, prepare the mail to send.
 			// TODO: Send a mail
 			//exit;
 
 			// Show message
-			// TODO: Show which username and which email we use for requesting the new password
-			$entryMessage = LangTokenMailed;
+			// Show which username and which email we use for requesting the new password
+			$entryMessage = LangTokenMailed1 . "<strong>" . $userid . "</strong>" . LangTokenMailed2 . "<strong>" . $mail . "</strong>" . LangTokenMailed3;
 		}
 	}
 }

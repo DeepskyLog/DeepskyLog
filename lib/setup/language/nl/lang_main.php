@@ -1,9 +1,12 @@
 <?php //NL
 // This is version 5.0
-define("LangUnknownUsername", "De gebruikersnaam is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
+define("LangUnknownUsername1", "De gebruikersnaam ");
+define("LangUnknownUsername2", " is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
 define("LangUnknownMailAddress", "Het emailadres is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
 define("LangUnknownMailAndUsername", "De gebruikersnaam en het mailadres zijn niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
-define("LangTokenMailed", "Een token om je wachtwoord te wijzigen is naar jouw emailadres verzonden. Volg de instructies in die mail om je wachtwoord te wijzigen.");
+define("LangTokenMailed1", "Een token om het wachtwoord van ");
+define("LangTokenMailed2", " te wijzigen is naar ");
+define("LangTokenMailed3", " verzonden. Volg de instructies in die mail om je wachtwoord te wijzigen.");
 define("LangForgotPassword", "Wachtwoord vergeten?");
 define("LangForgotPasswordText1", "Gelieve je DeepskyLog gebruikersnaam <strong>of</strong> je in DeepskyLog gekend emailadres in te voeren.");
 define("LangUserId", "DeepskyLog gebruikersnaam");
