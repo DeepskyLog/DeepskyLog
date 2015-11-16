@@ -2,7 +2,8 @@
 // This is version 5.0
 define("LangUnknownUsername1", "De gebruikersnaam ");
 define("LangUnknownUsername2", " is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
-define("LangUnknownMailAddress", "Het emailadres is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
+define("LangUnknownMailAddress1", "Het emailadres ");
+define("LangUnknownMailAddress2", " is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
 define("LangUnknownMailAndUsername", "De gebruikersnaam en het mailadres zijn niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
 define("LangTokenMailed1", "Een token om het wachtwoord van ");
 define("LangTokenMailed2", " te wijzigen is naar ");

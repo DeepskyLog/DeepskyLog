@@ -2,7 +2,8 @@
 // This is version 5.0
 define("LangUnknownUsername1", "Die Benutzername ");
 define("LangUnknownUsername2", " ist nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
-define("LangUnknownMailAddress", "Die angegebene E-Mail Adresse ist nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
+define("LangUnknownMailAddress1", "Die E-Mail Adresse ");
+define("LangUnknownMailAddress2", " ist nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
 define("LangUnknownMailAndUsername", "Die angegebene Benutzername und E-Mail Adresse sind nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
 define("LangTokenMailed1", "Ein Token zum &auml;ndern des Passworts ");
 define("LangTokenMailed2", " wurde Ihnen per E-Mail nach ");

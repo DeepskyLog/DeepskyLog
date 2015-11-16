@@ -413,7 +413,7 @@ class Observers {
 				// TODO: We have a mail address, but no username
 				// TODO: get $userid
 				if (strcmp($userid, "") == 0) {
-					$entryMessage = LangUnknownMailAddress;
+					$entryMessage = LangUnknownMailAddress1 . "<strong>" . $mail . "</strong>" . LangUnknownMailAddress2;
 					return;
 				}
 			} else {

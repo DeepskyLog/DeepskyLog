@@ -2,7 +2,8 @@
 // This is version 5.0
 define("LangUnknownUsername1", "The username ");
 define("LangUnknownUsername2", " is not known by DeepskyLog. Impossible to request a new password.");
-define("LangUnknownMailAddress", "The given mail address is not known by DeepskyLog. Impossible to request a new password.");
+define("LangUnknownMailAddress1", "The mail address ");
+define("LangUnknownMailAddress2", " is not known by DeepskyLog. Impossible to request a new password.");
 define("LangUnknownMailAndUsername", "The given username and mail address are not known by DeepskyLog. Impossible to request a new password.");
 define("LangTokenMailed1", "A token for changing the password of ");
 define("LangTokenMailed2", " has been emailed to ");
