@@ -1,5 +1,6 @@
 <?php //SV
 // This is version 5.0
+define("LangRequestNewPasswordSubject", "DeepskyLog Change Password Request");
 define("LangUnknownUsername1", "The username ");
 define("LangUnknownUsername2", " is not known by DeepskyLog. Impossible to request a new password.");
 define("LangUnknownMailAddress1", "The mail address ");

@@ -396,7 +396,7 @@ class Observers {
 		$_GET ['indexAction'] = 'change_account';
 	}
 	public function requestNewPassword() {
-		global $entryMessage, $objUtil;
+		global $entryMessage, $objUtil, $mailFrom;
 
 		// First check if we are indeed using the correct indexAction
 		if (strcmp($objUtil->checkPostKey('indexAction'), "requestPassword") == 0) {
@@ -429,6 +429,22 @@ class Observers {
 			// TODO: Add token in the database
 
 			// We have a username and a password, prepare the mail to send.
+			$subject = LangRequestNewPasswordSubject;
+
+			$headers = "From: " . $mailFrom . "\r\n";
+			$headers .= "Reply-To: ". $mailFrom . "\r\n";
+			$headers .= "MIME-Version: 1.0\r\n";
+			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+			$message = '<html><body>';
+			$message .= '<h1>Hello, World!</h1>';
+			$message .= '</body></html>';
+
+print $mailFrom;
+
+			//mail($mail, $subject, $message, $headers);
+			mail("deepskywim@gmail.com", $subject, $message, $headers);
+exit;
 			// TODO: Send a mail
 			//exit;
 
