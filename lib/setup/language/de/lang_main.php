@@ -1,18 +1,5 @@
 <?php //GE
 // This is version 5.0
-define("LangRequestNewPasswordSubject", "DeepskyLog Change Password Request");
-define("LangUnknownUsername1", "Die Benutzername ");
-define("LangUnknownUsername2", " ist nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
-define("LangUnknownMailAddress1", "Die E-Mail Adresse ");
-define("LangUnknownMailAddress2", " ist nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
-define("LangUnknownMailAndUsername", "Die angegebene Benutzername und E-Mail Adresse sind nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
-define("LangTokenMailed1", "Ein Token zum &auml;ndern des Passworts ");
-define("LangTokenMailed2", " wurde Ihnen per E-Mail nach ");
-define("LangTokenMailed3", " geschickt. Folgen Sie den Anweisungen in dieser E-Mail um Ihr Passwort zu &auml;ndern.");
-define("LangForgotPassword", "Passwort vergessen?");
-define("LangForgotPasswordText1", "Bitte geben Sie Ihren Benutzernamen <strong> oder </strong> Ihre E-Mail ein.");
-define("LangUserId", "DeepskyLog Benutzernamen");
-define("LangRequestNewPassword", "Neues Passwort anfordern");
 define("LangCurrentPasswordIncorrect", "Die von Ihnen gew&auml;hlte aktuelle Passwort ist nicht korrekt. Die password is nicht ver&auml;ndert.");
 define("LangNewPasswordNotCorrect", "Das neue Passwort und die Passwort Best&auml;tigung sind nicht dasselbe. Die password is nicht ver&auml;ndert.");
 define("LangPasswordChanged", "Das Passwort ist erfolgreich ge&auml;ndert.");
