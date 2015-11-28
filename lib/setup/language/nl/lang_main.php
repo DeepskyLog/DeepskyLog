@@ -1,24 +1,5 @@
 <?php //NL
 // This is version 5.0
-define("LangRequestNewPasswordMail1", "\nYou have (or someone impersonating you has) requested to change your <a href=\"");
-define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> password. <br />To complete the change, visit the following link:<br /><br />");
-define("LangRequestNewPasswordMail3", "<br /><br />If you are not the person who made this request, or you wish to cancel this request, visit the following link:<br /><br />");
-define("LangRequestNewPasswordMail4", "<br /><br />If you do nothing, the request will lapse after 24 hours (on ");
-define("LangRequestNewPasswordMail5", ") or when you log in successfully.");
-define("LangRequestNewPasswordMail6", "<br /><h2><a href=\"mailto:developers@deepskylog.be\">The DeepskyLog team</a></h2>");
-define("LangRequestNewPasswordSubject", "DeepskyLog Change Password Request");
-define("LangUnknownUsername1", "De gebruikersnaam ");
-define("LangUnknownUsername2", " is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
-define("LangUnknownMailAddress1", "Het emailadres ");
-define("LangUnknownMailAddress2", " is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
-define("LangUnknownMailAndUsername", "De gebruikersnaam en het mailadres zijn niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
-define("LangTokenMailed1", "Een token om het wachtwoord van ");
-define("LangTokenMailed2", " te wijzigen is naar ");
-define("LangTokenMailed3", " verzonden. Volg de instructies in die mail om je wachtwoord te wijzigen.");
-define("LangForgotPassword", "Wachtwoord vergeten?");
-define("LangForgotPasswordText1", "Gelieve je DeepskyLog gebruikersnaam <strong>of</strong> je in DeepskyLog gekend emailadres in te voeren.");
-define("LangUserId", "DeepskyLog gebruikersnaam");
-define("LangRequestNewPassword", "Vraag nieuw wachtwoord aan");
 define("LangCurrentPasswordIncorrect", "Het huidige wachtwoord is incorrect ingegeven. Onmogelijk om het wachtwoord aan te passen.");
 define("LangNewPasswordNotCorrect", "Het nieuwe wachtwoord en de bevestiging zijn niet gelijk. Onmogelijk om het wachtwoord aan te passen.");
 define("LangPasswordChanged", "Het wachtwoord is gewijzigd.");
