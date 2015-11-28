@@ -1338,7 +1338,13 @@ class Observations {
 		} else {
 			echo "<tr>";
 			echo "<td>" . LangViewObservationField22 . "</td>";
-			echo "<td>" . (($visibility = $this->getDsObservationProperty ( $LOid, 'visibility' )) ? $GLOBALS ['Visibility' . $visibility] : "-") . "</td>";
+			$vis = "-";
+			if ($visibility = $this->getDsObservationProperty ( $LOid, 'visibility' )) {
+				if ($visibility != "99") {
+					$vis = $GLOBALS ['Visibility' . $visibility];
+				}
+			}
+			echo "<td>" . $vis . "</td>";
 			echo "<td>" . LangViewObservationField33 . "</td>";
 			echo "<td>" . $diameterText . "</td>";
 			echo "<td>" . LangViewObservationField40 . "</td>";

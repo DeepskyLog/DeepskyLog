@@ -10,6 +10,10 @@ class Observers {
 		global $objDatabase;
 		return $objDatabase->execSQL ( "INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"" . RoleWaitlist . "\", \"" . $_SESSION ['lang'] . "\")" );
 	}
+	public function getUserIdFromEmail($mail) {
+		global $objDatabase;
+		return $objDatabase->selectSingleValue ( "SELECT id FROM observers WHERE email = \"" . $mail . "\"", 'id' );
+	}
 	public function getAdministrators() {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT id FROM observers WHERE role = \"RoleAdmin\"", 'id' );
@@ -390,6 +394,78 @@ class Observers {
 		}
 		// Return to the change account page.
 		$_GET ['indexAction'] = 'change_account';
+	}
+	public function requestNewPassword() {
+		global $entryMessage, $objUtil, $mailFrom, $baseURL;
+
+		// First check if we are indeed using the correct indexAction
+		if (strcmp($objUtil->checkPostKey('indexAction'), "requestPassword") == 0) {
+			// Check for the userid or the mail address
+			$userid = $objUtil->checkPostKey('deepskylog_id');
+			$mail = $objUtil->checkPostKey('mail');
+
+			if ($userid != "") {
+				// Check if the userid exists in the database, if this is not the case, show a message that the userid is not known by DeepskyLog.
+				$mail = $this->getObserverProperty ( $userid, 'email' );
+
+				// If mail is empty, show message that the userid is not correct.
+				if (strcmp($mail, "") == 0) {
+					$entryMessage = LangUnknownUsername1 . "<strong>" . $userid . "</strong>" . LangUnknownUsername2;
+					return;
+				}
+			} elseif ($mail != "") {
+				// We have a mail address, but no username. Get the userid which belongs to the mailaddress.
+				$userid = $this->getUserIdFromEmail($mail);
+
+				if (strcmp($userid, "") == 0) {
+					$entryMessage = LangUnknownMailAddress1 . "<strong>" . $mail . "</strong>" . LangUnknownMailAddress2;
+					return;
+				}
+			} else {
+				$entryMessage = LangUnknownMailAndUsername;
+				return;
+			}
+
+			// TODO: Add token in the database
+			$token = "qBOR3mStV5";
+      $confirmLink = $baseURL . "/token.php?t=" . $token . "&a=cfmpw";
+			$cancelLink = $baseURL . "/token.php?t=" . $token . "&a=cxlpw";
+
+			// We have a username and a password, prepare the mail to send.
+			$subject = LangRequestNewPasswordSubject;
+
+			$headers = "From: " . $mailFrom . "\r\n";
+			$headers .= "Reply-To: ". $mailFrom . "\r\n";
+			$headers .= "MIME-Version: 1.0\r\n";
+			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+			$message = '<html><body>';
+
+			$message .= '<h1>' . LangRequestNewPasswordSubject . '</h1>';
+			$message .= LangRequestNewPasswordMail1 . $baseURL;
+			$message .= LangRequestNewPasswordMail2;
+			$message .= "<a href=\"" . $confirmLink . "\">" . $confirmLink . "</a>";
+			$message .= LangRequestNewPasswordMail3;
+			$message .= "<a href=\"" . $cancelLink . "\">" . $cancelLink . "</a>";
+			$message .= LangRequestNewPasswordMail4;
+
+			// TODO: Get correct date (in all languages
+			$message .= "November 2, 2015 at 15:01 CET";
+
+			$message .= LangRequestNewPasswordMail5;
+			$message .= LangRequestNewPasswordMail6;
+
+			$message .= '<a href="' . $baseURL . '"><img src="' . $baseURL . '/images/logo.png"></a>';
+			$message .= '</body></html>';
+
+			// TODO: Send a mail
+			//mail($mail, $subject, $message, $headers);
+			mail("deepskywim@gmail.com", $subject, $message, $headers);
+
+			// Show message
+			// Show which username and which email we use for requesting the new password
+			$entryMessage = LangTokenMailed1 . "<strong>" . $userid . "</strong>" . LangTokenMailed2 . "<strong>" . $mail . "</strong>" . LangTokenMailed3;
+		}
 	}
 }
 ?>

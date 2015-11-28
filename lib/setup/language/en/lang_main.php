@@ -1,5 +1,24 @@
 <?php //EN
 // This is version 5.0
+define("LangRequestNewPasswordMail1", "\nYou have (or someone impersonating you has) requested to change your <a href=\"");
+define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> password. <br />To complete the change, visit the following link:<br /><br />");
+define("LangRequestNewPasswordMail3", "<br /><br />If you are not the person who made this request, or you wish to cancel this request, visit the following link:<br /><br />");
+define("LangRequestNewPasswordMail4", "<br /><br />If you do nothing, the request will lapse after 24 hours (on ");
+define("LangRequestNewPasswordMail5", ") or when you log in successfully.");
+define("LangRequestNewPasswordMail6", "<br /><h2><a href=\"mailto:developers@deepskylog.be\">The DeepskyLog team</a></h2>");
+define("LangRequestNewPasswordSubject", "DeepskyLog Change Password Request");
+define("LangUnknownUsername1", "The username ");
+define("LangUnknownUsername2", " is not known by DeepskyLog. Impossible to request a new password.");
+define("LangUnknownMailAddress1", "The mail address ");
+define("LangUnknownMailAddress2", " is not known by DeepskyLog. Impossible to request a new password.");
+define("LangUnknownMailAndUsername", "The given username and mail address are not known by DeepskyLog. Impossible to request a new password.");
+define("LangTokenMailed1", "A token for changing the password of ");
+define("LangTokenMailed2", " has been emailed to ");
+define("LangTokenMailed3", ". Follow the instructions in that email to change your password.");
+define("LangForgotPassword", "Forgot password?");
+define("LangForgotPasswordText1", "Please enter your DeepskyLog username <strong>or</strong> your email.");
+define("LangUserId", "DeepskyLog username");
+define("LangRequestNewPassword", "Request new password");
 define("LangCurrentPasswordIncorrect", "The current password you entered is incorrect. Unable to change the password.");
 define("LangNewPasswordNotCorrect", "The new password and the confirmed password are not the same. Unable to change the password.");
 define("LangPasswordChanged", "The password is successfully changed.");

@@ -409,6 +409,9 @@ function instructions() {
 		// $entryMessage is set in the validateAccount() function;
 		// $_GET['indexAction'] is set in the validateAccount() function
 	}
+	if ($objUtil->checkGetKey ( 'indexAction' ) == "requestPassword") {
+		$objObserver->requestNewPassword ();
+	}
 	if ($objUtil->checkGetKey ( 'indexAction' ) == "validate_eyepiece") // validate eyepiece
 {
 		$entryMessage .= $objEyepiece->validateSaveEyepiece ();
