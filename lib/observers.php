@@ -396,7 +396,7 @@ class Observers {
 		$_GET ['indexAction'] = 'change_account';
 	}
 	public function requestNewPassword() {
-		global $entryMessage, $objUtil, $mailFrom;
+		global $entryMessage, $objUtil, $mailFrom, $baseURL;
 
 		// First check if we are indeed using the correct indexAction
 		if (strcmp($objUtil->checkPostKey('indexAction'), "requestPassword") == 0) {
@@ -427,6 +427,9 @@ class Observers {
 			}
 
 			// TODO: Add token in the database
+			$token = "qBOR3mStV5";
+      $confirmLink = $baseURL . "/token.php?t=" . $token . "&a=cfmpw";
+			$cancelLink = $baseURL . "/token.php?t=" . $token . "&a=cxlpw";
 
 			// We have a username and a password, prepare the mail to send.
 			$subject = LangRequestNewPasswordSubject;
@@ -437,16 +440,27 @@ class Observers {
 			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 
 			$message = '<html><body>';
-			$message .= '<h1>Hello, World!</h1>';
+
+			$message .= '<h1>' . LangRequestNewPasswordSubject . '</h1>';
+			$message .= LangRequestNewPasswordMail1 . $baseURL;
+			$message .= LangRequestNewPasswordMail2;
+			$message .= "<a href=\"" . $confirmLink . "\">" . $confirmLink . "</a>";
+			$message .= LangRequestNewPasswordMail3;
+			$message .= "<a href=\"" . $cancelLink . "\">" . $cancelLink . "</a>";
+			$message .= LangRequestNewPasswordMail4;
+
+			// TODO: Get correct date (in all languages
+			$message .= "November 2, 2015 at 15:01 CET";
+
+			$message .= LangRequestNewPasswordMail5;
+			$message .= LangRequestNewPasswordMail6;
+
+			$message .= '<a href="' . $baseURL . '"><img src="' . $baseURL . '/images/logo.png"></a>';
 			$message .= '</body></html>';
 
-print $mailFrom;
-
+			// TODO: Send a mail
 			//mail($mail, $subject, $message, $headers);
 			mail("deepskywim@gmail.com", $subject, $message, $headers);
-exit;
-			// TODO: Send a mail
-			//exit;
 
 			// Show message
 			// Show which username and which email we use for requesting the new password
