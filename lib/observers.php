@@ -201,20 +201,20 @@ class Observers {
 		echo "</div><hr />";
 	}
 	public function valideAccount() {
-		global $entryMessage, $objUtil, $objLanguage, $developversion, $loggedUser, $allLanguages, $mailTo, $mailFrom, $objMessages, $baseURL;
+		global $entryMessage, $objUtil, $objLanguage, $developversion, $loggedUser, $allLanguages, $mailTo, $mailFrom, $objMessages, $baseURL, $instDir;
 
-		if (! $_POST ['email'] || ! $_POST ['firstname'] || ! $_POST ['name'] || ! $_POST ['passwd'] || ! $_POST ['passwd_again']) {
+		if (! $_POST ['email'] || ! $_POST ['firstname'] || ! $_POST ['name']) {
 			$entryMessage .= LangValidateAccountMessage1;
-			if ($objUtil->checkPostKey ( 'change' ))
+			if ($objUtil->checkPostKey ( 'change' )) {
 				$_GET ['indexAction'] = 'change_account';
-			else
-				$_GET ['indexAction'] = 'subscribe';
-		} elseif ($_POST ['passwd'] != $_POST ['passwd_again']) {
+			} else {
+				if (! $_POST ['passwd'] || ! $_POST ['passwd_again']) {
+					$_GET ['indexAction'] = 'subscribe';
+				}
+			}
+		} elseif (!$objUtil->checkPostKey ( 'change' ) && ($_POST ['passwd'] != $_POST ['passwd_again'])) {
 			$entryMessage .= LangValidateAccountMessage2;
-			if ($objUtil->checkPostKey ( 'change' ))
-				$_GET ['indexAction'] = 'change_account';
-			else
-				$_GET ['indexAction'] = 'subscribe';
+			$_GET ['indexAction'] = 'subscribe';
 		} elseif ($_POST ['firstname'] == $_POST ['name']) {
 			$entryMessage .= LangValidateAccountMessage6;
 			if ($objUtil->checkPostKey ( 'change' ))
@@ -271,14 +271,15 @@ class Observers {
 				$_GET ['indexAction'] = 'change_account';
 			} else {
 				$usedLanguages = array ();
-				while ( list ( $key, $value ) = each ( $allLanguages ) )
-					if (array_key_exists ( $key, $_POST ))
+				while ( list ( $key, $value ) = each ( $allLanguages ) ) {
+					if (array_key_exists ( $key, $_POST )) {
 						$usedLanguages [] = $key;
+					}
+				}
 				$this->setUsedLanguages ( $loggedUser, $usedLanguages );
 				$this->setObserverProperty ( $loggedUser, 'name', $_POST ['name'] );
 				$this->setObserverProperty ( $loggedUser, 'firstname', $_POST ['firstname'] );
 				$this->setObserverProperty ( $loggedUser, 'email', $_POST ['email'] );
-				$this->setObserverProperty ( $loggedUser, 'password', md5 ( $_POST ['passwd'] ) );
 				$this->setObserverProperty ( $loggedUser, 'language', $_POST ['language'] );
 				$this->setObserverProperty ( $loggedUser, 'observationlanguage', $_POST ['description_language'] );
 				$this->setObserverProperty ( $loggedUser, 'stdlocation', $_POST ['site'] );
@@ -300,17 +301,22 @@ class Observers {
 				$this->setObserverProperty ( $loggedUser, 'copyright', $_POST ['copyright'] );
 				$this->setObserverProperty ( $loggedUser, 'UT', ((array_key_exists ( 'local_time', $_POST ) && ($_POST ['local_time'] == "on")) ? "0" : "1") );
 				$this->setObserverProperty ( $loggedUser, 'sendMail', ((array_key_exists ( 'send_mail', $_POST ) && ($_POST ['send_mail'] == "on")) ? "1" : "0") );
-				if ($_POST ['icq_name'] != "")
+				if ($_POST ['icq_name'] != "") {
 					$this->setObserverProperty ( $loggedUser, 'icqname', $_POST ['icq_name'] );
+				}
 				$_SESSION ['lang'] = $_POST ['language'];
-				if ($_FILES ['picture'] ['tmp_name'] != "") {
+				if ($_FILES ['image'] ['tmp_name'] != "") {
+					if ($_POST['oldFile'] != '') {
+					  unlink($_POST['oldFile']);
+					}
 					$upload_dir = 'common/observer_pics';
 					$dir = opendir ( $upload_dir );
 					require_once $instDir . "common/control/resize.php"; // resize code
-					$original_image = $_FILES ['picture'] ['tmp_name'];
+					$original_image = $_FILES ['image'] ['tmp_name'];
 					$destination_image = $upload_dir . "/" . $loggedUser . ".jpg";
 					$new_image = image_createThumb ( $original_image, $destination_image, 300, 300, 75 );
 				}
+
 				$entryMessage .= LangValidateAccountMessage5;
 				$_GET ['user'] = $loggedUser;
 				$_GET ['indexAction'] = 'change_account';
@@ -355,6 +361,35 @@ class Observers {
 		$objAccomplishments->addObserver ( $id );
 
 		return LangValidateObserverMessage1 . ' ' . LangValidateObserverMessage2;
+	}
+	public function updatePassword($login, $passwd, $newPassword, $confirmNewPassword) {
+		global $entryMessage, $loggedUser;
+		$passwd_db = $this->getObserverPropertyCS ( $login, "password" );
+
+		if (strcmp($login, $loggedUser) == 0) {
+			// We check if we can change the password
+			if (strcmp($passwd_db, $passwd) == 0) {
+				if (strcmp ($newPassword, $confirmNewPassword) != 0) {
+					$entryMessage = LangNewPasswordNotCorrect;
+				} else {
+					$this->setObserverProperty ( $loggedUser, 'password', $newPassword );
+
+					$entryMessage = LangPasswordChanged;
+
+					// Make sure we are still logged in.
+					session_regenerate_id ( true );
+					$cookietime = time () + (365 * 24 * 60 * 60); // 1 year
+					setcookie ( "deepskylogsec", $newPassword . $login, $cookietime, "/" );
+
+					$_GET ['user'] = $loggedUser;
+				}
+			} else {
+				// Current password is not correct, show an error message
+				$entryMessage = LangCurrentPasswordIncorrect;
+			}
+		}
+		// Return to the change account page.
+		$_GET ['indexAction'] = 'change_account';
 	}
 }
 ?>

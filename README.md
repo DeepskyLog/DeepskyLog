@@ -22,3 +22,17 @@ At this moment, DeepskyLog can be accessed using the following sites:
 | http://www.deepskylog.se/ | English |
 
 If you want to add your own localised version of the DeepskyLog database, please contact us.
+
+
+## Responsibilities
+
+The responsibilties in the DeepskyLog team are:
+
+| Responsibility | Who? |
+| -------------- | ---- |
+| Project Management | [WimDeMeester](https://github.com/WimDeMeester) | 
+| Development | [WimDeMeester](https://github.com/WimDeMeester) | 
+| Issues, testing | [TomCorstjens](https://github.com/TomCorstjens) |
+| Deepsky database | [Ericvdj](https://github.com/Ericvdj) |
+| Deepsky Database - asterisms | [jefdewit](https://github.com/jefdewit) | 
+| Documentation | [SkyNomad](https://github.com/SkyNomad) |

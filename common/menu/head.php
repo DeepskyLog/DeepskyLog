@@ -37,7 +37,15 @@ function head() {
         <script src=\"lib/javascript/widget-columnSelector.js\"></script>
         <script src=\"lib/javascript/widget-reorder.js\"></script>
 		<link href=\"styles/tablesorter.theme.bootstrap.css\" rel=\"stylesheet\">";
-	echo "<link href=\"" . $baseURL . "styles/deepskylog5014.css\" rel=\"stylesheet\" type=\"text/css\" />";
+	echo "<link href=\"" . $baseURL . "styles/deepskylog5020.css\" rel=\"stylesheet\" type=\"text/css\" />";
+	// Load the needed javascript file for bootstrap-fileinput
+	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/fileinput.min.js\"></script>";
+	// Load the needed javascript file for bootstrap-strengtmeter
+	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/strength-meter.min.js\"></script>";
+	// Load the needed css file for bootstrap-fileinput
+	echo "<link rel=\"stylesheet\" href=\"styles/fileinput.min.css\"></script>";
+  // Load the needed css file for bootstrap-strengthmeter
+	echo "<link rel=\"stylesheet\" href=\"styles/strength-meter.min.css\"></script>";
 
 	$TitleText = "";
 	$theDispatch = $objUtil->checkRequestKey ( 'indexAction' );

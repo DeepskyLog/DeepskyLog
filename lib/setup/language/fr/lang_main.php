@@ -1,5 +1,13 @@
 <?php //FR
 // This is version 5.0
+define("LangCurrentPasswordIncorrect", "Le mot de passe actuel que vous avez entr&eacute; est incorrect. Impossible de changer le mot de passe.");
+define("LangNewPasswordNotCorrect", "Le nouveau mot de passe et le mot de passe confirm&eacute; ne sont pas les m&ecirc;mes. Impossible de changer le mot de passe.");
+define("LangPasswordChanged", "Le mot de passe est chang&eacute; avec succ&egrave;s.");
+define("LangChangePassword", "Changer mot de passe");
+define("PersonalInfo", "Personal");
+define("ObservingDetails", "Observing");
+define("Atlases", "Atlases");
+define("Languages", "Languages");
 define("LangSinceVersion", " depuis version ");
 define("LangWhatsNew", "What's new in DeepskyLog");
 define("LangMakePrivate", "Make private");
@@ -205,6 +213,7 @@ define('LangSelectColumns'        ,'Kies kolommen');
 define('LangNewMessage'           ,'Nieuw bericht');
 define('LangSendMessage'          ,'Zend bericht');
 define("LangChangeAccountTitle"		,"Settings");
+define("LangChangeAccountTitleFor"," for ");
 define("LangChangeMenuItem1"		  ,"Settings");
 
 define('LangUnderHorizon'				,'au-dessus de l\'horizon');
@@ -942,7 +951,7 @@ define("LangChangeAccountCopyright"                       ,"Notice de copyright"
 define("LangChangeAccountCopyrightExpl"                   ,"Vous pouvez rentrer une notice de copyright qui apparait en dessous de vos observations et dessins.");
 define("LangChangeVisibleLanguages"												,"Les langues des descriptions");
 define("LangChangeVisibleLanguagesExpl"										,"Choissisez les langues des observations que vous d&eacute;sirez lire");
-define("LangChangeAccountPicture"													,"Photo");
+define("LangChangeAccountPicture"													,"Modifier la photo de profil");
 define("LangChangeAccountButton"													,"Modifiez");
 define("LangChangeAccountField10"													,"Code ICQ de l'observateur");
 define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code pour les observations de com&egrave;tes");

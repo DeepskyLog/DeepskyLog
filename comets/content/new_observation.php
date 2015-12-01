@@ -9,7 +9,7 @@ elseif (! ($loggedUser))
 else
 	new_observation ();
 function new_observation() {
-	global $baseURL, $loggedUser, $objInstrument, $objCometObject, $objCometObservation, $objPresentations, $objObserver, $objUtil, $objLocation;
+	global $baseURL, $loggedUser, $objInstrument, $objCometObject, $objCometObservation, $objPresentations, $objObserver, $objUtil, $objLocation, $instDir;
 	$role = $objObserver->getObserverProperty ( $loggedUser, 'role', 2 );
 	$adapt = false;
 	echo "<div id=\"main\">";
@@ -166,9 +166,53 @@ function new_observation() {
 	echo "&nbsp;" . $content3 . "</span><br />";
 
 	$content1 = LangViewObservationField12;
-	$content2 = "<input type=\"file\" name=\"drawing\" class=\"inputField\" />";
+	$content2 = "<input type=\"file\" id=\"drawing\" name=\"drawing\" data-show-remove=\"false\" accept=\"image/*\" class=\"file-loading\" />";
+
+  // Make sure to show the current drawing
+	$imaLocation = "";
+	if ($obsid) {
+		$upload_dir = 'cometdrawings';
+		$dir = opendir ( $instDir . 'comets/' . $upload_dir );
+		while ( FALSE !== ($file = readdir ( $dir )) ) {
+			if ("." == $file or ".." == $file) {
+				continue; // skip current directory and directory above
+			}
+			if (fnmatch ( $obsid . "_resized.gif", $file ) || fnmatch ( $obsid . "_resized.jpg", $file ) || fnmatch ( $obsid . "_resized.png", $file )) {
+				$imaLocation = $baseURL . "comets/" . $upload_dir . "/" . $obsid . ".jpg";
+			}
+		}
+	}
+
+	// The javascript for the fileinput plugins
+	echo "<script type=\"text/javascript\">";
+	echo "$(document).on(\"ready\", function() {
+		$(\"#drawing\").fileinput({";
+			if ($imaLocation != "") {
+				echo "    initialPreview: [
+					// Show the correct file.
+					'<img src=\"" . $imaLocation . "\" class=\"file-preview-image\">'
+				],";
+			}
+
+			echo "
+			maxFileCount: 1,
+			validateInitialCount: true,
+			overwriteInitial: true,
+			autoReplace: true,
+			showRemove: false,
+			showUpload: false,
+			removeLabel: '',
+			removeIcon: '',
+			removeTitle: '',
+			layoutTemplates: {actionDelete: ''},
+			allowedFileTypes: [\"image\"],
+			initialCaption: \"" . LangViewObservationField12 . "\",
+		});
+	});";
+	echo "</script>";
+
 	echo "<strong>" . $content1 . "</strong>";
-	echo "<br /><span class=\"form-inline\">" . $content2;
+	echo "<br /><span class=\"form\">" . $content2;
 	echo "</span><br />";
 
 	$content1 = LangViewObservationField8;
