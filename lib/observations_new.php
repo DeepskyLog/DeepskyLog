@@ -1,10 +1,19 @@
-<?php require_once 'lib/datatables_setup.php'; ?>
-
+<?php require_once 'lib/datatables_setup.php'; 
+$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
+if ($loggedUser == ""){
+	$usedLang = $_SESSION['lang'];
+};
+?>
 <script type="text/javascript">
 
+	function removeAll(){
+		$(document.getElementById(":0.gadgetLink")).removeAttr('id');
+	}
+
+	
 	function format ( d ) {
 		var result = '<table class="details" width="100%" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-	        '<tr>';
+					 '<tr>';
 
 	    result += (d.observerimage == null)? '<td colspan="2"></td>' : '<td colspan="2"><img height="72" src="'+d.observerimage+'" class="img-rounded pull-left"></td>';
 		result += '<td colspan="4">'+d.moonpic+'</td>'+
@@ -58,7 +67,28 @@
 		            '<td>'+d.clustertype+'</td>'+	            
 	        	'</tr>'+		        			        
 		        '<tr >'+
-		            '<td style="padding: 20px 0 20px 0" colspan="6">'+d.observationdescription;
+		            '<td style="padding: 20px 0 20px 0" colspan="6">';
+		            if(d.translate){
+		            	console.log("add translate link for "+d.observationid);
+						removeAll();
+						   result +=
+						        '<script>'+
+						        'function translateInit'+d.observationid+'() {  '+ 
+						        'console.log("adding translation links '+d.observationid+'");'+
+						       	  'new google.translate.SectionalElement({'+
+						       	      'sectionalNodeClassName: "ids'+d.observationid+'",'+
+						       	      'controlNodeClassName: "idc'+d.observationid+'"'+
+						       	  '}, "google_sectional_element");'+
+						        '}'+
+						        '</script'+'>'+
+						        '<div class="ids'+d.observationid+'">'+
+						'<div class="idc'+d.observationid+'"></div>'+
+							d.observationdescription+
+						'</div>'+
+						        '<script src="http://translate.google.com/translate_a/element.js?cb=translateInit'+d.observationid+'&ug=section&hl=<?=$usedLang?>" />';
+		            } else {
+			    		result += d.observationdescription;
+			    	}
 		            if(d.hasdrawing == 1){
 		            	result += '<br/><br/><a data-lightbox="image-1" href="/deepsky/drawings/'+d.id+'.jpg"><img src="/deepsky/drawings/'+d.id+'_resized.jpg"/></a>';
 		            }
@@ -163,4 +193,3 @@
 <a class="btn btn-primary" href="observations.pdf.php?SID=Qobs"><span class="glyphicon glyphicon-download"></span>&nbsp;<?=LangExecuteQueryObjectsMessage4a?></a>
 <a class="btn btn-primary" href="observations.csv"><span class="glyphicon glyphicon-download"></span>&nbsp;<?=LangExecuteQueryObjectsMessage5?></a>
 <a class="btn btn-primary" href="observations.xml"><span class="glyphicon glyphicon-download"></span>&nbsp;<?=LangExecuteQueryObjectsMessage10?></a>
-
