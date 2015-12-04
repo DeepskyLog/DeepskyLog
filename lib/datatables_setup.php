@@ -1,6 +1,5 @@
 <script type="text/javascript" src="lib/javascript/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="lib/javascript/dataTables.bootstrap.min.js"></script>
-
 <link rel="stylesheet" type="text/css" href="styles/dataTables.bootstrap.css">
 
 <script>

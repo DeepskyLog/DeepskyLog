@@ -72,6 +72,7 @@ global $loggedUser;
 				observers.name,
 				observations.smalldiameter,
 				observations.largediameter,
+				observations.language as observerationlanguage,
 				IF(eyepieces.id = 0, '-', CONCAT(eyepieces.name, ' (', observations.magnification, 'x)')) as eyepiecedescription,
 				IF(lenses.id = 0, '-', CONCAT(lenses.name, ' (', lenses.factor, ')')) as lensdescription,
 				IF(filters.id = 0, '-', filters.name) as filterdescription,
@@ -107,6 +108,10 @@ global $loggedUser;
 	$result = $objDatabase->prepareAndSelectRecordsetArray ($query, array(':objectname'=>$objectname));
 	
 	$dataTablesObject = new stdClass();
+	$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );		
+	if ($loggedUser == ""){
+		$usedLang = $_SESSION['lang'];
+	};
 	
 	while(list($key, $value) = each($result)){
 		while(list($k, $v) = each($value)){
@@ -134,7 +139,11 @@ global $loggedUser;
 		if($clustertype != '-'){
 			$clustertypevar = "ClusterType".$clustertype;
 			$result[$key]['clustertype'] = $$clustertypevar;
-		}		
+		}	
+		
+		//add translate
+		$lang = $result[$key]['observerationlanguage'];
+		$result[$key]['translate'] = (($usedLang != null) && ($usedLang != $lang ));
 		
 		//add size
 		if($result[$key]['largediameter'] == 0){
@@ -153,7 +162,6 @@ global $loggedUser;
 
 	$dataTablesObject->data = $result;
 	
-	//print_r($_SESSION['Qobs']);
 	
 	$_SESSION['Qobs'] = $result;
 	
