@@ -125,10 +125,11 @@ if ($loggedUser == ""){
 	            //format of data columns
 	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_object&object='+row.objectname+'">'+row.objectname+'</a>'}},
 	            { "data": "constellation"},
-	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observer&user='+row.observerid+'">'+row.firstname+' '+row.name+'</a>' }},
-	            { "data": function ( row, type, val, meta ) { return row.instrumentdiameter+' mm'}},
+	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observer&user='+row.observerid+'">'+row.firstname+' '+row.name+'</a>' }},	            
+	            { "orderData": 5, "data": function ( row, type, val, meta ) { return row.instrumentdiameter+' mm'}},
+	            { "data": "instrumentdiameter", "visible": false},
 	            { "data": "sortdate", "visible": false},
-		        { "data": "date", "orderData": 5 },
+		        { "data": "date", "orderData": 6 },
 		        { "orderable" : false, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observation&observation='+row.observationid+'&dalm=D" title="<?=LangDetail ?>"><img src="/styles/images/details.png"/></a>' }}		      
 	        ];
 
@@ -172,14 +173,15 @@ if ($loggedUser == ""){
 <table id="observations" class="table table-striped table-bordered">
 	<thead>
     	<tr>
-			<th></th>
-			<th><?= LangOverviewObservationsHeader1 ?></th>		<!-- Object -->
-			<th><?= LangViewObservationField1b ?></th>			<!-- Constellation -->
-			<th><?= LangOverviewObservationsHeader2 ?></th>		<!-- Observer -->
-			<th><?= LangOverviewObservationsHeader10 ?></th>	<!-- Instrument diameter -->
-			<th></th>											<!-- (Hidden) sortdate -->
-			<th><?= LangOverviewObservationsHeader4 ?></th>		<!-- Date -->
-			<th></th>											<!-- Details -->
+			<th></th>											<!--0 + detailknop -->
+			<th><?= LangOverviewObservationsHeader1 ?></th>		<!--1 Object -->
+			<th><?= LangViewObservationField1b ?></th>			<!--2 Constellation -->
+			<th><?= LangOverviewObservationsHeader2 ?></th>		<!--3 Observer -->
+			<th><?= LangOverviewObservationsHeader10 ?></th>	<!--4 Instrument diameter -->
+			<th></th>											<!--5 (Hidden) diameter -->			
+			<th></th>											<!--6 (Hidden) sortdate -->
+			<th><?= LangOverviewObservationsHeader4 ?></th>		<!--7 Date -->
+			<th></th>											<!--8 Details -->
         </tr>
 	</thead>
     <tfoot>
@@ -188,7 +190,8 @@ if ($loggedUser == ""){
 			<th><?= LangOverviewObservationsHeader1 ?></th>
 			<th><?= LangViewObservationField1b ?></th>
 			<th><?= LangOverviewObservationsHeader2 ?></th>
-			<th><?= LangOverviewObservationsHeader10 ?></th>
+			<th><?= LangOverviewObservationsHeader10 ?></th>			
+			<th></th>
 			<th></th>
 			<th><?= LangOverviewObservationsHeader4 ?></th>
 			<th></th>
