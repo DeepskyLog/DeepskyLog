@@ -1552,6 +1552,7 @@ define("LangOverviewObservationsHeader5a"									,"(*) Alle Beobachtungen(AO), 
 define("LangOverviewObservationsHeader5b"									,"(*) Details(D) mit Zeichnung(DZ), Alle Beobachtungen(AO), Meine Beobachtungen(MO), Meine aktuellsten Beobachtungen(LO) dieses Objektes&nbsp;");
 define("LangOverviewObservationsHeader8"									,"Mein&nbsp;&nbsp;LO&nbsp;&nbsp;Beobachtungsger&auml;t");
 define("LangOverviewObservationsHeader9"									,"Mein&nbsp;&nbsp;LO&nbsp;&nbsp;Datum");
+define("LangOverviewObservationsHeader10"										,"Instrument diameter");
 define("LangOverviewObservations10"												,"Bitte geben Sie einen Namen an");
 define("LangOverviewObservations11"												,"DeepskyLog Beobachtungen");
 define("LangOverviewObservations12"												,"in");
