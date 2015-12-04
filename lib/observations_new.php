@@ -126,7 +126,7 @@ if ($loggedUser == ""){
 	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_object&object='+row.objectname+'">'+row.objectname+'</a>'}},
 	            { "data": "constellation"},
 	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observer&user='+row.observerid+'">'+row.firstname+' '+row.name+'</a>' }},
-	            { "data": "instrumentdiameter"},
+	            { "data": function ( row, type, val, meta ) { return row.instrumentdiameter+' mm'}},
 	            { "data": "sortdate", "visible": false},
 		        { "data": "date", "orderData": 5 },
 		        { "orderable" : false, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observation&observation='+row.observationid+'&dalm=D" title="<?=LangDetail ?>"><img src="/styles/images/details.png"/></a>' }}		      
