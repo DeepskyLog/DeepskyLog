@@ -198,6 +198,7 @@ class Messages {
 		$objDatabase->execSQL ( "INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")" );
 	}
 	public function sendEmail($subject, $message, $userid) {
+		// Sends a html mail to the given userid. If $userid == "developers", then we send a mail to the DeepskyLog team.
 		global $mailFrom, $instDir, $objObserver;
 		global $mailHost, $mailSMTPAuth, $mailServerUsername, $mailServerPassword, $mailSMTPSecure, $mailPort;
 

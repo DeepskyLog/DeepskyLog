@@ -867,11 +867,15 @@ function add_xml_observations() {
 										$objObject->newAltName ( $names [0] . " " . $names [1], $aliasNames [0], $aliasNames [1] );
 									}
 									$objeId = $objObject->getDsObjectName ( $targetName );
-									$body = "<OAL>" . LangValidateAccountEmailTitleObject . " " . $targetName . " " . "www.deepskylog.org/index.php?indexAction=detail_object&object=" . urlencode ( $targetName ) . " " . LangValidateAccountEmailTitleObjectObserver . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " www.deepskylog.org/index.php?indexAction=detail_observer&user=" . urlencode ( $loggedUser );
+									$body = LangValidateAccountEmailTitleObject . " <a href=\"http://www.deepskylog.org/index.php?indexAction=detail_object&object=" .
+														urlencode ( $targetName ) . "\">" . $targetName . "</a> " . LangValidateAccountEmailTitleObject2 . " " .
+														LangValidateAccountEmailTitleObjectObserver . " <a href=\"http://www.deepskylog.org/index.php?indexAction=detail_observer&user=" .
+														urlencode ( $loggedUser ) . "\">" . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " " .
+														$objObserver->getObserverProperty ( $loggedUser, 'name' ) . "</a>.<br /><br />";
 									if (isset ( $developversion ) && ($developversion == 1))
 										$entryMessage .= "On the live server, a mail would be sent with the subject: " . $subject . ".<br />";
 									else
-										$objMessage->sendEmail ( LangValidateAccountEmailTitleObject . " " . $targetName, $body, "developers" );
+										$objMessage->sendEmail ( LangValidateAccountEmailTitleObject . " " . $targetName . LangValidateAccountEmailTitleObject2, $body, "developers" );
 								}
 							}
 						}
