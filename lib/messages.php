@@ -201,8 +201,6 @@ class Messages {
 		global $mailFrom, $instDir;
 		global $mailHost, $mailSMTPAuth, $mailServerUsername, $mailServerPassword, $mailSMTPSecure, $mailPort;
 
-		// TODO: Add the PHPMailer class to DeepskyLog
-		// PHPMailer from scientific linux? Reinstall?
 		require_once('PHPMailer/class.phpmailer.php');
 
 		// Making the headers for the html mail
@@ -228,9 +226,10 @@ class Messages {
 		$mail->SMTPSecure = $mailSMTPSecure;
 		$mail->Port = $mailPort;    // SMTP Port
 
-print "<br />" . $mailHost . " - " . $mailSMTPAuth . " - " . $mailServerUsername . " - " . $mailServerPassword . " - " . $mailSMTPSecure . " - " . $mailPort . "<br /><br />";
 		$mail->From = $mailFrom;    //From Address -- CHANGE --
 		$mail->FromName = "DeepskyLog Team";    //From Name -- CHANGE --
+
+		// We get the mailaddress and the full name from the userid
 		$mail->AddAddress("deepskywim@gmail.com", "Wim De Meester");    //To Address -- CHANGE --
 		$mail->AddReplyTo($mailFrom, "DeepskyLog Team"); //Reply-To Address -- CHANGE --
 
@@ -241,18 +240,13 @@ print "<br />" . $mailHost . " - " . $mailSMTPAuth . " - " . $mailServerUsername
 		$mail->Subject = $subject;
 		$mail->Body    = $messageHeader . $message . $messageFooter;
 
-		//print $messageHeader . $message . $messageFooter;
-		// TODO: Check why the message is not sent!
-
 		if(!$mail->send()) {
 		    echo 'Message could not be sent.';
 		    echo 'Mailer Error: ' . $mail->ErrorInfo;
 		} else {
 		    echo 'Message has been sent';
 		}
-		//$mail->send();
-
-
+		$mail->send();
 	}
 	public function sendRealMessage($sender, $receiver, $subject, $message) {
 		global $objDatabase, $objObserver;
