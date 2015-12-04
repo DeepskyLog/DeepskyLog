@@ -2,21 +2,6 @@
 1. The user enters his username and hits "forgot password" or the email
 address instead of the username, because usernames are sometimes forgotten
 too.
-  + Send nice looking html email, with html showing the DeepskyLog logo, ...
-      > You have (or someone impersonating you has) requested to change your
-      > DeepskyLog password. To complete the change, visit the following link:
-      >
-      > http://www.deepskylog.org/token.php?t=qBOR3mStV5&a=cfmpw
-      >
-      > If you are not the person who made this request, or you wish to cancel
-      > this request, visit the following link:
-      >
-      > http://www.deepskylog.org/token.php?t=qBOR3mStV5&a=cxlpw
-
-      > If you do nothing, the request will lapse after 24 hours
-      > (on November 2, 2015 at 15:01 CET) or when you
-      > log in successfully.
-
   + When clicking on Cancel request.
     1. Show:  Your request has been canceled.
 
