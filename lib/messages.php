@@ -197,6 +197,62 @@ class Messages {
 		}
 		$objDatabase->execSQL ( "INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")" );
 	}
+	public function sendEmail($subject, $message, $userid) {
+		global $mailFrom;
+		global $mailHost, $mailSMTPAuth, $mailServerUsername, $mailServerPassword, $mailSMTPSecure, $mailPort;
+
+		// TODO: Add the PHPMailer class to DeepskyLog
+		require_once('PHPMailer/class.phpmailer.php');
+		//$subject = LangRequestNewPasswordSubject;
+
+		// Making the headers for the html mail
+		$headers = "From: " . $mailFrom . "\r\n";
+		$headers .= "Reply-To: ". $mailFrom . "\r\n";
+		$headers .= "MIME-Version: 1.0\r\n";
+		$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+		$message = '<html><body>';
+
+		$message .= '<h1>' . LangRequestNewPasswordSubject . '</h1>';
+		$message .= LangRequestNewPasswordMail1 . $baseURL;
+		$message .= LangRequestNewPasswordMail2;
+		$message .= "<a href=\"" . $confirmLink . "\">" . $confirmLink . "</a>";
+		$message .= LangRequestNewPasswordMail3;
+		$message .= "<a href=\"" . $cancelLink . "\">" . $cancelLink . "</a>";
+		$message .= LangRequestNewPasswordMail4;
+
+		$message .= LangRequestNewPasswordMail5;
+		$message .= LangRequestNewPasswordMail6;
+
+		$message .= '<a href="' . $baseURL . '"><img src="cid:logo" style="width:80%;"></a>';
+		$message .= '</body></html>';
+
+		// TODO: Move mail code to new class.
+
+		$mail = new PHPMailer();
+
+		$mail->IsSMTP();    			// set mailer to use SMTP
+		$mail->Host = $mailHost;
+		$mail->SMTPAuth = $mailSMTPAuth;
+		$mail->Username = $mailServerUsername;    // SMTP username -- CHANGE --
+		$mail->Password = $mailServerPassword;    // SMTP password -- CHANGE --
+		$mail->SMTPSecure = $mailSMTPSecure;
+		$mail->Port = $mailPort;    // SMTP Port
+
+		$mail->From = $mailFrom;    //From Address -- CHANGE --
+		$mail->FromName = "DeepskyLog Team";    //From Name -- CHANGE --
+		$mail->AddAddress("deepskywim@gmail.com", "Wim De Meester");    //To Address -- CHANGE --
+		$mail->AddReplyTo($mailFrom, "DeepskyLog Team"); //Reply-To Address -- CHANGE --
+
+		$mail->WordWrap = 50;    // set word wrap to 50 characters
+		$mail->IsHTML(true);    // set email format to HTML
+		$mail->AddEmbeddedImage($instDir . '/images/logo.png', 'logo');
+
+		$mail->Subject = $subject;
+		$mail->Body    = $message;
+
+		$mail->send();
+	}
 	public function sendRealMessage($sender, $receiver, $subject, $message) {
 		global $objDatabase, $objObserver;
 		$date = $mysqldate = date ( 'Y-m-d H:i:s' );
