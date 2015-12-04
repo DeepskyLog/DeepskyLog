@@ -212,7 +212,6 @@ class Messages {
 		// Add header and footer to mail.
 		$messageHeader = '<html><body>';
 		$messageHeader .= '<h1>' . $subject . '</h1>';
-
 		$messageFooter = '<a href=""><img src="cid:logo" style="width:80%;"></a>';
 		$messageFooter .= '</body></html>';
 
@@ -221,20 +220,26 @@ class Messages {
 		$mail->IsSMTP();    			// set mailer to use SMTP
 		$mail->Host = $mailHost;
 		$mail->SMTPAuth = $mailSMTPAuth;
-		$mail->Username = $mailServerUsername;    // SMTP username -- CHANGE --
-		$mail->Password = $mailServerPassword;    // SMTP password -- CHANGE --
+		$mail->Username = $mailServerUsername;    // SMTP username
+		$mail->Password = $mailServerPassword;    // SMTP password
 		$mail->SMTPSecure = $mailSMTPSecure;
 		$mail->Port = $mailPort;    // SMTP Port
 
-		$mail->From = $mailFrom;    //From Address -- CHANGE --
-		$mail->FromName = "DeepskyLog Team";    //From Name -- CHANGE --
+		$mail->From = $mailFrom;    //From Address
+		$mail->FromName = "DeepskyLog Team";    //From Name
 
 		// We get the mailaddress and the full name from the userid
-		$fullName = $objObserver->getFullName($userid);
-		$mailAddress = $objObserver->getObserverProperty($userid, "email", '');
+		if (strcmp($userid, "developers") == 0) {
+			$fullName = "DeepskyLog Team";
+			$mailAddress = $mailFrom;
+		} else {
+			$fullName = $objObserver->getFullName($userid);
+			$mailAddress = $objObserver->getObserverProperty($userid, "email", '');
+		}
 
-		$mail->AddAddress($mailAddress, $fullName);    //To Address -- CHANGE --
-		$mail->AddReplyTo($mailFrom, "DeepskyLog Team"); //Reply-To Address -- CHANGE --
+//		$mail->AddAddress($mailAddress, $fullName);    //To Address
+		$mail->AddAddress("deepskywim@gmail.com", $fullName);    //To Address
+		$mail->AddReplyTo($mailFrom, "DeepskyLog Team"); //Reply-To Address
 
 		$mail->WordWrap = 50;    // set word wrap to 50 characters
 		$mail->IsHTML(true);     // set email format to HTML
