@@ -198,12 +198,12 @@ class Messages {
 		$objDatabase->execSQL ( "INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")" );
 	}
 	public function sendEmail($subject, $message, $userid) {
-		global $mailFrom;
+		global $mailFrom, $instDir;
 		global $mailHost, $mailSMTPAuth, $mailServerUsername, $mailServerPassword, $mailSMTPSecure, $mailPort;
 
 		// TODO: Add the PHPMailer class to DeepskyLog
+		// PHPMailer from scientific linux? Reinstall?
 		require_once('PHPMailer/class.phpmailer.php');
-		//$subject = LangRequestNewPasswordSubject;
 
 		// Making the headers for the html mail
 		$headers = "From: " . $mailFrom . "\r\n";
@@ -211,23 +211,12 @@ class Messages {
 		$headers .= "MIME-Version: 1.0\r\n";
 		$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 
-		$message = '<html><body>';
+		// Add header and footer to mail.
+		$messageHeader = '<html><body>';
+		$messageHeader .= '<h1>' . $subject . '</h1>';
 
-		$message .= '<h1>' . LangRequestNewPasswordSubject . '</h1>';
-		$message .= LangRequestNewPasswordMail1 . $baseURL;
-		$message .= LangRequestNewPasswordMail2;
-		$message .= "<a href=\"" . $confirmLink . "\">" . $confirmLink . "</a>";
-		$message .= LangRequestNewPasswordMail3;
-		$message .= "<a href=\"" . $cancelLink . "\">" . $cancelLink . "</a>";
-		$message .= LangRequestNewPasswordMail4;
-
-		$message .= LangRequestNewPasswordMail5;
-		$message .= LangRequestNewPasswordMail6;
-
-		$message .= '<a href="' . $baseURL . '"><img src="cid:logo" style="width:80%;"></a>';
-		$message .= '</body></html>';
-
-		// TODO: Move mail code to new class.
+		$messageFooter = '<a href=""><img src="cid:logo" style="width:80%;"></a>';
+		$messageFooter .= '</body></html>';
 
 		$mail = new PHPMailer();
 
@@ -239,6 +228,7 @@ class Messages {
 		$mail->SMTPSecure = $mailSMTPSecure;
 		$mail->Port = $mailPort;    // SMTP Port
 
+print "<br />" . $mailHost . " - " . $mailSMTPAuth . " - " . $mailServerUsername . " - " . $mailServerPassword . " - " . $mailSMTPSecure . " - " . $mailPort . "<br /><br />";
 		$mail->From = $mailFrom;    //From Address -- CHANGE --
 		$mail->FromName = "DeepskyLog Team";    //From Name -- CHANGE --
 		$mail->AddAddress("deepskywim@gmail.com", "Wim De Meester");    //To Address -- CHANGE --
@@ -249,9 +239,20 @@ class Messages {
 		$mail->AddEmbeddedImage($instDir . '/images/logo.png', 'logo');
 
 		$mail->Subject = $subject;
-		$mail->Body    = $message;
+		$mail->Body    = $messageHeader . $message . $messageFooter;
 
-		$mail->send();
+		//print $messageHeader . $message . $messageFooter;
+		// TODO: Check why the message is not sent!
+
+		if(!$mail->send()) {
+		    echo 'Message could not be sent.';
+		    echo 'Mailer Error: ' . $mail->ErrorInfo;
+		} else {
+		    echo 'Message has been sent';
+		}
+		//$mail->send();
+
+
 	}
 	public function sendRealMessage($sender, $receiver, $subject, $message) {
 		global $objDatabase, $objObserver;
