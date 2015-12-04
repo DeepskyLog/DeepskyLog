@@ -198,7 +198,7 @@ class Messages {
 		$objDatabase->execSQL ( "INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")" );
 	}
 	public function sendEmail($subject, $message, $userid) {
-		global $mailFrom, $instDir;
+		global $mailFrom, $instDir, $objObserver;
 		global $mailHost, $mailSMTPAuth, $mailServerUsername, $mailServerPassword, $mailSMTPSecure, $mailPort;
 
 		require_once('PHPMailer/class.phpmailer.php');
@@ -230,22 +230,19 @@ class Messages {
 		$mail->FromName = "DeepskyLog Team";    //From Name -- CHANGE --
 
 		// We get the mailaddress and the full name from the userid
-		$mail->AddAddress("deepskywim@gmail.com", "Wim De Meester");    //To Address -- CHANGE --
+		$fullName = $objObserver->getFullName($userid);
+		$mailAddress = $objObserver->getObserverProperty($userid, "email", '');
+
+		$mail->AddAddress($mailAddress, $fullName);    //To Address -- CHANGE --
 		$mail->AddReplyTo($mailFrom, "DeepskyLog Team"); //Reply-To Address -- CHANGE --
 
 		$mail->WordWrap = 50;    // set word wrap to 50 characters
-		$mail->IsHTML(true);    // set email format to HTML
+		$mail->IsHTML(true);     // set email format to HTML
 		$mail->AddEmbeddedImage($instDir . '/images/logo.png', 'logo');
 
 		$mail->Subject = $subject;
 		$mail->Body    = $messageHeader . $message . $messageFooter;
 
-		if(!$mail->send()) {
-		    echo 'Message could not be sent.';
-		    echo 'Mailer Error: ' . $mail->ErrorInfo;
-		} else {
-		    echo 'Message has been sent';
-		}
 		$mail->send();
 	}
 	public function sendRealMessage($sender, $receiver, $subject, $message) {
