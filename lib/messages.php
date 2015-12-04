@@ -183,7 +183,9 @@ class Messages {
 
 		// We check whether the observer wants to receive the DeepskyLog messages as email. If so, we send an email.
 		if ($objObserver->getObserverProperty ( $receiver, 'sendMail' )) {
-			mail ( $objObserver->getObserverProperty ( $receiver, 'email' ), $subject, $message, $objObserver->getObserverProperty ( $sender, 'email' ) );
+			$senderName = $objObserver->getFullName($sender);
+			$message = LangDeepskyLogMessage . $senderName . ":<br /><br />" . $message . "<br /><br />";
+			$this->sendEmail($subject, $message, $receiver);
 		}
 
 		if ($receiver == "all") {
@@ -191,7 +193,7 @@ class Messages {
 			$toMail = $objDatabase->selectSingleArray ( "select * from observers where sendMail=\"1\" and role=\"1\"", "email" );
 			if (sizeof ( $toMail ) > 0) {
 				foreach ( $toMail as $mailTo ) {
-					mail ( $mailTo, $subject, $message, $objObserver->getObserverProperty ( $sender, 'email' ) );
+					$this->sendEmail ( $subject, $message . "<br /><br />", $mailTo );
 				}
 			}
 		}
@@ -259,7 +261,7 @@ class Messages {
 		$toMail = $objDatabase->selectSingleArray ( "select * from observers where role=\"1\"", "email" );
 		if (sizeof ( $toMail ) > 0) {
 			foreach ( $toMail as $mailTo ) {
-				mail ( $mailTo, $subject, $message, $objObserver->getObserverProperty ( $sender, 'email' ) );
+				$this->sendEmail ( $subject, $message . "<br /><br />", $mailTo );
 			}
 		}
 		$objDatabase->execSQL ( "INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")" );

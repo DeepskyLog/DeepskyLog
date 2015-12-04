@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("LangDeepskyLogMessage", "DeepskyLog message de ");
 define("LangCurrentPasswordIncorrect", "Le mot de passe actuel que vous avez entr&eacute; est incorrect. Impossible de changer le mot de passe.");
 define("LangNewPasswordNotCorrect", "Le nouveau mot de passe et le mot de passe confirm&eacute; ne sont pas les m&ecirc;mes. Impossible de changer le mot de passe.");
 define("LangPasswordChanged", "Le mot de passe est chang&eacute; avec succ&egrave;s.");
