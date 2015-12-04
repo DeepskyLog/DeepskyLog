@@ -23,6 +23,8 @@ if ($loggedUser == ""){
             	'<td><a href="/index.php?indexAction=detail_location&location='+d.locationid+'">'+d.locationname+'</a></td>'+
 		    	'<td><?=LangViewObservationField9?></td>'+
             	'<td>'+d.displaytime+'</td>'+
+	            '<td></td>'+	
+	            '<td></td>'+	           	
             '</tr>'+
 		        '<tr>'+
 		            '<td><?=LangViewObservationField7?> / <?=LangViewObservationField34?></td>'+
@@ -33,14 +35,11 @@ if ($loggedUser == ""){
 		            '<td></td>'+			            
 		        '</tr>'+
 		        '<tr>'+
-		            '<td><?=LangViewObservationField30?></td>'+
-		            '<td>';					
-						if(d.eyepieceid != 0){
-			            	result += '<a href="index.php?indexAction=detail_eyepiece&eyepiece='+d.eyepieceid+'">'+d.eyepiecedescription+'</a>';
-						} else {
-							result += d.eyepiecedescription;
-						}	
-		            result += '</td>'+
+		            '<td><?=LangViewObservationField3?></td>'+
+		            '<td>'+
+		            	'<a href="index.php?indexAction=detail_instrument&instrument='+d.instrumentid+'">'+d.instrumentname+' ('+d.instrumentdiameter+'mm)</a>'+
+			    	'</td>'+
+
 			        '<td><?=LangViewObservationField31?></td>'+
 		            '<td>';					
 						if(d.filterid != 0){
@@ -58,14 +57,25 @@ if ($loggedUser == ""){
 					}	
             	result += '</td>'+		            
 	        	'</tr>'+	
-		        '<tr>'+
-		            '<td><?=LangViewObservationField22?></td>'+
-		            '<td>'+d.visibility+'</td>'+
+		    	'<tr>'+
+		    		'<td><?=LangViewObservationField30?></td>'+
+	            	'<td>';					
+						if(d.eyepieceid != 0){
+		            		result += '<a href="index.php?indexAction=detail_eyepiece&eyepiece='+d.eyepieceid+'">'+d.eyepiecedescription+'</a>';
+						} else {
+							result += d.eyepiecedescription;
+						}	
+            	result += '</td>'+
 		            '<td><?=LangViewObservationField33?></td>'+
 		            '<td>'+d.size+'</td>'+		
 		            '<td><?=LangViewObservationField40?></td>'+
-		            '<td>'+d.clustertype+'</td>'+	            
-	        	'</tr>'+		        			        
+		            '<td>'+d.clustertype+'</td>'+	             	
+            	'</tr>'+	        	
+		        '<tr>'+
+		            '<td><?=LangViewObservationField22?></td>'+
+		            '<td>'+d.visibility+'</td>'+           
+	        	'</tr>'+	
+	        		        			        
 		        '<tr >'+
 		            '<td style="padding: 20px 0 20px 0" colspan="6">';
 		            if(d.translate){
@@ -90,7 +100,7 @@ if ($loggedUser == ""){
 			    		result += d.observationdescription;
 			    	}
 		            if(d.hasdrawing == 1){
-		            	result += '<br/><br/><a data-lightbox="image-1" href="/deepsky/drawings/'+d.id+'.jpg"><img src="/deepsky/drawings/'+d.id+'_resized.jpg"/></a>';
+		            	result += '<br/><br/><a data-lightbox="image-1" href="/deepsky/drawings/'+d.observationid+'.jpg"><img src="/deepsky/drawings/'+d.observationid+'_resized.jpg"/></a>';
 		            }
 		        	result += 
 		        	'</td>'+ 
@@ -103,7 +113,7 @@ if ($loggedUser == ""){
 		$(document).ready(function() {
 		  
 		    datatablesConfig.ajax = "observations_json.php?object=<?=$_GET['object']?>",		    
-		    datatablesConfig.order = [[7, 'desc']], 
+		    datatablesConfig.order = [[6, 'desc']], 
 		    datatablesConfig.columns = [
 	            {
 	                "class":          "details-control",
@@ -116,9 +126,8 @@ if ($loggedUser == ""){
 	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_object&object='+row.objectname+'">'+row.objectname+'</a>'}},
 	            { "data": "constellation"},
 	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observer&user='+row.observerid+'">'+row.firstname+' '+row.name+'</a>' }},
-	            { "orderData": 6, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_instrument&instrument='+row.instrumentid+'">'+row.instrumentname+'('+row.instrumentdiameter+')</a>' }},
+	            { "data": "instrumentdiameter"},
 	            { "data": "sortdate", "visible": false},
-	            { "data": "instrumentdiameter", "visible": false},
 		        { "data": "date", "orderData": 5 },
 		        { "orderable" : false, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observation&observation='+row.observationid+'&dalm=D" title="<?=LangDetail ?>"><img src="/styles/images/details.png"/></a>' }}		      
 	        ];
@@ -163,15 +172,14 @@ if ($loggedUser == ""){
 <table id="observations" class="table table-striped table-bordered">
 	<thead>
     	<tr>
-          <th></th>
-          <th><?= LangOverviewObservationsHeader1 ?></th>
-          <th><?= LangViewObservationField1b ?></th>
-          <th><?= LangOverviewObservationsHeader2 ?></th>
-          <th><?= LangOverviewObservationsHeader3 ?></th>
-          <th></th>
-          <th></th>
-          <th><?= LangOverviewObservationsHeader4 ?></th>
-          <th></th>
+			<th></th>
+			<th><?= LangOverviewObservationsHeader1 ?></th>		<!-- Object -->
+			<th><?= LangViewObservationField1b ?></th>			<!-- Constellation -->
+			<th><?= LangOverviewObservationsHeader2 ?></th>		<!-- Observer -->
+			<th><?= LangOverviewObservationsHeader10 ?></th>	<!-- Instrument diameter -->
+			<th></th>											<!-- (Hidden) sortdate -->
+			<th><?= LangOverviewObservationsHeader4 ?></th>		<!-- Date -->
+			<th></th>											<!-- Details -->
         </tr>
 	</thead>
     <tfoot>
@@ -180,8 +188,7 @@ if ($loggedUser == ""){
 			<th><?= LangOverviewObservationsHeader1 ?></th>
 			<th><?= LangViewObservationField1b ?></th>
 			<th><?= LangOverviewObservationsHeader2 ?></th>
-			<th><?= LangOverviewObservationsHeader3 ?></th>
-			<th></th>
+			<th><?= LangOverviewObservationsHeader10 ?></th>
 			<th></th>
 			<th><?= LangOverviewObservationsHeader4 ?></th>
 			<th></th>

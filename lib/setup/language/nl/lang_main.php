@@ -1537,6 +1537,7 @@ define("LangOverviewObservationsHeader5a"									,"(*) Alle observaties(AO) , M
 define("LangOverviewObservationsHeader5b"									,"(*) Details(D) met tekening(DT), Alle observaties(AO) , Mijn observaties(MO), mijn Laatste observatie(LO)&nbsp;van dit object");
 define("LangOverviewObservationsHeader8"									,"Mijn&nbsp;LO&nbsp;instrument");
 define("LangOverviewObservationsHeader9"									,"Mijn&nbsp;LO&nbsp;datum");
+define("LangOverviewObservationsHeader10"										,"Instrument diameter");
 define("LangOverviewObservations10"												,"Gelieve de titel in te geven");
 define("LangOverviewObservations11"												,"DeepskyLog observaties");
 define("LangOverviewObservations12"												,"in");

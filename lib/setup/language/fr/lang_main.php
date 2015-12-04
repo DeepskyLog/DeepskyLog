@@ -1508,6 +1508,7 @@ define("LangOverviewObservationsHeader5a"									,"(*) Toutes les observations(
 define("LangOverviewObservationsHeader5b"								  ,"(*) D&eacute;tails(D)avec dessin(DD), Toutes les observations(TO) , Mes observations(MO), Ma derni&egrave;re observation(DO)&nbsp;de l'objet");
 define("LangOverviewObservationsHeader8"									,"Mon&nbsp;instrument&nbsp;DO");
 define("LangOverviewObservationsHeader9"									,"Ma&nbsp;date&nbsp;DO");
+define("LangOverviewObservationsHeader10"										,"Instrument diameter");
 define("LangOverviewObservations10"												,"Pri&egrave;re de rentrer un titre");
 define("LangOverviewObservations11"												,"Observations DeepskyLog");
 define("LangOverviewObservations12"												,"dans");
