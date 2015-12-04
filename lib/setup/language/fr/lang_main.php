@@ -1588,7 +1588,7 @@ define("LangValidateAccountEmailLine2"										,"Email: ");
 define("LangValidateAccountEmailLine3"										,"Nom: ");
 define("LangValidateAccountEmailLine4"										,"Cet &eacute;mail a &eacute;t&eacute; envoy&eacute; automatiquement par l'application DeepSkyLog");
 define("LangValidateAccountEmailTitle"										,"DeepskyLog - enregistrement");
-define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - Object ");
+define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - New Object ");
 define("LangValidateAccountEmailTitleObject2"							," added during XML import");
 define("LangValidateAccountEmailTitleObjectObserver"			,"by observer ");
 define("LangValidateAccountMessage4"											,"Il y a d&eacute;j&agrave; un utilisateur avec ce nom, veuillez choisir un autre nom!");
