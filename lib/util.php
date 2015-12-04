@@ -1656,7 +1656,7 @@ class Utils {
 		}
 		$pdf->Stream ();
 	}
-	public function firstpage(&$y, $bottomsection, $top, &$xbase, $xmid, &$pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, $i, $showelements, $reportdata) {
+	public function firstpage(&$y, $bottomsection, $top, &$xbase, $xmid, &$pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $i, $showelements, $reportdata) {
 		global $objObserver, $loggedUser, $objLocation, $objInstrument;
 		$y = $top;
 		$xbase = $xleft;
@@ -1809,7 +1809,7 @@ class Utils {
 
 		$actualsort = '';
 		$theDate = date ( 'd/m/Y' );
-		$this->firstpage ( $y, $bottom, $top, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, '', $showelements, $reportdata );
+		$this->firstpage ( $y, $bottom, $top, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, '', $showelements, $reportdata );
 
 		while ( list ( $key, $valueA ) = each ( $result ) ) {
 			$con = $valueA ['objectconstellation'];
