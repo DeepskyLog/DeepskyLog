@@ -328,7 +328,7 @@ class Observers {
 	}
 	public function validateDeleteObserver() 	// validateObserver validates the user with the given id and gives the user the given role
 	{
-		global $objDatabase, $objUtil, $entryMessage, $loggedUser, $developversion, $mailTo, $mailFrom;
+		global $objDatabase, $objUtil, $entryMessage, $loggedUser, $developversion, $mailTo, $mailFrom, $objMessages, $objObserver;
 		if (! ($objUtil->checkSessionKey ( 'admin' ) == 'yes'))
 			throw new Exception ( LangException001 );
 		$objDatabase->execSQL ( "DELETE FROM observers WHERE id=\"" . ($id = $objUtil->checkGetKey ( 'validateDelete' )) . "\"" );
@@ -336,7 +336,7 @@ class Observers {
 		if (isset ( $developversion ) && ($developversion == 1))
 			$entryMessage .= "On the live server, a mail would be sent with the subject: Deepskylog account deleted.<br />";
 		else
-			mail ( $mailTo, "Deepskylog account deleted", "The account for " . $id . " was deleted by " . $loggedUser, "From:" . $mailFrom );
+			$objMessages->sendEmail("Deepskylog account deleted", "The account for " . $id . " was deleted by " . $objObserver->getFullName($loggedUser) . "<br /><br />";
 		$objAccomplishments->deleteObserver ( $id );
 		return "The user has been erased.";
 	}
