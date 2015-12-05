@@ -459,7 +459,7 @@ class Lists {
 					$subject = LangMessagePublicList1 . $listname . LangMessagePublicList2 . $username;
 					$message = LangMessagePublicList3;
 					$message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $listname ) . "\">" . $listname . "</a><br /><br />";
-					$message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listname ) . "\">" . $username . "</a>";
+					$message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listname ) . "\">" . $username . "</a><br /><br />";
 
 					$objMessages->sendMessage ( "DeepskyLog", "all", $subject, $message );
 				}

@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("LangDeepskyLogMessage", "DeepskyLog Nachricht von ");
 define("LangCurrentPasswordIncorrect", "Die von Ihnen gew&auml;hlte aktuelle Passwort ist nicht korrekt. Die password is nicht ver&auml;ndert.");
 define("LangNewPasswordNotCorrect", "Das neue Passwort und die Passwort Best&auml;tigung sind nicht dasselbe. Die password is nicht ver&auml;ndert.");
 define("LangPasswordChanged", "Das Passwort ist erfolgreich ge&auml;ndert.");
@@ -841,10 +842,12 @@ define("LangAccountSubscribed9"														,"developers at deepskylog.be um si
 
 
 define("LangValidateSubject"															,"DeepskyLog - Registration erfolgreich");
-define("LangValidateAdmin"																,"\nEiner der Administratoren hat Ihnen Administrator Rechte gegeben.\n");
+define("LangValidateAdmin"																,"Einer der Administratoren hat Ihnen Administrator Rechte gegeben.");
 define("LangValidateMail1"																,"Liebe(r) ");
-define("LangValidateMail2"																,"\n\nIhr Benutzer f&uuml;r DeepskyLog wurde genehmigt.\nSie k&ouml;nnen sich nun mit Ihrem Benutzer und Passwort auf DeepskyLog einloggen.\n");
-define("LangValidateMail3"																,"\nViele Gr&uuml;&szlig;e,\n\nDie DeepskyLog Administratoren");
+define("LangValidateMail2"																,"Ihr Benutzer f&uuml;r DeepskyLog wurde genehmigt.<br /><br />Sie k&ouml;nnen sich nun mit Ihrem Benutzer Name ");
+define("LangValidateMail2b"                               ," und Passwort auf DeepskyLog einloggen.");
+define("LangValidateMail2c"                               ,"Genie&szlig;en Sie mit <a href=\"http://www.deepskylog.de/\">DeepskyLog</a>.");
+define("LangValidateMail3"																,"Viele Gr&uuml;&szlig;e,<br /><br />Das DeepskyLog Team");
 
 
 define("LangObjectYSeen"																	,"Objekt bereits von mir beobachtet");
@@ -1626,13 +1629,15 @@ define("LangValidateAccountMessage1"											,"Bitte f&uuml;llen Sie all Felde
 define("LangValidateAccountMessage2"											,"Falsches Passwort!");
 define("LangValidateAccountMessage3"											,"Falsche eMail Adresse!");
 define("LangValidateAccountEmailLine1"										,"DeepskyLog Benutzer Details: ");
-define("LangValidateAccountEmailLine1bis"									,"Benutzername: ");
-define("LangValidateAccountEmailLine2"										,"Email: ");
-define("LangValidateAccountEmailLine3"										,"Name : ");
+define("LangValidateAccountEmailLine1bis"									,"Benutzername");
+define("LangValidateAccountEmailLine2"										,"Email");
+define("LangValidateAccountEmailLine3"										,"Name");
 define("LangValidateAccountEmailLine4"										,"Diese eMail wurde automatisch von DeepskyLog versand");
+define("LangValidateAccountEmailLine5"										,"Motivation");
 define("LangValidateAccountEmailTitle"									  ,"DeepskyLog - Registrierung");
-define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - Objekt - ");
-define("LangValidateAccountEmailTitleObjectObserver"			,"durch Benutzer ");
+define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - New Object ");
+define("LangValidateAccountEmailTitleObject2"							," added during XML import");
+define("LangValidateAccountEmailTitleObjectObserver"			,"by observer ");
 define("LangValidateAccountMessage4"											,"Es existiert bereits ein Benutzer mit diesem Namen. Bitte w&auml;hlen Sie einen anderen Namen!");
 define("LangValidateAccountMessage5"											,"Ihr Benutzer wurde erfolgreich ge&auml;ndert!");
 define("LangValidateAccountMessage"												,"Nachricht");
