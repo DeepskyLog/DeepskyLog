@@ -841,10 +841,12 @@ define("LangAccountSubscribed9"														,"developers at deepskylog.be to be
 
 
 define("LangValidateSubject"															,"DeepskyLog - account application approved");
-define("LangValidateAdmin"																,"\nOne of the administrators made you a new administrator.\n");
+define("LangValidateAdmin"																,"One of the administrators made you a new administrator.");
 define("LangValidateMail1"																,"Dear ");
-define("LangValidateMail2"																,"\n\nYour application for the account of deepskylog is approved.\nYou can now log in using your userid and password.\n");
-define("LangValidateMail3"																,"\nGreetings,\n\nThe deepskylog administrators");
+define("LangValidateMail2"																,"Your application for a DeepskyLog account is approved.<br /><br />You can now log in using your userid ");
+define("LangValidateMail2b"																," and password.");
+define("LangValidateMail2c"                               ,"Enjoy using <a href=\"http://www.deepskylog.org/\">DeepskyLog</a>.");
+define("LangValidateMail3"																,"Greetings,<br /><br />The DeepskyLog Team");
 
 
 define("LangObjectYSeen"																	,"Object already observed by me");

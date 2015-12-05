@@ -820,10 +820,12 @@ define("LangAccountSubscribed9"														,"developers at deepskylog.be om ze
 
 
 define("LangValidateSubject"															,"DeepskyLog - account aanvraag goedgekeurd");
-define("LangValidateAdmin"																,"\nEen van de administrators heeft je administrator rechten gegeven.\n");
+define("LangValidateAdmin"																,"Een van de administrators heeft je administrator rechten gegeven.");
 define("LangValidateMail1"																,"Beste ");
-define("LangValidateMail2"																,"\n\nJe deepskylog account aanvraag is goedgekeurd.\nJe kan nu inloggen met je userid en wachtwoord.\n");
-define("LangValidateMail3"																,"\nGroeten,\n\nDe deepskylog administrators");
+define("LangValidateMail2"																,"Je DeepskyLog account aanvraag is goedgekeurd.<br /><br />Je kan nu inloggen met je userid ");
+define("LangValidateMail2b"                               ," en wachtwoord.");
+define("LangValidateMail2c"                               ,"Geniet van <a href=\"http://www.deepskylog.be/\">DeepskyLog</a>.");
+define("LangValidateMail3"																,"Groeten,<br /><br />Het DeepskyLog team");
 
 
 define("LangObjectYSeen"																	,"Object reeds zelf waargenomen");

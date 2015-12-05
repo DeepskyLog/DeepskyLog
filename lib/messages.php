@@ -199,8 +199,9 @@ class Messages {
 		}
 		$objDatabase->execSQL ( "INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")" );
 	}
-	public function sendEmail($subject, $message, $userid) {
+	public function sendEmail($subject, $message, $userid, $cc = false) {
 		// Sends a html mail to the given userid. If $userid == "developers", then we send a mail to the DeepskyLog team.
+		// If $cc is true, we also send a CC to the developers.
 		global $mailFrom, $instDir, $objObserver;
 		global $mailHost, $mailSMTPAuth, $mailServerUsername, $mailServerPassword, $mailSMTPSecure, $mailPort;
 
@@ -243,6 +244,10 @@ class Messages {
 //		$mail->AddAddress($mailAddress, $fullName);    //To Address
 		$mail->AddAddress("deepskywim@gmail.com", $fullName);    //To Address
 		$mail->AddReplyTo($mailFrom, "DeepskyLog Team"); //Reply-To Address
+
+		if ($cc) {
+			$mail->AddCC( $mailFrom );
+		}
 
 		$mail->WordWrap = 50;    // set word wrap to 50 characters
 		$mail->IsHTML(true);     // set email format to HTML

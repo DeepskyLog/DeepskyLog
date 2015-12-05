@@ -794,10 +794,12 @@ define("LangAccountSubscribed9"														,"aux d&eacute;veloppeurs de deepsk
 
 
 define("LangValidateSubject"															,"DeepskyLog - votre compte est accept&eacute;");
-define("LangValidateAdmin"																,"\nUn administrateur vous a donn&eacute; les droits d'administrateur.\n");
+define("LangValidateAdmin"																,"Un administrateur vous a donn&eacute; les droits d'administrateur.");
 define("LangValidateMail1"																,"Cher ");
-define("LangValidateMail2"																,"\n\nVotre compte est accept&eacute;.\nVous pouvez maintenant rentrer avec votre nom et mot de passe.\n");
-define("LangValidateMail3"																,"\Bienvenu,\n\nLes administrateurs de DeepSkyLog");
+define("LangValidateMail2"																,"Votre compte est accept&eacute;.<br /><br />Vous pouvez maintenant rentrer avec votre nom ");
+define("LangValidateMail2b"																," et mot de passe.");
+define("LangValidateMail2c"                               ,"Profitez de <a href=\"http://www.deepskylog.fr/\">DeepskyLog</a>.");
+define("LangValidateMail3"																,"Bienvenu,<br /><br />Le Team DeepskyLog");
 
 
 define("LangObjectYSeen"																	,"J'ai d&eacute;j&agrave; observ&eacute; cet objet");

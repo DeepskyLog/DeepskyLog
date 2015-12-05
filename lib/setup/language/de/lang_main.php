@@ -842,10 +842,12 @@ define("LangAccountSubscribed9"														,"developers at deepskylog.be um si
 
 
 define("LangValidateSubject"															,"DeepskyLog - Registration erfolgreich");
-define("LangValidateAdmin"																,"\nEiner der Administratoren hat Ihnen Administrator Rechte gegeben.\n");
+define("LangValidateAdmin"																,"Einer der Administratoren hat Ihnen Administrator Rechte gegeben.");
 define("LangValidateMail1"																,"Liebe(r) ");
-define("LangValidateMail2"																,"\n\nIhr Benutzer f&uuml;r DeepskyLog wurde genehmigt.\nSie k&ouml;nnen sich nun mit Ihrem Benutzer und Passwort auf DeepskyLog einloggen.\n");
-define("LangValidateMail3"																,"\nViele Gr&uuml;&szlig;e,\n\nDie DeepskyLog Administratoren");
+define("LangValidateMail2"																,"Ihr Benutzer f&uuml;r DeepskyLog wurde genehmigt.<br /><br />Sie k&ouml;nnen sich nun mit Ihrem Benutzer Name ");
+define("LangValidateMail2b"                               ," und Passwort auf DeepskyLog einloggen.");
+define("LangValidateMail2c"                               ,"Genie&szlig;en Sie mit <a href=\"http://www.deepskylog.de/\">DeepskyLog</a>.");
+define("LangValidateMail3"																,"Viele Gr&uuml;&szlig;e,<br /><br />Das DeepskyLog Team");
 
 
 define("LangObjectYSeen"																	,"Objekt bereits von mir beobachtet");
