@@ -1627,10 +1627,11 @@ define("LangValidateAccountMessage1"											,"Bitte f&uuml;llen Sie all Felde
 define("LangValidateAccountMessage2"											,"Falsches Passwort!");
 define("LangValidateAccountMessage3"											,"Falsche eMail Adresse!");
 define("LangValidateAccountEmailLine1"										,"DeepskyLog Benutzer Details: ");
-define("LangValidateAccountEmailLine1bis"									,"Benutzername: ");
-define("LangValidateAccountEmailLine2"										,"Email: ");
-define("LangValidateAccountEmailLine3"										,"Name : ");
+define("LangValidateAccountEmailLine1bis"									,"Benutzername");
+define("LangValidateAccountEmailLine2"										,"Email");
+define("LangValidateAccountEmailLine3"										,"Name");
 define("LangValidateAccountEmailLine4"										,"Diese eMail wurde automatisch von DeepskyLog versand");
+define("LangValidateAccountEmailLine5"										,"Motivation");
 define("LangValidateAccountEmailTitle"									  ,"DeepskyLog - Registrierung");
 define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - New Object ");
 define("LangValidateAccountEmailTitleObject2"							," added during XML import");

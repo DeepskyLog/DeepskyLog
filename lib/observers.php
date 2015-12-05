@@ -201,7 +201,7 @@ class Observers {
 		echo "</div><hr />";
 	}
 	public function valideAccount() {
-		global $entryMessage, $objUtil, $objLanguage, $developversion, $loggedUser, $allLanguages, $mailTo, $mailFrom, $objMessages, $baseURL, $instDir;
+		global $entryMessage, $objUtil, $objLanguage, $objMessages, $developversion, $loggedUser, $allLanguages, $mailTo, $mailFrom, $objMessages, $baseURL, $instDir;
 
 		if (! $_POST ['email'] || ! $_POST ['firstname'] || ! $_POST ['name']) {
 			$entryMessage .= LangValidateAccountMessage1;
@@ -252,13 +252,16 @@ class Observers {
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'observationlanguage', $_POST ['description_language'] );
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'language', $_POST ['language'] );
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'registrationDate', date ( "Ymd H:i" ) );
-				$body = LangValidateAccountEmailLine1 . "\n" . 				// send mail to administrator
-				"\n" . LangValidateAccountEmailLine1bis . $_POST ['deepskylog_id'] . "\n" . LangValidateAccountEmailLine2 . $_POST ['email'] . "\n" . LangValidateAccountEmailLine3 . html_entity_decode ( $_POST ['firstname'] ) . " " . html_entity_decode ( $_POST ['name'] ) . "\n\n" . LangValidateAccountEmailLine4 . "\n\n" . html_entity_decode ( $_POST ['motivation'] );
+				$body = LangValidateAccountEmailLine1 . "<br /><br />" . 				// send mail to administrator
+								"<table><tr><td><strong>" . LangValidateAccountEmailLine1bis . "</strong></td><td>" . $_POST ['deepskylog_id'] . "</td></tr>" .
+								"<tr><td><strong>" . LangValidateAccountEmailLine2 . "</strong></td><td>" . $_POST ['email'] . "</td></tr>" .
+								"<tr><td><strong>" . LangValidateAccountEmailLine3 . "</strong></td><td>" . html_entity_decode ( $_POST ['firstname'] ) . " " . html_entity_decode ( $_POST ['name'] ) . "</td></tr>" .
+								"<tr><td><strong>" . LangValidateAccountEmailLine5 . "</strong></td><td>" . html_entity_decode ( $_POST ['motivation'] ) . "</td></tr></table><br />" . LangValidateAccountEmailLine4 . "<br /><br />";
 
 				if (isset ( $developversion ) && ($developversion == true))
 					$entryMessage .= "On the live server, a mail would be sent with the subject: " . LangValidateAccountEmailTitle . ".<p>";
 				else
-					mail ( $mailTo, LangValidateAccountEmailTitle, $body, "From:" . $mailFrom );
+					$objMessages->sendEmail ( LangValidateAccountEmailTitle, $body, "developers" );
 				$entryMessage = LangAccountSubscribed1 . LangAccountSubscribed2 . LangAccountSubscribed3 . LangAccountSubscribed4 . LangAccountSubscribed5 . LangAccountSubscribed6 . LangAccountSubscribed7 . LangAccountSubscribed8 . LangAccountSubscribed9;
 				$_GET ['user'] = $_POST ['deepskylog_id'];
 				$_GET ['indexAction'] = 'detail_observer';
