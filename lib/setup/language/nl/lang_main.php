@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangDeepskyLogMessage", "DeepskyLog bericht van ");
 define("LangCurrentPasswordIncorrect", "Het huidige wachtwoord is incorrect ingegeven. Onmogelijk om het wachtwoord aan te passen.");
 define("LangNewPasswordNotCorrect", "Het nieuwe wachtwoord en de bevestiging zijn niet gelijk. Onmogelijk om het wachtwoord aan te passen.");
 define("LangPasswordChanged", "Het wachtwoord is gewijzigd.");
@@ -819,10 +820,12 @@ define("LangAccountSubscribed9"														,"developers at deepskylog.be om ze
 
 
 define("LangValidateSubject"															,"DeepskyLog - account aanvraag goedgekeurd");
-define("LangValidateAdmin"																,"\nEen van de administrators heeft je administrator rechten gegeven.\n");
+define("LangValidateAdmin"																,"Een van de administrators heeft je administrator rechten gegeven.");
 define("LangValidateMail1"																,"Beste ");
-define("LangValidateMail2"																,"\n\nJe deepskylog account aanvraag is goedgekeurd.\nJe kan nu inloggen met je userid en wachtwoord.\n");
-define("LangValidateMail3"																,"\nGroeten,\n\nDe deepskylog administrators");
+define("LangValidateMail2"																,"Je DeepskyLog account aanvraag is goedgekeurd.<br /><br />Je kan nu inloggen met je userid ");
+define("LangValidateMail2b"                               ," en wachtwoord.");
+define("LangValidateMail2c"                               ,"Geniet van <a href=\"http://www.deepskylog.be/\">DeepskyLog</a>.");
+define("LangValidateMail3"																,"Groeten,<br /><br />Het DeepskyLog team");
 
 
 define("LangObjectYSeen"																	,"Object reeds zelf waargenomen");
@@ -1537,6 +1540,7 @@ define("LangOverviewObservationsHeader5a"									,"(*) Alle observaties(AO) , M
 define("LangOverviewObservationsHeader5b"									,"(*) Details(D) met tekening(DT), Alle observaties(AO) , Mijn observaties(MO), mijn Laatste observatie(LO)&nbsp;van dit object");
 define("LangOverviewObservationsHeader8"									,"Mijn&nbsp;LO&nbsp;instrument");
 define("LangOverviewObservationsHeader9"									,"Mijn&nbsp;LO&nbsp;datum");
+define("LangOverviewObservationsHeader10"										,"Instrument diameter");
 define("LangOverviewObservations10"												,"Gelieve de titel in te geven");
 define("LangOverviewObservations11"												,"DeepskyLog observaties");
 define("LangOverviewObservations12"												,"in");
@@ -1609,13 +1613,15 @@ define("LangNewComet13"																		,"boogminuten");
 define("LangValidateAccountMessage1"											,"Gelieve alle velden in te vullen!");
 define("LangValidateAccountMessage2"											,"Gelieve uw wachtwoord te bevestigen!");
 define("LangValidateAccountMessage3"											,"Fout emailadres!");
-define("LangValidateAccountEmailLine1"										,"Details deepskylog account: ");
-define("LangValidateAccountEmailLine1bis"									,"Gebruikersnaam: ");
-define("LangValidateAccountEmailLine2"										,"Email: ");
-define("LangValidateAccountEmailLine3"										,"Naam : ");
+define("LangValidateAccountEmailLine1"										,"Details DeepskyLog account: ");
+define("LangValidateAccountEmailLine1bis"									,"Gebruikersnaam");
+define("LangValidateAccountEmailLine2"										,"Email");
+define("LangValidateAccountEmailLine3"										,"Naam");
 define("LangValidateAccountEmailLine4"										,"Deze email werd automatisch verstuurd door de deepskylog toepassing");
+define("LangValidateAccountEmailLine5"										,"Motivatie");
 define("LangValidateAccountEmailTitle"										,"DeepskyLog - registratie");
-define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - Object - ");
+define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - Nieuw object ");
+define("LangValidateAccountEmailTitleObject2"							," toegevoegd tijdens XML import");
 define("LangValidateAccountEmailTitleObjectObserver"			,"door waarnemer ");
 define("LangValidateAccountMessage4"											,"Er is al een gebruiker met dezelfde naam, gelieve een andere te kiezen!");
 define("LangValidateAccountMessage5"											,"De aanpassingen zijn succesvol weggeschreven!");
