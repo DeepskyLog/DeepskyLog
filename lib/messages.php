@@ -241,8 +241,7 @@ class Messages {
 			$mailAddress = $objObserver->getObserverProperty($userid, "email", '');
 		}
 
-//		$mail->AddAddress($mailAddress, $fullName);    //To Address
-		$mail->AddAddress("deepskywim@gmail.com", $fullName);    //To Address
+		$mail->AddAddress($mailAddress, $fullName);    //To Address
 		$mail->AddReplyTo($mailFrom, "DeepskyLog Team"); //Reply-To Address
 
 		if ($cc) {
