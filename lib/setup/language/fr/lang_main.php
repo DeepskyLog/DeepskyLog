@@ -1,18 +1,6 @@
 <?php //FR
 // This is version 5.0
-define("LangRequestNewPasswordSubject", "DeepskyLog Change Password Request");
-define("LangUnknownUsername1", "Le nom d'utilisateur ");
-define("LangUnknownUsername2", " n'est pas connu par DeepskyLog. Impossible de demander un nouveau mot de passe.");
-define("LangUnknownMailAddress1", "L'&eacute;mail ");
-define("LangUnknownMailAddress2", " n'est pas connu par DeepskyLog. Impossible de demander un nouveau mot de passe.");
-define("LangUnknownMailAndUsername", "Le nom d'utilisateur donn&eacute; et l'&eacute;mail ne sont pas connus par DeepskyLog. Impossible de demander un nouveau mot de passe.");
-define("LangTokenMailed1", "Un token pour changer le mot de passe de ");
-define("LangTokenMailed2", " a &eacute;t&eacute; envoy&eacute; &agrave; ");
-define("LangTokenMailed3", ". Suivez les instructions dans ce message pour changer votre mot de passe.");
-define("LangForgotPassword", "Mot de passe oubli&eacute;?");
-define("LangForgotPasswordText1", "Veuillez entrez votre nom d'utilisateur DeepskyLog <strong> ou </strong> votre adresse &eacute;mail.");
-define("LangUserId", "Nom d'utilisateur DeepskyLog");
-define("LangRequestNewPassword", "Nouveau mot de passe");
+define("LangDeepskyLogMessage", "DeepskyLog message de ");
 define("LangCurrentPasswordIncorrect", "Le mot de passe actuel que vous avez entr&eacute; est incorrect. Impossible de changer le mot de passe.");
 define("LangNewPasswordNotCorrect", "Le nouveau mot de passe et le mot de passe confirm&eacute; ne sont pas les m&ecirc;mes. Impossible de changer le mot de passe.");
 define("LangPasswordChanged", "Le mot de passe est chang&eacute; avec succ&egrave;s.");
@@ -287,7 +275,7 @@ define('LangAtlassesIntro00'            ,'DeepskyLog Atlas');
 define('LangAtlassesIntro01'            ,"<b>Aper&ccirc;u</b> : des pages de 20 degr&eacutes, et &eacute;toiles jusqu'&agrave; la magnitude 10.");
 define('LangAtlassesIntro01a'           ,"<b>Chercher</b> : des pages de 12 degr&eacute;s, et &eacute;toiles jusqu'&agrave; la magnitude 12.");
 define('LangAtlassesIntro01b'           ,"<b>D&eacute;tail</b> : des pages de 6 degr&eacute;s, et &eacute;toiles jusqu'&agrave; la magnitude 15.");
-define('LangAtlassesIntro01c'           ,"Les atlas mentionnent si les objets sont d&eacute;j&agrave; vu dans Deepskylog (soulign&eacute en pointill&eacute;s) <br /> ou par vous-m&ecirc;me (atlas personnalis&eacute; pour les utilisateurs enregistr&eacute;s).");
+define('LangAtlassesIntro01b'           ,"Les atlas mentionnent si les objets sont d&eacute;j&agrave; vu dans Deepskylog (soulign&eacute en pointill&eacute;s) <br /> ou par vous-m&ecirc;me (atlas personnalis&eacute; pour les utilisateurs enregistr&eacute;s).");
 define('LangAtlassesIntro02'            ,'Atlas g&eacute;n&eacute;rales / Atlas personnalis&eacute;s');
 define('LangAtlassesIntro03'            ,"Vous pouvez g&eacute;n&eacute;rer un atlas g&eacute;n&eacute;ral, ou (si vous &ecirc;tes un utilisateur enregistr&eacute;) un atlas personnalis&eacute; <br> - Les atlas g&eacute;n&eacute;ral sont pr&eacute;compil&eacute;s et pr&ecirc;ts &agrave; t&eacute;l&eacute;charger comme un fichier pdf grande <br/> - Les atlas personnalisi&eacute;s sont g&eacute;n&eacute;r&eacute;s, page par page, pour vous en format pdf. <br /> <br /> Les atlas personnalis&eacute;s prend un certain temps (une page) ou beaucoup de temps (complet atlas) &agrave; g&eacute;n&eacute;rer et <br /> vous devez utiliser certains logiciels &agrave mettre les pages ensemble.");
 define('LangAtlassesIntro04'            ,'Atlas g&eacute;n&eacute;rales');
@@ -806,10 +794,12 @@ define("LangAccountSubscribed9"														,"aux d&eacute;veloppeurs de deepsk
 
 
 define("LangValidateSubject"															,"DeepskyLog - votre compte est accept&eacute;");
-define("LangValidateAdmin"																,"\nUn administrateur vous a donn&eacute; les droits d'administrateur.\n");
+define("LangValidateAdmin"																,"Un administrateur vous a donn&eacute; les droits d'administrateur.");
 define("LangValidateMail1"																,"Cher ");
-define("LangValidateMail2"																,"\n\nVotre compte est accept&eacute;.\nVous pouvez maintenant rentrer avec votre nom et mot de passe.\n");
-define("LangValidateMail3"																,"\Bienvenu,\n\nLes administrateurs de DeepSkyLog");
+define("LangValidateMail2"																,"Votre compte est accept&eacute;.<br /><br />Vous pouvez maintenant rentrer avec votre nom ");
+define("LangValidateMail2b"																," et mot de passe.");
+define("LangValidateMail2c"                               ,"Profitez de <a href=\"http://www.deepskylog.fr/\">DeepskyLog</a>.");
+define("LangValidateMail3"																,"Bienvenu,<br /><br />Le Team DeepskyLog");
 
 
 define("LangObjectYSeen"																	,"J'ai d&eacute;j&agrave; observ&eacute; cet objet");
@@ -1521,6 +1511,7 @@ define("LangOverviewObservationsHeader5a"									,"(*) Toutes les observations(
 define("LangOverviewObservationsHeader5b"								  ,"(*) D&eacute;tails(D)avec dessin(DD), Toutes les observations(TO) , Mes observations(MO), Ma derni&egrave;re observation(DO)&nbsp;de l'objet");
 define("LangOverviewObservationsHeader8"									,"Mon&nbsp;instrument&nbsp;DO");
 define("LangOverviewObservationsHeader9"									,"Ma&nbsp;date&nbsp;DO");
+define("LangOverviewObservationsHeader10"										,"Instrument diameter");
 define("LangOverviewObservations10"												,"Pri&egrave;re de rentrer un titre");
 define("LangOverviewObservations11"												,"Observations DeepskyLog");
 define("LangOverviewObservations12"												,"dans");
@@ -1593,14 +1584,16 @@ define("LangNewComet13"																		,"minutes d'arc");
 define("LangValidateAccountMessage1"											,"Veuillez remplir tous les champs!");
 define("LangValidateAccountMessage2"											,"Pri&egrave;re de confirmer votre mot de passe");
 define("LangValidateAccountMessage3"											,"Adresse &eacute;mail erronn&eacute;e!");
-define("LangValidateAccountEmailLine1"										,"D&eacute;tails de votre compte deepskylog: ");
-define("LangValidateAccountEmailLine1bis"									,"Nom de l'utilisateur: ");
-define("LangValidateAccountEmailLine2"										,"Email: ");
-define("LangValidateAccountEmailLine3"										,"Nom: ");
+define("LangValidateAccountEmailLine1"										,"D&eacute;tails de votre compte DeepskyLog: ");
+define("LangValidateAccountEmailLine1bis"									,"Nom de l'utilisateur");
+define("LangValidateAccountEmailLine2"										,"Email");
+define("LangValidateAccountEmailLine3"										,"Nom");
 define("LangValidateAccountEmailLine4"										,"Cet &eacute;mail a &eacute;t&eacute; envoy&eacute; automatiquement par l'application DeepSkyLog");
+define("LangValidateAccountEmailLine5"										,"Motivation");
 define("LangValidateAccountEmailTitle"										,"DeepskyLog - enregistrement");
-define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - Objet - ");
-define("LangValidateAccountEmailTitleObjectObserver"			,"par l'observateur ");
+define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - New Object ");
+define("LangValidateAccountEmailTitleObject2"							," added during XML import");
+define("LangValidateAccountEmailTitleObjectObserver"			,"by observer ");
 define("LangValidateAccountMessage4"											,"Il y a d&eacute;j&agrave; un utilisateur avec ce nom, veuillez choisir un autre nom!");
 define("LangValidateAccountMessage5"											,"Les adaptations ont &eacute;t&eacute; enregistr&eacute;es!");
 define("LangValidateAccountMessage"												,"Message");
