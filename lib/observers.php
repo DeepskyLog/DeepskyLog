@@ -398,7 +398,7 @@ class Observers {
 		// Return to the change account page.
 		$_GET ['indexAction'] = 'change_account';
 	}
-<<<<<<< HEAD
+
 	public function requestNewPassword() {
 		global $entryMessage, $objUtil, $mailFrom, $baseURL, $instDir;
 
@@ -430,18 +430,43 @@ class Observers {
 				return;
 			}
 
+			// TODO: Where are the changes in the login dialog???
+
 			// TODO: Add token in the database
 			$token = "qBOR3mStV5";
       $confirmLink = $baseURL . "/token.php?t=" . $token . "&a=cfmpw";
 			$cancelLink = $baseURL . "/token.php?t=" . $token . "&a=cxlpw";
 
+			// TODO: Send nice looking mail
+			$message .= '<h1>' . LangRequestNewPasswordSubject . '</h1>';
+			$message .= LangRequestNewPasswordMail1 . $baseURL;
+			$message .= LangRequestNewPasswordMail2;
+			$message .= "<a href=\"" . $confirmLink . "\">" . $confirmLink . "</a>";
+			$message .= LangRequestNewPasswordMail3;
+			$message .= "<a href=\"" . $cancelLink . "\">" . $cancelLink . "</a>";
+			$message .= LangRequestNewPasswordMail4;
+
+			// TODO: Get correct date (in all languages
+			$message .= "November 2, 2015 at 15:01 CET";
+
+			$message .= LangRequestNewPasswordMail5;
+			$message .= LangRequestNewPasswordMail6;
+
+			$message .= '<a href="' . $baseURL . '"><img src="' . $baseURL . '/images/logo.png"></a>';
+			$message .= '</body></html>';
+
+print $message;
+exit;
+
+
+			// TODO: Send a mail
+			//mail($mail, $subject, $message, $headers);
+			mail("deepskywim@gmail.com", $subject, $message, $headers);
 
 			// Show message
 			// Show which username and which email we use for requesting the new password
 			$entryMessage = LangTokenMailed1 . "<strong>" . $userid . "</strong>" . LangTokenMailed2 . "<strong>" . $email . "</strong>" . LangTokenMailed3;
 		}
 	}
-=======
->>>>>>> DeepskyLog/master
 }
 ?>
