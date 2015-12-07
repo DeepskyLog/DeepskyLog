@@ -1,6 +1,18 @@
 <?php //FR
 // This is version 5.0
-define("LangDeepskyLogMessage", "DeepskyLog message de ");
+define("LangRequestNewPasswordSubject", "DeepskyLog Change Password Request");
+define("LangUnknownUsername1", "Le nom d'utilisateur ");
+define("LangUnknownUsername2", " n'est pas connu par DeepskyLog. Impossible de demander un nouveau mot de passe.");
+define("LangUnknownMailAddress1", "L'&eacute;mail ");
+define("LangUnknownMailAddress2", " n'est pas connu par DeepskyLog. Impossible de demander un nouveau mot de passe.");
+define("LangUnknownMailAndUsername", "Le nom d'utilisateur donn&eacute; et l'&eacute;mail ne sont pas connus par DeepskyLog. Impossible de demander un nouveau mot de passe.");
+define("LangTokenMailed1", "Un token pour changer le mot de passe de ");
+define("LangTokenMailed2", " a &eacute;t&eacute; envoy&eacute; &agrave; ");
+define("LangTokenMailed3", ". Suivez les instructions dans ce message pour changer votre mot de passe.");
+define("LangForgotPassword", "Mot de passe oubli&eacute;?");
+define("LangForgotPasswordText1", "Veuillez entrez votre nom d'utilisateur DeepskyLog <strong> ou </strong> votre adresse &eacute;mail.");
+define("LangUserId", "Nom d'utilisateur DeepskyLog");
+define("LangRequestNewPassword", "Nouveau mot de passe");ßdefine("LangDeepskyLogMessage", "DeepskyLog message de ");
 define("LangCurrentPasswordIncorrect", "Le mot de passe actuel que vous avez entr&eacute; est incorrect. Impossible de changer le mot de passe.");
 define("LangNewPasswordNotCorrect", "Le nouveau mot de passe et le mot de passe confirm&eacute; ne sont pas les m&ecirc;mes. Impossible de changer le mot de passe.");
 define("LangPasswordChanged", "Le mot de passe est chang&eacute; avec succ&egrave;s.");

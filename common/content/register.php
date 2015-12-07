@@ -93,7 +93,7 @@ function register() {
 
 	echo "<div class=\"form-group\">";
 	echo "<label>" . LangChangeVisibleLanguages . "</label>";
-	echo "<table class=\"table table-condensed table-bordered\">";
+	echo "<table class=\"table table-condensed borderless\">";
 
 	$j = 0;
 	echo "<tr>";

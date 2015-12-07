@@ -10,6 +10,10 @@ class Observers {
 		global $objDatabase;
 		return $objDatabase->execSQL ( "INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"" . RoleWaitlist . "\", \"" . $_SESSION ['lang'] . "\")" );
 	}
+	public function getUserIdFromEmail($mail) {
+		global $objDatabase;
+		return $objDatabase->selectSingleValue ( "SELECT id FROM observers WHERE email = \"" . $mail . "\"", 'id' );
+	}
 	public function getAdministrators() {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT id FROM observers WHERE role = \"RoleAdmin\"", 'id' );
@@ -446,7 +450,7 @@ class Observers {
 			$message .= "<a href=\"" . $cancelLink . "\">" . $cancelLink . "</a>";
 			$message .= LangRequestNewPasswordMail4;
 
-			// TODO: Get correct date (in all languages
+			// TODO: Get correct date (in all languages)
 			$message .= "November 2, 2015 at 15:01 CET";
 
 			$message .= LangRequestNewPasswordMail5;
@@ -460,6 +464,7 @@ exit;
 
 
 			// TODO: Send a mail
+			// TODO: This mail should be translated and use the correct function
 			//mail($mail, $subject, $message, $headers);
 			mail("deepskywim@gmail.com", $subject, $message, $headers);
 
