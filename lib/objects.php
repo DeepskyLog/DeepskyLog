@@ -1961,7 +1961,7 @@ class Objects {
 				if (isset ( $developversion ) && ($developversion == 1))
 					$entryMessage .= "On the live server, a mail would be sent with the subject: " . LangValidateAccountEmailTitleObject . " " . $name . ".<br />";
 				else
-					$objMessage->sendEmail(LangValidateAccountEmailTitleObject . " " . $name, $body, $mailTo);
+					$objMessage->sendEmail(LangValidateAccountEmailTitleObject . " " . $name, $body, "developers");
 
 				$_GET ['indexAction'] = 'detail_object';
 				$_GET ['object'] = $name;

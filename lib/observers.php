@@ -336,7 +336,7 @@ class Observers {
 		if (isset ( $developversion ) && ($developversion == 1))
 			$entryMessage .= "On the live server, a mail would be sent with the subject: Deepskylog account deleted.<br />";
 		else
-			$objMessages->sendEmail("Deepskylog account deleted", "The account for " . $id . " was deleted by " . $objObserver->getFullName($loggedUser) . "<br /><br />");
+			$objMessages->sendEmail("Deepskylog account deleted", "The account for " . $id . " was deleted by " . $objObserver->getFullName($loggedUser) . "<br /><br />", "developers");
 		$objAccomplishments->deleteObserver ( $id );
 		return "The user has been erased.";
 	}
@@ -358,7 +358,7 @@ class Observers {
 		if (isset ( $developversion ) && ($developversion == 1))
 			$entryMessage .= "On the live server, a mail would be sent with the subject: " . LangValidateSubject . ".<br />";
 		else
-			$objMessages->sendMail ( LangValidateSubject, $body, $this->getObserverProperty ( $id, 'email' ), true );
+			$objMessages->sendEmail ( LangValidateSubject, $body, $id, true );
 
 		// After registration, all old messages are removed
 		$objMessages->removeAllMessages ( $id );
