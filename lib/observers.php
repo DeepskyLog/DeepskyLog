@@ -358,7 +358,7 @@ class Observers {
 		if (isset ( $developversion ) && ($developversion == 1))
 			$entryMessage .= "On the live server, a mail would be sent with the subject: " . LangValidateSubject . ".<br />";
 		else
-			$objMessages->sendMail ( LangValidateSubject, $body, $this->getObserverProperty ( $id, 'email' ), true );
+			$objMessages->sendEmail ( LangValidateSubject, $body, $this->getObserverProperty ( $id, 'email' ), true );
 
 		// After registration, all old messages are removed
 		$objMessages->removeAllMessages ( $id );
