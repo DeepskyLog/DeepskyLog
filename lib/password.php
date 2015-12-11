@@ -11,12 +11,12 @@ class Password {
 
     // We first check if there is already a token in the database for the userid.
     // If this is the case, we remove the token.
-    $db1 = $objDatabase->execSQL ( "DELETE from password_change_requests WHERE userid=\"" . $userid . "\"" );
+    $this->removeChangeRequest($userid);
 
     $sql = "INSERT INTO password_change_requests (id, userid) VALUES(\"" . $token . "\", \"" . $userid . "\")";
 
     $objDatabase->execSQL ( $sql );
-//     // Test
+    // Test
 //     $db1 = $objDatabase->selectSingleArray ( "select id from password_change_requests", "id" );
 //     print_r($db1);
 // print "<br />";
@@ -29,10 +29,19 @@ class Password {
 //     exit;
   }
 
+  // Removes the change request. This can happen in four occasions:
+  // - When adding a new change request for the given user.
+  // - When the cancel change request link is clicked: TODO
+  // - When there is a Password Change Request, but the observer does log in successfully.
+  // - When the time for the password change request has passed: TODO
+  public function removeChangeRequest($userid) {
+    global $objDatabase;
+
+    $objDatabase->execSQL ( "DELETE from password_change_requests WHERE userid=\"" . $userid . "\"" );
+  }
+
+
   // TODO: Function to change password.
 
-  // TODO: The two next functions are the same...
-  // TODO: Function to cancel change request.
-  // TODO: Function to remove token when successfully logged in.
 }
 ?>
