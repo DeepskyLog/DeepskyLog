@@ -2482,6 +2482,7 @@ class Utils {
 				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_object', 'deepsky/content/new_object.php' )))
 					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_observation', 'deepsky/content/new_observation.php' )))
 						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_object', 'deepsky/content/view_object.php' )))
+						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'changeToken', 'common/content/change_password.php' )))
 							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observation', 'deepsky/content/view_observation.php' )))
 								if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_catalogs', 'deepsky/content/view_catalogs.php' )))
 									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'atlaspage', 'deepsky/content/dsatlas.php' )))
