@@ -1,6 +1,12 @@
 <?php //GE
 // This is version 5.0
-define("LangRequestNewPasswordSubject", "DeepskyLog Change Password Request");
+define("LangRequestNewPasswordMail1", "\nSie haben (oder jemanden, der Sie imitiert) aufgefordert Ihr <a href=\"");
+define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> Passwort zu &auml;ndern. <br />Um die &Auml;nderung abzuschließen, besuchen Sie den folgenden Link:<br /><br />");
+define("LangRequestNewPasswordMail3", "<br /><br />Wenn Sie nicht die Person bist, die diesen Antrag hat gestellt, oder Sie diese Anforderung abbrechen m&ouml;chten, besuchen Sie den folgenden Link:<br /><br />");
+define("LangRequestNewPasswordMail4", "<br /><br />Wenn Sie nichts tun, wird die Anforderung nach 24 Stunden verfallen (am ");
+define("LangRequestNewPasswordMail5", ") oder Wenn Sie sich erfolgreich anmeldet.");
+define("LangRequestNewPasswordMail6", "<br /><h2><a href=\"mailto:developers@deepskylog.be\">Das DeepskyLog team</a></h2>");
+define("LangRequestNewPasswordSubject", "DeepskyLog passwort &Auml;nderungsanforderung");
 define("LangUnknownUsername1", "Die Benutzername ");
 define("LangUnknownUsername2", " ist nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
 define("LangUnknownMailAddress1", "Die E-Mail Adresse ");

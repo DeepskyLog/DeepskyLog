@@ -1,12 +1,12 @@
 <?php //NL
 // This is version 5.0
-define("LangRequestNewPasswordMail1", "\nYou have (or someone impersonating you has) requested to change your <a href=\"");
-define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> password. <br />To complete the change, visit the following link:<br /><br />");
-define("LangRequestNewPasswordMail3", "<br /><br />If you are not the person who made this request, or you wish to cancel this request, visit the following link:<br /><br />");
-define("LangRequestNewPasswordMail4", "<br /><br />If you do nothing, the request will lapse after 24 hours (on ");
-define("LangRequestNewPasswordMail5", ") or when you log in successfully.");
-define("LangRequestNewPasswordMail6", "<br /><h2><a href=\"mailto:developers@deepskylog.be\">The DeepskyLog team</a></h2>");
-define("LangRequestNewPasswordSubject", "DeepskyLog Change Password Request");
+define("LangRequestNewPasswordMail1", "\nJe hebt (of iemand die je nadoet heeft) verzocht om jouw <a href=\"");
+define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> wachtwoord te wijzigen. <br />Om de wijziging te voltooien, klik op de volgende link:<br /><br />");
+define("LangRequestNewPasswordMail3", "<br /><br />Als je niet de persoon bent die dit verzoek heeft ingediend, of je dit verzoek wenst te annuleren, klik op de volgende link:<br /><br />");
+define("LangRequestNewPasswordMail4", "<br /><br />Als je niets doet, vervalt het verzoek na 24 uur (op ");
+define("LangRequestNewPasswordMail5", ") of wanneer je succesvol inlogt.");
+define("LangRequestNewPasswordMail6", "<br /><h2><a href=\"mailto:developers@deepskylog.be\">Het DeepskyLog team</a></h2>");
+define("LangRequestNewPasswordSubject", "DeepskyLog aanvraag om wachtwoord aan te passen");
 define("LangUnknownUsername1", "De gebruikersnaam ");
 define("LangUnknownUsername2", " is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
 define("LangUnknownMailAddress1", "Het emailadres ");

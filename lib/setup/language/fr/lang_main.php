@@ -1,6 +1,12 @@
 <?php //FR
 // This is version 5.0
-define("LangRequestNewPasswordSubject", "DeepskyLog Change Password Request");
+define("LangRequestNewPasswordSubject", "DeepskyLog Demande de changer le mot de passe");
+define("LangRequestNewPasswordMail1", "\nVous avez (ou quelqu'un qui vous imite) demand&eacute; de changer votre <a href=\"");
+define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> mot de passe. <br />Pour compl&eacute;ter le changement, visitez le lien suivant:<br /><br />");
+define("LangRequestNewPasswordMail3", "<br /><br />Si vous n'&ecirc;tes pas la personne qui a fait cette demande, ou si vous souhaitez annuler cette demande, visitez le lien suivant:<br /><br />");
+define("LangRequestNewPasswordMail4", "<br /><br />Si vous ne faites rien, la demande expire apr&egrave;s 24 heures (le ");
+define("LangRequestNewPasswordMail5", ") ou lorsque vous vous connectez avec succ&egrave;s.");
+define("LangRequestNewPasswordMail6", "<br /><h2><a href=\"mailto:developers@deepskylog.be\">Le DeepskyLog team</a></h2>");
 define("LangUnknownUsername1", "Le nom d'utilisateur ");
 define("LangUnknownUsername2", " n'est pas connu par DeepskyLog. Impossible de demander un nouveau mot de passe.");
 define("LangUnknownMailAddress1", "L'&eacute;mail ");
@@ -288,7 +294,7 @@ define('LangAtlassesIntro00'            ,'DeepskyLog Atlas');
 define('LangAtlassesIntro01'            ,"<b>Aper&ccirc;u</b> : des pages de 20 degr&eacutes, et &eacute;toiles jusqu'&agrave; la magnitude 10.");
 define('LangAtlassesIntro01a'           ,"<b>Chercher</b> : des pages de 12 degr&eacute;s, et &eacute;toiles jusqu'&agrave; la magnitude 12.");
 define('LangAtlassesIntro01b'           ,"<b>D&eacute;tail</b> : des pages de 6 degr&eacute;s, et &eacute;toiles jusqu'&agrave; la magnitude 15.");
-define('LangAtlassesIntro01b'           ,"Les atlas mentionnent si les objets sont d&eacute;j&agrave; vu dans Deepskylog (soulign&eacute en pointill&eacute;s) <br /> ou par vous-m&ecirc;me (atlas personnalis&eacute; pour les utilisateurs enregistr&eacute;s).");
+define('LangAtlassesIntro01c'           ,"Les atlas mentionnent si les objets sont d&eacute;j&agrave; vu dans Deepskylog (soulign&eacute en pointill&eacute;s) <br /> ou par vous-m&ecirc;me (atlas personnalis&eacute; pour les utilisateurs enregistr&eacute;s).");
 define('LangAtlassesIntro02'            ,'Atlas g&eacute;n&eacute;rales / Atlas personnalis&eacute;s');
 define('LangAtlassesIntro03'            ,"Vous pouvez g&eacute;n&eacute;rer un atlas g&eacute;n&eacute;ral, ou (si vous &ecirc;tes un utilisateur enregistr&eacute;) un atlas personnalis&eacute; <br> - Les atlas g&eacute;n&eacute;ral sont pr&eacute;compil&eacute;s et pr&ecirc;ts &agrave; t&eacute;l&eacute;charger comme un fichier pdf grande <br/> - Les atlas personnalisi&eacute;s sont g&eacute;n&eacute;r&eacute;s, page par page, pour vous en format pdf. <br /> <br /> Les atlas personnalis&eacute;s prend un certain temps (une page) ou beaucoup de temps (complet atlas) &agrave; g&eacute;n&eacute;rer et <br /> vous devez utiliser certains logiciels &agrave mettre les pages ensemble.");
 define('LangAtlassesIntro04'            ,'Atlas g&eacute;n&eacute;rales');

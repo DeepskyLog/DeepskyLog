@@ -1,6 +1,12 @@
 <?php //SV
 // This is version 5.0
 define("LangRequestNewPasswordSubject", "DeepskyLog Change Password Request");
+define("LangRequestNewPasswordMail1", "\nYou have (or someone impersonating you has) requested to change your <a href=\"");
+define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> password. <br />To complete the change, visit the following link:<br /><br />");
+define("LangRequestNewPasswordMail3", "<br /><br />If you are not the person who made this request, or you wish to cancel this request, visit the following link:<br /><br />");
+define("LangRequestNewPasswordMail4", "<br /><br />If you do nothing, the request will lapse after 24 hours (on ");
+define("LangRequestNewPasswordMail5", ") or when you log in successfully.");
+define("LangRequestNewPasswordMail6", "<br /><h2><a href=\"mailto:developers@deepskylog.be\">The DeepskyLog team</a></h2>");
 define("LangUnknownUsername1", "The username ");
 define("LangUnknownUsername2", " is not known by DeepskyLog. Impossible to request a new password.");
 define("LangUnknownMailAddress1", "The mail address ");

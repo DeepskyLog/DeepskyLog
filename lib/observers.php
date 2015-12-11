@@ -441,7 +441,7 @@ class Observers {
 			$cancelLink = $baseURL . "/token.php?t=" . $token . "&a=cxlpw";
 
 			// Send nice looking mail
-			$message .= '<h1>' . LangRequestNewPasswordSubject . '</h1>';
+			$message = '<h1>' . LangRequestNewPasswordSubject . '</h1>';
 			$message .= LangRequestNewPasswordMail1 . $baseURL;
 			$message .= LangRequestNewPasswordMail2;
 			$message .= "<a href=\"" . $confirmLink . "\">" . $confirmLink . "</a>";
