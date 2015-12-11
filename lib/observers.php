@@ -404,7 +404,7 @@ class Observers {
 	}
 
 	public function requestNewPassword() {
-		global $entryMessage, $objUtil, $mailFrom, $baseURL, $instDir;
+		global $entryMessage, $objUtil, $mailFrom, $baseURL, $instDir, $objMessages;
 
 		// First check if we are indeed using the correct indexAction
 		if (strcmp($objUtil->checkPostKey('indexAction'), "requestPassword") == 0) {
@@ -437,12 +437,16 @@ class Observers {
 			// TODO: Add token in the database
 			$token = bin2hex(openssl_random_pseudo_bytes(10));
 
+			include_once $instDir . "/lib/password.php";
+			$pass = new Password();
+			$pass->storeToken($userid, $token);
+
       $confirmLink = $baseURL . "/token.php?t=" . $token . "&a=cfmpw";
 			$cancelLink = $baseURL . "/token.php?t=" . $token . "&a=cxlpw";
 
 			// Send nice looking mail
-			$message = '<h1>' . LangRequestNewPasswordSubject . '</h1>';
-			$message .= LangRequestNewPasswordMail1 . $baseURL;
+			$subject = LangRequestNewPasswordSubject;
+			$message = LangRequestNewPasswordMail1 . $baseURL;
 			$message .= LangRequestNewPasswordMail2;
 			$message .= "<a href=\"" . $confirmLink . "\">" . $confirmLink . "</a>";
 			$message .= LangRequestNewPasswordMail3;
@@ -460,17 +464,8 @@ class Observers {
 			$message .= LangRequestNewPasswordMail5;
 			$message .= LangRequestNewPasswordMail6;
 
-			$message .= '<a href="' . $baseURL . '"><img src="' . $baseURL . '/images/logo.png"></a>';
-			$message .= '</body></html>';
-
-print $message;
-exit;
-
-
-			// TODO: Send a mail
-			// TODO: This mail should be translated and use the correct function
-			//mail($mail, $subject, $message, $headers);
-			mail("deepskywim@gmail.com", $subject, $message, $headers);
+			// Send the mail
+			$objMessages->sendEmail($subject, $message, $userid);
 
 			// Show message
 			// Show which username and which email we use for requesting the new password

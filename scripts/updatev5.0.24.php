@@ -1,4 +1,3 @@
-@@ -1,20 +0,0 @@
 <?php
 $inIndex = true;
 require_once "../lib/setup/databaseInfo.php";
