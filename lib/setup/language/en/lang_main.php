@@ -1,5 +1,8 @@
 <?php //EN
 // This is version 5.0
+define("LangCancelRequestNewPasswordSubject", "A DeepskyLog Change Password Request was canceled");
+define("LangCancelRequestNewPassword1", "A request was canceled from the ip-address ");
+define("LangCancelRequestNewPassword2", "<br /><br />If you did not request this, it could be either an honest mistake or someone attempting to break into your DeepskyLog account.<br />");
 define("LangRequestNewPasswordMail1", "\nYou have (or someone impersonating you has) requested to change your <a href=\"");
 define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> password. <br />To complete the change, visit the following link:<br /><br />");
 define("LangRequestNewPasswordMail3", "<br /><br />If you are not the person who made this request, or you wish to cancel this request, visit the following link:<br /><br />");

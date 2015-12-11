@@ -2,20 +2,8 @@
 1. The user enters his username and hits "forgot password" or the email
 address instead of the username, because usernames are sometimes forgotten
 too.
-  + When clicking on Cancel request.
-    1. Show:  Your request has been canceled.
-
-    2. Send mail:
-        > A request was canceled from 10.33.178.31.
-        > If you did not request this, it could be either an honest mistake or someone attempting to break into your DeepskyLog account.
-
   + When clicking Change password:
     + Show: To change your password, enter a new password twice:...   Submit
-
-2. The system has a table password_change_requests with the columns ID, Time and UserID. When the new user presses the button, a record is created
-      in the table. The Time column contains the time when the user pressed the "Forgot Password" button. The ID is a string. A long random string is
-      created (say, a GUID) and then hashed like a password (which is a separate topic in and of itself). This hash is then used as the 'ID' in the
-      table.
 
 4. When the user clicks the link in the email, he is moved to your page. The page retrieves the ID from the URL, hashes it again, and checks against
       the table. If such a record is there and is no more than, say, 24 hours old, the user is presented with the prompt to enter a new password.

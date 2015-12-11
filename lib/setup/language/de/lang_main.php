@@ -1,5 +1,8 @@
 <?php //GE
 // This is version 5.0
+define("LangCancelRequestNewPasswordSubject", "Eine DeepskyLog Passwort&auml;nderunganforderung wird abgesagt");
+define("LangCancelRequestNewPassword1", "Eine Passwort&auml;nderunganforderung wird abgesagt von ");
+define("LangCancelRequestNewPassword2", "<br /><br />Wenn Sie dies nicht angefordert haben, k&ouml;nnte es ein ehrlicher Fehler sein oder jemand versucht in Ihr DeepskyLog Konto zu brechen.<br />");
 define("LangRequestNewPasswordMail1", "\nSie haben (oder jemanden, der Sie imitiert) aufgefordert Ihr <a href=\"");
 define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> Passwort zu &auml;ndern. <br />Um die &Auml;nderung abzuschließen, besuchen Sie den folgenden Link:<br /><br />");
 define("LangRequestNewPasswordMail3", "<br /><br />Wenn Sie nicht die Person bist, die diesen Antrag hat gestellt, oder Sie diese Anforderung abbrechen m&ouml;chten, besuchen Sie den folgenden Link:<br /><br />");

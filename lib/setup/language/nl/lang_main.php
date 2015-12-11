@@ -1,5 +1,8 @@
 <?php //NL
 // This is version 5.0
+define("LangCancelRequestNewPasswordSubject", "Een DeepskyLog aanvraag om je wachtwoord te wijzigen is geannuleerd");
+define("LangCancelRequestNewPassword1", "Een aanvraag om je wachtwoord te wijzigen is geannuleerd vanaf het ip-adres ");
+define("LangCancelRequestNewPassword2", "<br /><br />Als je dit niet hebt aangevraagd, zou het een eerlijke vergissing kunnen zijn of iemand die probeert in te breken in uw DeepskyLog account.<br />");
 define("LangRequestNewPasswordMail1", "\nJe hebt (of iemand die je nadoet heeft) verzocht om jouw <a href=\"");
 define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> wachtwoord te wijzigen. <br />Om de wijziging te voltooien, klik op de volgende link:<br /><br />");
 define("LangRequestNewPasswordMail3", "<br /><br />Als je niet de persoon bent die dit verzoek heeft ingediend, of je dit verzoek wenst te annuleren, klik op de volgende link:<br /><br />");
