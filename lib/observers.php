@@ -441,8 +441,8 @@ class Observers {
 			$pass = new Password();
 			$pass->storeToken($userid, $token);
 
-      $confirmLink = $baseURL . "/token.php?t=" . $token . "&a=cfmpw";
-			$cancelLink = $baseURL . "/token.php?t=" . $token . "&a=cxlpw";
+      $confirmLink = $baseURL . "token.php?t=" . $token . "&a=cfmpw";
+			$cancelLink = $baseURL . "index.php?indexAction=removeToken&amp;t=" . $token;
 
 			// Send nice looking mail
 			$subject = LangRequestNewPasswordSubject;

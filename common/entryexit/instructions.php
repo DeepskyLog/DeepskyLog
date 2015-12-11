@@ -23,6 +23,9 @@ function instructions() {
 	else
 		$lastReadObservation = - 1;
 
+	if ($objUtil->checkGetKey ( 'indexAction' ) == "removeToken") {
+		require_once $instDir . "common/control/removeToken.php";
+	}
 	if ($objUtil->checkGetKey ( 'indexAction' ) == "logout") // logout
 		require_once $instDir . "common/control/logout.php";
 		// listnames

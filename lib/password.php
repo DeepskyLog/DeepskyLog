@@ -16,17 +16,6 @@ class Password {
     $sql = "INSERT INTO password_change_requests (token, userid) VALUES(\"" . $token . "\", \"" . $userid . "\")";
 
     $objDatabase->execSQL ( $sql );
-    // Test
-//     $db1 = $objDatabase->selectSingleArray ( "select token from password_change_requests", "token" );
-//     print_r($db1);
-// print "<br />";
-//     $db2 = $objDatabase->selectSingleArray ( "select userid from password_change_requests", "userid" );
-//     print_r($db2);
-// print "<br />";
-//   $db3 = $objDatabase->selectSingleArray ( "select time from password_change_requests", "time" );
-//   print_r($db3);
-//   print "<br />";
-//     exit;
   }
 
   // Removes the change request. This can happen in three occasions:
@@ -47,6 +36,7 @@ class Password {
     $objDatabase->execSQL ( "DELETE from password_change_requests WHERE token=\"" . $token . "\"" );
   }
 
+  // Returns the userid when a token is given.
   public function getUserId($token) {
     global $objDatabase;
 

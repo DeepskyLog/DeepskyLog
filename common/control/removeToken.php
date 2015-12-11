@@ -1,18 +1,11 @@
 <?php
 // token.php
 // handles password change requests.
-$inIndex = true;
-require_once 'common/entryexit/preludes.php'; // Includes of all classes and assistance files
+token();
 
-global $inIndex;
-if ((! isset ( $inIndex )) || (! $inIndex))
-include "redirect.php";
-else
-token ();
 function token() {
-  global $instDir, $objMessages;
+  global $instDir, $objMessages, $entryMessage;
 
-  if (strcmp($_GET[a], "cxlpw") == 0) {
     // Get the userid
     include_once $instDir . "lib/password.php";
     $password = new Password();
@@ -40,13 +33,7 @@ function token() {
       $objMessages->sendEmail($subject, $message, $userid);
 
       // Go to the DeepskyLog page and show 'Your password change request was canceled'
-      //print "Clearing the password request";
-
-      //1. Show:  Your request has been canceled.
-
+      $entryMessage = LangCancelRequestNewPasswordSubject . ".";
     }
-  } else if (strcmp($_GET[a], "cfmpw") == 0) {
-    print "Changing the password";
-  }
 }
 ?>
