@@ -11,7 +11,7 @@ $sql ="DROP TABLE IF EXISTS password_change_requests";
 $run = $objDatabase->execSQL($sql);
 $sql = "CREATE TABLE password_change_requests (
           id                                   VARCHAR(255)            NOT NULL DEFAULT '',
-          time                                 DATETIME                DEFAULT CURRENT_TIMESTAMP,
+          time                                 TIMESTAMP               DEFAULT CURRENT_TIMESTAMP,
           userid                               VARCHAR(255)            NOT NULL DEFAULT ''
 );";
 $objDatabase->execSQL ( $sql );
