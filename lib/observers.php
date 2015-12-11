@@ -434,14 +434,13 @@ class Observers {
 				return;
 			}
 
-			// TODO: Where are the changes in the login dialog???
-
 			// TODO: Add token in the database
-			$token = "qBOR3mStV5";
+			$token = bin2hex(openssl_random_pseudo_bytes(10));
+
       $confirmLink = $baseURL . "/token.php?t=" . $token . "&a=cfmpw";
 			$cancelLink = $baseURL . "/token.php?t=" . $token . "&a=cxlpw";
 
-			// TODO: Send nice looking mail
+			// Send nice looking mail
 			$message .= '<h1>' . LangRequestNewPasswordSubject . '</h1>';
 			$message .= LangRequestNewPasswordMail1 . $baseURL;
 			$message .= LangRequestNewPasswordMail2;
@@ -450,8 +449,13 @@ class Observers {
 			$message .= "<a href=\"" . $cancelLink . "\">" . $cancelLink . "</a>";
 			$message .= LangRequestNewPasswordMail4;
 
-			// TODO: Get correct date (in all languages)
-			$message .= "November 2, 2015 at 15:01 CET";
+			// Get correct date (in all languages)
+			include_once $instDir . "/lib/setup/language.php";
+			// Get the date in the correct locale
+			$lang = new Language();
+			$lang->setLocale();
+
+    	$message .= iconv('ISO-8859-1', 'UTF-8', strftime('%A %d %B %Y, %R UTC', time() + 24*60*60));
 
 			$message .= LangRequestNewPasswordMail5;
 			$message .= LangRequestNewPasswordMail6;

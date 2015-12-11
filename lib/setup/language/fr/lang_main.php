@@ -12,7 +12,8 @@ define("LangTokenMailed3", ". Suivez les instructions dans ce message pour chang
 define("LangForgotPassword", "Mot de passe oubli&eacute;?");
 define("LangForgotPasswordText1", "Veuillez entrez votre nom d'utilisateur DeepskyLog <strong> ou </strong> votre adresse &eacute;mail.");
 define("LangUserId", "Nom d'utilisateur DeepskyLog");
-define("LangRequestNewPassword", "Nouveau mot de passe");ßdefine("LangDeepskyLogMessage", "DeepskyLog message de ");
+define("LangRequestNewPassword", "Nouveau mot de passe");
+define("LangDeepskyLogMessage", "DeepskyLog message de ");
 define("LangCurrentPasswordIncorrect", "Le mot de passe actuel que vous avez entr&eacute; est incorrect. Impossible de changer le mot de passe.");
 define("LangNewPasswordNotCorrect", "Le nouveau mot de passe et le mot de passe confirm&eacute; ne sont pas les m&ecirc;mes. Impossible de changer le mot de passe.");
 define("LangPasswordChanged", "Le mot de passe est chang&eacute; avec succ&egrave;s.");
