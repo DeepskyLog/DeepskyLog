@@ -27,7 +27,8 @@ define("LangCurrentPasswordIncorrect", "Die von Ihnen gew&auml;hlte aktuelle Pas
 define("LangNewPasswordNotCorrect", "Das neue Passwort und die Passwort Best&auml;tigung sind nicht dasselbe. Die password is nicht ver&auml;ndert.");
 define("LangPasswordChanged", "Das Passwort ist erfolgreich ge&auml;ndert.");
 define("LangChangePassword", "Passwort &auml;ndern");
-define("LangCurrentPassword", "Current password");
+define("LangCurrentPassword", "Heutiges Passwort");
+define("LangNewPassword", "Neues Passwort");
 define("PersonalInfo", "Personal");
 define("ObservingDetails", "Observing");
 define("Atlases", "Atlases");

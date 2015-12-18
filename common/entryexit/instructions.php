@@ -578,6 +578,20 @@ function instructions() {
 
 		$objObserver->updatePassword($login, $passwd, $newPassword, $confirmNewPassword);
 	}
+	if ($objUtil->checkPostKey ( 'changePasswordToken' )) {
+		$login = $objUtil->checkPostKey( 'userid' );
+		$token = $objUtil->checkPostKey( 'token' );
+		$newPassword =  md5 ( $objUtil->checkPostKey( 'newPassword' ) );
+		$confirmNewPassword =  md5 ( $objUtil->checkPostKey( 'confirmPassword' ) );
+
+		$objObserver->updatePasswordToken($login, $newPassword, $confirmNewPassword);
+
+		// Remove token
+		include_once $instDir . "lib/password.php";
+		$password = new Password();
+
+		$password->removeToken($token);
+	}
 	if ($objUtil->checkGetKey ( 'renameList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' ))) {
 		unset ( $_SESSION ['QobjParams'] );
 		$listNameFrom = $_GET ['listnamefrom'];

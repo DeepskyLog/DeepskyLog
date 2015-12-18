@@ -27,6 +27,8 @@ define("LangCurrentPasswordIncorrect", "Het huidige wachtwoord is incorrect inge
 define("LangNewPasswordNotCorrect", "Het nieuwe wachtwoord en de bevestiging zijn niet gelijk. Onmogelijk om het wachtwoord aan te passen.");
 define("LangPasswordChanged", "Het wachtwoord is gewijzigd.");
 define("LangChangePassword", "Wijzig wachtwoord");
+define("LangCurrentPassword", "Huidig wachtwoord");
+define("LangNewPassword", "Nieuw wachtwoord");
 define("PersonalInfo", "Persoonlijk");
 define("ObservingDetails", "Waarnemen");
 define("Atlases", "Atlassen");

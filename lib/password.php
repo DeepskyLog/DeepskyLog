@@ -74,8 +74,7 @@ class Password {
 
 		// If the time difference is larger than a day, we remove the token and return false;
 		if ($diff > 24*60*60) {
-			// TODO: REMOVE
-			//$this->removeToken($token);
+			$this->removeToken($token);
 			return false;
 		} else {
 			return true;

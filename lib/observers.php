@@ -403,6 +403,22 @@ class Observers {
 		$_GET ['indexAction'] = 'change_account';
 	}
 
+	public function updatePasswordToken($login, $newPassword, $confirmNewPassword) {
+		global $entryMessage, $loggedUser;
+		$passwd_db = $this->getObserverPropertyCS ( $login, "password" );
+
+		// We check if we can change the password
+		if (strcmp ($newPassword, $confirmNewPassword) != 0) {
+			$entryMessage = LangNewPasswordNotCorrect;
+		} else {
+			$this->setObserverProperty ( $login, 'password', $newPassword );
+
+			$entryMessage = LangPasswordChanged;
+		}
+		// Return to the change account page.
+		$_GET ['indexAction'] = 'main';
+	}
+
 	public function requestNewPassword() {
 		global $entryMessage, $objUtil, $mailFrom, $baseURL, $instDir, $objMessages;
 

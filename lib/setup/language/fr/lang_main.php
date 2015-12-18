@@ -27,6 +27,8 @@ define("LangCurrentPasswordIncorrect", "Le mot de passe actuel que vous avez ent
 define("LangNewPasswordNotCorrect", "Le nouveau mot de passe et le mot de passe confirm&eacute; ne sont pas les m&ecirc;mes. Impossible de changer le mot de passe.");
 define("LangPasswordChanged", "Le mot de passe est chang&eacute; avec succ&egrave;s.");
 define("LangChangePassword", "Changer mot de passe");
+define("LangCurrentPassword", "Mot de passe actuel");
+define("LangNewPassword", "Mot de passe nouveau");
 define("PersonalInfo", "Personal");
 define("ObservingDetails", "Observing");
 define("Atlases", "Atlases");
