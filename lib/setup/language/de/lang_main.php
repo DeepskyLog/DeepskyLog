@@ -1,11 +1,34 @@
 <?php //GE
 // This is version 5.0
+define("LangCancelRequestNewPasswordSubject", "Eine DeepskyLog Passwort&auml;nderunganforderung wird abgesagt");
+define("LangCancelRequestNewPassword1", "Eine Passwort&auml;nderunganforderung wird abgesagt von ");
+define("LangCancelRequestNewPassword2", "<br /><br />Wenn Sie dies nicht angefordert haben, k&ouml;nnte es ein ehrlicher Fehler sein oder jemand versucht in Ihr DeepskyLog Konto zu brechen.<br />");
+define("LangRequestNewPasswordMail1", "\nSie haben (oder jemanden, der Sie imitiert) aufgefordert Ihr <a href=\"");
+define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> Passwort zu &auml;ndern. <br />Um die &Auml;nderung abzuschließen, besuchen Sie den folgenden Link:<br /><br />");
+define("LangRequestNewPasswordMail3", "<br /><br />Wenn Sie nicht die Person bist, die diesen Antrag hat gestellt, oder Sie diese Anforderung abbrechen m&ouml;chten, besuchen Sie den folgenden Link:<br /><br />");
+define("LangRequestNewPasswordMail4", "<br /><br />Wenn Sie nichts tun, wird die Anforderung nach 24 Stunden verfallen (am ");
+define("LangRequestNewPasswordMail5", ") oder Wenn Sie sich erfolgreich anmeldet.");
+define("LangRequestNewPasswordMail6", "<br /><h2><a href=\"mailto:developers@deepskylog.be\">Das DeepskyLog team</a></h2>");
+define("LangRequestNewPasswordSubject", "DeepskyLog passwort &Auml;nderungsanforderung");
+define("LangUnknownUsername1", "Die Benutzername ");
+define("LangUnknownUsername2", " ist nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
+define("LangUnknownMailAddress1", "Die E-Mail Adresse ");
+define("LangUnknownMailAddress2", " ist nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
+define("LangUnknownMailAndUsername", "Die angegebene Benutzername und E-Mail Adresse sind nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
+define("LangTokenMailed1", "Ein Token zum &auml;ndern des Passworts ");
+define("LangTokenMailed2", " wurde Ihnen per E-Mail nach ");
+define("LangTokenMailed3", " geschickt. Folgen Sie den Anweisungen in dieser E-Mail um Ihr Passwort zu &auml;ndern.");
+define("LangForgotPassword", "Passwort vergessen?");
+define("LangForgotPasswordText1", "Bitte geben Sie Ihren Benutzernamen <strong> oder </strong> Ihre E-Mail ein.");
+define("LangUserId", "DeepskyLog Benutzernamen");
+define("LangRequestNewPassword", "Neues Passwort anfordern");
 define("LangDeepskyLogMessage", "DeepskyLog Nachricht von ");
 define("LangCurrentPasswordIncorrect", "Die von Ihnen gew&auml;hlte aktuelle Passwort ist nicht korrekt. Die password is nicht ver&auml;ndert.");
 define("LangNewPasswordNotCorrect", "Das neue Passwort und die Passwort Best&auml;tigung sind nicht dasselbe. Die password is nicht ver&auml;ndert.");
 define("LangPasswordChanged", "Das Passwort ist erfolgreich ge&auml;ndert.");
 define("LangChangePassword", "Passwort &auml;ndern");
-define("LangCurrentPassword", "Current password");
+define("LangCurrentPassword", "Heutiges Passwort");
+define("LangNewPassword", "Neues Passwort");
 define("PersonalInfo", "Personal");
 define("ObservingDetails", "Observing");
 define("Atlases", "Atlases");

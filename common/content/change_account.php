@@ -152,7 +152,6 @@ function change_account()
 	echo "<p class=\"form-control-static\">" .
         LangChangeAccountField1Expl . "</p></div>";
 
-  // TODO: Use bootstrap-fileinput for setting a picture for comet observations, deepsky observations and sessions.
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField2 . "</label>";
 	echo "<div class=\"col-sm-6\">

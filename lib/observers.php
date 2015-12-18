@@ -10,6 +10,10 @@ class Observers {
 		global $objDatabase;
 		return $objDatabase->execSQL ( "INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"" . RoleWaitlist . "\", \"" . $_SESSION ['lang'] . "\")" );
 	}
+	public function getUserIdFromEmail($mail) {
+		global $objDatabase;
+		return $objDatabase->selectSingleValue ( "SELECT id FROM observers WHERE email = \"" . $mail . "\"", 'id' );
+	}
 	public function getAdministrators() {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT id FROM observers WHERE role = \"RoleAdmin\"", 'id' );
@@ -397,6 +401,92 @@ class Observers {
 		}
 		// Return to the change account page.
 		$_GET ['indexAction'] = 'change_account';
+	}
+
+	public function updatePasswordToken($login, $newPassword, $confirmNewPassword) {
+		global $entryMessage, $loggedUser;
+		$passwd_db = $this->getObserverPropertyCS ( $login, "password" );
+
+		// We check if we can change the password
+		if (strcmp ($newPassword, $confirmNewPassword) != 0) {
+			$entryMessage = LangNewPasswordNotCorrect;
+		} else {
+			$this->setObserverProperty ( $login, 'password', $newPassword );
+
+			$entryMessage = LangPasswordChanged;
+		}
+		// Return to the change account page.
+		$_GET ['indexAction'] = 'main';
+	}
+
+	public function requestNewPassword() {
+		global $entryMessage, $objUtil, $mailFrom, $baseURL, $instDir, $objMessages;
+
+		// First check if we are indeed using the correct indexAction
+		if (strcmp($objUtil->checkPostKey('indexAction'), "requestPassword") == 0) {
+			// Check for the userid or the mail address
+			$userid = $objUtil->checkPostKey('deepskylog_id');
+			$email = $objUtil->checkPostKey('mail');
+
+			if ($userid != "") {
+				// Check if the userid exists in the database, if this is not the case, show a message that the userid is not known by DeepskyLog.
+				$email = $this->getObserverProperty ( $userid, 'email' );
+
+				// If mail is empty, show message that the userid is not correct.
+				if (strcmp($email, "") == 0) {
+					$entryMessage = LangUnknownUsername1 . "<strong>" . $userid . "</strong>" . LangUnknownUsername2;
+					return;
+				}
+			} elseif ($email != "") {
+				// We have a mail address, but no username. Get the userid which belongs to the mailaddress.
+				$userid = $this->getUserIdFromEmail($email);
+
+				if (strcmp($userid, "") == 0) {
+					$entryMessage = LangUnknownMailAddress1 . "<strong>" . $email . "</strong>" . LangUnknownMailAddress2;
+					return;
+				}
+			} else {
+				$entryMessage = LangUnknownMailAndUsername;
+				return;
+			}
+
+			// TODO: Add token in the database
+			$token = bin2hex(openssl_random_pseudo_bytes(10));
+
+			include_once $instDir . "/lib/password.php";
+			$pass = new Password();
+			$pass->storeToken($userid, $token);
+
+      $confirmLink = $baseURL . "index.php?indexAction=changeToken&amp;t=" . $token;
+			$cancelLink = $baseURL . "index.php?indexAction=removeToken&amp;t=" . $token;
+
+			// Send nice looking mail
+			$subject = LangRequestNewPasswordSubject;
+			$message = LangRequestNewPasswordMail1 . $baseURL;
+			$message .= LangRequestNewPasswordMail2;
+			$message .= "<a href=\"" . $confirmLink . "\">" . $confirmLink . "</a>";
+			$message .= LangRequestNewPasswordMail3;
+			$message .= "<a href=\"" . $cancelLink . "\">" . $cancelLink . "</a>";
+			$message .= LangRequestNewPasswordMail4;
+
+			// Get correct date (in all languages)
+			include_once $instDir . "/lib/setup/language.php";
+			// Get the date in the correct locale
+			$lang = new Language();
+			$lang->setLocale();
+
+    	$message .= iconv('ISO-8859-1', 'UTF-8', strftime('%A %d %B %Y, %R UTC', time() + 24*60*60));
+
+			$message .= LangRequestNewPasswordMail5;
+			$message .= LangRequestNewPasswordMail6;
+
+			// Send the mail
+			$objMessages->sendEmail($subject, $message, $userid);
+
+			// Show message
+			// Show which username and which email we use for requesting the new password
+			$entryMessage = LangTokenMailed1 . "<strong>" . $userid . "</strong>" . LangTokenMailed2 . "<strong>" . $email . "</strong>" . LangTokenMailed3;
+		}
 	}
 }
 ?>
