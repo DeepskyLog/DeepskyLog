@@ -196,7 +196,10 @@ class Objects {
 			$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
 		if ($loggedUser)
 			if (substr ( $seenDetails, 0, 1 ) == "Y") // object has been seen by the observer logged in
-				$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "&amp;observer=" . urlencode ( $loggedUser ) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
+				$obj = preg_split ( "/ /", $object );
+				$cat = $obj [0];
+				$number = $obj [1];
+				$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;catalog=" . $cat . "&amp;number=" . $number . "&amp;observer=" . urlencode ( $loggedUser ) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
 		return $seen;
 	}
 	public function getExactDsObject($value, $cat = '', $catindex = '') // returns the exact name of an object
