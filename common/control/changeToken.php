@@ -11,7 +11,30 @@ function token() {
     $password = new Password();
 
     $token = $_GET['t'];
-    $userid = $password->getUserId($token);
+
+    if ($password->tokenExists($token)) {
+      // Only go on when the token is not too old. If the token is too old, remove the token.
+      if ($password->isValid($token)) {
+        // Go to the correct 
+        echo "<div id=\"main\">";
+        // TODO: Add form to change the password.
+        // TODO: Add scripts to change the password.
+        print "TEST: " . $userid;
+        echo "</div>";
+      } else {
+        // TODO: Change
+        print "<br/>TOKEN IS NOT VALID ANYMORE!";
+      }
+    } else {
+      // TODO: Change message
+      $entryMessage = "TOKEN DOES NOT EXIST!";
+      $_GET ['indexAction'] = 'main';
+
+      // TODO: Return the index page
+      return;
+    }
+
+
 
     if (sizeof($userid) > 0) {
       // Clear the request

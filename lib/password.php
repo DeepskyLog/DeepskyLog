@@ -13,7 +13,10 @@ class Password {
     // If this is the case, we remove the token.
     $this->removeChangeRequest($userid);
 
-    $sql = "INSERT INTO password_change_requests (token, userid) VALUES(\"" . $token . "\", \"" . $userid . "\")";
+		// Make sure to store the token in UTC
+		$now = new DateTime("now", new DateTimeZone('UTC'));
+
+    $sql = "INSERT INTO password_change_requests (token, time, userid) VALUES(\"" . $token . "\", \"" . $now->format('Y-m-d H:i:s') . "\", \"" . $userid . "\")";
 
     $objDatabase->execSQL ( $sql );
   }
@@ -21,7 +24,7 @@ class Password {
   // Removes the change request. This can happen in three occasions:
   // - When adding a new change request for the given user.
   // - When there is a Password Change Request, but the observer does log in successfully.
-  // - When the time for the password change request has passed: TODO
+  // - When the time for the password change request has passed.
   public function removeChangeRequest($userid) {
     global $objDatabase;
 
@@ -44,6 +47,40 @@ class Password {
 
     return $userid[0];
   }
+
+	// Returns true if the token EXISTS
+	public function tokenExists($token) {
+		global $objDatabase;
+
+		$token = $objDatabase->selectSingleArray ( "select * from password_change_requests where token=\"" . $token . "\"", "userid" );
+
+		if (sizeof($token) > 0) {
+			return true;
+		}
+
+		return false;
+	}
+
+	// Checks if the token is still valid. The token is not longer valid after 24 hours. If the token is invalid, we remove the token.
+	public function isValid($token) {
+		global $objDatabase;
+
+		$time = $objDatabase->selectSingleArray ( "select time from password_change_requests where token=\"" . $token . "\"", "time" );
+		$now = new DateTime("now", new DateTimeZone('UTC'));
+		$tokenTime = new DateTime($time[0], new DateTimeZone('UTC'));
+
+		// Get the time difference in seconds
+		$diff = $now->getTimestamp() - $tokenTime->getTimestamp();
+
+		// If the time difference is larger than a day, we remove the token and return false;
+		if ($diff > 24*60*60) {
+			// TODO: REMOVE
+			//$this->removeToken($token);
+			return false;
+		} else {
+			return true;
+		}
+	}
 
   // TODO: Function to change password.
 
