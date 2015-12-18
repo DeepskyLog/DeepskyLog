@@ -14,6 +14,15 @@ function login() {
 	$_SESSION ['admin'] = "no";
 	$loginErrorCode = "";
 	$loginErrorText = "";
+	if (! array_key_exists ( 'lang', $_SESSION ))
+		$_SESSION ['lang'] = $defaultLanguage;
+	if (array_key_exists ( 'indexAction', $_GET ) && ($_GET ['indexAction'] == "setLanguage")) {
+		if (array_key_exists ( 'language', $_POST ) && $_POST ['language'] && array_key_exists ( $_POST ['language'], $objLanguage->getLanguages () ))
+			$_SESSION ['lang'] = $_POST ['language'];
+		$_GET ['indexAction'] = 'default_action';
+	}
+	$language = $objLanguage->getPath ( $_SESSION ['lang'] );
+	require_once $instDir . "/lib/setup/" . $language;
 	if ($objUtil->checkGetKey ( 'indexAction' ) == 'logout') {
 		$_SESSION ['deepskylog_id'] = '';
 		setcookie ( "deepskylogsec", "", time () - 3600, "/" );
@@ -70,13 +79,13 @@ function login() {
 				$_GET ['indexAction'] = 'default_action';
 			} else // passwords don't match
 {
-				$loginErrorCode = "LangErrorWrongPassword";
+				$loginErrorCode = LangErrorWrongPassword;
 				$_GET ['indexAction'] = 'error_action';
 				$loggedUser = "";
 			}
 		} else // not all fields are filled in
 {
-			$loginErrorCode = "LangErrorEmptyPassword";
+			$loginErrorCode = LangErrorEmptyPassword;
 			$_GET ['indexAction'] = 'error_action';
 		}
 	} else {
