@@ -23,6 +23,9 @@ function instructions() {
 	else
 		$lastReadObservation = - 1;
 
+	if ($objUtil->checkGetKey ( 'indexAction' ) == "removeToken") {
+		require_once $instDir . "common/control/removeToken.php";
+	}
 	if ($objUtil->checkGetKey ( 'indexAction' ) == "logout") // logout
 		require_once $instDir . "common/control/logout.php";
 		// listnames
@@ -409,8 +412,11 @@ function instructions() {
 		// $entryMessage is set in the validateAccount() function;
 		// $_GET['indexAction'] is set in the validateAccount() function
 	}
+	if ($objUtil->checkGetKey ( 'indexAction' ) == "requestPassword") {
+		$objObserver->requestNewPassword ();
+	}
 	if ($objUtil->checkGetKey ( 'indexAction' ) == "validate_eyepiece") // validate eyepiece
-{
+	{
 		$entryMessage .= $objEyepiece->validateSaveEyepiece ();
 		$_GET ['indexAction'] = 'view_eyepieces';
 	}
@@ -571,6 +577,20 @@ function instructions() {
 		$confirmNewPassword =  md5 ( $objUtil->checkPostKey( 'confirmPassword' ) );
 
 		$objObserver->updatePassword($login, $passwd, $newPassword, $confirmNewPassword);
+	}
+	if ($objUtil->checkPostKey ( 'changePasswordToken' )) {
+		$login = $objUtil->checkPostKey( 'userid' );
+		$token = $objUtil->checkPostKey( 'token' );
+		$newPassword =  md5 ( $objUtil->checkPostKey( 'newPassword' ) );
+		$confirmNewPassword =  md5 ( $objUtil->checkPostKey( 'confirmPassword' ) );
+
+		$objObserver->updatePasswordToken($login, $newPassword, $confirmNewPassword);
+
+		// Remove token
+		include_once $instDir . "lib/password.php";
+		$password = new Password();
+
+		$password->removeToken($token);
 	}
 	if ($objUtil->checkGetKey ( 'renameList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' ))) {
 		unset ( $_SESSION ['QobjParams'] );

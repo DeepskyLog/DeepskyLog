@@ -1,10 +1,34 @@
 <?php //NL
 // This is version 5.0
+define("LangCancelRequestNewPasswordSubject", "Een DeepskyLog aanvraag om je wachtwoord te wijzigen is geannuleerd");
+define("LangCancelRequestNewPassword1", "Een aanvraag om je wachtwoord te wijzigen is geannuleerd vanaf het ip-adres ");
+define("LangCancelRequestNewPassword2", "<br /><br />Als je dit niet hebt aangevraagd, zou het een eerlijke vergissing kunnen zijn of iemand die probeert in te breken in uw DeepskyLog account.<br />");
+define("LangRequestNewPasswordMail1", "\nJe hebt (of iemand die je nadoet heeft) verzocht om jouw <a href=\"");
+define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> wachtwoord te wijzigen. <br />Om de wijziging te voltooien, klik op de volgende link:<br /><br />");
+define("LangRequestNewPasswordMail3", "<br /><br />Als je niet de persoon bent die dit verzoek heeft ingediend, of je dit verzoek wenst te annuleren, klik op de volgende link:<br /><br />");
+define("LangRequestNewPasswordMail4", "<br /><br />Als je niets doet, vervalt het verzoek na 24 uur (op ");
+define("LangRequestNewPasswordMail5", ") of wanneer je succesvol inlogt.");
+define("LangRequestNewPasswordMail6", "<br /><h2><a href=\"mailto:developers@deepskylog.be\">Het DeepskyLog team</a></h2>");
+define("LangRequestNewPasswordSubject", "DeepskyLog aanvraag om wachtwoord aan te passen");
+define("LangUnknownUsername1", "De gebruikersnaam ");
+define("LangUnknownUsername2", " is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
+define("LangUnknownMailAddress1", "Het emailadres ");
+define("LangUnknownMailAddress2", " is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
+define("LangUnknownMailAndUsername", "De gebruikersnaam en het mailadres zijn niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
+define("LangTokenMailed1", "Een token om het wachtwoord van ");
+define("LangTokenMailed2", " te wijzigen is naar ");
+define("LangTokenMailed3", " verzonden. Volg de instructies in die mail om je wachtwoord te wijzigen.");
+define("LangForgotPassword", "Wachtwoord vergeten?");
+define("LangForgotPasswordText1", "Gelieve je DeepskyLog gebruikersnaam <strong>of</strong> je in DeepskyLog gekend emailadres in te voeren.");
+define("LangUserId", "DeepskyLog gebruikersnaam");
+define("LangRequestNewPassword", "Vraag nieuw wachtwoord aan");
 define("LangDeepskyLogMessage", "DeepskyLog bericht van ");
 define("LangCurrentPasswordIncorrect", "Het huidige wachtwoord is incorrect ingegeven. Onmogelijk om het wachtwoord aan te passen.");
 define("LangNewPasswordNotCorrect", "Het nieuwe wachtwoord en de bevestiging zijn niet gelijk. Onmogelijk om het wachtwoord aan te passen.");
 define("LangPasswordChanged", "Het wachtwoord is gewijzigd.");
 define("LangChangePassword", "Wijzig wachtwoord");
+define("LangCurrentPassword", "Huidig wachtwoord");
+define("LangNewPassword", "Nieuw wachtwoord");
 define("PersonalInfo", "Persoonlijk");
 define("ObservingDetails", "Waarnemen");
 define("Atlases", "Atlassen");
