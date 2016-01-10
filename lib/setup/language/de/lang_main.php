@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("LangStatistics", "Statistiken");
 define("GraphTitleMonths", "Anzahl der Beobachtungen pro Monat: ");
 define("GraphObservationsMonthTitle", "Beobachtungen pro Monat");
 define("LangCancelRequestNewPasswordSubject", "Eine DeepskyLog Passwort&auml;nderunganforderung wird abgesagt");

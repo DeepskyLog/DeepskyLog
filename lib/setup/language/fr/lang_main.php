@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("LangStatistics", "Statistiques");
 define("GraphTitleMonths", "Nombre d'observations par mois :");
 define("GraphObservationsMonthTitle", "Observations par mois");
 define("LangCancelRequestNewPasswordSubject", "DeepskyLog Demande de changer le mot de passe a &eacute;t&eacute; annul&eacute;e");
