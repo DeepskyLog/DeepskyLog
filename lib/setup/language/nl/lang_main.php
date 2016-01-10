@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("GraphTitleMonths", "Aantal waarnemingen per maand : ");
 define("GraphObservationsMonthTitle", "Waarnemingen per maand");
 define("LangCancelRequestNewPasswordSubject", "Een DeepskyLog aanvraag om je wachtwoord te wijzigen is geannuleerd");
 define("LangCancelRequestNewPassword1", "Een aanvraag om je wachtwoord te wijzigen is geannuleerd vanaf het ip-adres ");
