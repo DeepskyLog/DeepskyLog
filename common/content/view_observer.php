@@ -447,11 +447,36 @@ function view_observer() {
 	// Add the JavaScript to initialize the chart on document ready
 	echo "<script type=\"text/javascript\">
 	  	      var chart;
+						var data = [";
+						for($i = 1; $i <= 12; $i ++) {
+							$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where observerid=\"" . $user . "\" and MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+							if ($i != 12) {
+								echo $obs . ", ";
+							} else {
+								echo $obs;
+							}
+						}
+						echo "];
+						var cometdata = [";
+							for($i = 1; $i <= 12; $i ++) {
+								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where observerid=\"" . $user . "\" and MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+								if ($i != 12) {
+									echo $obs . ", ";
+								} else {
+									echo $obs;
+								}
+							}
+							echo "];
+						var dataSum = 0;
+						for (var i=0;i < data.length;i++) {
+    					dataSum += data[i] + cometdata[i];
+						}
+
 	  	      $(document).ready(function() {
 	  	      chart = new Highcharts.Chart({
 	  	        chart: {
 	  	          renderTo: 'container3',
-	  	          defaultSeriesType: 'line',
+								type: 'column',
 	  	          marginRight: 130,
 	  	          marginBottom: 25
 	  	        },
@@ -464,8 +489,7 @@ function view_observer() {
 	  	          x: -20
 	  	        },
 	  	        xAxis: {
-	  	          categories: [";
-
+	  	          categories: [ ";
 	for($i = 1; $i <= 12; $i ++) {
 		if ($i != 12) {
 			echo "'" . $i . "', ";
@@ -490,7 +514,7 @@ function view_observer() {
 	  	      tooltip: {
 	  	        formatter: function() {
 	  	                            return '<b>'+ this.series.name +'</b><br/>'+
-	  	        this.x +': '+ this.y;
+	  	        this.x +': '+ this.y + ' (' + Highcharts.numberFormat(this.y / dataSum * 100) + '%)';
 	  	        }
 	  	                    },
 	  	                    legend: {
@@ -501,32 +525,17 @@ function view_observer() {
 	  	                        y: 100,
 	  	                    borderWidth: 0
 	  	      },
+						plotOptions: {
+            column: {
+                stacking: 'normal'
+							} },
 	  	                    series: [{
 	  	                      name: '" . html_entity_decode ( $deepsky, ENT_QUOTES, "UTF-8" ) . "',
-	  	                        data: [";
-	for($i = 1; $i <= 12; $i ++) {
-		$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where observerid=\"" . $user . "\" and MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
-		if ($i != 12) {
-			echo $obs . ", ";
-		} else {
-			echo $obs;
-		}
-	}
-	echo "                    ]
+	  	                        data: data
 	  	                      }, {
                               name: '" . html_entity_decode ( $comets, ENT_QUOTES, "UTF-8" ) . "',
-                                data: [";
-
-	for($i = 1; $i <= 12; $i ++) {
-		$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where observerid=\"" . $user . "\" and MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
-		if ($i != 12) {
-			echo $obs . ", ";
-		} else {
-			echo $obs;
-		}
-	}
-
-	echo "                     ] }]
+                                data: cometdata
+ 														  }]
 	  	                      });
 	  	                      });
 
