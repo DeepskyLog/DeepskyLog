@@ -507,16 +507,21 @@ function view_observer() {
 	  	        },
 	  	        xAxis: {
 	  	          categories: [ ";
-	for($i = 1; $i <= 12; $i ++) {
-		if ($i != 12) {
-			echo "'" . $i . "', ";
-		} else {
-			echo "'" . $i . "'";
-		}
-	}
 
-	echo "]
-	  	        },
+								global $Month1Short, $Month2Short, $Month3Short, $Month4Short, $Month5Short, $Month6Short, $Month7Short, $Month8Short, $Month9Short, $Month10Short, $Month11Short, $Month12Short;
+								echo '"' . $Month1Short . '", ';
+								echo '"' . $Month2Short . '", ';
+								echo '"' . $Month3Short . '", ';
+								echo '"' . $Month4Short . '", ';
+								echo '"' . $Month5Short . '", ';
+								echo '"' . $Month6Short . '", ';
+								echo '"' . $Month7Short . '", ';
+								echo '"' . $Month8Short . '", ';
+								echo '"' . $Month9Short . '", ';
+								echo '"' . $Month10Short . '", ';
+								echo '"' . $Month11Short . '", ';
+								echo '"' . $Month12Short . "\"]
+							},
 	  	        yAxis: {
 	  	          title: {
 	  	            text: '" . GraphObservations . "'
