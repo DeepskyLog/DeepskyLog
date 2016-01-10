@@ -34,6 +34,7 @@ function statistics() {
           <li><a href=\"#observationsPerYear\" data-toggle=\"tab\">" . GraphObservationsTitle . "</a></li>
 					<li><a href=\"#observationsPerMonth\" data-toggle=\"tab\">" . GraphObservationsMonthTitle . "</a></li>
           <li><a href=\"#objectTypes\" data-toggle=\"tab\">" . GraphObservationsType . "</a></li>
+          <li><a href=\"#countries\" data-toggle=\"tab\">" . GraphObservationsPerCountry . "</a></li>
         </ul>";
 
 	echo "<div id=\"my-tab-content\" class=\"tab-content\">";
@@ -543,6 +544,84 @@ function statistics() {
 
 		</script>";
 	echo "<div id=\"container2\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
+
+	echo "</div>";
+
+  // The tab with the observations per country
+	echo "<div class=\"tab-pane\" id=\"countries\">";
+	// Pie chart
+	$countriesArray = array ();
+
+	// First find a list of all countries
+	$all = array_count_values($objDatabase->selectSingleArray ( "select locations.country from observations join locations on observations.locationid=locations.id", "country"));
+	$allComets = array_count_values($objDatabase->selectSingleArray ( "select locations.country from cometobservations join locations on cometobservations.locationid=locations.id", "country"));
+
+	// We loop over the countries (we merge the deepsky and comet observations)
+	$countryList = array_unique(array_merge(array_keys($all), array_keys($allComets)));
+	foreach ($countryList as $country) {
+		$obs = 0;
+		if (array_key_exists($country, $all)) {
+			$obs += $all[$country];
+		}
+		if (array_key_exists($country, $allComets)) {
+			$obs += $allComets[$country];
+		}
+		$countriesArray [$country] = $obs;
+	}
+
+	echo "<script type=\"text/javascript\">
+
+			var chart;
+			$(document).ready(function() {
+				chart = new Highcharts.Chart({
+					chart: {
+						renderTo: 'containerCountry',
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false
+					},
+					title: {
+						text: \"" . GraphObservationsPerCountry . "\"
+					},
+                subtitle: {
+                  text: '" . GraphSource . $baseURL . "'
+                },
+					tooltip: {
+						formatter: function() {
+							return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage * 100) / 100 + '%';
+						}
+					},
+					plotOptions: {
+						pie: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							showCheckbox: true,
+							dataLabels: {
+								enabled: true,
+								color: '#000000',
+								connectorColor: '#000000',
+								formatter: function() {
+									return '<b>'+ this.point.name +'</b>: '+ this.y;
+								}
+							}
+						}
+					},
+				    series: [{
+						type: 'pie',
+						name: 'Objects seen',
+						data: [";
+
+	foreach ( $countriesArray as $key => $value ) {
+		print "{name: \"" . $key . "\", y: " . $value . "},";
+	}
+	echo "
+						]
+					}]
+				});
+			});
+
+		</script>";
+	echo "<div id=\"containerCountry\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
 
 	echo "</div>";
 

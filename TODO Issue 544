@@ -2,10 +2,11 @@ TODOs issue 544: Best observing month per country
 
 + Add a new entry in detail observer. Best month for observer: Done
 + Add a new entry in detail observer. Observations per country: Done
+
 + Add a new menu entry: STATISTICS
   + Add entries for DeepskyLog: Done
+  + Add Observations per country: Done
   + TODO: Make it possible to see per country, use dropdown menu to change.
 
-+ TODO: Number of observations per country -> Also for observer self
++ TODO: Fix the countries in DeepskyLog
 + TODO: Speed up!
-+ TODO: Number of observations per country of observer.
