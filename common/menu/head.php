@@ -94,6 +94,8 @@ function head() {
 		$TitleText = LangTopObserversMessierHeader2 . " " . $objUtil->checkGetKey ( 'catalog', 'M' ) . " " . LangTopObserversMessierHeader3 . " - " . $objObserver->getObserverProperty ( $objUtil->checkGetKey ( 'user' ), 'firstname' ) . " " . $objObserver->getObserverProperty ( $objUtil->checkGetKey ( 'user' ), 'name' );
 	elseif ($theDispatch == 'detail_observer')
 		$TitleText = LangDetailObserver;
+	elseif ($theDispatch == 'statistics')
+	$TitleText = LangStatistics;	
 	elseif ($includeFile == 'common/content/change_account.php')
 		$TitleText = LangChangeAccountTitle;
 	elseif ($theDispatch == 'detail_eyepiece')
