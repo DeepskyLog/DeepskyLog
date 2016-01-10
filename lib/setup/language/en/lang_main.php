@@ -1,7 +1,7 @@
 <?php //EN
 // This is version 5.0
 define("LangStatistics", "Statistics");
-define("GraphTitleMonths", "Number of observations per month : ");
+define("GraphTitleMonths", "Number of observations per month");
 define("GraphObservationsMonthTitle", "Observations per month");
 define("LangCancelRequestNewPasswordSubject", "A DeepskyLog Change Password Request was canceled");
 define("LangCancelRequestNewPassword1", "A request was canceled from the ip-address ");

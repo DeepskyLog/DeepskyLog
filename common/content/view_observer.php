@@ -499,7 +499,7 @@ function view_observer() {
 	  	          marginBottom: 25
 	  	        },
 	  	        title: {
-	  	          text: \"" . GraphTitleMonths . " " . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\",
+	  	          text: \"" . GraphTitleMonths . ": " . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\",
 	  	          x: -20 //center
 	  	        },
 	  	        subtitle: {
