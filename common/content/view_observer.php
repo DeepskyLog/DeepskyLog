@@ -811,6 +811,84 @@ function view_observer() {
 
 	echo "</div>";
 
+	// The tab with the observations per country
+	echo "<div class=\"tab-pane\" id=\"countries\">";
+	// Pie chart
+	$countriesArray = array ();
+
+	// First find a list of all countries
+	$all = array_count_values($objDatabase->selectSingleArray ( "select locations.country from observations join locations on observations.locationid=locations.id where ((observations.observerid=\"" . $user . "\"))", "country"));
+	$allComets = array_count_values($objDatabase->selectSingleArray ( "select locations.country from cometobservations join locations on cometobservations.locationid=locations.id where ((cometobservations.observerid=\"" . $user . "\"))", "country"));
+
+	// We loop over the countries (we merge the deepsky and comet observations)
+	$countryList = array_unique(array_merge(array_keys($all), array_keys($allComets)));
+	foreach ($countryList as $country) {
+		$obs = 0;
+		if (array_key_exists($country, $all)) {
+			$obs += $all[$country];
+		}
+		if (array_key_exists($country, $allComets)) {
+			$obs += $allComets[$country];
+		}
+		$countriesArray [$country] = $obs;
+	}
+
+	echo "<script type=\"text/javascript\">
+
+			var chart;
+			$(document).ready(function() {
+				chart = new Highcharts.Chart({
+					chart: {
+						renderTo: 'containerCountry',
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false
+					},
+					title: {
+						text: \"" . GraphObservationsPerCountry . ": " . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\"
+					},
+                subtitle: {
+                  text: '" . GraphSource . $baseURL . "'
+                },
+					tooltip: {
+						formatter: function() {
+							return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage * 100) / 100 + '%';
+						}
+					},
+					plotOptions: {
+						pie: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							showCheckbox: true,
+							dataLabels: {
+								enabled: true,
+								color: '#000000',
+								connectorColor: '#000000',
+								formatter: function() {
+									return '<b>'+ this.point.name +'</b>: '+ this.y;
+								}
+							}
+						}
+					},
+				    series: [{
+						type: 'pie',
+						name: 'Objects seen',
+						data: [";
+
+	foreach ( $countriesArray as $key => $value ) {
+		print "{name: \"" . $key . "\", y: " . $value . "},";
+	}
+	echo "
+						]
+					}]
+				});
+			});
+
+		</script>";
+	echo "<div id=\"containerCountry\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
+
+	echo "</div>";
+
 	// Draw the stars
 	echo "<div class=\"tab-pane\" id=\"stars\">";
 
