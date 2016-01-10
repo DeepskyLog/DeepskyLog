@@ -341,7 +341,7 @@ function view_observer() {
 
 	// The observations per year page
 	echo "<div class=\"tab-pane\" id=\"observationsPerYear\">";
-	// GRAFIEK
+	// GRAPH
 	// Check the date of the first observation
 	$currentYear = date ( "Y" );
 	$sql = $objDatabase->selectSingleValue ( "select MIN(date) from observations where observerid=\"" . $user . "\";", "MIN(date)", $currentYear . "0606" );
@@ -437,6 +437,101 @@ function view_observer() {
 
 	// Show graph
 	echo "<div id=\"container\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
+	echo "</div>";
+
+
+	// The observations per month page
+	echo "<div class=\"tab-pane\" id=\"observationsPerMonth\">";
+	// GRAPH
+	// Add the JavaScript to initialize the chart on document ready
+	echo "<script type=\"text/javascript\">
+	  	      var chart;
+	  	      $(document).ready(function() {
+	  	      chart = new Highcharts.Chart({
+	  	        chart: {
+	  	          renderTo: 'container3',
+	  	          defaultSeriesType: 'line',
+	  	          marginRight: 130,
+	  	          marginBottom: 25
+	  	        },
+	  	        title: {
+	  	          text: \"" . GraphTitle1 . " " . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\",
+	  	          x: -20 //center
+	  	        },
+	  	        subtitle: {
+	  	          text: '" . GraphSource . $baseURL . "',
+	  	          x: -20
+	  	        },
+	  	        xAxis: {
+	  	          categories: [";
+
+	for($i = 1; $i <= 12; $i ++) {
+		if ($i != 12) {
+			echo "'" . $i . "', ";
+		} else {
+			echo "'" . $i . "'";
+		}
+	}
+
+	echo "]
+	  	        },
+	  	        yAxis: {
+	  	          title: {
+	  	            text: '" . GraphObservations . "'
+	  	        },
+	  	        plotLines: [{
+	  	          value: 0,
+	  	          width: 1,
+	  	          color: '#808080'
+	  	        }]
+	  	      },
+	  	      tooltip: {
+	  	        formatter: function() {
+	  	                            return '<b>'+ this.series.name +'</b><br/>'+
+	  	        this.x +': '+ this.y;
+	  	        }
+	  	                    },
+	  	                    legend: {
+	  	                    layout: 'vertical',
+	  	                    align: 'right',
+	  	                    verticalAlign: 'top',
+	  	                    x: -10,
+	  	                        y: 100,
+	  	                    borderWidth: 0
+	  	      },
+	  	                    series: [{
+	  	                      name: '" . html_entity_decode ( $deepsky, ENT_QUOTES, "UTF-8" ) . "',
+	  	                        data: [";
+	for($i = 1; $i <= 12; $i ++) {
+		$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where observerid=\"" . $user . "\" and MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+		if ($i != 12) {
+			echo $obs . ", ";
+		} else {
+			echo $obs;
+		}
+	}
+	echo "                    ]
+	  	                      }, {
+                              name: '" . html_entity_decode ( $comets, ENT_QUOTES, "UTF-8" ) . "',
+                                data: [";
+
+	for($i = 1; $i <= 12; $i ++) {
+		$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where observerid=\"" . $user . "\" and MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+		if ($i != 12) {
+			echo $obs . ", ";
+		} else {
+			echo $obs;
+		}
+	}
+
+	echo "                     ] }]
+	  	                      });
+	  	                      });
+
+	  	                      </script>";
+
+	// Show graph
+	echo "<div id=\"container3\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
 	echo "</div>";
 
 	// The tab with the object types
