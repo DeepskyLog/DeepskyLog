@@ -275,7 +275,7 @@ define('LangAtlasGenerationTimes'       ,"Generierung kann etwas dauern (zwische
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Keine Veroffentlichung ohne vorherige Genehmigung - Objekt Datenbank basierend auf Eye&Telescope - Sternen Datenbank basierend auf Tycho 2+ sowie USNO UCAC3 (Zacharia).");
 define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Keine Veroffentlichung ohne vorherige Genehmigung");
 define('LangAtlasDataSource2'           ,"Objekt Datenbank basierend auf Eye&Telescope - Sternen Datenbank basierend auf Tycho 2+ sowie USNO UCAC3 (Zacharia).");
-define("ObjectsSeenGraph"               ,"Objekt Typen gesehen : ");
+define("ObjectsSeenGraph"               ,"Objekt Typen gesehen");
 $REST = "Rest";
 define("GraphObservations"              ,"Beobachtungen");
 define("GraphSource"                    ,"Quelle: ");

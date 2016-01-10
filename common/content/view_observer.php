@@ -762,7 +762,7 @@ function view_observer() {
 						plotShadow: false
 					},
 					title: {
-						text: \"" . ObjectsSeenGraph . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\"
+						text: \"" . ObjectsSeenGraph . ": " . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\"
 					},
                 subtitle: {
                   text: '" . GraphSource . $baseURL . "'

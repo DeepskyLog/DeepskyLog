@@ -276,7 +276,7 @@ define('LangAtlasGenerationTimes'       ,"Les temps de g&eacute;n&eacute;ration 
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Pas de publication sans autorisation - Base de donnees basee sur Eye&Telescope - Base de donnees d'etoiles de Tycho 2+ et USNO UCAC3 (Zacharia).");
 define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Pas de publication sans autorisation");
 define('LangAtlasDataSource2'           ,"Base de donnees basee sur Eye&Telescope - Base de donnees d'etoiles de Tycho 2+ et USNO UCAC3 (Zacharia).");
-define("ObjectsSeenGraph"               ,"Nombre de type d'objet vu:");
+define("ObjectsSeenGraph"               ,"Nombre de type d'objet vu");
 $REST = "Reste";
 define("GraphObservations"              ,"Observations");
 define("GraphSource"                    ,"Source: ");

@@ -270,7 +270,7 @@ define('LangAtlasGenerationTimes'       ,"Generatietijden vari&euml;ren van 20 m
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Geen publicatie zonder schriftelijke toestemming - Object-databank origineel gebaseerd op Eye&Telescope - Ster-databank door Tycho 2+ en USNO UCAC3 (Zacharia).");
 define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Geen publicatie zonder schriftelijke toestemming");
 define('LangAtlasDataSource2'           ,"Object-databank origineel gebaseerd op Eye&Telescope - Ster-databank door Tycho 2+ en USNO UCAC3 (Zacharia).");
-define("ObjectsSeenGraph"               ,"Object types : ");
+define("ObjectsSeenGraph"               ,"Object types");
 $REST = "Rest";
 define("GraphObservations"              ,"Waarnemingen");
 define("GraphInfo"                      ,"Info");
