@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("GraphObservationsPerCountry", "Beobachtungen pro Land");
 define("LangStatistics", "Statistiken");
 define("GraphTitleMonths", "Anzahl der Beobachtungen pro Monat");
 define("GraphObservationsMonthTitle", "Beobachtungen pro Monat");

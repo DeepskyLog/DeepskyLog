@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 5.0
+define("GraphObservationsPerCountry", "Observations per country");
 define("LangStatistics", "Statistics");
 define("GraphTitleMonths", "Number of observations per month");
 define("GraphObservationsMonthTitle", "Observations per month");
