@@ -351,6 +351,34 @@ function view_observer() {
 	echo "<script type=\"text/javascript\">
 
 	  	      var chart;
+						var dataYear = [";
+						for($i = $startYear; $i <= $currentYear; $i ++) {
+							$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where observerid=\"" . $user . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+							if ($i != $currentYear) {
+								echo $obs . ", ";
+							} else {
+								echo $obs;
+							}
+						}
+						echo "];
+						var cometdataYear = [";
+						for($i = $startYear; $i <= $currentYear; $i ++) {
+							$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where observerid=\"" . $user . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+							if ($i != $currentYear) {
+								echo $obs . ", ";
+							} else {
+								echo $obs;
+							}
+						}
+						echo "];
+						var dataYearSum = 0;
+						for (var i=0;i < dataYear.length;i++) {
+    					dataYearSum += dataYear[i];
+						}
+						var cometdataYearSum = 0;
+						for (var i=0;i < cometdataYear.length;i++) {
+    					cometdataYearSum += cometdataYear[i];
+						}
 	  	      $(document).ready(function() {
 	  	      chart = new Highcharts.Chart({
 	  	        chart: {
@@ -393,8 +421,13 @@ function view_observer() {
 	  	      },
 	  	      tooltip: {
 	  	        formatter: function() {
-	  	                            return '<b>'+ this.series.name +'</b><br/>'+
-	  	        this.x +': '+ this.y;
+								if (this.series.name === \"Deepsky\") {
+									return '<b>'+ this.series.name +'</b><br/>'+
+														this.x +': '+ this.y + ' (' + Highcharts.numberFormat(this.y / dataYearSum * 100) + '%)';
+								} else {
+									return '<b>'+ this.series.name +'</b><br/>'+
+														this.x +': '+ this.y + ' (' + Highcharts.numberFormat(this.y / cometdataYearSum * 100) + '%)';
+								}
 	  	        }
 	  	                    },
 	  	                    legend: {
@@ -407,30 +440,10 @@ function view_observer() {
 	  	      },
 	  	                    series: [{
 	  	                      name: '" . html_entity_decode ( $deepsky, ENT_QUOTES, "UTF-8" ) . "',
-	  	                        data: [";
-	for($i = $startYear; $i <= $currentYear; $i ++) {
-		$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where observerid=\"" . $user . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
-		if ($i != $currentYear) {
-			echo $obs . ", ";
-		} else {
-			echo $obs;
-		}
-	}
-	echo "                    ]
+	  	                        data: dataYear
 	  	                      }, {
                               name: '" . html_entity_decode ( $comets, ENT_QUOTES, "UTF-8" ) . "',
-                                data: [";
-
-	for($i = $startYear; $i <= $currentYear; $i ++) {
-		$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where observerid=\"" . $user . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
-		if ($i != $currentYear) {
-			echo $obs . ", ";
-		} else {
-			echo $obs;
-		}
-	}
-
-	echo "                     ] }]
+                                data: cometdataYear }]
 	  	                      });
 	  	                      });
 
