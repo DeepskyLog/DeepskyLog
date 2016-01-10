@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("GraphObservationsMonthTitle", "Waarnemingen per maand");
 define("LangCancelRequestNewPasswordSubject", "Een DeepskyLog aanvraag om je wachtwoord te wijzigen is geannuleerd");
 define("LangCancelRequestNewPassword1", "Een aanvraag om je wachtwoord te wijzigen is geannuleerd vanaf het ip-adres ");
 define("LangCancelRequestNewPassword2", "<br /><br />Als je dit niet hebt aangevraagd, zou het een eerlijke vergissing kunnen zijn of iemand die probeert in te breken in uw DeepskyLog account.<br />");

@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 5.0
+define("GraphObservationsMonthTitle", "Observations per month");
 define("LangCancelRequestNewPasswordSubject", "A DeepskyLog Change Password Request was canceled");
 define("LangCancelRequestNewPassword1", "A request was canceled from the ip-address ");
 define("LangCancelRequestNewPassword2", "<br /><br />If you did not request this, it could be either an honest mistake or someone attempting to break into your DeepskyLog account.<br />");

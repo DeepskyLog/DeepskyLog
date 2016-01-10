@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("GraphObservationsMonthTitle", "Beobachtungen pro Monat");
 define("LangCancelRequestNewPasswordSubject", "Eine DeepskyLog Passwort&auml;nderunganforderung wird abgesagt");
 define("LangCancelRequestNewPassword1", "Eine Passwort&auml;nderunganforderung wird abgesagt von ");
 define("LangCancelRequestNewPassword2", "<br /><br />Wenn Sie dies nicht angefordert haben, k&ouml;nnte es ein ehrlicher Fehler sein oder jemand versucht in Ihr DeepskyLog Konto zu brechen.<br />");

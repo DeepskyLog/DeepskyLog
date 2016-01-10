@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("GraphObservationsMonthTitle", "Observations par mois");
 define("LangCancelRequestNewPasswordSubject", "DeepskyLog Demande de changer le mot de passe a &eacute;t&eacute; annul&eacute;e");
 define("LangCancelRequestNewPassword1", "Demande de changer le mot de passe a &eacute;t&eacute; annul&eacute;e de ");
 define("LangCancelRequestNewPassword2", "<br /><br />Si vous ne l'avez pas demand&eacute; cela, il pourrait &ecirc;tre une erreur honn&ecirc;te ou quelqu'un essaie de p&eacute;n&eacute;trer dans votre compte DeepskyLog.<br />");
