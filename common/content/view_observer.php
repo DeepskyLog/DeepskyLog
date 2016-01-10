@@ -384,6 +384,7 @@ function view_observer() {
 	  	          title: {
 	  	            text: '" . GraphObservations . "'
 	  	        },
+							min: 0,
 	  	        plotLines: [{
 	  	          value: 0,
 	  	          width: 1,
@@ -479,6 +480,7 @@ function view_observer() {
 	  	          title: {
 	  	            text: '" . GraphObservations . "'
 	  	        },
+							min: 0,
 	  	        plotLines: [{
 	  	          value: 0,
 	  	          width: 1,
