@@ -482,7 +482,11 @@ function view_observer() {
 							echo "];
 						var dataSum = 0;
 						for (var i=0;i < data.length;i++) {
-    					dataSum += data[i] + cometdata[i];
+    					dataSum += data[i];
+						}
+						var cometdataSum = 0;
+						for (var i=0;i < data.length;i++) {
+    					cometdataSum += cometdata[i];
 						}
 
 	  	      $(document).ready(function() {
@@ -526,8 +530,13 @@ function view_observer() {
 	  	      },
 	  	      tooltip: {
 	  	        formatter: function() {
-	  	                            return '<b>'+ this.series.name +'</b><br/>'+
-	  	        this.x +': '+ this.y + ' (' + Highcharts.numberFormat(this.y / dataSum * 100) + '%)';
+								if (this.series.name === \"Deepsky\") {
+									return '<b>'+ this.series.name +'</b><br/>'+
+														this.x +': '+ this.y + ' (' + Highcharts.numberFormat(this.y / dataSum * 100) + '%)';
+								} else {
+									return '<b>'+ this.series.name +'</b><br/>'+
+														this.x +': '+ this.y + ' (' + Highcharts.numberFormat(this.y / cometdataSum * 100) + '%)';
+								}
 	  	        }
 	  	                    },
 	  	                    legend: {
