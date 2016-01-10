@@ -2,6 +2,7 @@ TODO issue 544: Best observing month per country
 
 + Add a new entry in detail observer. Best month for observer: Done
 + Add a new menu entry: STATISTICS
-  + Entries: Info, Observations per Year, Observations per Month, Object Types Observed.
   + Add entries for DeepskyLog
   + Make it possible to see per country, use dropdown menu to change.
+
++ TODO: SET THE TITLE OF THE HTML PAGE FOR THE STATISTICS PAGE!!

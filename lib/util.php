@@ -2494,6 +2494,7 @@ class Utils {
 															if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'query_observations', 'deepsky/content/setup_observations_query.php' )))
 																if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'rank_objects', 'deepsky/content/top_objects.php' )))
 																	if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'rank_observers', 'deepsky/content/top_observers.php' )))
+																	if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'statistics', 'common/content/statistics.php' )))
 																		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_lenses', 'common/content/view_lenses.php' )))
 																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAdmin ( 'overview_lenses', 'common/content/overview_lenses.php' )))
 																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_query_objects', 'deepsky/content/selected_objects.php' )))

@@ -279,7 +279,7 @@ define("ObjectsSeenGraph"               ,"Objekt Typen gesehen : ");
 $REST = "Rest";
 define("GraphObservations"              ,"Beobachtungen");
 define("GraphSource"                    ,"Quelle: ");
-define("GraphTitle1"                    ,"Anzahl der Beobachtungen pro Jahr: ");
+define("GraphTitle1"                    ,"Anzahl der Beobachtungen pro Jahr");
 define("GraphInfo"                      ,"Info");
 define("GraphObservationsTitle"         ,"Beobachtungen pro Jahr");
 define("GraphObservationsType"          ,"Object Typen gesehen");

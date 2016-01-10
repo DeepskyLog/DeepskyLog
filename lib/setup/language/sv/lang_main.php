@@ -291,7 +291,7 @@ define("ObjectsSeenGraph"               ,"Object types seen : ");
 $REST = "Rest";
 define("GraphObservations"              ,"Observations");
 define("GraphSource"                    ,"Source: ");
-define("GraphTitle1"                    ,"Number of observations per year : ");
+define("GraphTitle1"                    ,"Number of observations per year");
 define("GraphInfo"                      ,"Info");
 define("GraphObservationsTitle"         ,"Observations per year");
 define("GraphObservationsType"          ,"Object types observed");
