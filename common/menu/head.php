@@ -30,6 +30,8 @@ function head() {
 	echo "<script src=\"" . $baseURL . "lib/javascript/bootstrap-tour.min.js\"></script>";
 	echo "<link href=\"styles/bootstrap.min.css\" rel=\"stylesheet\">";
 	echo "<link href=\"styles/bootstrap-tour.min.css\" rel=\"stylesheet\">";
+	echo "<link href=\"styles/select2.min.css\" rel=\"stylesheet\">";
+	echo "<script src=\"" . $baseURL . "lib/javascript/select2.min.js\"></script>";
 	echo "<link rel=\"stylesheet\" href=\"styles/bootstrap-theme.min.css\">";
 	echo "<script src=\"lib/javascript/jquery.tablesorter.min.js\"></script>
         <script src=\"lib/javascript/jquery.tablesorter.widgets.min.js\"></script>
@@ -95,7 +97,7 @@ function head() {
 	elseif ($theDispatch == 'detail_observer')
 		$TitleText = LangDetailObserver;
 	elseif ($theDispatch == 'statistics')
-	$TitleText = LangStatistics;	
+	$TitleText = LangStatistics;
 	elseif ($includeFile == 'common/content/change_account.php')
 		$TitleText = LangChangeAccountTitle;
 	elseif ($theDispatch == 'detail_eyepiece')

@@ -50,18 +50,19 @@ function statistics() {
 	ksort($countriesArray);
 
 	// TODO: The following line just breaks all the charts...
-	// echo "<script>
-	// 				$(document).ready(function() {
-  // 					$(\".countrySelection\").select2();
-	// 				});
-	// 			</script>";
+	echo "<script>
+					$(document).ready(function() {
+  					$(\".countrySelection\").select2();
+					});
+				</script>";
 
-	echo '<form class="form-horizontal">
+	echo '<form action="' . $baseURL . 'index.php" method="post" class="form-horizontal">
+					<input type="hidden" name="indexAction" value="statistics" />
   				<div class="form-group">
     				<label class="col-sm-2 control-label">' . LangSelectCountry . '</label>
 						<div class="col-sm-10">';
 
-	echo "			<select class=\"form-control countrySelection\">";
+	echo "			<select  name=\"country\" class=\"countrySelection\" onclick=\"submit();\" style=\"width: 50%\">";
 	echo "				<option value=\"All\">All</option>";
 	echo "				<option disabled>──────────</option>";
 
