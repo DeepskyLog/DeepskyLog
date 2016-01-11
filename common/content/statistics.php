@@ -19,17 +19,38 @@ function statistics() {
 	$totalCometYearObservations = $objCometObservation->getNumberOfObservationsThisYear ();
 	$totalCometobjects = $objCometObservation->getNumberOfDifferentObjects ();
 
+	if (strcmp ($selectedCountry, "All") != 0) {
+		$totalCountryDSObservations = $objObservation->getNumberOfDsObservations ( $selectedCountry );
+		$totalCountryDSYearObservations = $objObservation->getObservationsLastYear ( '%' , $selectedCountry );
+		$totalCountryDSobjects = $objObservation->getNumberOfDifferentObservedDSObjects ( $selectedCountry );
+		$totalCountryCometObservations = $objCometObservation->getNumberOfObservations ( $selectedCountry );
+		$totalCountryCometYearObservations = $objCometObservation->getNumberOfObservationsThisYear ( $selectedCountry );
+		$totalCountryCometobjects = $objCometObservation->getNumberOfDifferentObjects ( $selectedCountry );
+	}
+
 	for($i = 0; $i < count ( $modules ); $i ++) {
 		if (strcmp ( ${$modules [$i]}, $deepsky ) == 0) {
 			$key = $i;
-			$information [$i] [0] = $totalDSObservations;
-			$information [$i] [1] = $totalDSYearObservations;
-			$information [$i] [2] = $totalDSobjects;
+			if (strcmp ($selectedCountry, "All") == 0) {
+				$information [$i] [0] = $totalDSObservations;
+				$information [$i] [1] = $totalDSYearObservations;
+				$information [$i] [2] = $totalDSobjects;
+			} else {
+				$information [$i] [0] = $totalCountryDSObservations . " / " . $totalDSObservations . "&nbsp;(" . sprintf ( "%.2f", ($totalCountryDSObservations / $totalDSObservations) * 100 ) . "%)";
+				$information [$i] [1] = $totalCountryDSYearObservations . " / " . $totalDSYearObservations . "&nbsp;(" . sprintf ( "%.2f", $totalCountryDSYearObservations / $totalDSYearObservations * 100 ) . "%)";
+				$information [$i] [2] = $totalCountryDSobjects . " / " . $totalDSobjects . "&nbsp;(" . sprintf ( "%.2f", $totalCountryDSobjects / $totalDSobjects * 100 ) . "%)";
+			}
 		}
 		if (strcmp ( ${$modules [$i]}, $comets ) == 0) {
-			$information [$i] [0] = $totalCometObservations;
-			$information [$i] [1] = $totalCometYearObservations;
-			$information [$i] [2] = $totalCometobjects;
+			if (strcmp ($selectedCountry, "All") == 0) {
+				$information [$i] [0] = $totalCometObservations;
+				$information [$i] [1] = $totalCometYearObservations;
+				$information [$i] [2] = $totalCometobjects;
+			} else {
+				$information [$i] [0] = $totalCountryCometObservations . " / " . $totalCometObservations . " (" . sprintf ( "%.2f", $totalCountryCometObservations / $totalCometObservations * 100 ) . "%)";
+				$information [$i] [1] = $totalCountryCometYearObservations . " / " . $totalCometYearObservations . "&nbsp;(" . sprintf ( "%.2f", $totalCountryCometYearObservations / ($totalCometYearObservations ? $totalCometYearObservations : 1) * 100 ) . "%)";
+				$information [$i] [2] = $totalCountryCometobjects . " / " . $totalCometobjects . " (" . sprintf ( "%.2f", $totalCountryCometobjects / $totalCometobjects * 100 ) . "%)";
+			}
 		}
 	}
 	echo "<div>";
@@ -97,6 +118,7 @@ function statistics() {
 
 	echo "<div id=\"my-tab-content\" class=\"tab-content\">";
 	echo "<div class=\"tab-pane active\" id=\"info\">";
+
 	echo "<table class=\"table table-striped\">";
 	echo " <tr>";
 	echo "  <th></th>";

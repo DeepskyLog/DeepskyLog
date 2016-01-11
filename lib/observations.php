@@ -410,20 +410,30 @@ class Observations {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT observations.id FROM observations WHERE objectname=\"" . $object . "\" and observerid=\"" . $userid . "\" AND id!=\"" . $notobservation . "\" ORDER BY id DESC", 'id' );
 	}
-	public function getNumberOfDifferentObservedDSObjects() // Returns the number of different objects observed
+	public function getNumberOfDifferentObservedDSObjects( $country = "" ) // Returns the number of different objects observed
 {
 		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt' );
+
+		if (strcmp($country, "") == 0) {
+			return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt' );
+		} else {
+			return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations JOIN locations ON observations.locationid=locations.id WHERE observations.visibility != 7 and locations.country=\"" . $country . "\"", 'Cnt', 0 );
+		}
+
 	}
 	public function getNumberOfDsDrawings() // returns the total number of observations
 {
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 AND hasDrawing=1", 'Cnt', 0 );
 	}
-	public function getNumberOfDsObservations() // returns the total number of observations
+	public function getNumberOfDsObservations( $country="" ) // returns the total number of observations for a country
 {
 		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt', 0 );
+		if (strcmp($country, "") == 0) {
+			return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt', 0 );
+		} else {
+			return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations JOIN locations ON observations.locationid=locations.id WHERE visibility != 7 and locations.country=\"" . $country . "\"", 'Cnt', 0 );
+		}
 	}
 	public function getNumberOfObjects($id) // return the number of different objects seen by the observer
 {
@@ -683,10 +693,15 @@ class Observations {
 		$t = getdate ();
 		return $objDatabase->selectSingleValue ( "SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"" . $id . "\" AND observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != 7 AND hasDrawing=1 ", 'Cnt', 0 );
 	}
-	public function getObservationsLastYear($id) {
+	public function getObservationsLastYear($id, $country = "") {
 		global $objDatabase;
 		$t = getdate ();
-		return $objDatabase->selectSingleValue ( "SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"" . $id . "\" AND observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != 7 ", 'Cnt', 0 );
+
+		if (strcmp($country, "") == 0) {
+			return $objDatabase->selectSingleValue ( "SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"" . $id . "\" AND observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != 7 ", 'Cnt', 0 );
+		} else {
+			return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations JOIN locations ON observations.locationid=locations.id WHERE observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != 7 and locations.country=\"" . $country . "\"", 'Cnt', 0 );
+		}
 	}
 	public function getObservationsUserObject($userid, $object) {
 		global $objDatabase;
