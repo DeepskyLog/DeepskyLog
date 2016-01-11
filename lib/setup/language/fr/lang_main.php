@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("LangSelectCountry", "Choisissez le pays");
 define("LangStatistics", "Statistiques");
 define("GraphObservationsPerCountry", "Observations par pays");
 define("GraphTitleMonths", "Nombre d'observations par mois");

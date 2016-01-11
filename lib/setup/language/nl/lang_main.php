@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangSelectCountry", "Kies land");
 define("GraphObservationsPerCountry", "Waarnemingen per land");
 define("LangStatistics", "Statistieken");
 define("GraphTitleMonths", "Aantal waarnemingen per maand");

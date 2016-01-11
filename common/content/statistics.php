@@ -56,16 +56,25 @@ function statistics() {
 	// 				});
 	// 			</script>";
 
-	echo "<select class=\"form-control countrySelection\">";
-	echo "<option value=\"All\">All</option>";
-	echo "<option disabled>──────────</option>";
+	echo '<form class="form-horizontal">
+  				<div class="form-group">
+    				<label class="col-sm-2 control-label">' . LangSelectCountry . '</label>
+						<div class="col-sm-10">';
+
+	echo "			<select class=\"form-control countrySelection\">";
+	echo "				<option value=\"All\">All</option>";
+	echo "				<option disabled>──────────</option>";
 
 	foreach ( $countriesArray as $key => $value ) {
 		if ($key != "") {
 			echo "<option value=\"" . $key . "\">" . $key . "</option>";
 		}
 	}
-	echo "</select><br />";
+	echo "</select>";
+	echo '		</div>
+					</div>
+				</form>
+				<br />';
 
 	// We make some tabs.
 	echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">
