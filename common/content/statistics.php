@@ -48,14 +48,22 @@ function statistics() {
 		$countriesArray [$country] = $obs;
 	}
 	ksort($countriesArray);
+
+	// TODO: The following line just breaks all the charts...
 	// echo "<script>
 	// 				$(document).ready(function() {
   // 					$(\".countrySelection\").select2();
 	// 				});
 	// 			</script>";
+
 	echo "<select class=\"form-control countrySelection\">";
+	echo "<option value=\"All\">All</option>";
+	echo "<option disabled>──────────</option>";
+
 	foreach ( $countriesArray as $key => $value ) {
-		echo "<option value=\"" . $key . "\">" . $key . "</option>";
+		if ($key != "") {
+			echo "<option value=\"" . $key . "\">" . $key . "</option>";
+		}
 	}
 	echo "</select><br />";
 
