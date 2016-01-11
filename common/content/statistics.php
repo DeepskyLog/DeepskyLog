@@ -47,12 +47,17 @@ function statistics() {
 		}
 		$countriesArray [$country] = $obs;
 	}
-
+	ksort($countriesArray);
+	// echo "<script>
+	// 				$(document).ready(function() {
+  // 					$(\".countrySelection\").select2();
+	// 				});
+	// 			</script>";
 	echo "<select class=\"form-control countrySelection\">";
 	foreach ( $countriesArray as $key => $value ) {
 		echo "<option value=\"" . $key . "\">" . $key . "</option>";
 	}
-	echo "</select>";
+	echo "</select><br />";
 
 	// We make some tabs.
 	echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">
@@ -619,7 +624,18 @@ function statistics() {
 						name: 'Objects seen',
 						data: [";
 
+	// We only want to see the countries with at least 1% of the observations
+	$rest = 0;
 	foreach ( $countriesArray as $key => $value ) {
+		if (($value / $all) >= 0.01) {
+			$correctedCountries [$key] = $value;
+		} else {
+			$rest += $value;
+		}
+	}
+	$correctedCountries["Rest"] = $rest;
+
+	foreach ( $correctedCountries as $key => $value ) {
 		print "{name: \"" . $key . "\", y: " . $value . "},";
 	}
 	echo "
