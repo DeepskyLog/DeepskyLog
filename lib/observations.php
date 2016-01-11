@@ -419,7 +419,6 @@ class Observations {
 		} else {
 			return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations JOIN locations ON observations.locationid=locations.id WHERE observations.visibility != 7 and locations.country=\"" . $country . "\"", 'Cnt', 0 );
 		}
-
 	}
 	public function getNumberOfDsDrawings() // returns the total number of observations
 {
