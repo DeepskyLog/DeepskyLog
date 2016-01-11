@@ -7,7 +7,6 @@ else
 	statistics ();
 function statistics() {
 	global $modules, $deepsky, $comets, $baseURL, $instDir, $loggedUser, $objDatabase, $objAccomplishments, $objInstrument, $objPresentations, $objObservation, $objUtil, $objCometObservation, $objObserver, $objLocation;
-	$time_start = microtime(true);
 	if (array_key_exists("country", $_POST)) {
 		$selectedCountry = $_POST["country"];
 	} else {
@@ -422,30 +421,25 @@ function statistics() {
 	// Show graph
 	echo "<div id=\"container3\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
 	echo "</div>";
-	echo "<br />Third tab created: " . (microtime(true) - $time_start);
 
 	// The tab with the object types
 	echo "<div class=\"tab-pane\" id=\"objectTypes\">";
 	// Pie chart
+	if (strcmp($selectedCountry, "All") == 0) {
+		$deepskyobservations = $objDatabase->selectKeyValueArray ("select objects.type,count(*) from observations JOIN objects on observations.objectname=objects.name group by objects.type;", "type", "count(*)");
+		$cometobservations = count ( $objDatabase->selectRecordsetArray ( "select * from cometobservations" ) );
+	} else {
+		$deepskyobservations = $objDatabase->selectKeyValueArray ("select objects.type,count(*) from observations JOIN objects on observations.objectname=objects.name JOIN locations on observations.locationid=locations.id where locations.country=\"" . $selectedCountry . "\" group by objects.type;", "type", "count(*)");
+		$cometobservations = count ( $objDatabase->selectRecordsetArray ( "select * from cometobservations JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\"" ) );
+	}
 	$objectsArray = array ();
 	$colors = Array ();
 
-	if (strcmp($selectedCountry, "All") == 0) {
-		$all = count ( $objDatabase->selectRecordsetArray ( "select * from observations" ) );
-	} else {
-		$all = count ( $objDatabase->selectRecordsetArray ( "select * from observations JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\"" ) );
-	}
+	$all = array_sum($deepskyobservations) + $cometobservations;
 	if ($all == 0) {
 		$all = 1;
 	}
 	$rest = 0;
-
-	if (strcmp($selectedCountry, "All") == 0) {
-		$cometobservations = count ( $objDatabase->selectRecordsetArray ( "select * from cometobservations" ) );
-	} else {
-		$cometobservations = count ( $objDatabase->selectRecordsetArray ( "select * from cometobservations JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\"" ) );
-	}
-	$all += $cometobservations;
 
 	if (($cometobservations / $all) >= 0.01) {
 		$objectsArray ["comets"] = $cometobservations;
@@ -454,10 +448,10 @@ function statistics() {
 	}
 	$colors ["comets"] = "#4572A7";
 
-	$aster = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"ASTER\"" ) );
-	$aster += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA8STAR\"" ) );
-	$aster += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA4STAR\"" ) );
-	$aster += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA3STAR\"" ) );
+	$aster = $deepskyobservations["ASTER"];
+	$aster += $deepskyobservations["AA8STAR"];
+	$aster += $deepskyobservations["AA4STAR"];
+	$aster += $deepskyobservations["AA3STAR"];
 
 	if (($aster / $all) >= 0.01) {
 		$objectsArray ["ASTER"] = $aster;
@@ -466,7 +460,7 @@ function statistics() {
 	}
 	$colors ["ASTER"] = "#AA4643";
 
-	$brtnb = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"BRTNB\"" ) );
+	$brtnb = $deepskyobservations["BRTNB"];
 
 	if (($brtnb / $all) >= 0.01) {
 		$objectsArray ["BRTNB"] = $brtnb;
@@ -475,8 +469,8 @@ function statistics() {
 	}
 	$colors ["BRTNB"] = "#89A54E";
 
-	$ds = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"DS\"" ) );
-	$ds += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA2STAR\"" ) );
+	$ds = $deepskyobservations["DS"];
+	$ds += $deepskyobservations["AA2STAR"];
 
 	if (($ds / $all) >= 0.01) {
 		$objectsArray ["DS"] = $ds;
@@ -485,7 +479,7 @@ function statistics() {
 	}
 	$colors ["DS"] = "#80699B";
 
-	$star = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA1STAR\"" ) );
+	$star = $deepskyobservations["AA1STAR"];
 
 	if (($star / $all) >= 0.01) {
 		$objectsArray ["AA1STAR"] = $star;
@@ -494,7 +488,7 @@ function statistics() {
 	}
 	$colors ["AA1STAR"] = "#3D96AE";
 
-	$drknb = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"DRKNB\"" ) );
+	$drknb = $deepskyobservations["DRKNB"];
 
 	if (($drknb / $all) >= 0.01) {
 		$objectsArray ["DRKNB"] = $drknb;
@@ -503,7 +497,7 @@ function statistics() {
 	}
 	$colors ["DRKNB"] = "#DB843D";
 
-	$galcl = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"GALCL\"" ) );
+	$galcl = $deepskyobservations["GALCL"];
 
 	if (($galcl / $all) >= 0.01) {
 		$objectsArray ["GALCL"] = $galcl;
@@ -512,7 +506,7 @@ function statistics() {
 	}
 	$colors ["GALCL"] = "#92A8CD";
 
-	$galxy = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"GALXY\"" ) );
+	$galxy = $deepskyobservations["GALXY"];
 
 	if (($galxy / $all) >= 0.01) {
 		$objectsArray ["GALXY"] = $galxy;
@@ -521,7 +515,7 @@ function statistics() {
 	}
 	$colors ["GALXY"] = "#68302F";
 
-	$plnnb = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"PLNNB\"" ) );
+	$plnnb = $deepskyobservations["PLNNB"];
 
 	if (($plnnb / $all) >= 0.01) {
 		$objectsArray ["PLNNB"] = $plnnb;
@@ -530,8 +524,8 @@ function statistics() {
 	}
 	$colors ["PLNNB"] = "#A47D7C";
 
-	$opncl = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"OPNCL\"" ) );
-	$opncl += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"CLANB\"" ) );
+	$opncl = $deepskyobservations["OPNCL"];
+	$opncl += $deepskyobservations["CLANB"];
 
 	if (($opncl / $all) >= 0.01) {
 		$objectsArray ["OPNCL"] = $opncl;
@@ -540,7 +534,7 @@ function statistics() {
 	}
 	$colors ["OPNCL"] = "#B5CA92";
 
-	$glocl = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"GLOCL\"" ) );
+	$glocl = $deepskyobservations["GLOCL"];
 
 	if (($glocl / $all) >= 0.01) {
 		$objectsArray ["GLOCL"] = $glocl;
@@ -549,9 +543,9 @@ function statistics() {
 	}
 	$colors ["GLOCL"] = "#00FF00";
 
-	$eminb = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"EMINB\"" ) );
-	$eminb += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"ENRNN\"" ) );
-	$eminb += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"ENSTR\"" ) );
+	$eminb = $deepskyobservations["EMINB"];
+	$eminb += $deepskyobservations["ENRNN"];
+	$eminb += $deepskyobservations["ENSTR"];
 
 	if (($eminb / $all) >= 0.01) {
 		$objectsArray ["EMINB"] = $eminb;
@@ -560,9 +554,9 @@ function statistics() {
 	}
 	$colors ["EMINB"] = "#C0FFC0";
 
-	$refnb = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"REFNB\"" ) );
-	$refnb += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"RNHII\"" ) );
-	$refnb += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"HII\"" ) );
+	$refnb = $deepskyobservations["REFNB"];
+	$refnb += $deepskyobservations["RNHII"];
+	$refnb += $deepskyobservations["HII"];
 
 	if (($refnb / $all) >= 0.01) {
 		$objectsArray ["REFNB"] = $refnb;
@@ -571,7 +565,7 @@ function statistics() {
 	}
 	$colors ["REFNB"] = "#0000C0";
 
-	$nonex = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"NONEX\"" ) );
+	$nonex = $deepskyobservations["NONEX"];
 
 	if (($nonex / $all) >= 0.01) {
 		$objectsArray ["NONEX"] = $nonex;
@@ -580,7 +574,7 @@ function statistics() {
 	}
 	$colors ["NONEX"] = "#C0C0FF";
 
-	$snrem = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"SNREM\"" ) );
+	$snrem = $deepskyobservations["SNREM"];
 
 	if (($snrem / $all) >= 0.01) {
 		$objectsArray ["SNREM"] = $snrem;
@@ -589,7 +583,7 @@ function statistics() {
 	}
 	$colors ["SNREM"] = "#808000";
 
-	$quasr = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"QUASR\"" ) );
+	$quasr = $deepskyobservations["QUASR"];
 
 	if (($quasr / $all) >= 0.01) {
 		$objectsArray ["QUASR"] = $quasr;
@@ -598,7 +592,7 @@ function statistics() {
 	}
 	$colors ["QUASR"] = "#C0C000";
 
-	$wrneb = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"WRNEB\"" ) );
+	$wrneb = $deepskyobservations["WRNEB"];
 
 	if (($wrneb / $all) >= 0.01) {
 		$objectsArray ["WRNEB"] = $wrneb;
@@ -668,7 +662,6 @@ function statistics() {
 	echo "<div id=\"container2\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
 
 	echo "</div>";
-	echo "<br />Fourth tab created: " . (microtime(true) - $time_start);
 
 	if (strcmp($selectedCountry, "All") == 0) {
 		// The tab with the observations per country
@@ -742,7 +735,6 @@ function statistics() {
 
 	echo "</div>";
 }
-echo "<br />Last tab created: " . (microtime(true) - $time_start);
 	echo "</div>";
 	echo "</div>";
 }
