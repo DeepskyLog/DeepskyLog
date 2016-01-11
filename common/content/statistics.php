@@ -76,12 +76,7 @@ function statistics() {
 	ksort($countriesArray);
 
 	// Use select2 to let the user type in the drop down.
-	echo "<script>
-					$(document).ready(function() {
-  					$(\".countrySelection\").select2();
-					});
-				</script>";
-	echo '<form action="' . $baseURL . 'index.php" method="post" class="form-horizontal">
+	echo '<br /><br /><form action="' . $baseURL . 'index.php" method="post" class="form-horizontal">
 					<input type="hidden" name="indexAction" value="statistics" />
   				<div class="form-group">
     				<label class="col-sm-2 control-label">' . LangSelectCountry . '</label>
@@ -171,7 +166,13 @@ function statistics() {
 		$sql = $objDatabase->selectKeyValueArray ("select YEAR(date),count(*) from observations JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" group by YEAR(date)", "YEAR(date)", "count(*)");
 		$sql2 = $objDatabase->selectKeyValueArray ( "select YEAR(date),count(*) from cometobservations JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" group by YEAR(date);", "YEAR(date)", "count(*)" );
 	}
-	$startYear = min ( [min(array_keys($sql)), min(array_keys ( $sql2 ) )] );
+	if (sizeof($sql) == 0) {
+		$startYear = min(array_keys($sql2));
+	} else if (sizeof($sql2 == 0)) {
+		$startYear = min(array_keys($sql));
+	} else {
+		$startYear = min ( [min(array_keys($sql)), min(array_keys ( $sql2 ) )] );
+	}
 
 	// Add the JavaScript to initialize the chart on document ready
 	echo "<script type=\"text/javascript\">
@@ -737,5 +738,10 @@ function statistics() {
 }
 	echo "</div>";
 	echo "</div>";
+	echo "<script>
+					$(document).ready(function() {
+  					$(\".countrySelection\").select2();
+					});
+				</script>";
 }
 ?>
