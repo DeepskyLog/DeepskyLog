@@ -288,21 +288,27 @@ function statistics() {
 	// Show graph
 	echo "<div id=\"container\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
 	echo "</div>";
-	echo "<br />Second tab created: " . (microtime(true) - $time_start);
-
 
 	// The observations per month page
 	echo "<div class=\"tab-pane\" id=\"observationsPerMonth\">";
 	// GRAPH
 	// Add the JavaScript to initialize the chart on document ready
+	if (strcmp($selectedCountry, "All") == 0) {
+		$sql = $objDatabase->selectKeyValueArray ("select MONTH(date),count(*) from observations group by MONTH(date)", "MONTH(date)", "count(*)");
+		$sql2 = $objDatabase->selectKeyValueArray ( "select MONTH(date),count(*) from cometobservations group by MONTH(date);", "MONTH(date)", "count(*)" );
+	} else {
+		$sql = $objDatabase->selectKeyValueArray ("select MONTH(date),count(*) from observations JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" group by MONTH(date)", "MONTH(date)", "count(*)");
+		$sql2 = $objDatabase->selectKeyValueArray ( "select MONTH(date),count(*) from cometobservations JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" group by MONTH(date);", "MONTH(date)", "count(*)" );
+	}
 	echo "<script type=\"text/javascript\">
 	  	      var chart;
 						var data = [";
+
 						for($i = 1; $i <= 12; $i ++) {
-							if (strcmp($selectedCountry, "All") == 0) {
-								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+							if (array_key_exists($i, $sql)) {
+								$obs = $sql[$i];
 							} else {
-								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations  JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" AND MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+								$obs = 0;
 							}
 							if ($i != 12) {
 								echo $obs . ", ";
@@ -313,10 +319,10 @@ function statistics() {
 						echo "];
 						var cometdata = [";
 							for($i = 1; $i <= 12; $i ++) {
-								if (strcmp($selectedCountry, "All") == 0) {
-									$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+								if (array_key_exists($i, $sql2)) {
+									$obs = $sql2[$i];
 								} else {
-									$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations  JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" AND MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+									$obs = 0;
 								}
 								if ($i != 12) {
 									echo $obs . ", ";

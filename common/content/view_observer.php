@@ -468,11 +468,18 @@ function view_observer() {
 	echo "<div class=\"tab-pane\" id=\"observationsPerMonth\">";
 	// GRAPH
 	// Add the JavaScript to initialize the chart on document ready
+	$sql = $objDatabase->selectKeyValueArray ("select MONTH(date),count(*) from observations where observerid=\"" . $user . "\" group by MONTH(date)", "MONTH(date)", "count(*)");
+	$sql2 = $objDatabase->selectKeyValueArray ( "select MONTH(date),count(*) from cometobservations where observerid=\"" . $user . "\" group by MONTH(date);", "MONTH(date)", "count(*)" );
+
 	echo "<script type=\"text/javascript\">
 	  	      var chart;
 						var data = [";
 						for($i = 1; $i <= 12; $i ++) {
-							$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where observerid=\"" . $user . "\" and MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+							if (array_key_exists($i, $sql)) {
+								$obs = $sql[$i];
+							} else {
+								$obs = 0;
+							}
 							if ($i != 12) {
 								echo $obs . ", ";
 							} else {
@@ -482,7 +489,11 @@ function view_observer() {
 						echo "];
 						var cometdata = [";
 							for($i = 1; $i <= 12; $i ++) {
-								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where observerid=\"" . $user . "\" and MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+								if (array_key_exists($i, $sql2)) {
+									$obs = $sql2[$i];
+								} else {
+									$obs = 0;
+								}
 								if ($i != 12) {
 									echo $obs . ", ";
 								} else {
