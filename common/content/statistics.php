@@ -193,7 +193,7 @@ function statistics() {
 							if (strcmp($selectedCountry, "") == 0) {
 								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
 							} else {
-								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations  JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" AND date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );								
+								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations  JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" AND date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
 							}
 							if ($i != $currentYear) {
 								echo $obs . ", ";
@@ -294,7 +294,11 @@ function statistics() {
 	  	      var chart;
 						var data = [";
 						for($i = 1; $i <= 12; $i ++) {
-							$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+							if (strcmp($selectedCountry, "") == 0) {
+								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+							} else {
+								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations  JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" AND MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+							}
 							if ($i != 12) {
 								echo $obs . ", ";
 							} else {
@@ -304,7 +308,11 @@ function statistics() {
 						echo "];
 						var cometdata = [";
 							for($i = 1; $i <= 12; $i ++) {
-								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+								if (strcmp($selectedCountry, "") == 0) {
+									$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+								} else {
+									$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations  JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" AND MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
+								}
 								if ($i != 12) {
 									echo $obs . ", ";
 								} else {
