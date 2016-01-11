@@ -7,6 +7,11 @@ else
 	statistics ();
 function statistics() {
 	global $modules, $deepsky, $comets, $baseURL, $instDir, $loggedUser, $objDatabase, $objAccomplishments, $objInstrument, $objPresentations, $objObservation, $objUtil, $objCometObservation, $objObserver, $objLocation;
+	if (array_key_exists("country", $_POST)) {
+		$selectedCountry = $_POST["country"];
+	} else {
+		$selectedCountry = "All";
+	}
 	$totalDSObservations = $objObservation->getNumberOfDsObservations ();
 	$totalDSYearObservations = $objObservation->getObservationsLastYear ( '%' );
 	$totalDSobjects = $objObservation->getNumberOfDifferentObservedDSObjects ();
@@ -49,26 +54,30 @@ function statistics() {
 	}
 	ksort($countriesArray);
 
-	// TODO: The following line just breaks all the charts...
+	// Use select2 to let the user type in the drop down.
 	echo "<script>
 					$(document).ready(function() {
   					$(\".countrySelection\").select2();
 					});
 				</script>";
-
 	echo '<form action="' . $baseURL . 'index.php" method="post" class="form-horizontal">
 					<input type="hidden" name="indexAction" value="statistics" />
   				<div class="form-group">
     				<label class="col-sm-2 control-label">' . LangSelectCountry . '</label>
 						<div class="col-sm-10">';
 
-	echo "			<select  name=\"country\" class=\"countrySelection\" onclick=\"submit();\" style=\"width: 50%\">";
+	echo "			<select  name=\"country\" class=\"countrySelection\" onchange=\"submit();\" style=\"width: 50%\">";
 	echo "				<option value=\"All\">All</option>";
 	echo "				<option disabled>──────────</option>";
 
 	foreach ( $countriesArray as $key => $value ) {
 		if ($key != "") {
-			echo "<option value=\"" . $key . "\">" . $key . "</option>";
+			if ($key == $selectedCountry) {
+				$select = " selected";
+			} else {
+				$select = "";
+			}
+			echo "<option" . $select . " value=\"" . $key . "\">" . $key . "</option>";
 		}
 	}
 	echo "</select>";
