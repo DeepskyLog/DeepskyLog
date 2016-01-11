@@ -7,6 +7,7 @@ else
 	statistics ();
 function statistics() {
 	global $modules, $deepsky, $comets, $baseURL, $instDir, $loggedUser, $objDatabase, $objAccomplishments, $objInstrument, $objPresentations, $objObservation, $objUtil, $objCometObservation, $objObserver, $objLocation;
+	$time_start = microtime(true);
 	if (array_key_exists("country", $_POST)) {
 		$selectedCountry = $_POST["country"];
 	} else {
@@ -165,23 +166,24 @@ function statistics() {
 	$currentYear = date ( "Y" );
 
 	if (strcmp($selectedCountry, "All") == 0) {
-		$sql = $objDatabase->selectSingleValue ( "select MIN(date) from observations;", "MIN(date)", $currentYear . "0606" );
-		$sql2 = $objDatabase->selectSingleValue ( "select MIN(date) from cometobservations;", "MIN(date)", $currentYear . "0606" );
+		$sql = $objDatabase->selectKeyValueArray ("select YEAR(date),count(*) from observations group by YEAR(date)", "YEAR(date)", "count(*)");
+		$sql2 = $objDatabase->selectKeyValueArray ( "select YEAR(date),count(*) from cometobservations group by YEAR(date);", "YEAR(date)", "count(*)" );
 	} else {
-		$sql = $objDatabase->selectSingleValue ( "select MIN(date) from observations  JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\";", "MIN(date)", $currentYear . "0606" );
-		$sql2 = $objDatabase->selectSingleValue ( "select MIN(date) from cometobservations  JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\";", "MIN(date)", $currentYear . "0606" );
+		$sql = $objDatabase->selectKeyValueArray ("select YEAR(date),count(*) from observations JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" group by YEAR(date)", "YEAR(date)", "count(*)");
+		$sql2 = $objDatabase->selectKeyValueArray ( "select YEAR(date),count(*) from cometobservations JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" group by YEAR(date);", "YEAR(date)", "count(*)" );
 	}
-	$startYear = min ( floor ( $sql / 10000 ), floor ( $sql2 / 10000 ) );
+	$startYear = min ( [min(array_keys($sql)), min(array_keys ( $sql2 ) )] );
+
 	// Add the JavaScript to initialize the chart on document ready
 	echo "<script type=\"text/javascript\">
 
 	  	      var chart;
 						var dataYear = [";
 						for($i = $startYear; $i <= $currentYear; $i ++) {
-							if (strcmp($selectedCountry, "All") == 0) {
-								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+							if (array_key_exists($i, $sql)) {
+								$obs = $sql[$i];
 							} else {
-								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations  JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+								$obs = 0;
 							}
 							if ($i != $currentYear) {
 								echo $obs . ", ";
@@ -192,10 +194,10 @@ function statistics() {
 						echo "];
 						var cometdataYear = [";
 						for($i = $startYear; $i <= $currentYear; $i ++) {
-							if (strcmp($selectedCountry, "All") == 0) {
-								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+							if (array_key_exists($i, $sql2)) {
+								$obs = $sql2[$i];
 							} else {
-								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations  JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" AND date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+								$obs = 0;
 							}
 							if ($i != $currentYear) {
 								echo $obs . ", ";
@@ -286,6 +288,7 @@ function statistics() {
 	// Show graph
 	echo "<div id=\"container\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
 	echo "</div>";
+	echo "<br />Second tab created: " . (microtime(true) - $time_start);
 
 
 	// The observations per month page
@@ -310,7 +313,7 @@ function statistics() {
 						echo "];
 						var cometdata = [";
 							for($i = 1; $i <= 12; $i ++) {
-								if (strcmp($selectedCountry, "") == 0) {
+								if (strcmp($selectedCountry, "All") == 0) {
 									$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
 								} else {
 									$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations  JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" AND MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
@@ -413,6 +416,7 @@ function statistics() {
 	// Show graph
 	echo "<div id=\"container3\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
 	echo "</div>";
+	echo "<br />Third tab created: " . (microtime(true) - $time_start);
 
 	// The tab with the object types
 	echo "<div class=\"tab-pane\" id=\"objectTypes\">";
@@ -420,7 +424,7 @@ function statistics() {
 	$objectsArray = array ();
 	$colors = Array ();
 
-	if (strcmp($selectedCountry, "") == 0) {
+	if (strcmp($selectedCountry, "All") == 0) {
 		$all = count ( $objDatabase->selectRecordsetArray ( "select * from observations" ) );
 	} else {
 		$all = count ( $objDatabase->selectRecordsetArray ( "select * from observations JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\"" ) );
@@ -430,10 +434,10 @@ function statistics() {
 	}
 	$rest = 0;
 
-	if (strcmp($selectedCountry, "") == 0) {
+	if (strcmp($selectedCountry, "All") == 0) {
 		$cometobservations = count ( $objDatabase->selectRecordsetArray ( "select * from cometobservations" ) );
 	} else {
-		$all = count ( $objDatabase->selectRecordsetArray ( "select * from cometobservations JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\"" ) );
+		$cometobservations = count ( $objDatabase->selectRecordsetArray ( "select * from cometobservations JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\"" ) );
 	}
 	$all += $cometobservations;
 
@@ -658,8 +662,9 @@ function statistics() {
 	echo "<div id=\"container2\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
 
 	echo "</div>";
+	echo "<br />Fourth tab created: " . (microtime(true) - $time_start);
 
-	if (strcmp($selectedCountry, "") == 0) {
+	if (strcmp($selectedCountry, "All") == 0) {
 		// The tab with the observations per country
 		echo "<div class=\"tab-pane\" id=\"countries\">";
 		// Pie chart
@@ -731,6 +736,7 @@ function statistics() {
 
 	echo "</div>";
 }
+echo "<br />Last tab created: " . (microtime(true) - $time_start);
 	echo "</div>";
 	echo "</div>";
 }
