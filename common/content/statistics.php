@@ -28,6 +28,32 @@ function statistics() {
 		}
 	}
 	echo "<div>";
+	// Create a drop-down to select the country.
+	$countriesArray = array ();
+
+	// First find a list of all countries
+	$all = array_count_values($objDatabase->selectSingleArray ( "select locations.country from observations join locations on observations.locationid=locations.id", "country"));
+	$allComets = array_count_values($objDatabase->selectSingleArray ( "select locations.country from cometobservations join locations on cometobservations.locationid=locations.id", "country"));
+
+	// We loop over the countries (we merge the deepsky and comet observations)
+	$countryList = array_unique(array_merge(array_keys($all), array_keys($allComets)));
+	foreach ($countryList as $country) {
+		$obs = 0;
+		if (array_key_exists($country, $all)) {
+			$obs += $all[$country];
+		}
+		if (array_key_exists($country, $allComets)) {
+			$obs += $allComets[$country];
+		}
+		$countriesArray [$country] = $obs;
+	}
+
+	echo "<select class=\"form-control countrySelection\">";
+	foreach ( $countriesArray as $key => $value ) {
+		echo "<option value=\"" . $key . "\">" . $key . "</option>";
+	}
+	echo "</select>";
+
 	// We make some tabs.
 	echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">
           <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">" . GraphInfo . "</a></li>
@@ -550,24 +576,6 @@ function statistics() {
   // The tab with the observations per country
 	echo "<div class=\"tab-pane\" id=\"countries\">";
 	// Pie chart
-	$countriesArray = array ();
-
-	// First find a list of all countries
-	$all = array_count_values($objDatabase->selectSingleArray ( "select locations.country from observations join locations on observations.locationid=locations.id", "country"));
-	$allComets = array_count_values($objDatabase->selectSingleArray ( "select locations.country from cometobservations join locations on cometobservations.locationid=locations.id", "country"));
-
-	// We loop over the countries (we merge the deepsky and comet observations)
-	$countryList = array_unique(array_merge(array_keys($all), array_keys($allComets)));
-	foreach ($countryList as $country) {
-		$obs = 0;
-		if (array_key_exists($country, $all)) {
-			$obs += $all[$country];
-		}
-		if (array_key_exists($country, $allComets)) {
-			$obs += $allComets[$country];
-		}
-		$countriesArray [$country] = $obs;
-	}
 
 	echo "<script type=\"text/javascript\">
 
