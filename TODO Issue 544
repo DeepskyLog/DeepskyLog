@@ -6,7 +6,7 @@ TODOs issue 544: Best observing month per country
 + Add a new menu entry: STATISTICS
   + Add entries for DeepskyLog: Done
   + Add Observations per country: Done
-  + TODO: Make it possible to see all statistics per country, use dropdown menu to change.
+  + Make it possible to see all statistics per country, use dropdown menu to change.
 
-+ TODO: Speed up!
-+ TODO: Use Select2 for every <select><option ...>
++ TODO: Speed up! Time for every tab!
++ TODO: Use Select2 for every <select><option ...> (new issue) -> Doesn't always work well...

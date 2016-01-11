@@ -112,9 +112,11 @@ function statistics() {
           <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">" . GraphInfo . "</a></li>
           <li><a href=\"#observationsPerYear\" data-toggle=\"tab\">" . GraphObservationsTitle . "</a></li>
 					<li><a href=\"#observationsPerMonth\" data-toggle=\"tab\">" . GraphObservationsMonthTitle . "</a></li>
-          <li><a href=\"#objectTypes\" data-toggle=\"tab\">" . GraphObservationsType . "</a></li>
-          <li><a href=\"#countries\" data-toggle=\"tab\">" . GraphObservationsPerCountry . "</a></li>
-        </ul>";
+          <li><a href=\"#objectTypes\" data-toggle=\"tab\">" . GraphObservationsType . "</a></li>";
+	if (strcmp($selectedCountry, "All") == 0) {
+ 		echo "<li><a href=\"#countries\" data-toggle=\"tab\">" . GraphObservationsPerCountry . "</a></li>";
+	}
+  echo "</ul>";
 
 	echo "<div id=\"my-tab-content\" class=\"tab-content\">";
 	echo "<div class=\"tab-pane active\" id=\"info\">";
@@ -162,7 +164,7 @@ function statistics() {
 	// Check the date of the first observation
 	$currentYear = date ( "Y" );
 
-	if (strcmp($selectedCountry, "") == 0) {
+	if (strcmp($selectedCountry, "All") == 0) {
 		$sql = $objDatabase->selectSingleValue ( "select MIN(date) from observations;", "MIN(date)", $currentYear . "0606" );
 		$sql2 = $objDatabase->selectSingleValue ( "select MIN(date) from cometobservations;", "MIN(date)", $currentYear . "0606" );
 	} else {
@@ -176,7 +178,7 @@ function statistics() {
 	  	      var chart;
 						var dataYear = [";
 						for($i = $startYear; $i <= $currentYear; $i ++) {
-							if (strcmp($selectedCountry, "") == 0) {
+							if (strcmp($selectedCountry, "All") == 0) {
 								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
 							} else {
 								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations  JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
@@ -190,7 +192,7 @@ function statistics() {
 						echo "];
 						var cometdataYear = [";
 						for($i = $startYear; $i <= $currentYear; $i ++) {
-							if (strcmp($selectedCountry, "") == 0) {
+							if (strcmp($selectedCountry, "All") == 0) {
 								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
 							} else {
 								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations  JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" AND date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
@@ -294,7 +296,7 @@ function statistics() {
 	  	      var chart;
 						var data = [";
 						for($i = 1; $i <= 12; $i ++) {
-							if (strcmp($selectedCountry, "") == 0) {
+							if (strcmp($selectedCountry, "All") == 0) {
 								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
 							} else {
 								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations  JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" AND MONTH(date) = \"" . $i . "\";", "COUNT(date)", "0" );
@@ -418,13 +420,21 @@ function statistics() {
 	$objectsArray = array ();
 	$colors = Array ();
 
-	$all = count ( $objDatabase->selectRecordsetArray ( "select * from observations" ) );
+	if (strcmp($selectedCountry, "") == 0) {
+		$all = count ( $objDatabase->selectRecordsetArray ( "select * from observations" ) );
+	} else {
+		$all = count ( $objDatabase->selectRecordsetArray ( "select * from observations JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\"" ) );
+	}
 	if ($all == 0) {
 		$all = 1;
 	}
 	$rest = 0;
 
-	$cometobservations = count ( $objDatabase->selectRecordsetArray ( "select * from cometobservations" ) );
+	if (strcmp($selectedCountry, "") == 0) {
+		$cometobservations = count ( $objDatabase->selectRecordsetArray ( "select * from cometobservations" ) );
+	} else {
+		$all = count ( $objDatabase->selectRecordsetArray ( "select * from cometobservations JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\"" ) );
+	}
 	$all += $cometobservations;
 
 	if (($cometobservations / $all) >= 0.01) {
@@ -649,77 +659,78 @@ function statistics() {
 
 	echo "</div>";
 
-  // The tab with the observations per country
-	echo "<div class=\"tab-pane\" id=\"countries\">";
-	// Pie chart
+	if (strcmp($selectedCountry, "") == 0) {
+		// The tab with the observations per country
+		echo "<div class=\"tab-pane\" id=\"countries\">";
+		// Pie chart
 
-	echo "<script type=\"text/javascript\">
+		echo "<script type=\"text/javascript\">
 
-			var chart;
-			$(document).ready(function() {
-				chart = new Highcharts.Chart({
-					chart: {
-						renderTo: 'containerCountry',
-						plotBackgroundColor: null,
-						plotBorderWidth: null,
-						plotShadow: false
-					},
-					title: {
-						text: \"" . GraphObservationsPerCountry . "\"
-					},
-                subtitle: {
-                  text: '" . GraphSource . $baseURL . "'
-                },
-					tooltip: {
-						formatter: function() {
-							return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage * 100) / 100 + '%';
-						}
-					},
-					plotOptions: {
-						pie: {
-							allowPointSelect: true,
-							cursor: 'pointer',
-							showCheckbox: true,
-							dataLabels: {
-								enabled: true,
-								color: '#000000',
-								connectorColor: '#000000',
-								formatter: function() {
-									return '<b>'+ this.point.name +'</b>: '+ this.y;
-								}
+		var chart;
+		$(document).ready(function() {
+			chart = new Highcharts.Chart({
+				chart: {
+					renderTo: 'containerCountry',
+					plotBackgroundColor: null,
+					plotBorderWidth: null,
+					plotShadow: false
+				},
+				title: {
+					text: \"" . GraphObservationsPerCountry . "\"
+				},
+				subtitle: {
+					text: '" . GraphSource . $baseURL . "'
+				},
+				tooltip: {
+					formatter: function() {
+						return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage * 100) / 100 + '%';
+					}
+				},
+				plotOptions: {
+					pie: {
+						allowPointSelect: true,
+						cursor: 'pointer',
+						showCheckbox: true,
+						dataLabels: {
+							enabled: true,
+							color: '#000000',
+							connectorColor: '#000000',
+							formatter: function() {
+								return '<b>'+ this.point.name +'</b>: '+ this.y;
 							}
 						}
-					},
-				    series: [{
-						type: 'pie',
-						name: 'Objects seen',
-						data: [";
+					}
+				},
+				series: [{
+					type: 'pie',
+					name: 'Objects seen',
+					data: [";
 
-	// We only want to see the countries with at least 1% of the observations
-	$rest = 0;
-	foreach ( $countriesArray as $key => $value ) {
-		if (($value / $all) >= 0.01) {
-			$correctedCountries [$key] = $value;
-		} else {
-			$rest += $value;
-		}
-	}
-	$correctedCountries["Rest"] = $rest;
+					// We only want to see the countries with at least 1% of the observations
+					$rest = 0;
+					foreach ( $countriesArray as $key => $value ) {
+						if (($value / $all) >= 0.01) {
+							$correctedCountries [$key] = $value;
+						} else {
+							$rest += $value;
+						}
+					}
+					$correctedCountries["Rest"] = $rest;
 
-	foreach ( $correctedCountries as $key => $value ) {
-		print "{name: \"" . $key . "\", y: " . $value . "},";
-	}
-	echo "
-						]
-					}]
-				});
-			});
+					foreach ( $correctedCountries as $key => $value ) {
+						print "{name: \"" . $key . "\", y: " . $value . "},";
+					}
+					echo "
+				]
+			}]
+		});
+	});
 
-		</script>";
+	</script>";
 	echo "<div id=\"containerCountry\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
 
 	echo "</div>";
-
+}
 	echo "</div>";
 	echo "</div>";
 }

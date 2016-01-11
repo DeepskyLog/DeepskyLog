@@ -345,16 +345,20 @@ function view_observer() {
 	// GRAPH
 	// Check the date of the first observation
 	$currentYear = date ( "Y" );
-	$sql = $objDatabase->selectSingleValue ( "select MIN(date) from observations where observerid=\"" . $user . "\";", "MIN(date)", $currentYear . "0606" );
-	$sql2 = $objDatabase->selectSingleValue ( "select MIN(date) from cometobservations where observerid=\"" . $user . "\";", "MIN(date)", $currentYear . "0606" );
-	$startYear = min ( floor ( $sql / 10000 ), floor ( $sql2 / 10000 ) );
+	$sql = $objDatabase->selectKeyValueArray ("select YEAR(date),count(*) from observations where observerid=\"" . $user . "\" group by YEAR(date)", "YEAR(date)", "count(*)");
+	$sql2 = $objDatabase->selectKeyValueArray ( "select YEAR(date),count(*) from cometobservations where observerid=\"" . $user . "\" group by YEAR(date);", "YEAR(date)", "count(*)" );
+	$startYear = min ( [min(array_keys($sql)), min(array_keys ( $sql2 ) )] );
 	// Add the JavaScript to initialize the chart on document ready
 	echo "<script type=\"text/javascript\">
 
 	  	      var chart;
 						var dataYear = [";
 						for($i = $startYear; $i <= $currentYear; $i ++) {
-							$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where observerid=\"" . $user . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+							if (array_key_exists($i, $sql)) {
+								$obs = $sql[$i];
+							} else {
+								$obs = 0;
+							}
 							if ($i != $currentYear) {
 								echo $obs . ", ";
 							} else {
@@ -364,7 +368,11 @@ function view_observer() {
 						echo "];
 						var cometdataYear = [";
 						for($i = $startYear; $i <= $currentYear; $i ++) {
-							$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where observerid=\"" . $user . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+							if (array_key_exists($i, $sql2)) {
+								$obs = $sql2[$i];
+							} else {
+								$obs = 0;
+							}
 							if ($i != $currentYear) {
 								echo $obs . ", ";
 							} else {
