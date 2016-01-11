@@ -161,8 +161,14 @@ function statistics() {
 	// GRAPH
 	// Check the date of the first observation
 	$currentYear = date ( "Y" );
-	$sql = $objDatabase->selectSingleValue ( "select MIN(date) from observations;", "MIN(date)", $currentYear . "0606" );
-	$sql2 = $objDatabase->selectSingleValue ( "select MIN(date) from cometobservations;", "MIN(date)", $currentYear . "0606" );
+
+	if (strcmp($selectedCountry, "") == 0) {
+		$sql = $objDatabase->selectSingleValue ( "select MIN(date) from observations;", "MIN(date)", $currentYear . "0606" );
+		$sql2 = $objDatabase->selectSingleValue ( "select MIN(date) from cometobservations;", "MIN(date)", $currentYear . "0606" );
+	} else {
+		$sql = $objDatabase->selectSingleValue ( "select MIN(date) from observations  JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\";", "MIN(date)", $currentYear . "0606" );
+		$sql2 = $objDatabase->selectSingleValue ( "select MIN(date) from cometobservations  JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\";", "MIN(date)", $currentYear . "0606" );
+	}
 	$startYear = min ( floor ( $sql / 10000 ), floor ( $sql2 / 10000 ) );
 	// Add the JavaScript to initialize the chart on document ready
 	echo "<script type=\"text/javascript\">
@@ -170,7 +176,11 @@ function statistics() {
 	  	      var chart;
 						var dataYear = [";
 						for($i = $startYear; $i <= $currentYear; $i ++) {
-							$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+							if (strcmp($selectedCountry, "") == 0) {
+								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+							} else {
+								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations  JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+							}
 							if ($i != $currentYear) {
 								echo $obs . ", ";
 							} else {
@@ -180,7 +190,11 @@ function statistics() {
 						echo "];
 						var cometdataYear = [";
 						for($i = $startYear; $i <= $currentYear; $i ++) {
-							$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+							if (strcmp($selectedCountry, "") == 0) {
+								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
+							} else {
+								$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations  JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" AND date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );								
+							}
 							if ($i != $currentYear) {
 								echo $obs . ", ";
 							} else {
