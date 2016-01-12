@@ -5,8 +5,8 @@ global $inIndex, $copyright, $versionInfo, $copyrightInfo;
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 
-$copyright = "&copy;2004&nbsp;-&nbsp;2015";
-$versionInfo = "5.0.26";
+$copyright = "&copy;2004&nbsp;-&nbsp;2016";
+$versionInfo = "5.0.27";
 $copyrightInfo = $copyright . ",&nbsp;DeepskyLog developers";
 
 define ( "AtlasOverviewZoom", 17 );
