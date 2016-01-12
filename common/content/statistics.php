@@ -82,7 +82,7 @@ function statistics() {
     				<label class="col-sm-2 control-label">' . LangSelectCountry . '</label>
 						<div class="col-sm-10">';
 
-	echo "			<select  name=\"country\" class=\"countrySelection\" onchange=\"submit();\">";
+	echo "			<select  name=\"country\" class=\"form-control\" onchange=\"submit();\">";
 	echo "				<option value=\"All\">All</option>";
 	echo "				<option disabled>──────────</option>";
 

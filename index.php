@@ -136,11 +136,11 @@ if (isset ( $entryMessage ) && $entryMessage) { // dispays $entryMessage if any
 	echo "</script>";
 }
 
-echo "<script>
+echo '<script>
 				$(document).ready(function() {
-					$(\".countrySelection\").select2();
+					$("select").select2();
 				});
-			</script>";
+			</script>';
 
 
 echo "</body>";
