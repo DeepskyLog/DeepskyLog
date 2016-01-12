@@ -221,7 +221,7 @@ function new_session() {
 	echo "</div>";
 
 	// Add observer
-	$addObserver = "<select id=\"addObserver\" name=\"addObserver\" onchange=\"addUser(this,'" . $loggedUserName . "')\" class=\"form-control\">";
+	$addObserver = "<select style=\"width: 50%\" id=\"addObserver\" name=\"addObserver\" onchange=\"addUser(this,'" . $loggedUserName . "')\" class=\"form-control\">";
 	$obs = $objObserver->getPopularObserversByName ();
 
 	$addObserver .= "<option value=\"\">&nbsp;</option>";
@@ -241,7 +241,7 @@ function new_session() {
 	echo "</div>";
 
 	// Delete observer
-	$deleteObserver = "<select id=\"deleteObserver\" name=\"deleteObserver\" onchange=\"deleteUser(this,'" . $loggedUserName . "')\" class=\"form-control\">";
+	$deleteObserver = "<select style=\"width: 50%\" id=\"deleteObserver\" name=\"deleteObserver\" onchange=\"deleteUser(this,'" . $loggedUserName . "')\" class=\"form-control\">";
 
 	$deleteObserver .= "<option value=\"\">&nbsp;</option>";
 	$deleteObserver .= "</select>";

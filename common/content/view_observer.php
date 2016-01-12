@@ -347,7 +347,14 @@ function view_observer() {
 	$currentYear = date ( "Y" );
 	$sql = $objDatabase->selectKeyValueArray ("select YEAR(date),count(*) from observations where observerid=\"" . $user . "\" group by YEAR(date)", "YEAR(date)", "count(*)");
 	$sql2 = $objDatabase->selectKeyValueArray ( "select YEAR(date),count(*) from cometobservations where observerid=\"" . $user . "\" group by YEAR(date);", "YEAR(date)", "count(*)" );
-	$startYear = min ( [min(array_keys($sql)), min(array_keys ( $sql2 ) )] );
+
+	if (sizeof($sql) == 0) {
+		$startYear = min(array_keys($sql2));
+	} else if (sizeof($sql2 == 0)) {
+		$startYear = min(array_keys($sql));
+	} else {
+		$startYear = min ( [min(array_keys($sql)), min(array_keys ( $sql2 ) )] );
+	}
 	// Add the JavaScript to initialize the chart on document ready
 	echo "<script type=\"text/javascript\">
 
