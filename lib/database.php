@@ -9,16 +9,12 @@ class Database {
 	private function mysql_query_encaps($sql) {
 		global $loggedUser, $developversion;
 		try {
-			if ($developversion) {
-				$run = $this->databaseId->query ( "INSERT INTO logging(loginid, logdate, logtime, logurl, navigator, screenresolution, language, sqlstatement) 
-                       VALUES(\"" . ($loggedUser ? $loggedUser : "anonymous") . "\", " . date ( 'Ymd' ) . ", " . date ( 'His' ) . ", '', '', '', '', '" . $sql . "');" );
-			}
 			$run = $this->databaseId->query ( $sql );
 		} catch ( PDOException $ex ) {
 			$entryMessage = "A database error occured!"; // user friendly message
 			print $entryMessage;
 		}
-		
+
 		return $run;
 	}
 	public function execSQL($sql) {
@@ -66,14 +62,14 @@ class Database {
 			echo "Database connection lost...";
 			$this->newLogin ();
 		}
-	
+
 		try {
 			$run = $this->databaseId->prepare ( $sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY) );
 			$run->execute($values);
 		} catch ( PDOException $ex ) {
 			$entryMessage = "A database error occured!"; // user friendly message
 		}
-	
+
 		$result = array ();
 		while ( $get = $run->fetch ( PDO::FETCH_OBJ ) ) {
 			$resultparts = array ();
@@ -81,22 +77,22 @@ class Database {
 				$resultparts [$key] = $value;
 				$result [] = $resultparts;
 		}
-	
+
 		return $result;
-	}	
-	
+	}
+
 	public function selectRecordsetArray($sql) {
 		if (! $this->databaseId) {
 			echo "Database connection lost...";
 			$this->newLogin ();
 		}
-		
+
 		try {
 			$run = $this->databaseId->query ( $sql );
 		} catch ( PDOException $ex ) {
 			$entryMessage = "A database error occured!"; // user friendly message
 		}
-		
+
 		$result = array ();
 		while ( $get = $run->fetch ( PDO::FETCH_OBJ ) ) {
 			$resultparts = array ();
@@ -104,7 +100,7 @@ class Database {
 				$resultparts [$key] = $value;
 			$result [] = $resultparts;
 		}
-		
+
 		return $result;
 	}
 	public function selectSingleArray($sql, $name) {
@@ -117,7 +113,7 @@ class Database {
 		} catch ( PDOException $ex ) {
 			$entryMessage = "A database error occured!"; // user friendly message
 		}
-		
+
 		$result = array ();
 		while ( $get = $run->fetch ( PDO::FETCH_OBJ ) )
 			$result [] = $get->$name;
@@ -139,7 +135,7 @@ class Database {
 		} catch ( PDOException $ex ) {
 			$entryMessage = "A database error occured!"; // user friendly message
 		}
-		
+
 		$get = $run->fetch ( PDO::FETCH_ASSOC );
 		if ($get)
 			if ($get [$name] != '') {
