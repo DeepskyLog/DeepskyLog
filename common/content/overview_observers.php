@@ -28,7 +28,6 @@ function overview_observers() {
 	echo "<th>Reg. Date</th>";
 	echo "<th>" . LangViewObserverRole . "</th>";
 	echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\"></th>";
-	echo "<th>" . LangViewObserverLastLogin . "</th>";
 	echo "<th>" . "Observations" . "</th>";
 	echo "<th>" . "comet Observations" . "</th>";
 	echo "<th>" . LangViewObserverinstrumentCount . "</th>";
@@ -55,7 +54,6 @@ function overview_observers() {
 			echo "<td> " . LangViewObserverCometAdmin . "</td><td></td>";
 		elseif ($role == RoleWaitlist)
 			echo "<td> " . LangViewObserverWaitlist . "</td><td class=\"centered\"><a href=\"" . $baseURL . "index.php?indexAction=validate_observer&amp;validate=" . urlencode ( $value ['id'] ) . "\">" . LangViewObserverValidate . "</a> / <a href=\"" . $baseURL . "index.php?indexAction=validate_delete_observer&amp;validateDelete=" . urlencode ( $value ['id'] ) . "\">" . "Verwijder" . "</a></td>";
-		echo "<td>" . $value ['maxLogDate'] . " </td>";
 		echo "<td>" . $value ['obsCount'] . " </td>";
 		echo "<td>" . $value ['cometobsCount'] . " </td>";
 		echo "<td>" . $value ['instrumentCount'] . " </td>";
