@@ -76,11 +76,10 @@ function statistics() {
 	ksort($countriesArray);
 
 	// Use select2 to let the user type in the drop down.
-	echo '<form action="' . $baseURL . 'index.php" method="post" class="form-horizontal">
+	echo '<form action="' . $baseURL . 'index.php" method="post" class="form-inline">
 					<input type="hidden" name="indexAction" value="statistics" />
   				<div class="form-group">
-    				<label class="col-sm-2 control-label">' . LangSelectCountry . '</label>
-						<div class="col-sm-10">';
+						<label class="control-label">' . LangSelectCountry . '&nbsp;&nbsp;</label>';
 
 	echo "			<select  name=\"country\" class=\"form-control\" onchange=\"submit();\">";
 	echo "				<option value=\"All\">All</option>";
@@ -97,9 +96,8 @@ function statistics() {
 		}
 	}
 	echo "</select>";
-	echo '		</div>
-					</div>
-				</form>';
+	echo '	</div>
+				</form><br />';
 
 	// We make some tabs.
 	echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">
