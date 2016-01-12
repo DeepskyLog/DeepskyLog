@@ -830,10 +830,5 @@ function statistics() {
 }
 	echo "</div>";
 	echo "</div>";
-	echo "<script>
-					$(document).ready(function() {
-  					$(\".countrySelection\").select2();
-					});
-				</script>";
 }
 ?>
