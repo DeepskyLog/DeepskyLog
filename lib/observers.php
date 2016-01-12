@@ -77,8 +77,7 @@ class Observers {
 	public function getSortedObserversAdmin($sort) 	// getSortedObservers returns an array with the ids of all observers, sorted by the column specified in $sort
 	{
 		global $objDatabase;
-		return $objDatabase->selectRecordsetArray ( "SELECT observers.*, A.maxLogDate, B.instrumentCount, C.listCount, D.obsCount, E.cometobsCount, (IFNULL(B.instrumentCount,0) + IFNULL(C.listCount,0) + IFNULL(D.obsCount,0) + IFNULL(E.cometobsCount,0)) AS maxMax FROM observers
-     LEFT JOIN (SELECT logging.loginid, MAX(logging.logdate) as maxLogDate FROM logging GROUP BY logging.loginid) AS A ON observers.id=A.loginid
+		return $objDatabase->selectRecordsetArray ( "SELECT observers.*, B.instrumentCount, C.listCount, D.obsCount, E.cometobsCount, (IFNULL(B.instrumentCount,0) + IFNULL(C.listCount,0) + IFNULL(D.obsCount,0) + IFNULL(E.cometobsCount,0)) AS maxMax FROM observers
      LEFT JOIN (SELECT instruments.observer, COUNT(instruments.id) AS instrumentCount FROM instruments GROUP BY instruments.observer) AS B ON observers.id=B.observer
      LEFT JOIN (SELECT observerobjectlist.observerid, COUNT(DISTINCT observerobjectlist.listname) AS listCount FROM observerobjectlist GROUP BY observerobjectlist.observerid) AS C on observers.id=C.observerid
      LEFT JOIN (SELECT observations.observerid, COUNT(observations.id) AS obsCount FROM observations GROUP BY observations.observerid) AS D on observers.id=D.observerid
