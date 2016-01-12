@@ -136,6 +136,12 @@ if (isset ( $entryMessage ) && $entryMessage) { // dispays $entryMessage if any
 	echo "</script>";
 }
 
+echo '<script>
+				$(document).ready(function() {
+					$("select").select2();
+				});
+			</script>';
+
 
 echo "</body>";
 echo "</html>";
