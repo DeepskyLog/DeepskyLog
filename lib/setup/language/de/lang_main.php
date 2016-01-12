@@ -1,5 +1,10 @@
 <?php //GE
 // This is version 5.0
+define("LangSelectCountry", "Land ausw&auml;hlen");
+define("GraphObservationsPerCountry", "Beobachtungen pro Land");
+define("LangStatistics", "Statistiken");
+define("GraphTitleMonths", "Anzahl der Beobachtungen pro Monat");
+define("GraphObservationsMonthTitle", "Beobachtungen pro Monat");
 define("LangCancelRequestNewPasswordSubject", "Eine DeepskyLog Passwort&auml;nderunganforderung wird abgesagt");
 define("LangCancelRequestNewPassword1", "Eine Passwort&auml;nderunganforderung wird abgesagt von ");
 define("LangCancelRequestNewPassword2", "<br /><br />Wenn Sie dies nicht angefordert haben, k&ouml;nnte es ein ehrlicher Fehler sein oder jemand versucht in Ihr DeepskyLog Konto zu brechen.<br />");
@@ -272,11 +277,11 @@ define('LangAtlasGenerationTimes'       ,"Generierung kann etwas dauern (zwische
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Keine Veroffentlichung ohne vorherige Genehmigung - Objekt Datenbank basierend auf Eye&Telescope - Sternen Datenbank basierend auf Tycho 2+ sowie USNO UCAC3 (Zacharia).");
 define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Keine Veroffentlichung ohne vorherige Genehmigung");
 define('LangAtlasDataSource2'           ,"Objekt Datenbank basierend auf Eye&Telescope - Sternen Datenbank basierend auf Tycho 2+ sowie USNO UCAC3 (Zacharia).");
-define("ObjectsSeenGraph"               ,"Objekt Typen gesehen : ");
+define("ObjectsSeenGraph"               ,"Objekt Typen gesehen");
 $REST = "Rest";
 define("GraphObservations"              ,"Beobachtungen");
 define("GraphSource"                    ,"Quelle: ");
-define("GraphTitle1"                    ,"Anzahl der Beobachtungen pro Jahr: ");
+define("GraphTitle1"                    ,"Anzahl der Beobachtungen pro Jahr");
 define("GraphInfo"                      ,"Info");
 define("GraphObservationsTitle"         ,"Beobachtungen pro Jahr");
 define("GraphObservationsType"          ,"Object Typen gesehen");

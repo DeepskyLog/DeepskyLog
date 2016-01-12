@@ -646,34 +646,45 @@ class CometObservations {
 
 	// getNumberOfDifferentObjects() returns the number of different objects
 	// observed
-	function getNumberOfDifferentObjects() {
+	function getNumberOfDifferentObjects( $country = "" ) {
 		global $objDatabase;
 
 		$observers = new Observers ();
 
-		$sql = "SELECT COUNT(DISTINCT objectid) FROM cometobservations";
+		if (strcmp($country, "") == 0) {
+			$sql = "SELECT COUNT(DISTINCT objectid) FROM cometobservations";
+		} else {
+			$sql = "SELECT COUNT(DISTINCT cometobservations.objectid) FROM cometobservations JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $country . "\"";
+		}
 
 		return $objDatabase->result ( $sql );
 	}
 
 	// getNumberOfObservations() returns the total number of observations
-	function getNumberOfObservations() {
+	function getNumberOfObservations( $country = "" ) {
 		global $objDatabase;
-		$observers = new Observers ();
 
-		$sql = "SELECT COUNT(id) FROM cometobservations";
+		if (strcmp($country, "") == 0) {
+			$sql = "SELECT COUNT(id) FROM cometobservations";
+		} else {
+			$sql = "SELECT COUNT(cometobservations.id) FROM cometobservations JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $country . "\"";
+		}
 		return $objDatabase->result ( $sql );
 	}
 
 	// getNumberOfObservationsThisYear() returns the number of observations this
 	// year
-	function getNumberOfObservationsThisYear() {
+	function getNumberOfObservationsThisYear( $country = "") {
 		global $objDatabase;
 		$observers = new Observers ();
 
-		$date = date ( "Y" ) . "0101";
-		$sql = "SELECT COUNT(id) FROM cometobservations WHERE date > \"$date\"";
+		$t = getdate ();
 
+		if (strcmp($country, "") == 0) {
+			$sql = "SELECT COUNT(id) FROM cometobservations WHERE date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\"";
+		} else {
+			$sql = "SELECT COUNT(cometobservations.id) FROM cometobservations JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $country . "\" AND date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\"";
+		}
 		return $objDatabase->result ( $sql );
 	}
 

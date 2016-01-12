@@ -19,7 +19,7 @@ function change_site() {
 	$longitude = $objLocation->getLocationPropertyFromId ( $locationid, 'longitude' );
 	$lm = $objLocation->getLocationPropertyFromId ( $locationid, 'limitingMagnitude' );
 	$sb = $objLocation->getLocationPropertyFromId ( $locationid, 'skyBackground' );
-	
+
 	echo "<h4>" . stripslashes ( $objLocation->getLocationPropertyFromId ( $locationid, 'name' ) ) . "</h4>";
 	echo "<hr />";
 	echo "<a href=\"http://clearoutside.com/forecast/" . round ( $latitude, 2 ) . "/" . round ( $longitude, 2 ) . "\">
@@ -32,7 +32,7 @@ function change_site() {
 	        </div>
 	      </form>";
 	echo "<div id=\"map\"></div>";
-	
+
 	echo "<br /><form action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 	echo "<input type=\"hidden\" name=\"id\" value=\"" . $locationid . "\" />&nbsp;";
@@ -46,7 +46,7 @@ function change_site() {
              ";
 	$content = ($disabled ? "" : "  <input type=\"submit\" class=\"btn btn-primary tour4\" name=\"change\" value=\"" . LangAddSiteButton2 . "\" />");
 	echo $content;
-	
+
 	echo "</div>
  	       <label>" . LangAddSiteField7 . "</label>";
 	echo "<div class=\"form-inline\">";
@@ -54,7 +54,7 @@ function change_site() {
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddSiteField7Expl . "</span>";
 	echo "</div>";
-	
+
 	echo "<div class=\"form-group\">
      	       <label>" . LangAddSiteField8 . "</label>";
 	echo "<div class=\"form-inline\">";
@@ -62,11 +62,11 @@ function change_site() {
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddSiteField8Expl . "</span>";
 	echo "</div>";
-	
+
 	echo "</div></form><br /><br />";
-	
-	echo "<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places\"></script>";
-	
+
+	echo "<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&language=en&sensor=true&libraries=places\"></script>";
+
 	echo "<script>
 	  var geocoder;
       var map;
@@ -89,15 +89,15 @@ function change_site() {
 			draggable: true
           });
 		  fillHiddenFields(loca);
-      		
+
 	      addLocations();
-      		
+
       	  google.maps.event.addListener(myLocationMarker, 'dragend', function(evt){
  			document.getElementById('latitude').value = evt.latLng.lat();
  			document.getElementById('longitude').value = evt.latLng.lng();
 			fillHiddenFields(evt.latLng);
 		  });
-      		
+
       }
 
       function codeAddress() {
@@ -108,7 +108,7 @@ function change_site() {
 			 document.getElementById('latitude').value = results[0].geometry.location.lat();
  		     document.getElementById('longitude').value = results[0].geometry.location.lng();
 			 fillHiddenFields(results[0].geometry.location);
-			
+
 	         // Remove old marker
 		     myLocationMarker.setMap(null);
              myLocationMarker = new google.maps.Marker({
@@ -140,7 +140,7 @@ function change_site() {
           }
         }
       }
-      		
+
 	  function fillHiddenFields(latLng) {
 		// Do reverse geocoding:
 		geocoder.geocode({'latLng': latLng}, function(results, status) {
@@ -155,7 +155,7 @@ function change_site() {
 		    }
      	  }
   		});
-	
+
   		// Find the timezone
 		url = 'https://maps.googleapis.com/maps/api/timezone/json?location=' + latLng.lat() + ',' + latLng.lng() + '&timestamp=' + new Date().getTime() / 1000;
 		var xmlhttp = new XMLHttpRequest();
@@ -167,19 +167,19 @@ function change_site() {
 		}
 		xmlhttp.open('GET', url, true);
 		xmlhttp.send();
-		
+
   		// Find the elevation
 		elevator = new google.maps.ElevationService();
-	
+
 		var locations = [];
-	
+
 		locations.push(latLng);
-	
+
 		// Create a LocationElevationRequest object using the array's one value
 		var positionalRequest = {
  		  'locations': locations
   		}
-		
+
 		elevator.getElevationForLocations(positionalRequest, function(results, status) {
 		  if (status == google.maps.ElevationStatus.OK) {
       		// Retrieve the first result
@@ -208,18 +208,18 @@ function change_site() {
 					$sb = sprintf ( "%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude ( $limmag ) );
 				}
 				echo $limmag . "<br />SQM: " . $sb . "<br />";
-				
+
 				if ($objLocation->getLocationPropertyFromId ( $location, "locationactive" )) {
 					echo LangViewActive;
 				} else {
 					echo LangViewNotActive;
 				}
-				
+
 				echo "\";
  			var infowindow = new google.maps.InfoWindow({
 	 			content: contentString
 	 		});";
-				
+
 				echo "newLocation = new google.maps.LatLng(" . $objLocation->getLocationPropertyFromId ( $location, "latitude" ) . ", " . $objLocation->getLocationPropertyFromId ( $location, "longitude" ) . ");
 			  marker = new google.maps.Marker({
 			  position: newLocation,
@@ -228,7 +228,7 @@ function change_site() {
 			  html: contentString,
 			  title: \"" . html_entity_decode ( $objLocation->getLocationPropertyFromId ( $location, "name" ) ) . "\"
 			});
-	
+
 			myLocations.push(marker);
 			google.maps.event.addListener(marker, 'mouseover', function() {
 				infowindow.setContent(this.html);
@@ -238,7 +238,7 @@ function change_site() {
 			}
 		}
 	}
-	echo "}      		
+	echo "}
       		google.maps.event.addDomListener(window, 'load', initialize);
       		</script>";
 }

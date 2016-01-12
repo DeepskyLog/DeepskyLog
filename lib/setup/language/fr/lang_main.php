@@ -1,5 +1,10 @@
 <?php //FR
 // This is version 5.0
+define("LangSelectCountry", "Choisissez le pays");
+define("LangStatistics", "Statistiques");
+define("GraphObservationsPerCountry", "Observations par pays");
+define("GraphTitleMonths", "Nombre d'observations par mois");
+define("GraphObservationsMonthTitle", "Observations par mois");
 define("LangCancelRequestNewPasswordSubject", "DeepskyLog Demande de changer le mot de passe a &eacute;t&eacute; annul&eacute;e");
 define("LangCancelRequestNewPassword1", "Demande de changer le mot de passe a &eacute;t&eacute; annul&eacute;e de ");
 define("LangCancelRequestNewPassword2", "<br /><br />Si vous ne l'avez pas demand&eacute; cela, il pourrait &ecirc;tre une erreur honn&ecirc;te ou quelqu'un essaie de p&eacute;n&eacute;trer dans votre compte DeepskyLog.<br />");
@@ -273,11 +278,11 @@ define('LangAtlasGenerationTimes'       ,"Les temps de g&eacute;n&eacute;ration 
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Pas de publication sans autorisation - Base de donnees basee sur Eye&Telescope - Base de donnees d'etoiles de Tycho 2+ et USNO UCAC3 (Zacharia).");
 define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Pas de publication sans autorisation");
 define('LangAtlasDataSource2'           ,"Base de donnees basee sur Eye&Telescope - Base de donnees d'etoiles de Tycho 2+ et USNO UCAC3 (Zacharia).");
-define("ObjectsSeenGraph"               ,"Nombre de type d'objet vu:");
+define("ObjectsSeenGraph"               ,"Nombre de type d'objet vu");
 $REST = "Reste";
 define("GraphObservations"              ,"Observations");
 define("GraphSource"                    ,"Source: ");
-define("GraphTitle1"                    ,"Nombre d'observations par an :");
+define("GraphTitle1"                    ,"Nombre d'observations par an");
 define("GraphInfo"                      ,"Info");
 define("GraphObservationsTitle"         ,"Observations par an");
 define("GraphObservationsType"          ,"Nombre d'objets observé");

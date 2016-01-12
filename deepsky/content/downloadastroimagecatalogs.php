@@ -44,12 +44,12 @@ echo "<table class=\"table\">
        <tr><td><a href=\"" . $dirAstroImageCatalogs . "Abell.pdf\">" . ImageCatalogAbell . "</a></td></tr>
       </table>";
 
-$constellations = Array("AND", "ANT", "AQL", "AQR", "ARI", "AUR", "BOO", "CAE", "CAM", "CAP", 
-                        "CAS", "CEN", "CEP", "CET", "CMA", "CMI", "CNC", "COL", "COM", "CRA", 
-                        "CRB", "CRT", "CRV", "CVN", "CYG", "DEL", "DRA", "EQU", "ERI", "FOR", 
-                        "GEM", "GRU", "HER", "HOR", "HYA", "LAC", "LEO", "LEP", "LIB", "LMI", 
-                        "LUP", "LYN", "LYR", "MIC", "MON", "OPH", "ORI", "PEG", "PER", "PHE", 
-                        "PSA", "PSC", "PUP", "PYX", "SCL", "SCO", "SCT", "SER", "SGE", "SGR", 
+$constellations = Array("AND", "ANT", "AQL", "AQR", "ARI", "AUR", "BOO", "CAE", "CAM", "CAP",
+                        "CAS", "CEN", "CEP", "CET", "CMA", "CMI", "CNC", "COL", "COM", "CRA",
+                        "CRB", "CRT", "CRV", "CVN", "CYG", "DEL", "DRA", "EQU", "ERI", "FOR",
+                        "GEM", "GRU", "HER", "HOR", "HYA", "LAC", "LEO", "LEP", "LIB", "LMI",
+                        "LUP", "LYN", "LYR", "MIC", "MON", "OPH", "ORI", "PEG", "PER", "PHE",
+                        "PSA", "PSC", "PUP", "PYX", "SCL", "SCO", "SCT", "SER", "SGE", "SGR",
                         "TAU", "TRI", "UMA", "UMI", "VIR", "VUL");
 
 
@@ -73,7 +73,7 @@ while(list($key, $value) = each($cons)) {
   if ($count % 3 == 0) {
     print "</tr><tr>";
   }
-  echo "<td class=\"catalog\"><a href=\"".$dirAstroImageCatalogs."constellations/".$key.".pdf\">".$$key."</a></td>";
+  echo "<td class=\"catalog\"><a href=\"".$dirAstroImageCatalogs."constellations/".$key.".pdf\">".${$key}."</a></td>";
   if ($count % 3 == 0) {
   }
   $count++;

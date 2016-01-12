@@ -1,5 +1,10 @@
 <?php //EN
 // This is version 5.0
+define("LangSelectCountry", "Select country");
+define("GraphObservationsPerCountry", "Observations per country");
+define("LangStatistics", "Statistics");
+define("GraphTitleMonths", "Number of observations per month");
+define("GraphObservationsMonthTitle", "Observations per month");
 define("LangCancelRequestNewPasswordSubject", "A DeepskyLog Change Password Request was canceled");
 define("LangCancelRequestNewPassword1", "A request was canceled from the ip-address ");
 define("LangCancelRequestNewPassword2", "<br /><br />If you did not request this, it could be either an honest mistake or someone attempting to break into your DeepskyLog account.<br />");
@@ -274,11 +279,11 @@ define('LangAtlasGenerationTimes'       ,"Generation times may take from 20 minu
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).");
 define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - No publishing without written autorisation");
 define('LangAtlasDataSource2'           ,"Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).");
-define("ObjectsSeenGraph"               ,"Object types seen : ");
+define("ObjectsSeenGraph"               ,"Object types seen");
 $REST = "Rest";
 define("GraphObservations"              ,"Observations");
 define("GraphSource"                    ,"Source: ");
-define("GraphTitle1"                    ,"Number of observations per year : ");
+define("GraphTitle1"                    ,"Number of observations per year");
 define("GraphInfo"                      ,"Info");
 define("GraphObservationsTitle"         ,"Observations per year");
 define("GraphObservationsType"          ,"Object types observed");

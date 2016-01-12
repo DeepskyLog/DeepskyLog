@@ -1,5 +1,10 @@
 <?php //NL
 // This is version 5.0
+define("LangSelectCountry", "Kies land");
+define("GraphObservationsPerCountry", "Waarnemingen per land");
+define("LangStatistics", "Statistieken");
+define("GraphTitleMonths", "Aantal waarnemingen per maand");
+define("GraphObservationsMonthTitle", "Waarnemingen per maand");
 define("LangCancelRequestNewPasswordSubject", "Een DeepskyLog aanvraag om je wachtwoord te wijzigen is geannuleerd");
 define("LangCancelRequestNewPassword1", "Een aanvraag om je wachtwoord te wijzigen is geannuleerd vanaf het ip-adres ");
 define("LangCancelRequestNewPassword2", "<br /><br />Als je dit niet hebt aangevraagd, zou het een eerlijke vergissing kunnen zijn of iemand die probeert in te breken in uw DeepskyLog account.<br />");
@@ -267,14 +272,14 @@ define('LangAtlasGenerationTimes'       ,"Generatietijden vari&euml;ren van 20 m
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Geen publicatie zonder schriftelijke toestemming - Object-databank origineel gebaseerd op Eye&Telescope - Ster-databank door Tycho 2+ en USNO UCAC3 (Zacharia).");
 define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Geen publicatie zonder schriftelijke toestemming");
 define('LangAtlasDataSource2'           ,"Object-databank origineel gebaseerd op Eye&Telescope - Ster-databank door Tycho 2+ en USNO UCAC3 (Zacharia).");
-define("ObjectsSeenGraph"               ,"Object types : ");
+define("ObjectsSeenGraph"               ,"Object types");
 $REST = "Rest";
 define("GraphObservations"              ,"Waarnemingen");
 define("GraphInfo"                      ,"Info");
 define("GraphObservationsTitle"         ,"Waarnemingen per jaar");
 define("GraphObservationsType"          ,"Object types waargenomen");
 define("GraphSource"                    ,"Bron: ");
-define("GraphTitle1"                    ,"Aantal waarnemingen per jaar : ");
+define("GraphTitle1"                    ,"Aantal waarnemingen per jaar");
 define("AtlasExample"                   ,"Lookup atlas pagina voor M 45");
 define("ImageCatalogExample"            ,"Voorbeeld pagina voor Abell 84");
 define("ImageCatalogDescription1"       ,"DeepskyLog is een zeer krachtige applicatie, die het mogelijk maakt om gepersonaliseerde atlassen en beeldencatalogi aan te maken.");

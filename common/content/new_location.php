@@ -15,7 +15,7 @@ function new_location() {
            </form>
            <div id=\"map\"></div>
            ";
-	
+
 	echo "<br /><form action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 	echo "<input type=\"hidden\" name=\"latitude\" id=\"latitude\" />";
@@ -26,7 +26,7 @@ function new_location() {
 	echo "<div class=\"form-inline\">
     		<input type=\"text\" required class=\"form-control\" name=\"locationname\" placeholder=\"" . LangAddSiteField1 . "\"></input>";
 	echo "  <input type=\"submit\" class=\"btn btn-primary tour4\" name=\"add\" value=\"" . LangAddSiteButton . "\" />";
-	
+
 	echo "</div>
  	       <label>" . LangAddSiteField7 . "</label>";
 	echo "<div class=\"form-inline\">";
@@ -34,7 +34,7 @@ function new_location() {
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddSiteField7Expl . "</span>";
 	echo "</div>";
-	
+
 	echo "<div class=\"form-group\">
      	       <label>" . LangAddSiteField8 . "</label>";
 	echo "<div class=\"form-inline\">";
@@ -42,11 +42,11 @@ function new_location() {
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddSiteField8Expl . "</span>";
 	echo "</div>";
-	
+
 	echo "</div></form><br /><br />";
-	
-	echo "<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places\"></script>";
-	
+
+	echo "<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&language=en&sensor=true&libraries=places\"></script>";
+
 	echo "<script>
 	  var geocoder;
       var map;
@@ -78,7 +78,7 @@ function new_location() {
         }
       }
 
-	  function errorCallBack(error) {	
+	  function errorCallBack(error) {
 	    var loca = new google.maps.LatLng(-29.2558, -70.7403);
           map = new google.maps.Map(document.getElementById('map'), {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -107,7 +107,7 @@ function new_location() {
  		document.getElementById('latitude').value = position.coords.latitude;
  		document.getElementById('longitude').value = position.coords.longitude;
 	    fillHiddenFields(loca);
-			
+
 		map = new google.maps.Map(document.getElementById('map'), {
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           center: loca,
@@ -119,7 +119,7 @@ function new_location() {
 			draggable: true
          });
 
-			
+
 		  // gets the coords when drag event ends
           // then updates the input with the new coords
           google.maps.event.addListener(myLocationMarker, 'dragend', function(evt){
@@ -137,8 +137,8 @@ function new_location() {
       		if (results[0]) {
 			  arrAddress = results[0].address_components;
 			  for (ac = 0; ac < arrAddress.length; ac++) {
-				if (arrAddress[ac].types[0] == \"country\") { 
-				  document.getElementById('country').value = arrAddress[ac].long_name; 
+				if (arrAddress[ac].types[0] == \"country\") {
+				  document.getElementById('country').value = arrAddress[ac].long_name;
 				}
 			  }
 		    }
@@ -156,7 +156,7 @@ function new_location() {
 		}
 		xmlhttp.open('GET', url, true);
 		xmlhttp.send();
-			
+
   		// Find the elevation
 		elevator = new google.maps.ElevationService();
 
@@ -168,7 +168,7 @@ function new_location() {
 		var positionalRequest = {
  		  'locations': locations
   		}
-			
+
 		elevator.getElevationForLocations(positionalRequest, function(results, status) {
 		  if (status == google.maps.ElevationStatus.OK) {
       		// Retrieve the first result
@@ -180,7 +180,7 @@ function new_location() {
 	  }
 
       google.maps.event.addDomListener(window, 'load', initialize);
-			
+
 	  function searchKeyPress(e)
       {
         // look for window.event in case event isn't passed in
@@ -191,8 +191,8 @@ function new_location() {
 			document.getElementById('btnSearch').click();
 		}
       }
-			
-			
+
+
       function codeAddress() {
          var address = document.getElementById(\"address\").value;
          geocoder.geocode( { 'address': address}, function(results, status) {
@@ -201,7 +201,7 @@ function new_location() {
 			 document.getElementById('latitude').value = results[0].geometry.location.lat();
  		     document.getElementById('longitude').value = results[0].geometry.location.lng();
 			 fillHiddenFields(results[0].geometry.location);
-			
+
 	         // Remove old marker
 		     myLocationMarker.setMap(null);
              myLocationMarker = new google.maps.Marker({
@@ -236,7 +236,7 @@ function new_location() {
 
 	  function addLocations( ) {
 		var image = '" . $baseURL . "/images/telescope.png';";
-	
+
 	foreach ( $objLocation->getSortedLocations ( "id", $loggedUser ) as $location ) {
 		echo "// Let's add the existing locations to the map.
 			   		  var contentString = \"<strong>" . html_entity_decode ( $objLocation->getLocationPropertyFromId ( $location, "name" ) ) . "</strong><br /><br />Limiting magnitude: ";
@@ -251,18 +251,18 @@ function new_location() {
 			$sb = sprintf ( "%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude ( $limmag ) );
 		}
 		echo $limmag . "<br />SQM: " . $sb . "<br />";
-		
+
 		if ($objLocation->getLocationPropertyFromId ( $location, "locationactive" )) {
 			echo LangViewActive;
 		} else {
 			echo LangViewNotActive;
 		}
-		
+
 		echo "\";
  			var infowindow = new google.maps.InfoWindow({
 	 			content: contentString
 	 		});";
-		
+
 		echo "newLocation = new google.maps.LatLng(" . $objLocation->getLocationPropertyFromId ( $location, "latitude" ) . ", " . $objLocation->getLocationPropertyFromId ( $location, "longitude" ) . ");
 			  marker = new google.maps.Marker({
 			  position: newLocation,
@@ -271,7 +271,7 @@ function new_location() {
 			  html: contentString,
 			  title: \"" . html_entity_decode ( $objLocation->getLocationPropertyFromId ( $location, "name" ) ) . "\"
 			});
-				
+
 			myLocations.push(marker);
 			google.maps.event.addListener(marker, 'mouseover', function() {
 				infowindow.setContent(this.html);
@@ -279,7 +279,7 @@ function new_location() {
 			});
 			";
 	}
-	
+
 	echo "	  }
 			</script>";
 }
