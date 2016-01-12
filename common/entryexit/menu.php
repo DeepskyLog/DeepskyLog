@@ -8,7 +8,7 @@ else menu();
 function menu()
 { global $loggedUser,$instDir,$inIndex;
 
-  echo "  <div class=\"col-sm-2 sidebar-outer\">
+  echo "  <div class=\"col-sm-2 sidebar-outer move\">
            <ul class=\"nav nav-stacked sidebar\">";
 
 	if($loggedUser) {                                                                            // LOGGED IN

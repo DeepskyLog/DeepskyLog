@@ -39,7 +39,7 @@ function head() {
         <script src=\"lib/javascript/widget-columnSelector.js\"></script>
         <script src=\"lib/javascript/widget-reorder.js\"></script>
 		<link href=\"styles/tablesorter.theme.bootstrap.css\" rel=\"stylesheet\">";
-	echo "<link href=\"" . $baseURL . "styles/deepskylog5020.css\" rel=\"stylesheet\" type=\"text/css\" />";
+	echo "<link href=\"" . $baseURL . "styles/deepskylog5027.css\" rel=\"stylesheet\" type=\"text/css\" />";
 	// Load the needed javascript file for bootstrap-fileinput
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/fileinput.min.js\"></script>";
 	// Load the needed javascript file for bootstrap-strengtmeter
