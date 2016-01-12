@@ -602,6 +602,98 @@ function view_observer() {
 	$objectsArray = array ();
 	$colors = Array ();
 
+	// Correct the deepskyobservations array. Make sure that all the entries are available.
+	if (!array_key_exists("QUASR", $deepskyobservations)) {
+		$deepskyobservations["QUASR"] = 0;
+	}
+	if (!array_key_exists("DS", $deepskyobservations)) {
+		$deepskyobservations["DS"] = 0;
+	}
+	if (!array_key_exists("GALXY", $deepskyobservations)) {
+		$deepskyobservations["GALXY"] = 0;
+	}
+	if (!array_key_exists("GALCL", $deepskyobservations)) {
+		$deepskyobservations["GALCL"] = 0;
+	}
+	if (!array_key_exists("OPNCL", $deepskyobservations)) {
+		$deepskyobservations["OPNCL"] = 0;
+	}
+	if (!array_key_exists("DRKNB", $deepskyobservations)) {
+		$deepskyobservations["DRKNB"] = 0;
+	}
+	if (!array_key_exists("BRTNB", $deepskyobservations)) {
+		$deepskyobservations["BRTNB"] = 0;
+	}
+	if (!array_key_exists("STNEB", $deepskyobservations)) {
+		$deepskyobservations["STNEB"] = 0;
+	}
+	if (!array_key_exists("RNHII", $deepskyobservations)) {
+		$deepskyobservations["RNHII"] = 0;
+	}
+	if (!array_key_exists("HII", $deepskyobservations)) {
+		$deepskyobservations["HII"] = 0;
+	}
+	if (!array_key_exists("ASTER", $deepskyobservations)) {
+		$deepskyobservations["ASTER"] = 0;
+	}
+	if (!array_key_exists("GLOCL", $deepskyobservations)) {
+		$deepskyobservations["GLOCL"] = 0;
+	}
+	if (!array_key_exists("SNREM", $deepskyobservations)) {
+		$deepskyobservations["SNREM"] = 0;
+	}
+	if (!array_key_exists("AA2STAR", $deepskyobservations)) {
+		$deepskyobservations["AA2STAR"] = 0;
+	}
+	if (!array_key_exists("GXAGC", $deepskyobservations)) {
+		$deepskyobservations["GXAGC"] = 0;
+	}
+	if (!array_key_exists("PLNNB", $deepskyobservations)) {
+		$deepskyobservations["PLNNB"] = 0;
+	}
+	if (!array_key_exists("REFNB", $deepskyobservations)) {
+		$deepskyobservations["REFNB"] = 0;
+	}
+	if (!array_key_exists("EMINB", $deepskyobservations)) {
+		$deepskyobservations["EMINB"] = 0;
+	}
+	if (!array_key_exists("WRNEB", $deepskyobservations)) {
+		$deepskyobservations["WRNEB"] = 0;
+	}
+	if (!array_key_exists("ENSTR", $deepskyobservations)) {
+		$deepskyobservations["ENSTR"] = 0;
+	}
+	if (!array_key_exists("CLANB", $deepskyobservations)) {
+		$deepskyobservations["CLANB"] = 0;
+	}
+	if (!array_key_exists("AA1STAR", $deepskyobservations)) {
+		$deepskyobservations["AA1STAR"] = 0;
+	}
+	if (!array_key_exists("AA3STAR", $deepskyobservations)) {
+		$deepskyobservations["AA3STAR"] = 0;
+	}
+	if (!array_key_exists("AA4STAR", $deepskyobservations)) {
+		$deepskyobservations["AA4STAR"] = 0;
+	}
+	if (!array_key_exists("AA8STAR", $deepskyobservations)) {
+		$deepskyobservations["AA8STAR"] = 0;
+	}
+	if (!array_key_exists("NONEX", $deepskyobservations)) {
+		$deepskyobservations["NONEX"] = 0;
+	}
+	if (!array_key_exists("GACAN", $deepskyobservations)) {
+		$deepskyobservations["GACAN"] = 0;
+	}
+	if (!array_key_exists("GXADN", $deepskyobservations)) {
+		$deepskyobservations["GXADN"] = 0;
+	}
+	if (!array_key_exists("ENRNN", $deepskyobservations)) {
+		$deepskyobservations["ENRNN"] = 0;
+	}
+	if (!array_key_exists("SNOVA", $deepskyobservations)) {
+		$deepskyobservations["SNOVA"] = 0;
+	}
+
 	$all = array_sum($deepskyobservations) + $cometobservations;
 	if ($all == 0) {
 		$all = 1;
