@@ -130,6 +130,7 @@ class Observers {
 			echo "<div><table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			$catalog = "M";
 		}
+
 		$objectsInCatalog = $objObject->getNumberOfObjectsInCatalog ( $catalog );
 
 		echo "<thead>";
@@ -165,32 +166,58 @@ class Observers {
 		echo "</tfoot>";
 		echo "<tbody id=\"topobs_list\" class=\"tbody_obs\">";
 		$count = 0;
-		while ( list ( $key, $value ) = each ( $rank ) ) {
-			$name = $objObserver->getObserverProperty ( $key, 'name' );
-			$firstname = $objObserver->getObserverProperty ( $key, 'firstname' );
+		// We get the full list of observers and observations from sql, don't loop over the observers and do a mysql query always!
+		$allDrawings = $objObservation->getDsDrawingsCount();
+		$allObservationsLastYear = $objObservation->getAllObservationsLastYearCount (  );
+		$allDrawingsLastYear = $objObservation->getAllDrawingsLastYearCount (  );
+		$allObjects = $objObservation->getNumberOfObjectsCount ( );
+		$allObjectsCount = $objObservation->getAllObservedCountFromCatalogOrList ( $catalog );
+
+		foreach ( $rank as $value ) {
 			$outputtable .= "<tr>";
-			$outputtable .= "<td>" . ($count + 1) . "</td><td> <a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode ( $key ) . "\">$firstname&nbsp;$name</a> </td>";
-			$value2 = $objObservation->getDsObservationsCountFromObserver ( $key );
-			$outputtable .= "<td> $value2 &nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", (($value2 / $numberOfObservations) * 100) ) . "%)</td>";
-			$value2 = $objObservation->getDsDrawingsCountFromObserver ( $key );
+			$outputtable .= "<td>" . ($count + 1) . "</td><td> <a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode ( $value["observerid"] ) . "\">" . $value["observername"] . "</a> </td>";
+			$outputtable .= "<td>" . $value["Cnt"] . "&nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", (($value["Cnt"] / $numberOfObservations) * 100) ) . "%)</td>";
+			if (array_key_exists($value["observerid"], $allDrawings)) {
+				$value2 = $allDrawings [ $value["observerid"] ];
+			} else {
+				$value2 = 0;
+			}
 			$outputtable .= "<td> $value2 &nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", (($value2 / $numberOfDrawings) * 100) ) . "%)</td>";
-			$observationsThisYear = $objObservation->getObservationsLastYear ( $key );
+
+			if (array_key_exists($value["observerid"], $allObservationsLastYear)) {
+				$observationsThisYear = $allObservationsLastYear [ $value["observerid"] ];
+			} else {
+				$observationsThisYear = 0;
+			}
 			if ($numberOfObservationsThisYear != 0)
 				$percentObservations = ($observationsThisYear / $numberOfObservationsThisYear) * 100;
 			else
 				$percentObservations = 0;
 			$outputtable .= "<td>" . $observationsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", $percentObservations ) . "%)</td>";
 
-			$drawingsThisYear = $objObservation->getDrawingsLastYear ( $key );
+			if (array_key_exists($value["observerid"], $allDrawingsLastYear)) {
+				$drawingsThisYear = $allDrawingsLastYear [ $value["observerid"] ];
+			} else {
+				$drawingsThisYear = 0;
+			}
 			if ($numberOfDrawingsThisYear != 0)
 				$percentDrawings = ($drawingsThisYear / $numberOfDrawingsThisYear) * 100;
 			else
 				$percentDrawings = 0;
 			$outputtable .= "<td>" . $drawingsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", $percentDrawings ) . "%)</td>";
 
-			$objectsCount = $objObservation->getObservedCountFromCatalogOrList ( $key, $catalog );
+			if (array_key_exists($value["observerid"], $allObjectsCount)) {
+				$objectsCount = $allObjectsCount[ $value["observerid"]];
+			} else {
+				$objectsCount = 0;
+			}
 			$outputtable .= "<td> <a href=\"" . $baseURL . "index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode ( $catalog ) . "&amp;user=" . urlencode ( $key ) . "\">" . $objectsCount . "</a> (" . sprintf ( "%.2f", (($objectsCount / $objectsInCatalog) * 100) ) . "%)</td>";
-			$numberOfObjects = $objObservation->getNumberOfObjects ( $key );
+
+			if (array_key_exists($value["observerid"], $allObjects)) {
+				$numberOfObjects = $allObjects [ $value["observerid"] ];
+			} else {
+				$numberOfObjects = 0;
+			}
 			$outputtable .= "<td>" . $numberOfObjects . "&nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", (($numberOfObjects / $numberOfDifferentObjects) * 100) ) . "%)</td>";
 			$outputtable .= "</tr>";
 			$count ++;

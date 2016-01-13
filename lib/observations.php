@@ -760,6 +760,66 @@ class Observations {
 		$sql .= "ORDER BY Cnt DESC, observers.name ASC ";
 		return $objDatabase->selectKeyValueArray ( $sql, 'observerid', 'Cnt' );
 	}
+	public function getPopularObserversOverviewCatOrListAllInfo() {
+		global $objDatabase;
+		$sql = "SELECT observations.observerid, CONCAT(observers.firstname,' ',observers.name) As observername, COUNT(*) AS Cnt " . "FROM observations " . "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
+		$sql .= "GROUP BY observations.observerid, observers.name ";
+		$sql .= "ORDER BY Cnt DESC, observers.name ASC;";
+
+		return $objDatabase->selectRecordsetArray($sql);
+	}
+	public function getDsDrawingsCount() {
+		global $objDatabase;
+		$sql = "SELECT observerid, COUNT(*) AS Cnt " . "FROM observations " .
+						" WHERE visibility != 7 AND hasDrawing=1 ";
+		$sql .= "GROUP BY observerid ";
+
+		return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
+	}
+	public function getAllObservationsLastYearCount() {
+		global $objDatabase;
+		$t = getdate ();
+
+		global $objDatabase;
+		$sql = "SELECT observerid, COUNT(*) AS Cnt " . "FROM observations " .
+											"WHERE visibility != 7
+											  AND date > \"" .
+												date ( 'Ymd', strtotime ( '-1 year' ) ) . "\"";
+		$sql .= "GROUP BY observerid ";
+
+		return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
+	}
+	public function getAllDrawingsLastYearCount() {
+		global $objDatabase;
+		$t = getdate ();
+
+		global $objDatabase;
+		$sql = "SELECT observerid, COUNT(*) AS Cnt " . "FROM observations " .
+											"WHERE visibility != 7 AND hasDrawing = 1
+											  AND date > \"" .
+												date ( 'Ymd', strtotime ( '-1 year' ) ) . "\"";
+		$sql .= "GROUP BY observerid ";
+
+		return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
+	}
+	public function getNumberOfObjectsCount()
+	{
+		global $objDatabase;
+		$sql = "SELECT observerid, COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ";
+		$sql .= "GROUP BY observerid ";
+		return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
+	}
+	public function getAllObservedCountFromCatalogOrList($catalog) {
+		global $objDatabase;
+		if (substr ( $catalog, 0, 5 ) == 'List:') {
+			$sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $catalog, 5 ) . "\" " . "AND observations.visibility != 7 ";
+		} else {
+			$sql = "SELECT observerid, COUNT(DISTINCT objectnames.catindex) AS Cnt FROM objectnames " . "INNER JOIN observations ON observations.objectname = objectnames.objectname " . "WHERE objectnames.catalog = \"" . $catalog . "\" " . "AND observations.visibility != 7 ";
+		}
+		$sql .= "GROUP BY observerid ";
+
+		return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
+	}
 	public function setDsObservationProperty($id, $property, $propertyValue) // sets the property to the specified value for the given observation
 {
 		global $objDatabase;
