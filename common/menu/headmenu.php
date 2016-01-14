@@ -68,6 +68,7 @@ function headmenu() {
 		echo " <ul class=\"dropdown-menu\">";
 		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $loggedUser . "\">" . LangDetails . "</a></li>";
 		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=change_account\">" . LangChangeMenuItem1 . "</a></li>";
+		echo "  <li class=\"disabled\">─────────────────</li>";
 		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=logout&amp;title=" . urlencode ( LangLogoutMenuItem1 ) . "\">" . LangLogoutMenuItem1 . "</a></li>";
 		echo " </ul>";
 		echo "</li>";
