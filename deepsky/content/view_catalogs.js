@@ -1,7 +1,7 @@
 
 function view_catalogs(leftmenu,topmenu)
 {
-  resizeDivsViewCatalogs(leftmenu,topmenu);
+  //resizeDivsViewCatalogs(leftmenu,topmenu);
   var jsonhttp;
   if(window.XMLHttpRequest)
     jsonhttp=new XMLHttpRequest();
@@ -11,12 +11,12 @@ function view_catalogs(leftmenu,topmenu)
     alert("Catalog pages are not supported on non-xmlhttp machines");
   jsonhttp.onreadystatechange=function()
   { if(jsonhttp.readyState==4)
-    { show_catalogs(eval('('+jsonhttp.responseText+')')); 
+    { show_catalogs(eval('('+jsonhttp.responseText+')'));
     }
   };
   var url='ajaxinterface.php?instruction=getCatalogs';
   jsonhttp.open("GET",url,true);
-  jsonhttp.send(null);	
+  jsonhttp.send(null);
 }
 
 function show_catalogs(thecatalogs)
@@ -28,7 +28,8 @@ function show_catalogs(thecatalogs)
   document.getElementById('view_catalogs_left').innerHTML=thetext;
 }
 function view_catalog(thecatalog)
-{ document.getElementById('view_catalogs_right').innerHTML='Getting ajax data for '+thecatalog;	
+{
+  document.getElementById('view_catalogs_right').innerHTML='Getting ajax data for '+thecatalog;
   var jsonhttp;
   if(window.XMLHttpRequest)
     jsonhttp=new XMLHttpRequest();
@@ -38,17 +39,17 @@ function view_catalog(thecatalog)
     alert("Catalog pages are not supported on non-xmlhttp machines");
   jsonhttp.onreadystatechange=function()
   { if(jsonhttp.readyState==4)
-    { show_catalog(eval('('+jsonhttp.responseText+')')); 
+    { show_catalog(eval('('+jsonhttp.responseText+')'));
     }
   };
   var url='ajaxinterface.php?instruction=getCatalogData&thecatalog='+thecatalog;
   jsonhttp.open("GET",url,true);
-  jsonhttp.send(null);	
+  jsonhttp.send(null);
 }
 
 function show_catalog($thecatalogdata)
 { $thecount=count($thecatalogdata);
-  $thetext="Number of objects: ";	
+  $thetext="Number of objects: ";
   $thetext+=$thecount+"<br />";
   var $theconname= new array();
   var $theconcount=new array();
@@ -128,9 +129,9 @@ function show_catalog($thecatalogdata)
   }
   $thetext+='</table>';
 
-  
-  
-  
+
+
+
   $thetext+='<hr />';
   $thetext+='<table>';
   for($j=0;$j<$thecatalogdata.length;$j++)
