@@ -21,10 +21,8 @@ function view_catalogs(leftmenu,topmenu)
 
 function show_catalogs(thecatalogs)
 { var thetext='';
-//  $thetext='<list>';
   for(i=0;i<thecatalogs.length;i++)
 	thetext+='<a href="#" onclick="view_catalog(\''+thecatalogs[i]+'\');return false;";>'+thecatalogs[i]+'</a><br />';
-//  $thetext+='</list>';
   document.getElementById('view_catalogs_left').innerHTML=thetext;
 }
 function view_catalog(thecatalog)
@@ -74,8 +72,7 @@ function show_catalog($thecatalogdata)
          $theconname[$i]=$temp1;
          $theconcount[$i]=$temp2;
       }
-  $thetext+='<hr />';
-  $thetext+='<table>';
+  $thetext+='<div class="table-responsive"><table class="table table-condensed table-bordered table-hover">';
   for($j=0;$j<$theconname.length;$j++)
   { if(($j%3)==0)
 	  $thetext+='<tr>';
@@ -88,7 +85,7 @@ function show_catalog($thecatalogdata)
 	  $thetext=$thetext+'<td class="td33pct">&nbsp;</td>';
 	$thetext+='</tr>';
   }
-  $thetext+='</table>';
+  $thetext+='</table></div>';
 
   var $thetypename= new array();
   var $thetypecount=new array();
@@ -113,8 +110,7 @@ function show_catalog($thecatalogdata)
          $thetypename[$i]=$temp1;
          $thetypecount[$i]=$temp2;
       }
-  $thetext+='<hr />';
-  $thetext+='<table>';
+  $thetext+='<div class="table-responsive"><table class="table table-condensed table-bordered table-hover">';
   for($j=0;$j<$thetypename.length;$j++)
   { if(($j%3)==0)
 	  $thetext+='<tr>';
@@ -127,13 +123,12 @@ function show_catalog($thecatalogdata)
 	  $thetext=$thetext+'<td class="td33pct">&nbsp;</td>';
 	$thetext+='</tr>';
   }
-  $thetext+='</table>';
+  $thetext+='</table></div>';
 
 
 
 
-  $thetext+='<hr />';
-  $thetext+='<table>';
+  $thetext+='<div class="table-responsive"><table class="table table-condensed table-bordered table-hover">';
   for($j=0;$j<$thecatalogdata.length;$j++)
   { if(($j%3)==0)
 	  $thetext+='<tr>';
@@ -146,6 +141,6 @@ function show_catalog($thecatalogdata)
 	  $thetext=$thetext+'<td class="td33pct">&nbsp;</td>';
 	$thetext+='</tr>';
   }
-  $thetext+='</table>';
+  $thetext+='</table></div>';
   document.getElementById('view_catalogs_right').innerHTML=$thetext;
 }
