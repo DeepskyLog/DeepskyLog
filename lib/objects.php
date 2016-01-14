@@ -1755,20 +1755,22 @@ class Objects {
 		$objUtil->addPager ( "nearobjectlist", $count );
 
 		if ($loggedUser) {
-			$content1 = LangObjectsFilter . ": <a href=\"" . (($objUtil->checkRequestKey ( 'filteron' ) == 'location') ? $objUtil->removeFromLink ( $link, 'filteron=location' ) . "\" title=\"" . LangObjectsFilterLocationOffExpl . "\"" : $link . "&amp;filteron=location" . "\" title=\"" . LangObjectsFilterLocationExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterLocation . "</a>" . "&nbsp;";
-			$content1 .= "<a href=\"" . (($objUtil->checkRequestKey ( 'filteron1' ) == 'time') ? $objUtil->removeFromLink ( $link, 'filteron1=time' ) . "\" title=\"" . LangObjectsFilterDateTimeOffExpl . "\"" : $link . "&amp;filteron1=time" . "\" title=\"" . LangObjectsFilterDateTimeExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterDateTime . "</a>";
+			if (!(array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes")) {
+				$content1 = LangObjectsFilter . ": <a href=\"" . (($objUtil->checkRequestKey ( 'filteron' ) == 'location') ? $objUtil->removeFromLink ( $link, 'filteron=location' ) . "\" title=\"" . LangObjectsFilterLocationOffExpl . "\"" : $link . "&amp;filteron=location" . "\" title=\"" . LangObjectsFilterLocationExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterLocation . "</a>" . "&nbsp;";
+				$content1 .= "<a href=\"" . (($objUtil->checkRequestKey ( 'filteron1' ) == 'time') ? $objUtil->removeFromLink ( $link, 'filteron1=time' ) . "\" title=\"" . LangObjectsFilterDateTimeOffExpl . "\"" : $link . "&amp;filteron1=time" . "\" title=\"" . LangObjectsFilterDateTimeExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterDateTime . "</a>";
 
-			$content = $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objects.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4a ) . "&nbsp;";
-			$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectnames.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4b ) . "&nbsp;";
-			$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectsDetails.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4c ) . "&nbsp;";
-			$content .= "<a href=\"" . $baseURL . "objects.argo?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage8 . "</a>&nbsp;";
-			$content .= "<a href=\"" . $baseURL . "objects.csv?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage6 . "</a>";
+				$content = $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objects.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4a ) . "&nbsp;";
+				$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectnames.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4b ) . "&nbsp;";
+				$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectsDetails.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4c ) . "&nbsp;";
+				$content .= "<a href=\"" . $baseURL . "objects.argo?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage8 . "</a>&nbsp;";
+				$content .= "<a href=\"" . $baseURL . "objects.csv?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage6 . "</a>";
 
-			$content .= "&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;pdfTitle=Test\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . ReportLink . "</a>&nbsp;";
-			$content .= "<a href=\"" . $baseURL . "index.php?indexAction=objectsSets" . "\" rel=\"external\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage11 . "</a>";
+				$content .= "&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;pdfTitle=Test\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . ReportLink . "</a>&nbsp;";
+				$content .= "<a href=\"" . $baseURL . "index.php?indexAction=objectsSets" . "\" rel=\"external\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage11 . "</a>";
 
-			echo $content1 . "<br /><br />";
-			echo $content;
+				echo $content1 . "<br /><br />";
+				echo $content;
+			}
 		}
 	}
 	public function showObjectsFields($link, $min, $max, $ownShow = '', $showRank = 0, $fields = array("showname","objectconstellation","objectmagnitude"), $pageListAction = "addAllObjectsFromPageToList") // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
