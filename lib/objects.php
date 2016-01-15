@@ -1448,13 +1448,15 @@ class Objects {
 		echo "<td colspan=\"3\">" . (($this->getDsoProperty ( $object, 'pa' ) != 999) ? ($this->getDsoProperty ( $object, 'pa' ) . "&deg;") : "-") . "</td>";
 		echo "</tr>";
 
+		if (!(array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes")) {
+
 		echo "<tr>";
 		echo "<td colspan=\"3\">" . LangViewObjectFieldContrastReserve . "</td>";
 		echo "<td colspan=\"3\">" . "<span class=\"" . $contype . "\" onmouseover=\"Tip('" . $popup . "')\">" . $contrast . "</span>" . "</td>";
 		echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectFieldOptimumDetectionMagnification . "</span></td>";
 		echo "<td colspan=\"3\">" . $prefMag . "</td>";
 		echo "</tr>";
-
+}
 		if ($alt) {
 			echo "<tr>";
 			echo "<td colspan=\"3\">" . LangViewObjectField2 . "</td>";
