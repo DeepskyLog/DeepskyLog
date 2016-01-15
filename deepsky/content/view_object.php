@@ -81,8 +81,9 @@ function showObjectDetails($object_ss) {
 									LangRemoveModal1 . "<strong>" . $object_ss . "</strong>?
 									 <br />" . LangRemoveModal2 . "<strong>" . $object_ss . "</strong>" .
 									 LangRemoveModal3 . "<strong>" . $object_ss . "</strong>" . LangRemoveModal4 . "
-										<form action=\"".$baseURL."index.php?indexAction=deleteObject\">
+										<form action=\"".$baseURL."index.php?indexAction=deleteObject\" method=\"post\">
 										 <input type=\"hidden\" name=\"indexAction\" value=\"deleteObject\" />
+										 <input type=\"hidden\" name=\"object\" value=\"" . $object_ss . "\" />
 										</div>
 										<div class=\"modal-footer\">
 										<button type=\"button\" class=\"btn btn-success\" data-dismiss=\"modal\">" . LangKeepObject . "</button>
@@ -107,8 +108,9 @@ function showObjectDetails($object_ss) {
 									 LangRemoveModal1 ."<strong>" . $object_ss . "</strong>" . LangRemoveModal6 . "<strong>" .
 									 $obsCnt . "</strong>" . LangRemoveModal7 . "?
 									 <br />" . LangRemoveModal5 . "
-				            <form action=\"".$baseURL."index.php?indexAction=deleteObject\">
+				            <form action=\"".$baseURL."index.php?indexAction=deleteObject\" method=\"post\">
 				             <input type=\"hidden\" name=\"indexAction\" value=\"deleteObject\" />
+										 <input type=\"hidden\" name=\"object\" value=\"" . $object_ss . "\" />
 				            </div>
 				            <div class=\"modal-footer\">
 				            <button type=\"button\" class=\"btn btn-success\" data-dismiss=\"modal\">" . LangKeepObject . "</button>

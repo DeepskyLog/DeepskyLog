@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangDeleteSuccess", "Successfully deleted ");
 define("LangRemoveModal1", "Do you really want to delete ");
 define("LangRemoveModal2", "There are no observations of ");
 define("LangRemoveModal3", ", so removing ");
