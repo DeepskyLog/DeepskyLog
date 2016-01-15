@@ -66,10 +66,58 @@ function showObjectDetails($object_ss) {
 	echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden' . "\" title=\"" . ObjectDetailsHide . "\">-</a> " . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . '&nbsp;-&nbsp;' . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "</h4>";
 	if (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes") {
 		$obsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object_ss . "\"", 'ObsCnt' );
+
 		if ($obsCnt == 0) {
-			echo '<button class="btn btn-danger pull-right">' . LangRemoveObject . '</button>';
+			echo '<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#removeObject">' . LangRemoveObject . '</button>';
+
+			echo "<div class=\"modal fade\" id=\"removeObject\" tabindex=\"-1\">
+							<div class=\"modal-dialog\">
+								<div class=\"modal-content\">
+									<div class=\"modal-header\">
+										<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>
+										<h4 class=\"modal-title\" id=\"myModalLabel\">" . LangRemoveObject . "</h4>
+									</div>
+									<div class=\"modal-body\">" .
+									LangRemoveModal1 . "<strong>" . $object_ss . "</strong>?
+									 <br />" . LangRemoveModal2 . "<strong>" . $object_ss . "</strong>" .
+									 LangRemoveModal3 . "<strong>" . $object_ss . "</strong>" . LangRemoveModal4 . "
+										<form action=\"".$baseURL."index.php?indexAction=deleteObject\">
+										 <input type=\"hidden\" name=\"indexAction\" value=\"deleteObject\" />
+										</div>
+										<div class=\"modal-footer\">
+										<button type=\"button\" class=\"btn btn-success\" data-dismiss=\"modal\">" . LangKeepObject . "</button>
+										<input class=\"btn btn-danger\" type=\"submit\" name=\"objectToDelete\" value=\"" . LangRemoveObject . "!\" />
+							 </form>
+									</div>
+								 </div><!-- /.modal-content -->
+								</div><!-- /.modal-dialog -->
+							 </div><!-- /.modal -->";
+
 		} else {
-			echo '<button class="btn btn-danger pull-right">' . LangForceRemoveObject . '</button>';
+			echo '<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#forceRemoveObject">' . LangForceRemoveObject . '</button>';
+
+			echo "<div class=\"modal fade\" id=\"forceRemoveObject\" tabindex=\"-1\">
+							<div class=\"modal-dialog\">
+								<div class=\"modal-content\">
+									<div class=\"modal-header\">
+										<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>
+										<h4 class=\"modal-title\" id=\"myModalLabel\">" . LangForceRemoveObject . "</h4>
+									</div>
+									<div class=\"modal-body\">" .
+									 LangRemoveModal1 ."<strong>" . $object_ss . "</strong>" . LangRemoveModal6 . "<strong>" .
+									 $obsCnt . "</strong>" . LangRemoveModal7 . "?
+									 <br />" . LangRemoveModal5 . "
+				            <form action=\"".$baseURL."index.php?indexAction=deleteObject\">
+				             <input type=\"hidden\" name=\"indexAction\" value=\"deleteObject\" />
+				            </div>
+				            <div class=\"modal-footer\">
+				            <button type=\"button\" class=\"btn btn-success\" data-dismiss=\"modal\">" . LangKeepObject . "</button>
+				            <input class=\"btn btn-danger\" type=\"submit\" name=\"objectToDelete\" value=\"" . LangForceRemoveObject . "!\" />
+						   </form>
+				          </div>
+				         </div><!-- /.modal-content -->
+				        </div><!-- /.modal-dialog -->
+				       </div><!-- /.modal -->";
 		}
 		echo '<br />';
 	}
