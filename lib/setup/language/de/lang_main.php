@@ -1,5 +1,13 @@
 <?php //GE
 // This is version 5.0
+define("LangRemoveModal1", "Do you really want to delete ");
+define("LangRemoveModal2", "There are no observations of ");
+define("LangRemoveModal3", ", so removing ");
+define("LangRemoveModal4", " should be relatively safe.");
+define("LangRemoveModal5", "All the observations will also be removed.");
+define("LangRemoveModal6", ", which has ");
+define("LangRemoveModal7", " observations");
+define("LangKeepObject", "Keep");
 define("LangRemoveObject", "Remove Object");
 define("LangForceRemoveObject", "Force Remove Object");
 define("LangChangeAccountField14","Einheit f&uuml;r Instrumentendurchmesser");
