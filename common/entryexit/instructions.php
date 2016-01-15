@@ -545,6 +545,12 @@ function instructions() {
 		}
 		unset ( $_GET ['removePageObjectsFromList'] );
 	}
+	if (($objUtil->checkSessionKey ( 'admin' ) == 'yes') && $objUtil->checkPostKey ( 'objectToDelete' ) && $objectname = $objUtil->checkPostKey ('object')) {
+		$objObject->deleteObject($objectname);
+		unset ( $_POST ['objectToDelete'] );
+		unset ( $_POST ['object'] );
+		$entryMessage .= LangDeleteSuccess . " <strong>" . $objectname . "</strong>";
+	}
 	if ($objUtil->checkGetKey ( 'addList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' ))) {
 		unset ( $_SESSION ['QobjParams'] );
 		if ($objList->checkList ( $listnameToAdd ) != 0) {

@@ -1299,9 +1299,16 @@ class Objects {
 		$newcatindex = ucwords ( trim ( $catindex ) );
 		global $objDatabase;
 		$objDatabase->execSQL ( "UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"" );
-		$objDatabase->execSQL ( "UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"" );
 		$objDatabase->execSQL ( "UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname=\"$name\"" );
 		$objDatabase->execSQL ( "UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname=\"$name\"" );
+		$objDatabase->execSQL ( "DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\"" );
+		$objDatabase->execSQL ( "DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"" );
+		$objDatabase->execSQL ( "DELETE objects.* FROM objects WHERE name = \"$name\"" );
+	}
+	public function deleteObject($name) {
+		global $objDatabase;
+		$objDatabase->execSQL ( "DELETE FROM observations WHERE objectname=\"$name\"" );
+		$objDatabase->execSQL ( "DELETE FROM observerobjectlist WHERE objectname=\"$name\"" );
 		$objDatabase->execSQL ( "DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\"" );
 		$objDatabase->execSQL ( "DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"" );
 		$objDatabase->execSQL ( "DELETE objects.* FROM objects WHERE name = \"$name\"" );
