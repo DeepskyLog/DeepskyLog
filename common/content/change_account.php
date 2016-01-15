@@ -218,7 +218,7 @@ function change_account()
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField7 . "</label>";
 	echo "<div class=\"col-sm-6\">" . $tempLocationList;
 	echo "</div><p class=\"form-control-static\">" .
-			"<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeAccountField7Expl."</a>" . "</p></div>";
+			"<a href=\"".$baseURL."index.php?indexAction=add_location\">".LangChangeAccountField7Expl."</a>" . "</p></div>";
 
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField8 . "</label>";
