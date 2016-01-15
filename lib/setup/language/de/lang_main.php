@@ -1,5 +1,7 @@
 <?php //GE
 // This is version 5.0
+define("LangRemoveObject", "Remove Object");
+define("LangForceRemoveObject", "Force Remove Object");
 define("LangSelectCountry", "Land ausw&auml;hlen");
 define("GraphObservationsPerCountry", "Beobachtungen pro Land");
 define("LangStatistics", "Statistiken");

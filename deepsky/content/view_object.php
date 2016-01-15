@@ -61,8 +61,18 @@ function showButtons($theLocation, $viewobjectdetails, $viewobjectephemerides, $
 	echo "<hr />";
 }
 function showObjectDetails($object_ss) {
-	global $baseURL, $object, $objObject, $objPresentations, $objUtil;
-	echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden' . "\" title=\"" . ObjectDetailsHide . "\">-</a> " . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $objObject->getDSOseenLink ( $object ) . "</h4>";
+	global $baseURL, $object, $objObject, $objPresentations, $objUtil,$objDatabase;
+	$seen = $objObject->getDSOseenLink ( $object );
+	echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden' . "\" title=\"" . ObjectDetailsHide . "\">-</a> " . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . '&nbsp;-&nbsp;' . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "</h4>";
+	if (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes") {
+		$obsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object_ss . "\"", 'ObsCnt' );
+		if ($obsCnt == 0) {
+			echo '<button class="btn btn-danger pull-right">' . LangRemoveObject . '</button>';
+		} else {
+			echo '<button class="btn btn-danger pull-right">' . LangForceRemoveObject . '</button>';
+		}
+		echo '<br />';
+	}
 	echo "<hr />";
 	$objObject->showObject ( $object );
 }
