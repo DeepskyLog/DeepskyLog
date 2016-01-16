@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("LangQuickPick", "Entrez le nom de l'objet");
 define("LangSelectCountry", "Choisissez le pays");
 define("LangStatistics", "Statistiques");
 define("GraphObservationsPerCountry", "Observations par pays");

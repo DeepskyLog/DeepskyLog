@@ -1,5 +1,6 @@
 <?php //SV
 // This is version 5.0
+define("LangQuickPick", "Enter object name");
 define("LangSelectCountry", "Select country");
 define("LangStatistics", "Statistics");
 define("GraphObservationsPerCountry", "Observations per country");

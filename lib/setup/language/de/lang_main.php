@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("LangQuickPick", "Geben Sie Objektnamen ein");
 define("LangSelectCountry", "Land ausw&auml;hlen");
 define("GraphObservationsPerCountry", "Beobachtungen pro Land");
 define("LangStatistics", "Statistiken");
