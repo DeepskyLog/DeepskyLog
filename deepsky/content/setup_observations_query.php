@@ -613,8 +613,9 @@ function setup_observations_query() {
 		$content .= '<input id="deletequery" class="btn btn-danger" type="button" value="' . LangRemoveQuery . '" class="hidden" onclick="removeQuery();"/>' . '&nbsp;';
 
 		echo $content;
+		echo "</div></form>";
 	}
 	echo "</div>";
-	echo '<script type="text/javascript">setobserverqueries();</script>';
+	echo '<script type="text/javascript">setobservationqueries();</script>';
 }
 ?>
