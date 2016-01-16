@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("LangQuickPick", "Entrez le nom de l'objet");
 define("LangSelectCountry", "Choisissez le pays");
 define("LangStatistics", "Statistiques");
 define("GraphObservationsPerCountry", "Observations par pays");
@@ -800,6 +801,7 @@ define("LangYouAreHere"																		,"Vous &ecirc;tes ici:");
 define("LangHome"																					,"Acceuil");
 define("LangBecomeMember"																	,"Devenez membre");
 define("LangSearch"																				,"Recherche");
+define("LangQuickSearch"																	,"Recherche rapide");
 define("LangContact"																			,"Contact");
 define("LangDeepskyLogModules"														,"Modules de Deepskylog");
 define("LangWelcome"																			,"Bienvenu&nbsp;dans&nbsp;la module&nbsp;");

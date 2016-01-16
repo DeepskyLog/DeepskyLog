@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("LangQuickPick", "Geben Sie Objektnamen ein");
 define("LangSelectCountry", "Land ausw&auml;hlen");
 define("GraphObservationsPerCountry", "Beobachtungen pro Land");
 define("LangStatistics", "Statistiken");
@@ -846,7 +847,8 @@ define("OpenClustersLink"                                 ,"https://github.com/D
 define("LangYouAreHere"																		,"Sie sind hier:");
 define("LangHome"																					,"Startseite");
 define("LangBecomeMember"																	,"Mitglied werden");
-define("LangSearch"																				,"Suche");
+define("LangSearch"																				,"Suchen");
+define("LangQuickSearch"																	,"Schnell Suchen");
 define("LangContact"																			,"Kontakt");
 define("LangDeepskyLogModules"														,"Deepskylog Module");
 define("LangWelcome"																			,"Willkommen&nbsp;in&nbsp;dem&nbsp;");

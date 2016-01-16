@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangQuickPick", "Voer objectnaam in");
 define("LangSelectCountry", "Kies land");
 define("GraphObservationsPerCountry", "Waarnemingen per land");
 define("LangStatistics", "Statistieken");
@@ -488,9 +489,9 @@ define("Langpdfserieschoselayout","Gelieve een layout voor de index te kiezen.")
 // TO DO:
 
 
-define("LangStoredQueries"      ,"Stored queries:");
-define("LangSaveAs"             ,"Save As...");
-define("LangRemoveQuery"        ,"Remove");
+define("LangStoredQueries"      ,"Opgeslagen zoekopdrachten:");
+define("LangSaveAs"             ,"Bewaar als...");
+define("LangRemoveQuery"        ,"Verwijder");
 
 
 define("LangExclude",            "Uitgezonderd:");
@@ -826,6 +827,7 @@ define("LangYouAreHere"																		,"U bevindt zich hier:");
 define("LangHome"																					,"Home");
 define("LangBecomeMember"																	,"Word lid");
 define("LangSearch"																				,"Zoeken");
+define("LangQuickSearch"																	,"Snel Zoeken");
 define("LangContact"																			,"Contact");
 define("LangDeepskyLogModules"														,"Deepskylog Modules");
 define("LangWelcome"																			,"Welkom&nbsp;in&nbsp;de&nbsp;");

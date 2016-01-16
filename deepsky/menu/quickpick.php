@@ -17,12 +17,12 @@ function menu_quickpick() {
 			$link .= "&amp;" . $key . "=" . urlencode ( $value );
 	reset ( $_GET );
 	echo "<h4>";
-	echo LangSearch . "</h4>";
+	echo LangQuickSearch . "</h4>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"quickpick\" />";
 	echo "<input type=\"hidden\" name=\"titleobjectaction\" value=\"" . LangSearch . "\" />";
 	echo "<input type=\"hidden\" name=\"source\"      value=\"quickpick\" />";
 	echo "<input type=\"hidden\" name=\"myLanguages\" value=\"true\" />";
-	echo "<input type=\"search\" class=\"form-control\" placeholder=\"M 45\" id=\"quickpickobject\" name=\"object\" title=\"" . LangQuickPickHelp . "\" value=\"" . ((array_key_exists ( 'object', $_GET ) && ($_GET ['object'] != '* ')) ? $_GET ['object'] : "") . "\" />";
+	echo "<input type=\"search\" class=\"form-control\" placeholder=\"" . LangQuickPick . "\" id=\"quickpickobject\" name=\"object\" title=\"" . LangQuickPickHelp . "\" value=\"" . ((array_key_exists ( 'object', $_GET ) && ($_GET ['object'] != '* ')) ? $_GET ['object'] : "") . "\" />";
 	echo "<br /><br />";
 	echo "<div class=\"form group\"><input class=\"btn btn-default btn-block btn-sm\" type=\"submit\" name=\"searchObjectQuickPickQuickPick\" value=\"" . LangQuickPickSearchObject . "\" /></div>";
 	echo "<div class=\"form group\"><input class=\"btn btn-default btn-block btn-sm\" type=\"submit\" name=\"searchObservationsQuickPick\" value=\"" . LangQuickPickSearchObservations . "\" /></div>";

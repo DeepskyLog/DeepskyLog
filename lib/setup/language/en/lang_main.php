@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 5.0
+define("LangQuickPick", "Enter object name");
 define("LangSelectCountry", "Select country");
 define("GraphObservationsPerCountry", "Observations per country");
 define("LangStatistics", "Statistics");
@@ -493,7 +494,7 @@ define("Langpdfserieschoselayout","Please select a layout for the index page.");
 
 // TO DO:
 
-define("LangStoredQueries"      ,"Stored queries:");
+define("LangStoredQueries"      ,"Stored searches:");
 define("LangSaveAs"             ,"Save As...");
 define("LangRemoveQuery"        ,"Remove");
 
@@ -837,6 +838,7 @@ define("LangYouAreHere"																		,"You are here:");
 define("LangHome"																					,"Home");
 define("LangBecomeMember"																	,"Become member");
 define("LangSearch"																				,"Search");
+define("LangQuickSearch"																	,"Quick Search");
 define("LangContact"																			,"Contact");
 define("LangDeepskyLogModules"														,"Deepskylog Modules");
 define("LangWelcome"																			,"Welcome&nbsp;in&nbsp;the&nbsp;");
