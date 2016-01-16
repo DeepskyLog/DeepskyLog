@@ -78,7 +78,7 @@ function setobserverqueries()
       optn.text = "-----";
       optn.value = "------";
       document.getElementById('observerqueries').options.add(optn);
-      
+
       for(i=0;i<queries.length;i++)
       { optn = document.createElement("option");
         optn.value = queries[i]["observerquery"];
@@ -103,7 +103,8 @@ function saveObserverQueryAs()
   else
     alert("Not supported on non-xmlhttp machines");
   jsonhttp.onreadystatechange=function()
-  { if(jsonhttp.readyState==4)
+  {
+    if(jsonhttp.readyState==4)
     { //alert(jsonhttp.responseText);
       queries=eval("("+jsonhttp.responseText+")");
       for(i=document.getElementById('observerqueries').options.length-1;i>=0;i--)
@@ -113,7 +114,7 @@ function saveObserverQueryAs()
       optn.text = "-----";
       optn.value = "------";
       document.getElementById('observerqueries').options.add(optn);
-      
+
       for(i=0;i<queries.length;i++)
       { optn = document.createElement("option");
         optn.value = queries[i]["observerquery"];
@@ -184,7 +185,7 @@ function saveObserverQueryAs()
   { query=query+temp.substr(0,pos)+"="+document.getElementById(temp.substr(0,pos)).checked+'&';
     temp=temp.substr(pos+1);
   }
-  newqueryname=prompt('Give the name','queryname');
+  newqueryname=prompt('Name','');
   if(!(newqueryname))
     newqueryname='newqueryname';
   var url="ajaxinterface.php"            +"?"+
@@ -235,7 +236,7 @@ function removeQuery()
       optn.text = "-----";
       optn.value = "------";
       document.getElementById('observerqueries').options.add(optn);
-      
+
       for(i=0;i<queries.length;i++)
       { optn = document.createElement("option");
         optn.value = queries[i]["observerquery"];
@@ -243,7 +244,7 @@ function removeQuery()
         document.getElementById('observerqueries').options.add(optn);
       }
     }
-  };  
+  };
   var url="ajaxinterface.php"            +"?"+
     "instruction=removeObserverQuery" +"&"+
     "observerquerytype="+"obs"     +"&"+

@@ -59,7 +59,7 @@ function setobserverqueries()
       optn.text = "-----";
       optn.value = "------";
       document.getElementById('observerqueries').options.add(optn);
-      
+
       for(i=0;i<queries.length;i++)
       { optn = document.createElement("option");
         optn.value = queries[i]["observerquery"];
@@ -94,7 +94,7 @@ function saveObserverQueryAs()
       optn.text = "-----";
       optn.value = "------";
       document.getElementById('observerqueries').options.add(optn);
-      
+
       for(i=0;i<queries.length;i++)
       { optn = document.createElement("option");
         optn.value = queries[i]["observerquery"];
@@ -144,8 +144,8 @@ function saveObserverQueryAs()
   { query=query+temp.substr(0,pos)+"="+document.getElementById(temp.substr(0,pos)).checked+'&';
     temp=temp.substr(pos+1);
   }
-  query=query+'excludeexceptseen='+document.getElementById('excludeexceptseen').checked;  
-  newqueryname=prompt('Give the name','queryname');
+  query=query+'excludeexceptseen='+document.getElementById('excludeexceptseen').checked;
+  newqueryname=prompt('Name','');
   if(!(newqueryname))
     newqueryname='newqueryname';
   var url="ajaxinterface.php"            +"?"+
@@ -196,7 +196,7 @@ function removeQuery()
       optn.text = "-----";
       optn.value = "------";
       document.getElementById('observerqueries').options.add(optn);
-      
+
       for(i=0;i<queries.length;i++)
       { optn = document.createElement("option");
         optn.value = queries[i]["observerquery"];
@@ -204,7 +204,7 @@ function removeQuery()
         document.getElementById('observerqueries').options.add(optn);
       }
     }
-  };  
+  };
   var url="ajaxinterface.php"            +"?"+
     "instruction=removeObserverQuery" +"&"+
     "observerquerytype="+"obj"     +"&"+

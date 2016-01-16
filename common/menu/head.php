@@ -45,9 +45,9 @@ function head() {
 	// Load the needed javascript file for bootstrap-strengtmeter
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/strength-meter.min.js\"></script>";
 	// Load the needed css file for bootstrap-fileinput
-	echo "<link rel=\"stylesheet\" href=\"styles/fileinput.min.css\"></script>";
+	echo "<link rel=\"stylesheet\" href=\"styles/fileinput.min.css\" />";
   // Load the needed css file for bootstrap-strengthmeter
-	echo "<link rel=\"stylesheet\" href=\"styles/strength-meter.min.css\"></script>";
+	echo "<link rel=\"stylesheet\" href=\"styles/strength-meter.min.css\" />";
 
 	$TitleText = "";
 	$theDispatch = $objUtil->checkRequestKey ( 'indexAction' );
