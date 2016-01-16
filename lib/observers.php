@@ -211,7 +211,7 @@ class Observers {
 			} else {
 				$objectsCount = 0;
 			}
-			$outputtable .= "<td> <a href=\"" . $baseURL . "index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode ( $catalog ) . "&amp;user=" . urlencode ( $key ) . "\">" . $objectsCount . "</a> (" . sprintf ( "%.2f", (($objectsCount / $objectsInCatalog) * 100) ) . "%)</td>";
+			$outputtable .= "<td> <a href=\"" . $baseURL . "index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode ( $catalog ) . "&amp;user=" . urlencode ( $value["observerid"] ) . "\">" . $objectsCount . "</a> (" . sprintf ( "%.2f", (($objectsCount / $objectsInCatalog) * 100) ) . "%)</td>";
 
 			if (array_key_exists($value["observerid"], $allObjects)) {
 				$numberOfObjects = $allObjects [ $value["observerid"] ];
