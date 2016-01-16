@@ -494,7 +494,7 @@ define("Langpdfserieschoselayout","Please select a layout for the index page.");
 
 // TO DO:
 
-define("LangStoredQueries"      ,"Stored queries:");
+define("LangStoredQueries"      ,"Stored searches:");
 define("LangSaveAs"             ,"Save As...");
 define("LangRemoveQuery"        ,"Remove");
 

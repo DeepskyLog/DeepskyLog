@@ -489,9 +489,9 @@ define("Langpdfserieschoselayout","Gelieve een layout voor de index te kiezen.")
 // TO DO:
 
 
-define("LangStoredQueries"      ,"Stored queries:");
-define("LangSaveAs"             ,"Save As...");
-define("LangRemoveQuery"        ,"Remove");
+define("LangStoredQueries"      ,"Opgeslagen zoekopdrachten:");
+define("LangSaveAs"             ,"Bewaar als...");
+define("LangRemoveQuery"        ,"Verwijder");
 
 
 define("LangExclude",            "Uitgezonderd:");
