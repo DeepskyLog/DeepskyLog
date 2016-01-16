@@ -800,7 +800,7 @@ define("OpenClustersLink"                                 ,"https://github.com/D
 define("LangYouAreHere"																		,"Vous &ecirc;tes ici:");
 define("LangHome"																					,"Acceuil");
 define("LangBecomeMember"																	,"Devenez membre");
-define("LangSearch"																				,"Recherche");
+define("LangSearch"																				,"Recherche rapide");
 define("LangContact"																			,"Contact");
 define("LangDeepskyLogModules"														,"Modules de Deepskylog");
 define("LangWelcome"																			,"Bienvenu&nbsp;dans&nbsp;la module&nbsp;");
