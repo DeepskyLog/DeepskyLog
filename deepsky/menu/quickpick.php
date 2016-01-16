@@ -17,7 +17,7 @@ function menu_quickpick() {
 			$link .= "&amp;" . $key . "=" . urlencode ( $value );
 	reset ( $_GET );
 	echo "<h4>";
-	echo LangSearch . "</h4>";
+	echo LangQuickSearch . "</h4>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"quickpick\" />";
 	echo "<input type=\"hidden\" name=\"titleobjectaction\" value=\"" . LangSearch . "\" />";
 	echo "<input type=\"hidden\" name=\"source\"      value=\"quickpick\" />";

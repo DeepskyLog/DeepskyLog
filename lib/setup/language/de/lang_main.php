@@ -847,7 +847,8 @@ define("OpenClustersLink"                                 ,"https://github.com/D
 define("LangYouAreHere"																		,"Sie sind hier:");
 define("LangHome"																					,"Startseite");
 define("LangBecomeMember"																	,"Mitglied werden");
-define("LangSearch"																				,"Schnell Suchen");
+define("LangSearch"																				,"Suchen");
+define("LangQuickSearch"																	,"Schnell Suchen");
 define("LangContact"																			,"Kontakt");
 define("LangDeepskyLogModules"														,"Deepskylog Module");
 define("LangWelcome"																			,"Willkommen&nbsp;in&nbsp;dem&nbsp;");
