@@ -15,21 +15,6 @@ function setup_observations_query() {
 			}
 		}
 	}
-	echo "	<script type=\"text/javascript\" >";
-	echo "	var cal = new CalendarPopup();";
-	echo "  function SetMultipleValuesFromDate(y,m,d)";
-	echo "  {";
-	echo "    document.getElementById('minday').value = d;";
-	echo "    document.getElementById('minmonth').value = m;";
-	echo "    document.getElementById('minyear').value = y;";
-	echo "	}";
-	echo "  function SetMultipleValuesTillDate(y,m,d)";
-	echo "  {";
-	echo "    document.getElementById('maxday').value = d;";
-	echo "    document.getElementById('maxmonth').value = m;";
-	echo "    document.getElementById('maxyear').value = y;";
-	echo "	}";
-	echo "	</script>";
 	if ($objUtil->checkGetKey ( 'object' ))
 		$entryMessage .= LangInstructionsNoObjectFound . $_GET ['object'];
 	$_SESSION ['result'] = "";
@@ -615,6 +600,6 @@ function setup_observations_query() {
 		echo $content;
 	}
 	echo "</div>";
-	echo '<script type="text/javascript">setobserverqueries();</script>';
+	echo '<script type="text/javascript">setobservationqueries();</script>';
 }
 ?>

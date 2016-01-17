@@ -59,7 +59,7 @@ function clearFields()
     temp=temp.substr(pos+1);
   }
 }
-function setobserverqueries()
+function setobservationqueries()
 { var jsonhttp;
   if(window.XMLHttpRequest)
     jsonhttp=new XMLHttpRequest();
@@ -96,8 +96,9 @@ function setobserverqueries()
 
 function saveObserverQueryAs()
 { var jsonhttp, newqueryname;
-  if(window.XMLHttpRequest)
+  if(window.XMLHttpRequest) {
     jsonhttp=new XMLHttpRequest();
+  }
   else if(window.activeXObject)
     jsonhttp=new ActiveXObject("Microsoft.XMLHTTP");
   else
@@ -105,7 +106,7 @@ function saveObserverQueryAs()
   jsonhttp.onreadystatechange=function()
   {
     if(jsonhttp.readyState==4)
-    { //alert(jsonhttp.responseText);
+    {
       queries=eval("("+jsonhttp.responseText+")");
       for(i=document.getElementById('observerqueries').options.length-1;i>=0;i--)
         document.getElementById('observerqueries').remove(i);
@@ -132,7 +133,6 @@ function saveObserverQueryAs()
   query=query+'atlas='+document.getElementById('atlas').selectedIndex+'&';
   query=query+'atlasPageNumber='+document.getElementById('atlasPageNumber').value+'&';
   query=query+'con='+document.getElementById('con').selectedIndex+'&';
-  //query=query+'conto='+document.getElementById('conto').selectedIndex+'&';
   query=query+'type='+document.getElementById('type').selectedIndex+'&';
   query=query+'minDeclDegrees='+document.getElementById('minDeclDegrees').value+'&';
   query=query+'minDeclMinutes='+document.getElementById('minDeclMinutes').value+'&';
@@ -155,7 +155,6 @@ function saveObserverQueryAs()
   query=query+'maxsize='+document.getElementById('maxsize').value+'&';
   query=query+'size_max_units='+document.getElementById('size_max_units').selectedIndex+'&';
   query=query+'observer='+document.getElementById('observer').selectedIndex+'&';
-  query=query+'instrument='+document.getElementById('instrument').selectedIndex+'&';
   query=query+'minday='+document.getElementById('minday').value+'&';
   query=query+'minmonth='+document.getElementById('minmonth').selectedIndex+'&';
   query=query+'minyear='+document.getElementById('minyear').value+'&';
