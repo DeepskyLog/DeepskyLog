@@ -127,11 +127,11 @@ function new_observation() {
 		echo "<input type=\"hidden\" name=\"timestamp\"     value=\"" . $_POST ['timestamp'] . "\" />";
 		echo "<input type=\"hidden\" name=\"object\"        value=\"" . $object . "\" />";
 		if ($observationid) {
-			$content = "<input class=\"btn btn-primary pull-right\" type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />&nbsp;";
+			$content = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />&nbsp;";
 			echo "<h4>" . LangNewObservationSubtitle3B . LangNewObservationSubtitle3C . $object . "</h4>";
 			echo $content;
 		} else {
-			$content = "<input class=\"btn btn-primary pull-right\" type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
+			$content = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
 			echo "<h4>" . LangNewObservationSubtitle3 . LangNewObservationSubtitle3C . $object . "</h4>";
 			echo $content;
 		}
@@ -532,15 +532,15 @@ function new_observation() {
 		echo "<div class=\"form-inline\">";
 		echo $contentMisc4;
 		echo "</div>";
-		echo "</div>";
-
 		if ($observationid) {
-			$content = "<input class=\"btn btn-primary pull-right\" type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />&nbsp;";
+			$content = "<input class=\"btn btn-success\" type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />&nbsp;";
 			echo $content;
 		} else {
-			$content = "<input class=\"btn btn-primary pull-right\" type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
+			$content = "<input class=\"btn btn-success\" type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
 			echo $content;
 		}
+		echo "</div>";
+
 
 		echo "</div>";
 		echo "</div></form>";
@@ -570,13 +570,14 @@ function new_observation() {
 		$content .= "</select>";
 		$content .= "&nbsp;";
 		$content .= "<input type=\"text\" class=\"form-control\" maxlength=\"255\" name=\"number\" size=\"50\" value=\"\" />";
-		$content3 = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"objectsearch\" value=\"" . LangNewObservationButton1 . "\" />";
+		$content3 = "<input class=\"btn btn-success\" type=\"submit\" name=\"objectsearch\" value=\"" . LangNewObservationButton1 . "\" />";
 		echo "<div class=\"form-group\">
 	               <label>" . LangViewObjectField1 . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $content;
+		echo "</div>";
+		echo "</div>";
 		echo $content3;
-		echo "</div></div>";
 		echo "<hr />";
 		echo "</div></form>";
 	}
