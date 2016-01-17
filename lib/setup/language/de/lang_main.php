@@ -1,5 +1,7 @@
 <?php //GE
 // This is version 5.0
+define("LangCatalogNumber", "Nummer im Katalog");
+define("LangSelectCatalog", "Katalog Auswahl");
 define("LangQuickPick", "Geben Sie Objektnamen ein");
 define("LangSelectCountry", "Land ausw&auml;hlen");
 define("GraphObservationsPerCountry", "Beobachtungen pro Land");

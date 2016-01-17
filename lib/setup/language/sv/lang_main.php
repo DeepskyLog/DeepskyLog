@@ -1,5 +1,7 @@
 <?php //SV
 // This is version 5.0
+define("LangCatalogNumber", "Enter number in catalog");
+define("LangSelectCatalog", "Select catalog");
 define("LangQuickPick", "Enter object name");
 define("LangSelectCountry", "Select country");
 define("LangStatistics", "Statistics");

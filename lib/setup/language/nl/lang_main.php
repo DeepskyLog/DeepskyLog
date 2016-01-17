@@ -1,5 +1,7 @@
 <?php //NL
 // This is version 5.0
+define("LangCatalogNumber", "Nummer in cataloog");
+define("LangSelectCatalog", "Kies cataloog");
 define("LangQuickPick", "Voer objectnaam in");
 define("LangSelectCountry", "Kies land");
 define("GraphObservationsPerCountry", "Waarnemingen per land");

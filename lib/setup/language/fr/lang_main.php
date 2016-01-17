@@ -1,5 +1,7 @@
 <?php //FR
 // This is version 5.0
+define("LangCatalogNumber", "Num&eacute;ro dans le catalogue");
+define("LangSelectCatalog", "S&eacute;lectionnez catalogue");
 define("LangQuickPick", "Entrez le nom de l'objet");
 define("LangSelectCountry", "Choisissez le pays");
 define("LangStatistics", "Statistiques");
