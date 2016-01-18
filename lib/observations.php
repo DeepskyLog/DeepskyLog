@@ -198,7 +198,7 @@ class Observations {
 		if ($limmag == "")
 			$limmag = "NULL";
 		else {
-			if (ereg ( '([0-9]{1})[.,]([0-9]{1})', $limmag, $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
+			if (preg_match ( '/([0-9]{1})[.,]([0-9]{1})/', $limmag, $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
 				$limmag = $matches [1] . "." . $matches [2]; // valid limiting magnitude // save current magnitude limit
 			$limmag = "$limmag";
 		}
@@ -213,9 +213,6 @@ class Observations {
 			$seeing = "-1";
 		if ($limmag == "")
 			$limmag = "0";
-			/*
-		 * else { if (ereg('([0-9]{1})[.,]([0-9]{1})', $limmag, $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9 $limmag=$matches[1].".".$matches[2]; // valid limiting magnitude // save current magnitude limit $limmag="$limmag"; }
-		 */
 		$sqm = "-1";
 		if (($limmag > 15) && ($limmag < 25)) {
 			$sqm = $limmag;
@@ -1486,12 +1483,12 @@ class Observations {
 			// $_GET['observation']=$current_observation;
 		} elseif ((! $_POST ['day']) || (! $_POST ['month']) || (! $_POST ['year']) || ($_POST ['site'] == "1") || (! $_POST ['instrument']) || (! $_POST ['description'])) {
 			if ($objUtil->checkPostKey ( 'limit' ))
-				if (ereg ( '([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST ['limit'], $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
+				if (preg_match ( '/([0-9]{1})[.,]{0,1}([0-9]{0,1})/', $_POST ['limit'], $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
 					$_POST ['limit'] = $matches [1] . "." . (($matches [2]) ? $matches [2] : "0");
 				else
 					$_POST ['limit'] = 0; // clear current magnitude limit
 			else if ($objUtil->checkPostKey ( 'sqm' ))
-				if (ereg ( '([0-9]{1})([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST ['sqm'], $matches )) // sqm value
+				if (preg_match ( '/([0-9]{1})([0-9]{1})[.,]{0,1}([0-9]{0,1})/', $_POST ['sqm'], $matches )) // sqm value
 					$_POST ['sqm'] = $matches [1] . $matches [2] . "." . (($matches [3]) ? $matches [3] : "0");
 				else
 					$_POST ['sqm'] = - 1; // clear current magnitude limit
@@ -1525,7 +1522,7 @@ class Observations {
 				$_GET ['indexAction'] = 'add_observation';
 			} else {
 				if ($objUtil->checkPostKey ( 'limit' ))
-					if (ereg ( '([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST ['limit'], $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
+					if (preg_match ( '/([0-9]{1})[.,]{0,1}([0-9]{0,1})/', $_POST ['limit'], $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
 						$_POST ['limit'] = $matches [1] . "." . (($matches [2]) ? $matches [2] : "0");
 					else // clear current magnitude limit
 						$_POST ['limit'] = "";
@@ -1551,17 +1548,17 @@ class Observations {
 				$_SESSION ['Qobs'] = array ();
 				$_SESSION ['QobsParams'] = array ();
 				if ($objUtil->checkPostKey ( 'sqm' ))
-					if (ereg ( '([0-9]{1})([0-9]{0,1})[.,]{0,1}([0-9]{0,1})', $_POST ['sqm'], $matches )) // sqm value
+					if (preg_match ( '/([0-9]{1})([0-9]{0,1})[.,]{0,1}([0-9]{0,1})/', $_POST ['sqm'], $matches )) // sqm value
 						$_POST ['sqm'] = $matches [1] . $matches [2] . "." . (($matches [3]) ? $matches [3] : "0");
 					else
 						$_POST ['sqm'] = ""; // clear current magnitude limit
 				if ($objUtil->checkPostKey ( 'largeDiam' ))
-					if (ereg ( '([0-9]+)[.,]{0,1}([0-9]{0,1})', $_POST ['largeDiam'], $matches )) // large diameter
+					if (preg_match ( '/([0-9]+)[.,]{0,1}([0-9]{0,1})/', $_POST ['largeDiam'], $matches )) // large diameter
 						$_POST ['largeDiam'] = (($matches [1]) ? $matches [1] : "0") . "." . (($matches [2]) ? $matches [2] : "0");
 					else // clear current large diameter
 						$_POST ['largeDiam'] = "";
 				if ($objUtil->checkPostKey ( 'smallDiam' ))
-					if (ereg ( '([0-9]+)[.,]{0,1}([0-9]{0,1})', $_POST ['smallDiam'], $matches )) // large diameter
+					if (preg ( '/([0-9]+)[.,]{0,1}([0-9]{0,1})/', $_POST ['smallDiam'], $matches )) // large diameter
 						$_POST ['smallDiam'] = (($matches [1]) ? $matches [1] : "0") . "." . (($matches [2]) ? $matches [2] : "0");
 					else // clear current large diameter
 						$_POST ['smallDiam'] = "";

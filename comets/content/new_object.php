@@ -21,6 +21,7 @@ function new_object()
 	$content="<input type=\"text\" required class=\"form-control\" name=\"icqname\" value=\"\" />";
 	echo "<strong>" . LangNewObjectIcqname."&nbsp;*</strong>";
 	echo $content;
+  echo "<br /><br /><input type=\"submit\" class=\"btn btn-success\" name=\"newobject\" value=\"" . LangViewObservationButton1 . "\" />";
 	echo "<hr />";
 	echo "</form>";
 	echo "</div>";

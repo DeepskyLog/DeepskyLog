@@ -393,7 +393,7 @@ class Observers {
 		// After registration, all old messages are removed
 		$objMessages->removeAllMessages ( $id );
 		// After registration, a welcome message is sent
-		$objMessages->sendMessage ( "DeepskyLog", $id, LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!", LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!<br /><br />" . LangMessageWelcome1 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_instrument\">" . LangMessageWelcome2 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_site\">" . LangMessageWelcome3 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=change_account\">" . LangMessageWelcome4 );
+		$objMessages->sendMessage ( "DeepskyLog", $id, LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!", LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!<br /><br />" . LangMessageWelcome1 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_instrument\">" . LangMessageWelcome2 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_location\">" . LangMessageWelcome3 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=change_account\">" . LangMessageWelcome4 );
 
 		$objAccomplishments->addObserver ( $id );
 

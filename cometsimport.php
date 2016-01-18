@@ -101,7 +101,7 @@ while (!feof($fh))
   if ($observerid != '')
   {
    $objectid = $obj->getId($vars[0]);
-   
+
    if ($objectid == '')
    {
     print "UNKNOWN COMET : " . $vars[0]."\n";
@@ -120,19 +120,19 @@ while (!feof($fh))
    {
     $mag = $vars[3];
    }
- 
+
    $uncertain = 0;
 
    $weaker = 0;
 
-   if (ereg('\[([0-9]{1,2})[.,]([0-9]{1})([:]{0,1})', $mag, $matches))
+   if (preg_match('/\[([0-9]{1,2})[.,]([0-9]{1})([:]{0,1})/', $mag, $matches))
    {
     $mag = $matches[1].".".$matches[2].$matches[3];
 
     // Magnitude is weaker than the given magnitude
     $weaker = 1;
    }
-   if (ereg('([0-9]{1,2})[.,]([0-9]{1}):', $mag, $matches))
+   if (preg_match('/([0-9]{1,2})[.,]([0-9]{1}):/', $mag, $matches))
    {
 
     $mag = $matches[1].".".$matches[2];
@@ -441,7 +441,7 @@ while (!feof($fh))
       // 50 bino
       $instrumentid = 125;
      }
-     else 
+     else
      {
       print "UNKNOWN 5cm instrument (".$vars[6]."): F/".$vars[7]." ".$vars[8]."x"."\n";
      }

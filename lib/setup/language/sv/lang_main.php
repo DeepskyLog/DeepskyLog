@@ -1,5 +1,10 @@
 <?php //SV
 // This is version 5.0
+define("LangAddSiteStep2", "Define your own name for this location, eventually add a naked eye limiting magnitude (or SQM value) and press the ");
+define("LangAddSiteStep1", "Set your location on the map or by entering the name and pressing the ");
+define("LangAddSiteStep1Button", " button.");
+define("LangCatalogNumber", "Enter number in catalog");
+define("LangSelectCatalog", "Select catalog");
 define("LangQuickPick", "Enter object name");
 define("LangSelectCountry", "Select country");
 define("LangStatistics", "Statistics");
@@ -1059,7 +1064,7 @@ define("LangSearchMenuItem5"															,"Query objects");
 define("LangSearchMenuItem6"															,"Observers");
 define("LangSearchMenuItem7"															,"Popular objects");
 define("LangSearchMenuItem8"                              ,"Year of observations");
-define("LangSearchMenuItem9"                              ,"New observations");
+define("LangSearchMenuItem9"                              ,"Latest observations");
 define("LangSearchMenuItem10"                             ,"Catalogs");
 define("LangSearchAllLanguages"														,"Look again, using all languages.");
 define("LangSearchDetailPage"															,"Set up a detailed search.");
@@ -1183,8 +1188,8 @@ define("LangAddSiteField5"																,"Longitude");
 define("LangAddSiteField5Expl"														,"(eg New York -74&deg;01&#39; or Melbourne 144&deg;58&#39;)");
 define("LangAddSiteField6"																,"Time Zone");
 define("LangAddSiteField6Expl"														,"(hours, positive for sites east of Greenwich)");
-define("LangAddSiteField7"																,"Typical limiting magnitude");
-define("LangAddSiteField7Expl"														,"(Typical limiting magnitude of this location)");
+define("LangAddSiteField7"																,"Typical naked eye limiting magnitude");
+define("LangAddSiteField7Expl"														,"(Typical naked eye limiting magnitude of this location)");
 define("LangAddSiteField8"																,"Typical sky brightness");
 define("LangAddSiteField8Expl"														,"(Number returned from Sky Quality Meter)");
 define("LangAddSiteFieldSearchDatabase"										,"Search a location from the database");

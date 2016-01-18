@@ -22,7 +22,6 @@ function comets_execute_query_objects() {
 		$sort = "name"; // standard sort on name
 		                // SELECT OBJECTS
 		$result = $objCometObject->getObjectFromQuery ( $query, $sort );
-		// NUMBER OF PAGES
 		if ($result) {
 			$count = 0; // counter for altering table colors
 			$link = $baseURL . "index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode ( $_GET ['name'] );

@@ -1,5 +1,10 @@
 <?php //FR
 // This is version 5.0
+define("LangAddSiteStep2", "D&eacute;finiez votre propre nom pour ce lieu, &eacute;ventuellement ajouter un magnitude limite (ou la valeur SQM) et appuyez sur le bouton ");
+define("LangAddSiteStep1", "D&eacute;finiez votre position sur la carte ou entrez le nom et appuyer sur le bouton");
+define("LangAddSiteStep1Button", ".");
+define("LangCatalogNumber", "Num&eacute;ro dans le catalogue");
+define("LangSelectCatalog", "S&eacute;lectionnez catalogue");
 define("LangQuickPick", "Entrez le nom de l'objet");
 define("LangSelectCountry", "Choisissez le pays");
 define("LangStatistics", "Statistiques");
@@ -1010,7 +1015,7 @@ define("LangSearchMenuItem5"															,"Recherche d'objets");
 define("LangSearchMenuItem6"															,"Les observateurs");
 define("LangSearchMenuItem7"															,"Les objets fr&eacute;quents");
 define("LangSearchMenuItem8"                              ,"Les observations de l'ann&eacute;e");
-define("LangSearchMenuItem9"                              ,"Nouvelles observations");
+define("LangSearchMenuItem9"                              ,"Derni&egrave;res observations");
 define("LangSearchMenuItem10"                             ,"Catalogues");
 define("LangSearchAllLanguages"														,"Une nouvelle rechrerche dans toutes les languages.");
 define("LangSearchDetailPage"															,"Faire une recherche d&eacute;taill&eacute;e.");
