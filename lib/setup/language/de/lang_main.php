@@ -1058,7 +1058,7 @@ define("LangSearchMenuItem5"															,"Objekte abfragen");
 define("LangSearchMenuItem6"															,"Beobachter");
 define("LangSearchMenuItem7"															,"Beliebteste Objekte");
 define("LangSearchMenuItem8"                              ,"Jahres Beobachtungen");
-define("LangSearchMenuItem9"                              ,"Neues Beobachtungen");
+define("LangSearchMenuItem9"                              ,"Aktuellste Beobachtungen");
 define("LangSearchMenuItem10"                             ,"Catalogs");                                                   // TO TRANSLATE
 define("LangSearchAllLanguages"														,"Suche nochmal in allen Sprachen.");
 define("LangSearchDetailPage"															,"Detailierte Suche.");
@@ -1613,7 +1613,7 @@ define("LangDetailDrawingText"														,"Z");
 define("LangPreviousObservation"													,"Vorherige Beobachtung");
 define("LangNextObservation"															,"N&auml;chste Beobachtung");
 
-define("LangIndex1"																				,"Aktuellesten 10 Beobachtungen:");
+define("LangIndex1"																				,"Aktuellsten 10 Beobachtungen:");
 
 // content/new_observation.php
 

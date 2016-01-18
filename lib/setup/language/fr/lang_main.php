@@ -1015,7 +1015,7 @@ define("LangSearchMenuItem5"															,"Recherche d'objets");
 define("LangSearchMenuItem6"															,"Les observateurs");
 define("LangSearchMenuItem7"															,"Les objets fr&eacute;quents");
 define("LangSearchMenuItem8"                              ,"Les observations de l'ann&eacute;e");
-define("LangSearchMenuItem9"                              ,"Nouvelles observations");
+define("LangSearchMenuItem9"                              ,"Derni&egrave;res observations");
 define("LangSearchMenuItem10"                             ,"Catalogues");
 define("LangSearchAllLanguages"														,"Une nouvelle rechrerche dans toutes les languages.");
 define("LangSearchDetailPage"															,"Faire une recherche d&eacute;taill&eacute;e.");

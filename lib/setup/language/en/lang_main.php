@@ -1055,7 +1055,7 @@ define("LangSearchMenuItem5"															,"Search objects");
 define("LangSearchMenuItem6"															,"Observers");
 define("LangSearchMenuItem7"															,"Popular objects");
 define("LangSearchMenuItem8"                              ,"Year of observations");
-define("LangSearchMenuItem9"                              ,"New observations");
+define("LangSearchMenuItem9"                              ,"Latest observations");
 define("LangSearchMenuItem10"                             ,"Catalogs");
 define("LangSearchAllLanguages"														,"Look again, using all languages.");
 define("LangSearchDetailPage"															,"Set up a detailed search.");
