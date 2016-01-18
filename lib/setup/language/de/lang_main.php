@@ -11,6 +11,12 @@ define("LangRemoveModal7", " observations");
 define("LangKeepObject", "Keep");
 define("LangRemoveObject", "Remove Object");
 define("LangForceRemoveObject", "Force Remove Object");
+define("LangAddSiteStep2", "Definieren Sie Ihre eigenen Namen f&uuml;r die Position, schlie&szlig;lich f&uuml;gen Sie einen Grenzgr&ouml;&szlig;e (oder SQM-Wert) zu und dr&uuml;cken Sie die Taste ");
+define("LangAddSiteStep1", "Stellen Sie Ihren Ort auf der Karte ein oder gebe des Namens ein und Dr&euml;cke der Taste ");
+define("LangAddSiteStep1Button", ".");
+define("LangCatalogNumber", "Nummer im Katalog");
+define("LangSelectCatalog", "Katalog Auswahl");
+define("LangQuickPick", "Geben Sie Objektnamen ein");
 define("LangSelectCountry", "Land ausw&auml;hlen");
 define("GraphObservationsPerCountry", "Beobachtungen pro Land");
 define("LangStatistics", "Statistiken");
@@ -857,7 +863,8 @@ define("OpenClustersLink"                                 ,"https://github.com/D
 define("LangYouAreHere"																		,"Sie sind hier:");
 define("LangHome"																					,"Startseite");
 define("LangBecomeMember"																	,"Mitglied werden");
-define("LangSearch"																				,"Suche");
+define("LangSearch"																				,"Suchen");
+define("LangQuickSearch"																	,"Schnell Suchen");
 define("LangContact"																			,"Kontakt");
 define("LangDeepskyLogModules"														,"Deepskylog Module");
 define("LangWelcome"																			,"Willkommen&nbsp;in&nbsp;dem&nbsp;");
@@ -1062,7 +1069,7 @@ define("LangSearchMenuItem5"															,"Objekte abfragen");
 define("LangSearchMenuItem6"															,"Beobachter");
 define("LangSearchMenuItem7"															,"Beliebteste Objekte");
 define("LangSearchMenuItem8"                              ,"Jahres Beobachtungen");
-define("LangSearchMenuItem9"                              ,"Neues Beobachtungen");
+define("LangSearchMenuItem9"                              ,"Aktuellste Beobachtungen");
 define("LangSearchMenuItem10"                             ,"Catalogs");                                                   // TO TRANSLATE
 define("LangSearchAllLanguages"														,"Suche nochmal in allen Sprachen.");
 define("LangSearchDetailPage"															,"Detailierte Suche.");
@@ -1617,7 +1624,7 @@ define("LangDetailDrawingText"														,"Z");
 define("LangPreviousObservation"													,"Vorherige Beobachtung");
 define("LangNextObservation"															,"N&auml;chste Beobachtung");
 
-define("LangIndex1"																				,"Aktuellesten 10 Beobachtungen:");
+define("LangIndex1"																				,"Aktuellsten 10 Beobachtungen:");
 
 // content/new_observation.php
 

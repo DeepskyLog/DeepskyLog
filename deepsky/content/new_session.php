@@ -109,7 +109,7 @@ function new_session() {
 	echo "<form role=\"form\" id=\"sessionForm\" enctype=\"multipart/form-data\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_session\" />";
 
-	echo "<input type=\"submit\" class=\"btn btn-primary pull-right\" name=\"add\" value=\"" . LangAddSessionButton . "\" />";
+	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"add\" value=\"" . LangAddSessionButton . "\" />";
     echo "<br />";
 	echo "<div class=\"form-group\">
 	       <label>" . LangAddSessionField1 . "</label>";
@@ -183,7 +183,7 @@ function new_session() {
 	$contentLoc .= "</select>&nbsp;";
 
 	echo "<div class=\"form-group\">
-	       <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_site\" title=\"" . LangChangeAccountField7Expl . "\" >" . LangAddSessionField4 . "</a>" . "</label>";
+	       <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_location\" title=\"" . LangChangeAccountField7Expl . "\" >" . LangAddSessionField4 . "</a>" . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $contentLoc;
 	echo "</div>";
@@ -292,6 +292,8 @@ function new_session() {
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddSessionField12Expl . "</span>";
 	echo "</div>";
+
+	echo "<input type=\"submit\" class=\"btn btn-success\" name=\"add\" value=\"" . LangAddSessionButton . "\" />";
 
 	echo "</div></form>";
 	echo "</div>";

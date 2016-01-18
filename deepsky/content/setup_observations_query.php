@@ -15,21 +15,6 @@ function setup_observations_query() {
 			}
 		}
 	}
-	echo "	<script type=\"text/javascript\" >";
-	echo "	var cal = new CalendarPopup();";
-	echo "  function SetMultipleValuesFromDate(y,m,d)";
-	echo "  {";
-	echo "    document.getElementById('minday').value = d;";
-	echo "    document.getElementById('minmonth').value = m;";
-	echo "    document.getElementById('minyear').value = y;";
-	echo "	}";
-	echo "  function SetMultipleValuesTillDate(y,m,d)";
-	echo "  {";
-	echo "    document.getElementById('maxday').value = d;";
-	echo "    document.getElementById('maxmonth').value = m;";
-	echo "    document.getElementById('maxyear').value = y;";
-	echo "	}";
-	echo "	</script>";
 	if ($objUtil->checkGetKey ( 'object' ))
 		$entryMessage .= LangInstructionsNoObjectFound . $_GET ['object'];
 	$_SESSION ['result'] = "";
@@ -41,7 +26,7 @@ function setup_observations_query() {
 		$atlas = "";
 
 	echo "<div id=\"main\">";
-	echo "<form action=\"" . $baseURL . "index.php\" method=\"get\"><div>";
+	echo "<form class=\"form-horizontal\" action=\"" . $baseURL . "index.php\" method=\"get\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\"   value=\"result_selected_observations\" />";
 	echo "<input type=\"hidden\" name=\"title\"         value=\"" . LangSelectedObservationsTitle2 . "\" />";
 	echo "<input type=\"hidden\" name=\"sort\"          value=\"objectname\" />";
@@ -61,8 +46,8 @@ function setup_observations_query() {
 		$content1 .= "</select>";
 	}
 	$content2 = "<input type=\"submit\" class=\"btn btn-success\" name=\"query\" value=\"" . LangQueryObservationsButton1 . "\" />";
-	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "deepsky/content/setup_observations_query.js\"></script>";
 	$content2 .= "&nbsp;" . '<input type="button" class="btn btn-danger" onclick="clearFields();" value="' . LangQueryObservationsButton2 . '"/>';
+	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "deepsky/content/setup_observations_query.js\"></script>";
 	echo "<h4>" . LangQueryObservationsTitle . "</h4>";
 	echo "<span class=\"pull-right\">" . $content2 . "</span>";
 
@@ -72,23 +57,23 @@ function setup_observations_query() {
 	// OBJECT NAME
 	echo "<tr>";
 	echo "<td><strong>" . LangViewObservationField1 . "</strong></td>";
-	echo "<td colspan=\"2\" class=\"form-inline\">";
+	echo "<td colspan=\"3\" class=\"form-inline\">";
 	if (($catalog = $objUtil->checkGetKey ( 'catalog' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
 			$catalog = $_SESSION ['QobsParams'] ['catalog'];
 	echo "<select id=\"catalog\" class=\"form-control\" name=\"catalog\" class=\"inputfield\">";
-	echo "<option value=\"\">-----</option>";
+	echo "<option value=\"\">" . LangSelectCatalog . "</option>";
 	while ( list ( $key, $value ) = each ( $DSOcatalogs ) )
 		echo "<option" . (($value == $catalog) ? " selected=\"selected\"" : "") . " value=\"" . $value . "\">" . $value . "</option>";
 	echo "</select>";
 	if (($catNumber = $objUtil->checkGetKey ( 'number' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
 			$catNumber = $_SESSION ['QobsParams'] ['number'];
-	echo "<input id=\"number\" name=\"number\" type=\"text\" class=\"form-control\" maxlength=\"255\" size=\"40\" value=\"" . $catNumber . "\" />";
-	echo "</td>";
+	echo "<input id=\"number\" placeholder=\"" . LangCatalogNumber . "\" name=\"number\" type=\"text\" class=\"form-control\" maxlength=\"255\" size=\"40\" value=\"" . $catNumber . "\" />";
+	echo "</td></tr>";
 	// ATLAS PAGE NUMBER
-	echo "<td><strong>" . LangQueryObjectsField12 . "</strong></td>";
-	echo "<td colspan=\"2\" class=\"form-inline\">";
+	echo "<tr><td><strong>" . LangQueryObjectsField12 . "</strong></td>";
+	echo "<td colspan=\"3\" class=\"form-inline\">";
 	if (($atlas = $objUtil->checkGetKey ( 'atlas' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
 			$atlas = $_SESSION ['QobsParams'] ['atlas'];
@@ -601,6 +586,7 @@ function setup_observations_query() {
 	echo "</tr>";
 	echo "</table>";
 	echo "</div>";
+	echo "<span>" . $content2 . "</span>";
 	echo "</form>";
 	echo "<input id=\"temp\" type=\"hidden\" value=\"" . $temp . "\" />";
 	echo "<hr />";
@@ -615,6 +601,6 @@ function setup_observations_query() {
 		echo $content;
 	}
 	echo "</div>";
-	echo '<script type="text/javascript">setobserverqueries();</script>';
+	echo '<script type="text/javascript">setobservationqueries();</script>';
 }
 ?>

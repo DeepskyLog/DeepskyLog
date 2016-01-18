@@ -7,10 +7,11 @@ else
 	new_location ();
 function new_location() {
 	global $objLocation, $loggedUser, $objContrast, $baseURL;
-	echo "<form>
-			<div class=\"form-inline\">
+	echo "<form>";
+	echo "<ol><li>" . LangAddSiteStep1 . "<strong>\"" . LangSearchLocations0 . "\"</strong>" . LangAddSiteStep1Button . "<br /><br /></li>";
+	echo "<div class=\"form-inline\">
 	         <input type=\"text\" class=\"form-control\" id=\"address\" onkeypress=\"searchKeyPress(event);\" placeholder=\"La Silla, Chile\" autofocus></input>
-             <input type=\"button\" class=\"btn btn-success\" id=\"btnSearch\" value=\"" . LangSearchLocations0 . "\" onclick=\"codeAddress();\" ></input>
+             <input type=\"button\" class=\"btn btn-primary\" id=\"btnSearch\" value=\"" . LangSearchLocations0 . "\" onclick=\"codeAddress();\" ></input>
             </div>
            </form>
            <div id=\"map\"></div>
@@ -23,11 +24,12 @@ function new_location() {
 	echo "<input type=\"hidden\" name=\"country\" id=\"country\" />";
 	echo "<input type=\"hidden\" name=\"elevation\" id=\"elevation\" />";
 	echo "<input type=\"hidden\" name=\"timezone\" id=\"timezone\" />";
+	echo "<li>" . LangAddSiteStep2 . "<strong>\"" . LangAddSiteButton . "\"</strong>" . LangAddSiteStep1Button . "<br /><br /></li>";
 	echo "<div class=\"form-inline\">
     		<input type=\"text\" required class=\"form-control\" name=\"locationname\" placeholder=\"" . LangAddSiteField1 . "\"></input>";
-	echo "  <input type=\"submit\" class=\"btn btn-primary tour4\" name=\"add\" value=\"" . LangAddSiteButton . "\" />";
+	echo "  <input type=\"submit\" class=\"btn btn-success tour4\" name=\"add\" value=\"" . LangAddSiteButton . "\" />";
 
-	echo "</div>
+	echo "</div><br />
  	       <label>" . LangAddSiteField7 . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo "<input type=\"number\" min=\"0\" max=\"9.9\" step=\"0.1\" class=\"form-control\" maxlength=\"5\" name=\"lm\" size=\"5\" />";
@@ -43,7 +45,7 @@ function new_location() {
 	echo "<span class=\"help-block\">" . LangAddSiteField8Expl . "</span>";
 	echo "</div>";
 
-	echo "</div></form><br /><br />";
+	echo "</div></ol></form><br /><br />";
 
 	echo "<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&language=en&sensor=true&libraries=places\"></script>";
 

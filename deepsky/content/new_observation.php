@@ -127,11 +127,11 @@ function new_observation() {
 		echo "<input type=\"hidden\" name=\"timestamp\"     value=\"" . $_POST ['timestamp'] . "\" />";
 		echo "<input type=\"hidden\" name=\"object\"        value=\"" . $object . "\" />";
 		if ($observationid) {
-			$content = "<input class=\"btn btn-primary pull-right\" type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />&nbsp;";
+			$content = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />&nbsp;";
 			echo "<h4>" . LangNewObservationSubtitle3B . LangNewObservationSubtitle3C . $object . "</h4>";
 			echo $content;
 		} else {
-			$content = "<input class=\"btn btn-primary pull-right\" type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
+			$content = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
 			echo "<h4>" . LangNewObservationSubtitle3 . LangNewObservationSubtitle3C . $object . "</h4>";
 			echo $content;
 		}
@@ -145,7 +145,7 @@ function new_observation() {
 		}
 		$sites = $objLocation->getSortedLocationsList ( "name", $loggedUser, $activeSites );
 		$theLoc = (($observationid) ? $objObservation->getDsObservationProperty ( $_GET ['observation'], 'locationid' ) : $objUtil->checkPostKey ( 'site' ));
-		$contentLoc = "<select class=\"form-control\" name=\"site\">";
+		$contentLoc = "<select required class=\"form-control\" name=\"site\">";
 		while ( list ( $key, $value ) = each ( $sites ) ) {
 			$contentLoc .= "<option " . (($value [0] == $theLoc) ? "selected=\"selected\"" : '') . " value=\"" . $value [0] . "\">" . $value [1] . "</option>";
 		}
@@ -199,7 +199,7 @@ function new_observation() {
 
 		$instr = $objInstrument->getSortedInstrumentsList ( "name", $loggedUser, $activeSites );
 		$theInstrument = (($observationid) ? $objObservation->getDsObservationProperty ( $observationid, 'instrumentid' ) : $objUtil->checkPostKey ( 'instrument', 0 ));
-		$contentInstrument = "<select id=\"instrumentSelect\" onChange=\"fillMagnification();\" name=\"instrument\" class=\"form-control\">";
+		$contentInstrument = "<select required id=\"instrumentSelect\" onChange=\"fillMagnification();\" name=\"instrument\" class=\"form-control\">";
 		while ( list ( $key, $value ) = each ( $instr ) )
 			$contentInstrument .= "<option " . (($theInstrument == $key) ? "selected=\"selected\"" : '') . " value=\"" . $key . "\">" . $value . "</option>";
 		$contentInstrument .= "</select>&nbsp;";
@@ -217,6 +217,9 @@ function new_observation() {
 		$theLM = (($observationid) ? $objObservation->getDsObservationProperty ( $observationid, 'limmag' ) : $objUtil->checkPostKey ( 'limit' ));
 		$contentLM = "<input type=\"number\" min=\"0.0\" max=\"9.9\" step=\"0.1\" class=\"form-control\" maxlength=\"3\" name=\"limit\" size=\"4\"  value=\"" . ($theLM ? sprintf ( "%1.1f", $theLM ) : '') . "\" />";
 		$theSQM = (($observationid) ? ((($tempSQM = $objObservation->getDsObservationProperty ( $_GET ['observation'], 'SQM' )) != - 1) ? $tempSQM : '') : $objUtil->checkPostKey ( 'sqm' ));
+		if ($theSQM < 10) {
+			$theSQM = '';
+		}
 		$contentSQM = "<input type=\"number\" min=\"10.00\" max=\"25.00\" step=\"0.01\" class=\"form-control\" maxlength=\"4\" name=\"sqm\" size=\"4\"  value=\"" . ($theSQM ? sprintf ( "%2.1f", $theSQM ) : '') . "\" />";
 		// Seeing =====================================================================================================================================================================
 		$theSeeing = (($observationid) ? $objObservation->getDsObservationProperty ( $observationid, 'seeing' ) : $objUtil->checkPostKey ( 'seeing', 0 ));
@@ -366,7 +369,7 @@ function new_observation() {
 		}
 		// Presentation =====================================================================================================================================================================
 		echo "<div class=\"form-group\">
-	               <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_site\" title=\"" . LangChangeAccountField7Expl . "\" >" . LangViewObservationField4 . "</a></label>";
+	               <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_location\" title=\"" . LangChangeAccountField7Expl . "\" >" . LangViewObservationField4 . "</a></label>";
 		echo "<div class=\"form-inline\">";
 		echo $contentLoc;
 		echo "</div>";
@@ -532,15 +535,15 @@ function new_observation() {
 		echo "<div class=\"form-inline\">";
 		echo $contentMisc4;
 		echo "</div>";
-		echo "</div>";
-
 		if ($observationid) {
-			$content = "<input class=\"btn btn-primary pull-right\" type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />&nbsp;";
+			$content = "<input class=\"btn btn-success\" type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />&nbsp;";
 			echo $content;
 		} else {
-			$content = "<input class=\"btn btn-primary pull-right\" type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
+			$content = "<input class=\"btn btn-success\" type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
 			echo $content;
 		}
+		echo "</div>";
+
 
 		echo "</div>";
 		echo "</div></form>";
@@ -570,13 +573,14 @@ function new_observation() {
 		$content .= "</select>";
 		$content .= "&nbsp;";
 		$content .= "<input type=\"text\" class=\"form-control\" maxlength=\"255\" name=\"number\" size=\"50\" value=\"\" />";
-		$content3 = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"objectsearch\" value=\"" . LangNewObservationButton1 . "\" />";
+		$content3 = "<input class=\"btn btn-success\" type=\"submit\" name=\"objectsearch\" value=\"" . LangNewObservationButton1 . "\" />";
 		echo "<div class=\"form-group\">
 	               <label>" . LangViewObjectField1 . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $content;
+		echo "</div>";
+		echo "</div>";
 		echo $content3;
-		echo "</div></div>";
 		echo "<hr />";
 		echo "</div></form>";
 	}

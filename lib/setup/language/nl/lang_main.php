@@ -11,6 +11,12 @@ define("LangRemoveModal7", " observations");
 define("LangKeepObject", "Keep");
 define("LangRemoveObject", "Verwijder Object");
 define("LangForceRemoveObject", "Force Remove Object");
+define("LangAddSiteStep2", "Kies een naam voor deze locatie, voeg eventueel een grensmagnitude (of SQM waarde) toe en druk op de ");
+define("LangAddSiteStep1", "Kies je locatie op de map of typ de naam van de locatie in en druk op de ");
+define("LangAddSiteStep1Button", " knop.");
+define("LangCatalogNumber", "Nummer in cataloog");
+define("LangSelectCatalog", "Kies cataloog");
+define("LangQuickPick", "Voer objectnaam in");
 define("LangSelectCountry", "Kies land");
 define("GraphObservationsPerCountry", "Waarnemingen per land");
 define("LangStatistics", "Statistieken");
@@ -499,9 +505,9 @@ define("Langpdfserieschoselayout","Gelieve een layout voor de index te kiezen.")
 // TO DO:
 
 
-define("LangStoredQueries"      ,"Stored queries:");
-define("LangSaveAs"             ,"Save As...");
-define("LangRemoveQuery"        ,"Remove");
+define("LangStoredQueries"      ,"Opgeslagen zoekopdrachten:");
+define("LangSaveAs"             ,"Bewaar als...");
+define("LangRemoveQuery"        ,"Verwijder");
 
 
 define("LangExclude",            "Uitgezonderd:");
@@ -837,6 +843,7 @@ define("LangYouAreHere"																		,"U bevindt zich hier:");
 define("LangHome"																					,"Home");
 define("LangBecomeMember"																	,"Word lid");
 define("LangSearch"																				,"Zoeken");
+define("LangQuickSearch"																	,"Snel Zoeken");
 define("LangContact"																			,"Contact");
 define("LangDeepskyLogModules"														,"Deepskylog Modules");
 define("LangWelcome"																			,"Welkom&nbsp;in&nbsp;de&nbsp;");
@@ -1047,7 +1054,7 @@ define("LangSearchMenuItem5"															,"Zoek objecten");
 define("LangSearchMenuItem6"															,"Waarnemers");
 define("LangSearchMenuItem7"															,"Populaire&nbsp;objecten");
 define("LangSearchMenuItem8"                              ,"Jaarwaarnemingen");
-define("LangSearchMenuItem9"                              ,"Nieuwe waarnemingen");
+define("LangSearchMenuItem9"                              ,"Laatste waarnemingen");
 define("LangSearchMenuItem10"                             ,"Catalogi");
 define("LangSearchAllLanguages"														,"Opnieuw zoeken, in alle talen.");
 define("LangSearchDetailPage"															,"Een gedetailleerde zoekopdracht maken.");

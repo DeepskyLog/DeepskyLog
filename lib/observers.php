@@ -211,7 +211,7 @@ class Observers {
 			} else {
 				$objectsCount = 0;
 			}
-			$outputtable .= "<td> <a href=\"" . $baseURL . "index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode ( $catalog ) . "&amp;user=" . urlencode ( $key ) . "\">" . $objectsCount . "</a> (" . sprintf ( "%.2f", (($objectsCount / $objectsInCatalog) * 100) ) . "%)</td>";
+			$outputtable .= "<td> <a href=\"" . $baseURL . "index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode ( $catalog ) . "&amp;user=" . urlencode ( $value["observerid"] ) . "\">" . $objectsCount . "</a> (" . sprintf ( "%.2f", (($objectsCount / $objectsInCatalog) * 100) ) . "%)</td>";
 
 			if (array_key_exists($value["observerid"], $allObjects)) {
 				$numberOfObjects = $allObjects [ $value["observerid"] ];
@@ -393,7 +393,7 @@ class Observers {
 		// After registration, all old messages are removed
 		$objMessages->removeAllMessages ( $id );
 		// After registration, a welcome message is sent
-		$objMessages->sendMessage ( "DeepskyLog", $id, LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!", LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!<br /><br />" . LangMessageWelcome1 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_instrument\">" . LangMessageWelcome2 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_site\">" . LangMessageWelcome3 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=change_account\">" . LangMessageWelcome4 );
+		$objMessages->sendMessage ( "DeepskyLog", $id, LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!", LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!<br /><br />" . LangMessageWelcome1 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_instrument\">" . LangMessageWelcome2 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_location\">" . LangMessageWelcome3 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=change_account\">" . LangMessageWelcome4 );
 
 		$objAccomplishments->addObserver ( $id );
 

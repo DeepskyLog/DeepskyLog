@@ -69,7 +69,7 @@ function new_observation() {
 	for($i = 0; $i < count ( $sites ); $i ++)
 		$content2 .= "<option " . (($theLocation == $sites [$i] [0]) ? (" selected=\"selected\" ") : "") . " value=\"" . $sites [$i] [0] . "\" >" . $sites [$i] [1] . "</option>";
 	$content2 .= "</select>";
-	$content3 = "<a href=\"" . $baseURL . "index.php?indexAction=add_site\">" . LangChangeAccountField7Expl . "</a>";
+	$content3 = "<a href=\"" . $baseURL . "index.php?indexAction=add_location\">" . LangChangeAccountField7Expl . "</a>";
 	echo "<br /><strong>" . $content1 . "</strong>";
 	echo "<br /><span class=\"form-inline\">" . $content2;
 	echo "&nbsp;" . $content3 . "</span><br />";
@@ -221,7 +221,10 @@ function new_observation() {
 	echo "<br />" . $content2;
 	echo "<br />";
 
-	echo "</div></form>";
+	echo "</div>";
+	echo "<input type=\"submit\" class=\"btn btn-success\" name=\"addobservation\" value=\"" . ($adapt ? LangChangeObservationTitle : LangViewObservationButton1) . "\" />&nbsp;";
+
+	echo "</form>";
 	echo "<hr />";
 	echo "</div>";
 }

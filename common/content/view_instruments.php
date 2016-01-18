@@ -14,7 +14,7 @@ function new_instrument() {
 	echo "<hr />";
 	echo "<form role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"add_instrument\" />";
-	echo "<input type=\"submit\" class=\"btn btn-primary pull-right\" name=\"add\" value=\"" . LangAddInstrumentAdd . "\" />&nbsp;";
+	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"add\" value=\"" . LangAddInstrumentAdd . "\" />&nbsp;";
 	echo "</div>";
 	echo "</form>";
 	$objInstrument->showInstrumentsObserver ();

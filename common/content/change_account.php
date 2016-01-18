@@ -209,6 +209,8 @@ function change_account()
 
 	echo "<p>&nbsp;</p>";
 
+  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
+
   echo "</div>";
 
   echo "<div class=\"tab-pane\" id=\"observingDetails\">";
@@ -230,6 +232,8 @@ function change_account()
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField9 . "</label>";
 	echo "<div class=\"col-sm-6\">" . $tempAtlasList;
 	echo "</div></div>";
+
+  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
 
   echo "</div>";
 
@@ -276,6 +280,8 @@ function change_account()
          "<input type=\"number\" min=\"6\" max=\"9\" class=\"inputfield centered form-control\" maxlength=\"1\" name=\"atlaspagefont\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'atlaspagefont')."\" />";
 	echo "</div></div>";
 
+  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
+
   echo "</div>";
 
   echo "<div class=\"tab-pane\" id=\"languages\">";
@@ -312,6 +318,8 @@ function change_account()
 		echo "<td></td>";
 	}
 	echo "</tr></table></div></div>";
+
+  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
 
   echo "</div>";
 

@@ -1,4 +1,4 @@
-<?php 
+<?php
 // setup_objects_query.php
 // interface to query comets
 
@@ -16,7 +16,7 @@ function setup_objects_query()
 	echo "<h4>".LangQueryObjectsTitle."</h4>";
 	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"query\" value=\"" . LangQueryObjectsButton1 . "\" />";
 	echo "<br /><hr />";
-	// OBJECT NAME 
+	// OBJECT NAME
 	$content="<input type=\"text\" class=\"form-control\" maxlength=\"40\" name=\"name\" size=\"40\" value=\"\" />";
 	echo "<strong>" . LangQueryObjectsField1 . "</strong>";
 	echo $content;;
@@ -24,7 +24,9 @@ function setup_objects_query()
 	echo "<strong>" . LangNewObjectIcqname . "</strong>";
 	echo $content;
 	echo "<hr />";
-	echo "</div></form>";
+	echo "</div>";
+  echo "<input type=\"submit\" class=\"btn btn-success\" name=\"query\" value=\"" . LangQueryObjectsButton1 . "\" />";
+  echo "</form>";
 	echo "</div>";
 }
 ?>
