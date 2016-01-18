@@ -183,7 +183,7 @@ function new_session() {
 	$contentLoc .= "</select>&nbsp;";
 
 	echo "<div class=\"form-group\">
-	       <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_site\" title=\"" . LangChangeAccountField7Expl . "\" >" . LangAddSessionField4 . "</a>" . "</label>";
+	       <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_location\" title=\"" . LangChangeAccountField7Expl . "\" >" . LangAddSessionField4 . "</a>" . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $contentLoc;
 	echo "</div>";

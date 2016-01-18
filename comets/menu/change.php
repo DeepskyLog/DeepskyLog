@@ -20,7 +20,7 @@ function comets_menu_change()
 		echo "  <li class=\"disabled\">─────────────────</li>";
 	}
 	echo "  <li><a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeMenuItem3."</a></li>";
-	echo "  <li><a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeMenuItem4."</a></li>";
+	echo "  <li><a href=\"".$baseURL."index.php?indexAction=add_location\">".LangChangeMenuItem4."</a></li>";
 	echo "  <li class=\"disabled\">─────────────────</li>";
 	echo "  <li><a href=\"".$baseURL."index.php?indexAction=comets_add_object\" >".LangChangeMenuItem5."</a></li>";
 	echo " </ul>";
