@@ -1,5 +1,8 @@
 <?php //NL
 // This is version 5.0
+define("LangAddSiteStep2", "Kies een naam voor deze locatie, voeg eventueel een grensmagnitude (of SQM waarde) toe en druk op de ");
+define("LangAddSiteStep1", "Kies je locatie op de map of typ de naam van de locatie in en druk op de ");
+define("LangAddSiteStep1Button", " knop.");
 define("LangCatalogNumber", "Nummer in cataloog");
 define("LangSelectCatalog", "Kies cataloog");
 define("LangQuickPick", "Voer objectnaam in");

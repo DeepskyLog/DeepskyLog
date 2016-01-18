@@ -1,5 +1,8 @@
 <?php //FR
 // This is version 5.0
+define("LangAddSiteStep2", "D&eacute;finiez votre propre nom pour ce lieu, &eacute;ventuellement ajouter un magnitude limite (ou la valeur SQM) et appuyez sur le bouton ");
+define("LangAddSiteStep1", "D&eacute;finiez votre position sur la carte ou entrez le nom et appuyer sur le bouton");
+define("LangAddSiteStep1Button", ".");
 define("LangCatalogNumber", "Num&eacute;ro dans le catalogue");
 define("LangSelectCatalog", "S&eacute;lectionnez catalogue");
 define("LangQuickPick", "Entrez le nom de l'objet");

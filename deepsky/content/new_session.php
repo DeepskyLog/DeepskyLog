@@ -109,7 +109,7 @@ function new_session() {
 	echo "<form role=\"form\" id=\"sessionForm\" enctype=\"multipart/form-data\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_session\" />";
 
-	echo "<input type=\"submit\" class=\"btn btn-primary pull-right\" name=\"add\" value=\"" . LangAddSessionButton . "\" />";
+	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"add\" value=\"" . LangAddSessionButton . "\" />";
     echo "<br />";
 	echo "<div class=\"form-group\">
 	       <label>" . LangAddSessionField1 . "</label>";
@@ -292,6 +292,8 @@ function new_session() {
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddSessionField12Expl . "</span>";
 	echo "</div>";
+
+	echo "<input type=\"submit\" class=\"btn btn-success\" name=\"add\" value=\"" . LangAddSessionButton . "\" />";
 
 	echo "</div></form>";
 	echo "</div>";
