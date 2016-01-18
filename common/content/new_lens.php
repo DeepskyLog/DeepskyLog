@@ -18,24 +18,24 @@ function new_lens() {
 	while ( list ( $key, $value ) = each ( $lns ) )
 		$content1b .= "<option value=\"" . $baseURL . "index.php?indexAction=add_lens&amp;lensid=" . urlencode ( $value ) . "\" " . (($value == $objUtil->checkRequestKey ( 'lensid' )) ? " selected=\"selected\" " : '') . ">" . $objLens->getLensPropertyFromId ( $value, 'name' ) . "</option>";
 	$content1b .= "</select>&nbsp;";
-	
+
 	echo "<hr />";
-	echo "<input type=\"submit\" class=\"btn btn-primary pull-right\" name=\"add\" value=\"" . LangAddLensButton . "\" />&nbsp;";
+	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"add\" value=\"" . LangAddLensButton . "\" />&nbsp;";
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">" . LangAddLensExisting . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $content1b;
 	echo "</div></div>";
-	
+
 	echo LangAddSiteFieldOr . " " . LangAddLensFieldManually;
 	echo "<br /><br />";
-	
+
 	echo "<div class=\"form-group\">
 	       <label for=\"lensname\">" . LangAddLensField1 . "</label>";
 	echo "<input type=\"text\" required class=\"form-control\" maxlength=\"64\" name=\"lensname\" size=\"30\" value=\"" . stripslashes ( $objUtil->checkRequestKey ( 'lensname', '' ) ) . stripslashes ( $objLens->getLensPropertyFromId ( $objUtil->checkRequestKey ( 'lensid' ), 'name' ) ) . "\" />";
 	echo "<span class=\"help-block\">" . LangAddLensField1Expl . "</span>";
 	echo "</div>";
-	
+
 	echo "<div class=\"form-group\">
 	       <label for=\"factor\">" . LangAddLensField2 . "</label>";
 	echo "<div class=\"form-inline\">";
@@ -43,7 +43,8 @@ function new_lens() {
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddLensField2Expl . "</span>";
 	echo "</div>";
-	
+	echo "<input type=\"submit\" class=\"btn btn-success\" name=\"add\" value=\"" . LangAddLensButton . "\" />&nbsp;";
+
 	echo "<hr />";
 	echo "</div></form>";
 	echo "</div>";
