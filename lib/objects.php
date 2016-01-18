@@ -1891,7 +1891,7 @@ class Objects {
 			if ($check) // magnitude
 {
 				$magnitude = "99.9";
-				if ($objUtil->checkPostKey ( 'magnitude' ) && (! (ereg ( '^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$', abs ( $_POST ['magnitude'] ), $matches )))) {
+				if ($objUtil->checkPostKey ( 'magnitude' ) && (! (preg_match ( '/^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$/', abs ( $_POST ['magnitude'] ), $matches )))) {
 					$entryMessage = LangValidateObjectMessage8;
 					$_GET ['indexAction'] = 'add_object';
 					$check = false;
@@ -1919,7 +1919,7 @@ class Objects {
 			if ($check) // surface brightness
 {
 				$sb = "99.9";
-				if ($_POST ['sb'] && ereg ( '^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$', $_POST ['sb'], $matches )) {
+				if ($_POST ['sb'] && preg_match ( '/^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$/', $_POST ['sb'], $matches )) {
 					$sb = "" . $matches [1] . ".";
 					if ($matches [2] != "")
 						$sb = $sb . $matches [2];

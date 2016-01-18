@@ -41,7 +41,7 @@ function validate_observation()
 	        $objCometObservation->setPa($current_observation, $objUtil->checkRequestKey('position_angle',-99));
 	        // MAGNITUDE AND RELATED FIELDS
 	        if(array_key_exists('mag', $_POST)) // magnitude given
-	        { if(ereg('^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$', $_POST['mag'], $matches)) // correct magnitude
+	        { if(preg_match('/^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$/', $_POST['mag'], $matches)) // correct magnitude
 	          { $magnitude = "" . $matches[1] . ".";
 	            if($matches[2] != "")
 	              $magnitude = $magnitude . $matches[2];
