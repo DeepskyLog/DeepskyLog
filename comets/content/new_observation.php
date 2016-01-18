@@ -221,7 +221,10 @@ function new_observation() {
 	echo "<br />" . $content2;
 	echo "<br />";
 
-	echo "</div></form>";
+	echo "</div>";
+	echo "<input type=\"submit\" class=\"btn btn-success\" name=\"addobservation\" value=\"" . ($adapt ? LangChangeObservationTitle : LangViewObservationButton1) . "\" />&nbsp;";
+
+	echo "</form>";
 	echo "<hr />";
 	echo "</div>";
 }
