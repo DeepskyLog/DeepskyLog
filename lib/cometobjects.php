@@ -11,7 +11,7 @@ include_once "cometobservations.php";
 
 class CometObjects
 {
- // addObject adds a new object to the database. The name and icqname should be given as 
+ // addObject adds a new object to the database. The name and icqname should be given as
  // parameters.
  function addObject($name)
  {
@@ -34,7 +34,7 @@ class CometObjects
   return $id;
  }
 
- // deleteObject removes the object with id = $id 
+ // deleteObject removes the object with id = $id
  function deleteObject($id)
  {
   global $objDatabase;
@@ -60,9 +60,9 @@ class CometObjects
 
  // getId returns the id of an object
  function getId($name)
- { 
+ {
    global $objDatabase;
-    	
+
    $id="";
    $sql = "SELECT * FROM cometobjects WHERE name = \"" . $name . "\"";
    $run = $objDatabase->selectRecordset($sql);
@@ -71,7 +71,7 @@ class CometObjects
    return $id;
  }
 
- 
+
  // getName returns the name of an object
  function getName($id)
  {
@@ -127,12 +127,12 @@ class CometObjects
 
  // getObjectFromQuery returns an array with the names of all objects where
  // the queries are defined in an array.
- // An example of an array :  
+ // An example of an array :
  //  $q = array("name" => "NGC", "icqname" => "C200512");
  function getObjectFromQuery($queries, $sort, $exact = 0)
  {
   global $objDatabase;
- 
+
   $sql = "SELECT * FROM cometobjects where";
 
   if ($queries["name"] != "")
@@ -140,11 +140,11 @@ class CometObjects
    $name = $queries["name"];
    if ($exact == 0)
    {
-    $sql = $sql." (name like \"%$name%\")"; 
+    $sql = $sql." (name like \"%$name%\")";
    }
    else
    {
-    $sql = $sql." (name = \"$name\")"; 
+    $sql = $sql." (name = \"$name\")";
    }
    $sqland = 1;
   }
@@ -179,7 +179,7 @@ class CometObjects
   return $obs;
  }
 
- // getSelectedObjects returns an array with the names of all objects where the 
+ // getSelectedObjects returns an array with the names of all objects where the
  // databasefield has the given value.
  function getSelectedObjects($dbfield, $value)
  {
@@ -204,7 +204,7 @@ class CometObjects
  // databasefield has the given name.
  function getExactObject($value)
  {
-  global $objDatabase;  
+  global $objDatabase;
 
   $sql = "SELECT * FROM cometobjects where name = \"$value\"";
 
@@ -225,7 +225,7 @@ class CometObjects
   return $obs;
  }
 
- // getSortedObjects returns an array with the names of all objects, sorted by 
+ // getSortedObjects returns an array with the names of all objects, sorted by
  // the column specified in $sort
  function getSortedObjects($sort)
  {
@@ -312,31 +312,31 @@ class CometObjects
 
  // my_array_unique returns a unique array, where the keys increment.
  function my_array_unique($somearray)
- { 
-  $tmparr = array_unique($somearray); 
-  $i=0; 
-  foreach ($tmparr as $v) 
-  { 
-   $newarr[$i] = $v; 
-   $i++; 
-  } 
-  return $newarr; 
- } 
- 
- // getObservedByUser returns +1 if the object is already observed by the 
+ {
+  $tmparr = array_unique($somearray);
+  $i=0;
+  foreach ($tmparr as $v)
+  {
+   $newarr[$i] = $v;
+   $i++;
+  }
+  return $newarr;
+ }
+
+ // getObservedByUser returns +1 if the object is already observed by the
  // given user, -1 if the object is not yet observed
  function getObservedbyUser($name, $observerid)
  {
   $observations = new CometObservations;
-  $query = array("object" => "$name", "observer" => "$observerid", 
-		 "instrument" => "", "location" => "", "mindate" => "", 
+  $query = array("object" => "$name", "observer" => "$observerid",
+		 "instrument" => "", "location" => "", "mindate" => "",
 		 "maxdate" => "");
 
   $obs = $observations->getObservationFromQuery($query);
 
   $return = -1;
 
-  if ($obs != "")
+  if (sizeof($obs) > 0)
   {
    $return = +1;
   }
@@ -344,7 +344,7 @@ class CometObjects
   return $return;
  }
 
- // getObserved returns +1 if the object is already observed, -1 if the object 
+ // getObserved returns +1 if the object is already observed, -1 if the object
  // is not yet observed
  function getObserved($name)
  {
@@ -357,7 +357,7 @@ class CometObjects
 
   $return = -1;
 
-  if ($obs != "")
+  if (sizeof($obs) > 0)
   {
    $return = +1;
   }
