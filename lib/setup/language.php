@@ -11,7 +11,7 @@ class Language
    $exclude=array("index.php",".","..",".svn","languages.xml");
    $langs=array();
    while($fn=readdir($mydir))
-     if(!in_array($fn,$exclude)) 
+     if(!in_array($fn,$exclude))
        $langs[] = $fn;
    closedir($mydir);
    for($i=0;$i<count($langs);$i++)                                              // $langs is now a list of all available translations (en, nl, de, ...)
@@ -28,7 +28,7 @@ class Language
  { $xml=simplexml_load_file("lib/setup/language/languages.xml");
    $lang=$xml->lang;
    $countrylist=array();
-   foreach ($lang as $item=>$data) 
+   foreach ($lang as $item=>$data)
      $countrylist[sprintf($data->attributes()->code)] = sprintf($data->attributes()->$country);
    return $countrylist;
  }
@@ -56,6 +56,20 @@ class Language
  { global $defaultLanguage;
    $path="language/".($lang?$lang:$defaultLanguage)."/lang_main.php";
    return $path;
+ }
+ function setLocale()
+ {
+   // When adding a new language, also add the correct locale here!
+   // LOCALES: NL: nl_NL, EN: en_US, FR: fr_FR, DE: de_DE
+   if (strcmp($_SESSION['lang'], "nl") == 0) {
+     setlocale(LC_ALL, 'nl_NL');
+   } else if (strcmp($_SESSION['lang'], "fr") == 0) {
+     setlocale(LC_ALL, 'fr_FR');
+   } else if (strcmp($_SESSION['lang'], "de") == 0) {
+     setlocale(LC_ALL, 'de_DE');
+   } else {
+     setlocale(LC_ALL, 'en_EN');
+   }
  }
 }
 ?>

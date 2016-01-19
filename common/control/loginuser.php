@@ -8,7 +8,7 @@ if ((! isset ( $inIndex )) || (! $inIndex))
 else
 	login ();
 function login() {
-	global $loggedUser, $loggedUserName, $modules, $language, $entryMessage, $usedLanguages, $allLanguages, $defaultLanguage, $objUtil, $objObserver, $objLanguage, $loginErrorCode, $loginErrorText;
+	global $loggedUser, $loggedUserName, $modules, $language, $entryMessage, $usedLanguages, $allLanguages, $defaultLanguage, $objUtil, $objObserver, $objLanguage, $loginErrorCode, $loginErrorText, $instDir;
 	$loggedUser = '';
 	$loggedUserName = '';
 	$_SESSION ['admin'] = "no";
@@ -70,13 +70,13 @@ function login() {
 				$_GET ['indexAction'] = 'default_action';
 			} else // passwords don't match
 {
-				$loginErrorCode = "LangErrorWrongPassword";
+				$loginErrorCode = LangErrorWrongPassword;
 				$_GET ['indexAction'] = 'error_action';
 				$loggedUser = "";
 			}
 		} else // not all fields are filled in
 {
-			$loginErrorCode = "LangErrorEmptyPassword";
+			$loginErrorCode = LangErrorEmptyPassword;
 			$_GET ['indexAction'] = 'error_action';
 		}
 	} else {
@@ -118,10 +118,12 @@ function login() {
 	}
 	if ($loggedUser)
 		$loggedUserName = $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' );
+
+		// We remove the token to request a new password
+		include_once $instDir . "/lib/password.php";
+		$passClass = new Password();
+		$passClass->removeChangeRequest($loggedUser);
 }
 global $loggedUser;
 date_default_timezone_set ( 'UTC' );
-
-$objDatabase->execSQL ( "INSERT INTO logging(loginid, logdate, logtime, logurl, navigator, screenresolution, language) 
-                       VALUES(\"" . ($loggedUser ? $loggedUser : "anonymous") . "\", " . date ( 'Ymd' ) . ", " . date ( 'His' ) . ", '" . addslashes ( substr ( $objUtil->checkArrayKey ( $_SERVER, 'REQUEST_URI', '' ), 0, 255 ) ) . "', '" . addslashes ( substr ( $objUtil->checkArrayKey ( $_SERVER, 'HTTP_USER_AGENT', '' ), 0, 255 ) ) . "', 'screenres', '" . $_SESSION ['lang'] . "');" );
 ?>

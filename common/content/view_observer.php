@@ -40,16 +40,16 @@ function view_observer() {
 		$cometrank = "-";
 	else
 		$cometrank ++;
-	
+
 	for($i = 0; $i < count ( $modules ); $i ++) {
-		if (strcmp ( $$modules [$i], $deepsky ) == 0) {
+		if (strcmp ( ${$modules [$i]}, $deepsky ) == 0) {
 			$key = $i;
 			$information [$i] [0] = $userDSobservation . " / " . $totalDSObservations . "&nbsp;(" . sprintf ( "%.2f", ($userDSobservation / $totalDSObservations) * 100 ) . "%)";
 			$information [$i] [1] = $userDSYearObservations . " / " . $totalDSYearObservations . "&nbsp;(" . sprintf ( "%.2f", $userDSYearObservations / $totalDSYearObservations * 100 ) . "%)";
 			$information [$i] [2] = $userDSObjects . " / " . $totalDSobjects . "&nbsp;(" . sprintf ( "%.2f", $userDSObjects / $totalDSobjects * 100 ) . "%)";
 			$information [$i] [4] = $userDSrank;
 		}
-		if (strcmp ( $$modules [$i], $comets ) == 0) {
+		if (strcmp ( ${$modules [$i]}, $comets ) == 0) {
 			$information [$i] [0] = $userCometobservation . " / " . $totalCometObservations . " (" . sprintf ( "%.2f", $userCometobservation / $totalCometObservations * 100 ) . "%)";
 			$information [$i] [1] = $userCometYearObservations . " / " . $totalCometYearObservations . "&nbsp;(" . sprintf ( "%.2f", $userCometYearObservations / ($totalCometYearObservations ? $totalCometYearObservations : 1) * 100 ) . "%)";
 			$information [$i] [2] = $userCometObjects . " / " . $totalCometobjects . " (" . sprintf ( "%.2f", $userCometObjects / $totalCometobjects * 100 ) . "%)";
@@ -63,16 +63,19 @@ function view_observer() {
 	echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">
           <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">" . GraphInfo . "</a></li>
           <li><a href=\"#observationsPerYear\" data-toggle=\"tab\">" . GraphObservationsTitle . "</a></li>
+					<li><a href=\"#observationsPerMonth\" data-toggle=\"tab\">" . GraphObservationsMonthTitle . "</a></li>
           <li><a href=\"#objectTypes\" data-toggle=\"tab\">" . GraphObservationsType . "</a></li>
+					<li><a href=\"#countries\" data-toggle=\"tab\">" . GraphObservationsPerCountry . "</a></li>
           <li><a href=\"#stars\" data-toggle=\"tab\">" . GraphAccomplishments . "</a></li>
         </ul>";
-	
+
 	echo "<div id=\"my-tab-content\" class=\"tab-content\">";
 	echo "<div class=\"tab-pane active\" id=\"info\">";
 	if (array_key_exists ( 'admin', $_SESSION ) && ($_SESSION ['admin'] == "yes")) {
 		// admin logged in
 		echo "<br />";
 		echo "<form class=\"form-horizontal\" role=\"form\" action=\"" . $baseURL . "index.php\" >";
+
 		echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_emailNameFirstname_Password\" />";
 		echo "<input type=\"hidden\" name=\"user\" value=\"" . $user . "\" />";
 		echo "<div class=\"form-group\">";
@@ -89,7 +92,8 @@ function view_observer() {
 	         <label for=\"firstname\" class=\"col-sm-2 control-label\">" . LangChangeAccountField3 . "</label>
 	         <div class=\"col-sm-5\">
 	          <input type=\"text\" name=\"firstname\" class=\"form-control\" id=\"firstname\" value=\"" . $objObserver->getObserverProperty ( $user, 'firstname' ) . "\">
-           </div>
+					 </div>
+						<input type=\"submit\" class=\"btn btn-danger\" name=\"change_email_name_firstname\" value=\"".LangViewObserverChangeNameFirstname."\" />
 	        </div>";
 		echo "<div class=\"form-group\">
 	         <label for=\"name\" class=\"col-sm-2 control-label\">" . LangChangeAccountField4 . "</label>
@@ -104,7 +108,7 @@ function view_observer() {
            </div>
 	         <div class=\"col-sm-2\">
 	         	<input type=\"submit\" class=\"btn btn-primary\" name=\"change_password\" value=\"" . "Change password" . "\" />
-	         </div>	         		
+	         </div>
 	        </div>";
 		echo "<div class=\"form-group\">";
 		echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField7 . "</label>";
@@ -127,7 +131,7 @@ function view_observer() {
 		        <td>" . LangChangeAccountField3 . "</td>
 		        <td>" . $objObserver->getObserverProperty ( $user, 'firstname' ) . "</td>
 		       </tr>";
-		
+
 		echo " <tr>
 		        <td>" . LangChangeAccountField4 . "</td>
 		        <td>" . $objObserver->getObserverProperty ( $user, 'name' ) . "</td>
@@ -144,25 +148,25 @@ function view_observer() {
 			}
 			$result = $objLocation->getSortedLocations ( 'name', $loggedUser, 1 );
 			$loc = $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' );
-			
+
 			if ($result) {
 				echo "<div class=\"btn-group\">
 			      <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">
 					" . $objLocation->getLocationPropertyFromId ( $loc, 'name' ) . "&nbsp;<span class=\"caret\"></span>";
 				echo "</button> <ul class=\"dropdown-menu\">";
-				
+
 				$url = $baseURL . "index.php?indexAction=detail_observer&user=" . $loggedUser;
 				while ( list ( $key, $value ) = each ( $result ) ) {
 					echo "  <li><a href=\"" . $url . "&amp;activeLocationId=" . $value . "\">" . $objLocation->getLocationPropertyFromId ( $value, 'name' ) . "</a></li>";
 				}
-				
+
 				echo " </ul>";
 				echo "</li>
 			          </div>";
 			}
 			echo "</td>";
 		} else {
-			echo "<a href=\"" . $baseURL . "index.php?indexAction=detail_location&amp;location=" . urlencode ( $location_id ) . "\">" . $location_name . "</a> 
+			echo "<a href=\"" . $baseURL . "index.php?indexAction=detail_location&amp;location=" . urlencode ( $location_id ) . "\">" . $location_name . "</a>
 	          </td>
 	         </tr>";
 		}
@@ -178,18 +182,18 @@ function view_observer() {
 			}
 			$result = $objInstrument->getSortedInstruments ( 'name', $loggedUser, 1 );
 			$inst = $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' );
-			
+
 			if ($result) {
 				echo "<div class=\"btn-group\">
 			      <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">
 					" . $objInstrument->getInstrumentPropertyFromId ( $inst, 'name' ) . "&nbsp;<span class=\"caret\"></span>";
 				echo "</button> <ul class=\"dropdown-menu\">";
-				
+
 				$url = $baseURL . "index.php?indexAction=detail_observer&user=" . $loggedUser;
 				while ( list ( $key, $value ) = each ( $result ) ) {
 					echo "  <li><a href=\"" . $url . "&amp;activeTelescopeId=" . $value . "\">" . $objInstrument->getInstrumentPropertyFromId ( $value, 'name' ) . "</a></li>";
 				}
-				
+
 				echo " </ul>";
 				echo "</li>
 			          </div>";
@@ -245,7 +249,7 @@ function view_observer() {
 		echo " </th>";
 	}
 	echo " </tr>";
-	
+
 	echo " <tr>";
 	echo "  <td>" . LangViewObserverNumberOfObservations . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
@@ -253,7 +257,7 @@ function view_observer() {
 		echo " </td>";
 	}
 	echo " </tr>";
-	
+
 	echo " <tr>";
 	echo "  <td>" . LangTopObserversHeader4 . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
@@ -261,7 +265,7 @@ function view_observer() {
 		echo " </td>";
 	}
 	echo " </tr>";
-	
+
 	echo " <tr>";
 	echo "  <td>" . LangTopObserversHeader6 . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
@@ -269,7 +273,7 @@ function view_observer() {
 		echo " </td>";
 	}
 	echo " </tr>";
-	
+
 	echo " <tr>";
 	echo "  <td>" . LangTopObserversHeader5 . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
@@ -277,7 +281,7 @@ function view_observer() {
 		echo " </td>";
 	}
 	echo " </tr>";
-	
+
 	echo " <tr>";
 	echo "  <td>" . LangTopObserversHeader5b . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
@@ -285,7 +289,7 @@ function view_observer() {
 		echo " </td>";
 	}
 	echo " </tr>";
-	
+
 	echo " <tr>";
 	echo "  <td>" . LangTopObserversHeader5c . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
@@ -293,7 +297,7 @@ function view_observer() {
 		echo " </td>";
 	}
 	echo " </tr>";
-	
+
 	echo " <tr>";
 	echo "  <td>" . LangTopObserversHeader5d . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
@@ -301,7 +305,7 @@ function view_observer() {
 		echo " </td>";
 	}
 	echo " </tr>";
-	
+
 	echo " <tr>";
 	echo "  <td>" . LangViewObserverRank . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
@@ -309,9 +313,9 @@ function view_observer() {
 		echo " </td>";
 	}
 	echo " </tr>";
-	
+
 	echo "</table>";
-	
+
 	if ($loggedUser != "") {
 		if ($user != $loggedUser) {
 			echo "<br />";
@@ -319,7 +323,7 @@ function view_observer() {
 			echo "<span class=\"glyphicon glyphicon-envelope\"></span> " . LangMessagePublicList5 . $firstname . "</a>";
 		}
 	}
-	
+
 	echo "<hr />";
 	$dir = opendir ( $instDir . 'common/observer_pics' );
 	while ( FALSE !== ($file = readdir ( $dir )) ) {
@@ -333,31 +337,75 @@ function view_observer() {
 			echo "<hr />";
 		}
 	}
-	
+
 	echo "</div>";
-	
+
 	// The observations per year page
 	echo "<div class=\"tab-pane\" id=\"observationsPerYear\">";
-	// GRAFIEK
+	// GRAPH
 	// Check the date of the first observation
 	$currentYear = date ( "Y" );
-	$sql = $objDatabase->selectSingleValue ( "select MIN(date) from observations where observerid=\"" . $user . "\";", "MIN(date)", $currentYear . "0606" );
-	$sql2 = $objDatabase->selectSingleValue ( "select MIN(date) from cometobservations where observerid=\"" . $user . "\";", "MIN(date)", $currentYear . "0606" );
-	$startYear = min ( floor ( $sql / 10000 ), floor ( $sql2 / 10000 ) );
+	$sql = $objDatabase->selectKeyValueArray ("select YEAR(date),count(*) from observations where observerid=\"" . $user . "\" group by YEAR(date)", "YEAR(date)", "count(*)");
+	$sql2 = $objDatabase->selectKeyValueArray ( "select YEAR(date),count(*) from cometobservations where observerid=\"" . $user . "\" group by YEAR(date);", "YEAR(date)", "count(*)" );
+
+	if (sizeof($sql) == 0) {
+		$startYear = min(array_keys($sql2));
+	} else if (sizeof($sql2 == 0)) {
+		$startYear = min(array_keys($sql));
+	} else {
+		$startYear = min ( [min(array_keys($sql)), min(array_keys ( $sql2 ) )] );
+	}
 	// Add the JavaScript to initialize the chart on document ready
 	echo "<script type=\"text/javascript\">
-  
+
 	  	      var chart;
+						var dataYear = [";
+						for($i = $startYear; $i <= $currentYear; $i ++) {
+							if (array_key_exists($i, $sql)) {
+								$obs = $sql[$i];
+							} else {
+								$obs = 0;
+							}
+							if ($i != $currentYear) {
+								echo $obs . ", ";
+							} else {
+								echo $obs;
+							}
+						}
+						echo "];
+						var cometdataYear = [";
+						for($i = $startYear; $i <= $currentYear; $i ++) {
+							if (array_key_exists($i, $sql2)) {
+								$obs = $sql2[$i];
+							} else {
+								$obs = 0;
+							}
+							if ($i != $currentYear) {
+								echo $obs . ", ";
+							} else {
+								echo $obs;
+							}
+						}
+						echo "];
+						var dataYearSum = 0;
+						for (var i=0;i < dataYear.length;i++) {
+    					dataYearSum += dataYear[i];
+						}
+						var cometdataYearSum = 0;
+						for (var i=0;i < cometdataYear.length;i++) {
+    					cometdataYearSum += cometdataYear[i];
+						}
 	  	      $(document).ready(function() {
 	  	      chart = new Highcharts.Chart({
 	  	        chart: {
 	  	          renderTo: 'container',
 	  	          defaultSeriesType: 'line',
+								zoomType: 'x',
 	  	          marginRight: 130,
 	  	          marginBottom: 25
 	  	        },
 	  	        title: {
-	  	          text: \"" . GraphTitle1 . " " . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\",
+	  	          text: \"" . GraphTitle1 . ": " . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\",
 	  	          x: -20 //center
 	  	        },
 	  	        subtitle: {
@@ -366,7 +414,7 @@ function view_observer() {
 	  	        },
 	  	        xAxis: {
 	  	          categories: [";
-	
+
 	for($i = $startYear; $i <= $currentYear; $i ++) {
 		if ($i != $currentYear) {
 			echo "'" . $i . "', ";
@@ -374,13 +422,14 @@ function view_observer() {
 			echo "'" . $i . "'";
 		}
 	}
-	
+
 	echo "]
 	  	        },
 	  	        yAxis: {
 	  	          title: {
 	  	            text: '" . GraphObservations . "'
 	  	        },
+							min: 0,
 	  	        plotLines: [{
 	  	          value: 0,
 	  	          width: 1,
@@ -389,8 +438,13 @@ function view_observer() {
 	  	      },
 	  	      tooltip: {
 	  	        formatter: function() {
-	  	                            return '<b>'+ this.series.name +'</b><br/>'+
-	  	        this.x +': '+ this.y;
+								if (this.series.name === \"Deepsky\") {
+									return '<b>'+ this.series.name +'</b><br/>'+
+														this.x +': '+ this.y + ' (' + Highcharts.numberFormat(this.y / dataYearSum * 100) + '%)';
+								} else {
+									return '<b>'+ this.series.name +'</b><br/>'+
+														this.x +': '+ this.y + ' (' + Highcharts.numberFormat(this.y / cometdataYearSum * 100) + '%)';
+								}
 	  	        }
 	  	                    },
 	  	                    legend: {
@@ -403,218 +457,420 @@ function view_observer() {
 	  	      },
 	  	                    series: [{
 	  	                      name: '" . html_entity_decode ( $deepsky, ENT_QUOTES, "UTF-8" ) . "',
-	  	                        data: [";
-	for($i = $startYear; $i <= $currentYear; $i ++) {
-		$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from observations where observerid=\"" . $user . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
-		if ($i != $currentYear) {
-			echo $obs . ", ";
-		} else {
-			echo $obs;
-		}
-	}
-	echo "                    ]
+	  	                        data: dataYear
 	  	                      }, {
                               name: '" . html_entity_decode ( $comets, ENT_QUOTES, "UTF-8" ) . "',
-                                data: [";
-	
-	for($i = $startYear; $i <= $currentYear; $i ++) {
-		$obs = $objDatabase->selectSingleValue ( "select COUNT(date) from cometobservations where observerid=\"" . $user . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0" );
-		if ($i != $currentYear) {
-			echo $obs . ", ";
-		} else {
-			echo $obs;
-		}
-	}
-	
-	echo "                     ] }]
+                                data: cometdataYear }]
 	  	                      });
 	  	                      });
-  
+
 	  	                      </script>";
-	
+
 	// Show graph
 	echo "<div id=\"container\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
 	echo "</div>";
-	
+
+
+	// The observations per month page
+	echo "<div class=\"tab-pane\" id=\"observationsPerMonth\">";
+	// GRAPH
+	// Add the JavaScript to initialize the chart on document ready
+	$sql = $objDatabase->selectKeyValueArray ("select MONTH(date),count(*) from observations where observerid=\"" . $user . "\" group by MONTH(date)", "MONTH(date)", "count(*)");
+	$sql2 = $objDatabase->selectKeyValueArray ( "select MONTH(date),count(*) from cometobservations where observerid=\"" . $user . "\" group by MONTH(date);", "MONTH(date)", "count(*)" );
+
+	echo "<script type=\"text/javascript\">
+	  	      var chart;
+						var data = [";
+						for($i = 1; $i <= 12; $i ++) {
+							if (array_key_exists($i, $sql)) {
+								$obs = $sql[$i];
+							} else {
+								$obs = 0;
+							}
+							if ($i != 12) {
+								echo $obs . ", ";
+							} else {
+								echo $obs;
+							}
+						}
+						echo "];
+						var cometdata = [";
+							for($i = 1; $i <= 12; $i ++) {
+								if (array_key_exists($i, $sql2)) {
+									$obs = $sql2[$i];
+								} else {
+									$obs = 0;
+								}
+								if ($i != 12) {
+									echo $obs . ", ";
+								} else {
+									echo $obs;
+								}
+							}
+							echo "];
+						var dataSum = 0;
+						for (var i=0;i < data.length;i++) {
+    					dataSum += data[i];
+						}
+						var cometdataSum = 0;
+						for (var i=0;i < data.length;i++) {
+    					cometdataSum += cometdata[i];
+						}
+
+	  	      $(document).ready(function() {
+	  	      chart = new Highcharts.Chart({
+	  	        chart: {
+	  	          renderTo: 'container3',
+								type: 'column',
+	  	          marginRight: 130,
+	  	          marginBottom: 25
+	  	        },
+	  	        title: {
+	  	          text: \"" . GraphTitleMonths . ": " . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\",
+	  	          x: -20 //center
+	  	        },
+	  	        subtitle: {
+	  	          text: '" . GraphSource . $baseURL . "',
+	  	          x: -20
+	  	        },
+	  	        xAxis: {
+	  	          categories: [ ";
+
+								global $Month1Short, $Month2Short, $Month3Short, $Month4Short, $Month5Short, $Month6Short, $Month7Short, $Month8Short, $Month9Short, $Month10Short, $Month11Short, $Month12Short;
+								echo '"' . $Month1Short . '", ';
+								echo '"' . $Month2Short . '", ';
+								echo '"' . $Month3Short . '", ';
+								echo '"' . $Month4Short . '", ';
+								echo '"' . $Month5Short . '", ';
+								echo '"' . $Month6Short . '", ';
+								echo '"' . $Month7Short . '", ';
+								echo '"' . $Month8Short . '", ';
+								echo '"' . $Month9Short . '", ';
+								echo '"' . $Month10Short . '", ';
+								echo '"' . $Month11Short . '", ';
+								echo '"' . $Month12Short . "\"]
+							},
+	  	        yAxis: {
+	  	          title: {
+	  	            text: '" . GraphObservations . "'
+	  	        },
+							min: 0,
+	  	        plotLines: [{
+	  	          value: 0,
+	  	          width: 1,
+	  	          color: '#808080'
+	  	        }]
+	  	      },
+	  	      tooltip: {
+	  	        formatter: function() {
+								if (this.series.name === \"Deepsky\") {
+									return '<b>'+ this.series.name +'</b><br/>'+
+														this.x +': '+ this.y + ' (' + Highcharts.numberFormat(this.y / dataSum * 100) + '%)';
+								} else {
+									return '<b>'+ this.series.name +'</b><br/>'+
+														this.x +': '+ this.y + ' (' + Highcharts.numberFormat(this.y / cometdataSum * 100) + '%)';
+								}
+	  	        }
+	  	                    },
+	  	                    legend: {
+	  	                    layout: 'vertical',
+	  	                    align: 'right',
+	  	                    verticalAlign: 'top',
+	  	                    x: -10,
+	  	                        y: 100,
+	  	                    borderWidth: 0
+	  	      },
+						plotOptions: {
+            column: {
+                stacking: 'normal'
+							} },
+	  	                    series: [{
+	  	                      name: '" . html_entity_decode ( $deepsky, ENT_QUOTES, "UTF-8" ) . "',
+	  	                        data: data
+	  	                      }, {
+                              name: '" . html_entity_decode ( $comets, ENT_QUOTES, "UTF-8" ) . "',
+                                data: cometdata
+ 														  }]
+	  	                      });
+	  	                      });
+
+	  	                      </script>";
+
+	// Show graph
+	echo "<div id=\"container3\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
+	echo "</div>";
+
 	// The tab with the object types
 	echo "<div class=\"tab-pane\" id=\"objectTypes\">";
 	// Pie chart
+	$deepskyobservations = $objDatabase->selectKeyValueArray ("select objects.type,count(*) from observations JOIN objects on observations.objectname=objects.name where observerid=\"" . $user . "\" group by objects.type;", "type", "count(*)");
+	$cometobservations = count ( $objDatabase->selectRecordsetArray ( "select * from cometobservations where observerid=\"" . $user . "\"" ) );
+
 	$objectsArray = array ();
 	$colors = Array ();
-	
-	$all = count ( $objDatabase->selectRecordsetArray ( "select * from observations where observerid=\"" . $user . "\"" ) );
+
+	// Correct the deepskyobservations array. Make sure that all the entries are available.
+	if (!array_key_exists("QUASR", $deepskyobservations)) {
+		$deepskyobservations["QUASR"] = 0;
+	}
+	if (!array_key_exists("DS", $deepskyobservations)) {
+		$deepskyobservations["DS"] = 0;
+	}
+	if (!array_key_exists("GALXY", $deepskyobservations)) {
+		$deepskyobservations["GALXY"] = 0;
+	}
+	if (!array_key_exists("GALCL", $deepskyobservations)) {
+		$deepskyobservations["GALCL"] = 0;
+	}
+	if (!array_key_exists("OPNCL", $deepskyobservations)) {
+		$deepskyobservations["OPNCL"] = 0;
+	}
+	if (!array_key_exists("DRKNB", $deepskyobservations)) {
+		$deepskyobservations["DRKNB"] = 0;
+	}
+	if (!array_key_exists("BRTNB", $deepskyobservations)) {
+		$deepskyobservations["BRTNB"] = 0;
+	}
+	if (!array_key_exists("STNEB", $deepskyobservations)) {
+		$deepskyobservations["STNEB"] = 0;
+	}
+	if (!array_key_exists("RNHII", $deepskyobservations)) {
+		$deepskyobservations["RNHII"] = 0;
+	}
+	if (!array_key_exists("HII", $deepskyobservations)) {
+		$deepskyobservations["HII"] = 0;
+	}
+	if (!array_key_exists("ASTER", $deepskyobservations)) {
+		$deepskyobservations["ASTER"] = 0;
+	}
+	if (!array_key_exists("GLOCL", $deepskyobservations)) {
+		$deepskyobservations["GLOCL"] = 0;
+	}
+	if (!array_key_exists("SNREM", $deepskyobservations)) {
+		$deepskyobservations["SNREM"] = 0;
+	}
+	if (!array_key_exists("AA2STAR", $deepskyobservations)) {
+		$deepskyobservations["AA2STAR"] = 0;
+	}
+	if (!array_key_exists("GXAGC", $deepskyobservations)) {
+		$deepskyobservations["GXAGC"] = 0;
+	}
+	if (!array_key_exists("PLNNB", $deepskyobservations)) {
+		$deepskyobservations["PLNNB"] = 0;
+	}
+	if (!array_key_exists("REFNB", $deepskyobservations)) {
+		$deepskyobservations["REFNB"] = 0;
+	}
+	if (!array_key_exists("EMINB", $deepskyobservations)) {
+		$deepskyobservations["EMINB"] = 0;
+	}
+	if (!array_key_exists("WRNEB", $deepskyobservations)) {
+		$deepskyobservations["WRNEB"] = 0;
+	}
+	if (!array_key_exists("ENSTR", $deepskyobservations)) {
+		$deepskyobservations["ENSTR"] = 0;
+	}
+	if (!array_key_exists("CLANB", $deepskyobservations)) {
+		$deepskyobservations["CLANB"] = 0;
+	}
+	if (!array_key_exists("AA1STAR", $deepskyobservations)) {
+		$deepskyobservations["AA1STAR"] = 0;
+	}
+	if (!array_key_exists("AA3STAR", $deepskyobservations)) {
+		$deepskyobservations["AA3STAR"] = 0;
+	}
+	if (!array_key_exists("AA4STAR", $deepskyobservations)) {
+		$deepskyobservations["AA4STAR"] = 0;
+	}
+	if (!array_key_exists("AA8STAR", $deepskyobservations)) {
+		$deepskyobservations["AA8STAR"] = 0;
+	}
+	if (!array_key_exists("NONEX", $deepskyobservations)) {
+		$deepskyobservations["NONEX"] = 0;
+	}
+	if (!array_key_exists("GACAN", $deepskyobservations)) {
+		$deepskyobservations["GACAN"] = 0;
+	}
+	if (!array_key_exists("GXADN", $deepskyobservations)) {
+		$deepskyobservations["GXADN"] = 0;
+	}
+	if (!array_key_exists("ENRNN", $deepskyobservations)) {
+		$deepskyobservations["ENRNN"] = 0;
+	}
+	if (!array_key_exists("SNOVA", $deepskyobservations)) {
+		$deepskyobservations["SNOVA"] = 0;
+	}
+
+	$all = array_sum($deepskyobservations) + $cometobservations;
 	if ($all == 0) {
 		$all = 1;
 	}
 	$rest = 0;
-	
-	$cometobservations = count ( $objDatabase->selectRecordsetArray ( "select * from cometobservations where observerid = \"" . $user . "\"" ) );
-	$all += $cometobservations;
-	
+
 	if (($cometobservations / $all) >= 0.01) {
 		$objectsArray ["comets"] = $cometobservations;
 	} else {
 		$rest += $cometobservations;
 	}
 	$colors ["comets"] = "#4572A7";
-	
-	$aster = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"ASTER\" and observations.observerid = \"" . $user . "\"" ) );
-	$aster += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA8STAR\" and observations.observerid = \"" . $user . "\"" ) );
-	$aster += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA4STAR\" and observations.observerid = \"" . $user . "\"" ) );
-	$aster += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA3STAR\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$aster = $deepskyobservations["ASTER"];
+	$aster += $deepskyobservations["AA8STAR"];
+	$aster += $deepskyobservations["AA4STAR"];
+	$aster += $deepskyobservations["AA3STAR"];
+
 	if (($aster / $all) >= 0.01) {
 		$objectsArray ["ASTER"] = $aster;
 	} else {
 		$rest += $aster;
 	}
 	$colors ["ASTER"] = "#AA4643";
-	
-	$brtnb = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"BRTNB\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$brtnb = $deepskyobservations["BRTNB"];
+
 	if (($brtnb / $all) >= 0.01) {
 		$objectsArray ["BRTNB"] = $brtnb;
 	} else {
 		$rest += $brtnb;
 	}
 	$colors ["BRTNB"] = "#89A54E";
-	
-	$ds = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"DS\" and observations.observerid = \"" . $user . "\"" ) );
-	$ds += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA2STAR\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$ds = $deepskyobservations["DS"];
+	$ds += $deepskyobservations["AA2STAR"];
+
 	if (($ds / $all) >= 0.01) {
 		$objectsArray ["DS"] = $ds;
 	} else {
 		$rest += $ds;
 	}
 	$colors ["DS"] = "#80699B";
-	
-	$star = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA1STAR\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$star = $deepskyobservations["AA1STAR"];
+
 	if (($star / $all) >= 0.01) {
 		$objectsArray ["AA1STAR"] = $star;
 	} else {
 		$rest += $star;
 	}
 	$colors ["AA1STAR"] = "#3D96AE";
-	
-	$drknb = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"DRKNB\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$drknb = $deepskyobservations["DRKNB"];
+
 	if (($drknb / $all) >= 0.01) {
 		$objectsArray ["DRKNB"] = $drknb;
 	} else {
 		$rest += $drknb;
 	}
 	$colors ["DRKNB"] = "#DB843D";
-	
-	$galcl = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"GALCL\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$galcl = $deepskyobservations["GALCL"];
+
 	if (($galcl / $all) >= 0.01) {
 		$objectsArray ["GALCL"] = $galcl;
 	} else {
 		$rest += $galcl;
 	}
 	$colors ["GALCL"] = "#92A8CD";
-	
-	$galxy = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"GALXY\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$galxy = $deepskyobservations["GALXY"];
+
 	if (($galxy / $all) >= 0.01) {
 		$objectsArray ["GALXY"] = $galxy;
 	} else {
 		$rest += $galxy;
 	}
 	$colors ["GALXY"] = "#68302F";
-	
-	$plnnb = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"PLNNB\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$plnnb = $deepskyobservations["PLNNB"];
+
 	if (($plnnb / $all) >= 0.01) {
 		$objectsArray ["PLNNB"] = $plnnb;
 	} else {
 		$rest += $plnnb;
 	}
 	$colors ["PLNNB"] = "#A47D7C";
-	
-	$opncl = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"OPNCL\" and observations.observerid = \"" . $user . "\"" ) );
-	$opncl += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"CLANB\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$opncl = $deepskyobservations["OPNCL"];
+	$opncl += $deepskyobservations["CLANB"];
+
 	if (($opncl / $all) >= 0.01) {
 		$objectsArray ["OPNCL"] = $opncl;
 	} else {
 		$rest += $opncl;
 	}
 	$colors ["OPNCL"] = "#B5CA92";
-	
-	$glocl = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"GLOCL\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$glocl = $deepskyobservations["GLOCL"];
+
 	if (($glocl / $all) >= 0.01) {
 		$objectsArray ["GLOCL"] = $glocl;
 	} else {
 		$rest += $glocl;
 	}
 	$colors ["GLOCL"] = "#00FF00";
-	
-	$eminb = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"EMINB\" and observations.observerid = \"" . $user . "\"" ) );
-	$eminb += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"ENRNN\" and observations.observerid = \"" . $user . "\"" ) );
-	$eminb += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"ENSTR\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$eminb = $deepskyobservations["EMINB"];
+	$eminb += $deepskyobservations["ENRNN"];
+	$eminb += $deepskyobservations["ENSTR"];
+
 	if (($eminb / $all) >= 0.01) {
 		$objectsArray ["EMINB"] = $eminb;
 	} else {
 		$rest += $eminb;
 	}
 	$colors ["EMINB"] = "#C0FFC0";
-	
-	$refnb = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"REFNB\" and observations.observerid = \"" . $user . "\"" ) );
-	$refnb += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"RNHII\" and observations.observerid = \"" . $user . "\"" ) );
-	$refnb += count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"HII\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$refnb = $deepskyobservations["REFNB"];
+	$refnb += $deepskyobservations["RNHII"];
+	$refnb += $deepskyobservations["HII"];
+
 	if (($refnb / $all) >= 0.01) {
 		$objectsArray ["REFNB"] = $refnb;
 	} else {
 		$rest += $refnb;
 	}
 	$colors ["REFNB"] = "#0000C0";
-	
-	$nonex = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"NONEX\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$nonex = $deepskyobservations["NONEX"];
+
 	if (($nonex / $all) >= 0.01) {
 		$objectsArray ["NONEX"] = $nonex;
 	} else {
 		$rest += $nonex;
 	}
 	$colors ["NONEX"] = "#C0C0FF";
-	
-	$snrem = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"SNREM\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$snrem = $deepskyobservations["SNREM"];
+
 	if (($snrem / $all) >= 0.01) {
 		$objectsArray ["SNREM"] = $snrem;
 	} else {
 		$rest += $snrem;
 	}
 	$colors ["SNREM"] = "#808000";
-	
-	$quasr = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"QUASR\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$quasr = $deepskyobservations["QUASR"];
+
 	if (($quasr / $all) >= 0.01) {
 		$objectsArray ["QUASR"] = $quasr;
 	} else {
 		$rest += $quasr;
 	}
 	$colors ["QUASR"] = "#C0C000";
-	
-	$wrneb = count ( $objDatabase->selectRecordsetArray ( "select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"WRNEB\" and observations.observerid = \"" . $user . "\"" ) );
-	
+
+	$wrneb = $deepskyobservations["WRNEB"];
+
 	if (($wrneb / $all) >= 0.01) {
 		$objectsArray ["WRNEB"] = $wrneb;
 	} else {
 		$rest += $wrneb;
 	}
 	$colors ["WRNEB"] = "#008080";
-	
+
 	$objectsArray ["REST"] = $rest;
 	$colors ["REST"] = "#00FFFF";
 	echo "<script type=\"text/javascript\">
-  
+
 			var chart;
 			$(document).ready(function() {
 				chart = new Highcharts.Chart({
@@ -625,7 +881,7 @@ function view_observer() {
 						plotShadow: false
 					},
 					title: {
-						text: \"" . ObjectsSeenGraph . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\"
+						text: \"" . ObjectsSeenGraph . ": " . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\"
 					},
                 subtitle: {
                   text: '" . GraphSource . $baseURL . "'
@@ -654,7 +910,7 @@ function view_observer() {
 						type: 'pie',
 						name: 'Objects seen',
 						data: [";
-	
+
 	foreach ( $objectsArray as $key => $value ) {
 		if ($key != "REST") {
 			print "{name: \"" . html_entity_decode ( $GLOBALS [$key], ENT_QUOTES, "UTF-8" ) . "\", color: '" . $colors [$key] . "', y: " . $value . "}, ";
@@ -667,100 +923,178 @@ function view_observer() {
 					}]
 				});
 			});
-  
+
 		</script>";
 	echo "<div id=\"container2\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
-	
+
 	echo "</div>";
-	
+
+	// The tab with the observations per country
+	echo "<div class=\"tab-pane\" id=\"countries\">";
+	// Pie chart
+	$countriesArray = array ();
+
+	// First find a list of all countries
+	$all = array_count_values($objDatabase->selectSingleArray ( "select locations.country from observations join locations on observations.locationid=locations.id where ((observations.observerid=\"" . $user . "\"))", "country"));
+	$allComets = array_count_values($objDatabase->selectSingleArray ( "select locations.country from cometobservations join locations on cometobservations.locationid=locations.id where ((cometobservations.observerid=\"" . $user . "\"))", "country"));
+
+	// We loop over the countries (we merge the deepsky and comet observations)
+	$countryList = array_unique(array_merge(array_keys($all), array_keys($allComets)));
+	foreach ($countryList as $country) {
+		$obs = 0;
+		if (array_key_exists($country, $all)) {
+			$obs += $all[$country];
+		}
+		if (array_key_exists($country, $allComets)) {
+			$obs += $allComets[$country];
+		}
+		$countriesArray [$country] = $obs;
+	}
+
+	echo "<script type=\"text/javascript\">
+
+			var chart;
+			$(document).ready(function() {
+				chart = new Highcharts.Chart({
+					chart: {
+						renderTo: 'containerCountry',
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false
+					},
+					title: {
+						text: \"" . GraphObservationsPerCountry . ": " . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\"
+					},
+                subtitle: {
+                  text: '" . GraphSource . $baseURL . "'
+                },
+					tooltip: {
+						formatter: function() {
+							return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage * 100) / 100 + '%';
+						}
+					},
+					plotOptions: {
+						pie: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							showCheckbox: true,
+							dataLabels: {
+								enabled: true,
+								color: '#000000',
+								connectorColor: '#000000',
+								formatter: function() {
+									return '<b>'+ this.point.name +'</b>: '+ this.y;
+								}
+							}
+						}
+					},
+				    series: [{
+						type: 'pie',
+						name: 'Objects seen',
+						data: [";
+
+	foreach ( $countriesArray as $key => $value ) {
+		print "{name: \"" . $key . "\", y: " . $value . "},";
+	}
+	echo "
+						]
+					}]
+				});
+			});
+
+		</script>";
+	echo "<div id=\"containerCountry\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
+
+	echo "</div>";
+
 	// Draw the stars
 	echo "<div class=\"tab-pane\" id=\"stars\">";
-	
+
 	// Messier
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangMessier . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getMessierBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsMessierBronze, LangMessierBronzeToAccomplish );
 	drawStar ( $objAccomplishments->getMessierSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsMessierSilver, LangMessierSilverToAccomplish );
 	drawStar ( $objAccomplishments->getMessierGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsMessierGold, LangMessierGoldToAccomplish );
-	
+
 	echo "</div>";
-	
+
 	// Messier Drawings
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangMessierDrawings . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getMessierDrawingsBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsMessierBronzeDr, LangMessierBronzeToAccomplishDr );
 	drawStar ( $objAccomplishments->getMessierDrawingsSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsMessierSilverDr, LangMessierSilverToAccomplishDr );
 	drawStar ( $objAccomplishments->getMessierDrawingsGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsMessierGoldDr, LangMessierGoldToAccomplishDr );
 	echo "</div>";
-	
+
 	// Caldwell
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangCaldwell . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getCaldwellBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsCaldwellBronze, LangCaldwellBronzeToAccomplish );
 	drawStar ( $objAccomplishments->getCaldwellSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsCaldwellSilver, LangCaldwellSilverToAccomplish );
 	drawStar ( $objAccomplishments->getCaldwellGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsCaldwellGold, LangCaldwellGoldToAccomplish );
 	echo "</div>";
-	
+
 	// Caldwell drawings
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangCaldwellDrawings . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getCaldwellDrawingsBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsCaldwellBronzeDr, LangCaldwellBronzeToAccomplishDr );
 	drawStar ( $objAccomplishments->getCaldwellDrawingsSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsCaldwellSilverDr, LangCaldwellSilverToAccomplishDr );
 	drawStar ( $objAccomplishments->getCaldwellDrawingsGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsCaldwellGoldDr, LangCaldwellGoldToAccomplishDr );
 	echo "</div>";
-	
+
 	// Herschel - 400
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangHerschel400 . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getHerschelBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsH400Bronze, LangH400BronzeToAccomplish );
 	drawStar ( $objAccomplishments->getHerschelSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsH400Silver, LangH400SilverToAccomplish );
 	drawStar ( $objAccomplishments->getHerschelGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsH400Gold, LangH400GoldToAccomplish );
 	drawStar ( $objAccomplishments->getHerschelDiamond ( $user ), LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsH400Diamond, LangH400DiamondToAccomplish );
 	drawStar ( $objAccomplishments->getHerschelPlatina ( $user ), LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsH400Platina, LangH400PlatinaToAccomplish );
 	echo "</div>";
-	
+
 	// Herschel 400 drawings
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangHerschel400Drawings . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getHerschelDrawingsBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsH400BronzeDr, LangH400BronzeToAccomplishDr );
 	drawStar ( $objAccomplishments->getHerschelDrawingsSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsH400SilverDr, LangH400SilverToAccomplishDr );
 	drawStar ( $objAccomplishments->getHerschelDrawingsGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsH400GoldDr, LangH400GoldToAccomplishDr );
 	drawStar ( $objAccomplishments->getHerschelDrawingsDiamond ( $user ), LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsH400DiamondDr, LangH400DiamondToAccomplishDr );
 	drawStar ( $objAccomplishments->getHerschelDrawingsPlatina ( $user ), LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsH400PlatinaDr, LangH400PlatinaToAccomplishDr );
 	echo "</div>";
-	
+
 	// Herschel II
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangHerschelII . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getHerschelIIBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsHIIBronze, LangHIIBronzeToAccomplish );
 	drawStar ( $objAccomplishments->getHerschelIISilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsHIISilver, LangHIISilverToAccomplish );
 	drawStar ( $objAccomplishments->getHerschelIIGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsHIIGold, LangHIIGoldToAccomplish );
 	drawStar ( $objAccomplishments->getHerschelIIDiamond ( $user ), LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsHIIDiamond, LangHIIDiamondToAccomplish );
 	drawStar ( $objAccomplishments->getHerschelIIPlatina ( $user ), LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsHIIPlatina, LangHIIPlatinaToAccomplish );
 	echo "</div>";
-	
+
 	// Herschel II drawings
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangHerschelIIDrawings . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getHerschelIIDrawingsBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsHIIBronzeDr, LangHIIBronzeToAccomplishDr );
 	drawStar ( $objAccomplishments->getHerschelIIDrawingsSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsHIISilverDr, LangHIISilverToAccomplishDr );
 	drawStar ( $objAccomplishments->getHerschelIIDrawingsGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsHIIGoldDr, LangHIIGoldToAccomplishDr );
 	drawStar ( $objAccomplishments->getHerschelIIDrawingsDiamond ( $user ), LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsHIIDiamondDr, LangHIIDiamondToAccomplishDr );
 	drawStar ( $objAccomplishments->getHerschelIIDrawingsPlatina ( $user ), LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsHIIPlatinaDr, LangHIIPlatinaToAccomplishDr );
 	echo "</div>";
-	
+
 	// Total number of drawings
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangTotalDrawings . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getDrawingsRookie ( $user ), 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
 	drawStar ( $objAccomplishments->getDrawingsBeginner ( $user ), 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
@@ -771,13 +1105,13 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
 	drawStar ( $objAccomplishments->getDrawingsSenior ( $user ), 2500, "senior", $objUtil->getDrawAccomplishment ( 2500 ), $objUtil->getDrawToAccomplish ( 2500 ) );
 	drawStar ( $objAccomplishments->getDrawingsExpert ( $user ), 5000, "expert", $objUtil->getDrawAccomplishment ( 5000 ), $objUtil->getDrawToAccomplish ( 5000 ) );
-	
+
 	echo "</div>";
-	
+
 	// Total number of open clusters
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangOpenClusters . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getOpenClustersNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getOpenClustersRookie ( $user ), ( int ) (1700 / 500), "rookie", $objUtil->getSeenAccomplishment ( 1700 / 500 ), $objUtil->getSeenToAccomplish ( 1700 / 500 ) );
 	drawStar ( $objAccomplishments->getOpenClustersBeginner ( $user ), ( int ) (1700 / 200), "beginner", $objUtil->getSeenAccomplishment ( 1700 / 200 ), $objUtil->getSeenToAccomplish ( 1700 / 200 ) );
@@ -789,11 +1123,11 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getOpenClustersSenior ( $user ), ( int ) (1700 / 2), "senior", $objUtil->getSeenAccomplishment ( 1700 / 2 ), $objUtil->getSeenToAccomplish ( 1700 / 2 ) );
 	drawStar ( $objAccomplishments->getOpenClustersExpert ( $user ), 1700, "expert", $objUtil->getSeenAccomplishment ( 1700 ), $objUtil->getSeenToAccomplish ( 1700 ) );
 	echo "</div>";
-	
+
 	// Total number of open clusters drawn
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangOpenClusterDrawings . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsRookie ( $user ), ( int ) (1700 / 500), "rookie", $objUtil->getDrawAccomplishment ( 1700 / 500 ), $objUtil->getDrawToAccomplish ( 1700 / 500 ) );
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsBeginner ( $user ), ( int ) (1700 / 200), "beginner", $objUtil->getDrawAccomplishment ( 1700 / 200 ), $objUtil->getDrawToAccomplish ( 1700 / 200 ) );
@@ -804,13 +1138,13 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsAdvanced ( $user ), ( int ) (1700 / 5), "advanced", $objUtil->getDrawAccomplishment ( 1700 / 5 ), $objUtil->getDrawToAccomplish ( 1700 / 5 ) );
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsSenior ( $user ), ( int ) (1700 / 2), "senior", $objUtil->getDrawAccomplishment ( 1700 / 2 ), $objUtil->getDrawToAccomplish ( 1700 / 2 ) );
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsExpert ( $user ), 1700, "expert", $objUtil->getDrawAccomplishment ( 1700 ), $objUtil->getDrawToAccomplish ( 1700 ) );
-	
+
 	echo "</div>";
-	
+
 	// Total number of globular clusters
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangGlobularClusters . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getGlobularClustersNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getGlobularClustersRookie ( $user ), 2, "rookie", $objUtil->getSeenAccomplishment ( 2 ), $objUtil->getSeenToAccomplish ( 2 ) );
 	drawStar ( $objAccomplishments->getGlobularClustersBeginner ( $user ), 3, "beginner", $objUtil->getSeenAccomplishment ( 3 ), $objUtil->getSeenToAccomplish ( 3 ) );
@@ -822,11 +1156,11 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getGlobularClustersSenior ( $user ), ( int ) (152 / 2), "senior", $objUtil->getSeenAccomplishment ( 1700 / 2 ), $objUtil->getSeenToAccomplish ( 152 / 2 ) );
 	drawStar ( $objAccomplishments->getGlobularClustersExpert ( $user ), 152, "expert", $objUtil->getSeenAccomplishment ( 152 ), $objUtil->getSeenToAccomplish ( 152 ) );
 	echo "</div>";
-	
+
 	// Total number of globular clusters drawn
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangGlobularClusterDrawings . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsRookie ( $user ), 2, "rookie", $objUtil->getDrawAccomplishment ( 2 ), $objUtil->getDrawToAccomplish ( 2 ) );
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsBeginner ( $user ), 3, "beginner", $objUtil->getDrawAccomplishment ( 3 ), $objUtil->getDrawToAccomplish ( 3 ) );
@@ -837,13 +1171,13 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsAdvanced ( $user ), ( int ) (152 / 5), "advanced", $objUtil->getDrawAccomplishment ( 152 / 5 ), $objUtil->getDrawToAccomplish ( 152 / 5 ) );
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsSenior ( $user ), ( int ) (152 / 2), "senior", $objUtil->getDrawAccomplishment ( 152 / 2 ), $objUtil->getDrawToAccomplish ( 152 / 2 ) );
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsExpert ( $user ), 152, "expert", $objUtil->getDrawAccomplishment ( 152 ), $objUtil->getDrawToAccomplish ( 152 ) );
-	
+
 	echo "</div>";
-	
+
 	// Total number of planetary nebulae
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangPlanetaryNebulaeSeen . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getPlanetaryNebulaNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaRookie ( $user ), ( int ) (1023 / 500), "rookie", $objUtil->getSeenAccomplishment ( 1023 / 500 ), $objUtil->getSeenToAccomplish ( 1023 / 500 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaBeginner ( $user ), ( int ) (1023 / 200), "beginner", $objUtil->getSeenAccomplishment ( 1023 / 200 ), $objUtil->getSeenToAccomplish ( 1023 / 200 ) );
@@ -855,11 +1189,11 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getPlanetaryNebulaSenior ( $user ), ( int ) (1023 / 2), "senior", $objUtil->getSeenAccomplishment ( 1023 / 2 ), $objUtil->getSeenToAccomplish ( 1023 / 2 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaExpert ( $user ), 1023, "expert", $objUtil->getSeenAccomplishment ( 1023 ), $objUtil->getSeenToAccomplish ( 1023 ) );
 	echo "</div>";
-	
+
 	// Total number of planetary nebulae drawn
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangPlanetaryNebulaDrawings . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsRookie ( $user ), ( int ) (1023 / 500), "rookie", $objUtil->getDrawAccomplishment ( 1023 / 500 ), $objUtil->getDrawToAccomplish ( 1023 / 500 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsBeginner ( $user ), ( int ) (1023 / 200), "beginner", $objUtil->getDrawAccomplishment ( 1023 / 200 ), $objUtil->getDrawToAccomplish ( 1023 / 200 ) );
@@ -870,13 +1204,13 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsAdvanced ( $user ), ( int ) (1023 / 5), "advanced", $objUtil->getDrawAccomplishment ( 1023 / 5 ), $objUtil->getDrawToAccomplish ( 1023 / 5 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsSenior ( $user ), ( int ) (1023 / 2), "senior", $objUtil->getDrawAccomplishment ( 1023 / 2 ), $objUtil->getDrawToAccomplish ( 1023 / 2 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsExpert ( $user ), 1023, "expert", $objUtil->getDrawAccomplishment ( 1023 ), $objUtil->getDrawToAccomplish ( 1023 ) );
-	
+
 	echo "</div>";
-	
+
 	// Total number of galaxies
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangGalaxiesSeen . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getGalaxyNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getGalaxyRookie ( $user ), 10, "rookie", $objUtil->getSeenAccomplishment ( 5000 / 500 ), $objUtil->getSeenToAccomplish ( 10 ) );
 	drawStar ( $objAccomplishments->getGalaxyBeginner ( $user ), 25, "beginner", $objUtil->getSeenAccomplishment ( 25 ), $objUtil->getSeenToAccomplish ( 25 ) );
@@ -888,11 +1222,11 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getGalaxySenior ( $user ), 2500, "senior", $objUtil->getSeenAccomplishment ( 2500 ), $objUtil->getSeenToAccomplish ( 2500 ) );
 	drawStar ( $objAccomplishments->getGalaxyExpert ( $user ), 5000, "expert", $objUtil->getSeenAccomplishment ( 5000 ), $objUtil->getSeenToAccomplish ( 5000 ) );
 	echo "</div>";
-	
+
 	// Total number of galaxies drawn
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangGalaxyDrawings . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getGalaxyDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsRookie ( $user ), 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsBeginner ( $user ), 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
@@ -903,13 +1237,13 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getGalaxyDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsSenior ( $user ), 2500, "senior", $objUtil->getDrawAccomplishment ( 2500 ), $objUtil->getDrawToAccomplish ( 2500 ) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsExpert ( $user ), 5000, "expert", $objUtil->getDrawAccomplishment ( 5000 ), $objUtil->getDrawToAccomplish ( 5000 ) );
-	
+
 	echo "</div>";
-	
+
 	// Total number of nebulae
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangNebulaeSeen . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getNebulaNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getNebulaRookie ( $user ), 2, "rookie", $objUtil->getSeenAccomplishment ( 2 ), $objUtil->getSeenToAccomplish ( 2 ) );
 	drawStar ( $objAccomplishments->getNebulaBeginner ( $user ), 3, "beginner", $objUtil->getSeenAccomplishment ( 3 ), $objUtil->getSeenToAccomplish ( 3 ) );
@@ -921,11 +1255,11 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getNebulaSenior ( $user ), ( int ) (384 / 2), "senior", $objUtil->getSeenAccomplishment ( 384 / 2 ), $objUtil->getSeenToAccomplish ( 384 / 2 ) );
 	drawStar ( $objAccomplishments->getNebulaExpert ( $user ), 384, "expert", $objUtil->getSeenAccomplishment ( 384 ), $objUtil->getSeenToAccomplish ( 384 ) );
 	echo "</div>";
-	
+
 	// Total number of nebulae drawn
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangNebulaeDrawings . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getNebulaDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsRookie ( $user ), 2, "rookie", $objUtil->getDrawAccomplishment ( 2 ), $objUtil->getDrawToAccomplish ( 2 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsBeginner ( $user ), 3, "beginner", $objUtil->getDrawAccomplishment ( 3 ), $objUtil->getDrawToAccomplish ( 3 ) );
@@ -936,13 +1270,13 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getNebulaDrawingsAdvanced ( $user ), ( int ) (384 / 5), "advanced", $objUtil->getDrawAccomplishment ( 384 / 5 ), $objUtil->getDrawToAccomplish ( 384 / 5 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsSenior ( $user ), ( int ) (384 / 2), "senior", $objUtil->getDrawAccomplishment ( 384 / 2 ), $objUtil->getDrawToAccomplish ( 384 / 2 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsExpert ( $user ), 384, "expert", $objUtil->getDrawAccomplishment ( 384 ), $objUtil->getDrawToAccomplish ( 384 ) );
-	
+
 	echo "</div>";
-	
+
 	// Total number of different objects
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangDifferentObjectsSeen . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getObjectsNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getObjectsRookie ( $user ), ( int ) (5000 / 500), "rookie", $objUtil->getSeenAccomplishment ( 5000 / 500 ), $objUtil->getSeenToAccomplish ( 5000 / 500 ) );
 	drawStar ( $objAccomplishments->getObjectsBeginner ( $user ), 25, "beginner", $objUtil->getSeenAccomplishment ( 25 ), $objUtil->getSeenToAccomplish ( 25 ) );
@@ -954,11 +1288,11 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getObjectsSenior ( $user ), 2500, "senior", $objUtil->getSeenAccomplishment ( 2500 ), $objUtil->getSeenToAccomplish ( 2500 ) );
 	drawStar ( $objAccomplishments->getObjectsExpert ( $user ), 5000, "expert", $objUtil->getSeenAccomplishment ( 5000 ), $objUtil->getSeenToAccomplish ( 5000 ) );
 	echo "</div>";
-	
+
 	// Total number of nebulae drawn
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangDifferentObjectsDrawings . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getObjectsDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsRookie ( $user ), 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsBeginner ( $user ), 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
@@ -969,13 +1303,13 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getObjectsDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsSenior ( $user ), 2500, "senior", $objUtil->getDrawAccomplishment ( 2500 ), $objUtil->getDrawToAccomplish ( 2500 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsExpert ( $user ), 5000, "expert", $objUtil->getDrawAccomplishment ( 5000 ), $objUtil->getDrawToAccomplish ( 5000 ) );
-	
+
 	echo "</div>";
-	
+
 	// Total number of comet observations
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangTotalCometsSeen . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getCometObservationsNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getCometObservationsRookie ( $user ), ( int ) (5000 / 500), "rookie", $objUtil->getSeenAccomplishment ( 5000 / 500 ), $objUtil->getSeenToAccomplish ( 5000 / 500 ) );
 	drawStar ( $objAccomplishments->getCometObservationsBeginner ( $user ), 25, "beginner", $objUtil->getSeenAccomplishment ( 25 ), $objUtil->getSeenToAccomplish ( 25 ) );
@@ -987,11 +1321,11 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getCometObservationsSenior ( $user ), 2500, "senior", $objUtil->getSeenAccomplishment ( 2500 ), $objUtil->getSeenToAccomplish ( 2500 ) );
 	drawStar ( $objAccomplishments->getCometObservationsExpert ( $user ), 5000, "expert", $objUtil->getSeenAccomplishment ( 5000 ), $objUtil->getSeenToAccomplish ( 5000 ) );
 	echo "</div>";
-	
+
 	// Total number of different comets seen
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangDifferentCometsSeen . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getCometsObservedNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getCometsObservedRookie ( $user ), 10, "rookie", $objUtil->getSeenAccomplishment ( 10 ), $objUtil->getSeenToAccomplish ( 10 ) );
 	drawStar ( $objAccomplishments->getCometsObservedBeginner ( $user ), 25, "beginner", $objUtil->getSeenAccomplishment ( 25 ), $objUtil->getSeenToAccomplish ( 25 ) );
@@ -1002,13 +1336,13 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getCometsObservedAdvanced ( $user ), 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
 	drawStar ( $objAccomplishments->getCometsObservedSenior ( $user ), 2500, "senior", $objUtil->getSeenAccomplishment ( 2500 ), $objUtil->getSeenToAccomplish ( 2500 ) );
 	drawStar ( $objAccomplishments->getCometsObservedExpert ( $user ), 5000, "expert", $objUtil->getSeenAccomplishment ( 5000 ), $objUtil->getSeenToAccomplish ( 5000 ) );
-	
+
 	echo "</div>";
-	
+
 	// Total number of different comet drawings
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangCometDrawings . "</h4>";
-	
+
 	drawStar ( $objAccomplishments->getCometDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getCometDrawingsRookie ( $user ), 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
 	drawStar ( $objAccomplishments->getCometDrawingsBeginner ( $user ), 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
@@ -1019,18 +1353,18 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getCometDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
 	drawStar ( $objAccomplishments->getCometDrawingsSenior ( $user ), 2500, "senior", $objUtil->getDrawAccomplishment ( 2500 ), $objUtil->getDrawToAccomplish ( 2500 ) );
 	drawStar ( $objAccomplishments->getCometDrawingsExpert ( $user ), 5000, "expert", $objUtil->getDrawAccomplishment ( 5000 ), $objUtil->getDrawToAccomplish ( 5000 ) );
-	
+
 	echo "</div>";
-	
+
 	echo "</div>";
 	echo "<br />";
-	
+
 	echo "</div>";
 	echo "</div>";
 }
 function drawStar($done, $text, $color, $tooltip, $tooltipToDo) {
 	global $baseURL;
-	
+
 	if ($done) {
 		print "<div class=\"star\" id=\"" . $color . "\">";
 		print "<div class=\"accomplishmentText\" title=\"" . $tooltip . "\">" . ucfirst ( $text ) . "</div>";

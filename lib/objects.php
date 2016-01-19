@@ -194,9 +194,15 @@ class Objects {
 		$seen = "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
 		if (substr ( $seenDetails, 0, 1 ) == "X") // object has been seen already
 			$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
-		if ($loggedUser)
-			if (substr ( $seenDetails, 0, 1 ) == "Y") // object has been seen by the observer logged in
-				$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "&amp;observer=" . urlencode ( $loggedUser ) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
+		if ($loggedUser) {
+			if (substr ( $seenDetails, 0, 1 ) == "Y") {
+				// object has been seen by the observer logged in
+				$obj = preg_split ( "/ /", $object );
+				$cat = $obj [0];
+				$number = $obj [1];
+				$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;catalog=" . $cat . "&amp;number=" . $number . "&amp;observer=" . urlencode ( $loggedUser ) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
+			}
+		}
 		return $seen;
 	}
 	public function getExactDsObject($value, $cat = '', $catindex = '') // returns the exact name of an object
@@ -1885,7 +1891,7 @@ class Objects {
 			if ($check) // magnitude
 {
 				$magnitude = "99.9";
-				if ($objUtil->checkPostKey ( 'magnitude' ) && (! (ereg ( '^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$', abs ( $_POST ['magnitude'] ), $matches )))) {
+				if ($objUtil->checkPostKey ( 'magnitude' ) && (! (preg_match ( '/^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$/', abs ( $_POST ['magnitude'] ), $matches )))) {
 					$entryMessage = LangValidateObjectMessage8;
 					$_GET ['indexAction'] = 'add_object';
 					$check = false;
@@ -1913,7 +1919,7 @@ class Objects {
 			if ($check) // surface brightness
 {
 				$sb = "99.9";
-				if ($_POST ['sb'] && ereg ( '^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$', $_POST ['sb'], $matches )) {
+				if ($_POST ['sb'] && preg_match ( '/^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$/', $_POST ['sb'], $matches )) {
 					$sb = "" . $matches [1] . ".";
 					if ($matches [2] != "")
 						$sb = $sb . $matches [2];
@@ -1954,11 +1960,15 @@ class Objects {
 			if ($check) // fill database
 {
 				$objObject->addDSObject ( $name, $catalog, ucwords ( trim ( $_POST ['number'] ) ), $_POST ['type'], $_POST ['con'], $ra, $declination, $magnitude, $sb, $diam1, $diam2, $posangle, "DeepskyLogUser " . $loggedUser . " " . date ( 'Ymd' ) );
-				$body = LangValidateAccountEmailTitleObject . " " . $name . " " . "www.deepskylog.org/index.php?indexAction=detail_object&object=" . urlencode ( $name ) . " " . LangValidateAccountEmailTitleObjectObserver . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " www.deepskylog.org/index.php?indexAction=detail_observer&user=" . urlencode ( $loggedUser );
+				$body = LangValidateAccountEmailTitleObject . " <a href=\"www.deepskylog.org/index.php?indexAction=detail_object&object=" . urlencode ( $name ) . "\">" . $name . "</a> " .
+								 LangValidateAccountEmailTitleObjectObserver . " " . "<a href=\"www.deepskylog.org/index.php?indexAction=detail_observer&user=" . urlencode ( $loggedUser ) . "\">" .
+								 $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . "</a><br /><br />";
+
 				if (isset ( $developversion ) && ($developversion == 1))
 					$entryMessage .= "On the live server, a mail would be sent with the subject: " . LangValidateAccountEmailTitleObject . " " . $name . ".<br />";
 				else
-					mail ( $mailTo, LangValidateAccountEmailTitleObject . " " . $name, $body, "From:" . $mailFrom );
+					$objMessage->sendEmail(LangValidateAccountEmailTitleObject . " " . $name, $body, "developers");
+
 				$_GET ['indexAction'] = 'detail_object';
 				$_GET ['object'] = $name;
 			}

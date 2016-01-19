@@ -1,9 +1,45 @@
 <?php //NL
 // This is version 5.0
+define("LangAddSiteStep2", "Kies een naam voor deze locatie, voeg eventueel een grensmagnitude (of SQM waarde) toe en druk op de ");
+define("LangAddSiteStep1", "Kies je locatie op de map of typ de naam van de locatie in en druk op de ");
+define("LangAddSiteStep1Button", " knop.");
+define("LangCatalogNumber", "Nummer in cataloog");
+define("LangSelectCatalog", "Kies cataloog");
+define("LangQuickPick", "Voer objectnaam in");
+define("LangSelectCountry", "Kies land");
+define("GraphObservationsPerCountry", "Waarnemingen per land");
+define("LangStatistics", "Statistieken");
+define("GraphTitleMonths", "Aantal waarnemingen per maand");
+define("GraphObservationsMonthTitle", "Waarnemingen per maand");
+define("LangCancelRequestNewPasswordSubject", "Een DeepskyLog aanvraag om je wachtwoord te wijzigen is geannuleerd");
+define("LangCancelRequestNewPassword1", "Een aanvraag om je wachtwoord te wijzigen is geannuleerd vanaf het ip-adres ");
+define("LangCancelRequestNewPassword2", "<br /><br />Als je dit niet hebt aangevraagd, zou het een eerlijke vergissing kunnen zijn of iemand die probeert in te breken in uw DeepskyLog account.<br />");
+define("LangRequestNewPasswordMail1", "\nJe hebt (of iemand die je nadoet heeft) verzocht om jouw <a href=\"");
+define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> wachtwoord te wijzigen. <br />Om de wijziging te voltooien, klik op de volgende link:<br /><br />");
+define("LangRequestNewPasswordMail3", "<br /><br />Als je niet de persoon bent die dit verzoek heeft ingediend, of je dit verzoek wenst te annuleren, klik op de volgende link:<br /><br />");
+define("LangRequestNewPasswordMail4", "<br /><br />Als je niets doet, vervalt het verzoek na 24 uur (op ");
+define("LangRequestNewPasswordMail5", ") of wanneer je succesvol inlogt.");
+define("LangRequestNewPasswordMail6", "<br /><h2><a href=\"mailto:developers@deepskylog.be\">Het DeepskyLog team</a></h2>");
+define("LangRequestNewPasswordSubject", "DeepskyLog aanvraag om wachtwoord aan te passen");
+define("LangUnknownUsername1", "De gebruikersnaam ");
+define("LangUnknownUsername2", " is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
+define("LangUnknownMailAddress1", "Het emailadres ");
+define("LangUnknownMailAddress2", " is niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
+define("LangUnknownMailAndUsername", "De gebruikersnaam en het mailadres zijn niet gekend in DeepskyLog. Onmogelijk om een nieuw wachtwoord aan te vragen.");
+define("LangTokenMailed1", "Een token om het wachtwoord van ");
+define("LangTokenMailed2", " te wijzigen is naar ");
+define("LangTokenMailed3", " verzonden. Volg de instructies in die mail om je wachtwoord te wijzigen.");
+define("LangForgotPassword", "Wachtwoord vergeten?");
+define("LangForgotPasswordText1", "Gelieve je DeepskyLog gebruikersnaam <strong>of</strong> je in DeepskyLog gekend emailadres in te voeren.");
+define("LangUserId", "DeepskyLog gebruikersnaam");
+define("LangRequestNewPassword", "Vraag nieuw wachtwoord aan");
+define("LangDeepskyLogMessage", "DeepskyLog bericht van ");
 define("LangCurrentPasswordIncorrect", "Het huidige wachtwoord is incorrect ingegeven. Onmogelijk om het wachtwoord aan te passen.");
 define("LangNewPasswordNotCorrect", "Het nieuwe wachtwoord en de bevestiging zijn niet gelijk. Onmogelijk om het wachtwoord aan te passen.");
 define("LangPasswordChanged", "Het wachtwoord is gewijzigd.");
 define("LangChangePassword", "Wijzig wachtwoord");
+define("LangCurrentPassword", "Huidig wachtwoord");
+define("LangNewPassword", "Nieuw wachtwoord");
 define("PersonalInfo", "Persoonlijk");
 define("ObservingDetails", "Waarnemen");
 define("Atlases", "Atlassen");
@@ -242,14 +278,14 @@ define('LangAtlasGenerationTimes'       ,"Generatietijden vari&euml;ren van 20 m
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Geen publicatie zonder schriftelijke toestemming - Object-databank origineel gebaseerd op Eye&Telescope - Ster-databank door Tycho 2+ en USNO UCAC3 (Zacharia).");
 define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Geen publicatie zonder schriftelijke toestemming");
 define('LangAtlasDataSource2'           ,"Object-databank origineel gebaseerd op Eye&Telescope - Ster-databank door Tycho 2+ en USNO UCAC3 (Zacharia).");
-define("ObjectsSeenGraph"               ,"Object types : ");
+define("ObjectsSeenGraph"               ,"Object types");
 $REST = "Rest";
 define("GraphObservations"              ,"Waarnemingen");
 define("GraphInfo"                      ,"Info");
 define("GraphObservationsTitle"         ,"Waarnemingen per jaar");
 define("GraphObservationsType"          ,"Object types waargenomen");
 define("GraphSource"                    ,"Bron: ");
-define("GraphTitle1"                    ,"Aantal waarnemingen per jaar : ");
+define("GraphTitle1"                    ,"Aantal waarnemingen per jaar");
 define("AtlasExample"                   ,"Lookup atlas pagina voor M 45");
 define("ImageCatalogExample"            ,"Voorbeeld pagina voor Abell 84");
 define("ImageCatalogDescription1"       ,"DeepskyLog is een zeer krachtige applicatie, die het mogelijk maakt om gepersonaliseerde atlassen en beeldencatalogi aan te maken.");
@@ -458,9 +494,9 @@ define("Langpdfserieschoselayout","Gelieve een layout voor de index te kiezen.")
 // TO DO:
 
 
-define("LangStoredQueries"      ,"Stored queries:");
-define("LangSaveAs"             ,"Save As...");
-define("LangRemoveQuery"        ,"Remove");
+define("LangStoredQueries"      ,"Opgeslagen zoekopdrachten:");
+define("LangSaveAs"             ,"Bewaar als...");
+define("LangRemoveQuery"        ,"Verwijder");
 
 
 define("LangExclude",            "Uitgezonderd:");
@@ -796,6 +832,7 @@ define("LangYouAreHere"																		,"U bevindt zich hier:");
 define("LangHome"																					,"Home");
 define("LangBecomeMember"																	,"Word lid");
 define("LangSearch"																				,"Zoeken");
+define("LangQuickSearch"																	,"Snel Zoeken");
 define("LangContact"																			,"Contact");
 define("LangDeepskyLogModules"														,"Deepskylog Modules");
 define("LangWelcome"																			,"Welkom&nbsp;in&nbsp;de&nbsp;");
@@ -819,10 +856,12 @@ define("LangAccountSubscribed9"														,"developers at deepskylog.be om ze
 
 
 define("LangValidateSubject"															,"DeepskyLog - account aanvraag goedgekeurd");
-define("LangValidateAdmin"																,"\nEen van de administrators heeft je administrator rechten gegeven.\n");
+define("LangValidateAdmin"																,"Een van de administrators heeft je administrator rechten gegeven.");
 define("LangValidateMail1"																,"Beste ");
-define("LangValidateMail2"																,"\n\nJe deepskylog account aanvraag is goedgekeurd.\nJe kan nu inloggen met je userid en wachtwoord.\n");
-define("LangValidateMail3"																,"\nGroeten,\n\nDe deepskylog administrators");
+define("LangValidateMail2"																,"Je DeepskyLog account aanvraag is goedgekeurd.<br /><br />Je kan nu inloggen met je userid ");
+define("LangValidateMail2b"                               ," en wachtwoord.");
+define("LangValidateMail2c"                               ,"Geniet van <a href=\"http://www.deepskylog.be/\">DeepskyLog</a>.");
+define("LangValidateMail3"																,"Groeten,<br /><br />Het DeepskyLog team");
 
 
 define("LangObjectYSeen"																	,"Object reeds zelf waargenomen");
@@ -1004,7 +1043,7 @@ define("LangSearchMenuItem5"															,"Zoek objecten");
 define("LangSearchMenuItem6"															,"Waarnemers");
 define("LangSearchMenuItem7"															,"Populaire&nbsp;objecten");
 define("LangSearchMenuItem8"                              ,"Jaarwaarnemingen");
-define("LangSearchMenuItem9"                              ,"Nieuwe waarnemingen");
+define("LangSearchMenuItem9"                              ,"Laatste waarnemingen");
 define("LangSearchMenuItem10"                             ,"Catalogi");
 define("LangSearchAllLanguages"														,"Opnieuw zoeken, in alle talen.");
 define("LangSearchDetailPage"															,"Een gedetailleerde zoekopdracht maken.");
@@ -1537,6 +1576,7 @@ define("LangOverviewObservationsHeader5a"									,"(*) Alle observaties(AO) , M
 define("LangOverviewObservationsHeader5b"									,"(*) Details(D) met tekening(DT), Alle observaties(AO) , Mijn observaties(MO), mijn Laatste observatie(LO)&nbsp;van dit object");
 define("LangOverviewObservationsHeader8"									,"Mijn&nbsp;LO&nbsp;instrument");
 define("LangOverviewObservationsHeader9"									,"Mijn&nbsp;LO&nbsp;datum");
+define("LangOverviewObservationsHeader10"										,"Instrument diameter");
 define("LangOverviewObservations10"												,"Gelieve de titel in te geven");
 define("LangOverviewObservations11"												,"DeepskyLog observaties");
 define("LangOverviewObservations12"												,"in");
@@ -1609,13 +1649,15 @@ define("LangNewComet13"																		,"boogminuten");
 define("LangValidateAccountMessage1"											,"Gelieve alle velden in te vullen!");
 define("LangValidateAccountMessage2"											,"Gelieve uw wachtwoord te bevestigen!");
 define("LangValidateAccountMessage3"											,"Fout emailadres!");
-define("LangValidateAccountEmailLine1"										,"Details deepskylog account: ");
-define("LangValidateAccountEmailLine1bis"									,"Gebruikersnaam: ");
-define("LangValidateAccountEmailLine2"										,"Email: ");
-define("LangValidateAccountEmailLine3"										,"Naam : ");
+define("LangValidateAccountEmailLine1"										,"Details DeepskyLog account: ");
+define("LangValidateAccountEmailLine1bis"									,"Gebruikersnaam");
+define("LangValidateAccountEmailLine2"										,"Email");
+define("LangValidateAccountEmailLine3"										,"Naam");
 define("LangValidateAccountEmailLine4"										,"Deze email werd automatisch verstuurd door de deepskylog toepassing");
+define("LangValidateAccountEmailLine5"										,"Motivatie");
 define("LangValidateAccountEmailTitle"										,"DeepskyLog - registratie");
-define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - Object - ");
+define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - Nieuw object ");
+define("LangValidateAccountEmailTitleObject2"							," toegevoegd tijdens XML import");
 define("LangValidateAccountEmailTitleObjectObserver"			,"door waarnemer ");
 define("LangValidateAccountMessage4"											,"Er is al een gebruiker met dezelfde naam, gelieve een andere te kiezen!");
 define("LangValidateAccountMessage5"											,"De aanpassingen zijn succesvol weggeschreven!");

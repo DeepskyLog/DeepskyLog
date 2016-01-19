@@ -18,51 +18,51 @@ function new_instrument() {
 	while ( list ( $key, $value ) = each ( $insts ) )
 		$content1b .= "<option value=\"" . $baseURL . "index.php?indexAction=add_instrument&amp;instrumentid=" . urlencode ( $value ) . "\" " . (($value == $objUtil->checkRequestKey ( 'instrumentid' )) ? " selected=\"selected\" " : '') . ">" . $objInstrument->getInstrumentPropertyFromId ( $value, 'name' ) . "</option>";
 	$content1b .= "</select>";
-	
+
 	echo "<h4>" . LangAddInstrumentTitle . "</h4>";
 	echo "<hr />";
-	echo "<input type=\"submit\" class=\"btn btn-primary pull-right tour2\" name=\"add\" value=\"" . LangAddInstrumentAdd . "\" />&nbsp;";
-	
+	echo "<input type=\"submit\" class=\"btn btn-success pull-right tour2\" name=\"add\" value=\"" . LangAddInstrumentAdd . "\" />&nbsp;";
+
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">" . LangAddInstrumentExisting . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $content1b;
 	echo "</div></div>";
-	
-	echo LangAddSiteFieldOr . " " . LangAddInstrumentManually; 
+
+	echo LangAddSiteFieldOr . " " . LangAddInstrumentManually;
 	echo "<br /><br />";
-	
+
 	$type = $objUtil->checkRequestKey ( 'type' );
 	if ($instrumentid = $objUtil->checkRequestKey ( 'instrumentid', 0 ))
 		$type = $objInstrument->getInstrumentPropertyFromId ( $instrumentid, 'type' );
-	
+
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">" . LangAddInstrumentField1 . "</label>";
 	echo "<input type=\"text\" required class=\"form-control\" maxlength=\"64\" name=\"instrumentname\" size=\"30\"  value=\"" . stripslashes ( $objUtil->checkRequestKey ( 'instrumentname' ) ) . stripslashes ( $objInstrument->getInstrumentPropertyFromId ( $objUtil->checkRequestKey ( 'instrumentid' ), 'name' ) ) . "\" />";
 	echo "</div>";
 	echo "</div>";
-	
+
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">" . LangAddInstrumentField2 . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo "<input type=\"number\" min=\"0.01\" step=\"0.01\" required class=\"form-control\" maxlength=\"64\" name=\"diameter\" size=\"10\" value=\"" . stripslashes ( $objUtil->checkRequestKey ( 'diameter' ) ) . stripslashes ( $objInstrument->getInstrumentPropertyFromId ( $objUtil->checkRequestKey ( 'instrumentid' ), 'diameter' ) ) . "\" />" . "<select name=\"diameterunits\" class=\"form-control\"> <option>inch</option> <option selected=\"selected\">mm</option> </select>";
 	echo "</div>";
 	echo "</div>";
-	
+
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">" . LangAddInstrumentField5 . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $objInstrument->getInstrumentEchoListType ( $type );
 	echo "</div>";
 	echo "</div>";
-	
+
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">" . LangAddInstrumentField4 . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo "<input type=\"number\" min=\"0.0\" step=\"0.0\" class=\"form-control\" maxlength=\"64\" name=\"focallength\" size=\"10\"  value=\"" . stripslashes ( $objUtil->checkRequestKey ( 'focallength' ) ) . stripslashes ( $objInstrument->getInstrumentPropertyFromId ( $objUtil->checkRequestKey ( 'instrumentid' ), 'diameter' ) * $objInstrument->getInstrumentPropertyFromId ( $objUtil->checkRequestKey ( 'instrumentid' ), 'fd' ) ) . "\" />" . "<select class=\"form-control\" name=\"focallengthunits\"> <option>inch</option> <option selected=\"selected\">mm</option> </select>" . "&nbsp;<span>" . LangAddInstrumentOr . "&nbsp;" . LangAddInstrumentField3 . "</span>&nbsp;" . "<input type=\"number\" min=\"0.0\" step=\"0.01\" class=\"form-control\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"" . stripslashes ( $objUtil->checkRequestKey ( 'fd' ) ) . stripslashes ( $objInstrument->getInstrumentPropertyFromId ( $objUtil->checkRequestKey ( 'instrumentid' ), 'fd' ) ) . "\" />";
 	echo "</div>";
 	echo "</div>";
-	
+
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">" . LangAddInstrumentField6 . "</label>";
 	echo "<div class=\"form-inline\">";
@@ -72,6 +72,7 @@ function new_instrument() {
 	echo "</div>";
 
 	echo "<hr />";
+	echo "<input type=\"submit\" class=\"btn btn-success\" name=\"add\" value=\"" . LangAddInstrumentAdd . "\" />&nbsp;";
 	echo "</div></form>";
 	echo "</div>";
 }

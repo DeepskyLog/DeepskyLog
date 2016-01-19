@@ -23,14 +23,14 @@ function new_eyepiece() {
 	$content1b .= "</select>&nbsp;";
 	echo "<h4>" . LangAddEyepieceTitle . "</h4>";
 	echo "<hr />";
-	echo "<input type=\"submit\" class=\"btn btn-primary pull-right\" name=\"add\" value=\"".LangAddEyepieceButton."\" />&nbsp;";
+	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"add\" value=\"".LangAddEyepieceButton."\" />&nbsp;";
 
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">". LangAddEyepieceExisting."</label>";
 	echo "<div class=\"form-inline\">";
 	echo $content1b;
 	echo "</div></div>";
-	
+
 	echo "<hr />";
 	echo LangAddSiteFieldOr." ".LangAddEyepieceManually;
 	echo "<br /><br />";
@@ -40,7 +40,7 @@ function new_eyepiece() {
 	echo "<input type=\"text\" required class=\"form-control\" maxlength=\"64\" name=\"eyepiecename\" size=\"30\" value=\"" . stripslashes ( $objUtil->checkRequestKey ( 'eyepiecename' ) ) . stripslashes ( $objEyepiece->getEyepiecePropertyFromId ( $objUtil->checkRequestKey ( 'eyepieceid' ), 'name' ) ) . "\" />";
 	echo "<span class=\"help-block\">" . LangAddEyepieceField1Expl . "</span>";
 	echo "</div>";
-	
+
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">". LangAddEyepieceField2."</label>";
 	echo "<div class=\"form-inline\">";
@@ -48,7 +48,7 @@ function new_eyepiece() {
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddEyepieceField2Expl . "</span>";
 	echo "</div>";
-	
+
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">". LangAddEyepieceField4."</label>";
 	echo "<div class=\"form-inline\">";
@@ -56,7 +56,7 @@ function new_eyepiece() {
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddEyepieceField4Expl . "</span>";
 	echo "</div>";
-	
+
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">". LangAddEyepieceField3."</label>";
 	echo "<div class=\"form-inline\">";
@@ -64,7 +64,8 @@ function new_eyepiece() {
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddEyepieceField3Expl . "</span>";
 	echo "</div>";
-	
+	echo "<input type=\"submit\" class=\"btn btn-success\" name=\"add\" value=\"".LangAddEyepieceButton."\" />&nbsp;";
+
 	echo "<hr />";
 	echo "</div></form>";
 	echo "</div>";

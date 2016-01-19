@@ -68,6 +68,7 @@ function headmenu() {
 		echo " <ul class=\"dropdown-menu\">";
 		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $loggedUser . "\">" . LangDetails . "</a></li>";
 		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=change_account\">" . LangChangeMenuItem1 . "</a></li>";
+		echo "  <li class=\"disabled\">─────────────────</li>";
 		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=logout&amp;title=" . urlencode ( LangLogoutMenuItem1 ) . "\">" . LangLogoutMenuItem1 . "</a></li>";
 		echo " </ul>";
 		echo "</li>";
@@ -121,8 +122,11 @@ function headmenu() {
 		echo "<div class=\"modal fade\" id=\"login\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">
             <div class=\"modal-dialog\">
               <div class=\"modal-content\">
+							<div class=\"modal-header\">
+								<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
+								<h1 class=\"text-center login-title\">DeepskyLog</h1>
+							</div>
   		        <div class=\"modal-body\">
-  		          <h1 class=\"text-center login-title\">DeepskyLog</h1>
                   <div class=\"account-wall\">
                     <form class=\"form-signin\" action=\"" . $baseURL . "index.php\" method=\"post\">
                     	<input type=\"hidden\" name=\"indexAction\" value=\"check_login\" />
@@ -130,13 +134,47 @@ function headmenu() {
                       <input type=\"text\" class=\"form-control\" placeholder=\"" . LangLoginMenuItem1 . "\" required autofocus maxlength=\"64\" name=\"deepskylog_id\" id=\"deepskylog_id\">
                       <input type=\"password\" class=\"form-control\" placeholder=\"" . LangLoginMenuItem2 . "\" required maxlength=\"64\" name=\"passwd\" id=\"passwd\">
                       <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">" . LangLoginMenuTitle . "</button>
-
+											<br />
                     </form>
+										<div class=\"text-center\">
+											<a href=\"" . $baseURL . "index.php?indexAction=subscribe&amp;title=" . urlencode ( LangLoginMenuRegister ) . "\">" . LangLoginMenuRegister . "</a>
+											&nbsp;&nbsp;-&nbsp;&nbsp;
+											<a href=\"\" data-toggle=\"modal\" data-target=\"#forgotPassword\">" . LangForgotPassword . "</a>
+										</div>
   		          </div>
   	  	        </div>
               </div>
             </div>
           </div>";
+
+
+					// The Forgot password modal box
+					echo "<div class=\"modal fade\" id=\"forgotPassword\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">
+					        <div class=\"modal-dialog\">
+					          <div class=\"modal-content\">
+											<div class=\"modal-header\">
+												<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
+												<h1 class=\"text-center login-title\">" . LangForgotPassword . "</h1>
+											</div>
+								  		<div class=\"modal-body\">" .
+												LangForgotPasswordText1 . "
+								        <form class=\"form-signin\" action=\"" . $baseURL . "index.php\" method=\"post\">
+								        	<input type=\"hidden\" name=\"indexAction\" value=\"requestPassword\" />
+													<div class=\"form-group\">
+														<label for=\"deepskylog_id\">" . LangUserId . "</label>
+								          	<input type=\"text\" class=\"form-control\" autofocus name=\"deepskylog_id\" id=\"deepskylog_id\">
+													</div>
+													<div class=\"form-group\">
+														<label for=\"mail\">". LangChangeAccountField2 . "</label>
+								          	<input type=\"email\" class=\"form-control\" name=\"mail\" id=\"mail\">
+													</div>
+								          <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">" . LangRequestNewPassword . "</button>
+													<br />
+								        </form>
+								  	  </div>
+								    </div>
+								  </div>
+				        </div>";
 	}
 }
 ?>

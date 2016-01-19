@@ -11,7 +11,7 @@ function change_account()
 { global $baseURL,$instDir,$languageMenu,$loggedUser,
          $objAtlas,$objInstrument,$objLanguage,$objLocation,$objObserver,$objPresentations,$objUtil;
   $sites = $objLocation->getSortedLocations("name", $loggedUser);
-	$tempLocationList="<select name=\"site\" class=\"inputfield form-control\">";
+	$tempLocationList="<select name=\"site\" style=\"width: 50%\" class=\"inputfield form-control\">";
 	$tempLocationList.= "<option value=\"0\">-----</option>";
 	// If there are locations with the same name, the province should also be shown
 	$previous = "fskfskf";
@@ -28,7 +28,7 @@ function change_account()
 	  $tempLocationList.="<option ".(($objObserver->getObserverProperty($loggedUser,'stdlocation')==$sites[$i])?" selected=\"selected\"":"")." value=\"".$sites[$i]."\">".$sitename."</option>";
 	}
 	$tempLocationList.="</select>";
-	$tempInstrumentList="<select name=\"instrument\" class=\"inputfield form-control\">";
+	$tempInstrumentList="<select name=\"instrument\" style=\"width: 50%\" class=\"inputfield form-control\">";
 	$tempInstrumentList.= "<option value=\"0\">-----</option>";
 	$instr=$objInstrument->getSortedInstruments("name",$loggedUser);
 	$noStd=false;
@@ -46,19 +46,19 @@ function change_account()
 	$tempInstrumentList.="</select>";
 
 	$theAtlasKey=$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano');
-	$tempAtlasList="<select name=\"atlas\" class=\"inputfield form-control\">";
+	$tempAtlasList="<select name=\"atlas\" style=\"width: 50%\" class=\"inputfield form-control\">";
 	while(list($key,$value)=each($objAtlas->atlasCodes))
 	  $tempAtlasList.="<option ".(($key==$theAtlasKey)?"selected=\"selected\"":"")." value=\"$key\">" . $value . "</option>";
 	$tempAtlasList.="</select>";
 
-	$tempLangList="<select name=\"language\" class=\"inputfield form-control\">";
+	$tempLangList="<select name=\"language\" style=\"width: 50%\" class=\"inputfield form-control\">";
 	$languages=$objLanguage->getLanguages();
 	while(list($key,$value)=each($languages))
 	  $tempLangList.="<option value=\"".$key."\"".(($objObserver->getObserverProperty($loggedUser,'language')==$key)?" selected=\"selected\"":"").">".$value."</option>";
 	$tempLangList.="</select>";
 
 	$allLanguages=$objLanguage->getAllLanguages($objObserver->getObserverProperty($loggedUser,'language'));
-	$tempAllLangList="<select name=\"description_language\" class=\"inputfield form-control\">";
+	$tempAllLangList="<select name=\"description_language\" style=\"width: 50%\" class=\"inputfield form-control\">";
 	while(list($key,$value)=each($allLanguages))
 	  $tempAllLangList.="<option value=\"".$key."\"".(($objObserver->getObserverProperty($loggedUser,'observationlanguage') == $key)?" selected=\"selected\"":"").">".$value."</option>";
 	$tempAllLangList.="</select>";
@@ -152,7 +152,6 @@ function change_account()
 	echo "<p class=\"form-control-static\">" .
         LangChangeAccountField1Expl . "</p></div>";
 
-  // TODO: Use bootstrap-fileinput for setting a picture for comet observations, deepsky observations and sessions.
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField2 . "</label>";
 	echo "<div class=\"col-sm-6\">
@@ -210,6 +209,8 @@ function change_account()
 
 	echo "<p>&nbsp;</p>";
 
+  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
+
   echo "</div>";
 
   echo "<div class=\"tab-pane\" id=\"observingDetails\">";
@@ -219,7 +220,7 @@ function change_account()
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField7 . "</label>";
 	echo "<div class=\"col-sm-6\">" . $tempLocationList;
 	echo "</div><p class=\"form-control-static\">" .
-			"<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeAccountField7Expl."</a>" . "</p></div>";
+			"<a href=\"".$baseURL."index.php?indexAction=add_location\">".LangChangeAccountField7Expl."</a>" . "</p></div>";
 
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField8 . "</label>";
@@ -231,6 +232,8 @@ function change_account()
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField9 . "</label>";
 	echo "<div class=\"col-sm-6\">" . $tempAtlasList;
 	echo "</div></div>";
+
+  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
 
   echo "</div>";
 
@@ -277,6 +280,8 @@ function change_account()
          "<input type=\"number\" min=\"6\" max=\"9\" class=\"inputfield centered form-control\" maxlength=\"1\" name=\"atlaspagefont\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'atlaspagefont')."\" />";
 	echo "</div></div>";
 
+  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
+
   echo "</div>";
 
   echo "<div class=\"tab-pane\" id=\"languages\">";
@@ -313,6 +318,8 @@ function change_account()
 		echo "<td></td>";
 	}
 	echo "</tr></table></div></div>";
+
+  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
 
   echo "</div>";
 

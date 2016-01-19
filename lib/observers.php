@@ -10,6 +10,10 @@ class Observers {
 		global $objDatabase;
 		return $objDatabase->execSQL ( "INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"" . RoleWaitlist . "\", \"" . $_SESSION ['lang'] . "\")" );
 	}
+	public function getUserIdFromEmail($mail) {
+		global $objDatabase;
+		return $objDatabase->selectSingleValue ( "SELECT id FROM observers WHERE email = \"" . $mail . "\"", 'id' );
+	}
 	public function getAdministrators() {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT id FROM observers WHERE role = \"RoleAdmin\"", 'id' );
@@ -73,8 +77,7 @@ class Observers {
 	public function getSortedObserversAdmin($sort) 	// getSortedObservers returns an array with the ids of all observers, sorted by the column specified in $sort
 	{
 		global $objDatabase;
-		return $objDatabase->selectRecordsetArray ( "SELECT observers.*, A.maxLogDate, B.instrumentCount, C.listCount, D.obsCount, E.cometobsCount, (IFNULL(B.instrumentCount,0) + IFNULL(C.listCount,0) + IFNULL(D.obsCount,0) + IFNULL(E.cometobsCount,0)) AS maxMax FROM observers
-     LEFT JOIN (SELECT logging.loginid, MAX(logging.logdate) as maxLogDate FROM logging GROUP BY logging.loginid) AS A ON observers.id=A.loginid
+		return $objDatabase->selectRecordsetArray ( "SELECT observers.*, B.instrumentCount, C.listCount, D.obsCount, E.cometobsCount, (IFNULL(B.instrumentCount,0) + IFNULL(C.listCount,0) + IFNULL(D.obsCount,0) + IFNULL(E.cometobsCount,0)) AS maxMax FROM observers
      LEFT JOIN (SELECT instruments.observer, COUNT(instruments.id) AS instrumentCount FROM instruments GROUP BY instruments.observer) AS B ON observers.id=B.observer
      LEFT JOIN (SELECT observerobjectlist.observerid, COUNT(DISTINCT observerobjectlist.listname) AS listCount FROM observerobjectlist GROUP BY observerobjectlist.observerid) AS C on observers.id=C.observerid
      LEFT JOIN (SELECT observations.observerid, COUNT(observations.id) AS obsCount FROM observations GROUP BY observations.observerid) AS D on observers.id=D.observerid
@@ -127,6 +130,7 @@ class Observers {
 			echo "<div><table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			$catalog = "M";
 		}
+
 		$objectsInCatalog = $objObject->getNumberOfObjectsInCatalog ( $catalog );
 
 		echo "<thead>";
@@ -162,32 +166,58 @@ class Observers {
 		echo "</tfoot>";
 		echo "<tbody id=\"topobs_list\" class=\"tbody_obs\">";
 		$count = 0;
-		while ( list ( $key, $value ) = each ( $rank ) ) {
-			$name = $objObserver->getObserverProperty ( $key, 'name' );
-			$firstname = $objObserver->getObserverProperty ( $key, 'firstname' );
+		// We get the full list of observers and observations from sql, don't loop over the observers and do a mysql query always!
+		$allDrawings = $objObservation->getDsDrawingsCount();
+		$allObservationsLastYear = $objObservation->getAllObservationsLastYearCount (  );
+		$allDrawingsLastYear = $objObservation->getAllDrawingsLastYearCount (  );
+		$allObjects = $objObservation->getNumberOfObjectsCount ( );
+		$allObjectsCount = $objObservation->getAllObservedCountFromCatalogOrList ( $catalog );
+
+		foreach ( $rank as $value ) {
 			$outputtable .= "<tr>";
-			$outputtable .= "<td>" . ($count + 1) . "</td><td> <a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode ( $key ) . "\">$firstname&nbsp;$name</a> </td>";
-			$value2 = $objObservation->getDsObservationsCountFromObserver ( $key );
-			$outputtable .= "<td> $value2 &nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", (($value2 / $numberOfObservations) * 100) ) . "%)</td>";
-			$value2 = $objObservation->getDsDrawingsCountFromObserver ( $key );
+			$outputtable .= "<td>" . ($count + 1) . "</td><td> <a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode ( $value["observerid"] ) . "\">" . $value["observername"] . "</a> </td>";
+			$outputtable .= "<td>" . $value["Cnt"] . "&nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", (($value["Cnt"] / $numberOfObservations) * 100) ) . "%)</td>";
+			if (array_key_exists($value["observerid"], $allDrawings)) {
+				$value2 = $allDrawings [ $value["observerid"] ];
+			} else {
+				$value2 = 0;
+			}
 			$outputtable .= "<td> $value2 &nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", (($value2 / $numberOfDrawings) * 100) ) . "%)</td>";
-			$observationsThisYear = $objObservation->getObservationsLastYear ( $key );
+
+			if (array_key_exists($value["observerid"], $allObservationsLastYear)) {
+				$observationsThisYear = $allObservationsLastYear [ $value["observerid"] ];
+			} else {
+				$observationsThisYear = 0;
+			}
 			if ($numberOfObservationsThisYear != 0)
 				$percentObservations = ($observationsThisYear / $numberOfObservationsThisYear) * 100;
 			else
 				$percentObservations = 0;
 			$outputtable .= "<td>" . $observationsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", $percentObservations ) . "%)</td>";
 
-			$drawingsThisYear = $objObservation->getDrawingsLastYear ( $key );
+			if (array_key_exists($value["observerid"], $allDrawingsLastYear)) {
+				$drawingsThisYear = $allDrawingsLastYear [ $value["observerid"] ];
+			} else {
+				$drawingsThisYear = 0;
+			}
 			if ($numberOfDrawingsThisYear != 0)
 				$percentDrawings = ($drawingsThisYear / $numberOfDrawingsThisYear) * 100;
 			else
 				$percentDrawings = 0;
 			$outputtable .= "<td>" . $drawingsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", $percentDrawings ) . "%)</td>";
 
-			$objectsCount = $objObservation->getObservedCountFromCatalogOrList ( $key, $catalog );
-			$outputtable .= "<td> <a href=\"" . $baseURL . "index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode ( $catalog ) . "&amp;user=" . urlencode ( $key ) . "\">" . $objectsCount . "</a> (" . sprintf ( "%.2f", (($objectsCount / $objectsInCatalog) * 100) ) . "%)</td>";
-			$numberOfObjects = $objObservation->getNumberOfObjects ( $key );
+			if (array_key_exists($value["observerid"], $allObjectsCount)) {
+				$objectsCount = $allObjectsCount[ $value["observerid"]];
+			} else {
+				$objectsCount = 0;
+			}
+			$outputtable .= "<td> <a href=\"" . $baseURL . "index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode ( $catalog ) . "&amp;user=" . urlencode ( $value["observerid"] ) . "\">" . $objectsCount . "</a> (" . sprintf ( "%.2f", (($objectsCount / $objectsInCatalog) * 100) ) . "%)</td>";
+
+			if (array_key_exists($value["observerid"], $allObjects)) {
+				$numberOfObjects = $allObjects [ $value["observerid"] ];
+			} else {
+				$numberOfObjects = 0;
+			}
 			$outputtable .= "<td>" . $numberOfObjects . "&nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf ( "%.2f", (($numberOfObjects / $numberOfDifferentObjects) * 100) ) . "%)</td>";
 			$outputtable .= "</tr>";
 			$count ++;
@@ -201,7 +231,7 @@ class Observers {
 		echo "</div><hr />";
 	}
 	public function valideAccount() {
-		global $entryMessage, $objUtil, $objLanguage, $developversion, $loggedUser, $allLanguages, $mailTo, $mailFrom, $objMessages, $baseURL, $instDir;
+		global $entryMessage, $objUtil, $objLanguage, $objMessages, $developversion, $loggedUser, $allLanguages, $mailTo, $mailFrom, $objMessages, $baseURL, $instDir;
 
 		if (! $_POST ['email'] || ! $_POST ['firstname'] || ! $_POST ['name']) {
 			$entryMessage .= LangValidateAccountMessage1;
@@ -252,13 +282,16 @@ class Observers {
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'observationlanguage', $_POST ['description_language'] );
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'language', $_POST ['language'] );
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'registrationDate', date ( "Ymd H:i" ) );
-				$body = LangValidateAccountEmailLine1 . "\n" . 				// send mail to administrator
-				"\n" . LangValidateAccountEmailLine1bis . $_POST ['deepskylog_id'] . "\n" . LangValidateAccountEmailLine2 . $_POST ['email'] . "\n" . LangValidateAccountEmailLine3 . html_entity_decode ( $_POST ['firstname'] ) . " " . html_entity_decode ( $_POST ['name'] ) . "\n\n" . LangValidateAccountEmailLine4 . "\n\n" . html_entity_decode ( $_POST ['motivation'] );
+				$body = LangValidateAccountEmailLine1 . "<br /><br />" . 				// send mail to administrator
+								"<table><tr><td><strong>" . LangValidateAccountEmailLine1bis . "</strong></td><td>" . $_POST ['deepskylog_id'] . "</td></tr>" .
+								"<tr><td><strong>" . LangValidateAccountEmailLine2 . "</strong></td><td>" . $_POST ['email'] . "</td></tr>" .
+								"<tr><td><strong>" . LangValidateAccountEmailLine3 . "</strong></td><td>" . html_entity_decode ( $_POST ['firstname'] ) . " " . html_entity_decode ( $_POST ['name'] ) . "</td></tr>" .
+								"<tr><td><strong>" . LangValidateAccountEmailLine5 . "</strong></td><td>" . html_entity_decode ( $_POST ['motivation'] ) . "</td></tr></table><br />" . LangValidateAccountEmailLine4 . "<br /><br />";
 
 				if (isset ( $developversion ) && ($developversion == true))
 					$entryMessage .= "On the live server, a mail would be sent with the subject: " . LangValidateAccountEmailTitle . ".<p>";
 				else
-					mail ( $mailTo, LangValidateAccountEmailTitle, $body, "From:" . $mailFrom );
+					$objMessages->sendEmail ( LangValidateAccountEmailTitle, $body, "developers" );
 				$entryMessage = LangAccountSubscribed1 . LangAccountSubscribed2 . LangAccountSubscribed3 . LangAccountSubscribed4 . LangAccountSubscribed5 . LangAccountSubscribed6 . LangAccountSubscribed7 . LangAccountSubscribed8 . LangAccountSubscribed9;
 				$_GET ['user'] = $_POST ['deepskylog_id'];
 				$_GET ['indexAction'] = 'detail_observer';
@@ -325,7 +358,7 @@ class Observers {
 	}
 	public function validateDeleteObserver() 	// validateObserver validates the user with the given id and gives the user the given role
 	{
-		global $objDatabase, $objUtil, $entryMessage, $loggedUser, $developversion, $mailTo, $mailFrom;
+		global $objDatabase, $objUtil, $entryMessage, $loggedUser, $developversion, $mailTo, $mailFrom, $objMessages, $objObserver;
 		if (! ($objUtil->checkSessionKey ( 'admin' ) == 'yes'))
 			throw new Exception ( LangException001 );
 		$objDatabase->execSQL ( "DELETE FROM observers WHERE id=\"" . ($id = $objUtil->checkGetKey ( 'validateDelete' )) . "\"" );
@@ -333,7 +366,7 @@ class Observers {
 		if (isset ( $developversion ) && ($developversion == 1))
 			$entryMessage .= "On the live server, a mail would be sent with the subject: Deepskylog account deleted.<br />";
 		else
-			mail ( $mailTo, "Deepskylog account deleted", "The account for " . $id . " was deleted by " . $loggedUser, "From:" . $mailFrom );
+			$objMessages->sendEmail("Deepskylog account deleted", "The account for " . $id . " was deleted by " . $objObserver->getFullName($loggedUser) . "<br /><br />", "developers");
 		$objAccomplishments->deleteObserver ( $id );
 		return "The user has been erased.";
 	}
@@ -344,19 +377,23 @@ class Observers {
 			throw new Exception ( LangException001 );
 		$objDatabase->execSQL ( "UPDATE observers SET role = \"" . ($role = RoleUser) . "\" WHERE id=\"" . ($id = $objUtil->checkGetKey ( 'validate' )) . "\"" );
 		if ($role == RoleAdmin)
-			$ad = LangValidateAdmin;
+			$ad = "<br /><br />" . LangValidateAdmin;
 		else
 			$ad = "";
-		$body = LangValidateMail1 . "\n\n" . html_entity_decode ( $this->getObserverProperty ( $id, 'firstname' ) ) . ' ' . html_entity_decode ( $this->getObserverProperty ( $id, 'name' ) ) . "\n\n" . LangValidateMail2 . "\n\n" . $ad . "\n\n" . LangValidateMail3;
+
+		$body = LangValidateMail1 . html_entity_decode ( $this->getObserverProperty ( $id, 'firstname' ) ) . ' ' . html_entity_decode ( $this->getObserverProperty ( $id, 'name' ) ) .
+			          ", <br /><br />" . LangValidateMail2 . "<strong>" . $id . "</strong>" . LangValidateMail2b . "<br /><br />" . LangValidateMail2c .
+								$ad . "<br /><br />" . LangValidateMail3 . "<br /><br />";
+
 		if (isset ( $developversion ) && ($developversion == 1))
 			$entryMessage .= "On the live server, a mail would be sent with the subject: " . LangValidateSubject . ".<br />";
 		else
-			mail ( $this->getObserverProperty ( $id, 'email' ) . ";" . $mailTo, LangValidateSubject, $body, $mailFrom );
+			$objMessages->sendEmail ( LangValidateSubject, $body, $id, true );
 
-			// After registration, all old messages are removed
+		// After registration, all old messages are removed
 		$objMessages->removeAllMessages ( $id );
 		// After registration, a welcome message is sent
-		$objMessages->sendMessage ( "DeepskyLog", $id, LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!", LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!<br /><br />" . LangMessageWelcome1 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_instrument\">" . LangMessageWelcome2 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_site\">" . LangMessageWelcome3 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=change_account\">" . LangMessageWelcome4 );
+		$objMessages->sendMessage ( "DeepskyLog", $id, LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!", LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!<br /><br />" . LangMessageWelcome1 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_instrument\">" . LangMessageWelcome2 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_location\">" . LangMessageWelcome3 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=change_account\">" . LangMessageWelcome4 );
 
 		$objAccomplishments->addObserver ( $id );
 
@@ -390,6 +427,92 @@ class Observers {
 		}
 		// Return to the change account page.
 		$_GET ['indexAction'] = 'change_account';
+	}
+
+	public function updatePasswordToken($login, $newPassword, $confirmNewPassword) {
+		global $entryMessage, $loggedUser;
+		$passwd_db = $this->getObserverPropertyCS ( $login, "password" );
+
+		// We check if we can change the password
+		if (strcmp ($newPassword, $confirmNewPassword) != 0) {
+			$entryMessage = LangNewPasswordNotCorrect;
+		} else {
+			$this->setObserverProperty ( $login, 'password', $newPassword );
+
+			$entryMessage = LangPasswordChanged;
+		}
+		// Return to the change account page.
+		$_GET ['indexAction'] = 'main';
+	}
+
+	public function requestNewPassword() {
+		global $entryMessage, $objUtil, $mailFrom, $baseURL, $instDir, $objMessages;
+
+		// First check if we are indeed using the correct indexAction
+		if (strcmp($objUtil->checkPostKey('indexAction'), "requestPassword") == 0) {
+			// Check for the userid or the mail address
+			$userid = $objUtil->checkPostKey('deepskylog_id');
+			$email = $objUtil->checkPostKey('mail');
+
+			if ($userid != "") {
+				// Check if the userid exists in the database, if this is not the case, show a message that the userid is not known by DeepskyLog.
+				$email = $this->getObserverProperty ( $userid, 'email' );
+
+				// If mail is empty, show message that the userid is not correct.
+				if (strcmp($email, "") == 0) {
+					$entryMessage = LangUnknownUsername1 . "<strong>" . $userid . "</strong>" . LangUnknownUsername2;
+					return;
+				}
+			} elseif ($email != "") {
+				// We have a mail address, but no username. Get the userid which belongs to the mailaddress.
+				$userid = $this->getUserIdFromEmail($email);
+
+				if (strcmp($userid, "") == 0) {
+					$entryMessage = LangUnknownMailAddress1 . "<strong>" . $email . "</strong>" . LangUnknownMailAddress2;
+					return;
+				}
+			} else {
+				$entryMessage = LangUnknownMailAndUsername;
+				return;
+			}
+
+			// TODO: Add token in the database
+			$token = bin2hex(openssl_random_pseudo_bytes(10));
+
+			include_once $instDir . "/lib/password.php";
+			$pass = new Password();
+			$pass->storeToken($userid, $token);
+
+      $confirmLink = $baseURL . "index.php?indexAction=changeToken&amp;t=" . $token;
+			$cancelLink = $baseURL . "index.php?indexAction=removeToken&amp;t=" . $token;
+
+			// Send nice looking mail
+			$subject = LangRequestNewPasswordSubject;
+			$message = LangRequestNewPasswordMail1 . $baseURL;
+			$message .= LangRequestNewPasswordMail2;
+			$message .= "<a href=\"" . $confirmLink . "\">" . $confirmLink . "</a>";
+			$message .= LangRequestNewPasswordMail3;
+			$message .= "<a href=\"" . $cancelLink . "\">" . $cancelLink . "</a>";
+			$message .= LangRequestNewPasswordMail4;
+
+			// Get correct date (in all languages)
+			include_once $instDir . "/lib/setup/language.php";
+			// Get the date in the correct locale
+			$lang = new Language();
+			$lang->setLocale();
+
+    	$message .= iconv('ISO-8859-1', 'UTF-8', strftime('%A %d %B %Y, %R UTC', time() + 24*60*60));
+
+			$message .= LangRequestNewPasswordMail5;
+			$message .= LangRequestNewPasswordMail6;
+
+			// Send the mail
+			$objMessages->sendEmail($subject, $message, $userid);
+
+			// Show message
+			// Show which username and which email we use for requesting the new password
+			$entryMessage = LangTokenMailed1 . "<strong>" . $userid . "</strong>" . LangTokenMailed2 . "<strong>" . $email . "</strong>" . LangTokenMailed3;
+		}
 	}
 }
 ?>

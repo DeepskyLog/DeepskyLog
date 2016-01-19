@@ -1,4 +1,4 @@
-<?php 
+<?php
 ini_set('display_errors', '1');
 
 header('Content-Type: application/json');
@@ -25,8 +25,8 @@ global $loggedUser;
 		while ( FALSE !== ($file = readdir ( $dir )) ) {
 			if (("." == $file) or (".." == $file))
 				continue; // skip current directory and directory above
-				if (fnmatch ( $name . ".gif", $file ) || 
-					fnmatch ( $name . ".jpg", $file ) || 
+				if (fnmatch ( $name . ".gif", $file ) ||
+					fnmatch ( $name . ".jpg", $file ) ||
 					fnmatch ( $name . ".png", $file )) {
 					return "/common/observer_pics/" . $file;
 				}
@@ -34,18 +34,18 @@ global $loggedUser;
 	};
 
 	global $objDatabase, $objObject;
-	
+
 	$constellations = $objObject->getConstellations();
-	
+
 	//need to translate here
 	//probably better to move this to the bottom part
 	$whenQuery = '';
 	while(list($key, $value) = each($constellations))
 		$whenQuery = $whenQuery . " WHEN objects.con = '{$value}' THEN '{$GLOBALS [$value]}' ";
-	
+
 	$objectname = $_GET['object'];
 
-	$query = "SELECT 
+	$query = "SELECT
 				observations.id as observationid,
 				observations.objectname,
 				observations.observerid,
@@ -60,7 +60,7 @@ global $loggedUser;
 				observations.filterid,
 				observations.eyepieceid,
 				observations.magnification,
-				IF(observations.visibility = 0, '-', observations.visibility) as visibility,				
+				IF(observations.visibility = 0, '-', observations.visibility) as visibility,
 				IF(observations.clustertype = '', '-', observations.clustertype) as clustertype,
 				DATE_FORMAT(STR_TO_DATE( observations.date, '%Y%m%d'), '%e/%c/%Y') as date,
 				DATE_FORMAT(STR_TO_DATE( observations.date, '%Y%m%d'), '%Y-%c-%e') as moondate,
@@ -91,7 +91,7 @@ global $loggedUser;
 				objects.type as objecttype,
 				objects.mag as objectmagnitude,
 				objects.subr as objectsurfacebrigthness,
-				CASE 
+				CASE
 					{$whenQuery}
 					ELSE ' ' END AS constellation
 			FROM observations
@@ -103,21 +103,21 @@ global $loggedUser;
 			JOIN filters ON observations.filterid = filters.id
 			JOIN eyepieces ON observations.eyepieceid = eyepieces.id
 			WHERE observations.objectname=:objectname
-			";			
-					
+			";
+
 	$result = $objDatabase->prepareAndSelectRecordsetArray ($query, array(':objectname'=>$objectname));
-	
+
 	$dataTablesObject = new stdClass();
-	$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );		
+	$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
 	if ($loggedUser == ""){
 		$usedLang = $_SESSION['lang'];
 	};
-	
+
 	while(list($key, $value) = each($result)){
 		while(list($k, $v) = each($value)){
 			//add profilepic
 			if($k == "observerid"){
-				$result[$key]['observerimage'] = getObserverImage($v);				
+				$result[$key]['observerimage'] = getObserverImage($v);
 			}
 		}
 		//add seeing
@@ -126,25 +126,27 @@ global $loggedUser;
 			$seeingvar = "Seeing".$seeing;
 			$result[$key]['seeing'] = $$seeingvar;
 		}
-		
+
 		//add visibility
 		$visibility = $result[$key]['visibility'];
 		if($visibility != '-'){
-			$visibilityvar = "Visibility".$visibility;
-			$result[$key]['visibility'] = $$visibilityvar;
-		}	
-		
+			if ($visibility != 99) {
+				$visibilityvar = "Visibility".$visibility;
+				$result[$key]['visibility'] = $$visibilityvar;
+			}
+		}
+
 		//add clustertype
 		$clustertype = $result[$key]['clustertype'];
 		if($clustertype != '-'){
 			$clustertypevar = "ClusterType".$clustertype;
 			$result[$key]['clustertype'] = $$clustertypevar;
-		}	
-		
+		}
+
 		//add translate
 		$lang = $result[$key]['observerationlanguage'];
 		$result[$key]['translate'] = (($usedLang != null) && ($usedLang != $lang ));
-		
+
 		//add size
 		if($result[$key]['largediameter'] == 0){
 			$result[$key]['size'] = '-';
@@ -155,17 +157,17 @@ global $loggedUser;
 				$result[$key]['size'] = number_format($result[$key]['largediameter'], 1)." x ".number_format($result[$key]['smalldiameter'], 1)." ".LangNewObjectSizeUnits2;
 			}
 		}
-		
+
 		//add moonpic
 		$result[$key]['moonpic'] = getMoonPic($result[$key]['moondate'], $result[$key]['time'], $result[$key]['lat'], $result[$key]['lon'], $result[$key]['timezone']);
 	}
 
 	$dataTablesObject->data = $result;
-	
-	
+
+
 	$_SESSION['Qobs'] = $result;
-	
-	
-	
-	print json_encode($dataTablesObject);	
+
+
+
+	print json_encode($dataTablesObject);
 ?>

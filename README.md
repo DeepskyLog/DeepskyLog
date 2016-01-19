@@ -8,7 +8,9 @@ Observers can use the website at http://www.deepskylog.org/
 
 DeepskyLog is free and will always be free. If you want to donate money to DeepskyLog, we will use it to upgrade our servers to improve the speed and the disk space. 
 
-We ask everyone to use the official http://www.deepskylog.org/ website. So please, don't set up your own DeepskyLog site. One of the major advantages of DeepskyLog is that we have one large database with more than 75,000 observations and more than 10,000 drawings. We don't want to have databases all over the internet.
+When you want to help developing, but you don't know how to do html/css/javascript developing, a nice place to learn to code is [FreeCodeCamp](http://www.freecodecamp.com/).
+
+We ask everyone to use the official http://www.deepskylog.org/ website. So please, don't set up your own DeepskyLog site. One of the major advantages of DeepskyLog is that we have one large database with more than 90,000 observations and more than 10,000 drawings. We don't want to have databases all over the internet.
 
 At this moment, DeepskyLog can be accessed using the following sites:
 
@@ -26,7 +28,7 @@ If you want to add your own localised version of the DeepskyLog database, please
 
 ## Responsibilities
 
-The responsibilties in the DeepskyLog team are:
+The responsibilities in the DeepskyLog team are:
 
 | Responsibility | Who? |
 | -------------- | ---- |

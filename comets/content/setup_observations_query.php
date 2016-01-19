@@ -14,7 +14,7 @@ function setup_observations_query() {
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"comets_result_selected_observations\" />";
 	$id = $objUtil->checkSessionKey ( 'observedobject', $objUtil->checkGetKey ( 'observedobject' ) );
 	echo "<h4>" . LangQueryObservationsTitle . "</h4>";
-	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"query\" value=\"" . LangQueryObservationsTitle . "\" />"; 
+	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"query\" value=\"" . LangQueryObservationsTitle . "\" />";
 	echo "<br /><hr />";
 
 	// OBJECT NAME
@@ -26,7 +26,7 @@ function setup_observations_query() {
 		$content2 .= "<option value=\"" . $value [0] . "\"" . ((($id) && ($id == $objCometObject->getId ( $value[0] ))) ? " selected=\"selected\" " : "") . ">" . $value [0] . "</option>";
 	$content2 .= "</select>";
 	echo "<strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// OBSERVER
 	$content1 = LangViewObservationField2;
@@ -41,7 +41,7 @@ function setup_observations_query() {
 		$content2 .= "<option value=\"" . $value . "\">" . $key . "</option>";
 	$content2 .= "</select>";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// INSTRUMENT
 	$content1 = LangViewObservationField3;
@@ -52,7 +52,7 @@ function setup_observations_query() {
 		$content2 .= "<option value=\"" . $key . "\">" . $value . "</option>";
 	$content2 .= "</select>";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// MINIMUM DIAMETER
 	$content1 = LangViewObservationField13;
@@ -60,7 +60,7 @@ function setup_observations_query() {
 	$content2 .= "&nbsp;";
 	$content2 .= "<select name=\"mindiameterunits\" class=\"form-control\"><option selected=\"selected\">&nbsp;</option><option>inch</option><option>mm</option></select>";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// MAXIMUM DIAMETER
 	$content1 = LangViewObservationField14;
@@ -68,7 +68,7 @@ function setup_observations_query() {
 	$content2 .= "&nbsp;";
 	$content2 .= "<select name=\"maxdiameterunits\" class=\"form-control\"><option selected=\"selected\">&nbsp;</option><option>inch</option><option>mm</option></select>";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// SITE
 	$content1 = LangViewObservationField4;
@@ -80,7 +80,7 @@ function setup_observations_query() {
 			$content2 .= "<option value=\"" . $value . "\"" . ">" . $objLocation->getLocationPropertyFromId ( $value, 'name' ) . "</option>";
 	$content2 .= "</select>";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// MINIMUM DATE
 	$content1 = LangFromDate;
@@ -94,7 +94,7 @@ function setup_observations_query() {
 	$content2 .= "&nbsp;&nbsp;";
 	$content2 .= "<input type=\"number\" min=\"1609\" class=\"form-control\" maxlength=\"4\" size=\"5\" name=\"minyear\" value=\"\" />";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// MAXIMUM DATE
 	$content1 = LangTillDate;
@@ -108,25 +108,25 @@ function setup_observations_query() {
 	$content2 .= "&nbsp;&nbsp;";
 	$content2 .= "<input type=\"number\" min=\"1609\" class=\"form-control\" name=\"maxyear\" value=\"\" />";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// DESCRIPTION
 	$content1 = LangQueryObservationsMessage2;
 	$content2 = "<input type=\"text\" class=\"form-control\" maxlength=\"40\" name=\"description\" size=\"35\" value=\"\" />";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// MAXIMUM MAGNITUDE
 	$content1 = LangQueryObjectsField4;
 	$content2 = "<input type=\"number\" min=\"-5.0\" max=\"20.0\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" name=\"maxmag\" size=\"4\" value=\"\" />";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// MINIMUM MAGNITUDE
 	$content1 = LangQueryObjectsField3;
 	$content2 = "<input type=\"number\" min=\"-5.0\" max=\"20.0\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" name=\"minmag\" size=\"4\" value=\"\" />";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// MINIMUM DC
 	$content1 = LangQueryCometObjectsField3;
@@ -136,7 +136,7 @@ function setup_observations_query() {
 		$content2 .= "<option value=\"" . $i . "\">" . $i . "</option>";
 	$content2 .= "</select>";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// MAXIMUM DC
 	$content1 = LangQueryCometObjectsField4;
@@ -146,32 +146,34 @@ function setup_observations_query() {
 		$content2 .= "<option value=\"" . $i . "\">" . $i . "</option>";
 	$content2 .= "</select>";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// MINIMUM COMA
 	$content1 = LangQueryCometObjectsField5;
 	$content2 = "<input type=\"number\" min=\"0.0\" step=\"0.01\" class=\"form-control\" maxlength=\"4\" name=\"mincoma\" size=\"4\" value=\"\" />";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// MAXIMUM COMA
 	$content1 = LangQueryCometObjectsField6;
 	$content2 = "<input type=\"number\" min=\"0.0\" step=\"0.01\" class=\"form-control\" maxlength=\"4\" name=\"maxcoma\" size=\"4\" value=\"\" />";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// MINIMUM TAIL
 	$content1 = LangQueryCometObjectsField7;
 	$content2 = "<input type=\"number\" min=\"0.0\" step=\"0.01\"  class=\"form-control\" maxlength=\"4\" name=\"mintail\" size=\"4\" value=\"\" />";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
 
 	// MAXIMUM TAIL
 	$content1 = LangQueryCometObjectsField8;
 	$content2 = "<input type=\"number\" min=\"0.0\" step=\"0.01\"  class=\"form-control\" maxlength=\"4\" name=\"maxtail\" size=\"4\" value=\"\" />";
 	echo "<br /><strong>" . $content1 . "</strong><br />";
-	echo "<span class=\"form-inline\">" . $content2 . "</span>"; 
-	echo "</div></form>";
+	echo "<span class=\"form-inline\">" . $content2 . "</span>";
+	echo "</div>";
+	echo "<br /><input type=\"submit\" class=\"btn btn-success\" name=\"query\" value=\"" . LangQueryObservationsTitle . "\" />";
+	echo "</form>";
 	echo "</div>";
 }
 ?>

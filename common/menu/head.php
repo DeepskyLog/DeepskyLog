@@ -30,6 +30,8 @@ function head() {
 	echo "<script src=\"" . $baseURL . "lib/javascript/bootstrap-tour.min.js\"></script>";
 	echo "<link href=\"styles/bootstrap.min.css\" rel=\"stylesheet\">";
 	echo "<link href=\"styles/bootstrap-tour.min.css\" rel=\"stylesheet\">";
+	echo "<link href=\"styles/select2.min.css\" rel=\"stylesheet\">";
+	echo "<script src=\"" . $baseURL . "lib/javascript/select2.min.js\"></script>";
 	echo "<link rel=\"stylesheet\" href=\"styles/bootstrap-theme.min.css\">";
 	echo "<script src=\"lib/javascript/jquery.tablesorter.min.js\"></script>
         <script src=\"lib/javascript/jquery.tablesorter.widgets.min.js\"></script>
@@ -37,15 +39,15 @@ function head() {
         <script src=\"lib/javascript/widget-columnSelector.js\"></script>
         <script src=\"lib/javascript/widget-reorder.js\"></script>
 		<link href=\"styles/tablesorter.theme.bootstrap.css\" rel=\"stylesheet\">";
-	echo "<link href=\"" . $baseURL . "styles/deepskylog5020.css\" rel=\"stylesheet\" type=\"text/css\" />";
+	echo "<link href=\"" . $baseURL . "styles/deepskylog5030.css\" rel=\"stylesheet\" type=\"text/css\" />";
 	// Load the needed javascript file for bootstrap-fileinput
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/fileinput.min.js\"></script>";
 	// Load the needed javascript file for bootstrap-strengtmeter
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/strength-meter.min.js\"></script>";
 	// Load the needed css file for bootstrap-fileinput
-	echo "<link rel=\"stylesheet\" href=\"styles/fileinput.min.css\"></script>";
+	echo "<link rel=\"stylesheet\" href=\"styles/fileinput.min.css\" />";
   // Load the needed css file for bootstrap-strengthmeter
-	echo "<link rel=\"stylesheet\" href=\"styles/strength-meter.min.css\"></script>";
+	echo "<link rel=\"stylesheet\" href=\"styles/strength-meter.min.css\" />";
 
 	$TitleText = "";
 	$theDispatch = $objUtil->checkRequestKey ( 'indexAction' );
@@ -94,6 +96,8 @@ function head() {
 		$TitleText = LangTopObserversMessierHeader2 . " " . $objUtil->checkGetKey ( 'catalog', 'M' ) . " " . LangTopObserversMessierHeader3 . " - " . $objObserver->getObserverProperty ( $objUtil->checkGetKey ( 'user' ), 'firstname' ) . " " . $objObserver->getObserverProperty ( $objUtil->checkGetKey ( 'user' ), 'name' );
 	elseif ($theDispatch == 'detail_observer')
 		$TitleText = LangDetailObserver;
+	elseif ($theDispatch == 'statistics')
+	$TitleText = LangStatistics;
 	elseif ($includeFile == 'common/content/change_account.php')
 		$TitleText = LangChangeAccountTitle;
 	elseif ($theDispatch == 'detail_eyepiece')

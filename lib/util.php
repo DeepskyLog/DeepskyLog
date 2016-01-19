@@ -1656,7 +1656,7 @@ class Utils {
 		}
 		$pdf->Stream ();
 	}
-	public function firstpage(&$y, $bottomsection, $top, &$xbase, $xmid, &$pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, $i, $showelements, $reportdata) {
+	public function firstpage(&$y, $bottomsection, $top, &$xbase, $xmid, &$pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $i, $showelements, $reportdata) {
 		global $objObserver, $loggedUser, $objLocation, $objInstrument;
 		$y = $top;
 		$xbase = $xleft;
@@ -1702,7 +1702,7 @@ class Utils {
 		}
 		$xbase = $xleft;
 	}
-	public function newpage(&$y, $bottomsection, $top, $bottom, &$xbase, $xmid, &$pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, $i, $b, $showelements, $reportdata) {
+	public function newpage(&$y, $bottomsection, $top, $bottom, &$xbase, $xmid, &$pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $i, $b, $showelements, $reportdata) {
 		global $objObserver, $loggedUser, $objLocation, $objInstrument;
 		// if($y<$bottomsection)
 		{
@@ -1809,7 +1809,7 @@ class Utils {
 
 		$actualsort = '';
 		$theDate = date ( 'd/m/Y' );
-		$this->firstpage ( $y, $bottom, $top, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, '', $showelements, $reportdata );
+		$this->firstpage ( $y, $bottom, $top, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, '', $showelements, $reportdata );
 
 		while ( list ( $key, $valueA ) = each ( $result ) ) {
 			$con = $valueA ['objectconstellation'];
@@ -1829,9 +1829,9 @@ class Utils {
 			}
 			$deltaymax ++;
 			if (($y - ($deltaline * $deltaymax) < $bottom) && $sort)
-				$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, "", "", $showelements, $reportdata );
+				$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, "", "", $showelements, $reportdata );
 			elseif (($y - ($deltaline * $deltaymax) < $bottom) && (! ($sort))) {
-				$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, "", "", $showelements, $reportdata );
+				$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, "", "", $showelements, $reportdata );
 				if (strpos ( $showelements, 's' ) !== FALSE) {
 					$pdf->setLineStyle ( 0.5 );
 					$pdf->line ( $xbase - $sectionBarSpace, $y + (($deltaline + $deltaobjectline) * .75), $xbase + $SectionBarWidth, $y + (($deltaline + $deltaobjectline) * .75) );
@@ -1839,7 +1839,7 @@ class Utils {
 				}
 			} elseif ($sort && ($$sort != $actualsort)) {
 				if (($y - ($deltaline * $deltaymax) - $sectionBarSpace - $deltalineSection) < $bottom)
-					$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, "", "", $showelements, $reportdata );
+					$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, "", "", $showelements, $reportdata );
 				else {
 					$y -= $deltalineSection;
 					$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
@@ -1857,7 +1857,7 @@ class Utils {
 			while ( list ( $key, $dataelement ) = each ( $reportdata ) ) {
 				if ($dataelement ['fieldwidth']) {
 					if ($y - ($deltaline * $dataelement ['fieldline']) < $bottom) {
-						$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, "", "", $showelements, $reportdata );
+						$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, "", "", $showelements, $reportdata );
 					}
 					$justification = 'left';
 					$i = '';
@@ -1891,7 +1891,7 @@ class Utils {
 							while ( $theText ) {
 								$y -= $deltaline;
 								if ($y - ($deltaline * $dataelement ['fieldline']) < $bottom) {
-									$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, $i, $b, $showelements, $reportdata );
+									$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $i, $b, $showelements, $reportdata );
 									$y += ($deltaline * $dataelement ['fieldline']);
 								}
 								$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $theText ), $justification );
@@ -1905,7 +1905,7 @@ class Utils {
 							while ( $theText ) {
 								$y -= $deltaline;
 								if ($y - ($deltaline * $dataelement ['fieldline']) < $bottom) {
-									$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, $i, $b, $showelements, $reportdata );
+									$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $i, $b, $showelements, $reportdata );
 									$y += ($deltaline * $dataelement ['fieldline']);
 								}
 								$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $theText ), $justification );
@@ -1917,7 +1917,7 @@ class Utils {
 							while ( $theText ) {
 								$y -= $deltaline;
 								if ($y - ($deltaline * $dataelement ['fieldline']) < $bottom) {
-									$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, $i, $b, $showelements, $reportdata );
+									$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $i, $b, $showelements, $reportdata );
 									$y += ($deltaline * $dataelement ['fieldline']);
 								}
 								$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $theText ), $justification );
@@ -1943,7 +1943,7 @@ class Utils {
 		}
 		if ((strpos ( $showelements, 'i' ) !== FALSE) && (count ( $indexlist ) > 0) && ($sort)) {
 			$base = $xmid;
-			$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, '', '', $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, "", "", $showelements, $reportdata );
+			$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, '', '', $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, "", "", $showelements, $reportdata );
 			$pdf->setLineStyle ( 0.5 );
 			$y = $top;
 			while ( list ( $key, $value ) = each ( $indexlist ) ) {
@@ -1953,7 +1953,7 @@ class Utils {
 
 				$y -= ($deltaline + $deltaobjectline);
 				if (($y - ($deltaline + $deltaobjectline)) < $bottom) {
-					$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, '', '', $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, "", "", $showelements, $reportdata );
+					$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, '', '', $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, "", "", $showelements, $reportdata );
 					$pdf->setLineStyle ( 0.5 );
 				}
 			}
@@ -2482,6 +2482,7 @@ class Utils {
 				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_object', 'deepsky/content/new_object.php' )))
 					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_observation', 'deepsky/content/new_observation.php' )))
 						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_object', 'deepsky/content/view_object.php' )))
+						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'changeToken', 'common/content/change_password.php' )))
 							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observation', 'deepsky/content/view_observation.php' )))
 								if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_catalogs', 'deepsky/content/view_catalogs.php' )))
 									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'atlaspage', 'deepsky/content/dsatlas.php' )))
@@ -2493,6 +2494,7 @@ class Utils {
 															if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'query_observations', 'deepsky/content/setup_observations_query.php' )))
 																if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'rank_objects', 'deepsky/content/top_objects.php' )))
 																	if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'rank_observers', 'deepsky/content/top_observers.php' )))
+																	if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'statistics', 'common/content/statistics.php' )))
 																		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_lenses', 'common/content/view_lenses.php' )))
 																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAdmin ( 'overview_lenses', 'common/content/overview_lenses.php' )))
 																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_query_objects', 'deepsky/content/selected_objects.php' )))

@@ -49,11 +49,11 @@ function setup_objects_query() {
 	echo "<h4>" . LangQueryObjectsTitle . "</h4>";
 	echo "<span class=\"pull-right\">" . $content3 . "</span>";
 	echo "<br /><hr />";
-	
+
 	echo "<table><tr><td><strong>" . $content1 . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">" . $content2;
 	echo "</td></tr>";
-	
+
 	// OBJECT NAME
 	if ($catalog == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
@@ -61,16 +61,16 @@ function setup_objects_query() {
 	echo "<tr><td><strong>" . LangQueryObjectsField1 . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	echo "<select id=\"catalog\" name=\"catalog\" class=\"form-control\">";
-	echo "<option value=\"\">-----</option>";
+	echo "<option value=\"\">" . LangSelectCatalog . "</option>";
 	while ( list ( $key, $value ) = each ( $DSOcatalogs ) )
 		echo "<option" . (($value == $catalog) ? " selected=\"selected\"" : "") . " value=\"" . $value . "\">$value</option>";
 	echo "</select>";
 	if ($catNumber == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
 			$catNumber = $_SESSION ['QobjParams'] ['catNumber'];
-	echo "<input id=\"catNumber\" name=\"catNumber\" type=\"text\" class=\"form-control\" maxlength=\"255\" size=\"30\" value=\"" . $catNumber . "\" />";
+	echo "<input id=\"catNumber\" placeholder=\"" . LangCatalogNumber . "\" name=\"catNumber\" type=\"text\" class=\"form-control\" maxlength=\"255\" size=\"30\" value=\"" . $catNumber . "\" />";
 	echo "</td></tr>";
-	
+
 	// ATLAS PAGE NUMBER
 	echo "<tr><td><strong>" . LangQueryObjectsField12 . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
@@ -275,7 +275,7 @@ function setup_objects_query() {
 				$minContrast = $_SESSION ['QobjParams'] ['minContrast'];
 		echo "<input id=\"minContrast\" name=\"minContrast\" type=\"number\" min=\"-5.0\" max=\"10.0\" step=\"0.01\" class=\"form-control\" maxlength=\"4\" size=\"5\" value=\"" . $minContrast . "\" />";
 		echo "</td></tr>";
-		
+
 		// MAXIMUM CONTRAST RESERVE
 		echo "<tr><td><strong>" . LangQueryObjectsField17 . "</strong></td>";
 		echo "<td colspan=\"3\" class=\"form-inline\">";
@@ -352,7 +352,8 @@ function setup_objects_query() {
 	echo "</tr>";
 	echo "</table>";
 	echo "<input id=\"temp\" type=\"hidden\" value=\"" . $temp . "\" />";
-	echo "</div>";
+	echo "</div><br />";
+	echo "<span>" . $content3 . "</span>";
 	echo "</form>";
 	echo "</table><hr />";
 	if ($loggedUser) {

@@ -31,7 +31,7 @@ try {
          <div class=\"row\">";
 
 	require_once 'common/entryexit/menu.php';
-	echo "   <div class=\"col-sm-10\">";
+	echo "   <div class=\"col-sm-10 move\">";
 	require_once $includeFile;
 	echo "    </div>
   		     </div>
@@ -135,6 +135,12 @@ if (isset ( $entryMessage ) && $entryMessage) { // dispays $entryMessage if any
 				});";
 	echo "</script>";
 }
+
+echo '<script>
+				$(document).ready(function() {
+					$("select").select2();
+				});
+			</script>';
 
 
 echo "</body>";

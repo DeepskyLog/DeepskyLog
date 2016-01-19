@@ -1,10 +1,45 @@
 <?php //GE
 // This is version 5.0
+define("LangAddSiteStep2", "Definieren Sie Ihre eigenen Namen f&uuml;r die Position, schlie&szlig;lich f&uuml;gen Sie einen Grenzgr&ouml;&szlig;e (oder SQM-Wert) zu und dr&uuml;cken Sie die Taste ");
+define("LangAddSiteStep1", "Stellen Sie Ihren Ort auf der Karte ein oder gebe des Namens ein und Dr&euml;cke der Taste ");
+define("LangAddSiteStep1Button", ".");
+define("LangCatalogNumber", "Nummer im Katalog");
+define("LangSelectCatalog", "Katalog Auswahl");
+define("LangQuickPick", "Geben Sie Objektnamen ein");
+define("LangSelectCountry", "Land ausw&auml;hlen");
+define("GraphObservationsPerCountry", "Beobachtungen pro Land");
+define("LangStatistics", "Statistiken");
+define("GraphTitleMonths", "Anzahl der Beobachtungen pro Monat");
+define("GraphObservationsMonthTitle", "Beobachtungen pro Monat");
+define("LangCancelRequestNewPasswordSubject", "Eine DeepskyLog Passwort&auml;nderunganforderung wird abgesagt");
+define("LangCancelRequestNewPassword1", "Eine Passwort&auml;nderunganforderung wird abgesagt von ");
+define("LangCancelRequestNewPassword2", "<br /><br />Wenn Sie dies nicht angefordert haben, k&ouml;nnte es ein ehrlicher Fehler sein oder jemand versucht in Ihr DeepskyLog Konto zu brechen.<br />");
+define("LangRequestNewPasswordMail1", "\nSie haben (oder jemanden, der Sie imitiert) aufgefordert Ihr <a href=\"");
+define("LangRequestNewPasswordMail2", "\">DeepskyLog</a> Passwort zu &auml;ndern. <br />Um die &Auml;nderung abzuschließen, besuchen Sie den folgenden Link:<br /><br />");
+define("LangRequestNewPasswordMail3", "<br /><br />Wenn Sie nicht die Person bist, die diesen Antrag hat gestellt, oder Sie diese Anforderung abbrechen m&ouml;chten, besuchen Sie den folgenden Link:<br /><br />");
+define("LangRequestNewPasswordMail4", "<br /><br />Wenn Sie nichts tun, wird die Anforderung nach 24 Stunden verfallen (am ");
+define("LangRequestNewPasswordMail5", ") oder Wenn Sie sich erfolgreich anmeldet.");
+define("LangRequestNewPasswordMail6", "<br /><h2><a href=\"mailto:developers@deepskylog.be\">Das DeepskyLog team</a></h2>");
+define("LangRequestNewPasswordSubject", "DeepskyLog passwort &Auml;nderungsanforderung");
+define("LangUnknownUsername1", "Die Benutzername ");
+define("LangUnknownUsername2", " ist nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
+define("LangUnknownMailAddress1", "Die E-Mail Adresse ");
+define("LangUnknownMailAddress2", " ist nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
+define("LangUnknownMailAndUsername", "Die angegebene Benutzername und E-Mail Adresse sind nicht durch DeepskyLog bekannt. Unm&ouml;glich, ein neues Passwort an zu fordern.");
+define("LangTokenMailed1", "Ein Token zum &auml;ndern des Passworts ");
+define("LangTokenMailed2", " wurde Ihnen per E-Mail nach ");
+define("LangTokenMailed3", " geschickt. Folgen Sie den Anweisungen in dieser E-Mail um Ihr Passwort zu &auml;ndern.");
+define("LangForgotPassword", "Passwort vergessen?");
+define("LangForgotPasswordText1", "Bitte geben Sie Ihren Benutzernamen <strong> oder </strong> Ihre E-Mail ein.");
+define("LangUserId", "DeepskyLog Benutzernamen");
+define("LangRequestNewPassword", "Neues Passwort anfordern");
+define("LangDeepskyLogMessage", "DeepskyLog Nachricht von ");
 define("LangCurrentPasswordIncorrect", "Die von Ihnen gew&auml;hlte aktuelle Passwort ist nicht korrekt. Die password is nicht ver&auml;ndert.");
 define("LangNewPasswordNotCorrect", "Das neue Passwort und die Passwort Best&auml;tigung sind nicht dasselbe. Die password is nicht ver&auml;ndert.");
 define("LangPasswordChanged", "Das Passwort ist erfolgreich ge&auml;ndert.");
 define("LangChangePassword", "Passwort &auml;ndern");
-define("LangCurrentPassword", "Current password");
+define("LangCurrentPassword", "Heutiges Passwort");
+define("LangNewPassword", "Neues Passwort");
 define("PersonalInfo", "Personal");
 define("ObservingDetails", "Observing");
 define("Atlases", "Atlases");
@@ -248,11 +283,11 @@ define('LangAtlasGenerationTimes'       ,"Generierung kann etwas dauern (zwische
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Keine Veroffentlichung ohne vorherige Genehmigung - Objekt Datenbank basierend auf Eye&Telescope - Sternen Datenbank basierend auf Tycho 2+ sowie USNO UCAC3 (Zacharia).");
 define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Keine Veroffentlichung ohne vorherige Genehmigung");
 define('LangAtlasDataSource2'           ,"Objekt Datenbank basierend auf Eye&Telescope - Sternen Datenbank basierend auf Tycho 2+ sowie USNO UCAC3 (Zacharia).");
-define("ObjectsSeenGraph"               ,"Objekt Typen gesehen : ");
+define("ObjectsSeenGraph"               ,"Objekt Typen gesehen");
 $REST = "Rest";
 define("GraphObservations"              ,"Beobachtungen");
 define("GraphSource"                    ,"Quelle: ");
-define("GraphTitle1"                    ,"Anzahl der Beobachtungen pro Jahr: ");
+define("GraphTitle1"                    ,"Anzahl der Beobachtungen pro Jahr");
 define("GraphInfo"                      ,"Info");
 define("GraphObservationsTitle"         ,"Beobachtungen pro Jahr");
 define("GraphObservationsType"          ,"Object Typen gesehen");
@@ -817,7 +852,8 @@ define("OpenClustersLink"                                 ,"https://github.com/D
 define("LangYouAreHere"																		,"Sie sind hier:");
 define("LangHome"																					,"Startseite");
 define("LangBecomeMember"																	,"Mitglied werden");
-define("LangSearch"																				,"Suche");
+define("LangSearch"																				,"Suchen");
+define("LangQuickSearch"																	,"Schnell Suchen");
 define("LangContact"																			,"Kontakt");
 define("LangDeepskyLogModules"														,"Deepskylog Module");
 define("LangWelcome"																			,"Willkommen&nbsp;in&nbsp;dem&nbsp;");
@@ -841,10 +877,12 @@ define("LangAccountSubscribed9"														,"developers at deepskylog.be um si
 
 
 define("LangValidateSubject"															,"DeepskyLog - Registration erfolgreich");
-define("LangValidateAdmin"																,"\nEiner der Administratoren hat Ihnen Administrator Rechte gegeben.\n");
+define("LangValidateAdmin"																,"Einer der Administratoren hat Ihnen Administrator Rechte gegeben.");
 define("LangValidateMail1"																,"Liebe(r) ");
-define("LangValidateMail2"																,"\n\nIhr Benutzer f&uuml;r DeepskyLog wurde genehmigt.\nSie k&ouml;nnen sich nun mit Ihrem Benutzer und Passwort auf DeepskyLog einloggen.\n");
-define("LangValidateMail3"																,"\nViele Gr&uuml;&szlig;e,\n\nDie DeepskyLog Administratoren");
+define("LangValidateMail2"																,"Ihr Benutzer f&uuml;r DeepskyLog wurde genehmigt.<br /><br />Sie k&ouml;nnen sich nun mit Ihrem Benutzer Name ");
+define("LangValidateMail2b"                               ," und Passwort auf DeepskyLog einloggen.");
+define("LangValidateMail2c"                               ,"Genie&szlig;en Sie mit <a href=\"http://www.deepskylog.de/\">DeepskyLog</a>.");
+define("LangValidateMail3"																,"Viele Gr&uuml;&szlig;e,<br /><br />Das DeepskyLog Team");
 
 
 define("LangObjectYSeen"																	,"Objekt bereits von mir beobachtet");
@@ -1020,7 +1058,7 @@ define("LangSearchMenuItem5"															,"Objekte abfragen");
 define("LangSearchMenuItem6"															,"Beobachter");
 define("LangSearchMenuItem7"															,"Beliebteste Objekte");
 define("LangSearchMenuItem8"                              ,"Jahres Beobachtungen");
-define("LangSearchMenuItem9"                              ,"Neues Beobachtungen");
+define("LangSearchMenuItem9"                              ,"Aktuellste Beobachtungen");
 define("LangSearchMenuItem10"                             ,"Catalogs");                                                   // TO TRANSLATE
 define("LangSearchAllLanguages"														,"Suche nochmal in allen Sprachen.");
 define("LangSearchDetailPage"															,"Detailierte Suche.");
@@ -1552,6 +1590,7 @@ define("LangOverviewObservationsHeader5a"									,"(*) Alle Beobachtungen(AO), 
 define("LangOverviewObservationsHeader5b"									,"(*) Details(D) mit Zeichnung(DZ), Alle Beobachtungen(AO), Meine Beobachtungen(MO), Meine aktuellsten Beobachtungen(LO) dieses Objektes&nbsp;");
 define("LangOverviewObservationsHeader8"									,"Mein&nbsp;&nbsp;LO&nbsp;&nbsp;Beobachtungsger&auml;t");
 define("LangOverviewObservationsHeader9"									,"Mein&nbsp;&nbsp;LO&nbsp;&nbsp;Datum");
+define("LangOverviewObservationsHeader10"										,"Instrument diameter");
 define("LangOverviewObservations10"												,"Bitte geben Sie einen Namen an");
 define("LangOverviewObservations11"												,"DeepskyLog Beobachtungen");
 define("LangOverviewObservations12"												,"in");
@@ -1574,7 +1613,7 @@ define("LangDetailDrawingText"														,"Z");
 define("LangPreviousObservation"													,"Vorherige Beobachtung");
 define("LangNextObservation"															,"N&auml;chste Beobachtung");
 
-define("LangIndex1"																				,"Aktuellesten 10 Beobachtungen:");
+define("LangIndex1"																				,"Aktuellsten 10 Beobachtungen:");
 
 // content/new_observation.php
 
@@ -1625,13 +1664,15 @@ define("LangValidateAccountMessage1"											,"Bitte f&uuml;llen Sie all Felde
 define("LangValidateAccountMessage2"											,"Falsches Passwort!");
 define("LangValidateAccountMessage3"											,"Falsche eMail Adresse!");
 define("LangValidateAccountEmailLine1"										,"DeepskyLog Benutzer Details: ");
-define("LangValidateAccountEmailLine1bis"									,"Benutzername: ");
-define("LangValidateAccountEmailLine2"										,"Email: ");
-define("LangValidateAccountEmailLine3"										,"Name : ");
+define("LangValidateAccountEmailLine1bis"									,"Benutzername");
+define("LangValidateAccountEmailLine2"										,"Email");
+define("LangValidateAccountEmailLine3"										,"Name");
 define("LangValidateAccountEmailLine4"										,"Diese eMail wurde automatisch von DeepskyLog versand");
+define("LangValidateAccountEmailLine5"										,"Motivation");
 define("LangValidateAccountEmailTitle"									  ,"DeepskyLog - Registrierung");
-define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - Objekt - ");
-define("LangValidateAccountEmailTitleObjectObserver"			,"durch Benutzer ");
+define("LangValidateAccountEmailTitleObject"							,"DeepskyLog - New Object ");
+define("LangValidateAccountEmailTitleObject2"							," added during XML import");
+define("LangValidateAccountEmailTitleObjectObserver"			,"by observer ");
 define("LangValidateAccountMessage4"											,"Es existiert bereits ein Benutzer mit diesem Namen. Bitte w&auml;hlen Sie einen anderen Namen!");
 define("LangValidateAccountMessage5"											,"Ihr Benutzer wurde erfolgreich ge&auml;ndert!");
 define("LangValidateAccountMessage"												,"Nachricht");

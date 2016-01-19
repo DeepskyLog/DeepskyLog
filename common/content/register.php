@@ -24,7 +24,8 @@ function register() {
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\" />";
 	echo "<input type=\"hidden\" name=\"title\" value=\"" . LangRegisterNewTitle . "\" />";
 	echo "<h4>" . LangRegisterNewTitle;
-	echo "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />&nbsp;</h4>";
+	echo "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />";
+	echo "&nbsp;</h4>";
 	echo "<hr />";
 
 	echo "<div class=\"form-group\">
@@ -93,7 +94,7 @@ function register() {
 
 	echo "<div class=\"form-group\">";
 	echo "<label>" . LangChangeVisibleLanguages . "</label>";
-	echo "<table class=\"table table-condensed table-bordered\">";
+	echo "<table class=\"table table-condensed borderless\">";
 
 	$j = 0;
 	echo "<tr>";
@@ -107,8 +108,10 @@ function register() {
 	for ($i = $j % 3;$i < 3;$i++) {
 		echo "<td></td>";
 	}
-	echo "</tr></table></div></div>";
+	echo "</tr></table>";
 
+	echo "<input class=\"btn btn-success\" type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />";
+	echo "</div></div>";
 	echo "<hr />";
 	echo "</div></form>";
 	echo "</div>";

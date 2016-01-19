@@ -198,7 +198,7 @@ class Observations {
 		if ($limmag == "")
 			$limmag = "NULL";
 		else {
-			if (ereg ( '([0-9]{1})[.,]([0-9]{1})', $limmag, $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
+			if (preg_match ( '/([0-9]{1})[.,]([0-9]{1})/', $limmag, $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
 				$limmag = $matches [1] . "." . $matches [2]; // valid limiting magnitude // save current magnitude limit
 			$limmag = "$limmag";
 		}
@@ -213,9 +213,6 @@ class Observations {
 			$seeing = "-1";
 		if ($limmag == "")
 			$limmag = "0";
-			/*
-		 * else { if (ereg('([0-9]{1})[.,]([0-9]{1})', $limmag, $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9 $limmag=$matches[1].".".$matches[2]; // valid limiting magnitude // save current magnitude limit $limmag="$limmag"; }
-		 */
 		$sqm = "-1";
 		if (($limmag > 15) && ($limmag < 25)) {
 			$sqm = $limmag;
@@ -410,20 +407,29 @@ class Observations {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT observations.id FROM observations WHERE objectname=\"" . $object . "\" and observerid=\"" . $userid . "\" AND id!=\"" . $notobservation . "\" ORDER BY id DESC", 'id' );
 	}
-	public function getNumberOfDifferentObservedDSObjects() // Returns the number of different objects observed
+	public function getNumberOfDifferentObservedDSObjects( $country = "" ) // Returns the number of different objects observed
 {
 		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt' );
+
+		if (strcmp($country, "") == 0) {
+			return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt' );
+		} else {
+			return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations JOIN locations ON observations.locationid=locations.id WHERE observations.visibility != 7 and locations.country=\"" . $country . "\"", 'Cnt', 0 );
+		}
 	}
 	public function getNumberOfDsDrawings() // returns the total number of observations
 {
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 AND hasDrawing=1", 'Cnt', 0 );
 	}
-	public function getNumberOfDsObservations() // returns the total number of observations
+	public function getNumberOfDsObservations( $country="" ) // returns the total number of observations for a country
 {
 		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt', 0 );
+		if (strcmp($country, "") == 0) {
+			return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt', 0 );
+		} else {
+			return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations JOIN locations ON observations.locationid=locations.id WHERE visibility != 7 and locations.country=\"" . $country . "\"", 'Cnt', 0 );
+		}
 	}
 	public function getNumberOfObjects($id) // return the number of different objects seen by the observer
 {
@@ -683,10 +689,15 @@ class Observations {
 		$t = getdate ();
 		return $objDatabase->selectSingleValue ( "SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"" . $id . "\" AND observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != 7 AND hasDrawing=1 ", 'Cnt', 0 );
 	}
-	public function getObservationsLastYear($id) {
+	public function getObservationsLastYear($id, $country = "") {
 		global $objDatabase;
 		$t = getdate ();
-		return $objDatabase->selectSingleValue ( "SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"" . $id . "\" AND observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != 7 ", 'Cnt', 0 );
+
+		if (strcmp($country, "") == 0) {
+			return $objDatabase->selectSingleValue ( "SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"" . $id . "\" AND observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != 7 ", 'Cnt', 0 );
+		} else {
+			return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations JOIN locations ON observations.locationid=locations.id WHERE observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != 7 and locations.country=\"" . $country . "\"", 'Cnt', 0 );
+		}
 	}
 	public function getObservationsUserObject($userid, $object) {
 		global $objDatabase;
@@ -745,6 +756,66 @@ class Observations {
 		$sql .= "GROUP BY observations.observerid, observers.name ";
 		$sql .= "ORDER BY Cnt DESC, observers.name ASC ";
 		return $objDatabase->selectKeyValueArray ( $sql, 'observerid', 'Cnt' );
+	}
+	public function getPopularObserversOverviewCatOrListAllInfo() {
+		global $objDatabase;
+		$sql = "SELECT observations.observerid, CONCAT(observers.firstname,' ',observers.name) As observername, COUNT(*) AS Cnt " . "FROM observations " . "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
+		$sql .= "GROUP BY observations.observerid, observers.name ";
+		$sql .= "ORDER BY Cnt DESC, observers.name ASC;";
+
+		return $objDatabase->selectRecordsetArray($sql);
+	}
+	public function getDsDrawingsCount() {
+		global $objDatabase;
+		$sql = "SELECT observerid, COUNT(*) AS Cnt " . "FROM observations " .
+						" WHERE visibility != 7 AND hasDrawing=1 ";
+		$sql .= "GROUP BY observerid ";
+
+		return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
+	}
+	public function getAllObservationsLastYearCount() {
+		global $objDatabase;
+		$t = getdate ();
+
+		global $objDatabase;
+		$sql = "SELECT observerid, COUNT(*) AS Cnt " . "FROM observations " .
+											"WHERE visibility != 7
+											  AND date > \"" .
+												date ( 'Ymd', strtotime ( '-1 year' ) ) . "\"";
+		$sql .= "GROUP BY observerid ";
+
+		return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
+	}
+	public function getAllDrawingsLastYearCount() {
+		global $objDatabase;
+		$t = getdate ();
+
+		global $objDatabase;
+		$sql = "SELECT observerid, COUNT(*) AS Cnt " . "FROM observations " .
+											"WHERE visibility != 7 AND hasDrawing = 1
+											  AND date > \"" .
+												date ( 'Ymd', strtotime ( '-1 year' ) ) . "\"";
+		$sql .= "GROUP BY observerid ";
+
+		return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
+	}
+	public function getNumberOfObjectsCount()
+	{
+		global $objDatabase;
+		$sql = "SELECT observerid, COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ";
+		$sql .= "GROUP BY observerid ";
+		return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
+	}
+	public function getAllObservedCountFromCatalogOrList($catalog) {
+		global $objDatabase;
+		if (substr ( $catalog, 0, 5 ) == 'List:') {
+			$sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $catalog, 5 ) . "\" " . "AND observations.visibility != 7 ";
+		} else {
+			$sql = "SELECT observerid, COUNT(DISTINCT objectnames.catindex) AS Cnt FROM objectnames " . "INNER JOIN observations ON observations.objectname = objectnames.objectname " . "WHERE objectnames.catalog = \"" . $catalog . "\" " . "AND observations.visibility != 7 ";
+		}
+		$sql .= "GROUP BY observerid ";
+
+		return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
 	}
 	public function setDsObservationProperty($id, $property, $propertyValue) // sets the property to the specified value for the given observation
 {
@@ -1412,12 +1483,12 @@ class Observations {
 			// $_GET['observation']=$current_observation;
 		} elseif ((! $_POST ['day']) || (! $_POST ['month']) || (! $_POST ['year']) || ($_POST ['site'] == "1") || (! $_POST ['instrument']) || (! $_POST ['description'])) {
 			if ($objUtil->checkPostKey ( 'limit' ))
-				if (ereg ( '([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST ['limit'], $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
+				if (preg_match ( '/([0-9]{1})[.,]{0,1}([0-9]{0,1})/', $_POST ['limit'], $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
 					$_POST ['limit'] = $matches [1] . "." . (($matches [2]) ? $matches [2] : "0");
 				else
 					$_POST ['limit'] = 0; // clear current magnitude limit
 			else if ($objUtil->checkPostKey ( 'sqm' ))
-				if (ereg ( '([0-9]{1})([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST ['sqm'], $matches )) // sqm value
+				if (preg_match ( '/([0-9]{1})([0-9]{1})[.,]{0,1}([0-9]{0,1})/', $_POST ['sqm'], $matches )) // sqm value
 					$_POST ['sqm'] = $matches [1] . $matches [2] . "." . (($matches [3]) ? $matches [3] : "0");
 				else
 					$_POST ['sqm'] = - 1; // clear current magnitude limit
@@ -1451,7 +1522,7 @@ class Observations {
 				$_GET ['indexAction'] = 'add_observation';
 			} else {
 				if ($objUtil->checkPostKey ( 'limit' ))
-					if (ereg ( '([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST ['limit'], $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
+					if (preg_match ( '/([0-9]{1})[.,]{0,1}([0-9]{0,1})/', $_POST ['limit'], $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
 						$_POST ['limit'] = $matches [1] . "." . (($matches [2]) ? $matches [2] : "0");
 					else // clear current magnitude limit
 						$_POST ['limit'] = "";
@@ -1477,17 +1548,17 @@ class Observations {
 				$_SESSION ['Qobs'] = array ();
 				$_SESSION ['QobsParams'] = array ();
 				if ($objUtil->checkPostKey ( 'sqm' ))
-					if (ereg ( '([0-9]{1})([0-9]{0,1})[.,]{0,1}([0-9]{0,1})', $_POST ['sqm'], $matches )) // sqm value
+					if (preg_match ( '/([0-9]{1})([0-9]{0,1})[.,]{0,1}([0-9]{0,1})/', $_POST ['sqm'], $matches )) // sqm value
 						$_POST ['sqm'] = $matches [1] . $matches [2] . "." . (($matches [3]) ? $matches [3] : "0");
 					else
 						$_POST ['sqm'] = ""; // clear current magnitude limit
 				if ($objUtil->checkPostKey ( 'largeDiam' ))
-					if (ereg ( '([0-9]+)[.,]{0,1}([0-9]{0,1})', $_POST ['largeDiam'], $matches )) // large diameter
+					if (preg_match ( '/([0-9]+)[.,]{0,1}([0-9]{0,1})/', $_POST ['largeDiam'], $matches )) // large diameter
 						$_POST ['largeDiam'] = (($matches [1]) ? $matches [1] : "0") . "." . (($matches [2]) ? $matches [2] : "0");
 					else // clear current large diameter
 						$_POST ['largeDiam'] = "";
 				if ($objUtil->checkPostKey ( 'smallDiam' ))
-					if (ereg ( '([0-9]+)[.,]{0,1}([0-9]{0,1})', $_POST ['smallDiam'], $matches )) // large diameter
+					if (preg ( '/([0-9]+)[.,]{0,1}([0-9]{0,1})/', $_POST ['smallDiam'], $matches )) // large diameter
 						$_POST ['smallDiam'] = (($matches [1]) ? $matches [1] : "0") . "." . (($matches [2]) ? $matches [2] : "0");
 					else // clear current large diameter
 						$_POST ['smallDiam'] = "";

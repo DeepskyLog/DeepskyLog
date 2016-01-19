@@ -107,8 +107,7 @@
 .need-help{margin-top:10px;}
 .new-account{display:block;margin-top:10px;}
 
-
-body{
+.move{
   margin-top: 50px;
   padding-top: 75px;
   margin-bottom: 50px;
@@ -401,29 +400,6 @@ table.tablesorter tr.type2 td {
   border-style     : none;
   border-width     : 1px;
   border-color     : #FFFF00;
-}
-.view_catalogs_left {
-  background-color : #FFFFFF;
-  float            : left;
-  left             : 0px;        top     : 0px;
-  width            : 200px;      height  : 100px;
-  overflow         : scroll;
-  border-style     : solid;
-  border-width     : 1px;
-  padding          : 2px;
-  margin-right	   : 5px;
-}
-.view_catalogs_right {
-  background-color : #FFFFFF;
-  left             : 207px;      top     : 0px;
-  width            : 200px;      height  : 100px;
-  overflow         : scroll;
-  border-style     : solid;
-  border-width     : 1px;
-  padding          : 2px;
-}
-#catalogs {
-  height           : 500px;
 }
 #div5 {
   margin           : 0px;         border : 0px;
