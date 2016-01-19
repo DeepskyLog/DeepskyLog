@@ -44,6 +44,7 @@ global $loggedUser;
 		$whenQuery = $whenQuery . " WHEN objects.con = '{$value}' THEN '{$GLOBALS [$value]}' ";
 	
 	$objectname = $_GET['object'];
+	$showInches = $objObserver->getObserverProperty ( $loggedUser, "showInches" );
 
 	$query = "SELECT 
 				observations.id as observationid,
@@ -79,7 +80,10 @@ global $loggedUser;
 				CONCAT(observers.firstname, ' ', observers.name) as observername,
 				CONCAT(observers.name, ' ', observers.firstname) as observersortname,
 				instruments.name as instrumentname,
-				instruments.diameter as instrumentdiameter,
+				@instrumentdiameterInch :=  ROUND(instruments.diameter*0.039370,1),
+				@instrumentdiameterMm :=  ROUND(instruments.diameter),
+				IF({$showInches} = 0, @instrumentdiameterMm, @instrumentdiameterInch) as instrumentdiameter,
+				IF({$showInches} = 0, 'mm', 'inch') as diameterformat,
 				CONCAT(instruments.diameter, ' ', instruments.name) as instrumentsort,
 				instruments.id as instrumentid,
 				locations.name as locationname,
