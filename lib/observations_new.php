@@ -37,7 +37,7 @@ if ($loggedUser == ""){
 		        '<tr>'+
 		            '<td><?=LangViewObservationField3?></td>'+
 		            '<td>'+
-		            	'<a href="index.php?indexAction=detail_instrument&instrument='+d.instrumentid+'">'+d.instrumentname+' ('+d.instrumentdiameter+'mm)</a>'+
+		            	'<a href="index.php?indexAction=detail_instrument&instrument='+d.instrumentid+'">'+d.instrumentname+' ('+d.instrumentdiameter+' '+d.diameterformat+')</a>'+
 			    	'</td>'+
 
 			        '<td><?=LangViewObservationField31?></td>'+
@@ -126,7 +126,7 @@ if ($loggedUser == ""){
 	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_object&object='+row.objectname+'">'+row.objectname+'</a>'}},
 	            { "data": "constellation"},
 	            { "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observer&user='+row.observerid+'">'+row.firstname+' '+row.name+'</a>' }},	            
-	            { "orderData": 5, "data": function ( row, type, val, meta ) { return row.instrumentdiameter+' mm'}},
+	            { "orderData": 5, "data": function ( row, type, val, meta ) { return row.instrumentdiameter+' '+row.diameterformat}},
 	            { "data": "instrumentdiameter", "visible": false},
 	            { "data": "sortdate", "visible": false},
 		        { "data": "date", "orderData": 6 },

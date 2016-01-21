@@ -11,6 +11,7 @@ define("LangRemoveModal7", " observations");
 define("LangKeepObject", "Keep");
 define("LangRemoveObject", "Remove Object");
 define("LangForceRemoveObject", "Force Remove Object");
+define("LangChangeAccountField14","Unit&eacute; pr&eacute;f&eacute;r&eacute;e pour le diam&egrave;tre de l'instrument");
 define("LangAddSiteStep2", "D&eacute;finiez votre propre nom pour ce lieu, &eacute;ventuellement ajouter un magnitude limite (ou la valeur SQM) et appuyez sur le bouton ");
 define("LangAddSiteStep1", "D&eacute;finiez votre position sur la carte ou entrez le nom et appuyer sur le bouton");
 define("LangAddSiteStep1Button", ".");

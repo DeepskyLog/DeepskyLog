@@ -11,6 +11,7 @@ define("LangRemoveModal7", " observations");
 define("LangKeepObject", "Keep");
 define("LangRemoveObject", "Verwijder Object");
 define("LangForceRemoveObject", "Force Remove Object");
+define("LangChangeAccountField14","Gewenste eenheid voor instrumentdiameter");
 define("LangAddSiteStep2", "Kies een naam voor deze locatie, voeg eventueel een grensmagnitude (of SQM waarde) toe en druk op de ");
 define("LangAddSiteStep1", "Kies je locatie op de map of typ de naam van de locatie in en druk op de ");
 define("LangAddSiteStep1Button", " knop.");

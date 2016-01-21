@@ -11,6 +11,7 @@ define("LangRemoveModal7", " observations");
 define("LangKeepObject", "Keep");
 define("LangRemoveObject", "Remove Object");
 define("LangForceRemoveObject", "Force Remove Object");
+define("LangChangeAccountField14","Einheit f&uuml;r Instrumentendurchmesser");
 define("LangAddSiteStep2", "Definieren Sie Ihre eigenen Namen f&uuml;r die Position, schlie&szlig;lich f&uuml;gen Sie einen Grenzgr&ouml;&szlig;e (oder SQM-Wert) zu und dr&uuml;cken Sie die Taste ");
 define("LangAddSiteStep1", "Stellen Sie Ihren Ort auf der Karte ein oder gebe des Namens ein und Dr&euml;cke der Taste ");
 define("LangAddSiteStep1Button", ".");
