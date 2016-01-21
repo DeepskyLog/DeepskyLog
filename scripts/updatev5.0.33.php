@@ -1,7 +1,7 @@
 <?php
 $inIndex = true;
-require_once "../../lib/setup/databaseInfo.php";
-require_once "../../lib/database.php";
+require_once "../lib/setup/databaseInfo.php";
+require_once "../lib/database.php";
 date_default_timezone_set ( 'UTC' );
 
 $objDatabase = new Database ();
