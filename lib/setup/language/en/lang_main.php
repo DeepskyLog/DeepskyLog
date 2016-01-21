@@ -1038,6 +1038,7 @@ define("LangChangeAccountField11"													,"Use local time");
 define("LangChangeAccountField11Expl"											,"Use local time to enter and search observations");
 define("LangChangeAccountField13"													,"Motivation");
 define("LangChangeAccountField13Expl"											,"Please tell us briefly why you register, this allows us to eliminate automatic registrations.");
+define("LangChangeAccountField14"												,"Preferred unit of measurement");
 
 define("LangLoginMenuTitle"																,"Login");
 define("LangLoginMenuTitle1"															," or ");

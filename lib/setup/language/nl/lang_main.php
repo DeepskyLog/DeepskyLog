@@ -1026,6 +1026,7 @@ define("LangChangeAccountField11"													,"Gebruik lokale tijd");
 define("LangChangeAccountField11Expl"											,"Gebruik lokale tijd voor ingeven en opvragen van waarnemingen");
 define("LangChangeAccountField13"													,"Motivatie");
 define("LangChangeAccountField13Expl"											,"Geef kort even op waarom je wil registreren, zo vermijden we automatische registraties van zoekmachines.");
+define("LangChangeAccountField14"												,"Gewenste eenheid");
 
 define("LangLoginMenuTitle"																,"Log in");
 define("LangLoginMenuTitle1"															," of ");
