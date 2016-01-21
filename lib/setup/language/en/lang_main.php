@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 5.0
+define("LangChangeAccountField14","Preferred unit for instrument diameter");
 define("LangAddSiteStep2", "Define your own name for this location, eventually add a naked eye limiting magnitude (or SQM value) and press the ");
 define("LangAddSiteStep1", "Set your location on the map or by entering the name and pressing the ");
 define("LangAddSiteStep1Button", " button.");
