@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangChangeAccountField14","Gewenste eenheid voor instrumentdiameter");
 define("LangAddSiteStep2", "Kies een naam voor deze locatie, voeg eventueel een grensmagnitude (of SQM waarde) toe en druk op de ");
 define("LangAddSiteStep1", "Kies je locatie op de map of typ de naam van de locatie in en druk op de ");
 define("LangAddSiteStep1Button", " knop.");
@@ -1026,7 +1027,6 @@ define("LangChangeAccountField11"													,"Gebruik lokale tijd");
 define("LangChangeAccountField11Expl"											,"Gebruik lokale tijd voor ingeven en opvragen van waarnemingen");
 define("LangChangeAccountField13"													,"Motivatie");
 define("LangChangeAccountField13Expl"											,"Geef kort even op waarom je wil registreren, zo vermijden we automatische registraties van zoekmachines.");
-define("LangChangeAccountField14"												,"Gewenste eenheid");
 
 define("LangLoginMenuTitle"																,"Log in");
 define("LangLoginMenuTitle1"															," of ");

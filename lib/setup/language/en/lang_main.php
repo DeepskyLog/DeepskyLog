@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 5.0
+define("LangChangeAccountField14","Preferred unit for instrument diameter");
 define("LangAddSiteStep2", "Define your own name for this location, eventually add a naked eye limiting magnitude (or SQM value) and press the ");
 define("LangAddSiteStep1", "Set your location on the map or by entering the name and pressing the ");
 define("LangAddSiteStep1Button", " button.");
@@ -1038,7 +1039,6 @@ define("LangChangeAccountField11"													,"Use local time");
 define("LangChangeAccountField11Expl"											,"Use local time to enter and search observations");
 define("LangChangeAccountField13"													,"Motivation");
 define("LangChangeAccountField13Expl"											,"Please tell us briefly why you register, this allows us to eliminate automatic registrations.");
-define("LangChangeAccountField14"												,"Preferred unit of measurement");
 
 define("LangLoginMenuTitle"																,"Login");
 define("LangLoginMenuTitle1"															," or ");
