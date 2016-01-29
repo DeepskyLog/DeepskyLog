@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("LangCreateNewCatalog", "Create new empty catalog");
 define("LangSaveObject", "Save");
 define("LangDeleteSuccess", "Successfully deleted ");
 define("LangRemoveModal1", "Do you really want to delete ");

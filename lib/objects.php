@@ -1415,13 +1415,48 @@ class Objects {
 		echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
 		echo "<tr>";
 		echo "<td colspan=\"3\">" . LangViewObjectField1 . "</td>";
-		echo "<td colspan=\"3\">" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( stripslashes ( $object ) ) . "\">" . (stripslashes ( $object )) . "</a>" . "</td>";
-		if ($loggedUser && ($standardAtlasCode = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ))) {
-			echo "<td colspan=\"3\"><span class=\"pull-right\">" . $objAtlas->atlasCodes [$standardAtlasCode] . LangViewObjectField10 . "</span></td>";
-			echo "<td colspan=\"3\">" . $this->getDsoProperty ( $object, $standardAtlasCode ) . "</td>";
+		if (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes") {
+			// We show all possible Catalogs
+			global $DSOcatalogs;
+
+			$firstspace = strpos ( $object, ' ', 0 );
+			$thecatalog = substr ( $object, 0, $firstspace );
+			$theindex = substr ( $object, $firstspace + 1 );
+
+			echo '<td colspan="3">';
+			echo '  <select class="form-inline" name="newcatalog">';
+			echo '    <option value="">&nbsp;</option>';
+			while ( list ( $key, $value ) = each ( $DSOcatalogs ) ) {
+				if ($value == $thecatalog) {
+					$selected = 'selected';
+				} else {
+					$selected = '';
+				}
+				echo '  <option ' . $selected . ' value="' . $value . '">' . $value . '</option>';
+			}
+			echo '  </select>';
+
+			// We fill out the number in the Catalog
+			echo '  <input type="text" class="form-inline" name="newnumber" value="' . $theindex . '"/>';
+			echo '</td>';
+
+			// We add a button to create a new Catalog
+			// TODO: Show a modal to add a new, empty catalog
+			echo '<td colspan="3">';
+			echo '<span class="pull-right"><button type="button" class="btn btn-success" data-dismiss="modal">' . LangCreateNewCatalog . '</button></span>';
+			echo '</td>';
+			echo '<td colspan="3">';
+			echo '</td>';
 		} else {
-			echo "<td colspan=\"3\">&nbsp;</td>";
-			echo "<td colspan=\"3\">&nbsp;</td>";
+			echo "<td colspan=\"3\">" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( stripslashes ( $object ) ) . "\">" . (stripslashes ( $object )) . "</a>" . "</td>";
+
+			if ($loggedUser && ($standardAtlasCode = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ))) {
+				echo "<td colspan=\"3\"><span class=\"pull-right\">" . $objAtlas->atlasCodes [$standardAtlasCode] . LangViewObjectField10 . "</span></td>";
+				echo "<td colspan=\"3\">" . $this->getDsoProperty ( $object, $standardAtlasCode ) . "</td>";
+			} else {
+				echo "<td colspan=\"3\">&nbsp;</td>";
+				echo "<td colspan=\"3\">&nbsp;</td>";
+			}
 		}
 		echo "</tr>";
 
