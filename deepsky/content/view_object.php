@@ -67,6 +67,7 @@ function showObjectDetails($object_ss) {
 	if (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes") {
 		$obsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object_ss . "\"", 'ObsCnt' );
 
+    echo '<div class="pull-right">';
 		if ($obsCnt == 0) {
 			echo '<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#removeObject">' . LangRemoveObject . '</button>';
 
@@ -95,7 +96,7 @@ function showObjectDetails($object_ss) {
 							 </div><!-- /.modal -->";
 
 		} else {
-			echo '<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#forceRemoveObject">' . LangForceRemoveObject . '</button>';
+			echo '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#forceRemoveObject">' . LangForceRemoveObject . '</button>';
 
 			echo "<div class=\"modal fade\" id=\"forceRemoveObject\" tabindex=\"-1\">
 							<div class=\"modal-dialog\">
@@ -121,6 +122,8 @@ function showObjectDetails($object_ss) {
 				        </div><!-- /.modal-dialog -->
 				       </div><!-- /.modal -->";
 		}
+    echo '&nbsp;<button class="btn btn-warning">' . LangSaveObject . '</button>&nbsp;</div>';
+
 		echo '<br />';
 	}
 	echo "<hr />";
