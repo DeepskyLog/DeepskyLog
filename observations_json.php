@@ -44,7 +44,12 @@ global $loggedUser;
 		$whenQuery = $whenQuery . " WHEN objects.con = '{$value}' THEN '{$GLOBALS [$value]}' ";
 
 	$objectname = $_GET['object'];
-	$showInches = $objObserver->getObserverProperty ( $loggedUser, "showInches" );
+	
+	if ($loggedUser != null){ 
+		$showInches = $objObserver->getObserverProperty ( $loggedUser, "showInches" );
+	} else {
+		$showInches = 0;
+	}
 
 	$query = "SELECT
 				observations.id as observationid,
