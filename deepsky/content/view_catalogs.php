@@ -1,11 +1,11 @@
 <?php
-global $baseURL;
+global $instDir;
 
 echo "<script type=\"text/javascript\" src=\"" . $baseURL . "deepsky/content/view_catalogs.js\"></script>";
 echo '<div id="catalogs" class="catalogs">';
 
 // Show a drop-down with all catalogs
-include_once $baseURL . "/lib/catalogs.php";
+include_once $instDir . "/lib/catalogs.php";
 $objCatalog = new catalogs();
 $catalogs = $objCatalog->getCatalogs();
 
