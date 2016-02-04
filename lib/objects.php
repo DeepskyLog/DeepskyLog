@@ -44,17 +44,17 @@ class Objects {
 					$diam2 = $diam1;
 				$contrastCalc = $objContrast->calculateContrast ( $magni, $SBobj, $diam1, $diam2 );
 				if ($contrastCalc [0] < - 0.2)
-					$popup = $showname . LangContrastNotVisible . addslashes ( $_SESSION ['location'] ) . LangContrastPlace . addslashes ( $_SESSION ['telescope'] );
+					$popup = $showname . LangContrastNotVisible . $_SESSION ['location'] . LangContrastPlace . $_SESSION ['telescope'];
 				else if ($contrastCalc [0] < 0.1)
-					$popup = LangContrastQuestionable . $showname . LangContrastQuestionableB . addslashes ( $_SESSION ['location'] ) . LangContrastPlace . addslashes ( $_SESSION ['telescope'] );
+					$popup = LangContrastQuestionable . $showname . LangContrastQuestionableB . $_SESSION ['location'] . LangContrastPlace . $_SESSION ['telescope'];
 				else if ($contrastCalc [0] < 0.35)
-					$popup = $showname . LangContrastDifficult . addslashes ( $_SESSION ['location'] ) . LangContrastPlace . addslashes ( $_SESSION ['telescope'] );
+					$popup = $showname . LangContrastDifficult . $_SESSION ['location'] . LangContrastPlace . $_SESSION ['telescope'];
 				else if ($contrastCalc [0] < 0.5)
-					$popup = $showname . LangContrastQuiteDifficult . addslashes ( $_SESSION ['location'] ) . LangContrastPlace . addslashes ( $_SESSION ['telescope'] );
+					$popup = $showname . LangContrastQuiteDifficult . $_SESSION ['location'] . LangContrastPlace . $_SESSION ['telescope'];
 				else if ($contrastCalc [0] < 1.0)
-					$popup = $showname . LangContrastEasy . addslashes ( $_SESSION ['location'] ) . LangContrastPlace . addslashes ( $_SESSION ['telescope'] );
+					$popup = $showname . LangContrastEasy . $_SESSION ['location'] . LangContrastPlace . $_SESSION ['telescope'];
 				else
-					$popup = $showname . LangContrastVeryEasy . addslashes ( $_SESSION ['location'] ) . LangContrastPlace . addslashes ( $_SESSION ['telescope'] );
+					$popup = $showname . LangContrastVeryEasy . $_SESSION ['location'] . LangContrastPlace . $_SESSION ['telescope'];
 				$contrast = $contrastCalc [0];
 			}
 		}
@@ -683,7 +683,7 @@ class Objects {
 		$DrwCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As DrwCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 AND hasDrawing=1", 'DrwCnt' );
 		if ($ObsCnt) {
 			$seen = 'X' . ($DrwCnt ? 'S' : 'Z') . '(' . $ObsCnt . '/' . $DrwCnt . ')';
-			$seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectXSeen . "\" >" . 'X' . ($DrwCnt ? 'S' : 'Z') . '(' . $ObsCnt . '/' . $DrwCnt . ')' . "</a>";
+			$seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangObjectXSeen . "\" >" . 'X' . ($DrwCnt ? 'S' : 'Z') . '(' . $ObsCnt . '/' . $DrwCnt . ')' . "</a>";
 			if ($loggedUser) {
 				$run3 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7" );
 				$get3 = $run3->fetch ( PDO::FETCH_OBJ );
@@ -691,13 +691,13 @@ class Objects {
 					$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7 AND hasDrawing=1" );
 					if ($run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt > 0) {
 						$seen = 'YD(' . $ObsCnt . '/' . $get3->PersObsCnt . ')';
-						$seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectYDSeen . "\" >" . 'YD(' . $ObsCnt . '/' . $get3->PersObsCnt . ')' . "</a>";
+						$seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangObjectYDSeen . "\" >" . 'YD(' . $ObsCnt . '/' . $get3->PersObsCnt . ')' . "</a>";
 					} else {
 						$seen = 'Y' . ($DrwCnt ? 'S' : 'Z') . '(' . $ObsCnt . '/' . $get3->PersObsCnt . ')';
-						$seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectYSeen . "\" >" . 'Y' . ($DrwCnt ? 'S' : 'Z') . '(' . $ObsCnt . '/' . $get3->PersObsCnt . ')' . "</a>";
+						$seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangObjectYSeen . "\" >" . 'Y' . ($DrwCnt ? 'S' : 'Z') . '(' . $ObsCnt . '/' . $get3->PersObsCnt . ')' . "</a>";
 					}
 					$lastseen = $get3->PersObsMaxDate;
-					$lastseenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . urlencode ( $loggedUser ) . "&amp;sort=observationdate&amp;sortdirection=desc&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectYSeen . "\" >" . $get3->PersObsMaxDate . "</a>";
+					$lastseenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . urlencode ( $loggedUser ) . "&amp;sort=observationdate&amp;sortdirection=desc&amp;object=" . urlencode ( $object ) . "\"  data-toggle=\"tooltip\" data-placement=\"bottom\"  title=\"" . LangObjectYSeen . "\" >" . $get3->PersObsMaxDate . "</a>";
 				}
 			}
 		}
@@ -1361,11 +1361,9 @@ class Objects {
 		$_SESSION ['object'] = $object;
 		$altnames = $this->getAlternativeNames ( $object );
 		$alt = "";
-		$alttip = "";
 		while ( list ( $key, $value ) = each ( $altnames ) )
 			if (trim ( $value ) != trim ( $object )) {
 				$alt .= ($alt ? "/" : "") . (trim ( $value ));
-				$alttip .= ($alt ? "/" : "") . addslashes ( trim ( $value ) );
 			}
 		$contains = $this->getContainsNames ( $object );
 		$partof = $this->getPartOfNames ( $object );
@@ -1450,7 +1448,11 @@ class Objects {
 
 		echo "<tr>";
 		echo "<td colspan=\"3\">" . LangViewObjectFieldContrastReserve . "</td>";
-		echo "<td colspan=\"3\">" . "<span class=\"" . $contype . "\" onmouseover=\"Tip('" . $popup . "')\">" . $contrast . "</span>" . "</td>";
+		echo '<td colspan="3">
+					  <span class="' . $contype . '" data-toggle="tooltip" data-placement="bottom" title="' . $popup . '">' .
+							$contrast .
+						'</span>
+					</td>';
 		echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectFieldOptimumDetectionMagnification . "</span></td>";
 		echo "<td colspan=\"3\">" . $prefMag . "</td>";
 		echo "</tr>";
@@ -1458,14 +1460,15 @@ class Objects {
 		if ($alt) {
 			echo "<tr>";
 			echo "<td colspan=\"3\">" . LangViewObjectField2 . "</td>";
-			echo "<td colspan=\"9\">" . "<span onmouseover=\"Tip('" . $alttip . "')\">" . $alt . "</span>" . "</td>";
+			echo '<td colspan="9">' . $alt . '</td>';
 			echo "</tr>";
 		}
 
 		if ($partoft || $containst) {
 			echo "<tr>";
 			echo "<td colspan=\"3\">" . LangViewObjectField2b . "</td>";
-			echo "<td colspan=\"9\">" . "<span onmouseover=\"Tip('(" . ($containstip ? $containstip : "-") . ")/" . ($partoftip ? $partoftip : "-") . "')\">" . ($containst ? $containst . "/" : "(-)/") . ($partoft ? $partoft : "-") . "</span>" . "</td>";
+			echo '<td colspan="9">' .
+							($containst ? $containst . "/" : "(-)/") . ($partoft ? $partoft : "-") . "</td>";
 			echo "</tr>";
 		}
 
@@ -1563,20 +1566,34 @@ class Objects {
 			echo "<td>" . LangDate . "</td>";
 			echo "<td>" . date ( $dateformat, mktime ( 0, 0, 0, $theMonth, $theDay, $theYear ) ) . "</td>";
 			echo "<td>" . LangMoonRise . "</td>";
-			echo "<td>" . "<span onmouseover=\"Tip('" . $popup1 . "')\">" . $ristraset [0] . "</span>" . "</td>";
+
+			echo '<td>
+							<span data-toggle="tooltip" data-placement="bottom" title="' . $popup1 . '">' . $ristraset [0] . '</span>
+						</td>';
 			echo "<td>" . LangTransit . "</td>";
-			echo "<td>" . "<span onmouseover=\"Tip('" . $popup2 . "')\">" . $ristraset [1] . "</span>" . "</td>";
+			echo '<td>
+							<span data-toggle="tooltip" data-placement="bottom" title="' . $popup2 . '">' . $ristraset [1] . '</span>
+						</td>';
 			echo "<td>" . LangMoonSet . "</td>";
-			echo "<td>" . "<span onmouseover=\"Tip('" . $popup3 . "')\">" . $ristraset [2] . "</span>" . "</td>";
+			echo '<td>
+							<span data-toggle="tooltip" data-placement="bottom" title="' . $popup3 . '">' . $ristraset [2] . '</span>
+						</td>';
 			echo "<td>" . LangBest . "</td>";
 			echo "<td>" . $ristraset [4] . "</td>";
 			echo "<td>" . LangMaxAltitude . "</td>";
-			echo "<td>" . "<span class=\"" . "\" onmouseover=\"Tip('" . $popup4 . "')\">" . $ristraset [3] . "</span>" . "</td>";
+			echo '<td>
+							<span data-toggle="tooltip" data-placement="bottom" title="' . $popup4 . '">' . $ristraset [3] . '</span>
+						</td>';
 			echo "</tr>";
 		}
 		echo "</table>";
 		echo "</div></form>";
 		echo "<hr />";
+		echo '<script>
+						$(document).ready(function(){
+    					$(\'[data-toggle="tooltip"]\').tooltip();
+						});
+					</script>';
 	}
 	public function getEphemerides($theObject, $theDay, $theMonth, $theYear, $theLocation = "") {
 		global $objAstroCalc, $objObserver, $loggedUser, $objLocation;
@@ -1694,32 +1711,32 @@ class Objects {
 
 			echo "<tr " . (($_SESSION ['Qobj'] [$count] ['objectname'] == $ownShow) ? "class=\"type3\"" : "") . ">";
 			if (($showRank == 1) && $myList)
-				echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader9 . ": " . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "')\"><a href=\"#\" onclick=\"theplace = prompt('" . LangNewPlaceInList . "','" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "'); location.href='" . $link . "&amp;ObjectFromPlaceInList=" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "&amp;ObjectToPlaceInList='+theplace; return false;\" title=\"" . LangToListMoved6 . "\">" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</a></td>";
+				echo "<td><a href=\"#\" data-toggle=\"tooltip\" data-placement=\"bottom\" onclick=\"theplace = prompt('" . LangNewPlaceInList . "','" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "'); location.href='" . $link . "&amp;ObjectFromPlaceInList=" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "&amp;ObjectToPlaceInList='+theplace; return false;\" title=\"" . LangToListMoved6 . "\">" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</a></td>";
 			elseif ($showRank)
-				echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader9 . ": " . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</td>";
+				echo "<td>" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</td>";
 			if ($myList) {
 				echo ("<td>");
 				if ($objList->checkObjectInMyActiveList ( $_SESSION ['Qobj'] [$count] ['objectname'] )) {
-					echo "<a href=\"" . $link . "&amp;removeObjectFromList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage3 . $listname_ss . "\">
+					echo "<a href=\"" . $link . "&amp;removeObjectFromList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\"  data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage3 . $listname_ss . "\">
 							<span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span>
 							</a>";
 				} else {
-					echo "<a href=\"" . $link . "&amp;addObjectToList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;showname=" . urlencode ( $_SESSION ['Qobj'] [$count] ['showname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage2 . $listname_ss . "\">
+					echo "<a href=\"" . $link . "&amp;addObjectToList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;showname=" . urlencode ( $_SESSION ['Qobj'] [$count] ['showname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\"  data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage2 . $listname_ss . "\">
 							<span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span>
 							</a>";
 				}
 				echo "</td>";
 			}
-			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader1 . ": " . $_SESSION ['Qobj'] [$count] ['objectname'] . "')\" class=\"" . $specialclass . "\"><a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "\" >" . $_SESSION ['Qobj'] [$count] ['showname'] . "</a></td>";
-			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader2 . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objectconstellation']] . "')\">" . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objectconstellation']] . "</td>";
-			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader2 . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objectconstellation']] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectconstellation'] . "</td>";
-			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader3 . ": " . $_SESSION ['Qobj'] [$count] ['objectmagnitude'] . "')\">" . (($_SESSION ['Qobj'] [$count] ['objectmagnitude'] == 99.9) || ($_SESSION ['Qobj'] [$count] ['objectmagnitude'] == '') ? "&nbsp;&nbsp;-&nbsp;" : sprintf ( "%01.1f", $_SESSION ['Qobj'] [$count] ['objectmagnitude'] )) . "</td>";
-			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader3b . ": " . $_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] . "')\">" . (($_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] == 99.9) || ($_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] == '') ? "&nbsp;&nbsp;-&nbsp;" : sprintf ( "%01.1f", $_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] )) . "</td>";
-			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader4 . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objecttype']] . "')\">" . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objecttype']] . "</td>";
-			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader4 . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objecttype']] . "')\">" . $_SESSION ['Qobj'] [$count] ['objecttype'] . "</td>";
-			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader10 . ": " . addslashes ( $_SESSION ['Qobj'] [$count] ['objectsizepa'] ) . "')\">" . $_SESSION ['Qobj'] [$count] ['objectsizepa'] . "</td>";
-			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader5 . ": " . addslashes ( $_SESSION ['Qobj'] [$count] ['objectrahms'] ) . "')\">" . $_SESSION ['Qobj'] [$count] ['objectrahms'] . "</td>";
-			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader6 . ": " . addslashes ( $_SESSION ['Qobj'] [$count] ['objectdecldms'] ) . "')\">" . $_SESSION ['Qobj'] [$count] ['objectdecldms'] . "</td>";
+			echo "<td class=\"" . $specialclass . "\"><a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "\" >" . $_SESSION ['Qobj'] [$count] ['showname'] . "</a></td>";
+			echo "<td>" . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objectconstellation']] . "</td>";
+			echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangOverviewObjectsHeader2 . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objectconstellation']] . "\">" . $_SESSION ['Qobj'] [$count] ['objectconstellation'] . "</span></td>";
+			echo "<td>" . (($_SESSION ['Qobj'] [$count] ['objectmagnitude'] == 99.9) || ($_SESSION ['Qobj'] [$count] ['objectmagnitude'] == '') ? "&nbsp;&nbsp;-&nbsp;" : sprintf ( "%01.1f", $_SESSION ['Qobj'] [$count] ['objectmagnitude'] )) . "</td>";
+			echo "<td>" . (($_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] == 99.9) || ($_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] == '') ? "&nbsp;&nbsp;-&nbsp;" : sprintf ( "%01.1f", $_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] )) . "</td>";
+			echo "<td>" . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objecttype']] . "</td>";
+			echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangOverviewObjectsHeader4 . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objecttype']] . "\">" . $_SESSION ['Qobj'] [$count] ['objecttype'] . "</span></td>";
+			echo "<td>" . $_SESSION ['Qobj'] [$count] ['objectsizepa'] . "</td>";
+			echo "<td>" . $_SESSION ['Qobj'] [$count] ['objectrahms'] . "</td>";
+			echo "<td>" . $_SESSION ['Qobj'] [$count] ['objectdecldms'] . "</td>";
 			if ($loggedUser) {
 				$page = $_SESSION ['Qobj'] [$count] [$atlas];
 				if (substr ( $_SESSION ['Qobj'] [$count] ['objectseen'], 0, 2 ) == "YD")
@@ -1730,16 +1747,22 @@ class Objects {
 					$seenclass = "seenX";
 				else
 					$seenclass = "seenN";
-				echo "<td onmouseover=\"Tip('" . $objAtlas->atlasCodes [$atlas] . ": " . $page . "')\">" . $page . "</td>";
-				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectcontrastpopup'] . "')\"><span class=\"" . $_SESSION ['Qobj'] [$count] ['objectcontrasttype'] . "\" >" . $_SESSION ['Qobj'] [$count] ['objectcontrast'] . "</span></td>";
-				echo "<td onmouseover=\"Tip('" . LangViewObjectFieldMagnification . ": " . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnification'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnificationvalue'] . "</td>";
-				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectrisepopup'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectrise'] . "</td>";
-				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objecttransitpopup'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objecttransit'] . "</td>";
-				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectsetpopup'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectset'] . "</td>";
-				echo "<td onmouseover=\"Tip('" . LangBest . ": " . $_SESSION ['Qobj'] [$count] ['objectbest'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectbest'] . "</td>";
-				echo "<td onmouseover=\"Tip('" . str_replace("'","\'",$_SESSION ['Qobj'] [$count] ['objectmaxaltitudepopup']) . "')\">" . $_SESSION ['Qobj'] [$count] ['objectmaxaltitude'] . "</td>";
-				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectseen'] . "')\"><span class=\"" . $seenclass . "\">" . $_SESSION ['Qobj'] [$count] ['objectseenlink'] . "</span></td>";
-				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectlastseen'] . "')\"><span class=\"" . $seenclass . "\">" . $_SESSION ['Qobj'] [$count] ['objectlastseenlink'] . "</span></td>";
+				echo "<td>" . $page . "</td>";
+
+				$contrast = $_SESSION ['Qobj'] [$count] ['objectcontrast'];
+				if (strcmp($_SESSION ['Qobj'] [$count] ['objectcontrasttype'], "") === 0) {
+					$contrast = "-";
+				}
+
+				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectcontrastpopup'] . "\" class=\"" . $_SESSION ['Qobj'] [$count] ['objectcontrasttype'] . "\" >" . $contrast . "</span></td>";
+				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangViewObjectFieldMagnification . ": " . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnification'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnificationvalue'] . "</span></td>";
+				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectrisepopup'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectrise'] . "</span></td>";
+				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objecttransitpopup'] . "\">" . $_SESSION ['Qobj'] [$count] ['objecttransit'] . "</span></td>";
+				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectsetpopup'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectset'] . "</span></td>";
+				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangBest . ": " . $_SESSION ['Qobj'] [$count] ['objectbest'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectbest'] . "</span></td>";
+				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectmaxaltitudepopup'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectmaxaltitude'] . "<span></td>";
+				echo "<td><span class=\"" . $seenclass . "\">" . $_SESSION ['Qobj'] [$count] ['objectseenlink'] . "</span></td>";
+				echo "<td><span class=\"" . $seenclass . "\">" . $_SESSION ['Qobj'] [$count] ['objectlastseenlink'] . "</span></td>";
 			}
 			if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'stdLocation' )) {
 				echo "<td>" . $_SESSION ['Qobj'] [$count] ['objectmaxalt'] . "</td>";
@@ -1752,6 +1775,11 @@ class Objects {
 			$count ++;
 		}
 		echo "</tbody></table>";
+		echo '<script>
+						$(document).ready(function(){
+    					$(\'[data-toggle="tooltip"]\').tooltip();
+						});
+					</script>';
 		$objUtil->addPager ( "nearobjectlist", $count );
 
 		if ($loggedUser) {

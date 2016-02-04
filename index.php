@@ -20,7 +20,6 @@ try {
 	echo "<body onkeydown=\"bodyOnKeyDown(event);\">";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "common/entryexit/globals.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/jsenvironment.js\"></script>";
-	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/wz_tooltip.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/ajaxbase.js\"></script>";
 
 	require_once 'common/menu/headmenu.php'; // div1&2 = Page Title and welcome line - modules choices
