@@ -22,8 +22,7 @@ try {
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/jsenvironment.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/wz_tooltip.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/ajaxbase.js\"></script>";
-	echo "<script type=\"text/javascript\"
-              src=\"http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js\"></script>";
+
 	require_once 'common/menu/headmenu.php'; // div1&2 = Page Title and welcome line - modules choices
 
 	// Container-fluid makes the container the full width of the screen.
