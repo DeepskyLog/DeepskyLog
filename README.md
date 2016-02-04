@@ -2,11 +2,11 @@
 # DeepskyLog
 DeepskyLog is a web application to prepare, log and compare Deep-Sky and comet observations.
 
-Observers can use the website at http://www.deepskylog.org/ 
+Observers can use the website at http://www.deepskylog.org/
 
 ## Help DeepskyLog
 
-DeepskyLog is free and will always be free. If you want to donate money to DeepskyLog, we will use it to upgrade our servers to improve the speed and the disk space. 
+DeepskyLog is free and will always be free. If you want to donate money to DeepskyLog, we will use it to upgrade our servers to improve the speed and the disk space.
 
 When you want to help developing, but you don't know how to do html/css/javascript developing, a nice place to learn to code is [FreeCodeCamp](http://www.freecodecamp.com/).
 
@@ -32,9 +32,14 @@ The responsibilities in the DeepskyLog team are:
 
 | Responsibility | Who? |
 | -------------- | ---- |
-| Project Management | [WimDeMeester](https://github.com/WimDeMeester) | 
-| Development | [WimDeMeester](https://github.com/WimDeMeester) | 
+| Project Management | [WimDeMeester](https://github.com/WimDeMeester) |
+| Development | [WimDeMeester](https://github.com/WimDeMeester) |
 | Issues, testing | [TomCorstjens](https://github.com/TomCorstjens) |
 | Deepsky database | [Ericvdj](https://github.com/Ericvdj) |
-| Deepsky Database - asterisms | [jefdewit](https://github.com/jefdewit) | 
+| Deepsky Database - asterisms | [jefdewit](https://github.com/jefdewit) |
 | Documentation | [SkyNomad](https://github.com/SkyNomad) |
+
+
+## External libraries
+
+[See the list with external libraries](ExternalLibraries.md)
