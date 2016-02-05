@@ -19,11 +19,8 @@ function selected_objects() {
 				'loadLayout',
 				'saveLayout',
 				'removeLayout',
-				'sort',
-				'soretorder',
 				'multiplepagenr',
-				'noShowName',
-				'sortdirection' 
+				'noShowName'
 		) )))
 			$link .= '&amp;' . urlencode ( $key ) . '=' . urlencode ( $value );
 	if (count ( $_SESSION ['Qobj'] ) > 1) 	// =============================================== valid result, multiple objects found
@@ -35,9 +32,9 @@ function selected_objects() {
 		else
 			$title .= LangListQueryObjectsMessage11;
 		$title .= "</h4>";
-		
+
 		echo $title;
-		
+
 		if ($myList) {
 			$addButtons = "&nbsp;<a href=\"" . $link . "&amp;addAllObjectsFromQueryToList=true\" title=\"" . LangListQueryObjectsMessage5 . $listname_ss . "\" class=\"btn btn-primary\">" . LangListQueryObjectsMessage4 . "</a>";
 		} else {
@@ -52,19 +49,19 @@ function selected_objects() {
 		echo "<a href=\"" . $link . "&amp;noShowName=noShowName\" class=\"btn btn-primary\">" . LangListQueryObjectsMessage17 . "</a>";
 		echo $addButtons;
 		echo "</span><br />";
-		
+
 		echo "<hr />";
 
 		$objObject->showObjects ( $link, '', 0, '', "selected_objects" );
 		echo "<hr />";
-		
+
 		echo "</div>";
 	} else 	// ========================================================================no results found
 	{
 		echo "<div id=\"main\">";
 		echo "<h4>" . LangSelectedObjectsTitle . "</h4>";
-		echo LangExecuteQueryObjectsMessage2; 
-		echo "<a href=\"" . $baseURL . "index.php?indexAction=query_objects\">" . LangExecuteQueryObjectsMessage2a . "</a>"; 
+		echo LangExecuteQueryObjectsMessage2;
+		echo "<a href=\"" . $baseURL . "index.php?indexAction=query_objects\">" . LangExecuteQueryObjectsMessage2a . "</a>";
 		echo "</div>";
 	}
 }
