@@ -44,10 +44,6 @@ function selected_observations() {
 			echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
 			$topline = "&nbsp;-&nbsp;" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\">" . LangViewObjectViewNearbyObject . "</a>";
 		}
-		// if(substr($objObject->getSeen($object),0,1)!='-')
-		// $topline.= "&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\">".LangViewObjectObservations."</a>";
-		// if($loggedUser)
-		// $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation."</a>";
 		if (! ($collapsed)) {
 			if ($myList) {
 				if ($objList->checkObjectInMyActiveList ( $object ))
