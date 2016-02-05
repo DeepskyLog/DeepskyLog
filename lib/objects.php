@@ -200,7 +200,7 @@ class Objects {
 				$obj = preg_split ( "/ /", $object );
 				$cat = $obj [0];
 				$number = $obj [1];
-				$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;catalog=" . $cat . "&amp;number=" . $number . "&amp;observer=" . urlencode ( $loggedUser ) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
+				$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;catalog=" . $cat . "&amp;number=" . rawurlencode($number) . "&amp;observer=" . urlencode ( $loggedUser ) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
 			}
 		}
 		return $seen;
@@ -618,7 +618,7 @@ class Objects {
 			$obj = preg_split ( "/ /", $object );
 			$cat = $obj [0];
 			$number = $obj [1];
-			echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog=" . $cat . "&number=" . $number . "&drawings=on\">" . $totDraw . "</a></td>";
+			echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog=" . $cat . "&number=" . rawurlencode($number) . "&drawings=on\">" . $totDraw . "</a></td>";
 		} else {
 			echo "  <td>0</td>";
 		}
@@ -631,7 +631,7 @@ class Objects {
 				// The number of personal observations of this object.
 				echo " <tr>";
 				echo "  <td>" . LangPersonalObservations . "</td>";
-				echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog=" . $cat . "&number=" . $number . "&observer=" . $loggedUser . "\">" . $get3->PersObsCnt . "</a></td>";
+				echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog=" . $cat . "&number=" . rawurlencode($number) . "&observer=" . $loggedUser . "\">" . $get3->PersObsCnt . "</a></td>";
 				echo " </tr>";
 
 				// The date of observer's last observation of this object.
@@ -648,7 +648,7 @@ class Objects {
 				$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7 AND hasDrawing=1" );
 				$persDrawings = $run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt;
 				if ($persDrawings > 0) {
-					echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Search&seen=A&catalog=" . $cat . "&number=" . $number . "&observer=" . $loggedUser . "&drawings=on\">" . $persDrawings . "</a></td>";
+					echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Search&seen=A&catalog=" . $cat . "&number=" . rawurlencode($number) . "&observer=" . $loggedUser . "&drawings=on\">" . $persDrawings . "</a></td>";
 				} else {
 					echo "<td>" . $persDrawings . "</td>";
 				}

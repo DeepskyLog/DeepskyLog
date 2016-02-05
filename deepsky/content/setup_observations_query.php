@@ -28,9 +28,6 @@ function setup_observations_query() {
 	echo "<div id=\"main\">";
 	echo "<form class=\"form-horizontal\" action=\"" . $baseURL . "index.php\" method=\"get\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\"   value=\"result_selected_observations\" />";
-	echo "<input type=\"hidden\" name=\"title\"         value=\"" . LangSelectedObservationsTitle2 . "\" />";
-	echo "<input type=\"hidden\" name=\"sort\"          value=\"objectname\" />";
-	echo "<input type=\"hidden\" name=\"sortdirection\" value=\"asc\" />";
 	echo "<input type=\"hidden\" name=\"myLanguages\"   value=\"true\" />";
 	$content = "";
 	$content1 = "";
