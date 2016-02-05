@@ -455,25 +455,43 @@ class Observations {
 			$objects = $objObject->getPartOfs ( $objects );
 		return $objects;
 	}
+	/** Returns all the observations from a query.
+
+		@param $queries The query to find the observations. An example:
+											array("object" => "NGC 7293", "observer" => "wim")
+											You can really enter a lot of options here to find the needed observations:
+	  										+ instrument: The used instrument. Be carefull, because each observer has unique instruments.
+												+ location: The location where the observation was done. Be carefull, because each observer has unique locations.
+	  										+ mindate, maxdate: The date interval to search for observations.
+	  										+ mindiameter, maxdiameter: The interval of telescope diameter for the observations.
+												+ type: The object type, eg GALXY.
+												+ con: The constellation where the observation was made.
+	  										+ minmag, maxmag: The interval of the magnitudes of the observed objects.
+												+ minsubr, maxsubr: The interval of the surface brightness of the observed objects.
+	  										+ minra, maxra: The interval of the right ascension of the observed objects.
+	  										+ mindecl, maxdecl: The interval of the declination of the observed objects.
+	  										+ urano, uranonew, sky, msa, ... : The atlas page of the observed objects.
+	  										+ mindiam1, maxdiam1: The interval of the largest diameter of the observed objects.
+												+ mindiam2, maxdiam2: The interval of the smallest diameter of the observed objects.
+	  										+ description: A part of the description
+												+ minvisibility, maxvisibility: The interval of the visibility of the observations.
+	  										+ minseeing, maxseeing: The interval of the seeing conditions of the observations.
+	  										+ minlimmag, maxlimmag: The interval of the naked eye limiting magnitude of the observations.
+												+ $languages: An array with the languages, for example: $languages => Array ( [0] => en ))
+	  										+ eyepiece: The eyepiece used for the observations. Be carefull, because each observer has unique eyepieces.
+												+ filter: The filter used for the observations. Be carefull, because each observer has unique filters.
+												+ lens: The lens used for the observations. Be carefull, because each observer has unique lenses.
+												+ minSmallDiameter, maxSmallDiameter: The interval of the estimated smallest diameters of the observed objects.
+												+ minLargeDiameter, maxLargeDiameter: The interval of the estimated largest diameters of the observed objects.
+	  									  + stellar, extended, resolved, mottled, unusualShape, partlyUnresolved, colorContrasts: The extra parameters of the observations. 1 if true, 0 if false.
+	  										+ clusterType: The cluster type of the observations (From "A" to "I" or "X").
+	  										+ minSQM, maxSQM: The interval of SQM values for the observations.
+		@param $seenpar TO FIND OUT WHAT THIS PARAMETER MEANS!!!
+		@param $exactinstrumentlocation TO FIND OUT WHAT THIS PARAMETER MEANS!!!
+	*/
 	public function getObservationFromQuery($queries, $seenpar = "A", $exactinstrumentlocation = "0") // returns an array with the names of all observations where the queries are defined in an array.
 { // An example of an array :
-	  // $q = array("object" => "NGC 7293", "observer" => "wim",
-	  // "instrument" => "3", "location" => "24",
-	  // "mindate" => "20040512", "maxdate" => "20040922",
-	  // "mindiameter" => "100", "maxdiameter" => "200", "type" => "GALXY", "con" => "AND",
-	  // "minmag" => "6.0", "maxmag" => "14.0", "minsubr" => "13.0",
-	  // "maxsubr" => "14.0", "minra" => "0.3", "maxra" => "0.9",
-	  // "mindecl" => "24.0", "maxdecl" => "30.0", "urano" => "111",
-	  // "uranonew" => "111", "sky" => "11", "msa" => "222",
-	  // "mindiam1" => "12.2", "maxdiam1" => "13.2", "mindiam2" => "11.1",
-	  // "maxdiam2" => "22.2", "description" => "Doughnut", "minvisibility" => "5",
-	  // "maxvisibility" => "3", "minseeing" => "2", "maxseeing" => "4",
-	  // "minlimmag" => "5.5", "maxlimmag" => "6.0", $languages => Array ( [0] => en )),
-	  // "eyepiece" => "4", "filter" => "2", "lens" => "3", "minSmallDiameter" => "3.4",
-	  // "maxSmallDiameter" => "3.7", "minLargeDiameter" => "5.3", "maxLargeDiameter" => "6.5",
-	  // "stellar" => "1", "extended" => "0", "resolved" => "0", "mottled" => "1",
-	  // "clusterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1",
-	  // "colorContrasts" => "0", "minSQM" => "18.9", "maxSQM" => "21.2";
+	  //
 		global $objInstrument, $objEyepiece, $objFilter, $objLens, $objLocation, $objDatabase, $loggedUser;
 		$object = "";
 		$sqland = "";
