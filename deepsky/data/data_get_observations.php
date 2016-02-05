@@ -17,9 +17,9 @@ function data_get_observations()
 		if(count($objectarray)==1)
 		  $object=$objectarray[0];
 	}
-	else 
+	else
 	  $object=$objUtil->checkGetKey('object');
-	
+
 	//200811151634B: dit wordt momenteel niet verwerkt, kan er met CONVERT_TZ(dt,from_tz,to_tz) in het sql statement gewerkt worden?
 	$mindate=$objUtil->checkGetKey('mindate');
 	$maxdate=$objUtil->checkGetKey('maxdate');
@@ -30,11 +30,11 @@ function data_get_observations()
 	    $maxdate = $maxdate + 1;
 	}
 	//200811151634End
-	
+
 	$selectedLanguages=Array();
 	if($objUtil->checkGetKey('myLanguages','false')=='true')
 	  while(list($key,$value)=each($allLanguages))
-	    if(array_key_exists($key,$_GET)) 
+	    if(array_key_exists($key,$_GET))
 	      $selectedLanguages[]=$key;
 	if((!count($selectedLanguages))&&$objUtil->checkGetKey('myLanguages'))
 	{ reset($allLanguages);
@@ -43,7 +43,7 @@ function data_get_observations()
 	    ||((!$loggedUser)&&($key==$_SESSION['lang'])))
 	      $selectedLanguages[]=$key;
 	}
-	
+
 	$query = array("object"           => $object,
 	               "catalog"          => $objUtil->checkGetKey('catalog'),
 	               "number"           => $objUtil->checkGetKey('number'),
@@ -51,7 +51,7 @@ function data_get_observations()
 	               "instrument"       => $objUtil->checkGetKey('instrument'),
 	               "location"         => $objUtil->checkGetKey('site'),
 	               "mindate"          => $objUtil->checkGetDate('minyear','minmonth','minday'),
-	               "maxdate"          => $objUtil->checkGetDate('maxyear','maxmonth','maxday'), 
+	               "maxdate"          => $objUtil->checkGetDate('maxyear','maxmonth','maxday'),
 	               "maxdiameter"      => ($objUtil->checkGetKey('maxdiameter')?($objUtil->checkGetKey('maxdiameterunits')=="inch"?$_GET['maxdiameter']*25.4:$_GET['maxdiameter']):''),
 	               "mindiameter"      => ($objUtil->checkGetKey('mindiameter')?($objUtil->checkGetKey('mindiameterunits')=="inch"?$_GET['mindiameter']*25.4:$_GET['mindiameter']):''),
 	               "type"             => $objUtil->checkGetKey('type'),
@@ -80,8 +80,8 @@ function data_get_observations()
 	               "lens"             => $objUtil->checkGetKey('lens'),
 	               "filter"           => $objUtil->checkGetKey('filter'),
 	               "eyepiece"         => $objUtil->checkGetKey('eyepiece'),
-	               "hasDrawing"       => $objUtil->checkGetKey('drawings','off'),            
-	               "hasNoDrawing"     => $objUtil->checkGetKey('nodrawings','off'),            
+	               "hasDrawing"       => $objUtil->checkGetKey('drawings','off'),
+	               "hasNoDrawing"     => $objUtil->checkGetKey('nodrawings','off'),
 	               "languages"        => $selectedLanguages,
 	               "minobservation"   => ($objUtil->checkGetKey('newobservations')?$objObserver->getObserverProperty($loggedUser,'lastReadObservationId',0):0),
 	               "seen"             => $objUtil->checkGetKey('seen','A'),
@@ -92,17 +92,17 @@ function data_get_observations()
 	 $validQobs=true;
 	while($validQobs && (list($key,$value) = each($_SESSION['QobsParams'])))
 	 if(!array_key_exists($key,$query)||($value!=$query[$key]))
-	   $validQobs=false;	 
+	   $validQobs=false;
 	while($validQobs && (list($key,$value) = each($query)))
 	 if(!array_key_exists($key,$_SESSION['QobsParams'])||($value!=$_SESSION['QobsParams'][$key]))
 	   $validQobs=false;
 	if(!$validQobs)
 	{ $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen','A'),$objUtil->checkGetKey('exactinstrumentlocation',0));
-	  $_SESSION['QobsParams']=$query; 
+	  $_SESSION['QobsParams']=$query;
 	  $_SESSION['QobsSort']='observationid';
 	  $_SESSION['QobsSortDirection']='desc';
 	  $query['countquery']='true';
-	  $_SESSION['QobsTotal']=$objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen'),$objUtil->checkGetKey('exactinstrumentlocation',0)); 
+	  $_SESSION['QobsTotal']=$objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen'),$objUtil->checkGetKey('exactinstrumentlocation',0));
 	  $_SESSION['QobsMaxCnt']=$MaxCnt;
 	  $min=0;
 		if($loggedUser && (!($objObserver->getObserverProperty($loggedUser,'UT'))))
@@ -115,11 +115,11 @@ function data_get_observations()
 	      $new_obs=Array();
 	      while(list($key, $value)=each($_SESSION['Qobs'])) // go through observations array
 	      { $newdate = $objObservation->getDsObservationLocalDate($value['observationid']);
-	        if ($mindate != "" && $maxdate != "") 
-	        { if (($newdate >= $mindate) && ($newdate <= $maxdate)) 
+	        if ($mindate != "" && $maxdate != "")
+	        { if (($newdate >= $mindate) && ($newdate <= $maxdate))
 	            $new_obs[] = $value;
 	        }
-	        else if ($maxdate != "") 
+	        else if ($maxdate != "")
 	        { if ($newdate <= $maxdate)
 	            $new_obs[] = $value;
 	        }
@@ -140,7 +140,7 @@ function data_get_observations()
   }
   $_SESSION['Qobs']=$nonempty;
 	//=========================================== CHECK TO SEE IF SORTING IS NECESSARY ===========================================
-	if(!array_key_exists('sort',$_GET))      
+	if(!array_key_exists('sort',$_GET))
 	{ $_GET['sort'] = $_SESSION['QobsSort'];
 	  $_GET['sortdirection']=$_SESSION['QobsSortDirection'];
 	}
@@ -182,7 +182,7 @@ function data_get_observations()
 		    $_SESSION['Qobs']=array_values($sortarray);
 		  }
 		  $_SESSION['QobsSort']=$_GET['sort'];
-		  $_SESSION['QobsSortDirection']='asc'; 
+		  $_SESSION['QobsSortDirection']='asc';
 			$min=0;
 	  }
 	}
@@ -191,6 +191,6 @@ function data_get_observations()
 	 	  $_SESSION['Qobs']=array_reverse($_SESSION['Qobs'],true);
 	  $_SESSION['QobsSortDirection']=$_GET['sortdirection'];
 		$min=0;
-	}	
+	}
 }
 ?>

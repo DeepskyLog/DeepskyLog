@@ -19,10 +19,8 @@ function selected_observations() {
 				'indexAction',
 				'lco',
 				'sessionid',
-				'sortdirection',
-				'sort',
 				'myLanguages',
-				'collapsed' 
+				'collapsed'
 		) ))
 			$link2 .= "&amp;" . $key . "=" . urlencode ( $value );
 		// while(list($key,$value)=each($usedLanguages))
@@ -46,10 +44,6 @@ function selected_observations() {
 			echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
 			$topline = "&nbsp;-&nbsp;" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\">" . LangViewObjectViewNearbyObject . "</a>";
 		}
-		// if(substr($objObject->getSeen($object),0,1)!='-')
-		// $topline.= "&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\">".LangViewObjectObservations."</a>";
-		// if($loggedUser)
-		// $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation."</a>";
 		if (! ($collapsed)) {
 			if ($myList) {
 				if ($objList->checkObjectInMyActiveList ( $object ))
@@ -108,7 +102,7 @@ function selected_observations() {
 			$content5 .= $toAdd;
 		}
 		$content5 .= "</span>";
-		
+
 		if ($objUtil->checkGetKey ( 'myLanguages' ))
 			$content6 = "<a class=\"btn btn-success\" href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";
 		elseif ($loggedUser)
@@ -133,10 +127,10 @@ function selected_observations() {
 		echo $content1;
 		echo "<hr />";
 		echo "</div>";
-		
+
 		if (($object && $objObject->getExactDsObject ( $object )) && ($collapsed)) {
 			echo "<h4>" . $collapsedtext . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "</h4>";
-			echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object ); 
+			echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
 			$topline = "&nbsp;-&nbsp;" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\">" . LangViewObjectViewNearbyObject . "</a>";
 		}
 	}
