@@ -490,8 +490,7 @@ class Observations {
 		@param $exactinstrumentlocation TO FIND OUT WHAT THIS PARAMETER MEANS!!!
 	*/
 	public function getObservationFromQuery($queries, $seenpar = "A", $exactinstrumentlocation = "0") // returns an array with the names of all observations where the queries are defined in an array.
-{ // An example of an array :
-	  //
+	{
 		global $objInstrument, $objEyepiece, $objFilter, $objLens, $objLocation, $objDatabase, $loggedUser;
 		$object = "";
 		$sqland = "";

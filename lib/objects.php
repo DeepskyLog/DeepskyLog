@@ -200,7 +200,7 @@ class Objects {
 				$obj = preg_split ( "/ /", $object );
 				$cat = $obj [0];
 				$number = $obj [1];
-				$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;catalog=" . $cat . "&amp;number=" . $number . "&amp;observer=" . urlencode ( $loggedUser ) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
+				$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;catalog=" . $cat . "&amp;number=" . rawurlencode($number) . "&amp;observer=" . urlencode ( $loggedUser ) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
 			}
 		}
 		return $seen;
