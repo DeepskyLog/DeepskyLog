@@ -106,8 +106,12 @@ class Accomplishments {
     return $this->ranking($numberOfHerschels, 5);
   }
 
-  // Calculates the number of different herschel II objects the observer has drawn and
-  // returns an array [ bronze, silver, gold, diamond, platina ]
+  /** Calculates the number of different herschel II objects the observer has drawn and
+   returns an array [ bronze, silver, gold, diamond, platina ]
+
+   @param $observer The observer for which to calculate the number of herschel II objects drawn.
+   @return integer[] [ bronze, silver, gold, diamond, platina ]
+  */
   public function calculateHerschelIIDrawings($observer)
   { global $objObservation;
     $objObservation = new Observations();
