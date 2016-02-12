@@ -5,119 +5,29 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 require_once "observations.php";
 
 /**
-Collects all functions needed to calculated and retrieve the accomplishments of an observer.
+Collects all functions needed to calculate and retrieve the accomplishments of an observer.
 */
 class Accomplishments {
-  /** Calculates the number of different messiers objects the observer has seen and
-   returns an array [ bronze, silver, gold ].
+  /** Calculates the number of different objects of a certain catalog the observer has seen and
+   returns an array consisting of $ranking elements. For messier, $ranking should be 3 and the
+   result is [ bronze, silver, gold ]
 
-   @param $observer The observer for which to calculate the number of messier objects seen.
+   @param $observer The observer for which to calculate the number of objects seen.
+   @param $catalog The catalog to use.
+   @param $ranking The number of categories in the result
+   @param $drawings True if the drawings should be calculated
    @return integer[] [ bronze, silver, gold ]
    */
-  public function calculateMessier($observer)
+  public function calculateAccomplishments($observer, $catalog, $ranking, $drawings = false)
   { global $objObservation;
     $objObservation = new Observations();
-    $numberOfMessiers = $objObservation->getObservedCountFromCatalogOrList($observer,"M");
+    if ($drawings) {
+      $numberOfObjects = $objObservation->getDrawingsCountFromCatalog($observer,$catalog);
+    } else {
+      $numberOfObjects = $objObservation->getObservedCountFromCatalogOrList($observer,$catalog);
+    }
 
-    return $this->ranking($numberOfMessiers, 3);
-  }
-
-  /** Calculates the number of different messiers objects the observer has drawn and
-   returns an array [ bronze, silver, gold ].
-
-   @param $observer The observer for which to calculate the number of messier objects drawn.
-   @return integer[] [ bronze, silver, gold ]
-  */
-  public function calculateMessierDrawings($observer)
-  { global $objObservation;
-    $objObservation = new Observations();
-    $numberOfDrawings = $objObservation->getDrawingsCountFromCatalog($observer, "M");
-
-    return $this->ranking($numberOfDrawings, 3);
-  }
-
-  /** Calculates the number of different caldwell objects the observer has seen and
-   returns an array [ bronze, silver, gold ].
-
-   @param $observer The observer for which to calculate the number of caldwell objects seen.
-   @return integer[] [ bronze, silver, gold ]
-  */
-  public function calculateCaldwell($observer)
-  { global $objObservation;
-    $objObservation = new Observations();
-    $numberOfCaldwells = $objObservation->getObservedCountFromCatalogOrList($observer,"Caldwell");
-
-    return $this->ranking($numberOfCaldwells, 3);
-  }
-
-  /** Calculates the number of different caldwell objects the observer has drawn and
-   returns an array [ bronze, silver, gold ].
-
-   @param $observer The observer for which to calculate the number of caldwell objects drawn.
-   @return integer[] [ bronze, silver, gold ]
-  */
-  public function calculateCaldwellDrawings($observer)
-  { global $objObservation;
-    $objObservation = new Observations();
-    $numberOfCaldwells = $objObservation->getDrawingsCountFromCatalog($observer,"Caldwell");
-
-    return $this->ranking($numberOfCaldwells, 3);
-  }
-
-  /** Calculates the number of different herschel objects the observer has seen and
-   returns an array [ bronze, silver, gold, diamond, platina ].
-
-   @param $observer The observer for which to calculate the number of herschel objects seen.
-   @return integer[] [ bronze, silver, gold, diamond, platina ]
-  */
-  public function calculateHerschel($observer)
-  { global $objObservation;
-    $objObservation = new Observations();
-    $numberOfHerschels = $objObservation->getObservedCountFromCatalogOrList($observer,"H400");
-
-    return $this->ranking($numberOfHerschels, 5);
-  }
-
-  /** Calculates the number of different herschel objects the observer has drawn and
-   returns an array [ bronze, silver, gold, diamond, platina ].
-
-   @param $observer The observer for which to calculate the number of herschel objects drawn.
-   @return integer[] [ bronze, silver, gold, diamond, platina ]
-    */
-  public function calculateHerschelDrawings($observer)
-  { global $objObservation;
-    $objObservation = new Observations();
-    $numberOfDrawings = $objObservation->getDrawingsCountFromCatalog($observer, "H400");
-
-    return $this->ranking($numberOfDrawings, 5);
-  }
-
-  /** Calculates the number of different herschel II objects the observer has seen and
-   returns an array [ bronze, silver, gold, diamond, platina ].
-
-     @param $observer The observer for which to calculate the number of herschel II objects seen.
-     @return integer[] [ bronze, silver, gold, diamond, platina ]
-  */
-  public function calculateHerschelII($observer)
-  { global $objObservation;
-    $objObservation = new Observations();
-    $numberOfHerschels = $objObservation->getObservedCountFromCatalogOrList($observer,"HII");
-
-    return $this->ranking($numberOfHerschels, 5);
-  }
-
-  /** Calculates the number of different herschel II objects the observer has drawn and
-   returns an array [ bronze, silver, gold, diamond, platina ]
-
-   @param $observer The observer for which to calculate the number of herschel II objects drawn.
-   @return integer[] [ bronze, silver, gold, diamond, platina ]
-  */
-  public function calculateHerschelIIDrawings($observer)
-  { global $objObservation;
-    $objObservation = new Observations();
-    $numberOfDrawings = $objObservation->getDrawingsCountFromCatalog($observer, "HII");
-
-    return $this->ranking($numberOfDrawings, 5);
+    return $this->ranking($numberOfObjects, $ranking);
   }
 
   // Calculates the total number of drawings the observer has made and
@@ -1736,7 +1646,7 @@ class Accomplishments {
   public function recalculateMessiers($observerId) {
   	global $objDatabase, $objMessages;
   	// MESSIER
-  	$messiers = $this->calculateMessier($observerId);
+  	$messiers = $this->calculateAccomplishments($observerId, "M", 3, false);
   	$oldMessierBronze = $this->getMessierBronze($observerId);
   	$newMessierBronze = $messiers[0];
   	$sql = "UPDATE accomplishments SET messierBronze = " . $newMessierBronze . " WHERE observer = \"". $observerId ."\";";
@@ -1765,7 +1675,7 @@ class Accomplishments {
   	}
 
   	// MESSIER DRAWINGS
-  	$messierDrawings = $this->calculateMessierDrawings($observerId);
+  	$messierDrawings = $this->calculateAccomplishments($observerId, "M", 3, true);
   	$oldMessierDrawingsBronze = $this->getMessierDrawingsBronze($observerId);
   	$newMessierDrawingsBronze = $messierDrawings[0];
   	$sql = "UPDATE accomplishments SET messierDrawingsBronze = " . $newMessierDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
@@ -1797,7 +1707,7 @@ class Accomplishments {
   public function recalculateCaldwells($observerId) {
   	global $objDatabase, $objMessages;
   	// CALDWELL
-  	$caldwells = $this->calculateCaldwell($observerId);
+  	$caldwells = $this->calculateAccomplishments($observerId, "Caldwell", 3, false);
   	$oldCaldwellBronze = $this->getCaldwellBronze($observerId);
   	$newCaldwellBronze = $caldwells[0];
   	$sql = "UPDATE accomplishments SET CaldwellBronze = " . $newCaldwellBronze . " WHERE observer = \"". $observerId ."\";";
@@ -1826,7 +1736,7 @@ class Accomplishments {
   	}
 
   	// CALDWELL DRAWINGS
-  	$caldwellDrawings = $this->calculateCaldwellDrawings($observerId);
+  	$caldwellDrawings = $this->calculateAccomplishmentsDrawings($observerId, "Caldwell", 3, true);
   	$oldCaldwellDrawingsBronze = $this->getCaldwellDrawingsBronze($observerId);
   	$newCaldwellDrawingsBronze = $caldwellDrawings[0];
   	$sql = "UPDATE accomplishments SET CaldwellDrawingsBronze = " . $newCaldwellDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
@@ -1859,7 +1769,7 @@ class Accomplishments {
   public function recalculateHerschels($observerId) {
   	global $objDatabase, $objMessages;
   	// Herschel
-  	$herschels = $this->calculateHerschel($observerId);
+  	$herschels = $this->calculateAccomplishments($observerId, "H400", 5, false);
   	$oldHerschelBronze = $this->getHerschelBronze($observerId);
   	$newHerschelBronze = $herschels[0];
   	$sql = "UPDATE accomplishments SET HerschelBronze = " . $newHerschelBronze . " WHERE observer = \"". $observerId ."\";";
@@ -1906,7 +1816,7 @@ class Accomplishments {
   	}
 
   	// Herschel DRAWINGS
-  	$herschelDrawings = $this->calculateHerschelDrawings($observerId);
+  	$herschelDrawings = $this->calculateAccomplishmentsDrawings($observerId, "H400", 5, true);
   	$oldHerschelDrawingsBronze = $this->getHerschelDrawingsBronze($observerId);
   	$newHerschelDrawingsBronze = $herschelDrawings[0];
   	$sql = "UPDATE accomplishments SET HerschelDrawingsBronze = " . $newHerschelDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
@@ -1956,7 +1866,7 @@ class Accomplishments {
   public function recalculateHerschelIIs($observerId) {
   	global $objDatabase, $objMessages;
   	// HerschelII
-  	$HerschelIIs = $this->calculateHerschelII($observerId);
+  	$HerschelIIs = $this->calculateAccomplishments($observerId, "HII", 5, false);
   	$oldHerschelIIBronze = $this->getHerschelIIBronze($observerId);
   	$newHerschelIIBronze = $HerschelIIs[0];
   	$sql = "UPDATE accomplishments SET HerschelIIBronze = " . $newHerschelIIBronze . " WHERE observer = \"". $observerId ."\";";
@@ -2003,7 +1913,7 @@ class Accomplishments {
   	}
 
   	// HerschelII DRAWINGS
-  	$HerschelIIDrawings = $this->calculateHerschelIIDrawings($observerId);
+  	$HerschelIIDrawings = $this->calculateAccomplishmentsDrawings($observerId, "HII", 5, true);
   	$oldHerschelIIDrawingsBronze = $this->getHerschelIIDrawingsBronze($observerId);
   	$newHerschelIIDrawingsBronze = $HerschelIIDrawings[0];
   	$sql = "UPDATE accomplishments SET HerschelIIDrawingsBronze = " . $newHerschelIIDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
