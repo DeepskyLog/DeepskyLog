@@ -15,18 +15,30 @@ class Accomplishments {
    @param $observer The observer for which to calculate the number of objects seen.
    @param $catalog The catalog to use. If the catalog is
               + drawings: The number of drawings by an observer is calculated.
+              + cometObservations: The number of observations in the comets module.
+              + cometsObserved: The number of comets observed.
+              + cometDrawings: The number of comet drawings.
    @param $ranking The number of categories in the result
    @param $drawings True if the drawings should be calculated
    @return integer[] [ bronze, silver, gold ]
    */
   public function calculateAccomplishments($observer, $catalog, $ranking, $drawings = false)
-  { global $objObservation;
+  { global $objObservation, $objObserver, $objCometObservation;
     $objObservation = new Observations();
 
     switch($catalog) {
       case "drawings":
         $total = $objObservation->getDsDrawingsCountFromObserver($observer);
         break;
+      case "cometObservations":
+        $total = $objObserver->getNumberOfCometObservations($observer);
+        break;
+      case "cometsObserved":
+        $total = $objCometObservation->getNumberOfObjects($observer);
+        break;
+      case "cometDrawings":
+          $total = $objCometObservation->getCometDrawingsCountFromObserver($observer);
+          break;
       default:
         if ($drawings) {
           $total = $objObservation->getDrawingsCountFromCatalog($observer,$catalog);
@@ -36,40 +48,6 @@ class Accomplishments {
         break;
     }
     return $this->ranking($total, $ranking);
-  }
-
-  // Calculates the total number of drawings the observer has made and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateDrawings($observer)
-  { global $objObservation;
-    $objObservation = new Observations();
-    $drawingsMade = $objObservation->getDsDrawingsCountFromObserver($observer);
-
-    return $this->ranking($drawingsMade, 10);
-  }
-
-  // Calculates the total number of comet observations the observer has made and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateCometObservations($observer) {
-    global $objObserver;
-    $userCometobservation=$objObserver->getNumberOfCometObservations($observer);
-    return $this->ranking($userCometobservation, 10);
-  }
-
-  // Calculates the number of different comet observed by the observer and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateCometsObserved($observer) {
-    global $objCometObservation;
-    $userCometObjects = $objCometObservation->getNumberOfObjects($observer);
-    return $this->ranking($userCometObjects, 10);
-  }
-
-  // Calculates the total number of comet drawings the observer has made and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateCometDrawings($observer) {
-    global $objCometObservation;
-    $drawingsMade = $objCometObservation->getCometDrawingsCountFromObserver($observer);
-    return $this->ranking($drawingsMade, 10);
   }
 
   // Calculates the number of different open clusters the observer has seen and
@@ -263,46 +241,37 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   }
 
-  // Returns 1 if the observer has seen 25 messiers
-  public function getMessierBronze($observerId) {
+  /** Returns 1 if the observer has an accomplishment.
+
+    @param $observerId The observer for which the accomplishments should be returned from the database.
+    @return integer[] [ messierBronze, messierSilver, messierGold, ... ]
+  */
+  public function getAccomplishments($observerId) {
   	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select messierBronze from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["messierBronze"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select * from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
   }
 
-  // Returns 1 if the observer has seen 50 messiers
-  public function getMessierSilver($observerId) {
+  /** Returns 1 if the observer has seen 25, 50 or 110 messiers.
+
+    @param $observerId The observer for which the messier accomplishments should be returned from the database.
+    @return integer[] [ bronze, silver, gold ]
+  */
+  public function getMessierAccomplishments($observerId) {
   	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select messierSilver from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["messierSilver"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select messierBronze as '0', messierSilver as '1', messierGold as '2' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
   }
 
-  // Returns 1 if the observer has seen 110 messiers
-  public function getMessierGold($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select messierGold from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["messierGold"];
-  }
+  /** Returns 1 if the drawn has seen 25, 50 or 110 messiers.
 
-  // Returns 1 if the observer has drawn 25 messiers
-  public function getMessierDrawingsBronze($observerId) {
+    @param $observerId The observer for which the messier accomplishments should be returned from the database.
+    @return integer[] [ bronze, silver, gold ]
+  */
+  public function getMessierAccomplishmentsDrawings($observerId) {
   	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select messierDrawingsBronze from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["messierDrawingsBronze"];
-  }
-
-  // Returns 1 if the observer has drawn 50 messiers
-  public function getMessierDrawingsSilver($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select messierDrawingsSilver from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["messierDrawingsSilver"];
-  }
-
-  // Returns 1 if the observer has drawn 110 messiers
-  public function getMessierDrawingsGold($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select messierDrawingsGold from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["messierDrawingsGold"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select messierDrawingsBronze as '0', messierDrawingsSilver as '1', messierDrawingsGold as '2' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
   }
 
   // Returns 1 if the observer has seen 25 Caldwells
@@ -1655,59 +1624,52 @@ class Accomplishments {
   	global $objDatabase, $objMessages;
   	// MESSIER
   	$messiers = $this->calculateAccomplishments($observerId, "M", 3, false);
-  	$oldMessierBronze = $this->getMessierBronze($observerId);
-  	$newMessierBronze = $messiers[0];
-  	$sql = "UPDATE accomplishments SET messierBronze = " . $newMessierBronze . " WHERE observer = \"". $observerId ."\";";
+
+    $oldMessiers = $this->getMessierAccomplishments($observerId);
+
+  	$sql = "UPDATE accomplishments SET messierBronze = " . $messiers[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldMessierBronze == 0 && $newMessierBronze == 1) {
+    $sql = "UPDATE accomplishments SET messierSilver = " . $messiers[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET messierGold = " . $messiers[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldMessiers[0] == 0 && $messiers[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangMessier, 25), $this->getSeenMessage(LangMessier, 25, $observerId));
   	}
 
-  	$oldMessierSilver = $this->getMessierSilver($observerId);
-  	$newMessierSilver = $messiers[1];
-  	$sql = "UPDATE accomplishments SET messierSilver = " . $newMessierSilver . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldMessierSilver == 0 && $newMessierSilver == 1) {
+  	if ($oldMessiers[1] == 0 && $messiers[1] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangMessier, 50), $this->getSeenMessage(LangMessier, 50, $observerId));
   	}
 
-  	$oldMessierGold = $this->getMessierGold($observerId);
-  	$newMessierGold = $messiers[2];
-  	$sql = "UPDATE accomplishments SET messierGold = " . $newMessierGold . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldMessierGold == 0 && $newMessierGold == 1) {
+  	if ($oldMessiers[2] == 0 && $messiers[2] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangMessier, 110), $this->getSeenMessage(LangMessier, 110, $observerId));
   	}
 
   	// MESSIER DRAWINGS
   	$messierDrawings = $this->calculateAccomplishments($observerId, "M", 3, true);
-  	$oldMessierDrawingsBronze = $this->getMessierDrawingsBronze($observerId);
-  	$newMessierDrawingsBronze = $messierDrawings[0];
-  	$sql = "UPDATE accomplishments SET messierDrawingsBronze = " . $newMessierDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
+  	$oldMessierDrawings = $this->getMessierAccomplishmentsDrawings($observerId);
+
+  	$sql = "UPDATE accomplishments SET messierDrawingsBronze = " . $messierDrawings[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldMessierDrawingsBronze == 0 && $newMessierDrawingsBronze == 1) {
+    $sql = "UPDATE accomplishments SET messierDrawingsSilver = " . $messierDrawings[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET messierDrawingsGold = " . $messierDrawings[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldMessierDrawings[0] == 0 && $messierDrawings[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangMessier, 25), $this->getDrawMessage(LangMessier, 25, $observerId));
   	}
 
-  	$oldMessierDrawingsSilver = $this->getMessierDrawingsSilver($observerId);
-  	$newMessierDrawingsSilver = $messierDrawings[1];
-  	$sql = "UPDATE accomplishments SET messierDrawingsSilver = " . $newMessierDrawingsSilver . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldMessierDrawingsSilver == 0 && $newMessierDrawingsSilver == 1) {
+  	if ($oldMessierDrawings[1] == 0 && $messierDrawings[1] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangMessier, 50), $this->getDrawMessage(LangMessier, 50, $observerId));
   	}
 
-  	$oldMessierDrawingsGold = $this->getMessierDrawingsGold($observerId);
-  	$newMessierDrawingsGold = $messierDrawings[2];
-  	$sql = "UPDATE accomplishments SET messierDrawingsGold = " . $newMessierDrawingsGold . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldMessierDrawingsGold == 0 && $newMessierDrawingsGold == 1) {
+  	if ($oldMessierDrawings[2] == 0 && $messierDrawings[2] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangMessier, 110), $this->getDrawMessage(LangMessier, 110, $observerId));
   	}
   }
@@ -3205,7 +3167,7 @@ class Accomplishments {
   public function recalculateCometObservations($observerId) {
   	global $objDatabase, $objMessages;
   	// Comet Observations
-  	$CometObservations = $this->calculateCometObservations($observerId);
+  	$CometObservations = $this->calculateAccomplishments($observerId, "cometObservations", 10, false);
   	$oldCometObservationsNewbie = $this->getCometObservationsNewbie($observerId);
   	$newCometObservationsNewbie = $CometObservations[0];
   	$sql = "UPDATE accomplishments SET CometObservationsNewbie = " . $newCometObservationsNewbie . " WHERE observer = \"". $observerId ."\";";
@@ -3300,7 +3262,7 @@ class Accomplishments {
   public function recalculateCometsObserved($observerId) {
   	global $objDatabase, $objMessages;
   	// Comet Observations
-  	$CometsObserved = $this->calculateCometsObserved($observerId);
+  	$CometsObserved = $this->calculateAccomplishments($observerId, "calculateCometsObserved", 10, false);
   	$oldCometsObservedNewbie = $this->getCometsObservedNewbie($observerId);
   	$newCometsObservedNewbie = $CometsObserved[0];
   	$sql = "UPDATE accomplishments SET CometsObservedNewbie = " . $newCometsObservedNewbie . " WHERE observer = \"". $observerId ."\";";
@@ -3395,7 +3357,7 @@ class Accomplishments {
   public function recalculateCometDrawings($observerId) {
   	global $objDatabase, $objMessages;
   	// Comet Observations
-  	$CometDrawings = $this->calculateCometDrawings($observerId);
+  	$CometDrawings = $this->calculateAccomplishments($observerId, "cometDrawings", 10, false);
   	$oldCometDrawingsNewbie = $this->getCometDrawingsNewbie($observerId);
   	$newCometDrawingsNewbie = $CometDrawings[0];
   	$sql = "UPDATE accomplishments SET CometDrawingsNewbie = " . $newCometDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
