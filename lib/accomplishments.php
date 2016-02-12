@@ -13,7 +13,8 @@ class Accomplishments {
    result is [ bronze, silver, gold ]
 
    @param $observer The observer for which to calculate the number of objects seen.
-   @param $catalog The catalog to use.
+   @param $catalog The catalog to use. If the catalog is
+              + drawings: The number of drawings by an observer is calculated.
    @param $ranking The number of categories in the result
    @param $drawings True if the drawings should be calculated
    @return integer[] [ bronze, silver, gold ]
@@ -21,13 +22,20 @@ class Accomplishments {
   public function calculateAccomplishments($observer, $catalog, $ranking, $drawings = false)
   { global $objObservation;
     $objObservation = new Observations();
-    if ($drawings) {
-      $numberOfObjects = $objObservation->getDrawingsCountFromCatalog($observer,$catalog);
-    } else {
-      $numberOfObjects = $objObservation->getObservedCountFromCatalogOrList($observer,$catalog);
-    }
 
-    return $this->ranking($numberOfObjects, $ranking);
+    switch($catalog) {
+      case "drawings":
+        $total = $objObservation->getDsDrawingsCountFromObserver($observer);
+        break;
+      default:
+        if ($drawings) {
+          $total = $objObservation->getDrawingsCountFromCatalog($observer,$catalog);
+        } else {
+          $total = $objObservation->getObservedCountFromCatalogOrList($observer,$catalog);
+        }
+        break;
+    }
+    return $this->ranking($total, $ranking);
   }
 
   // Calculates the total number of drawings the observer has made and
@@ -1736,7 +1744,7 @@ class Accomplishments {
   	}
 
   	// CALDWELL DRAWINGS
-  	$caldwellDrawings = $this->calculateAccomplishmentsDrawings($observerId, "Caldwell", 3, true);
+  	$caldwellDrawings = $this->calculateAccomplishments($observerId, "Caldwell", 3, true);
   	$oldCaldwellDrawingsBronze = $this->getCaldwellDrawingsBronze($observerId);
   	$newCaldwellDrawingsBronze = $caldwellDrawings[0];
   	$sql = "UPDATE accomplishments SET CaldwellDrawingsBronze = " . $newCaldwellDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
@@ -1816,7 +1824,7 @@ class Accomplishments {
   	}
 
   	// Herschel DRAWINGS
-  	$herschelDrawings = $this->calculateAccomplishmentsDrawings($observerId, "H400", 5, true);
+  	$herschelDrawings = $this->calculateAccomplishments($observerId, "H400", 5, true);
   	$oldHerschelDrawingsBronze = $this->getHerschelDrawingsBronze($observerId);
   	$newHerschelDrawingsBronze = $herschelDrawings[0];
   	$sql = "UPDATE accomplishments SET HerschelDrawingsBronze = " . $newHerschelDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
@@ -1913,7 +1921,7 @@ class Accomplishments {
   	}
 
   	// HerschelII DRAWINGS
-  	$HerschelIIDrawings = $this->calculateAccomplishmentsDrawings($observerId, "HII", 5, true);
+  	$HerschelIIDrawings = $this->calculateAccomplishments($observerId, "HII", 5, true);
   	$oldHerschelIIDrawingsBronze = $this->getHerschelIIDrawingsBronze($observerId);
   	$newHerschelIIDrawingsBronze = $HerschelIIDrawings[0];
   	$sql = "UPDATE accomplishments SET HerschelIIDrawingsBronze = " . $newHerschelIIDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
@@ -1963,7 +1971,7 @@ class Accomplishments {
   public function recalculateDrawings($observerId) {
   	global $objDatabase, $objMessages;
   	// drawings
-  	$drawings = $this->calculateDrawings($observerId);
+  	$drawings = $this->calculateAccomplishments($observerId, "drawings", 10, true);
   	$oldDrawingsNewbie = $this->getDrawingsNewbie($observerId);
   	$newDrawingsNewbie = $drawings[0];
   	$sql = "UPDATE accomplishments SET drawingsNewbie = " . $newDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
