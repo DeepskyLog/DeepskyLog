@@ -1,15 +1,19 @@
 <?php
 // accomplishments.php
-// The objects class collects all functions needed to calculated and retrieve the accomplishments of an observer.
-
 global $inIndex;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 require_once "observations.php";
 
-
+/**
+Collects all functions needed to calculated and retrieve the accomplishments of an observer.
+*/
 class Accomplishments {
-  // Calculates the number of different messiers objects the observer has seen and
-  // returns an array [ bronze, silver, gold ]
+  /** Calculates the number of different messiers objects the observer has seen and
+   returns an array [ bronze, silver, gold ].
+
+   @param $observer The observer for which to calculate the number of messier objects seen.
+   @return integer[] [ bronze, silver, gold ]
+   */
   public function calculateMessier($observer)
   { global $objObservation;
     $objObservation = new Observations();
@@ -18,8 +22,12 @@ class Accomplishments {
     return $this->ranking($numberOfMessiers, 3);
   }
 
-  // Calculates the number of different messiers objects the observer has drawn and
-  // returns an array [ bronze, silver, gold ]
+  /** Calculates the number of different messiers objects the observer has drawn and
+   returns an array [ bronze, silver, gold ].
+
+   @param $observer The observer for which to calculate the number of messier objects drawn.
+   @return integer[] [ bronze, silver, gold ]
+  */
   public function calculateMessierDrawings($observer)
   { global $objObservation;
     $objObservation = new Observations();
@@ -28,8 +36,12 @@ class Accomplishments {
     return $this->ranking($numberOfDrawings, 3);
   }
 
-  // Calculates the number of different caldwell objects the observer has seen and
-  // returns an array [ bronze, silver, gold ]
+  /** Calculates the number of different caldwell objects the observer has seen and
+   returns an array [ bronze, silver, gold ].
+
+   @param $observer The observer for which to calculate the number of caldwell objects seen.
+   @return integer[] [ bronze, silver, gold ]
+  */
   public function calculateCaldwell($observer)
   { global $objObservation;
     $objObservation = new Observations();
@@ -38,8 +50,12 @@ class Accomplishments {
     return $this->ranking($numberOfCaldwells, 3);
   }
 
-  // Calculates the number of different caldwell objects the observer has drawn and
-  // returns an array [ bronze, silver, gold ]
+  /** Calculates the number of different caldwell objects the observer has drawn and
+   returns an array [ bronze, silver, gold ].
+
+   @param $observer The observer for which to calculate the number of caldwell objects drawn.
+   @return integer[] [ bronze, silver, gold ]
+  */
   public function calculateCaldwellDrawings($observer)
   { global $objObservation;
     $objObservation = new Observations();
@@ -48,8 +64,12 @@ class Accomplishments {
     return $this->ranking($numberOfCaldwells, 3);
   }
 
-  // Calculates the number of different herschel objects the observer has seen and
-  // returns an array [ bronze, silver, gold, diamond, platina ]
+  /** Calculates the number of different herschel objects the observer has seen and
+   returns an array [ bronze, silver, gold, diamond, platina ].
+
+   @param $observer The observer for which to calculate the number of herschel objects seen.
+   @return integer[] [ bronze, silver, gold, diamond, platina ]
+  */
   public function calculateHerschel($observer)
   { global $objObservation;
     $objObservation = new Observations();
@@ -58,8 +78,12 @@ class Accomplishments {
     return $this->ranking($numberOfHerschels, 5);
   }
 
-  // Calculates the number of different herschel objects the observer has drawn and
-  // returns an array [ bronze, silver, gold, diamond, platina ]
+  /** Calculates the number of different herschel objects the observer has drawn and
+   returns an array [ bronze, silver, gold, diamond, platina ].
+
+   @param $observer The observer for which to calculate the number of herschel objects drawn.
+   @return integer[] [ bronze, silver, gold, diamond, platina ]
+    */
   public function calculateHerschelDrawings($observer)
   { global $objObservation;
     $objObservation = new Observations();
@@ -68,8 +92,12 @@ class Accomplishments {
     return $this->ranking($numberOfDrawings, 5);
   }
 
-  // Calculates the number of different herschel II objects the observer has seen and
-  // returns an array [ bronze, silver, gold, diamond, platina ]
+  /** Calculates the number of different herschel II objects the observer has seen and
+   returns an array [ bronze, silver, gold, diamond, platina ].
+
+     @param $observer The observer for which to calculate the number of herschel II objects seen.
+     @return integer[] [ bronze, silver, gold, diamond, platina ]
+  */
   public function calculateHerschelII($observer)
   { global $objObservation;
     $objObservation = new Observations();
@@ -78,8 +106,12 @@ class Accomplishments {
     return $this->ranking($numberOfHerschels, 5);
   }
 
-  // Calculates the number of different herschel II objects the observer has drawn and
-  // returns an array [ bronze, silver, gold, diamond, platina ]
+  /** Calculates the number of different herschel II objects the observer has drawn and
+   returns an array [ bronze, silver, gold, diamond, platina ]
+
+   @param $observer The observer for which to calculate the number of herschel II objects drawn.
+   @return integer[] [ bronze, silver, gold, diamond, platina ]
+  */
   public function calculateHerschelIIDrawings($observer)
   { global $objObservation;
     $objObservation = new Observations();

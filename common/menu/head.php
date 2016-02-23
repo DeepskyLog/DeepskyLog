@@ -16,22 +16,29 @@ function head() {
 	echo "<link rel=\"shortcut icon\" href=\"" . $baseURL . "styles/images/favicon.png\" />";
 	echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"DeepskyLog - latest observations\" href=\"observations.rss\" />";
 	echo "<link href=\"https://plus.google.com/105963409869875462537/\" rel=\"publisher\" />";
-	echo "<script type=\"text/javascript\" src=\"https://apis.google.com/js/plusone.js\"></script>";
+	// Load the javascript for using php functions in javascript.
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/phpjs.js\"></script>";
-	echo "<script src=\"" . $baseURL . "lib/javascript/jquery-1.11.2.min.js\" type=\"text/javascript\"></script>
-        <link rel=\"stylesheet\" href=\"" . $baseURL . "styles/lightbox.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\" />
+	// Load the javascript for jquery.
+	echo "<script src=\"" . $baseURL . "lib/javascript/jquery-1.11.2.min.js\" type=\"text/javascript\"></script>";
+	// Load Lightbox to show nice pictures when clicking on the images.
+	echo "<link rel=\"stylesheet\" href=\"" . $baseURL . "styles/lightbox.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\" />
         <script src=\"" . $baseURL . "lib/javascript/lightbox.min.js\" type=\"text/javascript\" charset=\"utf-8\"></script>";
 	echo "<link href='http://fonts.googleapis.com/css?family=Yellowtail' rel='stylesheet' type='text/css'>";
+	// Load the javascript for jquery-ui.
 	echo "<script src=\"" . $baseURL . "lib/javascript/jquery-ui.min.js\" type=\"text/javascript\"></script>";
 	echo "<link rel=\"stylesheet\" href=\"" . $baseURL . "styles/jquery-ui.min.css\">";
+	// Load highcharts
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/highcharts.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/modules/exporting.js\"></script>";
+	// Load bootstrap
 	echo "<script src=\"" . $baseURL . "lib/javascript/bootstrap.min.js\"></script>";
 	echo "<script src=\"" . $baseURL . "lib/javascript/bootstrap-tour.min.js\"></script>";
 	echo "<link href=\"styles/bootstrap.min.css\" rel=\"stylesheet\">";
 	echo "<link href=\"styles/bootstrap-tour.min.css\" rel=\"stylesheet\">";
+	// Load select2 javascript to be able to type in select boxes in html.
 	echo "<link href=\"styles/select2.min.css\" rel=\"stylesheet\">";
 	echo "<script src=\"" . $baseURL . "lib/javascript/select2.min.js\"></script>";
+	// Load the tablesorter
 	echo "<link rel=\"stylesheet\" href=\"styles/bootstrap-theme.min.css\">";
 	echo "<script src=\"lib/javascript/jquery.tablesorter.min.js\"></script>
         <script src=\"lib/javascript/jquery.tablesorter.widgets.min.js\"></script>
