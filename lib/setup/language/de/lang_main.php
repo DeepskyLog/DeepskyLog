@@ -1609,6 +1609,7 @@ define("LangLOText"																				,"LO");
 define("LangMO"																						,"Vergleiche diese Beobachtung mit allen meinen Beobachtungen dieses Objektes");
 define("LangMOText"																				,"MO");
 define("LangDetail"																				,"Details dieser Beobachtung");
+define("LangImage"																				,"This observation contains an image");
 define("LangDetailText"																		,"D");
 define("LangDetailDrawingText"														,"Z");
 define("LangPreviousObservation"													,"Vorherige Beobachtung");

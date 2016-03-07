@@ -1566,6 +1566,7 @@ define("LangLOText"																				,"DO");
 define("LangMO"																						,"Comparez cette observation avec toutes mes observations de cet objet");
 define("LangMOText"																				,"MO");
 define("LangDetail"																				,"D&eacute;tails de l'observation");
+define("LangImage"																				,"This observation contains an image");
 define("LangDetailText"																		,"D");
 define("LangDetailDrawingText"														,"D");
 define("LangPreviousObservation"													,"Observation pr&eacute;c&eacute;dente");
