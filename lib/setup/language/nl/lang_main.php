@@ -1595,6 +1595,7 @@ define("LangLOText"																				,"LO");
 define("LangMO"																						,"Vergelijk deze waarneming met al mijn waarnemingen van dit object");
 define("LangMOText"																				,"MO");
 define("LangDetail"																				,"Details van deze waarneming");
+define("LangImage"																				,"Deze waarneming bevat een afbeelding");
 define("LangDetailText"																		,"D");
 define("LangDetailDrawingText"														,"T");
 define("LangPreviousObservation"													,"Vorige waarneming");

@@ -130,7 +130,7 @@ if ($loggedUser == ""){
 	            { "data": "instrumentdiameter", "visible": false},
 	            { "data": "sortdate", "visible": false},
 		        { "data": "date", "orderData": 6 },
-		        { "orderable" : false, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observation&observation='+row.observationid+'&dalm=D" title="<?=LangDetail ?>"><img src="/styles/images/details.png"/></a>' }}		      
+		        { "orderable" : false, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observation&observation='+row.observationid+'&dalm=D" title="<?=LangDetail ?>"><img src="/styles/images/details.png"/></a>'+(row.hasdrawing==1?'&nbsp;<img src="/styles/images/img.png" title="<?=LangImage ?>"/>':'') }}		      
 	        ];
 
 		var dt = $('#observations').DataTable( datatablesConfig );
@@ -181,7 +181,7 @@ if ($loggedUser == ""){
 			<th></th>											<!--5 (Hidden) diameter -->			
 			<th></th>											<!--6 (Hidden) sortdate -->
 			<th><?= LangOverviewObservationsHeader4 ?></th>		<!--7 Date -->
-			<th></th>											<!--8 Details -->
+			<th style="width:40px"></th>											<!--8 Details -->
         </tr>
 	</thead>
     <tfoot>
