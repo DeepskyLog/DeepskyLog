@@ -765,7 +765,7 @@ class Observations {
 	public function getPopularObservers() {
 		// returns the number of observations of the observers
 		global $objDatabase;
-		return $objDatabase->selectSingleArray ( "SELECT observations.observerid, COUNT(observations.id) As Cnt FROM observations GROUP BY observations.observerid ORDER BY Cnt DESC", 'observerid' );
+		return $objDatabase->selectSingleArray ( "SELECT observations.observerid, COUNT(observations.id) As Cnt FROM observations where observations.visibility != 7 GROUP BY observations.observerid ORDER BY Cnt DESC", 'observerid' );
 	}
 	public function getPopularObserversOverviewCatOrList($sort, $cat = "") {
 		global $objDatabase, $loggedUser;
