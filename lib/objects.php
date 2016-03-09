@@ -1868,7 +1868,7 @@ class Objects {
 	}
 	public function validateObject() // checks if the add new object form is correctly filled in and eventually adds the object to the database
 {
-		global $objUtil, $objObject, $objObserver, $entryMessage, $loggedUser, $developversion, $mailTo, $mailFrom;
+		global $objUtil, $objObject, $objObserver, $entryMessage, $loggedUser, $developversion, $mailTo, $mailFrom, $objMessage;
 		if (! ($loggedUser))
 			new Exception ( LangException002c );
 		if ($objUtil->checkPostKey ( 'newobject' )) {
@@ -1934,7 +1934,7 @@ class Objects {
 					}
 				}
 			}
-			if ($check) // postion angle
+			if ($check) // position angle
 {
 				$posangle = "999";
 				if (! $objUtil->checkLimitsInclusive ( 'posangle', 0, 359 )) {
