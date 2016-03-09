@@ -98,7 +98,8 @@ function tolist() {
                           <!-- Ask for the new name of the list. -->
                           <h1 class=\"text-center login-title\">" . LangNewNameList . "</h1>
                           <form action=\"" . $baseURL . "index.php?indexAction=listaction\">
-                           <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
+                           <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />
+													 <input type=\"hidden\" name=\"listnamefrom\" value=\"" . $listname . "\" />";
 
 		$publicList = $objList->isPublic ( $listname );
 		$listToPrint = $listname;
