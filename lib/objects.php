@@ -1934,7 +1934,7 @@ class Objects {
 					}
 				}
 			}
-			if ($check) // postion angle
+			if ($check) // position angle
 {
 				$posangle = "999";
 				if (! $objUtil->checkLimitsInclusive ( 'posangle', 0, 359 )) {
