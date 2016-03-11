@@ -20,6 +20,7 @@ class Accomplishments {
               + cometDrawings: The number of comet drawings.
               + openClusters: The number of open clusters seen or drawn.
               + globularClusters: The number of globular clusters seen or drawn.
+              + planetaryNebulae: The number of planetary nebulae seen or drawn.
    @param $ranking The number of categories in the result.
    @param $drawings True if the drawings should be calculated.
    @param $max The maximum number of elements to take into account.
@@ -57,6 +58,13 @@ class Accomplishments {
         }
         $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"GLOCL\" and observations.observerid = \"" . $observer . "\"" . $extra));
         break;
+      case "planetaryNebulae":
+        $extra = "";
+        if ($drawings) {
+          $extra = " and observations.hasDrawing = 1";
+        }
+        $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"PLNNB\" and observations.observerid = \"" . $observer . "\""));
+        break;
       default:
         if ($drawings) {
           $total = $objObservation->getDrawingsCountFromCatalog($observer,$catalog);
@@ -71,24 +79,6 @@ class Accomplishments {
     } else {
       return $this->ranking($total, $ranking);
     }
-  }
-
-  // Calculates the number of different planetary nebulae the observer has seen and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculatePlanetaryNebulae($observer)
-  { global $objDatabase;
-    $plnnb = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"PLNNB\" and observations.observerid = \"" . $observer . "\""));
-
-    return $this->ranking($plnnb, 10, 1023);
-  }
-
-  // Calculates the number of different planetary nebulae the observer has drawn and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculatePlanetaryNebulaDrawings($observer)
-  { global $objDatabase;
-    $plnnbDr = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"PLNNB\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-
-    return $this->ranking($plnnbDr, 10, 1023);
   }
 
   // Calculates the number of different galaxies the observer has seen and
@@ -2394,7 +2384,7 @@ class Accomplishments {
   public function recalculatePlanetaryNebulae($observerId) {
   	global $objDatabase, $objMessages;
   	// PlanetaryNebulae
-  	$PlanetaryNebulae = $this->calculatePlanetaryNebulae($observerId);
+  	$PlanetaryNebulae = $this->calculateAccomplishments($observerId, "planetaryNebulae", 10, false, 1023);
   	$oldPlanetaryNebulaeNewbie = $this->getPlanetaryNebulaNewbie($observerId);
   	$newPlanetaryNebulaeNewbie = $PlanetaryNebulae[0];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaNewbie = " . $newPlanetaryNebulaeNewbie . " WHERE observer = \"". $observerId ."\";";
@@ -2489,7 +2479,7 @@ class Accomplishments {
   public function recalculatePlanetaryNebulaDrawings($observerId) {
   	global $objDatabase, $objMessages;
   	// PlanetaryNebulaDrawings
-  	$PlanetaryNebulaDrawings = $this->calculatePlanetaryNebulaDrawings($observerId);
+  	$PlanetaryNebulaDrawings = $this->calculateAccomplishments($observerId, "planetaryNebulae", 10, true, 1023);
   	$oldPlanetaryNebulaDrawingsNewbie = $this->getPlanetaryNebulaDrawingsNewbie($observerId);
   	$newPlanetaryNebulaDrawingsNewbie = $PlanetaryNebulaDrawings[0];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsNewbie = " . $newPlanetaryNebulaDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
