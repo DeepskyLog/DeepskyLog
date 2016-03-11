@@ -19,6 +19,7 @@ class Accomplishments {
               + cometsObserved: The number of comets observed.
               + cometDrawings: The number of comet drawings.
               + openClusters: The number of open clusters seen or drawn.
+              + globularClusters: The number of globular clusters seen or drawn.
    @param $ranking The number of categories in the result.
    @param $drawings True if the drawings should be calculated.
    @param $max The maximum number of elements to take into account.
@@ -49,6 +50,13 @@ class Accomplishments {
           $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"OPNCL\" and observations.observerid = \"" . $observer . "\"" . $extra));
           $total += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"CLANB\" and observations.observerid = \"" . $observer . "\"" . $extra));
           break;
+      case "globularClusters":
+        $extra = "";
+        if ($drawings) {
+          $extra = " and observations.hasDrawing = 1";
+        }
+        $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"GLOCL\" and observations.observerid = \"" . $observer . "\"" . $extra));
+        break;
       default:
         if ($drawings) {
           $total = $objObservation->getDrawingsCountFromCatalog($observer,$catalog);
@@ -63,24 +71,6 @@ class Accomplishments {
     } else {
       return $this->ranking($total, $ranking);
     }
-  }
-
-  // Calculates the number of different globular clusters the observer has seen and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateGlobularClusters($observer)
-  { global $objDatabase;
-    $glocl = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"GLOCL\" and observations.observerid = \"" . $observer . "\""));
-
-    return $this->ranking($glocl, 10, 152);
-  }
-
-  // Calculates the number of different globular clusters the observer has drawn and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateGlobularClusterDrawings($observer)
-  { global $objDatabase;
-    $gloclDr = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"GLOCL\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-
-    return $this->ranking($gloclDr, 10, 152);
   }
 
   // Calculates the number of different planetary nebulae the observer has seen and
@@ -2213,7 +2203,8 @@ class Accomplishments {
   public function recalculateGlobularClusters($observerId) {
   	global $objDatabase, $objMessages;
   	// GlobularClusters
-  	$GlobularClusters = $this->calculateGlobularClusters($observerId);
+    $GlobularClusters = $this->calculateAccomplishments($observerId, "globularClusters", 10, false, 152);
+
   	$oldGlobularClustersNewbie = $this->getGlobularClustersNewbie($observerId);
   	$newGlobularClustersNewbie = $GlobularClusters[0];
   	$sql = "UPDATE accomplishments SET GlobularClusterNewbie = " . $newGlobularClustersNewbie . " WHERE observer = \"". $observerId ."\";";
@@ -2308,7 +2299,7 @@ class Accomplishments {
   public function recalculateGlobularClusterDrawings($observerId) {
   	global $objDatabase, $objMessages;
   	// GlobularClusterDrawings
-  	$GlobularClusterDrawings = $this->calculateGlobularClusterDrawings($observerId);
+  	$GlobularClusterDrawings = $this->calculateAccomplishments($observerId, "globularClusters", 10, true, 152);
   	$oldGlobularClusterDrawingsNewbie = $this->getGlobularClusterDrawingsNewbie($observerId);
   	$newGlobularClusterDrawingsNewbie = $GlobularClusterDrawings[0];
   	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsNewbie = " . $newGlobularClusterDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
