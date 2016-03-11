@@ -63,7 +63,7 @@ class Accomplishments {
         if ($drawings) {
           $extra = " and observations.hasDrawing = 1";
         }
-        $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"PLNNB\" and observations.observerid = \"" . $observer . "\""));
+        $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"PLNNB\" and observations.observerid = \"" . $observer . "\"" . $extra));
         break;
       default:
         if ($drawings) {
@@ -1596,7 +1596,7 @@ class Accomplishments {
   }
 
   public function recalculateMessiers($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// MESSIER
   	$messiers = $this->calculateAccomplishments($observerId, "M", 3, false);
 
@@ -1650,7 +1650,7 @@ class Accomplishments {
   }
 
   public function recalculateCaldwells($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// CALDWELL
   	$caldwells = $this->calculateAccomplishments($observerId, "Caldwell", 3, false);
   	$oldCaldwellBronze = $this->getCaldwellBronze($observerId);
@@ -1712,7 +1712,7 @@ class Accomplishments {
   }
 
   public function recalculateHerschels($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// Herschel
   	$herschels = $this->calculateAccomplishments($observerId, "H400", 5, false);
   	$oldHerschelBronze = $this->getHerschelBronze($observerId);
@@ -1809,7 +1809,7 @@ class Accomplishments {
   }
 
   public function recalculateHerschelIIs($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// HerschelII
   	$HerschelIIs = $this->calculateAccomplishments($observerId, "HII", 5, false);
   	$oldHerschelIIBronze = $this->getHerschelIIBronze($observerId);
@@ -1906,7 +1906,7 @@ class Accomplishments {
   }
 
   public function recalculateDrawings($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// drawings
   	$drawings = $this->calculateAccomplishments($observerId, "drawings", 10, true);
   	$oldDrawingsNewbie = $this->getDrawingsNewbie($observerId);
@@ -2001,7 +2001,7 @@ class Accomplishments {
   }
 
   public function recalculateOpenClusters($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// OpenClusters
   	$OpenClusters = $this->calculateAccomplishments($observerId, "openClusters", 10, false, 1700);
   	$oldOpenClustersNewbie = $this->getOpenClustersNewbie($observerId);
@@ -2191,7 +2191,7 @@ class Accomplishments {
   }
 
   public function recalculateGlobularClusters($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// GlobularClusters
     $GlobularClusters = $this->calculateAccomplishments($observerId, "globularClusters", 10, false, 152);
 
@@ -2287,7 +2287,7 @@ class Accomplishments {
   }
 
   public function recalculateGlobularClusterDrawings($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// GlobularClusterDrawings
   	$GlobularClusterDrawings = $this->calculateAccomplishments($observerId, "globularClusters", 10, true, 152);
   	$oldGlobularClusterDrawingsNewbie = $this->getGlobularClusterDrawingsNewbie($observerId);
@@ -2382,7 +2382,7 @@ class Accomplishments {
   }
 
   public function recalculatePlanetaryNebulae($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// PlanetaryNebulae
   	$PlanetaryNebulae = $this->calculateAccomplishments($observerId, "planetaryNebulae", 10, false, 1023);
   	$oldPlanetaryNebulaeNewbie = $this->getPlanetaryNebulaNewbie($observerId);
@@ -2477,7 +2477,7 @@ class Accomplishments {
   }
 
   public function recalculatePlanetaryNebulaDrawings($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// PlanetaryNebulaDrawings
   	$PlanetaryNebulaDrawings = $this->calculateAccomplishments($observerId, "planetaryNebulae", 10, true, 1023);
   	$oldPlanetaryNebulaDrawingsNewbie = $this->getPlanetaryNebulaDrawingsNewbie($observerId);
@@ -2572,7 +2572,7 @@ class Accomplishments {
   }
 
   public function recalculateGalaxies($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// Galaxies
   	$Galaxies = $this->calculateGalaxies($observerId);
   	$oldGalaxiesNewbie = $this->getGalaxyNewbie($observerId);
@@ -2667,7 +2667,7 @@ class Accomplishments {
   }
 
   public function recalculateGalaxyDrawings($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// GalaxyDrawings
   	$GalaxyDrawings = $this->calculateGalaxyDrawings($observerId);
   	$oldGalaxyDrawingsNewbie = $this->getGalaxyDrawingsNewbie($observerId);
@@ -2762,7 +2762,7 @@ class Accomplishments {
   }
 
   public function recalculateNebulae($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// Nebula
   	$Nebula = $this->calculateNebulae($observerId);
   	$oldNebulaNewbie = $this->getNebulaNewbie($observerId);
@@ -2857,7 +2857,7 @@ class Accomplishments {
   }
 
   public function recalculateNebulaDrawings($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// NebulaDrawings
   	$NebulaDrawings = $this->calculateNebulaDrawings($observerId);
   	$oldNebulaDrawingsNewbie = $this->getNebulaDrawingsNewbie($observerId);
@@ -2952,7 +2952,7 @@ class Accomplishments {
   }
 
   public function recalculateObjects($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// Different Objects
   	$Objects = $this->calculateDifferentObjects($observerId);
   	$oldObjectsNewbie = $this->getObjectsNewbie($observerId);
@@ -3047,7 +3047,7 @@ class Accomplishments {
   }
 
   public function recalculateObjectDrawings($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// ObjectsDrawings
   	$ObjectsDrawings = $this->calculateDifferentObjectDrawings($observerId);
   	$oldObjectsDrawingsNewbie = $this->getObjectsDrawingsNewbie($observerId);
@@ -3141,7 +3141,7 @@ class Accomplishments {
   }
 
   public function recalculateCometObservations($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// Comet Observations
   	$CometObservations = $this->calculateAccomplishments($observerId, "cometObservations", 10, false);
   	$oldCometObservationsNewbie = $this->getCometObservationsNewbie($observerId);
@@ -3236,7 +3236,7 @@ class Accomplishments {
   }
 
   public function recalculateCometsObserved($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// Comet Observations
   	$CometsObserved = $this->calculateAccomplishments($observerId, "calculateCometsObserved", 10, false);
   	$oldCometsObservedNewbie = $this->getCometsObservedNewbie($observerId);
@@ -3331,7 +3331,7 @@ class Accomplishments {
   }
 
   public function recalculateCometDrawings($observerId) {
-  	global $objDatabase, $objMessages;
+  	global $objDatabase, $objMessages, $loggedUser;
   	// Comet Observations
   	$CometDrawings = $this->calculateAccomplishments($observerId, "cometDrawings", 10, false);
   	$oldCometDrawingsNewbie = $this->getCometDrawingsNewbie($observerId);
