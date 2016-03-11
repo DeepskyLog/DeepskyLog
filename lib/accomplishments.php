@@ -22,6 +22,7 @@ class Accomplishments {
               + globularClusters: The number of globular clusters seen or drawn.
               + planetaryNebulae: The number of planetary nebulae seen or drawn.
               + galaxies: The number of galaxies seen or drawn.
+              + nebulae: The number of nebulae seen or drawn.
    @param $ranking The number of categories in the result.
    @param $drawings True if the drawings should be calculated.
    @param $max The maximum number of elements to take into account.
@@ -62,6 +63,16 @@ class Accomplishments {
       case "galaxies":
         $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"GALXY\" and observations.observerid = \"" . $observer . "\"" . $extra));
         break;
+      case "nebulae":
+        $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"EMINB\" and observations.observerid = \"" . $observer . "\"" . $extra));
+        $total += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"ENRNN\" and observations.observerid = \"" . $observer . "\"" . $extra));
+        $total += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"ENSTR\" and observations.observerid = \"" . $observer . "\"" . $extra));
+        $total += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"REFNB\" and observations.observerid = \"" . $observer . "\"" . $extra));
+        $total += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"RNHII\" and observations.observerid = \"" . $observer . "\"" . $extra));
+        $total += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"HII\" and observations.observerid = \"" . $observer . "\"" . $extra));
+        $total += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"SNREM\" and observations.observerid = \"" . $observer . "\"" . $extra));
+        $total += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"WRNEB\" and observations.observerid = \"" . $observer . "\"" . $extra));
+        break;
       default:
         if ($drawings) {
           $total = $objObservation->getDrawingsCountFromCatalog($observer,$catalog);
@@ -76,40 +87,6 @@ class Accomplishments {
     } else {
       return $this->ranking($total, $ranking);
     }
-  }
-
-  // Calculates the number of different nebulae the observer has seen and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateNebulae($observer)
-  { global $objDatabase;
-
-    $eminb = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"EMINB\" and observations.observerid = \"" . $observer . "\""));
-    $eminb += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"ENRNN\" and observations.observerid = \"" . $observer . "\""));
-    $eminb += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"ENSTR\" and observations.observerid = \"" . $observer . "\""));
-    $eminb += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"REFNB\" and observations.observerid = \"" . $observer . "\""));
-    $eminb += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"RNHII\" and observations.observerid = \"" . $observer . "\""));
-    $eminb += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"HII\" and observations.observerid = \"" . $observer . "\""));
-    $eminb += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"SNREM\" and observations.observerid = \"" . $observer . "\""));
-    $eminb += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"WRNEB\" and observations.observerid = \"" . $observer . "\""));
-
-    return $this->ranking($eminb, 10, 384);
-  }
-
-  // Calculates the number of different nebulae the observer has drawn and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateNebulaDrawings($observer)
-  { global $objDatabase;
-
-    $eminbDr = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"EMINB\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-    $eminbDr += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"ENRNN\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-    $eminbDr += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"ENSTR\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-    $eminbDr += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"REFNB\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-    $eminbDr += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"RNHII\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-    $eminbDr += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"HII\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-    $eminbDr += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"SNREM\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-    $eminbDr += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"WRNEB\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-
-    return $this->ranking($eminbDr, 10, 384);
   }
 
   // Calculates the number of different objects the observer has seen and
@@ -2743,7 +2720,7 @@ class Accomplishments {
   public function recalculateNebulae($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// Nebula
-  	$Nebula = $this->calculateNebulae($observerId);
+  	$Nebula = $this->calculateAccomplishments($observerId, "nebulae", 10, false, 384);
   	$oldNebulaNewbie = $this->getNebulaNewbie($observerId);
   	$newNebulaNewbie = $Nebula[0];
   	$sql = "UPDATE accomplishments SET NebulaNewbie = " . $newNebulaNewbie . " WHERE observer = \"". $observerId ."\";";
@@ -2838,7 +2815,7 @@ class Accomplishments {
   public function recalculateNebulaDrawings($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// NebulaDrawings
-  	$NebulaDrawings = $this->calculateNebulaDrawings($observerId);
+  	$NebulaDrawings = $this->calculateAccomplishments($observerId, "nebulae", 10, true, 384);
   	$oldNebulaDrawingsNewbie = $this->getNebulaDrawingsNewbie($observerId);
   	$newNebulaDrawingsNewbie = $NebulaDrawings[0];
   	$sql = "UPDATE accomplishments SET NebulaDrawingsNewbie = " . $newNebulaDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
