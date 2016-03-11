@@ -21,6 +21,7 @@ class Accomplishments {
               + openClusters: The number of open clusters seen or drawn.
               + globularClusters: The number of globular clusters seen or drawn.
               + planetaryNebulae: The number of planetary nebulae seen or drawn.
+              + galaxies: The number of galaxies seen or drawn.
    @param $ranking The number of categories in the result.
    @param $drawings True if the drawings should be calculated.
    @param $max The maximum number of elements to take into account.
@@ -29,6 +30,11 @@ class Accomplishments {
   public function calculateAccomplishments($observer, $catalog, $ranking, $drawings = false, $max = 0)
   { global $objObservation, $objObserver, $objCometObservation, $objDatabase;
     $objObservation = new Observations();
+
+    $extra = "";
+    if ($drawings) {
+      $extra = " and observations.hasDrawing = 1";
+    }
 
     switch($catalog) {
       case "drawings":
@@ -44,26 +50,17 @@ class Accomplishments {
           $total = $objCometObservation->getCometDrawingsCountFromObserver($observer);
           break;
       case "openClusters":
-          $extra = "";
-          if ($drawings) {
-            $extra = " and observations.hasDrawing = 1";
-          }
           $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"OPNCL\" and observations.observerid = \"" . $observer . "\"" . $extra));
           $total += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"CLANB\" and observations.observerid = \"" . $observer . "\"" . $extra));
           break;
       case "globularClusters":
-        $extra = "";
-        if ($drawings) {
-          $extra = " and observations.hasDrawing = 1";
-        }
         $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"GLOCL\" and observations.observerid = \"" . $observer . "\"" . $extra));
         break;
       case "planetaryNebulae":
-        $extra = "";
-        if ($drawings) {
-          $extra = " and observations.hasDrawing = 1";
-        }
         $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"PLNNB\" and observations.observerid = \"" . $observer . "\"" . $extra));
+        break;
+      case "galaxies":
+        $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"GALXY\" and observations.observerid = \"" . $observer . "\"" . $extra));
         break;
       default:
         if ($drawings) {
@@ -79,24 +76,6 @@ class Accomplishments {
     } else {
       return $this->ranking($total, $ranking);
     }
-  }
-
-  // Calculates the number of different galaxies the observer has seen and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateGalaxies($observer)
-  { global $objDatabase;
-    $galxy = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"GALXY\" and observations.observerid = \"" . $observer . "\""));
-
-    return $this->ranking($galxy, 10);
-  }
-
-  // Calculates the number of different galaxies the observer has drawn and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateGalaxyDrawings($observer)
-  { global $objDatabase;
-    $galxyDr = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"GALXY\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-
-    return $this->ranking($galxyDr, 10);
   }
 
   // Calculates the number of different nebulae the observer has seen and
@@ -2574,7 +2553,7 @@ class Accomplishments {
   public function recalculateGalaxies($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// Galaxies
-  	$Galaxies = $this->calculateGalaxies($observerId);
+  	$Galaxies = $this->calculateAccomplishments($observerId, "galaxies", 10, false);
   	$oldGalaxiesNewbie = $this->getGalaxyNewbie($observerId);
   	$newGalaxiesNewbie = $Galaxies[0];
   	$sql = "UPDATE accomplishments SET GalaxyNewbie = " . $newGalaxiesNewbie . " WHERE observer = \"". $observerId ."\";";
@@ -2669,7 +2648,7 @@ class Accomplishments {
   public function recalculateGalaxyDrawings($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// GalaxyDrawings
-  	$GalaxyDrawings = $this->calculateGalaxyDrawings($observerId);
+  	$GalaxyDrawings = $this->calculateAccomplishments($observerId, "galaxies", 10, true);
   	$oldGalaxyDrawingsNewbie = $this->getGalaxyDrawingsNewbie($observerId);
   	$newGalaxyDrawingsNewbie = $GalaxyDrawings[0];
   	$sql = "UPDATE accomplishments SET GalaxyDrawingsNewbie = " . $newGalaxyDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
