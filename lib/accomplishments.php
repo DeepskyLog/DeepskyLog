@@ -23,6 +23,7 @@ class Accomplishments {
               + planetaryNebulae: The number of planetary nebulae seen or drawn.
               + galaxies: The number of galaxies seen or drawn.
               + nebulae: The number of nebulae seen or drawn.
+              + differentObjects: The number of different objects seen or drawn
    @param $ranking The number of categories in the result.
    @param $drawings True if the drawings should be calculated.
    @param $max The maximum number of elements to take into account.
@@ -73,6 +74,13 @@ class Accomplishments {
         $total += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"SNREM\" and observations.observerid = \"" . $observer . "\"" . $extra));
         $total += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"WRNEB\" and observations.observerid = \"" . $observer . "\"" . $extra));
         break;
+      case "differentObjects":
+        if ($drawings) {
+          $total = $objObservation->getNumberOfObjectDrawings($observer);
+        } else {
+          $total = $objObservation->getNumberOfObjects($observer);
+        }
+        break;
       default:
         if ($drawings) {
           $total = $objObservation->getDrawingsCountFromCatalog($observer,$catalog);
@@ -87,26 +95,6 @@ class Accomplishments {
     } else {
       return $this->ranking($total, $ranking);
     }
-  }
-
-  // Calculates the number of different objects the observer has seen and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateDifferentObjects($observer)
-  {
-    $objObservation = new Observations();
-    $totalDSobjects = $objObservation->getNumberOfObjects($observer);
-
-    return $this->ranking($totalDSobjects, 10);
-  }
-
-  // Calculates the number of different objects the observer has drawn and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateDifferentObjectDrawings($observer)
-  {
-    $objObservation = new Observations();
-    $totalDSDrawings = $objObservation->getNumberOfObjectDrawings($observer);
-
-    return $this->ranking($totalDSDrawings, 10);
   }
 
   // Returns an boolean array with the accomplishments
@@ -2910,7 +2898,7 @@ class Accomplishments {
   public function recalculateObjects($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// Different Objects
-  	$Objects = $this->calculateDifferentObjects($observerId);
+  	$Objects = $this->calculateAccomplishments($observerId, "differentObjects", 10, false);
   	$oldObjectsNewbie = $this->getObjectsNewbie($observerId);
   	$newObjectsNewbie = $Objects[0];
   	$sql = "UPDATE accomplishments SET objectsNewbie = " . $newObjectsNewbie . " WHERE observer = \"". $observerId ."\";";
@@ -3005,7 +2993,7 @@ class Accomplishments {
   public function recalculateObjectDrawings($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// ObjectsDrawings
-  	$ObjectsDrawings = $this->calculateDifferentObjectDrawings($observerId);
+  	$ObjectsDrawings = $this->calculateAccomplishments($observerId, "differentObjects", 10, true);
   	$oldObjectsDrawingsNewbie = $this->getObjectsDrawingsNewbie($observerId);
   	$newObjectsDrawingsNewbie = $ObjectsDrawings[0];
   	$sql = "UPDATE accomplishments SET ObjectsDrawingsNewbie = " . $newObjectsDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
