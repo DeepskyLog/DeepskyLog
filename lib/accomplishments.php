@@ -18,12 +18,14 @@ class Accomplishments {
               + cometObservations: The number of observations in the comets module.
               + cometsObserved: The number of comets observed.
               + cometDrawings: The number of comet drawings.
-   @param $ranking The number of categories in the result
-   @param $drawings True if the drawings should be calculated
+              + openClusters: The number of open clusters seen or drawn.
+   @param $ranking The number of categories in the result.
+   @param $drawings True if the drawings should be calculated.
+   @param $max The maximum number of elements to take into account.
    @return integer[] [ bronze, silver, gold ]
    */
-  public function calculateAccomplishments($observer, $catalog, $ranking, $drawings = false)
-  { global $objObservation, $objObserver, $objCometObservation;
+  public function calculateAccomplishments($observer, $catalog, $ranking, $drawings = false, $max = 0)
+  { global $objObservation, $objObserver, $objCometObservation, $objDatabase;
     $objObservation = new Observations();
 
     switch($catalog) {
@@ -39,6 +41,14 @@ class Accomplishments {
       case "cometDrawings":
           $total = $objCometObservation->getCometDrawingsCountFromObserver($observer);
           break;
+      case "openClusters":
+          $extra = "";
+          if ($drawings) {
+            $extra = " and observations.hasDrawing = 1";
+          }
+          $total = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"OPNCL\" and observations.observerid = \"" . $observer . "\"" . $extra));
+          $total += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"CLANB\" and observations.observerid = \"" . $observer . "\"" . $extra));
+          break;
       default:
         if ($drawings) {
           $total = $objObservation->getDrawingsCountFromCatalog($observer,$catalog);
@@ -47,27 +57,12 @@ class Accomplishments {
         }
         break;
     }
-    return $this->ranking($total, $ranking);
-  }
+    if ($max > 0) {
+      return $this->ranking($total, $ranking, $max);
 
-  // Calculates the number of different open clusters the observer has seen and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateOpenClusters($observer)
-  { global $objDatabase;
-    $opncl = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"OPNCL\" and observations.observerid = \"" . $observer . "\""));
-    $opncl += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"CLANB\" and observations.observerid = \"" . $observer . "\""));
-
-    return $this->ranking($opncl, 10, 1700);
-  }
-
-  // Calculates the number of different open clusters the observer has drawn and
-  // returns an array [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
-  public function calculateOpenClusterDrawings($observer)
-  { global $objDatabase;
-    $opnclDr = count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"OPNCL\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-    $opnclDr += count($objDatabase->selectRecordsetArray("select DISTINCT(objects.name) from objects,observations where objects.name = observations.objectname and objects.type = \"CLANB\" and observations.observerid = \"" . $observer . "\" and observations.hasDrawing = 1"));
-
-    return $this->ranking($opnclDr, 10, 1700);
+    } else {
+      return $this->ranking($total, $ranking);
+    }
   }
 
   // Calculates the number of different globular clusters the observer has seen and
@@ -2028,7 +2023,7 @@ class Accomplishments {
   public function recalculateOpenClusters($observerId) {
   	global $objDatabase, $objMessages;
   	// OpenClusters
-  	$OpenClusters = $this->calculateOpenClusters($observerId);
+  	$OpenClusters = $this->calculateAccomplishments($observerId, "openClusters", 10, false, 1700);
   	$oldOpenClustersNewbie = $this->getOpenClustersNewbie($observerId);
   	$newOpenClustersNewbie = $OpenClusters[0];
   	$sql = "UPDATE accomplishments SET OpenClusterNewbie = " . $newOpenClustersNewbie . " WHERE observer = \"". $observerId ."\";";
@@ -2123,7 +2118,7 @@ class Accomplishments {
   public function recalculateOpenClusterDrawings($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// OpenClusterDrawings
-  	$OpenClusterDrawings = $this->calculateOpenClusterDrawings($observerId);
+    $OpenClusterDrawings = $this->calculateAccomplishments($observerId, "openClusters", 10, true, 1700);
   	$oldOpenClusterDrawingsNewbie = $this->getOpenClusterDrawingsNewbie($observerId);
   	$newOpenClusterDrawingsNewbie = $OpenClusterDrawings[0];
   	$sql = "UPDATE accomplishments SET OpenClusterDrawingsNewbie = " . $newOpenClusterDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
