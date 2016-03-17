@@ -112,7 +112,7 @@ if ($loggedUser == ""){
 
 		$(document).ready(function() {
 		  
-		    datatablesConfig.ajax = "observations_json.php?object=<?=$_GET['object']?>",		    
+		    datatablesConfig.ajax = "observations_json.php?object=<?=urlencode($_GET['object'])?>",		    
 		    datatablesConfig.order = [[6, 'desc']], 
 		    datatablesConfig.columns = [
 	            {
