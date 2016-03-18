@@ -201,19 +201,70 @@ function change_account()
 	echo "</div><p class=\"form-control-static\">" .
 			  LangChangeAccountField12Expl . "</p></div>";
 
+  // The copyright / license settings.
+  $copyright = $objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'copyright');
+  $ownLicense = true;
+
   echo '<div class="form-group">
           <label class="col-sm-2 control-label">' . LangCCLicense . '</label>
           <div class="col-sm-6">
-            <select name="cclicense" class="inputfield form-control">
-        	    <option value="0">Attribution CC BY</option>
-              <option value="1">Attribution-ShareAlike CC BY-SA</option>
-              <option value="2">Attribution-NoDerivs CC BY-ND</option>
-              <option value="3">Attribution-NonCommercial CC BY-NC</option>
-              <option value="4">Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>
-              <option value="5">Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>
-              <option value="6">' . LangNoLicense . '</option>
-              <option value="7">' . LangOwnLicense . '</option>
-            </select>
+            <select name="cclicense" class="inputfield form-control">';
+  echo '<option value="0"';
+  if (strcmp($copyright, "Attribution CC BY") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+  }
+  echo '>Attribution CC BY</option>';
+
+  echo '<option value="1"';
+  if (strcmp($copyright, "Attribution-ShareAlike CC BY-SA") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+  }
+  echo '>Attribution-ShareAlike CC BY-SA</option>';
+
+  echo '<option value="2"';
+  if (strcmp($copyright, "Attribution-NoDerivs CC BY-ND") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+  }
+  echo '>Attribution-NoDerivs CC BY-ND</option>';
+
+  echo '<option value="3"';
+  if (strcmp($copyright, "Attribution-NonCommercial CC BY-NC") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+  }
+  echo '>Attribution-NonCommercial CC BY-NC</option>';
+
+  echo '<option value="4"';
+  if (strcmp($copyright, "Attribution-NonCommercial-ShareAlike CC BY-NC-SA") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+  }
+  echo '>Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>';
+
+  echo '<option value="5"';
+  if (strcmp($copyright, "Attribution-NonCommercial-NoDerivs CC BY-NC-ND") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+  }
+  echo '>Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>';
+
+  echo '<option value="6"';
+  if (strcmp($copyright, "") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+  }
+  echo '>' . LangNoLicense . '</option>';
+
+  echo '<option value="7"';
+  if ( $ownLicense ) {
+    echo ' selected="selected"';
+  }
+  echo '>' . LangOwnLicense . '</option>';
+
+  echo '    </select>
           </div>
           <p class="form-control-static">' .
             LangSelectLicenseInfo . '
@@ -222,7 +273,7 @@ function change_account()
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountCopyright . "</label>";
 	echo "<div class=\"col-sm-6\">" .
-         "<input type=\"text\" class=\"inputfield form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'copyright')."\" />";
+         "<input type=\"text\" class=\"inputfield form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"". $copyright ."\" />";
 	echo "</div></div>";
 
 	echo "<p>&nbsp;</p>";
