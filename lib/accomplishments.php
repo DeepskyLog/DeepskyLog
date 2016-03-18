@@ -285,78 +285,19 @@ class Accomplishments {
   	return $recordArray[0];
   }
 
+  /** Returns 1 if the observer has drawn 1, 10, 25, 50, 100, 250, 500, 1000, 2500 or 5000 objects.
+
+    @param $observerId The observer for which the different drawings should be returned from the database.
+    @return integer[] [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  */
+  public function getDrawingsAccomplishments($observerId) {
+  	global $objDatabase;
+  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsNewbie as '0', DrawingsRookie as '1', DrawingsBeginner as '2', DrawingsTalented as '3', DrawingsSkilled as '4', DrawingsIntermediate as '5', DrawingsExperienced as '6', DrawingsAdvanced as '7', DrawingsSenior as '8', DrawingsExpert as '9' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
   // TODO: Start writing phpdoc for the next methods.
   // TODO: Refactor getXxxxxxBronze, ... see getMessierAccomplishments
-
-  // Returns 1 if the observer has one drawing
-  public function getDrawingsNewbie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["DrawingsNewbie"];
-  }
-
-  // Returns 1 if the observer has 10 drawings
-  public function getDrawingsRookie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["DrawingsRookie"];
-  }
-
-  // Returns 1 if the observer has 25 drawings
-  public function getDrawingsBeginner($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["DrawingsBeginner"];
-  }
-
-  // Returns 1 if the observer has 50 drawings
-  public function getDrawingsTalented($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["DrawingsTalented"];
-  }
-
-  // Returns 1 if the observer has 100 drawings
-  public function getDrawingsSkilled($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["DrawingsSkilled"];
-  }
-
-  // Returns 1 if the observer has 250 drawings
-  public function getDrawingsIntermediate($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["DrawingsIntermediate"];
-  }
-
-  // Returns 1 if the observer has 500 drawings
-  public function getDrawingsExperienced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["DrawingsExperienced"];
-  }
-
-  // Returns 1 if the observer has 1000 drawings
-  public function getDrawingsAdvanced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["DrawingsAdvanced"];
-  }
-
-  // Returns 1 if the observer has 2500 drawings
-  public function getDrawingsSenior($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["DrawingsSenior"];
-  }
-
-  // Returns 1 if the observer has 5000 drawings
-  public function getDrawingsExpert($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["DrawingsExpert"];
-  }
 
   // Returns 1 if the observer has one open clusters
   public function getOpenClustersNewbie($observerId) {
@@ -1725,93 +1666,75 @@ class Accomplishments {
   	global $objDatabase, $objMessages, $loggedUser;
   	// drawings
   	$drawings = $this->calculateAccomplishments($observerId, "drawings", 10, true);
-  	$oldDrawingsNewbie = $this->getDrawingsNewbie($observerId);
-  	$newDrawingsNewbie = $drawings[0];
-  	$sql = "UPDATE accomplishments SET drawingsNewbie = " . $newDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
+  	$oldDrawings = $this->getDrawingsAccomplishments($observerId);
+
+  	$sql = "UPDATE accomplishments SET drawingsNewbie = " . $drawings[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldDrawingsNewbie == 0 && $newDrawingsNewbie == 1) {
+    $sql = "UPDATE accomplishments SET drawingsRookie = " . $drawings[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET drawingsBeginner = " . $drawings[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET drawingsTalented = " . $drawings[3] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET drawingsSkilled = " . $drawings[4] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET drawingsIntermediate = " . $drawings[5] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET drawingsExperienced = " . $drawings[6] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET drawingsAdvanced = " . $drawings[7] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET drawingsSenior = " . $drawings[8] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET drawingsExpert = " . $drawings[9] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldDrawings[0] == 0 && $drawings[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 1), $this->getDrawMessage(LangObject, 1, $observerId));
   	}
 
-  	$oldDrawingsRookie = $this->getDrawingsRookie($observerId);
-  	$newDrawingsRookie = $drawings[1];
-  	$sql = "UPDATE accomplishments SET drawingsRookie = " . $newDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldDrawingsRookie == 0 && $newDrawingsRookie == 1) {
+  	if ($oldDrawings[1] == 0 && $drawings[1] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsObjects, 10), $this->getDrawMessage(LangAccomplishmentsObjects, 10, $observerId));
   	}
 
-  	$oldDrawingsBeginner = $this->getDrawingsBeginner($observerId);
-  	$newDrawingsBeginner = $drawings[2];
-  	$sql = "UPDATE accomplishments SET drawingsBeginner = " . $newDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldDrawingsBeginner == 0 && $newDrawingsBeginner == 1) {
+  	if ($oldDrawings[2] == 0 && $drawings[2] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsObjects, 25), $this->getDrawMessage(LangAccomplishmentsObjects, 25, $observerId));
   	}
 
-  	$oldDrawingsTalented = $this->getDrawingsTalented($observerId);
-  	$newDrawingsTalented = $drawings[3];
-  	$sql = "UPDATE accomplishments SET drawingsTalented = " . $newDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldDrawingsTalented == 0 && $newDrawingsTalented == 1) {
+  	if ($oldDrawings[3] == 0 && $drawings[3] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsObjects, 50), $this->getDrawMessage(LangAccomplishmentsObjects, 50, $observerId));
   	}
 
- 		$oldDrawingsSkilled = $this->getDrawingsSkilled($observerId);
-  	$newDrawingsSkilled = $drawings[4];
-  	$sql = "UPDATE accomplishments SET drawingsSkilled = " . $newDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldDrawingsSkilled == 0 && $newDrawingsSkilled == 1) {
+  	if ($oldDrawings[4] == 0 && $drawings[4] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsObjects, 100), $this->getDrawMessage(LangAccomplishmentsObjects, 100, $observerId));
   	}
 
-  	$oldDrawingsIntermediate = $this->getDrawingsIntermediate($observerId);
-  	$newDrawingsIntermediate = $drawings[5];
-  	$sql = "UPDATE accomplishments SET drawingsIntermediate = " . $newDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldDrawingsIntermediate == 0 && $newDrawingsIntermediate == 1) {
+  	if ($oldDrawings[5] == 0 && $drawings[5] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsObjects, 250), $this->getDrawMessage(LangAccomplishmentsObjects, 250, $observerId));
   	}
 
-  	$oldDrawingsExperienced = $this->getDrawingsExperienced($observerId);
-  	$newDrawingsExperienced = $drawings[6];
-  	$sql = "UPDATE accomplishments SET drawingsExperienced = " . $newDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldDrawingsExperienced == 0 && $newDrawingsExperienced == 1) {
+  	if ($oldDrawings[6] == 0 && $drawings[6] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsObjects, 500), $this->getDrawMessage(LangAccomplishmentsObjects, 500, $observerId));
   	}
 
-    $oldDrawingsAdvanced = $this->getDrawingsAdvanced($observerId);
-  	$newDrawingsAdvanced = $drawings[7];
-  	$sql = "UPDATE accomplishments SET drawingsAdvanced = " . $newDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldDrawingsAdvanced == 0 && $newDrawingsAdvanced == 1) {
+  	if ($oldDrawings[7] == 0 && $drawings[7] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsObjects, 1000), $this->getDrawMessage(LangAccomplishmentsObjects, 1000, $observerId));
   	}
 
-    $oldDrawingsSenior = $this->getDrawingsSenior($observerId);
-  	$newDrawingsSenior = $drawings[8];
-  	$sql = "UPDATE accomplishments SET drawingsSenior = " . $newDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldDrawingsSenior == 0 && $newDrawingsSenior == 1) {
+  	if ($oldDrawings[8] == 0 && $drawings[8] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsObjects, 2500), $this->getDrawMessage(LangAccomplishmentsObjects, 2500, $observerId));
   	}
 
-    $oldDrawingsExpert = $this->getDrawingsExpert($observerId);
-  	$newDrawingsExpert = $drawings[9];
-  	$sql = "UPDATE accomplishments SET drawingsExpert = " . $newDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldDrawingsExpert == 0 && $newDrawingsExpert == 1) {
+  	if ($oldDrawings[9] == 0 && $drawings[9] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsObjects, 5000), $this->getDrawMessage(LangAccomplishmentsObjects, 5000, $observerId));
   	}
   }
