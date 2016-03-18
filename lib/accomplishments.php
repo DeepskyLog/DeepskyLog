@@ -263,78 +263,30 @@ class Accomplishments {
   	return $recordArray[0];
   }
 
+  /** Returns 1 if the observer has seen 25, 50, 100, 200 or 400 Herschel-II objects.
+
+    @param $observerId The observer for which the Herschel-II accomplishments should be returned from the database.
+    @return integer[] [ bronze, silver, gold, diamond, platina ]
+  */
+  public function getHerschelIIAccomplishments($observerId) {
+  	global $objDatabase;
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIBronze as '0', HerschelIISilver as '1', HerschelIIGold as '2', HerschelIIDiamond as '3', HerschelIIPlatina as '4' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
+  /** Returns 1 if the observer has drawn 25, 50, 100, 200 or 400 Herschel-II objects.
+
+    @param $observerId The observer for which the Herschel-II accomplishments should be returned from the database.
+    @return integer[] [ bronze, silver, gold, diamond, platina ]
+  */
+  public function getHerschelIIAccomplishmentsDrawings($observerId) {
+  	global $objDatabase;
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDrawingsBronze as '0', HerschelIIDrawingsSilver as '1', HerschelIIDrawingsGold as '2', HerschelIIDrawingsDiamond as '3', HerschelIIDrawingsPlatina as '4' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
   // TODO: Start writing phpdoc for the next methods.
   // TODO: Refactor getXxxxxxBronze, ... see getMessierAccomplishments
-
-  // Returns 1 if the observer has seen 25 HerschelIIs
-  public function getHerschelIIBronze($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIBronze from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["HerschelIIBronze"];
-  }
-
-  // Returns 1 if the observer has seen 50 HerschelIIs
-  public function getHerschelIISilver($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIISilver from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["HerschelIISilver"];
-  }
-
-  // Returns 1 if the observer has seen 100 HerschelIIs
-  public function getHerschelIIGold($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIGold from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["HerschelIIGold"];
-  }
-
-  // Returns 1 if the observer has seen 200 HerschelIIs
-  public function getHerschelIIDiamond($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDiamond from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["HerschelIIDiamond"];
-  }
-
-  // Returns 1 if the observer has seen 400 HerschelIIs
-  public function getHerschelIIPlatina($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIPlatina from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["HerschelIIPlatina"];
-  }
-
-  // Returns 1 if the observer has drawn 25 HerschelIIs
-  public function getHerschelIIDrawingsBronze($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDrawingsBronze from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["HerschelIIDrawingsBronze"];
-  }
-
-  // Returns 1 if the observer has drawn 50 HerschelIIs
-  public function getHerschelIIDrawingsSilver($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDrawingsSilver from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["HerschelIIDrawingsSilver"];
-  }
-
-  // Returns 1 if the observer has drawn 100 HerschelIIs
-  public function getHerschelIIDrawingsGold($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDrawingsGold from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["HerschelIIDrawingsGold"];
-  }
-
-  // Returns 1 if the observer has drawn 200 HerschelIIs
-  public function getHerschelIIDrawingsDiamond($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDrawingsDiamond from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["HerschelIIDrawingsDiamond"];
-  }
-
-  // Returns 1 if the observer has drawn 400 HerschelIIs
-  public function getHerschelIIDrawingsPlatina($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDrawingsPlatina from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["HerschelIIDrawingsPlatina"];
-  }
 
   // Returns 1 if the observer has one drawing
   public function getDrawingsNewbie($observerId) {
@@ -1690,97 +1642,81 @@ class Accomplishments {
 
   public function recalculateHerschelIIs($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
-  	// HerschelII
-  	$HerschelIIs = $this->calculateAccomplishments($observerId, "HII", 5, false);
-  	$oldHerschelIIBronze = $this->getHerschelIIBronze($observerId);
-  	$newHerschelIIBronze = $HerschelIIs[0];
-  	$sql = "UPDATE accomplishments SET HerschelIIBronze = " . $newHerschelIIBronze . " WHERE observer = \"". $observerId ."\";";
+  	// Herschel
+  	$herschels = $this->calculateAccomplishments($observerId, "HII", 5, false);
+  	$oldHerschels = $this->getHerschelIIAccomplishments($observerId);
+
+  	$sql = "UPDATE accomplishments SET HerschelIIBronze = " . $herschels[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldHerschelIIBronze == 0 && $newHerschelIIBronze == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschelII, 25), $this->getSeenMessage(LangHerschelII, 25, $observerId));
+    $sql = "UPDATE accomplishments SET HerschelIISilver = " . $herschels[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET HerschelIIGold = " . $herschels[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET HerschelIIDiamond = " . $herschels[3] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET HerschelIIPlatina = " . $herschels[4] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldHerschels[0] == 0 && $herschels[0] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 25), $this->getSeenMessage(LangHerschelII, 25, $observerId));
   	}
 
-  	$oldHerschelIISilver = $this->getHerschelIISilver($observerId);
-  	$newHerschelIISilver = $HerschelIIs[1];
-  	$sql = "UPDATE accomplishments SET HerschelIISilver = " . $newHerschelIISilver . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldHerschelIISilver == 0 && $newHerschelIISilver == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschelII, 50), $this->getSeenMessage(LangHerschelII, 50, $observerId));
+  	if ($oldHerschels[1] == 0 && $herschels[1] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 50), $this->getSeenMessage(LangHerschelII, 50, $observerId));
   	}
 
-  	$oldHerschelIIGold = $this->getHerschelIIGold($observerId);
-  	$newHerschelIIGold = $HerschelIIs[2];
-  	$sql = "UPDATE accomplishments SET HerschelIIGold = " . $newHerschelIIGold . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldHerschelIIGold == 0 && $newHerschelIIGold == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschelII, 100), $this->getSeenMessage(LangHerschelII, 100, $observerId));
+  	if ($oldHerschels[2] == 0 && $herschels[2] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 100), $this->getSeenMessage(LangHerschelII, 100, $observerId));
   	}
 
-  	$oldHerschelIIDiamond = $this->getHerschelIIDiamond($observerId);
-  	$newHerschelIIDiamond = $HerschelIIs[3];
-  	$sql = "UPDATE accomplishments SET HerschelIIDiamond = " . $newHerschelIIDiamond . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldHerschelIIDiamond == 0 && $newHerschelIIDiamond == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschelII, 200), $this->getSeenMessage(LangHerschelII, 200, $observerId));
+  	if ($oldHerschels[3] == 0 && $herschels[3] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 200), $this->getSeenMessage(LangHerschelII, 200, $observerId));
   	}
 
-  	$oldHerschelIIPlatina = $this->getHerschelIIPlatina($observerId);
-  	$newHerschelIIPlatina = $HerschelIIs[4];
-  	$sql = "UPDATE accomplishments SET HerschelIIPlatina = " . $newHerschelIIPlatina . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldHerschelIIPlatina == 0 && $newHerschelIIPlatina == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschelII, 400), $this->getSeenMessage(LangHerschelII, 400, $observerId));
+  	if ($oldHerschels[4] == 0 && $herschels[4] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 400), $this->getSeenMessage(LangHerschelII, 400, $observerId));
   	}
 
-  	// HerschelII DRAWINGS
-  	$HerschelIIDrawings = $this->calculateAccomplishments($observerId, "HII", 5, true);
-  	$oldHerschelIIDrawingsBronze = $this->getHerschelIIDrawingsBronze($observerId);
-  	$newHerschelIIDrawingsBronze = $HerschelIIDrawings[0];
-  	$sql = "UPDATE accomplishments SET HerschelIIDrawingsBronze = " . $newHerschelIIDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
+  	// Herschel DRAWINGS
+  	$herschelDrawings = $this->calculateAccomplishments($observerId, "HII", 5, true);
+  	$oldHerschelDrawings = $this->getHerschelIIAccomplishmentsDrawings($observerId);
+
+  	$sql = "UPDATE accomplishments SET HerschelIIDrawingsBronze = " . $herschelDrawings[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldHerschelIIDrawingsBronze == 0 && $newHerschelIIDrawingsBronze == 1) {
+    $sql = "UPDATE accomplishments SET HerschelIIDrawingsSilver = " . $herschelDrawings[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET HerschelIIDrawingsGold = " . $herschelDrawings[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET HerschelIIDrawingsDiamond = " . $herschelDrawings[3] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET HerschelIIDrawingsPlatina = " . $herschelDrawings[4] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldHerschelDrawings[0] == 0 && $herschelDrawings[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangHerschelII, 25), $this->getDrawMessage(LangHerschelII, 25, $observerId));
   	}
 
-  	$oldHerschelIIDrawingsSilver = $this->getHerschelIIDrawingsSilver($observerId);
-  	$newHerschelIIDrawingsSilver = $HerschelIIDrawings[1];
-  	$sql = "UPDATE accomplishments SET HerschelIIDrawingsSilver = " . $newHerschelIIDrawingsSilver . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldHerschelIIDrawingsSilver == 0 && $newHerschelIIDrawingsSilver == 1) {
+  	if ($oldHerschelDrawings[1] == 0 && $herschelDrawings[1] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangHerschelII, 50), $this->getDrawMessage(LangHerschelII, 50, $observerId));
   	}
 
-  	$oldHerschelIIDrawingsGold = $this->getHerschelIIDrawingsGold($observerId);
-  	$newHerschelIIDrawingsGold = $HerschelIIDrawings[2];
-  	$sql = "UPDATE accomplishments SET HerschelIIDrawingsGold = " . $newHerschelIIDrawingsGold . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldHerschelIIDrawingsGold == 0 && $newHerschelIIDrawingsGold == 1) {
+  	if ($oldHerschelDrawings[2] == 0 && $herschelDrawings[2] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangHerschelII, 100), $this->getDrawMessage(LangHerschelII, 100, $observerId));
   	}
 
-  	$oldHerschelIIDrawingsDiamond = $this->getHerschelIIDrawingsDiamond($observerId);
-  	$newHerschelIIDrawingsDiamond = $HerschelIIDrawings[3];
-  	$sql = "UPDATE accomplishments SET HerschelIIDrawingsDiamond = " . $newHerschelIIDrawingsDiamond . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldHerschelIIDrawingsDiamond == 0 && $newHerschelIIDrawingsDiamond == 1) {
+  	if ($oldHerschelDrawings[3] == 0 && $herschelDrawings[3] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangHerschelII, 200), $this->getDrawMessage(LangHerschelII, 200, $observerId));
   	}
 
-  	$oldHerschelIIDrawingsPlatina = $this->getHerschelIIDrawingsPlatina($observerId);
-  	$newHerschelIIDrawingsPlatina = $HerschelIIDrawings[4];
-  	$sql = "UPDATE accomplishments SET HerschelIIDrawingsPlatina = " . $newHerschelIIDrawingsPlatina . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldHerschelIIDrawingsPlatina == 0 && $newHerschelIIDrawingsPlatina == 1) {
+  	if ($oldHerschelDrawings[4] == 0 && $herschelDrawings[4] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangHerschelII, 400), $this->getDrawMessage(LangHerschelII, 400, $observerId));
   	}
   }
