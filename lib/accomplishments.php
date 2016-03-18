@@ -219,50 +219,30 @@ class Accomplishments {
   	return $recordArray[0];
   }
 
+  /** Returns 1 if the observer has seen 25, 50 or 110 Caldwell objects.
+
+    @param $observerId The observer for which the caldwell accomplishments should be returned from the database.
+    @return integer[] [ bronze, silver, gold ]
+  */
+  public function getCaldwellAccomplishments($observerId) {
+  	global $objDatabase;
+  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellBronze as '0', CaldwellSilver as '1', CaldwellGold as '2' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
+  /** Returns 1 if the observer has drawn 25, 50 or 110 Caldwell objects.
+
+    @param $observerId The observer for which the caldwell accomplishments should be returned from the database.
+    @return integer[] [ bronze, silver, gold ]
+  */
+  public function getCaldwellAccomplishmentsDrawings($observerId) {
+  	global $objDatabase;
+  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellDrawingsBronze as '0', CaldwellDrawingsSilver as '1', CaldwellDrawingsGold as '2' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
   // TODO: Start writing phpdoc for the next methods.
-  // TODO: Refactor getCaldwellBronze, ... see getMessierAccomplishments
-
-  // Returns 1 if the observer has seen 25 Caldwells
-  public function getCaldwellBronze($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellBronze from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["CaldwellBronze"];
-  }
-
-  // Returns 1 if the observer has seen 50 Caldwells
-  public function getCaldwellSilver($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellSilver from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["CaldwellSilver"];
-  }
-
-  // Returns 1 if the observer has seen 110 Caldwells
-  public function getCaldwellGold($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellGold from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["CaldwellGold"];
-  }
-
-  // Returns 1 if the observer has drawn 25 Caldwells
-  public function getCaldwellDrawingsBronze($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellDrawingsBronze from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["CaldwellDrawingsBronze"];
-  }
-
-  // Returns 1 if the observer has drawn 50 Caldwells
-  public function getCaldwellDrawingsSilver($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellDrawingsSilver from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["CaldwellDrawingsSilver"];
-  }
-
-  // Returns 1 if the observer has drawn 110 Caldwells
-  public function getCaldwellDrawingsGold($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellDrawingsGold from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["CaldwellDrawingsGold"];
-  }
+  // TODO: Refactor getXxxxxxBronze, ... see getMessierAccomplishments
 
   // Returns 1 if the observer has seen 25 Herschels
   public function getHerschelBronze($observerId) {
@@ -1626,62 +1606,53 @@ class Accomplishments {
   	global $objDatabase, $objMessages, $loggedUser;
   	// CALDWELL
   	$caldwells = $this->calculateAccomplishments($observerId, "Caldwell", 3, false);
-  	$oldCaldwellBronze = $this->getCaldwellBronze($observerId);
-  	$newCaldwellBronze = $caldwells[0];
-  	$sql = "UPDATE accomplishments SET CaldwellBronze = " . $newCaldwellBronze . " WHERE observer = \"". $observerId ."\";";
+    $oldCaldwells = $this->getCaldwellAccomplishments($observerId);
+
+  	$sql = "UPDATE accomplishments SET CaldwellBronze = " . $caldwells[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldCaldwellBronze == 0 && $newCaldwellBronze == 1) {
+    $sql = "UPDATE accomplishments SET CaldwellSilver = " . $caldwells[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET CaldwellGold = " . $caldwells[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldCaldwells[0] == 0 && $caldwells[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangCaldwell, 25), $this->getSeenMessage(LangCaldwell, 25, $observerId));
   	}
 
-  	$oldCaldwellSilver = $this->getCaldwellSilver($observerId);
-  	$newCaldwellSilver = $caldwells[1];
-  	$sql = "UPDATE accomplishments SET CaldwellSilver = " . $newCaldwellSilver . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldCaldwellSilver == 0 && $newCaldwellSilver == 1) {
+  	if ($oldCaldwells[1] == 0 && $caldwells[1] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangCaldwell, 50), $this->getSeenMessage(LangCaldwell, 50, $observerId));
   	}
 
-  	$oldCaldwellGold = $this->getCaldwellGold($observerId);
-  	$newCaldwellGold = $caldwells[2];
-  	$sql = "UPDATE accomplishments SET CaldwellGold = " . $newCaldwellGold . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldCaldwellGold == 0 && $newCaldwellGold == 1) {
+  	if ($oldCaldwells[2] == 0 && $caldwells[2] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangCaldwell, 110), $this->getSeenMessage(LangCaldwell, 110, $observerId));
   	}
 
   	// CALDWELL DRAWINGS
   	$caldwellDrawings = $this->calculateAccomplishments($observerId, "Caldwell", 3, true);
-  	$oldCaldwellDrawingsBronze = $this->getCaldwellDrawingsBronze($observerId);
-  	$newCaldwellDrawingsBronze = $caldwellDrawings[0];
-  	$sql = "UPDATE accomplishments SET CaldwellDrawingsBronze = " . $newCaldwellDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
+  	$oldCaldwellDrawings = $this->getCaldwellAccomplishmentsDrawings($observerId);
+
+  	$sql = "UPDATE accomplishments SET CaldwellDrawingsBronze = " . $caldwellDrawings[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldCaldwellDrawingsBronze == 0 && $newCaldwellDrawingsBronze == 1) {
+    $sql = "UPDATE accomplishments SET CaldwellDrawingsSilver = " . $caldwellDrawings[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET CaldwellDrawingsGold = " . $caldwellDrawings[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldCaldwellDrawings[0] == 0 && $caldwellDrawings[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangCaldwell, 25), $this->getDrawMessage(LangCaldwell, 25, $observerId));
   	}
 
-  	$oldCaldwellDrawingsSilver = $this->getCaldwellDrawingsSilver($observerId);
-  	$newCaldwellDrawingsSilver = $caldwellDrawings[1];
-  	$sql = "UPDATE accomplishments SET CaldwellDrawingsSilver = " . $newCaldwellDrawingsSilver . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldCaldwellDrawingsSilver == 0 && $newCaldwellDrawingsSilver == 1) {
+  	if ($oldCaldwellDrawings[1] == 0 && $caldwellDrawings[1] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangCaldwell, 50), $this->getDrawMessage(LangCaldwell, 50, $observerId));
   	}
 
-  	$oldCaldwellDrawingsGold = $this->getCaldwellDrawingsGold($observerId);
-  	$newCaldwellDrawingsGold = $caldwellDrawings[2];
-  	$sql = "UPDATE accomplishments SET CaldwellDrawingsGold = " . $newCaldwellDrawingsGold . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldCaldwellDrawingsGold == 0 && $newCaldwellDrawingsGold == 1) {
+  	if ($oldCaldwellDrawings[2] == 0 && $caldwellDrawings[2] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangCaldwell, 110), $this->getDrawMessage(LangCaldwell, 110, $observerId));
   	}
-
   }
 
   public function recalculateHerschels($observerId) {
