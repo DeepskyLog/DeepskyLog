@@ -1,5 +1,9 @@
 <?php //GE
 // This is version 5.0
+define("LangNoLicense", "Keine Lizenz (nicht empfohlen!)");
+define("LangOwnLicense", "Geben Sie Ihren eigenen Copyright-Text");
+define('LangSelectLicenseInfo',  'Es ist wichtig, die <strong>richtige Lizenz f&uuml;r Ihre Zeichnungen </strong> zu w&auml;hlen! Weitere Informationen: <a href="http://creativecommons.org/choose/">Creative Commons Lizenz-Auswahl-Tool</a>.');
+define("LangCCLicense", "Lizenz f&uuml;r Zeichnungen");
 define("LangChangeAccountField14","Einheit f&uuml;r Instrumentendurchmesser");
 define("LangAddSiteStep2", "Definieren Sie Ihre eigenen Namen f&uuml;r die Position, schlie&szlig;lich f&uuml;gen Sie einen Grenzgr&ouml;&szlig;e (oder SQM-Wert) zu und dr&uuml;cken Sie die Taste ");
 define("LangAddSiteStep1", "Stellen Sie Ihren Ort auf der Karte ein oder gebe des Namens ein und Dr&euml;cke der Taste ");

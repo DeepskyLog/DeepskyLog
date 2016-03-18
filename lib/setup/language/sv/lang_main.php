@@ -1,5 +1,9 @@
 <?php //SV
 // This is version 5.0
+define("LangNoLicense", "No license (Not recommended!)");
+define("LangOwnLicense", "Enter your own copyright text");
+define('LangSelectLicenseInfo',  'It is important to select the <strong>correct license for your drawings</strong>! For help, see the <a href="http://creativecommons.org/choose/">Creative Commons license-choosing tool</a>.');
+define("LangCCLicense", "License for drawings");
 define("LangChangeAccountField14","Preferred unit for instrument diameter");
 define("LangAddSiteStep2", "Define your own name for this location, eventually add a naked eye limiting magnitude (or SQM value) and press the ");
 define("LangAddSiteStep1", "Set your location on the map or by entering the name and pressing the ");

@@ -201,6 +201,24 @@ function change_account()
 	echo "</div><p class=\"form-control-static\">" .
 			  LangChangeAccountField12Expl . "</p></div>";
 
+  echo '<div class="form-group">
+          <label class="col-sm-2 control-label">' . LangCCLicense . '</label>
+          <div class="col-sm-6">
+            <select name="cclicense" class="inputfield form-control">
+        	    <option value="0">Attribution CC BY</option>
+              <option value="1">Attribution-ShareAlike CC BY-SA</option>
+              <option value="2">Attribution-NoDerivs CC BY-ND</option>
+              <option value="3">Attribution-NonCommercial CC BY-NC</option>
+              <option value="4">Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>
+              <option value="5">Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>
+              <option value="6">' . LangNoLicense . '</option>
+              <option value="7">' . LangOwnLicense . '</option>
+            </select>
+          </div>
+          <p class="form-control-static">' .
+            LangSelectLicenseInfo . '
+          </p>
+        </div>';
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountCopyright . "</label>";
 	echo "<div class=\"col-sm-6\">" .
@@ -236,14 +254,14 @@ function change_account()
 	$showInches = $objObserver->getObserverProperty ( $loggedUser, "showInches" );
 	$inchSelected = ($showInches == '1')?"selected":"";
 	$mmSelected = ($showInches == '0')?"selected":"";
-	
+
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField14 . "</label>";
 	echo "<div class=\"col-sm-6\">";
 	echo "<select name=\"showInches\" class=\"form-control\"" . $disabled . " >";
 	echo "<option ".$inchSelected." value='1'>inch</option>";
 	echo "<option ".$mmSelected." value='0'>mm</option>";
-	echo "</select>";	
+	echo "</select>";
 	echo "</div></div>";
 
     echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
