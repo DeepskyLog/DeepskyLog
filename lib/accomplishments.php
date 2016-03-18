@@ -340,151 +340,33 @@ class Accomplishments {
   	return $recordArray[0];
   }
 
+  /** Returns 1 if the observer has seen 1, 10, 25, 50, 100, 250, 500, 1000, 2500 or 5000 planetary nebulae.
+
+    @param $observerId The observer for which the observed planetary nebulae should be returned from the database.
+    @return integer[] [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  */
+  public function getPlanetaryNebulaeAccomplishments($observerId) {
+  	global $objDatabase;
+    $recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaNewbie as '0', PlanetaryNebulaRookie as '1', PlanetaryNebulaBeginner as '2', PlanetaryNebulaTalented as '3', PlanetaryNebulaSkilled as '4', PlanetaryNebulaIntermediate as '5', PlanetaryNebulaExperienced as '6', PlanetaryNebulaAdvanced as '7', PlanetaryNebulaSenior as '8', PlanetaryNebulaExpert as '9' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
+  /** Returns 1 if the observer has drawn 1, 10, 25, 50, 100, 250, 500, 1000, 2500 or 5000 planetary nebulae.
+
+    @param $observerId The observer for which the drawn planetary nebulae should be returned from the database.
+    @return integer[] [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  */
+  public function getPlanetaryNebulaeAccomplishmentsDrawings($observerId) {
+  	global $objDatabase;
+    $recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsNewbie as '0', PlanetaryNebulaDrawingsRookie as '1', PlanetaryNebulaDrawingsBeginner as '2', PlanetaryNebulaDrawingsTalented as '3', PlanetaryNebulaDrawingsSkilled as '4', PlanetaryNebulaDrawingsIntermediate as '5', PlanetaryNebulaDrawingsExperienced as '6', PlanetaryNebulaDrawingsAdvanced as '7', PlanetaryNebulaDrawingsSenior as '8', PlanetaryNebulaDrawingsExpert as '9' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
 
   // TODO: Start writing phpdoc for the next methods.
-  // TODO: Refactor getXxxxxxBronze, ... see getMessierAccomplishments
+  // TODO: Refactor getXxxxxxNewbie, ...
 
-  // Returns 1 if the observer has one planetary nebula
-  public function getPlanetaryNebulaNewbie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaNewbie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaNewbie"];
-  }
-
-  // Returns 1 if the observer has 10 PlanetaryNebula
-  public function getPlanetaryNebulaRookie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaRookie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaRookie"];
-  }
-
-  // Returns 1 if the observer has 25 PlanetaryNebula
-  public function getPlanetaryNebulaBeginner($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaBeginner from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaBeginner"];
-  }
-
-  // Returns 1 if the observer has 50 PlanetaryNebula
-  public function getPlanetaryNebulaTalented($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaTalented from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaTalented"];
-  }
-
-  // Returns 1 if the observer has 100 PlanetaryNebula
-  public function getPlanetaryNebulaSkilled($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaSkilled from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaSkilled"];
-  }
-
-  // Returns 1 if the observer has 250 PlanetaryNebula
-  public function getPlanetaryNebulaIntermediate($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaIntermediate from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaIntermediate"];
-  }
-
-  // Returns 1 if the observer has 500 PlanetaryNebula
-  public function getPlanetaryNebulaExperienced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaExperienced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaExperienced"];
-  }
-
-  // Returns 1 if the observer has 1000 PlanetaryNebula
-  public function getPlanetaryNebulaAdvanced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaAdvanced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaAdvanced"];
-  }
-
-  // Returns 1 if the observer has 2500 PlanetaryNebula
-  public function getPlanetaryNebulaSenior($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaSenior from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaSenior"];
-  }
-
-  // Returns 1 if the observer has 5000 PlanetaryNebula
-  public function getPlanetaryNebulaExpert($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaExpert from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaExpert"];
-  }
-
-  // Returns 1 if the observer has one Globular clusters
-  public function getPlanetaryNebulaDrawingsNewbie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaDrawingsNewbie"];
-  }
-
-  // Returns 1 if the observer has 10 PlanetaryNebulaDrawings
-  public function getPlanetaryNebulaDrawingsRookie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaDrawingsRookie"];
-  }
-
-  // Returns 1 if the observer has 25 PlanetaryNebulaDrawings
-  public function getPlanetaryNebulaDrawingsBeginner($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaDrawingsBeginner"];
-  }
-
-  // Returns 1 if the observer has 50 PlanetaryNebulaDrawings
-  public function getPlanetaryNebulaDrawingsTalented($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaDrawingsTalented"];
-  }
-
-  // Returns 1 if the observer has 100 PlanetaryNebulaDrawings
-  public function getPlanetaryNebulaDrawingsSkilled($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaDrawingsSkilled"];
-  }
-
-  // Returns 1 if the observer has 250 PlanetaryNebulaDrawings
-  public function getPlanetaryNebulaDrawingsIntermediate($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaDrawingsIntermediate"];
-  }
-
-  // Returns 1 if the observer has 500 PlanetaryNebulaDrawings
-  public function getPlanetaryNebulaDrawingsExperienced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaDrawingsExperienced"];
-  }
-
-  // Returns 1 if the observer has 1000 PlanetaryNebulaDrawings
-  public function getPlanetaryNebulaDrawingsAdvanced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaDrawingsAdvanced"];
-  }
-
-  // Returns 1 if the observer has 2500 PlanetaryNebulaDrawings
-  public function getPlanetaryNebulaDrawingsSenior($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaDrawingsSenior"];
-  }
-
-  // Returns 1 if the observer has 5000 PlanetaryNebulaDrawings
-  public function getPlanetaryNebulaDrawingsExpert($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["PlanetaryNebulaDrawingsExpert"];
-  }
-
-  // Returns 1 if the observer has one planetary nebula
+  // Returns 1 if the observer has one galaxy
   public function getGalaxyNewbie($observerId) {
   	global $objDatabase;
   	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyNewbie from accomplishments where observer = \"". $observerId . "\";");
@@ -1815,190 +1697,154 @@ class Accomplishments {
   public function recalculatePlanetaryNebulae($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// PlanetaryNebulae
-  	$PlanetaryNebulae = $this->calculateAccomplishments($observerId, "planetaryNebulae", 10, false, 1023);
-  	$oldPlanetaryNebulaeNewbie = $this->getPlanetaryNebulaNewbie($observerId);
-  	$newPlanetaryNebulaeNewbie = $PlanetaryNebulae[0];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaNewbie = " . $newPlanetaryNebulaeNewbie . " WHERE observer = \"". $observerId ."\";";
+  	$planetaryNebulae = $this->calculateAccomplishments($observerId, "planetaryNebulae", 10, false, 1023);
+  	$oldPlanetaryNebulae = $this->getPlanetaryNebulaeAccomplishments($observerId);
+
+  	$sql = "UPDATE accomplishments SET PlanetaryNebulaNewbie = " . $planetaryNebulae[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldPlanetaryNebulaeNewbie == 0 && $newPlanetaryNebulaeNewbie == 1) {
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaRookie = " . $planetaryNebulae[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaBeginner = " . $planetaryNebulae[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaTalented = " . $planetaryNebulae[3] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaSkilled = " . $planetaryNebulae[4] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaIntermediate = " . $planetaryNebulae[5] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaExperienced = " . $planetaryNebulae[6] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaAdvanced = " . $planetaryNebulae[7] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaSenior = " . $planetaryNebulae[8] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaExpert = " . $planetaryNebulae[9] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldPlanetaryNebulae[0] == 0 && $planetaryNebulae[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebula, 1), $this->getSeenMessage(LangPlanetaryNebula, 1, $observerId));
   	}
 
-  	$oldPlanetaryNebulaeRookie = $this->getPlanetaryNebulaRookie($observerId);
-  	$newPlanetaryNebulaeRookie = $PlanetaryNebulae[1];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaRookie = " . $newPlanetaryNebulaeRookie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaeRookie == 0 && $newPlanetaryNebulaeRookie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulaeSeen, 2), $this->getSeenMessage(LangPlanetaryNebulaeSeen, 2, $observerId));
+  	if ($oldPlanetaryNebulae[1] == 0 && $planetaryNebulae[1] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 10), $this->getSeenMessage(LangPlanetaryNebulae, 10, $observerId));
   	}
 
-  	$oldPlanetaryNebulaeBeginner = $this->getPlanetaryNebulaBeginner($observerId);
-  	$newPlanetaryNebulaeBeginner = $PlanetaryNebulae[2];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaBeginner = " . $newPlanetaryNebulaeBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaeBeginner == 0 && $newPlanetaryNebulaeBeginner == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulaeSeen, 5), $this->getSeenMessage(LangPlanetaryNebulaeSeen, 5, $observerId));
+  	if ($oldPlanetaryNebulae[2] == 0 && $planetaryNebulae[2] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 25), $this->getSeenMessage(LangPlanetaryNebulae, 25, $observerId));
   	}
 
-  	$oldPlanetaryNebulaeTalented = $this->getPlanetaryNebulaTalented($observerId);
-  	$newPlanetaryNebulaeTalented = $PlanetaryNebulae[3];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaTalented = " . $newPlanetaryNebulaeTalented . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaeTalented == 0 && $newPlanetaryNebulaeTalented == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulaeSeen, 10), $this->getSeenMessage(LangPlanetaryNebulaeSeen, 10, $observerId));
+  	if ($oldPlanetaryNebulae[3] == 0 && $planetaryNebulae[3] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 50), $this->getSeenMessage(LangPlanetaryNebulae, 50, $observerId));
   	}
 
-  	$oldPlanetaryNebulaeSkilled = $this->getPlanetaryNebulaSkilled($observerId);
-  	$newPlanetaryNebulaeSkilled = $PlanetaryNebulae[4];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaSkilled = " . $newPlanetaryNebulaeSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaeSkilled == 0 && $newPlanetaryNebulaeSkilled == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulaeSeen, 20), $this->getSeenMessage(LangPlanetaryNebulaeSeen, 20, $observerId));
+  	if ($oldPlanetaryNebulae[4] == 0 && $planetaryNebulae[4] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 100), $this->getSeenMessage(LangPlanetaryNebulae, 100, $observerId));
   	}
 
-  	$oldPlanetaryNebulaeIntermediate = $this->getPlanetaryNebulaIntermediate($observerId);
-  	$newPlanetaryNebulaeIntermediate = $PlanetaryNebulae[5];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaIntermediate = " . $newPlanetaryNebulaeIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaeIntermediate == 0 && $newPlanetaryNebulaeIntermediate == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulaeSeen, 51), $this->getSeenMessage(LangPlanetaryNebulaeSeen, 51, $observerId));
+  	if ($oldPlanetaryNebulae[5] == 0 && $planetaryNebulae[5] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 250), $this->getSeenMessage(LangPlanetaryNebulae, 250, $observerId));
   	}
 
-  	$oldPlanetaryNebulaeExperienced = $this->getPlanetaryNebulaExperienced($observerId);
-  	$newPlanetaryNebulaeExperienced = $PlanetaryNebulae[6];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaExperienced = " . $newPlanetaryNebulaeExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaeExperienced == 0 && $newPlanetaryNebulaeExperienced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulaeSeen, 102), $this->getSeenMessage(LangPlanetaryNebulaeSeen, 102, $observerId));
+  	if ($oldPlanetaryNebulae[6] == 0 && $planetaryNebulae[6] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 500), $this->getSeenMessage(LangPlanetaryNebulae, 500, $observerId));
   	}
 
-  	$oldPlanetaryNebulaeAdvanced = $this->getPlanetaryNebulaAdvanced($observerId);
-  	$newPlanetaryNebulaeAdvanced = $PlanetaryNebulae[7];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaAdvanced = " . $newPlanetaryNebulaeAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaeAdvanced == 0 && $newPlanetaryNebulaeAdvanced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulaeSeen, 204), $this->getSeenMessage(LangPlanetaryNebulaeSeen, 204, $observerId));
+  	if ($oldPlanetaryNebulae[7] == 0 && $planetaryNebulae[7] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 1000), $this->getSeenMessage(LangPlanetaryNebulae, 1000, $observerId));
   	}
 
-  	$oldPlanetaryNebulaeSenior = $this->getPlanetaryNebulaSenior($observerId);
-  	$newPlanetaryNebulaeSenior = $PlanetaryNebulae[8];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaSenior = " . $newPlanetaryNebulaeSenior . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaeSenior == 0 && $newPlanetaryNebulaeSenior == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulaeSeen, 511), $this->getSeenMessage(LangPlanetaryNebulaeSeen, 511, $observerId));
+  	if ($oldPlanetaryNebulae[8] == 0 && $planetaryNebulae[8] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 2500), $this->getSeenMessage(LangPlanetaryNebulae, 2500, $observerId));
   	}
 
-  	$oldPlanetaryNebulaeExpert = $this->getPlanetaryNebulaExpert($observerId);
-  	$newPlanetaryNebulaeExpert = $PlanetaryNebulae[9];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaExpert = " . $newPlanetaryNebulaeExpert . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaeExpert == 0 && $newPlanetaryNebulaeExpert == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulaeSeen, 1023), $this->getSeenMessage(LangPlanetaryNebulaeSeen, 1023, $observerId));
+  	if ($oldPlanetaryNebulae[9] == 0 && $planetaryNebulae[9] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 5000), $this->getSeenMessage(LangPlanetaryNebulae, 5000, $observerId));
   	}
   }
 
   public function recalculatePlanetaryNebulaDrawings($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// PlanetaryNebulaDrawings
-  	$PlanetaryNebulaDrawings = $this->calculateAccomplishments($observerId, "planetaryNebulae", 10, true, 1023);
-  	$oldPlanetaryNebulaDrawingsNewbie = $this->getPlanetaryNebulaDrawingsNewbie($observerId);
-  	$newPlanetaryNebulaDrawingsNewbie = $PlanetaryNebulaDrawings[0];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsNewbie = " . $newPlanetaryNebulaDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
+    $planetaryNebulaDrawings = $this->calculateAccomplishments($observerId, "planetaryNebulae", 10, true, 1023);
+  	$oldPlanetaryNebulaDrawings = $this->getPlanetaryNebulaeAccomplishmentsDrawings($observerId);
+
+  	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsNewbie = " . $planetaryNebulaDrawings[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldPlanetaryNebulaDrawingsNewbie == 0 && $newPlanetaryNebulaDrawingsNewbie == 1) {
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsRookie = " . $planetaryNebulaDrawings[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsBeginner = " . $planetaryNebulaDrawings[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsTalented = " . $planetaryNebulaDrawings[3] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsSkilled = " . $planetaryNebulaDrawings[4] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsIntermediate = " . $planetaryNebulaDrawings[5] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsExperienced = " . $planetaryNebulaDrawings[6] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsAdvanced = " . $planetaryNebulaDrawings[7] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsSenior = " . $planetaryNebulaDrawings[8] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsExpert = " . $planetaryNebulaDrawings[9] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldPlanetaryNebulaDrawings[0] == 0 && $planetaryNebulaDrawings[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebula, 1), $this->getDrawMessage(LangPlanetaryNebula, 1, $observerId));
   	}
 
-  	$oldPlanetaryNebulaDrawingsRookie = $this->getPlanetaryNebulaDrawingsRookie($observerId);
-  	$newPlanetaryNebulaDrawingsRookie = $PlanetaryNebulaDrawings[1];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsRookie = " . $newPlanetaryNebulaDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaDrawingsRookie == 0 && $newPlanetaryNebulaDrawingsRookie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulaeSeen, 2), $this->getDrawMessage(LangPlanetaryNebulaeSeen, 2, $observerId));
+  	if ($oldPlanetaryNebulaDrawings[1] == 0 && $planetaryNebulaDrawings[1] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 10), $this->getDrawMessage(LangPlanetaryNebulae, 10, $observerId));
   	}
 
-  	$oldPlanetaryNebulaDrawingsBeginner = $this->getPlanetaryNebulaDrawingsBeginner($observerId);
-  	$newPlanetaryNebulaDrawingsBeginner = $PlanetaryNebulaDrawings[2];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsBeginner = " . $newPlanetaryNebulaDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaDrawingsBeginner == 0 && $newPlanetaryNebulaDrawingsBeginner == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulaeSeen, 5), $this->getDrawMessage(LangPlanetaryNebulaeSeen, 5, $observerId));
+  	if ($oldPlanetaryNebulaDrawings[2] == 0 && $planetaryNebulaDrawings[2] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 25), $this->getDrawMessage(LangPlanetaryNebulae, 25, $observerId));
   	}
 
-  	$oldPlanetaryNebulaDrawingsTalented = $this->getPlanetaryNebulaDrawingsTalented($observerId);
-  	$newPlanetaryNebulaDrawingsTalented = $PlanetaryNebulaDrawings[3];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsTalented = " . $newPlanetaryNebulaDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaDrawingsTalented == 0 && $newPlanetaryNebulaDrawingsTalented == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulaeSeen, 10), $this->getDrawMessage(LangPlanetaryNebulaeSeen, 10, $observerId));
+  	if ($oldPlanetaryNebulaDrawings[3] == 0 && $planetaryNebulaDrawings[3] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 50), $this->getDrawMessage(LangPlanetaryNebulae, 50, $observerId));
   	}
 
-  	$oldPlanetaryNebulaDrawingsSkilled = $this->getPlanetaryNebulaDrawingsSkilled($observerId);
-  	$newPlanetaryNebulaDrawingsSkilled = $PlanetaryNebulaDrawings[4];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsSkilled = " . $newPlanetaryNebulaDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaDrawingsSkilled == 0 && $newPlanetaryNebulaDrawingsSkilled == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulaeSeen, 20), $this->getDrawMessage(LangPlanetaryNebulaeSeen, 20, $observerId));
+  	if ($oldPlanetaryNebulaDrawings[4] == 0 && $planetaryNebulaDrawings[4] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 100), $this->getDrawMessage(LangPlanetaryNebulae, 100, $observerId));
   	}
 
-  	$oldPlanetaryNebulaDrawingsIntermediate = $this->getPlanetaryNebulaDrawingsIntermediate($observerId);
-  	$newPlanetaryNebulaDrawingsIntermediate = $PlanetaryNebulaDrawings[5];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsIntermediate = " . $newPlanetaryNebulaDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaDrawingsIntermediate == 0 && $newPlanetaryNebulaDrawingsIntermediate == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulaeSeen, 51), $this->getDrawMessage(LangPlanetaryNebulaeSeen, 51, $observerId));
+  	if ($oldPlanetaryNebulaDrawings[5] == 0 && $planetaryNebulaDrawings[5] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 250), $this->getDrawMessage(LangPlanetaryNebulae, 250, $observerId));
   	}
 
-  	$oldPlanetaryNebulaDrawingsExperienced = $this->getPlanetaryNebulaDrawingsExperienced($observerId);
-  	$newPlanetaryNebulaDrawingsExperienced = $PlanetaryNebulaDrawings[6];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsExperienced = " . $newPlanetaryNebulaDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaDrawingsExperienced == 0 && $newPlanetaryNebulaDrawingsExperienced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulaeSeen, 102), $this->getDrawMessage(LangPlanetaryNebulaeSeen, 102, $observerId));
+  	if ($oldPlanetaryNebulaDrawings[6] == 0 && $planetaryNebulaDrawings[6] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 500), $this->getDrawMessage(LangPlanetaryNebulae, 500, $observerId));
   	}
 
-  	$oldPlanetaryNebulaDrawingsAdvanced = $this->getPlanetaryNebulaDrawingsAdvanced($observerId);
-  	$newPlanetaryNebulaDrawingsAdvanced = $PlanetaryNebulaDrawings[7];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsAdvanced = " . $newPlanetaryNebulaDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaDrawingsAdvanced == 0 && $newPlanetaryNebulaDrawingsAdvanced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulaeSeen, 204), $this->getDrawMessage(LangPlanetaryNebulaeSeen, 204, $observerId));
+  	if ($oldPlanetaryNebulaDrawings[7] == 0 && $planetaryNebulaDrawings[7] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 1000), $this->getDrawMessage(LangPlanetaryNebulae, 1000, $observerId));
   	}
 
-  	$oldPlanetaryNebulaDrawingsSenior = $this->getPlanetaryNebulaDrawingsSenior($observerId);
-  	$newPlanetaryNebulaDrawingsSenior = $PlanetaryNebulaDrawings[8];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsSenior = " . $newPlanetaryNebulaDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaDrawingsSenior == 0 && $newPlanetaryNebulaDrawingsSenior == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulaeSeen, 511), $this->getDrawMessage(LangPlanetaryNebulaeSeen, 511, $observerId));
+  	if ($oldPlanetaryNebulaDrawings[8] == 0 && $planetaryNebulaDrawings[8] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 2500), $this->getDrawMessage(LangPlanetaryNebulae, 2500, $observerId));
   	}
 
-  	$oldPlanetaryNebulaDrawingsExpert = $this->getPlanetaryNebulaDrawingsExpert($observerId);
-  	$newPlanetaryNebulaDrawingsExpert = $PlanetaryNebulaDrawings[9];
-  	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsExpert = " . $newPlanetaryNebulaDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldPlanetaryNebulaDrawingsExpert == 0 && $newPlanetaryNebulaDrawingsExpert == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulaeSeen, 1023), $this->getDrawMessage(LangPlanetaryNebulaeSeen, 1023, $observerId));
+  	if ($oldPlanetaryNebulaDrawings[9] == 0 && $planetaryNebulaDrawings[9] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 5000), $this->getDrawMessage(LangPlanetaryNebulae, 5000, $observerId));
   	}
   }
 
