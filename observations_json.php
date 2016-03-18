@@ -44,7 +44,7 @@ global $loggedUser;
 		$whenQuery = $whenQuery . " WHEN objects.con = '{$value}' THEN '{$GLOBALS [$value]}' ";
 
 	$objectname = $_GET['object'];
-	
+
 	if ($loggedUser != null){ 
 		$showInches = $objObserver->getObserverProperty ( $loggedUser, "showInches" );
 	} else {
@@ -112,10 +112,13 @@ global $loggedUser;
 			JOIN filters ON observations.filterid = filters.id
 			JOIN eyepieces ON observations.eyepieceid = eyepieces.id
 			WHERE observations.objectname=:objectname
-			";
-
+			OR observations.objectname = (
+					SELECT objectname 
+					FROM objectnames 
+					WHERE altname = :objectname)";
+					
 	$result = $objDatabase->prepareAndSelectRecordsetArray ($query, array(':objectname'=>$objectname));
-
+	
 	$dataTablesObject = new stdClass();
 	$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
 	if ($loggedUser == ""){
