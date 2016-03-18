@@ -97,6 +97,10 @@ class Accomplishments {
     }
   }
 
+// TODO: Start writing phpdoc for the next methods.
+// TODO: Refactor getCaldwellBronze, ... see getMessierAccomplishments
+// TODO: Check why different comets == 0
+
   // Returns an boolean array with the accomplishments
   private function ranking($numberOfObjects, $categories, $total = 5000) {
   	if ($categories == 3) {
