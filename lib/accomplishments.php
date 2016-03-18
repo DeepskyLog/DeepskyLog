@@ -97,10 +97,15 @@ class Accomplishments {
     }
   }
 
-// TODO: Start writing phpdoc for the next methods.
-// TODO: Refactor getCaldwellBronze, ... see getMessierAccomplishments
-
-  // Returns an boolean array with the accomplishments
+  /** Returns an boolean array with the accomplishments.
+    @param $numberOfObjects The number of objects already seen and for which to calculate the accomplishments.
+    @param $categories The number of categories for the accomplishments. this can be:
+                          + 3 : Typically Bronze, Silver or gold. Only for catalogs with 110 objects.
+                          + 5 : Typically Bronze, Silver, gold, diamond, platina. Only for catalogs with 400 objects.
+                          + default: 10 different accomplishments. Standard for 5000 observations. This can be overruled by using the $total parameter.
+    @param $total The total number of observations to calculate the accomplishments.
+    @return boolean[] An array with the accomplishments. The number of elements in the array depends on the $categories parameter.
+  */
   private function ranking($numberOfObjects, $categories, $total = 5000) {
   	if ($categories == 3) {
   		return $this->accomplishments3($numberOfObjects);
@@ -110,20 +115,30 @@ class Accomplishments {
   		return $this->accomplishments10($numberOfObjects, $total);
   	}
   }
-  // Returns a boolean array for [ bronze, silver, gold ]
+
+  /** Returns a boolean array with the accomplishments when there are 3 categories : [ bronze, silver, gold ]. This only works for catalogs with 110 objects.
+    @param $numberOfObjects The number of objects seen or drawn to use to calculate the accomplishments
+    @return boolean[] An array with the accomplishments: [ bronze, silver, gold ]
+  */
   private function accomplishments3($numberOfObjects) {
     return array( $numberOfObjects >= 25 ? 1:0, $numberOfObjects >= 50 ? 1:0,
              $numberOfObjects >= 110 ? 1:0 );
   }
 
-  // Returns a boolean array for [ bronze, silver, gold, diamond, platina ]
+  /** Returns a boolean array with the accomplishments when there are 5 categories : [ bronze, silver, gold, diamond, platina ]. This only works for catalogs with 400 objects.
+    @param $numberOfObjects The number of objects seen or drawn to use to calculate the accomplishments
+    @return boolean[] An array with the accomplishments: [ bronze, silver, gold, diamond, platina ]
+  */
   private function accomplishments5($numberOfObjects) {
     return array( $numberOfObjects >= 25 ? 1:0, $numberOfObjects >= 50 ? 1:0,
              $numberOfObjects >= 100 ? 1:0, $numberOfObjects >= 200 ? 1:0,
              $numberOfObjects >= 400 ? 1:0 );
   }
 
-  // Returns a boolean array for [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  /** Returns a boolean array with the accomplishments when there are 10 categories : [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ].
+    @param $numberOfObjects The number of objects seen or drawn to use to calculate the accomplishments
+    @return boolean[] An array with the accomplishments: [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  */
   private function accomplishments10($numberOfObjects, $total) {
   	$total1 = 1;
   	$total10 = ($total / 500) >= 2 ? ($total / 500):2;
@@ -141,6 +156,9 @@ class Accomplishments {
              $numberOfObjects >= ($total / 10) ? 1:0, $numberOfObjects >= ($total / 5) ? 1:0,
              $numberOfObjects >= ($total / 2) ? 1:0, $numberOfObjects >= ($total) ? 1:0 );
   }
+
+  // TODO: Start writing phpdoc for the next methods.
+  // TODO: Refactor getCaldwellBronze, ... see getMessierAccomplishments
 
   // Create an entry for a new observer in the accomplishments table
   public function addObserver($observerId) {
