@@ -99,7 +99,6 @@ class Accomplishments {
 
 // TODO: Start writing phpdoc for the next methods.
 // TODO: Refactor getCaldwellBronze, ... see getMessierAccomplishments
-// TODO: Check why different comets == 0
 
   // Returns an boolean array with the accomplishments
   private function ranking($numberOfObjects, $categories, $total = 5000) {
@@ -3186,7 +3185,7 @@ class Accomplishments {
   public function recalculateCometsObserved($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// Comet Observations
-  	$CometsObserved = $this->calculateAccomplishments($observerId, "calculateCometsObserved", 10, false);
+  	$CometsObserved = $this->calculateAccomplishments($observerId, "cometsObserved", 10, false);
   	$oldCometsObservedNewbie = $this->getCometsObservedNewbie($observerId);
   	$newCometsObservedNewbie = $CometsObserved[0];
   	$sql = "UPDATE accomplishments SET CometsObservedNewbie = " . $newCometsObservedNewbie . " WHERE observer = \"". $observerId ."\";";
