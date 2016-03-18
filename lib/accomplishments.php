@@ -318,148 +318,31 @@ class Accomplishments {
   	return $recordArray[0];
   }
 
+  /** Returns 1 if the observer has seen 1, 10, 25, 50, 100, 250, 500, 1000, 2500 or 5000 globular clusters.
+
+    @param $observerId The observer for which the observed globular clusters should be returned from the database.
+    @return integer[] [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  */
+  public function getGlobularClustersAccomplishments($observerId) {
+  	global $objDatabase;
+    $recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterNewbie as '0', GlobularClusterRookie as '1', GlobularClusterBeginner as '2', GlobularClusterTalented as '3', GlobularClusterSkilled as '4', GlobularClusterIntermediate as '5', GlobularClusterExperienced as '6', GlobularClusterAdvanced as '7', GlobularClusterSenior as '8', GlobularClusterExpert as '9' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
+  /** Returns 1 if the observer has drawn 1, 10, 25, 50, 100, 250, 500, 1000, 2500 or 5000 globular clusters.
+
+    @param $observerId The observer for which the drawn globular clusters should be returned from the database.
+    @return integer[] [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  */
+  public function getGlobularClustersAccomplishmentsDrawings($observerId) {
+  	global $objDatabase;
+    $recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsNewbie as '0', GlobularClusterDrawingsRookie as '1', GlobularClusterDrawingsBeginner as '2', GlobularClusterDrawingsTalented as '3', GlobularClusterDrawingsSkilled as '4', GlobularClusterDrawingsIntermediate as '5', GlobularClusterDrawingsExperienced as '6', GlobularClusterDrawingsAdvanced as '7', GlobularClusterDrawingsSenior as '8', GlobularClusterDrawingsExpert as '9' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
+
   // TODO: Start writing phpdoc for the next methods.
   // TODO: Refactor getXxxxxxBronze, ... see getMessierAccomplishments
-
-  // Returns 1 if the observer has one Globular clusters
-  public function getGlobularClustersNewbie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterNewbie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterNewbie"];
-  }
-
-  // Returns 1 if the observer has 10 GlobularClusters
-  public function getGlobularClustersRookie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterRookie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterRookie"];
-  }
-
-  // Returns 1 if the observer has 25 GlobularClusters
-  public function getGlobularClustersBeginner($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterBeginner from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterBeginner"];
-  }
-
-  // Returns 1 if the observer has 50 GlobularClusters
-  public function getGlobularClustersTalented($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterTalented from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterTalented"];
-  }
-
-  // Returns 1 if the observer has 100 GlobularClusters
-  public function getGlobularClustersSkilled($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterSkilled from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterSkilled"];
-  }
-
-  // Returns 1 if the observer has 250 GlobularClusters
-  public function getGlobularClustersIntermediate($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterIntermediate from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterIntermediate"];
-  }
-
-  // Returns 1 if the observer has 500 GlobularClusters
-  public function getGlobularClustersExperienced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterExperienced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterExperienced"];
-  }
-
-  // Returns 1 if the observer has 1000 GlobularClusters
-  public function getGlobularClustersAdvanced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterAdvanced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterAdvanced"];
-  }
-
-  // Returns 1 if the observer has 2500 GlobularClusters
-  public function getGlobularClustersSenior($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterSenior from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterSenior"];
-  }
-
-  // Returns 1 if the observer has 5000 GlobularClusters
-  public function getGlobularClustersExpert($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterExpert from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterExpert"];
-  }
-
-  // Returns 1 if the observer has one Globular clusters
-  public function getGlobularClusterDrawingsNewbie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterDrawingsNewbie"];
-  }
-
-  // Returns 1 if the observer has 10 GlobularClusterDrawings
-  public function getGlobularClusterDrawingsRookie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterDrawingsRookie"];
-  }
-
-  // Returns 1 if the observer has 25 GlobularClusterDrawings
-  public function getGlobularClusterDrawingsBeginner($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterDrawingsBeginner"];
-  }
-
-  // Returns 1 if the observer has 50 GlobularClusterDrawings
-  public function getGlobularClusterDrawingsTalented($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterDrawingsTalented"];
-  }
-
-  // Returns 1 if the observer has 100 GlobularClusterDrawings
-  public function getGlobularClusterDrawingsSkilled($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterDrawingsSkilled"];
-  }
-
-  // Returns 1 if the observer has 250 GlobularClusterDrawings
-  public function getGlobularClusterDrawingsIntermediate($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterDrawingsIntermediate"];
-  }
-
-  // Returns 1 if the observer has 500 GlobularClusterDrawings
-  public function getGlobularClusterDrawingsExperienced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterDrawingsExperienced"];
-  }
-
-  // Returns 1 if the observer has 1000 GlobularClusterDrawings
-  public function getGlobularClusterDrawingsAdvanced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterDrawingsAdvanced"];
-  }
-
-  // Returns 1 if the observer has 2500 GlobularClusterDrawings
-  public function getGlobularClusterDrawingsSenior($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterDrawingsSenior"];
-  }
-
-  // Returns 1 if the observer has 5000 GlobularClusterDrawings
-  public function getGlobularClusterDrawingsExpert($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GlobularClusterDrawingsExpert"];
-  }
 
   // Returns 1 if the observer has one planetary nebula
   public function getPlanetaryNebulaNewbie($observerId) {
@@ -1778,191 +1661,154 @@ class Accomplishments {
   public function recalculateGlobularClusters($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// GlobularClusters
-    $GlobularClusters = $this->calculateAccomplishments($observerId, "globularClusters", 10, false, 152);
+  	$globularClusters = $this->calculateAccomplishments($observerId, "globularClusters", 10, false, 152);
+  	$oldGlobularClusters = $this->getGlobularClustersAccomplishments($observerId);
 
-  	$oldGlobularClustersNewbie = $this->getGlobularClustersNewbie($observerId);
-  	$newGlobularClustersNewbie = $GlobularClusters[0];
-  	$sql = "UPDATE accomplishments SET GlobularClusterNewbie = " . $newGlobularClustersNewbie . " WHERE observer = \"". $observerId ."\";";
+  	$sql = "UPDATE accomplishments SET GlobularClusterNewbie = " . $globularClusters[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldGlobularClustersNewbie == 0 && $newGlobularClustersNewbie == 1) {
+    $sql = "UPDATE accomplishments SET GlobularClusterRookie = " . $globularClusters[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterBeginner = " . $globularClusters[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterTalented = " . $globularClusters[3] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterSkilled = " . $globularClusters[4] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterIntermediate = " . $globularClusters[5] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterExperienced = " . $globularClusters[6] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterAdvanced = " . $globularClusters[7] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterSenior = " . $globularClusters[8] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterExpert = " . $globularClusters[9] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldGlobularClusters[0] == 0 && $globularClusters[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularCluster, 1), $this->getSeenMessage(LangGlobularCluster, 1, $observerId));
   	}
 
-  	$oldGlobularClustersRookie = $this->getGlobularClustersRookie($observerId);
-  	$newGlobularClustersRookie = $GlobularClusters[1];
-  	$sql = "UPDATE accomplishments SET GlobularClusterRookie = " . $newGlobularClustersRookie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClustersRookie == 0 && $newGlobularClustersRookie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 2), $this->getSeenMessage(LangGlobularClusters, 2, $observerId));
+  	if ($oldGlobularClusters[1] == 0 && $globularClusters[1] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 10), $this->getSeenMessage(LangGlobularClusters, 10, $observerId));
   	}
 
-  	$oldGlobularClustersBeginner = $this->getGlobularClustersBeginner($observerId);
-  	$newGlobularClustersBeginner = $GlobularClusters[2];
-  	$sql = "UPDATE accomplishments SET GlobularClusterBeginner = " . $newGlobularClustersBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClustersBeginner == 0 && $newGlobularClustersBeginner == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 3), $this->getSeenMessage(LangGlobularClusters, 3, $observerId));
+  	if ($oldGlobularClusters[2] == 0 && $globularClusters[2] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 25), $this->getSeenMessage(LangGlobularClusters, 25, $observerId));
   	}
 
-  	$oldGlobularClustersTalented = $this->getGlobularClustersTalented($observerId);
-  	$newGlobularClustersTalented = $GlobularClusters[3];
-  	$sql = "UPDATE accomplishments SET GlobularClusterTalented = " . $newGlobularClustersTalented . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClustersTalented == 0 && $newGlobularClustersTalented == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 4), $this->getSeenMessage(LangGlobularClusters, 4, $observerId));
+  	if ($oldGlobularClusters[3] == 0 && $globularClusters[3] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 50), $this->getSeenMessage(LangGlobularClusters, 50, $observerId));
   	}
 
-  	$oldGlobularClustersSkilled = $this->getGlobularClustersSkilled($observerId);
-  	$newGlobularClustersSkilled = $GlobularClusters[4];
-  	$sql = "UPDATE accomplishments SET GlobularClusterSkilled = " . $newGlobularClustersSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClustersSkilled == 0 && $newGlobularClustersSkilled == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 5), $this->getSeenMessage(LangGlobularClusters, 5, $observerId));
+  	if ($oldGlobularClusters[4] == 0 && $globularClusters[4] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 100), $this->getSeenMessage(LangGlobularClusters, 100, $observerId));
   	}
 
-  	$oldGlobularClustersIntermediate = $this->getGlobularClustersIntermediate($observerId);
-  	$newGlobularClustersIntermediate = $GlobularClusters[5];
-  	$sql = "UPDATE accomplishments SET GlobularClusterIntermediate = " . $newGlobularClustersIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClustersIntermediate == 0 && $newGlobularClustersIntermediate == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 7), $this->getSeenMessage(LangGlobularClusters, 7, $observerId));
+  	if ($oldGlobularClusters[5] == 0 && $globularClusters[5] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 250), $this->getSeenMessage(LangGlobularClusters, 250, $observerId));
   	}
 
-  	$oldGlobularClustersExperienced = $this->getGlobularClustersExperienced($observerId);
-  	$newGlobularClustersExperienced = $GlobularClusters[6];
-  	$sql = "UPDATE accomplishments SET GlobularClusterExperienced = " . $newGlobularClustersExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClustersExperienced == 0 && $newGlobularClustersExperienced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 15), $this->getSeenMessage(LangGlobularClusters, 15, $observerId));
+  	if ($oldGlobularClusters[6] == 0 && $globularClusters[6] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 500), $this->getSeenMessage(LangGlobularClusters, 500, $observerId));
   	}
 
-  	$oldGlobularClustersAdvanced = $this->getGlobularClustersAdvanced($observerId);
-  	$newGlobularClustersAdvanced = $GlobularClusters[7];
-  	$sql = "UPDATE accomplishments SET GlobularClusterAdvanced = " . $newGlobularClustersAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClustersAdvanced == 0 && $newGlobularClustersAdvanced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 30), $this->getSeenMessage(LangGlobularClusters, 30, $observerId));
+  	if ($oldGlobularClusters[7] == 0 && $globularClusters[7] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 1000), $this->getSeenMessage(LangGlobularClusters, 1000, $observerId));
   	}
 
-  	$oldGlobularClustersSenior = $this->getGlobularClustersSenior($observerId);
-  	$newGlobularClustersSenior = $GlobularClusters[8];
-  	$sql = "UPDATE accomplishments SET GlobularClusterSenior = " . $newGlobularClustersSenior . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClustersSenior == 0 && $newGlobularClustersSenior == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 76), $this->getSeenMessage(LangGlobularClusters, 76, $observerId));
+  	if ($oldGlobularClusters[8] == 0 && $globularClusters[8] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 2500), $this->getSeenMessage(LangGlobularClusters, 2500, $observerId));
   	}
 
-  	$oldGlobularClustersExpert = $this->getGlobularClustersExpert($observerId);
-  	$newGlobularClustersExpert = $GlobularClusters[9];
-  	$sql = "UPDATE accomplishments SET GlobularClusterExpert = " . $newGlobularClustersExpert . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClustersExpert == 0 && $newGlobularClustersExpert == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 152), $this->getSeenMessage(LangGlobularClusters, 152, $observerId));
+  	if ($oldGlobularClusters[9] == 0 && $globularClusters[9] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 5000), $this->getSeenMessage(LangGlobularClusters, 5000, $observerId));
   	}
   }
 
   public function recalculateGlobularClusterDrawings($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// GlobularClusterDrawings
-  	$GlobularClusterDrawings = $this->calculateAccomplishments($observerId, "globularClusters", 10, true, 152);
-  	$oldGlobularClusterDrawingsNewbie = $this->getGlobularClusterDrawingsNewbie($observerId);
-  	$newGlobularClusterDrawingsNewbie = $GlobularClusterDrawings[0];
-  	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsNewbie = " . $newGlobularClusterDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
+    $globularClusterDrawings = $this->calculateAccomplishments($observerId, "globularClusters", 10, true, 152);
+  	$oldGlobularClusterDrawings = $this->getGlobularClustersAccomplishmentsDrawings($observerId);
+
+  	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsNewbie = " . $globularClusterDrawings[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldGlobularClusterDrawingsNewbie == 0 && $newGlobularClusterDrawingsNewbie == 1) {
+    $sql = "UPDATE accomplishments SET GlobularClusterDrawingsRookie = " . $globularClusterDrawings[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterDrawingsBeginner = " . $globularClusterDrawings[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterDrawingsTalented = " . $globularClusterDrawings[3] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterDrawingsSkilled = " . $globularClusterDrawings[4] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterDrawingsIntermediate = " . $globularClusterDrawings[5] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterDrawingsExperienced = " . $globularClusterDrawings[6] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterDrawingsAdvanced = " . $globularClusterDrawings[7] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterDrawingsSenior = " . $globularClusterDrawings[8] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GlobularClusterDrawingsExpert = " . $globularClusterDrawings[9] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldGlobularClusterDrawings[0] == 0 && $globularClusterDrawings[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularCluster, 1), $this->getDrawMessage(LangGlobularCluster, 1, $observerId));
   	}
 
-  	$oldGlobularClusterDrawingsRookie = $this->getGlobularClusterDrawingsRookie($observerId);
-  	$newGlobularClusterDrawingsRookie = $GlobularClusterDrawings[1];
-  	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsRookie = " . $newGlobularClusterDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClusterDrawingsRookie == 0 && $newGlobularClusterDrawingsRookie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 2), $this->getDrawMessage(LangGlobularClusters, 2, $observerId));
+  	if ($oldGlobularClusterDrawings[1] == 0 && $globularClusterDrawings[1] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 10), $this->getDrawMessage(LangGlobularClusters, 10, $observerId));
   	}
 
-  	$oldGlobularClusterDrawingsBeginner = $this->getGlobularClusterDrawingsBeginner($observerId);
-  	$newGlobularClusterDrawingsBeginner = $GlobularClusterDrawings[2];
-  	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsBeginner = " . $newGlobularClusterDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClusterDrawingsBeginner == 0 && $newGlobularClusterDrawingsBeginner == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 3), $this->getDrawMessage(LangGlobularClusters, 3, $observerId));
+  	if ($oldGlobularClusterDrawings[2] == 0 && $globularClusterDrawings[2] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 25), $this->getDrawMessage(LangGlobularClusters, 25, $observerId));
   	}
 
-  	$oldGlobularClusterDrawingsTalented = $this->getGlobularClusterDrawingsTalented($observerId);
-  	$newGlobularClusterDrawingsTalented = $GlobularClusterDrawings[3];
-  	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsTalented = " . $newGlobularClusterDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClusterDrawingsTalented == 0 && $newGlobularClusterDrawingsTalented == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 4), $this->getDrawMessage(LangGlobularClusters, 4, $observerId));
+  	if ($oldGlobularClusterDrawings[3] == 0 && $globularClusterDrawings[3] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 50), $this->getDrawMessage(LangGlobularClusters, 50, $observerId));
   	}
 
-  	$oldGlobularClusterDrawingsSkilled = $this->getGlobularClusterDrawingsSkilled($observerId);
-  	$newGlobularClusterDrawingsSkilled = $GlobularClusterDrawings[4];
-  	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsSkilled = " . $newGlobularClusterDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClusterDrawingsSkilled == 0 && $newGlobularClusterDrawingsSkilled == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 5), $this->getDrawMessage(LangGlobularClusters, 5, $observerId));
+  	if ($oldGlobularClusterDrawings[4] == 0 && $globularClusterDrawings[4] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 100), $this->getDrawMessage(LangGlobularClusters, 100, $observerId));
   	}
 
-  	$oldGlobularClusterDrawingsIntermediate = $this->getGlobularClusterDrawingsIntermediate($observerId);
-  	$newGlobularClusterDrawingsIntermediate = $GlobularClusterDrawings[5];
-  	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsIntermediate = " . $newGlobularClusterDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClusterDrawingsIntermediate == 0 && $newGlobularClusterDrawingsIntermediate == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 7), $this->getDrawMessage(LangGlobularClusters, 7, $observerId));
+  	if ($oldGlobularClusterDrawings[5] == 0 && $globularClusterDrawings[5] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 250), $this->getDrawMessage(LangGlobularClusters, 250, $observerId));
   	}
 
-  	$oldGlobularClusterDrawingsExperienced = $this->getGlobularClusterDrawingsExperienced($observerId);
-  	$newGlobularClusterDrawingsExperienced = $GlobularClusterDrawings[6];
-  	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsExperienced = " . $newGlobularClusterDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClusterDrawingsExperienced == 0 && $newGlobularClusterDrawingsExperienced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 15), $this->getDrawMessage(LangGlobularClusters, 15, $observerId));
+  	if ($oldGlobularClusterDrawings[6] == 0 && $globularClusterDrawings[6] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 500), $this->getDrawMessage(LangGlobularClusters, 500, $observerId));
   	}
 
-  	$oldGlobularClusterDrawingsAdvanced = $this->getGlobularClusterDrawingsAdvanced($observerId);
-  	$newGlobularClusterDrawingsAdvanced = $GlobularClusterDrawings[7];
-  	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsAdvanced = " . $newGlobularClusterDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClusterDrawingsAdvanced == 0 && $newGlobularClusterDrawingsAdvanced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 30), $this->getDrawMessage(LangGlobularClusters, 30, $observerId));
+  	if ($oldGlobularClusterDrawings[7] == 0 && $globularClusterDrawings[7] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 1000), $this->getDrawMessage(LangGlobularClusters, 1000, $observerId));
   	}
 
-  	$oldGlobularClusterDrawingsSenior = $this->getGlobularClusterDrawingsSenior($observerId);
-  	$newGlobularClusterDrawingsSenior = $GlobularClusterDrawings[8];
-  	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsSenior = " . $newGlobularClusterDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClusterDrawingsSenior == 0 && $newGlobularClusterDrawingsSenior == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 76), $this->getDrawMessage(LangGlobularClusters, 76, $observerId));
+  	if ($oldGlobularClusterDrawings[8] == 0 && $globularClusterDrawings[8] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 2500), $this->getDrawMessage(LangGlobularClusters, 2500, $observerId));
   	}
 
-  	$oldGlobularClusterDrawingsExpert = $this->getGlobularClusterDrawingsExpert($observerId);
-  	$newGlobularClusterDrawingsExpert = $GlobularClusterDrawings[9];
-  	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsExpert = " . $newGlobularClusterDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGlobularClusterDrawingsExpert == 0 && $newGlobularClusterDrawingsExpert == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 152), $this->getDrawMessage(LangGlobularClusters, 152, $observerId));
+  	if ($oldGlobularClusterDrawings[9] == 0 && $globularClusterDrawings[9] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 5000), $this->getDrawMessage(LangGlobularClusters, 5000, $observerId));
   	}
   }
 
