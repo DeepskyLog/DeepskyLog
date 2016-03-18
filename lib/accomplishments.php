@@ -296,148 +296,30 @@ class Accomplishments {
   	return $recordArray[0];
   }
 
+  /** Returns 1 if the observer has seen 1, 10, 25, 50, 100, 250, 500, 1000, 2500 or 5000 open clusters.
+
+    @param $observerId The observer for which the observed open clusters should be returned from the database.
+    @return integer[] [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  */
+  public function getOpenClustersAccomplishments($observerId) {
+  	global $objDatabase;
+    $recordArray = $objDatabase->selectRecordsetArray("select OpenClusterNewbie as '0', OpenClusterRookie as '1', OpenClusterBeginner as '2', OpenClusterTalented as '3', OpenClusterSkilled as '4', OpenClusterIntermediate as '5', OpenClusterExperienced as '6', OpenClusterAdvanced as '7', OpenClusterSenior as '8', OpenClusterExpert as '9' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
+  /** Returns 1 if the observer has drawn 1, 10, 25, 50, 100, 250, 500, 1000, 2500 or 5000 open clusters.
+
+    @param $observerId The observer for which the drawn open clusters should be returned from the database.
+    @return integer[] [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  */
+  public function getOpenClustersAccomplishmentsDrawings($observerId) {
+  	global $objDatabase;
+    $recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsNewbie as '0', OpenClusterDrawingsRookie as '1', OpenClusterDrawingsBeginner as '2', OpenClusterDrawingsTalented as '3', OpenClusterDrawingsSkilled as '4', OpenClusterDrawingsIntermediate as '5', OpenClusterDrawingsExperienced as '6', OpenClusterDrawingsAdvanced as '7', OpenClusterDrawingsSenior as '8', OpenClusterDrawingsExpert as '9' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
   // TODO: Start writing phpdoc for the next methods.
   // TODO: Refactor getXxxxxxBronze, ... see getMessierAccomplishments
-
-  // Returns 1 if the observer has one open clusters
-  public function getOpenClustersNewbie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterNewbie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterNewbie"];
-  }
-
-  // Returns 1 if the observer has 10 OpenClusters
-  public function getOpenClustersRookie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterRookie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterRookie"];
-  }
-
-  // Returns 1 if the observer has 25 OpenClusters
-  public function getOpenClustersBeginner($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterBeginner from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterBeginner"];
-  }
-
-  // Returns 1 if the observer has 50 OpenClusters
-  public function getOpenClustersTalented($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterTalented from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterTalented"];
-  }
-
-  // Returns 1 if the observer has 100 OpenClusters
-  public function getOpenClustersSkilled($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterSkilled from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterSkilled"];
-  }
-
-  // Returns 1 if the observer has 250 OpenClusters
-  public function getOpenClustersIntermediate($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterIntermediate from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterIntermediate"];
-  }
-
-  // Returns 1 if the observer has 500 OpenClusters
-  public function getOpenClustersExperienced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterExperienced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterExperienced"];
-  }
-
-  // Returns 1 if the observer has 1000 OpenClusters
-  public function getOpenClustersAdvanced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterAdvanced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterAdvanced"];
-  }
-
-  // Returns 1 if the observer has 2500 OpenClusters
-  public function getOpenClustersSenior($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterSenior from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterSenior"];
-  }
-
-  // Returns 1 if the observer has 5000 OpenClusters
-  public function getOpenClustersExpert($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterExpert from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterExpert"];
-  }
-
-  // Returns 1 if the observer has one open clusters
-  public function getOpenClusterDrawingsNewbie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterDrawingsNewbie"];
-  }
-
-  // Returns 1 if the observer has 10 OpenClusterDrawings
-  public function getOpenClusterDrawingsRookie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterDrawingsRookie"];
-  }
-
-  // Returns 1 if the observer has 25 OpenClusterDrawings
-  public function getOpenClusterDrawingsBeginner($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterDrawingsBeginner"];
-  }
-
-  // Returns 1 if the observer has 50 OpenClusterDrawings
-  public function getOpenClusterDrawingsTalented($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterDrawingsTalented"];
-  }
-
-  // Returns 1 if the observer has 100 OpenClusterDrawings
-  public function getOpenClusterDrawingsSkilled($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterDrawingsSkilled"];
-  }
-
-  // Returns 1 if the observer has 250 OpenClusterDrawings
-  public function getOpenClusterDrawingsIntermediate($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterDrawingsIntermediate"];
-  }
-
-  // Returns 1 if the observer has 500 OpenClusterDrawings
-  public function getOpenClusterDrawingsExperienced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterDrawingsExperienced"];
-  }
-
-  // Returns 1 if the observer has 1000 OpenClusterDrawings
-  public function getOpenClusterDrawingsAdvanced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterDrawingsAdvanced"];
-  }
-
-  // Returns 1 if the observer has 2500 OpenClusterDrawings
-  public function getOpenClusterDrawingsSenior($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterDrawingsSenior"];
-  }
-
-  // Returns 1 if the observer has 5000 OpenClusterDrawings
-  public function getOpenClusterDrawingsExpert($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["OpenClusterDrawingsExpert"];
-  }
 
   // Returns 1 if the observer has one Globular clusters
   public function getGlobularClustersNewbie($observerId) {
@@ -1742,94 +1624,76 @@ class Accomplishments {
   public function recalculateOpenClusters($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// OpenClusters
-  	$OpenClusters = $this->calculateAccomplishments($observerId, "openClusters", 10, false, 1700);
-  	$oldOpenClustersNewbie = $this->getOpenClustersNewbie($observerId);
-  	$newOpenClustersNewbie = $OpenClusters[0];
-  	$sql = "UPDATE accomplishments SET OpenClusterNewbie = " . $newOpenClustersNewbie . " WHERE observer = \"". $observerId ."\";";
+  	$openClusters = $this->calculateAccomplishments($observerId, "openClusters", 10, false, 1700);
+  	$oldOpenClusters = $this->getOpenClustersAccomplishments($observerId);
+
+  	$sql = "UPDATE accomplishments SET OpenClusterNewbie = " . $openClusters[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldOpenClustersNewbie == 0 && $newOpenClustersNewbie == 1) {
+    $sql = "UPDATE accomplishments SET OpenClusterRookie = " . $openClusters[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterBeginner = " . $openClusters[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterTalented = " . $openClusters[3] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterSkilled = " . $openClusters[4] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterIntermediate = " . $openClusters[5] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterExperienced = " . $openClusters[6] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterAdvanced = " . $openClusters[7] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterSenior = " . $openClusters[8] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterExpert = " . $openClusters[9] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldOpenClusters[0] == 0 && $openClusters[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenCluster, 1), $this->getSeenMessage(LangOpenCluster, 1, $observerId));
   	}
 
-  	$oldOpenClustersRookie = $this->getOpenClustersRookie($observerId);
-  	$newOpenClustersRookie = $OpenClusters[1];
-  	$sql = "UPDATE accomplishments SET OpenClusterRookie = " . $newOpenClustersRookie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClustersRookie == 0 && $newOpenClustersRookie == 1) {
+  	if ($oldOpenClusters[1] == 0 && $openClusters[1] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 10), $this->getSeenMessage(LangOpenClusters, 10, $observerId));
   	}
 
-  	$oldOpenClustersBeginner = $this->getOpenClustersBeginner($observerId);
-  	$newOpenClustersBeginner = $OpenClusters[2];
-  	$sql = "UPDATE accomplishments SET OpenClusterBeginner = " . $newOpenClustersBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClustersBeginner == 0 && $newOpenClustersBeginner == 1) {
+  	if ($oldOpenClusters[2] == 0 && $openClusters[2] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 25), $this->getSeenMessage(LangOpenClusters, 25, $observerId));
   	}
 
-  	$oldOpenClustersTalented = $this->getOpenClustersTalented($observerId);
-  	$newOpenClustersTalented = $OpenClusters[3];
-  	$sql = "UPDATE accomplishments SET OpenClusterTalented = " . $newOpenClustersTalented . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClustersTalented == 0 && $newOpenClustersTalented == 1) {
+  	if ($oldOpenClusters[3] == 0 && $openClusters[3] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 50), $this->getSeenMessage(LangOpenClusters, 50, $observerId));
   	}
 
-  	$oldOpenClustersSkilled = $this->getOpenClustersSkilled($observerId);
-  	$newOpenClustersSkilled = $OpenClusters[4];
-  	$sql = "UPDATE accomplishments SET OpenClusterSkilled = " . $newOpenClustersSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClustersSkilled == 0 && $newOpenClustersSkilled == 1) {
+  	if ($oldOpenClusters[4] == 0 && $openClusters[4] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 100), $this->getSeenMessage(LangOpenClusters, 100, $observerId));
   	}
 
-  	$oldOpenClustersIntermediate = $this->getOpenClustersIntermediate($observerId);
-  	$newOpenClustersIntermediate = $OpenClusters[5];
-  	$sql = "UPDATE accomplishments SET OpenClusterIntermediate = " . $newOpenClustersIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClustersIntermediate == 0 && $newOpenClustersIntermediate == 1) {
+  	if ($oldOpenClusters[5] == 0 && $openClusters[5] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 250), $this->getSeenMessage(LangOpenClusters, 250, $observerId));
   	}
 
-  	$oldOpenClustersExperienced = $this->getOpenClustersExperienced($observerId);
-  	$newOpenClustersExperienced = $OpenClusters[6];
-  	$sql = "UPDATE accomplishments SET OpenClusterExperienced = " . $newOpenClustersExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClustersExperienced == 0 && $newOpenClustersExperienced == 1) {
+  	if ($oldOpenClusters[6] == 0 && $openClusters[6] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 500), $this->getSeenMessage(LangOpenClusters, 500, $observerId));
   	}
 
-  	$oldOpenClustersAdvanced = $this->getOpenClustersAdvanced($observerId);
-  	$newOpenClustersAdvanced = $OpenClusters[7];
-  	$sql = "UPDATE accomplishments SET OpenClusterAdvanced = " . $newOpenClustersAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClustersAdvanced == 0 && $newOpenClustersAdvanced == 1) {
+  	if ($oldOpenClusters[7] == 0 && $openClusters[7] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 1000), $this->getSeenMessage(LangOpenClusters, 1000, $observerId));
   	}
 
-  	$oldOpenClustersSenior = $this->getOpenClustersSenior($observerId);
-  	$newOpenClustersSenior = $OpenClusters[8];
-  	$sql = "UPDATE accomplishments SET OpenClusterSenior = " . $newOpenClustersSenior . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClustersSenior == 0 && $newOpenClustersSenior == 1) {
+  	if ($oldOpenClusters[8] == 0 && $openClusters[8] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 2500), $this->getSeenMessage(LangOpenClusters, 2500, $observerId));
   	}
 
-  	$oldOpenClustersExpert = $this->getOpenClustersExpert($observerId);
-  	$newOpenClustersExpert = $OpenClusters[9];
-  	$sql = "UPDATE accomplishments SET OpenClusterExpert = " . $newOpenClustersExpert . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClustersExpert == 0 && $newOpenClustersExpert == 1) {
+  	if ($oldOpenClusters[9] == 0 && $openClusters[9] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 5000), $this->getSeenMessage(LangOpenClusters, 5000, $observerId));
   	}
   }
@@ -1837,94 +1701,76 @@ class Accomplishments {
   public function recalculateOpenClusterDrawings($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// OpenClusterDrawings
-    $OpenClusterDrawings = $this->calculateAccomplishments($observerId, "openClusters", 10, true, 1700);
-  	$oldOpenClusterDrawingsNewbie = $this->getOpenClusterDrawingsNewbie($observerId);
-  	$newOpenClusterDrawingsNewbie = $OpenClusterDrawings[0];
-  	$sql = "UPDATE accomplishments SET OpenClusterDrawingsNewbie = " . $newOpenClusterDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
+    $openClusterDrawings = $this->calculateAccomplishments($observerId, "openClusters", 10, true, 1700);
+  	$oldOpenClusterDrawings = $this->getOpenClustersAccomplishmentsDrawings($observerId);
+
+  	$sql = "UPDATE accomplishments SET OpenClusterDrawingsNewbie = " . $openClusterDrawings[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldOpenClusterDrawingsNewbie == 0 && $newOpenClusterDrawingsNewbie == 1) {
+    $sql = "UPDATE accomplishments SET OpenClusterDrawingsRookie = " . $openClusterDrawings[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterDrawingsBeginner = " . $openClusterDrawings[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterDrawingsTalented = " . $openClusterDrawings[3] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterDrawingsSkilled = " . $openClusterDrawings[4] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterDrawingsIntermediate = " . $openClusterDrawings[5] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterDrawingsExperienced = " . $openClusterDrawings[6] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterDrawingsAdvanced = " . $openClusterDrawings[7] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterDrawingsSenior = " . $openClusterDrawings[8] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET OpenClusterDrawingsExpert = " . $openClusterDrawings[9] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldOpenClusterDrawings[0] == 0 && $openClusterDrawings[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenCluster, 1), $this->getDrawMessage(LangOpenCluster, 1, $observerId));
   	}
 
-  	$oldOpenClusterDrawingsRookie = $this->getOpenClusterDrawingsRookie($observerId);
-  	$newOpenClusterDrawingsRookie = $OpenClusterDrawings[1];
-  	$sql = "UPDATE accomplishments SET OpenClusterDrawingsRookie = " . $newOpenClusterDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClusterDrawingsRookie == 0 && $newOpenClusterDrawingsRookie == 1) {
+  	if ($oldOpenClusterDrawings[1] == 0 && $openClusterDrawings[1] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 10), $this->getDrawMessage(LangOpenClusters, 10, $observerId));
   	}
 
-  	$oldOpenClusterDrawingsBeginner = $this->getOpenClusterDrawingsBeginner($observerId);
-  	$newOpenClusterDrawingsBeginner = $OpenClusterDrawings[2];
-  	$sql = "UPDATE accomplishments SET OpenClusterDrawingsBeginner = " . $newOpenClusterDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClusterDrawingsBeginner == 0 && $newOpenClusterDrawingsBeginner == 1) {
+  	if ($oldOpenClusterDrawings[2] == 0 && $openClusterDrawings[2] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 25), $this->getDrawMessage(LangOpenClusters, 25, $observerId));
   	}
 
-  	$oldOpenClusterDrawingsTalented = $this->getOpenClusterDrawingsTalented($observerId);
-  	$newOpenClusterDrawingsTalented = $OpenClusterDrawings[3];
-  	$sql = "UPDATE accomplishments SET OpenClusterDrawingsTalented = " . $newOpenClusterDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClusterDrawingsTalented == 0 && $newOpenClusterDrawingsTalented == 1) {
+  	if ($oldOpenClusterDrawings[3] == 0 && $openClusterDrawings[3] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 50), $this->getDrawMessage(LangOpenClusters, 50, $observerId));
   	}
 
-  	$oldOpenClusterDrawingsSkilled = $this->getOpenClusterDrawingsSkilled($observerId);
-  	$newOpenClusterDrawingsSkilled = $OpenClusterDrawings[4];
-  	$sql = "UPDATE accomplishments SET OpenClusterDrawingsSkilled = " . $newOpenClusterDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClusterDrawingsSkilled == 0 && $newOpenClusterDrawingsSkilled == 1) {
+  	if ($oldOpenClusterDrawings[4] == 0 && $openClusterDrawings[4] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 100), $this->getDrawMessage(LangOpenClusters, 100, $observerId));
   	}
 
-  	$oldOpenClusterDrawingsIntermediate = $this->getOpenClusterDrawingsIntermediate($observerId);
-  	$newOpenClusterDrawingsIntermediate = $OpenClusterDrawings[5];
-  	$sql = "UPDATE accomplishments SET OpenClusterDrawingsIntermediate = " . $newOpenClusterDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClusterDrawingsIntermediate == 0 && $newOpenClusterDrawingsIntermediate == 1) {
+  	if ($oldOpenClusterDrawings[5] == 0 && $openClusterDrawings[5] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 250), $this->getDrawMessage(LangOpenClusters, 250, $observerId));
   	}
 
-  	$oldOpenClusterDrawingsExperienced = $this->getOpenClusterDrawingsExperienced($observerId);
-  	$newOpenClusterDrawingsExperienced = $OpenClusterDrawings[6];
-  	$sql = "UPDATE accomplishments SET OpenClusterDrawingsExperienced = " . $newOpenClusterDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClusterDrawingsExperienced == 0 && $newOpenClusterDrawingsExperienced == 1) {
+  	if ($oldOpenClusterDrawings[6] == 0 && $openClusterDrawings[6] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 500), $this->getDrawMessage(LangOpenClusters, 500, $observerId));
   	}
 
-  	$oldOpenClusterDrawingsAdvanced = $this->getOpenClusterDrawingsAdvanced($observerId);
-  	$newOpenClusterDrawingsAdvanced = $OpenClusterDrawings[7];
-  	$sql = "UPDATE accomplishments SET OpenClusterDrawingsAdvanced = " . $newOpenClusterDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClusterDrawingsAdvanced == 0 && $newOpenClusterDrawingsAdvanced == 1) {
+  	if ($oldOpenClusterDrawings[7] == 0 && $openClusterDrawings[7] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 1000), $this->getDrawMessage(LangOpenClusters, 1000, $observerId));
   	}
 
-  	$oldOpenClusterDrawingsSenior = $this->getOpenClusterDrawingsSenior($observerId);
-  	$newOpenClusterDrawingsSenior = $OpenClusterDrawings[8];
-  	$sql = "UPDATE accomplishments SET OpenClusterDrawingsSenior = " . $newOpenClusterDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClusterDrawingsSenior == 0 && $newOpenClusterDrawingsSenior == 1) {
+  	if ($oldOpenClusterDrawings[8] == 0 && $openClusterDrawings[8] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 2500), $this->getDrawMessage(LangOpenClusters, 2500, $observerId));
   	}
 
-  	$oldOpenClusterDrawingsExpert = $this->getOpenClusterDrawingsExpert($observerId);
-  	$newOpenClusterDrawingsExpert = $OpenClusterDrawings[9];
-  	$sql = "UPDATE accomplishments SET OpenClusterDrawingsExpert = " . $newOpenClusterDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldOpenClusterDrawingsExpert == 0 && $newOpenClusterDrawingsExpert == 1) {
+  	if ($oldOpenClusterDrawings[9] == 0 && $openClusterDrawings[9] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 5000), $this->getDrawMessage(LangOpenClusters, 5000, $observerId));
   	}
   }
