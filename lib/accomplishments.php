@@ -450,82 +450,23 @@ class Accomplishments {
       return $recordArray[0];
     }
 
+    /** Returns 1 if the observer has 1, 10, 25, 50, 100, 250, 500, 1000, 2500 or 5000 comet drawings.
+
+    @param $observerId The observer for which the comet drawings should be returned from the database.
+    @return integer[] [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+    */
+    public function getCometDrawingsAccomplishments($observerId) {
+      global $objDatabase;
+      $recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsNewbie as '0', CometDrawingsRookie as '1', CometDrawingsBeginner as '2', CometDrawingsTalented as '3', CometDrawingsSkilled as '4', CometDrawingsIntermediate as '5', CometDrawingsExperienced as '6', CometDrawingsAdvanced as '7', CometDrawingsSenior as '8', CometDrawingsExpert as '9' from accomplishments where observer = \"". $observerId . "\";");
+      return $recordArray[0];
+    }
 
 
     // TODO: Start writing phpdoc for the next methods.
-    // TODO: Refactor getXxxxxxNewbie, ...
+    // TODO: Refactor recalculateXxxxxx methods.
 
 
 
-    // Returns 1 if the observer has one Objects Drawing
-    public function getCometDrawingsNewbie($observerId) {
-      global $objDatabase;
-      $recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
-      return $recordArray[0]["CometDrawingsNewbie"];
-    }
-
-    // Returns 1 if the observer has 10 CometDrawings
-    public function getCometDrawingsRookie($observerId) {
-      global $objDatabase;
-      $recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
-      return $recordArray[0]["CometDrawingsRookie"];
-    }
-
-    // Returns 1 if the observer has 25 CometDrawings
-    public function getCometDrawingsBeginner($observerId) {
-      global $objDatabase;
-      $recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
-      return $recordArray[0]["CometDrawingsBeginner"];
-    }
-
-    // Returns 1 if the observer has 50 CometDrawings
-    public function getCometDrawingsTalented($observerId) {
-      global $objDatabase;
-      $recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
-      return $recordArray[0]["CometDrawingsTalented"];
-    }
-
-    // Returns 1 if the observer has 100 CometDrawings
-    public function getCometDrawingsSkilled($observerId) {
-      global $objDatabase;
-      $recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
-      return $recordArray[0]["CometDrawingsSkilled"];
-    }
-
-    // Returns 1 if the observer has 250 CometDrawings
-    public function getCometDrawingsIntermediate($observerId) {
-      global $objDatabase;
-      $recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
-      return $recordArray[0]["CometDrawingsIntermediate"];
-    }
-
-    // Returns 1 if the observer has 500 CometDrawings
-    public function getCometDrawingsExperienced($observerId) {
-      global $objDatabase;
-      $recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
-      return $recordArray[0]["CometDrawingsExperienced"];
-    }
-
-    // Returns 1 if the observer has 1000 CometDrawings
-    public function getCometDrawingsAdvanced($observerId) {
-      global $objDatabase;
-      $recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
-      return $recordArray[0]["CometDrawingsAdvanced"];
-    }
-
-    // Returns 1 if the observer has 2500 CometDrawings
-    public function getCometDrawingsSenior($observerId) {
-      global $objDatabase;
-      $recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
-      return $recordArray[0]["CometDrawingsSenior"];
-    }
-
-    // Returns 1 if the observer has 5000 CometDrawings
-    public function getCometDrawingsExpert($observerId) {
-      global $objDatabase;
-      $recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
-      return $recordArray[0]["CometDrawingsExpert"];
-    }
 
     // Recalculates all deepsky accomplishments (for example after adding, removing or changing an observation)
     public function recalculateDeepsky($observerId) {
@@ -1990,106 +1931,85 @@ class Accomplishments {
         $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 2500), $this->getSeenMessage(LangObject, 2500, $observerId));
       }
 
-      if ($oldCometsObserved[9] == 0 && $CometObservations[9] == 1) {
+      if ($oldCometsObserved[9] == 0 && $CometsObserved[9] == 1) {
         $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 5000), $this->getSeenMessage(LangObject, 5000, $observerId));
       }
     }
 
-
-
-
     public function recalculateCometDrawings($observerId) {
       global $objDatabase, $objMessages, $loggedUser;
-      // Comet Observations
+      // Objects
       $CometDrawings = $this->calculateAccomplishments($observerId, "cometDrawings", 10, false);
-      $oldCometDrawingsNewbie = $this->getCometDrawingsNewbie($observerId);
-      $newCometDrawingsNewbie = $CometDrawings[0];
-      $sql = "UPDATE accomplishments SET CometDrawingsNewbie = " . $newCometDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
+      $oldCometDrawings = $this->getCometDrawingsAccomplishments($observerId);
+
+      $sql = "UPDATE accomplishments SET CometDrawingsNewbie = " . $CometDrawings[0] . " WHERE observer = \"". $observerId ."\";";
       $objDatabase->execSQL($sql);
 
-      if ($oldCometDrawingsNewbie == 0 && $newCometDrawingsNewbie == 1) {
-        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComet, 1), $this->getDrawMessage(LangComet, 1, $observerId));
+      $sql = "UPDATE accomplishments SET CometDrawingsRookie = " . $CometDrawings[1] . " WHERE observer = \"". $observerId ."\";";
+      $objDatabase->execSQL($sql);
+
+      $sql = "UPDATE accomplishments SET CometDrawingsBeginner = " . $CometDrawings[2] . " WHERE observer = \"". $observerId ."\";";
+      $objDatabase->execSQL($sql);
+
+      $sql = "UPDATE accomplishments SET CometDrawingsTalented = " . $CometDrawings[3] . " WHERE observer = \"". $observerId ."\";";
+      $objDatabase->execSQL($sql);
+
+      $sql = "UPDATE accomplishments SET CometDrawingsSkilled = " . $CometDrawings[4] . " WHERE observer = \"". $observerId ."\";";
+      $objDatabase->execSQL($sql);
+
+      $sql = "UPDATE accomplishments SET CometDrawingsIntermediate = " . $CometDrawings[5] . " WHERE observer = \"". $observerId ."\";";
+      $objDatabase->execSQL($sql);
+
+      $sql = "UPDATE accomplishments SET CometDrawingsExperienced = " . $CometDrawings[6] . " WHERE observer = \"". $observerId ."\";";
+      $objDatabase->execSQL($sql);
+
+      $sql = "UPDATE accomplishments SET CometDrawingsAdvanced = " . $CometDrawings[7] . " WHERE observer = \"". $observerId ."\";";
+      $objDatabase->execSQL($sql);
+
+      $sql = "UPDATE accomplishments SET CometDrawingsSenior = " . $CometDrawings[8] . " WHERE observer = \"". $observerId ."\";";
+      $objDatabase->execSQL($sql);
+
+      $sql = "UPDATE accomplishments SET CometDrawingsExpert = " . $CometDrawings[9] . " WHERE observer = \"". $observerId ."\";";
+      $objDatabase->execSQL($sql);
+
+      if ($oldCometDrawings[0] == 0 && $CometDrawings[0] == 1) {
+        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 1), $this->getSeenMessage(LangObject, 1, $observerId));
       }
 
-      $oldCometDrawingsRookie = $this->getCometDrawingsRookie($observerId);
-      $newCometDrawingsRookie = $CometDrawings[1];
-      $sql = "UPDATE accomplishments SET CometDrawingsRookie = " . $newCometDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-      $objDatabase->execSQL($sql);
-
-      if ($oldCometDrawingsRookie == 0 && $newCometDrawingsRookie == 1) {
-        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComets, 10), $this->getDrawMessage(LangComets, 10, $observerId));
+      if ($oldCometDrawings[1] == 0 && $CometDrawings[1] == 1) {
+        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 10), $this->getSeenMessage(LangObject, 10, $observerId));
       }
 
-      $oldCometDrawingsBeginner = $this->getCometDrawingsBeginner($observerId);
-      $newCometDrawingsBeginner = $CometDrawings[2];
-      $sql = "UPDATE accomplishments SET CometDrawingsBeginner = " . $newCometDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-      $objDatabase->execSQL($sql);
-
-      if ($oldCometDrawingsBeginner == 0 && $newCometDrawingsBeginner == 1) {
-        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComets, 25), $this->getDrawMessage(LangComets, 25, $observerId));
+      if ($oldCometDrawings[2] == 0 && $CometDrawings[2] == 1) {
+        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 25), $this->getSeenMessage(LangObject, 25, $observerId));
       }
 
-      $oldCometDrawingsTalented = $this->getCometDrawingsTalented($observerId);
-      $newCometDrawingsTalented = $CometDrawings[3];
-      $sql = "UPDATE accomplishments SET CometDrawingsTalented = " . $newCometDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-      $objDatabase->execSQL($sql);
-
-      if ($oldCometDrawingsTalented == 0 && $newCometDrawingsTalented == 1) {
-        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComets, 50), $this->getDrawMessage(LangComets, 50, $observerId));
+      if ($oldCometDrawings[3] == 0 && $CometDrawings[3] == 1) {
+        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 50), $this->getSeenMessage(LangObject, 50, $observerId));
       }
 
-      $oldCometDrawingsSkilled = $this->getCometDrawingsSkilled($observerId);
-      $newCometDrawingsSkilled = $CometDrawings[4];
-      $sql = "UPDATE accomplishments SET CometDrawingsSkilled = " . $newCometDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-      $objDatabase->execSQL($sql);
-
-      if ($oldCometDrawingsSkilled == 0 && $newCometDrawingsSkilled == 1) {
-        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComets, 100), $this->getDrawMessage(LangComets, 100, $observerId));
+      if ($oldCometDrawings[4] == 0 && $CometDrawings[4] == 1) {
+        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 100), $this->getSeenMessage(LangObject, 100, $observerId));
       }
 
-      $oldCometDrawingsIntermediate = $this->getCometDrawingsIntermediate($observerId);
-      $newCometDrawingsIntermediate = $CometDrawings[5];
-      $sql = "UPDATE accomplishments SET CometDrawingsIntermediate = " . $newCometDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-      $objDatabase->execSQL($sql);
-
-      if ($oldCometDrawingsIntermediate == 0 && $newCometDrawingsIntermediate == 1) {
-        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComets, 250), $this->getDrawMessage(LangComets, 250, $observerId));
+      if ($oldCometDrawings[5] == 0 && $CometDrawings[5] == 1) {
+        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 250), $this->getSeenMessage(LangObject, 250, $observerId));
       }
 
-      $oldCometDrawingsExperienced = $this->getCometDrawingsExperienced($observerId);
-      $newCometDrawingsExperienced = $CometDrawings[6];
-      $sql = "UPDATE accomplishments SET CometDrawingsExperienced = " . $newCometDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-      $objDatabase->execSQL($sql);
-
-      if ($oldCometDrawingsExperienced == 0 && $newCometDrawingsExperienced == 1) {
-        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComets, 500), $this->getDrawMessage(LangComets, 500, $observerId));
+      if ($oldCometDrawings[6] == 0 && $CometDrawings[6] == 1) {
+        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 500), $this->getSeenMessage(LangObject, 500, $observerId));
       }
 
-      $oldCometDrawingsAdvanced = $this->getCometDrawingsAdvanced($observerId);
-      $newCometDrawingsAdvanced = $CometDrawings[7];
-      $sql = "UPDATE accomplishments SET CometDrawingsAdvanced = " . $newCometDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-      $objDatabase->execSQL($sql);
-
-      if ($oldCometDrawingsAdvanced == 0 && $newCometDrawingsAdvanced == 1) {
-        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComets, 1000), $this->getDrawMessage(LangComets, 1000, $observerId));
+      if ($oldCometDrawings[7] == 0 && $CometDrawings[7] == 1) {
+        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 1000), $this->getSeenMessage(LangObject, 1000, $observerId));
       }
 
-      $oldCometDrawingsSenior = $this->getCometDrawingsSenior($observerId);
-      $newCometDrawingsSenior = $CometDrawings[8];
-      $sql = "UPDATE accomplishments SET CometDrawingsSenior = " . $newCometDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-      $objDatabase->execSQL($sql);
-
-      if ($oldCometDrawingsSenior == 0 && $newCometDrawingsSenior == 1) {
-        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComets, 2500), $this->getDrawMessage(LangComets, 2500, $observerId));
+      if ($oldCometDrawings[8] == 0 && $CometDrawings[8] == 1) {
+        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 2500), $this->getSeenMessage(LangObject, 2500, $observerId));
       }
 
-      $oldCometDrawingsExpert = $this->getCometDrawingsExpert($observerId);
-      $newCometDrawingsExpert = $CometDrawings[9];
-      $sql = "UPDATE accomplishments SET CometDrawingsExpert = " . $newCometDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-      $objDatabase->execSQL($sql);
-
-      if ($oldCometDrawingsExpert == 0 && $newCometDrawingsExpert == 1) {
-        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComets, 5000), $this->getDrawMessage(LangComets, 5000, $observerId));
+      if ($oldCometDrawings[9] == 0 && $CometDrawings[9] == 1) {
+        $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 5000), $this->getSeenMessage(LangObject, 5000, $observerId));
       }
     }
   }
