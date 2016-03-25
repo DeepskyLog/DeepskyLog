@@ -363,148 +363,32 @@ class Accomplishments {
   }
 
 
+
+  /** Returns 1 if the observer has seen 1, 10, 25, 50, 100, 250, 500, 1000, 2500 or 5000 galaxies.
+
+    @param $observerId The observer for which the observed galaxies should be returned from the database.
+    @return integer[] [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  */
+  public function getGalaxiesAccomplishments($observerId) {
+  	global $objDatabase;
+    $recordArray = $objDatabase->selectRecordsetArray("select GalaxyNewbie as '0', GalaxyRookie as '1', GalaxyBeginner as '2', GalaxyTalented as '3', GalaxySkilled as '4', GalaxyIntermediate as '5', GalaxyExperienced as '6', GalaxyAdvanced as '7', GalaxySenior as '8', GalaxyExpert as '9' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
+  /** Returns 1 if the observer has drawn 1, 10, 25, 50, 100, 250, 500, 1000, 2500 or 5000 galaxies.
+
+    @param $observerId The observer for which the drawn galaxies should be returned from the database.
+    @return integer[] [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  */
+  public function getGalaxiesAccomplishmentsDrawings($observerId) {
+  	global $objDatabase;
+    $recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsNewbie as '0', GalaxyDrawingsRookie as '1', GalaxyDrawingsBeginner as '2', GalaxyDrawingsTalented as '3', GalaxyDrawingsSkilled as '4', GalaxyDrawingsIntermediate as '5', GalaxyDrawingsExperienced as '6', GalaxyDrawingsAdvanced as '7', GalaxyDrawingsSenior as '8', GalaxyDrawingsExpert as '9' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
+
   // TODO: Start writing phpdoc for the next methods.
   // TODO: Refactor getXxxxxxNewbie, ...
-
-  // Returns 1 if the observer has one galaxy
-  public function getGalaxyNewbie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyNewbie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyNewbie"];
-  }
-
-  // Returns 1 if the observer has 10 Galaxy
-  public function getGalaxyRookie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyRookie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyRookie"];
-  }
-
-  // Returns 1 if the observer has 25 Galaxy
-  public function getGalaxyBeginner($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyBeginner from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyBeginner"];
-  }
-
-  // Returns 1 if the observer has 50 Galaxy
-  public function getGalaxyTalented($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyTalented from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyTalented"];
-  }
-
-  // Returns 1 if the observer has 100 Galaxy
-  public function getGalaxySkilled($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxySkilled from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxySkilled"];
-  }
-
-  // Returns 1 if the observer has 250 Galaxy
-  public function getGalaxyIntermediate($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyIntermediate from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyIntermediate"];
-  }
-
-  // Returns 1 if the observer has 500 Galaxy
-  public function getGalaxyExperienced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyExperienced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyExperienced"];
-  }
-
-  // Returns 1 if the observer has 1000 Galaxy
-  public function getGalaxyAdvanced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyAdvanced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyAdvanced"];
-  }
-
-  // Returns 1 if the observer has 2500 Galaxy
-  public function getGalaxySenior($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxySenior from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxySenior"];
-  }
-
-  // Returns 1 if the observer has 5000 Galaxy
-  public function getGalaxyExpert($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyExpert from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyExpert"];
-  }
-
-  // Returns 1 if the observer has one galaxy Drawing
-  public function getGalaxyDrawingsNewbie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyDrawingsNewbie"];
-  }
-
-  // Returns 1 if the observer has 10 GalaxyDrawings
-  public function getGalaxyDrawingsRookie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyDrawingsRookie"];
-  }
-
-  // Returns 1 if the observer has 25 GalaxyDrawings
-  public function getGalaxyDrawingsBeginner($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyDrawingsBeginner"];
-  }
-
-  // Returns 1 if the observer has 50 GalaxyDrawings
-  public function getGalaxyDrawingsTalented($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyDrawingsTalented"];
-  }
-
-  // Returns 1 if the observer has 100 GalaxyDrawings
-  public function getGalaxyDrawingsSkilled($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyDrawingsSkilled"];
-  }
-
-  // Returns 1 if the observer has 250 GalaxyDrawings
-  public function getGalaxyDrawingsIntermediate($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyDrawingsIntermediate"];
-  }
-
-  // Returns 1 if the observer has 500 GalaxyDrawings
-  public function getGalaxyDrawingsExperienced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyDrawingsExperienced"];
-  }
-
-  // Returns 1 if the observer has 1000 GalaxyDrawings
-  public function getGalaxyDrawingsAdvanced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyDrawingsAdvanced"];
-  }
-
-  // Returns 1 if the observer has 2500 GalaxyDrawings
-  public function getGalaxyDrawingsSenior($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyDrawingsSenior"];
-  }
-
-  // Returns 1 if the observer has 5000 GalaxyDrawings
-  public function getGalaxyDrawingsExpert($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["GalaxyDrawingsExpert"];
-  }
 
   // Returns 1 if the observer has one nebula
   public function getNebulaNewbie($observerId) {
@@ -1250,23 +1134,23 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
 
   	if ($oldHerschels[0] == 0 && $herschels[0] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 25), $this->getSeenMessage(LangHerschelII, 25, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschelII, 25), $this->getSeenMessage(LangHerschelII, 25, $observerId));
   	}
 
   	if ($oldHerschels[1] == 0 && $herschels[1] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 50), $this->getSeenMessage(LangHerschelII, 50, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschelII, 50), $this->getSeenMessage(LangHerschelII, 50, $observerId));
   	}
 
   	if ($oldHerschels[2] == 0 && $herschels[2] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 100), $this->getSeenMessage(LangHerschelII, 100, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschelII, 100), $this->getSeenMessage(LangHerschelII, 100, $observerId));
   	}
 
   	if ($oldHerschels[3] == 0 && $herschels[3] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 200), $this->getSeenMessage(LangHerschelII, 200, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschelII, 200), $this->getSeenMessage(LangHerschelII, 200, $observerId));
   	}
 
   	if ($oldHerschels[4] == 0 && $herschels[4] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschel400, 400), $this->getSeenMessage(LangHerschelII, 400, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangHerschelII, 400), $this->getSeenMessage(LangHerschelII, 400, $observerId));
   	}
 
   	// Herschel DRAWINGS
@@ -1427,39 +1311,39 @@ class Accomplishments {
   	}
 
   	if ($oldOpenClusters[1] == 0 && $openClusters[1] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 10), $this->getSeenMessage(LangOpenClusters, 10, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenCluster, 10), $this->getSeenMessage(LangOpenCluster, 10, $observerId));
   	}
 
   	if ($oldOpenClusters[2] == 0 && $openClusters[2] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 25), $this->getSeenMessage(LangOpenClusters, 25, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenCluster, 25), $this->getSeenMessage(LangOpenCluster, 25, $observerId));
   	}
 
   	if ($oldOpenClusters[3] == 0 && $openClusters[3] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 50), $this->getSeenMessage(LangOpenClusters, 50, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenCluster, 50), $this->getSeenMessage(LangOpenCluster, 50, $observerId));
   	}
 
   	if ($oldOpenClusters[4] == 0 && $openClusters[4] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 100), $this->getSeenMessage(LangOpenClusters, 100, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenCluster, 100), $this->getSeenMessage(LangOpenCluster, 100, $observerId));
   	}
 
   	if ($oldOpenClusters[5] == 0 && $openClusters[5] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 250), $this->getSeenMessage(LangOpenClusters, 250, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenCluster, 250), $this->getSeenMessage(LangOpenCluster, 250, $observerId));
   	}
 
   	if ($oldOpenClusters[6] == 0 && $openClusters[6] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 500), $this->getSeenMessage(LangOpenClusters, 500, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenCluster, 500), $this->getSeenMessage(LangOpenCluster, 500, $observerId));
   	}
 
   	if ($oldOpenClusters[7] == 0 && $openClusters[7] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 1000), $this->getSeenMessage(LangOpenClusters, 1000, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenCluster, 1000), $this->getSeenMessage(LangOpenCluster, 1000, $observerId));
   	}
 
   	if ($oldOpenClusters[8] == 0 && $openClusters[8] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 2500), $this->getSeenMessage(LangOpenClusters, 2500, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenCluster, 2500), $this->getSeenMessage(LangOpenCluster, 2500, $observerId));
   	}
 
   	if ($oldOpenClusters[9] == 0 && $openClusters[9] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 5000), $this->getSeenMessage(LangOpenClusters, 5000, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenCluster, 5000), $this->getSeenMessage(LangOpenCluster, 5000, $observerId));
   	}
   }
 
@@ -1504,39 +1388,39 @@ class Accomplishments {
   	}
 
   	if ($oldOpenClusterDrawings[1] == 0 && $openClusterDrawings[1] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 10), $this->getDrawMessage(LangOpenClusters, 10, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenCluster, 10), $this->getDrawMessage(LangOpenCluster, 10, $observerId));
   	}
 
   	if ($oldOpenClusterDrawings[2] == 0 && $openClusterDrawings[2] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 25), $this->getDrawMessage(LangOpenClusters, 25, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenCluster, 25), $this->getDrawMessage(LangOpenCluster, 25, $observerId));
   	}
 
   	if ($oldOpenClusterDrawings[3] == 0 && $openClusterDrawings[3] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 50), $this->getDrawMessage(LangOpenClusters, 50, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenCluster, 50), $this->getDrawMessage(LangOpenCluster, 50, $observerId));
   	}
 
   	if ($oldOpenClusterDrawings[4] == 0 && $openClusterDrawings[4] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 100), $this->getDrawMessage(LangOpenClusters, 100, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenCluster, 100), $this->getDrawMessage(LangOpenCluster, 100, $observerId));
   	}
 
   	if ($oldOpenClusterDrawings[5] == 0 && $openClusterDrawings[5] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 250), $this->getDrawMessage(LangOpenClusters, 250, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenCluster, 250), $this->getDrawMessage(LangOpenCluster, 250, $observerId));
   	}
 
   	if ($oldOpenClusterDrawings[6] == 0 && $openClusterDrawings[6] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 500), $this->getDrawMessage(LangOpenClusters, 500, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenCluster, 500), $this->getDrawMessage(LangOpenCluster, 500, $observerId));
   	}
 
   	if ($oldOpenClusterDrawings[7] == 0 && $openClusterDrawings[7] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 1000), $this->getDrawMessage(LangOpenClusters, 1000, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenCluster, 1000), $this->getDrawMessage(LangOpenCluster, 1000, $observerId));
   	}
 
   	if ($oldOpenClusterDrawings[8] == 0 && $openClusterDrawings[8] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 2500), $this->getDrawMessage(LangOpenClusters, 2500, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenCluster, 2500), $this->getDrawMessage(LangOpenCluster, 2500, $observerId));
   	}
 
   	if ($oldOpenClusterDrawings[9] == 0 && $openClusterDrawings[9] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 5000), $this->getDrawMessage(LangOpenClusters, 5000, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenCluster, 5000), $this->getDrawMessage(LangOpenCluster, 5000, $observerId));
   	}
   }
 
@@ -1581,39 +1465,39 @@ class Accomplishments {
   	}
 
   	if ($oldGlobularClusters[1] == 0 && $globularClusters[1] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 10), $this->getSeenMessage(LangGlobularClusters, 10, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularCluster, 10), $this->getSeenMessage(LangGlobularCluster, 10, $observerId));
   	}
 
   	if ($oldGlobularClusters[2] == 0 && $globularClusters[2] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 25), $this->getSeenMessage(LangGlobularClusters, 25, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularCluster, 25), $this->getSeenMessage(LangGlobularCluster, 25, $observerId));
   	}
 
   	if ($oldGlobularClusters[3] == 0 && $globularClusters[3] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 50), $this->getSeenMessage(LangGlobularClusters, 50, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularCluster, 50), $this->getSeenMessage(LangGlobularCluster, 50, $observerId));
   	}
 
   	if ($oldGlobularClusters[4] == 0 && $globularClusters[4] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 100), $this->getSeenMessage(LangGlobularClusters, 100, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularCluster, 100), $this->getSeenMessage(LangGlobularCluster, 100, $observerId));
   	}
 
   	if ($oldGlobularClusters[5] == 0 && $globularClusters[5] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 250), $this->getSeenMessage(LangGlobularClusters, 250, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularCluster, 250), $this->getSeenMessage(LangGlobularCluster, 250, $observerId));
   	}
 
   	if ($oldGlobularClusters[6] == 0 && $globularClusters[6] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 500), $this->getSeenMessage(LangGlobularClusters, 500, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularCluster, 500), $this->getSeenMessage(LangGlobularCluster, 500, $observerId));
   	}
 
   	if ($oldGlobularClusters[7] == 0 && $globularClusters[7] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 1000), $this->getSeenMessage(LangGlobularClusters, 1000, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularCluster, 1000), $this->getSeenMessage(LangGlobularCluster, 1000, $observerId));
   	}
 
   	if ($oldGlobularClusters[8] == 0 && $globularClusters[8] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 2500), $this->getSeenMessage(LangGlobularClusters, 2500, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularCluster, 2500), $this->getSeenMessage(LangGlobularCluster, 2500, $observerId));
   	}
 
   	if ($oldGlobularClusters[9] == 0 && $globularClusters[9] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 5000), $this->getSeenMessage(LangGlobularClusters, 5000, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularCluster, 5000), $this->getSeenMessage(LangGlobularCluster, 5000, $observerId));
   	}
   }
 
@@ -1658,39 +1542,39 @@ class Accomplishments {
   	}
 
   	if ($oldGlobularClusterDrawings[1] == 0 && $globularClusterDrawings[1] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 10), $this->getDrawMessage(LangGlobularClusters, 10, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularCluster, 10), $this->getDrawMessage(LangGlobularCluster, 10, $observerId));
   	}
 
   	if ($oldGlobularClusterDrawings[2] == 0 && $globularClusterDrawings[2] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 25), $this->getDrawMessage(LangGlobularClusters, 25, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularCluster, 25), $this->getDrawMessage(LangGlobularCluster, 25, $observerId));
   	}
 
   	if ($oldGlobularClusterDrawings[3] == 0 && $globularClusterDrawings[3] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 50), $this->getDrawMessage(LangGlobularClusters, 50, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularCluster, 50), $this->getDrawMessage(LangGlobularCluster, 50, $observerId));
   	}
 
   	if ($oldGlobularClusterDrawings[4] == 0 && $globularClusterDrawings[4] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 100), $this->getDrawMessage(LangGlobularClusters, 100, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularCluster, 100), $this->getDrawMessage(LangGlobularCluster, 100, $observerId));
   	}
 
   	if ($oldGlobularClusterDrawings[5] == 0 && $globularClusterDrawings[5] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 250), $this->getDrawMessage(LangGlobularClusters, 250, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularCluster, 250), $this->getDrawMessage(LangGlobularCluster, 250, $observerId));
   	}
 
   	if ($oldGlobularClusterDrawings[6] == 0 && $globularClusterDrawings[6] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 500), $this->getDrawMessage(LangGlobularClusters, 500, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularCluster, 500), $this->getDrawMessage(LangGlobularCluster, 500, $observerId));
   	}
 
   	if ($oldGlobularClusterDrawings[7] == 0 && $globularClusterDrawings[7] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 1000), $this->getDrawMessage(LangGlobularClusters, 1000, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularCluster, 1000), $this->getDrawMessage(LangGlobularCluster, 1000, $observerId));
   	}
 
   	if ($oldGlobularClusterDrawings[8] == 0 && $globularClusterDrawings[8] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 2500), $this->getDrawMessage(LangGlobularClusters, 2500, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularCluster, 2500), $this->getDrawMessage(LangGlobularCluster, 2500, $observerId));
   	}
 
   	if ($oldGlobularClusterDrawings[9] == 0 && $globularClusterDrawings[9] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 5000), $this->getDrawMessage(LangGlobularClusters, 5000, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularCluster, 5000), $this->getDrawMessage(LangGlobularCluster, 5000, $observerId));
   	}
   }
 
@@ -1735,39 +1619,39 @@ class Accomplishments {
   	}
 
   	if ($oldPlanetaryNebulae[1] == 0 && $planetaryNebulae[1] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 10), $this->getSeenMessage(LangPlanetaryNebulae, 10, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebula, 10), $this->getSeenMessage(LangPlanetaryNebula, 10, $observerId));
   	}
 
   	if ($oldPlanetaryNebulae[2] == 0 && $planetaryNebulae[2] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 25), $this->getSeenMessage(LangPlanetaryNebulae, 25, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebula, 25), $this->getSeenMessage(LangPlanetaryNebula, 25, $observerId));
   	}
 
   	if ($oldPlanetaryNebulae[3] == 0 && $planetaryNebulae[3] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 50), $this->getSeenMessage(LangPlanetaryNebulae, 50, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebula, 50), $this->getSeenMessage(LangPlanetaryNebula, 50, $observerId));
   	}
 
   	if ($oldPlanetaryNebulae[4] == 0 && $planetaryNebulae[4] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 100), $this->getSeenMessage(LangPlanetaryNebulae, 100, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebula, 100), $this->getSeenMessage(LangPlanetaryNebula, 100, $observerId));
   	}
 
   	if ($oldPlanetaryNebulae[5] == 0 && $planetaryNebulae[5] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 250), $this->getSeenMessage(LangPlanetaryNebulae, 250, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebula, 250), $this->getSeenMessage(LangPlanetaryNebula, 250, $observerId));
   	}
 
   	if ($oldPlanetaryNebulae[6] == 0 && $planetaryNebulae[6] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 500), $this->getSeenMessage(LangPlanetaryNebulae, 500, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebula, 500), $this->getSeenMessage(LangPlanetaryNebula, 500, $observerId));
   	}
 
   	if ($oldPlanetaryNebulae[7] == 0 && $planetaryNebulae[7] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 1000), $this->getSeenMessage(LangPlanetaryNebulae, 1000, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebula, 1000), $this->getSeenMessage(LangPlanetaryNebula, 1000, $observerId));
   	}
 
   	if ($oldPlanetaryNebulae[8] == 0 && $planetaryNebulae[8] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 2500), $this->getSeenMessage(LangPlanetaryNebulae, 2500, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebula, 2500), $this->getSeenMessage(LangPlanetaryNebula, 2500, $observerId));
   	}
 
   	if ($oldPlanetaryNebulae[9] == 0 && $planetaryNebulae[9] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulae, 5000), $this->getSeenMessage(LangPlanetaryNebulae, 5000, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebula, 5000), $this->getSeenMessage(LangPlanetaryNebula, 5000, $observerId));
   	}
   }
 
@@ -1812,231 +1696,199 @@ class Accomplishments {
   	}
 
   	if ($oldPlanetaryNebulaDrawings[1] == 0 && $planetaryNebulaDrawings[1] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 10), $this->getDrawMessage(LangPlanetaryNebulae, 10, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebula, 10), $this->getDrawMessage(LangPlanetaryNebula, 10, $observerId));
   	}
 
   	if ($oldPlanetaryNebulaDrawings[2] == 0 && $planetaryNebulaDrawings[2] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 25), $this->getDrawMessage(LangPlanetaryNebulae, 25, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebula, 25), $this->getDrawMessage(LangPlanetaryNebula, 25, $observerId));
   	}
 
   	if ($oldPlanetaryNebulaDrawings[3] == 0 && $planetaryNebulaDrawings[3] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 50), $this->getDrawMessage(LangPlanetaryNebulae, 50, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebula, 50), $this->getDrawMessage(LangPlanetaryNebula, 50, $observerId));
   	}
 
   	if ($oldPlanetaryNebulaDrawings[4] == 0 && $planetaryNebulaDrawings[4] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 100), $this->getDrawMessage(LangPlanetaryNebulae, 100, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebula, 100), $this->getDrawMessage(LangPlanetaryNebula, 100, $observerId));
   	}
 
   	if ($oldPlanetaryNebulaDrawings[5] == 0 && $planetaryNebulaDrawings[5] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 250), $this->getDrawMessage(LangPlanetaryNebulae, 250, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebula, 250), $this->getDrawMessage(LangPlanetaryNebula, 250, $observerId));
   	}
 
   	if ($oldPlanetaryNebulaDrawings[6] == 0 && $planetaryNebulaDrawings[6] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 500), $this->getDrawMessage(LangPlanetaryNebulae, 500, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebula, 500), $this->getDrawMessage(LangPlanetaryNebula, 500, $observerId));
   	}
 
   	if ($oldPlanetaryNebulaDrawings[7] == 0 && $planetaryNebulaDrawings[7] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 1000), $this->getDrawMessage(LangPlanetaryNebulae, 1000, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebula, 1000), $this->getDrawMessage(LangPlanetaryNebula, 1000, $observerId));
   	}
 
   	if ($oldPlanetaryNebulaDrawings[8] == 0 && $planetaryNebulaDrawings[8] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 2500), $this->getDrawMessage(LangPlanetaryNebulae, 2500, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebula, 2500), $this->getDrawMessage(LangPlanetaryNebula, 2500, $observerId));
   	}
 
   	if ($oldPlanetaryNebulaDrawings[9] == 0 && $planetaryNebulaDrawings[9] == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulae, 5000), $this->getDrawMessage(LangPlanetaryNebulae, 5000, $observerId));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebula, 5000), $this->getDrawMessage(LangPlanetaryNebula, 5000, $observerId));
   	}
   }
 
   public function recalculateGalaxies($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// Galaxies
-  	$Galaxies = $this->calculateAccomplishments($observerId, "galaxies", 10, false);
-  	$oldGalaxiesNewbie = $this->getGalaxyNewbie($observerId);
-  	$newGalaxiesNewbie = $Galaxies[0];
-  	$sql = "UPDATE accomplishments SET GalaxyNewbie = " . $newGalaxiesNewbie . " WHERE observer = \"". $observerId ."\";";
+  	$galaxies = $this->calculateAccomplishments($observerId, "galaxies", 10, false, 152);
+  	$oldGalaxies = $this->getGalaxiesAccomplishments($observerId);
+
+  	$sql = "UPDATE accomplishments SET GalaxyNewbie = " . $galaxies[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldGalaxiesNewbie == 0 && $newGalaxiesNewbie == 1) {
+    $sql = "UPDATE accomplishments SET GalaxyRookie = " . $galaxies[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyBeginner = " . $galaxies[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyTalented = " . $galaxies[3] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxySkilled = " . $galaxies[4] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyIntermediate = " . $galaxies[5] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyExperienced = " . $galaxies[6] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyAdvanced = " . $galaxies[7] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxySenior = " . $galaxies[8] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyExpert = " . $galaxies[9] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldGalaxies[0] == 0 && $galaxies[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxy, 1), $this->getSeenMessage(LangGalaxy, 1, $observerId));
   	}
 
-  	$oldGalaxiesRookie = $this->getGalaxyRookie($observerId);
-  	$newGalaxiesRookie = $Galaxies[1];
-  	$sql = "UPDATE accomplishments SET GalaxyRookie = " . $newGalaxiesRookie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxiesRookie == 0 && $newGalaxiesRookie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxiesSeen, 10), $this->getSeenMessage(LangGalaxiesSeen, 10, $observerId));
+  	if ($oldGalaxies[1] == 0 && $galaxies[1] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxy, 10), $this->getSeenMessage(LangGalaxy, 10, $observerId));
   	}
 
-  	$oldGalaxiesBeginner = $this->getGalaxyBeginner($observerId);
-  	$newGalaxiesBeginner = $Galaxies[2];
-  	$sql = "UPDATE accomplishments SET GalaxyBeginner = " . $newGalaxiesBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxiesBeginner == 0 && $newGalaxiesBeginner == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxiesSeen, 25), $this->getSeenMessage(LangGalaxiesSeen, 25, $observerId));
+  	if ($oldGalaxies[2] == 0 && $galaxies[2] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxy, 25), $this->getSeenMessage(LangGalaxy, 25, $observerId));
   	}
 
-  	$oldGalaxiesTalented = $this->getGalaxyTalented($observerId);
-  	$newGalaxiesTalented = $Galaxies[3];
-  	$sql = "UPDATE accomplishments SET GalaxyTalented = " . $newGalaxiesTalented . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxiesTalented == 0 && $newGalaxiesTalented == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxiesSeen, 50), $this->getSeenMessage(LangGalaxiesSeen, 50, $observerId));
+  	if ($oldGalaxies[3] == 0 && $galaxies[3] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxy, 50), $this->getSeenMessage(LangGalaxy, 50, $observerId));
   	}
 
-  	$oldGalaxiesSkilled = $this->getGalaxySkilled($observerId);
-  	$newGalaxiesSkilled = $Galaxies[4];
-  	$sql = "UPDATE accomplishments SET GalaxySkilled = " . $newGalaxiesSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxiesSkilled == 0 && $newGalaxiesSkilled == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxiesSeen, 100), $this->getSeenMessage(LangGalaxiesSeen, 100, $observerId));
+  	if ($oldGalaxies[4] == 0 && $galaxies[4] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxy, 100), $this->getSeenMessage(LangGalaxy, 100, $observerId));
   	}
 
-  	$oldGalaxiesIntermediate = $this->getGalaxyIntermediate($observerId);
-  	$newGalaxiesIntermediate = $Galaxies[5];
-  	$sql = "UPDATE accomplishments SET GalaxyIntermediate = " . $newGalaxiesIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxiesIntermediate == 0 && $newGalaxiesIntermediate == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxiesSeen, 250), $this->getSeenMessage(LangGalaxiesSeen, 250, $observerId));
+  	if ($oldGalaxies[5] == 0 && $galaxies[5] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxy, 250), $this->getSeenMessage(LangGalaxy, 250, $observerId));
   	}
 
-  	$oldGalaxiesExperienced = $this->getGalaxyExperienced($observerId);
-  	$newGalaxiesExperienced = $Galaxies[6];
-  	$sql = "UPDATE accomplishments SET GalaxyExperienced = " . $newGalaxiesExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxiesExperienced == 0 && $newGalaxiesExperienced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxiesSeen, 500), $this->getSeenMessage(LangGalaxiesSeen, 500, $observerId));
+  	if ($oldGalaxies[6] == 0 && $galaxies[6] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxy, 500), $this->getSeenMessage(LangGalaxy, 500, $observerId));
   	}
 
-  	$oldGalaxiesAdvanced = $this->getGalaxyAdvanced($observerId);
-  	$newGalaxiesAdvanced = $Galaxies[7];
-  	$sql = "UPDATE accomplishments SET GalaxyAdvanced = " . $newGalaxiesAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxiesAdvanced == 0 && $newGalaxiesAdvanced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxiesSeen, 1000), $this->getSeenMessage(LangGalaxiesSeen, 1000, $observerId));
+  	if ($oldGalaxies[7] == 0 && $galaxies[7] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxy, 1000), $this->getSeenMessage(LangGalaxy, 1000, $observerId));
   	}
 
-  	$oldGalaxiesSenior = $this->getGalaxySenior($observerId);
-  	$newGalaxiesSenior = $Galaxies[8];
-  	$sql = "UPDATE accomplishments SET GalaxySenior = " . $newGalaxiesSenior . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxiesSenior == 0 && $newGalaxiesSenior == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxiesSeen, 2500), $this->getSeenMessage(LangGalaxiesSeen, 2500, $observerId));
+  	if ($oldGalaxies[8] == 0 && $galaxies[8] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxy, 2500), $this->getSeenMessage(LangGalaxy, 2500, $observerId));
   	}
 
-  	$oldGalaxiesExpert = $this->getGalaxyExpert($observerId);
-  	$newGalaxiesExpert = $Galaxies[9];
-  	$sql = "UPDATE accomplishments SET GalaxyExpert = " . $newGalaxiesExpert . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxiesExpert == 0 && $newGalaxiesExpert == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxiesSeen, 5000), $this->getSeenMessage(LangGalaxiesSeen, 5000, $observerId));
+  	if ($oldGalaxies[9] == 0 && $galaxies[9] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxy, 5000), $this->getSeenMessage(LangGalaxy, 5000, $observerId));
   	}
   }
 
   public function recalculateGalaxyDrawings($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// GalaxyDrawings
-  	$GalaxyDrawings = $this->calculateAccomplishments($observerId, "galaxies", 10, true);
-  	$oldGalaxyDrawingsNewbie = $this->getGalaxyDrawingsNewbie($observerId);
-  	$newGalaxyDrawingsNewbie = $GalaxyDrawings[0];
-  	$sql = "UPDATE accomplishments SET GalaxyDrawingsNewbie = " . $newGalaxyDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
+    $galaxyDrawings = $this->calculateAccomplishments($observerId, "galaxies", 10, true, 152);
+  	$oldGalaxyDrawings = $this->getGalaxiesAccomplishmentsDrawings($observerId);
+
+  	$sql = "UPDATE accomplishments SET GalaxyDrawingsNewbie = " . $galaxyDrawings[0] . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
 
-  	if ($oldGalaxyDrawingsNewbie == 0 && $newGalaxyDrawingsNewbie == 1) {
+    $sql = "UPDATE accomplishments SET GalaxyDrawingsRookie = " . $galaxyDrawings[1] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyDrawingsBeginner = " . $galaxyDrawings[2] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyDrawingsTalented = " . $galaxyDrawings[3] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyDrawingsSkilled = " . $galaxyDrawings[4] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyDrawingsIntermediate = " . $galaxyDrawings[5] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyDrawingsExperienced = " . $galaxyDrawings[6] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyDrawingsAdvanced = " . $galaxyDrawings[7] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyDrawingsSenior = " . $galaxyDrawings[8] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+    $sql = "UPDATE accomplishments SET GalaxyDrawingsExpert = " . $galaxyDrawings[9] . " WHERE observer = \"". $observerId ."\";";
+  	$objDatabase->execSQL($sql);
+
+  	if ($oldGalaxyDrawings[0] == 0 && $galaxyDrawings[0] == 1) {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxy, 1), $this->getDrawMessage(LangGalaxy, 1, $observerId));
   	}
 
-  	$oldGalaxyDrawingsRookie = $this->getGalaxyDrawingsRookie($observerId);
-  	$newGalaxyDrawingsRookie = $GalaxyDrawings[1];
-  	$sql = "UPDATE accomplishments SET GalaxyDrawingsRookie = " . $newGalaxyDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxyDrawingsRookie == 0 && $newGalaxyDrawingsRookie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxiesSeen, 10), $this->getDrawMessage(LangGalaxiesSeen, 10, $observerId));
+  	if ($oldGalaxyDrawings[1] == 0 && $galaxyDrawings[1] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxy, 10), $this->getDrawMessage(LangGalaxy, 10, $observerId));
   	}
 
-  	$oldGalaxyDrawingsBeginner = $this->getGalaxyDrawingsBeginner($observerId);
-  	$newGalaxyDrawingsBeginner = $GalaxyDrawings[2];
-  	$sql = "UPDATE accomplishments SET GalaxyDrawingsBeginner = " . $newGalaxyDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxyDrawingsBeginner == 0 && $newGalaxyDrawingsBeginner == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxiesSeen, 25), $this->getDrawMessage(LangGalaxiesSeen, 25, $observerId));
+  	if ($oldGalaxyDrawings[2] == 0 && $galaxyDrawings[2] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxy, 25), $this->getDrawMessage(LangGalaxy, 25, $observerId));
   	}
 
-  	$oldGalaxyDrawingsTalented = $this->getGalaxyDrawingsTalented($observerId);
-  	$newGalaxyDrawingsTalented = $GalaxyDrawings[3];
-  	$sql = "UPDATE accomplishments SET GalaxyDrawingsTalented = " . $newGalaxyDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxyDrawingsTalented == 0 && $newGalaxyDrawingsTalented == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxiesSeen, 50), $this->getDrawMessage(LangGalaxiesSeen, 50, $observerId));
+  	if ($oldGalaxyDrawings[3] == 0 && $galaxyDrawings[3] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxy, 50), $this->getDrawMessage(LangGalaxy, 50, $observerId));
   	}
 
-  	$oldGalaxyDrawingsSkilled = $this->getGalaxyDrawingsSkilled($observerId);
-  	$newGalaxyDrawingsSkilled = $GalaxyDrawings[4];
-  	$sql = "UPDATE accomplishments SET GalaxyDrawingsSkilled = " . $newGalaxyDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxyDrawingsSkilled == 0 && $newGalaxyDrawingsSkilled == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxiesSeen, 100), $this->getDrawMessage(LangGalaxiesSeen, 100, $observerId));
+  	if ($oldGalaxyDrawings[4] == 0 && $galaxyDrawings[4] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxy, 100), $this->getDrawMessage(LangGalaxy, 100, $observerId));
   	}
 
-  	$oldGalaxyDrawingsIntermediate = $this->getGalaxyDrawingsIntermediate($observerId);
-  	$newGalaxyDrawingsIntermediate = $GalaxyDrawings[5];
-  	$sql = "UPDATE accomplishments SET GalaxyDrawingsIntermediate = " . $newGalaxyDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxyDrawingsIntermediate == 0 && $newGalaxyDrawingsIntermediate == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxiesSeen, 250), $this->getDrawMessage(LangGalaxiesSeen, 250, $observerId));
+  	if ($oldGalaxyDrawings[5] == 0 && $galaxyDrawings[5] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxy, 250), $this->getDrawMessage(LangGalaxy, 250, $observerId));
   	}
 
-  	$oldGalaxyDrawingsExperienced = $this->getGalaxyDrawingsExperienced($observerId);
-  	$newGalaxyDrawingsExperienced = $GalaxyDrawings[6];
-  	$sql = "UPDATE accomplishments SET GalaxyDrawingsExperienced = " . $newGalaxyDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxyDrawingsExperienced == 0 && $newGalaxyDrawingsExperienced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxiesSeen, 500), $this->getDrawMessage(LangGalaxiesSeen, 500, $observerId));
+  	if ($oldGalaxyDrawings[6] == 0 && $galaxyDrawings[6] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxy, 500), $this->getDrawMessage(LangGalaxy, 500, $observerId));
   	}
 
-  	$oldGalaxyDrawingsAdvanced = $this->getGalaxyDrawingsAdvanced($observerId);
-  	$newGalaxyDrawingsAdvanced = $GalaxyDrawings[7];
-  	$sql = "UPDATE accomplishments SET GalaxyDrawingsAdvanced = " . $newGalaxyDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxyDrawingsAdvanced == 0 && $newGalaxyDrawingsAdvanced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxiesSeen, 1000), $this->getDrawMessage(LangGalaxiesSeen, 1000, $observerId));
+  	if ($oldGalaxyDrawings[7] == 0 && $galaxyDrawings[7] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxy, 1000), $this->getDrawMessage(LangGalaxy, 1000, $observerId));
   	}
 
-  	$oldGalaxyDrawingsSenior = $this->getGalaxyDrawingsSenior($observerId);
-  	$newGalaxyDrawingsSenior = $GalaxyDrawings[8];
-  	$sql = "UPDATE accomplishments SET GalaxyDrawingsSenior = " . $newGalaxyDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxyDrawingsSenior == 0 && $newGalaxyDrawingsSenior == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxiesSeen, 2500), $this->getDrawMessage(LangGalaxiesSeen, 2500, $observerId));
+  	if ($oldGalaxyDrawings[8] == 0 && $galaxyDrawings[8] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxy, 2500), $this->getDrawMessage(LangGalaxy, 2500, $observerId));
   	}
 
-  	$oldGalaxyDrawingsExpert = $this->getGalaxyDrawingsExpert($observerId);
-  	$newGalaxyDrawingsExpert = $GalaxyDrawings[9];
-  	$sql = "UPDATE accomplishments SET GalaxyDrawingsExpert = " . $newGalaxyDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-
-  	if ($oldGalaxyDrawingsExpert == 0 && $newGalaxyDrawingsExpert == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxiesSeen, 5000), $this->getDrawMessage(LangGalaxiesSeen, 5000, $observerId));
+  	if ($oldGalaxyDrawings[9] == 0 && $galaxyDrawings[9] == 1) {
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxy, 5000), $this->getDrawMessage(LangGalaxy, 5000, $observerId));
   	}
   }
+
+
+
+
 
   public function recalculateNebulae($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
