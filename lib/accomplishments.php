@@ -406,6 +406,27 @@ class Accomplishments {
   	return $recordArray[0];
   }
 
+  /** Returns 1 if the observer has seen 1, 10, 25, 50, 100, 250, 500, 1000, 2500 or 5000 objects.
+
+    @param $observerId The observer for which the observed objects should be returned from the database.
+    @return integer[] [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  */
+  public function getObjectsAccomplishments($observerId) {
+  	global $objDatabase;
+    $recordArray = $objDatabase->selectRecordsetArray("select ObjectsNewbie as '0', ObjectsRookie as '1', ObjectsBeginner as '2', ObjectsTalented as '3', ObjectsSkilled as '4', ObjectsIntermediate as '5', ObjectsExperienced as '6', ObjectsAdvanced as '7', ObjectsSenior as '8', ObjectsExpert as '9' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
+
+  /** Returns 1 if the observer has drawn 1, 10, 25, 50, 100, 250, 500, 1000, 2500 or 5000 objects.
+
+    @param $observerId The observer for which the drawn objects should be returned from the database.
+    @return integer[] [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
+  */
+  public function getObjectsAccomplishmentsDrawings($observerId) {
+  	global $objDatabase;
+    $recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsNewbie as '0', ObjectsDrawingsRookie as '1', ObjectsDrawingsBeginner as '2', ObjectsDrawingsTalented as '3', ObjectsDrawingsSkilled as '4', ObjectsDrawingsIntermediate as '5', ObjectsDrawingsExperienced as '6', ObjectsDrawingsAdvanced as '7', ObjectsDrawingsSenior as '8', ObjectsDrawingsExpert as '9' from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0];
+  }
 
 
   // TODO: Start writing phpdoc for the next methods.
@@ -413,145 +434,6 @@ class Accomplishments {
 
 
 
-  // Returns 1 if the observer has one Objects
-  public function getObjectsNewbie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsNewbie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsNewbie"];
-  }
-
-  // Returns 1 if the observer has 10 Objects
-  public function getObjectsRookie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsRookie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsRookie"];
-  }
-
-  // Returns 1 if the observer has 25 Objects
-  public function getObjectsBeginner($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsBeginner from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsBeginner"];
-  }
-
-  // Returns 1 if the observer has 50 Objects
-  public function getObjectsTalented($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsTalented from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsTalented"];
-  }
-
-  // Returns 1 if the observer has 100 Objects
-  public function getObjectsSkilled($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsSkilled from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsSkilled"];
-  }
-
-  // Returns 1 if the observer has 250 Objects
-  public function getObjectsIntermediate($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsIntermediate from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsIntermediate"];
-  }
-
-  // Returns 1 if the observer has 500 Objects
-  public function getObjectsExperienced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsExperienced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsExperienced"];
-  }
-
-  // Returns 1 if the observer has 1000 Objects
-  public function getObjectsAdvanced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsAdvanced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsAdvanced"];
-  }
-
-  // Returns 1 if the observer has 2500 Objects
-  public function getObjectsSenior($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsSenior from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsSenior"];
-  }
-
-  // Returns 1 if the observer has 5000 Objects
-  public function getObjectsExpert($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsExpert from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsExpert"];
-  }
-
-  // Returns 1 if the observer has one Objects Drawing
-  public function getObjectsDrawingsNewbie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsDrawingsNewbie"];
-  }
-
-  // Returns 1 if the observer has 10 ObjectsDrawings
-  public function getObjectsDrawingsRookie($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsDrawingsRookie"];
-  }
-
-  // Returns 1 if the observer has 25 ObjectsDrawings
-  public function getObjectsDrawingsBeginner($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsDrawingsBeginner"];
-  }
-
-  // Returns 1 if the observer has 50 ObjectsDrawings
-  public function getObjectsDrawingsTalented($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsDrawingsTalented"];
-  }
-
-  // Returns 1 if the observer has 100 ObjectsDrawings
-  public function getObjectsDrawingsSkilled($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsDrawingsSkilled"];
-  }
-
-  // Returns 1 if the observer has 250 ObjectsDrawings
-  public function getObjectsDrawingsIntermediate($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsDrawingsIntermediate"];
-  }
-
-  // Returns 1 if the observer has 500 ObjectsDrawings
-  public function getObjectsDrawingsExperienced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsDrawingsExperienced"];
-  }
-
-  // Returns 1 if the observer has 1000 ObjectsDrawings
-  public function getObjectsDrawingsAdvanced($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsDrawingsAdvanced"];
-  }
-
-  // Returns 1 if the observer has 2500 ObjectsDrawings
-  public function getObjectsDrawingsSenior($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["ObjectsDrawingsSenior"];
-  }
-
-  // Returns 1 if the observer has 5000 ObjectsDrawings
-  public function getObjectsDrawingsExpert($observerId) {
-  	global $objDatabase;
-  	$recordArray = $objDatabase->selectRecordsetArray("select objectsDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
-  	return $recordArray[0]["objectsDrawingsExpert"];
-  }
 
   // Returns 1 if the observer has one Objects Drawing
   public function getCometObservationsNewbie($observerId) {
@@ -1919,7 +1801,7 @@ class Accomplishments {
     	}
 
     	if ($oldNebulaDrawings[9] == 0 && $nebulaDrawings[9] == 1) {
-    		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangNebula, 5000), $this->getDrawMessage(LangPlanetaryNebula, 5000, $observerId));
+    		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangNebula, 5000), $this->getDrawMessage(LangNebula, 5000, $observerId));
     	}
     }
 
@@ -1928,195 +1810,167 @@ class Accomplishments {
 
 
 
+    public function recalculateObjects($observerId) {
+      	global $objDatabase, $objMessages, $loggedUser;
+      	// Objects
+      	$objects = $this->calculateAccomplishments($observerId, "differentObjects", 10, false);
+      	$oldObjects = $this->getObjectsAccomplishments($observerId);
 
-  public function recalculateObjects($observerId) {
-  	global $objDatabase, $objMessages, $loggedUser;
-  	// Different Objects
-  	$Objects = $this->calculateAccomplishments($observerId, "differentObjects", 10, false);
-  	$oldObjectsNewbie = $this->getObjectsNewbie($observerId);
-  	$newObjectsNewbie = $Objects[0];
-  	$sql = "UPDATE accomplishments SET objectsNewbie = " . $newObjectsNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+      	$sql = "UPDATE accomplishments SET objectsNewbie = " . $objects[0] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	if ($oldObjectsNewbie == 0 && $newObjectsNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 1), $this->getSeenMessage(LangObject, 1, $observerId));
-  	}
+        $sql = "UPDATE accomplishments SET objectsRookie = " . $objects[1] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	$oldObjectsRookie = $this->getObjectsRookie($observerId);
-  	$newObjectsRookie = $Objects[1];
-  	$sql = "UPDATE accomplishments SET objectsRookie = " . $newObjectsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+        $sql = "UPDATE accomplishments SET objectsBeginner = " . $objects[2] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	if ($oldObjectsRookie == 0 && $newObjectsRookie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangAccomplishmentsDifferentObjects, 10), $this->getSeenMessage(LangAccomplishmentsDifferentObjects, 10, $observerId));
-  	}
+        $sql = "UPDATE accomplishments SET objectsTalented = " . $objects[3] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	$oldObjectsBeginner = $this->getObjectsBeginner($observerId);
-  	$newObjectsBeginner = $Objects[2];
-  	$sql = "UPDATE accomplishments SET objectsBeginner = " . $newObjectsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+        $sql = "UPDATE accomplishments SET objectsSkilled = " . $objects[4] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	if ($oldObjectsBeginner == 0 && $newObjectsBeginner == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangAccomplishmentsDifferentObjects, 25), $this->getSeenMessage(LangAccomplishmentsDifferentObjects, 25, $observerId));
-  	}
+        $sql = "UPDATE accomplishments SET objectsIntermediate = " . $objects[5] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	$oldObjectsTalented = $this->getObjectsTalented($observerId);
-  	$newObjectsTalented = $Objects[3];
-  	$sql = "UPDATE accomplishments SET objectsTalented = " . $newObjectsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+        $sql = "UPDATE accomplishments SET objectsExperienced = " . $objects[6] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	if ($oldObjectsTalented == 0 && $newObjectsTalented == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangAccomplishmentsDifferentObjects, 50), $this->getSeenMessage(LangAccomplishmentsDifferentObjects, 50, $observerId));
-  	}
+        $sql = "UPDATE accomplishments SET objectsAdvanced = " . $objects[7] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	$oldObjectsSkilled = $this->getObjectsSkilled($observerId);
-  	$newObjectsSkilled = $Objects[4];
-  	$sql = "UPDATE accomplishments SET objectsSkilled = " . $newObjectsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+        $sql = "UPDATE accomplishments SET objectsSenior = " . $objects[8] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	if ($oldObjectsSkilled == 0 && $newObjectsSkilled == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangAccomplishmentsDifferentObjects, 100), $this->getSeenMessage(LangAccomplishmentsDifferentObjects, 100, $observerId));
-  	}
+        $sql = "UPDATE accomplishments SET objectsExpert = " . $objects[9] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	$oldObjectsIntermediate = $this->getObjectsIntermediate($observerId);
-  	$newObjectsIntermediate = $Objects[5];
-  	$sql = "UPDATE accomplishments SET objectsIntermediate = " . $newObjectsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+      	if ($oldObjects[0] == 0 && $objects[0] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 1), $this->getSeenMessage(LangObject, 1, $observerId));
+      	}
 
-  	if ($oldObjectsIntermediate == 0 && $newObjectsIntermediate == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangAccomplishmentsDifferentObjects, 250), $this->getSeenMessage(LangAccomplishmentsDifferentObjects, 250, $observerId));
-  	}
+      	if ($oldObjects[1] == 0 && $objects[1] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 10), $this->getSeenMessage(LangObject, 10, $observerId));
+      	}
 
-  	$oldObjectsExperienced = $this->getObjectsExperienced($observerId);
-  	$newObjectsExperienced = $Objects[6];
-  	$sql = "UPDATE accomplishments SET objectsExperienced = " . $newObjectsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+      	if ($oldObjects[2] == 0 && $objects[2] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 25), $this->getSeenMessage(LangObject, 25, $observerId));
+      	}
 
-  	if ($oldObjectsExperienced == 0 && $newObjectsExperienced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangAccomplishmentsDifferentObjects, 500), $this->getSeenMessage(LangAccomplishmentsDifferentObjects, 500, $observerId));
-  	}
+      	if ($oldObjects[3] == 0 && $objects[3] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 50), $this->getSeenMessage(LangObject, 50, $observerId));
+      	}
 
-  	$oldObjectsAdvanced = $this->getObjectsAdvanced($observerId);
-  	$newObjectsAdvanced = $Objects[7];
-  	$sql = "UPDATE accomplishments SET objectsAdvanced = " . $newObjectsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+      	if ($oldObjects[4] == 0 && $objects[4] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 100), $this->getSeenMessage(LangObject, 100, $observerId));
+      	}
 
-  	if ($oldObjectsAdvanced == 0 && $newObjectsAdvanced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangAccomplishmentsDifferentObjects, 1000), $this->getSeenMessage(LangAccomplishmentsDifferentObjects, 1000, $observerId));
-  	}
+      	if ($oldObjects[5] == 0 && $objects[5] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 250), $this->getSeenMessage(LangObject, 250, $observerId));
+      	}
 
-  	$oldObjectsSenior = $this->getObjectsSenior($observerId);
-  	$newObjectsSenior = $Objects[8];
-  	$sql = "UPDATE accomplishments SET objectsSenior = " . $newObjectsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+      	if ($oldObjects[6] == 0 && $objects[6] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 500), $this->getSeenMessage(LangObject, 500, $observerId));
+      	}
 
-  	if ($oldObjectsSenior == 0 && $newObjectsSenior == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangAccomplishmentsDifferentObjects, 2500), $this->getSeenMessage(LangAccomplishmentsDifferentObjects, 2500, $observerId));
-  	}
+      	if ($oldObjects[7] == 0 && $objects[7] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 1000), $this->getSeenMessage(LangObject, 1000, $observerId));
+      	}
 
-  	$oldObjectsExpert = $this->getObjectsExpert($observerId);
-  	$newObjectsExpert = $Objects[9];
-  	$sql = "UPDATE accomplishments SET objectsExpert = " . $newObjectsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+      	if ($oldObjects[8] == 0 && $objects[8] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 2500), $this->getSeenMessage(LangObject, 2500, $observerId));
+      	}
 
-  	if ($oldObjectsExpert == 0 && $newObjectsExpert == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangAccomplishmentsDifferentObjects, 5000), $this->getSeenMessage(LangAccomplishmentsDifferentObjects, 5000, $observerId));
-  	}
-  }
+      	if ($oldObjects[9] == 0 && $objects[9] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 5000), $this->getSeenMessage(LangObject, 5000, $observerId));
+      	}
+      }
 
-  public function recalculateObjectDrawings($observerId) {
-  	global $objDatabase, $objMessages, $loggedUser;
-  	// ObjectsDrawings
-  	$ObjectsDrawings = $this->calculateAccomplishments($observerId, "differentObjects", 10, true);
-  	$oldObjectsDrawingsNewbie = $this->getObjectsDrawingsNewbie($observerId);
-  	$newObjectsDrawingsNewbie = $ObjectsDrawings[0];
-  	$sql = "UPDATE accomplishments SET ObjectsDrawingsNewbie = " . $newObjectsDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
-  	if ($oldObjectsDrawingsNewbie == 0 && $newObjectsDrawingsNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 1), $this->getDrawMessage(LangObject, 1, $observerId));
-  	}
+      public function recalculateObjectDrawings($observerId) {
+      	global $objDatabase, $objMessages, $loggedUser;
+      	// ObjectDrawings
+        $objectDrawings = $this->calculateAccomplishments($observerId, "differentObjects", 10, true);
+      	$oldObjectDrawings = $this->getObjectsAccomplishmentsDrawings($observerId);
 
-  	$oldObjectsDrawingsRookie = $this->getObjectsDrawingsRookie($observerId);
-  	$newObjectsDrawingsRookie = $ObjectsDrawings[1];
-  	$sql = "UPDATE accomplishments SET ObjectsDrawingsRookie = " . $newObjectsDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+      	$sql = "UPDATE accomplishments SET ObjectsDrawingsNewbie = " . $objectDrawings[0] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	if ($oldObjectsDrawingsRookie == 0 && $newObjectsDrawingsRookie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsDifferentObjects, 10), $this->getDrawMessage(LangAccomplishmentsDifferentObjects, 10, $observerId));
-  	}
+        $sql = "UPDATE accomplishments SET ObjectsDrawingsRookie = " . $objectDrawings[1] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	$oldObjectsDrawingsBeginner = $this->getObjectsDrawingsBeginner($observerId);
-  	$newObjectsDrawingsBeginner = $ObjectsDrawings[2];
-  	$sql = "UPDATE accomplishments SET ObjectsDrawingsBeginner = " . $newObjectsDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+        $sql = "UPDATE accomplishments SET ObjectsDrawingsBeginner = " . $objectDrawings[2] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	if ($oldObjectsDrawingsBeginner == 0 && $newObjectsDrawingsBeginner == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsDifferentObjects, 25), $this->getDrawMessage(LangAccomplishmentsDifferentObjects, 25, $observerId));
-  	}
+        $sql = "UPDATE accomplishments SET ObjectsDrawingsTalented = " . $objectDrawings[3] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	$oldObjectsDrawingsTalented = $this->getObjectsDrawingsTalented($observerId);
-  	$newObjectsDrawingsTalented = $ObjectsDrawings[3];
-  	$sql = "UPDATE accomplishments SET ObjectsDrawingsTalented = " . $newObjectsDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+        $sql = "UPDATE accomplishments SET ObjectsDrawingsSkilled = " . $objectDrawings[4] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	if ($oldObjectsDrawingsTalented == 0 && $newObjectsDrawingsTalented == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsDifferentObjects, 50), $this->getDrawMessage(LangAccomplishmentsDifferentObjects, 50, $observerId));
-  	}
+        $sql = "UPDATE accomplishments SET ObjectsDrawingsIntermediate = " . $objectDrawings[5] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	$oldObjectsDrawingsSkilled = $this->getObjectsDrawingsSkilled($observerId);
-  	$newObjectsDrawingsSkilled = $ObjectsDrawings[4];
-  	$sql = "UPDATE accomplishments SET ObjectsDrawingsSkilled = " . $newObjectsDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+        $sql = "UPDATE accomplishments SET ObjectsDrawingsExperienced = " . $objectDrawings[6] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	if ($oldObjectsDrawingsSkilled == 0 && $newObjectsDrawingsSkilled == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsDifferentObjects, 100), $this->getDrawMessage(LangAccomplishmentsDifferentObjects, 100, $observerId));
-  	}
+        $sql = "UPDATE accomplishments SET ObjectsDrawingsAdvanced = " . $objectDrawings[7] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	$oldObjectsDrawingsIntermediate = $this->getObjectsDrawingsIntermediate($observerId);
-  	$newObjectsDrawingsIntermediate = $ObjectsDrawings[5];
-  	$sql = "UPDATE accomplishments SET ObjectsDrawingsIntermediate = " . $newObjectsDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+        $sql = "UPDATE accomplishments SET ObjectsDrawingsSenior = " . $objectDrawings[8] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	if ($oldObjectsDrawingsIntermediate == 0 && $newObjectsDrawingsIntermediate == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsDifferentObjects, 250), $this->getDrawMessage(LangAccomplishmentsDifferentObjects, 250, $observerId));
-  	}
+        $sql = "UPDATE accomplishments SET ObjectsDrawingsExpert = " . $objectDrawings[9] . " WHERE observer = \"". $observerId ."\";";
+      	$objDatabase->execSQL($sql);
 
-  	$oldObjectsDrawingsExperienced = $this->getObjectsDrawingsExperienced($observerId);
-  	$newObjectsDrawingsExperienced = $ObjectsDrawings[6];
-  	$sql = "UPDATE accomplishments SET ObjectsDrawingsExperienced = " . $newObjectsDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+      	if ($oldObjectDrawings[0] == 0 && $objectDrawings[0] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 1), $this->getDrawMessage(LangObject, 1, $observerId));
+      	}
 
-  	if ($oldObjectsDrawingsExperienced == 0 && $newObjectsDrawingsExperienced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsDifferentObjects, 500), $this->getDrawMessage(LangAccomplishmentsDifferentObjects, 500, $observerId));
-  	}
+      	if ($oldObjectDrawings[1] == 0 && $objectDrawings[1] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 10), $this->getDrawMessage(LangObject, 10, $observerId));
+      	}
 
-  	$oldObjectsDrawingsAdvanced = $this->getObjectsDrawingsAdvanced($observerId);
-  	$newObjectsDrawingsAdvanced = $ObjectsDrawings[7];
-  	$sql = "UPDATE accomplishments SET ObjectsDrawingsAdvanced = " . $newObjectsDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+      	if ($oldObjectDrawings[2] == 0 && $objectDrawings[2] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 25), $this->getDrawMessage(LangObject, 25, $observerId));
+      	}
 
-  	if ($oldObjectsDrawingsAdvanced == 0 && $newObjectsDrawingsAdvanced == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsDifferentObjects, 1000), $this->getDrawMessage(LangAccomplishmentsDifferentObjects, 1000, $observerId));
-  	}
+      	if ($oldObjectDrawings[3] == 0 && $objectDrawings[3] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 50), $this->getDrawMessage(LangObject, 50, $observerId));
+      	}
 
-  	$oldObjectsDrawingsSenior = $this->getObjectsDrawingsSenior($observerId);
-  	$newObjectsDrawingsSenior = $ObjectsDrawings[8];
-  	$sql = "UPDATE accomplishments SET objectsDrawingsSenior = " . $newObjectsDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+      	if ($oldObjectDrawings[4] == 0 && $objectDrawings[4] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 100), $this->getDrawMessage(LangObject, 100, $observerId));
+      	}
 
-  	if ($oldObjectsDrawingsSenior == 0 && $newObjectsDrawingsSenior == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsDifferentObjects, 2500), $this->getDrawMessage(LangAccomplishmentsDifferentObjects, 2500, $observerId));
-  	}
+      	if ($oldObjectDrawings[5] == 0 && $objectDrawings[5] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 250), $this->getDrawMessage(LangObject, 250, $observerId));
+      	}
 
-  	$oldObjectsDrawingsExpert = $this->getObjectsDrawingsExpert($observerId);
-  	$newObjectsDrawingsExpert = $ObjectsDrawings[9];
-  	$sql = "UPDATE accomplishments SET objectsDrawingsExpert = " . $newObjectsDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$objDatabase->execSQL($sql);
+      	if ($oldObjectDrawings[6] == 0 && $objectDrawings[6] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 500), $this->getDrawMessage(LangObject, 500, $observerId));
+      	}
 
-  	if ($oldObjectsDrawingsExpert == 0 && $newObjectsDrawingsExpert == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsDifferentObjects, 5000), $this->getDrawMessage(LangAccomplishmentsDifferentObjects, 5000, $observerId));
-  	}
-  }
+      	if ($oldObjectDrawings[7] == 0 && $objectDrawings[7] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 1000), $this->getDrawMessage(LangObject, 1000, $observerId));
+      	}
+
+      	if ($oldObjectDrawings[8] == 0 && $objectDrawings[8] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 2500), $this->getDrawMessage(LangObject, 2500, $observerId));
+      	}
+
+      	if ($oldObjectDrawings[9] == 0 && $objectDrawings[9] == 1) {
+      		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 5000), $this->getDrawMessage(LangObject, 5000, $observerId));
+      	}
+      }
+
+      // TODO: Check the numbers in the sendMessage methods!!!!
+
+
+
+
+
+
 
   public function recalculateCometObservations($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
