@@ -1500,7 +1500,7 @@ class Accomplishments {
   public function recalculateGalaxies($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// Galaxies
-  	$galaxies = $this->calculateAccomplishments($observerId, "galaxies", 10, false, 152);
+  	$galaxies = $this->calculateAccomplishments($observerId, "galaxies", 10, false);
   	$oldGalaxies = $this->getGalaxiesAccomplishments($observerId);
 
   	$sql = "UPDATE accomplishments SET GalaxyNewbie = " . $galaxies[0] . " WHERE observer = \"". $observerId ."\";";
@@ -1577,7 +1577,7 @@ class Accomplishments {
   public function recalculateGalaxyDrawings($observerId) {
   	global $objDatabase, $objMessages, $loggedUser;
   	// GalaxyDrawings
-    $galaxyDrawings = $this->calculateAccomplishments($observerId, "galaxies", 10, true, 152);
+    $galaxyDrawings = $this->calculateAccomplishments($observerId, "galaxies", 10, true);
   	$oldGalaxyDrawings = $this->getGalaxiesAccomplishmentsDrawings($observerId);
 
   	$sql = "UPDATE accomplishments SET GalaxyDrawingsNewbie = " . $galaxyDrawings[0] . " WHERE observer = \"". $observerId ."\";";
@@ -1805,11 +1805,6 @@ class Accomplishments {
     	}
     }
 
-
-
-
-
-
     public function recalculateObjects($observerId) {
       	global $objDatabase, $objMessages, $loggedUser;
       	// Objects
@@ -1965,6 +1960,8 @@ class Accomplishments {
       }
 
       // TODO: Check the numbers in the sendMessage methods!!!!
+      // TODO: Check the numbers in the calculateAccomplishments method.
+      // TODO: Format code
 
 
 
