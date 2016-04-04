@@ -36,7 +36,6 @@ The responsibilities in the DeepskyLog team are:
 | Development | [WimDeMeester](https://github.com/WimDeMeester) |
 | Issues, testing | [TomCorstjens](https://github.com/TomCorstjens) |
 | Deepsky database | [Ericvdj](https://github.com/Ericvdj) |
-| Deepsky Database - asterisms | [jefdewit](https://github.com/jefdewit) |
 | Documentation | [SkyNomad](https://github.com/SkyNomad) |
 
 
