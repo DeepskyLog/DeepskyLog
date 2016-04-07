@@ -461,14 +461,9 @@ class Accomplishments {
       return $recordArray[0];
     }
 
-
-    // TODO: Start writing phpdoc for the next methods.
-    // TODO: Refactor recalculateXxxxxx methods.
-
-
-
-
-    // Recalculates all deepsky accomplishments (for example after adding, removing or changing an observation)
+    /** Recalculates all deepsky accomplishments (for example after adding, removing or changing an observation)
+      @param $observerId The observer for which all deepsky accomplishments should be recalculated.
+    */
     public function recalculateDeepsky($observerId) {
       $this->recalculateMessiers($observerId);
       $this->recalculateCaldwells($observerId);
@@ -489,28 +484,53 @@ class Accomplishments {
       $this->recalculateObjectDrawings($observerId);
     }
 
-    // Recalculates all comet accomplishments (for example after adding, removing or changing an observation)
+    /** Recalculates all comet accomplishments (for example after adding, removing or changing an observation)
+      @param $observerId The observer for which all comet accomplishments should be recalculated.
+    */
     public function recalculateComets($observerId) {
       $this->recalculateCometObservations($observerId);
       $this->recalculateCometsObserved($observerId);
       $this->recalculateCometDrawings($observerId);
     }
 
+    /** Gets the subject for the message when a new accomplishment is earned (because of extra objects seen)
+      @param $catalog The catalog for which the subject should be returned.
+      @param $numberOfObjects The number of objects seen from the given catalog.
+      @return The subject for the message.
+    */
     public function getSeenSubject($catalog, $numberOfObjects) {
       return LangNewCertificat . $numberOfObjects . ' ' . $catalog . LangObserved;
     }
 
+    /** Gets the body for the message when a new accomplishment is earned (because of extra objects seen)
+      @param $catalog The catalog for which the subject should be returned.
+      @param $numberOfObjects The number of objects seen from the given catalog.
+      @return The body for the message.
+    */
     public function getSeenMessage($catalog, $numberOfObjects, $observerId) {
       return LangCongrats . $numberOfObjects . " " . $catalog . LangCheckout . " http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"";
     }
 
+    /** Gets the subject for the message when a new accomplishment is earned (because of extra objects drawn)
+      @param $catalog The catalog for which the subject should be returned.
+      @param $numberOfObjects The number of objects drawn from the given catalog.
+      @return The subject for the message.
+    */
     public function getDrawSubject($catalog, $numberOfObjects) {
       return LangNewCertificat . $numberOfObjects . ' ' . $catalog . LangAccomplishmentsDrawn;
     }
 
+    /** Gets the body for the message when a new accomplishment is earned (because of extra objects drawn)
+      @param $catalog The catalog for which the subject should be returned.
+      @param $numberOfObjects The number of objects drawn from the given catalog.
+      @return The body for the message.
+    */
     public function getDrawMessage($catalog, $numberOfObjects, $observerId) {
       return LangDrawCongrats . $numberOfObjects . " " . $catalog . LangDrawCheckout . " http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"";
     }
+
+    // TODO: Start writing phpdoc for the next methods.
+    // TODO: Refactor recalculateXxxxxx methods.
 
     public function recalculateMessiers($observerId) {
       global $objDatabase, $objMessages, $loggedUser;
