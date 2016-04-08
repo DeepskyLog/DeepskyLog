@@ -1014,7 +1014,7 @@ function view_observer() {
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangMessier . "</h4>";
 
-	$accomplishments = $objAccomplishments->getAccomplishments ( $user );
+	$accomplishments = $objAccomplishments->getAllAccomplishments ( $user );
 
 	drawStar ( $accomplishments['messierBronze'], LangAccomplishmentsBronze, "bronze", LangAccomplishmentsMessierBronze, LangMessierBronzeToAccomplish );
 	drawStar ( $accomplishments['messierSilver'], LangAccomplishmentsSilver, "silver", LangAccomplishmentsMessierSilver, LangMessierSilverToAccomplish );
