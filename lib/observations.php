@@ -102,6 +102,7 @@ class Observations {
 				}
 			}
 			// error catching
+			// TODO: Also check missing or incorrect language!
 			if (count ( $errorlist ) > 0) {
 				$errormessage = LangCSVError1 . "<br />";
 				if (count ( $noDates ) > 0) {
@@ -174,9 +175,15 @@ class Observations {
 						if ($parts_array [$i] [3]) {
 							$times = sscanf ( trim ( $parts_array [$i] [3] ), "%2d%c%2d" );
 							$time = sprintf ( "%02d%02d", $times [0], $times [2] );
-						} else
+						} else {
 							$time = "-9999";
-						$obsid = $this->addDSObservation2 ( $correctedObjects [$i], $loggedUser, $instrum, $locat, $date, $time, trim ( $parts_array [$i] [13] ), htmlentities ( trim ( $parts_array [$i] [9] ) ), str_replace ( ',', '.', htmlentities ( trim ( $parts_array [$i] [10] ) ) ), htmlentities ( ((trim ( $parts_array [$i] [11] ) == "") ? "0" : trim ( $parts_array [$i] [11] )) ), htmlentities ( trim ( $parts_array [$i] [12] ) ), ((trim ( $parts_array [$i] [6] ) != "") ? Nz0 ( $objEyepiece->getEyepieceObserverPropertyFromName ( htmlentities ( trim ( $parts_array [$i] [6] ) ), $loggedUser, 'id' ) ) : 0), ((trim ( $parts_array [$i] [7] ) != "") ? Nz0 ( $objFilter->getFilterObserverPropertyFromName ( htmlentities ( trim ( $parts_array [$i] [7] ) ), $loggedUser, 'id' ) ) : 0), ((trim ( $parts_array [$i] [8] ) != "") ? Nz0 ( $objLens->getLensObserverPropertyFromName ( htmlentities ( trim ( $parts_array [$i] [8] ) ), $loggedUser, 'id' ) ) : 0) );
+						}
+						$language = trim ( $parts_array [$i] [13] );
+						// TODO: Make sure to throw an error in stead of setting the default language to English.
+						if ($language == "") {
+							$language = "en";
+						}
+						$obsid = $this->addDSObservation2 ( $correctedObjects [$i], $loggedUser, $instrum, $locat, $date, $time, $language, htmlentities ( trim ( $parts_array [$i] [9] ) ), str_replace ( ',', '.', htmlentities ( trim ( $parts_array [$i] [10] ) ) ), htmlentities ( ((trim ( $parts_array [$i] [11] ) == "") ? "0" : trim ( $parts_array [$i] [11] )) ), htmlentities ( trim ( $parts_array [$i] [12] ) ), ((trim ( $parts_array [$i] [6] ) != "") ? Nz0 ( $objEyepiece->getEyepieceObserverPropertyFromName ( htmlentities ( trim ( $parts_array [$i] [6] ) ), $loggedUser, 'id' ) ) : 0), ((trim ( $parts_array [$i] [7] ) != "") ? Nz0 ( $objFilter->getFilterObserverPropertyFromName ( htmlentities ( trim ( $parts_array [$i] [7] ) ), $loggedUser, 'id' ) ) : 0), ((trim ( $parts_array [$i] [8] ) != "") ? Nz0 ( $objLens->getLensObserverPropertyFromName ( htmlentities ( trim ( $parts_array [$i] [8] ) ), $loggedUser, 'id' ) ) : 0) );
 						if ($obsid) {
 							$added ++;
 							// Add the observation to all the sessions

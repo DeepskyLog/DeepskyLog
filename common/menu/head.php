@@ -55,6 +55,9 @@ function head() {
 	echo "<link rel=\"stylesheet\" href=\"styles/fileinput.min.css\" />";
   // Load the needed css file for bootstrap-strengthmeter
 	echo "<link rel=\"stylesheet\" href=\"styles/strength-meter.min.css\" />";
+	// Load toastr
+	echo "<link rel=\"stylesheet\" href=\"styles/toastr.min.css\" />";
+	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/toastr.min.js\"></script>";
 
 	$TitleText = "";
 	$theDispatch = $objUtil->checkRequestKey ( 'indexAction' );
