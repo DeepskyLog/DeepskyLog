@@ -304,7 +304,6 @@ class Accomplishments {
       @param $observerId The observer for which all comet accomplishments should be recalculated.
     */
     public function recalculateComets($observerId) {
-      // TODO: REWRITE!
       $this->recalculateCometObservations($observerId);
       $this->recalculateCometsObserved($observerId);
       $this->recalculateCometDrawings($observerId);
@@ -357,10 +356,6 @@ class Accomplishments {
       global $objDatabase, $objMessages, $loggedUser;
       // Calculate the accomplishments for the given catalog, the number of accomplishments and if the observer has seen or drawn the object.
       $objectsObserved = $this->calculateAccomplishments($observerId, $catalog, $drawing, $this->getNumberOfObjectsInCatalog($catalog));
-      // TODO: Check the getAccomplishments method!
-      // TODO: Why does it take so long? -> Send Message method!!
-      // TODO: in sendMessage?: Fix error PHP Notice:  Undefined offset: 0 in /var/www/html/lib/observers.php on line 116, referer: http://192.168.99.100/index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=M+76&newObservationQuickPick=Nieuwe%C2%A0waarneming
-      // TODO: Write phpunit tests
       $objectsObservedFromDatabase = $this->getAccomplishments($observerId, $catalog, $drawing);
       // Get the correct type of the accomplishments
       $accomplishmentType = $this->getAccomplishmentType(sizeof($objectsObserved));
@@ -395,7 +390,6 @@ class Accomplishments {
     @return Then number of objects in the catalog. For messier, caldwell, H400, HII, and the catalog with enough objects, 5000 is returned.
     */
     private function getNumberOfObjectsInCatalog($catalog) {
-      // TODO: Use these numbers in the detail observer page!!!
       if ($catalog == "Nebula") {
         return 384;
       } else if ($catalog == "PlanetaryNebula") {

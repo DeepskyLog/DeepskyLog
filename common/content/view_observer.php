@@ -1097,6 +1097,8 @@ function view_observer() {
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangTotalDrawings . "</h4>";
 
+	// TODO: Use the method getNumberOfObjectsInCatalog in accomplishments to calculate the number of objects in the catalog.
+	// TODO: Refactor to use less code ;-)
 	drawStar ( $accomplishments['drawingsNewbie'], 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $accomplishments['drawingsRookie'], 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
 	drawStar ( $accomplishments['drawingsBeginner'], 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
