@@ -817,7 +817,6 @@ define("LangWelcome1"																			,"&nbsp;de&nbsp;");
 define("LangWelcome2"																			,"Vous&nbsp;&ecirc;tes&nbsp;rentr&eacute;&nbsp;comme&nbsp;");
 define("LangWelcome3"																			,"Vous&nbsp;n'&ecirc;tes&nbsp;pas&nbsp;rentr&eacute;");
 define("LangWelcome4"																			,"Les modules: ");
-define("LangWelcome5"																			,"Votre compte est sur la liste d'attente pour validation.");
 define("LangManage"																				,"Gestion");
 define("LangManageDots"																		,"Gestion...");
 
@@ -1901,12 +1900,6 @@ define("LangCSVObjectError3"															,"Les instructions suivantes ne sont 
 define("LangCSVObjectError4"															,"Les donn&#233;es suivantes ne concordent pas");
 define("LangCSVObjectButton"															,"Importez!");
 define("LangValidateCSVObjectMessage"											,"L'importation du fichier CSV est r&#233;ussie!");
-
-// control/check_login.php
-
-define("LangErrorWrongPassword"														,"Mauvais mot de passe, essayez &agrave; nouveau!");
-define("LangErrorEmptyPassword"														,"Pri&egrave;re de remplir votre nom/mot de passe svp!");
-define("LangErrorPasswordNotValidated"										,"Votre compte n'a pas encore &eacute;t&eacute; valid&eacute; par un administrateur!");
 
 // Visibility for objects
 define("LangVisibility1"																	,"Objet tr&egrave;s facile et clair");

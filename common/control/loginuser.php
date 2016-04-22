@@ -47,7 +47,15 @@ function login() {
 				$_SESSION ['lang'] = $objUtil->checkPostKey ( 'language', $objObserver->getObserverProperty ( $login, 'language' ) );
 				if ($objObserver->getObserverProperty ( $login, 'role', 2 ) == "2") // user in waitlist already tries to log in
 {
-					$loginErrorCode = "LangWelcome5";
+					if ($_SESSION['lang'] == 'nl') {
+						$loginErrorCode = "Uw account is nog niet gevalideerd door een administrator!";
+					} else if ($_SESSION['lang'] == 'de') {
+						$loginErrorCode = "Ihr Benutzer wurde noch nicht best&auml;tigt!";
+					} else if ($_SESSION['lang'] == 'fr') {
+						$loginErrorCode = "Votre compte n'a pas encore &eacute;t&eacute; valid&eacute; par un administrateur!";
+					} else {
+						$loginErrorCode = "Your account hasn't been validated yet!";
+					}
 					$loggedUser = "";
 				} elseif ($objObserver->getObserverProperty ( $login, 'role', 2 ) == "1") // validated user
 {
@@ -68,15 +76,31 @@ function login() {
 				}
 				unset ( $_SESSION ['QobjParams'] );
 				$_GET ['indexAction'] = 'default_action';
-			} else // passwords don't match
-{
-				$loginErrorCode = LangErrorWrongPassword;
+			} else {
+				// passwords don't match
+				if ($_SESSION['lang'] == 'nl') {
+					$loginErrorCode = "Verkeerd wachtwoord, probeer opnieuw!";
+				} else if ($_SESSION['lang'] == 'de') {
+					$loginErrorCode = "Falsches Passwort! Bitter versuchen Sie es noch einmal!";
+				} else if ($_SESSION['lang'] == 'fr') {
+					$loginErrorCode = "Mauvais mot de passe, essayez &agrave; nouveau!";
+				} else {
+					$loginErrorCode = "Wrong password, please try again!";
+				}
 				$_GET ['indexAction'] = 'error_action';
 				$loggedUser = "";
 			}
-		} else // not all fields are filled in
-{
-			$loginErrorCode = LangErrorEmptyPassword;
+		} else {
+			// not all fields are filled in
+			if ($_SESSION['lang'] == 'nl') {
+				$loginErrorCode = "Gelieve uw wachtwoord en/of gebruikersnaam in te vullen!";
+			} else if ($_SESSION['lang'] == 'de') {
+				$loginErrorCode = "Benutzer und/oder Passwort nicht eingegeben!";
+			} else if ($_SESSION['lang'] == 'fr') {
+				$loginErrorCode = "Pri&egrave;re de remplir votre nom/mot de passe svp!";
+			} else {
+				$loginErrorCode = "You forgot to enter your username and/or password!";
+			}
 			$_GET ['indexAction'] = 'error_action';
 		}
 	} else {

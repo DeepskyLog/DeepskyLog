@@ -1941,12 +1941,6 @@ define("LangCSVObjectError4"															,"The following dat is not compliant:
 define("LangCSVObjectButton"															,"Import!");
 define("LangValidateCSVObjectMessage"											,"Import of CSV file successfull!");
 
-// control/check_login.php
-
-define("LangErrorWrongPassword"														,"Wrong password, please try again!");
-define("LangErrorEmptyPassword"														,"You forgot to enter your username and/or password!");
-define("LangErrorPasswordNotValidated"										,"Your account hasn't been validated yet!");
-
 // Visibility for objects
 define("LangVisibility1"																	,"Very simple, prominent object");
 define("LangVisibility2"																	,"Object easily percepted with direct vision");
