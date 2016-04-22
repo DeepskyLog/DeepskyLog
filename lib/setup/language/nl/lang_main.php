@@ -843,7 +843,6 @@ define("LangWelcome1"																			,"&nbsp;module&nbsp;van&nbsp;");
 define("LangWelcome2"																			,"Je&nbsp;bent&nbsp;ingelogd&nbsp;als&nbsp;");
 define("LangWelcome3"																			,"Je&nbsp;bent&nbsp;niet&nbsp;ingelogd");
 define("LangWelcome4"																			,"Modules: ");
-define("LangWelcome5"																			,"Jouw account zit in de wachtlijst om gevalideerd te worden.");
 define("LangManage"																				,"Beheer");
 define("LangManageDots"																		,"Beheer...");
 
@@ -1929,12 +1928,6 @@ define("LangCSVObjectError3"															,"De onderstaande opdrachten niet gek
 define("LangCSVObjectError4"															,"De onderstaande data niet past");
 define("LangCSVObjectButton"															,"Importeer!");
 define("LangValidateCSVObjectMessage"											,"Importeren CSV bestand succesvol!");
-
-// control/check_login.php
-
-define("LangErrorWrongPassword"														,"Verkeerd wachtwoord, probeer opnieuw!");
-define("LangErrorEmptyPassword"														,"Gelieve uw wachtwoord en/of gebruikersnaam in te vullen!");
-define("LangErrorPasswordNotValidated"										,"Uw account is nog niet gevalideerd door een administrator!");
 
 // Visibility for objects
 define("LangVisibility1"																	,"Zeer eenvoudig, helder object");

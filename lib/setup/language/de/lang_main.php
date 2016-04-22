@@ -1940,12 +1940,6 @@ define("LangCSVObjectError4"															,"Folgende Daten sind nicht konform:"
 define("LangCSVObjectButton"															,"Importieren!");
 define("LangValidateCSVObjectMessage"											,"Import der CSV Datei erfolgreich!");
 
-// control/check_login.php
-
-define("LangErrorWrongPassword"														,"Falsches Passwort! Bitter versuchen Sie es noch einmal!");
-define("LangErrorEmptyPassword"														,"Benutzer und/oder Passwort nicht eingegeben!");
-define("LangErrorPasswordNotValidated"										,"Ihr Benutzer wurde noch nicht best&auml;tigt!");
-
 // Visibility for objects
 define("LangVisibility1"																	,"Sehr einfaches, auff&auml;lliges Objekt im Okular");
 define("LangVisibility2"																	,"Objekt bei direktem Beobachten gut zu sehen");
