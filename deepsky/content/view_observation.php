@@ -1,14 +1,20 @@
 <?php
 // view_observation.php
 // view information of observation
+global $toastMessage;
+
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
-else if (! ($observationid = $objUtil->checkGetKey ( 'observation' )))
-	throw new Exception ( "No observation given." );
-else if (! ($object = $objObservation->getDsObservationProperty ( $observationid, 'objectname' ))) // check if observation exists
-	throw new Exception ( "This observation does not exist." );
-else
+else if (! ($observationid = $objUtil->checkGetKey ( 'observation' ))) {
+	$toastMessage = "No observation given.";
+	$return;
+} else if (! ($object = $objObservation->getDsObservationProperty ( $observationid, 'objectname' ))) {
+	// check if observation exists
+	$toastMessage = "This observation does not exist.";
+	$return;
+} else {
 	view_observation ();
+}
 function view_observation() {
 	global $baseURL, $object, $loggedUser, $myList, $observationid, $listname_ss, $objObservation, $objObject, $objPresentations, $objUtil, $objList, $objObserver;
 	echo "<div id=\"main\">";
