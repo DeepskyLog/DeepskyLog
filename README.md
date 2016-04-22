@@ -34,7 +34,7 @@ The responsibilities in the DeepskyLog team are:
 | -------------- | ---- |
 | Project Management | [WimDeMeester](https://github.com/WimDeMeester) |
 | Development | [WimDeMeester](https://github.com/WimDeMeester) |
-| Issues, testing | [TomCorstjens](https://github.com/TomCorstjens) |
+| Issues, testing | [TomCorstjens](https://github.com/TomCorstjens), [LindaPlaterink](https://github.com/LindaPlaterink) |
 | Deepsky database | [Ericvdj](https://github.com/Ericvdj) |
 | Documentation | [SkyNomad](https://github.com/SkyNomad) |
 
