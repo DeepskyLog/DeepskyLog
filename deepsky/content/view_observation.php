@@ -4,9 +4,9 @@
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 else if (! ($observationid = $objUtil->checkGetKey ( 'observation' )))
-	throw new Exception ( "No observation defined in view_observation.php" );
+	throw new Exception ( "No observation given." );
 else if (! ($object = $objObservation->getDsObservationProperty ( $observationid, 'objectname' ))) // check if observation exists
-	throw new Exception ( "No observed object found in view_observation.php" );
+	throw new Exception ( "This observation does not exist." );
 else
 	view_observation ();
 function view_observation() {
@@ -57,7 +57,7 @@ function view_observation() {
 		$AOid = $objObservation->getMOObservationsId ( $object, $loggedUser, $_GET ['observation'] );
 	} elseif ($_GET ['dalm'] == "LO") {
 		$AOid = array (
-				$objObservation->getLOObservationId ( $object, $loggedUser, $_GET ['observation'] ) 
+				$objObservation->getLOObservationId ( $object, $loggedUser, $_GET ['observation'] )
 		);
 	} else {
 		$AOid = array ();
@@ -69,9 +69,9 @@ function view_observation() {
 	if ($loggedUser != "") {
 		$observerid = $objObservation->getDsObservationProperty ( $_GET ['observation'], 'observerid' );
 		$name = $objObserver->getObserverProperty ( $observerid, 'firstname' ) . " " . $objObserver->getObserverProperty ( $observerid, 'name' ) . " ";
-		
+
 		$date = sscanf ( $objObservation->getDsObservationProperty ( $_GET ['observation'], 'date' ), "%4d%2d%2d" );
-		
+
 		$subject = LangMessageYourObservation . $objObservation->getDsObservationProperty ( $_GET ['observation'], 'objectname' ) . LangMessageOn . $date [2] . "/" . $date [1] . "/" . $date [0];
 		echo "&nbsp;<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=new_message&amp;receiver=" . urlencode ( $observerid ) . "&amp;subject=" . urlencode ( $subject ) . "\"><span class=\"glyphicon glyphicon-envelope\"></span> " . $name . LangMessageAboutObservation . "</a>";
 	}
