@@ -4,10 +4,10 @@
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 else if (! ($observationid = $objUtil->checkGetKey ( 'observation' ))) {
-	print "No observation given.";
+	print LangNoObservationToDisplay;
 } else if (! ($object = $objObservation->getDsObservationProperty ( $observationid, 'objectname' ))) {
 	// check if observation exists
-	print "The requested observation does not exist.";
+	print LangRequestedObservationDoesNotExist;
 } else {
 	view_observation ();
 }

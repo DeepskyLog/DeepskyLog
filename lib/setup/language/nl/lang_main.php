@@ -1,5 +1,7 @@
 <?php //NL
 // This is version 5.0
+define("LangNoObservationToDisplay", "Geen waarneming te tonen.");
+define("LangRequestedObservationDoesNotExist", "De gevraagde waarneming bestaat niet.");
 define("LangChangeAccountField14","Gewenste eenheid voor instrumentdiameter");
 define("LangAddSiteStep2", "Kies een naam voor deze locatie, voeg eventueel een grensmagnitude (of SQM waarde) toe en druk op de ");
 define("LangAddSiteStep1", "Kies je locatie op de map of typ de naam van de locatie in en druk op de ");
