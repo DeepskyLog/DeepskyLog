@@ -1,0 +1,12 @@
+### Issue 606: Missing objects in lists after changing from private to public and adding extra objects
+
+##### TODO
++ Make a new private list.
++ Add objects to this list.
++ Check in database.
++ Change list to public.
++ Check in database.
++ Check when logged out if the list is available with all objects.
++ Add some extra objects.
++ Check in database.
++ Check when logged out if all objects are in the list.
