@@ -4,6 +4,8 @@ define("LangNoLicense", "No license (Not recommended!)");
 define("LangOwnLicense", "Enter your own copyright text");
 define('LangSelectLicenseInfo',  'It is important to select the <strong>correct license for your drawings</strong>! For help, see the <a href="http://creativecommons.org/choose/">Creative Commons license-choosing tool</a>.');
 define("LangCCLicense", "License for drawings");
+define("LangNoObservationToDisplay", "No observation to display.");
+define("LangRequestedObservationDoesNotExist", "The requested observation does not exist.");
 define("LangChangeAccountField14","Preferred unit for instrument diameter");
 define("LangAddSiteStep2", "Define your own name for this location, eventually add a naked eye limiting magnitude (or SQM value) and press the ");
 define("LangAddSiteStep1", "Set your location on the map or by entering the name and pressing the ");
@@ -1942,12 +1944,6 @@ define("LangCSVObjectError3"															,"The following instructions are not 
 define("LangCSVObjectError4"															,"The following dat is not compliant:");
 define("LangCSVObjectButton"															,"Import!");
 define("LangValidateCSVObjectMessage"											,"Import of CSV file successfull!");
-
-// control/check_login.php
-
-define("LangErrorWrongPassword"														,"Wrong password, please try again!");
-define("LangErrorEmptyPassword"														,"You forgot to enter your username and/or password!");
-define("LangErrorPasswordNotValidated"										,"Your account hasn't been validated yet!");
 
 // Visibility for objects
 define("LangVisibility1"																	,"Very simple, prominent object");

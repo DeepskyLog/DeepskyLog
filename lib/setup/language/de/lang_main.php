@@ -4,6 +4,8 @@ define("LangNoLicense", "Keine Lizenz (nicht empfohlen!)");
 define("LangOwnLicense", "Geben Sie Ihren eigenen Copyright-Text");
 define('LangSelectLicenseInfo',  'Es ist wichtig, die <strong>richtige Lizenz f&uuml;r Ihre Zeichnungen </strong> zu w&auml;hlen! Weitere Informationen: <a href="http://creativecommons.org/choose/">Creative Commons Lizenz-Auswahl-Tool</a>.');
 define("LangCCLicense", "Lizenz f&uuml;r Zeichnungen");
+define("LangNoObservationToDisplay", "Keine Beobachtung zum anzeigen.");
+define("LangRequestedObservationDoesNotExist", "Die angeforderte Beobachtung existiert nicht.");
 define("LangChangeAccountField14","Einheit f&uuml;r Instrumentendurchmesser");
 define("LangAddSiteStep2", "Definieren Sie Ihre eigenen Namen f&uuml;r die Position, schlie&szlig;lich f&uuml;gen Sie einen Grenzgr&ouml;&szlig;e (oder SQM-Wert) zu und dr&uuml;cken Sie die Taste ");
 define("LangAddSiteStep1", "Stellen Sie Ihren Ort auf der Karte ein oder gebe des Namens ein und Dr&euml;cke der Taste ");
@@ -1941,12 +1943,6 @@ define("LangCSVObjectError3"															,"Folgende Instruktionen sind nicht i
 define("LangCSVObjectError4"															,"Folgende Daten sind nicht konform:");
 define("LangCSVObjectButton"															,"Importieren!");
 define("LangValidateCSVObjectMessage"											,"Import der CSV Datei erfolgreich!");
-
-// control/check_login.php
-
-define("LangErrorWrongPassword"														,"Falsches Passwort! Bitter versuchen Sie es noch einmal!");
-define("LangErrorEmptyPassword"														,"Benutzer und/oder Passwort nicht eingegeben!");
-define("LangErrorPasswordNotValidated"										,"Ihr Benutzer wurde noch nicht best&auml;tigt!");
 
 // Visibility for objects
 define("LangVisibility1"																	,"Sehr einfaches, auff&auml;lliges Objekt im Okular");

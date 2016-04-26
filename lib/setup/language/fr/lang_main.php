@@ -4,6 +4,8 @@ define("LangNoLicense", "Aucune licence (Non recommand&eacute;!)");
 define("LangOwnLicense", "Entrez votre propre texte copyright");
 define('LangSelectLicenseInfo',  'Il est important de s&eacute;lectionner le <strong>licence correcte pour vos dessins</strong>! Pour de l\'aide, voir le <a href="http://creativecommons.org/choose/">Creative Commons outil de licence</a>.');
 define("LangCCLicense", "Licence pour les dessins");
+define("LangNoObservationToDisplay", "Pas d'observation &agrave; afficher.");
+define("LangRequestedObservationDoesNotExist", "L'observation demand&eacute; n'existe pas.");
 define("LangChangeAccountField14","Unit&eacute; pr&eacute;f&eacute;r&eacute;e pour le diam&egrave;tre de l'instrument");
 define("LangAddSiteStep2", "D&eacute;finiez votre propre nom pour ce lieu, &eacute;ventuellement ajouter un magnitude limite (ou la valeur SQM) et appuyez sur le bouton ");
 define("LangAddSiteStep1", "D&eacute;finiez votre position sur la carte ou entrez le nom et appuyer sur le bouton");
@@ -819,7 +821,6 @@ define("LangWelcome1"																			,"&nbsp;de&nbsp;");
 define("LangWelcome2"																			,"Vous&nbsp;&ecirc;tes&nbsp;rentr&eacute;&nbsp;comme&nbsp;");
 define("LangWelcome3"																			,"Vous&nbsp;n'&ecirc;tes&nbsp;pas&nbsp;rentr&eacute;");
 define("LangWelcome4"																			,"Les modules: ");
-define("LangWelcome5"																			,"Votre compte est sur la liste d'attente pour validation.");
 define("LangManage"																				,"Gestion");
 define("LangManageDots"																		,"Gestion...");
 
@@ -1903,12 +1904,6 @@ define("LangCSVObjectError3"															,"Les instructions suivantes ne sont 
 define("LangCSVObjectError4"															,"Les donn&#233;es suivantes ne concordent pas");
 define("LangCSVObjectButton"															,"Importez!");
 define("LangValidateCSVObjectMessage"											,"L'importation du fichier CSV est r&#233;ussie!");
-
-// control/check_login.php
-
-define("LangErrorWrongPassword"														,"Mauvais mot de passe, essayez &agrave; nouveau!");
-define("LangErrorEmptyPassword"														,"Pri&egrave;re de remplir votre nom/mot de passe svp!");
-define("LangErrorPasswordNotValidated"										,"Votre compte n'a pas encore &eacute;t&eacute; valid&eacute; par un administrateur!");
 
 // Visibility for objects
 define("LangVisibility1"																	,"Objet tr&egrave;s facile et clair");

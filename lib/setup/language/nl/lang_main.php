@@ -4,6 +4,8 @@ define("LangNoLicense", "Geen licentie (niet aanbevolen!)");
 define("LangOwnLicense", "Voer uw eigen copyright tekst in");
 define('LangSelectLicenseInfo',  'Selecteer de <strong>correcte licentie voor uw tekeningen</strong>! Voor meer informatie, gebruik de <a href="http://creativecommons.org/choose/">Creative Commons licentie-selectie tool</a>.');
 define("LangCCLicense", "Licentie voor tekeningen");
+define("LangNoObservationToDisplay", "Geen waarneming te tonen.");
+define("LangRequestedObservationDoesNotExist", "De gevraagde waarneming bestaat niet.");
 define("LangChangeAccountField14","Gewenste eenheid voor instrumentdiameter");
 define("LangAddSiteStep2", "Kies een naam voor deze locatie, voeg eventueel een grensmagnitude (of SQM waarde) toe en druk op de ");
 define("LangAddSiteStep1", "Kies je locatie op de map of typ de naam van de locatie in en druk op de ");
@@ -845,7 +847,6 @@ define("LangWelcome1"																			,"&nbsp;module&nbsp;van&nbsp;");
 define("LangWelcome2"																			,"Je&nbsp;bent&nbsp;ingelogd&nbsp;als&nbsp;");
 define("LangWelcome3"																			,"Je&nbsp;bent&nbsp;niet&nbsp;ingelogd");
 define("LangWelcome4"																			,"Modules: ");
-define("LangWelcome5"																			,"Jouw account zit in de wachtlijst om gevalideerd te worden.");
 define("LangManage"																				,"Beheer");
 define("LangManageDots"																		,"Beheer...");
 
@@ -1931,12 +1932,6 @@ define("LangCSVObjectError3"															,"De onderstaande opdrachten niet gek
 define("LangCSVObjectError4"															,"De onderstaande data niet past");
 define("LangCSVObjectButton"															,"Importeer!");
 define("LangValidateCSVObjectMessage"											,"Importeren CSV bestand succesvol!");
-
-// control/check_login.php
-
-define("LangErrorWrongPassword"														,"Verkeerd wachtwoord, probeer opnieuw!");
-define("LangErrorEmptyPassword"														,"Gelieve uw wachtwoord en/of gebruikersnaam in te vullen!");
-define("LangErrorPasswordNotValidated"										,"Uw account is nog niet gevalideerd door een administrator!");
 
 // Visibility for objects
 define("LangVisibility1"																	,"Zeer eenvoudig, helder object");
