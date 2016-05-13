@@ -13,6 +13,10 @@ define("LangRemoveModal7", " observations");
 define("LangKeepObject", "Keep");
 define("LangRemoveObject", "Remove Object");
 define("LangForceRemoveObject", "Force Remove Object");
+define("LangPublicListAlreadyExists", "Eine &ouml;ffentliche Liste mit dem gleichen Namen (");
+define("LangPublicListAlreadyExists2", ") is bereits vorhanden. Bitte benennen Sie die Liste, bevor die Liste &ouml;ffentlich zu machen.");
+define("LangNoObservationToDisplay", "Keine Beobachtung zum anzeigen.");
+define("LangRequestedObservationDoesNotExist", "Die angeforderte Beobachtung existiert nicht.");
 define("LangChangeAccountField14","Einheit f&uuml;r Instrumentendurchmesser");
 define("LangAddSiteStep2", "Definieren Sie Ihre eigenen Namen f&uuml;r die Position, schlie&szlig;lich f&uuml;gen Sie einen Grenzgr&ouml;&szlig;e (oder SQM-Wert) zu und dr&uuml;cken Sie die Taste ");
 define("LangAddSiteStep1", "Stellen Sie Ihren Ort auf der Karte ein oder gebe des Namens ein und Dr&euml;cke der Taste ");
@@ -1950,12 +1954,6 @@ define("LangCSVObjectError3"															,"Folgende Instruktionen sind nicht i
 define("LangCSVObjectError4"															,"Folgende Daten sind nicht konform:");
 define("LangCSVObjectButton"															,"Importieren!");
 define("LangValidateCSVObjectMessage"											,"Import der CSV Datei erfolgreich!");
-
-// control/check_login.php
-
-define("LangErrorWrongPassword"														,"Falsches Passwort! Bitter versuchen Sie es noch einmal!");
-define("LangErrorEmptyPassword"														,"Benutzer und/oder Passwort nicht eingegeben!");
-define("LangErrorPasswordNotValidated"										,"Ihr Benutzer wurde noch nicht best&auml;tigt!");
 
 // Visibility for objects
 define("LangVisibility1"																	,"Sehr einfaches, auff&auml;lliges Objekt im Okular");

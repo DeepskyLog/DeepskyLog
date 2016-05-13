@@ -6,7 +6,7 @@ if ((! isset ( $inIndex )) || (! $inIndex))
 else
 	instructions ();
 function instructions() {
-	global $baseURL, $loggedUser, $myList, $lastReadObservation, $theDate, $modules, $menuView, $menuAddChange, $menuAdmin, $menuLogin, $menuSearch, $menuDownloads, $menuMoon, $listname_ss, $listname, $entryMessage, $step, $objSession, $objAccomplishments, $objEyepiece, $objFilter, $objLens, $objInstrument, $objLocation, $objMessages, $objObject, $objObserver, $objObservation, $objFormLayout, $objUtil, $objList;
+	global $baseURL, $loggedUser, $myList, $lastReadObservation, $theDate, $modules, $menuView, $menuAddChange, $menuAdmin, $menuLogin, $menuSearch, $menuDownloads, $menuMoon, $listname_ss, $listname, $entryMessage, $toastMessage, $step, $objSession, $objAccomplishments, $objEyepiece, $objFilter, $objLens, $objInstrument, $objLocation, $objMessages, $objObject, $objObserver, $objObservation, $objFormLayout, $objUtil, $objList;
 	if ($objUtil->checkGetKey ( 'saveLayout' )) {
 		$objFormLayout->saveLayout ( $objUtil->checkGetKey ( 'formName', 'NoFormName' ), $objUtil->checkGetKey ( 'layoutName', 'layoutName' ), $objUtil->checkGetKey ( 'restoreColumns', '' ), $objUtil->checkGetKey ( 'orderColumns', '' ) );
 	}
@@ -603,7 +603,7 @@ function instructions() {
 		$listNameFrom = $_GET ['listnamefrom'];
 		$listnameTo = $_GET ['addlistname'];
 
-		if ($objList->checkList ( $listnameTo ) != 0 && $objUtil->checkGetKey ( "PublicList", false ) === $objList->isPublic ( $listNameFrom )) {
+		if ($objList->checkList ( $listnameTo ) != 0 && $objUtil->checkGetKey ( "PublicList", false ) === $objList->isPublic ( $listNameFrom, $loggedUser )) {
 			$entryMessage .= LangToListList . stripslashes ( $listnameTo ) . LangToListExists;
 		} else {
 			$objList->renameList ( $listNameFrom, $listnameTo, $objUtil->checkGetKey ( "PublicList", false ) );
@@ -647,24 +647,26 @@ function instructions() {
 			$myList = True;
 		if ($_GET ['listname'] != "----------") {
 			if ($myList)
-				$entryMessage .= LangToListList . $listname_ss . LangToListActivation1;
+				$toastMessage = LangToListList . $listname_ss . LangToListActivation1;
 		} else
 			$_GET ['indexAction'] = "defaultAction";
 		unset ( $_GET ['activateList'] );
 	}
 	if ($objUtil->checkGetKey ( 'addObjectToList' ) && $listname && $myList) {
 		$objList->addObjectToList ( $_GET ['addObjectToList'], $objUtil->checkGetKey ( 'showname', $_GET ['addObjectToList'] ) );
-		$entryMessage .= LangListQueryObjectsMessage8 . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['addObjectToList'] ) . "\">" . $_GET ['showname'] . "</a>" . LangListQueryObjectsMessage6 . "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;manage=manage\">" . $listname_ss . "</a>.";
+
+		// Show a toast message.
+		$toastMessage = LangListQueryObjectsMessage8 . $_GET ['showname'] . LangListQueryObjectsMessage6 . $listname_ss;
 		unset ( $_GET ['addObjectToList'] );
 	}
 	if ($objUtil->checkGetKey ( 'addObservationToList' ) && $myList) {
 		$objList->addObservationToList ( $_GET ['addObservationToList'] );
-		$entryMessage .= LangListQueryObjectsMessage16 . LangListQueryObjectsMessage6 . "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;manage=manage\">" . $listname_ss . "</a>.";
+		$toastMessage = LangListQueryObjectsMessage16 . LangListQueryObjectsMessage6 . $listname_ss;
 		unset ( $_GET ['addObservationToList'] );
 	}
 	if (array_key_exists ( 'removeObjectFromList', $_GET ) && $_GET ['removeObjectFromList'] && $myList) {
 		$objList->removeObjectFromList ( $_GET ['removeObjectFromList'] );
-		$entryMessage .= LangListQueryObjectsMessage8 . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['removeObjectFromList'] ) . "\">" . $_GET ['removeObjectFromList'] . "</a>" . LangListQueryObjectsMessage7 . "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;manage=manage\">" . $listname_ss . "</a>.";
+		$toastMessage = LangListQueryObjectsMessage8 . $_GET ['removeObjectFromList'] . LangListQueryObjectsMessage7 . $listname_ss;
 		unset ( $_GET ['removeObjectFromList'] );
 	}
 
@@ -674,7 +676,7 @@ function instructions() {
 			$objList->addObjectToList ( $_SESSION ['Qobj'] [$count] ['objectname'], $_SESSION ['Qobj'] [$count] ['showname'] );
 			$count ++;
 		}
-		$entryMessage = LangListQueryObjectsMessage9 . "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;manage=manage\">" . $listname_ss . "</a>.";
+		$toastMessage = LangListQueryObjectsMessage9 . $listname_ss;
 		unset ( $_GET ['addAllObjectsFromPageToList'] );
 	}
 	if (array_key_exists ( 'addAllObjectsFromQueryToList', $_GET ) && $_GET ['addAllObjectsFromQueryToList'] && $myList) {
@@ -683,7 +685,7 @@ function instructions() {
 			$objList->addObjectToList ( $_SESSION ['Qobj'] [$count] ['objectname'], $_SESSION ['Qobj'] [$count] ['showname'] );
 			$count ++;
 		}
-		$entryMessage = LangListQueryObjectsMessage9 . "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;manage=manage\">" . $_SESSION ['listname'] . "</a>.";
+		$toastMessage = LangListQueryObjectsMessage9 . $_SESSION ['listname'];
 		unset ( $_GET ['addAllObjectsFromQueryToList'] );
 	}
 	if (array_key_exists ( 'editListObjectDescription', $_GET ) && $_GET ['editListObjectDescription'] && array_key_exists ( 'object', $_GET ) && $_GET ['object'] && array_key_exists ( 'description', $_GET ) && $myList) {

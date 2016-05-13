@@ -1014,9 +1014,11 @@ function view_observer() {
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangMessier . "</h4>";
 
-	drawStar ( $objAccomplishments->getMessierBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsMessierBronze, LangMessierBronzeToAccomplish );
-	drawStar ( $objAccomplishments->getMessierSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsMessierSilver, LangMessierSilverToAccomplish );
-	drawStar ( $objAccomplishments->getMessierGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsMessierGold, LangMessierGoldToAccomplish );
+	$accomplishments = $objAccomplishments->getAllAccomplishments ( $user );
+
+	drawStar ( $accomplishments['messierBronze'], LangAccomplishmentsBronze, "bronze", LangAccomplishmentsMessierBronze, LangMessierBronzeToAccomplish );
+	drawStar ( $accomplishments['messierSilver'], LangAccomplishmentsSilver, "silver", LangAccomplishmentsMessierSilver, LangMessierSilverToAccomplish );
+	drawStar ( $accomplishments['messierGold'], LangAccomplishmentsGold, "gold", LangAccomplishmentsMessierGold, LangMessierGoldToAccomplish );
 
 	echo "</div>";
 
@@ -1024,87 +1026,89 @@ function view_observer() {
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangMessierDrawings . "</h4>";
 
-	drawStar ( $objAccomplishments->getMessierDrawingsBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsMessierBronzeDr, LangMessierBronzeToAccomplishDr );
-	drawStar ( $objAccomplishments->getMessierDrawingsSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsMessierSilverDr, LangMessierSilverToAccomplishDr );
-	drawStar ( $objAccomplishments->getMessierDrawingsGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsMessierGoldDr, LangMessierGoldToAccomplishDr );
+	drawStar ( $accomplishments['messierDrawingsBronze'], LangAccomplishmentsBronze, "bronze", LangAccomplishmentsMessierBronzeDr, LangMessierBronzeToAccomplishDr );
+	drawStar ( $accomplishments['messierDrawingsSilver'], LangAccomplishmentsSilver, "silver", LangAccomplishmentsMessierSilverDr, LangMessierSilverToAccomplishDr );
+	drawStar ( $accomplishments['messierDrawingsGold'], LangAccomplishmentsGold, "gold", LangAccomplishmentsMessierGoldDr, LangMessierGoldToAccomplishDr );
 	echo "</div>";
 
 	// Caldwell
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangCaldwell . "</h4>";
 
-	drawStar ( $objAccomplishments->getCaldwellBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsCaldwellBronze, LangCaldwellBronzeToAccomplish );
-	drawStar ( $objAccomplishments->getCaldwellSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsCaldwellSilver, LangCaldwellSilverToAccomplish );
-	drawStar ( $objAccomplishments->getCaldwellGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsCaldwellGold, LangCaldwellGoldToAccomplish );
+	drawStar ( $accomplishments['caldwellBronze'], LangAccomplishmentsBronze, "bronze", LangAccomplishmentsCaldwellBronze, LangCaldwellBronzeToAccomplish );
+	drawStar ( $accomplishments['caldwellSilver'], LangAccomplishmentsSilver, "silver", LangAccomplishmentsCaldwellSilver, LangCaldwellSilverToAccomplish );
+	drawStar ( $accomplishments['caldwellGold'], LangAccomplishmentsGold, "gold", LangAccomplishmentsCaldwellGold, LangCaldwellGoldToAccomplish );
 	echo "</div>";
 
 	// Caldwell drawings
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangCaldwellDrawings . "</h4>";
 
-	drawStar ( $objAccomplishments->getCaldwellDrawingsBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsCaldwellBronzeDr, LangCaldwellBronzeToAccomplishDr );
-	drawStar ( $objAccomplishments->getCaldwellDrawingsSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsCaldwellSilverDr, LangCaldwellSilverToAccomplishDr );
-	drawStar ( $objAccomplishments->getCaldwellDrawingsGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsCaldwellGoldDr, LangCaldwellGoldToAccomplishDr );
+	drawStar ( $accomplishments['caldwellDrawingsBronze'], LangAccomplishmentsBronze, "bronze", LangAccomplishmentsCaldwellBronzeDr, LangCaldwellBronzeToAccomplishDr );
+	drawStar ( $accomplishments['caldwellDrawingsSilver'], LangAccomplishmentsSilver, "silver", LangAccomplishmentsCaldwellSilverDr, LangCaldwellSilverToAccomplishDr );
+	drawStar ( $accomplishments['caldwelldrawingsGold'], LangAccomplishmentsGold, "gold", LangAccomplishmentsCaldwellGoldDr, LangCaldwellGoldToAccomplishDr );
 	echo "</div>";
 
 	// Herschel - 400
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangHerschel400 . "</h4>";
 
-	drawStar ( $objAccomplishments->getHerschelBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsH400Bronze, LangH400BronzeToAccomplish );
-	drawStar ( $objAccomplishments->getHerschelSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsH400Silver, LangH400SilverToAccomplish );
-	drawStar ( $objAccomplishments->getHerschelGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsH400Gold, LangH400GoldToAccomplish );
-	drawStar ( $objAccomplishments->getHerschelDiamond ( $user ), LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsH400Diamond, LangH400DiamondToAccomplish );
-	drawStar ( $objAccomplishments->getHerschelPlatina ( $user ), LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsH400Platina, LangH400PlatinaToAccomplish );
+	drawStar ( $accomplishments['herschelBronze'], LangAccomplishmentsBronze, "bronze", LangAccomplishmentsH400Bronze, LangH400BronzeToAccomplish );
+	drawStar ( $accomplishments['herschelSilver'], LangAccomplishmentsSilver, "silver", LangAccomplishmentsH400Silver, LangH400SilverToAccomplish );
+	drawStar ( $accomplishments['herschelGold'], LangAccomplishmentsGold, "gold", LangAccomplishmentsH400Gold, LangH400GoldToAccomplish );
+	drawStar ( $accomplishments['herschelDiamond'], LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsH400Diamond, LangH400DiamondToAccomplish );
+	drawStar ( $accomplishments['herschelPlatina'], LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsH400Platina, LangH400PlatinaToAccomplish );
 	echo "</div>";
 
 	// Herschel 400 drawings
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangHerschel400Drawings . "</h4>";
 
-	drawStar ( $objAccomplishments->getHerschelDrawingsBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsH400BronzeDr, LangH400BronzeToAccomplishDr );
-	drawStar ( $objAccomplishments->getHerschelDrawingsSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsH400SilverDr, LangH400SilverToAccomplishDr );
-	drawStar ( $objAccomplishments->getHerschelDrawingsGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsH400GoldDr, LangH400GoldToAccomplishDr );
-	drawStar ( $objAccomplishments->getHerschelDrawingsDiamond ( $user ), LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsH400DiamondDr, LangH400DiamondToAccomplishDr );
-	drawStar ( $objAccomplishments->getHerschelDrawingsPlatina ( $user ), LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsH400PlatinaDr, LangH400PlatinaToAccomplishDr );
+	drawStar ( $accomplishments['herschelDrawingsBronze'], LangAccomplishmentsBronze, "bronze", LangAccomplishmentsH400BronzeDr, LangH400BronzeToAccomplishDr );
+	drawStar ( $accomplishments['herschelDrawingsSilver'], LangAccomplishmentsSilver, "silver", LangAccomplishmentsH400SilverDr, LangH400SilverToAccomplishDr );
+	drawStar ( $accomplishments['herschelDrawingsGold'], LangAccomplishmentsGold, "gold", LangAccomplishmentsH400GoldDr, LangH400GoldToAccomplishDr );
+	drawStar ( $accomplishments['herschelDrawingsDiamond'], LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsH400DiamondDr, LangH400DiamondToAccomplishDr );
+	drawStar ( $accomplishments['herschelDrawingsPlatina'], LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsH400PlatinaDr, LangH400PlatinaToAccomplishDr );
 	echo "</div>";
 
 	// Herschel II
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangHerschelII . "</h4>";
 
-	drawStar ( $objAccomplishments->getHerschelIIBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsHIIBronze, LangHIIBronzeToAccomplish );
-	drawStar ( $objAccomplishments->getHerschelIISilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsHIISilver, LangHIISilverToAccomplish );
-	drawStar ( $objAccomplishments->getHerschelIIGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsHIIGold, LangHIIGoldToAccomplish );
-	drawStar ( $objAccomplishments->getHerschelIIDiamond ( $user ), LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsHIIDiamond, LangHIIDiamondToAccomplish );
-	drawStar ( $objAccomplishments->getHerschelIIPlatina ( $user ), LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsHIIPlatina, LangHIIPlatinaToAccomplish );
+	drawStar ( $accomplishments['herschelIIBronze'], LangAccomplishmentsBronze, "bronze", LangAccomplishmentsHIIBronze, LangHIIBronzeToAccomplish );
+	drawStar ( $accomplishments['herschelIISilver'], LangAccomplishmentsSilver, "silver", LangAccomplishmentsHIISilver, LangHIISilverToAccomplish );
+	drawStar ( $accomplishments['herschelIIGold'], LangAccomplishmentsGold, "gold", LangAccomplishmentsHIIGold, LangHIIGoldToAccomplish );
+	drawStar ( $accomplishments['herschelIIDiamond'], LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsHIIDiamond, LangHIIDiamondToAccomplish );
+	drawStar ( $accomplishments['herschelIIPlatina'], LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsHIIPlatina, LangHIIPlatinaToAccomplish );
 	echo "</div>";
 
 	// Herschel II drawings
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangHerschelIIDrawings . "</h4>";
 
-	drawStar ( $objAccomplishments->getHerschelIIDrawingsBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsHIIBronzeDr, LangHIIBronzeToAccomplishDr );
-	drawStar ( $objAccomplishments->getHerschelIIDrawingsSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsHIISilverDr, LangHIISilverToAccomplishDr );
-	drawStar ( $objAccomplishments->getHerschelIIDrawingsGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsHIIGoldDr, LangHIIGoldToAccomplishDr );
-	drawStar ( $objAccomplishments->getHerschelIIDrawingsDiamond ( $user ), LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsHIIDiamondDr, LangHIIDiamondToAccomplishDr );
-	drawStar ( $objAccomplishments->getHerschelIIDrawingsPlatina ( $user ), LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsHIIPlatinaDr, LangHIIPlatinaToAccomplishDr );
+	drawStar ( $accomplishments['herschelIIDrawingsBronze'], LangAccomplishmentsBronze, "bronze", LangAccomplishmentsHIIBronzeDr, LangHIIBronzeToAccomplishDr );
+	drawStar ( $accomplishments['herschelIIDrawingsSilver'], LangAccomplishmentsSilver, "silver", LangAccomplishmentsHIISilverDr, LangHIISilverToAccomplishDr );
+	drawStar ( $accomplishments['herschelIIDrawingsGold'], LangAccomplishmentsGold, "gold", LangAccomplishmentsHIIGoldDr, LangHIIGoldToAccomplishDr );
+	drawStar ( $accomplishments['herschelIIDrawingsDiamond'], LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsHIIDiamondDr, LangHIIDiamondToAccomplishDr );
+	drawStar ( $accomplishments['herschelIIDrawingsPlatina'], LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsHIIPlatinaDr, LangHIIPlatinaToAccomplishDr );
 	echo "</div>";
 
 	// Total number of drawings
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangTotalDrawings . "</h4>";
 
-	drawStar ( $objAccomplishments->getDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getDrawingsRookie ( $user ), 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
-	drawStar ( $objAccomplishments->getDrawingsBeginner ( $user ), 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
-	drawStar ( $objAccomplishments->getDrawingsTalented ( $user ), 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
-	drawStar ( $objAccomplishments->getDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100 ) );
-	drawStar ( $objAccomplishments->getDrawingsIntermediate ( $user ), 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getDrawingsExperienced ( $user ), 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
-	drawStar ( $objAccomplishments->getDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
-	drawStar ( $objAccomplishments->getDrawingsSenior ( $user ), 2500, "senior", $objUtil->getDrawAccomplishment ( 2500 ), $objUtil->getDrawToAccomplish ( 2500 ) );
-	drawStar ( $objAccomplishments->getDrawingsExpert ( $user ), 5000, "expert", $objUtil->getDrawAccomplishment ( 5000 ), $objUtil->getDrawToAccomplish ( 5000 ) );
+	// TODO: Use the method getNumberOfObjectsInCatalog in accomplishments to calculate the number of objects in the catalog.
+	// TODO: Refactor to use less code ;-)
+	drawStar ( $accomplishments['drawingsNewbie'], 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['drawingsRookie'], 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
+	drawStar ( $accomplishments['drawingsBeginner'], 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
+	drawStar ( $accomplishments['drawingsTalented'], 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
+	drawStar ( $accomplishments['drawingsSkilled'], 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100 ) );
+	drawStar ( $accomplishments['drawingsIntermediate'], 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
+	drawStar ( $accomplishments['drawingsExperienced'], 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
+	drawStar ( $accomplishments['drawingsAdvanced'], 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
+	drawStar ( $accomplishments['drawingsSenior'], 2500, "senior", $objUtil->getDrawAccomplishment ( 2500 ), $objUtil->getDrawToAccomplish ( 2500 ) );
+	drawStar ( $accomplishments['drawingsExpert'], 5000, "expert", $objUtil->getDrawAccomplishment ( 5000 ), $objUtil->getDrawToAccomplish ( 5000 ) );
 
 	echo "</div>";
 
@@ -1112,32 +1116,32 @@ function view_observer() {
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangOpenClusters . "</h4>";
 
-	drawStar ( $objAccomplishments->getOpenClustersNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getOpenClustersRookie ( $user ), ( int ) (1700 / 500), "rookie", $objUtil->getSeenAccomplishment ( 1700 / 500 ), $objUtil->getSeenToAccomplish ( 1700 / 500 ) );
-	drawStar ( $objAccomplishments->getOpenClustersBeginner ( $user ), ( int ) (1700 / 200), "beginner", $objUtil->getSeenAccomplishment ( 1700 / 200 ), $objUtil->getSeenToAccomplish ( 1700 / 200 ) );
-	drawStar ( $objAccomplishments->getOpenClustersTalented ( $user ), ( int ) (1700 / 100), "talented", $objUtil->getSeenAccomplishment ( 1700 / 100 ), $objUtil->getSeenToAccomplish ( 1700 / 100 ) );
-	drawStar ( $objAccomplishments->getOpenClustersSkilled ( $user ), ( int ) (1700 / 50), "skilled", $objUtil->getSeenAccomplishment ( 1700 / 50 ), $objUtil->getSeenToAccomplish ( 1700 / 50 ) );
-	drawStar ( $objAccomplishments->getOpenClustersIntermediate ( $user ), ( int ) (1700 / 20), "intermediate", $objUtil->getSeenAccomplishment ( 1700 / 20 ), $objUtil->getSeenToAccomplish ( 1700 / 20 ) );
-	drawStar ( $objAccomplishments->getOpenClustersExperienced ( $user ), ( int ) (1700 / 10), "experienced", $objUtil->getSeenAccomplishment ( 1700 / 10 ), $objUtil->getSeenToAccomplish ( 1700 / 10 ) );
-	drawStar ( $objAccomplishments->getOpenClustersAdvanced ( $user ), ( int ) (1700 / 5), "advanced", $objUtil->getSeenAccomplishment ( 1700 / 5 ), $objUtil->getSeenToAccomplish ( 1700 / 5 ) );
-	drawStar ( $objAccomplishments->getOpenClustersSenior ( $user ), ( int ) (1700 / 2), "senior", $objUtil->getSeenAccomplishment ( 1700 / 2 ), $objUtil->getSeenToAccomplish ( 1700 / 2 ) );
-	drawStar ( $objAccomplishments->getOpenClustersExpert ( $user ), 1700, "expert", $objUtil->getSeenAccomplishment ( 1700 ), $objUtil->getSeenToAccomplish ( 1700 ) );
+	drawStar ( $accomplishments['openClusterNewbie'], 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['openClusterRookie'], ( int ) (1700 / 500), "rookie", $objUtil->getSeenAccomplishment ( 1700 / 500 ), $objUtil->getSeenToAccomplish ( 1700 / 500 ) );
+	drawStar ( $accomplishments['openClusterBeginner'], ( int ) (1700 / 200), "beginner", $objUtil->getSeenAccomplishment ( 1700 / 200 ), $objUtil->getSeenToAccomplish ( 1700 / 200 ) );
+	drawStar ( $accomplishments['openClusterTalented'], ( int ) (1700 / 100), "talented", $objUtil->getSeenAccomplishment ( 1700 / 100 ), $objUtil->getSeenToAccomplish ( 1700 / 100 ) );
+	drawStar ( $accomplishments['openClusterSkilled'], ( int ) (1700 / 50), "skilled", $objUtil->getSeenAccomplishment ( 1700 / 50 ), $objUtil->getSeenToAccomplish ( 1700 / 50 ) );
+	drawStar ( $accomplishments['openClusterIntermediate'], ( int ) (1700 / 20), "intermediate", $objUtil->getSeenAccomplishment ( 1700 / 20 ), $objUtil->getSeenToAccomplish ( 1700 / 20 ) );
+	drawStar ( $accomplishments['openClusterExperienced'], ( int ) (1700 / 10), "experienced", $objUtil->getSeenAccomplishment ( 1700 / 10 ), $objUtil->getSeenToAccomplish ( 1700 / 10 ) );
+	drawStar ( $accomplishments['openClusterAdvanced'], ( int ) (1700 / 5), "advanced", $objUtil->getSeenAccomplishment ( 1700 / 5 ), $objUtil->getSeenToAccomplish ( 1700 / 5 ) );
+	drawStar ( $accomplishments['openClusterSenior'], ( int ) (1700 / 2), "senior", $objUtil->getSeenAccomplishment ( 1700 / 2 ), $objUtil->getSeenToAccomplish ( 1700 / 2 ) );
+	drawStar ( $accomplishments['openClusterExpert'], 1700, "expert", $objUtil->getSeenAccomplishment ( 1700 ), $objUtil->getSeenToAccomplish ( 1700 ) );
 	echo "</div>";
 
 	// Total number of open clusters drawn
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangOpenClusterDrawings . "</h4>";
 
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsRookie ( $user ), ( int ) (1700 / 500), "rookie", $objUtil->getDrawAccomplishment ( 1700 / 500 ), $objUtil->getDrawToAccomplish ( 1700 / 500 ) );
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsBeginner ( $user ), ( int ) (1700 / 200), "beginner", $objUtil->getDrawAccomplishment ( 1700 / 200 ), $objUtil->getDrawToAccomplish ( 1700 / 200 ) );
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsTalented ( $user ), ( int ) (1700 / 100), "talented", $objUtil->getDrawAccomplishment ( 1700 / 100 ), $objUtil->getDrawToAccomplish ( 1700 / 100 ) );
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsSkilled ( $user ), ( int ) (1700 / 50), "skilled", $objUtil->getDrawAccomplishment ( 1700 / 50 ), $objUtil->getDrawToAccomplish ( 1700 / 50 ) );
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsIntermediate ( $user ), ( int ) (1700 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 1700 / 20 ), $objUtil->getDrawToAccomplish ( 1700 / 20 ) );
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsExperienced ( $user ), ( int ) (1700 / 10), "experienced", $objUtil->getDrawAccomplishment ( 1700 / 10 ), $objUtil->getDrawToAccomplish ( 1700 / 10 ) );
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsAdvanced ( $user ), ( int ) (1700 / 5), "advanced", $objUtil->getDrawAccomplishment ( 1700 / 5 ), $objUtil->getDrawToAccomplish ( 1700 / 5 ) );
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsSenior ( $user ), ( int ) (1700 / 2), "senior", $objUtil->getDrawAccomplishment ( 1700 / 2 ), $objUtil->getDrawToAccomplish ( 1700 / 2 ) );
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsExpert ( $user ), 1700, "expert", $objUtil->getDrawAccomplishment ( 1700 ), $objUtil->getDrawToAccomplish ( 1700 ) );
+	drawStar ( $accomplishments['openClusterDrawingsNewbie'], 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['openClusterDrawingsRookie'], ( int ) (1700 / 500), "rookie", $objUtil->getDrawAccomplishment ( 1700 / 500 ), $objUtil->getDrawToAccomplish ( 1700 / 500 ) );
+	drawStar ( $accomplishments['openClusterDrawingsBeginner'], ( int ) (1700 / 200), "beginner", $objUtil->getDrawAccomplishment ( 1700 / 200 ), $objUtil->getDrawToAccomplish ( 1700 / 200 ) );
+	drawStar ( $accomplishments['openClusterDrawingsTalented'], ( int ) (1700 / 100), "talented", $objUtil->getDrawAccomplishment ( 1700 / 100 ), $objUtil->getDrawToAccomplish ( 1700 / 100 ) );
+	drawStar ( $accomplishments['openClusterDrawingsSkilled'], ( int ) (1700 / 50), "skilled", $objUtil->getDrawAccomplishment ( 1700 / 50 ), $objUtil->getDrawToAccomplish ( 1700 / 50 ) );
+	drawStar ( $accomplishments['openClusterDrawingsIntermediate'], ( int ) (1700 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 1700 / 20 ), $objUtil->getDrawToAccomplish ( 1700 / 20 ) );
+	drawStar ( $accomplishments['openClusterDrawingsExperienced'], ( int ) (1700 / 10), "experienced", $objUtil->getDrawAccomplishment ( 1700 / 10 ), $objUtil->getDrawToAccomplish ( 1700 / 10 ) );
+	drawStar ( $accomplishments['openClusterDrawingsAdvanced'], ( int ) (1700 / 5), "advanced", $objUtil->getDrawAccomplishment ( 1700 / 5 ), $objUtil->getDrawToAccomplish ( 1700 / 5 ) );
+	drawStar ( $accomplishments['openClusterDrawingsSenior'], ( int ) (1700 / 2), "senior", $objUtil->getDrawAccomplishment ( 1700 / 2 ), $objUtil->getDrawToAccomplish ( 1700 / 2 ) );
+	drawStar ( $accomplishments['openClusterDrawingsExpert'], 1700, "expert", $objUtil->getDrawAccomplishment ( 1700 ), $objUtil->getDrawToAccomplish ( 1700 ) );
 
 	echo "</div>";
 
@@ -1145,32 +1149,32 @@ function view_observer() {
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangGlobularClusters . "</h4>";
 
-	drawStar ( $objAccomplishments->getGlobularClustersNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getGlobularClustersRookie ( $user ), 2, "rookie", $objUtil->getSeenAccomplishment ( 2 ), $objUtil->getSeenToAccomplish ( 2 ) );
-	drawStar ( $objAccomplishments->getGlobularClustersBeginner ( $user ), 3, "beginner", $objUtil->getSeenAccomplishment ( 3 ), $objUtil->getSeenToAccomplish ( 3 ) );
-	drawStar ( $objAccomplishments->getGlobularClustersTalented ( $user ), 4, "talented", $objUtil->getSeenAccomplishment ( 4 ), $objUtil->getSeenToAccomplish ( 4 ) );
-	drawStar ( $objAccomplishments->getGlobularClustersSkilled ( $user ), 5, "skilled", $objUtil->getSeenAccomplishment ( 5 ), $objUtil->getSeenToAccomplish ( 5 ) );
-	drawStar ( $objAccomplishments->getGlobularClustersIntermediate ( $user ), ( int ) (152 / 20), "intermediate", $objUtil->getSeenAccomplishment ( 152 / 20 ), $objUtil->getSeenToAccomplish ( 152 / 20 ) );
-	drawStar ( $objAccomplishments->getGlobularClustersExperienced ( $user ), ( int ) (152 / 10), "experienced", $objUtil->getSeenAccomplishment ( 152 / 10 ), $objUtil->getSeenToAccomplish ( 152 / 10 ) );
-	drawStar ( $objAccomplishments->getGlobularClustersAdvanced ( $user ), ( int ) (152 / 5), "advanced", $objUtil->getSeenAccomplishment ( 152 / 5 ), $objUtil->getSeenToAccomplish ( 152 / 5 ) );
-	drawStar ( $objAccomplishments->getGlobularClustersSenior ( $user ), ( int ) (152 / 2), "senior", $objUtil->getSeenAccomplishment ( 1700 / 2 ), $objUtil->getSeenToAccomplish ( 152 / 2 ) );
-	drawStar ( $objAccomplishments->getGlobularClustersExpert ( $user ), 152, "expert", $objUtil->getSeenAccomplishment ( 152 ), $objUtil->getSeenToAccomplish ( 152 ) );
+	drawStar ( $accomplishments['globularClusterNewbie'], 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['globularClusterRookie'], 2, "rookie", $objUtil->getSeenAccomplishment ( 2 ), $objUtil->getSeenToAccomplish ( 2 ) );
+	drawStar ( $accomplishments['globularClusterBeginner'], 3, "beginner", $objUtil->getSeenAccomplishment ( 3 ), $objUtil->getSeenToAccomplish ( 3 ) );
+	drawStar ( $accomplishments['globularClusterTalented'], 4, "talented", $objUtil->getSeenAccomplishment ( 4 ), $objUtil->getSeenToAccomplish ( 4 ) );
+	drawStar ( $accomplishments['globularClusterSkilled'], 5, "skilled", $objUtil->getSeenAccomplishment ( 5 ), $objUtil->getSeenToAccomplish ( 5 ) );
+	drawStar ( $accomplishments['globularClusterIntermediate'], ( int ) (152 / 20), "intermediate", $objUtil->getSeenAccomplishment ( 152 / 20 ), $objUtil->getSeenToAccomplish ( 152 / 20 ) );
+	drawStar ( $accomplishments['globularClusterExperienced'], ( int ) (152 / 10), "experienced", $objUtil->getSeenAccomplishment ( 152 / 10 ), $objUtil->getSeenToAccomplish ( 152 / 10 ) );
+	drawStar ( $accomplishments['globularClusterAdvanced'], ( int ) (152 / 5), "advanced", $objUtil->getSeenAccomplishment ( 152 / 5 ), $objUtil->getSeenToAccomplish ( 152 / 5 ) );
+	drawStar ( $accomplishments['globularClusterSenior'], ( int ) (152 / 2), "senior", $objUtil->getSeenAccomplishment ( 1700 / 2 ), $objUtil->getSeenToAccomplish ( 152 / 2 ) );
+	drawStar ( $accomplishments['globularClusterExpert'], 152, "expert", $objUtil->getSeenAccomplishment ( 152 ), $objUtil->getSeenToAccomplish ( 152 ) );
 	echo "</div>";
 
 	// Total number of globular clusters drawn
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangGlobularClusterDrawings . "</h4>";
 
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsRookie ( $user ), 2, "rookie", $objUtil->getDrawAccomplishment ( 2 ), $objUtil->getDrawToAccomplish ( 2 ) );
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsBeginner ( $user ), 3, "beginner", $objUtil->getDrawAccomplishment ( 3 ), $objUtil->getDrawToAccomplish ( 3 ) );
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsTalented ( $user ), 4, "talented", $objUtil->getDrawAccomplishment ( 4 ), $objUtil->getDrawToAccomplish ( 4 ) );
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsSkilled ( $user ), 5, "skilled", $objUtil->getDrawAccomplishment ( 5 ), $objUtil->getDrawToAccomplish ( 5 ) );
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsIntermediate ( $user ), ( int ) (152 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 152 / 20 ), $objUtil->getDrawToAccomplish ( 152 / 20 ) );
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsExperienced ( $user ), ( int ) (152 / 10), "experienced", $objUtil->getDrawAccomplishment ( 152 / 10 ), $objUtil->getDrawToAccomplish ( 152 / 10 ) );
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsAdvanced ( $user ), ( int ) (152 / 5), "advanced", $objUtil->getDrawAccomplishment ( 152 / 5 ), $objUtil->getDrawToAccomplish ( 152 / 5 ) );
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsSenior ( $user ), ( int ) (152 / 2), "senior", $objUtil->getDrawAccomplishment ( 152 / 2 ), $objUtil->getDrawToAccomplish ( 152 / 2 ) );
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsExpert ( $user ), 152, "expert", $objUtil->getDrawAccomplishment ( 152 ), $objUtil->getDrawToAccomplish ( 152 ) );
+	drawStar ( $accomplishments['globularClusterDrawingsNewbie'], 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['globularClusterDrawingsRookie'], 2, "rookie", $objUtil->getDrawAccomplishment ( 2 ), $objUtil->getDrawToAccomplish ( 2 ) );
+	drawStar ( $accomplishments['globularClusterDrawingsBeginner'], 3, "beginner", $objUtil->getDrawAccomplishment ( 3 ), $objUtil->getDrawToAccomplish ( 3 ) );
+	drawStar ( $accomplishments['globularClusterDrawingsTalented'], 4, "talented", $objUtil->getDrawAccomplishment ( 4 ), $objUtil->getDrawToAccomplish ( 4 ) );
+	drawStar ( $accomplishments['globularClusterDrawingsSkilled'], 5, "skilled", $objUtil->getDrawAccomplishment ( 5 ), $objUtil->getDrawToAccomplish ( 5 ) );
+	drawStar ( $accomplishments['globularClusterDrawingsIntermediate'], ( int ) (152 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 152 / 20 ), $objUtil->getDrawToAccomplish ( 152 / 20 ) );
+	drawStar ( $accomplishments['globularClusterDrawingsExperienced'], ( int ) (152 / 10), "experienced", $objUtil->getDrawAccomplishment ( 152 / 10 ), $objUtil->getDrawToAccomplish ( 152 / 10 ) );
+	drawStar ( $accomplishments['globularClusterDrawingsAdvanced'], ( int ) (152 / 5), "advanced", $objUtil->getDrawAccomplishment ( 152 / 5 ), $objUtil->getDrawToAccomplish ( 152 / 5 ) );
+	drawStar ( $accomplishments['globularClusterDrawingsSenior'], ( int ) (152 / 2), "senior", $objUtil->getDrawAccomplishment ( 152 / 2 ), $objUtil->getDrawToAccomplish ( 152 / 2 ) );
+	drawStar ( $accomplishments['globularClusterDrawingsExpert'], 152, "expert", $objUtil->getDrawAccomplishment ( 152 ), $objUtil->getDrawToAccomplish ( 152 ) );
 
 	echo "</div>";
 
@@ -1178,32 +1182,32 @@ function view_observer() {
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangPlanetaryNebulaeSeen . "</h4>";
 
-	drawStar ( $objAccomplishments->getPlanetaryNebulaNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaRookie ( $user ), ( int ) (1023 / 500), "rookie", $objUtil->getSeenAccomplishment ( 1023 / 500 ), $objUtil->getSeenToAccomplish ( 1023 / 500 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaBeginner ( $user ), ( int ) (1023 / 200), "beginner", $objUtil->getSeenAccomplishment ( 1023 / 200 ), $objUtil->getSeenToAccomplish ( 1023 / 200 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaTalented ( $user ), ( int ) (1023 / 100), "talented", $objUtil->getSeenAccomplishment ( 1023 / 100 ), $objUtil->getSeenToAccomplish ( 1023 / 100 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaSkilled ( $user ), ( int ) (1023 / 50), "skilled", $objUtil->getSeenAccomplishment ( 1023 / 50 ), $objUtil->getSeenToAccomplish ( 1023 / 50 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaIntermediate ( $user ), ( int ) (1023 / 20), "intermediate", $objUtil->getSeenAccomplishment ( 1023 / 20 ), $objUtil->getSeenToAccomplish ( 1023 / 20 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaExperienced ( $user ), ( int ) (1023 / 10), "experienced", $objUtil->getSeenAccomplishment ( 1023 / 10 ), $objUtil->getSeenToAccomplish ( 1023 / 10 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaAdvanced ( $user ), ( int ) (1023 / 5), "advanced", $objUtil->getSeenAccomplishment ( 1023 / 5 ), $objUtil->getSeenToAccomplish ( 1023 / 5 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaSenior ( $user ), ( int ) (1023 / 2), "senior", $objUtil->getSeenAccomplishment ( 1023 / 2 ), $objUtil->getSeenToAccomplish ( 1023 / 2 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaExpert ( $user ), 1023, "expert", $objUtil->getSeenAccomplishment ( 1023 ), $objUtil->getSeenToAccomplish ( 1023 ) );
+	drawStar ( $accomplishments['planetaryNebulaNewbie'], 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['planetaryNebulaRookie'], ( int ) (1023 / 500), "rookie", $objUtil->getSeenAccomplishment ( 1023 / 500 ), $objUtil->getSeenToAccomplish ( 1023 / 500 ) );
+	drawStar ( $accomplishments['planetaryNebulaBeginner'], ( int ) (1023 / 200), "beginner", $objUtil->getSeenAccomplishment ( 1023 / 200 ), $objUtil->getSeenToAccomplish ( 1023 / 200 ) );
+	drawStar ( $accomplishments['planetaryNebulaTalented'], ( int ) (1023 / 100), "talented", $objUtil->getSeenAccomplishment ( 1023 / 100 ), $objUtil->getSeenToAccomplish ( 1023 / 100 ) );
+	drawStar ( $accomplishments['planetaryNebulaSkilled'], ( int ) (1023 / 50), "skilled", $objUtil->getSeenAccomplishment ( 1023 / 50 ), $objUtil->getSeenToAccomplish ( 1023 / 50 ) );
+	drawStar ( $accomplishments['planetaryNebulaIntermediate'], ( int ) (1023 / 20), "intermediate", $objUtil->getSeenAccomplishment ( 1023 / 20 ), $objUtil->getSeenToAccomplish ( 1023 / 20 ) );
+	drawStar ( $accomplishments['planetaryNebulaExperienced'], ( int ) (1023 / 10), "experienced", $objUtil->getSeenAccomplishment ( 1023 / 10 ), $objUtil->getSeenToAccomplish ( 1023 / 10 ) );
+	drawStar ( $accomplishments['planetaryNebulaAdvanced'], ( int ) (1023 / 5), "advanced", $objUtil->getSeenAccomplishment ( 1023 / 5 ), $objUtil->getSeenToAccomplish ( 1023 / 5 ) );
+	drawStar ( $accomplishments['planetaryNebulaSenior'], ( int ) (1023 / 2), "senior", $objUtil->getSeenAccomplishment ( 1023 / 2 ), $objUtil->getSeenToAccomplish ( 1023 / 2 ) );
+	drawStar ( $accomplishments['planetaryNebulaExpert'], 1023, "expert", $objUtil->getSeenAccomplishment ( 1023 ), $objUtil->getSeenToAccomplish ( 1023 ) );
 	echo "</div>";
 
 	// Total number of planetary nebulae drawn
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangPlanetaryNebulaDrawings . "</h4>";
 
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsRookie ( $user ), ( int ) (1023 / 500), "rookie", $objUtil->getDrawAccomplishment ( 1023 / 500 ), $objUtil->getDrawToAccomplish ( 1023 / 500 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsBeginner ( $user ), ( int ) (1023 / 200), "beginner", $objUtil->getDrawAccomplishment ( 1023 / 200 ), $objUtil->getDrawToAccomplish ( 1023 / 200 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsTalented ( $user ), ( int ) (1023 / 100), "talented", $objUtil->getDrawAccomplishment ( 1023 / 100 ), $objUtil->getDrawToAccomplish ( 1023 / 100 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsSkilled ( $user ), ( int ) (1023 / 50), "skilled", $objUtil->getDrawAccomplishment ( 1023 / 50 ), $objUtil->getDrawToAccomplish ( 1023 / 50 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsIntermediate ( $user ), ( int ) (1023 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 1023 / 20 ), $objUtil->getDrawToAccomplish ( 1023 / 20 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsExperienced ( $user ), ( int ) (1023 / 10), "experienced", $objUtil->getDrawAccomplishment ( 1023 / 10 ), $objUtil->getDrawToAccomplish ( 1023 / 10 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsAdvanced ( $user ), ( int ) (1023 / 5), "advanced", $objUtil->getDrawAccomplishment ( 1023 / 5 ), $objUtil->getDrawToAccomplish ( 1023 / 5 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsSenior ( $user ), ( int ) (1023 / 2), "senior", $objUtil->getDrawAccomplishment ( 1023 / 2 ), $objUtil->getDrawToAccomplish ( 1023 / 2 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsExpert ( $user ), 1023, "expert", $objUtil->getDrawAccomplishment ( 1023 ), $objUtil->getDrawToAccomplish ( 1023 ) );
+	drawStar ( $accomplishments['planetaryNebulaDrawingsNewbie'], 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['planetaryNebulaDrawingsRookie'], ( int ) (1023 / 500), "rookie", $objUtil->getDrawAccomplishment ( 1023 / 500 ), $objUtil->getDrawToAccomplish ( 1023 / 500 ) );
+	drawStar ( $accomplishments['planetaryNebulaDrawingsBeginner'], ( int ) (1023 / 200), "beginner", $objUtil->getDrawAccomplishment ( 1023 / 200 ), $objUtil->getDrawToAccomplish ( 1023 / 200 ) );
+	drawStar ( $accomplishments['planetaryNebulaDrawingsTalented'], ( int ) (1023 / 100), "talented", $objUtil->getDrawAccomplishment ( 1023 / 100 ), $objUtil->getDrawToAccomplish ( 1023 / 100 ) );
+	drawStar ( $accomplishments['planetaryNebulaDrawingsSkilled'], ( int ) (1023 / 50), "skilled", $objUtil->getDrawAccomplishment ( 1023 / 50 ), $objUtil->getDrawToAccomplish ( 1023 / 50 ) );
+	drawStar ( $accomplishments['planetaryNebulaDrawingsIntermediate'], ( int ) (1023 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 1023 / 20 ), $objUtil->getDrawToAccomplish ( 1023 / 20 ) );
+	drawStar ( $accomplishments['planetaryNebulaDrawingsExperienced'], ( int ) (1023 / 10), "experienced", $objUtil->getDrawAccomplishment ( 1023 / 10 ), $objUtil->getDrawToAccomplish ( 1023 / 10 ) );
+	drawStar ( $accomplishments['planetaryNebulaDrawingsAdvanced'], ( int ) (1023 / 5), "advanced", $objUtil->getDrawAccomplishment ( 1023 / 5 ), $objUtil->getDrawToAccomplish ( 1023 / 5 ) );
+	drawStar ( $accomplishments['planetaryNebulaDrawingsSenior'], ( int ) (1023 / 2), "senior", $objUtil->getDrawAccomplishment ( 1023 / 2 ), $objUtil->getDrawToAccomplish ( 1023 / 2 ) );
+	drawStar ( $accomplishments['planetaryNebulaDrawingsExpert'], 1023, "expert", $objUtil->getDrawAccomplishment ( 1023 ), $objUtil->getDrawToAccomplish ( 1023 ) );
 
 	echo "</div>";
 
@@ -1211,32 +1215,32 @@ function view_observer() {
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangGalaxiesSeen . "</h4>";
 
-	drawStar ( $objAccomplishments->getGalaxyNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getGalaxyRookie ( $user ), 10, "rookie", $objUtil->getSeenAccomplishment ( 5000 / 500 ), $objUtil->getSeenToAccomplish ( 10 ) );
-	drawStar ( $objAccomplishments->getGalaxyBeginner ( $user ), 25, "beginner", $objUtil->getSeenAccomplishment ( 25 ), $objUtil->getSeenToAccomplish ( 25 ) );
-	drawStar ( $objAccomplishments->getGalaxyTalented ( $user ), 50, "talented", $objUtil->getSeenAccomplishment ( 50 ), $objUtil->getSeenToAccomplish ( 50 ) );
-	drawStar ( $objAccomplishments->getGalaxySkilled ( $user ), 100, "skilled", $objUtil->getSeenAccomplishment ( 100 ), $objUtil->getSeenToAccomplish ( 100 ) );
-	drawStar ( $objAccomplishments->getGalaxyIntermediate ( $user ), 250, "intermediate", $objUtil->getSeenAccomplishment ( 250 ), $objUtil->getSeenToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getGalaxyExperienced ( $user ), 500, "experienced", $objUtil->getSeenAccomplishment ( 500 ), $objUtil->getSeenToAccomplish ( 500 ) );
-	drawStar ( $objAccomplishments->getGalaxyAdvanced ( $user ), 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
-	drawStar ( $objAccomplishments->getGalaxySenior ( $user ), 2500, "senior", $objUtil->getSeenAccomplishment ( 2500 ), $objUtil->getSeenToAccomplish ( 2500 ) );
-	drawStar ( $objAccomplishments->getGalaxyExpert ( $user ), 5000, "expert", $objUtil->getSeenAccomplishment ( 5000 ), $objUtil->getSeenToAccomplish ( 5000 ) );
+	drawStar ( $accomplishments['galaxyNewbie'], 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['galaxyRookie'], 10, "rookie", $objUtil->getSeenAccomplishment ( 5000 / 500 ), $objUtil->getSeenToAccomplish ( 10 ) );
+	drawStar ( $accomplishments['galaxyBeginner'], 25, "beginner", $objUtil->getSeenAccomplishment ( 25 ), $objUtil->getSeenToAccomplish ( 25 ) );
+	drawStar ( $accomplishments['galaxyTalented'], 50, "talented", $objUtil->getSeenAccomplishment ( 50 ), $objUtil->getSeenToAccomplish ( 50 ) );
+	drawStar ( $accomplishments['galaxySkilled'], 100, "skilled", $objUtil->getSeenAccomplishment ( 100 ), $objUtil->getSeenToAccomplish ( 100 ) );
+	drawStar ( $accomplishments['galaxyIntermediate'], 250, "intermediate", $objUtil->getSeenAccomplishment ( 250 ), $objUtil->getSeenToAccomplish ( 250 ) );
+	drawStar ( $accomplishments['galaxyExperienced'], 500, "experienced", $objUtil->getSeenAccomplishment ( 500 ), $objUtil->getSeenToAccomplish ( 500 ) );
+	drawStar ( $accomplishments['galaxyAdvanced'], 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
+	drawStar ( $accomplishments['galaxySenior'], 2500, "senior", $objUtil->getSeenAccomplishment ( 2500 ), $objUtil->getSeenToAccomplish ( 2500 ) );
+	drawStar ( $accomplishments['galaxyExpert'], 5000, "expert", $objUtil->getSeenAccomplishment ( 5000 ), $objUtil->getSeenToAccomplish ( 5000 ) );
 	echo "</div>";
 
 	// Total number of galaxies drawn
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangGalaxyDrawings . "</h4>";
 
-	drawStar ( $objAccomplishments->getGalaxyDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getGalaxyDrawingsRookie ( $user ), 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
-	drawStar ( $objAccomplishments->getGalaxyDrawingsBeginner ( $user ), 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
-	drawStar ( $objAccomplishments->getGalaxyDrawingsTalented ( $user ), 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
-	drawStar ( $objAccomplishments->getGalaxyDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100 ) );
-	drawStar ( $objAccomplishments->getGalaxyDrawingsIntermediate ( $user ), 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getGalaxyDrawingsExperienced ( $user ), 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
-	drawStar ( $objAccomplishments->getGalaxyDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
-	drawStar ( $objAccomplishments->getGalaxyDrawingsSenior ( $user ), 2500, "senior", $objUtil->getDrawAccomplishment ( 2500 ), $objUtil->getDrawToAccomplish ( 2500 ) );
-	drawStar ( $objAccomplishments->getGalaxyDrawingsExpert ( $user ), 5000, "expert", $objUtil->getDrawAccomplishment ( 5000 ), $objUtil->getDrawToAccomplish ( 5000 ) );
+	drawStar ( $accomplishments['galaxyDrawingsNewbie'], 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['galaxyDrawingsRookie'], 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
+	drawStar ( $accomplishments['galaxyDrawingsBeginner'], 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
+	drawStar ( $accomplishments['galaxyDrawingsTalented'], 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
+	drawStar ( $accomplishments['galaxyDrawingsSkilled'], 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100 ) );
+	drawStar ( $accomplishments['galaxyDrawingsIntermediate'], 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
+	drawStar ( $accomplishments['galaxyDrawingsExperienced'], 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
+	drawStar ( $accomplishments['galaxyDrawingsAdvanced'], 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
+	drawStar ( $accomplishments['galaxyDrawingsSenior'], 2500, "senior", $objUtil->getDrawAccomplishment ( 2500 ), $objUtil->getDrawToAccomplish ( 2500 ) );
+	drawStar ( $accomplishments['galaxyDrawingsExpert'], 5000, "expert", $objUtil->getDrawAccomplishment ( 5000 ), $objUtil->getDrawToAccomplish ( 5000 ) );
 
 	echo "</div>";
 
@@ -1244,32 +1248,32 @@ function view_observer() {
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangNebulaeSeen . "</h4>";
 
-	drawStar ( $objAccomplishments->getNebulaNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getNebulaRookie ( $user ), 2, "rookie", $objUtil->getSeenAccomplishment ( 2 ), $objUtil->getSeenToAccomplish ( 2 ) );
-	drawStar ( $objAccomplishments->getNebulaBeginner ( $user ), 3, "beginner", $objUtil->getSeenAccomplishment ( 3 ), $objUtil->getSeenToAccomplish ( 3 ) );
-	drawStar ( $objAccomplishments->getNebulaTalented ( $user ), 4, "talented", $objUtil->getSeenAccomplishment ( 4 ), $objUtil->getSeenToAccomplish ( 4 ) );
-	drawStar ( $objAccomplishments->getNebulaSkilled ( $user ), ( int ) (384 / 50), "skilled", $objUtil->getSeenAccomplishment ( 384 / 50 ), $objUtil->getSeenToAccomplish ( 384 / 50 ) );
-	drawStar ( $objAccomplishments->getNebulaIntermediate ( $user ), ( int ) (384 / 20), "intermediate", $objUtil->getSeenAccomplishment ( 384 / 20 ), $objUtil->getSeenToAccomplish ( 384 / 20 ) );
-	drawStar ( $objAccomplishments->getNebulaExperienced ( $user ), ( int ) (384 / 10), "experienced", $objUtil->getSeenAccomplishment ( 384 / 10 ), $objUtil->getSeenToAccomplish ( 384 / 10 ) );
-	drawStar ( $objAccomplishments->getNebulaAdvanced ( $user ), ( int ) (384 / 5), "advanced", $objUtil->getSeenAccomplishment ( 384 / 5 ), $objUtil->getSeenToAccomplish ( 384 / 5 ) );
-	drawStar ( $objAccomplishments->getNebulaSenior ( $user ), ( int ) (384 / 2), "senior", $objUtil->getSeenAccomplishment ( 384 / 2 ), $objUtil->getSeenToAccomplish ( 384 / 2 ) );
-	drawStar ( $objAccomplishments->getNebulaExpert ( $user ), 384, "expert", $objUtil->getSeenAccomplishment ( 384 ), $objUtil->getSeenToAccomplish ( 384 ) );
+	drawStar ( $accomplishments['nebulaNewbie'], 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['nebulaRookie'], 2, "rookie", $objUtil->getSeenAccomplishment ( 2 ), $objUtil->getSeenToAccomplish ( 2 ) );
+	drawStar ( $accomplishments['nebulaBeginner'], 3, "beginner", $objUtil->getSeenAccomplishment ( 3 ), $objUtil->getSeenToAccomplish ( 3 ) );
+	drawStar ( $accomplishments['nebulaTalented'], 4, "talented", $objUtil->getSeenAccomplishment ( 4 ), $objUtil->getSeenToAccomplish ( 4 ) );
+	drawStar ( $accomplishments['nebulaSkilled'], ( int ) (384 / 50), "skilled", $objUtil->getSeenAccomplishment ( 384 / 50 ), $objUtil->getSeenToAccomplish ( 384 / 50 ) );
+	drawStar ( $accomplishments['nebulaIntermediate'], ( int ) (384 / 20), "intermediate", $objUtil->getSeenAccomplishment ( 384 / 20 ), $objUtil->getSeenToAccomplish ( 384 / 20 ) );
+	drawStar ( $accomplishments['nebulaExperienced'], ( int ) (384 / 10), "experienced", $objUtil->getSeenAccomplishment ( 384 / 10 ), $objUtil->getSeenToAccomplish ( 384 / 10 ) );
+	drawStar ( $accomplishments['nebulaAdvanced'], ( int ) (384 / 5), "advanced", $objUtil->getSeenAccomplishment ( 384 / 5 ), $objUtil->getSeenToAccomplish ( 384 / 5 ) );
+	drawStar ( $accomplishments['nebulaSenior'], ( int ) (384 / 2), "senior", $objUtil->getSeenAccomplishment ( 384 / 2 ), $objUtil->getSeenToAccomplish ( 384 / 2 ) );
+	drawStar ( $accomplishments['nebulaExpert'], 384, "expert", $objUtil->getSeenAccomplishment ( 384 ), $objUtil->getSeenToAccomplish ( 384 ) );
 	echo "</div>";
 
 	// Total number of nebulae drawn
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangNebulaeDrawings . "</h4>";
 
-	drawStar ( $objAccomplishments->getNebulaDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getNebulaDrawingsRookie ( $user ), 2, "rookie", $objUtil->getDrawAccomplishment ( 2 ), $objUtil->getDrawToAccomplish ( 2 ) );
-	drawStar ( $objAccomplishments->getNebulaDrawingsBeginner ( $user ), 3, "beginner", $objUtil->getDrawAccomplishment ( 3 ), $objUtil->getDrawToAccomplish ( 3 ) );
-	drawStar ( $objAccomplishments->getNebulaDrawingsTalented ( $user ), 4, "talented", $objUtil->getDrawAccomplishment ( 4 ), $objUtil->getDrawToAccomplish ( 4 ) );
-	drawStar ( $objAccomplishments->getNebulaDrawingsSkilled ( $user ), ( int ) (384 / 50), "skilled", $objUtil->getDrawAccomplishment ( 384 / 50 ), $objUtil->getDrawToAccomplish ( 384 / 50 ) );
-	drawStar ( $objAccomplishments->getNebulaDrawingsIntermediate ( $user ), ( int ) (384 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 384 / 20 ), $objUtil->getDrawToAccomplish ( 384 / 20 ) );
-	drawStar ( $objAccomplishments->getNebulaDrawingsExperienced ( $user ), ( int ) (384 / 10), "experienced", $objUtil->getDrawAccomplishment ( 384 / 10 ), $objUtil->getDrawToAccomplish ( 384 / 10 ) );
-	drawStar ( $objAccomplishments->getNebulaDrawingsAdvanced ( $user ), ( int ) (384 / 5), "advanced", $objUtil->getDrawAccomplishment ( 384 / 5 ), $objUtil->getDrawToAccomplish ( 384 / 5 ) );
-	drawStar ( $objAccomplishments->getNebulaDrawingsSenior ( $user ), ( int ) (384 / 2), "senior", $objUtil->getDrawAccomplishment ( 384 / 2 ), $objUtil->getDrawToAccomplish ( 384 / 2 ) );
-	drawStar ( $objAccomplishments->getNebulaDrawingsExpert ( $user ), 384, "expert", $objUtil->getDrawAccomplishment ( 384 ), $objUtil->getDrawToAccomplish ( 384 ) );
+	drawStar ( $accomplishments['nebulaDrawingsNewbie'], 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['nebulaDrawingsRookie'], 2, "rookie", $objUtil->getDrawAccomplishment ( 2 ), $objUtil->getDrawToAccomplish ( 2 ) );
+	drawStar ( $accomplishments['nebulaDrawingsBeginner'], 3, "beginner", $objUtil->getDrawAccomplishment ( 3 ), $objUtil->getDrawToAccomplish ( 3 ) );
+	drawStar ( $accomplishments['nebulaDrawingsTalented'], 4, "talented", $objUtil->getDrawAccomplishment ( 4 ), $objUtil->getDrawToAccomplish ( 4 ) );
+	drawStar ( $accomplishments['nebulaDrawingsSkilled'], ( int ) (384 / 50), "skilled", $objUtil->getDrawAccomplishment ( 384 / 50 ), $objUtil->getDrawToAccomplish ( 384 / 50 ) );
+	drawStar ( $accomplishments['nebulaDrawingsIntermediate'], ( int ) (384 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 384 / 20 ), $objUtil->getDrawToAccomplish ( 384 / 20 ) );
+	drawStar ( $accomplishments['nebulaDrawingsExperienced'], ( int ) (384 / 10), "experienced", $objUtil->getDrawAccomplishment ( 384 / 10 ), $objUtil->getDrawToAccomplish ( 384 / 10 ) );
+	drawStar ( $accomplishments['nebulaDrawingsAdvanced'], ( int ) (384 / 5), "advanced", $objUtil->getDrawAccomplishment ( 384 / 5 ), $objUtil->getDrawToAccomplish ( 384 / 5 ) );
+	drawStar ( $accomplishments['nebulaDrawingsSenior'], ( int ) (384 / 2), "senior", $objUtil->getDrawAccomplishment ( 384 / 2 ), $objUtil->getDrawToAccomplish ( 384 / 2 ) );
+	drawStar ( $accomplishments['nebulaDrawingsExpert'], 384, "expert", $objUtil->getDrawAccomplishment ( 384 ), $objUtil->getDrawToAccomplish ( 384 ) );
 
 	echo "</div>";
 
@@ -1277,32 +1281,32 @@ function view_observer() {
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangDifferentObjectsSeen . "</h4>";
 
-	drawStar ( $objAccomplishments->getObjectsNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getObjectsRookie ( $user ), ( int ) (5000 / 500), "rookie", $objUtil->getSeenAccomplishment ( 5000 / 500 ), $objUtil->getSeenToAccomplish ( 5000 / 500 ) );
-	drawStar ( $objAccomplishments->getObjectsBeginner ( $user ), 25, "beginner", $objUtil->getSeenAccomplishment ( 25 ), $objUtil->getSeenToAccomplish ( 25 ) );
-	drawStar ( $objAccomplishments->getObjectsTalented ( $user ), 50, "talented", $objUtil->getSeenAccomplishment ( 50 ), $objUtil->getSeenToAccomplish ( 50 ) );
-	drawStar ( $objAccomplishments->getObjectsSkilled ( $user ), 100, "skilled", $objUtil->getSeenAccomplishment ( 100 ), $objUtil->getSeenToAccomplish ( 100 ) );
-	drawStar ( $objAccomplishments->getObjectsIntermediate ( $user ), 250, "intermediate", $objUtil->getSeenAccomplishment ( 250 ), $objUtil->getSeenToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getObjectsExperienced ( $user ), 500, "experienced", $objUtil->getSeenAccomplishment ( 500 ), $objUtil->getSeenToAccomplish ( 500 ) );
-	drawStar ( $objAccomplishments->getObjectsAdvanced ( $user ), 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
-	drawStar ( $objAccomplishments->getObjectsSenior ( $user ), 2500, "senior", $objUtil->getSeenAccomplishment ( 2500 ), $objUtil->getSeenToAccomplish ( 2500 ) );
-	drawStar ( $objAccomplishments->getObjectsExpert ( $user ), 5000, "expert", $objUtil->getSeenAccomplishment ( 5000 ), $objUtil->getSeenToAccomplish ( 5000 ) );
+	drawStar ( $accomplishments['objectsNewbie'], 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['objectsRookie'], ( int ) (5000 / 500), "rookie", $objUtil->getSeenAccomplishment ( 5000 / 500 ), $objUtil->getSeenToAccomplish ( 5000 / 500 ) );
+	drawStar ( $accomplishments['objectsBeginner'], 25, "beginner", $objUtil->getSeenAccomplishment ( 25 ), $objUtil->getSeenToAccomplish ( 25 ) );
+	drawStar ( $accomplishments['objectsTalented'], 50, "talented", $objUtil->getSeenAccomplishment ( 50 ), $objUtil->getSeenToAccomplish ( 50 ) );
+	drawStar ( $accomplishments['objectsSkilled'], 100, "skilled", $objUtil->getSeenAccomplishment ( 100 ), $objUtil->getSeenToAccomplish ( 100 ) );
+	drawStar ( $accomplishments['objectsIntermediate'], 250, "intermediate", $objUtil->getSeenAccomplishment ( 250 ), $objUtil->getSeenToAccomplish ( 250 ) );
+	drawStar ( $accomplishments['objectsExperienced'], 500, "experienced", $objUtil->getSeenAccomplishment ( 500 ), $objUtil->getSeenToAccomplish ( 500 ) );
+	drawStar ( $accomplishments['objectsAdvanced'], 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
+	drawStar ( $accomplishments['objectsSenior'], 2500, "senior", $objUtil->getSeenAccomplishment ( 2500 ), $objUtil->getSeenToAccomplish ( 2500 ) );
+	drawStar ( $accomplishments['objectsExpert'], 5000, "expert", $objUtil->getSeenAccomplishment ( 5000 ), $objUtil->getSeenToAccomplish ( 5000 ) );
 	echo "</div>";
 
 	// Total number of nebulae drawn
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangDifferentObjectsDrawings . "</h4>";
 
-	drawStar ( $objAccomplishments->getObjectsDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getObjectsDrawingsRookie ( $user ), 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
-	drawStar ( $objAccomplishments->getObjectsDrawingsBeginner ( $user ), 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
-	drawStar ( $objAccomplishments->getObjectsDrawingsTalented ( $user ), 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
-	drawStar ( $objAccomplishments->getObjectsDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100 ) );
-	drawStar ( $objAccomplishments->getObjectsDrawingsIntermediate ( $user ), 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getObjectsDrawingsExperienced ( $user ), 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
-	drawStar ( $objAccomplishments->getObjectsDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
-	drawStar ( $objAccomplishments->getObjectsDrawingsSenior ( $user ), 2500, "senior", $objUtil->getDrawAccomplishment ( 2500 ), $objUtil->getDrawToAccomplish ( 2500 ) );
-	drawStar ( $objAccomplishments->getObjectsDrawingsExpert ( $user ), 5000, "expert", $objUtil->getDrawAccomplishment ( 5000 ), $objUtil->getDrawToAccomplish ( 5000 ) );
+	drawStar ( $accomplishments['objectsDrawingsNewbie'], 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['objectsDrawingsRookie'], 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
+	drawStar ( $accomplishments['objectsDrawingsBeginner'], 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
+	drawStar ( $accomplishments['objectsDrawingsTalented'], 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
+	drawStar ( $accomplishments['objectsDrawingsSkilled'], 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100 ) );
+	drawStar ( $accomplishments['objectsDrawingsIntermediate'], 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
+	drawStar ( $accomplishments['objectsDrawingsExperienced'], 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
+	drawStar ( $accomplishments['objectsDrawingsAdvanced'], 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
+	drawStar ( $accomplishments['objectsDrawingsSenior'], 2500, "senior", $objUtil->getDrawAccomplishment ( 2500 ), $objUtil->getDrawToAccomplish ( 2500 ) );
+	drawStar ( $accomplishments['objectsDrawingsExpert'], 5000, "expert", $objUtil->getDrawAccomplishment ( 5000 ), $objUtil->getDrawToAccomplish ( 5000 ) );
 
 	echo "</div>";
 
@@ -1310,32 +1314,32 @@ function view_observer() {
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangTotalCometsSeen . "</h4>";
 
-	drawStar ( $objAccomplishments->getCometObservationsNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getCometObservationsRookie ( $user ), ( int ) (5000 / 500), "rookie", $objUtil->getSeenAccomplishment ( 5000 / 500 ), $objUtil->getSeenToAccomplish ( 5000 / 500 ) );
-	drawStar ( $objAccomplishments->getCometObservationsBeginner ( $user ), 25, "beginner", $objUtil->getSeenAccomplishment ( 25 ), $objUtil->getSeenToAccomplish ( 25 ) );
-	drawStar ( $objAccomplishments->getCometObservationsTalented ( $user ), 50, "talented", $objUtil->getSeenAccomplishment ( 50 ), $objUtil->getSeenToAccomplish ( 50 ) );
-	drawStar ( $objAccomplishments->getCometObservationsSkilled ( $user ), 100, "skilled", $objUtil->getSeenAccomplishment ( 100 ), $objUtil->getSeenToAccomplish ( 100 ) );
-	drawStar ( $objAccomplishments->getCometObservationsIntermediate ( $user ), 250, "intermediate", $objUtil->getSeenAccomplishment ( 250 ), $objUtil->getSeenToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getCometObservationsExperienced ( $user ), 500, "experienced", $objUtil->getSeenAccomplishment ( 500 ), $objUtil->getSeenToAccomplish ( 500 ) );
-	drawStar ( $objAccomplishments->getCometObservationsAdvanced ( $user ), 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
-	drawStar ( $objAccomplishments->getCometObservationsSenior ( $user ), 2500, "senior", $objUtil->getSeenAccomplishment ( 2500 ), $objUtil->getSeenToAccomplish ( 2500 ) );
-	drawStar ( $objAccomplishments->getCometObservationsExpert ( $user ), 5000, "expert", $objUtil->getSeenAccomplishment ( 5000 ), $objUtil->getSeenToAccomplish ( 5000 ) );
+	drawStar ( $accomplishments['cometObservationsNewbie'], 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['cometObservationsRookie'], ( int ) (5000 / 500), "rookie", $objUtil->getSeenAccomplishment ( 5000 / 500 ), $objUtil->getSeenToAccomplish ( 5000 / 500 ) );
+	drawStar ( $accomplishments['cometObservationsBeginner'], 25, "beginner", $objUtil->getSeenAccomplishment ( 25 ), $objUtil->getSeenToAccomplish ( 25 ) );
+	drawStar ( $accomplishments['cometObservationsTalented'], 50, "talented", $objUtil->getSeenAccomplishment ( 50 ), $objUtil->getSeenToAccomplish ( 50 ) );
+	drawStar ( $accomplishments['cometObservationsSkilled'], 100, "skilled", $objUtil->getSeenAccomplishment ( 100 ), $objUtil->getSeenToAccomplish ( 100 ) );
+	drawStar ( $accomplishments['cometObservationsIntermediate'], 250, "intermediate", $objUtil->getSeenAccomplishment ( 250 ), $objUtil->getSeenToAccomplish ( 250 ) );
+	drawStar ( $accomplishments['cometObservationsExperienced'], 500, "experienced", $objUtil->getSeenAccomplishment ( 500 ), $objUtil->getSeenToAccomplish ( 500 ) );
+	drawStar ( $accomplishments['cometObservationsAdvanced'], 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
+	drawStar ( $accomplishments['cometObservationsSenior'], 2500, "senior", $objUtil->getSeenAccomplishment ( 2500 ), $objUtil->getSeenToAccomplish ( 2500 ) );
+	drawStar ( $accomplishments['cometObservationsExpert'], 5000, "expert", $objUtil->getSeenAccomplishment ( 5000 ), $objUtil->getSeenToAccomplish ( 5000 ) );
 	echo "</div>";
 
 	// Total number of different comets seen
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangDifferentCometsSeen . "</h4>";
 
-	drawStar ( $objAccomplishments->getCometsObservedNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getCometsObservedRookie ( $user ), 10, "rookie", $objUtil->getSeenAccomplishment ( 10 ), $objUtil->getSeenToAccomplish ( 10 ) );
-	drawStar ( $objAccomplishments->getCometsObservedBeginner ( $user ), 25, "beginner", $objUtil->getSeenAccomplishment ( 25 ), $objUtil->getSeenToAccomplish ( 25 ) );
-	drawStar ( $objAccomplishments->getCometsObservedTalented ( $user ), 50, "talented", $objUtil->getSeenAccomplishment ( 50 ), $objUtil->getSeenToAccomplish ( 50 ) );
-	drawStar ( $objAccomplishments->getCometsObservedSkilled ( $user ), 100, "skilled", $objUtil->getSeenAccomplishment ( 100 ), $objUtil->getSeenToAccomplish ( 100 ) );
-	drawStar ( $objAccomplishments->getCometsObservedIntermediate ( $user ), 250, "intermediate", $objUtil->getSeenAccomplishment ( 250 ), $objUtil->getSeenToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getCometsObservedExperienced ( $user ), 500, "experienced", $objUtil->getSeenAccomplishment ( 500 ), $objUtil->getSeenToAccomplish ( 500 ) );
-	drawStar ( $objAccomplishments->getCometsObservedAdvanced ( $user ), 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
-	drawStar ( $objAccomplishments->getCometsObservedSenior ( $user ), 2500, "senior", $objUtil->getSeenAccomplishment ( 2500 ), $objUtil->getSeenToAccomplish ( 2500 ) );
-	drawStar ( $objAccomplishments->getCometsObservedExpert ( $user ), 5000, "expert", $objUtil->getSeenAccomplishment ( 5000 ), $objUtil->getSeenToAccomplish ( 5000 ) );
+	drawStar ( $accomplishments['cometsObservedNewbie'], 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['cometsObservedRookie'], 10, "rookie", $objUtil->getSeenAccomplishment ( 10 ), $objUtil->getSeenToAccomplish ( 10 ) );
+	drawStar ( $accomplishments['cometsObservedBeginner'], 25, "beginner", $objUtil->getSeenAccomplishment ( 25 ), $objUtil->getSeenToAccomplish ( 25 ) );
+	drawStar ( $accomplishments['cometsObservedTalented'], 50, "talented", $objUtil->getSeenAccomplishment ( 50 ), $objUtil->getSeenToAccomplish ( 50 ) );
+	drawStar ( $accomplishments['cometsObservedSkilled'], 100, "skilled", $objUtil->getSeenAccomplishment ( 100 ), $objUtil->getSeenToAccomplish ( 100 ) );
+	drawStar ( $accomplishments['cometsObservedIntermediate'], 250, "intermediate", $objUtil->getSeenAccomplishment ( 250 ), $objUtil->getSeenToAccomplish ( 250 ) );
+	drawStar ( $accomplishments['cometsObservedExperienced'], 500, "experienced", $objUtil->getSeenAccomplishment ( 500 ), $objUtil->getSeenToAccomplish ( 500 ) );
+	drawStar ( $accomplishments['cometsObservedAdvanced'], 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
+	drawStar ( $accomplishments['cometsObservedSenior'], 2500, "senior", $objUtil->getSeenAccomplishment ( 2500 ), $objUtil->getSeenToAccomplish ( 2500 ) );
+	drawStar ( $accomplishments['cometsObservedExpert'], 5000, "expert", $objUtil->getSeenAccomplishment ( 5000 ), $objUtil->getSeenToAccomplish ( 5000 ) );
 
 	echo "</div>";
 
@@ -1343,16 +1347,16 @@ function view_observer() {
 	echo "<div class=\"accomplishmentRow\">";
 	echo "<h4>" . LangCometDrawings . "</h4>";
 
-	drawStar ( $objAccomplishments->getCometDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
-	drawStar ( $objAccomplishments->getCometDrawingsRookie ( $user ), 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
-	drawStar ( $objAccomplishments->getCometDrawingsBeginner ( $user ), 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
-	drawStar ( $objAccomplishments->getCometDrawingsTalented ( $user ), 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
-	drawStar ( $objAccomplishments->getCometDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100 ) );
-	drawStar ( $objAccomplishments->getCometDrawingsIntermediate ( $user ), 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getCometDrawingsExperienced ( $user ), 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
-	drawStar ( $objAccomplishments->getCometDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
-	drawStar ( $objAccomplishments->getCometDrawingsSenior ( $user ), 2500, "senior", $objUtil->getDrawAccomplishment ( 2500 ), $objUtil->getDrawToAccomplish ( 2500 ) );
-	drawStar ( $objAccomplishments->getCometDrawingsExpert ( $user ), 5000, "expert", $objUtil->getDrawAccomplishment ( 5000 ), $objUtil->getDrawToAccomplish ( 5000 ) );
+	drawStar ( $accomplishments['cometDrawingsNewbie'], 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
+	drawStar ( $accomplishments['cometDrawingsRookie'], 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
+	drawStar ( $accomplishments['cometDrawingsBeginner'], 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
+	drawStar ( $accomplishments['cometDrawingsTalented'], 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
+	drawStar ( $accomplishments['cometDrawingsSkilled'], 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100 ) );
+	drawStar ( $accomplishments['cometDrawingsIntermediate'], 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
+	drawStar ( $accomplishments['cometDrawingsExperienced'], 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
+	drawStar ( $accomplishments['cometDrawingsAdvanced'], 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
+	drawStar ( $accomplishments['cometDrawingsSenior'], 2500, "senior", $objUtil->getDrawAccomplishment ( 2500 ), $objUtil->getDrawToAccomplish ( 2500 ) );
+	drawStar ( $accomplishments['cometDrawingsExpert'], 5000, "expert", $objUtil->getDrawAccomplishment ( 5000 ), $objUtil->getDrawToAccomplish ( 5000 ) );
 
 	echo "</div>";
 

@@ -13,6 +13,10 @@ define("LangRemoveModal7", " observations");
 define("LangKeepObject", "Keep");
 define("LangRemoveObject", "Remove Object");
 define("LangForceRemoveObject", "Force Remove Object");
+define("LangPublicListAlreadyExists", "A public list with the same name (");
+define("LangPublicListAlreadyExists2", ") as your list already exists. Please rename your list before making the list public.");
+define("LangNoObservationToDisplay", "No observation to display.");
+define("LangRequestedObservationDoesNotExist", "The requested observation does not exist.");
 define("LangChangeAccountField14","Preferred unit for instrument diameter");
 define("LangAddSiteStep2", "Define your own name for this location, eventually add a naked eye limiting magnitude (or SQM value) and press the ");
 define("LangAddSiteStep1", "Set your location on the map or by entering the name and pressing the ");
@@ -1951,12 +1955,6 @@ define("LangCSVObjectError3"															,"The following instructions are not 
 define("LangCSVObjectError4"															,"The following dat is not compliant:");
 define("LangCSVObjectButton"															,"Import!");
 define("LangValidateCSVObjectMessage"											,"Import of CSV file successfull!");
-
-// control/check_login.php
-
-define("LangErrorWrongPassword"														,"Wrong password, please try again!");
-define("LangErrorEmptyPassword"														,"You forgot to enter your username and/or password!");
-define("LangErrorPasswordNotValidated"										,"Your account hasn't been validated yet!");
 
 // Visibility for objects
 define("LangVisibility1"																	,"Very simple, prominent object");

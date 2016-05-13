@@ -1824,6 +1824,7 @@ class Objects {
     					$(\'[data-toggle="tooltip"]\').tooltip();
 						});
 					</script>';
+
 		$objUtil->addPager ( "nearobjectlist", $count );
 
 		if ($loggedUser) {
