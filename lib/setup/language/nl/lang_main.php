@@ -1,5 +1,7 @@
 <?php //NL
 // This is version 5.0
+define("LangPublicListAlreadyExists", "Er bestaat al een publieke lijst met dezelfde naam (");
+define("LangPublicListAlreadyExists2", ") als jouw lijst. Hernoem jouw lijst vooraleer ze publiek te maken.");
 define("LangNoObservationToDisplay", "Geen waarneming te tonen.");
 define("LangRequestedObservationDoesNotExist", "De gevraagde waarneming bestaat niet.");
 define("LangChangeAccountField14","Gewenste eenheid voor instrumentdiameter");

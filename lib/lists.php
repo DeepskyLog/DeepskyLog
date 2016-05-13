@@ -348,12 +348,19 @@ class Lists {
 		}
 	}
 	public function switchPublicPrivate($listName) {
-		global $objDatabase, $objMessages, $objObserver, $loggedUser;
+		global $objDatabase, $objMessages, $objObserver, $loggedUser, $entryMessage;
 
 		$public = $this->isPublic ( $listName, $loggedUser );
 		if ($public) {
 			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"0\" where listname=\"" . $listName . "\" AND observerid = \"" . $loggedUser . "\"");
 		} else {
+			// We first check if a public list with the same name already exists.
+			$run = $objDatabase->selectRecordset ( "SELECT listname FROM observerobjectlist WHERE listname=\"" . $listName . "\" AND public=\"1\"" );
+			$get = $run->fetch ( PDO::FETCH_OBJ );
+			if (!empty($get)) {
+				$entryMessage = LangPublicListAlreadyExists . "<strong>" . $listName . "</strong>" . LangPublicListAlreadyExists2;
+				return;
+			}
 			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"1\" where listname=\"" . $listName . "\" AND observerid = \"" . $loggedUser . "\"");
 
 			$username = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );

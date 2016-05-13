@@ -1,5 +1,7 @@
 <?php //FR
 // This is version 5.0
+define("LangPublicListAlreadyExists", "Une liste publique avec le m&ecirc;me nom (");
+define("LangPublicListAlreadyExists2", ") que votre liste existe d&eacute;j&agrave;. Renommez votre liste avant de faire la liste publique.");
 define("LangNoObservationToDisplay", "Pas d'observation &agrave; afficher.");
 define("LangRequestedObservationDoesNotExist", "L'observation demand&eacute; n'existe pas.");
 define("LangChangeAccountField14","Unit&eacute; pr&eacute;f&eacute;r&eacute;e pour le diam&egrave;tre de l'instrument");

@@ -5,15 +5,16 @@
 + Add objects to this list: M 12, M14
 + Check in database: public = 0;
 + Change list to public
-+ Check in database: public = 1, but for all lists with that name, not only for the observer which made the list public!
++ Check in database: public = 1
 + Check when logged out if the list is available with all objects: ok
 + Add some extra objects: M 16
 + Check in database: New object has public = 0??
 + Check when logged out if all objects are in the list.
 
 ##### TODO
-+ What happens when a public list with the same name already exists?
++ Why are the newly added objects after the list was made public not public anymore?
 
 ##### DONE
 + When changing the list to public (or private), only change the list of the observer, not all lists with that name.
 + When there is a public list with the same name as your private list, only show the objects from the correct list.
++ Don't let the user make a list public when there is already a public list with the same name.
