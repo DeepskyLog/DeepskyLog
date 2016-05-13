@@ -1,5 +1,7 @@
 <?php //GE
 // This is version 5.0
+define("LangPublicListAlreadyExists", "Eine &ouml;ffentliche Liste mit dem gleichen Namen (");
+define("LangPublicListAlreadyExists2", ") is bereits vorhanden. Bitte benennen Sie die Liste, bevor die Liste &ouml;ffentlich zu machen.");
 define("LangNoObservationToDisplay", "Keine Beobachtung zum anzeigen.");
 define("LangRequestedObservationDoesNotExist", "Die angeforderte Beobachtung existiert nicht.");
 define("LangChangeAccountField14","Einheit f&uuml;r Instrumentendurchmesser");
