@@ -248,13 +248,19 @@ class Lists {
 
 		$count = 0;
 
+		if ($public) {
+			$pub = 1;
+		} else {
+			$pub = 0;
+		}
+
 		foreach ( $results as $listname ) {
 			if ($listname != "") {
 				echo "<tr>";
 				echo "<td>";
 
 				// Add a link to see and activate the list.
-				echo "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . $listname . "\">";
+				echo "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;public=" . $pub . "&amp;listname=" . $listname . "\">";
 
 				echo $listname;
 
@@ -359,10 +365,14 @@ class Lists {
 			$objMessages->sendMessage ( "DeepskyLog", "all", $subject, $message );
 		}
 	}
-	public function getObjectsFromList($theListname) {
+	public function getObjectsFromList($theListname, $pub) {
 		global $objObject, $objDatabase, $loggedUser;
 		$obs = array ();
-		$sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " . "JOIN objects ON observerobjectlist.objectname = objects.name " . "WHERE listname = \"" . $theListname . "\" AND objectname <>\"\" AND (observerobjectlist.observerid=\"" . $loggedUser . "\" OR observerobjectlist.public=\"1\")";
+		if ($pub == 1) {
+			$sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " . "JOIN objects ON observerobjectlist.objectname = objects.name " . "WHERE listname = \"" . $theListname . "\" AND objectname <>\"\" AND public=\"1\"";
+		} else {
+			$sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " . "JOIN objects ON observerobjectlist.objectname = objects.name " . "WHERE listname = \"" . $theListname . "\" AND objectname <>\"\" AND observerobjectlist.observerid=\"" . $loggedUser . "\"";
+		}
 		$run = $objDatabase->selectRecordset ( $sql );
 		while ( $get = $run->fetch ( PDO::FETCH_OBJ ) )
 			if (! in_array ( $get->objectname, $obs ))

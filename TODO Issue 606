@@ -13,7 +13,7 @@
 
 ##### TODO
 + What happens when a public list with the same name already exists?
-+ When there is a public list with the same name as your private list, only show the objects from the correct list.
 
 ##### DONE
 + When changing the list to public (or private), only change the list of the observer, not all lists with that name.
++ When there is a public list with the same name as your private list, only show the objects from the correct list.

@@ -54,13 +54,15 @@ function menu_list() {
 			// If the list is a Public list, we add 'Public: ' to the name of the list.
  			if (in_array($value, $publicLists)) {
  				$listname = LangPublicList . $value;
+				$public = 1;
  			} else {
 				$listname = $value;
+				$public = 0;
 			}
 			if ((($value == $_SESSION ['listname']) && $myList) || ((! $myList) && ($value == "----------")))
-				echo ("<option selected=\"selected\" value=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . $value . "\">" . $listname . "</option>");
+				echo ("<option selected=\"selected\" value=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;public=" . $public . "&amp;listname=" . $value . "\">" . $listname . "</option>");
 			elseif (! (array_key_exists ( 'removeList', $_GET ) && ($_SESSION ['listname'] == $value)))
-				echo ("<option value=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . $value . "\">" . $listname . "</option>");
+				echo ("<option value=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;public=" . $public . "&amp;listname=" . $value . "\">" . $listname . "</option>");
 		}
 		echo "</select>";
 	}
