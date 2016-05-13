@@ -1,5 +1,7 @@
 <?php //SV
 // This is version 5.0
+define("LangPublicListAlreadyExists", "A public list with the same name (");
+define("LangPublicListAlreadyExists2", ") as your list already exists. Please rename your list before making the list public.");
 define("LangNoObservationToDisplay", "No observation to display.");
 define("LangRequestedObservationDoesNotExist", "The requested observation does not exist.");
 define("LangChangeAccountField14","Preferred unit for instrument diameter");

@@ -26,7 +26,7 @@ function data_get_objects() {
 		if (! $validQobj) {
 			$obj = $objObject->getSeenObjectDetails ( $objObservation->getObjectsFromObservations ( $_SESSION ['Qobs'], $showPartOfs ), 'A' );
 			$_SESSION ['QobjParams'] = array_merge ( array (
-					'source' => 'observation_query' 
+					'source' => 'observation_query'
 			), $_SESSION ['QobsParams'] );
 			$_SESSION ['QobjPO'] = $showPartOfs;
 			$_SESSION ['Qobj'] = $obj;
@@ -39,9 +39,9 @@ function data_get_objects() {
 		if (! $validQobj) {
 			$_SESSION ['QobjParams'] = array (
 					'source' => 'tolist',
-					'list' => $listname 
+					'list' => $listname
 			);
-			$_SESSION ['Qobj'] = $objList->getObjectsFromList ( $_SESSION ['listname'] );
+			$_SESSION ['Qobj'] = $objList->getObjectsFromList ( $_SESSION ['listname'], $objUtil->checkGetKey( 'public') );
 		}
 	}	// ========================================= get nearby objects for selected object
 	elseif ($objUtil->checkGetKey ( 'source' ) == 'objects_nearby') {
@@ -52,7 +52,7 @@ function data_get_objects() {
 			$_SESSION ['QobjParams'] = array (
 					'source' => 'objects_nearby',
 					'object' => $_GET ['object'],
-					'zoom' => $_GET ['zoom'] 
+					'zoom' => $_GET ['zoom']
 			);
 			$_SESSION ['Qobj'] = $objObject->getSeenObjectDetails ( $objObject->getNearbyObjects ( $_GET ['object'], $_GET ['zoom'] ) );
 		}
@@ -331,7 +331,7 @@ function data_get_objects() {
 					"descriptioncontains" => $descriptioncontains,
 					"catalog" => $objUtil->checkGetKey ( 'catalog' ),
 					"catNumber" => $objUtil->checkGetKey ( 'catNumber' ),
-					"seen" => $seenPar 
+					"seen" => $seenPar
 			);
 			$validQobj = false;
 			if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) > 1) && array_key_exists ( 'Qobj', $_SESSION ) && (count ( $_SESSION ['Qobj'] ) > 0))
@@ -367,11 +367,11 @@ function data_get_objects() {
 			} else {
 				$_SESSION ['QobjParams'] = array (
 						'source' => 'quickpick',
-						'object' => $objUtil->checkGetKey ( 'object' ) 
+						'object' => $objUtil->checkGetKey ( 'object' )
 				);
 				$_SESSION ['QobjPO'] = $showPartOfs;
 				$_SESSION ['Qobj'] = $objObject->getObjectFromQuery ( array (
-						'name' => $objUtil->checkGetKey ( 'object' ) 
+						'name' => $objUtil->checkGetKey ( 'object' )
 				), 1, "A", $showPartOfs );
 			}
 		}
@@ -402,11 +402,11 @@ function data_get_objects() {
 			} else {
 				$_SESSION ['QobjParams'] = array (
 						'source' => 'add_object',
-						'object' => $objUtil->checkGetKey ( 'object' ) 
+						'object' => $objUtil->checkGetKey ( 'object' )
 				);
 				$_SESSION ['QobjPO'] = $showPartOfs;
 				$_SESSION ['Qobj'] = $objObject->getObjectFromQuery ( array (
-						'name' => $objUtil->checkGetKey ( 'object' ) 
+						'name' => $objUtil->checkGetKey ( 'object' )
 				), 1, "A", $showPartOfs );
 			}
 		}
@@ -424,7 +424,7 @@ function data_get_objects() {
 		$_REQUEST ['catalog'] = $thenewcatalog0;
 		$_REQUEST ['number'] = $theindex;
 		$_SESSION ['QobjParams'] = array (
-				'source' => 'add_object20' 
+				'source' => 'add_object20'
 		);
 		$ra = (abs ( $objUtil->checkRequestKey ( 'RAhours' ) ) + ($objUtil->checkRequestKey ( 'RAminutes' ) / 60) + ($objUtil->checkRequestKey ( 'RAseconds' ) / 3600));
 		$decl = ((substr ( trim ( $objUtil->checkRequestKey ( 'DeclDegrees' ) ), 0, 1 ) == '-') ? - 1 : 1) * (abs ( $objUtil->checkRequestKey ( 'DeclDegrees' ) ) + ($objUtil->checkRequestKey ( 'DeclMinutes' ) / 60) + ($objUtil->checkRequestKey ( 'DeclSeconds' ) / 3600));
