@@ -101,7 +101,7 @@ class Lists {
 	public function checkList($name) {
 		global $loggedUser, $objDatabase;
 		$retval = 0;
-		if ($this->isPublic ( $name )) {
+		if ($this->isPublic ( $name, $loggedUser )) {
 			$sql = "SELECT listname FROM observerobjectlist WHERE listname=\"" . $name . "\"";
 			$run = $objDatabase->selectRecordset ( $sql );
 			if ($get = $run->fetch ( PDO::FETCH_OBJ ))
@@ -121,7 +121,7 @@ class Lists {
 	}
 	public function checkObjectMyOrPublicList($value, $list) {
 		global $objDatabase, $loggedUser;
-		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.objectplace FROM observerobjectlist WHERE " . ($this->isPublic ( $list ) ? "" : ("observerid = \"" . $loggedUser . "\" AND ")) . "objectname=\"" . $value . "\" AND listname=\"" . $list . "\"", 'objectplace', 0 );
+		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.objectplace FROM observerobjectlist WHERE " . ($this->isPublic ( $list, $loggedUser ) ? "" : ("observerid = \"" . $loggedUser . "\" AND ")) . "objectname=\"" . $value . "\" AND listname=\"" . $list . "\"", 'objectplace', 0 );
 	}
 	public function emptyList($listname) {
 		global $objDatabase, $loggedUser, $myList;
@@ -133,7 +133,7 @@ class Lists {
 	}
 	public function getListObjectDescription($object) {
 		global $loggedUser, $listname, $objDatabase;
-		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.description FROM observerobjectlist WHERE " . ($this->isPublic ( $listname ) ? "" : "observerid = \"" . $loggedUser . "\" AND ") . "objectname=\"" . $object . "\" AND listname=\"" . $listname . "\"", 'description', '' );
+		return $objDatabase->selectSingleValue ( "SELECT observerobjectlist.description FROM observerobjectlist WHERE " . ($this->isPublic ( $listname, $loggedUser ) ? "" : "observerid = \"" . $loggedUser . "\" AND ") . "objectname=\"" . $object . "\" AND listname=\"" . $listname . "\"", 'description', '' );
 	}
 	public function getListOwner() {
 		global $listname, $objDatabase;
@@ -199,7 +199,7 @@ class Lists {
 		return $objDatabase->selectSingleArray ( "SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\"", 'listname' );
 	}
 	public function showLists($public = false) {
-		global $objUtil, $baseURL;
+		global $objUtil, $baseURL, $loggedUser;
 
 		// Get all the lists of the observer
 		$lists = $this->getMyLists ();
@@ -207,14 +207,14 @@ class Lists {
 		if ($public) {
 			foreach ( $lists as $list ) {
 				// Only add the public lists to the results
-				if ($this->isPublic ( $list )) {
+				if ($this->isPublic ( $list, $loggedUser )) {
 					$results [] = $list;
 				}
 			}
 		} else {
 			foreach ( $lists as $list ) {
 				// Only add the private lists to the results
-				if (! $this->isPublic ( $list )) {
+				if (! $this->isPublic ( $list, $loggedUser )) {
 					$results [] = $list;
 				}
 			}
@@ -316,7 +316,7 @@ class Lists {
                           <form action=\"" . $baseURL . "index.php?indexAction=listaction\">
                            <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />
                            <input type=\"hidden\" name=\"listnamefrom\" value=\"" . $listname . "\" />";
-				if ($this->isPublic ( $listname )) {
+				if ($this->isPublic ( $listname, $loggedUser )) {
 					$publicList = true;
 				} else {
 					$publicList = false;
@@ -344,11 +344,11 @@ class Lists {
 	public function switchPublicPrivate($listName) {
 		global $objDatabase, $objMessages, $objObserver, $loggedUser;
 
-		$public = $this->isPublic ( $listName );
+		$public = $this->isPublic ( $listName, $loggedUser );
 		if ($public) {
-			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"0\" where listname=\"" . $listName . "\"");
+			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"0\" where listname=\"" . $listName . "\" AND observerid = \"" . $loggedUser . "\"");
 		} else {
-			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"1\" where listname=\"" . $listName . "\"");
+			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"1\" where listname=\"" . $listName . "\" AND observerid = \"" . $loggedUser . "\"");
 
 			$username = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
 			$subject = LangMessagePublicList1 . $listName . LangMessagePublicList2 . $username;
@@ -437,9 +437,9 @@ class Lists {
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && array_key_exists ( 'source', $_SESSION ['QobjParams'] ) && ($_SESSION ['QobjParams'] ['source'] == 'tolist'))
 			unset ( $_SESSION ['QobjParams'] );
 	}
-	public function isPublic($listName) {
+	public function isPublic($listName, $user) {
 		global $objDatabase;
-		$sql = "SELECT public from observerobjectlist where listname=\"" . $listName . "\" AND public=\"1\";";
+		$sql = "SELECT public from observerobjectlist where listname=\"" . $listName . "\" AND public=\"1\" AND observerid=\"" . $user . "\";";
 		return $objDatabase->selectSingleValue ( $sql, "public", 0 );
 	}
 	public function renameList($nameFrom, $nameTo, $newPublic) {
@@ -448,7 +448,7 @@ class Lists {
 		if ($loggedUser && $myList) {
 			// Send mail when we are creating a public list
 			$pos = $newPublic;
-			$posOld = $this->isPublic ( $nameFrom );
+			$posOld = $this->isPublic ( $nameFrom, $loggedUser );
 
 			if ($posOld == false) {
 				if ($pos) {

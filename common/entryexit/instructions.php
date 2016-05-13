@@ -597,7 +597,7 @@ function instructions() {
 		$listNameFrom = $_GET ['listnamefrom'];
 		$listnameTo = $_GET ['addlistname'];
 
-		if ($objList->checkList ( $listnameTo ) != 0 && $objUtil->checkGetKey ( "PublicList", false ) === $objList->isPublic ( $listNameFrom )) {
+		if ($objList->checkList ( $listnameTo ) != 0 && $objUtil->checkGetKey ( "PublicList", false ) === $objList->isPublic ( $listNameFrom, $loggedUser )) {
 			$entryMessage .= LangToListList . stripslashes ( $listnameTo ) . LangToListExists;
 		} else {
 			$objList->renameList ( $listNameFrom, $listnameTo, $objUtil->checkGetKey ( "PublicList", false ) );

@@ -1,6 +1,6 @@
 ### Issue 606: Missing objects in lists after changing from private to public and adding extra objects
 
-##### TODO
+##### TEST
 + Make a new private list: Testlijst 2
 + Add objects to this list: M 12, M14
 + Check in database: public = 0;
@@ -11,5 +11,9 @@
 + Check in database: New object has public = 0??
 + Check when logged out if all objects are in the list.
 
-TODO:
+##### TODO
++ What happens when a public list with the same name already exists?
++ When there is a public list with the same name as your private list, only show the objects from the correct list.
+
+##### DONE
 + When changing the list to public (or private), only change the list of the observer, not all lists with that name.
