@@ -4,6 +4,8 @@ define("LangNoLicense", "Geen licentie (niet aanbevolen!)");
 define("LangOwnLicense", "Voer uw eigen copyright tekst in");
 define('LangSelectLicenseInfo',  'Selecteer de <strong>correcte licentie voor uw tekeningen</strong>! Voor meer informatie, gebruik de <a href="http://creativecommons.org/choose/">Creative Commons licentie-selectie tool</a>.');
 define("LangCCLicense", "Licentie voor tekeningen");
+define("LangPublicListAlreadyExists", "Er bestaat al een publieke lijst met dezelfde naam (");
+define("LangPublicListAlreadyExists2", ") als jouw lijst. Hernoem jouw lijst vooraleer ze publiek te maken.");
 define("LangNoObservationToDisplay", "Geen waarneming te tonen.");
 define("LangRequestedObservationDoesNotExist", "De gevraagde waarneming bestaat niet.");
 define("LangChangeAccountField14","Gewenste eenheid voor instrumentdiameter");

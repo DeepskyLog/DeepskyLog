@@ -4,6 +4,8 @@ define("LangNoLicense", "Keine Lizenz (nicht empfohlen!)");
 define("LangOwnLicense", "Geben Sie Ihren eigenen Copyright-Text");
 define('LangSelectLicenseInfo',  'Es ist wichtig, die <strong>richtige Lizenz f&uuml;r Ihre Zeichnungen </strong> zu w&auml;hlen! Weitere Informationen: <a href="http://creativecommons.org/choose/">Creative Commons Lizenz-Auswahl-Tool</a>.');
 define("LangCCLicense", "Lizenz f&uuml;r Zeichnungen");
+define("LangPublicListAlreadyExists", "Eine &ouml;ffentliche Liste mit dem gleichen Namen (");
+define("LangPublicListAlreadyExists2", ") is bereits vorhanden. Bitte benennen Sie die Liste, bevor die Liste &ouml;ffentlich zu machen.");
 define("LangNoObservationToDisplay", "Keine Beobachtung zum anzeigen.");
 define("LangRequestedObservationDoesNotExist", "Die angeforderte Beobachtung existiert nicht.");
 define("LangChangeAccountField14","Einheit f&uuml;r Instrumentendurchmesser");
