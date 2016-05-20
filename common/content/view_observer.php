@@ -203,6 +203,15 @@ function view_observer() {
 			echo ($instrumentname ? "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $objObserver->getObserverProperty ( $user, 'stdtelescope' ) ) . "\">" . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>" : "") . "</td>
  	         </tr>";
 		}
+		echo '<tr>
+						<td>';
+		echo LangChangeAccountCopyright;
+		echo '  </td>
+						<td>';
+		echo $objObserver->getCopyright( $user );
+
+		echo '	</td>
+					</tr>';
 	}
 	if ($objUtil->checkSessionKey ( 'admin' ) == "yes") {
 		echo "<form class=\"form-horizontal\" role=\"form\" action=\"" . $baseURL . "index.php\" >";

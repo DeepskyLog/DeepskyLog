@@ -83,9 +83,42 @@ function register() {
 	echo "<span class=\"help-block\">" . LangChangeAccountLanguageExpl . "</span>";
 	echo "</div>";
 
+	// javascript to disable the copyright field when one of the CC options is selected.
+  echo '<script>
+          function enableDisableCopyright() {
+            var selectBox = document.getElementById("cclicense");
+            var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+            if (selectedValue == 7) {
+              document.getElementById("copyright").disabled=false;
+            } else {
+              document.getElementById("copyright").disabled=true;
+            }
+          }
+        </script>';
+
+  echo '<div class="form-group">
+          <label>' . LangCCLicense . '</label><br />
+          <span class="form-inline">
+            <select name="cclicense" id="cclicense" onchange="enableDisableCopyright();" class="inputfield form-control">';
+  echo '<option value="0" selected>Attribution CC BY</option>';
+  echo '<option value="1">Attribution-ShareAlike CC BY-SA</option>';
+  echo '<option value="2">Attribution-NoDerivs CC BY-ND</option>';
+  echo '<option value="3">Attribution-NonCommercial CC BY-NC</option>';
+  echo '<option value="4">Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>';
+  echo '<option value="5">Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>';
+  echo '<option value="6">' . LangNoLicense . '</option>';
+  echo '<option value="7">' . LangOwnLicense . '</option>';
+
+  echo '    </select>
+          </span>
+          <span class="help-block">' .
+            LangSelectLicenseInfo . '
+          </span>
+        </div>';
+
 	echo "<div class=\"form-group\">
 	       <label>" . LangChangeAccountCopyright . "</label>";
-	echo "<input type=\"text\" class=\"form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"" . $objObserver->getObserverProperty ( $objUtil->checkSessionKey ( 'deepskylog_id' ), 'copyright' ) . "\" />";
+	echo "<input type=\"text\" disabled id=\"copyright\" class=\"form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"" . $objObserver->getObserverProperty ( $objUtil->checkSessionKey ( 'deepskylog_id' ), 'copyright' ) . "\" />";
 	echo "<span class=\"help-block\">" . LangChangeAccountCopyrightExpl . "</span>";
 	echo "</div>";
 
