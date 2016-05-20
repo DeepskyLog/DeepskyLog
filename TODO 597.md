@@ -25,6 +25,14 @@ Done:
 
 Done:
 + Save the correct text to the database.
+  + after registration
+  + when setting the copyright message
+
+#### The register page
+(common/content/register.php)
+
+Done:
++ Page with copyright
 
 #### The observer details page
 (common/content/view_observer.php)
@@ -38,11 +46,6 @@ Done:
 + When there is a picture, show the license (image + link)
 
 Also in the new datatables page.
-
-#### The register page
-(common/content/register.php)
-
-+ Page with copyright
 
 #### When not logged in
 + Message on the cookies?
