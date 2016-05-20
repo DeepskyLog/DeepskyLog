@@ -43,9 +43,8 @@ Done:
 #### The detail observation page
 (lib/observations.php)
 
+Done:
 + When there is a picture, show the license (image + link)
-
-Also in the new datatables page.
 
 #### When not logged in
 + Message on the cookies?
