@@ -3,8 +3,9 @@
 #### The settings page:
 (common/content/change_account.php)
 
-+ Make the current field active only if the own license option is selected
-+ Safe the correct text to the database.
+Todo:
++ Show the correct option from the database. Make also sure that the copyright field is correctly enabled/disabled in the beginning.
++ Save the correct text to the database.
 
 We can just put one of the 6 Creative Commons licenses in the database field. This way, we don't need to update the database.
 
@@ -20,7 +21,9 @@ Done:
 + Select the correct license from the settings: When there is no text, select the 'No license option'.
 + Let the user also choose to use an own copyright message.
 + Let the user choose not to use a license. Mention that this is not the most safe option.
++ Make the current field active only if the own license option is selected
 
+TODO:
 #### The observer details page
 + Show the license, with the image from the Creative Commons page and a link to the license at the page with the picture.
 

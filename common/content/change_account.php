@@ -205,10 +205,23 @@ function change_account()
   $copyright = $objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'copyright');
   $ownLicense = true;
 
+  // javascript to disable the copyright field when one of the CC options is selected.
+  echo '<script>
+          function enableDisableCopyright() {
+            var selectBox = document.getElementById("cclicense");
+            var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+            if (selectedValue == 7) {
+              document.getElementById("copyright").disabled=false;
+            } else {
+              document.getElementById("copyright").disabled=true;
+            }
+          }
+        </script>';
+
   echo '<div class="form-group">
           <label class="col-sm-2 control-label">' . LangCCLicense . '</label>
           <div class="col-sm-6">
-            <select name="cclicense" class="inputfield form-control">';
+            <select name="cclicense" id="cclicense" onchange="enableDisableCopyright();" class="inputfield form-control">';
   echo '<option value="0"';
   if (strcmp($copyright, "Attribution CC BY") == 0) {
     $ownLicense = false;
@@ -273,7 +286,7 @@ function change_account()
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountCopyright . "</label>";
 	echo "<div class=\"col-sm-6\">" .
-         "<input type=\"text\" class=\"inputfield form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"". $copyright ."\" />";
+         "<input type=\"text\" id=\"copyright\" class=\"inputfield form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"". $copyright ."\" />";
 	echo "</div></div>";
 
 	echo "<p>&nbsp;</p>";
