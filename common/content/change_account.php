@@ -226,6 +226,7 @@ function change_account()
   if (strcmp($copyright, "Attribution CC BY") == 0) {
     $ownLicense = false;
     echo ' selected="selected"';
+    $copyrightStr = "";
   }
   echo '>Attribution CC BY</option>';
 
@@ -233,6 +234,7 @@ function change_account()
   if (strcmp($copyright, "Attribution-ShareAlike CC BY-SA") == 0) {
     $ownLicense = false;
     echo ' selected="selected"';
+    $copyrightStr = "";
   }
   echo '>Attribution-ShareAlike CC BY-SA</option>';
 
@@ -240,6 +242,7 @@ function change_account()
   if (strcmp($copyright, "Attribution-NoDerivs CC BY-ND") == 0) {
     $ownLicense = false;
     echo ' selected="selected"';
+    $copyrightStr = "";
   }
   echo '>Attribution-NoDerivs CC BY-ND</option>';
 
@@ -247,6 +250,7 @@ function change_account()
   if (strcmp($copyright, "Attribution-NonCommercial CC BY-NC") == 0) {
     $ownLicense = false;
     echo ' selected="selected"';
+    $copyrightStr = "";
   }
   echo '>Attribution-NonCommercial CC BY-NC</option>';
 
@@ -254,6 +258,7 @@ function change_account()
   if (strcmp($copyright, "Attribution-NonCommercial-ShareAlike CC BY-NC-SA") == 0) {
     $ownLicense = false;
     echo ' selected="selected"';
+    $copyrightStr = "";
   }
   echo '>Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>';
 
@@ -261,6 +266,7 @@ function change_account()
   if (strcmp($copyright, "Attribution-NonCommercial-NoDerivs CC BY-NC-ND") == 0) {
     $ownLicense = false;
     echo ' selected="selected"';
+    $copyrightStr = "";
   }
   echo '>Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>';
 
@@ -268,12 +274,14 @@ function change_account()
   if (strcmp($copyright, "") == 0) {
     $ownLicense = false;
     echo ' selected="selected"';
+    $copyrightStr = "";
   }
   echo '>' . LangNoLicense . '</option>';
 
   echo '<option value="7"';
   if ( $ownLicense ) {
     echo ' selected="selected"';
+    $copyrightStr = $copyright;
   }
   echo '>' . LangOwnLicense . '</option>';
 
@@ -286,7 +294,7 @@ function change_account()
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountCopyright . "</label>";
 	echo "<div class=\"col-sm-6\">" .
-         "<input type=\"text\" id=\"copyright\" class=\"inputfield form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"". $copyright ."\" />";
+         "<input type=\"text\" id=\"copyright\" class=\"inputfield form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"". $copyrightStr ."\" />";
 	echo "</div></div>";
 
 	echo "<p>&nbsp;</p>";
