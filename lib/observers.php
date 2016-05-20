@@ -278,7 +278,7 @@ class Observers {
 					if (array_key_exists ( $key, $_POST ))
 						$usedLanguages [] = $key;
 				$this->setUsedLanguages ( $_POST ['deepskylog_id'], $usedLanguages );
-				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'copyright', $_POST ['copyright'] );
+				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'copyright', $this->getPostedLicense() );
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'observationlanguage', $_POST ['description_language'] );
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'language', $_POST ['language'] );
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'registrationDate', date ( "Ymd H:i" ) );
@@ -309,32 +309,6 @@ class Observers {
 						$usedLanguages [] = $key;
 					}
 				}
-				switch ($_POST['cclicense']) {
-					case 0:
-						$license = 'Attribution CC BY';
-						break;
-					case 1:
-						$license = 'Attribution-ShareAlike CC BY-SA';
-						break;
-					case 2:
-						$license = 'Attribution-NoDerivs CC BY-ND';
-						break;
-					case 3:
-						$license = 'Attribution-NonCommercial CC BY-NC';
-						break;
-					case 4:
-						$license = 'Attribution-NonCommercial-ShareAlike CC BY-NC-SA';
-						break;
-					case 5:
-						$license = 'Attribution-NonCommercial-NoDerivs CC BY-NC-ND';
-						break;
-					case 6:
-						$license = '';
-						break;
-					case 7:
-						$license = $_POST['copyright'];
-						break;
-				}
 				$this->setUsedLanguages ( $loggedUser, $usedLanguages );
 				$this->setObserverProperty ( $loggedUser, 'name', $_POST ['name'] );
 				$this->setObserverProperty ( $loggedUser, 'firstname', $_POST ['firstname'] );
@@ -358,7 +332,7 @@ class Observers {
 				$this->setObserverProperty ( $loggedUser, 'atlaspagefont', $_POST ['atlaspagefont'] );
 				$this->setObserverProperty ( $loggedUser, 'photosize1', $_POST ['photosize1'] );
 				$this->setObserverProperty ( $loggedUser, 'photosize2', $_POST ['photosize2'] );
-				$this->setObserverProperty ( $loggedUser, 'copyright', $license );
+				$this->setObserverProperty ( $loggedUser, 'copyright', $this->getPostedLicense() );
 				$this->setObserverProperty ( $loggedUser, 'UT', ((array_key_exists ( 'local_time', $_POST ) && ($_POST ['local_time'] == "on")) ? "0" : "1") );
 				$this->setObserverProperty ( $loggedUser, 'sendMail', ((array_key_exists ( 'send_mail', $_POST ) && ($_POST ['send_mail'] == "on")) ? "1" : "0") );
 				if ($_POST ['icq_name'] != "") {
@@ -382,6 +356,42 @@ class Observers {
 				$_GET ['indexAction'] = 'change_account';
 			}
 		}
+	}
+	/** Returns the text string that is posted using the form to change the
+	* settings of the observer or to register. The returned string is one of the
+	* Creative Common strings, empty or the copyright message the observer has
+	* written himself.
+	*
+	* @return The text for the license
+	*/
+	public function getPostedLicense() {
+		switch ($_POST['cclicense']) {
+			case 0:
+				$license = 'Attribution CC BY';
+				break;
+			case 1:
+				$license = 'Attribution-ShareAlike CC BY-SA';
+				break;
+			case 2:
+				$license = 'Attribution-NoDerivs CC BY-ND';
+				break;
+			case 3:
+				$license = 'Attribution-NonCommercial CC BY-NC';
+				break;
+			case 4:
+				$license = 'Attribution-NonCommercial-ShareAlike CC BY-NC-SA';
+				break;
+			case 5:
+				$license = 'Attribution-NonCommercial-NoDerivs CC BY-NC-ND';
+				break;
+			case 6:
+				$license = '';
+				break;
+			case 7:
+				$license = $_POST['copyright'];
+				break;
+		}
+		return $license;
 	}
 	public function validateDeleteObserver() 	// validateObserver validates the user with the given id and gives the user the given role
 	{

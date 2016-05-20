@@ -32,12 +32,17 @@ Done:
 Done:
 + Show the license, with the image from the Creative Commons page and a link to the license at the page with the picture.
 
-
 #### The detail observation page
+(lib/observations.php)
+
 + When there is a picture, show the license (image + link)
 
 Also in the new datatables page.
 
+#### The register page
+(common/content/register.php)
+
++ Page with copyright
 
 #### When not logged in
 + Message on the cookies?
