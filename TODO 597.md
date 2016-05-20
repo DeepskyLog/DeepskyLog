@@ -26,16 +26,18 @@ Done:
 Done:
 + Save the correct text to the database.
 
-
-
-TODO:
 #### The observer details page
+(common/content/view_observer.php)
+
+Done:
 + Show the license, with the image from the Creative Commons page and a link to the license at the page with the picture.
+
 
 #### The detail observation page
 + When there is a picture, show the license (image + link)
 
 Also in the new datatables page.
+
 
 #### When not logged in
 + Message on the cookies?
