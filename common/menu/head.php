@@ -58,6 +58,8 @@ function head() {
 	// Load toastr
 	echo "<link rel=\"stylesheet\" href=\"styles/toastr.min.css\" />";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/toastr.min.js\"></script>";
+  // Load bootstrap-maxlength
+	echo '<script type="text/javascript" src="' . $baseURL . 'lib/javascript/bootstrap-maxlength.js"></script>';
 
 	$TitleText = "";
 	$theDispatch = $objUtil->checkRequestKey ( 'indexAction' );
