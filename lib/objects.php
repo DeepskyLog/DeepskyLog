@@ -1476,7 +1476,7 @@ class Objects {
 			echo "<tr>";
 			echo "<td colspan=\"3\">" . LangViewObjectListDescription . ' (' . "<a href=\"" . DreyerDescriptionLink . "\" rel=\"external\">" . LangViewObjectDreyerDescription . "</a>)" . "</td>";
 			if ($myList) {
-				echo "<td colspan=\"9\">" . "<textarea name=\"description\" class=\"form-control\" onchange=\"submit()\">" . $objList->getListObjectDescription ( $object ) . "</textarea>" . "</td>";
+				echo "<td colspan=\"9\">" . "<textarea maxlength=\"1024\" name=\"description\" class=\"form-control\" onchange=\"submit()\">" . $objList->getListObjectDescription ( $object ) . "</textarea>" . "</td>";
 			} else {
 				echo "<td colspan=\"9\">" . $objList->getListObjectDescription ( $object ) . "</td>";
 			}

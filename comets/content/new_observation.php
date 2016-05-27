@@ -216,7 +216,7 @@ function new_observation() {
 	echo "</span><br />";
 
 	$content1 = LangViewObservationField8;
-	$content2 = "<textarea name=\"description\" class=\"form-control\" rows=\"5\" >" . ($adapt ? $objCometObservation->getDescription ( $obsid ) : "") . "</textarea>";
+	$content2 = "<textarea maxlength=\"500\" name=\"description\" class=\"form-control\" rows=\"5\" >" . ($adapt ? $objCometObservation->getDescription ( $obsid ) : "") . "</textarea>";
 	echo "<strong>" . $content1 . "</strong>";
 	echo "<br />" . $content2;
 	echo "<br />";
