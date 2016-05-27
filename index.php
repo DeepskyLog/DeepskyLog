@@ -176,6 +176,12 @@ if ($toastMessage != "") {
 	</script>';
 }
 
+echo '<script>
+				$("textarea").maxlength({
+					alwaysShow: true
+				});
+			</script>';
+
 echo "</body>";
 echo "</html>";
 ?>
