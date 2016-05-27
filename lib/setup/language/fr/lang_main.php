@@ -1,5 +1,9 @@
 <?php //FR
 // This is version 5.0
+define("LangNoLicense", "Aucune licence (Non recommand&eacute;!)");
+define("LangOwnLicense", "Entrez votre propre texte copyright");
+define('LangSelectLicenseInfo',  'Il est important de s&eacute;lectionner le <strong>licence correcte pour vos dessins</strong>! Pour de l\'aide, voir le <a href="http://creativecommons.org/choose/">Creative Commons outil de licence</a>.');
+define("LangCCLicense", "Licence pour les dessins");
 define("LangPublicListAlreadyExists", "Une liste publique avec le m&ecirc;me nom (");
 define("LangPublicListAlreadyExists2", ") que votre liste existe d&eacute;j&agrave;. Renommez votre liste avant de faire la liste publique.");
 define("LangNoObservationToDisplay", "Pas d'observation &agrave; afficher.");

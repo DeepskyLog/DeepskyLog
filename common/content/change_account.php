@@ -201,10 +201,100 @@ function change_account()
 	echo "</div><p class=\"form-control-static\">" .
 			  LangChangeAccountField12Expl . "</p></div>";
 
+  // The copyright / license settings.
+  $copyright = $objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'copyright');
+  $ownLicense = true;
+
+  // javascript to disable the copyright field when one of the CC options is selected.
+  echo '<script>
+          function enableDisableCopyright() {
+            var selectBox = document.getElementById("cclicense");
+            var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+            if (selectedValue == 7) {
+              document.getElementById("copyright").disabled=false;
+            } else {
+              document.getElementById("copyright").disabled=true;
+            }
+          }
+        </script>';
+
+  echo '<div class="form-group">
+          <label class="col-sm-2 control-label">' . LangCCLicense . '</label>
+          <div class="col-sm-6">
+            <select name="cclicense" id="cclicense" onchange="enableDisableCopyright();" class="inputfield form-control">';
+  echo '<option value="0"';
+  if (strcmp($copyright, "Attribution CC BY") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+    $copyrightStr = "";
+  }
+  echo '>Attribution CC BY</option>';
+
+  echo '<option value="1"';
+  if (strcmp($copyright, "Attribution-ShareAlike CC BY-SA") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+    $copyrightStr = "";
+  }
+  echo '>Attribution-ShareAlike CC BY-SA</option>';
+
+  echo '<option value="2"';
+  if (strcmp($copyright, "Attribution-NoDerivs CC BY-ND") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+    $copyrightStr = "";
+  }
+  echo '>Attribution-NoDerivs CC BY-ND</option>';
+
+  echo '<option value="3"';
+  if (strcmp($copyright, "Attribution-NonCommercial CC BY-NC") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+    $copyrightStr = "";
+  }
+  echo '>Attribution-NonCommercial CC BY-NC</option>';
+
+  echo '<option value="4"';
+  if (strcmp($copyright, "Attribution-NonCommercial-ShareAlike CC BY-NC-SA") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+    $copyrightStr = "";
+  }
+  echo '>Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>';
+
+  echo '<option value="5"';
+  if (strcmp($copyright, "Attribution-NonCommercial-NoDerivs CC BY-NC-ND") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+    $copyrightStr = "";
+  }
+  echo '>Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>';
+
+  echo '<option value="6"';
+  if (strcmp($copyright, "") == 0) {
+    $ownLicense = false;
+    echo ' selected="selected"';
+    $copyrightStr = "";
+  }
+  echo '>' . LangNoLicense . '</option>';
+
+  echo '<option value="7"';
+  if ( $ownLicense ) {
+    echo ' selected="selected"';
+    $copyrightStr = $copyright;
+  }
+  echo '>' . LangOwnLicense . '</option>';
+
+  echo '    </select>
+          </div>
+          <p class="form-control-static">' .
+            LangSelectLicenseInfo . '
+          </p>
+        </div>';
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountCopyright . "</label>";
 	echo "<div class=\"col-sm-6\">" .
-         "<input type=\"text\" class=\"inputfield form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'copyright')."\" />";
+         "<input type=\"text\" id=\"copyright\" class=\"inputfield form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"". $copyrightStr ."\" />";
 	echo "</div></div>";
 
 	echo "<p>&nbsp;</p>";
@@ -236,14 +326,14 @@ function change_account()
 	$showInches = $objObserver->getObserverProperty ( $loggedUser, "showInches" );
 	$inchSelected = ($showInches == '1')?"selected":"";
 	$mmSelected = ($showInches == '0')?"selected":"";
-	
+
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField14 . "</label>";
 	echo "<div class=\"col-sm-6\">";
 	echo "<select name=\"showInches\" class=\"form-control\"" . $disabled . " >";
 	echo "<option ".$inchSelected." value='1'>inch</option>";
 	echo "<option ".$mmSelected." value='0'>mm</option>";
-	echo "</select>";	
+	echo "</select>";
 	echo "</div></div>";
 
     echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
