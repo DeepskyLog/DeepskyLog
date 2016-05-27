@@ -205,7 +205,7 @@ function new_observation() {
 		$contentInstrument .= "</select>&nbsp;";
 		// Description =====================================================================================================================================================================
 		$theDescription = (($observationid) ? $objPresentations->br2nl ( html_entity_decode ( preg_replace ( "/&amp;/", "&", $objObservation->getDsObservationProperty ( $observationid, 'description' ) ) ) ) : $objUtil->checkPostKey ( 'description' ));
-		$contentDescription = "<textarea name=\"description\" class=\"form-control\" rows=\"7\">" . $theDescription . "</textarea>";
+		$contentDescription = "<textarea maxlength=\"5000\" name=\"description\" class=\"form-control\" rows=\"7\">" . $theDescription . "</textarea>";
 		// Language =====================================================================================================================================================================
 		$theLanguage = (($observationid) ? $objObservation->getDsObservationProperty ( $observationid, 'language' ) : (($tempLang = $objUtil->checkPostKey ( 'description_language' )) ? $tempLang : $objObserver->getObserverProperty ( $loggedUser, 'observationlanguage' )));
 		$allLanguages = $objLanguage->getAllLanguages ( $objObserver->getObserverProperty ( $loggedUser, 'language' ) );

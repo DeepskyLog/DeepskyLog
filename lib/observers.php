@@ -278,7 +278,7 @@ class Observers {
 					if (array_key_exists ( $key, $_POST ))
 						$usedLanguages [] = $key;
 				$this->setUsedLanguages ( $_POST ['deepskylog_id'], $usedLanguages );
-				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'copyright', $_POST ['copyright'] );
+				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'copyright', $this->getPostedLicense() );
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'observationlanguage', $_POST ['description_language'] );
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'language', $_POST ['language'] );
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'registrationDate', date ( "Ymd H:i" ) );
@@ -332,7 +332,7 @@ class Observers {
 				$this->setObserverProperty ( $loggedUser, 'atlaspagefont', $_POST ['atlaspagefont'] );
 				$this->setObserverProperty ( $loggedUser, 'photosize1', $_POST ['photosize1'] );
 				$this->setObserverProperty ( $loggedUser, 'photosize2', $_POST ['photosize2'] );
-				$this->setObserverProperty ( $loggedUser, 'copyright', $_POST ['copyright'] );
+				$this->setObserverProperty ( $loggedUser, 'copyright', $this->getPostedLicense() );
 				$this->setObserverProperty ( $loggedUser, 'UT', ((array_key_exists ( 'local_time', $_POST ) && ($_POST ['local_time'] == "on")) ? "0" : "1") );
 				$this->setObserverProperty ( $loggedUser, 'sendMail', ((array_key_exists ( 'send_mail', $_POST ) && ($_POST ['send_mail'] == "on")) ? "1" : "0") );
 				if ($_POST ['icq_name'] != "") {
@@ -356,6 +356,70 @@ class Observers {
 				$_GET ['indexAction'] = 'change_account';
 			}
 		}
+	}
+	/** Returns the text string for the license the given observer has selected.
+	* In case of one of the Creative Commons licenses, a picture and a link to the
+	* license is returned.
+	*
+	* @param $observerid The observer for which the license should be retrieved.
+	* @return The text for the license.
+	*/
+	public function getCopyright($observerid) {
+		$text = $this->getObserverProperty ( $observerid, 'copyright' );
+
+		if (strcmp($text, "Attribution-NoDerivs CC BY-ND") == 0) {
+			$copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons Attribution-NoDerivatives 4.0 International License</a>.';
+		} else if (strcmp($text, "Attribution CC BY") == 0) {
+			$copyright = '<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.';
+		} else if (strcmp($text, "Attribution-ShareAlike CC BY-SA") == 0) {
+			$copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.';
+		} else if (strcmp($text, "Attribution-NonCommercial CC BY-NC") == 0) {
+			$copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.';
+		} else if (strcmp($text, "Attribution-NonCommercial-ShareAlike CC BY-NC-SA") == 0) {
+			$copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.';
+		} else if (strcmp($text, "Attribution-NonCommercial-NoDerivs CC BY-NC-ND") == 0) {
+			$copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.';
+		} else {
+			$copyright = $text;
+		}
+
+		return $copyright;
+	}
+	/** Returns the text string that is posted using the form to change the
+	* settings of the observer or to register. The returned string is one of the
+	* Creative Common strings, empty or the copyright message the observer has
+	* written himself.
+	*
+	* @return The text for the license.
+	*/
+	public function getPostedLicense() {
+		switch ($_POST['cclicense']) {
+			case 0:
+				$license = 'Attribution CC BY';
+				break;
+			case 1:
+				$license = 'Attribution-ShareAlike CC BY-SA';
+				break;
+			case 2:
+				$license = 'Attribution-NoDerivs CC BY-ND';
+				break;
+			case 3:
+				$license = 'Attribution-NonCommercial CC BY-NC';
+				break;
+			case 4:
+				$license = 'Attribution-NonCommercial-ShareAlike CC BY-NC-SA';
+				break;
+			case 5:
+				$license = 'Attribution-NonCommercial-NoDerivs CC BY-NC-ND';
+				break;
+			case 6:
+				$license = '';
+				break;
+			case 7:
+				$license = $_POST['copyright'];
+				break;
+		}
+		return $license;
 	}
 	public function validateDeleteObserver() 	// validateObserver validates the user with the given id and gives the user the given role
 	{

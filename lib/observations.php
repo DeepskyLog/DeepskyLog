@@ -1155,7 +1155,7 @@ class Observations {
 					echo "</tr>";
 				}
 			}
-			if ((($lco == "C") || ($lco == "O")) && ($objUtil->checkGetKey ( 'expand' ) != $value ['observationid']) && ($copyright = $objObserver->getObserverProperty ( $value ['observerid'], 'copyright' )))
+			if ((($lco == "C") || ($lco == "O")) && ($objUtil->checkGetKey ( 'expand' ) != $value ['observationid']) && ($copyright = $objObserver->getCopyright ( $value ['observerid'] )))
 				echo "<tr class=\"copyright tablesorter-childRow\"><td colspan=\"" . (($lco == "O") ? 8 : 6) . "\">" . $copyright . "</td></tr>";
 			$count ++;
 		}
@@ -1462,7 +1462,7 @@ class Observations {
 
 		if ($this->getDsObservationProperty ( $LOid, 'hasDrawing' ))
 			echo "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $LOid . ".jpg" . "\" data-lightbox=\"image-1\" data-title=\"\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"" . $title . "\"></img></a></p>";
-		if ($copyright = $objObserver->getObserverProperty ( $this->getDsObservationProperty ( $LOid, 'observerid' ), 'copyright' ))
+		if ($copyright = $objObserver->getCopyright ( $this->getDsObservationProperty ( $LOid, 'observerid' ) ))
 			echo "<p class=\"copyright\">" . $copyright . "</p>";
 		echo "<br /><br />";
 		$bottomline = "";

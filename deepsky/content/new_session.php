@@ -208,7 +208,7 @@ function new_session() {
 
 	// Other observers
 	// First add the loggedUser
-	$observersCont = "<textarea readonly=\"readonly\" class=\"form-control\" id=\"observers\" rows=\"7\" cols=\"50\">";
+	$observersCont = "<textarea maxlength=\"5000\" readonly=\"readonly\" class=\"form-control\" id=\"observers\" rows=\"7\" cols=\"50\">";
 	$observersCont .= $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . "&nbsp;" . $objObserver->getObserverProperty ( $loggedUser, "name" );
 	$observersCont .= "</textarea>";
 
@@ -265,21 +265,21 @@ function new_session() {
 	// Weather
 	echo "<div class=\"form-group\">
 	       <label>" . LangAddSessionField5 . "</label>";
-	echo "<textarea name=\"weather\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . "</textarea>";
+	echo "<textarea maxlength=\"500\" name=\"weather\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . "</textarea>";
 	echo "<span class=\"help-block\">" . LangAddSessionField5Expl . "</span>";
 	echo "</div>";
 
 	// Equipment
 	echo "<div class=\"form-group\">
 	       <label>" . LangAddSessionField6 . "</label>";
-	echo "<textarea name=\"equipment\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . "</textarea>";
+	echo "<textarea maxlength=\"500\" name=\"equipment\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . "</textarea>";
 	echo "<span class=\"help-block\">" . LangAddSessionField6Expl . "</span>";
 	echo "</div>";
 
 	// Comments
 	echo "<div class=\"form-group\">
 	       <label>" . LangAddSessionField7 . "</label>";
-	echo "<textarea name=\"comments\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . "</textarea>";
+	echo "<textarea name=\"comments\"  class=\"form-control\" maxlength=\"5000\" cols=\"50\" rows=\"7\">" . "</textarea>";
 	echo "<span class=\"help-block\">" . LangAddSessionField7Expl . "</span>";
 	echo "</div>";
 

@@ -134,6 +134,17 @@ if (isset ( $entryMessage ) && $entryMessage) { // dispays $entryMessage if any
 	echo "</script>";
 }
 
+// Show the cookies warning
+if (strcmp($loggedUser, "") == 0) {
+	echo '<!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+	<script type="text/javascript">
+	    window.cookieconsent_options = {"message":"This website uses cookies to ensure you get the best experience on our website","dismiss":"Got it!","learnMore":"More info","link":null,"theme":"dark-bottom"};
+	</script>
+
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+	<!-- End Cookie Consent plugin -->';
+}
+
 echo '<script>
 $(document).ready(function() {
 	$("select").select2();
@@ -164,6 +175,12 @@ if ($toastMessage != "") {
 
 	</script>';
 }
+
+echo '<script>
+				$("textarea").maxlength({
+					alwaysShow: true
+				});
+			</script>';
 
 echo "</body>";
 echo "</html>";
