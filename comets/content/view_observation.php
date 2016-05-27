@@ -142,7 +142,7 @@ function view_observation() {
 		$description = $objCometObservation->getDescription ( $_GET ['observation'] );
 		if ($description != "") {
 			$content1 = LangViewObservationField8;
-			$content2 = "<textarea name=\"description\" class=\"description\" readonly cols=\"100\" rows=\"5\" >" . $objPresentations->br2nl ( $description ) . "</textarea>";
+			$content2 = "<textarea maxlength=\"500\" name=\"description\" class=\"description\" readonly cols=\"100\" rows=\"5\" >" . $objPresentations->br2nl ( $description ) . "</textarea>";
 			echo "<tr><td><strong>" . $content1 . "</strong></td>";
 		echo "<td>" . $content2. "</td>";
 		echo "</tr>";

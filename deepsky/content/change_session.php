@@ -260,7 +260,7 @@ function change_session() {
 	echo "</div>";
 
 	// Other observers
-	$observersCont = "<textarea readonly=\"readonly\" class=\"form-control\" id=\"observers\" rows=\"7\" cols=\"50\">";
+	$observersCont = "<textarea maxlength=\"5000\" readonly=\"readonly\" class=\"form-control\" id=\"observers\" rows=\"7\" cols=\"50\">";
 	$observersArray = $objSession->getObservers ( $objUtil->checkRequestKey ( 'sessionid' ) );
 	if (! in_array ( $loggedUser, $observersArray )) {
 		$observersCont .= $loggedUserName . "\n";
@@ -337,21 +337,21 @@ function change_session() {
 	// Weather
 	echo "<div class=\"form-group\">
 	       <label>" . LangAddSessionField5 . "</label>";
-	echo "<textarea name=\"weather\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'weather' ) . "</textarea>";
+	echo "<textarea maxlength=\"500\" name=\"weather\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'weather' ) . "</textarea>";
 	echo "<span class=\"help-block\">" . LangAddSessionField5Expl . "</span>";
 	echo "</div>";
 
 	// Equipment
 	echo "<div class=\"form-group\">
 	       <label>" . LangAddSessionField6 . "</label>";
-	echo "<textarea name=\"equipment\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'equipment' ) . "</textarea>";
+	echo "<textarea maxlength=\"500\" name=\"equipment\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'equipment' ) . "</textarea>";
 	echo "<span class=\"help-block\">" . LangAddSessionField6Expl . "</span>";
 	echo "</div>";
 
 	// Comments
 	echo "<div class=\"form-group\">
 	       <label>" . LangAddSessionField7 . "</label>";
-	echo "<textarea name=\"comments\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'comments' ) . "</textarea>";
+	echo "<textarea maxlength=\"5000\" name=\"comments\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'comments' ) . "</textarea>";
 	echo "<span class=\"help-block\">" . LangAddSessionField7Expl . "</span>";
 	echo "</div>";
 

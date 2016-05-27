@@ -221,7 +221,7 @@ function change_account()
   echo '<div class="form-group">
           <label class="col-sm-2 control-label">' . LangCCLicense . '</label>
           <div class="col-sm-6">
-            <select name="cclicense" id="cclicense" onchange="enableDisableCopyright();" class="inputfield form-control">';
+            <select name="cclicense" id="cclicense" onchange="enableDisableCopyright();" class="inputfield">';
   echo '<option value="0"';
   if (strcmp($copyright, "Attribution CC BY") == 0) {
     $ownLicense = false;
