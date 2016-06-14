@@ -78,7 +78,7 @@ function login() {
 				$_GET ['indexAction'] = 'default_action';
 			} else {
 				// passwords don't match
-				if (array_key_exists('lang'), $_SESSION) {
+				if (array_key_exists('lang', $_SESSION)) {
 					if ($_SESSION['lang'] == 'nl') {
 						$loginErrorCode = "Verkeerd wachtwoord, probeer opnieuw!";
 					} else if ($_SESSION['lang'] == 'de') {
@@ -96,7 +96,7 @@ function login() {
 			}
 		} else {
 			// not all fields are filled in
-			if (array_key_exists('lang'), $_SESSION) {
+			if (array_key_exists('lang', $_SESSION)) {
 				if ($_SESSION['lang'] == 'nl') {
 					$loginErrorCode = "Gelieve uw wachtwoord en/of gebruikersnaam in te vullen!";
 				} else if ($_SESSION['lang'] == 'de') {
