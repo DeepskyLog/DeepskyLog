@@ -330,7 +330,7 @@ function change_account()
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField14 . "</label>";
 	echo "<div class=\"col-sm-6\">";
-	echo "<select name=\"showInches\" class=\"form-control\"" . $disabled . " >";
+	echo "<select name=\"showInches\" class=\"form-control\" >";
 	echo "<option ".$inchSelected." value='1'>inch</option>";
 	echo "<option ".$mmSelected." value='0'>mm</option>";
 	echo "</select>";
