@@ -78,12 +78,16 @@ function login() {
 				$_GET ['indexAction'] = 'default_action';
 			} else {
 				// passwords don't match
-				if ($_SESSION['lang'] == 'nl') {
-					$loginErrorCode = "Verkeerd wachtwoord, probeer opnieuw!";
-				} else if ($_SESSION['lang'] == 'de') {
-					$loginErrorCode = "Falsches Passwort! Bitter versuchen Sie es noch einmal!";
-				} else if ($_SESSION['lang'] == 'fr') {
-					$loginErrorCode = "Mauvais mot de passe, essayez &agrave; nouveau!";
+				if (array_key_exists('lang'), $_SESSION) {
+					if ($_SESSION['lang'] == 'nl') {
+						$loginErrorCode = "Verkeerd wachtwoord, probeer opnieuw!";
+					} else if ($_SESSION['lang'] == 'de') {
+						$loginErrorCode = "Falsches Passwort! Bitter versuchen Sie es noch einmal!";
+					} else if ($_SESSION['lang'] == 'fr') {
+						$loginErrorCode = "Mauvais mot de passe, essayez &agrave; nouveau!";
+					} else {
+						$loginErrorCode = "Wrong password, please try again!";
+					}
 				} else {
 					$loginErrorCode = "Wrong password, please try again!";
 				}
@@ -92,12 +96,16 @@ function login() {
 			}
 		} else {
 			// not all fields are filled in
-			if ($_SESSION['lang'] == 'nl') {
-				$loginErrorCode = "Gelieve uw wachtwoord en/of gebruikersnaam in te vullen!";
-			} else if ($_SESSION['lang'] == 'de') {
-				$loginErrorCode = "Benutzer und/oder Passwort nicht eingegeben!";
-			} else if ($_SESSION['lang'] == 'fr') {
-				$loginErrorCode = "Pri&egrave;re de remplir votre nom/mot de passe svp!";
+			if (array_key_exists('lang'), $_SESSION) {
+				if ($_SESSION['lang'] == 'nl') {
+					$loginErrorCode = "Gelieve uw wachtwoord en/of gebruikersnaam in te vullen!";
+				} else if ($_SESSION['lang'] == 'de') {
+					$loginErrorCode = "Benutzer und/oder Passwort nicht eingegeben!";
+				} else if ($_SESSION['lang'] == 'fr') {
+					$loginErrorCode = "Pri&egrave;re de remplir votre nom/mot de passe svp!";
+				} else {
+					$loginErrorCode = "You forgot to enter your username and/or password!";
+				}
 			} else {
 				$loginErrorCode = "You forgot to enter your username and/or password!";
 			}

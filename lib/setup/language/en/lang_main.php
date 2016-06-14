@@ -4,7 +4,6 @@ define("LangNoLicense", "No license (Not recommended!)");
 define("LangOwnLicense", "Enter your own copyright text");
 define('LangSelectLicenseInfo',  'It is important to select the <strong>correct license for your drawings</strong>! For help, see the <a href="http://creativecommons.org/choose/">Creative Commons license-choosing tool</a>.');
 define("LangCCLicense", "License for drawings");
-define("LangChangeAccountField14", "Preferred unit for instrument diameter");
 define("LangPublicListAlreadyExists", "A public list with the same name (");
 define("LangPublicListAlreadyExists2", ") as your list already exists. Please rename your list before making the list public.");
 define("LangNoObservationToDisplay", "No observation to display.");
