@@ -1,7 +1,7 @@
 | Library | Version | Date added in DeepskyLog | Remarks |
 | ------- | ------- | ------------------------ | ------- |
 | jQuery  | 1.11.2  | 23/01/2015 | |
-| jQuery-ui | 1.11.4 | 20/03/2015 | |
+| jQuery-ui | 1.12.0 | 07/09/2016 | |
 | jquery.datatables | 1.10.9 | 21/09/2015 | |
 | Bootstrap | 3.3.2 | 23/01/2015 | |
 | bootstrap-tour | 0.10.1 | 31/10/2014 | |
@@ -16,3 +16,5 @@
 | bootstrap-maxlength | 1.7.0 | 27/05/2016 | |
 | phpjs | ? | ? | CHECK if we still need this. Remove if possible. |
 | class.pdf.php | ? | ? | CHECK if we can update this to a newer version. |
+
+TODO: Update JQuery to version 3.1.0?
