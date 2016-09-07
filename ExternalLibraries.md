@@ -3,7 +3,7 @@
 | jQuery  | 1.11.2  | 23/01/2015 | |
 | jQuery-ui | 1.12.0 | 07/09/2016 | |
 | jquery.datatables | 1.10.9 | 21/09/2015 | |
-| Bootstrap | 3.3.2 | 23/01/2015 | |
+| Bootstrap | 3.3.7 | 07/09/2016 | |
 | bootstrap-tour | 0.10.1 | 31/10/2014 | |
 | tablesorter | 2.23.1 | 21/08/2015 | |
 | lightbox | 2.7.1 | 31/10/2014 | |
