@@ -11,7 +11,7 @@
 | jquery-ui-bootstrap | 1.0.0 | 22/05/2015 | |
 | bootstrap-fileinput |	4.3.4 |	08/09/2016 | |
 | bootstrap-strength-meter | 1.1.3 | 07/10/2015 | |
-| toastr | 2.1.2 | 01/04/2016 | |
+| toastr | 2.1.3 | 08/09/2016 | |
 | select2 | 4.0.1 | 11/01/2016 | DON'T UPDATE UNLESS https://github.com/select2/select2/issues/3472 IS SOLVED!! |
 | bootstrap-maxlength | 1.7.0 | 27/05/2016 | |
 | phpjs | ? | ? | CHECK if we still need this. Remove if possible. |
