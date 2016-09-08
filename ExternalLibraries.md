@@ -7,7 +7,7 @@
 | bootstrap-tour | 0.11.0 | 07/09/2016 | |
 | tablesorter | 2.27.6 | 08/09/2016 | |
 | lightbox | 2.8.2 | 08/09/2016 | |
-| Highcharts | 4.0.4 | 31/10/2014 | |
+| Highcharts | 4.2.6 | 08/09/2016 | |
 | jquery-ui-bootstrap | 1.0.0 | 22/05/2015 | |
 | bootstrap-fileinput |	4.2.7 |	05/10/2015 | |
 | bootstrap-strength-meter | 1.1.3 | 07/10/2015 | |

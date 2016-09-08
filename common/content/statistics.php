@@ -218,7 +218,7 @@ function statistics() {
 	  	          defaultSeriesType: 'line',
                 zoomType: 'x',
 	  	          marginRight: 130,
-	  	          marginBottom: 25
+	  	          marginBottom: 40
 	  	        },
 	  	        title: {
 	  	          text: \"" . GraphTitle1 . "\",
