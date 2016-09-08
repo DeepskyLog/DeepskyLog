@@ -182,6 +182,9 @@ echo '<script>
 				});
 			</script>';
 
+echo "<link rel=\"stylesheet\" href=\"" . $baseURL . "styles/lightbox.css\" />
+        <script src=\"" . $baseURL . "lib/javascript/lightbox.min.js\"></script>";
+
 echo "</body>";
 echo "</html>";
 ?>

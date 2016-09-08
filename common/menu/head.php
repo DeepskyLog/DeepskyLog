@@ -21,8 +21,6 @@ function head() {
 	// Load the javascript for jquery.
 	echo "<script src=\"" . $baseURL . "lib/javascript/jquery-3.1.0.min.js\" type=\"text/javascript\"></script>";
 	// Load Lightbox to show nice pictures when clicking on the images.
-	echo "<link rel=\"stylesheet\" href=\"" . $baseURL . "styles/lightbox.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\" />
-        <script src=\"" . $baseURL . "lib/javascript/lightbox.min.js\"></script>";
 	echo "<link href='http://fonts.googleapis.com/css?family=Yellowtail' rel='stylesheet' type='text/css'>";
 	// Load the javascript for jquery-ui.
 	echo "<script src=\"" . $baseURL . "lib/javascript/jquery-ui.min.js\" type=\"text/javascript\"></script>";
