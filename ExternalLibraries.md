@@ -1,12 +1,12 @@
 | Library | Version | Date added in DeepskyLog | Remarks |
 | ------- | ------- | ------------------------ | ------- |
-| jQuery  | 1.11.2  | 23/01/2015 | |
+| jQuery  | 3.1.0  | 08/09/2016 | |
 | jQuery-ui | 1.12.0 | 07/09/2016 | |
 | jquery.datatables | 1.10.9 | 21/09/2015 | |
 | Bootstrap | 3.3.7 | 07/09/2016 | |
 | bootstrap-tour | 0.11.0 | 07/09/2016 | |
-| tablesorter | 2.27.6 | 07/09/2015 | |
-| lightbox | 2.7.1 | 31/10/2014 | |
+| tablesorter | 2.27.6 | 08/09/2016 | |
+| lightbox | 2.8.2 | 08/09/2016 | |
 | Highcharts | 4.0.4 | 31/10/2014 | |
 | jquery-ui-bootstrap | 1.0.0 | 22/05/2015 | |
 | bootstrap-fileinput |	4.2.7 |	05/10/2015 | |
@@ -16,5 +16,3 @@
 | bootstrap-maxlength | 1.7.0 | 27/05/2016 | |
 | phpjs | ? | ? | CHECK if we still need this. Remove if possible. |
 | class.pdf.php | ? | ? | CHECK if we can update this to a newer version. |
-
-TODO: Update JQuery to version 3.1.0?
