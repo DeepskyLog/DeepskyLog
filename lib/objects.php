@@ -1299,9 +1299,16 @@ class Objects {
 		$newcatindex = ucwords ( trim ( $catindex ) );
 		global $objDatabase;
 		$objDatabase->execSQL ( "UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"" );
-		$objDatabase->execSQL ( "UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"" );
 		$objDatabase->execSQL ( "UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname=\"$name\"" );
 		$objDatabase->execSQL ( "UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname=\"$name\"" );
+		$objDatabase->execSQL ( "DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\"" );
+		$objDatabase->execSQL ( "DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"" );
+		$objDatabase->execSQL ( "DELETE objects.* FROM objects WHERE name = \"$name\"" );
+	}
+	public function deleteObject($name) {
+		global $objDatabase;
+		$objDatabase->execSQL ( "DELETE FROM observations WHERE objectname=\"$name\"" );
+		$objDatabase->execSQL ( "DELETE FROM observerobjectlist WHERE objectname=\"$name\"" );
 		$objDatabase->execSQL ( "DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\"" );
 		$objDatabase->execSQL ( "DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"" );
 		$objDatabase->execSQL ( "DELETE objects.* FROM objects WHERE name = \"$name\"" );
@@ -1408,13 +1415,48 @@ class Objects {
 		echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
 		echo "<tr>";
 		echo "<td colspan=\"3\">" . LangViewObjectField1 . "</td>";
-		echo "<td colspan=\"3\">" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( stripslashes ( $object ) ) . "\">" . (stripslashes ( $object )) . "</a>" . "</td>";
-		if ($loggedUser && ($standardAtlasCode = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ))) {
-			echo "<td colspan=\"3\"><span class=\"pull-right\">" . $objAtlas->atlasCodes [$standardAtlasCode] . LangViewObjectField10 . "</span></td>";
-			echo "<td colspan=\"3\">" . $this->getDsoProperty ( $object, $standardAtlasCode ) . "</td>";
+		if (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes") {
+			// We show all possible Catalogs
+			global $DSOcatalogs;
+
+			$firstspace = strpos ( $object, ' ', 0 );
+			$thecatalog = substr ( $object, 0, $firstspace );
+			$theindex = substr ( $object, $firstspace + 1 );
+
+			echo '<td colspan="3">';
+			echo '  <select class="form-inline" name="newcatalog">';
+			echo '    <option value="">&nbsp;</option>';
+			while ( list ( $key, $value ) = each ( $DSOcatalogs ) ) {
+				if ($value == $thecatalog) {
+					$selected = 'selected';
+				} else {
+					$selected = '';
+				}
+				echo '  <option ' . $selected . ' value="' . $value . '">' . $value . '</option>';
+			}
+			echo '  </select>';
+
+			// We fill out the number in the Catalog
+			echo '  <input type="text" class="form-inline" name="newnumber" value="' . $theindex . '"/>';
+			echo '</td>';
+
+			// We add a button to create a new Catalog
+			// TODO: Show a modal to add a new, empty catalog
+			echo '<td colspan="3">';
+			echo '<span class="pull-right"><button type="button" class="btn btn-success" data-dismiss="modal">' . LangCreateNewCatalog . '</button></span>';
+			echo '</td>';
+			echo '<td colspan="3">';
+			echo '</td>';
 		} else {
-			echo "<td colspan=\"3\">&nbsp;</td>";
-			echo "<td colspan=\"3\">&nbsp;</td>";
+			echo "<td colspan=\"3\">" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( stripslashes ( $object ) ) . "\">" . (stripslashes ( $object )) . "</a>" . "</td>";
+
+			if ($loggedUser && ($standardAtlasCode = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ))) {
+				echo "<td colspan=\"3\"><span class=\"pull-right\">" . $objAtlas->atlasCodes [$standardAtlasCode] . LangViewObjectField10 . "</span></td>";
+				echo "<td colspan=\"3\">" . $this->getDsoProperty ( $object, $standardAtlasCode ) . "</td>";
+			} else {
+				echo "<td colspan=\"3\">&nbsp;</td>";
+				echo "<td colspan=\"3\">&nbsp;</td>";
+			}
 		}
 		echo "</tr>";
 
@@ -1446,6 +1488,8 @@ class Objects {
 		echo "<td colspan=\"3\">" . (($this->getDsoProperty ( $object, 'pa' ) != 999) ? ($this->getDsoProperty ( $object, 'pa' ) . "&deg;") : "-") . "</td>";
 		echo "</tr>";
 
+		if (!(array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes")) {
+
 		echo "<tr>";
 		echo "<td colspan=\"3\">" . LangViewObjectFieldContrastReserve . "</td>";
 		echo '<td colspan="3">
@@ -1456,7 +1500,7 @@ class Objects {
 		echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectFieldOptimumDetectionMagnification . "</span></td>";
 		echo "<td colspan=\"3\">" . $prefMag . "</td>";
 		echo "</tr>";
-
+}
 		if ($alt) {
 			echo "<tr>";
 			echo "<td colspan=\"3\">" . LangViewObjectField2 . "</td>";
@@ -1784,20 +1828,22 @@ class Objects {
 		$objUtil->addPager ( "nearobjectlist", $count );
 
 		if ($loggedUser) {
-			$content1 = LangObjectsFilter . ": <a href=\"" . (($objUtil->checkRequestKey ( 'filteron' ) == 'location') ? $objUtil->removeFromLink ( $link, 'filteron=location' ) . "\" title=\"" . LangObjectsFilterLocationOffExpl . "\"" : $link . "&amp;filteron=location" . "\" title=\"" . LangObjectsFilterLocationExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterLocation . "</a>" . "&nbsp;";
-			$content1 .= "<a href=\"" . (($objUtil->checkRequestKey ( 'filteron1' ) == 'time') ? $objUtil->removeFromLink ( $link, 'filteron1=time' ) . "\" title=\"" . LangObjectsFilterDateTimeOffExpl . "\"" : $link . "&amp;filteron1=time" . "\" title=\"" . LangObjectsFilterDateTimeExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterDateTime . "</a>";
+			if (!(array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes")) {
+				$content1 = LangObjectsFilter . ": <a href=\"" . (($objUtil->checkRequestKey ( 'filteron' ) == 'location') ? $objUtil->removeFromLink ( $link, 'filteron=location' ) . "\" title=\"" . LangObjectsFilterLocationOffExpl . "\"" : $link . "&amp;filteron=location" . "\" title=\"" . LangObjectsFilterLocationExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterLocation . "</a>" . "&nbsp;";
+				$content1 .= "<a href=\"" . (($objUtil->checkRequestKey ( 'filteron1' ) == 'time') ? $objUtil->removeFromLink ( $link, 'filteron1=time' ) . "\" title=\"" . LangObjectsFilterDateTimeOffExpl . "\"" : $link . "&amp;filteron1=time" . "\" title=\"" . LangObjectsFilterDateTimeExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterDateTime . "</a>";
 
-			$content = $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objects.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4a ) . "&nbsp;";
-			$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectnames.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4b ) . "&nbsp;";
-			$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectsDetails.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4c ) . "&nbsp;";
-			$content .= "<a href=\"" . $baseURL . "objects.argo?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage8 . "</a>&nbsp;";
-			$content .= "<a href=\"" . $baseURL . "objects.csv?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage6 . "</a>";
+				$content = $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objects.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4a ) . "&nbsp;";
+				$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectnames.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4b ) . "&nbsp;";
+				$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectsDetails.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4c ) . "&nbsp;";
+				$content .= "<a href=\"" . $baseURL . "objects.argo?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage8 . "</a>&nbsp;";
+				$content .= "<a href=\"" . $baseURL . "objects.csv?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage6 . "</a>";
 
-			$content .= "&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;pdfTitle=Test\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . ReportLink . "</a>&nbsp;";
-			$content .= "<a href=\"" . $baseURL . "index.php?indexAction=objectsSets" . "\" rel=\"external\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage11 . "</a>";
+				$content .= "&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;pdfTitle=Test\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . ReportLink . "</a>&nbsp;";
+				$content .= "<a href=\"" . $baseURL . "index.php?indexAction=objectsSets" . "\" rel=\"external\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage11 . "</a>";
 
-			echo $content1 . "<br /><br />";
-			echo $content;
+				echo $content1 . "<br /><br />";
+				echo $content;
+			}
 		}
 	}
 	public function showObjectsFields($link, $min, $max, $ownShow = '', $showRank = 0, $fields = array("showname","objectconstellation","objectmagnitude"), $pageListAction = "addAllObjectsFromPageToList") // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects

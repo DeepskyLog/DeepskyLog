@@ -13,33 +13,33 @@ function showButtons($theLocation, $viewobjectdetails, $viewobjectephemerides, $
 	$seen = $objObject->getSeen ( $object );
 	$content1 = "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectextrainfo=hidden' . "\" >-</a>";
 	$content1 .= "&nbsp;&nbsp;&nbsp;&nbsp;";
-	$content1 .= "<input type=\"button\" class=\"btn btn-success\" value=\">\" 
+	$content1 .= "<input type=\"button\" class=\"btn btn-success\" value=\">\"
 	               title=\"" . LangButtonOnlyObjectDetails . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "\"
 	               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=show&amp;viewobjectephemerides=hidden&amp;viewobjectobjectsnearby=hidden&amp;viewobjectobservations=hidden' . "';\"/>";
 	if ($viewobjectdetails == "hidden")
-		$content1 .= "<input type=\"button\" class=\"btn\" value=\"+ " . LangButtonObjectDetails . "\" 
+		$content1 .= "<input type=\"button\" class=\"btn\" value=\"+ " . LangButtonObjectDetails . "\"
 	               title=\"" . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "\"
 	               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=show' . "';\"/>";
 	else
-		$content1 .= "<input type=\"button\" class=\"btn\" value=\"- " . LangButtonObjectDetails . "\" 
+		$content1 .= "<input type=\"button\" class=\"btn\" value=\"- " . LangButtonObjectDetails . "\"
 	               title=\"" . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "\"
 	               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden' . "';\"/>";
 	if ($theLocation) {
 		$content1 .= "&nbsp;" . "&nbsp;" . "&nbsp;";
-		$content1 .= "<input type=\"button\" class=\"btn btn-success\" value=\">\" 
+		$content1 .= "<input type=\"button\" class=\"btn btn-success\" value=\">\"
 		               title=\"" . LangButtonOnlyObjectEphemerides . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "\"
 		               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden&amp;viewobjectephemerides=show&amp;viewobjectobjectsnearby=hidden&amp;viewobjectobservations=hidden' . "';\"/>";
 		if ($viewobjectephemerides == "hidden")
-			$content1 .= "<input type=\"button\" class=\"btn\" value=\"+ " . LangButtonObjectEphemerides . "\" 
+			$content1 .= "<input type=\"button\" class=\"btn\" value=\"+ " . LangButtonObjectEphemerides . "\"
 		               title=\"" . ReportEpehemeridesFor . "&nbsp;" . $object_ss . ' ' . ReportEpehemeridesIn . ' ' . $objLocation->getLocationPropertyFromId ( $theLocation, 'name' ) . "\"
 		               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectephemerides=show' . "';\"/>";
 		else
-			$content1 .= "<input type=\"button\" class=\"btn\" value=\"- " . LangButtonObjectEphemerides . "\" 
+			$content1 .= "<input type=\"button\" class=\"btn\" value=\"- " . LangButtonObjectEphemerides . "\"
 		               title=\"" . ReportEpehemeridesFor . "&nbsp;" . $object_ss . ' ' . ReportEpehemeridesIn . ' ' . $objLocation->getLocationPropertyFromId ( $theLocation, 'name' ) . "\"
 		               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectephemerides=hidden' . "';\"/>";
 	}
 	$content1 .= "&nbsp;" . "&nbsp;" . "&nbsp;";
-	$content1 .= "<input type=\"button\" class=\"btn btn-success\" value=\">\" 
+	$content1 .= "<input type=\"button\" class=\"btn btn-success\" value=\">\"
 	               title=\"" . LangButtonOnlyObjectObjectsNearby . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "\"
 	               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden&amp;viewobjectephemerides=hidden&amp;viewobjectobjectsnearby=show&amp;viewobjectobservations=hidden' . "';\"/>";
 	if ($viewobjectobjectsnearby == "hidden")
@@ -47,7 +47,7 @@ function showButtons($theLocation, $viewobjectdetails, $viewobjectephemerides, $
 	else
 		$content1 .= "<input type=\"button\" class=\"btn\" value=\"- " . LangButtonObjectObjectsNearby . "\" onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectobjectsnearby=hidden' . "';\"/>";
 	$content1 .= "&nbsp;" . "&nbsp;" . "&nbsp;";
-	$content1 .= "<input type=\"button\" class=\"btn btn-success\" value=\">\" 
+	$content1 .= "<input type=\"button\" class=\"btn btn-success\" value=\">\"
 	               title=\"" . LangButtonOnlyObjectObservations . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "\"
 	               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden&amp;viewobjectephemerides=hidden&amp;viewobjectobjectsnearby=hidden&amp;viewobjectobservations=show' . "';\"/>";
 	if ($viewobjectobservations == "hidden")
@@ -55,21 +55,84 @@ function showButtons($theLocation, $viewobjectdetails, $viewobjectephemerides, $
 	else
 		$content1 .= "<input type=\"button\" class=\"btn\" value=\"- " . LangButtonObjectObservations . "\" onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectobservations=hidden' . "';\"/>";
 	$content2 = "<a href=\"" . $baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode ( $object ) . "\"><input type=\"button\" class=\"btn pull-right btn-success\" value=\"" . LangAtlasPage . "\"/></a>";
-	
+
 	echo $content1;
 	echo $content2;
 	echo "<hr />";
 }
 function showObjectDetails($object_ss) {
-	global $baseURL, $object, $objObject, $objPresentations, $objUtil;
-	echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden' . "\" title=\"" . ObjectDetailsHide . "\">-</a> " . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $objObject->getDSOseenLink ( $object ) . "</h4>"; 
+	global $baseURL, $object, $objObject, $objPresentations, $objUtil,$objDatabase;
+	$seen = $objObject->getDSOseenLink ( $object );
+	echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden' . "\" title=\"" . ObjectDetailsHide . "\">-</a> " . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . '&nbsp;-&nbsp;' . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "</h4>";
+	if (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes") {
+		$obsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object_ss . "\"", 'ObsCnt' );
+
+    echo '<div class="pull-right">';
+		if ($obsCnt == 0) {
+			echo '<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#removeObject">' . LangRemoveObject . '</button>';
+
+			echo "<div class=\"modal fade\" id=\"removeObject\" tabindex=\"-1\">
+							<div class=\"modal-dialog\">
+								<div class=\"modal-content\">
+									<div class=\"modal-header\">
+										<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>
+										<h4 class=\"modal-title\" id=\"myModalLabel\">" . LangRemoveObject . "</h4>
+									</div>
+									<div class=\"modal-body\">" .
+									LangRemoveModal1 . "<strong>" . $object_ss . "</strong>?
+									 <br />" . LangRemoveModal2 . "<strong>" . $object_ss . "</strong>" .
+									 LangRemoveModal3 . "<strong>" . $object_ss . "</strong>" . LangRemoveModal4 . "
+										<form action=\"".$baseURL."index.php?indexAction=deleteObject\" method=\"post\">
+										 <input type=\"hidden\" name=\"indexAction\" value=\"deleteObject\" />
+										 <input type=\"hidden\" name=\"object\" value=\"" . $object_ss . "\" />
+										</div>
+										<div class=\"modal-footer\">
+										<button type=\"button\" class=\"btn btn-success\" data-dismiss=\"modal\">" . LangKeepObject . "</button>
+										<input class=\"btn btn-danger\" type=\"submit\" name=\"objectToDelete\" value=\"" . LangRemoveObject . "!\" />
+							 </form>
+									</div>
+								 </div><!-- /.modal-content -->
+								</div><!-- /.modal-dialog -->
+							 </div><!-- /.modal -->";
+
+		} else {
+			echo '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#forceRemoveObject">' . LangForceRemoveObject . '</button>';
+
+			echo "<div class=\"modal fade\" id=\"forceRemoveObject\" tabindex=\"-1\">
+							<div class=\"modal-dialog\">
+								<div class=\"modal-content\">
+									<div class=\"modal-header\">
+										<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>
+										<h4 class=\"modal-title\" id=\"myModalLabel\">" . LangForceRemoveObject . "</h4>
+									</div>
+									<div class=\"modal-body\">" .
+									 LangRemoveModal1 ."<strong>" . $object_ss . "</strong>" . LangRemoveModal6 . "<strong>" .
+									 $obsCnt . "</strong>" . LangRemoveModal7 . "?
+									 <br />" . LangRemoveModal5 . "
+				            <form action=\"".$baseURL."index.php?indexAction=deleteObject\" method=\"post\">
+				             <input type=\"hidden\" name=\"indexAction\" value=\"deleteObject\" />
+										 <input type=\"hidden\" name=\"object\" value=\"" . $object_ss . "\" />
+				            </div>
+				            <div class=\"modal-footer\">
+				            <button type=\"button\" class=\"btn btn-success\" data-dismiss=\"modal\">" . LangKeepObject . "</button>
+				            <input class=\"btn btn-danger\" type=\"submit\" name=\"objectToDelete\" value=\"" . LangForceRemoveObject . "!\" />
+						   </form>
+				          </div>
+				         </div><!-- /.modal-content -->
+				        </div><!-- /.modal-dialog -->
+				       </div><!-- /.modal -->";
+		}
+    echo '&nbsp;<button class="btn btn-warning">' . LangSaveObject . '</button>&nbsp;</div>';
+
+		echo '<br />';
+	}
 	echo "<hr />";
 	$objObject->showObject ( $object );
 }
 function showObjectsNearby() {
 	global $baseURL, $FF, $step, $objObject, $objPresentations, $objUtil;
 	$link = $baseURL . 'index.php?indexAction=detail_object&amp;object=' . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( 'zoom', 30 ) . '&amp;SID=Qobj';
-	
+
 	$content1 = "<h4>";
 	$content1 .= "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectobjectsnearby=hidden' . "\" title=\"" . ObjectNearbyObjectsHide . "\">-</a> ";
 	$content1 .= $_GET ['object'];
@@ -127,7 +190,7 @@ function showObjectEphemerides($theLocation) {
 	$latitude = 1.0 * $objLocation->getLocationPropertyFromId ( $theLocation, 'latitude' );
 	$timezone = $objLocation->getLocationPropertyFromId ( $theLocation, 'timezone' );
 	$dateTimeZone = new DateTimeZone ( $timezone );
-	
+
 	$theMonth = $_SESSION ['globalMonth'];
 	$theDay = $_SESSION ['globalDay'];
 
@@ -152,7 +215,7 @@ function showObjectEphemerides($theLocation) {
 		$theEphemerides15 [$i] = $objObject->getEphemerides ( $object, 15, $i, 2010 );
 		$theNightEphemerides15 [$i] = date_sun_info ( strtotime ( "2010" . "-" . $i . "-" . "15" ), $latitude, $longitude );
 	}
-	echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectephemerides=hidden' . "\" title=\"" . ReportEpehemeridesForHide . "\">-</a> " . ReportEpehemeridesFor . "&nbsp;" . stripslashes ( $object ) . ' ' . ReportEpehemeridesIn . ' ' . $objLocation->getLocationPropertyFromId ( $theLocation, 'name' ) . "</h4>"; 
+	echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectephemerides=hidden' . "\" title=\"" . ReportEpehemeridesForHide . "\">-</a> " . ReportEpehemeridesFor . "&nbsp;" . stripslashes ( $object ) . ' ' . ReportEpehemeridesIn . ' ' . $objLocation->getLocationPropertyFromId ( $theLocation, 'name' ) . "</h4>";
 	echo "<hr />";
 	echo "<table class=\"table table-condensed\">";
 	echo "<tr class=\"type10\">";
@@ -162,10 +225,10 @@ function showObjectEphemerides($theLocation) {
 		$background15 = '';
 		if ((($i == $theMonth) && ($theDay < 8)) || ((($i - 1) == $theMonth) && ($theDay > 22)))
 			$background1 = 'class="current"';
-		
+
 		if (($i == $theMonth) && ($theDay >= 8) && ($theDay <= 22))
 			$background15 = 'class="current"';
-		
+
 		echo "<th " . $background1 . ">&nbsp;</th><th class=\"centered\" " . $background15 . ">" . $i . "</th>";
 	}
 	$background1 = '';
@@ -280,18 +343,18 @@ function showObjectEphemerides($theLocation) {
 }
 function showObjectImage($imagesize) {
 	global $object, $objPresentations, $objUtil;
-	echo "<h4>" . LangViewDSSImageTitle . $object . "&nbsp;(" . $imagesize . "'&nbsp;x&nbsp;" . $imagesize . "')</h4>"; 
+	echo "<h4>" . LangViewDSSImageTitle . $object . "&nbsp;(" . $imagesize . "'&nbsp;x&nbsp;" . $imagesize . "')</h4>";
 	$imagelink = "http://archive.stsci.edu/cgi-bin/dss_search?" . "v=poss2ukstu_red&amp;r=" . urlencode ( $objUtil->checkRequestKey ( 'raDSS' ) ) . ".0&amp;d=" . urlencode ( $objUtil->checkRequestKey ( 'declDSS' ) ) . "&amp;e=J2000&amp;h=" . $imagesize . ".0&amp;w=" . $imagesize . "&amp;f=gif&amp;c=none&amp;fov=NONE&amp;v3=";
-	echo "<p class=\"centered DSSImage\" > 
+	echo "<p class=\"centered DSSImage\" >
 	       <a href=\"" . $imagelink . "\" data-lightbox=\"image-1\" data-title=\"\">
-	       <img class=\"DSSImage\" src=\"" . $imagelink . "\" alt=\"" . $object . "\" ></img> 
+	       <img class=\"DSSImage\" src=\"" . $imagelink . "\" alt=\"" . $object . "\" ></img>
 	       </a></p>";
 	echo "<p>&copy;&nbsp;<a href=\"http://archive.stsci.edu/dss/index.html\">STScI Digitized Sky Survey</a></p>";
 	echo "<hr />";
 }
 function showObjectObservations() {
 	global $baseURL, $FF, $object, $loggedUser, $min, $step, $objObservation, $objPresentations, $objUtil;
-	
+
 	$link = $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj';
 	$link2 = $link;
 	$link3 = $link;
@@ -336,7 +399,7 @@ function showObjectObservations() {
 	if ($loggedUser && $objUtil->checkSessionKey ( 'lco', '' ) == "L") {
 		$toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=no\">" . LangOwnColor . "</a>";
 		if ($objUtil->checkGetKey ( 'noOwnColor' )) {
-			if ($objUtil->checkGetKey('noOwnColor') == "no") {		
+			if ($objUtil->checkGetKey('noOwnColor') == "no") {
 				$toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=yes\">" . LangNoOwnColor . "</a>";
 			}
 		}
@@ -350,7 +413,7 @@ function showObjectObservations() {
 	else
 		$content6 = "<a class=\"btn btn-success\" href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowInterfaceLanguage . "</a>";
 	echo $content5;
-	echo $content6; 
+	echo $content6;
 	echo "<hr />";
 
 	$objObservation->showListObservation ( $link, $_SESSION ['lco'] );
@@ -358,13 +421,13 @@ function showObjectObservations() {
 	if ($_SESSION ['lco'] == "O") {
 		echo LangOverviewObservationsHeader5a;
 		echo "<br /><br />";
-	} 
+	}
 	$content1 = "<a class=\"btn btn-primary\" href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a>  ";
 	$content1 .= $objPresentations->promptWithLinkText ( LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf.php?SID=Qobs", LangExecuteQueryObjectsMessage4a );
 	$content1 .= "  ";
 	$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations.csv\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage5 . "</a>  ";
 	$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations.xml\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage10 . "</a>";
-	echo $content1; 
+	echo $content1;
 	echo "<hr />";
 }
 function showAdminObjectFunctions() {
@@ -437,34 +500,38 @@ function view_object() {
 		$viewobjectobservations = 'hidden';
 	if (! ($theLocation = ($loggedUser ? $objObserver->getObserverProperty ( $loggedUser, 'stdLocation' ) : '')))
 		$viewobjectephemerides = 'hidden';
-	
+
 	echo "<div id=\"main\">";
-	if ($viewobjectextrainfo == "show") {
-		showButtons ( $theLocation, $viewobjectdetails, $viewobjectephemerides, $viewobjectobjectsnearby, $viewobjectobservations );
-		echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
-		echo $objPresentations->getDSSDeepskyLiveLinks2 ( $object ); 
-		echo "<hr />";
-	}
-	if ($viewobjectextrainfo == "hidden") {
-		$content = "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectextrainfo=show' . "\" >+&nbsp;" . LangObjectShowExtraInfo . "</a>";
-		echo $content;
-		echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
-		echo $objPresentations->getDSSDeepskyLiveLinks2 ( $object ); 
-		echo "<hr />";
-	}
-	if ($viewobjectdetails == "show")
+	// Check if the user is an administrator.
+	if (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes") {
 		showObjectDetails ( stripslashes ( $object ) );
-	if ($viewobjectephemerides == "show")
-		showObjectEphemerides ( $theLocation );
-	if ($viewobjectobjectsnearby == "show")
 		showObjectsNearby ();
-	if ($imagesize = $objUtil->checkRequestKey ( 'imagesize' ))
-		showObjectImage ( $imagesize );
-	if ($viewobjectobservations == "show")
-		showObjectObservations ();
-	if (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes")
 		showAdminObjectFunctions ();
+	} else {
+		if ($viewobjectextrainfo == "show") {
+			showButtons ( $theLocation, $viewobjectdetails, $viewobjectephemerides, $viewobjectobjectsnearby, $viewobjectobservations );
+			echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
+			echo $objPresentations->getDSSDeepskyLiveLinks2 ( $object );
+			echo "<hr />";
+		}
+		if ($viewobjectextrainfo == "hidden") {
+			$content = "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectextrainfo=show' . "\" >+&nbsp;" . LangObjectShowExtraInfo . "</a>";
+			echo $content;
+			echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
+			echo $objPresentations->getDSSDeepskyLiveLinks2 ( $object );
+			echo "<hr />";
+		}
+		if ($viewobjectdetails == "show")
+			showObjectDetails ( stripslashes ( $object ) );
+		if ($viewobjectephemerides == "show")
+			showObjectEphemerides ( $theLocation );
+		if ($viewobjectobjectsnearby == "show")
+			showObjectsNearby ();
+		if ($imagesize = $objUtil->checkRequestKey ( 'imagesize' ))
+			showObjectImage ( $imagesize );
+		if ($viewobjectobservations == "show")
+			showObjectObservations ();
+	}
 	echo "</div>";
 }
 ?>
-	

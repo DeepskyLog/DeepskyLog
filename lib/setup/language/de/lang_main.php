@@ -1,5 +1,18 @@
 <?php //GE
 // This is version 5.0
+define("LangCreateNewCatalog", "Create new empty catalog");
+define("LangSaveObject", "Save");
+define("LangDeleteSuccess", "Successfully deleted ");
+define("LangRemoveModal1", "Do you really want to delete ");
+define("LangRemoveModal2", "There are no observations of ");
+define("LangRemoveModal3", ", so removing ");
+define("LangRemoveModal4", " should be relatively safe.");
+define("LangRemoveModal5", "All the observations will also be removed.");
+define("LangRemoveModal6", ", which has ");
+define("LangRemoveModal7", " observations");
+define("LangKeepObject", "Keep");
+define("LangRemoveObject", "Remove Object");
+define("LangForceRemoveObject", "Force Remove Object");
 define("LangNoLicense", "Keine Lizenz (nicht empfohlen!)");
 define("LangOwnLicense", "Geben Sie Ihren eigenen Copyright-Text");
 define('LangSelectLicenseInfo',  'Es ist wichtig, die <strong>richtige Lizenz f&uuml;r Ihre Zeichnungen </strong> zu w&auml;hlen! Weitere Informationen: <a href="http://creativecommons.org/choose/">Creative Commons Lizenz-Auswahl-Tool</a>.');
