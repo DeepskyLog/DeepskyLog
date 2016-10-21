@@ -315,7 +315,7 @@ class Accomplishments {
       @return The subject for the message.
     */
     public function getSeenSubject($catalog, $numberOfObjects) {
-      return LangNewCertificat . $numberOfObjects . ' ' . $catalog . LangObserved;
+      return LangNewCertificat . round($numberOfObjects) . ' ' . $catalog . LangObserved;
     }
 
     /** Gets the body for the message when a new accomplishment is earned (because of extra objects seen)
@@ -325,7 +325,7 @@ class Accomplishments {
     */
     public function getSeenMessage($catalog, $numberOfObjects, $observerId) {
       global $baseURL;
-      return LangCongrats . $numberOfObjects . " " . $catalog . LangCheckout . " " . $baseURL . "/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"";
+      return LangCongrats . round($numberOfObjects) . " " . $catalog . LangCheckout . " " . $baseURL . "/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"";
     }
 
     /** Gets the subject for the message when a new accomplishment is earned (because of extra objects drawn)
@@ -334,7 +334,7 @@ class Accomplishments {
       @return The subject for the message.
     */
     public function getDrawSubject($catalog, $numberOfObjects) {
-      return LangNewCertificat . $numberOfObjects . ' ' . $catalog . LangAccomplishmentsDrawn;
+      return LangNewCertificat . round($numberOfObjects) . ' ' . $catalog . LangAccomplishmentsDrawn;
     }
 
     /** Gets the body for the message when a new accomplishment is earned (because of extra objects drawn)
@@ -344,7 +344,7 @@ class Accomplishments {
     */
     public function getDrawMessage($catalog, $numberOfObjects, $observerId) {
       global $baseURL;
-      return LangDrawCongrats . $numberOfObjects . " " . $catalog . LangDrawCheckout . " " . $baseURL . "/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"";
+      return LangDrawCongrats . round($numberOfObjects) . " " . $catalog . LangDrawCheckout . " " . $baseURL . "/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"";
     }
 
     /** Recalculates the number of objects seen or drawn and send a mail when a new accomplishment is reached.
@@ -363,7 +363,7 @@ class Accomplishments {
       $numberSeen = $this->getNumberOfObjects(sizeof($objectsObserved), $this->getNumberOfObjectsInCatalog($catalog));
 
       // Get the correct string from the translation files
-      $objectText = $this->getCorrectLanguageFile($catalog);
+      $objectText = $this->getCorrectLanguageFile($catalog, $numberSeen);
       if ($drawing) {
         $catalog .= "Drawings";
       }
@@ -405,31 +405,50 @@ class Accomplishments {
 
     /** Returns the correct text from the language file to describe the catalog.
     @param $catalog The catalog to use.
+    @param $numberOfObjects The number of observations for this catalog. Needed to return the plural if needed.
     @return The correct text to use in the getDrawMessage, getDrawSubject, getSeenMessage and getSeenSubject methods
     */
-    private function getCorrectLanguageFile($catalog) {
-      if ($catalog == "messier") {
-        return LangMessier;
-      } else if ($catalog == "Caldwell") {
-        return LangCaldwell;
-      } else if ($catalog == "Herschel") {
-        return LangHerschel400;
-      } else if ($catalog == "HerschelII") {
-        return LangHerschelII;
-      } else if ($catalog == "OpenCluster") {
-        return LangOpenCluster;
-      } else if ($catalog == "GlobularCluster") {
-        return LangGlobularCluster;
-      } else if ($catalog == "PlanetaryNebula") {
-        return LangPlanetaryNebula;
-      } else if ($catalog == "Galaxy") {
-        return LangGalaxy;
-      } else if ($catalog == "Nebula") {
-        return LangNebula;
-      } else if ($catalog == "Objects") {
-        return LangObject;
-      } else if ($catalog == "Drawings") {
-        return LangAccomplishmentsObjects;
+    private function getCorrectLanguageFile($catalog, $numberOfObjects) {
+      if ($numberOfObjects > 1) {
+        if ($catalog == "messier") {
+          return LangMessier;
+        } else if ($catalog == "Caldwell") {
+          return LangCaldwell;
+        } else if ($catalog == "Herschel") {
+          return LangHerschel400;
+        } else if ($catalog == "HerschelII") {
+          return LangHerschelII;
+        } else if ($catalog == "OpenCluster") {
+          return strtolower(LangOpenClusters);
+        } else if ($catalog == "GlobularCluster") {
+          return strtolower(LangGlobularClusters);
+        } else if ($catalog == "PlanetaryNebula") {
+          return strtolower(LangPlanetaryNebulaeSeen);
+        } else if ($catalog == "Galaxy") {
+          return strtolower(LangGalaxiesSeen);
+        } else if ($catalog == "Nebula") {
+          return strtolower(LangNebulaeSeen);
+        } else if ($catalog == "Objects") {
+          return LangObject;
+        } else if ($catalog == "Drawings") {
+          return LangAccomplishmentsObjects;
+        }
+      } else {
+        if ($catalog == "OpenCluster") {
+          return LangOpenCluster;
+        } else if ($catalog == "GlobularCluster") {
+          return LangGlobularCluster;
+        } else if ($catalog == "PlanetaryNebula") {
+          return LangPlanetaryNebula;
+        } else if ($catalog == "Galaxy") {
+          return LangGalaxy;
+        } else if ($catalog == "Nebula") {
+          return LangNebula;
+        } else if ($catalog == "Objects") {
+          return LangObject;
+        } else if ($catalog == "Drawings") {
+          return LangAccomplishmentsObjects;
+        }
       }
     }
 
