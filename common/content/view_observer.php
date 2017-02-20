@@ -369,30 +369,33 @@ function view_observer() {
 
 	  	      var chart;
 						var dataYear = [";
-						for($i = $startYear; $i <= $currentYear; $i ++) {
-							if (array_key_exists($i, $sql)) {
-								$obs = $sql[$i];
-							} else {
-								$obs = 0;
-							}
-							if ($i != $currentYear) {
-								echo $obs . ", ";
-							} else {
-								echo $obs;
-							}
+						if ($startYear < 1900) {
+							$startYear = $currentYear;
 						}
+						for($i = $startYear; $i <= $currentYear; $i ++) {
+						 if (array_key_exists($i, $sql)) {
+						   $obs = $sql[$i];
+						 } else {
+							 $obs = 0;
+						 }
+						 if ($i != $currentYear) {
+							echo $obs . ", ";
+						 } else {
+							echo $obs;
+						 }
+					  }
 						echo "];
 						var cometdataYear = [";
-						for($i = $startYear; $i <= $currentYear; $i ++) {
+  					for($i = $startYear; $i <= $currentYear; $i ++) {
 							if (array_key_exists($i, $sql2)) {
 								$obs = $sql2[$i];
 							} else {
-								$obs = 0;
+							  $obs = 0;
 							}
 							if ($i != $currentYear) {
-								echo $obs . ", ";
+							  echo $obs . ", ";
 							} else {
-								echo $obs;
+							  echo $obs;
 							}
 						}
 						echo "];
