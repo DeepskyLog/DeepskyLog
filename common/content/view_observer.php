@@ -369,39 +369,34 @@ function view_observer() {
 
 	  	      var chart;
 						var dataYear = [";
-						if ($startYear == $currentYear) {
-							$obs = 0;
-						} else {
-						  for($i = $startYear; $i <= $currentYear; $i ++) {
-							  if (array_key_exists($i, $sql)) {
-								  $obs = $sql[$i];
-							  } else {
-								  $obs = 0;
-							  }
-							  if ($i != $currentYear) {
-								  echo $obs . ", ";
-							  } else {
-								  echo $obs;
-							  }
-						  }
+						if ($startYear < 1900) {
+							$startYear = $currentYear;
+						}
+						for($i = $startYear; $i <= $currentYear; $i ++) {
+						 if (array_key_exists($i, $sql)) {
+						   $obs = $sql[$i];
+						 } else {
+							 $obs = 0;
+						 }
+						 if ($i != $currentYear) {
+							echo $obs . ", ";
+						 } else {
+							echo $obs;
+						 }
 					  }
 						echo "];
 						var cometdataYear = [";
-						if ($startYear == $currentYear) {
-							$obs = 0;
-						} else {
-  						for($i = $startYear; $i <= $currentYear; $i ++) {
-							  if (array_key_exists($i, $sql2)) {
-								  $obs = $sql2[$i];
-							  } else {
-								  $obs = 0;
-							  }
-							  if ($i != $currentYear) {
-								  echo $obs . ", ";
-							  } else {
-								  echo $obs;
-							  }
-						  }
+  					for($i = $startYear; $i <= $currentYear; $i ++) {
+							if (array_key_exists($i, $sql2)) {
+								$obs = $sql2[$i];
+							} else {
+							  $obs = 0;
+							}
+							if ($i != $currentYear) {
+							  echo $obs . ", ";
+							} else {
+							  echo $obs;
+							}
 						}
 						echo "];
 						var dataYearSum = 0;
