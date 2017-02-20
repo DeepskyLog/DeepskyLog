@@ -369,31 +369,39 @@ function view_observer() {
 
 	  	      var chart;
 						var dataYear = [";
-						for($i = $startYear; $i <= $currentYear; $i ++) {
-							if (array_key_exists($i, $sql)) {
-								$obs = $sql[$i];
-							} else {
-								$obs = 0;
-							}
-							if ($i != $currentYear) {
-								echo $obs . ", ";
-							} else {
-								echo $obs;
-							}
-						}
+						if ($startYear == $currentYear) {
+							$obs = 0;
+						} else {
+						  for($i = $startYear; $i <= $currentYear; $i ++) {
+							  if (array_key_exists($i, $sql)) {
+								  $obs = $sql[$i];
+							  } else {
+								  $obs = 0;
+							  }
+							  if ($i != $currentYear) {
+								  echo $obs . ", ";
+							  } else {
+								  echo $obs;
+							  }
+						  }
+					  }
 						echo "];
 						var cometdataYear = [";
-						for($i = $startYear; $i <= $currentYear; $i ++) {
-							if (array_key_exists($i, $sql2)) {
-								$obs = $sql2[$i];
-							} else {
-								$obs = 0;
-							}
-							if ($i != $currentYear) {
-								echo $obs . ", ";
-							} else {
-								echo $obs;
-							}
+						if ($startYear == $currentYear) {
+							$obs = 0;
+						} else {
+  						for($i = $startYear; $i <= $currentYear; $i ++) {
+							  if (array_key_exists($i, $sql2)) {
+								  $obs = $sql2[$i];
+							  } else {
+								  $obs = 0;
+							  }
+							  if ($i != $currentYear) {
+								  echo $obs . ", ";
+							  } else {
+								  echo $obs;
+							  }
+						  }
 						}
 						echo "];
 						var dataYearSum = 0;
