@@ -1148,25 +1148,31 @@ class Utils {
 		while ( list ( $key, $value ) = each ( $result ) ) 
 		{
 			$obs = $objObservation->getAllInfoDsObservation ( $value ['observationid'] );
-			/*
-			$date = sscanf ( $obs ['date'], "%4d%2d%2d" );
-			$time = $obs ['time'];
-			if ($time >= "0") 
+
+			$dateStrArray = sscanf ( $obs ['date'], "%4d%2d%2d" );
+			$dateStr = $dateStrArray [2] . "-" . $dateStrArray [1] . "-" . $dateStrArray [0];
+			$timeStr = $obs ['time'];
+			if ($timeStr >= "0") 
 			{
-				$hours = ( int ) ($time / 100);
-				$minutes = $time - (100 * $hours);
-				$time = sprintf ( "%d:%02d", $hours, $minutes );
+				$hours = ( int ) ($timeStr / 100);
+				$minutes = $timeStr - (100 * $hours);
+				$timeStr = sprintf ( "%d:%02d", $hours, $minutes );
 			}
 			else
-				$time = "";
-			*/
-			
+				$timeStr = "";
+
+			$date = strtotime($dateStr);
+			$time = strtotime($timeStr);
+			$dayFraction = ($time % (24*60*60)) / (24*60*60);
+			$julianDay = (unixtojd($date) - 0.5 + $dayFraction);
+				
+				
 			echo "\n";
 			echo "SkyObject=BeginObject\n";
-			
+
 			echo "   ObjectID=4\n";
 			echo "   CatalogNumber=" . html_entity_decode ($obs ['objectname']) . "\n";
-			echo "   DateObserved=" . unixtojd($obs['date']) . "\n";
+			echo "   DateObserved=" . $julianDay . "\n";
 			echo "   Location=" . html_entity_decode ($objLocation->getLocationPropertyFromId($obs ['locationid'], 'name')) . "\n";
 			echo "   Comment=" . preg_replace ( "/(\")/", "", preg_replace ( "/(\r\n|\n|\r)/", "", preg_replace ( "/;/", ",", $objPresentations->br2nl ( html_entity_decode ( $obs ['description'], ENT_COMPAT, 'UTF-8' ) ) ) ) ) . "\n";
 			$instrument = html_entity_decode($objInstrument->getInstrumentPropertyFromId ($obs['instrumentid'], 'name'));
