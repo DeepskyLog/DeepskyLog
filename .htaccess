@@ -12,6 +12,7 @@ AddHandler application/x-httpd-php .csv
 AddHandler application/x-httpd-php .argo
 AddHandler application/x-httpd-php .icq
 AddHandler application/x-httpd-php .xml
+AddHandler application/x-httpd-php .skylist
 
 AddType application/rss+xml .rss
 
