@@ -6,7 +6,7 @@ $inIndex = true;
 require_once 'common/entryexit/preludes.php';
 
 header ("Content-Type: application/octet-stream");
-header ("Content-Disposition: attachment; filename=\"observations-skylist.php\"");
+header ("Content-Disposition: attachment; filename=\"observations.skylist\"");
 
 observations_skylist();
 

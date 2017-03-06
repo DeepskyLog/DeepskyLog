@@ -124,7 +124,7 @@ function selected_observations() {
 		$content1 .= "  ";
 		$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations.csv\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage5 . "</span></a> ";
 		$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations.xml\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage10 . "</span></a> ";
-		$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations-skylist.php\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage12 . "</span></a>";
+		$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations.skylist\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage12 . "</span></a>";
 		echo $content1;
 		echo "<hr />";
 		echo "</div>";

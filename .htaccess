@@ -36,3 +36,6 @@ AddType application/rss+xml .rss
 <Files observations.xml>
     ForceType application/x-httpd-php
 </Files>
+<Files observations.skylist>
+    ForceType application/x-httpd-php
+</Files>
