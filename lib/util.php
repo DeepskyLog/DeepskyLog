@@ -1138,6 +1138,50 @@ class Utils {
 			echo "\n";
 		}
 	}
+	
+	public function skylistObservations($result) // Creates a skylist file from an array of observations
+	{
+		global $objLens, $objFilter, $objEyepiece, $objLocation, $objPresentations, $objObservation, $objObserver, $objInstrument;
+		
+		echo "SkySafariObservingListVersion=3.0\n";
+		
+		while ( list ( $key, $value ) = each ( $result ) ) 
+		{
+			$obs = $objObservation->getAllInfoDsObservation ( $value ['observationid'] );
+			/*
+			$date = sscanf ( $obs ['date'], "%4d%2d%2d" );
+			$time = $obs ['time'];
+			if ($time >= "0") 
+			{
+				$hours = ( int ) ($time / 100);
+				$minutes = $time - (100 * $hours);
+				$time = sprintf ( "%d:%02d", $hours, $minutes );
+			}
+			else
+				$time = "";
+			*/
+			
+			echo "\n";
+			echo "SkyObject=BeginObject\n";
+			
+			echo "   ObjectID=4\n";
+			echo "   CatalogNumber=" . html_entity_decode ($obs ['objectname']) . "\n";
+			echo "   DateObserved=" . unixtojd($obs['date']) . "\n";
+			echo "   Location=" . html_entity_decode ($objLocation->getLocationPropertyFromId($obs ['locationid'], 'name')) . "\n";
+			echo "   Comment=" . preg_replace ( "/(\")/", "", preg_replace ( "/(\r\n|\n|\r)/", "", preg_replace ( "/;/", ",", $objPresentations->br2nl ( html_entity_decode ( $obs ['description'], ENT_COMPAT, 'UTF-8' ) ) ) ) ) . "\n";
+			echo "   Equipment=" . html_entity_decode($objInstrument->getInstrumentPropertyFromId ($obs['instrumentid'], 'name'));
+			if (!empty(html_entity_decode ( $objEyepiece->getInstrumentPropertyFromId($obs['eyepieceid'], 'name'))))
+				echo ", " . html_entity_decode ($objEyepiece->getInstrumentPropertyFromId($obs['eyepieceid'], 'name'));
+			if (!empty(html_entity_decode ( $objLens->getInstrumentPropertyFromId($obs['lensid'], 'name'))))
+				echo ", " . html_entity_decode ($objLens->getInstrumentPropertyFromId($obs ['lensid'], 'name')) ;
+			if (!empty(html_entity_decode ( $objFilter->getInstrumentPropertyFromId($obs['filterid'], 'name'))))
+				echo ", " . html_entity_decode ($objFilter->getInstrumentPropertyFromId($obs ['filterid'], 'name')) ;
+			echo("\n");
+			
+			echo "EndObject=SkyObject\n";
+		}
+	}
+	
 	public function pdfCometObservations($result) // Creates a pdf document from an array of comet observations
 {
 		include_once "cometobjects.php";
