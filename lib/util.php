@@ -1169,14 +1169,18 @@ class Utils {
 			echo "   DateObserved=" . unixtojd($obs['date']) . "\n";
 			echo "   Location=" . html_entity_decode ($objLocation->getLocationPropertyFromId($obs ['locationid'], 'name')) . "\n";
 			echo "   Comment=" . preg_replace ( "/(\")/", "", preg_replace ( "/(\r\n|\n|\r)/", "", preg_replace ( "/;/", ",", $objPresentations->br2nl ( html_entity_decode ( $obs ['description'], ENT_COMPAT, 'UTF-8' ) ) ) ) ) . "\n";
-			echo "   Equipment=" . html_entity_decode($objInstrument->getInstrumentPropertyFromId ($obs['instrumentid'], 'name'));
-			if (!empty(html_entity_decode ( $objEyepiece->getInstrumentPropertyFromId($obs['eyepieceid'], 'name'))))
-				echo ", " . html_entity_decode ($objEyepiece->getInstrumentPropertyFromId($obs['eyepieceid'], 'name'));
-			if (!empty(html_entity_decode ( $objLens->getInstrumentPropertyFromId($obs['lensid'], 'name'))))
-				echo ", " . html_entity_decode ($objLens->getInstrumentPropertyFromId($obs ['lensid'], 'name')) ;
-			if (!empty(html_entity_decode ( $objFilter->getInstrumentPropertyFromId($obs['filterid'], 'name'))))
-				echo ", " . html_entity_decode ($objFilter->getInstrumentPropertyFromId($obs ['filterid'], 'name')) ;
-			echo("\n");
+			$instrument = html_entity_decode($objInstrument->getInstrumentPropertyFromId ($obs['instrumentid'], 'name'));
+			$eyepiece = html_entity_decode($objEyepiece->getEyepiecePropertyFromId($obs['$eyepieceid'], 'name'));
+			$lens = html_entity_decode($objLens->getLensPropertyFromId($obs['lensid'], 'name'));
+			$filter = html_entity_decode($objFilter->getFilterPropertyFromId($obs['filterid'], 'name'));
+			echo "   Equipment=" . $instrument;
+			if (!empty($eyepiece))
+				echo ", " . $eyepiece;
+			if (!empty($lens))
+				echo ", " . $lens;
+			if (!empty($filter))
+				echo ", " . $filter;
+				echo("\n");
 			
 			echo "EndObject=SkyObject\n";
 		}
