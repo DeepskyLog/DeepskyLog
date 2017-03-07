@@ -1340,6 +1340,7 @@ define("LangExecuteQueryObjectsMessage8"									,"Argo Navis");
 define("LangExecuteQueryObjectsMessage9"									,"Filter objects");
 define("LangExecuteQueryObjectsMessage10"									,"&lt;OAL&gt;");
 define("LangExecuteQueryObjectsMessage11"	  							,"Maps");
+define("LangExecuteQueryObjectsMessage12"									,"skylist");
 define("LangInvalidCSVfile"																,"You didn't provide a valid CSV file!");
 define("LangSeenDontCare"																	,"All objects, seen or not");
 define("LangSeenByMe"																			,"Only objects that have been seen by me");

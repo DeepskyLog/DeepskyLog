@@ -1334,6 +1334,7 @@ define("LangExecuteQueryObjectsMessage8"									,"Argo Navis");
 define("LangExecuteQueryObjectsMessage9"									,"Filter objecten");
 define("LangExecuteQueryObjectsMessage10"									,"&lt;OAL&gt;");
 define("LangExecuteQueryObjectsMessage11"	  							,"Mappen");
+define("LangExecuteQueryObjectsMessage12"									,"skylist");
 define("LangInvalidCSVfile"																,"U gaf geen geldig CSV bestand!");
 define("LangSeenDontCare"																	,"Alle objecten, ongeacht waargenomen of niet");
 define("LangSeenByMe"																			,"Enkel objecten die ik reeds heb waargenomen");
