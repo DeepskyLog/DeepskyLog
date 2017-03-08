@@ -1112,7 +1112,7 @@ class Utils {
 			echo "SkyObject=BeginObject\n";
 			
 			$objectId = $this->getSkyListObjectId ($valueA['objecttype']);
-			echo "   ObjectID=" . $objectId . "\n";
+			echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
 		 	$names = $objObject->getAlternativeNames($valueA['objectname']);
 			//array_push($names, trim($valueA['objectname']));
  			$objectName = "";
@@ -1130,7 +1130,19 @@ class Utils {
 			{
 				reset($names);
 				while (list($key, $value) = each($names))
+				{
+					$regex = "/(?i)^PK(\s*)(\d+)(\+|-)(\d+)(\.*)(0*)(\d*)/";
+					if (preg_match($regex, $value) == 1)
+						$value = preg_replace($regex, "PK $2$3$4$5$7", $value);
+					$regex = "/(?i)^Mi\s*(\d+)-(\d+)$/";
+					if (preg_match($regex, $value) == 1)
+						$value = preg_replace($regex, "Minkowski $1-$2", $value);
+					
+					if ($value == "Dddm 1")
+						$value = "KO 1";
+							
 					echo "   CatalogNumber=" . $value . "\n";
+				}
 			}
 				
 			echo "EndObject=SkyObject\n";
