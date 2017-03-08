@@ -1113,40 +1113,54 @@ class Utils {
 			
 			$objectId = $this->getSkyListObjectId ($valueA['objecttype']);
 			echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
-		 	$names = $objObject->getAlternativeNames($valueA['objectname']);
-			//array_push($names, trim($valueA['objectname']));
- 			$objectName = "";
- 			while (list($key, $value) = each($names))
- 			{
-				if (preg_match("/(?i)^(M|NGC|IC|C)\s*\d+/", $value) == 1)
-				{
-					$objectName = $value;
-					break;
-				}
- 			}
-			if ($objectName != "")
+			
+			$objectNames = $this->getObjectNames($valueA);
+			while (list($key, $objectName) = each($objectNames))
 				echo "   CatalogNumber=" . $objectName . "\n";
-			else 
-			{
-				reset($names);
-				while (list($key, $value) = each($names))
-				{
-					$regex = "/(?i)^PK(\s*)(\d+)(\+|-)(\d+)(\.*)(0*)(\d*)/";
-					if (preg_match($regex, $value) == 1)
-						$value = preg_replace($regex, "PK $2$3$4$5$7", $value);
-					$regex = "/(?i)^Mi\s*(\d+)-(\d+)$/";
-					if (preg_match($regex, $value) == 1)
-						$value = preg_replace($regex, "Minkowski $1-$2", $value);
-					
-					if ($value == "Dddm 1")
-						$value = "KO 1";
-							
-					echo "   CatalogNumber=" . $value . "\n";
-				}
-			}
 				
 			echo "EndObject=SkyObject\n";
 		}
+	}
+	
+	function getObjectNames($row)
+	{
+		global $objObject; 
+
+		$objectNames = [];
+		
+ 		$names = $objObject->getAlternativeNames($row['objectname']);
+ 		//array_push($names, trim($row['objectname']));
+ 		$objectName = "";
+		while (list($key, $value) = each($names))
+		{
+			if (preg_match("/(?i)^(M|NGC|IC|C)\s*\d+/", $value) == 1)
+			{
+				$objectName = $value;
+				break;
+			}
+		}
+		if ($objectName != "")
+			array_push($objectNames,  $objectName);
+		else
+		{
+			reset($names);
+			while (list($key, $value) = each($names))
+			{
+				$regex = "/(?i)^PK(\s*)(\d+)(\+|-)(\d+)(\.*)(0*)(\d*)/";
+				if (preg_match($regex, $value) == 1)
+					$value = preg_replace($regex, "PK $2$3$4$5$7", $value);
+				$regex = "/(?i)^Mi\s*(\d+)-(\d+)$/";
+				if (preg_match($regex, $value) == 1)
+					$value = preg_replace($regex, "Minkowski $1-$2", $value);
+						
+				if ($value == "Dddm 1")
+					$value = "KO 1";
+						
+				array_push($objectNames,  $value);
+			}
+		}
+		
+		return $objectNames;
 	}
 	
 	function startsWith($haystack, $needle)
@@ -1204,28 +1218,32 @@ class Utils {
 			echo "\n";
 		}
 	}
+	
 	public function skylistObservations($result) // Creates a skylist file from an array of observations
-{
+	{
 		global $objLens, $objFilter, $objEyepiece, $objLocation, $objPresentations, $objObservation, $objObserver, $objInstrument;
 		
 		echo "SkySafariObservingListVersion=3.0\n";
 		
-		while ( list ( $key, $value ) = each ( $result ) ) {
-			$obs = $objObservation->getAllInfoDsObservation ( $value ['observationid'] );
+		while (list($key, $value) = each($result)) 
+		{
+			$obs = $objObservation->getAllInfoDsObservation($value ['observationid']);
 			
 			$dateStrArray = sscanf ( $obs ['date'], "%4d%2d%2d" );
 			$dateStr = $dateStrArray [2] . "-" . $dateStrArray [1] . "-" . $dateStrArray [0];
 			$timeStr = $obs ['time'];
-			if ($timeStr >= "0") {
+			if ($timeStr >= "0") 
+			{
 				$hours = ( int ) ($timeStr / 100);
 				$minutes = $timeStr - (100 * $hours);
 				$timeStr = sprintf ( "%d:%02d", $hours, $minutes );
-			} else
+			} 
+			else
 				$timeStr = "";
 			
-			$date = strtotime ( $dateStr );
-			$time = strtotime ( $timeStr );
-			$dayFraction = ($time % (24 * 60 * 60)) / (24 * 60 * 60);
+			$date = strtotime ($dateStr);
+			$time = strtotime ($timeStr);
+			$dayFraction = ($time % (24*60*60)) / (24*60*60);
 			$julianDay = (unixtojd ( $date ) - 0.5 + $dayFraction);
 			
 			echo "\n";
@@ -1233,6 +1251,14 @@ class Utils {
 			
 			echo "   ObjectID=4\n";
 			echo "   CatalogNumber=" . html_entity_decode ( $obs ['objectname'] ) . "\n";
+// 			$objectId = $this->getSkyListObjectId($obs['objecttype']);
+// 			echo "---Type=" . $obs['objecttype'] . "\n";
+// 			echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
+			
+// 			$objectNames = $this->getObjectNames($obs);
+// 			while (list($key, $objectName) = each($objectNames))
+// 				echo "   CatalogNumber=" . $objectName . "\n";
+			
 			echo "   DateObserved=" . $julianDay . "\n";
 			echo "   Location=" . html_entity_decode ( $objLocation->getLocationPropertyFromId ( $obs ['locationid'], 'name' ) ) . "\n";
 			echo "   Comment=" . preg_replace ( "/(\")/", "", preg_replace ( "/(\r\n|\n|\r)/", "", preg_replace ( "/;/", ",", $objPresentations->br2nl ( html_entity_decode ( $obs ['description'], ENT_COMPAT, 'UTF-8' ) ) ) ) ) . "\n";
