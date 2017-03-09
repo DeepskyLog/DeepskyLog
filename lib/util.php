@@ -1117,6 +1117,10 @@ class Utils {
 			$objectNames = $this->getObjectNames($valueA);
 			while (list($key, $objectName) = each($objectNames))
 				echo "   CatalogNumber=" . $objectName . "\n";
+			
+			$dslObjectName = trim($valueA['objectname']);
+			if (!in_array($dslObjectName, $objectNames)) 
+				echo "   Comment=DeepskyLog: " . $dslObjectName . "\n"; 
 				
 			echo "EndObject=SkyObject\n";
 		}
@@ -1157,7 +1161,7 @@ class Utils {
 	
 	function fixObjectName($objectName)
 	{
-		$regexPK = "/(?i)^PK(\s*)(\d+)(\+|-)(\d+)(\.*)(0*)(\d*)/";
+		$regexPK = "/(?i)^PK(\s*)(\d+)(\+|-)(\d+)(\.)(0*)(\d*)/";
 		$regexMi = "/(?i)^Mi\s*(\d+)-(\d+)$/";
 		
 		$objectName = trim($objectName);
@@ -1258,15 +1262,13 @@ class Utils {
 			echo "\n";
 			echo "SkyObject=BeginObject\n";
 			
-			echo "   ObjectID=4\n";
-			echo "   CatalogNumber=" . $this->fixObjectName(html_entity_decode($obs['objectname'])) . "\n";
-// 			$objectId = $this->getSkyListObjectId($obs['objecttype']);
-// 			echo "---Type=" . $obs['objecttype'] . "\n";
-// 			echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
-			
-// 			$objectNames = $this->getObjectNames($obs);
-// 			while (list($key, $objectName) = each($objectNames))
-// 				echo "   CatalogNumber=" . $objectName . "\n";
+ 			$objectId = $this->getSkyListObjectId($value['objecttype']);
+ 			echo "   ObjectID=" . $objectId . /*",-1,-1" .*/ "\n";
+
+ 			//echo "   CatalogNumber=" . $this->fixObjectName(html_entity_decode($obs['objectname'])) . "\n";
+			$objectNames = $this->getObjectNames($obs);
+			while (list($key, $objectName) = each($objectNames))
+				echo "   CatalogNumber=" . $objectName . "\n";
 			
 			echo "   DateObserved=" . $julianDay . "\n";
 			echo "   Location=" . html_entity_decode($objLocation->getLocationPropertyFromId($obs['locationid'], 'name')) . "\n";
@@ -1283,6 +1285,9 @@ class Utils {
 			if (!empty($filter))
 				echo ", " . $filter;
 			echo ("\n");
+			
+			if (!in_array($dslObjectName, $objectNames)) 
+				echo "   Comment=DeepskyLog: " . $dslObjectName . "\n";
 			
 			echo "EndObject=SkyObject\n";
 		}
