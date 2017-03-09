@@ -1106,12 +1106,12 @@ class Utils {
 		
 		echo "SkySafariObservingListVersion=3.0\n";
 		
-		while ( list ( $key, $valueA ) = each ( $result ) ) 
+		while (list($key, $valueA) = each($result))
 		{
 			echo "\n";
 			echo "SkyObject=BeginObject\n";
 			
-			$objectId = $this->getSkyListObjectId ($valueA['objecttype']);
+			$objectId = $this->getSkyListObjectId($valueA['objecttype']);
 			echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
 			
 			$objectNames = $this->getObjectNames($valueA);
@@ -1133,7 +1133,7 @@ class Utils {
  		$objectName = "";
 		while (list($key, $value) = each($names))
 		{
-			if (preg_match("/(?i)^(M|NGC|IC|C)\s*\d+/", $value) == 1)
+			if (preg_match("/(?i)^(M|NGC|IC|C)\s*\d+/", $value))
 			{
 				$objectName = $value;
 				break;
@@ -1146,21 +1146,30 @@ class Utils {
 			reset($names);
 			while (list($key, $value) = each($names))
 			{
-				$regex = "/(?i)^PK(\s*)(\d+)(\+|-)(\d+)(\.*)(0*)(\d*)/";
-				if (preg_match($regex, $value) == 1)
-					$value = preg_replace($regex, "PK $2$3$4$5$7", $value);
-				$regex = "/(?i)^Mi\s*(\d+)-(\d+)$/";
-				if (preg_match($regex, $value) == 1)
-					$value = preg_replace($regex, "Minkowski $1-$2", $value);
-						
-				if ($value == "Dddm 1")
-					$value = "KO 1";
+				$value = $this->fixObjectName($value);
 						
 				array_push($objectNames,  $value);
 			}
 		}
 		
 		return $objectNames;
+	}
+	
+	function fixObjectName($objectName)
+	{
+		$regexPK = "/(?i)^PK(\s*)(\d+)(\+|-)(\d+)(\.*)(0*)(\d*)/";
+		$regexMi = "/(?i)^Mi\s*(\d+)-(\d+)$/";
+		
+		$objectName = trim($objectName);
+
+		if (preg_match($regexPK, $objectName))
+			$objectName = preg_replace($regexPK, "PK $2$3$4$5$7", $objectName);
+		else if (preg_match($regexMi, $objectName))
+			$objectName = preg_replace($regexMi, "Minkowski $1-$2", $objectName);
+		else if ($objectName == "Dddm 1")
+			$objectName = "KO 1";
+		
+		return $objectName;
 	}
 	
 	function startsWith($haystack, $needle)
@@ -1229,14 +1238,14 @@ class Utils {
 		{
 			$obs = $objObservation->getAllInfoDsObservation($value ['observationid']);
 			
-			$dateStrArray = sscanf ( $obs ['date'], "%4d%2d%2d" );
+			$dateStrArray = sscanf($obs['date'], "%4d%2d%2d");
 			$dateStr = $dateStrArray [2] . "-" . $dateStrArray [1] . "-" . $dateStrArray [0];
 			$timeStr = $obs ['time'];
 			if ($timeStr >= "0") 
 			{
-				$hours = ( int ) ($timeStr / 100);
+				$hours = (int)($timeStr / 100);
 				$minutes = $timeStr - (100 * $hours);
-				$timeStr = sprintf ( "%d:%02d", $hours, $minutes );
+				$timeStr = sprintf("%d:%02d", $hours, $minutes);
 			} 
 			else
 				$timeStr = "";
@@ -1250,7 +1259,7 @@ class Utils {
 			echo "SkyObject=BeginObject\n";
 			
 			echo "   ObjectID=4\n";
-			echo "   CatalogNumber=" . html_entity_decode ( $obs ['objectname'] ) . "\n";
+			echo "   CatalogNumber=" . $this->fixObjectName(html_entity_decode($obs['objectname'])) . "\n";
 // 			$objectId = $this->getSkyListObjectId($obs['objecttype']);
 // 			echo "---Type=" . $obs['objecttype'] . "\n";
 // 			echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
@@ -1260,18 +1269,18 @@ class Utils {
 // 				echo "   CatalogNumber=" . $objectName . "\n";
 			
 			echo "   DateObserved=" . $julianDay . "\n";
-			echo "   Location=" . html_entity_decode ( $objLocation->getLocationPropertyFromId ( $obs ['locationid'], 'name' ) ) . "\n";
-			echo "   Comment=" . preg_replace ( "/(\")/", "", preg_replace ( "/(\r\n|\n|\r)/", "", preg_replace ( "/;/", ",", $objPresentations->br2nl ( html_entity_decode ( $obs ['description'], ENT_COMPAT, 'UTF-8' ) ) ) ) ) . "\n";
-			$instrument = html_entity_decode ( $objInstrument->getInstrumentPropertyFromId ( $obs ['instrumentid'], 'name' ) );
-			$eyepiece = html_entity_decode ( $objEyepiece->getEyepiecePropertyFromId ( $obs ['$eyepieceid'], 'name' ) );
-			$lens = html_entity_decode ( $objLens->getLensPropertyFromId ( $obs ['lensid'], 'name' ) );
-			$filter = html_entity_decode ( $objFilter->getFilterPropertyFromId ( $obs ['filterid'], 'name' ) );
+			echo "   Location=" . html_entity_decode($objLocation->getLocationPropertyFromId($obs['locationid'], 'name')) . "\n";
+			echo "   Comment=" . preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",", $objPresentations->br2nl(html_entity_decode($obs['description'], ENT_COMPAT, 'UTF-8'))))) . "\n";
+			$instrument = html_entity_decode($objInstrument->getInstrumentPropertyFromId($obs['instrumentid'], 'name'));
+			$eyepiece = html_entity_decode($objEyepiece->getEyepiecePropertyFromId($obs['$eyepieceid'], 'name'));
+			$lens = html_entity_decode($objLens->getLensPropertyFromId($obs['lensid'], 'name'));
+			$filter = html_entity_decode($objFilter->getFilterPropertyFromId($obs['filterid'], 'name'));
 			echo "   Equipment=" . $instrument;
-			if (! empty ( $eyepiece ))
+			if (!empty($eyepiece))
 				echo ", " . $eyepiece;
-			if (! empty ( $lens ))
+			if (!empty($lens))
 				echo ", " . $lens;
-			if (! empty ( $filter ))
+			if (!empty($filter))
 				echo ", " . $filter;
 			echo ("\n");
 			
