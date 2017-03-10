@@ -40,3 +40,6 @@ AddType application/rss+xml .rss
 <Files observations.skylist>
     ForceType application/x-httpd-php
 </Files>
+<Files objects.skylist>
+    ForceType application/x-httpd-php
+</Files>
