@@ -1106,63 +1106,80 @@ class Utils {
 		
 		echo "SkySafariObservingListVersion=3.0\n";
 		
-		while (list($key, $valueA) = each($result))
+		while (list($key, $row) = each($result))
 		{
 			echo "\n";
 			echo "SkyObject=BeginObject\n";
 			
-			$objectId = $this->getSkyListObjectId($valueA['objecttype']);
-			echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
+			$objectType = $row['objecttype'];
+			$objectId = $this->getSkyListObjectId($objectType);
+			//echo "----ObjectType=" . $objectType . "\n";
 			
-			$objectNames = $this->getObjectNames($valueA);
+			$objectNames = $this->getObjectNames($row, $objectId);
+			
+			echo "   ObjectID=" . $objectId . /*",-1,-1" .*/ "\n";
 			while (list($key, $objectName) = each($objectNames))
 				echo "   CatalogNumber=" . $objectName . "\n";
 			
-			$dslObjectName = trim($valueA['objectname']);
+			
+			$dslObjectName = trim($row['objectname']);
 			if (!in_array($dslObjectName, $objectNames)) 
-				echo "   Comment=DeepskyLog: " . $dslObjectName . "\n"; 
-				
+				echo "   Comment=DeepskyLog: " . implode(",", $objObject->getAlternativeNames($row['objectname'])) . "\n";
+			
 			echo "EndObject=SkyObject\n";
 		}
 	}
 	
-	function getObjectNames($row)
+	function getObjectNames($row, &$objectId)
 	{
 		global $objObject; 
 
 		$objectNames = [];
+		$names = [];
 		
- 		$names = $objObject->getAlternativeNames($row['objectname']);
- 		//array_push($names, trim($row['objectname']));
- 		$objectName = "";
-		while (list($key, $value) = each($names))
+		$objectName = $this->fixObjectName(trim($row['objectname']), $objectId);
+ 		array_push($names, $objectName);
+ 		
+		$altNames = $objObject->getAlternativeNames($row['objectname']);
+		while (list($key, $altName) = each($altNames))
 		{
-			if (preg_match("/(?i)^(M|NGC|IC|C)\s*\d+/", $value))
-			{
-				$objectName = $value;
+			$altName = $this->fixObjectName(trim($altName), $objectId);
+			if ($altName != $objectName)
+ 				array_push($names, trim($altName));
+		}
+ 		
+ 		$objectName = "";
+		reset($names);
+ 		while (list($key, $name) = each($names))
+		{
+			if (preg_match("/(?i)^(M|NGC|IC|C|Cr|Tr|STF|STFA|HD)\s*\d+$/", $name))
+			{ // These catalogs are best known to Skysafari
+				$objectName = $name;
+				break;
+			}
+			else if (preg_match("/(?i)^(Mel|SAO)\s*\d+$/", $name))
+			{ // Then these
+				$objectName = $name;
 				break;
 			}
 		}
 		if ($objectName != "")
-			array_push($objectNames,  $objectName);
+			array_push($objectNames, $objectName);
 		else
 		{
 			reset($names);
-			while (list($key, $value) = each($names))
-			{
-				$value = $this->fixObjectName($value);
-						
-				array_push($objectNames,  $value);
-			}
+			while (list($key, $name) = each($names))
+				array_push($objectNames, $name);
 		}
 		
 		return $objectNames;
 	}
 	
-	function fixObjectName($objectName)
+	function fixObjectName($objectName, &$objectId)
 	{
 		$regexPK = "/(?i)^PK(\s*)(\d+)(\+|-)(\d+)(\.)(0*)(\d*)/";
 		$regexMi = "/(?i)^Mi\s*(\d+)-(\d+)$/";
+		$regexSteph = "/(?i)^Steph\s*(\d+)$/";
 		
 		$objectName = trim($objectName);
 
@@ -1170,9 +1187,18 @@ class Utils {
 			$objectName = preg_replace($regexPK, "PK $2$3$4$5$7", $objectName);
 		else if (preg_match($regexMi, $objectName))
 			$objectName = preg_replace($regexMi, "Minkowski $1-$2", $objectName);
+		else if (preg_match($regexSteph, $objectName))
+			$objectName = preg_replace($regexSteph, "Stephenson $1", $objectName);
+		else if ($objectName == "Beta Cyg")
+			$objectName = "Beta1 Cygni";
 		else if ($objectName == "Dddm 1")
 			$objectName = "KO 1";
-		
+		else if ($objectName == "Stephenson 1")
+		{
+			$objectName = "HD 175426";
+			$objectId = 2;
+		}
+			
 		return $objectName;
 	}
 	
@@ -1185,7 +1211,7 @@ class Utils {
 	
 	function getSkyListObjectId($objectType) 
 	{
-		if ($objectType == "AA2STAR")
+		if (preg_match("/(?i)^AA\d+STAR$/", $objectType))
 			return 2;
 		else
 		 	return 4;
