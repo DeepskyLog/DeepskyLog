@@ -1349,6 +1349,7 @@ define("LangExecuteQueryObjectsMessage8"									,"Argo Navis");
 define("LangExecuteQueryObjectsMessage9"									,"Filter objects");
 define("LangExecuteQueryObjectsMessage10"									,"&lt;OAL&gt;");
 define("LangExecuteQueryObjectsMessage11"	  							,"Maps");
+define("LangExecuteQueryObjectsMessage12"									,"skylist");
 define("LangInvalidCSVfile"																,"Sie haben keine g&uuml;ltige CSV Datei angegeben!");
 define("LangSeenDontCare"																	,"Egal");                                                          // TO TRANSLATE: should be:  All objects, seen or not
 define("LangSeenByMe"																			,"Bereits von mir beobachtet");                                    // TO TRANSLATE: should be: Only objects that have been seen by me
