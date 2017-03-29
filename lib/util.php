@@ -1126,6 +1126,14 @@ class Utils {
 			if (!in_array($dslObjectName, $objectNames)) 
 				echo "   Comment=DeepskyLog: " . implode(",", $objObject->getAlternativeNames($row['objectname'])) . "\n";
 			
+			$dateLastSeen = trim($row['objectlastseen']);
+			//echo "---Date=" . $dateLastSeen . "\n";
+			if ($dateLastSeen != "")
+				echo "   DateObserved=" . ($this->getJulianDay($dateLastSeen) + 1) . "\n";
+			
+// 			while (list($key, $value) = each($row))
+// 				echo "---" . $key . "=" . $value . "\n";
+			
 			echo "EndObject=SkyObject\n";
 		}
 	}
@@ -1217,6 +1225,32 @@ class Utils {
 		 	return 4;
 	}
 	
+	function getJulianDay($dateYYYYMMDD, $timeHHMM = NULL)
+	{
+		$dateStrArray = sscanf($dateYYYYMMDD, "%4d%2d%2d");
+		$dateStr = $dateStrArray [2] . "-" . $dateStrArray [1] . "-" . $dateStrArray [0];
+		$date = strtotime ($dateStr);
+		
+		if ($timeHHMM != NULL)
+		{
+			$timeStr = $timeHHMM;
+			if ($timeStr >= "0") 
+			{
+				$hours = (int)($timeStr / 100);
+				$minutes = $timeStr - (100 * $hours);
+				$timeStr = sprintf("%d:%02d", $hours, $minutes);
+			} 
+			else
+				$timeStr = "";
+			$time = strtotime ($timeStr);
+			$dayFraction = - 0.5 + ($time % (24*60*60)) / (24*60*60);
+		}
+		else 	
+			$dayFraction = 0;
+		
+		return unixtojd($date) + $dayFraction;
+	}
+	
 	public function csvObjectsList($result) // Creates a csv file from an array of list objects
 {
 		global $objObject, $objPresentations, $objObserver, $loggedUser;
@@ -1268,23 +1302,6 @@ class Utils {
 		{
 			$obs = $objObservation->getAllInfoDsObservation($value ['observationid']);
 			
-			$dateStrArray = sscanf($obs['date'], "%4d%2d%2d");
-			$dateStr = $dateStrArray [2] . "-" . $dateStrArray [1] . "-" . $dateStrArray [0];
-			$timeStr = $obs ['time'];
-			if ($timeStr >= "0") 
-			{
-				$hours = (int)($timeStr / 100);
-				$minutes = $timeStr - (100 * $hours);
-				$timeStr = sprintf("%d:%02d", $hours, $minutes);
-			} 
-			else
-				$timeStr = "";
-			
-			$date = strtotime ($dateStr);
-			$time = strtotime ($timeStr);
-			$dayFraction = ($time % (24*60*60)) / (24*60*60);
-			$julianDay = (unixtojd ( $date ) - 0.5 + $dayFraction);
-			
 			echo "\n";
 			echo "SkyObject=BeginObject\n";
 			
@@ -1296,7 +1313,7 @@ class Utils {
 			while (list($key, $objectName) = each($objectNames))
 				echo "   CatalogNumber=" . $objectName . "\n";
 			
-			echo "   DateObserved=" . $julianDay . "\n";
+			echo "   DateObserved=" . $this->getJulianDay($obs['date'], $obs['time']) . "\n";
 			echo "   Location=" . html_entity_decode($objLocation->getLocationPropertyFromId($obs['locationid'], 'name')) . "\n";
 			echo "   Comment=" . preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",", $objPresentations->br2nl(html_entity_decode($obs['description'], ENT_COMPAT, 'UTF-8'))))) . "\n";
 			$instrument = html_entity_decode($objInstrument->getInstrumentPropertyFromId($obs['instrumentid'], 'name'));
