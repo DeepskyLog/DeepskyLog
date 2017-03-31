@@ -58,7 +58,6 @@ function manage_csv_objects()
 	  		$objObject->newAltName($object[$i], $cat[$i], $catindex_data[$i]);
 	  	elseif ($instruction[$i] == "NN")
 	  	{ $objObject->newName($object[$i], $cat[$i],$catindex_data[$i]);
-	  		$_GET['object'] = trim($cat[$i] . " " . ucwords(trim($catindex_data[$i])));
 	    }
 	  	elseif ($instruction[$i] == "RAN")
 	  	  $objObject->removeAltName($object[$i], $cat[$i], $catindex_data[$i]);
@@ -68,7 +67,6 @@ function manage_csv_objects()
 	  	  $objObject->removePartOf($object[$i], $cat[$i], $catindex_data[$i]);
 	  	elseif ($instruction[$i] == "RRO")
 	    { $objObject->removeAndReplaceObjectBy($object[$i], $cat[$i], $catindex_data[$i]);
-	  		$_GET['object'] = trim($cat[$i] . " " . ucwords(trim($catindex_data[$i])));
 	  	}
 	  	elseif ($instruction[$i] == "RA")
 	  	{	$objObject->setDsoProperty($object[$i],'ra', $catindex_data[$i]);
@@ -100,7 +98,6 @@ function manage_csv_objects()
 	  		$objObject->setDsoProperty($object[$i],'pa', $catindex_data[$i]);
 	  	elseif ($instruction[$i] == "DESC")
 	  		$objObject->setDsoProperty($object[$i],'description', $catindex_data[$i]);
-	    $_GET['indexAction']="detail_object";
 	  }
 	}
 }

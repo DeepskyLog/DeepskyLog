@@ -9,11 +9,15 @@ include_once $instDir . "/lib/catalogs.php";
 $objCatalog = new catalogs();
 $catalogs = $objCatalog->getCatalogs();
 
-echo '<select onchange="view_catalog(this.value);">';
+echo '<form>
+<div class="form-group">
+<select class="form-control" onchange="view_catalog(this.value);">';
 foreach ($catalogs as $key => $value) {
   print '<option><value="' . $value . '">' . $value . '</a></option>';
 }
 echo '</select>';
+echo '  </div>
+       </form>';
 echo '<br /><br />';
 echo '<div id="view_catalogs_right" class="view_catalogs_right">';
 echo LangClickToViewCatalogDetails;
