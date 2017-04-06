@@ -1630,30 +1630,16 @@ class Objects {
 						</td>';
 			echo "</tr>";
 			
-			$aladinObjectName = $this->getAladinObjectName($object);
-			if (empty($aladinObjectName))
-			{
-				foreach ($altnames as $altName)
-				{
-					$aladinObjectName = $this->getAladinObjectName($altName);
-					if (!empty($aladinObjectName))
-						break;
-				}
-			}
-			
-			if (!empty($aladinObjectName))
-			{
-				echo '<tr>';
-				echo '  <td colspan="3">Aladin</td>';  
-				echo '  <td colspan="100">';
-				echo '    <div id="aladin-lite-div" style="width:600px;height:400px;"></div>';
-				echo '    <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>';
-				echo '    <script type="text/javascript">';
-				echo '      var aladin = A.aladin(\'#aladin-lite-div\', {survey: "P/DSS2/color", fov:1, target: "' . $aladinObjectName . '"});';
-				echo '    </script>';
-				echo '  </td>';  
-				echo '</tr>';
-			}
+			echo '<tr>';
+			echo '  <td colspan="3">Aladin</td>';  
+			echo '  <td colspan="100">';
+			echo '    <div id="aladin-lite-div" style="width:600px;height:400px;"></div>';
+			echo '    <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>';
+			echo '    <script type="text/javascript">';
+			echo '      var aladin = A.aladin(\'#aladin-lite-div\', {survey: "P/DSS2/color", fov:1, target: "' . $this->raDecToAladin($ra, $dec) . '"});';
+			echo '    </script>';
+			echo '  </td>';  
+			echo '</tr>';
 		}
 		echo "</table>";
 		echo "</div></form>";
@@ -1665,49 +1651,50 @@ class Objects {
 					</script>';
 	}
 	
-	public function getAladinObjectName($objectName)
+	public function raDecToAladin($ra, $decl) 
 	{
-		$objectName = stripslashes($objectName);
-		$objectName = trim($objectName);
+		$sign = "";
+		if ($decl < 0) 
+		{
+			$sign = "-";
+			$decl = - $decl;
+		} 
+		else
+			$sign = "+";
 		
-		// Blacklist: numbered
-		$objectName = preg_replace("/(?i)^Lorenzin\s*(\d+)$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^ASCC\s*(\d+)$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Alessi\s*(\d+)$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Le Gentil\s*(\d+)$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Globular Filament\s*(\d+)$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Caldwell\s*(\d+)$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Kemble\s*(\d+)$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Harrington\s*(\d+)$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^STAR\s*(\d+)$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Hrr\s*(\d+)$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^STF\s*(\d+)$/", "", $objectName);
+		$ra_hours = floor($ra);
+		$subminutes = 60 * ($ra - $ra_hours);
+		$ra_minutes = floor($subminutes);
+		$ra_seconds = round(60 * ($subminutes - $ra_minutes));
+		if ($ra_seconds == 60) 
+		{
+			$ra_seconds = 0;
+			$ra_minutes++;
+		}
+		if ($ra_minutes == 60) 
+		{
+			$ra_minutes = 0;
+			$ra_hours++;
+		}
+		if ($ra_hours == 24)
+			$ra_hours = 0;
 		
-		//Blacklist: entire name or starting with
-		$objectName = preg_replace("/(?i)^Herman's Cross$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Terebellum$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Orion's Sword$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Double Cluster$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Kemble's Cascade$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^CYGSNR.*$/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Pickering.*/", "", $objectName);
-		$objectName = preg_replace("/(?i)^Simeis.*/", "", $objectName);
+		$decl_degrees = floor($decl);
+		$subminutes = 60 * ($decl - $decl_degrees);
+		$decl_minutes = floor($subminutes);
+		$decl_seconds = round(60 * ($subminutes - $decl_minutes));
+		if ($decl_seconds == 60) 
+		{
+			$decl_seconds = 0;
+			$decl_minutes++;
+		}
+		if ($decl_minutes == 60) 
+		{
+			$decl_minutes = 0;
+			$decl_degrees++;
+		}
 		
-		
-		// Changelist: numbered
-		$objectName = preg_replace("/(?i)^Cr\s*(\d+)$/", "Collinder $1", $objectName);
-		$objectName = preg_replace("/(?i)^Berk\s*(\d+)$/", "Berkeley $1", $objectName);
-		$objectName = preg_replace("/(?i)^Do\s*(\d+)$/", "Dolidze $1", $objectName);
-		$objectName = preg_replace("/(?i)^Alessi-Teutsch\s*(\d+)$/", "Alessi Teutsch $1", $objectName);
-		$objectName = preg_replace("/(?i)^B\s*(\d+)$/", "Barnard $1", $objectName);
-		$objectName = preg_replace("/(?i)^Biur\s*(\d+)$/", "Biurakan $1", $objectName);
-		
-		// Changelist: special cases
-		$objectName = preg_replace("/(?i)^Epsilon Lyr/", "Epsilon1 Lyr", $objectName);
-		$objectName = preg_replace("/(?i)^Zeta-2 CrB/", "Zeta CrB", $objectName);
-		$objectName = preg_replace("/(?i)^Phi-2 Cnc/", "Phi2 Cnc", $objectName);
-		
-		return $objectName;
+		return ($ra_hours . ' ' . $ra_minutes . ' ' . $ra_seconds . ' ' . $sign . $decl_degrees . ' ' . $decl_minutes . ' ' . $decl_seconds);
 	}
 	
 	public function getEphemerides($theObject, $theDay, $theMonth, $theYear, $theLocation = "") {
