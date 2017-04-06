@@ -1649,33 +1649,38 @@ class Objects {
 						});
 					</script>';
 	}
-	public function raDecToAladin($ra, $decl) {
+	
+	public function raDecToAladin($ra, $decl) 
+	{
 		$sign = "";
-		if ($decl < 0) {
+		if ($decl < 0) 
+		{
 			$sign = "-";
 			$decl = - $decl;
 		} else
 			$sign = "+";
 		
-		$ra_hours = floor ( $ra );
+		$ra_hours = floor($ra);
 		$subminutes = 60 * ($ra - $ra_hours);
-		$ra_minutes = floor ( $subminutes );
-		$ra_seconds = round ( 60 * ($subminutes - $ra_minutes) );
-		if ($ra_seconds == 60) {
+		$ra_minutes = floor($subminutes);
+		$ra_seconds = round(60 * ($subminutes - $ra_minutes));
+		if ($ra_seconds == 60) 
+		{
 			$ra_seconds = 0;
 			$ra_minutes ++;
 		}
-		if ($ra_minutes == 60) {
+		if ($ra_minutes == 60) 
+		{
 			$ra_minutes = 0;
 			$ra_hours ++;
 		}
 		if ($ra_hours == 24)
 			$ra_hours = 0;
 		
-		$decl_degrees = floor ( $decl );
+		$decl_degrees = floor($decl);
 		$subminutes = 60 * ($decl - $decl_degrees);
-		$decl_minutes = floor ( $subminutes );
-		$decl_seconds = round ( 60 * ($subminutes - $decl_minutes) );
+		$decl_minutes = floor($subminutes);
+		$decl_seconds = round(60 * ($subminutes - $decl_minutes));
 		if ($decl_seconds == 60) {
 			$decl_seconds = 0;
 			$decl_minutes ++;
@@ -1687,17 +1692,22 @@ class Objects {
 		
 		return ($ra_hours . ' ' . $ra_minutes . ' ' . $ra_seconds . ' ' . $sign . $decl_degrees . ' ' . $decl_minutes . ' ' . $decl_seconds);
 	}
+	
 	private function getFOV($name) // getSize returns the size of the object
-{
+	{
 		global $objDatabase;
-		$sql = "SELECT diam1, diam2 FROM objects WHERE name = \"$name\"";
-		$run = $objDatabase->selectRecordset ( $sql );
-		$get = $run->fetch ( PDO::FETCH_OBJ );
+		$sql = "SELECT diam1, diam2, type FROM objects WHERE name = \"$name\"";
+		$run = $objDatabase->selectRecordset($sql);
+		$get = $run->fetch(PDO::FETCH_OBJ);
 		
-		$fov = 2 * max ( $get->diam1, $get->diam2 ) / 3600;
+		if (preg_match('/(?i)^AA\d*STAR$/', $get->type))
+			$fov = 1;
+		else
+			$fov = 2 * max($get->diam1, $get->diam2) / 3600;
 		
 		return $fov;
 	}
+	
 	public function getEphemerides($theObject, $theDay, $theMonth, $theYear, $theLocation = "") {
 		global $objAstroCalc, $objObserver, $loggedUser, $objLocation;
 		$thejd = gregoriantojd ( $theMonth, $theDay, $theYear );
