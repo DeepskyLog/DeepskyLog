@@ -1630,16 +1630,20 @@ class Objects {
 						</td>';
 			echo "</tr>";
 			
-			echo '<tr>';
-			echo '  <td colspan="3">Aladin</td>';  
-			echo '  <td colspan="100">';
-			echo '    <div id="aladin-lite-div" style="width:600px;height:400px;"></div>';
-			echo '    <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>';
-			echo '    <script type="text/javascript">';
-			echo '      var aladin = A.aladin(\'#aladin-lite-div\', {survey: "P/DSS2/color", fov:1, target: "' . stripslashes($object) . '"});';
-			echo '    </script>';
-			echo '  </td>';  
-			echo '</tr>';
+			$aladinObjectName = $this->getAladinObjectName($object);
+			if (!empty($aladinObjectName))
+			{
+				echo '<tr>';
+				echo '  <td colspan="3">Aladin</td>';  
+				echo '  <td colspan="100">';
+				echo '    <div id="aladin-lite-div" style="width:600px;height:400px;"></div>';
+				echo '    <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>';
+				echo '    <script type="text/javascript">';
+				echo '      var aladin = A.aladin(\'#aladin-lite-div\', {survey: "P/DSS2/color", fov:1, target: "' . $aladinObjectName . '"});';
+				echo '    </script>';
+				echo '  </td>';  
+				echo '</tr>';
+			}
 		}
 		echo "</table>";
 		echo "</div></form>";
@@ -1650,6 +1654,18 @@ class Objects {
 						});
 					</script>';
 	}
+	
+	public function getAladinObjectName($objectName)
+	{
+		$objectName = stripslashes($objectName);
+
+		$objectName = preg_replace("/(?i)^Lorenzin\s*(\d+)$/", "", $objectName);
+		
+		$objectName = preg_replace("/(?i)^Cr\s*(\d+)$/", "Collinder $1", $objectName);
+		$objectName = preg_replace("/(?i)^Berk\s*(\d+)$/", "Berkeley $1", $objectName);
+		return $objectName;
+	}
+	
 	public function getEphemerides($theObject, $theDay, $theMonth, $theYear, $theLocation = "") {
 		global $objAstroCalc, $objObserver, $loggedUser, $objLocation;
 		$thejd = gregoriantojd ( $theMonth, $theDay, $theYear );
