@@ -1631,6 +1631,16 @@ class Objects {
 			echo "</tr>";
 			
 			$aladinObjectName = $this->getAladinObjectName($object);
+			if (empty($aladinObjectName))
+			{
+				foreach ($altnames as $altName)
+				{
+					$aladinObjectName = $this->getAladinObjectName($altName);
+					if (!empty($aladinObjectName))
+						break;
+				}
+			}
+			
 			if (!empty($aladinObjectName))
 			{
 				echo '<tr>';
@@ -1658,11 +1668,45 @@ class Objects {
 	public function getAladinObjectName($objectName)
 	{
 		$objectName = stripslashes($objectName);
-
-		$objectName = preg_replace("/(?i)^Lorenzin\s*(\d+)$/", "", $objectName);
+		$objectName = trim($objectName);
 		
+		// Blacklist: numbered
+		$objectName = preg_replace("/(?i)^Lorenzin\s*(\d+)$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^ASCC\s*(\d+)$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Alessi\s*(\d+)$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Le Gentil\s*(\d+)$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Globular Filament\s*(\d+)$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Caldwell\s*(\d+)$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Kemble\s*(\d+)$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Harrington\s*(\d+)$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^STAR\s*(\d+)$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Hrr\s*(\d+)$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^STF\s*(\d+)$/", "", $objectName);
+		
+		//Blacklist: entire name or starting with
+		$objectName = preg_replace("/(?i)^Herman's Cross$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Terebellum$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Orion's Sword$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Double Cluster$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Kemble's Cascade$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^CYGSNR.*$/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Pickering.*/", "", $objectName);
+		$objectName = preg_replace("/(?i)^Simeis.*/", "", $objectName);
+		
+		
+		// Changelist: numbered
 		$objectName = preg_replace("/(?i)^Cr\s*(\d+)$/", "Collinder $1", $objectName);
 		$objectName = preg_replace("/(?i)^Berk\s*(\d+)$/", "Berkeley $1", $objectName);
+		$objectName = preg_replace("/(?i)^Do\s*(\d+)$/", "Dolidze $1", $objectName);
+		$objectName = preg_replace("/(?i)^Alessi-Teutsch\s*(\d+)$/", "Alessi Teutsch $1", $objectName);
+		$objectName = preg_replace("/(?i)^B\s*(\d+)$/", "Barnard $1", $objectName);
+		$objectName = preg_replace("/(?i)^Biur\s*(\d+)$/", "Biurakan $1", $objectName);
+		
+		// Changelist: special cases
+		$objectName = preg_replace("/(?i)^Epsilon Lyr/", "Epsilon1 Lyr", $objectName);
+		$objectName = preg_replace("/(?i)^Zeta-2 CrB/", "Zeta CrB", $objectName);
+		$objectName = preg_replace("/(?i)^Phi-2 Cnc/", "Phi2 Cnc", $objectName);
+		
 		return $objectName;
 	}
 	
