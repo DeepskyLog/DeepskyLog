@@ -1629,6 +1629,17 @@ class Objects {
 							<span data-toggle="tooltip" data-placement="bottom" title="' . $popup4 . '">' . $ristraset [3] . '</span>
 						</td>';
 			echo "</tr>";
+			
+			echo '<tr>';
+			echo '  <td colspan="3">Aladin</td>';  
+			echo '  <td colspan="100">';
+			echo '    <div id="aladin-lite-div" style="width:600px;height:400px;"></div>';
+			echo '    <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>';
+			echo '    <script type="text/javascript">';
+			echo '      var aladin = A.aladin(\'#aladin-lite-div\', {survey: "P/DSS2/color", fov:1, target: "' . stripslashes($object) . '"});';
+			echo '    </script>';
+			echo '  </td>';  
+			echo '</tr>';
 		}
 		echo "</table>";
 		echo "</div></form>";
@@ -1837,12 +1848,12 @@ class Objects {
 				$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectsDetails.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4c ) . "&nbsp;";
 				$content .= "<a href=\"" . $baseURL . "objects.argo?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage8 . "</a>&nbsp;";
 				$content .= "<a href=\"" . $baseURL . "objects.csv?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage6 . "</a>";
-
+				
 				$content .= "&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;pdfTitle=Test\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . ReportLink . "</a>&nbsp;";
 				$content .= "<a href=\"" . $baseURL . "index.php?indexAction=objectsSets" . "\" rel=\"external\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage11 . "</a>";
 
 				$content .= "&nbsp;<a href=\"" . $baseURL . "objects.skylist?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage12 . "</a>";
-
+				
 				echo $content1 . "<br /><br />";
 				echo $content;
 			}
