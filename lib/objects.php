@@ -1552,7 +1552,11 @@ class Objects {
 			echo "</tr>";
 		}
 		
-		if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'stdLocation' )) {
+		$ra = $this->getDsoProperty ( $object, 'ra' );
+		$dec = $this->getDsoProperty ( $object, 'decl' );
+		
+		if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'stdLocation' )) 
+		{
 			$theYear = $_SESSION ['globalYear'];
 			$theMonth = $_SESSION ['globalMonth'];
 			$theDay = $_SESSION ['globalDay'];
@@ -1576,8 +1580,6 @@ class Objects {
 				$timedifference = - $timedifference;
 			}
 			
-			$ra = $this->getDsoProperty ( $object, 'ra' );
-			$dec = $this->getDsoProperty ( $object, 'decl' );
 			$ristraset = $objAstroCalc->calculateRiseTransitSettingTime ( $longitude, $latitude, $ra, $dec, $jd, $timedifference );
 			
 			$dateTimeText = date ( $dateformat, mktime ( 0, 0, 0, $theMonth, $theDay, $theYear ) );
@@ -1629,17 +1631,19 @@ class Objects {
 						</td>';
 			echo "</tr>";
 			
-			echo '<tr>';
-			echo '  <td colspan="3">Aladin</td>';
-			echo '  <td colspan="100">';
-			echo '    <div id="aladin-lite-div" style="width:600px;height:400px;"></div>';
-			echo '    <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>';
-			echo '    <script type="text/javascript">';
-			echo '      var aladin = A.aladin(\'#aladin-lite-div\', {survey: "P/DSS2/color", fov:' . $this->getFov($object) . ', target: "' . $this->raDecToAladin ( $ra, $dec ) . '"});';
-			echo '    </script>';
-			echo '  </td>';
-			echo '</tr>';
 		}
+
+		echo '<tr>';
+		echo '  <td colspan="3">Aladin</td>';
+		echo '  <td colspan="100">';
+		echo '    <div id="aladin-lite-div" style="width:600px;height:400px;"></div>';
+		echo '    <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>';
+		echo '    <script type="text/javascript">';
+		echo '      var aladin = A.aladin(\'#aladin-lite-div\', {survey: "P/DSS2/color", fov:' . $this->getFov($object) . ', target: "' . $this->raDecToAladin ( $ra, $dec ) . '"});';
+		echo '    </script>';
+		echo '  </td>';
+		echo '</tr>';
+	
 		echo "</table>";
 		echo "</div></form>";
 		echo "<hr />";
