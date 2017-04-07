@@ -1269,7 +1269,6 @@ class Observations {
 				"DS",
 				"OPNCL",
 				"AA1STAR",
-				"AA2STAR",
 				"AA3STAR",
 				"AA4STAR",
 				"AA8STAR",
@@ -1404,8 +1403,7 @@ class Observations {
 		echo "</tr>";
 
 		if (in_array ( $objObject->getDsoProperty ( $object, 'type' ), array (
-				"DS",
-				"AA2STAR"
+				"DS"
 		) )) {
 			echo "<tr>";
 			echo "<td>" . LangViewObservationField22 . "</td>";

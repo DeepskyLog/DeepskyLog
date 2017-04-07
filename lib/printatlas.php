@@ -448,7 +448,7 @@ class PrintAtlas
   	      		$this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
 		  else if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
 	        $this->astroDrawStar1Object($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
 	        $this->astroDrawStarxObject($i);
 	      else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
 	        $this->astroDrawOCObject($i);
@@ -470,7 +470,7 @@ class PrintAtlas
 	        $this->astroDrawQSRObject($i);
 	      else
 	        $this->astroDrawBRTNBObject($i);
-  	    if((isset($_SESSION['atlasPagesIndex']))&&(!(in_array($this->astroObjectsArr[$i]["type"],array('AA1STAR','AA2STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))))
+  	    if((isset($_SESSION['atlasPagesIndex']))&&(!(in_array($this->astroObjectsArr[$i]["type"],array('AA1STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))))
   	    { $indexDistance=sqrt((abs($this->gridD0rad - $this->gridDyRad))^2 + ((abs($this->gridL0rad - $this->gridLxRad)*cos($this->gridLxRad))^2));
   	    	if(!(in_array($this->astroObjectsArr[$i]["name"],$_SESSION['atlasPagesIndex'])))
   	      { $_SESSION['atlasPagesIndex'][$this->astroObjectsArr[$i]["name"]]=Array($indexDistance,$this->theItemPage);
@@ -497,7 +497,7 @@ class PrintAtlas
   	      		$this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
 			if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
 	        	$this->astroDrawStar1Object($i);
-		    else if(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
+		    else if(in_array($this->astroObjectsArr[$i]["type"],array('AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
 		        $this->astroDrawStarxObject($i);
 	    	else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
 	        	$this->astroDrawOCObject($i);

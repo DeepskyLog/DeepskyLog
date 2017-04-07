@@ -661,9 +661,6 @@ function view_observer() {
 	if (!array_key_exists("SNREM", $deepskyobservations)) {
 		$deepskyobservations["SNREM"] = 0;
 	}
-	if (!array_key_exists("AA2STAR", $deepskyobservations)) {
-		$deepskyobservations["AA2STAR"] = 0;
-	}
 	if (!array_key_exists("GXAGC", $deepskyobservations)) {
 		$deepskyobservations["GXAGC"] = 0;
 	}
@@ -748,7 +745,6 @@ function view_observer() {
 	$colors ["BRTNB"] = "#89A54E";
 
 	$ds = $deepskyobservations["DS"];
-	$ds += $deepskyobservations["AA2STAR"];
 
 	if (($ds / $all) >= 0.01) {
 		$objectsArray ["DS"] = $ds;
