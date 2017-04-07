@@ -241,7 +241,6 @@ function head() {
 
      </script>";
 	echo '<link rel="stylesheet" href="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />';
-	echo '<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js" charset="utf-8"></script>';	
 
 	echo "</head>";
 }
