@@ -336,8 +336,7 @@ function new_observation() {
 				$contentMisc4 .= "</select>&nbsp;";
 			}
 		} else if (in_array ( $objObject->getDsoProperty ( $object, 'type' ), array (
-				"DS",
-				"AA2STAR"
+				"DS"
 		) )) {
 			$contentMisc2 .= "<input type=\"checkbox\" name=\"equalBrightness\" />" . LangDetailDS1 . "&nbsp;";
 			$contentMisc2 .= "<input type=\"checkbox\" name=\"niceField\" />" . LangDetailDS2;
@@ -493,8 +492,7 @@ function new_observation() {
 
 		// Check if we are observing a double star. If it is the case, us VisibilityDs
 		if (in_array ( $objObject->getDsoProperty ( $object, 'type' ), array (
-				"DS",
-				"AA2STAR"
+				"DS"
 		) )) {
 			echo "<div class=\"form-group\">
 	               <label>" . LangViewObservationField22 . "</label>";

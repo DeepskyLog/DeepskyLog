@@ -96,7 +96,11 @@ class Accomplishments {
         }
         break;
       }
-      return $this->ranking($total, $this->getNumberOfCategories($catalog), $max);
+      if ($max == 0) {
+        return $this->ranking($total, $this->getNumberOfCategories($catalog));
+      } else {
+        return $this->ranking($total, $this->getNumberOfCategories($catalog), $max);
+      }
     }
 
     /** Returns the number of categories for the accomplishments of a given catalog.
@@ -325,7 +329,7 @@ class Accomplishments {
     */
     public function getSeenMessage($catalog, $numberOfObjects, $observerId) {
       global $baseURL;
-      return LangCongrats . round($numberOfObjects) . " " . $catalog . LangCheckout . " " . $baseURL . "/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"";
+      return LangCongrats . round($numberOfObjects) . " " . $catalog . LangCheckout . " " . $baseURL . "/index.php?indexAction=detail_observer3&user=" . urlencode($observerId) . "";
     }
 
     /** Gets the subject for the message when a new accomplishment is earned (because of extra objects drawn)
@@ -344,7 +348,7 @@ class Accomplishments {
     */
     public function getDrawMessage($catalog, $numberOfObjects, $observerId) {
       global $baseURL;
-      return LangDrawCongrats . round($numberOfObjects) . " " . $catalog . LangDrawCheckout . " " . $baseURL . "/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"";
+      return LangDrawCongrats . round($numberOfObjects) . " " . $catalog . LangDrawCheckout . " " . $baseURL . "/index.php?indexAction=detail_observer3&user=" . urlencode($observerId) . "";
     }
 
     /** Recalculates the number of objects seen or drawn and send a mail when a new accomplishment is reached.
