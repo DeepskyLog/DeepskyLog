@@ -1704,7 +1704,7 @@ class Objects {
 		$run = $objDatabase->selectRecordset($sql);
 		$get = $run->fetch(PDO::FETCH_OBJ);
 		
-		if (preg_match('/(?i)^AA\d*STAR$/', $get->type) || preg_match('/(?i)^PLNNB$/', $get->type))
+		if (preg_match('/(?i)^AA\d*STAR$/', $get->type) || preg_match('/(?i)^PLNNB$/', $get->type) || $get->diam1 ==0 && $get->diam2 == 0)
 			$fov = 1;
 		else
 			$fov = 2 * max($get->diam1, $get->diam2) / 3600;
