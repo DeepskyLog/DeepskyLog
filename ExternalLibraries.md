@@ -5,7 +5,7 @@
 | jquery.datatables | 1.10.9 | 21/09/2015 | |
 | Bootstrap | 3.3.7 | 07/09/2016 | |
 | bootstrap-tour | 0.11.0 | 07/09/2016 | |
-| tablesorter | 2.27.6 | 08/09/2016 | |
+| tablesorter | 2.28.7 | 14/04/2017 | |
 | lightbox | 2.8.2 | 08/09/2016 | |
 | Highcharts | 4.2.6 | 08/09/2016 | |
 | jquery-ui-bootstrap | 1.0.0 | 22/05/2015 | |
