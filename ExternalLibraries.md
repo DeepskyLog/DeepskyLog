@@ -1,7 +1,7 @@
 | Library | Version | Date added in DeepskyLog | Remarks |
 | ------- | ------- | ------------------------ | ------- |
 | jQuery  | 2.2.4  | 08/09/2016 | |
-| jQuery-ui | 1.12.0 | 07/09/2016 | |
+| jQuery-ui | 1.12.1 | 14/04/2017 | |
 | jquery.datatables | 1.10.9 | 21/09/2015 | |
 | Bootstrap | 3.3.7 | 07/09/2016 | |
 | bootstrap-tour | 0.11.0 | 07/09/2016 | |
