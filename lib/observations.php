@@ -200,7 +200,7 @@ class Observations {
 	public function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language) { // adds a new observation to the database. The name, observerid, instrumentid, locationid, date, time, description, seeing and limiting magnitude should be given as parameters. The id of the latest observation is returned.
 	                                                                                                                                                               // If the time and date are given in local time, you should execute setLocalDateAndTime after inserting the observation!
 		global $objDatabase;
-		if (($seeing == "-1") || ($seeing == ""))
+		if (($seeing == "-1") || ($seeing == "") || (intval($seeing) > 5) || (intval($seeing) < 0))
 			$seeing = "NULL";
 		if ($limmag == "")
 			$limmag = "NULL";
@@ -216,7 +216,7 @@ class Observations {
 	}
 	public function addDSObservation2($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language, $eyepieceid, $filterid, $lensid) {
 		global $objDatabase, $objPresentations;
-		if (($seeing == "-1") || ($seeing == ""))
+		if (($seeing == "-1") || ($seeing == "") || (intval($seeing) > 5) || (intval($seeing) < 0))
 			$seeing = "-1";
 		if ($limmag == "")
 			$limmag = "0";
