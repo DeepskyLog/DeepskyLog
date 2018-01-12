@@ -222,13 +222,13 @@ class Utils {
 		$attr = $dom->createAttribute ( "version" );
 		$fcgaInfo->appendChild ( $attr );
 
-		$attrText = $dom->createTextNode ( "2.0" );
+		$attrText = $dom->createTextNode ( "2.1" );
 		$attr->appendChild ( $attrText );
 
 		$attr = $dom->createAttribute ( "xmlns:oal" );
 		$fcgaInfo->appendChild ( $attr );
 
-		$attrText = $dom->createTextNode ( "http://groups.google.com/group/openastronomylog" );
+		$attrText = $dom->createTextNode ( "https://github.com/openastronomylog/openastronomylog" );
 		$attr->appendChild ( $attrText );
 
 		$attr = $dom->createAttribute ( "xmlns:xsi" );
@@ -240,7 +240,7 @@ class Utils {
 		$attr = $dom->createAttribute ( "xsi:schemaLocation" );
 		$fcgaInfo->appendChild ( $attr );
 
-		$attrText = $dom->createTextNode ( "http://groups.google.com/group/openastronomylog oal21.xsd" );
+		$attrText = $dom->createTextNode ( "https://github.com/openastronomylog/openastronomylog oal21.xsd" );
 		$attr->appendChild ( $attrText );
 
 		// add root - <observers>
