@@ -127,985 +127,1170 @@ class Utils
         }
     }
 
-   public function argoObjects($result) // Creates an argo navis file from an array of objects
-{
-      global $objObserver, $loggedUser, $objPresentations, $objAtlas;
-      $result = $this->sortResult ( $result );
 
-      while ( list ( $key, $valueA ) = each ( $result ) ) {
-         echo "DSL " . $valueA ['objectname'] . "|" . $objPresentations->raArgoToString ( $valueA ['objectra'] ) . "|" . $objPresentations->decToArgoString ( $valueA ['objectdecl'], 0 ) . "|" . $GLOBALS ["argo" . $valueA ['objecttype']] . "|" . $objPresentations->presentationInt ( $valueA ['objectmagnitude'], 99.9, '' ) . "|" . $valueA ['objectsize'] . ";" . $objAtlas->atlasCodes [($atlas = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ))] . " " . $valueA [$atlas] . ";" . "CR " . $valueA ['objectcontrast'] . ";" . $valueA ['objectseen'] . ";" . $valueA ['objectlastseen'] . "\n";
-      }
-   }
-   public function checkAdminOrUserID($toCheck) {
-      global $loggedUser;
-      return ((array_key_exists ( 'admin', $_SESSION ) && ($_SESSION ['admin'] == "yes")) || ($loggedUser == $toCheck));
-   }
-   public function checkArrayKey($theArray, $key, $default = '') {
-      return (array_key_exists ( $key, $theArray ) && ($theArray [$key] != '')) ? $theArray [$key] : $default;
-   }
-   public function checkGetDate($year, $month, $day) {
-      if ($year = $this->checkGetKey ( $year ))
-         return sprintf ( "%04d", $year ) . sprintf ( "%02d", $this->checkGetKey ( $month, '00' ) ) . sprintf ( "%02d", $this->checkGetKey ( $day, '00' ) );
-      elseif ($month = $this->checkGetKey ( $month ))
-         return sprintf ( "%02d", $month ) . sprintf ( "%02d", $this->checkGetKey ( $day, '00' ) );
-      return '';
-   }
-   public function getLocalizedDate($date) {
-      global $dateformat;
-      $date = sscanf ( $date, "%4d%2d%2d" );
-      $dateTimeText = date ( $dateformat, mktime ( 0, 0, 0, $date [1], $date [2], $date [0] ) );
+     /**
+      * Creates an argo navis file from an array of objects.
+      *
+      * @param array $result The array with the objects.
+      *
+      * @return string A file that can be imported into the Argo Navis
+      */
+    public function argoObjects($result)
+    {
+        global $objObserver, $loggedUser, $objPresentations, $objAtlas;
+        $result = $this->sortResult($result);
 
-      return $dateTimeText;
-   }
-   public function checkGetKey($key, $default = '') {
-      return (array_key_exists ( $key, $_GET ) && ($_GET [$key] != '')) ? $_GET [$key] : $default;
-   }
-   public function checkGetKeyReturnString($key, $string, $default = '') {
-      return array_key_exists ( $key, $_GET ) ? $string : $default;
-   }
-   public function checkGetTimeOrDegrees($hr, $min, $sec) {
-      if ($this->checkGetKey ( $hr ) . $this->checkGetKey ( $min ) . $this->checkGetKey ( $sec )) {
-         if (substr ( $this->checkGetKey ( $hr ), 0, 1 ) == "-")
-            return - (abs ( $this->checkGetKey ( $hr, 0 ) ) + ($this->checkGetKey ( $min, 0 ) / 60) + ($this->checkGetKey ( $sec, 0 ) / 3600));
-         else
-            return $this->checkGetKey ( $hr, 0 ) + ($this->checkGetKey ( $min, 0 ) / 60) + ($this->checkGetKey ( $sec, 0 ) / 3600);
-      } else
-         return '';
-   }
-   public function checkLimitsInclusive($value, $low, $high) {
-      return (($value >= $low) && ($value <= $high));
-   }
-   public function checkPostKey($key, $default = '') {
-      return (array_key_exists ( $key, $_POST ) && ($_POST [$key] != '')) ? $_POST [$key] : $default;
-   }
-   public function checkRequestKey($key, $default = '') {
-      return ((array_key_exists ( $key, $_REQUEST ) && ($_REQUEST [$key] != '')) ? $_REQUEST [$key] : ((array_key_exists ( $key, $_POST ) && ($_POST [$key] != '')) ? $_POST [$key] : ((array_key_exists ( $key, $_GET ) && ($_GET [$key] != '')) ? $_GET [$key] : $default)));
-   }
-   public function checkSessionKey($key, $default = '') {
-      return (array_key_exists ( $key, $_SESSION ) && ($_SESSION [$key] != '')) ? $_SESSION [$key] : $default;
-   }
-   public function checkUserID($toCheck) {
-      global $loggedUser;
-      return ($loggedUser == $toCheck);
-   }
-   public function comastObservations($result) // Creates a oal file from an array of observations
-{
-      global $objPresentations, $objObservation, $objCatalog, $objSession, $loggedUser, $objDatabase;
-      include_once "cometobjects.php";
-      include_once "observers.php";
-      include_once "instruments.php";
-      include_once "locations.php";
-      include_once "lenses.php";
-      include_once "filters.php";
-      include_once "cometobservations.php";
-      include_once "icqmethod.php";
-      include_once "icqreferencekey.php";
-      include_once "catalogs.php";
-      include_once "setup/vars.php";
-      include_once "setup/databaseInfo.php";
+        while (list($key, $valueA) = each($result)) {
+            echo "DSL " . $valueA ['objectname'] . "|" . $objPresentations->raArgoToString($valueA['objectra']) . 
+                    "|" . $objPresentations->decToArgoString($valueA['objectdecl'], 0) . "|" . $GLOBALS["argo" . $valueA['objecttype']] .
+                    "|" . $objPresentations->presentationInt($valueA ['objectmagnitude'], 99.9, '') . 
+                    "|" . $valueA ['objectsize'] . ";" . 
+                    $objAtlas->atlasCodes[($atlas = $objObserver->getObserverProperty($loggedUser, 'standardAtlasCode', 'urano'))] . " " . 
+                    $valueA[$atlas] . ";" . "CR " . $valueA['objectcontrast']. ";" . $valueA['objectseen'] . ";" . 
+                    $valueA['objectlastseen'] . "\n";
+        }
+    }
 
-      $observer = $GLOBALS ['objObserver'];
-      $location = $GLOBALS ['objLocation'];
+     /**
+      * Check if the given user is an admin.
+      *
+      * @param string $toCheck The userid to check.
+      *
+      * @return boolean True id the given user is an admin.
+      */
+    public function checkAdminOrUserID($toCheck)
+    {
+        global $loggedUser;
+        return ((array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes")) || ($loggedUser == $toCheck));
+    }
 
-      $dom = new DomDocument ( '1.0', 'ISO-8859-1' );
+     /**
+      * Check if the key exist in the given array.
+      *
+      * @param array  $theArray The array to check.
+      * @param string $key      The key to check.
+      * @param string $default  The default to return if the key was not found. The standard value is an empty string.
+      *
+      * @return string The value of the found key, or the standard value.
+      */
+    public function checkArrayKey($theArray, $key, $default = '')
+    {
+        return (array_key_exists($key, $theArray) && ($theArray[$key] != '')) ? $theArray [$key] : $default;
+    }
 
-      $observers = array ();
-      $sites = array ();
-      $objects = array ();
-      $scopes = array ();
-      $eyepieces = array ();
-      $lenses = array ();
-      $filters = array ();
+     /**
+      * Returns a date string YYYYMMDD or MMDD if the date given year or month equals the year or month in the $GET keys.
+      *
+      * @param integer $year  The year to check.
+      * @param integer $month The month to check.
+      * @param integer $day   The day to check.
+      *
+      * @return string The value of the date, in YYYYMMDD format if $year == GET[$year] or MMDD if $month == $GET[$month].
+      */
+    public function checkGetDate($year, $month, $day)
+    {
+        if ($year = $this->checkGetKey($year)) {
+            return sprintf("%04d", $year) . sprintf("%02d", $this->checkGetKey($month, '00')) . 
+                    sprintf("%02d", $this->checkGetKey($day, '00'));
+        } elseif ($month = $this->checkGetKey($month)) {
+            return sprintf("%02d", $month) . sprintf("%02d", $this->checkGetKey($day, '00'));
+        }
+        return '';
+    }
 
-      $cntObservers = 0;
-      $cntSites = 0;
-      $cntObjects = 0;
-      $cntScopes = 0;
-      $cntEyepieces = 0;
-      $cntLens = 0;
-      $cntFilter = 0;
+     /**
+      * Returns a localized date. This means MMDDYYYY for US and DDMMYYYY for Europe
+      *
+      * @param integer $date The date to convert.
+      *
+      * @return string The date in localized form.
+      */
+    public function getLocalizedDate($date)
+    {
+        global $dateformat;
+        $date = sscanf($date, "%4d%2d%2d");
+        $dateTimeText = date($dateformat, mktime(0, 0, 0, $date [1], $date [2], $date [0]));
 
-      $allObs = $result;
+        return $dateTimeText;
+    }
 
-      while ( list ( $key, $value ) = each ( $result ) ) {
-         $obs = $objObservation->getAllInfoDsObservation ( $value ['observationid'] );
-         $objectname = $obs ['objectname'];
-         $observerid = $obs ['observerid'];
-         $inst = $obs ['instrumentid'];
-         $loc = $obs ['locationid'];
-         $visibility = $obs ['visibility'];
-         $seeing = $obs ['seeing'];
-         $limmag = $obs ['limmag'];
-         $filt = $obs ['filterid'];
-         $eyep = $obs ['eyepieceid'];
-         $lns = $obs ['lensid'];
+     /**
+      * Returns the key from the $GET array. If the key is not found, the $default value is returned.
+      *
+      * @param string $key     The key to look for.
+      * @param string $default The value to return if the key does not exist. Default value is ''.
+      *
+      * @return string The key from the $GET array. If the key is not found, the $default value is returned.
+      */
+    public function checkGetKey($key, $default = '')
+    {
+        return (array_key_exists($key, $_GET) && ($_GET [$key] != '')) ? $_GET[$key] : $default;
+    }
 
-         if (in_array ( $observerid, $observers ) == false) {
-            $observers [$cntObservers] = $observerid;
-            $cntObservers = $cntObservers + 1;
-         }
-
-         if (in_array ( $loc, $sites ) == false) {
-            $sites [$cntSites] = $loc;
-            $cntSites = $cntSites + 1;
-         }
-
-         if (in_array ( $objectname, $objects ) == false) {
-            $objects [$cntObjects] = $objectname;
-            $cntObjects = $cntObjects + 1;
-         }
-
-         if (in_array ( $inst, $scopes ) == false) {
-            $scopes [$cntScopes] = $inst;
-            $cntScopes = $cntScopes + 1;
-         }
-
-         if (in_array ( $eyep, $eyepieces ) == false) {
-            $eyepieces [$cntEyepieces] = $eyep;
-            $cntEyepieces = $cntEyepieces + 1;
-         }
-
-         if (in_array ( $lns, $lenses ) == false) {
-            $lenses [$cntLens] = $lns;
-            $cntLens = $cntLens + 1;
-         }
-
-         if (in_array ( $filt, $filters ) == false) {
-            $filters [$cntFilter] = $filt;
-            $cntFilter = $cntFilter + 1;
-         }
-      }
-
-      // add root fcga -> The header
-      $fcgaInfo = $dom->createElement ( 'oal:observations' );
-      $fcgaDom = $dom->appendChild ( $fcgaInfo );
-
-      $attr = $dom->createAttribute ( "version" );
-      $fcgaInfo->appendChild ( $attr );
-
-      $attrText = $dom->createTextNode ( "2.1" );
-      $attr->appendChild ( $attrText );
-
-      $attr = $dom->createAttribute ( "xmlns:oal" );
-      $fcgaInfo->appendChild ( $attr );
-
-      $attrText = $dom->createTextNode ( "http://groups.google.com/group/openastronomylog" );
-      $attr->appendChild ( $attrText );
-
-      $attr = $dom->createAttribute ( "xmlns:xsi" );
-      $fcgaInfo->appendChild ( $attr );
-
-      $attrText = $dom->createTextNode ( "http://www.w3.org/2001/XMLSchema-instance" );
-      $attr->appendChild ( $attrText );
-
-      $attr = $dom->createAttribute ( "xsi:schemaLocation" );
-      $fcgaInfo->appendChild ( $attr );
-
-      $attrText = $dom->createTextNode ( "http://groups.google.com/group/openastronomylog oal21.xsd" );
-      $attr->appendChild ( $attrText );
-
-      // add root - <observers>
-      $observersDom = $fcgaDom->appendChild ( $dom->createElement ( 'observers' ) );
-
-      while ( list ( $key, $value ) = each ( $observers ) ) {
-         $observer2 = $dom->createElement ( 'observer' );
-         $observerChild = $observersDom->appendChild ( $observer2 );
-         $attr = $dom->createAttribute ( "id" );
-         $observer2->appendChild ( $attr );
-
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\s+/", "_", $value ) ) );
-         $attrText = $dom->createTextNode ( "usr_" . $correctedValue );
-         $attr->appendChild ( $attrText );
-
-         $name = $observerChild->appendChild ( $dom->createElement ( 'name' ) );
-         $name->appendChild ( $dom->createCDATASection ( utf8_encode ( html_entity_decode ( $observer->getObserverProperty ( $value, 'firstname' ) ) ) ) );
-
-         $surname = $observerChild->appendChild ( $dom->createElement ( 'surname' ) );
-         $surname->appendChild ( $dom->createCDataSection ( ($observer->getObserverProperty ( $value, 'name' )) ) );
-
-         $account = $observerChild->appendChild ( $dom->createElement ( 'account' ) );
-         $account->appendChild ( $dom->createCDataSection ( utf8_encode ( html_entity_decode ( $value ) ) ) );
-
-         $attr = $dom->createAttribute ( "name" );
-         $account->appendChild ( $attr );
-
-         $attrText = $dom->createTextNode ( "www.deepskylog.org" );
-         $attr->appendChild ( $attrText );
-
-         if ($observer->getObserverProperty ( $value, 'fstOffset' ) != 0.0) {
-            $fst = $observerChild->appendChild ( $dom->createElement ( 'fstOffset' ) );
-            $fst->appendChild ( $dom->createTextNode ( ($observer->getObserverProperty ( $value, 'fstOffset' )) ) );
-         }
-      }
-
-      // add root - <sites>
-      $observersDom = $fcgaDom->appendChild ( $dom->createElement ( 'sites' ) );
-
-      while ( list ( $key, $value ) = each ( $sites ) ) {
-         $site2 = $dom->createElement ( 'site' );
-         $siteChild = $observersDom->appendChild ( $site2 );
-         $attr = $dom->createAttribute ( "id" );
-         $site2->appendChild ( $attr );
-
-         $attrText = $dom->createTextNode ( "site_" . $value );
-         $attr->appendChild ( $attrText );
-
-         $name = $siteChild->appendChild ( $dom->createElement ( 'name' ) );
-         $name->appendChild ( $dom->createCDATASection ( utf8_encode ( html_entity_decode ( $location->getLocationPropertyFromId ( $value, 'name' ) ) ) ) );
-
-         $longitude = $siteChild->appendChild ( $dom->createElement ( 'longitude' ) );
-         $longitude->appendChild ( $dom->createTextNode ( $location->getLocationPropertyFromId ( $value, 'longitude' ) ) );
-
-         $attr = $dom->createAttribute ( "unit" );
-         $longitude->appendChild ( $attr );
-
-         $attrText = $dom->createTextNode ( "deg" );
-         $attr->appendChild ( $attrText );
-
-         $latitude = $siteChild->appendChild ( $dom->createElement ( 'latitude' ) );
-         $latitude->appendChild ( $dom->createTextNode ( $location->getLocationPropertyFromId ( $value, 'latitude' ) ) );
-
-         $attr = $dom->createAttribute ( "unit" );
-         $latitude->appendChild ( $attr );
-
-         $attrText = $dom->createTextNode ( "deg" );
-         $attr->appendChild ( $attrText );
-
-         // ELEVATION
-         $elevation = $siteChild->appendChild ( $dom->createElement ( 'elevation' ) );
-         $elevation->appendChild ( $dom->createTextNode ( $location->getLocationPropertyFromId ( $value, 'elevation' ) ) );
-
-         $timezone = $siteChild->appendChild ( $dom->createElement ( 'timezone' ) );
-         $dateTimeZone = new DateTimeZone ( $location->getLocationPropertyFromId ( $value, 'timezone' ) );
-         $datestr = "01/01/2008";
-         $dateTime = new DateTime ( $datestr, $dateTimeZone );
-         // Geeft tijdsverschil terug in seconden
-         $timedifference = $dateTimeZone->getOffset ( $dateTime );
-         $timedifference = $timedifference / 60.0;
-
-         if (strncmp ( $location->getLocationPropertyFromId ( $value, 'timezone' ), "Etc/GMT", 7 ) == 0) {
-            $timedifference = - $timedifference;
-         }
-
-         $timezone->appendChild ( $dom->createTextNode ( $timedifference ) );
-      }
-
-      // add root - <sessions> We export all the sessions of the logged observer
-      $observersDom = $fcgaDom->appendChild ( $dom->createElement ( 'sessions' ) );
-
-      if ($loggedUser != "") {
-         $sessions = $objSession->getAllSessionsForUser ( $loggedUser );
-
-         $usedSessions = Array ();
-         // Only add session for which the location is also exported
-         for($scnt = 0; $scnt < count ( $sessions ); $scnt ++) {
-            if (in_array ( $sessions [$scnt] ['locationid'], $sites )) {
-               $session = $dom->createElement ( 'session' );
-               $sessionChild = $observersDom->appendChild ( $session );
-               $attr = $dom->createAttribute ( "id" );
-               $session->appendChild ( $attr );
-
-               $attrText = $dom->createTextNode ( "se_" . $sessions [$scnt] ['id'] );
-               $attr->appendChild ( $attrText );
-
-               $attr = $dom->createAttribute ( "lang" );
-               $session->appendChild ( $attr );
-
-               $attrText = $dom->createTextNode ( $sessions [$scnt] ['language'] );
-               $attr->appendChild ( $attrText );
-
-               $begin = $sessionChild->appendChild ( $dom->createElement ( 'begin' ) );
-               $begindate = $sessions [$scnt] ['begindate'];
-               $begindate = str_replace ( " ", "T", $begindate ) . "+00:00";
-               $begin->appendChild ( $dom->createTextNode ( $begindate ) );
-
-               $end = $sessionChild->appendChild ( $dom->createElement ( 'end' ) );
-               $enddate = $sessions [$scnt] ['enddate'];
-               $enddate = str_replace ( " ", "T", $enddate ) . "+00:00";
-               $end->appendChild ( $dom->createTextNode ( $enddate ) );
-
-               $site = $sessionChild->appendChild ( $dom->createElement ( 'site' ) );
-               $site->appendChild ( $dom->createTextNode ( "site_" . $sessions [$scnt] ['locationid'] ) );
-
-               $weather = $sessionChild->appendChild ( $dom->createElement ( 'weather' ) );
-               $weather->appendChild ( $dom->createCDATASection ( $sessions [$scnt] ['weather'] ) );
-
-               $equipment = $sessionChild->appendChild ( $dom->createElement ( 'equipment' ) );
-               $equipment->appendChild ( $dom->createCDATASection ( $sessions [$scnt] ['equipment'] ) );
-
-               $comments = $sessionChild->appendChild ( $dom->createElement ( 'comments' ) );
-               $comments->appendChild ( $dom->createCDATASection ( $sessions [$scnt] ['comments'] ) );
-
-               // TODO : Also add images of the session to the export
-               $usedSessions [] = $sessions [$scnt] ['id'];
+     /**
+      * Returns on time or coordinate when the hr, min and sec are in the $GET array. If the keys are not found,  is returned.
+      *
+      * @param string $hr  The key describing the number of hours.
+      * @param string $min The key describing the number of minutes.
+      * @param string $sec The key describing the number of seconds.
+      *
+      * @return integer The time if the hr, min and sec keys exists in the $GET array. If the keys are not found,  is returned.
+      */
+    public function checkGetTimeOrDegrees($hr, $min, $sec) 
+    {
+        if ($this->checkGetKey($hr) . $this->checkGetKey($min) . $this->checkGetKey($sec)) {
+            if (substr($this->checkGetKey($hr), 0, 1) == "-") {
+                return -(abs($this->checkGetKey($hr, 0)) + ($this->checkGetKey($min, 0) / 60) + ($this->checkGetKey($sec, 0) / 3600));
+            } else {
+                return $this->checkGetKey($hr, 0) + ($this->checkGetKey($min, 0) / 60) + ($this->checkGetKey($sec, 0) / 3600);
             }
-         }
-      }
+        } else {
+            return '';
+        }
+    }
 
-      // add root - <targets>
-      $observersDom = $fcgaDom->appendChild ( $dom->createElement ( 'targets' ) );
+     /**
+      * Checks if the value is in the limits.
+      *
+      * @param double $value The value to check.
+      * @param double $low   The lower limit.
+      * @param double $high  The higher limit.
+      *
+      * @return boolean Checks if the given value lies inside the given limits.
+      */
+    public function checkLimitsInclusive($value, $low, $high)
+    {
+        return (($value >= $low) && ($value <= $high));
+    }
+    
+     /**
+      * Returns the key from the $POST array. If the key is not found, the $default value is returned.
+      *
+      * @param string $key     The key to look for.
+      * @param string $default The value to return if the key does not exist. Default value is ''.
+      *
+      * @return string The key from the $POST array. If the key is not found, the $default value is returned.
+      */
+    public function checkPostKey($key, $default = '')
+    {
+        return (array_key_exists($key, $_POST) && ($_POST[$key] != '')) ? $_POST[$key] : $default;
+    }
 
-      while ( list ( $key, $value ) = each ( $objects ) ) {
-         $object2 = $dom->createElement ( 'target' );
-         $objectChild = $observersDom->appendChild ( $object2 );
-         $attr = $dom->createAttribute ( "id" );
-         $object2->appendChild ( $attr );
+     /**
+      * Returns the key from the $REQUEST array. If the key is not found, the POST and GET arrays are checked.
+      *
+      * @param string $key     The key to look for.
+      * @param string $default The value to return if the key does not exist. Default value is ''.
+      *
+      * @return string The key from the $REQUEST array. If the key is not found, the POST and GET arrays are checked.
+      */
+    public function checkRequestKey($key, $default = '') 
+    {
+        return ((array_key_exists($key, $_REQUEST) && ($_REQUEST[$key] != '')) ? $_REQUEST[$key] : 
+                ((array_key_exists($key, $_POST) && ($_POST [$key] != '')) ? $_POST [$key] : 
+                ((array_key_exists($key, $_GET) && ($_GET [$key] != '')) ? $_GET [$key] : $default)));
+    }
 
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\s+/", "_", $value ) ) );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\+/", "_", $correctedValue ) ) );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\//", "_", $correctedValue ) ) );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\,/", "_", $correctedValue ) ) );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\(/", "_", $correctedValue ) ) );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\)/", "_", $correctedValue ) ) );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/ /", "_", $correctedValue ) ) );
+     /**
+      * Returns the key from the $SESSION array. If the key is not found, the $default value is returned.
+      *
+      * @param string $key     The key to look for.
+      * @param string $default The value to return if the key does not exist. Default value is ''.
+      *
+      * @return string The key from the $SESSION array. If the key is not found, the $default value is returned.
+      */
+    public function checkSessionKey($key, $default = '')
+    {
+        return (array_key_exists($key, $_SESSION) && ($_SESSION [$key] != '')) ? $_SESSION [$key] : $default;
+    }
 
-         $attrText = $dom->createTextNode ( "_" . $correctedValue );
-         $attr->appendChild ( $attrText );
+     /**
+      * Checks if the given user is logged in.
+      *
+      * @param string $toCheck The userid to check.
+      *
+      * @return boolean True is the given user is logged in.
+      */
+    public function checkUserID($toCheck)
+    {
+        global $loggedUser;
+        return ($loggedUser == $toCheck);
+    }
 
-         $attr = $dom->createAttribute ( "xsi:type" );
-         $object2->appendChild ( $attr );
+     /**
+      * Encodes the html decoded string to utf8.
+      *
+      * @param string $string The string to encode.
+      *
+      * @return string The utf8 encoded string.
+      */
+    public function safeEncode($string) 
+    {
+        return utf8_encode(html_entity_decode($string));
+    }
 
-         $object = $GLOBALS ['objObject']->getAllInfoDsObject ( $value );
+     /**
+      * Corrects the name for XML export. Changes all unwanted characters to _.
+      *
+      * @param string $value The string to correct.
+      *
+      * @return string The corrected string for XML export.
+      */
+    public function correctForXmlExport($value)
+    {
+        $correctedValue = $this->safeEncode(preg_replace("/\s+/", "_", $value));
+        $correctedValue = $this->safeEncode(preg_replace("/\+/", "_", $correctedValue));
+        $correctedValue = $this->safeEncode(preg_replace("/\//", "_", $correctedValue));
+        $correctedValue = $this->safeEncode(preg_replace("/\,/", "_", $correctedValue));
+        $correctedValue = $this->safeEncode(preg_replace("/\(/", "_", $correctedValue));
+        $correctedValue = $this->safeEncode(preg_replace("/\)/", "_", $correctedValue));
+        $correctedValue = $this->safeEncode(preg_replace("/ /", "_", $correctedValue));
 
-         $type = $object ["type"];
-         if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC") {
-            $type = "oal:deepSkyOC";
-         } else if ($type == "GALXY") {
-            $type = "oal:deepSkyGX";
-         } else if ($type == "GALCL") {
-            $type = "oal:deepSkyCG";
-         } else if ($type == "PLNNB") {
-            $type = "oal:deepSkyPN";
-         } else if ($type == "ASTER" || $type == "AA1STAR" || $type == "AA3STAR" || $type == "AA4STAR" || $type == "AA8STAR") {
-            $type = "oal:deepSkyAS";
-         } else if ($type == "DS") {
-            $type = "oal:deepSkyDS";
-         } else if ($type == "GLOCL" || $type == "GXAGC" || $type == "LMCGC" || $type == "SMCGC") {
-            $type = "oal:deepSkyGC";
-         } else if ($type == "BRTNB" || $type == "CLANB" || $type == "EMINB" || $type == "ENRNN" || $type == "ENSTR" || $type == "GXADN" || $type == "GACAN" || $type == "HII" || $type == "LMCCN" || $type == "LMCDN" || $type == "REFNB" || $type == "RNHII" || $type == "SMCCN" || $type == "SMCDN" || $type == "SNREM" || $type == "STNEB" || $type == "WRNEB") {
-            $type = "oal:deepSkyGN";
-         } else if ($type == "QUASR") {
-            $type = "oal:deepSkyQS";
-         } else if ($type == "DRKNB") {
-            $type = "oal:deepSkyDN";
-         } else if ($type == "NONEX") {
-            $type = "oal:deepSkyNA";
-         }
-         $attrText = $dom->createTextNode ( $type );
-         $attr->appendChild ( $attrText );
+        return $correctedValue;
+    }
 
-         $datasource = $objectChild->appendChild ( $dom->createElement ( 'datasource' ) );
-         $datasource->appendChild ( $dom->createCDATASection ( utf8_encode ( html_entity_decode ( $object ["datasource"] ) ) ) );
+    /**
+     * Prints the OAL file from an array of observations.
+     *
+     * @param array $result The array of observations to use.
+     *
+     * @return string The OAL file.
+     */
+    public function comastObservations($result)
+    {
+        global $objPresentations, $objObservation, $objCatalog, $objSession, $loggedUser, $objDatabase;
+        include_once "cometobjects.php";
+        include_once "observers.php";
+        include_once "instruments.php";
+        include_once "locations.php";
+        include_once "lenses.php";
+        include_once "filters.php";
+        include_once "cometobservations.php";
+        include_once "icqmethod.php";
+        include_once "icqreferencekey.php";
+        include_once "catalogs.php";
+        include_once "setup/vars.php";
+        include_once "setup/databaseInfo.php";
 
-         $name = $objectChild->appendChild ( $dom->createElement ( 'name' ) );
-         $name->appendChild ( $dom->createCDATASection ( ($objCatalog->checkObject ( $value )) ) );
+        $observer = $GLOBALS['objObserver'];
+        $location = $GLOBALS['objLocation'];
 
-         $altnames = $GLOBALS ['objObject']->getAlternativeNames ( $value );
-         while ( list ( $key2, $value2 ) = each ( $altnames ) ) // go through names array
-{
-            if (trim ( $value2 ) != trim ( $value )) {
-               if (trim ( $value2 ) != "") {
-                  $alias = $objectChild->appendChild ( $dom->createElement ( 'alias' ) );
-                  $alias->appendChild ( $dom->createCDataSection ( (trim ( $objCatalog->checkObject ( $value2 ) )) ) );
-               }
-            }
-         }
+        $dom = new DomDocument('1.0', 'ISO-8859-1');
 
-         $position = $objectChild->appendChild ( $dom->createElement ( 'position' ) );
+        $observers = array ();
+        $sites = array ();
+        $objects = array ();
+        $scopes = array ();
+        $eyepieces = array ();
+        $lenses = array ();
+        $filters = array ();
 
-         $raDom = $dom->createElement ( 'ra' );
-         $ra = $position->appendChild ( $raDom );
-         $ra->appendChild ( $dom->createTextNode ( $object ["ra"] * 15.0 ) );
+        $cntObservers = 0;
+        $cntSites = 0;
+        $cntObjects = 0;
+        $cntScopes = 0;
+        $cntEyepieces = 0;
+        $cntLens = 0;
+        $cntFilter = 0;
 
-         $attr = $dom->createAttribute ( "unit" );
-         $raDom->appendChild ( $attr );
+        $allObs = $result;
 
-         $attrText = $dom->createTextNode ( "deg" );
-         $attr->appendChild ( $attrText );
+        while (list($key, $value) = each($result)) {
+            $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
+            $objectname = $obs['objectname'];
+            $observerid = $obs['observerid'];
+            $inst = $obs['instrumentid'];
+            $loc = $obs['locationid'];
+            $visibility = $obs['visibility'];
+            $seeing = $obs['seeing'];
+            $limmag = $obs['limmag'];
+            $filt = $obs['filterid'];
+            $eyep = $obs['eyepieceid'];
+            $lns = $obs['lensid'];
 
-         $decDom = $dom->createElement ( 'dec' );
-         $dec = $position->appendChild ( $decDom );
-         $dec->appendChild ( $dom->createTextNode ( $object ["decl"] ) );
-
-         $attr = $dom->createAttribute ( "unit" );
-         $decDom->appendChild ( $attr );
-
-         $attrText = $dom->createTextNode ( "deg" );
-         $attr->appendChild ( $attrText );
-
-         $constellation = $objectChild->appendChild ( $dom->createElement ( 'constellation' ) );
-         $constellation->appendChild ( $dom->createCDATASection ( ($object ["con"]) ) );
-
-         if ($object ["diam2"] > 0.0 && $object ["diam2"] != 99.9) {
-            $sdDom = $dom->createElement ( 'smallDiameter' );
-            $diam2 = $objectChild->appendChild ( $sdDom );
-            $sDiameter = $object ["diam2"] / 60.0;
-            $diam2->appendChild ( $dom->createTextNode ( $sDiameter ) );
-
-            $attr = $dom->createAttribute ( "unit" );
-            $sdDom->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "arcmin" );
-            $attr->appendChild ( $attrText );
-         }
-
-         $diameter1 = $object ["diam1"];
-         if ($diameter1 > 0.0 && $diameter1 != 99.9) {
-            $ldDom = $dom->createElement ( 'largeDiameter' );
-            $diam1 = $objectChild->appendChild ( $ldDom );
-            $lDiameter = $diameter1 / 60.0;
-            $diam1->appendChild ( $dom->createTextNode ( $lDiameter ) );
-
-            $attr = $dom->createAttribute ( "unit" );
-            $ldDom->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "arcmin" );
-            $attr->appendChild ( $attrText );
-         }
-
-         if ($object ["mag"] < 99.0) {
-            $mag = $objectChild->appendChild ( $dom->createElement ( 'visMag' ) );
-            $mag->appendChild ( $dom->createTextNode ( ($object ["mag"]) ) );
-         }
-
-         if ($object ["subr"] < 99.0) {
-            $mag = $objectChild->appendChild ( $dom->createElement ( 'surfBr' ) );
-            $mag->appendChild ( $dom->createTextNode ( ($object ["subr"]) ) );
-
-            $attr = $dom->createAttribute ( "unit" );
-            $mag->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "mags-per-squarearcmin" );
-            $attr->appendChild ( $attrText );
-         }
-
-         if ($type != "oal:deepSkyCG" && $type != "oal:deepSkyGC" && $type != "oal:deepSkyNA" && $type != "oal:deepSkyOC" && $type != "oal:deepSkyPN" && $type != "oal:deepSkyQS") {
-            if ($object ["pa"] < 999.0) {
-               $pa = $objectChild->appendChild ( $dom->createElement ( 'pa' ) );
-               $pa->appendChild ( $dom->createTextNode ( ($object ["pa"]) ) );
-            }
-         }
-      }
-      // add root - <scopes>
-      $observersDom = $fcgaDom->appendChild ( $dom->createElement ( 'scopes' ) );
-
-      while ( list ( $key, $value ) = each ( $scopes ) ) {
-         if ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $value, 'fixedMagnification' ) != 1) {
-            if ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $value, 'name' ) != "") {
-               $scope2 = $dom->createElement ( 'scope' );
-               $siteChild = $observersDom->appendChild ( $scope2 );
-               $attr = $dom->createAttribute ( "id" );
-               $scope2->appendChild ( $attr );
-
-               $attrText = $dom->createTextNode ( "opt_" . $value );
-               $attr->appendChild ( $attrText );
-
-               $attr = $dom->createAttribute ( "xsi:type" );
-               $scope2->appendChild ( $attr );
-
-               if ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $value, 'fixedMagnification' ) > 0) {
-                  $typeLong = "oal:fixedMagnificationOpticsType";
-               } else {
-                  $typeLong = "oal:scopeType";
-               }
-               $tp = $GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $value, 'type' );
-               if ($tp == InstrumentOther || $tp == InstrumentRest) {
-                  $typeShort = "";
-               } else if ($tp == InstrumentNakedEye) {
-                  $typeShort = "A";
-               } else if ($tp == InstrumentBinoculars || $tp == InstrumentFinderscope) {
-                  $typeShort = "B";
-               } else if ($tp == InstrumentRefractor) {
-                  $typeShort = "R";
-               } else if ($tp == InstrumentReflector) {
-                  $typeShort = "N";
-               } else if ($tp == InstrumentCassegrain) {
-                  $typeShort = "C";
-               } else if ($tp == InstrumentKutter) {
-                  $typeShort = "K";
-               } else if ($tp == InstrumentMaksutov) {
-                  $typeShort = "M";
-               } else if ($tp == InstrumentSchmidtCassegrain) {
-                  $typeShort = "S";
-               }
-
-               if ($typeShort == "B") {
-                  $typeLong = "oal:fixedMagnificationOpticsType";
-               }
-               $attrText = $dom->createTextNode ( $typeLong );
-               $attr->appendChild ( $attrText );
-
-               $name = $siteChild->appendChild ( $dom->createElement ( 'model' ) );
-               $name->appendChild ( $dom->createCDATASection ( utf8_encode ( html_entity_decode ( $GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $value, 'name' ) ) ) ) );
-
-               $type = $siteChild->appendChild ( $dom->createElement ( 'type' ) );
-               $type->appendChild ( $dom->createCDATASection ( ($typeShort) ) );
-
-               $aperture = $siteChild->appendChild ( $dom->createElement ( 'aperture' ) );
-               $aperture->appendChild ( $dom->createTextNode ( ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $value, 'diameter' )) ) );
-
-               if ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $value, 'fixedMagnification' ) > 0) {
-                  $magnification = $siteChild->appendChild ( $dom->createElement ( 'magnification' ) );
-                  $magnification->appendChild ( $dom->createTextNode ( ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $value, 'fixedMagnification' )) ) );
-               } else {
-                  if ($typeShort == "B") {
-                     $magnification = $siteChild->appendChild ( $dom->createElement ( 'magnification' ) );
-                     $magnification->appendChild ( $dom->createTextNode ( "1" ) );
-                  } else {
-                     $focalLength = $siteChild->appendChild ( $dom->createElement ( 'focalLength' ) );
-                     $focalLength->appendChild ( $dom->createTextNode ( ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $value, 'fd' )) * $GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $value, 'diameter' ) ) );
-                  }
-               }
-            }
-         }
-      }
-
-      // add root - <eyepieces>
-      $observersDom = $fcgaDom->appendChild ( $dom->createElement ( 'eyepieces' ) );
-
-      while ( list ( $key, $value ) = each ( $eyepieces ) ) {
-         if ($value != "" && $value > 0) {
-            $eyepiece2 = $dom->createElement ( 'eyepiece' );
-            $eyepieceChild = $observersDom->appendChild ( $eyepiece2 );
-            $attr = $dom->createAttribute ( "id" );
-            $eyepiece2->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "ep_" . $value );
-            $attr->appendChild ( $attrText );
-
-            $model = $eyepieceChild->appendChild ( $dom->createElement ( 'model' ) );
-            $model->appendChild ( $dom->createCDATASection ( utf8_encode ( html_entity_decode ( $GLOBALS ['objEyepiece']->getEyepiecePropertyFromId ( $value, 'name' ) ) ) ) );
-
-            $focalLength = $eyepieceChild->appendChild ( $dom->createElement ( 'focalLength' ) );
-            $focalLength->appendChild ( $dom->createTextNode ( ($GLOBALS ['objEyepiece']->getEyepiecePropertyFromId ( $value, 'focalLength' )) ) );
-
-            if ($GLOBALS ['objEyepiece']->getEyepiecePropertyFromId ( $value, 'maxFocalLength' ) > 0) {
-               $maxFocalLength = $eyepieceChild->appendChild ( $dom->createElement ( 'maxFocalLength' ) );
-               $maxFocalLength->appendChild ( $dom->createTextNode ( ($GLOBALS ['objEyepiece']->getEyepiecePropertyFromId ( $value, 'maxFocalLength' )) ) );
+            if (in_array($observerid, $observers) == false) {
+                $observers[$cntObservers] = $observerid;
+                $cntObservers = $cntObservers + 1;
             }
 
-            $apparentFOV = $eyepieceChild->appendChild ( $dom->createElement ( 'apparentFOV' ) );
-            $apparentFOV->appendChild ( $dom->createTextNode ( ($GLOBALS ['objEyepiece']->getEyepiecePropertyFromId ( $value, 'apparentFOV' )) ) );
-
-            $attr = $dom->createAttribute ( "unit" );
-            $apparentFOV->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "deg" );
-            $attr->appendChild ( $attrText );
-         }
-      }
-
-      // add root - <lenses>
-      $observersDom = $fcgaDom->appendChild ( $dom->createElement ( 'lenses' ) );
-
-      while ( list ( $key, $value ) = each ( $lenses ) ) {
-         if ($value != "" && $value > 0) {
-            $lens2 = $dom->createElement ( 'lens' );
-            $lensChild = $observersDom->appendChild ( $lens2 );
-            $attr = $dom->createAttribute ( "id" );
-            $lens2->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "le_" . $value );
-            $attr->appendChild ( $attrText );
-
-            $model = $lensChild->appendChild ( $dom->createElement ( 'model' ) );
-            $model->appendChild ( $dom->createCDATASection ( utf8_encode ( html_entity_decode ( $GLOBALS ['objLens']->getLensPropertyFromId ( $value, 'name' ) ) ) ) );
-
-            $factor = $lensChild->appendChild ( $dom->createElement ( 'factor' ) );
-            $factor->appendChild ( $dom->createTextNode ( ($GLOBALS ['objLens']->getLensPropertyFromId ( $value, 'factor' )) ) );
-         }
-      }
-
-      // add root - <filters>
-      $observersDom = $fcgaDom->appendChild ( $dom->createElement ( 'filters' ) );
-
-      while ( list ( $key, $value ) = each ( $filters ) ) {
-         if ($value != "" && $value > 0) {
-            $filter2 = $dom->createElement ( 'filter' );
-            $filterChild = $observersDom->appendChild ( $filter2 );
-            $attr = $dom->createAttribute ( "id" );
-            $filter2->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "flt_" . $value );
-            $attr->appendChild ( $attrText );
-
-            $model = $filterChild->appendChild ( $dom->createElement ( 'model' ) );
-            $model->appendChild ( $dom->createCDATASection ( utf8_encode ( html_entity_decode ( $GLOBALS ['objFilter']->getFilterPropertyFromId ( $value, 'name' ) ) ) ) );
-
-            $tp = $GLOBALS ['objFilter']->getFilterPropertyFromId ( $value, 'type' );
-            if ($tp == 0) {
-               $filType = "other";
-            } else if ($tp == 1) {
-               $filType = "broad band";
-            } else if ($tp == 2) {
-               $filType = "narrow band";
-            } else if ($tp == 3) {
-               $filType = "O-III";
-            } else if ($tp == 4) {
-               $filType = "H-beta";
-            } else if ($tp == 5) {
-               $filType = "H-alpha";
-            } else if ($tp == 6) {
-               $filType = "color";
-            } else if ($tp == 7) {
-               $filType = "neutral";
-            } else if ($tp == 8) {
-               $filType = "corrective";
+            if (in_array($loc, $sites) == false) {
+                $sites[$cntSites] = $loc;
+                $cntSites = $cntSites + 1;
             }
 
-            $type = $filterChild->appendChild ( $dom->createElement ( 'type' ) );
-            $type->appendChild ( $dom->createCDATASection ( $filType ) );
-
-            if ($filType == "color") {
-               $col = $GLOBALS ['objFilter']->getFilterPropertyFromId ( $value, 'color' );
-               if ($col == 1) {
-                  $colName = "light red";
-               } else if ($col == 2) {
-                  $colName = "red";
-               } else if ($col == 3) {
-                  $colName = "deep red";
-               } else if ($col == 4) {
-                  $colName = "orange";
-               } else if ($col == 5) {
-                  $colName = "light yellow";
-               } else if ($col == 6) {
-                  $colName = "deep yellow";
-               } else if ($col == 7) {
-                  $colName = "yellow";
-               } else if ($col == 8) {
-                  $colName = "yellow-green";
-               } else if ($col == 9) {
-                  $colName = "light green";
-               } else if ($col == 10) {
-                  $colName = "green";
-               } else if ($col == 11) {
-                  $colName = "medium blue";
-               } else if ($col == 12) {
-                  $colName = "pale blue";
-               } else if ($col == 13) {
-                  $colName = "blue";
-               } else if ($col == 14) {
-                  $colName = "deep blue";
-               } else if ($col == 15) {
-                  $colName = "violet";
-               }
-               if ($colName != "") {
-                  $color = $filterChild->appendChild ( $dom->createElement ( 'color' ) );
-                  $color->appendChild ( $dom->createCDATASection ( $colName ) );
-               }
-
-               if ($GLOBALS ['objFilter']->getFilterPropertyFromId ( $value, 'wratten' ) != "") {
-                  $wratten = $filterChild->appendChild ( $dom->createElement ( 'wratten' ) );
-                  $wratten->appendChild ( $dom->createCDATASection ( $GLOBALS ['objFilter']->getFilterPropertyFromId ( $value, 'wratten' ) ) );
-               }
-
-               if ($GLOBALS ['objFilter']->getFilterPropertyFromId ( $value, 'schott' ) != "") {
-                  $schott = $filterChild->appendChild ( $dom->createElement ( 'schott' ) );
-                  $schott->appendChild ( $dom->createCDATASection ( $GLOBALS ['objFilter']->getFilterPropertyFromId ( $value, 'schott' ) ) );
-               }
-            }
-         }
-      }
-
-      // add root - <imagers> DeepskyLog has no imagers
-      $observersDom = $fcgaDom->appendChild ( $dom->createElement ( 'imagers' ) );
-
-      // Add the observations.
-      while ( list ( $key, $value ) = each ( $allObs ) ) {
-         $obs = $GLOBALS ['objObservation']->getAllInfoDsObservation ( $value ['observationid'] );
-         $objectname = $obs ['objectname'];
-         $observerid = $obs ['observerid'];
-         $inst = $obs ['instrumentid'];
-         $loc = $obs ['locationid'];
-         $visibility = $obs ['visibility'];
-         $seeing = $obs ['seeing'];
-         $limmag = $obs ['limmag'];
-         $filt = $obs ['filterid'];
-         $eyep = $obs ['eyepieceid'];
-         $lns = $obs ['lensid'];
-
-         $observation = $fcgaDom->appendChild ( $dom->createElement ( 'observation' ) );
-         $attr = $dom->createAttribute ( "id" );
-         $observation->appendChild ( $attr );
-
-         $attrText = $dom->createTextNode ( "obs_" . $value ['observationid'] );
-         $attr->appendChild ( $attrText );
-
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\s+/", "_", $observerid ) ) );
-         $observer = $observation->appendChild ( $dom->createElement ( 'observer' ) );
-         $observer->appendChild ( $dom->createTextNode ( "usr_" . $correctedValue ) );
-
-         $site = $observation->appendChild ( $dom->createElement ( 'site' ) );
-         $site->appendChild ( $dom->createTextNode ( "site_" . $loc ) );
-
-         // Check whether this observation is part of a session...
-         for($scnt = 0; $scnt < count ( $usedSessions ); $scnt ++) {
-            $sessionObs = $objDatabase->selectRecordsetArray ( "select * from sessionObservations where sessionid = \"" . $usedSessions [$scnt] . "\" and observationid = \"" . $value ['observationid'] . "\"" );
-
-            if (count ( $sessionObs ) >= 1) {
-               $session = $observation->appendChild ( $dom->createElement ( 'session' ) );
-               $session->appendChild ( $dom->createTextNode ( "se_" . $usedSessions [$scnt] ) );
-            }
-         }
-
-         $target = $observation->appendChild ( $dom->createElement ( 'target' ) );
-         $correctedValue = $objCatalog->checkObject ( $objectname );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\s+/", "_", $correctedValue ) ) );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\+/", "_", $correctedValue ) ) );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\//", "_", $correctedValue ) ) );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\,/", "_", $correctedValue ) ) );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\(/", "_", $correctedValue ) ) );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/\)/", "_", $correctedValue ) ) );
-         $correctedValue = utf8_encode ( html_entity_decode ( preg_replace ( "/ /", "_", $correctedValue ) ) );
-
-         $target->appendChild ( $dom->createTextNode ( "_" . $correctedValue ) );
-
-         if ($obs ["time"] >= 0) {
-            $time = sprintf ( "T%02d:%02d:00+00:00", ( int ) ($obs ["time"] % 2400 / 100), $obs ["time"] % 2400 - ( int ) ($obs ["time"] % 2400 / 100) * 100 );
-         } else {
-            $time = "T22:00:00+00:00";
-         }
-
-         $year = ( int ) ($obs ["date"] / 10000);
-         $month = ( int ) (($obs ["date"] - $year * 10000) / 100);
-         $day = ( int ) (($obs ["date"] - $year * 10000 - $month * 100));
-         if ($day == 0) {
-            $day = 1;
-         } else if ($day > 31) {
-            $day = 31;
-         }
-         $date = sprintf ( "%4d-%02d-%02d", $year, $month, $day );
-
-         $begin = $observation->appendChild ( $dom->createElement ( 'begin' ) );
-         $begin->appendChild ( $dom->createTextNode ( $date . $time ) );
-
-         if ($obs ["SQM"] > 0) {
-            $magPerSquareArcsecond = $observation->appendChild ( $dom->createElement ( 'sky-quality' ) );
-            $magPerSquareArcsecond->appendChild ( $dom->createTextNode ( $obs ["SQM"] ) );
-
-            $attr = $dom->createAttribute ( "unit" );
-            $magPerSquareArcsecond->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "mags-per-squarearcsec" );
-            $attr->appendChild ( $attrText );
-         } else if ($obs ["limmag"] > 0) {
-            $faintestStar = $observation->appendChild ( $dom->createElement ( 'faintestStar' ) );
-            $faintestStar->appendChild ( $dom->createTextNode ( $obs ["limmag"] ) );
-         }
-
-         if ($obs ["seeing"] > 0) {
-            $seeing = $observation->appendChild ( $dom->createElement ( 'seeing' ) );
-            $seeing->appendChild ( $dom->createTextNode ( $obs ["seeing"] ) );
-         }
-
-         if ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $inst, 'fixedMagnification' ) != 1) {
-            $scope = $observation->appendChild ( $dom->createElement ( 'scope' ) );
-            $scope->appendChild ( $dom->createTextNode ( "opt_" . $inst ) );
-         }
-
-         if ($eyep > 0) {
-            $eyepiece = $observation->appendChild ( $dom->createElement ( 'eyepiece' ) );
-            $eyepiece->appendChild ( $dom->createTextNode ( "ep_" . $eyep ) );
-         }
-
-         if ($lns > 0) {
-            $lens = $observation->appendChild ( $dom->createElement ( 'lens' ) );
-            $lens->appendChild ( $dom->createTextNode ( "le_" . $lns ) );
-         }
-
-         if ($filt > 0) {
-            $filter = $observation->appendChild ( $dom->createElement ( 'filter' ) );
-            $filter->appendChild ( $dom->createTextNode ( "flt_" . $filt ) );
-         }
-
-         $magni = 0;
-         if ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $inst, 'fixedMagnification' ) > 0) {
-            $magni = $GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $inst, 'fixedMagnification' );
-         } else if ($obs ["magnification"] > 0) {
-            $magni = $obs ["magnification"];
-         } else if ($eyep > 0 && $GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $inst, 'fixedMagnification' ) > 0) {
-            $factor = 1.0;
-            if ($GLOBALS ['objLens']->getFilterPropertyFromId ( $lns, 'factor' ) > 0) {
-               $factor = $GLOBALS ['objLens']->getFilterPropertyFromId ( $lns, 'factor' );
-            }
-            $magni = sprintf ( "%.2f", $GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $inst, 'fixedMagnification' ) * $GLOBALS ['objInstrument']->getInstrumentPropertyFromId ( $inst, 'diameter' ) * $factor / $GLOBALS ['objEyepiece']->getEyepiecePropertyFromId ( $eyep, 'focalLength' ) );
-         }
-
-         // Replace , with .
-         $magni = str_replace ( ",", ".", $magni );
-
-         if ($magni > 0) {
-            $magnification = $observation->appendChild ( $dom->createElement ( 'magnification' ) );
-            $magnification->appendChild ( $dom->createTextNode ( ( int ) $magni ) );
-         }
-
-         $result = $observation->appendChild ( $dom->createElement ( 'result' ) );
-
-         if ($obs ["extended"] > 0) {
-            $attr = $dom->createAttribute ( "extended" );
-            $result->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "true" );
-            $attr->appendChild ( $attrText );
-         }
-
-         $attr = $dom->createAttribute ( "lang" );
-         $result->appendChild ( $attr );
-
-         $attrText = $dom->createTextNode ( $obs ["language"] );
-         $attr->appendChild ( $attrText );
-
-         if ($obs ["mottled"] > 0) {
-            $attr = $dom->createAttribute ( "mottled" );
-            $result->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "true" );
-            $attr->appendChild ( $attrText );
-         }
-
-         $object = $GLOBALS ['objObject']->getAllInfoDsObject ( $objectname );
-
-         $type = $object ["type"];
-
-         if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC") {
-            if ($obs ["partlyUnresolved"] > 0) {
-               $attr = $dom->createAttribute ( "partlyUnresolved" );
-               $result->appendChild ( $attr );
-
-               $attrText = $dom->createTextNode ( "true" );
-               $attr->appendChild ( $attrText );
+            if (in_array($objectname, $objects) == false) {
+                $objects[$cntObjects] = $objectname;
+                $cntObjects = $cntObjects + 1;
             }
 
-            if ($obs ["unusualShape"] > 0) {
-               $attr = $dom->createAttribute ( "unusualShape" );
-               $result->appendChild ( $attr );
-
-               $attrText = $dom->createTextNode ( "true" );
-               $attr->appendChild ( $attrText );
+            if (in_array($inst, $scopes) == false) {
+                $scopes[$cntScopes] = $inst;
+                $cntScopes = $cntScopes + 1;
             }
 
-            if ($obs ["colorContrasts"] > 0) {
-               $attr = $dom->createAttribute ( "colorContrasts" );
-               $result->appendChild ( $attr );
-
-               $attrText = $dom->createTextNode ( "true" );
-               $attr->appendChild ( $attrText );
-            }
-         }
-
-         if ($type == "DS") {
-            if ($obs ["equalBrightness"] >= 0) {
-               $attr = $dom->createAttribute ( "equalBrightness" );
-               $result->appendChild ( $attr );
-
-               if ($obs ["equalBrightness"] == 0) {
-                  $attrText = $dom->createTextNode ( "false" );
-               } else {
-                  $attrText = $dom->createTextNode ( "true" );
-               }
-               $attr->appendChild ( $attrText );
+            if (in_array($eyep, $eyepieces) == false) {
+                $eyepieces[$cntEyepieces] = $eyep;
+                $cntEyepieces = $cntEyepieces + 1;
             }
 
-            if ($obs ["niceField"] >= 0) {
-               $attr = $dom->createAttribute ( "niceSurrounding" );
-               $result->appendChild ( $attr );
-
-               if ($obs ["equalBrightness"] == 0) {
-                  $attrText = $dom->createTextNode ( "false" );
-               } else {
-                  $attrText = $dom->createTextNode ( "true" );
-               }
-               $attr->appendChild ( $attrText );
+            if (in_array($lns, $lenses) == false) {
+                $lenses [$cntLens] = $lns;
+                $cntLens = $cntLens + 1;
             }
 
-            if ($obs ["component1"] > 0) {
-               if ($obs ["component1"] == 1) {
-                  $col1 = "white";
-               }
-               if ($obs ["component1"] == 2) {
-                  $col1 = "red";
-               }
-               if ($obs ["component1"] == 3) {
-                  $col1 = "orange";
-               }
-               if ($obs ["component1"] == 4) {
-                  $col1 = "yellow";
-               }
-               if ($obs ["component1"] == 5) {
-                  $col1 = "green";
-               }
-               if ($obs ["component1"] == 6) {
-                  $col1 = "blue";
-               }
-               $colorMain = $result->appendChild ( $dom->createElement ( 'colorMain' ) );
-               $colorMain->appendChild ( $dom->createTextNode ( $col1 ) );
+            if (in_array($filt, $filters) == false) {
+                $filters[$cntFilter] = $filt;
+                $cntFilter = $cntFilter + 1;
+            }
+        }
+
+        // add root fcga -> The header
+        $fcgaInfo = $dom->createElement('oal:observations');
+        $fcgaDom = $dom->appendChild($fcgaInfo);
+
+        $attr = $dom->createAttribute("version");
+        $fcgaInfo->appendChild($attr);
+
+        $attrText = $dom->createTextNode("2.1");
+        $attr->appendChild($attrText);
+
+        $attr = $dom->createAttribute("xmlns:oal");
+        $fcgaInfo->appendChild($attr);
+
+        $attrText = $dom->createTextNode("http://groups.google.com/group/openastronomylog");
+        $attr->appendChild($attrText);
+
+        $attr = $dom->createAttribute("xmlns:xsi");
+        $fcgaInfo->appendChild($attr);
+
+        $attrText = $dom->createTextNode("http://www.w3.org/2001/XMLSchema-instance");
+        $attr->appendChild($attrText);
+
+        $attr = $dom->createAttribute("xsi:schemaLocation");
+        $fcgaInfo->appendChild($attr);
+
+        $attrText = $dom->createTextNode("http://groups.google.com/group/openastronomylog oal21.xsd");
+        $attr->appendChild($attrText);
+
+        // add root - <observers>
+        $observersDom = $fcgaDom->appendChild($dom->createElement('observers'));
+
+        while (list($key, $value) = each($observers)) {
+            $observer2 = $dom->createElement('observer');
+            $observerChild = $observersDom->appendChild($observer2);
+            $attr = $dom->createAttribute("id");
+            $observer2->appendChild($attr);
+
+            $correctedValue = $this->safeEncode(preg_replace("/\s+/", "_", $value));
+            $attrText = $dom->createTextNode("usr_" . $correctedValue);
+            $attr->appendChild($attrText);
+
+            $name = $observerChild->appendChild($dom->createElement('name'));
+            $name->appendChild($dom->createCDATASection($this->safeEncode($observer->getObserverProperty($value, 'firstname'))));
+
+            $surname = $observerChild->appendChild($dom->createElement('surname'));
+            $surname->appendChild($dom->createCDataSection($this->safeEncode($observer->getObserverProperty($value, 'name'))));
+
+            $account = $observerChild->appendChild($dom->createElement('account'));
+            $account->appendChild($dom->createCDataSection($this->safeEncode($value)));
+
+            $attr = $dom->createAttribute("name");
+            $account->appendChild($attr);
+
+            $attrText = $dom->createTextNode("www.deepskylog.org");
+            $attr->appendChild($attrText);
+
+            if ($observer->getObserverProperty($value, 'fstOffset') != 0.0) {
+                $fst = $observerChild->appendChild($dom->createElement('fstOffset'));
+                $fst->appendChild($dom->createTextNode(($observer->getObserverProperty($value, 'fstOffset'))));
+            }
+        }
+
+        // add root - <sites>
+        $observersDom = $fcgaDom->appendChild($dom->createElement('sites'));
+
+        while (list($key, $value) = each($sites)) {
+            $site2 = $dom->createElement('site');
+            $siteChild = $observersDom->appendChild($site2);
+            $attr = $dom->createAttribute("id");
+            $site2->appendChild($attr);
+
+            $attrText = $dom->createTextNode("site_" . $value);
+            $attr->appendChild($attrText);
+
+            $name = $siteChild->appendChild($dom->createElement('name'));
+            $name->appendChild($dom->createCDATASection($this->safeEncode($location->getLocationPropertyFromId($value, 'name'))));
+
+            $longitude = $siteChild->appendChild($dom->createElement('longitude'));
+            $longitude->appendChild($dom->createTextNode($location->getLocationPropertyFromId($value, 'longitude')));
+
+            $attr = $dom->createAttribute("unit");
+            $longitude->appendChild($attr);
+
+            $attrText = $dom->createTextNode("deg");
+            $attr->appendChild($attrText);
+
+            $latitude = $siteChild->appendChild($dom->createElement('latitude'));
+            $latitude->appendChild($dom->createTextNode($location->getLocationPropertyFromId($value, 'latitude')));
+
+            $attr = $dom->createAttribute("unit");
+            $latitude->appendChild($attr);
+
+            $attrText = $dom->createTextNode("deg");
+            $attr->appendChild($attrText);
+
+            // ELEVATION
+            $elevation = $siteChild->appendChild($dom->createElement('elevation'));
+            $elevation->appendChild($dom->createTextNode($location->getLocationPropertyFromId($value, 'elevation')));
+
+            $timezone = $siteChild->appendChild($dom->createElement('timezone'));
+            $dateTimeZone = new DateTimeZone($location->getLocationPropertyFromId($value, 'timezone'));
+            $datestr = "01/01/2008";
+            $dateTime = new DateTime($datestr, $dateTimeZone);
+            // Returns the time difference in seconds
+            $timedifference = $dateTimeZone->getOffset($dateTime);
+            $timedifference = $timedifference / 60.0;
+
+            if (strncmp($location->getLocationPropertyFromId($value, 'timezone'), "Etc/GMT", 7) == 0) {
+                $timedifference = - $timedifference;
             }
 
-            if ($obs ["component2"] > 0) {
-               if ($obs ["component2"] == 1) {
-                  $col2 = "white";
-               }
-               if ($obs ["component2"] == 2) {
-                  $col2 = "red";
-               }
-               if ($obs ["component2"] == 3) {
-                  $col2 = "orange";
-               }
-               if ($obs ["component2"] == 4) {
-                  $col2 = "yellow";
-               }
-               if ($obs ["component2"] == 5) {
-                  $col2 = "green";
-               }
-               if ($obs ["component2"] == 6) {
-                  $col2 = "blue";
-               }
-               $colorCompanion = $result->appendChild ( $dom->createElement ( 'colorCompanion' ) );
-               $colorCompanion->appendChild ( $dom->createTextNode ( $col2 ) );
-            }
-         }
+            $timezone->appendChild($dom->createTextNode($timedifference));
+        }
 
-         if ($obs ["resolved"] > 0) {
+        // add root - <sessions> We export all the sessions of the logged observer
+        $observersDom = $fcgaDom->appendChild($dom->createElement('sessions'));
+
+        if ($loggedUser != "") {
+            $sessions = $objSession->getAllSessionsForUser($loggedUser);
+
+             $usedSessions = Array();
+            // Only add session for which the location is also exported
+            for ($scnt = 0; $scnt < count($sessions); $scnt ++) {
+                if (in_array($sessions [$scnt]['locationid'], $sites)) {
+                    $session = $dom->createElement('session');
+                    $sessionChild = $observersDom->appendChild($session);
+                    $attr = $dom->createAttribute("id");
+                    $session->appendChild($attr);
+
+                    $attrText = $dom->createTextNode("se_" . $sessions[$scnt]['id']);
+                    $attr->appendChild($attrText);
+
+                    $attr = $dom->createAttribute("lang");
+                    $session->appendChild($attr);
+
+                    $attrText = $dom->createTextNode($sessions[$scnt]['language']);
+                    $attr->appendChild($attrText);
+
+                    $begin = $sessionChild->appendChild($dom->createElement('begin'));
+                    $begindate = $sessions[$scnt]['begindate'];
+                    $begindate = str_replace(" ", "T", $begindate) . "+00:00";
+                    $begin->appendChild($dom->createTextNode($begindate));
+
+                    $end = $sessionChild->appendChild($dom->createElement('end'));
+                    $enddate = $sessions[$scnt]['enddate'];
+                    $enddate = str_replace(" ", "T", $enddate) . "+00:00";
+                    $end->appendChild($dom->createTextNode($enddate));
+
+                    $site = $sessionChild->appendChild($dom->createElement('site'));
+                    $site->appendChild($dom->createTextNode("site_" . $sessions[$scnt]['locationid']));
+
+                    $weather = $sessionChild->appendChild($dom->createElement('weather'));
+                    $weather->appendChild($dom->createCDATASection($this->safeEncode($sessions[$scnt]['weather'])));
+
+                    $equipment = $sessionChild->appendChild($dom->createElement('equipment'));
+                    $equipment->appendChild($dom->createCDATASection($this->safeEncode($sessions[$scnt]['equipment'])));
+
+                    $comments = $sessionChild->appendChild($dom->createElement('comments'));
+                    $comments->appendChild($dom->createCDATASection($this->safeEncode($sessions[$scnt]['comments'])));
+
+                    // TODO : Also add images of the session to the export
+                    $usedSessions [] = $sessions[$scnt]['id'];
+                }
+            }
+        }
+
+        // add root - <targets>
+        $observersDom = $fcgaDom->appendChild($dom->createElement('targets'));
+
+        while (list($key, $value) = each($objects)) {
+            $object2 = $dom->createElement('target');
+            $objectChild = $observersDom->appendChild($object2);
+            $attr = $dom->createAttribute("id");
+            $object2->appendChild($attr);
+
+            $correctedValue = $this->correctForXmlExport($value);
+            $attrText = $dom->createTextNode("_" . $correctedValue);
+            $attr->appendChild($attrText);
+
+            $attr = $dom->createAttribute("xsi:type");
+            $object2->appendChild($attr);
+
+            $object = $GLOBALS ['objObject']->getAllInfoDsObject($value);
+
+            $type = $object["type"];
+            if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC") {
+                $type = "oal:deepSkyOC";
+            } else if ($type == "GALXY") {
+                $type = "oal:deepSkyGX";
+            } else if ($type == "GALCL") {
+                $type = "oal:deepSkyCG";
+            } else if ($type == "PLNNB") {
+                $type = "oal:deepSkyPN";
+            } else if ($type == "ASTER" || $type == "AA1STAR" || $type == "AA3STAR" || $type == "AA4STAR" || $type == "AA8STAR") {
+                $type = "oal:deepSkyAS";
+            } else if ($type == "DS") {
+                $type = "oal:deepSkyDS";
+            } else if ($type == "GLOCL" || $type == "GXAGC" || $type == "LMCGC" || $type == "SMCGC") {
+                $type = "oal:deepSkyGC";
+            } else if ($type == "BRTNB" || $type == "CLANB" || $type == "EMINB" || $type == "ENRNN" || $type == "ENSTR"
+                || $type == "GXADN" || $type == "GACAN" || $type == "HII" || $type == "LMCCN" || $type == "LMCDN" || $type == "REFNB"
+                || $type == "RNHII" || $type == "SMCCN" || $type == "SMCDN" || $type == "SNREM" || $type == "STNEB" || $type == "WRNEB"
+            ) {
+                $type = "oal:deepSkyGN";
+            } else if ($type == "QUASR") {
+                $type = "oal:deepSkyQS";
+            } else if ($type == "DRKNB") {
+                $type = "oal:deepSkyDN";
+            } else if ($type == "NONEX") {
+                $type = "oal:deepSkyNA";
+            }
+            $attrText = $dom->createTextNode($type);
+            $attr->appendChild($attrText);
+
+            $datasource = $objectChild->appendChild($dom->createElement('datasource'));
+            $datasource->appendChild($dom->createCDATASection($this->safeEncode($object["datasource"])));
+
+            $name = $objectChild->appendChild($dom->createElement('name'));
+            $name->appendChild($dom->createCDATASection(($objCatalog->checkObject($value))));
+
+            $altnames = $GLOBALS['objObject']->getAlternativeNames($value);
+            while (list($key2, $value2) = each($altnames)) {
+                // go through names array
+                if (trim($value2) != trim($value)) {
+                    if (trim($value2) != "") {
+                        $alias = $objectChild->appendChild($dom->createElement('alias'));
+                        $alias->appendChild($dom->createCDataSection((trim($objCatalog->checkObject($value2)))));
+                    }
+                }
+            }
+
+            $position = $objectChild->appendChild($dom->createElement('position'));
+
+            $raDom = $dom->createElement('ra');
+            $ra = $position->appendChild($raDom);
+            $ra->appendChild($dom->createTextNode($object["ra"] * 15.0));
+
+            $attr = $dom->createAttribute("unit");
+            $raDom->appendChild($attr);
+
+            $attrText = $dom->createTextNode("deg");
+            $attr->appendChild($attrText);
+
+            $decDom = $dom->createElement('dec');
+            $dec = $position->appendChild($decDom);
+            $dec->appendChild($dom->createTextNode($object["decl"]));
+
+            $attr = $dom->createAttribute("unit");
+            $decDom->appendChild($attr);
+
+            $attrText = $dom->createTextNode("deg");
+            $attr->appendChild($attrText);
+
+            $constellation = $objectChild->appendChild($dom->createElement('constellation'));
+            $constellation->appendChild($dom->createCDATASection(($object["con"])));
+
+            if ($object["diam2"] > 0.0 && $object["diam2"] != 99.9) {
+                $sdDom = $dom->createElement('smallDiameter');
+                $diam2 = $objectChild->appendChild($sdDom);
+                $sDiameter = $object["diam2"] / 60.0;
+                $diam2->appendChild($dom->createTextNode($sDiameter));
+
+                $attr = $dom->createAttribute("unit");
+                $sdDom->appendChild($attr);
+
+                $attrText = $dom->createTextNode("arcmin");
+                $attr->appendChild($attrText);
+            }
+
+            $diameter1 = $object["diam1"];
+            if ($diameter1 > 0.0 && $diameter1 != 99.9) {
+                $ldDom = $dom->createElement('largeDiameter');
+                $diam1 = $objectChild->appendChild($ldDom);
+                $lDiameter = $diameter1 / 60.0;
+                $diam1->appendChild($dom->createTextNode($lDiameter));
+
+                $attr = $dom->createAttribute("unit");
+                $ldDom->appendChild($attr);
+
+                $attrText = $dom->createTextNode("arcmin");
+                $attr->appendChild($attrText);
+            }
+
+            if ($object["mag"] < 99.0) {
+                $mag = $objectChild->appendChild($dom->createElement('visMag'));
+                $mag->appendChild($dom->createTextNode(($object["mag"])));
+            }
+
+            if ($object["subr"] < 99.0) {
+                $mag = $objectChild->appendChild($dom->createElement('surfBr'));
+                $mag->appendChild($dom->createTextNode(($object["subr"])));
+
+                $attr = $dom->createAttribute("unit");
+                $mag->appendChild($attr);
+
+                $attrText = $dom->createTextNode("mags-per-squarearcmin");
+                $attr->appendChild($attrText);
+            }
+
+            if ($type != "oal:deepSkyCG" && $type != "oal:deepSkyGC" && $type != "oal:deepSkyNA" && $type != "oal:deepSkyOC"
+                && $type != "oal:deepSkyPN" && $type != "oal:deepSkyQS"
+            ) {
+                if ($object["pa"] < 999.0) {
+                    $pa = $objectChild->appendChild($dom->createElement('pa'));
+                    $pa->appendChild($dom->createTextNode(($object ["pa"])));
+                }
+            }
+        }
+      
+        // add root - <scopes>
+        $observersDom = $fcgaDom->appendChild($dom->createElement('scopes'));
+
+        while (list($key, $value) = each($scopes)) {
+            if ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId($value, 'fixedMagnification') != 1) {
+                if ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId($value, 'name') != "") {
+                    $scope2 = $dom->createElement('scope');
+                    $siteChild = $observersDom->appendChild($scope2);
+                    $attr = $dom->createAttribute("id");
+                    $scope2->appendChild($attr);
+
+                    $attrText = $dom->createTextNode("opt_" . $value);
+                    $attr->appendChild($attrText);
+
+                    $attr = $dom->createAttribute("xsi:type");
+                    $scope2->appendChild($attr);
+
+                    if ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId($value, 'fixedMagnification') > 0) {
+                        $typeLong = "oal:fixedMagnificationOpticsType";
+                    } else {
+                        $typeLong = "oal:scopeType";
+                    }
+                    $tp = $GLOBALS ['objInstrument']->getInstrumentPropertyFromId($value, 'type');
+                    if ($tp == InstrumentOther || $tp == InstrumentRest) {
+                        $typeShort = "";
+                    } else if ($tp == InstrumentNakedEye) {
+                        $typeShort = "A";
+                    } else if ($tp == InstrumentBinoculars || $tp == InstrumentFinderscope) {
+                        $typeShort = "B";
+                    } else if ($tp == InstrumentRefractor) {
+                        $typeShort = "R";
+                    } else if ($tp == InstrumentReflector) {
+                        $typeShort = "N";
+                    } else if ($tp == InstrumentCassegrain) {
+                        $typeShort = "C";
+                    } else if ($tp == InstrumentKutter) {
+                        $typeShort = "K";
+                    } else if ($tp == InstrumentMaksutov) {
+                        $typeShort = "M";
+                    } else if ($tp == InstrumentSchmidtCassegrain) {
+                        $typeShort = "S";
+                    }
+
+                    if ($typeShort == "B") {
+                        $typeLong = "oal:fixedMagnificationOpticsType";
+                    }
+                    $attrText = $dom->createTextNode($typeLong);
+                    $attr->appendChild($attrText);
+
+                    $name = $siteChild->appendChild($dom->createElement('model'));
+                    $name->appendChild(
+                        $dom->createCDATASection($this->safeEncode($GLOBALS ['objInstrument']->getInstrumentPropertyFromId($value, 'name')))
+                    );
+
+                    $type = $siteChild->appendChild($dom->createElement('type'));
+                    $type->appendChild($dom->createCDATASection(($typeShort)));
+
+                    $aperture = $siteChild->appendChild($dom->createElement('aperture'));
+                    $aperture->appendChild(
+                        $dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value, 'diameter')))
+                    );
+
+                    if ($GLOBALS ['objInstrument']->getInstrumentPropertyFromId($value, 'fixedMagnification') > 0) {
+                        $magnification = $siteChild->appendChild($dom->createElement('magnification'));
+                        $magnification->appendChild(
+                            $dom->createTextNode(($GLOBALS ['objInstrument']->getInstrumentPropertyFromId($value, 'fixedMagnification')))
+                        );
+                    } else {
+                        if ($typeShort == "B") {
+                            $magnification = $siteChild->appendChild($dom->createElement('magnification'));
+                            $magnification->appendChild($dom->createTextNode("1"));
+                        } else {
+                            $focalLength = $siteChild->appendChild($dom->createElement('focalLength'));
+                            $focalLength->appendChild(
+                                $dom->createTextNode(
+                                    ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value, 'fd')) * 
+                                    $GLOBALS ['objInstrument']->getInstrumentPropertyFromId($value, 'diameter')
+                                )
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        // add root - <eyepieces>
+        $observersDom = $fcgaDom->appendChild($dom->createElement('eyepieces'));
+
+        while (list($key, $value) = each($eyepieces)) {
+            if ($value != "" && $value > 0) {
+                $eyepiece2 = $dom->createElement('eyepiece');
+                $eyepieceChild = $observersDom->appendChild($eyepiece2);
+                $attr = $dom->createAttribute("id");
+                $eyepiece2->appendChild($attr);
+
+                $attrText = $dom->createTextNode("ep_" . $value);
+                $attr->appendChild($attrText);
+
+                $model = $eyepieceChild->appendChild($dom->createElement('model'));
+                $model->appendChild(
+                    $dom->createCDATASection($this->safeEncode($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value, 'name')))
+                );
+
+                $focalLength = $eyepieceChild->appendChild($dom->createElement('focalLength'));
+                $focalLength->appendChild($dom->createTextNode(($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value, 'focalLength'))));
+
+                if ($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value, 'maxFocalLength') > 0) {
+                    $maxFocalLength = $eyepieceChild->appendChild($dom->createElement('maxFocalLength'));
+                    $maxFocalLength->appendChild(
+                        $dom->createTextNode(($GLOBALS ['objEyepiece']->getEyepiecePropertyFromId($value, 'maxFocalLength')))
+                    );
+                }
+
+                $apparentFOV = $eyepieceChild->appendChild($dom->createElement('apparentFOV'));
+                $apparentFOV->appendChild($dom->createTextNode(($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value, 'apparentFOV'))));
+
+                $attr = $dom->createAttribute("unit");
+                $apparentFOV->appendChild($attr);
+
+                $attrText = $dom->createTextNode("deg");
+                $attr->appendChild($attrText);
+            }
+        }
+
+        // add root - <lenses>
+        $observersDom = $fcgaDom->appendChild($dom->createElement('lenses'));
+
+        while (list($key, $value) = each($lenses)) {
+            if ($value != "" && $value > 0) {
+                $lens2 = $dom->createElement('lens');
+                $lensChild = $observersDom->appendChild($lens2);
+                $attr = $dom->createAttribute("id");
+                $lens2->appendChild($attr);
+
+                $attrText = $dom->createTextNode("le_" . $value);
+                $attr->appendChild($attrText);
+
+                $model = $lensChild->appendChild($dom->createElement('model'));
+                $model->appendChild($dom->createCDATASection($this->safeEncode($GLOBALS['objLens']->getLensPropertyFromId($value, 'name'))));
+
+                $factor = $lensChild->appendChild($dom->createElement('factor'));
+                $factor->appendChild($dom->createTextNode(($GLOBALS ['objLens']->getLensPropertyFromId($value, 'factor'))));
+            }
+        }
+
+        // add root - <filters>
+        $observersDom = $fcgaDom->appendChild($dom->createElement('filters'));
+
+        while (list($key, $value) = each($filters)) {
+            if ($value != "" && $value > 0) {
+                $filter2 = $dom->createElement('filter');
+                $filterChild = $observersDom->appendChild($filter2);
+                $attr = $dom->createAttribute("id");
+                $filter2->appendChild($attr);
+
+                $attrText = $dom->createTextNode("flt_" . $value);
+                $attr->appendChild($attrText);
+
+                $model = $filterChild->appendChild($dom->createElement('model'));
+                $model->appendChild($dom->createCDATASection($this->safeEncode($GLOBALS['objFilter']->getFilterPropertyFromId($value, 'name'))));
+
+                $tp = $GLOBALS ['objFilter']->getFilterPropertyFromId($value, 'type');
+                if ($tp == 0) {
+                    $filType = "other";
+                } else if ($tp == 1) {
+                    $filType = "broad band";
+                } else if ($tp == 2) {
+                    $filType = "narrow band";
+                } else if ($tp == 3) {
+                    $filType = "O-III";
+                } else if ($tp == 4) {
+                    $filType = "H-beta";
+                } else if ($tp == 5) {
+                    $filType = "H-alpha";
+                } else if ($tp == 6) {
+                    $filType = "color";
+                } else if ($tp == 7) {
+                    $filType = "neutral";
+                } else if ($tp == 8) {
+                    $filType = "corrective";
+                }
+
+                $type = $filterChild->appendChild($dom->createElement('type'));
+                $type->appendChild($dom->createCDATASection($filType));
+
+                if ($filType == "color") {
+                    $col = $GLOBALS ['objFilter']->getFilterPropertyFromId($value, 'color');
+                    if ($col == 1) {
+                        $colName = "light red";
+                    } else if ($col == 2) {
+                        $colName = "red";
+                    } else if ($col == 3) {
+                        $colName = "deep red";
+                    } else if ($col == 4) {
+                        $colName = "orange";
+                    } else if ($col == 5) {
+                        $colName = "light yellow";
+                    } else if ($col == 6) {
+                        $colName = "deep yellow";
+                    } else if ($col == 7) {
+                        $colName = "yellow";
+                    } else if ($col == 8) {
+                        $colName = "yellow-green";
+                    } else if ($col == 9) {
+                        $colName = "light green";
+                    } else if ($col == 10) {
+                        $colName = "green";
+                    } else if ($col == 11) {
+                        $colName = "medium blue";
+                    } else if ($col == 12) {
+                        $colName = "pale blue";
+                    } else if ($col == 13) {
+                        $colName = "blue";
+                    } else if ($col == 14) {
+                        $colName = "deep blue";
+                    } else if ($col == 15) {
+                        $colName = "violet";
+                    }
+                    if ($colName != "") {
+                        $color = $filterChild->appendChild($dom->createElement('color'));
+                        $color->appendChild($dom->createCDATASection($colName));
+                    }
+
+                    if ($GLOBALS ['objFilter']->getFilterPropertyFromId($value, 'wratten') != "") {
+                        $wratten = $filterChild->appendChild($dom->createElement('wratten'));
+                        $wratten->appendChild(
+                            $dom->createCDATASection($GLOBALS['objFilter']->getFilterPropertyFromId($value, 'wratten'))
+                        );
+                    }
+
+                    if ($GLOBALS ['objFilter']->getFilterPropertyFromId($value, 'schott') != "") {
+                        $schott = $filterChild->appendChild($dom->createElement('schott'));
+                        $schott->appendChild($dom->createCDATASection($GLOBALS['objFilter']->getFilterPropertyFromId($value, 'schott')));
+                    }
+                }
+            }
+        }
+
+        // add root - <imagers> DeepskyLog has no imagers
+        $observersDom = $fcgaDom->appendChild($dom->createElement('imagers'));
+
+        // Add the observations.
+        while (list($key, $value) = each($allObs)) {
+            $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value['observationid']);
+            $objectname = $obs['objectname'];
+            $observerid = $obs['observerid'];
+            $inst = $obs['instrumentid'];
+            $loc = $obs['locationid'];
+            $visibility = $obs['visibility'];
+            $seeing = $obs['seeing'];
+            $limmag = $obs['limmag'];
+            $filt = $obs['filterid'];
+            $eyep = $obs['eyepieceid'];
+            $lns = $obs['lensid'];
+
+            $observation = $fcgaDom->appendChild($dom->createElement('observation'));
+            $attr = $dom->createAttribute("id");
+            $observation->appendChild($attr);
+
+            $attrText = $dom->createTextNode("obs_" . $value ['observationid']);
+            $attr->appendChild($attrText);
+
+            $correctedValue = $this->safeEncode(preg_replace("/\s+/", "_", $observerid));
+            $observer = $observation->appendChild($dom->createElement('observer'));
+            $observer->appendChild($dom->createTextNode("usr_" . $correctedValue));
+
+            $site = $observation->appendChild($dom->createElement('site'));
+            $site->appendChild($dom->createTextNode("site_" . $loc));
+
+            // Check whether this observation is part of a session...
+            for ($scnt = 0; $scnt < count($usedSessions); $scnt ++) {
+                $sessionObs = $objDatabase->selectRecordsetArray("select * from sessionObservations where sessionid = \"" . $usedSessions [$scnt] . "\" and observationid = \"" . $value ['observationid'] . "\"");
+
+                if (count($sessionObs) >= 1) {
+                    $session = $observation->appendChild($dom->createElement('session'));
+                    $session->appendChild($dom->createTextNode("se_" . $usedSessions[$scnt]));
+                }
+            }
+
+            $target = $observation->appendChild($dom->createElement('target'));
+            $correctedValue = $this->correctForXmlExport($objCatalog->checkObject($objectname));
+
+            $target->appendChild($dom->createTextNode("_" . $correctedValue));
+
+            if ($obs ["time"] >= 0) {
+                $time = sprintf(
+                    "T%02d:%02d:00+00:00", (int)($obs ["time"] % 2400 / 100), $obs ["time"] % 2400 - (int)($obs ["time"] % 2400 / 100) * 100
+                );
+            } else {
+                $time = "T22:00:00+00:00";
+            }
+
+            $year = ( int ) ($obs ["date"] / 10000);
+            $month = ( int ) (($obs ["date"] - $year * 10000) / 100);
+            $day = ( int ) (($obs ["date"] - $year * 10000 - $month * 100));
+            if ($day == 0) {
+                $day = 1;
+            } else if ($day > 31) {
+                $day = 31;
+            }
+            $date = sprintf("%4d-%02d-%02d", $year, $month, $day);
+
+            $begin = $observation->appendChild($dom->createElement('begin'));
+            $begin->appendChild($dom->createTextNode($date . $time));
+
+            if ($obs ["SQM"] > 0) {
+                $magPerSquareArcsecond = $observation->appendChild($dom->createElement('sky-quality'));
+                $magPerSquareArcsecond->appendChild($dom->createTextNode($obs["SQM"]));
+
+                $attr = $dom->createAttribute("unit");
+                $magPerSquareArcsecond->appendChild($attr);
+
+                $attrText = $dom->createTextNode("mags-per-squarearcsec");
+                $attr->appendChild($attrText);
+            } else if ($obs["limmag"] > 0) {
+                $faintestStar = $observation->appendChild($dom->createElement('faintestStar'));
+                $faintestStar->appendChild($dom->createTextNode($obs ["limmag"]));
+            }
+
+            if ($obs["seeing"] > 0) {
+                $seeing = $observation->appendChild($dom->createElement('seeing'));
+                $seeing->appendChild($dom->createTextNode($obs["seeing"]));
+            }
+
+            if ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst, 'fixedMagnification') != 1) {
+                $scope = $observation->appendChild($dom->createElement('scope'));
+                $scope->appendChild($dom->createTextNode("opt_" . $inst));
+            }
+
+            if ($eyep > 0) {
+                $eyepiece = $observation->appendChild($dom->createElement('eyepiece'));
+                $eyepiece->appendChild($dom->createTextNode("ep_" . $eyep));
+            }
+
+            if ($lns > 0) {
+                $lens = $observation->appendChild($dom->createElement('lens'));
+                $lens->appendChild($dom->createTextNode("le_" . $lns));
+            }
+
+            if ($filt > 0) {
+                $filter = $observation->appendChild($dom->createElement('filter'));
+                $filter->appendChild($dom->createTextNode("flt_" . $filt));
+            }
+
+            $magni = 0;
+            if ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst, 'fixedMagnification') > 0) {
+                $magni = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst, 'fixedMagnification');
+            } else if ($obs["magnification"] > 0) {
+                $magni = $obs["magnification"];
+            } else if ($eyep > 0 && $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst, 'fixedMagnification') != 0) {
+                $factor = 1.0;
+                if ($GLOBALS ['objLens']->getFilterPropertyFromId($lns, 'factor') > 0) {
+                    $factor = $GLOBALS ['objLens']->getFilterPropertyFromId($lns, 'factor');
+                }
+                $magni = sprintf(
+                    "%.2f", 
+                    $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst, 'fixedMagnification') 
+                    * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst, 'diameter') 
+                    * $factor / $GLOBALS['objEyepiece']->getEyepiecePropertyFromId($eyep, 'focalLength')
+                );
+            }
+
+            // Replace , with .
+            $magni = str_replace(",", ".", $magni);
+
+            if ($magni > 0) {
+                $magnification = $observation->appendChild($dom->createElement('magnification'));
+                $magnification->appendChild($dom->createTextNode((int) $magni));
+            }
+
+            $result = $observation->appendChild($dom->createElement('result'));
+
+            if ($obs["extended"] > 0) {
+                $attr = $dom->createAttribute("extended");
+                $result->appendChild($attr);
+
+                $attrText = $dom->createTextNode("true");
+                $attr->appendChild($attrText);
+            }
+
+            $attr = $dom->createAttribute("lang");
+            $result->appendChild($attr);
+
+            $attrText = $dom->createTextNode($obs["language"]);
+            $attr->appendChild($attrText);
+
+            if ($obs["mottled"] > 0) {
+                $attr = $dom->createAttribute("mottled");
+                $result->appendChild($attr);
+
+                $attrText = $dom->createTextNode("true");
+                $attr->appendChild($attrText);
+            }
+
+            $object = $GLOBALS['objObject']->getAllInfoDsObject($objectname);
+
+            $type = $object["type"];
+
+            if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC") {
+                if ($obs["partlyUnresolved"] > 0) {
+                    $attr = $dom->createAttribute("partlyUnresolved");
+                    $result->appendChild($attr);
+
+                    $attrText = $dom->createTextNode("true");
+                    $attr->appendChild($attrText);
+                }
+
+                if ($obs["unusualShape"] > 0) {
+                    $attr = $dom->createAttribute("unusualShape");
+                    $result->appendChild($attr);
+
+                    $attrText = $dom->createTextNode("true");
+                    $attr->appendChild($attrText);
+                }
+
+                if ($obs["colorContrasts"] > 0) {
+                    $attr = $dom->createAttribute("colorContrasts");
+                    $result->appendChild($attr);
+
+                    $attrText = $dom->createTextNode("true");
+                    $attr->appendChild($attrText);
+                }
+            }
+
+            if ($type == "DS") {
+                if ($obs["equalBrightness"] >= 0) {
+                    $attr = $dom->createAttribute("equalBrightness");
+                    $result->appendChild($attr);
+
+                    if ($obs["equalBrightness"] == 0) {
+                        $attrText = $dom->createTextNode("false");
+                    } else {
+                        $attrText = $dom->createTextNode("true");
+                    }
+                    $attr->appendChild($attrText);
+                }
+
+                if ($obs["niceField"] >= 0) {
+                    $attr = $dom->createAttribute("niceSurrounding");
+                    $result->appendChild($attr);
+
+                    if ($obs["niceField"] == 0) {
+                        $attrText = $dom->createTextNode("false");
+                    } else {
+                        $attrText = $dom->createTextNode("true");
+                    }
+                    $attr->appendChild($attrText);
+                }
+
+                // TODO: Two times the same for component1 and component2
+                if ($obs["component1"] > 0) {
+                    if ($obs["component1"] == 1) {
+                        $col1 = "white";
+                    }
+                    if ($obs["component1"] == 2) {
+                        $col1 = "red";
+                    }
+                    if ($obs["component1"] == 3) {
+                        $col1 = "orange";
+                    }
+                    if ($obs["component1"] == 4) {
+                        $col1 = "yellow";
+                    }
+                    if ($obs["component1"] == 5) {
+                        $col1 = "green";
+                    }
+                    if ($obs["component1"] == 6) {
+                        $col1 = "blue";
+                    }
+                    $colorMain = $result->appendChild ( $dom->createElement ( 'colorMain' ) );
+                    $colorMain->appendChild ( $dom->createTextNode ( $col1 ) );
+                }
+
+                if ($obs ["component2"] > 0) {
+                    if ($obs ["component2"] == 1) {
+                        $col2 = "white";
+                    }
+                    if ($obs ["component2"] == 2) {
+                        $col2 = "red";
+                    }
+                    if ($obs ["component2"] == 3) {
+                        $col2 = "orange";
+                    }
+                    if ($obs ["component2"] == 4) {
+                        $col2 = "yellow";
+                    }
+                    if ($obs ["component2"] == 5) {
+                        $col2 = "green";
+                    }
+                    if ($obs ["component2"] == 6) {
+                        $col2 = "blue";
+                }
+                $colorCompanion = $result->appendChild ( $dom->createElement ( 'colorCompanion' ) );
+                $colorCompanion->appendChild ( $dom->createTextNode ( $col2 ) );
+            }
+        }
+
+        if ($obs ["resolved"] > 0) {
             $attr = $dom->createAttribute ( "resolved" );
             $result->appendChild ( $attr );
 
             $attrText = $dom->createTextNode ( "true" );
             $attr->appendChild ( $attrText );
-         }
+        }
 
-         if ($obs ["stellar"] > 0) {
+        if ($obs ["stellar"] > 0) {
             $attr = $dom->createAttribute ( "stellar" );
             $result->appendChild ( $attr );
 
             $attrText = $dom->createTextNode ( "true" );
             $attr->appendChild ( $attrText );
-         }
+        }
 
-         $attr = $dom->createAttribute ( "xsi:type" );
-         $result->appendChild ( $attr );
+        $attr = $dom->createAttribute ( "xsi:type" );
+        $result->appendChild ( $attr );
 
-         $object = $GLOBALS ['objObject']->getAllInfoDsObject ( $objectname );
+        $object = $GLOBALS ['objObject']->getAllInfoDsObject ( $objectname );
 
-         $type = $object ["type"];
-         if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC") {
+        $type = $object ["type"];
+        if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC") {
             $type = "oal:findingsDeepSkyOCType";
-         } else if ($type == "DS") {
+        } else if ($type == "DS") {
             $type = "oal:findingsDeepSkyDSType";
-         } else {
+        } else {
             $type = "oal:findingsDeepSkyType";
-         }
-         $attrText = $dom->createTextNode ( $type );
-         $attr->appendChild ( $attrText );
+        }
+        $attrText = $dom->createTextNode ( $type );
+        $attr->appendChild ( $attrText );
 
-         $description = $result->appendChild ( $dom->createElement ( 'description' ) );
-         $description->appendChild ( $dom->createCDATASection ( utf8_encode ( $objPresentations->br2nl ( html_entity_decode ( $obs ["description"] ) ) ) ) );
+        $description = $result->appendChild ( $dom->createElement ( 'description' ) );
+        $description->appendChild ( $dom->createCDATASection ( utf8_encode ( $objPresentations->br2nl ( html_entity_decode ( $obs ["description"] ) ) ) ) );
 
-         $rat = $obs ["visibility"];
-         if ($rat == 0) {
+        $rat = $obs ["visibility"];
+        if ($rat == 0) {
             $rat = 99;
-         }
+        }
 
-         if ($obs ["smallDiameter"] > 0) {
+        if ($obs ["smallDiameter"] > 0) {
             $smallDiameter = $result->appendChild ( $dom->createElement ( 'smallDiameter' ) );
             $smallDiameter->appendChild ( $dom->createTextNode ( $obs ["smallDiameter"] ) );
 
@@ -1114,9 +1299,9 @@ class Utils
 
             $attrText = $dom->createTextNode ( "arcsec" );
             $attr->appendChild ( $attrText );
-         }
+        }
 
-         if ($obs ["largeDiameter"] > 0) {
+        if ($obs ["largeDiameter"] > 0) {
             $largeDiameter = $result->appendChild ( $dom->createElement ( 'largeDiameter' ) );
             $largeDiameter->appendChild ( $dom->createTextNode ( $obs ["largeDiameter"] ) );
 
@@ -1125,25 +1310,26 @@ class Utils
 
             $attrText = $dom->createTextNode ( "arcsec" );
             $attr->appendChild ( $attrText );
-         }
+        }
 
-         $rating = $result->appendChild ( $dom->createElement ( 'rating' ) );
-         $rating->appendChild ( $dom->createTextNode ( $rat ) );
+        $rating = $result->appendChild ( $dom->createElement ( 'rating' ) );
+        $rating->appendChild ( $dom->createTextNode ( $rat ) );
 
-         if ($obs ["clusterType"] != "" && $obs ["clusterType"] != 0) {
+        if ($obs ["clusterType"] != "" && $obs ["clusterType"] != 0) {
             $character = $result->appendChild ( $dom->createElement ( 'character' ) );
             $character->appendChild ( $dom->createCDATASection ( $obs ["clusterType"] ) );
-         }
-      }
+        }
+    }
 
-      // generate xml
-      $dom->formatOutput = true; // set the formatOutput attribute of
-                                 // domDocument to true
-                                 // save XML as string or file
-      $test1 = $dom->saveXML (); // put string in test1
+    // generate xml
+    $dom->formatOutput = true; // set the formatOutput attribute of
+                               // domDocument to true
+                               // save XML as string or file
+    $test1 = $dom->saveXML (); // put string in test1
 
-      print $test1;
-   }
+    print $test1;
+}
+
    public function csvObjects($result) // Creates a csv file from an array of objects
 {
       global $objObject, $objPresentations, $objObserver, $loggedUser;
