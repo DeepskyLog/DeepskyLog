@@ -349,6 +349,40 @@ class Utils
         return $correctedValue;
     }
 
+     /**
+      * Returns the color for the component of a double star.
+      *
+      * @param string $component The component to use.
+      *
+      * @return string The string with the color or the empty string if there were no colors entered.
+      */
+    public function getColorForOalExport($component)
+    {
+        if ($obs[$component] > 0) {
+            if ($obs[$component] == 1) {
+                $col = "white";
+            }
+            if ($obs[$component] == 2) {
+                $col = "red";
+            }
+            if ($obs[$component] == 3) {
+                $col = "orange";
+            }
+            if ($obs[$component] == 4) {
+                $col = "yellow";
+            }
+            if ($obs[$component] == 5) {
+                $col = "green";
+            }
+            if ($obs[$component] == 6) {
+                $col = "blue";
+            } else {
+                $col = "";
+            }
+            return $col;
+        }
+    }
+
     /**
      * Prints the OAL file from an array of observations.
      *
@@ -1202,188 +1236,182 @@ class Utils
                     $attr->appendChild($attrText);
                 }
 
-                // TODO: Two times the same for component1 and component2
-                if ($obs["component1"] > 0) {
-                    if ($obs["component1"] == 1) {
-                        $col1 = "white";
-                    }
-                    if ($obs["component1"] == 2) {
-                        $col1 = "red";
-                    }
-                    if ($obs["component1"] == 3) {
-                        $col1 = "orange";
-                    }
-                    if ($obs["component1"] == 4) {
-                        $col1 = "yellow";
-                    }
-                    if ($obs["component1"] == 5) {
-                        $col1 = "green";
-                    }
-                    if ($obs["component1"] == 6) {
-                        $col1 = "blue";
-                    }
-                    $colorMain = $result->appendChild ( $dom->createElement ( 'colorMain' ) );
-                    $colorMain->appendChild ( $dom->createTextNode ( $col1 ) );
-                }
+                $col = getColorForOalExport("component1");
 
-                if ($obs ["component2"] > 0) {
-                    if ($obs ["component2"] == 1) {
-                        $col2 = "white";
-                    }
-                    if ($obs ["component2"] == 2) {
-                        $col2 = "red";
-                    }
-                    if ($obs ["component2"] == 3) {
-                        $col2 = "orange";
-                    }
-                    if ($obs ["component2"] == 4) {
-                        $col2 = "yellow";
-                    }
-                    if ($obs ["component2"] == 5) {
-                        $col2 = "green";
-                    }
-                    if ($obs ["component2"] == 6) {
-                        $col2 = "blue";
+                if ($col != "") {
+                    $colorMain = $result->appendChild($dom->createElement('colorMain'));
+                    $colorMain->appendChild($dom->createTextNode($col1));
                 }
-                $colorCompanion = $result->appendChild ( $dom->createElement ( 'colorCompanion' ) );
-                $colorCompanion->appendChild ( $dom->createTextNode ( $col2 ) );
+    
+                $col = getColorForOalExport("component2");
+
+                if ($col != "") {
+                    $colorCompanion = $result->appendChild($dom->createElement('colorCompanion'));
+                    $colorCompanion->appendChild($dom->createTextNode($col2));
+                }
+            }
+
+            if ($obs["resolved"] > 0) {
+                $attr = $dom->createAttribute("resolved");
+                $result->appendChild($attr);
+
+                $attrText = $dom->createTextNode("true");
+                $attr->appendChild($attrText);
+            }
+
+            if ($obs["stellar"] > 0) {
+                $attr = $dom->createAttribute("stellar");
+                $result->appendChild($attr);
+
+                $attrText = $dom->createTextNode("true");
+                $attr->appendChild($attrText);
+            }
+
+            $attr = $dom->createAttribute("xsi:type");
+            $result->appendChild($attr);
+
+            $object = $GLOBALS['objObject']->getAllInfoDsObject($objectname);
+
+            $type = $object["type"];
+            if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC") {
+                $type = "oal:findingsDeepSkyOCType";
+            } else if ($type == "DS") {
+                $type = "oal:findingsDeepSkyDSType";
+            } else {
+                $type = "oal:findingsDeepSkyType";
+            }
+            $attrText = $dom->createTextNode($type);
+            $attr->appendChild($attrText);
+
+            $description = $result->appendChild($dom->createElement('description'));
+            $description->appendChild(
+                $dom->createCDATASection(utf8_encode($objPresentations->br2nl(html_entity_decode($obs["description"]))))
+            );
+
+            $rat = $obs["visibility"];
+            if ($rat == 0) {
+                $rat = 99;
+            }
+
+            if ($obs["smallDiameter"] > 0) {
+                $smallDiameter = $result->appendChild($dom->createElement('smallDiameter'));
+                $smallDiameter->appendChild($dom->createTextNode($obs["smallDiameter"]));
+
+                $attr = $dom->createAttribute("unit");
+                $smallDiameter->appendChild($attr);
+
+                $attrText = $dom->createTextNode("arcsec");
+                $attr->appendChild($attrText);
+            }
+
+            if ($obs["largeDiameter"] > 0) {
+                $largeDiameter = $result->appendChild($dom->createElement('largeDiameter'));
+                $largeDiameter->appendChild($dom->createTextNode($obs["largeDiameter"]));
+
+                $attr = $dom->createAttribute("unit");
+                $largeDiameter->appendChild($attr);
+
+                $attrText = $dom->createTextNode("arcsec");
+                $attr->appendChild($attrText);
+            }
+
+            $rating = $result->appendChild($dom->createElement('rating'));
+            $rating->appendChild($dom->createTextNode($rat));
+
+            if ($obs["clusterType"] != "" && $obs["clusterType"] != 0) {
+                $character = $result->appendChild($dom->createElement('character'));
+                $character->appendChild($dom->createCDATASection($obs["clusterType"]));
             }
         }
 
-        if ($obs ["resolved"] > 0) {
-            $attr = $dom->createAttribute ( "resolved" );
-            $result->appendChild ( $attr );
+        // generate xml
+        $dom->formatOutput = true; // set the formatOutput attribute of
+                                   // domDocument to true
+                                   // save XML as string or file
+        $test1 = $dom->saveXML();  // put string in test1
 
-            $attrText = $dom->createTextNode ( "true" );
-            $attr->appendChild ( $attrText );
-        }
+        print $test1;
+    }
 
-        if ($obs ["stellar"] > 0) {
-            $attr = $dom->createAttribute ( "stellar" );
-            $result->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "true" );
-            $attr->appendChild ( $attrText );
-        }
-
-        $attr = $dom->createAttribute ( "xsi:type" );
-        $result->appendChild ( $attr );
-
-        $object = $GLOBALS ['objObject']->getAllInfoDsObject ( $objectname );
-
-        $type = $object ["type"];
-        if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC") {
-            $type = "oal:findingsDeepSkyOCType";
-        } else if ($type == "DS") {
-            $type = "oal:findingsDeepSkyDSType";
-        } else {
-            $type = "oal:findingsDeepSkyType";
-        }
-        $attrText = $dom->createTextNode ( $type );
-        $attr->appendChild ( $attrText );
-
-        $description = $result->appendChild ( $dom->createElement ( 'description' ) );
-        $description->appendChild ( $dom->createCDATASection ( utf8_encode ( $objPresentations->br2nl ( html_entity_decode ( $obs ["description"] ) ) ) ) );
-
-        $rat = $obs ["visibility"];
-        if ($rat == 0) {
-            $rat = 99;
-        }
-
-        if ($obs ["smallDiameter"] > 0) {
-            $smallDiameter = $result->appendChild ( $dom->createElement ( 'smallDiameter' ) );
-            $smallDiameter->appendChild ( $dom->createTextNode ( $obs ["smallDiameter"] ) );
-
-            $attr = $dom->createAttribute ( "unit" );
-            $smallDiameter->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "arcsec" );
-            $attr->appendChild ( $attrText );
-        }
-
-        if ($obs ["largeDiameter"] > 0) {
-            $largeDiameter = $result->appendChild ( $dom->createElement ( 'largeDiameter' ) );
-            $largeDiameter->appendChild ( $dom->createTextNode ( $obs ["largeDiameter"] ) );
-
-            $attr = $dom->createAttribute ( "unit" );
-            $largeDiameter->appendChild ( $attr );
-
-            $attrText = $dom->createTextNode ( "arcsec" );
-            $attr->appendChild ( $attrText );
-        }
-
-        $rating = $result->appendChild ( $dom->createElement ( 'rating' ) );
-        $rating->appendChild ( $dom->createTextNode ( $rat ) );
-
-        if ($obs ["clusterType"] != "" && $obs ["clusterType"] != 0) {
-            $character = $result->appendChild ( $dom->createElement ( 'character' ) );
-            $character->appendChild ( $dom->createCDATASection ( $obs ["clusterType"] ) );
+     /**
+      * Creates a csv file from an array of objects.
+      *
+      * @param array $result The array of objects.
+      *
+      * @return string The string with csv file with the objects.
+      */
+    public function csvObjects($result)
+    {
+        global $objObject, $objPresentations, $objObserver, $loggedUser;
+        $result = $this->sortResult($result);
+        echo html_entity_decode(LangCSVMessage7) . "\n";
+        while (list($key, $valueA) = each($result)) {
+            $alt = "";
+            $alts = $objObject->getAlternativeNames($valueA['objectname']);
+            while (list($key, $value) = each($alts)) {
+                if ($value != $valueA['objectname']) {
+                    $alt .= " - " . trim($value);
+                }
+            }
+            $alt = ($alt ? substr($alt, 3) : '');
+            echo $valueA['objectname'] . ";" . $alt . ";" . $objPresentations->raToStringHMS($valueA['objectra']) . ";"
+                . $objPresentations->decToStringDegMinSec($valueA ['objectdecl'], 0) . ";"
+                . $GLOBALS [$valueA['objectconstellation']] . ";" . $GLOBALS[$valueA['objecttype']] . ";"
+                . $objPresentations->presentationInt1($valueA['objectmagnitude'], 99.9, '') . ";"
+                . $objPresentations->presentationInt1($valueA['objectsurfacebrightness'], 99.9, '') . ";"
+                . $valueA['objectsize'] . ";" . $objPresentations->presentationInt($valueA['objectpa'], 999, '') . ";"
+                . $valueA[$objObserver->getObserverProperty($loggedUser, 'standardAtlasCode', 'urano')] . ";"
+                . $valueA['objectcontrast'] . ";" . $valueA['objectoptimalmagnification'] . ";" . $valueA['objectseen'] . ";"
+                . $valueA['objectlastseen'] . "\n";
         }
     }
 
-    // generate xml
-    $dom->formatOutput = true; // set the formatOutput attribute of
-                               // domDocument to true
-                               // save XML as string or file
-    $test1 = $dom->saveXML (); // put string in test1
+     /**
+      * Creates a skylist file from an array of objects.
+      *
+      * @param array $result The array of objects.
+      *
+      * @return string The string with skySafari file with the objects.
+      */
+    public function skylistObjects($result)
+    {
+        // TODO: Check Issue 674
+        global $objObject, $objPresentations, $objObserver, $loggedUser;
+        $result = $this->sortResult ( $result );
 
-    print $test1;
-}
+        echo "SkySafariObservingListVersion=3.0\n";
 
-   public function csvObjects($result) // Creates a csv file from an array of objects
-{
-      global $objObject, $objPresentations, $objObserver, $loggedUser;
-      $result = $this->sortResult ( $result );
-      echo html_entity_decode ( LangCSVMessage7 ) . "\n";
-      while ( list ( $key, $valueA ) = each ( $result ) ) {
-         $alt = "";
-         $alts = $objObject->getAlternativeNames ( $valueA ['objectname'] );
-         while ( list ( $key, $value ) = each ( $alts ) )
-            if ($value != $valueA ['objectname'])
-               $alt .= " - " . trim ( $value );
-         $alt = ($alt ? substr ( $alt, 3 ) : '');
-         echo $valueA ['objectname'] . ";" . $alt . ";" . $objPresentations->raToStringHMS ( $valueA ['objectra'] ) . ";" . $objPresentations->decToStringDegMinSec ( $valueA ['objectdecl'], 0 ) . ";" . $GLOBALS [$valueA ['objectconstellation']] . ";" . $GLOBALS [$valueA ['objecttype']] . ";" . $objPresentations->presentationInt1 ( $valueA ['objectmagnitude'], 99.9, '' ) . ";" . $objPresentations->presentationInt1 ( $valueA ['objectsurfacebrightness'], 99.9, '' ) . ";" . $valueA ['objectsize'] . ";" . $objPresentations->presentationInt ( $valueA ['objectpa'], 999, '' ) . ";" . $valueA [$objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' )] . ";" . $valueA ['objectcontrast'] . ";" . $valueA ['objectoptimalmagnification'] . ";" . $valueA ['objectseen'] . ";" . $valueA ['objectlastseen'] . "\n";
-      }
-   }
+        while (list($key, $row) = each($result))
+        {
+            echo "\n";
+            echo "SkyObject=BeginObject\n";
 
-   public function skylistObjects($result) // Creates a skylist file from an array of objects
-   {
-      global $objObject, $objPresentations, $objObserver, $loggedUser;
-      $result = $this->sortResult ( $result );
+            $objectType = $row['objecttype'];
+            $objectId = $this->getSkyListObjectId($objectType);
+            //echo "----ObjectType=" . $objectType . "\n";
 
-      echo "SkySafariObservingListVersion=3.0\n";
+            $objectNames = $this->getObjectNames($row, $objectId);
 
-      while (list($key, $row) = each($result))
-      {
-         echo "\n";
-         echo "SkyObject=BeginObject\n";
-
-         $objectType = $row['objecttype'];
-         $objectId = $this->getSkyListObjectId($objectType);
-         //echo "----ObjectType=" . $objectType . "\n";
-
-         $objectNames = $this->getObjectNames($row, $objectId);
-
-         echo "   ObjectID=" . $objectId . /*",-1,-1" .*/ "\n";
-         while (list($key, $objectName) = each($objectNames))
-            echo "   CatalogNumber=" . $objectName . "\n";
+            echo "   ObjectID=" . $objectId . /*",-1,-1" .*/ "\n";
+            while (list($key, $objectName) = each($objectNames))
+                echo "   CatalogNumber=" . $objectName . "\n";
 
 
-         $dslObjectName = trim($row['objectname']);
-         if (!in_array($dslObjectName, $objectNames))
-            echo "   Comment=DeepskyLog: " . implode(",", $objObject->getAlternativeNames($row['objectname'])) . "\n";
+            $dslObjectName = trim($row['objectname']);
+            if (!in_array($dslObjectName, $objectNames))
+                echo "   Comment=DeepskyLog: " . implode(",", $objObject->getAlternativeNames($row['objectname'])) . "\n";
 
-         $dateLastSeen = trim($row['objectlastseen']);
-         //echo "---Date=" . $dateLastSeen . "\n";
-         if ($dateLastSeen != "")
-            echo "   DateObserved=" . ($this->getJulianDay($dateLastSeen) + 1) . "\n";
+            $dateLastSeen = trim($row['objectlastseen']);
+            //echo "---Date=" . $dateLastSeen . "\n";
+            if ($dateLastSeen != "")
+                echo "   DateObserved=" . ($this->getJulianDay($dateLastSeen) + 1) . "\n";
 
-//          while (list($key, $value) = each($row))
-//             echo "---" . $key . "=" . $value . "\n";
+            //          while (list($key, $value) = each($row))
+            //             echo "---" . $key . "=" . $value . "\n";
 
-         echo "EndObject=SkyObject\n";
-      }
-   }
+            echo "EndObject=SkyObject\n";
+        }
+    }
 
    function getObjectNames($row, &$objectId)
    {
