@@ -9,8 +9,9 @@
  * @link     http://www.deepslylog.org
  */
 global $inIndex;
-if ((! isset($inIndex)) || (!$inIndex))
-   require "../../redirect.php";
+if ((! isset($inIndex)) || (!$inIndex)) {
+    include "../../redirect.php";
+}
 
 /** 
  * Several handy functions
