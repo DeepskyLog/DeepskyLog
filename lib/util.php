@@ -1414,77 +1414,101 @@ class Utils
         }
     }
 
-   function getObjectNames($row, &$objectId)
-   {
-      global $objObject;
+     /**
+      * Returns a list of objectnames. Will return the name of the object if the name starts with 
+      * M, NGC, IC, C, Cr, Tr, STF, STFA, HD, Mel, or SAO. If the object does not belong in one 
+      * of these catalogues, we return an array with all the names / alternative names of this
+      * object. Used in the export to skylist format (SkySafari).
+      *
+      * @param array   $row      The array with the objectnames.
+      * @param integer $objectId The id of the type of the object in SkySafari.
+      *
+      * @return array An array with the object names.
+      */    
+    function getObjectNames($row, &$objectId)
+    {
+        global $objObject;
 
-      $objectNames = [];
-      $names = [];
+        $objectNames = [];
+        $names = [];
 
-      $objectName = $this->fixObjectName(trim($row['objectname']), $objectId);
-       array_push($names, $objectName);
+        // Fix the name of the object.
+        $objectName = $this->fixObjectName(trim($row['objectname']), $objectId);
+        // Add the name of the object to the names array.
+        array_push($names, $objectName);
 
-      $altNames = $objObject->getAlternativeNames($row['objectname']);
-      while (list($key, $altName) = each($altNames))
-      {
-         $altName = $this->fixObjectName(trim($altName), $objectId);
-         if ($altName != $objectName)
-             array_push($names, trim($altName));
-      }
+        // Get all the alternative names for the given object.
+        $altNames = $objObject->getAlternativeNames($row['objectname']);
+        // Loop over all the alternative names
+        while (list($key, $altName) = each($altNames)) {
+            // Fix the names
+            $altName = $this->fixObjectName(trim($altName), $objectId);
+            // If name is not the same as the objectname, we add the alternative name to the names array.
+            if ($altName != $objectName)
+                array_push($names, trim($altName));
+        }
 
-       $objectName = "";
-      reset($names);
-       while (list($key, $name) = each($names))
-      {
-         if (preg_match("/(?i)^(M|NGC|IC|C|Cr|Tr|STF|STFA|HD)\s*\d+$/", $name))
-         { // These catalogs are best known to Skysafari
-            $objectName = $name;
-            break;
-         }
-         else if (preg_match("/(?i)^(Mel|SAO)\s*\d+$/", $name))
-         { // Then these
-            $objectName = $name;
-            break;
-         }
-      }
-      if ($objectName != "")
-         array_push($objectNames, $objectName);
-      else
-      {
-         reset($names);
-         while (list($key, $name) = each($names))
-            array_push($objectNames, $name);
-      }
+        $objectName = "";
+        reset($names);
+        // We loop over the names array.
+        while (list($key, $name) = each($names)) {
+            if (preg_match("/(?i)^(M|NGC|IC|C|Cr|Tr|STF|STFA|HD)\s*\d+$/", $name)) { 
+                // These catalogs are best known to Skysafari
+                $objectName = $name;
+                break;
+            } else if (preg_match("/(?i)^(Mel|SAO)\s*\d+$/", $name)) { 
+                // Then these
+                $objectName = $name;
+                break;
+            }
+        }
+        // objectname is known if one of the names was from the M, NGC, IC, ... , Mel or SAO catalogues.
+        if ($objectName != "") {
+            // if the objectname was known, add the objectname to the objectNames array.
+            array_push($objectNames, $objectName);
+        } else {
+            reset($names);
+            // Loop over the objectnames and add all names and alternative names. 
+            while (list($key, $name) = each($names))
+                array_push($objectNames, $name);
+        }
 
-      return $objectNames;
-   }
+        return $objectNames;
+    }
 
-   function fixObjectName($objectName, &$objectId)
-   {
-      $regexPK = "/(?i)^PK(\s*)(\d+)(\+|-)(\d+)(\.)(0*)(\d*)/";
-      $regexMi = "/(?i)^Mi\s*(\d+)-(\d+)$/";
-      $regexSteph = "/(?i)^Steph\s*(\d+)$/";
+     /**
+      * Returns the corrected name of the object. Used in the export to skylist format (SkySafari).
+      *
+      * @param string  $objectName The name of the object.
+      * @param integer $objectId   The id of the type of the object in SkySafari.
+      *
+      * @return string The corrected name of the object.
+      */    
+    function fixObjectName($objectName, &$objectId)
+    {
+        $regexPK = "/(?i)^PK(\s*)(\d+)(\+|-)(\d+)(\.)(0*)(\d*)/";
+        $regexMi = "/(?i)^Mi\s*(\d+)-(\d+)$/";
+        $regexSteph = "/(?i)^Steph\s*(\d+)$/";
 
-      $objectName = trim($objectName);
+        $objectName = trim($objectName);
 
-      if (preg_match($regexPK, $objectName))
-         $objectName = preg_replace($regexPK, "PK $2$3$4$5$7", $objectName);
-      else if (preg_match($regexMi, $objectName))
-         $objectName = preg_replace($regexMi, "Minkowski $1-$2", $objectName);
-      else if (preg_match($regexSteph, $objectName))
-         $objectName = preg_replace($regexSteph, "Stephenson $1", $objectName);
-      else if ($objectName == "Beta Cyg")
-         $objectName = "Beta1 Cygni";
-      else if ($objectName == "Dddm 1")
-         $objectName = "KO 1";
-      else if ($objectName == "Stephenson 1")
-      {
-         $objectName = "HD 175426";
-         $objectId = 2;
-      }
+        if (preg_match($regexPK, $objectName)) {
+            $objectName = preg_replace($regexPK, "PK $2$3$4$5$7", $objectName);
+        } else if (preg_match($regexMi, $objectName)) {
+            $objectName = preg_replace($regexMi, "Minkowski $1-$2", $objectName);
+        } else if (preg_match($regexSteph, $objectName)) {
+            $objectName = preg_replace($regexSteph, "Stephenson $1", $objectName);
+        } else if ($objectName == "Beta Cyg") {
+            $objectName = "Beta1 Cygni";
+        } else if ($objectName == "Dddm 1") {
+            $objectName = "KO 1";
+        } else if ($objectName == "Stephenson 1") {
+            $objectName = "HD 175426";
+            $objectId = 2;
+        }
 
-      return $objectName;
-   }
+        return $objectName;
+    }
 
    function startsWith($haystack, $needle)
    {
