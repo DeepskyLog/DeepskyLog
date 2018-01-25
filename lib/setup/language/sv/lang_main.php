@@ -1916,7 +1916,7 @@ define("LangValidateCSVMessage"														,"Import of CSV file successfull!")
 // content/newObservationXml.php
 define("LangXMLTitle"																			,"Import observations from an XML file");
 define("LangXMLMessage1"																	,"This form gives you the possibility to add different observations at the same time using an OpenAstronomyLog XML file.");
-define("LangXMLMessage2"																	,"This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), ...");
+define("LangXMLMessage2"																	,"This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>, <a href=\"http://knightware.biz/dsp/\">Deep-Sky Planner</a>, <a href=\"https://skysafariastronomy.com/\">SkySafari 6+</a>, ...)");
 define("LangXMLMessage3"																	,"Information: Only observations with your name (name and surname) will be added. Observations which are already available in DeepskyLog will not be imported a second time.");
 define("LangXMLError1"																		,"DeepskyLog only supports openAstronomyLog version 2.0");
 define("LangXMLError2"																		,"No observations for user ");

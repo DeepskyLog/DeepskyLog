@@ -1904,7 +1904,7 @@ define("LangValidateCSVMessage"														,"Importeren CSV bestand succesvol!
 // content/newObservationXml.php
 define("LangXMLTitle"																			,"Importeer waarnemingen vanuit XML bestand");
 define("LangXMLMessage1"																	,"Dit formulier geeft u de mogelijkheid om meerdere waarnemingen tegelijkertijd toe te voegen door middel van een openAstronomyLog XML bestand.");
-define("LangXMLMessage2"																	,"Op deze manier kan u gemakkelijk en snel waarnemingen waarnemingen uitwisselen tussen verschillende applicaties die het openAstronomyLog XML formaat ondersteunen (zoals <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), ...");
+define("LangXMLMessage2"																	,"Op deze manier kan u gemakkelijk en snel waarnemingen waarnemingen uitwisselen tussen verschillende applicaties die het openAstronomyLog XML formaat ondersteunen (zoals <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>, <a href=\"http://knightware.biz/dsp/\">Deep-Sky Planner</a>, <a href=\"https://skysafariastronomy.com/\">SkySafari 6+</a>, ...)");
 define("LangXMLMessage3"																	,"Ter informatie: alleen waarnemingen met uw naam (voornaam + naam voluit) zullen toegevoegd worden. Waarnemingen die al aanwezig zijn in DeepskyLog worden niet nog een tweede keer ingelezen.");
 define("LangXMLError1"																		,"DeepskyLog ondersteunt enkel openAstronomyLog versie 2.0");
 define("LangXMLError2"																		,"Geen waarnemingen voor gebruiker ");
