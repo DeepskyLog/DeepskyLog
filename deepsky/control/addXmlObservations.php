@@ -60,7 +60,12 @@ function addXmlObservations()
     // Use the correct schema definition to check the xml file.
     $xmlschema = str_replace(' ', '/', $searchNode->item(0)->getAttribute("xsi:schemaLocation"));
 
-    $xmlschema = $baseURL . "xml/oal21/oal21.xsd";
+    // Use the correct oal definitions.
+    if ($version == "2.0") {
+        $xmlschema = $baseURL . "xml/oal20/oal20.xsd";        
+    } else if ($version == "2.1") {
+        $xmlschema = $baseURL . "xml/oal21/oal21.xsd";
+    }
 
     // Validate the XML file against the schema
     if ($dom->schemaValidate($xmlschema)) {
@@ -869,42 +874,58 @@ function addXmlObservations()
                 }
 
                 // Eyepiece is not mandatory
-                if ($observation->getElementsByTagName ( "eyepiece" )->item ( 0 )) {
+                if ($observation->getElementsByTagName("eyepiece")->item(0)) {
                     // Check if the eyepiece already exists in DeepskyLog
-                    $eyepiece = $eyepieceArray [$observation->getElementsByTagName ( "eyepiece" )->item ( 0 )->nodeValue] ["name"];
+                    $eyepiece = $eyepieceArray [$observation->getElementsByTagName("eyepiece")->item(0)->nodeValue]["name"];
 
-                    $ea = $eyepieceArray [$observation->getElementsByTagName ( "eyepiece" )->item ( 0 )->nodeValue];
+                    $ea = $eyepieceArray[$observation->getElementsByTagName("eyepiece")->item(0)->nodeValue];
 
-                    if (count ( $objDatabase->selectRecordArray ( "SELECT * from eyepieces where observer = \"" . $_SESSION ['deepskylog_id'] . "\" and name = \"" . $ea ["name"] . "\";" ) ) > 0) {
+                    if (count(
+                        $objDatabase->selectRecordArray(
+                            "SELECT * from eyepieces where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \""
+                            . $ea["name"] . "\";"
+                        )
+                    ) > 0
+                    ) {
                         // Update the eyepiece
-                        $eyepId = $objEyepiece->getEyepieceId ( $ea ["name"], $_SESSION ['deepskylog_id'] );
-                        $objEyepiece->setEyepieceProperty ( $eyepId, "name", $ea ["name"] );
-                        $objEyepiece->setEyepieceProperty ( $eyepId, "focalLength", $ea ["focalLength"] );
-                        $objEyepiece->setEyepieceProperty ( $eyepId, "apparentFOV", $ea ["apparentFOV"] );
-                        $objEyepiece->setEyepieceProperty ( $eyepId, "maxFocalLength", $ea ["maxFocalLength"] );
+                        $eyepId = $objEyepiece->getEyepieceId($ea["name"], $_SESSION['deepskylog_id'] );
+                        $objEyepiece->setEyepieceProperty($eyepId, "name", $ea["name"] );
+                        $objEyepiece->setEyepieceProperty($eyepId, "focalLength", $ea["focalLength"] );
+                        $objEyepiece->setEyepieceProperty($eyepId, "apparentFOV", $ea["apparentFOV"] );
+                        $objEyepiece->setEyepieceProperty($eyepId, "maxFocalLength", $ea["maxFocalLength"] );
                     } else {
                         // Add the new eyepiece!
-                        $eyepId = $objEyepiece->addEyepiece ( $ea ["name"], $ea ["focalLength"], $ea ["apparentFOV"] );
-                        $objDatabase->execSQL ( "update eyepieces set observer = \"" . $_SESSION ['deepskylog_id'] . "\" where id = \"" . $eyepId . "\";" );
-                        $objEyepiece->setEyepieceProperty ( $eyepId, "maxFocalLength", $ea ["maxFocalLength"] );
+                        $eyepId = $objEyepiece->addEyepiece($ea["name"], $ea["focalLength"], $ea["apparentFOV"] );
+                        $objDatabase->execSQL(
+                            "update eyepieces set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $eyepId . "\";"
+                        );
+                        $objEyepiece->setEyepieceProperty($eyepId, "maxFocalLength", $ea["maxFocalLength"]);
                     }
                 }
 
                 // Lens is not mandatory
-                if ($observation->getElementsByTagName ( "lens" )->item ( 0 )) {
+                if ($observation->getElementsByTagName("lens")->item(0)) {
                     // Check if the eyepiece already exists in DeepskyLog
-                    $lens = $lensArray [$observation->getElementsByTagName ( "lens" )->item ( 0 )->nodeValue] ["name"];
+                    $lens = $lensArray[$observation->getElementsByTagName("lens")->item(0)->nodeValue]["name"];
 
-                    $la = $lensArray [$observation->getElementsByTagName ( "lens" )->item ( 0 )->nodeValue];
-                    if (count ( $objDatabase->selectRecordArray ( "SELECT * from lenses where observer = \"" . $_SESSION ['deepskylog_id'] . "\" and name = \"" . $lens . "\";" ) ) > 0) {
+                    $la = $lensArray[$observation->getElementsByTagName("lens")->item(0)->nodeValue];
+                    if (count(
+                        $objDatabase->selectRecordArray(
+                            "SELECT * from lenses where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $lens
+                            . "\";"
+                        )
+                    ) > 0
+                    ) {
                         // Update the lens
-                        $lensId = $objLens->getLensId ( $la ["name"], $_SESSION ['deepskylog_id'] );
-                        $objLens->setLensProperty ( $lensId, "name", $la ["name"] );
-                        $objLens->setLensProperty ( $lensId, "factor", $la ["factor"] );
+                        $lensId = $objLens->getLensId($la["name"], $_SESSION['deepskylog_id']);
+                        $objLens->setLensProperty($lensId, "name", $la["name"]);
+                        $objLens->setLensProperty($lensId, "factor", $la["factor"]);
                     } else {
                         // Add the new lens!
-                        $lensId = $objLens->addLens ( $la ["name"], $la ["factor"] );
-                        $objDatabase->execSQL ( "update lenses set observer = \"" . $_SESSION ['deepskylog_id'] . "\" where id = \"" . $lensId . "\";" );
+                        $lensId = $objLens->addLens($la["name"], $la["factor"]);
+                        $objDatabase->execSQL(
+                            "update lenses set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $lensId . "\";"
+                        );
                     }
                 }
 
