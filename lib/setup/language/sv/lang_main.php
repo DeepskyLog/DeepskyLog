@@ -1913,7 +1913,7 @@ define("LangCSVError10d"																	,".");
 define("LangCSVButton"																		,"Import!");
 define("LangValidateCSVMessage"														,"Import of CSV file successfull!");
 
-// content/new_observationxml.php
+// content/newObservationXml.php
 define("LangXMLTitle"																			,"Import observations from an XML file");
 define("LangXMLMessage1"																	,"This form gives you the possibility to add different observations at the same time using an OpenAstronomyLog XML file.");
 define("LangXMLMessage2"																	,"This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), ...");

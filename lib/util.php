@@ -2951,7 +2951,7 @@ class Utils
    }
    public function utilitiesDispatchIndexAction() {
       if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_csv', 'deepsky/content/new_observationcsv.php' )))
-         if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_xml', 'deepsky/content/new_observationxml.php' )))
+         if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_xml', 'deepsky/content/newObservationXml.php' )))
             if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_object', 'deepsky/content/new_object.php' )))
                if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_observation', 'deepsky/content/new_observation.php' )))
                   if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_object', 'deepsky/content/view_object.php' )))

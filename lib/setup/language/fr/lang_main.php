@@ -1873,7 +1873,7 @@ define("LangCSVError10d"																	,".");
 define("LangCSVButton"																		,"Importez!");
 define("LangValidateCSVMessage"														,"L'importation du fichier CSV est faite!");
 
-// content/new_observationxml.php
+// content/newObservationXml.php
 define("LangXMLTitle"																			,"Importez les observations &agrave; partir d'un fichier XML");
 define("LangXMLMessage1"																	,"Ce formulaire vous donne la possibilit&eacute; d'ajouter diff&eacute;rentes observations en utilisant un fichier OpenAstonomyLog XML.");
 define("LangXMLMessage2"																	,"De cette fa&ccedil;on, vous pouvez &eacute;changer facilement et rapidement des observations entre diff&eacute;rentes applications qui supportent le format OpenAstonomyLog XML (comme <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), ...");
