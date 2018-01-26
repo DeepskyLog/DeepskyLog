@@ -1888,10 +1888,15 @@ define("LangCSVError2"																		,"De onderstaande objecten niet gekend z
 define("LangCSVError2b"																		,"En ");
 define("LangCSVError2c"																		," andere objekten.");
 define("LangCSVError3"																		,"De onderstaande waarneemplaatsen niet gekend zijn in DeepskyLog");
+define("LangCSVError3b"																		," andere waarneemplaatsen.");
 define("LangCSVError4"																		,"De onderstaande instrumenten niet gekend zijn in DeepskyLog");
+define("LangCSVError4b"																		," andere instrumenten.");
 define("LangCSVError5"																		,"De onderstaande filters niet gekend zijn in DeepskyLog");
+define("LangCSVError5b"																		," andere filters.");
 define("LangCSVError6"																		,"De onderstaande oculairs niet gekend zijn in DeepskyLog");
+define("LangCSVError6b"																		," andere oculairs.");
 define("LangCSVError7"																		,"De onderstaande lenzen niet gekend zijn in DeepskyLog");
+define("LangCSVError7b"																		," andere lenzen.");
 define("LangCSVError8"																		,"De onderstaande datum(s) niet geldig zijn");
 define("LangCSVError9"																		,"De onderstaande datum(s) in de toekomst liggen");
 define("LangCSVError10"																		,"Enkel de foutloze waarnemingen werden ingelezen.<br />Je dient eerst de bovenstaande zaken op te lossen om dan opnieuw de ");

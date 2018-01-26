@@ -1899,10 +1899,15 @@ define("LangCSVError2"																		,"Folgende Objekte sind nicht in Deepsky
 define("LangCSVError2b"																		,"Und ");
 define("LangCSVError2c"																		," andere objekte.");
 define("LangCSVError3"																		,"Folgende Beobachtungspl&auml;tze sind nicht in DeepskyLog verf&uuml;gbar");
+define("LangCSVError3b"																		," andere Beobachtungspl&auml;tze.");
 define("LangCSVError4"																		,"Folgende Beobachtungsger&auml;te sind nicht in DeepskyLog verf&uuml;gbar");
+define("LangCSVError4b"																		," andere Beobachtungsger&auml;te.");
 define("LangCSVError5"																		,"Die folgenden Filter sind nicht in DeepskyLog verf&uuml;gbar");
+define("LangCSVError5b"																		," andere Filter.");
 define("LangCSVError6"																		,"Die folgenden Okulare sind nicht in DeepskyLog verf&uuml;gbar");
+define("LangCSVError6b"																		," andere Okulare.");
 define("LangCSVError7"																		,"Die folgenden Linsen sind nicht in DeepskyLog verf&uuml;gbar");
+define("LangCSVError7b"																		," andere Linsen.");
 define("LangCSVError8"																		,"Folgende Daten konnten von DeepskyLog nicht korrekt erfasst werden");
 define("LangCSVError9"																		,"Folgende Daten liegen in der Zukunft");
 define("LangCSVError10"																		,"Nur die korrekten Beobachtungen wurden gelesen.<br />Sie m&uuml;ssen zuerst die oben genannten Probleme l&ouml;sen um dann den");

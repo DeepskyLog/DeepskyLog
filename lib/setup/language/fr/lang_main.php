@@ -1858,12 +1858,17 @@ define("LangCSVError0"																		,"L'import csv des observations a &eacut
 define("LangCSVError1"																		,"Le fichier csv n'a pas &eacute;t&eacute; trait&eacute; parce que: ");
 define("LangCSVError2"																		,"Les objets suivants ne sont pas connus par DeepskyLog");
 define("LangCSVError2b"																		,"Et ");
-define("LangCSVError2c"																		," autre objects.");
+define("LangCSVError2c"																		," autres objects.");
 define("LangCSVError3"																		,"Les endroits suivants ne sont pas connus par DeepskyLog");
+define("LangCSVError3b"																		," autres endroits.");
 define("LangCSVError4"																		,"Les instruments suivants net sont pas connus par DeepskyLog");
+define("LangCSVError4b"																		," autres instruments.");
 define("LangCSVError5"																		,"Les filtres suivant ne sont pas connus par DeepskyLog");
+define("LangCSVError5b"																		," autres filtres.");
 define("LangCSVError6"																		,"Les oculaires suivant ne sont pas connus par DeepskyLog");
+define("LangCSVError6b"																		," autres oculaires.");
 define("LangCSVError7"																		,"Les lentilles suivant ne sont pas connus par DeepskyLog");
+define("LangCSVError7b"																		," autres lentilles.");
 define("LangCSVError8"																		,"La ou les dates suivantes ne sont pas valides");
 define("LangCSVError9"																		,"La ou les dates suivantes se trouvent dans le futur");
 define("LangCSVError10"																		,"Les observations n'ont pas &eacute;t&eacute; enregistr&eacute;es.<br />Il faut d'abord r&eacute;soudre les probl&egrave;mes mentionn&eacute;s pour ensuite ");

@@ -1900,10 +1900,15 @@ define("LangCSVError2"																		,"The following objects are not availabl
 define("LangCSVError2b"																		,"And ");
 define("LangCSVError2c"																		," other objects.");
 define("LangCSVError3"																		,"The following locations are not available in DeepskyLog");
+define("LangCSVError3b"																		," other locations.");
 define("LangCSVError4"																		,"The following instruments are not available in DeepskyLog");
+define("LangCSVError4b"																		," other instruments.");
 define("LangCSVError5"																		,"The following filters are not available in DeepskyLog");
+define("LangCSVError5b"																		," other filters.");
 define("LangCSVError6"																		,"The following eyepieces are not available in DeepskyLog");
+define("LangCSVError6b"																		," other eyepieces.");
 define("LangCSVError7"																		,"The following lenses are not available in DeepskyLog");
+define("LangCSVError7b"																		," other lenses.");
 define("LangCSVError8"																		,"The following date(s) can't be read by DeepskyLog");
 define("LangCSVError9"																		,"The following date(s) are in the future");
 define("LangCSVError10"																		,"Only the correct observations have been read.<br />&nbsp;<br />You first have to solve the problems mentionned above and then ");
