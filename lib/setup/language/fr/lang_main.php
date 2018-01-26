@@ -1837,10 +1837,10 @@ define("LangRemove"																				,"Supprimez");
 
 // content/new_observationcsv.php
 define("LangCSVTitle"																			,"Importez les observations a partir d'un fichier csv");
-define("LangCSVMessage1"																	,"Ce formulaire vous donne la possibilit&eacute; de rentrer plusieures observations &agrave; la fois &agrave; l'aide d'un fichier csv (comma seperated value). Cette fa&ccedil;on facile et rapide vous permet de rentrer plusieures observations &agrave; la fois. Le formulaire vous permet &eacute;galement de copier facilement vos observations que vous auriez stock&eacute;es dans une autre base de donn&eacute;es et de les enregistrer dans DeepskyLog. A titre d'information: juste les observations avec votre nom et pr&eacute;nom seront rajout&eacute;es.");
-define("LangCSVMessage2"																	,"Le fichier csv utilse le format suivant: <span class=\"bold\">(NOUVEAU FORMAT!!!)</span>");
-define("LangCSVMessage3"																	,"<span class=\"bold\"><i> 1-Objet; 2-Observateur; 3-Date; 4-TU; 5-Endroit; 6-Instrument; 7-Oculaire; 8-Filtre; 9-Lentille; 10-Seeing; 11-LimMag ou SQM comme vous voulez; 12-Visibilit&eacute;; 13-Langue; 14-Description</i></span>");
-define("LangCSVMessage4"																	,"<span class=\"bold\">Attention!</span> Contrairement &agrave; la version 3.3 et pr&eacute;c&eacute;dentes, le fichier <span class=\"bold\">ne peut plus</span> contenir <span class=\"underline\">une ligne de t&ecirc;te</span>,
+define("LangCSVMessage1"																	,"Ce formulaire vous donne la possibilit&eacute; de rentrer plusieures observations &agrave; la fois &agrave; l'aide d'un fichier csv (comma separated value). Cette fa&ccedil;on facile et rapide vous permet de rentrer plusieures observations &agrave; la fois. Le formulaire vous permet &eacute;galement de copier facilement vos observations que vous auriez stock&eacute;es dans une autre base de donn&eacute;es et de les enregistrer dans DeepskyLog. A titre d'information: juste les observations avec votre nom et pr&eacute;nom seront rajout&eacute;es.");
+define("LangCSVMessage2"																	,"Le fichier csv utilise le format suivant:");
+define("LangCSVMessage3"																	,"<strong><i> 1-Objet; 2-Observateur; 3-Date; 4-TU; 5-Endroit; 6-Instrument; 7-Oculaire; 8-Filtre; 9-Lentille; 10-Seeing; 11-LimMag ou SQM comme vous voulez; 12-Visibilit&eacute;; 13-Langue; 14-Description</i></strong>");
+define("LangCSVMessage4"																	,"Le fichier <strong>ne contient pas</strong> <u>une ligne de t&ecirc;te</u>,
                            																	la premi&egrave;re ligne contient directement des observations dans le format mentionn&eacute;, par exemple: <br /><br />
                            																	NGC 2392;Jean Leduc;21-01-2005;20:45;Mons;Obsession 15\";31mm Nagler;Lumicon O-III filter;2;4.0;3;nl;Une belle n&eacute;bulosit&eacute; plan&eacute;taire avec &eacute;toile centrale visible!<br />M 35;Jean Leduc;21-01-2005;20:53;Mons;Obsession 15\";;;2;4.0;1;nl;Plus ou moins trente membres dans des lignes courb&eacute;es.<br />...<br /><br />Le seeing est indiqu&eacute; avec un num&eacute;ro entre 1 et 5 (1=excellent, 2=bien, 3=m&eacute;diocre, 4=faible, 5=mauvais).<br />La visibilit&eacute; est indiqu&eacute;e avec un num&eacute;ro entre 1 et 7 (1=Objet tr&egrave;s facile et clair, 2=Objet facilement visible &agrave; vision direct, 3=Objet visible &agrave; vision direct, 4=Vision p&eacute;riph&eacute;rique n&eacute;cessaire pour voir  l'objet, 5=Objet difficilement visible en vision p&eacute;riph&eacute;rique, 6=Visibilit&eacute; de l'objet est douteuse, 7=L'objet n'est pas visible).<br />Une observation &agrave; l'oeil nu doit &ecirc;tre enregistr&eacute;e avec l'
 instrument 'Naked Eye' (en anglais!).<br />Indiquez 'fr' dans le champs 'langue'");
@@ -1857,11 +1857,18 @@ define("LangCSVMessage10"																	,"; observations d&eacute;j&agrave; pr
 define("LangCSVError0"																		,"L'import csv des observations a &eacute;t&eacute; arr&ecirc;t&eacute;");
 define("LangCSVError1"																		,"Le fichier csv n'a pas &eacute;t&eacute; trait&eacute; parce que: ");
 define("LangCSVError2"																		,"Les objets suivants ne sont pas connus par DeepskyLog");
+define("LangCSVError2b"																		,"Et ");
+define("LangCSVError2c"																		," autres objects.");
 define("LangCSVError3"																		,"Les endroits suivants ne sont pas connus par DeepskyLog");
+define("LangCSVError3b"																		," autres endroits.");
 define("LangCSVError4"																		,"Les instruments suivants net sont pas connus par DeepskyLog");
+define("LangCSVError4b"																		," autres instruments.");
 define("LangCSVError5"																		,"Les filtres suivant ne sont pas connus par DeepskyLog");
+define("LangCSVError5b"																		," autres filtres.");
 define("LangCSVError6"																		,"Les oculaires suivant ne sont pas connus par DeepskyLog");
+define("LangCSVError6b"																		," autres oculaires.");
 define("LangCSVError7"																		,"Les lentilles suivant ne sont pas connus par DeepskyLog");
+define("LangCSVError7b"																		," autres lentilles.");
 define("LangCSVError8"																		,"La ou les dates suivantes ne sont pas valides");
 define("LangCSVError9"																		,"La ou les dates suivantes se trouvent dans le futur");
 define("LangCSVError10"																		,"Les observations n'ont pas &eacute;t&eacute; enregistr&eacute;es.<br />Il faut d'abord r&eacute;soudre les probl&egrave;mes mentionn&eacute;s pour ensuite ");
@@ -1873,10 +1880,10 @@ define("LangCSVError10d"																	,".");
 define("LangCSVButton"																		,"Importez!");
 define("LangValidateCSVMessage"														,"L'importation du fichier CSV est faite!");
 
-// content/new_observationxml.php
+// content/newObservationXml.php
 define("LangXMLTitle"																			,"Importez les observations &agrave; partir d'un fichier XML");
 define("LangXMLMessage1"																	,"Ce formulaire vous donne la possibilit&eacute; d'ajouter diff&eacute;rentes observations en utilisant un fichier OpenAstonomyLog XML.");
-define("LangXMLMessage2"																	,"De cette fa&ccedil;on, vous pouvez &eacute;changer facilement et rapidement des observations entre diff&eacute;rentes applications qui supportent le format OpenAstonomyLog XML (comme <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), ...");
+define("LangXMLMessage2"																	,"De cette fa&ccedil;on, vous pouvez &eacute;changer facilement et rapidement des observations entre diff&eacute;rentes applications qui supportent le format OpenAstonomyLog XML (comme <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>, <a href=\"http://knightware.biz/dsp/\">Deep-Sky Planner</a>, <a href=\"https://skysafariastronomy.com/\">SkySafari 6+</a>, ...)");
 define("LangXMLMessage3"																	,"Informations: uniquement les observations avec votre nom (pr&eacute;nom et nom) seront ajout&eacute;es. Les observations qui sont d&eacute;j&agrave; disponibles dans deepskylog ne seront pas import&eacute;es une seconde fois.");
 define("LangXMLError1"																		,"DeepskyLog ne supporte que openAstronomyLog version 2.0");
 define("LangXMLError2"																		,"Pas d'observations pour cet utilisateur ");
@@ -1891,7 +1898,7 @@ define("LangValidateXMLMessage"														,"L'importation du fichier XML est 
 
 //List import
 define("LangCSVListTitle"																	,"Importez les objets du fichier CSV vers votre liste");
-define("LangCSVListMessage1"															,"Ce formulaire vous donne la possibilit&#233; de rajouter plusieurs objets &#224; la fois &#224; partir d&#8217;un fichier CSV (comma seperated value). De cette fa&#231;on vous pouvez rajouter facilement et tr&#232;s vite des objets en une seul manipulation. Ce formulaire vous permet &#233;galement de rajouter facilement &#224; la liste de DeepslyLog des objets m&#233;moris&#233;s dans d&#8217;autres banques de donn&#233;es.");
+define("LangCSVListMessage1"															,"Ce formulaire vous donne la possibilit&#233; de rajouter plusieurs objets &#224; la fois &#224; partir d&#8217;un fichier CSV (comma separated value). De cette fa&#231;on vous pouvez rajouter facilement et tr&#232;s vite des objets en une seul manipulation. Ce formulaire vous permet &#233;galement de rajouter facilement &#224; la liste de DeepslyLog des objets m&#233;moris&#233;s dans d&#8217;autres banques de donn&#233;es.");
 define("LangCSVListMessage2"															,"Le ficier CSV doit commencer avec la d&#233;fintion suivante dans la premi&egrave;re ligne, les lignes suivantes contiennent les donn&eacute;es:");
 define("LangCSVListMessage3"															,"Nom de l'objet;Nom &agrave; montrer (optionel);champs libres;ils ne sont pas pris en consid&#233;ration ...");
 define("LangCSVListMessage4"															,"");

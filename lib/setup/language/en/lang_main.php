@@ -1869,10 +1869,10 @@ define("LangQueryObservationsButton2"											,"Clear Fields");
 
 // content/new_observationcsv.php
 define("LangCSVTitle"																			,"Import observations from a CSV file");
-define("LangCSVMessage1"																	,"This form allows you to submit multiple observations at once by importing them directly from a CSV file (comma seperated value file).<br />This will facilitate and speed up the number of observations you can submit at once.<br />It also allows you to easily add former observations already kept by in some sort of database program. For your interest: only observations with your name (in full) will be inserted.");
-define("LangCSVMessage2"																	,"The CSV file uses the following format: <span class=\"bold\">(NEW FORMAT!!!)</span>");
-define("LangCSVMessage3"																	,"<span class=\"bold\"><i>1-Object; 2-Observer; 3-Date; 4-UT; 5-Location; 6-Instrument; 7-Eyepiece; 8-Filter; 9-Lens; 10-Seeing; 11-LimMag or SQM as you wish; 12-Visibility; 13-Language; 14-Description</i></span>");
-define("LangCSVMessage4"																	,"<span class=\"bold\">Attention!</span> In contrast with version 3.3 and preceding ones, the file may <span class=\"bold\">no longer</span> contain <span class=\"underline\">a header line</span>,
+define("LangCSVMessage1"																	,"This form allows you to submit multiple observations at once by importing them directly from a CSV file (comma separated value file).<br />This will facilitate and speed up the number of observations you can submit at once.<br />It also allows you to easily add former observations already kept by in some sort of database program. For your interest: only observations with your name (in full) will be inserted.");
+define("LangCSVMessage2"																	,"The CSV file uses the following format:");
+define("LangCSVMessage3"																	,"<strong><i>1-Object; 2-Observer; 3-Date; 4-UT; 5-Location; 6-Instrument; 7-Eyepiece; 8-Filter; 9-Lens; 10-Seeing; 11-LimMag or SQM as you wish; 12-Visibility; 13-Language; 14-Description</i></strong>");
+define("LangCSVMessage4"																	,"The file does not contain a header line,
                            																	the first line immediately contains the actual observations in the format mentioned above, e.g.: <br /><br />
                            																	NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;en;Nice planetary nebula with a very bright central star!<br />M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;en;About thirty members with several curved chains of stars.<br />...<br /><br />Seeing should be given as a number between 1 and 5<br />(1=excellent, 2=good, 3=moderate, 4=poor, 5=bad).<br />&nbsp;<br />Visibility should be given as a number between 1 and 7<br />(1=Very simple, prominent object, 2=Object easily percepted with direct vision, 3=Object perceptable with direct vision, 4=Averted vision required to percept object, 5=Object barely perceptable with averted vision, 6=Perception of object is very questionable, 7=Object definitely not seen).<br />&nbsp;<br />If an observation has been done by naked eye, 'Naked Eye' should be given as instrument.<br />Language should be the short name for the language the description
 is in  (en for English)");
@@ -1889,11 +1889,18 @@ define("LangCSVMessage10"																	,"; observations dropped because alrea
 define("LangCSVError0"																		,"The csv observation import is completed with problems.");
 define("LangCSVError1"																		,"The CSV file is not completely imported because: ");
 define("LangCSVError2"																		,"The following objects are not available in DeepskyLog");
+define("LangCSVError2b"																		,"And ");
+define("LangCSVError2c"																		," other objects missing.");
 define("LangCSVError3"																		,"The following locations are not available in DeepskyLog");
+define("LangCSVError3b"																		," other locations missing.");
 define("LangCSVError4"																		,"The following instruments are not available in DeepskyLog");
+define("LangCSVError4b"																		," other instruments missing.");
 define("LangCSVError5"																		,"The following filters are not available in DeepskyLog");
+define("LangCSVError5b"																		," other filters missing.");
 define("LangCSVError6"																		,"The following eyepieces are not available in DeepskyLog");
+define("LangCSVError6b"																		," other eyepieces missing.");
 define("LangCSVError7"																		,"The following lenses are not available in DeepskyLog");
+define("LangCSVError7b"																		," other lenses missing.");
 define("LangCSVError8"																		,"The following date(s) can't be read by DeepskyLog");
 define("LangCSVError9"																		,"The following date(s) are in the future");
 define("LangCSVError10"																		,"Only the correct observations have been read.<br />&nbsp;<br />You first have to solve the problems mentionned above and then ");
@@ -1905,10 +1912,10 @@ define("LangCSVError10d"																	,".");
 define("LangCSVButton"																		,"Import!");
 define("LangValidateCSVMessage"														,"Import of CSV file successfull!");
 
-// content/new_observationxml.php
+// content/newObservationXml.php
 define("LangXMLTitle"																			,"Import observations from an XML file");
 define("LangXMLMessage1"																	,"This form gives you the possibility to add different observations at the same time using an OpenAstronomyLog XML file.");
-define("LangXMLMessage2"																	,"This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), ...");
+define("LangXMLMessage2"																	,"This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>, <a href=\"http://knightware.biz/dsp/\">Deep-Sky Planner</a>, <a href=\"https://skysafariastronomy.com/\">SkySafari 6+</a>, ...)");
 define("LangXMLMessage3"																	,"Information: Only observations with your name (name and surname) will be added. Observations which are already available in DeepskyLog will not be imported a second time.");
 define("LangXMLError1"																		,"DeepskyLog only supports openAstronomyLog version 2.0");
 define("LangXMLError2"																		,"No observations for user ");
@@ -1938,7 +1945,7 @@ define("LangCSVListButton"																,"Import!");
 // content/manage_csv.php
 define("LangNewObjectSubtitle1b"													,"Manage objects from CSV file");
 define("LangCSVObjectTitle"																,"Managing of objects from CSV file");
-define("LangCSVObjectMessage1"														,"This form gives you the possibility to manage several objects using one single csv file (comma seperated value).");
+define("LangCSVObjectMessage1"														,"This form gives you the possibility to manage several objects using one single csv file (comma separated value).");
 define("LangCSVObjectMessage1b"														,"This way you can easily and quickly introduce several objects, alternative names, etc.");
 define("LangCSVObjectMessage2"														,"The csv file must adhere following syntax if the instructions concern object naming:");
 define("LangCSVObjectMessage3"														,"Instruction;Object;Catalog;Catalogindex;");

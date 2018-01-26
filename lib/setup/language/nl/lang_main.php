@@ -1866,10 +1866,10 @@ define("LangRemove"																				,"Verwijder");
 
 // content/new_observationcsv.php
 define("LangCSVTitle"																			,"Importeer waarnemingen vanuit CSV bestand");
-define("LangCSVMessage1"																	,"Dit formulier geeft u de mogelijkheid om meerdere waarnemingen tegelijkertijd toe te voegen door middel van een CSV bestand (comma seperated value). Op deze manier kan u gemakkelijk en snel meerdere waarnemingen ineens invoeren. Het formulier laat u ook toe om vroegere waarnemingen, reeds bijgehouden in een of andere databank, op een gemakkelijke manier toe te voegen aan DeepskyLog. Ter informatie: alleen waarnemingen met uw naam (voornaam + naam voluit) zullen toegevoegd worden.");
-define("LangCSVMessage2"																	,"Het CSV bestand gebruikt het volgende formaat: <span class=\"bold\">(NIEUW FORMAAT!!!)</span>");
-define("LangCSVMessage3"																	,"<span class=\"bold\"><i> 1-Object; 2-Waarnemer; 3-Datum; 4-UT; 5-Locatie; 6-Instrument; 7-Oculair; 8-Filter; 9-Lens; 10-Seeing; 11-LimMag of SQM naar keuze; 12-Zichtbaarheid; 13-Taal; 14-Beschrijving</i></span>");
-define("LangCSVMessage4"																	,"<span class=\"bold\">Opgepast!</span> In tegenstelling tot versie 3.3 en daarvoor, is er <span class=\"bold\" \"underline\">geen header lijn meer toegelaten</span> in de csv import file.
+define("LangCSVMessage1"																	,"Dit formulier geeft u de mogelijkheid om meerdere waarnemingen tegelijkertijd toe te voegen door middel van een CSV bestand (comma separated value). Op deze manier kan u gemakkelijk en snel meerdere waarnemingen ineens invoeren. Het formulier laat u ook toe om vroegere waarnemingen, reeds bijgehouden in een of andere databank, op een gemakkelijke manier toe te voegen aan DeepskyLog. Ter informatie: alleen waarnemingen met uw naam (voornaam + naam voluit) zullen toegevoegd worden.");
+define("LangCSVMessage2"																	,"Het CSV bestand gebruikt het volgende formaat:");
+define("LangCSVMessage3"																	,"<strong><i> 1-Object; 2-Waarnemer; 3-Datum; 4-UT; 5-Locatie; 6-Instrument; 7-Oculair; 8-Filter; 9-Lens; 10-Seeing; 11-LimMag of SQM naar keuze; 12-Zichtbaarheid; 13-Taal; 14-Beschrijving</i></strong>");
+define("LangCSVMessage4"																	,"Er is <strong><u>geen header lijn toegelaten</strong></u> in de csv import file.
                            																	De eerste lijn bevat onmiddellijk de eigenlijke waarnemingen in het bovenstaande formaat, bv: <br /><br />
                            																	NGC 2392;Piet Janssens;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;nl;Mooie planetaire nevel met een zeer heldere centrale ster!<br />M 35;Piet Janssens;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;nl;Ongeveer dertig leden tellend in gebogen lijnen.<br />...<br /><br />Seeing wordt aangegeven door een nummer tussen 1 en 5 (1=uitstekend, 2=goed, 3=middelmatig, 4=zwak, 5=slecht).<br />Zichtbaarheid wordt aangegeven door een nummer tussen 1 en 7 (1=Zeer eenvoudig, helder object, 2=Object eenvoudig te zien bij direct kijken, 3=Object zichtbaar bij direct kijken, 4=Perifeer kijken nodig om object te zien, 5=Object amper zichtbaar bij perifeer kijken, 6=Zichtbaarheid van object is twijfelachtig, 7=Object niet zichtbaar).<br />Een waarneming met het blote oog moet 'Naked Eye' als instrument bevatten.<br />Taal moet de korte naam van de taal zijn (nl voor Nederlands)");
 define("LangCSVMessage5"																	,"Opgepast!<br />De instrumenten, waarneemplaatsen, oculairs, filters en objecten in het CSV bestand moeten reeds vooraf bekend zijn in DeepskyLog.
@@ -1885,11 +1885,18 @@ define("LangCSVMessage10"																	,"; waarnemingen reeds aanwezig en nie
 define("LangCSVError0"																		,"De CSV import van de waarnemingen is gestopt");
 define("LangCSVError1"																		,"Het CSV bestand kon niet ingelezen worden omdat: ");
 define("LangCSVError2"																		,"De onderstaande objecten niet gekend zijn in DeepskyLog");
+define("LangCSVError2b"																		,"En ");
+define("LangCSVError2c"																		," andere objekten.");
 define("LangCSVError3"																		,"De onderstaande waarneemplaatsen niet gekend zijn in DeepskyLog");
+define("LangCSVError3b"																		," andere waarneemplaatsen.");
 define("LangCSVError4"																		,"De onderstaande instrumenten niet gekend zijn in DeepskyLog");
+define("LangCSVError4b"																		," andere instrumenten.");
 define("LangCSVError5"																		,"De onderstaande filters niet gekend zijn in DeepskyLog");
+define("LangCSVError5b"																		," andere filters.");
 define("LangCSVError6"																		,"De onderstaande oculairs niet gekend zijn in DeepskyLog");
+define("LangCSVError6b"																		," andere oculairs.");
 define("LangCSVError7"																		,"De onderstaande lenzen niet gekend zijn in DeepskyLog");
+define("LangCSVError7b"																		," andere lenzen.");
 define("LangCSVError8"																		,"De onderstaande datum(s) niet geldig zijn");
 define("LangCSVError9"																		,"De onderstaande datum(s) in de toekomst liggen");
 define("LangCSVError10"																		,"Enkel de foutloze waarnemingen werden ingelezen.<br />Je dient eerst de bovenstaande zaken op te lossen om dan opnieuw de ");
@@ -1901,10 +1908,10 @@ define("LangCSVError10d"																	,".");
 define("LangCSVButton"																		,"Importeer!");
 define("LangValidateCSVMessage"														,"Importeren CSV bestand succesvol!");
 
-// content/new_observationxml.php
+// content/newObservationXml.php
 define("LangXMLTitle"																			,"Importeer waarnemingen vanuit XML bestand");
 define("LangXMLMessage1"																	,"Dit formulier geeft u de mogelijkheid om meerdere waarnemingen tegelijkertijd toe te voegen door middel van een openAstronomyLog XML bestand.");
-define("LangXMLMessage2"																	,"Op deze manier kan u gemakkelijk en snel waarnemingen waarnemingen uitwisselen tussen verschillende applicaties die het openAstronomyLog XML formaat ondersteunen (zoals <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), ...");
+define("LangXMLMessage2"																	,"Op deze manier kan u gemakkelijk en snel waarnemingen waarnemingen uitwisselen tussen verschillende applicaties die het openAstronomyLog XML formaat ondersteunen (zoals <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>, <a href=\"http://knightware.biz/dsp/\">Deep-Sky Planner</a>, <a href=\"https://skysafariastronomy.com/\">SkySafari 6+</a>, ...)");
 define("LangXMLMessage3"																	,"Ter informatie: alleen waarnemingen met uw naam (voornaam + naam voluit) zullen toegevoegd worden. Waarnemingen die al aanwezig zijn in DeepskyLog worden niet nog een tweede keer ingelezen.");
 define("LangXMLError1"																		,"DeepskyLog ondersteunt enkel openAstronomyLog versie 2.0");
 define("LangXMLError2"																		,"Geen waarnemingen voor gebruiker ");
@@ -1919,7 +1926,7 @@ define("LangValidateXMLMessage"														,"Importeren XML bestand succesvol!
 
 //List import
 define("LangCSVListTitle"																	,"Importeer objecten vanuit CSV bestand naar uw lijst");
-define("LangCSVListMessage1"															,"Dit formulier geeft u de mogelijkheid om meerdere objecten tegelijkertijd toe te voegen door middel van een CSV bestand (comma seperated value). Op deze manier kan u gemakkelijk en snel meerdere objecten ineens invoeren. Het formulier laat u ook toe om vroegere objecten, reeds bijgehouden in een of andere databank, op een gemakkelijke manier toe te voegen aan uw DeepskyLog lijst.");
+define("LangCSVListMessage1"															,"Dit formulier geeft u de mogelijkheid om meerdere objecten tegelijkertijd toe te voegen door middel van een CSV bestand (comma separated value). Op deze manier kan u gemakkelijk en snel meerdere objecten ineens invoeren. Het formulier laat u ook toe om vroegere objecten, reeds bijgehouden in een of andere databank, op een gemakkelijke manier toe te voegen aan uw DeepskyLog lijst.");
 define("LangCSVListMessage2"															,"Het CSV bestand moet beginnen met onderstaande definitie in de eerste lijn, de volgende lijnen bevatten de data:");
 define("LangCSVListMessage3"															,"Objectnaam;Te tonen naam (optioneel);vrije velden(ze worden niet in rekening gebracht...)");
 define("LangCSVListMessage4"															,"");
@@ -1934,7 +1941,7 @@ define("LangCSVListButton"																,"Importeer!");
 // content/manage_csv.php
 define("LangNewObjectSubtitle1b"													,"Manage objecten vanuit CSV bestand");
 define("LangCSVObjectTitle"																,"Managen van objecten vanuit CSV bestand");
-define("LangCSVObjectMessage1"														,"Dit formulier geeft u de mogelijkheid om meerdere objecten tegelijkertijd te managen door middel van een CSV bestand (comma seperated value).");
+define("LangCSVObjectMessage1"														,"Dit formulier geeft u de mogelijkheid om meerdere objecten tegelijkertijd te managen door middel van een CSV bestand (comma separated value).");
 define("LangCSVObjectMessage1b"														,"Op deze manier kan u gemakkelijk en snel meerdere objecten ineens invoeren, alternatieve namen geven, part-ofs instellen enz.");
 define("LangCSVObjectMessage2"														,"Het CSV bestand moet beginnen met onderstaande definitie als het om benamingen gaat:");
 define("LangCSVObjectMessage3"														,"Opdracht;Object;Catalog;Catalogindex;");

@@ -10,7 +10,7 @@
 	-->
 
 	<!-- Include the base elements -->
-	<xsd:include schemaLocation="../base/oal_Base.xsd"/>
+	<xsd:include schemaLocation="oal_Base.xsd"/>
 
 	<!-- type hierarchy for objects of the solar system (sun, moon, planets, minor planets, comets) -->
 	<xsd:complexType name="SolarSystemTargetType" abstract="true">

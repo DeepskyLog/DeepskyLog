@@ -10,7 +10,7 @@
 	-->
 
 	<!-- Include the base elements -->
-	<xsd:include schemaLocation="../base/oal_Base.xsd"/>
+	<xsd:include schemaLocation="oal_Base.xsd"/>
 	
 	<!--An extension of the imagerType to describe CCD cameras-->
 	<xsd:complexType name="ccdCameraType">

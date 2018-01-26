@@ -12,10 +12,10 @@
 	     (c) 2005 - 2011 by Fachgruppe Computerastronomie of the Vereinigung der Sternfreunde e.V. (VdS) 
 	-->
 
-	<xsd:include schemaLocation="./base/oal_Base.xsd"/>
-	<xsd:include schemaLocation="./extensions/ext_DeepSky.xsd"/>
-	<xsd:include schemaLocation="./extensions/ext_SolarSystem.xsd"/>
-	<xsd:include schemaLocation="./extensions/ext_VariableStars.xsd"/>
-	<xsd:include schemaLocation="./extensions/ext_Imaging.xsd"/>
+	<xsd:include schemaLocation="./openastronomylog21/oal_Base.xsd"/>
+	<xsd:include schemaLocation="./openastronomylog21/ext_DeepSky.xsd"/>
+	<xsd:include schemaLocation="./openastronomylog21/ext_SolarSystem.xsd"/>
+	<xsd:include schemaLocation="./openastronomylog21/ext_VariableStars.xsd"/>
+	<xsd:include schemaLocation="./openastronomylog21/ext_Imaging.xsd"/>
 
 </xsd:schema>

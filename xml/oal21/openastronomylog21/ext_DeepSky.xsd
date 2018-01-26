@@ -10,7 +10,7 @@
 	-->
 
 	<!-- Include the base elements -->
-	<xsd:include schemaLocation="../base/oal_Base.xsd"/>
+	<xsd:include schemaLocation="oal_Base.xsd"/>
 
 
 	<!-- New in V2.0: type definition for multiple stars -->

@@ -1878,10 +1878,10 @@ define("LangRemove"																				,"L&ouml;schen");
 
 // content/new_observationcsv.php
 define("LangCSVTitle"																			,"Beobachtungen von CSV Datei importieren");
-define("LangCSVMessage1"																	,"Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine CSV Datei importieren (comma seperated value Datei). Dies beschleunigt das Hochladen ihrer Beobachtungen, ferner k&ouml;nnen sie alte Beobachtungen aus Drittanwendungen leichter importieren. Zu Ihrer Information: Alle Beobachtungen mit Ihrem (vollen) Namen werden importiert.");
-define("LangCSVMessage2"																	,"Die CSV Datei nutzt folgendes Format: <span class=\"bold\">(NEUES FORMAT!!!)</span>");
-define("LangCSVMessage3"																	,"<span class=\"bold\"><i>1-Objekt; 2-Beobachter; 3-Datum; 4-UT; 5-Beobachtungsplatz; 6-Beobachtungsger&auml;t; 7-Okular; 8-Filter; 9-Linse; 10-Seeing; 11-Schw&auml;chsterStern oder SQM; 12-Sichtbarkeit; 13-Sprache; 14-Beschreibung</i></span>");
-define("LangCSVMessage4"																	,"<span class=\"bold\">Vorsicht!</span>Im Gegensatz zur Version 3.3 (und Vorg&auml;ngern) kann die Datei <span class=\"bold\">keine</span> <span class=\"underline\">Kopfzeile</span> mehr enthalten. Die erste Zeile enth&auml;lt direkt die eigentlichen Beobachtungen im angegebenen Format, wie z.B.: <br /><br />NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;en;H&uuml;bsche Planetarischer Nebel mit hellem zentralen Stern!<br />M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;en;Ungef&auml;hr 30 Mitglieder mit einigen Sternmustern.<br />...<br /><br />Seeing sollte als Zahl zwischen 1 und 5 (1=excellent, 2=gut, 3=Moderat, 4=Schwach, 5=Sehr schwach) angegeben werden.<br />Sichtbarkeit sollte als Zahl zwischen 1 und 7 (1=Sehr einfaches, auff&auml;lliges Objekt im Okular, 2=Objekt bei direktem Beobachten gut zu sehen, 3=Objekt bei direktem Beobachten zu sehen, 4=Indirektes Beobachten ist n&
+define("LangCSVMessage1"																	,"Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine CSV Datei importieren (comma separated value Datei). Dies beschleunigt das Hochladen ihrer Beobachtungen, ferner k&ouml;nnen sie alte Beobachtungen aus Drittanwendungen leichter importieren. Zu Ihrer Information: Alle Beobachtungen mit Ihrem (vollen) Namen werden importiert.");
+define("LangCSVMessage2"																	,"Die CSV Datei nutzt folgendes Format:");
+define("LangCSVMessage3"																	,"<strong><i>1-Objekt; 2-Beobachter; 3-Datum; 4-UT; 5-Beobachtungsplatz; 6-Beobachtungsger&auml;t; 7-Okular; 8-Filter; 9-Linse; 10-Seeing; 11-Schw&auml;chsterStern oder SQM; 12-Sichtbarkeit; 13-Sprache; 14-Beschreibung</i></strong>");
+define("LangCSVMessage4"																	,"Die Datei enthalt <strong>keine</strong> <u>Kopfzeile</u>. Die erste Zeile enth&auml;lt direkt die eigentlichen Beobachtungen im angegebenen Format, wie z.B.: <br /><br />NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;en;H&uuml;bsche Planetarischer Nebel mit hellem zentralen Stern!<br />M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;en;Ungef&auml;hr 30 Mitglieder mit einigen Sternmustern.<br />...<br /><br />Seeing sollte als Zahl zwischen 1 und 5 (1=excellent, 2=gut, 3=Moderat, 4=Schwach, 5=Sehr schwach) angegeben werden.<br />Sichtbarkeit sollte als Zahl zwischen 1 und 7 (1=Sehr einfaches, auff&auml;lliges Objekt im Okular, 2=Objekt bei direktem Beobachten gut zu sehen, 3=Objekt bei direktem Beobachten zu sehen, 4=Indirektes Beobachten ist n&
 ouml;tig, um das Objekt zu sehen, 5=Objekt bei indirektem Beobachten gerade noch wahrnehmbar, 6=Sichtung des Objektes sehr fraglich, 7=Objekt sicher nicht zu sehen) angegeben werden.<br />Wenn eine Beobachtung mit dem blo&szlig;en Auge gemacht wurde, sollte \"Naked Eye\" als Instrument ausgew&auml;hlt werden.<br />Sprache sollte als Kurzkennung der Sprache angegeben werden (z.B.: de f&uuml;r deutsch)");
 define("LangCSVMessage5"																	,"Achtung!<br />Das Beobachtungsger&auml;t, der Beobachtungsplatz und die Objekte in der CSV-Datei sollten schon in DeepskyLog bekannt sein,
                           																 sonst erhalten Sie eine Fehlermeldung und diesen Beobachtungen wirden nicht importiert.<br />
@@ -1896,11 +1896,18 @@ define("LangCSVMessage10"																	,"; Beobachtungen abgelehnt da bereits
 define("LangCSVError0"																		,"Der Beobachtungs Import (CSV-Datei) wurde abgebrochen");
 define("LangCSVError1"																		,"Die CSV Datei konnte nicht importiert werden weil: ");
 define("LangCSVError2"																		,"Folgende Objekte sind nicht in DeepskyLog verf&uuml;gbar");
+define("LangCSVError2b"																		,"Und ");
+define("LangCSVError2c"																		," andere objekte.");
 define("LangCSVError3"																		,"Folgende Beobachtungspl&auml;tze sind nicht in DeepskyLog verf&uuml;gbar");
+define("LangCSVError3b"																		," andere Beobachtungspl&auml;tze.");
 define("LangCSVError4"																		,"Folgende Beobachtungsger&auml;te sind nicht in DeepskyLog verf&uuml;gbar");
+define("LangCSVError4b"																		," andere Beobachtungsger&auml;te.");
 define("LangCSVError5"																		,"Die folgenden Filter sind nicht in DeepskyLog verf&uuml;gbar");
+define("LangCSVError5b"																		," andere Filter.");
 define("LangCSVError6"																		,"Die folgenden Okulare sind nicht in DeepskyLog verf&uuml;gbar");
+define("LangCSVError6b"																		," andere Okulare.");
 define("LangCSVError7"																		,"Die folgenden Linsen sind nicht in DeepskyLog verf&uuml;gbar");
+define("LangCSVError7b"																		," andere Linsen.");
 define("LangCSVError8"																		,"Folgende Daten konnten von DeepskyLog nicht korrekt erfasst werden");
 define("LangCSVError9"																		,"Folgende Daten liegen in der Zukunft");
 define("LangCSVError10"																		,"Nur die korrekten Beobachtungen wurden gelesen.<br />Sie m&uuml;ssen zuerst die oben genannten Probleme l&ouml;sen um dann den");
@@ -1912,10 +1919,10 @@ define("LangCSVError10d"																	,".");
 define("LangCSVButton"																		,"Importieren!");
 define("LangValidateCSVMessage"														,"Import der CSV Datei erfolgreich!");
 
-// content/new_observationxml.php
+// content/newObservationXml.php
 define("LangXMLTitle"																			,"Importiere Beobachtungen aus XML Datei");
 define("LangXMLMessage1"																	,"Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine OpenAstronomyLog XML Datei importieren.");
-define("LangXMLMessage2"																	,"Dies beschleunigt das Hochladen ihrer Beobachtungen. Ferner k&ouml;nnen Sie Beobachtungen zwischen verschiedenen Anwendungen, die den OpenAstronomyLog XML Standard unterst&uuml;tzen (wie z.B.: <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), austauschen.");
+define("LangXMLMessage2"																	,"Dies beschleunigt das Hochladen ihrer Beobachtungen. Ferner k&ouml;nnen Sie Beobachtungen zwischen verschiedenen Anwendungen, die den OpenAstronomyLog XML Standard unterst&uuml;tzen (wie z.B.: <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>, <a href=\"http://knightware.biz/dsp/\">Deep-Sky Planner</a>, <a href=\"https://skysafariastronomy.com/\">SkySafari 6+</a>, ...), austauschen.");
 define("LangXMLMessage3"																	,"Bitte beachten Sie: Es werden nur Beobachtungen mit Ihrem Namen (Vor- und Nachname) hinzugef&uuml;gt. Beobachtungen die DeepskyLog bereits bekannt sind, werden ebenfalls nicht importiert.");
 define("LangXMLError1"																		,"DeepskyLog unterst&uuml;tzt z. Zt. nur OpenAstronomyLog Version 2.0");
 define("LangXMLError2"																		,"Keine Beobachtungen f&uuml;r Benutzer ");
@@ -1930,7 +1937,7 @@ define("LangValidateXMLMessage"														,"Import der XML Daten erfolgreich!
 
 //List import
 define("LangCSVListTitle"																	,"Beobachtungen von CSV Datei importieren");
-define("LangCSVListMessage1"															,"Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine CSV Datei importieren (comma seperated value Datei). Dies beschleunigt das Hochladen ihrer Beobachtungen, ferner k&ouml;nnen sie alte Beobachtungen aus Drittanwendungen leichter importieren. Zu Ihrer Information: Alle Beobachtungen mit Ihrem (vollen) Namen werden importiert.");
+define("LangCSVListMessage1"															,"Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine CSV Datei importieren (comma separated value Datei). Dies beschleunigt das Hochladen ihrer Beobachtungen, ferner k&ouml;nnen sie alte Beobachtungen aus Drittanwendungen leichter importieren. Zu Ihrer Information: Alle Beobachtungen mit Ihrem (vollen) Namen werden importiert.");
 define("LangCSVListMessage2"															,"Die CSV Datei sollte mit folgender Definition starten am ersten Linie, die n&auml;chste Linien sind Datei:");
 define("LangCSVListMessage3"															,"Objekt;freies Feld;Diese Felder werden ignoriert...");
 define("LangCSVListMessage4"															,"");
@@ -1945,7 +1952,7 @@ define("LangCSVListButton"																,"Importieren!");
 // content/manage_csv.php
 define("LangNewObjectSubtitle1b"													,"Bearbeite Objekte der CSV Datei");
 define("LangCSVObjectTitle"																,"Bearbeiten von Objekten der CSV Datei");
-define("LangCSVObjectMessage1"														,"Diese Eingabemaske erlaubt Ihnen mehrere Objekte auf einmal einzugeben, indem Sie eine CSV Datei importiren (comma seperated value Datei).");
+define("LangCSVObjectMessage1"														,"Diese Eingabemaske erlaubt Ihnen mehrere Objekte auf einmal einzugeben, indem Sie eine CSV Datei importiren (comma separated value Datei).");
 define("LangCSVObjectMessage1b"														,"Dies beschleunigt das Hochladen ihrer Objekte.");
 define("LangCSVObjectMessage2"														,"Dies CSV Datei sollte folgenden Aufbau haben, wenn sie die Nomenklatur von Objekten betrifft:");
 define("LangCSVObjectMessage3"														,"Instruktion;Objekt;Katalog;Katalognummer;");
