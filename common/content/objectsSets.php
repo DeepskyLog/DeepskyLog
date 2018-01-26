@@ -83,13 +83,13 @@ function objectsSets()
   echo "<td>"."<span class=\"form-inline\"><input type=\"text\" class=\"form-control\" id=\"RD"."photos"."\" value=\"".$foto1." ".$foto2."\"/><input id=\"RCB"."photos"."\" class=\"btn btn-primary btn-sm\" type=\"button\" value=\"V\" onclick=\"setCheckedValues('photos',".$k.",document.getElementById('RDphotos').value);\" />"."</span></td>";
   echo "</tr>";  
   echo "<tr>";
-  echo "<th class=\"bold\">".LangpdfseriesObject."</th>";
+  echo "<th><strong>".LangpdfseriesObject."</strong></th>";
   echo "<th> &nbsp; </th>";
-  echo "<th class=\"bold\">".LangpdfseriesSize."</th>";
-  echo "<th class=\"bold\">".LangpdfseriesFoVs."</th>";
-  echo "<th class=\"bold\">".Langpdfseriesdsos."</th>";
-  echo "<th class=\"bold\">".Langpdfseriesstars."</th>";
-  echo "<th class=\"bold\">".Langpdfseriesphotos."</th>";
+  echo "<th><strong>".LangpdfseriesSize."</strong></th>";
+  echo "<th><strong>".LangpdfseriesFoVs."</strong></th>";
+  echo "<th><strong>".Langpdfseriesdsos."</strong></th>";
+  echo "<th><strong>".Langpdfseriesstars."</strong></th>";
+  echo "<th><strong>".Langpdfseriesphotos."</strong></th>";
   
   echo "</tr>";
   for($i=0;$i<$k;$i++)
