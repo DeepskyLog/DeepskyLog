@@ -268,8 +268,8 @@ class Observations
             for ($i = 0; $i < count($parts_array); $i ++) {
                 if (!in_array($i, $errorlist)) {
                     $observername = $objObserver->getObserverProperty(
-                    htmlentities(trim($parts_array[$i][1])), 'firstname') . " "
-                        . $objObserver->getObserverProperty(htmlentities(trim($parts_array[$i][1])), 'name');
+                        htmlentities(trim($parts_array[$i][1])), 'firstname'
+                    ) . " " . $objObserver->getObserverProperty(htmlentities(trim($parts_array[$i][1])), 'name');
                     if (trim($parts_array[$i][1]) == $username) {
                         $instrum = $objInstrument->getInstrumentId(
                             htmlentities(trim($parts_array[$i][5]), ENT_COMPAT, "UTF-8", 0), $loggedUser
@@ -291,7 +291,6 @@ class Observations
                         if ($language == "") {
                             $language = "en";
                         }
-                        // TODO: Check if the observation is already imported!
                         $obsid = $this->addDSObservation2(
                             $correctedObjects[$i], $loggedUser, $instrum, $locat, $date, $time, $language, 
                             htmlentities(trim($parts_array[$i][9])), str_replace(',', '.', htmlentities(trim($parts_array[$i][10]))), 
@@ -301,11 +300,13 @@ class Observations
                             ((trim($parts_array[$i][7]) != "") ? Nz0($objFilter->getFilterObserverPropertyFromName(htmlentities(trim($parts_array[$i][7])), $loggedUser, 'id')) : 0), 
                             ((trim($parts_array[$i][8]) != "") ? Nz0($objLens->getLensObserverPropertyFromName(htmlentities(trim($parts_array[$i][8])), $loggedUser, 'id')) : 0)
                         );
-                        if ($obsid) {
+                        // TODO: Check if the observation is already imported!
+                        if ($obsid != 0) {
                             $added++;
                             // Add the observation to all the sessions
                             $current_observation = $objSession->addObservationToSessions($obsid);
                         } else {
+                            // This is a double observation! Check addDSObservation2.
                             $double++;
                         }
                     }
@@ -317,23 +318,51 @@ class Observations
         }
     }
 
-    public function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language) { // adds a new observation to the database. The name, observerid, instrumentid, locationid, date, time, description, seeing and limiting magnitude should be given as parameters. The id of the latest observation is returned.
-                                                                                                                                                                   // If the time and date are given in local time, you should execute setLocalDateAndTime after inserting the observation!
+     /**
+      * Adds a new observation to the database. The name, observerid, instrumentid, locationid, date, time, description, seeing and 
+      * limiting magnitude should be given as parameters. The id of the latest observation is returned.
+      * If the time and date are given in local time, you should execute setLocalDateAndTime after inserting the observation!
+      *
+      * @param string $objectname   The name of the object.
+      * @param string $observerid   The id of the observer.
+      * @param int    $instrumentid The id of the instrument. 
+      * @param int    $locationid   The id of the location.
+      * @param int    $date         The date of the observation in YYYYMMDD format.
+      * @param int    $time         The time of the observation in HHMM format. If the time and date are given in local time, you should execute setLocalDateAndTime after inserting the observation!
+      * @param string $description  The description of the observation.
+      * @param int    $seeing       The seeing: 1 for Excellent, 2 for Good, 3 for Moderate, 4 for Poor and 5 for Bad.
+      * @param float  $limmag       The limiting magnitude during the observation.
+      * @param int    $visibility   How easy the object was visible: 1 for Very simple, prominent object, 2 for Object easily percepted with direct vision, 3 for Object perceptable with direct vision, 4 for Averted vision required to percept object, 5 for Object barely perceptable with averted vision, 6 for Perception of object is very questionable, and 7 for Object definitely not seen.
+      * @param string $language     The short name of the language: e.g. en for English, nl for Dutch, ...
+      *
+      * @return integer The id of the observation.
+      */
+    public function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language)
+    { 
         global $objDatabase;
-        if (($seeing == "-1") || ($seeing == "") || (intval($seeing) > 5) || (intval($seeing) < 0))
+        if (($seeing == "-1") || ($seeing == "") || (intval($seeing) > 5) || (intval($seeing) < 0)) {
             $seeing = "NULL";
-        if ($limmag == "")
+        }
+        if ($limmag == "") {
             $limmag = "NULL";
-        else {
-            if (preg_match ( '/([0-9]{1})[.,]([0-9]{1})/', $limmag, $matches )) // limiting magnitude like X.X or X,X with X a number between 0 and 9
-                $limmag = $matches [1] . "." . $matches [2]; // valid limiting magnitude // save current magnitude limit
+        } else {
+            // limiting magnitude like X.X or X,X with X a number between 0 and 9
+            if (preg_match('/([0-9]{1})[.,]([0-9]{1})/', $limmag, $matches)) {
+                // valid limiting magnitude
+                $limmag = $matches [1] . "." . $matches [2];
+            }
             $limmag = "$limmag";
         }
-        $description = preg_replace ( "/(\")/", "", $description );
+        $description = preg_replace("/(\")/", "", $description);
 
-        $objDatabase->execSQL ( "INSERT INTO observations (objectname, observerid, instrumentid, locationid, date, time, description, seeing, limmag, visibility, language) " . "VALUES (\"$objectname\", \"$observerid\", \"$instrumentid\", \"$locationid\", \"$date\", \"$time\", \"$description\", $seeing, $limmag, $visibility, \"$language\")" );
-        return $objDatabase->selectSingleValue ( "SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id' );
+        $objDatabase->execSQL(
+            "INSERT INTO observations (objectname, observerid, instrumentid, locationid, date, time, description, seeing, limmag, 
+            visibility, language) " . "VALUES (\"$objectname\", \"$observerid\", \"$instrumentid\", \"$locationid\", \"$date\", \"$time\", 
+            \"$description\", $seeing, $limmag, $visibility, \"$language\")"
+        );
+        return $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
     }
+
     public function addDSObservation2($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language, $eyepieceid, $filterid, $lensid) {
         global $objDatabase, $objPresentations;
         if (($seeing == "-1") || ($seeing == "") || (intval($seeing) > 5) || (intval($seeing) < 0))
@@ -400,7 +429,7 @@ class Observations
                                                          $lensid,
                                                          $sqm)" );
             // Return the obsid
-        return $objDatabase->selectSingleValue ( "SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id' );
+        return $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
     }
     public function getAllInfoDsObservation($id) // returns all information of an observation
 {
