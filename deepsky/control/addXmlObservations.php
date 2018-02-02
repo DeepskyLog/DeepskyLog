@@ -2,7 +2,7 @@
 /** 
  * Adds observations from an OpenAstronomyLog xml file to the database
  * 
- * @category Deepsky
+ * @category Deepsky/import
  * @package  DeepskyLog
  * @author   DeepskyLog Developers <developers@deepskylog.be>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
@@ -82,10 +82,10 @@ function addXmlObservations()
             // Get the id and the name of the observers in the comast file
             $oalid = $observer->getAttribute("id");
             $name = htmlentities(($observer->getElementsByTagName("name")->item(0)->nodeValue), ENT_COMPAT, "UTF-8", 0);
-            $tmpObserverArray ['name'] = $name;
+            $tmpObserverArray['name'] = $name;
 
             $surname = htmlentities(($observer->getElementsByTagName("surname")->item(0)->nodeValue), ENT_COMPAT, "UTF-8", 0);
-            $tmpObserverArray ['surname'] = $surname;
+            $tmpObserverArray['surname'] = $surname;
 
             // Get the fstOffset if know, else, just set fstOffset to 0.
             if ($observer->getElementsByTagName("fstOffset")->item(0)) {
@@ -118,13 +118,14 @@ function addXmlObservations()
                 // If the name and surname of the oal user is the same as the user that is logged in...
                 $id = $_SESSION['deepskylog_id'];
             }
-            $observerArray [$oalid] = $tmpObserverArray;
+            $tmpObserverArray['id'] = $id;
+            $observerArray[$oalid] = $tmpObserverArray;
         }
 
         if ($id == "") {
             // If there is no user found, we exit the OAL import and print an error message.            
             $entryMessage .= LangXMLError2 . $deepskylog_username . LangXMLError2a;
-            $_GET ['indexAction'] = "add_xml";
+            $_GET['indexAction'] = "add_xml";
 
             return;
         } else {
@@ -394,7 +395,7 @@ function addXmlObservations()
 
             // Get the begindate and convert it to the DeepskyLog format
             $beginDate = strtotime($session->getElementsByTagName("begin")->item(0)->nodeValue);
-            $sessionInfoArray ["begindate"] = date('Y-m-d H:i:s', $beginDate);
+            $sessionInfoArray["begindate"] = date('Y-m-d H:i:s', $beginDate);
             
             $endDate = strtotime($session->getElementsByTagName("end")->item(0)->nodeValue);
             $sessionInfoArray["enddate"] = date('Y-m-d H:i:s', $endDate);
@@ -766,7 +767,8 @@ function addXmlObservations()
             $siteValid = true;
             if ($observation->getElementsByTagName("site")->item(0)) {
                 $observerid = $observation->getElementsByTagName("observer")->item(0)->nodeValue;
-                if ($observerid == $id) {
+
+                if ($id == $observerArray[$observerid]["id"]) {
                     // Check if the site already exists in DeepskyLog
                     $site = $siteArray[$observation->getElementsByTagName("site")->item(0)->nodeValue]["name"];
                     $sa = $siteArray[$observation->getElementsByTagName("site")->item(0)->nodeValue];
@@ -888,14 +890,14 @@ function addXmlObservations()
                     ) > 0
                     ) {
                         // Update the eyepiece
-                        $eyepId = $objEyepiece->getEyepieceId($ea["name"], $_SESSION['deepskylog_id'] );
-                        $objEyepiece->setEyepieceProperty($eyepId, "name", $ea["name"] );
-                        $objEyepiece->setEyepieceProperty($eyepId, "focalLength", $ea["focalLength"] );
-                        $objEyepiece->setEyepieceProperty($eyepId, "apparentFOV", $ea["apparentFOV"] );
-                        $objEyepiece->setEyepieceProperty($eyepId, "maxFocalLength", $ea["maxFocalLength"] );
+                        $eyepId = $objEyepiece->getEyepieceId($ea["name"], $_SESSION['deepskylog_id']);
+                        $objEyepiece->setEyepieceProperty($eyepId, "name", $ea["name"]);
+                        $objEyepiece->setEyepieceProperty($eyepId, "focalLength", $ea["focalLength"]);
+                        $objEyepiece->setEyepieceProperty($eyepId, "apparentFOV", $ea["apparentFOV"]);
+                        $objEyepiece->setEyepieceProperty($eyepId, "maxFocalLength", $ea["maxFocalLength"]);
                     } else {
                         // Add the new eyepiece!
-                        $eyepId = $objEyepiece->addEyepiece($ea["name"], $ea["focalLength"], $ea["apparentFOV"] );
+                        $eyepId = $objEyepiece->addEyepiece($ea["name"], $ea["focalLength"], $ea["apparentFOV"]);
                         $objDatabase->execSQL(
                             "update eyepieces set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $eyepId . "\";"
                         );
@@ -930,123 +932,136 @@ function addXmlObservations()
                 }
 
                 // Object!!!
-                $target = $targetArray [$observation->getElementsByTagName ( "target" )->item ( 0 )->nodeValue] ["name"];
-                $ta = $targetArray [$observation->getElementsByTagName ( "target" )->item ( 0 )->nodeValue];
+                $target = $targetArray[$observation->getElementsByTagName("target")->item(0)->nodeValue]["name"];
+                $ta = $targetArray[$observation->getElementsByTagName("target")->item(0)->nodeValue];
 
-                if ($ta ["valid"] && $siteValid) {
-                    if ($ta ["known"] == 1) {
+                if ($siteValid) {
+                    if ($ta["known"] == 1) {
                         $pattern = '/([A-Za-z]+)([\d\D\w]*)/';
-                        $targetName = preg_replace ( $pattern, '${1} ${2}', $target );
-                        $targetName = str_replace ( "  ", " ", $targetName );
+                        $targetName = preg_replace($pattern, '${1} ${2}', $target);
+                        $targetName = str_replace("  ", " ", $targetName);
                         $objeId = - 1;
                         // Check if the object with the given name exists. If this is the case, set the objeId, else check the alternative names
-                        $targetName = $objCatalog->checkObject ( $targetName );
-                        if (count ( $objDatabase->selectRecordArray ( "SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\");" ) ) > 0) {
-                            $objeId = $objObject->getDsObjectName ( $targetName );
+                        $targetName = $objCatalog->checkObject($targetName);
+                        if (count(
+                            $objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\");")
+                        ) > 0
+                        ) {
+                            $objeId = $objObject->getDsObjectName($targetName);
                         } else {
                             // Object with the given name does not exist... Check if the name is an alternative name
-                            for($i = 0; $i < sizeof ( $ta ["aliases"] ); $i ++) {
-                                $targetName = preg_replace ( $pattern, '${1} ${2}', $ta ["aliases"] ["alias" . $i] );
-                                $targetName = str_replace ( "  ", " ", $targetName );
-                                $targetName = $objCatalog->checkObject ( $targetName );
-                                if (count ( $objDatabase->selectRecordArray ( "SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\")" ) ) > 0) {
-                                    $objeId = $objObject->getDsObjectName ( $targetName );
+                            for ($i = 0;$i < sizeof($ta["aliases"]); $i++) {
+                                $targetName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
+                                $targetName = str_replace("  ", " ", $targetName);
+                                $targetName = $objCatalog->checkObject($targetName);
+                                if (count(
+                                    $objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\")")
+                                ) > 0
+                                ) {
+                                    $objeId = $objObject->getDsObjectName($targetName);
                                 }
                             }
                             if ($objeId == - 1) {
+                                // If the object has no coordinates, we can not add a new object.
+                                if ($ta["type"] == "TARGET") {
+                                    continue;
+                                }
                                 // Object does not exist (name or alternative name)
                                 // Check for the type and coordinates. If there is already an object at the same coordinates with the same type, add the alternative name
-                                if ((count ( $objDatabase->selectRecordArray ( "SELECT name FROM objects WHERE ra > " . ($ta ["ra"] - 0.0001) . " and ra < " . ($ta ["ra"] + 0.0001) . " and decl > " . ($ta ["dec"] - 0.0001) . " and decl < " . ($ta ["dec"] + 0.0001) . " and type = \"" . $ta ["type"] . "\"" ) )) > 0) {
-                                    $run = $objDatabase->selectRecordset ( "SELECT name FROM objects WHERE ra > " . ($ta ["ra"] - 0.0001) . " and ra < " . ($ta ["ra"] + 0.0001) . " and decl > " . ($ta ["dec"] - 0.0001) . " and decl < " . ($ta ["dec"] + 0.0001) . " and type = \"" . $ta ["type"] . "\"" );
-                                    $get = $run->fetch ( PDO::FETCH_OBJ );
+                                $sql = "SELECT name FROM objects WHERE ra > " . ($ta["ra"] - 0.0001) . " and ra < " . ($ta["ra"] + 0.0001) . " and decl > " . ($ta["dec"] - 0.0001) . " and decl < " . ($ta["dec"] + 0.0001) . " and type = \"" . $ta["type"] . "\"";
+                                if ((count($objDatabase->selectRecordArray($sql))) > 0) {
+                                    $run = $objDatabase->selectRecordset($sql);
+                                    $get = $run->fetch(PDO::FETCH_OBJ);
 
                                     $objeId = $get->name;
 
                                     // Also add alternative name to the existing object.
-                                    $names = explode ( " ", $objeId );
-                                    $aliasNames = explode ( " ", $targetName );
+                                    $names = explode(" ", $objeId);
+                                    $aliasNames = explode(" ", $targetName);
 
-                                    $objObject->newAltName ( $names [0] . " " . $names [1], $aliasNames [0], $aliasNames [1] );
+                                    $objObject->newAltName($names[0] . " " . $names[1], $aliasNames[0], $aliasNames[1]);
                                 } else {
                                     // else, add new object
-                                    $targetName = preg_replace ( $pattern, '${1} ${2}', $target );
-                                    $targetName = str_replace ( "  ", " ", $targetName );
-                                    $targetName = $objCatalog->checkObject ( $targetName );
-                                    $names = explode ( " ", $targetName );
-                                    $objObject->addDSObject ( $names [0] . " " . $names [1], $names [0], $names [1], $ta ["type"], $ta ["constellation"], $ta ["ra"], $ta ["dec"], $ta ["mag"], $ta ["subr"], $ta ["diam1"], $ta ["diam2"], $ta ["pa"], $ta ["datasource"] );
-                                    for($i = 0; $i < sizeof ( $ta ["aliases"] ); $i ++) {
-                                        $aliasName = preg_replace ( $pattern, '${1} ${2}', $ta ["aliases"] ["alias" . $i] );
-                                        $aliasNames = explode ( " ", $aliasName );
-                                        $objObject->newAltName ( $names [0] . " " . $names [1], $aliasNames [0], $aliasNames [1] );
+                                    $targetName = preg_replace($pattern, '${1} ${2}', $target);
+                                    $targetName = str_replace("  ", " ", $targetName);
+                                    $targetName = $objCatalog->checkObject($targetName);
+                                    $names = explode(" ", $targetName);
+                                    $objObject->addDSObject(
+                                        $names[0] . " " . $names[1], $names[0], $names[1], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], 
+                                        $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], $ta["datasource"]
+                                    );
+                                    for ($i = 0; $i < sizeof($ta["aliases"]); $i++) {
+                                        $aliasName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
+                                        $aliasNames = explode(" ", $aliasName);
+                                        $objObject->newAltName($names[0] . " " . $names[1], $aliasNames[0], $aliasNames[1]);
                                     }
-                                    $objeId = $objObject->getDsObjectName ( $targetName );
+                                    $objeId = $objObject->getDsObjectName($targetName);
                                     $body = LangValidateAccountEmailTitleObject . " <a href=\"http://www.deepskylog.org/index.php?indexAction=detail_object&object=" .
-                                                        urlencode ( $targetName ) . "\">" . $targetName . "</a> " . LangValidateAccountEmailTitleObject2 . " " .
+                                                        urlencode($targetName) . "\">" . $targetName . "</a> " . LangValidateAccountEmailTitleObject2 . " " .
                                                         LangValidateAccountEmailTitleObjectObserver . " <a href=\"http://www.deepskylog.org/index.php?indexAction=detail_observer&user=" .
-                                                        urlencode ( $loggedUser ) . "\">" . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " " .
-                                                        $objObserver->getObserverProperty ( $loggedUser, 'name' ) . "</a>.<br /><br />";
-                                    if (isset ( $developversion ) && ($developversion == 1))
+                                                        urlencode($loggedUser) . "\">" . $objObserver->getObserverProperty($loggedUser, 'firstname') . " " .
+                                                        $objObserver->getObserverProperty($loggedUser, 'name') . "</a>.<br /><br />";
+                                    if (isset($developversion) && ($developversion == 1)) {
                                         $entryMessage .= "On the live server, a mail would be sent with the subject: " . $subject . ".<br />";
-                                    else
-                                        $objMessage->sendEmail ( LangValidateAccountEmailTitleObject . " " . $targetName . LangValidateAccountEmailTitleObject2, $body, "developers" );
+                                    } else {
+                                        $objMessage->sendEmail(LangValidateAccountEmailTitleObject . " " . $targetName . LangValidateAccountEmailTitleObject2, $body, "developers");
+                                    }
                                 }
                             }
                         }
+  
+    
                         // Check if the observation already exists!
-// TODO: Check if this can better / easier: 
-    //             $endDate = strtotime($session->getElementsByTagName("end")->item(0)->nodeValue);
-    //              $sessionInfoArray["enddate"] = date('Y-m-d H:i:s', $endDate);
-    // Will also work for the stranger dates, like 2018-01-06T18:24:18.783Z
-                        $dateArray = sscanf ( $observation->getElementsByTagName ( "begin" )->item ( 0 )->nodeValue, "%4d-%2d-%2dT%2d:%2d:%2d%c%02d:%02d" );
-                        $date = mktime ( $dateArray [3], $dateArray [4], 0, $dateArray [1], $dateArray [2], $dateArray [0] );
-                        if ($dateArray [6] == "-") {
-                            $timeDiff = - ($dateArray [7] * 60 + $dateArray [8]) * 60.0;
-                        } else {
-                            $timeDiff = ($dateArray [7] * 60 + $dateArray [8]) * 60.0;
-                        }
-                        // Get the time and date in UT.
-                        $date = $date - $timeDiff;
+                        $date = new DateTime($observation->getElementsByTagName("begin")->item(0)->nodeValue);
+                        $date->setTimezone(new DateTimeZone('UTC'));
 
-                        $dateStr = date ( "Ymd", $date );
-                        $timeStr = date ( "Hi", $date );
+                        $dateStr = $date->format("Ymd");
+                        $timeStr = $date->format('Hi');
 
                         if ($instId > 1) {
                             // Check if the observation does already exist
-                            $obsId = $objDatabase->selectRecordArray ( "SELECT id from observations WHERE objectname = \"" . $objeId . "\" and date = \"" . $dateStr . "\" and instrumentid = \"" . $instId . "\" and locationId = \"" . $locId . "\" and observerid = \"" . $_SESSION ['deepskylog_id'] . "\";" );
+                            $obsId = $objDatabase->selectRecordArray(
+                                "SELECT id from observations WHERE objectname = \"" . $objeId . "\" and date = \"" . $dateStr . 
+                                "\" and instrumentid = \"" . $instId . "\" and locationId = \"" . $locId . "\" and observerid = \"" . 
+                                $_SESSION ['deepskylog_id'] . "\";"
+                            );
 
-                            if (count ( $obsId ) > 0) {
-                                // TODO : Adapt observation
+                            if (count($obsId) > 0) {
+                                // We do NOT adapt the observation that is already in DeepskyLog!
                             } else {
                                 // New observation
-                                $resultNode = $observation->getElementsByTagName ( "result" )->item ( 0 );
-                                if ($resultNode->getElementsByTagName ( "description" )->item ( 0 )) {
-                                    $description = ($resultNode->getElementsByTagName ( "description" )->item ( 0 )->nodeValue);
+                                $resultNode = $observation->getElementsByTagName("result")->item(0);
+                                if ($resultNode->getElementsByTagName("description")->item(0)) {
+                                    $description = ($resultNode->getElementsByTagName("description")->item(0)->nodeValue);
                                 } else {
                                     $description = "";
                                 }
                                 // Seeing is not mandatory
-                                if ($observation->getElementsByTagName ( "seeing" )->item ( 0 )) {
-                                    $seeing = $observation->getElementsByTagName ( "seeing" )->item ( 0 )->nodeValue;
+                                if ($observation->getElementsByTagName("seeing")->item(0)) {
+                                    $seeing = $observation->getElementsByTagName("seeing")->item(0)->nodeValue;
                                 } else {
                                     $seeing = "-1";
                                 }
 
                                 // Limiting magnitude is not mandatory
-                                if ($observation->getElementsByTagName ( "faintestStar" )->item ( 0 )) {
-                                    $limmag = $observation->getElementsByTagName ( "faintestStar" )->item ( 0 )->nodeValue;
+                                if ($observation->getElementsByTagName("faintestStar")->item(0)) {
+                                    $limmag = $observation->getElementsByTagName("faintestStar")->item(0)->nodeValue;
                                 } else {
                                     $limmag = "";
                                 }
 
-                                if ($resultNode->hasAttribute ( "lang" )) {
-                                    $language = $resultNode->getAttribute ( "lang" );
+                                if ($resultNode->hasAttribute("lang")) {
+                                    $language = $resultNode->getAttribute("lang");
+                                    if ($language == "") {
+                                        $language = "en";
+                                    }
                                 } else {
                                     $language = "en";
                                 }
 
                                 // Rating is not mandatory
-                                if ($resultNode->getElementsByTagName ( "rating" )->item ( 0 )) {
-                                    $visibility = $resultNode->getElementsByTagName ( "rating" )->item ( 0 )->nodeValue;
+                                if ($resultNode->getElementsByTagName("rating")->item(0)) {
+                                    $visibility = $resultNode->getElementsByTagName("rating")->item(0)->nodeValue;
                                 } else {
                                     $visibility = 0;
                                 }
@@ -1054,148 +1069,149 @@ function addXmlObservations()
                                     $visibility = 0;
                                 }
 
-                                if ($observation->getElementsByTagName ( "eyepiece" )->item ( 0 )) {
+                                if ($observation->getElementsByTagName("eyepiece")->item(0)) {
                                     $ei = $eyepId;
                                 } else {
                                     $ei = 0;
                                 }
 
-                                if ($observation->getElementsByTagName ( "filter" )->item ( 0 )) {
+                                if ($observation->getElementsByTagName("filter")->item(0)) {
                                     $fi = $filtId;
                                 } else {
                                     $fi = 0;
                                 }
 
-                                if ($observation->getElementsByTagName ( "lens" )->item ( 0 )) {
+                                if ($observation->getElementsByTagName("lens")->item(0)) {
                                     $li = $lensId;
                                 } else {
                                     $li = 0;
                                 }
-                                $obsId = $objObservation->addDSObservation2 ( $objeId, $_SESSION ['deepskylog_id'], $instId, $locId, $dateStr, $timeStr, $description, $seeing, $limmag, $visibility, $language, $ei, $fi, $li );
-                                $obsId = $objDatabase->selectSingleValue ( "SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id' );
+                                $obsId = $objObservation->addDSObservation2(
+                                    $objeId, $_SESSION ['deepskylog_id'], $instId, $locId, $dateStr, $timeStr, $description, $seeing, $limmag, $visibility,
+                                    $language, $ei, $fi, $li
+                                );
+                                $obsId = $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
 
                                 // Add the observation to the session
-                                $objSession->addObservationToSessions ( $obsId );
+                                $objSession->addObservationToSessions($obsId);
 
                                 // Magnification is not mandatory
-                                if ($observation->getElementsByTagName ( "magnification" )->item ( 0 )) {
-                                    $objObservation->setDsObservationProperty ( $obsId, "magnification", $observation->getElementsByTagName ( "magnification" )->item ( 0 )->nodeValue );
+                                if ($observation->getElementsByTagName("magnification")->item(0)) {
+                                    $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName("magnification")->item(0)->nodeValue);
                                 }
                                 // Sqm is not mandatory
-                                if ($observation->getElementsByTagName ( "sky-quality" )->item ( 0 )) {
+                                if ($observation->getElementsByTagName("sky-quality")->item(0)) {
                                     // Get sqm value and convert it
-                                    $unit = $observation->getElementsByTagName ( "sky-quality" )->item ( 0 )->getAttribute ( "unit" );
+                                    $unit = $observation->getElementsByTagName("sky-quality")->item(0)->getAttribute("unit");
 
                                     if ($unit == "mags-per-squarearcmin") {
-                                        $sqm = $observation->getElementsByTagName ( "sky-quality" )->item ( 0 )->nodeValue + 8.89;
+                                        $sqm = $observation->getElementsByTagName("sky-quality")->item(0)->nodeValue + 8.89;
                                     } else {
-                                        $sqm = $observation->getElementsByTagName ( "sky-quality" )->item ( 0 )->nodeValue;
+                                        $sqm = $observation->getElementsByTagName("sky-quality")->item(0)->nodeValue;
                                     }
 
-                                    $objObservation->setDsObservationProperty ( $obsId, "SQM", $sqm );
+                                    $objObservation->setDsObservationProperty($obsId, "SQM", $sqm);
                                 }
 
-                                // The result of the observation!
-                                $resultNode = $observation->getElementsByTagName ( "result" )->item ( 0 );
                                 // colorContrasts is not mandatory
-                                if ($resultNode->hasAttribute ( "colorContrasts" )) {
-                                    if ($resultNode->getAttribute ( "colorContrasts" ) == "true") {
+                                if ($resultNode->hasAttribute("colorContrasts")) {
+                                    if ($resultNode->getAttribute("colorContrasts") == "true") {
                                         $colorContrast = 1;
                                     } else {
                                         $colorContrast = 0;
                                     }
                                 } else {
-                                    $colorContrast = - 1;
+                                    $colorContrast = -1;
                                 }
-                                $objObservation->setDsObservationProperty ( $obsId, "colorContrasts", $colorContrast );
+                                $objObservation->setDsObservationProperty($obsId, "colorContrasts", $colorContrast);
 
                                 // extended is not mandatory
-                                if ($resultNode->hasAttribute ( "extended" )) {
-                                    if ($resultNode->getAttribute ( "extended" ) == "true") {
+                                if ($resultNode->hasAttribute("extended")) {
+                                    if ($resultNode->getAttribute("extended") == "true") {
                                         $extended = 1;
                                     } else {
                                         $extended = 0;
                                     }
                                 } else {
-                                    $extended = - 1;
+                                    $extended = -1;
                                 }
-                                $objObservation->setDsObservationProperty ( $obsId, "extended", $extended );
+                                $objObservation->setDsObservationProperty($obsId, "extended", $extended);
 
                                 // mottled is not mandatory
-                                if ($resultNode->hasAttribute ( "mottled" )) {
-                                    if ($resultNode->getAttribute ( "mottled" ) == "true") {
+                                if ($resultNode->hasAttribute("mottled")) {
+                                    if ($resultNode->getAttribute("mottled") == "true") {
                                         $mottled = 1;
                                     } else {
                                         $mottled = 0;
                                     }
                                 } else {
-                                    $mottled = - 1;
+                                    $mottled = -1;
                                 }
-                                $objObservation->setDsObservationProperty ( $obsId, "mottled", $mottled );
+                                $objObservation->setDsObservationProperty($obsId, "mottled", $mottled);
 
                                 // resolved is not mandatory
-                                if ($resultNode->hasAttribute ( "resolved" )) {
-                                    if ($resultNode->getAttribute ( "resolved" ) == "true") {
+                                if ($resultNode->hasAttribute("resolved")) {
+                                    if ($resultNode->getAttribute("resolved") == "true") {
                                         $resolved = 1;
                                     } else {
                                         $resolved = 0;
                                     }
                                 } else {
-                                    $resolved = - 1;
+                                    $resolved = -1;
                                 }
-                                $objObservation->setDsObservationProperty ( $obsId, "resolved", $resolved );
+                                $objObservation->setDsObservationProperty($obsId, "resolved", $resolved);
 
                                 // stellar is not mandatory
-                                if ($resultNode->hasAttribute ( "stellar" )) {
-                                    if ($resultNode->getAttribute ( "stellar" ) == "true") {
+                                if ($resultNode->hasAttribute("stellar")) {
+                                    if ($resultNode->getAttribute("stellar") == "true") {
                                         $stellar = 1;
                                     } else {
                                         $stellar = 0;
                                     }
                                 } else {
-                                    $stellar = - 1;
+                                    $stellar = -1;
                                 }
-                                $objObservation->setDsObservationProperty ( $obsId, "stellar", $stellar );
+                                $objObservation->setDsObservationProperty($obsId, "stellar", $stellar);
 
                                 // unusualShape is not mandatory
-                                if ($resultNode->hasAttribute ( "unusualShape" )) {
-                                    if ($resultNode->getAttribute ( "unusualShape" ) == "true") {
+                                if ($resultNode->hasAttribute("unusualShape")) {
+                                    if ($resultNode->getAttribute("unusualShape") == "true") {
                                         $unusualShape = 1;
                                     } else {
                                         $unusualShape = 0;
                                     }
                                 } else {
-                                    $unusualShape = - 1;
+                                    $unusualShape = -1;
                                 }
-                                $objObservation->setDsObservationProperty ( $obsId, "unusualShape", $unusualShape );
+                                $objObservation->setDsObservationProperty($obsId, "unusualShape", $unusualShape);
 
                                 // partlyUnresolved is not mandatory
-                                if ($resultNode->hasAttribute ( "partlyUnresolved" )) {
-                                    if ($resultNode->getAttribute ( "partlyUnresolved" ) == "true") {
+                                if ($resultNode->hasAttribute("partlyUnresolved")) {
+                                    if ($resultNode->getAttribute("partlyUnresolved") == "true") {
                                         $partlyUnresolved = 1;
                                     } else {
                                         $partlyUnresolved = 0;
                                     }
                                 } else {
-                                    $partlyUnresolved = - 1;
+                                    $partlyUnresolved = -1;
                                 }
-                                $objObservation->setDsObservationProperty ( $obsId, "partlyUnresolved", $partlyUnresolved );
+                                $objObservation->setDsObservationProperty($obsId, "partlyUnresolved", $partlyUnresolved);
 
                                 // equalBrightness is not mandatory
-                                if ($resultNode->hasAttribute ( "equalBrightness" )) {
-                                    if ($resultNode->getAttribute ( "equalBrightness" ) == "true") {
+                                if ($resultNode->hasAttribute("equalBrightness")) {
+                                    if ($resultNode->getAttribute("equalBrightness") == "true") {
                                         $equalBrightness = 1;
                                     } else {
                                         $equalBrightness = 0;
                                     }
                                 } else {
-                                    $equalBrightness = - 1;
+                                    $equalBrightness = -1;
                                 }
-                                $objObservation->setDsObservationProperty ( $obsId, "equalBrightness", $equalBrightness );
+                                $objObservation->setDsObservationProperty($obsId, "equalBrightness", $equalBrightness);
 
                                 // niceSurrounding is not mandatory
-                                if ($resultNode->hasAttribute ( "niceSurrounding" )) {
-                                    if ($resultNode->getAttribute ( "niceSurrounding" ) == "true") {
+                                if ($resultNode->hasAttribute("niceSurrounding")) {
+                                    if ($resultNode->getAttribute("niceSurrounding") == "true") {
                                         $niceSurrounding = 1;
                                     } else {
                                         $niceSurrounding = 0;
@@ -1203,11 +1219,11 @@ function addXmlObservations()
                                 } else {
                                     $niceSurrounding = - 1;
                                 }
-                                $objObservation->setDsObservationProperty ( $obsId, "nicefield", $niceSurrounding );
+                                $objObservation->setDsObservationProperty($obsId, "nicefield", $niceSurrounding);
 
                                 // colorMain is not mandatory
-                                if ($resultNode->getElementsByTagName ( "colorMain" )->item ( 0 )) {
-                                    $color1 = $resultNode->getElementsByTagName ( "colorMain" )->item ( 0 )->nodeValue;
+                                if ($resultNode->getElementsByTagName("colorMain")->item(0)) {
+                                    $color1 = $resultNode->getElementsByTagName("colorMain")->item(0)->nodeValue;
 
                                     if ($color1 == "White" || $color1 == "white") {
                                         $col1 = 1;
@@ -1227,12 +1243,12 @@ function addXmlObservations()
                                     if ($color1 == "Blue" || $color1 == "blue") {
                                         $col1 = 6;
                                     }
-                                    $objObservation->setDsObservationProperty ( $obsId, "component1", $col1 );
+                                    $objObservation->setDsObservationProperty($obsId, "component1", $col1);
                                 }
 
                                 // colorCompanion is not mandatory
-                                if ($resultNode->getElementsByTagName ( "colorCompanion" )->item ( 0 )) {
-                                    $color2 = $resultNode->getElementsByTagName ( "colorCompanion" )->item ( 0 )->nodeValue;
+                                if ($resultNode->getElementsByTagName("colorCompanion")->item(0)) {
+                                    $color2 = $resultNode->getElementsByTagName("colorCompanion")->item(0)->nodeValue;
 
                                     if ($color2 == "White" || $color2 == "white") {
                                         $col2 = 1;
@@ -1252,47 +1268,48 @@ function addXmlObservations()
                                     if ($color2 == "Blue" || $color2 == "blue") {
                                         $col2 = 6;
                                     }
-                                    $objObservation->setDsObservationProperty ( $obsId, "component2", $col2 );
+                                    $objObservation->setDsObservationProperty($obsId, "component2", $col2);
                                 }
 
                                 // Character is not mandatory
-                                if ($resultNode->getElementsByTagName ( "character" )->item ( 0 )) {
-                                    $objObservation->setDsObservationProperty ( $obsId, "clusterType", $resultNode->getElementsByTagName ( "character" )->item ( 0 )->nodeValue );
+                                if ($resultNode->getElementsByTagName("character")->item(0)) {
+                                    $objObservation->setDsObservationProperty($obsId, "clusterType", $resultNode->getElementsByTagName("character")->item(0)->nodeValue);
                                 }
 
                                 // smallDiameter is not mandatory
-                                if ($resultNode->getElementsByTagName ( "smallDiameter" )->item ( 0 )) {
-                                    $unit = $resultNode->getElementsByTagName ( "smallDiameter" )->item ( 0 )->getAttribute ( "unit" );
+                                if ($resultNode->getElementsByTagName("smallDiameter")->item(0)) {
+                                    $unit = $resultNode->getElementsByTagName("smallDiameter")->item(0)->getAttribute("unit");
                                     if ($unit == "deg") {
-                                        $smallDiameter = $resultNode->getElementsByTagName ( "smallDiameter" )->item ( 0 )->nodeValue * 3600.0;
+                                        $smallDiameter = $resultNode->getElementsByTagName("smallDiameter")->item(0)->nodeValue * 3600.0;
                                     } else if ($unit == "rad") {
-                                        $smallDiameter = Rad2Deg ( $resultNode->getElementsByTagName ( "smallDiameter" )->item ( 0 )->nodeValue ) * 3600.0;
+                                        $smallDiameter = Rad2Deg($resultNode->getElementsByTagName("smallDiameter")->item(0)->nodeValue) * 3600.0;
                                     } else if ($unit == "arcmin") {
-                                        $smallDiameter = $resultNode->getElementsByTagName ( "smallDiameter" )->item ( 0 )->nodeValue * 60.0;
+                                        $smallDiameter = $resultNode->getElementsByTagName("smallDiameter")->item(0)->nodeValue * 60.0;
                                     } else if ($unit == "arcsec") {
-                                        $smallDiameter = $resultNode->getElementsByTagName ( "smallDiameter" )->item ( 0 )->nodeValue;
+                                        $smallDiameter = $resultNode->getElementsByTagName("smallDiameter")->item(0)->nodeValue;
                                     }
-                                    $objObservation->setDsObservationProperty ( $obsId, "smallDiameter", $smallDiameter );
+                                    $objObservation->setDsObservationProperty($obsId, "smallDiameter", $smallDiameter);
                                 }
                                 // largeDiameter is not mandatory
-                                if ($resultNode->getElementsByTagName ( "largeDiameter" )->item ( 0 )) {
-                                    $unit = $resultNode->getElementsByTagName ( "largeDiameter" )->item ( 0 )->getAttribute ( "unit" );
+                                if ($resultNode->getElementsByTagName("largeDiameter")->item(0)) {
+                                    $unit = $resultNode->getElementsByTagName("largeDiameter")->item(0)->getAttribute("unit");
                                     if ($unit == "deg") {
-                                        $largeDiameter = $resultNode->getElementsByTagName ( "largeDiameter" )->item ( 0 )->nodeValue * 3600.0;
+                                        $largeDiameter = $resultNode->getElementsByTagName("largeDiameter")->item(0)->nodeValue * 3600.0;
                                     } else if ($unit == "rad") {
-                                        $largeDiameter = Rad2Deg ( $resultNode->getElementsByTagName ( "largeDiameter" )->item ( 0 )->nodeValue ) * 3600.0;
+                                        $largeDiameter = Rad2Deg($resultNode->getElementsByTagName("largeDiameter")->item(0)->nodeValue) * 3600.0;
                                     } else if ($unit == "arcmin") {
-                                        $largeDiameter = $resultNode->getElementsByTagName ( "largeDiameter" )->item ( 0 )->nodeValue * 60.0;
+                                        $largeDiameter = $resultNode->getElementsByTagName("largeDiameter")->item(0)->nodeValue * 60.0;
                                     } else if ($unit == "arcsec") {
-                                        $largeDiameter = $resultNode->getElementsByTagName ( "largeDiameter" )->item ( 0 )->nodeValue;
+                                        $largeDiameter = $resultNode->getElementsByTagName("largeDiameter")->item(0)->nodeValue;
                                     }
-                                    $objObservation->setDsObservationProperty ( $obsId, "largeDiameter", $largeDiameter );
+                                    $objObservation->setDsObservationProperty($obsId, "largeDiameter", $largeDiameter);
                                 }
 
-                                if ($observation->getElementsByTagName ( "magnification" )->item ( 0 )) {
-                                    $objObservation->setDsObservationProperty ( $obsId, "magnification", $observation->getElementsByTagName ( "magnification" )->item ( 0 )->nodeValue );
+                                if ($observation->getElementsByTagName("magnification")->item(0)) {
+                                    $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName("magnification")->item(0)->nodeValue);
                                 }
                                 // TODO: Make sure we use the correct namespace -> WE NEED THE CORRECT OAL21.XSD
+                                // TODO: Show a status with the number of imported objects, ...
                             }
                         }
                     }
