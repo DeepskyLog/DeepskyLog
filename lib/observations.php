@@ -300,13 +300,12 @@ class Observations
                             ((trim($parts_array[$i][7]) != "") ? Nz0($objFilter->getFilterObserverPropertyFromName(htmlentities(trim($parts_array[$i][7])), $loggedUser, 'id')) : 0), 
                             ((trim($parts_array[$i][8]) != "") ? Nz0($objLens->getLensObserverPropertyFromName(htmlentities(trim($parts_array[$i][8])), $loggedUser, 'id')) : 0)
                         );
-                        // TODO: Check if the observation is already imported!
                         if ($obsid != 0) {
                             $added++;
                             // Add the observation to all the sessions
                             $current_observation = $objSession->addObservationToSessions($obsid);
                         } else {
-                            // This is a double observation! Check addDSObservation2.
+                            // This is a double observation!
                             $double++;
                         }
                     }
@@ -363,500 +362,696 @@ class Observations
         return $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
     }
 
-    public function addDSObservation2($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language, $eyepieceid, $filterid, $lensid) {
+     /**
+      * Adds a new observation to the database. The name, observerid, instrumentid, locationid, date, time, description, seeing and 
+      * limiting magnitude should be given as parameters. The id of the latest observation is returned.
+      * If the observation is already in the database, we don't add this observation again. We return 0 as object id.
+      *
+      * @param string $objectname   The name of the object.
+      * @param string $observerid   The id of the observer.
+      * @param int    $instrumentid The id of the instrument. 
+      * @param int    $locationid   The id of the location.
+      * @param int    $date         The date of the observation in YYYYMMDD format.
+      * @param int    $time         The time of the observation in HHMM format. If the time and date are given in local time, you should execute setLocalDateAndTime after inserting the observation!
+      * @param string $description  The description of the observation.
+      * @param int    $seeing       The seeing: 1 for Excellent, 2 for Good, 3 for Moderate, 4 for Poor and 5 for Bad.
+      * @param float  $limmag       The limiting magnitude during the observation.
+      * @param int    $visibility   How easy the object was visible: 1 for Very simple, prominent object, 2 for Object easily percepted with direct vision, 3 for Object perceptable with direct vision, 4 for Averted vision required to percept object, 5 for Object barely perceptable with averted vision, 6 for Perception of object is very questionable, and 7 for Object definitely not seen.
+      * @param string $language     The short name of the language: e.g. en for English, nl for Dutch, ...
+      * @param int    $eyepieceid   The id of the eyepiece
+      * @param int    $filterid     The id of the filter
+      * @param int    $lensid       The id of the lens
+      *
+      * @return integer The id of the observation, or 0 if the observation was already in the database.
+      */
+    public function addDSObservation2($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language, $eyepieceid, $filterid, $lensid)
+    {
         global $objDatabase, $objPresentations;
-        if (($seeing == "-1") || ($seeing == "") || (intval($seeing) > 5) || (intval($seeing) < 0))
+        if (($seeing == "-1") || ($seeing == "") || (intval($seeing) > 5) || (intval($seeing) < 0)) {
             $seeing = "-1";
-        if ($limmag == "")
+        }
+        if ($limmag == "") {
             $limmag = "0";
+        }
         $sqm = "-1";
         if (($limmag > 15) && ($limmag < 25)) {
             $sqm = $limmag;
             $limmag = "0";
-        } elseif (($limmag > 0) && ($limmag < 10))
+        } elseif (($limmag > 0) && ($limmag < 10)) {
             $limmag = $limmag;
-        else
+        } else {
             $limmag = "0";
-        $description = preg_replace ( "/(\")/", "", $description );
-        $description = preg_replace ( "/;/", ",", $description );
-        $description = htmlentities ( $description, ENT_COMPAT, "UTF-8" );
+        }
 
-        if ($id = $objDatabase->selectSingleValue ( "SELECT id FROM observations WHERE objectname=\"$objectname\" AND
-                                                                                  observerid=\"$observerid\" AND
-                                                                                  instrumentid=\"$instrumentid\" AND
-                                                                                  locationid=\"$locationid\" AND
-                                                                                  date=\"$date\" AND
-                                                                                  time=\"$time\" AND
-                                                                                  description=\"$description\" AND
-                                                                                  seeing=$seeing AND
-                                                                                  ROUND(limmag)=ROUND($limmag) AND
-                                                                                  ROUND(SQM)=ROUND($sqm) AND
-                                                                                  visibility=$visibility AND
-                                                                                  language=\"$language\" AND
-                                                                                  eyepieceid=$eyepieceid AND
-                                                                                  filterid=$filterid AND
-                                                                                  lensid=$lensid", 'id', 0 ))
+        $description = preg_replace("/(\")/", "", $description);
+        $description = preg_replace("/;/", ",", $description);
+        $description = htmlentities($description, ENT_COMPAT, "UTF-8");
+
+        if ($id = $objDatabase->selectSingleValue(
+            "SELECT id FROM observations WHERE objectname=\"$objectname\" AND
+                                                observerid=\"$observerid\" AND
+                                                instrumentid=\"$instrumentid\" AND
+                                                locationid=\"$locationid\" AND
+                                                date=\"$date\" AND
+                                                time=\"$time\" AND
+                                                description=\"$description\" AND
+                                                seeing=$seeing AND
+                                                ROUND(limmag, 2)=ROUND($limmag, 2) AND
+                                                ROUND(SQM, 2)=ROUND($sqm, 2) AND
+                                                visibility=$visibility AND
+                                                language=\"$language\" AND
+                                                eyepieceid=$eyepieceid AND
+                                                filterid=$filterid AND
+                                                lensid=$lensid", 'id', 0
+        )
+        ) {
             return 0;
-        else
-            $objDatabase->execSQL ( "INSERT INTO observations (objectname,
-                                                         observerid,
-                                                         instrumentid,
-                                                         locationid,
-                                                         date,
-                                                         time,
-                                                         description,
-                                                         seeing,
-                                                         limmag,
-                                                         visibility,
-                                                         language,
-                                                         eyepieceid,
-                                                         filterid,
-                                                         lensid,
-                                                         SQM)
-                                               VALUES (  \"$objectname\",
-                                                         \"$observerid\",
-                                                         \"$instrumentid\",
-                                                         \"$locationid\",
-                                                         \"$date\",
-                                                         \"$time\",
-                                                         \"$description\",
-                                                         $seeing,
-                                                         $limmag,
-                                                         $visibility,
-                                                         \"$language\",
-                                                         $eyepieceid,
-                                                         $filterid,
-                                                         $lensid,
-                                                         $sqm)" );
+        } else {
+            $objDatabase->execSQL(
+                "INSERT INTO observations (objectname,
+                                            observerid,
+                                            instrumentid,
+                                            locationid,
+                                            date,
+                                            time,
+                                            description,
+                                            seeing,
+                                            limmag,
+                                            visibility,
+                                            language,
+                                            eyepieceid,
+                                            filterid,
+                                            lensid,
+                                            SQM)
+                                VALUES (\"$objectname\",
+                                            \"$observerid\",
+                                            \"$instrumentid\",
+                                            \"$locationid\",
+                                            \"$date\",
+                                            \"$time\",
+                                            \"$description\",
+                                            $seeing,
+                                            $limmag,
+                                            $visibility,
+                                            \"$language\",
+                                            $eyepieceid,
+                                            $filterid,
+                                            $lensid,
+                                            $sqm)"
+            );
+        }
             // Return the obsid
         return $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
     }
-    public function getAllInfoDsObservation($id) // returns all information of an observation
-{
+
+     /**
+      * Returns all information of an observation with the given id.
+      *
+      * @param int $id The id of the observation.
+      *
+      * @return array An array with all information. This is: 'id', 'objectname', 'observerid', 'instrumentid', 'locationid', 
+      *                'date', 'localdate', 'time', 'localtime', 'description', 'seeing', 'limmag', 'visibility', 'language', 
+      *                'eyepieceid', 'filterid', 'lensid', 'smallDiameter', 'largeDiameter', 'stellar', 'extended', 'resolved', 
+      *                'mottled', 'clusterType', 'unusualShape', 'partlyUnresolved', 'colorContrasts', 'SQM', 'hasDrawing', 
+      *                'dateDec', 'magnification', 'equalBrightness', 'niceField', 'component1', 'component2'.
+      */
+    public function getAllInfoDsObservation($id)
+    {
         global $objDatabase;
-        $obs = $objDatabase->selectRecordArray ( "SELECT * FROM observations WHERE id=\"$id\"" );
-        $obs ["localdate"] = $this->getDsObservationLocalDate ( $id );
-        $obs ["localtime"] = $this->getDsObservationLocalTime ( $id );
-        $obs ["language"] = $this->getDsObservationProperty ( $id, 'language' );
-        /*
-         * $ob["name"] = $get->objectname; $ob["observer"] = $get->observerid; $ob["instrument"] = $get->instrumentid; $ob["location"] = $get->locationid; $ob["date"] = $get->date; $ob["time"] = $get->time; $ob["description"] = $get->description; $ob["seeing"] = $get->seeing; $ob["limmag"] = $get->limmag; $ob["visibility"] = $get->visibility; $ob["eyepiece"] = $get->eyepieceid; $ob["filter"] = $get->filterid; $ob["lens"] = $get->lensid; $ob["sqm"] = $get->SQM; $ob["largeDiam"] = $get->largeDiameter; $ob["smallDiam"] = $get->smallDiameter; $ob["stellar"] = $get->stellar; $ob["extended"] = $get->extended; $ob["resolved"] = $get->resolved; $ob["mottled"] = $get->mottled; $ob["clusterType"] = $get->clusterType; $ob["unusualShape"] = $get->unusualShape; $ob["partlyUnresolved"] = $get->partlyUnresolved; $ob["colorContrasts"] = $get->colorContrasts;
-         */
+        $obs = $objDatabase->selectRecordArray("SELECT * FROM observations WHERE id=\"$id\"");
+        $obs["localdate"] = $this->getDsObservationLocalDate($id);
+        $obs["localtime"] = $this->getDsObservationLocalTime($id);
+        $obs["language"] = $this->getDsObservationProperty($id, 'language');
+
         return $obs;
     }
-    public function getAOObservationsId($object, $notobservation) {
+
+     /**
+      * Returns all observation id's of the observations of the same object.
+      *
+      * @param string $object         The object name.
+      * @param int    $notobservation The observation id to exclude.
+      *
+      * @return array An array with all id's of the other observations of the same object.
+      */
+    public function getAOObservationsId($object, $notobservation)
+    {
         global $objDatabase;
-        return $objDatabase->selectSingleArray ( "SELECT observations.id FROM observations WHERE objectname=\"" . $object . "\" AND id!=\"" . $notobservation . "\" ORDER BY id DESC", 'id' );
+        return $objDatabase->selectSingleArray(
+            "SELECT observations.id FROM observations WHERE objectname=\"" . $object . "\" AND id!=\"" . $notobservation . "\" ORDER BY id DESC", 'id'
+        );
     }
-    public function getDsObservationLocalDate($id) // returns the date of the given observation in local time
-{
+
+    /** 
+     * Returns the date of the given observation in local time.
+     * 
+     * @param int $id The id of the observation
+     * 
+     * @return string The local date of the observation
+     */
+    public function getDsObservationLocalDate($id)
+    {
         global $objDatabase, $objLocation;
-        $run = $objDatabase->selectRecordset ( "SELECT date,time,locationid FROM observations WHERE id=\"" . $id . "\"" );
-        if ($get = $run->fetch ( PDO::FETCH_OBJ )) {
+        $run = $objDatabase->selectRecordset("SELECT date,time,locationid FROM observations WHERE id=\"" . $id . "\"");
+        
+        if ($get = $run->fetch(PDO::FETCH_OBJ)) {
             $date = $get->date;
             $time = $get->time;
             $loc = $get->locationid;
+            
             if ($time >= 0) {
-                $date = sscanf ( $get->date, "%4d%2d%2d" );
-                $timezone = $objLocation->getLocationPropertyFromId ( $get->locationid, 'timezone' );
-                $dateTimeZone = new DateTimeZone ( $timezone );
-                $datestr = sprintf ( "%02d", $date [1] ) . "/" . sprintf ( "%02d", $date [2] ) . "/" . $date [0];
-                $dateTime = new DateTime ( $datestr, $dateTimeZone );
-                // Geeft tijdsverschil terug in seconden
-                $timedifference = $dateTimeZone->getOffset ( $dateTime );
-                $timedifference = $timedifference / 3600.0;
-                if (strncmp ( $timezone, "Etc/GMT", 7 ) == 0) {
-                    $timedifference = - $timedifference;
-                }
-                $jd = cal_to_jd ( CAL_GREGORIAN, $date [1], $date [2], $date [0] );
-                $time = sscanf ( sprintf ( "%04d", $time ), "%2d%2d" );
-                $hours = $time [0] + ( int ) $timedifference;
-                $minutes = $time [1];
-                // We are converting from UT to local time -> we should add the time difference!
-                $timedifferenceminutes = ($timedifference - ( int ) $timedifference) * 60;
-                $minutes = $minutes + $timedifferenceminutes;
-                if ($minutes < 0) {
-                    $hours = $hours - 1;
-                    $minutes = $minutes + 60;
-                } else if ($minutes >= 60) {
-                    $hours = $hours + 1;
-                    $minutes = $minutes - 60;
-                }
-                if ($hours < 0) {
-                    $hours = $hours + 24;
-                    $jd = $jd - 1;
-                }
-                if ($hours >= 24) {
-                    $hours = $hours - 24;
-                    $jd = $jd + 1;
-                }
-                $dte = JDToGregorian ( $jd );
-                sscanf ( $dte, "%2d/%2d/%4d", $month, $day, $year );
-                $date = sprintf ( "%d%02d%02d", $year, $month, $day );
+                $date = sscanf($get->date, "%4d%2d%2d");
+                $timezone = $objLocation->getLocationPropertyFromId($get->locationid, 'timezone');
+                $dateTimeZone = new DateTimeZone($timezone);
+                $time = sscanf(sprintf("%04d", $time), "%2d%2d");
+
+                $datestr = $date[0] . "-" . sprintf("%02d", $date[1]) . "-" . sprintf("%02d", $date[2]) . " "
+                    . sprintf("%02d", $time[0]) . ":" . sprintf("%02d", $time[1]);
+                $date = new DateTime($datestr, new DateTimeZone('UTC'));
+
+                $date->setTimezone($dateTimeZone);
+
+                return $date->format('Ymd');
             }
             return $date;
         }
     }
-    public function getDsObservationLocalTime($id) // returns the time of the given observation in local time
-{
+
+    /** 
+     * Returns the time of the given observation in local time.
+     * 
+     * @param int $id The id of the observation
+     * 
+     * @return string The local time of the observation
+     */
+    public function getDsObservationLocalTime($id)
+    {
         global $objDatabase, $objLocation;
-        if ($get = $objDatabase->selectrecordset ( "SELECT date, time, locationid FROM observations WHERE id=\"$id\"" )->fetch ( PDO::FETCH_OBJ )) {
+        $run = $objDatabase->selectRecordset("SELECT date,time,locationid FROM observations WHERE id=\"" . $id . "\"");
+        
+        if ($get = $run->fetch(PDO::FETCH_OBJ)) {
             $date = $get->date;
             $time = $get->time;
             $loc = $get->locationid;
-            $date = sscanf ( $date, "%4d%2d%2d" );
-            $timezone = $objLocation->getLocationPropertyFromId ( $loc, 'timezone' );
-            $dateTimeZone = new DateTimeZone ( $timezone );
-            $datestr = sprintf ( "%02d", $date [1] ) . "/" . sprintf ( "%02d", $date [2] ) . "/" . $date [0];
-            $dateTime = new DateTime ( $datestr, $dateTimeZone );
-            // Geeft tijdsverschil terug in seconden
-            $timedifference = $dateTimeZone->getOffset ( $dateTime );
-            $timedifference = $timedifference / 3600.0;
-            if (strncmp ( $timezone, "Etc/GMT", 7 ) == 0) {
-                $timedifference = - $timedifference;
+            
+            if ($time >= 0) {
+                $date = sscanf($get->date, "%4d%2d%2d");
+                $timezone = $objLocation->getLocationPropertyFromId($get->locationid, 'timezone');
+                $dateTimeZone = new DateTimeZone($timezone);
+                $time = sscanf(sprintf("%04d", $time), "%2d%2d");
+
+                $datestr = $date[0] . "-" . sprintf("%02d", $date[1]) . "-" . sprintf("%02d", $date[2]) . " "
+                    . sprintf("%02d", $time[0]) . ":" . sprintf("%02d", $time[1]);
+                $date = new DateTime($datestr, new DateTimeZone('UTC'));
+
+                $date->setTimezone($dateTimeZone);
+
+                // We return the time as HHMM
+                return $date->format('Hi');
             }
-            if ($time < 0)
-                return $time;
-            $time = sscanf ( sprintf ( "%04d", $time ), "%2d%2d" );
-            $hours = $time [0] + ( int ) $timedifference;
-            $minutes = $time [1];
-            // We are converting from UT to local time -> we should add the time difference!
-            $timedifferenceminutes = ($timedifference - ( int ) $timedifference) * 60;
-            $minutes = $minutes + $timedifferenceminutes;
-            if ($minutes < 0) {
-                $hours = $hours - 1;
-                $minutes = $minutes + 60;
-            } else if ($minutes >= 60) {
-                $hours = $hours + 1;
-                $minutes = $minutes - 60;
-            }
-            if ($hours < 0)
-                $hours = $hours + 24;
-            if ($hours >= 24)
-                $hours = $hours - 24;
-            $time = $hours * 100 + $minutes;
             return $time;
-        } else
-            throw new Exception ( "Error in getDsObservationLocalTime of observations.php" );
+        }
     }
-    public function getDsObservationProperty($id, $property, $defaultvalue = '') // returns the property of the observation
-{
+
+    /** 
+     * Returns the property of the observation.
+     * 
+     * @param int    $id           The id of the observation.
+     * @param string $property     The property we are interested in.
+     * @param string $defaultvalue The default value for the property. If not given, the default value is "".
+     * 
+     * @return string The value of the property
+     */
+    public function getDsObservationProperty($id, $property, $defaultvalue = '')
+    {
         global $objDatabase;
-        return $objDatabase->selectSingleValue ( "SELECT " . $property . " FROM observations WHERE id=\"" . $id . "\"", $property, $defaultvalue );
+        return $objDatabase->selectSingleValue(
+            "SELECT " . $property . " FROM observations WHERE id=\"" . $id . "\"", $property, $defaultvalue
+        );
     }
-    public function getDsDrawingsCountFromObserver($id) {
+
+    /** 
+     * Returns the number of drawings made by a given observer.
+     * 
+     * @param int $observerid The id of the observer.
+     * 
+     * @return int The number of drawings made by a given observer.
+     */
+    public function getDsDrawingsCountFromObserver($observerid) 
+    {
         global $objDatabase;
-        return $objDatabase->selectSingleValue ( "SELECT COUNT(*) as Cnt FROM observations WHERE observations.observerid = \"$id\" and visibility != 7 AND hasDrawing=1", "Cnt", 0 );
+        return $objDatabase->selectSingleValue(
+            "SELECT COUNT(*) as Cnt FROM observations WHERE observations.observerid = \"$observerid\" and visibility != 7 AND hasDrawing=1", "Cnt", 0
+        );
     }
-    public function getDsObservationsCountFromObserver($id) {
+
+    /** 
+     * Returns the number of observations made by a given observer.
+     * 
+     * @param int $observerid The id of the observer.
+     * 
+     * @return int The number of observations made by a given observer.
+     */    
+    public function getDsObservationsCountFromObserver($observerid) 
+    {
         global $objDatabase;
-        return $objDatabase->selectSingleValue ( "SELECT COUNT(*) as Cnt FROM observations WHERE observations.observerid = \"$id\" and visibility != 7 ", "Cnt", 0 );
+        return $objDatabase->selectSingleValue(
+            "SELECT COUNT(*) as Cnt FROM observations WHERE observations.observerid = \"$observerid\" and visibility != 7 ", "Cnt", 0
+        );
     }
-    public function getLOObservationId($objectname, $userid, $notobservation) {
+
+
+    /** 
+     * Returns the id of the last observation of the given object by the given user.
+     * 
+     * @param string $objectname     The name of the object.
+     * @param int    $userid         The user id.
+     * @param int    $notobservation Exclude this observation.
+     * 
+     * @return int The id of the last observation of the given object by a given observer.
+     */    
+    public function getLOObservationId($objectname, $userid, $notobservation)
+    {
         global $objDatabase;
-        return $objDatabase->selectSingleValue ( "SELECT id FROM observations WHERE objectname=\"" . $objectname . "\" and observerid=\"" . $userid . "\" and id!=\"" . $notobservation . "\" ORDER BY date DESC", 'id', 0 );
+        return $objDatabase->selectSingleValue(
+            "SELECT id FROM observations WHERE objectname=\"" . $objectname . "\" and observerid=\"" . $userid . "\" and id!=\"" . $notobservation . "\" ORDER BY date DESC", 'id', 0 
+        );
     }
-    public function getMaxObservation() {
+
+    /** 
+     * Returns the id of the last observation added to DeepskyLog.
+     * 
+     * @return int The id of the last observation added to DeepskyLog.
+     */    
+    public function getMaxObservation() 
+    {
         global $objDatabase;
-        return $objDatabase->selectSingleValue ( 'SELECT MAX(observations.id) as MaxCnt FROM observations', 'MaxCnt', 0 );
+        return $objDatabase->selectSingleValue('SELECT MAX(observations.id) as MaxCnt FROM observations', 'MaxCnt', 0);
     }
-    public function getMOObservationsId($object, $userid, $notobservation) {
+
+    /** 
+     * Returns the ids of the all observations of the given object by the given user.
+     * 
+     * @param string $object         The name of the object.
+     * @param int    $userid         The user id.
+     * @param int    $notobservation Exclude this observation.
+     * 
+     * @return int The id of the all observations of the given object by a given observer.
+     */    
+    public function getMOObservationsId($object, $userid, $notobservation)
+    {
         global $objDatabase;
-        return $objDatabase->selectSingleArray ( "SELECT observations.id FROM observations WHERE objectname=\"" . $object . "\" and observerid=\"" . $userid . "\" AND id!=\"" . $notobservation . "\" ORDER BY id DESC", 'id' );
+        return $objDatabase->selectSingleArray(
+            "SELECT observations.id FROM observations WHERE objectname=\"" . $object . "\" and observerid=\"" . $userid . "\" AND id!=\"" . $notobservation . "\" ORDER BY id DESC", 'id'
+        );
     }
-    public function getNumberOfDifferentObservedDSObjects( $country = "" ) // Returns the number of different objects observed
-{
+
+    /** 
+     * Returns the number of different objects observed. If the country parameter is given, we only count the objects 
+     * observed in the given country.
+     * 
+     * @param string $country The country of the observations.
+     * 
+     * @return int The number of objects seen (in the given country if country != "")
+     */    
+    public function getNumberOfDifferentObservedDSObjects($country = "")
+    {
         global $objDatabase;
 
         if (strcmp($country, "") == 0) {
-            return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt' );
+            return $objDatabase->selectSingleValue(
+                "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt'
+            );
         } else {
-            return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations JOIN locations ON observations.locationid=locations.id WHERE observations.visibility != 7 and locations.country=\"" . $country . "\"", 'Cnt', 0 );
+            return $objDatabase->selectSingleValue(
+                "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations JOIN locations ON observations.locationid=locations.id WHERE observations.visibility != 7 and locations.country=\"" . $country . "\"", 'Cnt', 0
+            );
         }
     }
-    public function getNumberOfDsDrawings() // returns the total number of observations
-{
+
+    /** 
+     * Returns the number of drawings.
+     * 
+     * @return int The number of drawings in DeepskyLog.
+     */    
+    public function getNumberOfDsDrawings()
+    {
         global $objDatabase;
-        return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 AND hasDrawing=1", 'Cnt', 0 );
+        return $objDatabase->selectSingleValue(
+            "SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 AND hasDrawing=1", 'Cnt', 0
+        );
     }
-    public function getNumberOfDsObservations( $country="" ) // returns the total number of observations for a country
-{
+
+    /** 
+     * Returns the number of observations made. If a country is given as argument, the number of observations from that country is 
+     * returned.
+     * 
+     * @param int $country The country for which we want to know the number of observations. If not given, we are interested in all observations entered in DeepskyLog.
+     * 
+     * @return int The number of observations made in a given country (if country == "", then the number of observations in DeepskyLog is returned).
+     */    
+    public function getNumberOfDsObservations($country="")
+    {
         global $objDatabase;
         if (strcmp($country, "") == 0) {
-            return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt', 0 );
+            return $objDatabase->selectSingleValue(
+                "SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 ", 'Cnt', 0
+            );
         } else {
-            return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations JOIN locations ON observations.locationid=locations.id WHERE visibility != 7 and locations.country=\"" . $country . "\"", 'Cnt', 0 );
+            return $objDatabase->selectSingleValue(
+                "SELECT COUNT(objectname) As Cnt FROM observations JOIN locations ON observations.locationid=locations.id WHERE visibility != 7 and locations.country=\"" . $country . "\"", 'Cnt', 0
+            );
         }
     }
-    public function getNumberOfObjects($id) // return the number of different objects seen by the observer
-{
+
+    /** 
+     * Returns the number of objects seen by the given observer.
+     * 
+     * @param int $observerid The id of the observer.
+     * 
+     * @return int The number of objects seen by a given observer.
+     */    
+    public function getNumberOfObjects($observerid)
+    {
         global $objDatabase;
-        return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"" . $id . "\" AND visibility != 7 ", 'Cnt', 0 );
+        return $objDatabase->selectSingleValue(
+            "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"" . $observerid
+            . "\" AND visibility != 7 ", 'Cnt', 0
+        );
     }
-    public function getNumberOfObjectDrawings($id) // return the number of different objects seen by the observer
-{
+
+    /** 
+     * Returns the number of objects that are drawn by a given observer.
+     * 
+     * @param int $observerid The id of the observer.
+     * 
+     * @return int The number of objects that are drawnby a given observer.
+     */    
+    public function getNumberOfObjectDrawings($observerid)
+    {
         global $objDatabase;
-        return $objDatabase->selectSingleValue ( "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"" . $id . "\" AND visibility != 7 and hasDrawing = 1", 'Cnt', 0 );
+        return $objDatabase->selectSingleValue(
+            "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"" . $observerid
+            . "\" AND visibility != 7 and hasDrawing = 1", 'Cnt', 0
+        );
     }
-    public function getObjectsFromObservations($observations, $showPartOfs = 0) {
+
+    /** 
+     * Returns the objects from a list of observations.
+     * 
+     * @param array $observations The array with the observations.
+     * @param bool  $showPartOfs  If true, also include the objects that are part of the list of objects.
+     * 
+     * @return int The objects from a list of observations.
+     */    
+    public function getObjectsFromObservations($observations, $showPartOfs = 0)
+    {
         global $objObject;
-        $objects = array ();
+        $objects = array();
         $i = 0;
-        while ( list ( $key, $observation ) = each ( $observations ) )
-            if (! array_key_exists ( $observation ['objectname'], $objects ))
-                $objects [$observation ['objectname']] = array (
-                        $i ++,
-                        $observation ['objectname']
+        
+        while (list($key, $observation) = each($observations)) {
+            if (!array_key_exists($observation['objectname'], $objects)) {
+                $objects[$observation['objectname']] = array(
+                        $i++,
+                        $observation['objectname']
                 );
-        if ($showPartOfs)
-            $objects = $objObject->getPartOfs ( $objects );
+            }
+        }
+        if ($showPartOfs) {
+            $objects = $objObject->getPartOfs($objects);
+        }
         return $objects;
     }
-    /** Returns all the observations from a query.
 
-        @param $queries The query to find the observations. An example:
-                                            array("object" => "NGC 7293", "observer" => "wim")
-                                            You can really enter a lot of options here to find the needed observations:
-                                              + instrument: The used instrument. Be carefull, because each observer has unique instruments.
-                                                + location: The location where the observation was done. Be carefull, because each observer has unique locations.
-                                              + mindate, maxdate: The date interval to search for observations.
-                                              + mindiameter, maxdiameter: The interval of telescope diameter for the observations.
-                                                + type: The object type, eg GALXY.
-                                                + con: The constellation where the observation was made.
-                                              + minmag, maxmag: The interval of the magnitudes of the observed objects.
-                                                + minsubr, maxsubr: The interval of the surface brightness of the observed objects.
-                                              + minra, maxra: The interval of the right ascension of the observed objects.
-                                              + mindecl, maxdecl: The interval of the declination of the observed objects.
-                                              + urano, uranonew, sky, msa, ... : The atlas page of the observed objects.
-                                              + mindiam1, maxdiam1: The interval of the largest diameter of the observed objects.
-                                                + mindiam2, maxdiam2: The interval of the smallest diameter of the observed objects.
-                                              + description: A part of the description
-                                                + minvisibility, maxvisibility: The interval of the visibility of the observations.
-                                              + minseeing, maxseeing: The interval of the seeing conditions of the observations.
-                                              + minlimmag, maxlimmag: The interval of the naked eye limiting magnitude of the observations.
-                                                + $languages: An array with the languages, for example: $languages => Array ( [0] => en ))
-                                              + eyepiece: The eyepiece used for the observations. Be carefull, because each observer has unique eyepieces.
-                                                + filter: The filter used for the observations. Be carefull, because each observer has unique filters.
-                                                + lens: The lens used for the observations. Be carefull, because each observer has unique lenses.
-                                                + minSmallDiameter, maxSmallDiameter: The interval of the estimated smallest diameters of the observed objects.
-                                                + minLargeDiameter, maxLargeDiameter: The interval of the estimated largest diameters of the observed objects.
-                                            + stellar, extended, resolved, mottled, unusualShape, partlyUnresolved, colorContrasts: The extra parameters of the observations. 1 if true, 0 if false.
-                                              + clusterType: The cluster type of the observations (From "A" to "I" or "X").
-                                              + minSQM, maxSQM: The interval of SQM values for the observations.
-        @param $seenpar TO FIND OUT WHAT THIS PARAMETER MEANS!!!
-        @param $exactinstrumentlocation TO FIND OUT WHAT THIS PARAMETER MEANS!!!
-    */
-    public function getObservationFromQuery($queries, $seenpar = "A", $exactinstrumentlocation = "0") // returns an array with the names of all observations where the queries are defined in an array.
+    /**
+     * Returns all the observations from a query.
+     *
+     * @param array  $queries                 The query to find the observations. An example:
+     *                                        array("object" => "NGC 7293", "observer" => "wim")
+     *                                        You can really enter a lot of options here to find the needed observations:
+     *                                        + instrument: The used instrument. Be carefull, because each observer has unique instruments.
+     *                                        + location: The location where the observation was done. Be carefull, because each observer has unique locations.
+     *                                        + mindate, maxdate: The date interval to search for observations.
+     *                                        + mindiameter, maxdiameter: The interval of telescope diameter for the observations.
+     *                                        + type: The object type, eg GALXY.
+     *                                        + con: The constellation where the observation was made.
+     *                                        + minmag, maxmag: The interval of the magnitudes of the observed objects.
+     *                                        + minsubr, maxsubr: The interval of the surface brightness of the observed objects.
+     *                                        + minra, maxra: The interval of the right ascension of the observed objects.
+     *                                        + mindecl, maxdecl: The interval of the declination of the observed objects.
+     *                                        + urano, uranonew, sky, msa, ... : The atlas page of the observed objects.
+     *                                        + mindiam1, maxdiam1: The interval of the largest diameter of the observed objects.
+     *                                        + mindiam2, maxdiam2: The interval of the smallest diameter of the observed objects.
+     *                                        + description: A part of the description
+     *                                        + minvisibility, maxvisibility: The interval of the visibility of the observations.
+     *                                        + minseeing, maxseeing: The interval of the seeing conditions of the observations.
+     *                                        + minlimmag, maxlimmag: The interval of the naked eye limiting magnitude of the observations.
+     *                                        + $languages: An array with the languages, for example: $languages => Array ( [0] => en ))
+     *                                        + eyepiece: The eyepiece used for the observations. Be carefull, because each observer has unique eyepieces.
+     *                                        + filter: The filter used for the observations. Be carefull, because each observer has unique filters.
+     *                                        + lens: The lens used for the observations. Be carefull, because each observer has unique lenses.
+     *                                        + minSmallDiameter, maxSmallDiameter: The interval of the estimated smallest diameters of the observed objects.
+     *                                        + minLargeDiameter, maxLargeDiameter: The interval of the estimated largest diameters of the observed objects.
+     *                                        + stellar, extended, resolved, mottled, unusualShape, partlyUnresolved, colorContrasts: The extra parameters of the observations. 1 if true, 0 if false.
+     *                                        + clusterType: The cluster type of the observations (From "A" to "I" or "X").
+     *                                        + minSQM, maxSQM: The interval of SQM values for the observations.
+     *                                        + countquery: true if we only want to count the number of observations
+     * @param string $seenpar                 If set to 'Y' only get the observations that we seen by the logged in user.
+     *                                        If set to 'A' only get observations that are seen by others, but not by the logged in user.
+     * @param bool   $exactinstrumentlocation If set to true, the exact location, instrument, eyepiece, lens and filter will be used as given by ids.
+     *                                        If set to false, all locations, eyepieces, lenses, filters and instruments with the same name will be used.
+     * 
+     * @return array An array with the names of all observations where the queries are defined in an array.
+     */
+    public function getObservationFromQuery($queries, $seenpar = "A", $exactinstrumentlocation = "0") 
     {
         global $objInstrument, $objEyepiece, $objFilter, $objLens, $objLocation, $objDatabase, $loggedUser;
         $object = "";
         $sqland = "";
         $alternative = "";
-        if (! array_key_exists ( 'countquery', $queries ))
-            $sql1 = "SELECT DISTINCT observations.id as observationid,
-                                                           observations.objectname as objectname,
-                                                                               observations.date as observationdate,
-                                                                                 observations.description as observationdescription,
-                                                                               observers.id as observerid,
-                                                                                 CONCAT(observers.firstname , ' ' , observers.name) as observername,
-                                                                               CONCAT(observers.name , ' ' , observers.firstname) as observersortname,
-                                                                                 objects.con as objectconstellation,
-                                                                                 objects.type as objecttype,
-                                                                                 objects.mag as objectmagnitude,
-                                                                                 objects.subr as objectsurfacebrigthness,
-                                                                                 instruments.id as instrumentid,
-                                                                                 instruments.name as instrumentname,
-                                                                                 instruments.diameter as instrumentdiameter,
-                                                                               CONCAT(10000+instruments.diameter,' mm ',instruments.name) as instrumentsort
-                                                                                 ";
-        else
+        if (!array_key_exists('countquery', $queries)) {
+            $sql1 = "SELECT DISTINCT observations.id as observationid, observations.objectname as objectname, observations.date as observationdate,
+                                     observations.description as observationdescription, observers.id as observerid,
+                                     CONCAT(observers.firstname , ' ' , observers.name) as observername,
+                                     CONCAT(observers.name , ' ' , observers.firstname) as observersortname,
+                                     objects.con as objectconstellation, objects.type as objecttype, objects.mag as objectmagnitude,
+                                     objects.subr as objectsurfacebrigthness, instruments.id as instrumentid, instruments.name as instrumentname,
+                                     instruments.diameter as instrumentdiameter,
+                                     CONCAT(10000+instruments.diameter,' mm ',instruments.name) as instrumentsort ";
+        } else {
             $sql1 = "SELECT count(DISTINCT observations.id) as ObsCnt ";
+        }
         $sql2 = $sql1;
-        $sql1 .= "FROM observations " . "JOIN instruments on observations.instrumentid=instruments.id " . "JOIN objects on observations.objectname=objects.name " . "JOIN locations on observations.locationid=locations.id " . "JOIN objectnames on observations.objectname=objectnames.objectname " . "JOIN observers on observations.observerid=observers.id ";
-        $sql2 .= "FROM observations " . "JOIN objectpartof on objectpartof.objectname=observations.objectname " . "JOIN instruments on observations.instrumentid=instruments.id " . "JOIN objects on observations.objectname=objects.name " . "JOIN locations on observations.locationid=locations.id " . "JOIN objectnames on objectpartof.partofname=objectnames.objectname " . "JOIN observers on observations.observerid=observers.id ";
-        if (array_key_exists ( 'object', $queries ) && ($queries ["object"] != ""))
-            $sqland .= "AND (objectnames.altname like \"" . $queries ["object"] . "\") ";
-            // $sqland .= " AND (CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex)) like \"" . strtoupper(str_replace(' ','',$queries["object"])) . "\") ";
-        elseif (array_key_exists ( 'catalog', $queries ) && $queries ["catalog"] && $queries ['catalog'] != '%')
-            $sqland .= "AND (objectnames.altname like \"" . trim ( $queries ["catalog"] . ' ' . $queries ['number'] . '%' ) . "\") ";
-        elseif (array_key_exists ( 'number', $queries ) && $queries ['number'])
-            $sqland .= "AND (objectnames.altname like \"" . trim ( $queries ["number"] ) . "\") ";
-        $sqland .= (isset ( $queries ["observer"] ) && $queries ["observer"]) ? " AND observations.observerid = \"" . $queries ["observer"] . "\" " : '';
-        if (isset ( $queries ["instrument"] ) && ($queries ["instrument"] != "")) {
-            $sqland .= "AND (observations.instrumentid = \"" . $queries ["instrument"] . "\" ";
-            if (! $exactinstrumentlocation) {
-                $insts = $objInstrument->getAllInstrumentsIds ( $queries ["instrument"] );
-                while ( list ( $key, $value ) = each ( $insts ) )
+        $sql1 .= "FROM observations " . "JOIN instruments on observations.instrumentid=instruments.id " . 
+                  "JOIN objects on observations.objectname=objects.name " . "JOIN locations on observations.locationid=locations.id " . 
+                  "JOIN objectnames on observations.objectname=objectnames.objectname " . "JOIN observers on observations.observerid=observers.id ";
+        $sql2 .= "FROM observations " . "JOIN objectpartof on objectpartof.objectname=observations.objectname " . 
+                 "JOIN instruments on observations.instrumentid=instruments.id " . "JOIN objects on observations.objectname=objects.name " . 
+                 "JOIN locations on observations.locationid=locations.id " . "JOIN objectnames on objectpartof.partofname=objectnames.objectname " . 
+                 "JOIN observers on observations.observerid=observers.id ";
+        
+        if (array_key_exists('object', $queries) && ($queries["object"] != "")) {
+            $sqland .= "AND (objectnames.altname like \"" . $queries["object"] . "\") ";
+        } elseif (array_key_exists('catalog', $queries) && $queries["catalog"] && $queries['catalog'] != '%') {
+            $sqland .= "AND (objectnames.altname like \"" . trim($queries["catalog"] . ' ' . $queries['number'] . '%') . "\") ";
+        } elseif (array_key_exists('number', $queries) && $queries['number']) {
+            $sqland .= "AND (objectnames.altname like \"" . trim($queries["number"]) . "\") ";
+        }
+        $sqland .= (isset($queries ["observer"]) && $queries["observer"]) ? " AND observations.observerid = \"" . $queries["observer"] . "\" " : '';
+        if (isset($queries["instrument"]) && ($queries["instrument"] != "")) {
+            $sqland .= "AND (observations.instrumentid = \"" . $queries["instrument"] . "\" ";
+            if (!$exactinstrumentlocation) {
+                $insts = $objInstrument->getAllInstrumentsIds($queries["instrument"]);
+                while (list($key, $value) = each($insts))
                     $sqland .= " || observations.instrumentid = \"" . $value . "\" ";
             }
             $sqland .= ") ";
         }
-        if (isset ( $queries ["eyepiece"] ) && ($queries ["eyepiece"] != "")) {
+        if (isset($queries["eyepiece"]) && ($queries["eyepiece"] != "")) {
             $sqland .= "AND (observations.eyepieceid = \"" . $queries ["eyepiece"] . "\" ";
-            if (! $exactinstrumentlocation) {
-                $eyeps = $objEyepiece->getAllEyepiecesIds ( $queries ["eyepiece"] );
-                while ( list ( $key, $value ) = each ( $eyeps ) )
+            if (!$exactinstrumentlocation) {
+                $eyeps = $objEyepiece->getAllEyepiecesIds($queries["eyepiece"]);
+                while (list($key, $value) = each($eyeps))
                     $sqland .= " || observations.eyepieceid = \"" . $value . "\" ";
             }
             $sqland .= ") ";
         }
-        if (isset ( $queries ["filter"] ) && ($queries ["filter"] != "")) {
-            $sqland .= " AND (observations.filterid = \"" . $queries ["filter"] . "\" ";
+        if (isset($queries["filter"]) && ($queries["filter"] != "")) {
+            $sqland .= " AND (observations.filterid = \"" . $queries["filter"] . "\" ";
             if (! $exactinstrumentlocation) {
-                $filts = $objFilter->getAllFiltersIds ( $queries ["filter"] );
-                while ( list ( $key, $value ) = each ( $filts ) )
+                $filts = $objFilter->getAllFiltersIds($queries["filter"]);
+                while (list($key, $value) = each($filts))
                     $sqland .= " || observations.filterid = \"" . $value . "\" ";
             }
             $sqland .= ") ";
         }
-        if (isset ( $queries ["lens"] ) && ($queries ["lens"] != "")) {
-            $sqland .= "AND (observations.lensid = \"" . $queries ["lens"] . "\" ";
+        if (isset($queries["lens"]) && ($queries["lens"] != "")) {
+            $sqland .= "AND (observations.lensid = \"" . $queries["lens"] . "\" ";
             if (! $exactinstrumentlocation) {
-                $lns = $objLens->getAllLensesIds ( $queries ["lens"] );
-                while ( list ( $key, $value ) = each ( $lns ) )
+                $lns = $objLens->getAllLensesIds($queries["lens"]);
+                while (list($key, $value) = each($lns))
                     $sqland .= " || observations.lensid = \"" . $value . "\" ";
             }
             $sqland .= ") ";
         }
-        if (isset ( $queries ["location"] ) && ($queries ["location"] != "")) {
-            $sqland .= "AND (observations.locationid=" . $queries ["location"] . " ";
+        if (isset($queries["location"]) && ($queries["location"] != "")) {
+            $sqland .= "AND (observations.locationid=" . $queries["location"] . " ";
             if (! $exactinstrumentlocation) {
-                $locs = $objLocation->getAllLocationsIds ( $queries ["location"] );
-                while ( list ( $key, $value ) = each ( $locs ) )
-                    if ($value != $queries ["location"])
+                $locs = $objLocation->getAllLocationsIds($queries["location"]);
+                while (list($key, $value) = each($locs))
+                    if ($value != $queries["location"])
                         $sqland .= " || observations.locationid = " . $value . " ";
             }
             $sqland .= ") ";
         }
-        if (isset ( $queries ["maxdate"] ) && ($queries ["maxdate"] != ""))
-            if (strlen ( $queries ["maxdate"] ) > 4)
-                $sqland .= "AND observations.date <= \"" . $queries ["maxdate"] . "\" ";
-            else
-                $sqland .= "AND RIGHT(observations.date,4) <= \"" . $queries ["maxdate"] . "\" ";
-        if (isset ( $queries ["mindate"] ) && ($queries ["mindate"] != ""))
-            if (strlen ( $queries ["mindate"] ) > 4)
-                $sqland .= "AND observations.date >= \"" . $queries ["mindate"] . "\" ";
-            else
-                $sqland .= "AND RIGHT(observations.date,4) >= \"" . $queries ["mindate"] . "\" ";
-        $sqland .= (isset ( $queries ["description"] ) && $queries ["description"]) ? "AND observations.description like \"%" . $queries ["description"] . "%\" " : '';
-        $sqland .= (isset ( $queries ["mindiameter"] ) && $queries ["mindiameter"]) ? "AND instruments.diameter >= \"" . $queries ["mindiameter"] . "\" " : '';
-        $sqland .= (isset ( $queries ["maxdiameter"] ) && $queries ["maxdiameter"]) ? "AND instruments.diameter <= \"" . $queries ["maxdiameter"] . "\" " : '';
-        $sqland .= (isset ( $queries ["type"] ) && $queries ["type"]) ? "AND objects.type = \"" . $queries ["type"] . "\" " : '';
-        $sqland .= (isset ( $queries ["con"] ) && $queries ["con"]) ? "AND objects.con = \"" . $queries ["con"] . "\" " : '';
-        $sqland .= (isset ( $queries ["minmag"] ) && (strcmp ( $queries ["minmag"], "" ) != 0)) ? "AND (objects.mag > \"" . $queries ["minmag"] . "\" OR objects.mag like \"" . $queries ["minmag"] . "\") AND (objects.mag < 99)" : '';
-        if (isset ( $queries ["maxmag"] ) && (strcmp ( $queries ["maxmag"], "" ) != 0))
-            $sqland .= "AND (objects.mag < \"" . $queries ["maxmag"] . "\" OR objects.mag like \"" . $queries ["maxmag"] . "\") ";
-        if (isset ( $queries ["minsb"] ) && (strcmp ( $queries ["minsb"], "" ) != 0))
-            $sqland .= "AND objects.subr >= \"" . $queries ["minsb"] . "\" ";
-        if (isset ( $queries ["maxsb"] ) && (strcmp ( $queries ["maxsb"], "" ) != 0))
-            $sqland .= "AND objects.subr <= \"" . $queries ["maxsb"] . "\" ";
-        if (isset ( $queries ["minra"] ) && (strcmp ( $queries ["minra"], "" ) != 0))
-            $sqland .= "AND (objects.ra >= \"" . $queries ["minra"] . "\" OR objects.ra like \"" . $queries ["minra"] . "\") ";
-        if (isset ( $queries ["maxra"] ) && (strcmp ( $queries ["maxra"], "" ) != 0))
-            $sqland .= "AND (objects.ra <= \"" . $queries ["maxra"] . "\" OR objects.ra like \"" . $queries ["maxra"] . "\") ";
-        if (isset ( $queries ["mindecl"] ) && (strcmp ( $queries ["mindecl"], "" ) != 0))
-            $sqland .= "AND objects.decl >= \"" . $queries ["mindecl"] . "\" ";
-        if (isset ( $queries ["maxdecl"] ) && (strcmp ( $queries ["maxdecl"], "" ) != 0))
-            $sqland .= "AND objects.decl <= \"" . $queries ["maxdecl"] . "\" ";
-        if (isset ( $queries ["minLat"] ) && (strcmp ( $queries ["minLat"], "" ) != 0))
+        if (isset($queries["maxdate"]) && ($queries["maxdate"] != "")) {
+            if (strlen($queries["maxdate"]) > 4) {
+                $sqland .= "AND observations.date <= \"" . $queries["maxdate"] . "\" ";
+            } else {
+                $sqland .= "AND RIGHT(observations.date,4) <= \"" . $queries["maxdate"] . "\" ";
+            }
+        }
+        if (isset($queries["mindate"]) && ($queries["mindate"] != "")) {
+            if (strlen($queries["mindate"]) > 4) {
+                $sqland .= "AND observations.date >= \"" . $queries["mindate"] . "\" ";
+            } else {
+                $sqland .= "AND RIGHT(observations.date,4) >= \"" . $queries["mindate"] . "\" ";
+            }
+        }
+        $sqland .= (isset($queries["description"]) && $queries["description"]) ? "AND observations.description like \"%" . $queries["description"] . "%\" " : '';
+        $sqland .= (isset($queries["mindiameter"]) && $queries["mindiameter"]) ? "AND instruments.diameter >= \"" . $queries["mindiameter"] . "\" " : '';
+        $sqland .= (isset($queries["maxdiameter"]) && $queries["maxdiameter"]) ? "AND instruments.diameter <= \"" . $queries["maxdiameter"] . "\" " : '';
+        $sqland .= (isset($queries["type"]) && $queries["type"]) ? "AND objects.type = \"" . $queries["type"] . "\" " : '';
+        $sqland .= (isset($queries["con"]) && $queries["con"]) ? "AND objects.con = \"" . $queries["con"] . "\" " : '';
+        $sqland .= (isset($queries["minmag"]) && (strcmp($queries ["minmag"], "") != 0)) ? "AND (objects.mag > \"" . $queries["minmag"] . "\" OR objects.mag like \"" . $queries["minmag"] . "\") AND (objects.mag < 99)" : '';
+        if (isset($queries["maxmag"]) && (strcmp($queries["maxmag"], "") != 0))
+            $sqland .= "AND (objects.mag < \"" . $queries["maxmag"] . "\" OR objects.mag like \"" . $queries["maxmag"] . "\") ";
+        if (isset($queries["minsb"]) && (strcmp($queries["minsb"], "") != 0))
+            $sqland .= "AND objects.subr >= \"" . $queries["minsb"] . "\" ";
+        if (isset($queries["maxsb"]) && (strcmp($queries["maxsb"], "") != 0))
+            $sqland .= "AND objects.subr <= \"" . $queries["maxsb"] . "\" ";
+        if (isset($queries["minra"]) && (strcmp($queries["minra"], "") != 0))
+            $sqland .= "AND (objects.ra >= \"" . $queries["minra"] . "\" OR objects.ra like \"" . $queries["minra"] . "\") ";
+        if (isset($queries["maxra"]) && (strcmp($queries["maxra"], "") != 0))
+            $sqland .= "AND (objects.ra <= \"" . $queries["maxra"] . "\" OR objects.ra like \"" . $queries["maxra"] . "\") ";
+        if (isset($queries["mindecl"]) && (strcmp($queries["mindecl"], "") != 0))
+            $sqland .= "AND objects.decl >= \"" . $queries["mindecl"] . "\" ";
+        if (isset($queries["maxdecl"]) && (strcmp($queries["maxdecl"], "") != 0))
+            $sqland .= "AND objects.decl <= \"" . $queries["maxdecl"] . "\" ";
+        if (isset($queries["minLat"]) && (strcmp($queries["minLat"], "") != 0))
             $sqland .= "AND locations.latitude >= " . $queries ["minLat"] . " ";
-        if (isset ( $queries ["maxLat"] ) && (strcmp ( $queries ["maxLat"], "" ) != 0))
-            $sqland .= "AND locations.latitude <= " . $queries ["maxLat"] . " ";
-        if (isset ( $queries ["mindiam1"] ) && (strcmp ( $queries ["mindiam1"], "" ) != 0))
-            $sqland .= "AND (objects.diam1 > \"" . $queries ["mindiam1"] . "\" or objects.diam1 like \"" . $queries ["mindiam1"] . "\") ";
-        if (isset ( $queries ["maxdiam1"] ) && (strcmp ( $queries ["maxdiam1"], "" ) != 0))
-            $sqland .= "AND (objects.diam1 <= \"" . $queries ["mindiam1"] . "\" or objects.diam1 like \"" . $queries ["maxdiam1"] . "\") ";
-        if (isset ( $queries ["mindiam2"] ) && (strcmp ( $queries ["mindiam2"], "" ) != 0))
-            $sqland .= "AND (objects.diam2 > \"$diam2\" or objects.diam2 like \"" . $queries ["mindiam2"] . "\") ";
-        if (isset ( $queries ["maxdiam2"] ) && (strcmp ( $queries ["maxdiam2"], "" ) != 0))
-            $sqland .= "AND (objects.diam2 <= \"$diam2\" or objects.diam2 like \"" . $queries ["mindiam2"] . "\") ";
-        $sqland .= (isset ( $queries ["atlas"] ) && $queries ["atlas"] && isset ( $queries ["atlasPageNumber"] ) && $queries ["atlasPageNumber"]) ? "AND " . $queries ["atlas"] . "=\"" . $queries ["atlasPageNumber"] . "\" " : '';
-        if (isset ( $queries ["minvisibility"] ) && ($queries ["minvisibility"] != ""))
-            $sqland .= "AND observations.visibility <= \"" . $queries ["minvisibility"] . "\" AND observations.visibility >= \"1\" ";
-        if (isset ( $queries ["maxvisibility"] ) && ($queries ["maxvisibility"] != ""))
-            $sqland .= "AND observations.visibility >= \"" . $queries ["maxvisibility"] . "\" ";
-        if (isset ( $queries ["minseeing"] ) && ($queries ["minseeing"] != ""))
-            $sqland .= "AND observations.seeing <= \"" . $queries ["minseeing"] . "\" ";
-        if (isset ( $queries ["maxseeing"] ) && ($queries ["maxseeing"] != ""))
-            $sqland .= "AND observations.seeing >= \"" . $queries ["maxseeing"] . "\" ";
-        if (isset ( $queries ["minlimmag"] ) && ($queries ["minlimmag"] != ""))
-            $sqland .= "AND observations.limmag >= \"" . $queries ["minlimmag"] . "\" ";
-        if (isset ( $queries ["maxlimmag"] ) && ($queries ["maxlimmag"] != ""))
-            $sqland .= "AND observations.limmag <= \"" . $queries ["maxlimmag"] . "\" ";
-        if (isset ( $queries ["minSmallDiameter"] ) && ($queries ["minSmallDiameter"] != ""))
-            $sqland .= "AND observations.smallDiameter >= \"" . $queries ["smallDiameter"] . "\" ";
-        if (isset ( $queries ["maxSmallDiameter"] ) && ($queries ["maxSmallDiameter"] != ""))
-            $sqland .= "AND observations.smallDiameter <= \"" . $queries ["smallDiameter"] . "\" ";
-        if (isset ( $queries ["minLargeDiameter"] ) && ($queries ["minLargeDiameter"] != ""))
-            $sqland .= "AND observations.largeDiameter >= \"" . $queries ["largeDiameter"] . "\" ";
-        if (isset ( $queries ["maxLargeDiameter"] ) && ($queries ["maxLargeDiameter"] != ""))
-            $sqland .= "AND observations.largeDiameter <= \"" . $queries ["largeDiameter"] . "\" ";
-        if (isset ( $queries ["stellar"] ) && ($queries ["stellar"] != ""))
-            $sqland .= "AND observations.stellar = \"" . $queries ["stellar"] . "\" ";
-        if (isset ( $queries ["extended"] ) && ($queries ["extended"] != ""))
-            $sqland .= "AND observations.extended = \"" . $queries ["extended"] . "\" ";
-        if (isset ( $queries ["resolved"] ) && ($queries ["resolved"] != ""))
-            $sqland .= "AND observations.resolved = \"" . $queries ["resolved"] . "\" ";
-        if (isset ( $queries ["mottled"] ) && ($queries ["mottled"] != ""))
-            $sqland .= "AND observations.mottled = \"" . $queries ["mottled"] . "\" ";
-        if (isset ( $queries ["clusterType"] ) && ($queries ["clusterType"] != ""))
-            $sqland .= "AND observations.clusterType = \"" . $queries ["clusterType"] . "\" ";
-        if (isset ( $queries ["unusualShape"] ) && ($queries ["unusualShape"] != ""))
-            $sqland .= "AND observations.unusualShape = \"" . $queries ["unusualShape"] . "\" ";
-        if (isset ( $queries ["partlyUnresolved"] ) && ($queries ["partlyUnresolved"] != ""))
-            $sqland .= "AND observations.partlyUnresolved = \"" . $queries ["partlyUnresolved"] . "\" ";
-        if (isset ( $queries ["colorContrasts"] ) && ($queries ["colorContrasts"] != ""))
-            $sqland .= "AND observations.colorContrasts = \"" . $queries ["colorContrasts"] . "\" ";
-        if (isset ( $queries ["minSQM"] ) && ($queries ["minSQM"] != ""))
-            $sqland .= "AND observations.SQM >= \"" . $queries ["minSQM"] . "\" ";
-        if (isset ( $queries ["maxSQM"] ) && ($queries ["maxSQM"] != ""))
-            $sqland .= "AND observations.SQM <= \"" . $queries ["minSQM"] . "\" ";
-        if (isset ( $queries ["hasDrawing"] ) && ($queries ["hasDrawing"] == 'on'))
+        if (isset($queries["maxLat"]) && (strcmp($queries["maxLat"], "") != 0))
+            $sqland .= "AND locations.latitude <= " . $queries["maxLat"] . " ";
+        if (isset($queries["mindiam1"]) && (strcmp($queries["mindiam1"], "") != 0))
+            $sqland .= "AND (objects.diam1 > \"" . $queries["mindiam1"] . "\" or objects.diam1 like \"" . $queries["mindiam1"] . "\") ";
+        if (isset($queries["maxdiam1"]) && (strcmp($queries["maxdiam1"], "") != 0))
+            $sqland .= "AND (objects.diam1 <= \"" . $queries["mindiam1"] . "\" or objects.diam1 like \"" . $queries["maxdiam1"] . "\") ";
+        if (isset($queries["mindiam2"]) && (strcmp($queries["mindiam2"], "") != 0))
+            $sqland .= "AND (objects.diam2 > \"$diam2\" or objects.diam2 like \"" . $queries["mindiam2"] . "\") ";
+        if (isset($queries["maxdiam2"]) && (strcmp($queries["maxdiam2"], "") != 0))
+            $sqland .= "AND (objects.diam2 <= \"$diam2\" or objects.diam2 like \"" . $queries["mindiam2"] . "\") ";
+        $sqland .= (isset($queries["atlas"]) && $queries["atlas"] && isset($queries["atlasPageNumber"]) && $queries["atlasPageNumber"]) ? "AND " . $queries["atlas"] . "=\"" . $queries["atlasPageNumber"] . "\" " : '';
+        if (isset($queries["minvisibility"]) && ($queries["minvisibility"] != ""))
+            $sqland .= "AND observations.visibility <= \"" . $queries["minvisibility"] . "\" AND observations.visibility >= \"1\" ";
+        if (isset($queries["maxvisibility"]) && ($queries["maxvisibility"] != ""))
+            $sqland .= "AND observations.visibility >= \"" . $queries["maxvisibility"] . "\" ";
+        if (isset($queries["minseeing"]) && ($queries["minseeing"] != ""))
+            $sqland .= "AND observations.seeing <= \"" . $queries["minseeing"] . "\" ";
+        if (isset($queries["maxseeing"]) && ($queries["maxseeing"] != ""))
+            $sqland .= "AND observations.seeing >= \"" . $queries["maxseeing"] . "\" ";
+        if (isset($queries["minlimmag"]) && ($queries["minlimmag"] != ""))
+            $sqland .= "AND observations.limmag >= \"" . $queries["minlimmag"] . "\" ";
+        if (isset($queries["maxlimmag"]) && ($queries["maxlimmag"] != ""))
+            $sqland .= "AND observations.limmag <= \"" . $queries["maxlimmag"] . "\" ";
+        if (isset($queries["minSmallDiameter"]) && ($queries["minSmallDiameter"] != ""))
+            $sqland .= "AND observations.smallDiameter >= \"" . $queries["smallDiameter"] . "\" ";
+        if (isset($queries["maxSmallDiameter"]) && ($queries["maxSmallDiameter"] != ""))
+            $sqland .= "AND observations.smallDiameter <= \"" . $queries["smallDiameter"] . "\" ";
+        if (isset($queries["minLargeDiameter"]) && ($queries["minLargeDiameter"] != ""))
+            $sqland .= "AND observations.largeDiameter >= \"" . $queries["largeDiameter"] . "\" ";
+        if (isset($queries["maxLargeDiameter"]) && ($queries["maxLargeDiameter"] != ""))
+            $sqland .= "AND observations.largeDiameter <= \"" . $queries["largeDiameter"] . "\" ";
+        if (isset($queries["stellar"]) && ($queries["stellar"] != ""))
+            $sqland .= "AND observations.stellar = \"" . $queries["stellar"] . "\" ";
+        if (isset($queries["extended"]) && ($queries["extended"] != ""))
+            $sqland .= "AND observations.extended = \"" . $queries["extended"] . "\" ";
+        if (isset($queries["resolved"]) && ($queries["resolved"] != ""))
+            $sqland .= "AND observations.resolved = \"" . $queries["resolved"] . "\" ";
+        if (isset($queries["mottled"]) && ($queries["mottled"] != ""))
+            $sqland .= "AND observations.mottled = \"" . $queries["mottled"] . "\" ";
+        if (isset($queries["clusterType"]) && ($queries["clusterType"] != ""))
+            $sqland .= "AND observations.clusterType = \"" . $queries["clusterType"] . "\" ";
+        if (isset($queries["unusualShape"]) && ($queries["unusualShape"] != ""))
+            $sqland .= "AND observations.unusualShape = \"" . $queries["unusualShape"] . "\" ";
+        if (isset($queries["partlyUnresolved"]) && ($queries["partlyUnresolved"] != ""))
+            $sqland .= "AND observations.partlyUnresolved = \"" . $queries["partlyUnresolved"] . "\" ";
+        if (isset($queries["colorContrasts"]) && ($queries["colorContrasts"] != ""))
+            $sqland .= "AND observations.colorContrasts = \"" . $queries["colorContrasts"] . "\" ";
+        if (isset($queries["minSQM"]) && ($queries["minSQM"] != ""))
+            $sqland .= "AND observations.SQM >= \"" . $queries["minSQM"] . "\" ";
+        if (isset($queries["maxSQM"]) && ($queries["maxSQM"] != ""))
+            $sqland .= "AND observations.SQM <= \"" . $queries["minSQM"] . "\" ";
+        if (isset($queries["hasDrawing"]) && ($queries["hasDrawing"] == 'on'))
             $sqland .= "AND observations.hasDrawing=TRUE ";
-        if (isset ( $queries ["hasNoDrawing"] ) && ($queries ["hasNoDrawing"] == 'on'))
+        if (isset($queries["hasNoDrawing"]) && ($queries["hasNoDrawing"] == 'on'))
             $sqland .= "AND observations.hasDrawing=FALSE ";
-        if (isset ( $queries ["minobservation"] ) && ($queries ["minobservation"] != ''))
-            $sqland .= "AND observations.id> " . $queries ["minobservation"] . " ";
-        if ((! array_key_exists ( 'countquery', $queries )) && (isset ( $queries ["languages"] ))) {
+        if (isset($queries["minobservation"]) && ($queries["minobservation"] != ''))
+            $sqland .= "AND observations.id> " . $queries["minobservation"] . " ";
+        if ((!array_key_exists('countquery', $queries)) && (isset($queries["languages"]))) {
             $extra2 = "";
-            for($i = 0; $i < count ( $queries ["languages"] ); $i ++)
-                $extra2 .= "OR observations.language=\"" . $queries ["languages"] [$i] . "\" ";
-            if ($extra2)
-                $sqland .= " AND (" . substr ( $extra2, 3 ) . ") ";
+            for ($i = 0; $i < count($queries["languages"]); $i++) {
+                $extra2 .= "OR observations.language=\"" . $queries["languages"][$i] . "\" ";
+            }
+            if ($extra2) {
+                $sqland .= " AND (" . substr($extra2, 3) . ") ";
+            }
         }
         $sql = "(" . $sql1;
-        if ($sqland)
-            $sql .= " WHERE " . substr ( $sqland, 4 );
-        if (array_key_exists ( 'object', $queries ) && ($queries ["object"] != "") && (! array_key_exists ( 'countquery', $queries ))) {
+        if ($sqland) {
+            $sql .= " WHERE " . substr($sqland, 4);
+        }
+        if (array_key_exists('object', $queries) && ($queries["object"] != "") && (!array_key_exists('countquery', $queries))) {
             $sql .= ") UNION (" . $sql2;
             if ($sqland)
-                $sql .= " WHERE " . substr ( $sqland, 4 );
+                $sql .= " WHERE " . substr($sqland, 4);
         }
         $sql .= ")";
-        if (! array_key_exists ( 'countquery', $queries ))
+        if (!array_key_exists('countquery', $queries)) {
             $sql .= " ORDER BY observationid DESC";
+        }
         $sql = $sql . ";";
-        // echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
-        $run = $objDatabase->selectRecordset ( $sql );
-        if (! array_key_exists ( 'countquery', $queries )) {
+        //echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
+        //exit;
+        $run = $objDatabase->selectRecordset($sql);
+        if (!array_key_exists('countquery', $queries)) {
             $j = 0;
-            $result = array ();
-            while ( $get = $run->fetch ( PDO::FETCH_OBJ ) ) {
+            $result = array();
+            while ($get = $run->fetch(PDO::FETCH_OBJ)) {
                 $seentype = "X";
-                if (array_key_exists ( 'deepskylog_id', $_SESSION ) && ($seenpar != "A"))
-                    if ($objDatabase->SelectSingleValue ( "SELECT observations.id FROM observations WHERE objectname = \"" . $get->objectname . "\" AND observerid = \"" . $loggedUser . "\"", 'id' )) // object has been seen by the observer logged in
+                if (array_key_exists('deepskylog_id', $_SESSION) && ($seenpar != "A")) {
+                    if ($objDatabase->SelectSingleValue(
+                        "SELECT observations.id FROM observations WHERE objectname = \"" . $get->objectname . "\" AND observerid = \"" . $loggedUser . "\"", 'id'
+                    )
+                    ) {
                         $seentype = "Y";
+                    }
+                }
                 if (($seenpar == "A") || ($seenpar == $seentype)) {
-                    while ( list ( $key, $value ) = each ( $get ) )
-                        $result [$j] [$key] = $value;
-                    $j ++;
+                    while (list($key, $value) = each($get)) {
+                        $result[$j][$key] = $value;
+                    }
+                    $j++;
                 }
             }
             return $result;
         } else {
-            $get = $run->fetch ( PDO::FETCH_OBJ );
+            $get = $run->fetch(PDO::FETCH_OBJ);
             return $get->ObsCnt;
         }
     }
+
+    
     public function getDrawingsLastYear($id) {
         global $objDatabase;
         $t = getdate ();
