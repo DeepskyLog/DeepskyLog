@@ -1237,14 +1237,14 @@ class Utils
                     $attr->appendChild($attrText);
                 }
 
-                $col = getColorForOalExport("component1");
+                $col = $this->getColorForOalExport("component1");
 
                 if ($col != "") {
                     $colorMain = $result->appendChild($dom->createElement('colorMain'));
                     $colorMain->appendChild($dom->createTextNode($col1));
                 }
     
-                $col = getColorForOalExport("component2");
+                $col = $this->getColorForOalExport("component2");
 
                 if ($col != "") {
                     $colorCompanion = $result->appendChild($dom->createElement('colorCompanion'));
