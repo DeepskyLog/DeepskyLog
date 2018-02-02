@@ -50,13 +50,13 @@ function change_instrument() {
 	echo $objInstrument->getInstrumentEchoListType ( $objInstrument->getInstrumentPropertyFromId ( $instrumentid, 'type' ), $disabled );
 	echo "</div></div>";
 	
-	$content = "<input value=\"" . (($fl = round ( $objInstrument->getInstrumentPropertyFromId ( $instrumentid, 'fd' ) * $objInstrument->getInstrumentPropertyFromId ( $instrumentid, 'diameter' ), 0 )) ? $fl : "") . "\" type=\"number\" min=\"0.01\" step=\"0.01\" required class=\"form-control\" maxlength=\"64\" name=\"focallength\" size=\"10\" " . $disabled . " />";
+	$content = "<input value=\"" . (($fl = round ( $objInstrument->getInstrumentPropertyFromId ( $instrumentid, 'fd' ) * $objInstrument->getInstrumentPropertyFromId ( $instrumentid, 'diameter' ), 0 )) ? $fl : "") . "\" type=\"number\" min=\"0.01\" step=\"0.01\" class=\"form-control\" maxlength=\"64\" name=\"focallength\" size=\"10\" " . $disabled . " />";
 	$content .= "<select class=\"form-control\" name=\"focallengthunits\" " . $disabled . " >";
 	$content .= "<option>inch</option>";
 	$content .= "<option selected=\"selected\">mm</option>";
 	$content .= "</select>";
 	$content .= ' ' . LangAddInstrumentOr . ' ' . LangAddInstrumentField3 . ' ';
-	$content .= "<input type=\"number\" min=\"0.01\" step=\"0.01\" required class=\"form-control\" maxlength=\"64\" name=\"fd\" size=\"10\"  " . $disabled . " />";
+	$content .= "<input type=\"number\" min=\"0.01\" step=\"0.01\" class=\"form-control\" maxlength=\"64\" name=\"fd\" size=\"10\"  " . $disabled . " />";
 
 	echo "<div class=\"form-group\">
  	       <label for=\"filtername\">" . LangAddInstrumentField4 . "</label>";
