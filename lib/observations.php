@@ -258,7 +258,7 @@ class Observations
                 $messageLines = "<h4>" . LangCSVError0 . "</h4>" . $errormessage . "<p>"
                     . LangCSVError10 . "<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">" . LangCSVError10a . "</a>"
                     . LangCSVError10b . "</p>";
-                $_GET['indexAction'] = 'message';
+                $_GET['indexAction'] = 'default_action';
             }
 
             $username = $objObserver->getObserverProperty($loggedUser, 'firstname') . " "
