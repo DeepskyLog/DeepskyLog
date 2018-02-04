@@ -87,7 +87,7 @@ function addXmlObservations()
             $surname = htmlentities(($observer->getElementsByTagName("surname")->item(0)->nodeValue), ENT_COMPAT, "UTF-8", 0);
             $tmpObserverArray['surname'] = $surname;
 
-            // Get the fstOffset if know, else, just set fstOffset to 0.
+            // Get the fstOffset if known, else, just set fstOffset to 0.
             if ($observer->getElementsByTagName("fstOffset")->item(0)) {
                 $fstOffset[$oalid] = $observer->getElementsByTagName("fstOffset")->item(0)->nodeValue;
             } else {
@@ -110,7 +110,7 @@ function addXmlObservations()
             
             if ($obsid != "") {
                 // If the deepskylog account name was set in the account section of the OAL file...
-                if ($obsid == $_SESSION ['deepskylog_id']) {
+                if ($obsid == $_SESSION['deepskylog_id']) {
                     // ...we check if this is the same as the observer that is logged in.
                     $id = $oalid;
                 }
@@ -130,11 +130,10 @@ function addXmlObservations()
             return;
         } else {
             // If there is a user found, we immediately set the fstOffset to the value from the OAL file, if this value is not 0.0!
-            if ($fstOffset[$id] != 0.0) {
-                $objObserver->setObserverProperty($_SESSION['deepskylog_id'], 'fstOffset', $fstOffset[$id]);
+            if ($fstOffset[$oalid] != 0.0) {
+                $objObserver->setObserverProperty($_SESSION['deepskylog_id'], 'fstOffset', $fstOffset[$oalid]);
             }
         }
-
         // Make a list of all targets
         $targets = $dom->getElementsByTagName("targets");
         $target = $targets->item(0)->getElementsByTagName("target");
@@ -144,7 +143,7 @@ function addXmlObservations()
         foreach ( $target as $target ) {
             $targetInfoArray = Array();
             $targetid = $target->getAttribute("id");
-            $targetInfoArray ["name"] = $target->getElementsByTagName("name")->item(0)->nodeValue;
+            $targetInfoArray["name"] = $target->getElementsByTagName("name")->item(0)->nodeValue;
 
             // Get all the aliases for the name
             $aliases = $target->getElementsByTagName("alias");
@@ -211,114 +210,118 @@ function addXmlObservations()
             if ($valid) {
                 if ($targetInfoArray["type"] != "TARGET") {
                     // Get Ra and convert it to degrees
-                    if ((!$target->getElementsByTagName("position")->item(0)->getElementsByTagName("ra")->item(0))) {
+                    if (!$target->getElementsByTagName("position")->item(0)) {
                         $valid = false;
                     } else {
-                        $unit = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("ra")->item(0)->getAttribute("unit");
-                        if ($unit == "deg") {
-                            $ra = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("ra")->item(0)->nodeValue;
-                        } else if ($unit == "rad") {
-                            $ra = Rad2Deg(
-                                $target->getElementsByTagName("position")->item(0)->getElementsByTagName("ra")->item(0)->nodeValue
-                            );
-                        } else if ($unit == "arcmin") {
-                            $ra = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("ra")->item(0)->nodeValue / 60.0;
-                        } else if ($unit == "arcsec") {
-                            $ra = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("ra")->item(0)->nodeValue / 3600.0;
-                        }
-                        $targetInfoArray["ra"] = $ra / 15.0;
-                    }
-
-                    if (!($target->getElementsByTagName("position")->item(0)->getElementsByTagName("dec")->item(0))) {
-                        $valid = false;
-                    } else {
-                        // Get Dec and convert it to degrees
-                        $unit = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("dec")->item(0)->getAttribute("unit");
-                        if ($unit == "deg") {
-                            $dec = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("dec")->item(0)->nodeValue;
-                        } else if ($unit == "rad") {
-                            $dec = Rad2Deg(
-                                $target->getElementsByTagName("position")->item(0)->getElementsByTagName("dec")->item(0)->nodeValue
-                            );
-                        } else if ($unit == "arcmin") {
-                            $dec = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("dec")->item(0)->nodeValue / 60.0;
-                        } else if ($unit == "arcsec") {
-                            $dec = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("dec")->item(0)->nodeValue / 3600.0;
-                        }
-                        $targetInfoArray["dec"] = $dec;
-                    }
-
-                    // Get the constellation
-                    $targetInfoArray['constellation'] = $objConstellation->getConstellationFromCoordinates(
-                        $targetInfoArray["ra"], $targetInfoArray["dec"]
-                    );
-
-                    // Check if the magnitude is defined. If this is the case, get it. Otherwise, set to 99.9
-                    if ($target->getElementsByTagName("visMag")->item(0)) {
-                        $targetInfoArray["mag"] = $target->getElementsByTagName("visMag")->item(0)->nodeValue;
-                    } else {
-                        $targetInfoArray["mag"] = "99.9";
-                    }
-
-                    // Check if the surface brightness is defined. If this is the case, get it. Otherwise, set to 99.9
-                    if ($target->getElementsByTagName("surfBr")->item(0)) {
-                        // Get surface brightness and convert it
-                        $unit = $target->getElementsByTagName("surfBr")->item(0)->getAttribute("unit");
-
-                        if ($unit == "mags-per-squarearcmin") {
-                            $subr = $target->getElementsByTagName("surfBr")->item(0)->nodeValue;
+                        if ((!$target->getElementsByTagName("position")->item(0)->getElementsByTagName("ra")->item(0))) {
+                            $valid = false;
                         } else {
-                            $subr = $target->getElementsByTagName("surfBr")->item(0)->nodeValue - 8.89;
+                            $unit = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("ra")->item(0)->getAttribute("unit");
+                            if ($unit == "deg") {
+                                $ra = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("ra")->item(0)->nodeValue;
+                            } else if ($unit == "rad") {
+                                $ra = Rad2Deg(
+                                    $target->getElementsByTagName("position")->item(0)->getElementsByTagName("ra")->item(0)->nodeValue
+                                );
+                            } else if ($unit == "arcmin") {
+                                $ra = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("ra")->item(0)->nodeValue / 60.0;
+                            } else if ($unit == "arcsec") {
+                                $ra = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("ra")->item(0)->nodeValue / 3600.0;
+                            }
+                            $targetInfoArray["ra"] = $ra / 15.0;
                         }
 
-                        $targetInfoArray ["subr"] = $subr;
-                    } else {
-                        $targetInfoArray ["subr"] = "99.9";
-                    }
-
-                    // Check if the position angle is defined. If this is the case, get it. Otherwise, set to 999
-                    if ($target->getElementsByTagName("pa")->item(0)) {
-                        $targetInfoArray["pa"] = $target->getElementsByTagName("pa")->item(0)->nodeValue;
-                    } else {
-                        $targetInfoArray["pa"] = "999";
-                    }
-
-                    // Check if the largeDiameter is defined. If this is the case, get it. Otherwise, set to 0
-                    if ($target->getElementsByTagName("largeDiameter")->item(0)) {
-                        // Get unit of the largeDiameter and convert it to arcseconds
-                        $unit = $target->getElementsByTagName("largeDiameter")->item(0)->getAttribute("unit");
-
-                        if ($unit == "deg") {
-                            $diam1 = $target->getElementsByTagName("largeDiameter")->item(0)->nodeValue * 3600.0;
-                        } else if ($unit == "rad") {
-                            $diam1 = Rad2Deg($target->getElementsByTagName("largeDiameter")->item(0)->nodeValue) * 3600.0;
-                        } else if ($unit == "arcmin") {
-                            $diam1 = $target->getElementsByTagName("largeDiameter")->item(0)->nodeValue * 60.0;
-                        } else if ($unit == "arcsec") {
-                            $diam1 = $target->getElementsByTagName("largeDiameter")->item(0)->nodeValue;
+                        if (!($target->getElementsByTagName("position")->item(0)->getElementsByTagName("dec")->item(0))) {
+                            $valid = false;
+                        } else {
+                            // Get Dec and convert it to degrees
+                            $unit = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("dec")->item(0)->getAttribute("unit");
+                            if ($unit == "deg") {
+                                $dec = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("dec")->item(0)->nodeValue;
+                            } else if ($unit == "rad") {
+                                $dec = Rad2Deg(
+                                    $target->getElementsByTagName("position")->item(0)->getElementsByTagName("dec")->item(0)->nodeValue
+                                );
+                            } else if ($unit == "arcmin") {
+                                $dec = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("dec")->item(0)->nodeValue / 60.0;
+                            } else if ($unit == "arcsec") {
+                                $dec = $target->getElementsByTagName("position")->item(0)->getElementsByTagName("dec")->item(0)->nodeValue / 3600.0;
+                            }
+                            $targetInfoArray["dec"] = $dec;
                         }
-                        $targetInfoArray["diam1"] = $diam1;
-                    } else {
-                        $targetInfoArray["diam1"] = "0";
-                    }
 
-                    // Check if the smallDiameter is defined. If this is the case, get it. Otherwise, set to 0
-                    if ($target->getElementsByTagName("smallDiameter")->item(0)) {
-                        // Get the unit of the small diameter and convert it to arcseconds
-                        $unit = $target->getElementsByTagName("smallDiameter")->item(0)->getAttribute("unit");
+                        // Get the constellation
+                        $targetInfoArray['constellation'] = $objConstellation->getConstellationFromCoordinates(
+                            $targetInfoArray["ra"], $targetInfoArray["dec"]
+                        );
 
-                        if ($unit == "deg") {
-                            $diam2 = $target->getElementsByTagName("smallDiameter")->item(0)->nodeValue * 3600.0;
-                        } else if ($unit == "rad") {
-                            $diam2 = Rad2Deg($target->getElementsByTagName("smallDiameter")->item(0)->nodeValue) * 3600.0;
-                        } else if ($unit == "arcmin") {
-                            $diam2 = $target->getElementsByTagName("smallDiameter")->item(0)->nodeValue * 60.0;
-                        } else if ($unit == "arcsec") {
-                            $diam2 = $target->getElementsByTagName("smallDiameter")->item(0)->nodeValue;
+                        // Check if the magnitude is defined. If this is the case, get it. Otherwise, set to 99.9
+                        if ($target->getElementsByTagName("visMag")->item(0)) {
+                            $targetInfoArray["mag"] = $target->getElementsByTagName("visMag")->item(0)->nodeValue;
+                        } else {
+                            $targetInfoArray["mag"] = "99.9";
                         }
-                        $targetInfoArray["diam2"] = $diam2;
-                    } else {
-                        $targetInfoArray["diam2"] = "0";
+
+                        // Check if the surface brightness is defined. If this is the case, get it. Otherwise, set to 99.9
+                        if ($target->getElementsByTagName("surfBr")->item(0)) {
+                            // Get surface brightness and convert it
+                            $unit = $target->getElementsByTagName("surfBr")->item(0)->getAttribute("unit");
+
+                            if ($unit == "mags-per-squarearcmin") {
+                                $subr = $target->getElementsByTagName("surfBr")->item(0)->nodeValue;
+                            } else {
+                                $subr = $target->getElementsByTagName("surfBr")->item(0)->nodeValue - 8.89;
+                            }
+
+                            $targetInfoArray ["subr"] = $subr;
+                        } else {
+                            $targetInfoArray ["subr"] = "99.9";
+                        }
+
+                        // Check if the position angle is defined. If this is the case, get it. Otherwise, set to 999
+                        if ($target->getElementsByTagName("pa")->item(0)) {
+                            $targetInfoArray["pa"] = $target->getElementsByTagName("pa")->item(0)->nodeValue;
+                        } else {
+                            $targetInfoArray["pa"] = "999";
+                        }
+
+                        // Check if the largeDiameter is defined. If this is the case, get it. Otherwise, set to 0
+                        if ($target->getElementsByTagName("largeDiameter")->item(0)) {
+                            // Get unit of the largeDiameter and convert it to arcseconds
+                            $unit = $target->getElementsByTagName("largeDiameter")->item(0)->getAttribute("unit");
+
+                            if ($unit == "deg") {
+                                $diam1 = $target->getElementsByTagName("largeDiameter")->item(0)->nodeValue * 3600.0;
+                            } else if ($unit == "rad") {
+                                $diam1 = Rad2Deg($target->getElementsByTagName("largeDiameter")->item(0)->nodeValue) * 3600.0;
+                            } else if ($unit == "arcmin") {
+                                $diam1 = $target->getElementsByTagName("largeDiameter")->item(0)->nodeValue * 60.0;
+                            } else if ($unit == "arcsec") {
+                                $diam1 = $target->getElementsByTagName("largeDiameter")->item(0)->nodeValue;
+                            }
+                            $targetInfoArray["diam1"] = $diam1;
+                        } else {
+                            $targetInfoArray["diam1"] = "0";
+                        }
+
+                        // Check if the smallDiameter is defined. If this is the case, get it. Otherwise, set to 0
+                        if ($target->getElementsByTagName("smallDiameter")->item(0)) {
+                            // Get the unit of the small diameter and convert it to arcseconds
+                            $unit = $target->getElementsByTagName("smallDiameter")->item(0)->getAttribute("unit");
+
+                            if ($unit == "deg") {
+                                $diam2 = $target->getElementsByTagName("smallDiameter")->item(0)->nodeValue * 3600.0;
+                            } else if ($unit == "rad") {
+                                $diam2 = Rad2Deg($target->getElementsByTagName("smallDiameter")->item(0)->nodeValue) * 3600.0;
+                            } else if ($unit == "arcmin") {
+                                $diam2 = $target->getElementsByTagName("smallDiameter")->item(0)->nodeValue * 60.0;
+                            } else if ($unit == "arcsec") {
+                                $diam2 = $target->getElementsByTagName("smallDiameter")->item(0)->nodeValue;
+                            }
+                            $targetInfoArray["diam2"] = $diam2;
+                        } else {
+                            $targetInfoArray["diam2"] = "0";
+                        }
                     }
                 }
                 $targetInfoArray["valid"] = $valid;
@@ -338,7 +341,6 @@ function addXmlObservations()
             $siteid = $site->getAttribute("id");
 
             $siteInfoArray["name"] = htmlentities(($site->getElementsByTagName("name")->item(0)->nodeValue), ENT_COMPAT, "UTF-8", 0);
-
             // Get longitude and convert it to degrees
             $unit = $site->getElementsByTagName("longitude")->item(0)->getAttribute("unit");
             if ($unit == "deg") {
@@ -379,7 +381,6 @@ function addXmlObservations()
             }
             $siteArray[$siteid] = $siteInfoArray;
         }
-
         // SESSIONS
         $sessions = $dom->getElementsByTagName("sessions");
         $session = $sessions->item(0)->getElementsByTagName("session");
@@ -763,6 +764,11 @@ function addXmlObservations()
         // Check if there are observations for the given observer
         $searchNode = $dom->getElementsByTagName("observations");
         $observation = $searchNode->item(0)->getElementsByTagName("observation");
+
+        $added = 0;
+        $double = 0;
+        $errors = 0;
+
         foreach ($observation as $observation) {
             $siteValid = true;
             if ($observation->getElementsByTagName("site")->item(0)) {
@@ -932,16 +938,23 @@ function addXmlObservations()
                 }
 
                 // Object!!!
+
+                // If the target is not known, we skip this observation.
+                if (!array_key_exists($observation->getElementsByTagName("target")->item(0)->nodeValue, $targetArray)) {
+                    continue;
+                }
                 $target = $targetArray[$observation->getElementsByTagName("target")->item(0)->nodeValue]["name"];
                 $ta = $targetArray[$observation->getElementsByTagName("target")->item(0)->nodeValue];
+
 
                 if ($siteValid) {
                     if ($ta["known"] == 1) {
                         $pattern = '/([A-Za-z]+)([\d\D\w]*)/';
                         $targetName = preg_replace($pattern, '${1} ${2}', $target);
                         $targetName = str_replace("  ", " ", $targetName);
-                        $objeId = - 1;
-                        // Check if the object with the given name exists. If this is the case, set the objeId, else check the alternative names
+                        $objeId = -1;
+                        // Check if the object with the given name exists. If this is
+                        // the case, set the objeId, else check the alternative names
                         $targetName = $objCatalog->checkObject($targetName);
                         if (count(
                             $objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\");")
@@ -964,6 +977,7 @@ function addXmlObservations()
                             if ($objeId == - 1) {
                                 // If the object has no coordinates, we can not add a new object.
                                 if ($ta["type"] == "TARGET") {
+                                    $error++;
                                     continue;
                                 }
                                 // Object does not exist (name or alternative name)
@@ -1027,7 +1041,9 @@ function addXmlObservations()
                             );
 
                             if (count($obsId) > 0) {
-                                // We do NOT adapt the observation that is already in DeepskyLog!
+                                $double++;
+                                // We do NOT adapt the observation that is already
+                                // in DeepskyLog!
                             } else {
                                 // New observation
                                 $resultNode = $observation->getElementsByTagName("result")->item(0);
@@ -1308,14 +1324,16 @@ function addXmlObservations()
                                 if ($observation->getElementsByTagName("magnification")->item(0)) {
                                     $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName("magnification")->item(0)->nodeValue);
                                 }
-                                // TODO: Make sure we use the correct namespace -> WE NEED THE CORRECT OAL21.XSD
-                                // TODO: Show a status with the number of imported objects, ...
+                                $added++;
                             }
                         }
                     }
                 }
             }
         }
+        $_GET['indexAction'] = 'default_action';
+
+        $entryMessage = LangCSVMessage8 . ": " . $added . LangCSVMessage9 . ": " . $errors . LangCSVMessage10 . ": " . $double . ".<br />";
     } else {
         $entryMessage .= LangXMLError3;
         $_GET ['indexAction'] = "add_xml";
