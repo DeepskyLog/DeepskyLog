@@ -745,7 +745,7 @@ class Observations
      * 
      * @param int $observerid The id of the observer.
      * 
-     * @return int The number of objects that are drawnby a given observer.
+     * @return int The number of objects that are drawn by a given observer.
      */    
     public function getNumberOfObjectDrawings($observerid)
     {
@@ -1050,151 +1050,381 @@ class Observations
             return $get->ObsCnt;
         }
     }
-
     
-    public function getDrawingsLastYear($id) {
+    /** 
+     * Returns the number of objects that are drawn by a given observer during the last year.
+     * 
+     * @param int $id The id of the observer.
+     * 
+     * @return int The number of objects that are drawn by a given observer during the last year.
+     */    
+    public function getDrawingsLastYear($id)
+    {
         global $objDatabase;
-        $t = getdate ();
-        return $objDatabase->selectSingleValue ( "SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"" . $id . "\" AND observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != 7 AND hasDrawing=1 ", 'Cnt', 0 );
+        $t = getdate();
+        return $objDatabase->selectSingleValue(
+            "SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"" 
+            . $id . "\" AND observations.date > \"" . date('Ymd', strtotime('-1 year')) 
+            . "\" AND observations.visibility != 7 AND hasDrawing=1 ", 'Cnt', 0
+        );
     }
-    public function getObservationsLastYear($id, $country = "") {
+
+    /** 
+     * Returns the number of objects that are seen by a 
+     * given observer (in a certain country) during the last year.
+     * 
+     * @param int    $id      The id of the observer.
+     * @param string $country The country in which the observations are done. 
+     *                        If not set, all countries are used.
+     * 
+     * @return int The number of objects that are seen by a given observer in a given country.
+     */    
+    public function getObservationsLastYear($id, $country = "")
+    {
         global $objDatabase;
-        $t = getdate ();
+        $t = getdate();
 
         if (strcmp($country, "") == 0) {
-            return $objDatabase->selectSingleValue ( "SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"" . $id . "\" AND observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != 7 ", 'Cnt', 0 );
+            return $objDatabase->selectSingleValue(
+                "SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \""
+                . $id . "\" AND observations.date > \"" . date('Ymd', strtotime('-1 year'))
+                . "\" AND observations.visibility != 7 ", 'Cnt', 0
+            );
         } else {
-            return $objDatabase->selectSingleValue ( "SELECT COUNT(objectname) As Cnt FROM observations JOIN locations ON observations.locationid=locations.id WHERE observations.date > \"" . date ( 'Ymd', strtotime ( '-1 year' ) ) . "\" AND observations.visibility != 7 and locations.country=\"" . $country . "\"", 'Cnt', 0 );
+            return $objDatabase->selectSingleValue(
+                "SELECT COUNT(objectname) As Cnt FROM observations JOIN locations " 
+                . "ON observations.locationid=locations.id WHERE observations.date > \""
+                . date('Ymd', strtotime('-1 year')) 
+                . "\" AND observations.visibility != 7 and locations.country=\"" 
+                . $country . "\"", 'Cnt', 0
+            );
         }
     }
-    public function getObservationsUserObject($userid, $object) {
+
+    /** 
+     * Returns the number of times the observer has seen the object.
+     * 
+     * @param int    $userid The id of the observer.
+     * @param string $object The name of the object.
+     * 
+     * @return int The number of times the observer has seen the given object.
+     */    
+    public function getObservationsUserObject($userid, $object)
+    {
         global $objDatabase;
-        return $objDatabase->selectSingleValue ( "SELECT COUNT(*) As ObsCnt FROM observations WHERE observerid=\"" . $userid . "\" AND observations.objectname=\"" . $object . "\"", "ObsCnt" );
+        return $objDatabase->selectSingleValue(
+            "SELECT COUNT(*) As ObsCnt FROM observations WHERE observerid=\"" 
+            . $userid . "\" AND observations.objectname=\"" . $object . "\"", "ObsCnt"
+        );
     }
-    public function getObservedCountFromCatalogOrList($id, $catalog) {
+
+    /** 
+     * Returns the number of objects seen in a list or a catalog.
+     * 
+     * @param int    $id      The id of the observer.
+     * @param string $catalog The name of the catalog. 
+     *                        If it is a list, the string should start with 'List:'.
+     * 
+     * @return int The number of objects the observer has seen from the given catalog.
+     */    
+    public function getObservedCountFromCatalogOrList($id, $catalog) 
+    {
         global $objDatabase, $loggedUser;
-        if (substr ( $catalog, 0, 5 ) == 'List:') {
-            $sql = "SELECT COUNT(DISTINCT observations.objectname) AS CatCnt " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $catalog, 5 ) . "\" " . "AND observations.observerid=\"" . $id . "\" " . "AND observations.visibility != 7 ";
+        if (substr($catalog, 0, 5) == 'List:') {
+            $sql = "SELECT COUNT(DISTINCT observations.objectname) AS CatCnt " 
+                . "FROM observations " 
+                . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " 
+                . "JOIN observers on observations.observerid = observers.id " 
+                . "WHERE observerobjectlist.listname=\"" . substr($catalog, 5) . "\" " 
+                . "AND observations.observerid=\"" . $id . "\" " 
+                . "AND observations.visibility != 7 ";
         } else {
-            $sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " . "INNER JOIN observations ON observations.objectname = objectnames.objectname " . "WHERE objectnames.catalog = \"" . $catalog . "\" " . "AND observations.observerid=\"" . $id . "\" " . "AND observations.visibility != 7 ";
+            $sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " 
+                . "INNER JOIN observations ON observations.objectname = objectnames.objectname " 
+                . "WHERE objectnames.catalog = \"" . $catalog . "\" " 
+                . "AND observations.observerid=\"" . $id . "\" " 
+                . "AND observations.visibility != 7 ";
         }
-        return $objDatabase->selectSingleValue ( $sql, 'CatCnt', 0 );
+        return $objDatabase->selectSingleValue($sql, 'CatCnt', 0);
     }
-    public function getDrawingsCountFromCatalog($id, $catalog) {
+
+    /** 
+     * Returns the number of objects the observer has drawn from a given catalog.
+     * 
+     * @param int    $id      The id of the observer.
+     * @param string $catalog The name of the catalog.
+     * 
+     * @return int The number of objects the observer has drawn from a given catalog.
+     */    
+    public function getDrawingsCountFromCatalog($id, $catalog) 
+    {
         global $objDatabase, $loggedUser;
-        $sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " . "INNER JOIN observations ON observations.objectname = objectnames.objectname " . "WHERE objectnames.catalog = \"" . $catalog . "\" " . "AND observations.observerid=\"" . $id . "\" " . "AND observations.visibility != 7 " . "AND observations.hasDrawing = 1";
-        return $objDatabase->selectSingleValue ( $sql, 'CatCnt', 0 );
+        $sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " 
+            . "INNER JOIN observations ON observations.objectname = objectnames.objectname " 
+            . "WHERE objectnames.catalog = \"" . $catalog . "\" " 
+            . "AND observations.observerid=\"" . $id . "\" " 
+            . "AND observations.visibility != 7 " 
+            . "AND observations.hasDrawing = 1";
+        return $objDatabase->selectSingleValue($sql, 'CatCnt', 0);
     }
-    public function getObservedFromCatalog($id, $catalog) {
+
+    /** 
+     * Returns the number of objects the observer has seen from a given catalog or list.
+     * 
+     * @param int    $id      The id of the observer.
+     * @param string $catalog The name of the catalog. Start with "List:" if interested in observing list.
+     * 
+     * @return int The number of objects the observer has seen from a given catalog or list.
+     */    
+    public function getObservedFromCatalog($id, $catalog) 
+    {
         global $objDatabase, $loggedUser;
-        if (substr ( $catalog, 0, 5 ) == "List:")
-            $sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . "INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " . "WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") " . "AND (observations.observerid = \"" . $id . "\") " . "AND (observations.visibility != 7))";
-        else
-            $sql = "SELECT DISTINCT CONCAT(objectnames.catindex,' ',objectnames.objectname) AS Temp, objectnames.objectname FROM objectnames " . "INNER JOIN observations ON observations.objectname = objectnames.objectname " . "WHERE ((objectnames.catalog = \"$catalog\") " . "AND (observations.observerid=\"$id\") " . "AND (observations.visibility != 7))";
-        return $objDatabase->selectSingleArray ( $sql, 'objectname' );
+        if (substr($catalog, 0, 5) == "List:") {
+            $sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " 
+                . "INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " 
+                . "WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") " 
+                . "AND (observations.observerid = \"" . $id . "\") " 
+                . "AND (observations.visibility != 7))";
+        } else {
+            $sql = "SELECT DISTINCT CONCAT(objectnames.catindex,' ',objectnames.objectname) " 
+                . "AS Temp, objectnames.objectname FROM objectnames " 
+                . "INNER JOIN observations ON observations.objectname = objectnames.objectname " 
+                . "WHERE ((objectnames.catalog = \"$catalog\") " 
+                . "AND (observations.observerid=\"$id\") " 
+                . "AND (observations.visibility != 7))";
+        }
+        return $objDatabase->selectSingleArray($sql, 'objectname');
     }
-    public function getObservedFromCatalogPartOf($id, $catalog) {
+
+    /** 
+     * Returns the number of objects or parts of objects
+     * the observer has seen from a given catalog or list.
+     * 
+     * @param int    $id      The id of the observer.
+     * @param string $catalog The name of the catalog. 
+     *                        Start with "List:" if interested in observing list.
+     * 
+     * @return int The number of objects or parts of objects the 
+     *             observer has seen from a given catalog or list.
+     */    
+    public function getObservedFromCatalogPartOf($id, $catalog) 
+    {
         global $objDatabase, $loggedUser;
-        if (substr ( $catalog, 0, 5 ) == "List:")
-            $sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " . " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " . " JOIN observations ON observations.objectname = objectpartof.objectname " . " WHERE ((observerobjectlist.listname = \"" . substr ( $catalog, 5 ) . "\") " . " AND (observations.observerid = \"" . $id . "\") " . " AND (observations.visibility != 7))";
-        else
-            $sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " . " JOIN objectpartof ON objectpartof.partofname = objectnames.objectname " . " JOIN observations ON observations.objectname = objectpartof.objectname " . " WHERE ((objectnames.catalog = \"$catalog\") " . " AND (observations.observerid=\"$id\") " . " AND (observations.visibility != 7))";
-        return $objDatabase->selectSingleArray ( $sql, 'objectname' );
+        if (substr($catalog, 0, 5) == "List:") {
+            $sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " 
+                . " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " 
+                . " JOIN observations ON observations.objectname = objectpartof.objectname " 
+                . " WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") " 
+                . " AND (observations.observerid = \"" . $id . "\") " 
+                . " AND (observations.visibility != 7))";
+        } else {
+            $sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " 
+                . " JOIN objectpartof ON objectpartof.partofname = objectnames.objectname " 
+                . " JOIN observations ON observations.objectname = objectpartof.objectname " 
+                . " WHERE ((objectnames.catalog = \"$catalog\") " 
+                . " AND (observations.observerid=\"$id\") " 
+                . " AND (observations.visibility != 7))";
+        }
+        return $objDatabase->selectSingleArray($sql, 'objectname');
     }
-    public function getPopularObservations() {
-        // returns the number of observations of the objects
+
+    /** 
+     * Returns the number of observations of the objects.
+     * Sorted by number of observations.
+     * 
+     * @return array The number of observations for all objects.
+     */    
+    public function getPopularObservations() 
+    {
         global $objDatabase;
-        $run = $objDatabase->selectRecordset ( "SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC" );
+        $run = $objDatabase->selectRecordset(
+            "SELECT observations.objectname, COUNT(observations.id) As ObservationCount "
+            . "FROM observations GROUP BY observations.objectname"
+            . " ORDER BY ObservationCount DESC"
+        );
         $i = 1;
-        while ( $run->fetch ( PDO::FETCH_OBJ ) )
+        while ($run->fetch(PDO::FETCH_OBJ))
             $numberOfObservations [$get->objectname] = array (
                     $i ++,
                     $get->objectname
             );
         return $numberOfObservations;
     }
-    public function getPopularObservers() {
+
+    /** 
+     * Returns the number of observations for each observer.
+     * Sorted by number of observations.
+     * 
+     * @return array The number of observations for each observer.
+     */    
+    public function getPopularObservers() 
+    {
         // returns the number of observations of the observers
         global $objDatabase;
-        return $objDatabase->selectSingleArray ( "SELECT observations.observerid, COUNT(observations.id) As Cnt FROM observations where observations.visibility != 7 GROUP BY observations.observerid ORDER BY Cnt DESC", 'observerid' );
+        return $objDatabase->selectSingleArray(
+            "SELECT observations.observerid, COUNT(observations.id) " 
+            . "As Cnt FROM observations where observations.visibility != 7"
+            . " GROUP BY observations.observerid ORDER BY Cnt DESC",
+            'observerid'
+        );
     }
-    public function getPopularObserversOverviewCatOrList($sort, $cat = "") {
-        global $objDatabase, $loggedUser;
-        $sql = "SELECT observations.observerid, COUNT(*) AS Cnt " . "FROM observations " . "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
-        $sql .= "GROUP BY observations.observerid, observers.name ";
-        $sql .= "ORDER BY Cnt DESC, observers.name ASC ";
-        return $objDatabase->selectKeyValueArray ( $sql, 'observerid', 'Cnt' );
-    }
-    public function getPopularObserversOverviewCatOrListAllInfo() {
+
+    /** 
+     * Returns the number of observations for each observer in a catalog or a list.
+     *   
+     * @return array The number of observations for each observer in a catalog or a list.
+     */    
+    public function getPopularObserversOverviewCatOrListAllInfo()
+    {
         global $objDatabase;
-        $sql = "SELECT observations.observerid, CONCAT(observers.firstname,' ',observers.name) As observername, COUNT(*) AS Cnt " . "FROM observations " . "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
+        $sql = "SELECT observations.observerid, " 
+            . "CONCAT(observers.firstname,' ',observers.name) As observername, "
+            . "COUNT(*) AS Cnt " . "FROM observations " 
+            . "JOIN observers on observations.observerid = observers.id "
+            . "WHERE observations.visibility != 7 ";
         $sql .= "GROUP BY observations.observerid, observers.name ";
         $sql .= "ORDER BY Cnt DESC, observers.name ASC;";
 
         return $objDatabase->selectRecordsetArray($sql);
     }
-    public function getDsDrawingsCount() {
+
+    /** 
+     * Returns the number of drawings for each observer.
+     * 
+     * @return array The number of drawings for each observer.
+     */    
+    public function getDsDrawingsCount() 
+    {
         global $objDatabase;
-        $sql = "SELECT observerid, COUNT(*) AS Cnt " . "FROM observations " .
-                        " WHERE visibility != 7 AND hasDrawing=1 ";
+        $sql = "SELECT observerid, COUNT(*) AS Cnt " 
+            . "FROM observations "
+            . " WHERE visibility != 7 AND hasDrawing=1 ";
         $sql .= "GROUP BY observerid ";
 
         return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
     }
-    public function getAllObservationsLastYearCount() {
+
+    /** 
+     * Returns the number of observations for each observer during the last year.
+     * Sorted by number of observations.
+     * 
+     * @return array The number of observations for each observer during the last year.
+     */    
+    public function getAllObservationsLastYearCount()
+    {
         global $objDatabase;
-        $t = getdate ();
+        $t = getdate();
 
         global $objDatabase;
-        $sql = "SELECT observerid, COUNT(*) AS Cnt " . "FROM observations " .
-                                            "WHERE visibility != 7
-                                              AND date > \"" .
-                                                date ( 'Ymd', strtotime ( '-1 year' ) ) . "\"";
+        $sql = "SELECT observerid, COUNT(*) AS Cnt "
+            . "FROM observations "
+            . "WHERE visibility != 7 "
+            . "  AND date > \"" .
+            date('Ymd', strtotime('-1 year')) . "\"";
         $sql .= "GROUP BY observerid ";
 
         return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
     }
-    public function getAllDrawingsLastYearCount() {
+
+    /** 
+     * Returns the number of drawings for each observer during the last year.
+     * 
+     * @return array The number of drawings for each observer during the last year.
+     */    
+    public function getAllDrawingsLastYearCount()
+    {
         global $objDatabase;
-        $t = getdate ();
+        $t = getdate();
 
         global $objDatabase;
-        $sql = "SELECT observerid, COUNT(*) AS Cnt " . "FROM observations " .
-                                            "WHERE visibility != 7 AND hasDrawing = 1
-                                              AND date > \"" .
-                                                date ( 'Ymd', strtotime ( '-1 year' ) ) . "\"";
+        $sql = "SELECT observerid, COUNT(*) AS Cnt "
+            . "FROM observations "
+            . "WHERE visibility != 7 AND hasDrawing = 1 " 
+            . " AND date > \""
+            . date('Ymd', strtotime('-1 year')) . "\"";
         $sql .= "GROUP BY observerid ";
 
         return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
     }
+
+    /** 
+     * Returns the number of different objects seen for each observer.
+     * 
+     * @return array The number of different objects seen for each observer.
+     */    
     public function getNumberOfObjectsCount()
     {
         global $objDatabase;
-        $sql = "SELECT observerid, COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ";
+        $sql = "SELECT observerid, COUNT(DISTINCT objectname) As Cnt "
+            . "FROM observations WHERE visibility != 7 ";
         $sql .= "GROUP BY observerid ";
         return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
     }
-    public function getAllObservedCountFromCatalogOrList($catalog) {
+
+    /** 
+     * Returns the number of observed objects in a catalog or list for each observer.
+     * 
+     * @param string $catalog The catalog. If a list, start with "List:".
+     * 
+     * @return array The number of observed objects in a catalog or list for each observer.
+     */    
+    public function getAllObservedCountFromCatalogOrList($catalog)
+    {
         global $objDatabase;
-        if (substr ( $catalog, 0, 5 ) == 'List:') {
-            $sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $catalog, 5 ) . "\" " . "AND observations.visibility != 7 ";
+        if (substr($catalog, 0, 5) == 'List:') {
+            $sql = "SELECT observations.observerid, "
+                . "COUNT(DISTINCT observations.objectname) AS Cnt FROM observations " 
+                . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " 
+                . "JOIN observers on observations.observerid = observers.id " 
+                . "WHERE observerobjectlist.listname=\"" 
+                . substr($catalog, 5) . "\" " 
+                . "AND observations.visibility != 7 ";
         } else {
-            $sql = "SELECT observerid, COUNT(DISTINCT objectnames.catindex) AS Cnt FROM objectnames " . "INNER JOIN observations ON observations.objectname = objectnames.objectname " . "WHERE objectnames.catalog = \"" . $catalog . "\" " . "AND observations.visibility != 7 ";
+            $sql = "SELECT observerid, COUNT(DISTINCT objectnames.catindex) AS Cnt FROM objectnames " 
+                . "INNER JOIN observations ON observations.objectname = objectnames.objectname " 
+                . "WHERE objectnames.catalog = \"" . $catalog . "\" " 
+                . "AND observations.visibility != 7 ";
         }
         $sql .= "GROUP BY observerid ";
 
         return $objDatabase->selectKeyValueArray($sql, "observerid", "Cnt");
     }
-    public function setDsObservationProperty($id, $property, $propertyValue) // sets the property to the specified value for the given observation
-{
+
+    /** 
+     * Sets the property for the observation to the given value.
+     * 
+     * @param int    $id            The id of the observation.
+     * @param string $property      The property to set.
+     * @param string $propertyValue The new value of the property.
+     * 
+     * @return None
+     */    
+    public function setDsObservationProperty($id, $property, $propertyValue)
+    {
         global $objDatabase;
-        return $objDatabase->execSQL ( "UPDATE observations SET " . $property . " = " . (($propertyValue == "NULL") ? "NULL" : "\"" . $propertyValue . "\"") . " WHERE id = \"" . $id . "\"" );
+        $objDatabase->execSQL(
+            "UPDATE observations SET " 
+            . $property . " = " 
+            . (($propertyValue == "NULL") ? "NULL" : "\"" . $propertyValue . "\"") 
+            . " WHERE id = \"" . $id . "\""
+        );
     }
-    public function setLocalDateAndTime($id, $date, $time) // sets the date and time for the given observation when the time is given in local time
-{
+    
+    /** 
+     * Sets the date and time for the given observation 
+     * when the time is given in local time.
+     * 
+     * @param int    $id   The id of the observation.
+     * @param string $date The date (local time).
+     * @param string $time The time (local time).
+     * 
+     * @return None
+     */        
+    public function setLocalDateAndTime($id, $date, $time) 
+    {
         global $objDatabase, $objLocation;
         if ($time >= 0) {
-            $timezone = $objLocation->getLocationPropertyFromId ( $this->getDsObservationProperty ( $id, 'locationid' ), 'timezone' );
+            $timezone = $objLocation->getLocationPropertyFromId($this->getDsObservationProperty($id, 'locationid'), 'timezone');
             $datearray = sscanf ( $date, "%4d%2d%2d" );
             $dateTimeZone = new DateTimeZone ( $timezone );
             $date = sprintf ( "%02d", $datearray [1] ) . "/" . sprintf ( "%02d", $datearray [2] ) . "/" . $datearray [0];
