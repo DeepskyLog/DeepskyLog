@@ -1415,8 +1415,8 @@ class Observations
      * when the time is given in local time.
      * 
      * @param int    $id   The id of the observation.
-     * @param string $date The date (local time).
-     * @param string $time The time (local time).
+     * @param string $date The date (local time), in YYYYMMDD format.
+     * @param string $time The time (local time), in HHMM format.
      * 
      * @return None
      */        
@@ -1425,50 +1425,44 @@ class Observations
         global $objDatabase, $objLocation;
         if ($time >= 0) {
             $timezone = $objLocation->getLocationPropertyFromId($this->getDsObservationProperty($id, 'locationid'), 'timezone');
-            $datearray = sscanf ( $date, "%4d%2d%2d" );
-            $dateTimeZone = new DateTimeZone ( $timezone );
-            $date = sprintf ( "%02d", $datearray [1] ) . "/" . sprintf ( "%02d", $datearray [2] ) . "/" . $datearray [0];
-            $dateTime = new DateTime ( $date, $dateTimeZone );
-            // Returns the timedifference in seconds
-            $timedifference = $dateTimeZone->getOffset ( $dateTime );
-            $timedifference = $timedifference / 3600.0;
-            $timestr = sscanf ( sprintf ( "%04d", $time ), "%2d%2d" );
-            $jd = cal_to_jd ( CAL_GREGORIAN, $datearray [1], $datearray [2], $datearray [0] );
-            $hours = $timestr [0] - ( int ) $timedifference;
-            $timedifferenceminutes = ($timedifference - ( int ) $timedifference) * 60;
-            $minutes = $timestr [1] - $timedifferenceminutes;
-            if ($minutes < 0) {
-                $hours = $hours - 1;
-                $minutes = $minutes + 60;
-            }
-            if ($minutes > 60) {
-                $hours = $hours + 1;
-                $minutes = $minutes - 60;
-            }
-            if ($hours < 0) {
-                $hours = $hours + 24;
-                $jd = $jd - 1;
-            }
-            if ($hours >= 24) {
-                $hours = $hours - 24;
-                $jd = $jd + 1;
-            }
-            $time = $hours * 100 + $minutes;
-            $dte = JDToGregorian ( $jd );
-            sscanf ( $dte, "%2d/%2d/%4d", $month, $day, $year );
-            $date = $year . sprintf ( "%02d", $month ) . sprintf ( "%02d", $day );
-        }
-        $objDatabase->execSQL ( "UPDATE observations SET date = \"" . $date . "\" WHERE id = \"" . $id . "\"" );
-        $objDatabase->execSQL ( "UPDATE observations SET time = \"" . $time . "\" WHERE id = \"" . $id . "\"" );
-    }
-    public function getLastObservations($number = 10) {
-        // TODO : Implement
-        // global $objDatabase;
-        // $run = $objDatabase->selectRecordset("select count(DISTINCT id) from observations order by id desc LIMIT " . $number . ";");
-        // $get = $run->fetch ( PDO::FETCH_OBJ );
 
-        // return $get->ObsCnt;
+            $date = new DateTime(
+                $observation->getElementsByTagName("begin")
+                    ->item(0)->nodeValue, new DateTimeZone($timezone)
+            );
+            $date->setTimezone(new DateTimeZone('UTC'));
+
+            $dateStr = $date->format("Ymd");
+            $timeStr = $date->format('Hi');
+        }
+        $objDatabase->execSQL(
+            "UPDATE observations SET date = \"" . $dateStr 
+                . "\" WHERE id = \"" . $id . "\""
+        );
+        $objDatabase->execSQL(
+            "UPDATE observations SET time = \"" . $timeStr 
+                . "\" WHERE id = \"" . $id . "\""
+        );
     }
+
+    /** 
+     * Returns the list with the last added observations.
+     * 
+     * @param int $number The number of observations to list, default is 10.
+     * 
+     * @return array The array with the observations (id, objectname, observerid and date)
+     */        
+    public function getLastObservations($number = 10) 
+    {
+        global $objDatabase;
+
+        return $objDatabase->selectRecordsetArray(
+            "SELECT id, objectname, observerid, date FROM observations " 
+                ."ORDER BY id DESC LIMIT " . $number . ";", 'id'
+        );
+    }
+
+    
     public function showListObservation($link, $lco) {
         global $lastReadObservation, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations, $objObservation;
 
@@ -1739,6 +1733,7 @@ class Observations
 
         $objUtil->addPager ( "Object", $count, false );
     }
+
     public function showObservation($LOid) {
         global $objUtil, $dateformat, $myList, $listname, $listname_ss, $baseURL, $objAstroCalc, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations, $objDatabase, $objLocation, $instDir;
         $link = $baseURL . "index.php?";
@@ -2099,9 +2094,9 @@ class Observations
             $time = - 9999;
             if (strlen ( $_POST ['hours'] )) {
                 if (isset ( $_POST ['minutes'] ))
-                    $time = ($_POST ['hours'] * 100) + $_POST ['minutes'];
+                    $time = sprintf("%02d", ($_POST['hours'])) . sprintf("%02d", $_POST['minutes']);
                 else
-                    $time = ($_POST ['hours'] * 100);
+                    $time = sprintf("%02d", ($_POST ['hours'])) . "00";
             }
             if ($_FILES ['drawing'] ['size'] > $maxFileSize) // file size of drawing too big
 {
