@@ -410,7 +410,7 @@ class Utils
         $observer = $GLOBALS['objObserver'];
         $location = $GLOBALS['objLocation'];
 
-        $dom = new DomDocument('1.0', 'ISO-8859-1');
+        $dom = new DomDocument('1.0', 'UTF-8');
 
         $observers = array ();
         $sites = array ();
@@ -1237,14 +1237,14 @@ class Utils
                     $attr->appendChild($attrText);
                 }
 
-                $col = getColorForOalExport("component1");
+                $col = $this->getColorForOalExport("component1");
 
                 if ($col != "") {
                     $colorMain = $result->appendChild($dom->createElement('colorMain'));
                     $colorMain->appendChild($dom->createTextNode($col1));
                 }
     
-                $col = getColorForOalExport("component2");
+                $col = $this->getColorForOalExport("component2");
 
                 if ($col != "") {
                     $colorCompanion = $result->appendChild($dom->createElement('colorCompanion'));
