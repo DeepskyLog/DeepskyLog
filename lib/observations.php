@@ -1427,8 +1427,7 @@ class Observations
             $timezone = $objLocation->getLocationPropertyFromId($this->getDsObservationProperty($id, 'locationid'), 'timezone');
 
             $date = new DateTime(
-                $observation->getElementsByTagName("begin")
-                    ->item(0)->nodeValue, new DateTimeZone($timezone)
+                $date . " " . $time, new DateTimeZone($timezone)
             );
             $date->setTimezone(new DateTimeZone('UTC'));
 
