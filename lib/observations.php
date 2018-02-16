@@ -1459,9 +1459,12 @@ class Observations
         global $objDatabase;
         $t = getdate();
         return $objDatabase->selectSingleValue(
-            "SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"" 
-            . $id . "\" AND observations.date > \"" . date('Ymd', strtotime('-1 year')) 
-            . "\" AND observations.visibility != 7 AND hasDrawing=1 ", 'Cnt', 0
+            "SELECT COUNT(*) AS Cnt FROM observations " 
+            . "WHERE observations.observerid LIKE \"" 
+            . $id . "\" AND observations.date > \"" 
+            . date('Ymd', strtotime('-1 year')) 
+            . "\" AND observations.visibility != 7 " 
+            . "AND hasDrawing=1 ", 'Cnt', 0
         );
     }
 
@@ -1473,7 +1476,8 @@ class Observations
      * @param string $country The country in which the observations are done. 
      *                        If not set, all countries are used.
      * 
-     * @return int The number of objects that are seen by a given observer in a given country.
+     * @return int The number of objects that are seen by a given observer in
+     *             a given country.
      */    
     public function getObservationsLastYear($id, $country = "")
     {
@@ -1482,14 +1486,17 @@ class Observations
 
         if (strcmp($country, "") == 0) {
             return $objDatabase->selectSingleValue(
-                "SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \""
-                . $id . "\" AND observations.date > \"" . date('Ymd', strtotime('-1 year'))
+                "SELECT COUNT(*) AS Cnt FROM observations " 
+                . "WHERE observations.observerid LIKE \""
+                . $id . "\" AND observations.date > \"" 
+                . date('Ymd', strtotime('-1 year'))
                 . "\" AND observations.visibility != 7 ", 'Cnt', 0
             );
         } else {
             return $objDatabase->selectSingleValue(
                 "SELECT COUNT(objectname) As Cnt FROM observations JOIN locations " 
-                . "ON observations.locationid=locations.id WHERE observations.date > \""
+                . "ON observations.locationid=locations.id " 
+                . "WHERE observations.date > \""
                 . date('Ymd', strtotime('-1 year')) 
                 . "\" AND observations.visibility != 7 and locations.country=\"" 
                 . $country . "\"", 'Cnt', 0
@@ -1510,7 +1517,8 @@ class Observations
         global $objDatabase;
         return $objDatabase->selectSingleValue(
             "SELECT COUNT(*) As ObsCnt FROM observations WHERE observerid=\"" 
-            . $userid . "\" AND observations.objectname=\"" . $object . "\"", "ObsCnt"
+            . $userid . "\" AND observations.objectname=\"" . $object . "\"", 
+            "ObsCnt"
         );
     }
 
@@ -1521,7 +1529,8 @@ class Observations
      * @param string $catalog The name of the catalog. 
      *                        If it is a list, the string should start with 'List:'.
      * 
-     * @return int The number of objects the observer has seen from the given catalog.
+     * @return int The number of objects the observer has seen from the given
+     *             catalog.
      */    
     public function getObservedCountFromCatalogOrList($id, $catalog) 
     {
@@ -1529,14 +1538,18 @@ class Observations
         if (substr($catalog, 0, 5) == 'List:') {
             $sql = "SELECT COUNT(DISTINCT observations.objectname) AS CatCnt " 
                 . "FROM observations " 
-                . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " 
+                . "JOIN observerobjectlist on " 
+                . "observerobjectlist.objectname=observations.objectname " 
                 . "JOIN observers on observations.observerid = observers.id " 
-                . "WHERE observerobjectlist.listname=\"" . substr($catalog, 5) . "\" " 
+                . "WHERE observerobjectlist.listname=\"" . substr($catalog, 5) 
+                . "\" " 
                 . "AND observations.observerid=\"" . $id . "\" " 
                 . "AND observations.visibility != 7 ";
         } else {
-            $sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " 
-                . "INNER JOIN observations ON observations.objectname = objectnames.objectname " 
+            $sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt " 
+                . "FROM objectnames " 
+                . "INNER JOIN observations ON " 
+                . "observations.objectname = objectnames.objectname " 
                 . "WHERE objectnames.catalog = \"" . $catalog . "\" " 
                 . "AND observations.observerid=\"" . $id . "\" " 
                 . "AND observations.visibility != 7 ";
@@ -1555,8 +1568,10 @@ class Observations
     public function getDrawingsCountFromCatalog($id, $catalog) 
     {
         global $objDatabase, $loggedUser;
-        $sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " 
-            . "INNER JOIN observations ON observations.objectname = objectnames.objectname " 
+        $sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt " 
+            . "FROM objectnames " 
+            . "INNER JOIN observations ON " 
+            . "observations.objectname = objectnames.objectname " 
             . "WHERE objectnames.catalog = \"" . $catalog . "\" " 
             . "AND observations.observerid=\"" . $id . "\" " 
             . "AND observations.visibility != 7 " 
@@ -1565,26 +1580,34 @@ class Observations
     }
 
     /** 
-     * Returns the number of objects the observer has seen from a given catalog or list.
+     * Returns the number of objects the observer has seen from a given catalog
+     * or list.
      * 
      * @param int    $id      The id of the observer.
-     * @param string $catalog The name of the catalog. Start with "List:" if interested in observing list.
+     * @param string $catalog The name of the catalog. Start with "List:" if 
+     *                        interested in observing list.
      * 
-     * @return int The number of objects the observer has seen from a given catalog or list.
+     * @return int The number of objects the observer has seen from a given 
+     *             catalog or list.
      */    
     public function getObservedFromCatalog($id, $catalog) 
     {
         global $objDatabase, $loggedUser;
         if (substr($catalog, 0, 5) == "List:") {
-            $sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " 
-                . "INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " 
-                . "WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") " 
+            $sql = "SELECT DISTINCT observerobjectlist.objectname " 
+                . "FROM observerobjectlist " 
+                . "INNER JOIN observations ON " 
+                . "observations.objectname = observerobjectlist.objectname " 
+                . "WHERE ((observerobjectlist.listname = \"" 
+                . substr($catalog, 5) . "\") " 
                 . "AND (observations.observerid = \"" . $id . "\") " 
                 . "AND (observations.visibility != 7))";
         } else {
-            $sql = "SELECT DISTINCT CONCAT(objectnames.catindex,' ',objectnames.objectname) " 
+            $sql = "SELECT DISTINCT " 
+                . "CONCAT(objectnames.catindex,' ',objectnames.objectname) " 
                 . "AS Temp, objectnames.objectname FROM objectnames " 
-                . "INNER JOIN observations ON observations.objectname = objectnames.objectname " 
+                . "INNER JOIN observations ON " 
+                . "observations.objectname = objectnames.objectname " 
                 . "WHERE ((objectnames.catalog = \"$catalog\") " 
                 . "AND (observations.observerid=\"$id\") " 
                 . "AND (observations.visibility != 7))";
@@ -1607,16 +1630,22 @@ class Observations
     {
         global $objDatabase, $loggedUser;
         if (substr($catalog, 0, 5) == "List:") {
-            $sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " 
-                . " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " 
-                . " JOIN observations ON observations.objectname = objectpartof.objectname " 
-                . " WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") " 
+            $sql = "SELECT DISTINCT observerobjectlist.objectname " 
+                . "FROM observerobjectlist " 
+                . " JOIN objectpartof ON " 
+                . "objectpartof.partofname = observerobjectlist.objectname " 
+                . " JOIN observations ON " 
+                . "observations.objectname = objectpartof.objectname " 
+                . " WHERE ((observerobjectlist.listname = \"" 
+                . substr($catalog, 5) . "\") " 
                 . " AND (observations.observerid = \"" . $id . "\") " 
                 . " AND (observations.visibility != 7))";
         } else {
             $sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " 
-                . " JOIN objectpartof ON objectpartof.partofname = objectnames.objectname " 
-                . " JOIN observations ON observations.objectname = objectpartof.objectname " 
+                . " JOIN objectpartof ON " 
+                . "objectpartof.partofname = objectnames.objectname " 
+                . " JOIN observations ON " 
+                . "observations.objectname = objectpartof.objectname " 
                 . " WHERE ((objectnames.catalog = \"$catalog\") " 
                 . " AND (observations.observerid=\"$id\") " 
                 . " AND (observations.visibility != 7))";
@@ -1634,16 +1663,18 @@ class Observations
     {
         global $objDatabase;
         $run = $objDatabase->selectRecordset(
-            "SELECT observations.objectname, COUNT(observations.id) As ObservationCount "
+            "SELECT observations.objectname, COUNT(observations.id) " 
+            . "As ObservationCount "
             . "FROM observations GROUP BY observations.objectname"
             . " ORDER BY ObservationCount DESC"
         );
         $i = 1;
-        while ($run->fetch(PDO::FETCH_OBJ))
+        while ($run->fetch(PDO::FETCH_OBJ)) {
             $numberOfObservations [$get->objectname] = array (
                     $i ++,
                     $get->objectname
             );
+        }
         return $numberOfObservations;
     }
 
@@ -1668,7 +1699,8 @@ class Observations
     /** 
      * Returns the number of observations for each observer in a catalog or a list.
      *   
-     * @return array The number of observations for each observer in a catalog or a list.
+     * @return array The number of observations for each observer in a catalog or
+     *               a list.
      */    
     public function getPopularObserversOverviewCatOrListAllInfo()
     {
@@ -1704,7 +1736,8 @@ class Observations
      * Returns the number of observations for each observer during the last year.
      * Sorted by number of observations.
      * 
-     * @return array The number of observations for each observer during the last year.
+     * @return array The number of observations for each observer during the last
+     *               year.
      */    
     public function getAllObservationsLastYearCount()
     {
@@ -1762,22 +1795,27 @@ class Observations
      * 
      * @param string $catalog The catalog. If a list, start with "List:".
      * 
-     * @return array The number of observed objects in a catalog or list for each observer.
+     * @return array The number of observed objects in a catalog or list for each
+     *               observer.
      */    
     public function getAllObservedCountFromCatalogOrList($catalog)
     {
         global $objDatabase;
         if (substr($catalog, 0, 5) == 'List:') {
             $sql = "SELECT observations.observerid, "
-                . "COUNT(DISTINCT observations.objectname) AS Cnt FROM observations " 
-                . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " 
+                . "COUNT(DISTINCT observations.objectname) AS Cnt " 
+                . "FROM observations " 
+                . "JOIN observerobjectlist on " 
+                . "observerobjectlist.objectname=observations.objectname " 
                 . "JOIN observers on observations.observerid = observers.id " 
                 . "WHERE observerobjectlist.listname=\"" 
                 . substr($catalog, 5) . "\" " 
                 . "AND observations.visibility != 7 ";
         } else {
-            $sql = "SELECT observerid, COUNT(DISTINCT objectnames.catindex) AS Cnt FROM objectnames " 
-                . "INNER JOIN observations ON observations.objectname = objectnames.objectname " 
+            $sql = "SELECT observerid, COUNT(DISTINCT objectnames.catindex) AS Cnt " 
+                . "FROM objectnames " 
+                . "INNER JOIN observations ON " 
+                . "observations.objectname = objectnames.objectname " 
                 . "WHERE objectnames.catalog = \"" . $catalog . "\" " 
                 . "AND observations.visibility != 7 ";
         }
@@ -1820,7 +1858,9 @@ class Observations
     {
         global $objDatabase, $objLocation;
         if ($time >= 0) {
-            $timezone = $objLocation->getLocationPropertyFromId($this->getDsObservationProperty($id, 'locationid'), 'timezone');
+            $timezone = $objLocation->getLocationPropertyFromId(
+                $this->getDsObservationProperty($id, 'locationid'), 'timezone'
+            );
 
             $date = new DateTime(
                 $date . " " . $time, new DateTimeZone($timezone)
@@ -1845,7 +1885,8 @@ class Observations
      * 
      * @param int $number The number of observations to list, default is 10.
      * 
-     * @return array The array with the observations (id, objectname, observerid and date)
+     * @return array The array with the observations (id, objectname, observerid
+     *               and date)
      */        
     public function getLastObservations($number = 10) 
     {
@@ -1863,7 +1904,8 @@ class Observations
      * @param string $link The link of the page where the list is shown.
      * @param string $lco  L: Shows a list of all observations.
      *                     C: Shows a compact view of all observations. 
-     *                     O: Show also the last observation of this object made by the logged in user.
+     *                     O: Show also the last observation of this object made 
+     *                     by the logged in user.
      * 
      * @return None Prints a list with observations.
      */        
@@ -1902,14 +1944,17 @@ class Observations
         echo "<table class=\"table sort-tableObject tablesorter custom-popup\">";
         echo "<thead>";
         echo "<tr>";
-        echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\" width=\"10px\">";
+        echo "<th class=\"filter-false columnSelector-disable\"" 
+            . " data-sorter=\"false\" width=\"10px\">";
         echo "&nbsp;";
         if (($loggedUser) && ($lastReadObservation >= 0)) {
-            echo "<a href=\"" . $link . "&amp;markAsRead=All\" title=\"" . LangMarkAllAsRead . "\">!</a>";
+            echo "<a href=\"" . $link . "&amp;markAsRead=All\" title=\"" 
+                . LangMarkAllAsRead . "\">!</a>";
         }
         echo "</th>";
         if ($myList) {
-            echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">&nbsp;</th>";
+            echo "<th class=\"filter-false columnSelector-disable\" " 
+                . "data-sorter=\"false\">&nbsp;</th>";
         }
         echo "<th id=\"objectname\">" . LangOverviewObservationsHeader1 . "</th>";
         echo "<th id=\"objectconstellation\">" 
@@ -1921,13 +1966,17 @@ class Observations
         echo "<th id=\"observationdate\">" 
             . LangOverviewObservationsHeader4 . "</th>";
         if ($lco != "O") {
-            echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">&nbsp;</th>";
+            echo "<th class=\"filter-false columnSelector-disable\" " 
+                . "data-sorter=\"false\">&nbsp;</th>";
         } else {
-            echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" 
+            echo "<th class=\"filter-false columnSelector-disable\" " 
+                . "data-sorter=\"false\">" 
                 . LangOverviewObservationsHeader8 
-                . "</th>" . "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" 
+                . "</th>" . "<th class=\"filter-false columnSelector-disable\" " 
+                . "data-sorter=\"false\">" 
                 . LangOverviewObservationsHeader9 . "</th>" 
-                . "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" 
+                . "<th class=\"filter-false columnSelector-disable\" " 
+                . "data-sorter=\"false\">" 
                 . LangOverviewObservationsHeader5 . "</th>";
         }
         echo "</tr>";
@@ -1979,28 +2028,54 @@ class Observations
             );
             if ($LOid && ($lco == "O")) {
                 $LOdescription = $objPresentations->searchAndLinkCatalogsInText(
-                    preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid, 'description'))
+                    preg_replace(
+                        "/&amp;/", "&", 
+                        $this->getDsObservationProperty($LOid, 'description')
+                    )
                 );
-                $LOinstrumentId = $this->getDsObservationProperty($LOid, 'instrumentid');
-                $LOinstrument = $objInstrument->getInstrumentPropertyFromId($LOinstrumentId, 'name');
-                $LOinstrumentsize = round($objInstrument->getInstrumentPropertyFromId($LOinstrumentId, 'diameter'), 0);
+                $LOinstrumentId = $this->getDsObservationProperty(
+                    $LOid, 'instrumentid'
+                );
+                $LOinstrument = $objInstrument->getInstrumentPropertyFromId(
+                    $LOinstrumentId, 'name'
+                );
+                $LOinstrumentsize = round(
+                    $objInstrument->getInstrumentPropertyFromId(
+                        $LOinstrumentId, 'diameter'
+                    ), 0
+                );
             }
             if ($LOinstrument == "Naked eye") {
                 $LOinstrument = InstrumentsNakedEye;
             }
-            if ($loggedUser && (!($objObserver->getObserverProperty($loggedUser, 'UT')))) {
-                $date = sscanf($this->getDsObservationLocalDate($value['observationid']), "%4d%2d%2d");
+            if ($loggedUser
+                && (!($objObserver->getObserverProperty($loggedUser, 'UT')))
+            ) {
+                $date = sscanf(
+                    $this->getDsObservationLocalDate($value['observationid']), 
+                    "%4d%2d%2d"
+                );
                 if ($lco == "O") {
-                    $LOdate = sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
+                    $LOdate = sscanf(
+                        $this->getDsObservationLocalDate($LOid), "%4d%2d%2d"
+                    );
                 }
             } else {
-                $date = sscanf($this->getDsObservationProperty($value ['observationid'], 'date'), "%4d%2d%2d");
+                $date = sscanf(
+                    $this->getDsObservationProperty(
+                        $value ['observationid'], 'date'
+                    ), "%4d%2d%2d"
+                );
                 if ($lco == "O") {
-                    $LOdate = sscanf($this->getDsObservationProperty($LOid, 'date'), "%4d%2d%2d");
+                    $LOdate = sscanf(
+                        $this->getDsObservationProperty($LOid, 'date'), "%4d%2d%2d"
+                    );
                 }
             }
             if ($lco == 'L') {
-                if (($value['observerid'] == $loggedUser) && ($objUtil->checkGetKey('noOwnColor') == "no")) {
+                if (($value['observerid'] == $loggedUser) 
+                    && ($objUtil->checkGetKey('noOwnColor') == "no")
+                ) {
                     echo "<tr class=\"green\">";
                 } else {
                     echo "<tr class=\"type" . (2 - ($count % 2)) . "\">";
@@ -2013,11 +2088,19 @@ class Observations
                 $hasDrawing = false;
             } else {
                 $rowspan = 2;
-                $hasDrawing = $this->getDsObservationProperty($value['observationid'], 'hasDrawing');
+                $hasDrawing = $this->getDsObservationProperty(
+                    $value['observationid'], 'hasDrawing'
+                );
                 if ($hasDrawing) {
                     $rowspan ++;
                 }
-                if ((($lco == "C") || ($lco == "O")) && ($objUtil->checkGetKey('expand') != $value['observationid']) && ($copyright = $objObserver->getObserverProperty($value['observerid'], 'copyright'))) {
+                $copyright = $objObserver->getObserverProperty(
+                    $value['observerid'], 'copyright'
+                );
+                if ((($lco == "C") || ($lco == "O")) 
+                    && ($objUtil->checkGetKey('expand') != $value['observationid']) 
+                    && $copyright
+                ) {
                     $rowspan ++;
                 }
                 if ($objUtil->checkGetKey('expand') == $value['observationid']) {
@@ -2040,7 +2123,9 @@ class Observations
                     . $explanation1 . "\">" 
                     . ((substr($seen, 0, 1) != "Y") ? "x" : "+") . "</a>";
             }
-            if (($value ['observationid'] > $lastReadObservation) && ($lastReadObservation >= 0)) {
+            if (($value ['observationid'] > $lastReadObservation) 
+                && ($lastReadObservation >= 0)
+            ) {
                 echo "&nbsp;<a href=\"" . $link . "&amp;markAsRead=" 
                     . $value['observationid'] . "\" title=\"" 
                     . LangMarkUpToHereAsRead . "\">!</a>";
@@ -2048,7 +2133,13 @@ class Observations
             echo "</td>";
             if ($myList) {
                 echo "<td>";
-                if ($objDatabase->selectSingleValue("SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND objectname=\"" . $value['objectname'] . "\" AND listname=\"" . $listname . "\"", 'ObjCnt', 0) > 0) {
+                if ($objDatabase->selectSingleValue(
+                    "SELECT Count(observerobjectlist.objectname) As ObjCnt " 
+                    . "FROM observerobjectlist WHERE observerid = \"" . $loggedUser 
+                    . "\" AND objectname=\"" . $value['objectname'] . "\" AND " 
+                    . "listname=\"" . $listname . "\"", 'ObjCnt', 0
+                ) > 0
+                ) {
                     echo "<a  href=\"" . $link . "&amp;addObservationToList=" 
                         . urlencode($value['observationid']) . "\" title=\"" 
                         . LangViewObservationField44 . "\">E</a>";
@@ -2093,17 +2184,18 @@ class Observations
                 
                 if ($loggedUser && $LOid) {
                     echo "&nbsp;<a  href=\"" . $baseURL 
-                        . "index.php?indexAction=detail_observation&amp;observation=" 
-                        . $value['observationid'] . "&amp;dalm=MO\" title=\"" 
-                        . LangMO . "\">" . LangMOText . "</a>";
+                      . "index.php?indexAction=detail_observation&amp;observation=" 
+                      . $value['observationid'] . "&amp;dalm=MO\" title=\"" 
+                      . LangMO . "\">" . LangMOText . "</a>";
                     echo "&nbsp;<a  href=\"" . $baseURL 
-                        . "index.php?indexAction=detail_observation&amp;observation=" 
-                        . $value ['observationid'] . "&amp;dalm=LO\" title=\"" 
-                        . LangLO . "\">" . LangLOText . "</a>";
+                      . "index.php?indexAction=detail_observation&amp;observation=" 
+                      . $value ['observationid'] . "&amp;dalm=LO\" title=\"" 
+                      . LangLO . "\">" . LangLOText . "</a>";
                 }
                 echo "</td>";
                 echo "</tr>";
-                echo "<tr class=\"type" . (2 - ($count % 2)) . " tablesorter-childRow\">";
+                echo "<tr class=\"type" . (2 - ($count % 2)) 
+                    . " tablesorter-childRow\">";
                 echo "<td class=\"expandedObservation\" colspan=\"" 
                     . ($myList ? (($lco == 'O') ? 10 : 8) : (($lco == 'O') ? 8 : 6)) 
                     . "\">";
@@ -2111,23 +2203,34 @@ class Observations
                 echo "</td>";
             } else {
                 echo "<td>" . $GLOBALS[$value['objectconstellation']] . "</td>";
-                echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" 
-                    . urlencode($value['observerid']) . "\">" . $value['observername'] . "</a></td>";
+                echo "<td><a href=\"" . $baseURL 
+                    . "index.php?indexAction=detail_observer&amp;user=" 
+                    . urlencode($value['observerid']) . "\">" 
+                    . $value['observername'] . "</a></td>";
                 echo "<td><a href=\"" . $baseURL 
                     . "index.php?indexAction=detail_instrument&amp;instrument=" 
                     . urlencode($value['instrumentid']) . "\">" 
-                    . (($value['instrumentname'] == "Naked eye") ? InstrumentsNakedEye : $value['instrumentname'] 
-                    . " &nbsp;(" . round($value['instrumentdiameter'], 0) . "&nbsp;mm)") . "</a></td>";
-                echo "<td>" . date($dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0])) . "</td>";
+                    . (($value['instrumentname'] == "Naked eye") 
+                    ? InstrumentsNakedEye : $value['instrumentname'] 
+                    . " &nbsp;(" . round($value['instrumentdiameter'], 0) 
+                    . "&nbsp;mm)") . "</a></td>";
+                echo "<td>" . date(
+                    $dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0])
+                ) . "</td>";
                 if ($lco == "O") {
                     echo "<td>" . (($LOid) ? "<a  href=\"" . $baseURL 
                         . "index.php?indexAction=detail_instrument&amp;instrument=" 
                         . urlencode($LOinstrumentId) . "\">" . $LOinstrument 
                         . " &nbsp;" 
-                        . (($LOinstrument != InstrumentsNakedEye) ? ("(" . $LOinstrumentsize . "&nbsp;mm" . ")") : "") 
+                        . (($LOinstrument != InstrumentsNakedEye) 
+                        ? ("(" . $LOinstrumentsize . "&nbsp;mm" . ")") : "") 
                         . "</a>" : "") . "</td>";
                     echo "<td>" 
-                        . ((($lco == "O") && $LOid) ? date($dateformat, mktime(0, 0, 0, $LOdate[1], $LOdate[2], $LOdate[0])) : "") 
+                        . ((($lco == "O") && $LOid) 
+                        ? date(
+                            $dateformat,
+                            mktime(0, 0, 0, $LOdate[1], $LOdate[2], $LOdate[0])
+                        ) : "") 
                         . "</td>";
                 }
                 echo "<td>";
@@ -2167,7 +2270,10 @@ class Observations
                         echo "<td colspan=\"5\">";
                         $toClose = false;
                         if ($loggedUser != "") {
-                            if ($usedLang != $this->getDsObservationProperty($value['observationid'], 'language')) {
+                            if ($usedLang != $this->getDsObservationProperty(
+                                $value['observationid'], 'language'
+                            )
+                            ) {
                                 $toClose = true;
 
                                 // Make the google translate control node
@@ -2176,7 +2282,9 @@ class Observations
                                 echo "</div>";
                             }
                         }
-                        echo $objPresentations->searchAndLinkCatalogsInText($value['observationdescription']) . "<br />";
+                        echo $objPresentations->searchAndLinkCatalogsInText(
+                            $value['observationdescription']
+                        ) . "<br />";
                         if ($toClose) {
                             echo "</div>";
                         }
@@ -2186,7 +2294,10 @@ class Observations
                         echo "<td colspan=\"4\">";
                         $toClose = false;
                         if ($loggedUser != "") {
-                            if ($usedLang != $this->getDsObservationProperty($value['observationid'], 'language')) {
+                            if ($usedLang != $this->getDsObservationProperty(
+                                $value['observationid'], 'language'
+                            )
+                            ) {
                                 $toClose = true;
                                 // Make the google translate control node
                                 echo "<div class=\"goog-trans-section\">";
@@ -2194,7 +2305,9 @@ class Observations
                                 echo "</div>";
                             }
                         }
-                        echo $objPresentations->searchAndLinkCatalogsInText($value['observationdescription']) . "<br />";
+                        echo $objPresentations->searchAndLinkCatalogsInText(
+                            $value['observationdescription']
+                        ) . "<br />";
                         if ($toClose) {
                             echo "</div>";
                         }
@@ -2203,7 +2316,10 @@ class Observations
                         echo "<td colspan=\"4\">";
                         $toClose = false;
                         if ($loggedUser != "") {
-                            if ($usedLang != $this->getDsObservationProperty($LOid, 'language')) {
+                            if ($usedLang != $this->getDsObservationProperty(
+                                $LOid, 'language'
+                            )
+                            ) {
                                 $toClose = true;
                                 // Make the google translate control node
                                 echo "<div class=\"goog-trans-section\">";
@@ -2220,51 +2336,78 @@ class Observations
                     echo "</tr>";
                 }
                 if ((($lco == "O") && $LOid && $hasDrawing) || $hasDrawing 
-                    && ($objUtil->checkGetKey('expand', 0) != $value['observationid'])
+                    && $objUtil->checkGetKey('expand', 0) != $value['observationid']
                 ) {
-                    echo "<tr class=\"type" . (2 - ($count % 2)) . " tablesorter-childRow\">";
+                    echo "<tr class=\"type" . (2 - ($count % 2)) 
+                        . " tablesorter-childRow\">";
                     if ($lco == "C") {
                         echo "<td colspan=\"7\">" 
-                            . (($this->getDsObservationProperty($value['observationid'], 'hasDrawing')) ? "<p>" 
-                            . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $value['observationid'] 
+                            . (($this->getDsObservationProperty(
+                                $value['observationid'], 'hasDrawing'
+                            )) 
+                            ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" 
+                            . $value['observationid'] 
                             . ".jpg\" data-lightbox=" . $value['observationid'] 
-                            . " data-title=\"\"><img class=\"account\" src=\"" . $baseURL 
-                            . "deepsky/drawings/" . $value['observationid'] . "_resized.jpg\" alt=\"" 
-                            . $title . "\"></img></a>" . "</p>" : "") . "</td>";
+                            . " data-title=\"\"><img class=\"account\" src=\"" 
+                            . $baseURL 
+                            . "deepsky/drawings/" . $value['observationid'] 
+                            . "_resized.jpg\" alt=\"" 
+                            . $title . "\"></img></a>" . "</p>" 
+                            : "") . "</td>";
                     } elseif ($lco == "O") {
                         if ($myList) {
-                            if (($objUtil->checkGetKey('expand') == $value['observationid'])) {
-                                echo "<td> &nbsp; </td><td colspan=\"6\"> &nbsp;</td>";
+                            $obid = $value['observationid'];
+                            if ($objUtil->checkGetKey('expand') == $obid) {
+                                echo "<td> &nbsp; </td><td colspan=\"6\">" 
+                                    . " &nbsp;</td>";
                             } else {
                                 echo "<td> &nbsp; </td>
                                       <td colspan=\"6\">" 
-                                      . (($this->getDsObservationProperty($value['observationid'], 'hasDrawing')) ? "<p>" 
-                                      . "<a href=\"" . $baseURL . "deepsky/drawings/" . $value['observationid'] 
+                                    . (($this->getDsObservationProperty(
+                                        $value['observationid'], 'hasDrawing'
+                                    )) 
+                                      ? "<p>" 
+                                      . "<a href=\"" . $baseURL 
+                                      . "deepsky/drawings/" 
+                                      . $value['observationid'] 
                                       . ".jpg\"  title=\"\">
                                          <img class=\"account\" src=\"" 
-                                      . $baseURL . "deepsky/drawings/" . $value['observationid'] 
+                                      . $baseURL . "deepsky/drawings/" 
+                                      . $value['observationid'] 
                                       . "_resized.jpg\" alt=\"" . $title . "\"></img>
                                         </a>" . "</p>" : "") . "</td>";
                             }
                         } else {
-                            if (($objUtil->checkGetKey('expand') == $value['observationid'])) {
-                                echo "<td> &nbsp; </td><td colspan=\"6\"> &nbsp;</td>";
+                            $obid = $value['observationid'];
+                            if ($objUtil->checkGetKey('expand') == $obid) {
+                                echo "<td> &nbsp; </td><td colspan=\"6\"> " 
+                                    . "&nbsp;</td>";
                             } else {
                                 echo "<td colspan=\"6\">" 
-                                    . (($this->getDsObservationProperty($value['observationid'], 'hasDrawing')) ? "<p>" 
-                                    . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $value['observationid'] 
-                                    . ".jpg\" data-lightbox=\"image-1\" data-title=\"\">
+                                    . ($this->getDsObservationProperty(
+                                        $value['observationid'], 'hasDrawing'
+                                    ) 
+                                    ? "<p>" 
+                                    . "<a  href=\"" . $baseURL . "deepsky/drawings/" 
+                                    . $value['observationid'] 
+                                    . ".jpg\" data-lightbox=\"image-1\" " . 
+                                    "data-title=\"\">
                                        <img class=\"account\" src=\"" . $baseURL 
-                                    . "deepsky/drawings/" . $value['observationid'] . "_resized.jpg\" alt=\"" 
+                                    . "deepsky/drawings/" . $value['observationid'] 
+                                    . "_resized.jpg\" alt=\"" 
                                     . $title . "\"></img>
                                       </a>" . "</p>" : "") . "</td>";
                             }
                         }
                         echo "<td colspan=\"4\">"
-                            . (($LOdescription && ($this->getDsObservationProperty($LOid, 'hasDrawing'))) ? "<p>" 
-                            . "<a href=\"" . $baseURL . "deepsky/drawings/" . $LOid . ".jpg" 
+                            . (($LOdescription 
+                            && $this->getDsObservationProperty($LOid, 'hasDrawing'))
+                            ? "<p>" 
+                            . "<a href=\"" . $baseURL . "deepsky/drawings/" . $LOid 
+                            . ".jpg" 
                             . "\" data-lightbox=\"image-1\" data-title=\"\">
-                                    <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid 
+                                    <img class=\"account\" src=\"" . $baseURL 
+                            . "deepsky/drawings/" . $LOid 
                             . "_resized.jpg\" alt=\"" . $title . "\"></img>
                                 </a>" . "</p>" : "") . "</td>";
                     }
@@ -2320,13 +2463,19 @@ class Observations
         ) {
             $date = sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
         } else {
-            $date = sscanf($this->getDsObservationProperty($LOid, 'date'), "%4d%2d%2d");
+            $date = sscanf(
+                $this->getDsObservationProperty($LOid, 'date'), "%4d%2d%2d"
+            );
         }
         $time = "";
         $dateTimeLabelText = "";
-        $dateTimeText = date($dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0]));
+        $dateTimeText = date(
+            $dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0])
+        );
         if ($this->getDsObservationProperty($LOid, 'time') >= 0) {
-            if ($loggedUser && (!($objObserver->getObserverProperty($loggedUser, 'UT')))) {
+            if ($loggedUser 
+                && (!($objObserver->getObserverProperty($loggedUser, 'UT')))
+            ) {
                 $date = sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
                 $dateTimeLabelText = "&nbsp;" . LangViewObservationField9lt;
                 $time = $this->getDsObservationLocalTime($LOid);
@@ -2351,7 +2500,8 @@ class Observations
             $seeing = 0;
         }
         $diameterText = '';
-        if ($largeDiameter = $this->getDsObservationProperty($LOid, 'largeDiameter')) {
+        $largeDiameter = $this->getDsObservationProperty($LOid, 'largeDiameter');
+        if ($largeDiameter) {
             if ($largeDiameter > 60) {
                 $diameterText = sprintf("%.1f ", $largeDiameter / 60.0) 
                     . (($smallDiameter = $this->getDsObservationProperty(
