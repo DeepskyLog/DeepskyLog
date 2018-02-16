@@ -6,7 +6,7 @@ if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 
 $copyright = "&copy;2004&nbsp;-&nbsp;2018";
-$versionInfo = "2018.2";
+$versionInfo = "2018.2.1";
 $copyrightInfo = $copyright . ",&nbsp;DeepskyLog developers";
 
 define ( "AtlasOverviewZoom", 17 );
