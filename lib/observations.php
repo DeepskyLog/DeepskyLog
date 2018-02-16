@@ -1869,15 +1869,16 @@ class Observations
 
             $dateStr = $date->format("Ymd");
             $timeStr = $date->format('Hi');
+        
+            $objDatabase->execSQL(
+                "UPDATE observations SET date = \"" . $dateStr 
+                    . "\" WHERE id = \"" . $id . "\""
+            );
+            $objDatabase->execSQL(
+                "UPDATE observations SET time = \"" . $timeStr 
+                    . "\" WHERE id = \"" . $id . "\""
+            );
         }
-        $objDatabase->execSQL(
-            "UPDATE observations SET date = \"" . $dateStr 
-                . "\" WHERE id = \"" . $id . "\""
-        );
-        $objDatabase->execSQL(
-            "UPDATE observations SET time = \"" . $timeStr 
-                . "\" WHERE id = \"" . $id . "\""
-        );
     }
 
     /** 
