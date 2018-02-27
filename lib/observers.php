@@ -8,7 +8,7 @@ class Observers {
 	public function addObserver($id, $name, $firstname, $email, $password) 	// addObserver adds a new observer to the database. The id, name, first name email address and password should be given as parameters. The password must be encoded using md5(...). The new observer will not be able to log in yet. Before being able to do so, the administrator must validate the new user.
 	{
 		global $objDatabase;
-		return $objDatabase->execSQL ( "INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"" . RoleWaitlist . "\", \"" . $_SESSION ['lang'] . "\")" );
+		return $objDatabase->execSQL ( "INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"" . ROLEWAITLIST . "\", \"" . $_SESSION ['lang'] . "\")" );
 	}
 	public function getUserIdFromEmail($mail) {
 		global $objDatabase;
@@ -16,7 +16,7 @@ class Observers {
 	}
 	public function getAdministrators() {
 		global $objDatabase;
-		return $objDatabase->selectSingleArray ( "SELECT id FROM observers WHERE role = \"RoleAdmin\"", 'id' );
+		return $objDatabase->selectSingleArray ( "SELECT id FROM observers WHERE role = \"ROLEADMIN\"", 'id' );
 	}
 	public function getCometRank($observer) 	// getCometRank() returns the number of observations of the given observer
 	{
@@ -440,8 +440,8 @@ class Observers {
 		global $objDatabase, $objUtil, $entryMessage, $developversion, $mailTo, $mailFrom, $objMessages, $objAccomplishments;
 		if (! ($objUtil->checkSessionKey ( 'admin' ) == 'yes'))
 			throw new Exception ( LangException001 );
-		$objDatabase->execSQL ( "UPDATE observers SET role = \"" . ($role = RoleUser) . "\" WHERE id=\"" . ($id = $objUtil->checkGetKey ( 'validate' )) . "\"" );
-		if ($role == RoleAdmin)
+		$objDatabase->execSQL ( "UPDATE observers SET role = \"" . ($role = ROLEUSER) . "\" WHERE id=\"" . ($id = $objUtil->checkGetKey ( 'validate' )) . "\"" );
+		if ($role == ROLEADMIN)
 			$ad = "<br /><br />" . LangValidateAdmin;
 		else
 			$ad = "";

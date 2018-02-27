@@ -17,39 +17,39 @@ class Instruments {
 		return $objDatabase->selectSingleArray ( "SELECT id FROM instruments WHERE name = \"" . ($objDatabase->selectSingleValue ( "SELECT name FROM instruments WHERE id = \"" . addslashes ( $id ) . "\"", 'name' )) . "\"", 'id' );
 	}
 	public function getInstrumentEchoType($instrumentType) {
-		if ($instrumentType == InstrumentNakedEye)
+		if ($instrumentType == INSTRUMENTNAKEDEYE)
 			return InstrumentsNakedEye;
-		if ($instrumentType == InstrumentBinoculars)
+		if ($instrumentType == INSTRUMENTBINOCULARS)
 			return InstrumentsBinoculars;
-		if ($instrumentType == InstrumentFinderscope)
+		if ($instrumentType == INSTRUMENTFINDERSCOPE)
 			return InstrumentsFinderscope;
-		if ($instrumentType == InstrumentReflector)
+		if ($instrumentType == INSTRUMENTREFLECTOR)
 			return InstrumentsReflector;
-		if ($instrumentType == InstrumentRefractor)
+		if ($instrumentType == INSTRUMENTREFRACTOR)
 			return InstrumentsRefractor;
-		if ($instrumentType == InstrumentRest)
+		if ($instrumentType == INSTRUMENTREST)
 			return InstrumentsOther;
-		if ($instrumentType == InstrumentCassegrain)
+		if ($instrumentType == INSTRUMENTCASSEGRAIN)
 			return InstrumentsCassegrain;
-		if ($instrumentType == InstrumentSchmidtCassegrain)
+		if ($instrumentType == INSTRUMENTSCHMIDTCASSEGRAIN)
 			return InstrumentsSchmidtCassegrain;
-		if ($instrumentType == InstrumentKutter)
+		if ($instrumentType == INSTRUMENTKUTTER)
 			return InstrumentsKutter;
-		if ($instrumentType == InstrumentMaksutov)
+		if ($instrumentType == INSTRUMENTMAKSUTOV)
 			return InstrumentsMaksutov;
 		return "unkown instrument type";
 	}
 	public function getInstrumentEchoListType($type, $disabled = "") {
 		$tempTypeList = "<select name=\"type\" class=\"form-control\" " . $disabled . " >";
-		$tempTypeList .= "<option " . (($type == InstrumentReflector) ? "selected=\"selected\" " : "") . "value=\"" . InstrumentReflector . "\">" . InstrumentsReflector . "</option>";
-		$tempTypeList .= "<option " . (($type == InstrumentRefractor) ? "selected=\"selected\" " : "") . "value=\"" . InstrumentRefractor . "\">" . InstrumentsRefractor . "</option>";
-		$tempTypeList .= "<option " . (($type == InstrumentCassegrain) ? "selected=\"selected\" " : "") . "value=\"" . InstrumentCassegrain . "\">" . InstrumentsCassegrain . "</option>";
-		$tempTypeList .= "<option " . (($type == InstrumentSchmidtCassegrain) ? "selected=\"selected\" " : "") . "value=\"" . InstrumentSchmidtCassegrain . "\">" . InstrumentsSchmidtCassegrain . "</option>";
-		$tempTypeList .= "<option " . (($type == InstrumentKutter) ? "selected=\"selected\" " : "") . "value=\"" . InstrumentKutter . "\">" . InstrumentsKutter . "</option>";
-		$tempTypeList .= "<option " . (($type == InstrumentMaksutov) ? "selected=\"selected\" " : "") . "value=\"" . InstrumentMaksutov . "\">" . InstrumentsMaksutov . "</option>";
-		$tempTypeList .= "<option " . (($type == InstrumentBinoculars) ? "selected=\"selected\" " : "") . "value=\"" . InstrumentBinoculars . "\">" . InstrumentsBinoculars . "</option>";
-		$tempTypeList .= "<option " . (($type == InstrumentFinderscope) ? "selected=\"selected\" " : "") . "value=\"" . InstrumentFinderscope . "\">" . InstrumentsFinderscope . "</option>";
-		$tempTypeList .= "<option " . (($type == InstrumentOther) ? "selected=\"selected\" " : "") . "value=\"" . InstrumentRest . "\">" . InstrumentsOther . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTREFLECTOR) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTREFLECTOR . "\">" . InstrumentsReflector . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTREFRACTOR) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTREFRACTOR . "\">" . InstrumentsRefractor . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTCASSEGRAIN) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTCASSEGRAIN . "\">" . InstrumentsCassegrain . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTSCHMIDTCASSEGRAIN) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTSCHMIDTCASSEGRAIN . "\">" . InstrumentsSchmidtCassegrain . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTKUTTER) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTKUTTER . "\">" . InstrumentsKutter . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTMAKSUTOV) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTMAKSUTOV . "\">" . InstrumentsMaksutov . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTBINOCULARS) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTBINOCULARS . "\">" . InstrumentsBinoculars . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTFINDERSCOPE) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTFINDERSCOPE . "\">" . InstrumentsFinderscope . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTOTHER) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTREST . "\">" . InstrumentsOther . "</option>";
 		$tempTypeList .= "</select>";
 		return $tempTypeList;
 	}
@@ -183,18 +183,18 @@ class Instruments {
 			$instrumentname = htmlspecialchars_decode ( $instrumentname, ENT_QUOTES );
 			$type = htmlspecialchars ( $_POST ['type'] );
 			$diameter = $_POST ['diameter'];
-			if ($objUtil->checkPostKey ( 'fd' ) || $objUtil->checkPostKey ( 'focallength' ) || ($objUtil->checkPostKey ( 'type' ) == InstrumentBinoculars || $objUtil->checkPostKey ( 'type' ) == InstrumentFinderscope)) {
+			if ($objUtil->checkPostKey ( 'fd' ) || $objUtil->checkPostKey ( 'focallength' ) || ($objUtil->checkPostKey ( 'type' ) == INSTRUMENTBINOCULARS || $objUtil->checkPostKey ( 'type' ) == INSTRUMENTFINDERSCOPE)) {
 				$fd = 0;
 				$fixedMagnification = $objUtil->checkPostKey ( 'fixedMagnification' );
 				if ($objUtil->checkPostKey ( 'diameterunits' ) == "inch")
 					$diameter *= 25.4;
-				if ($_POST ['focallength'] && ($_POST ['type'] != InstrumentBinoculars)) {
+				if ($_POST ['focallength'] && ($_POST ['type'] != INSTRUMENTBINOCULARS)) {
 					$focallength = $_POST ['focallength'];
 					if (array_key_exists ( 'focallengthunits', $_POST ) && $_POST ['focallengthunits'] == "inch" && ! array_key_exists ( 'fd', $_POST ))
 						$focallength = $focallength * 25.4;
 					if ($diameter > 0)
 						$fd = $focallength / $diameter;
-				} elseif (array_key_exists ( 'fd', $_POST ) && $_POST ['fd'] && array_key_exists ( 'type', $_POST ) && ($_POST ['type'] != InstrumentBinoculars))
+				} elseif (array_key_exists ( 'fd', $_POST ) && $_POST ['fd'] && array_key_exists ( 'type', $_POST ) && ($_POST ['type'] != INSTRUMENTBINOCULARS))
 					$fd = $objUtil->checkPostKey ( 'fd', 1.0 );
 			}
 			if ($objUtil->checkPostKey ( 'add' )) {

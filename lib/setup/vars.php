@@ -1,58 +1,68 @@
 <?php
-// vars.php
-// contains a series of defines for the project
-global $inIndex, $copyright, $versionInfo, $copyrightInfo;
-if ((! isset ( $inIndex )) || (! $inIndex))
-	include "../../redirect.php";
+/** 
+ * Contains a series of definitions
+ * 
+ * PHP version 7
+ * 
+ * @category Utilities
+ * @package  DeepskyLog
+ * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
+ * @link     http://www.deepslylog.org
+ */
+global $inIndex;
+if ((!isset($inIndex)) || (!$inIndex)) {
+    include "../../redirect.php";
+}
 
-$copyright = "&copy;2004&nbsp;-&nbsp;2018";
-$versionInfo = "2018.3";
-$copyrightInfo = $copyright . ",&nbsp;DeepskyLog developers";
+define("VERSIONINFO", "2018.3");
+define("COPYRIGHTINFO", "&copy;2004&nbsp;-&nbsp;2018 ,&nbsp;DeepskyLog developers");
 
-define ( "AtlasOverviewZoom", 17 );
-define ( "AtlasLookupZoom", 18 );
-define ( "AtlasDetailZoom", 20 );
+define("ATLASOVERVIEWZOOM", 17);
+define("ATLASLOOKUPZOOM", 18);
+define("ATLASDETAILZOOM", 20);
 
-define ( "RoleAdmin", 0 );
-define ( "RoleUser", 1 );
-define ( "RoleWaitlist", 2 );
-define ( "RoleRemoved", 3 );
-define ( "RoleCometAdmin", 4 );
+define("ROLEADMIN", 0);
+define("ROLEUSER", 1);
+define("ROLEWAITLIST", 2);
+define("ROLEREMOVED", 3);
+define("ROLECOMETADMIN", 4);
 
-define ( "InstrumentOther", - 1 );
-define ( "InstrumentNakedEye", 0 );
-define ( "InstrumentBinoculars", 1 );
-define ( "InstrumentRefractor", 2 );
-define ( "InstrumentReflector", 3 );
-define ( "InstrumentFinderscope", 4 );
-define ( "InstrumentRest", 5 );
-define ( "InstrumentCassegrain", 6 );
-define ( "InstrumentKutter", 7 );
-define ( "InstrumentMaksutov", 8 );
-define ( "InstrumentSchmidtCassegrain", 9 );
-define ( "FilterOther", 0 );
-define ( "FilterBroadBand", 1 );
-define ( "FilterNarrowBand", 2 );
-define ( "FilterOIII", 3 );
-define ( "FilterHBeta", 4 );
-define ( "FilterHAlpha", 5 );
-define ( "FilterColor", 6 );
-define ( "FilterNeutral", 7 );
-define ( "FilterCorrective", 8 );
-define ( "FilterColorLightRed", "1" );
-define ( "FilterColorRed", "2" );
-define ( "FilterColorDeepRed", "3" );
-define ( "FilterColorOrange", "4" );
-define ( "FilterColorLightYellow", "5" );
-define ( "FilterColorDeepYellow", "6" );
-define ( "FilterColorYellow", "7" );
-define ( "FilterColorYellowGreen", "8" );
-define ( "FilterColorLightGreen", "9" );
-define ( "FilterColorGreen", "10" );
-define ( "FilterColorMediumBlue", "11" );
-define ( "FilterColorPaleBlue", "12" );
-define ( "FilterColorBlue", "13" );
-define ( "FilterColorDeepBlue", "14" );
-define ( "FilterColorDeepViolet", "15" );
+define("INSTRUMENTOTHER", - 1);
+define("INSTRUMENTNAKEDEYE", 0);
+define("INSTRUMENTBINOCULARS", 1);
+define("INSTRUMENTREFRACTOR", 2);
+define("INSTRUMENTREFLECTOR", 3);
+define("INSTRUMENTFINDERSCOPE", 4);
+define("INSTRUMENTREST", 5);
+define("INSTRUMENTCASSEGRAIN", 6);
+define("INSTRUMENTKUTTER", 7);
+define("INSTRUMENTMAKSUTOV", 8);
+define("INSTRUMENTSCHMIDTCASSEGRAIN", 9);
+
+define("FILTEROTHER", 0);
+define("FILTERBROADBAND", 1);
+define("FILTERNARROWBAND", 2);
+define("FILTEROIII", 3);
+define("FILTERHBETA", 4);
+define("FILTERHALPHA", 5);
+define("FILTERCOLOR", 6);
+define("FILTERNEUTRAL", 7);
+define("FILTERCORRECTIVE", 8);
+define("FILTERCOLORLIGHTRED", "1");
+define("FILTERCOLORRED", "2");
+define("FILTERCOLORDEEPRED", "3");
+define("FILTERCOLORORANGE", "4");
+define("FILTERCOLORLIGHTYELLOW", "5");
+define("FILTERCOLORDEEPYELLOW", "6");
+define("FILTERCOLORYELLOW", "7");
+define("FILTERCOLORYELLOWGREEN", "8");
+define("FILTERCOLORLIGHTGREEN", "9");
+define("FILTERCOLORGREEN", "10");
+define("FILTERCOLORMEDIUMBLUE", "11");
+define("FILTERCOLORPALEBLUE", "12");
+define("FILTERCOLORBLUE", "13");
+define("FILTERCOLORDEEPBLUE", "14");
+define("FILTERCOLORDEEPVIOLET", "15");
 
 ?>

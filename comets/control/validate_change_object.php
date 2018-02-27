@@ -26,7 +26,7 @@ function validate_change_object()
 	
 	    $role = $objObserver->getObserverProperty($loggedUser,'role',2);
 	
-	    if ($role == RoleAdmin || $role == RoleCometAdmin)
+	    if ($role == ROLEADMIN || $role == ROLECOMETADMIN)
 	    {
 	      $name = $_POST['name'];
 	      $icqname = $_POST['icqname'];

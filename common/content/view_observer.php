@@ -224,17 +224,17 @@ function view_observer() {
 	         <label for=\"role\" class=\"col-sm-2 control-label\">" . LangViewObserverRole . "</label>
 	         <div class=\"col-sm-3\">
 	         		<select name=\"role\" class=\"form-control\">
- 	            <option " . (($objObserver->getObserverProperty ( $user, 'role', 2 ) == RoleAdmin) ? "selected=\"selected\"" : "") . " value=\"0\">" . LangViewObserverAdmin . "</option>
- 	            <option " . (($objObserver->getObserverProperty ( $user, 'role', 2 ) == RoleUser) ? "selected=\"selected\"" : "") . " value=\"1\">" . LangViewObserverUser . "</option>
- 	            <option " . (($objObserver->getObserverProperty ( $user, 'role', 2 ) == RoleCometAdmin) ? "selected=\"selected\"" : "") . " value=\"4\">" . LangViewObserverCometAdmin . "</option>
- 	            <option " . (($objObserver->getObserverProperty ( $user, 'role', 2 ) == RoleWaitlist) ? "selected=\"selected\"" : "") . " value=\"2\">" . LangViewObserverWaitlist . "</option>
+ 	            <option " . (($objObserver->getObserverProperty ( $user, 'role', 2 ) == ROLEADMIN) ? "selected=\"selected\"" : "") . " value=\"0\">" . LangViewObserverAdmin . "</option>
+ 	            <option " . (($objObserver->getObserverProperty ( $user, 'role', 2 ) == ROLEUSER) ? "selected=\"selected\"" : "") . " value=\"1\">" . LangViewObserverUser . "</option>
+ 	            <option " . (($objObserver->getObserverProperty ( $user, 'role', 2 ) == ROLECOMETADMIN) ? "selected=\"selected\"" : "") . " value=\"4\">" . LangViewObserverCometAdmin . "</option>
+ 	            <option " . (($objObserver->getObserverProperty ( $user, 'role', 2 ) == ROLEWAITLIST) ? "selected=\"selected\"" : "") . " value=\"2\">" . LangViewObserverWaitlist . "</option>
  	          </select>&nbsp;
            </div>
            <div class=\"col-sm-2\">
                 <button type=\"submit\" class=\"btn btn-default\" name=\"change\">" . LangViewObserverChange . "</button>
            </div>
 	        </div>";
-		} elseif ($objObserver->getObserverProperty ( $user, 'role', 2 ) == RoleWaitlist) {
+		} elseif ($objObserver->getObserverProperty ( $user, 'role', 2 ) == ROLEWAITLIST) {
 			echo "<div class=\"form-group\">";
 			echo "<label class=\"col-sm-2 control-label\">" . LangViewObserverRole . "</label>";
 			echo "<div class=\"col-sm-5\">" . LangViewObserverWaitlist;

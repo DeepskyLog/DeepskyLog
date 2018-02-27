@@ -525,29 +525,29 @@ function addXmlObservations()
                 if ($scope->getElementsByTagName("focalLength")->item(0)) {
                     $type = $scope->getElementsByTagName("type")->item(0)->nodeValue;
                     if ($type == "A" || $type == "Naked Eye") {
-                        $typeToSave = InstrumentNakedEye;
+                        $typeToSave = INSTRUMENTNAKEDEYE;
                     } else if ($type == "B" || $type == "Binoculars") {
-                        $typeToSave = InstrumentBinoculars;
+                        $typeToSave = INSTRUMENTBINOCULARS;
                     } else if ($type == "R" || $type == "Refractor") {
-                        $typeToSave = InstrumentRefractor;
+                        $typeToSave = INSTRUMENTREFRACTOR;
                     } else if ($type == "N" || $type == "Newton") {
-                        $typeToSave = InstrumentReflector;
+                        $typeToSave = INSTRUMENTREFLECTOR;
                     } else if ($type == "C" || $type == "Cassegrain") {
-                        $typeToSave = InstrumentCassegrain;
+                        $typeToSave = INSTRUMENTCASSEGRAIN;
                     } else if ($type == "K" || $type == "Kutter") {
-                        $typeToSave = InstrumentKutter;
+                        $typeToSave = INSTRUMENTKUTTER;
                     } else if ($type == "M" || $type == "Maksutov") {
-                        $typeToSave = InstrumentMaksutov;
+                        $typeToSave = INSTRUMENTMAKSUTOV;
                     } else if ($type == "S" || $type == "Schmidt-Cassegrain") {
-                        $typeToSave = InstrumentSchmidtCassegrain;
+                        $typeToSave = INSTRUMENTSCHMIDTCASSEGRAIN;
                     } else {
-                        $typeToSave = InstrumentOther;
+                        $typeToSave = INSTRUMENTOTHER;
                     }
                 } else {
-                    $typeToSave = InstrumentOther;
+                    $typeToSave = INSTRUMENTOTHER;
                 }
             } else {
-                $typeToSave = InstrumentBinoculars;
+                $typeToSave = INSTRUMENTBINOCULARS;
             }
             $scopeInfoArray["type"] = $typeToSave;
 

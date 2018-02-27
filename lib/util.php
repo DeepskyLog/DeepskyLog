@@ -811,23 +811,23 @@ class Utils
                         $typeLong = "oal:scopeType";
                     }
                     $tp = $GLOBALS ['objInstrument']->getInstrumentPropertyFromId($value, 'type');
-                    if ($tp == InstrumentOther || $tp == InstrumentRest) {
+                    if ($tp == INSTRUMENTOTHER || $tp == INSTRUMENTREST) {
                         $typeShort = "";
-                    } else if ($tp == InstrumentNakedEye) {
+                    } else if ($tp == INSTRUMENTNAKEDEYE) {
                         $typeShort = "A";
-                    } else if ($tp == InstrumentBinoculars || $tp == InstrumentFinderscope) {
+                    } else if ($tp == INSTRUMENTBINOCULARS || $tp == INSTRUMENTFINDERSCOPE) {
                         $typeShort = "B";
-                    } else if ($tp == InstrumentRefractor) {
+                    } else if ($tp == INSTRUMENTREFRACTOR) {
                         $typeShort = "R";
-                    } else if ($tp == InstrumentReflector) {
+                    } else if ($tp == INSTRUMENTREFLECTOR) {
                         $typeShort = "N";
-                    } else if ($tp == InstrumentCassegrain) {
+                    } else if ($tp == INSTRUMENTCASSEGRAIN) {
                         $typeShort = "C";
-                    } else if ($tp == InstrumentKutter) {
+                    } else if ($tp == INSTRUMENTKUTTER) {
                         $typeShort = "K";
-                    } else if ($tp == InstrumentMaksutov) {
+                    } else if ($tp == INSTRUMENTMAKSUTOV) {
                         $typeShort = "M";
-                    } else if ($tp == InstrumentSchmidtCassegrain) {
+                    } else if ($tp == INSTRUMENTSCHMIDTCASSEGRAIN) {
                         $typeShort = "S";
                     }
 
@@ -1329,9 +1329,9 @@ class Utils
         $dom->formatOutput = true; // set the formatOutput attribute of
                                    // domDocument to true
                                    // save XML as string or file
-        $test1 = $dom->saveXML();  // put string in test1
+        $xmloutput = $dom->saveXML();  // put string in test1
 
-        print $test1;
+        print $xmloutput;
     }
 
      /**

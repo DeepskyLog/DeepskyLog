@@ -1,14 +1,15 @@
 <?php
 // overview_instruments.php
 // generates an overview of all instruments (admin only)
-if ((! isset ( $inIndex )) || (! $inIndex))
-	include "../../redirect.php";
-elseif (! $loggedUser)
-	throw new Exception ( LangException002 );
-elseif ($_SESSION ['admin'] != "yes")
-	throw new Exception ( LangException001 );
-else
-	overview_instruments ();
+if ((! isset ( $inIndex )) || (! $inIndex)) {
+    include "../../redirect.php";
+} elseif (! $loggedUser) {
+    throw new Exception ( LangException002 );
+} elseif ($_SESSION ['admin'] != "yes") {
+    throw new Exception ( LangException001 );
+} else {
+    overview_instruments ();
+}
 function overview_instruments() {
 	global $baseURL, $step, $min, $objInstrument, $objObserver, $objPresentations, $objUtil;
 	$telescopes = $objInstrument->getSortedInstruments ( 'name', '%' );
@@ -46,31 +47,31 @@ function overview_instruments() {
 		echo "<td>$fd</td>";
 		echo "<td>$fixedMagnification</td>";
 		echo "<td>";
-		if ($type == InstrumentReflector) {
+		if ($type == INSTRUMENTREFLECTOR) {
 			echo (InstrumentsReflector);
 		}
-		if ($type == InstrumentFinderscope) {
+		if ($type == INSTRUMENTFINDERSCOPE) {
 			echo (InstrumentsFinderscope);
 		}
-		if ($type == InstrumentRefractor) {
+		if ($type == INSTRUMENTREFRACTOR) {
 			echo (InstrumentsRefractor);
 		}
-		if ($type == InstrumentRest) {
+		if ($type == INSTRUMENTREST) {
 			echo (InstrumentsOther);
 		}
-		if ($type == InstrumentBinoculars) {
+		if ($type == INSTRUMENTBINOCULARS) {
 			echo (InstrumentsBinoculars);
 		}
-		if ($type == InstrumentCassegrain) {
+		if ($type == INSTRUMENTCASSEGRAIN) {
 			echo (InstrumentsCassegrain);
 		}
-		if ($type == InstrumentSchmidtCassegrain) {
+		if ($type == INSTRUMENTSCHMIDTCASSEGRAIN) {
 			echo (InstrumentsSchmidtCassegrain);
 		}
-		if ($type == InstrumentKutter) {
+		if ($type == INSTRUMENTKUTTER) {
 			echo (InstrumentsKutter);
 		}
-		if ($type == InstrumentMaksutov) {
+		if ($type == INSTRUMENTMAKSUTOV) {
 			echo (InstrumentsMaksutov);
 		}
 		echo "</td>";
