@@ -25,7 +25,6 @@ define("ATLASDETAILZOOM", 20);
 define("ROLEADMIN", 0);
 define("ROLEUSER", 1);
 define("ROLEWAITLIST", 2);
-define("ROLEREMOVED", 3);
 define("ROLECOMETADMIN", 4);
 
 define("INSTRUMENTOTHER", - 1);

@@ -1862,6 +1862,7 @@ class Observations
                 $this->getDsObservationProperty($id, 'locationid'), 'timezone'
             );
 
+            $time = intval($time / 100) . ":" . ($time % 100);        
             $date = new DateTime(
                 $date . " " . $time, new DateTimeZone($timezone)
             );
