@@ -42,17 +42,17 @@ function overview_observers() {
 		echo "<td> <a href=\"mailto:" . $value ['email'] . "\"> " . $value ['email'] . " </a> </td>";
 		echo "<td>" . $value ['registrationDate'] . " </td>";
 		$role = $objObserver->getObserverProperty ( $value ['id'], 'role', 2 );
-		if ($role == RoleAdmin)
+		if ($role == ROLEADMIN)
 			echo "<td> " . LangViewObserverAdmin . "</td><td></td>";
-		elseif ($role == RoleUser) {
+		elseif ($role == ROLEUSER) {
 			echo "<td> " . LangViewObserverUser . "</td>";
 			if ($value ['maxMax'])
 				echo "<td class=\"centered\">niet verwijderbaar</td>";
 			else
 				echo "<td class=\"centered\"><a href=\"" . $baseURL . "index.php?indexAction=validate_delete_observer&amp;validateDelete=" . urlencode ( $value ['id'] ) . "\">" . "Verwijder" . "</a></td>";
-		} elseif ($role == RoleCometAdmin)
+		} elseif ($role == ROLECOMETADMIN)
 			echo "<td> " . LangViewObserverCometAdmin . "</td><td></td>";
-		elseif ($role == RoleWaitlist)
+		elseif ($role == ROLEWAITLIST)
 			echo "<td> " . LangViewObserverWaitlist . "</td><td class=\"centered\"><a href=\"" . $baseURL . "index.php?indexAction=validate_observer&amp;validate=" . urlencode ( $value ['id'] ) . "\">" . LangViewObserverValidate . "</a> / <a href=\"" . $baseURL . "index.php?indexAction=validate_delete_observer&amp;validateDelete=" . urlencode ( $value ['id'] ) . "\">" . "Verwijder" . "</a></td>";
 		echo "<td>" . $value ['obsCount'] . " </td>";
 		echo "<td>" . $value ['cometobsCount'] . " </td>";

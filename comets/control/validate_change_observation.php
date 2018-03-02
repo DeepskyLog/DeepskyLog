@@ -24,7 +24,7 @@ function validate_change_observation()
 	elseif($_POST['observation']) // all fields filled in and observationid given
 	{ // only admins may change a comet observation
 	  $role = $objObserver->getObserverProperty($loggedUser,'role',2);
-	  if(($role==RoleAdmin)||($role==RoleCometAdmin)||($loggedUser == $objCometObservation->getObserverId($_POST['observation'])))
+	  if(($role==ROLEADMIN)||($role==ROLECOMETADMIN)||($loggedUser == $objCometObservation->getObserverId($_POST['observation'])))
 	  { $date = $_POST['year'] . sprintf("%02d", $_POST['month']) . sprintf("%02d", $_POST['day']);
 	    $time = ($_POST['hours'] * 100) + $_POST['minutes'];
 	    $objCometObservation->setDescription($_POST['observation'], nl2br(htmlentities($_POST['description'])));

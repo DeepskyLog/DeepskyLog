@@ -22,9 +22,9 @@ function dsatlas()
 	echo "<script type=\"text/javascript\">";
 	echo "this.theobject='".$object."';";
 	echo "this.atlaspagerahr=".$ra.";this.atlaspagedecldeg=".$decl.";";
-	echo "this.AtlasOverviewZoom=".AtlasOverviewZoom.";";
-	echo "this.AtlasLookupZoom=".AtlasLookupZoom.";";
-	echo "this.AtlasDetailZoom=".AtlasDetailZoom.";";
+	echo "this.ATLASOVERVIEWZOOM=".ATLASOVERVIEWZOOM.";";
+	echo "this.ATLASLOOKUPZOOM=".ATLASLOOKUPZOOM.";";
+	echo "this.ATLASDETAILZOOM=".ATLASDETAILZOOM.";";
 	while(list($name,$value)=each($atlasPageText))
 	  echo $name."='".$value."';";
 	echo "</script>";	
