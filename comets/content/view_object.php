@@ -18,7 +18,7 @@ function view_object() {
 	// Check if there is an observer
 	if (array_key_exists ( 'deepskylog_id', $_SESSION )) {
 		// Check if this observer is cometadministrator
-		if ($objObserver->getObserverProperty ( $_SESSION ['deepskylog_id'], "role" ) == RoleCometAdmin || $objObserver->getObserverProperty ( $_SESSION ['deepskylog_id'], "role" ) == RoleAdmin) {
+		if ($objObserver->getObserverProperty ( $_SESSION ['deepskylog_id'], "role" ) == ROLECOMETADMIN || $objObserver->getObserverProperty ( $_SESSION ['deepskylog_id'], "role" ) == ROLEADMIN) {
 			$admin = true;
 		}
 	}

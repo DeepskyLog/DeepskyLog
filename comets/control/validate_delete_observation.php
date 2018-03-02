@@ -22,7 +22,7 @@ function validate_delete_observation()
 	  // only admins may delete a comet observation
 	  $role = $objObserver->getObserverProperty($_SESSION['deepskylog_id'],'role',2);
 
-	  if ($role == RoleAdmin || $role == RoleCometAdmin || $loggedUser == $cometobservations->getObserverId($_GET['observationid']))
+	  if ($role == ROLEADMIN || $role == ROLECOMETADMIN || $loggedUser == $cometobservations->getObserverId($_GET['observationid']))
 	  {
 	    $cometobservations->deleteObservation($_GET['observationid']);
 			unset($_SESSION['deepskylog_id']);
