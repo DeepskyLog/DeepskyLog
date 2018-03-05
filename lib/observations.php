@@ -394,7 +394,7 @@ class Observations
                             ), 
                             htmlentities(trim($parts_array[$i][12])), 
                             ((trim($parts_array[$i][6]) != "") 
-                                ? eyepieceProp : 0), 
+                                ? $eyepieceProp : 0), 
                             ((trim($parts_array[$i][7]) != "") 
                                 ? Nz0(
                                     $objFilter->getFilterObserverPropertyFromName(
