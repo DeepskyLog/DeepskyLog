@@ -195,7 +195,7 @@ class Observations
 
             // Check for the correctness of dates
             for ($i = 0, $j = 0, $k = 0; $i < count($dates); $i++) {
-                $parsed_date = date_parse($dates[$i]);
+                $parsed_date = date_parse_from_format("d-m-Y", $dates[$i]);
 
                 if ($parsed_date["error_count"] > 0 || $parsed_date["year"] < 1900) {
                     if (!in_array(trim($dates[$i]), $wrongDates)) {
@@ -359,7 +359,7 @@ class Observations
                             ), $loggedUser
                         );
 
-                        $parsed_date = date_parse($dates[$i]);
+                        $parsed_date = date_parse_from_format("d-m-Y", $dates[$i]);
                         $date = sprintf(
                             "%04d%02d%02d", $parsed_date["year"], 
                             $parsed_date["month"], $parsed_date["day"]
@@ -394,7 +394,7 @@ class Observations
                             ), 
                             htmlentities(trim($parts_array[$i][12])), 
                             ((trim($parts_array[$i][6]) != "") 
-                                ? eyepieceProp : 0), 
+                                ? $eyepieceProp : 0), 
                             ((trim($parts_array[$i][7]) != "") 
                                 ? Nz0(
                                     $objFilter->getFilterObserverPropertyFromName(
