@@ -16,3 +16,4 @@
 | bootstrap-maxlength | 1.7.0 | 27/05/2016 | |
 | phpjs | ? | ? | CHECK if we still need this. Remove if possible. |
 | class.pdf.php | ? | ? | CHECK if we can update this to a newer version. |
+| pdf-php | 0.12.43 | 20/04/2018 | |

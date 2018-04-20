@@ -83,8 +83,8 @@ function preludesB() {
 	include_once "lib/moonphase.inc.php";
 	include_once "lib/printatlas.php";
 	$objPrintAtlas = new PrintAtlas ();
-	include_once "lib/class.pdf.php";
-	include_once "lib/class.ezpdf.php";
+	include_once "lib/Cpdf.php";
+	include_once "lib/Cezpdf.php";
 	include_once "lib/icqmethod.php";
 	include_once "lib/icqreferencekey.php";
 
