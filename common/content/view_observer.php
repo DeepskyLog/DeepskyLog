@@ -1,59 +1,102 @@
 <?php
-// view_observer.php
-// shows information of an observer
-if ((! isset ( $inIndex )) || (! $inIndex))
+/** 
+ * Shows information of an observer.
+ * 
+ * PHP Version 7
+ * 
+ * @category Utilities/Common
+ * @package  DeepskyLog
+ * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
+ * @link     http://www.deepslylog.org
+ */
+if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
-elseif (! ($user = $objUtil->checkGetKey ( 'user' )))
-    throw new Exception ( LangException015b );
-else
-    view_observer ();
-function view_observer() {
-    global $user, $modules, $deepsky, $comets, $baseURL, $instDir, $loggedUser, $objDatabase, $objAccomplishments, $objInstrument, $objPresentations, $objObservation, $objUtil, $objCometObservation, $objObserver, $objLocation;
-    $name = $objObserver->getObserverProperty($user, 'name');
-    $firstname = $objObserver->getObserverProperty ( $user, 'firstname' );
-    $location_id = $objObserver->getObserverProperty ( $user, 'stdlocation' );
-    $location_name = $objLocation->getLocationPropertyFromId ( $location_id, 'name' );
-    $instrumentname = $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $user, 'stdtelescope' ), 'name' );
-    $userDSobservation = $objObserver->getNumberOfDsObservations ( $user );
-    $totalDSObservations = $objObservation->getNumberOfDsObservations ();
-    $userDSYearObservations = $objObservation->getObservationsLastYear ( $user );
-    $totalDSYearObservations = $objObservation->getObservationsLastYear ( '%' );
-    $userDSObjects = $objObservation->getNumberOfObjects ( $user );
-    $totalDSobjects = $objObservation->getNumberOfDifferentObservedDSObjects ();
-    $userMobjects = $objObservation->getObservedCountFromCatalogOrList ( $user, "M" );
-    $userCaldwellObjects = $objObservation->getObservedCountFromCatalogOrList ( $user, "Caldwell" );
-    $userH400objects = $objObservation->getObservedCountFromCatalogOrList ( $user, "H400" );
-    $userHIIobjects = $objObservation->getObservedCountFromCatalogOrList ( $user, "HII" );
-    $userDSrank = $objObserver->getDsRank ( $user );
-    if ($userDSrank === false)
-        $userDSrank = "-";
-    else
-        $userDSrank ++;
-    $userCometobservation = $objObserver->getNumberOfCometObservations ( $user );
-    $totalCometObservations = $objCometObservation->getNumberOfObservations ();
-    $userCometYearObservations = $objCometObservation->getObservationsThisYear ( $user );
-    $totalCometYearObservations = $objCometObservation->getNumberOfObservationsThisYear ();
-    $userCometObjects = $objCometObservation->getNumberOfObjects ( $user );
-    $totalCometobjects = $objCometObservation->getNumberOfDifferentObjects ();
-    $cometrank = $objObserver->getCometRank ( $user );
-    if ($cometrank === false)
-        $cometrank = "-";
-    else
-        $cometrank ++;
+} elseif (!($user = $objUtil->checkGetKey('user'))) {
+    throw new Exception(LangException015b);
+} else {
+    viewObserver();
+}
 
-    for($i = 0; $i < count ( $modules ); $i ++) {
-        if (strcmp ( ${$modules [$i]}, $deepsky ) == 0) {
+/** 
+ * Shows the page with all information, stars and statistic of the observer.
+ * The observer also can change some settings.
+ * 
+ * @return None
+ */
+function viewObserver()
+{
+    global $user, $modules, $deepsky, $comets, $baseURL, $instDir, $loggedUser;
+    global $objDatabase, $objAccomplishments, $objInstrument, $objPresentations;
+    global $objObservation, $objUtil, $objCometObservation, $objObserver;
+    global $objLocation;
+
+    $name = $objObserver->getObserverProperty($user, 'name');
+    $firstname = $objObserver->getObserverProperty($user, 'firstname');
+    $location_id = $objObserver->getObserverProperty($user, 'stdlocation');
+    $location_name = $objLocation->getLocationPropertyFromId($location_id, 'name');
+    $instrumentname = $objInstrument->getInstrumentPropertyFromId(
+        $objObserver->getObserverProperty($user, 'stdtelescope'), 'name' 
+    );
+    $userDSobservation = $objObserver->getNumberOfDsObservations($user);
+    $totalDSObservations = $objObservation->getNumberOfDsObservations();
+    $userDSYearObservations = $objObservation->getObservationsLastYear($user);
+    $totalDSYearObservations = $objObservation->getObservationsLastYear('%');
+    $userDSObjects = $objObservation->getNumberOfObjects($user);
+    $totalDSobjects = $objObservation->getNumberOfDifferentObservedDSObjects();
+    $userMobjects = $objObservation->getObservedCountFromCatalogOrList($user, "M");
+    $userCaldwellObjects = $objObservation->getObservedCountFromCatalogOrList($user, "Caldwell");
+    $userH400objects = $objObservation->getObservedCountFromCatalogOrList($user, "H400");
+    $userHIIobjects = $objObservation->getObservedCountFromCatalogOrList($user, "HII");
+    $userDSrank = $objObserver->getDsRank($user);
+    if ($userDSrank === false) {
+        $userDSrank = "-";
+    } else {
+        $userDSrank ++;
+    }
+    $userCometobservation = $objObserver->getNumberOfCometObservations($user);
+    $totalCometObservations = $objCometObservation->getNumberOfObservations();
+    $userCometYearObservations = $objCometObservation->getObservationsThisYear($user);
+    $totalCometYearObservations = $objCometObservation->getNumberOfObservationsThisYear();
+    $userCometObjects = $objCometObservation->getNumberOfObjects($user);
+    $totalCometobjects = $objCometObservation->getNumberOfDifferentObjects();
+    $cometrank = $objObserver->getCometRank($user);
+    if ($cometrank === false) {
+        $cometrank = "-";
+    } else {
+        $cometrank ++;
+    }
+
+    for ($i = 0; $i < count($modules); $i ++) {
+        if (strcmp(${$modules[$i]}, $deepsky) == 0) {
             $key = $i;
-            $information [$i] [0] = $userDSobservation . " / " . $totalDSObservations . "&nbsp;(" . sprintf ( "%.2f", ($userDSobservation / $totalDSObservations) * 100 ) . "%)";
-            $information [$i] [1] = $userDSYearObservations . " / " . $totalDSYearObservations . "&nbsp;(" . sprintf ( "%.2f", $userDSYearObservations / $totalDSYearObservations * 100 ) . "%)";
-            $information [$i] [2] = $userDSObjects . " / " . $totalDSobjects . "&nbsp;(" . sprintf ( "%.2f", $userDSObjects / $totalDSobjects * 100 ) . "%)";
-            $information [$i] [4] = $userDSrank;
+            $information[$i][0] = $userDSobservation . " / " 
+                . $totalDSObservations 
+                . "&nbsp;(" 
+                . sprintf("%.2f", ($userDSobservation / $totalDSObservations) * 100) 
+                . "%)";
+            $information[$i][1] = $userDSYearObservations . " / " 
+                . $totalDSYearObservations . "&nbsp;(" 
+                . sprintf("%.2f", $userDSYearObservations / $totalDSYearObservations * 100)
+                . "%)";
+            $information[$i][2] = $userDSObjects . " / " . $totalDSobjects . "&nbsp;(" 
+                . sprintf("%.2f", $userDSObjects / $totalDSobjects * 100) . "%)";
+            $information[$i][4] = $userDSrank;
         }
-        if (strcmp ( ${$modules [$i]}, $comets ) == 0) {
-            $information [$i] [0] = $userCometobservation . " / " . $totalCometObservations . " (" . sprintf ( "%.2f", $userCometobservation / $totalCometObservations * 100 ) . "%)";
-            $information [$i] [1] = $userCometYearObservations . " / " . $totalCometYearObservations . "&nbsp;(" . sprintf ( "%.2f", $userCometYearObservations / ($totalCometYearObservations ? $totalCometYearObservations : 1) * 100 ) . "%)";
-            $information [$i] [2] = $userCometObjects . " / " . $totalCometobjects . " (" . sprintf ( "%.2f", $userCometObjects / $totalCometobjects * 100 ) . "%)";
-            $information [$i] [4] = $cometrank;
+        if (strcmp(${$modules[$i]}, $comets) == 0) {
+            $information[$i][0] = $userCometobservation . " / " 
+                . $totalCometObservations . " (" 
+                . sprintf("%.2f", $userCometobservation / $totalCometObservations * 100)
+                . "%)";
+            $information[$i][1] = $userCometYearObservations . " / " 
+                . $totalCometYearObservations . "&nbsp;(" 
+                . sprintf("%.2f", $userCometYearObservations / ($totalCometYearObservations ? $totalCometYearObservations : 1) * 100) 
+                . "%)";
+            $information[$i][2] = $userCometObjects . " / " 
+                . $totalCometobjects . " (" 
+                . sprintf("%.2f", $userCometObjects / $totalCometobjects * 100) 
+                . "%)";
+            $information[$i][4] = $cometrank;
         }
     }
     echo "<div>";
@@ -71,7 +114,7 @@ function view_observer() {
 
     echo "<div id=\"my-tab-content\" class=\"tab-content\">";
     echo "<div class=\"tab-pane active\" id=\"info\">";
-    if (array_key_exists ( 'admin', $_SESSION ) && ($_SESSION ['admin'] == "yes")) {
+    if (array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes")) {
         // admin logged in
         echo "<br />";
         echo "<form class=\"form-horizontal\" role=\"form\" action=\"" . $baseURL . "index.php\" >";
@@ -80,25 +123,28 @@ function view_observer() {
         echo "<input type=\"hidden\" name=\"user\" value=\"" . $user . "\" />";
         echo "<div class=\"form-group\">";
         echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField1 . "</label>";
-        echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">" . $objObserver->getObserverProperty ( $user, 'id' ) . "</p>";
+        echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">" . $objObserver->getObserverProperty($user, 'id') . "</p>";
         echo "</div></div>";
         echo "<div class=\"form-group\">
              <label for=\"email\" class=\"col-sm-2 control-label\">" . LangChangeAccountField2 . "</label>
              <div class=\"col-sm-5\">
-              <input type=\"email\" name=\"email\" class=\"form-control\" id=\"email\" value=\"" . $objObserver->getObserverProperty ( $user, 'email' ) . "\">
+              <input type=\"email\" name=\"email\" class=\"form-control\" id=\"email\" value=\"" 
+              . $objObserver->getObserverProperty($user, 'email') . "\">
            </div>
             </div>";
         echo "<div class=\"form-group\">
              <label for=\"firstname\" class=\"col-sm-2 control-label\">" . LangChangeAccountField3 . "</label>
              <div class=\"col-sm-5\">
-              <input type=\"text\" name=\"firstname\" class=\"form-control\" id=\"firstname\" value=\"" . $objObserver->getObserverProperty ( $user, 'firstname' ) . "\">
+              <input type=\"text\" name=\"firstname\" class=\"form-control\" id=\"firstname\" value=\"" 
+              . $objObserver->getObserverProperty($user, 'firstname') . "\">
                      </div>
                         <input type=\"submit\" class=\"btn btn-danger\" name=\"change_email_name_firstname\" value=\"".LangViewObserverChangeNameFirstname."\" />
             </div>";
         echo "<div class=\"form-group\">
              <label for=\"name\" class=\"col-sm-2 control-label\">" . LangChangeAccountField4 . "</label>
              <div class=\"col-sm-5\">
-              <input type=\"text\" name=\"name\" class=\"form-control\" id=\"name\" value=\"" . $objObserver->getObserverProperty ( $user, 'name' ) . "\">
+              <input type=\"text\" name=\"name\" class=\"form-control\" id=\"name\" value=\"" 
+              . $objObserver->getObserverProperty($user, 'name') . "\">
            </div>
             </div>";
         echo "<div class=\"form-group\">
@@ -112,14 +158,18 @@ function view_observer() {
             </div>";
         echo "<div class=\"form-group\">";
         echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField7 . "</label>";
-        echo "<div class=\"col-sm-5\"><p class=\"form-control-static\"><a href=\"" . $baseURL . "index.php?indexAction=detail_location&amp;location=" . urlencode ( $location_id ) . "\">" . $location_name . "</a></p>";
+        echo "<div class=\"col-sm-5\"><p class=\"form-control-static\"><a href=\"" 
+            . $baseURL . "index.php?indexAction=detail_location&amp;location=" 
+            . urlencode($location_id) . "\">" . $location_name . "</a></p>";
         echo "</div></div>";
         echo "<div class=\"form-group\">";
         echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField8 . "</label>";
         // Here, we set the name of the default instrument. For the current user, we need to make it possible to change the default instrument.
         echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">";
         if ($instrumentname) {
-            echo "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $objObserver->getObserverProperty ( $user, 'stdtelescope' ) ) . "\">" . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>";
+            echo "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" 
+                . urlencode($objObserver->getObserverProperty($user, 'stdtelescope')) 
+                . "\">" . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>";
         } else {
             echo "";
         }
@@ -129,35 +179,37 @@ function view_observer() {
         echo "<table class=\"table table-striped\">";
         echo " <tr>
                 <td>" . LangChangeAccountField3 . "</td>
-                <td>" . $objObserver->getObserverProperty ( $user, 'firstname' ) . "</td>
+                <td>" . $objObserver->getObserverProperty($user, 'firstname') . "</td>
                </tr>";
 
         echo " <tr>
                 <td>" . LangChangeAccountField4 . "</td>
-                <td>" . $objObserver->getObserverProperty ( $user, 'name' ) . "</td>
+                <td>" . $objObserver->getObserverProperty($user, 'name') . "</td>
                </tr>";
         // Setting the default location
         echo " <tr>
                 <td>" . LangChangeAccountField7 . "</td>";
         echo "<td>";
         if ($loggedUser == $user) {
-            if (array_key_exists ( 'activeLocationId', $_GET ) && $_GET ['activeLocationId']) {
-                $objObserver->setObserverProperty ( $loggedUser, 'stdlocation', $_GET ['activeLocationId'] );
-                if (array_key_exists ( 'Qobj', $_SESSION ))
-                    $_SESSION ['Qobj'] = $objObject->getObjectVisibilities ( $_SESSION ['Qobj'] );
+            if (array_key_exists('activeLocationId', $_GET) && $_GET['activeLocationId']) {
+                $objObserver->setObserverProperty($loggedUser, 'stdlocation', $_GET['activeLocationId']);
+                if (array_key_exists('Qobj', $_SESSION)) {
+                    $_SESSION ['Qobj'] = $objObject->getObjectVisibilities($_SESSION['Qobj']);
+                }
             }
-            $result = $objLocation->getSortedLocations ( 'name', $loggedUser, 1 );
-            $loc = $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' );
+            $result = $objLocation->getSortedLocations('name', $loggedUser, 1);
+            $loc = $objObserver->getObserverProperty($loggedUser, 'stdlocation');
 
             if ($result) {
                 echo "<div class=\"btn-group\">
                   <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">
-                    " . $objLocation->getLocationPropertyFromId ( $loc, 'name' ) . "&nbsp;<span class=\"caret\"></span>";
+                    " . $objLocation->getLocationPropertyFromId($loc, 'name') . "&nbsp;<span class=\"caret\"></span>";
                 echo "</button> <ul class=\"dropdown-menu\">";
 
                 $url = $baseURL . "index.php?indexAction=detail_observer&user=" . $loggedUser;
-                while ( list ( $key, $value ) = each ( $result ) ) {
-                    echo "  <li><a href=\"" . $url . "&amp;activeLocationId=" . $value . "\">" . $objLocation->getLocationPropertyFromId ( $value, 'name' ) . "</a></li>";
+                while (list($key, $value) = each($result)) {
+                    echo "  <li><a href=\"" . $url . "&amp;activeLocationId=" . $value . "\">" 
+                        . $objLocation->getLocationPropertyFromId($value, 'name') . "</a></li>";
                 }
 
                 echo " </ul>";
@@ -166,7 +218,8 @@ function view_observer() {
             }
             echo "</td>";
         } else {
-            echo "<a href=\"" . $baseURL . "index.php?indexAction=detail_location&amp;location=" . urlencode ( $location_id ) . "\">" . $location_name . "</a>
+            echo "<a href=\"" . $baseURL . "index.php?indexAction=detail_location&amp;location=" 
+                . urlencode($location_id) . "\">" . $location_name . "</a>
               </td>
              </tr>";
         }
@@ -175,23 +228,26 @@ function view_observer() {
               <td>" . LangChangeAccountField8 . "</td>";
         echo "<td>";
         if ($loggedUser == $user) {
-            if (array_key_exists ( 'activeTelescopeId', $_GET ) && $_GET ['activeTelescopeId']) {
-                $objObserver->setObserverProperty ( $loggedUser, 'stdtelescope', $_GET ['activeTelescopeId'] );
-                if (array_key_exists ( 'Qobj', $_SESSION ))
-                    $_SESSION ['Qobj'] = $objObject->getObjectVisibilities ( $_SESSION ['Qobj'] );
+            if (array_key_exists('activeTelescopeId', $_GET) && $_GET['activeTelescopeId']) {
+                $objObserver->setObserverProperty($loggedUser, 'stdtelescope', $_GET['activeTelescopeId']);
+                if (array_key_exists('Qobj', $_SESSION))
+                    $_SESSION['Qobj'] = $objObject->getObjectVisibilities($_SESSION ['Qobj']);
             }
-            $result = $objInstrument->getSortedInstruments ( 'name', $loggedUser, 1 );
-            $inst = $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' );
+            $result = $objInstrument->getSortedInstruments('name', $loggedUser, 1);
+            $inst = $objObserver->getObserverProperty($loggedUser, 'stdtelescope');
 
             if ($result) {
                 echo "<div class=\"btn-group\">
                   <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">
-                    " . $objInstrument->getInstrumentPropertyFromId ( $inst, 'name' ) . "&nbsp;<span class=\"caret\"></span>";
+                    " . $objInstrument->getInstrumentPropertyFromId($inst, 'name') 
+                    . "&nbsp;<span class=\"caret\"></span>";
                 echo "</button> <ul class=\"dropdown-menu\">";
 
                 $url = $baseURL . "index.php?indexAction=detail_observer&user=" . $loggedUser;
-                while ( list ( $key, $value ) = each ( $result ) ) {
-                    echo "  <li><a href=\"" . $url . "&amp;activeTelescopeId=" . $value . "\">" . $objInstrument->getInstrumentPropertyFromId ( $value, 'name' ) . "</a></li>";
+                while (list($key, $value) = each($result)) {
+                    echo "  <li><a href=\"" . $url . "&amp;activeTelescopeId=" . $value . "\">" 
+                        . $objInstrument->getInstrumentPropertyFromId($value, 'name') 
+                        . "</a></li>";
                 }
 
                 echo " </ul>";
@@ -200,20 +256,26 @@ function view_observer() {
             }
             echo "</td>";
         } else {
-            echo ($instrumentname ? "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $objObserver->getObserverProperty ( $user, 'stdtelescope' ) ) . "\">" . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>" : "") . "</td>
+            echo ($instrumentname 
+                ? "<a href=\"" . $baseURL 
+                . "index.php?indexAction=detail_instrument&amp;instrument=" 
+                . urlencode($objObserver->getObserverProperty($user, 'stdtelescope')) 
+                . "\">" 
+                . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>" 
+                : "") . "</td>
               </tr>";
         }
         echo '<tr>
-                        <td>';
+               <td>';
         echo LangChangeAccountCopyright;
-        echo '  </td>
-                        <td>';
-        echo $objObserver->getCopyright( $user );
+        echo ' </td>
+               <td>';
+        echo $objObserver->getCopyright($user);
 
-        echo '    </td>
-                    </tr>';
+        echo ' </td>
+              </tr>';
     }
-    if ($objUtil->checkSessionKey ( 'admin' ) == "yes") {
+    if ($objUtil->checkSessionKey('admin') == "yes") {
         echo "<form class=\"form-horizontal\" role=\"form\" action=\"" . $baseURL . "index.php\" >";
         echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_role\" />";
         echo "<input type=\"hidden\" name=\"user\" value=\"" . $user . "\" />";
@@ -224,23 +286,27 @@ function view_observer() {
              <label for=\"role\" class=\"col-sm-2 control-label\">" . LangViewObserverRole . "</label>
              <div class=\"col-sm-3\">
                      <select name=\"role\" class=\"form-control\">
-                 <option " . (($objObserver->getObserverProperty ( $user, 'role', 2 ) == ROLEADMIN) ? "selected=\"selected\"" : "") . " value=\"0\">" . LangViewObserverAdmin . "</option>
-                 <option " . (($objObserver->getObserverProperty ( $user, 'role', 2 ) == ROLEUSER) ? "selected=\"selected\"" : "") . " value=\"1\">" . LangViewObserverUser . "</option>
-                 <option " . (($objObserver->getObserverProperty ( $user, 'role', 2 ) == ROLECOMETADMIN) ? "selected=\"selected\"" : "") . " value=\"4\">" . LangViewObserverCometAdmin . "</option>
-                 <option " . (($objObserver->getObserverProperty ( $user, 'role', 2 ) == ROLEWAITLIST) ? "selected=\"selected\"" : "") . " value=\"2\">" . LangViewObserverWaitlist . "</option>
+                 <option " . (($objObserver->getObserverProperty($user, 'role', 2) == ROLEADMIN) 
+                 ? "selected=\"selected\"" : "") . " value=\"0\">" . LangViewObserverAdmin . "</option>
+                 <option " . (($objObserver->getObserverProperty($user, 'role', 2) == ROLEUSER) 
+                 ? "selected=\"selected\"" : "") . " value=\"1\">" . LangViewObserverUser . "</option>
+                 <option " . (($objObserver->getObserverProperty($user, 'role', 2) == ROLECOMETADMIN) 
+                 ? "selected=\"selected\"" : "") . " value=\"4\">" . LangViewObserverCometAdmin . "</option>
+                 <option " . (($objObserver->getObserverProperty($user, 'role', 2) == ROLEWAITLIST) 
+                 ? "selected=\"selected\"" : "") . " value=\"2\">" . LangViewObserverWaitlist . "</option>
                </select>&nbsp;
            </div>
            <div class=\"col-sm-2\">
                 <button type=\"submit\" class=\"btn btn-default\" name=\"change\">" . LangViewObserverChange . "</button>
            </div>
             </div>";
-        } elseif ($objObserver->getObserverProperty ( $user, 'role', 2 ) == ROLEWAITLIST) {
+        } elseif ($objObserver->getObserverProperty($user, 'role', 2) == ROLEWAITLIST) {
             echo "<div class=\"form-group\">";
             echo "<label class=\"col-sm-2 control-label\">" . LangViewObserverRole . "</label>";
             echo "<div class=\"col-sm-5\">" . LangViewObserverWaitlist;
             echo "</div></div>";
-        } else // fixed admin role
-{
+        } else {
+            // fixed admin role
             echo "<div class=\"form-group\">";
             echo "<label class=\"col-sm-2 control-label\">" . LangViewObserverRole . "</label>";
             echo "<div class=\"col-sm-5\">" . LangViewObserverAdmin;
@@ -253,39 +319,39 @@ function view_observer() {
     echo "<table class=\"table table-striped\">";
     echo " <tr>";
     echo "  <th></th>";
-    for($i = 0; $i < count ( $modules ); $i ++) {
-        echo " <th>" . $GLOBALS [$modules [$i]];
+    for ($i = 0; $i < count($modules); $i++) {
+        echo " <th>" . $GLOBALS[$modules[$i]];
         echo " </th>";
     }
     echo " </tr>";
 
     echo " <tr>";
     echo "  <td>" . LangViewObserverNumberOfObservations . "</td>";
-    for($i = 0; $i < count ( $modules ); $i ++) {
-        echo " <td>" . $information [$i] [0];
+    for ($i = 0; $i < count($modules); $i++) {
+        echo " <td>" . $information[$i][0];
         echo " </td>";
     }
     echo " </tr>";
 
     echo " <tr>";
     echo "  <td>" . LangTopObserversHeader4 . "</td>";
-    for($i = 0; $i < count ( $modules ); $i ++) {
-        echo " <td>" . $information [$i] [1];
+    for ($i = 0; $i < count($modules); $i++) {
+        echo " <td>" . $information[$i][1];
         echo " </td>";
     }
     echo " </tr>";
 
     echo " <tr>";
     echo "  <td>" . LangTopObserversHeader6 . "</td>";
-    for($i = 0; $i < count ( $modules ); $i ++) {
-        echo " <td>" . $information [$i] [2];
+    for ($i = 0; $i < count($modules); $i++) {
+        echo " <td>" . $information[$i][2];
         echo " </td>";
     }
     echo " </tr>";
 
     echo " <tr>";
     echo "  <td>" . LangTopObserversHeader5 . "</td>";
-    for($i = 0; $i < count ( $modules ); $i ++) {
+    for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . (($key == $i) ? $userMobjects . " / 110" : "-");
         echo " </td>";
     }
@@ -293,7 +359,7 @@ function view_observer() {
 
     echo " <tr>";
     echo "  <td>" . LangTopObserversHeader5b . "</td>";
-    for($i = 0; $i < count ( $modules ); $i ++) {
+    for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . (($key == $i) ? $userCaldwellObjects . " / 110" : "-");
         echo " </td>";
     }
@@ -301,7 +367,7 @@ function view_observer() {
 
     echo " <tr>";
     echo "  <td>" . LangTopObserversHeader5c . "</td>";
-    for($i = 0; $i < count ( $modules ); $i ++) {
+    for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . (($key == $i) ? $userH400objects . " / 400" : "-");
         echo " </td>";
     }
@@ -309,7 +375,7 @@ function view_observer() {
 
     echo " <tr>";
     echo "  <td>" . LangTopObserversHeader5d . "</td>";
-    for($i = 0; $i < count ( $modules ); $i ++) {
+    for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . (($key == $i) ? $userHIIobjects . " / 400" : "-");
         echo " </td>";
     }
@@ -317,8 +383,8 @@ function view_observer() {
 
     echo " <tr>";
     echo "  <td>" . LangViewObserverRank . "</td>";
-    for($i = 0; $i < count ( $modules ); $i ++) {
-        echo " <td>" . $information [$i] [4];
+    for ($i = 0; $i < count($modules); $i++) {
+        echo " <td>" . $information[$i][4];
         echo " </td>";
     }
     echo " </tr>";
@@ -334,14 +400,16 @@ function view_observer() {
     }
 
     echo "<hr />";
-    $dir = opendir ( $instDir . 'common/observer_pics' );
-    while ( FALSE !== ($file = readdir ( $dir )) ) {
-        if (("." == $file) or (".." == $file))
+    $dir = opendir($instDir . 'common/observer_pics');
+    while (false !== ($file = readdir($dir))) {
+        if (("." == $file) or (".." == $file)) {
             continue; // skip current directory and directory above
-        if (fnmatch ( $user . ".gif", $file ) || fnmatch ( $user . ".jpg", $file ) || fnmatch ( $user . ".png", $file )) {
+        }
+        if (fnmatch($user . ".gif", $file) || fnmatch($user . ".jpg", $file) || fnmatch($user . ".png", $file)) {
             echo "<div>";
             echo "<a href=\"" . $baseURL . "common/observer_pics/" . $file . "\" data-lightbox=\"image-1\" data-title=\"\">";
-            echo "<img class=\"viewobserver\" src=\"" . $baseURL . "common/observer_pics/" . $file . "\" alt=\"" . $firstname . "&nbsp;" . $name . "\"></img>
+            echo "<img class=\"viewobserver\" src=\"" . $baseURL . "common/observer_pics/" . $file 
+                . "\" alt=\"" . $firstname . "&nbsp;" . $name . "\"></img>
               </a></div>";
             echo "<hr />";
         }
@@ -353,52 +421,59 @@ function view_observer() {
     echo "<div class=\"tab-pane\" id=\"observationsPerYear\">";
     // GRAPH
     // Check the date of the first observation
-    $currentYear = date ( "Y" );
-    $sql = $objDatabase->selectKeyValueArray ("select YEAR(date),count(*) from observations where observerid=\"" . $user . "\" group by YEAR(date)", "YEAR(date)", "count(*)");
-    $sql2 = $objDatabase->selectKeyValueArray ( "select YEAR(date),count(*) from cometobservations where observerid=\"" . $user . "\" group by YEAR(date);", "YEAR(date)", "count(*)" );
+    $currentYear = date("Y");
+    $sql = $objDatabase->selectKeyValueArray(
+        "select YEAR(date),count(*) from observations where observerid=\"" . $user 
+        . "\" group by YEAR(date)", "YEAR(date)", "count(*)"
+    );
+    $sql2 = $objDatabase->selectKeyValueArray(
+        "select YEAR(date),count(*) from cometobservations where observerid=\"" . $user 
+        . "\" group by YEAR(date);", "YEAR(date)", "count(*)"
+    );
 
     if (sizeof($sql) == 0) {
         $startYear = min(array_keys($sql2));
     } else if (sizeof($sql2 == 0)) {
         $startYear = min(array_keys($sql));
     } else {
-        $startYear = min ( [min(array_keys($sql)), min(array_keys ( $sql2 ) )] );
+        $startYear = min([min(array_keys($sql)), min(array_keys($sql2))]);
     }
+
     // Add the JavaScript to initialize the chart on document ready
     echo "<script type=\"text/javascript\">
 
                 var chart;
                         var dataYear = [";
-                        if ($startYear < 1900) {
-                            $startYear = $currentYear;
-                        }
-                        for($i = $startYear; $i <= $currentYear; $i ++) {
-                         if (array_key_exists($i, $sql)) {
-                           $obs = $sql[$i];
-                         } else {
-                             $obs = 0;
-                         }
-                         if ($i != $currentYear) {
-                            echo $obs . ", ";
-                         } else {
-                            echo $obs;
-                         }
-                      }
-                        echo "];
-                        var cometdataYear = [";
-                      for($i = $startYear; $i <= $currentYear; $i ++) {
-                            if (array_key_exists($i, $sql2)) {
-                                $obs = $sql2[$i];
-                            } else {
-                              $obs = 0;
-                            }
-                            if ($i != $currentYear) {
-                              echo $obs . ", ";
-                            } else {
-                              echo $obs;
-                            }
-                        }
-                        echo "];
+    if ($startYear < 1900) {
+        $startYear = $currentYear;
+    }
+    for ($i = $startYear; $i <= $currentYear; $i++) {
+        if (array_key_exists($i, $sql)) {
+            $obs = $sql[$i];
+        } else {
+            $obs = 0;
+        }
+        if ($i != $currentYear) {
+            echo $obs . ", ";
+        } else {
+            echo $obs;
+        }
+    }
+    echo "];
+    var cometdataYear = [";
+    for ($i = $startYear; $i <= $currentYear; $i++) {
+        if (array_key_exists($i, $sql2)) {
+            $obs = $sql2[$i];
+        } else {
+            $obs = 0;
+        }
+        if ($i != $currentYear) {
+            echo $obs . ", ";
+        } else {
+            echo $obs;
+        }
+    }
+    echo "];
                         var dataYearSum = 0;
                         for (var i=0;i < dataYear.length;i++) {
                         dataYearSum += dataYear[i];
@@ -417,7 +492,9 @@ function view_observer() {
                     marginBottom: 40
                   },
                   title: {
-                    text: \"" . GraphTitle1 . ": " . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\",
+                    text: \"" . GraphTitle1 
+        . ": " . html_entity_decode($firstname, ENT_QUOTES, "UTF-8") . " " 
+        . html_entity_decode($name, ENT_QUOTES, "UTF-8") . "\",
                     x: -20 //center
                   },
                   subtitle: {
@@ -427,7 +504,7 @@ function view_observer() {
                   xAxis: {
                     categories: [";
 
-    for($i = $startYear; $i <= $currentYear; $i ++) {
+    for ($i = $startYear; $i <= $currentYear; $i++) {
         if ($i != $currentYear) {
             echo "'" . $i . "', ";
         } else {
@@ -468,10 +545,10 @@ function view_observer() {
                               borderWidth: 0
                 },
                               series: [{
-                                name: '" . html_entity_decode ( $deepsky, ENT_QUOTES, "UTF-8" ) . "',
+                                name: '" . html_entity_decode($deepsky, ENT_QUOTES, "UTF-8") . "',
                                   data: dataYear
                                 }, {
-                              name: '" . html_entity_decode ( $comets, ENT_QUOTES, "UTF-8" ) . "',
+                              name: '" . html_entity_decode($comets, ENT_QUOTES, "UTF-8") . "',
                                 data: cometdataYear }]
                                 });
                                 });
@@ -487,39 +564,43 @@ function view_observer() {
     echo "<div class=\"tab-pane\" id=\"observationsPerMonth\">";
     // GRAPH
     // Add the JavaScript to initialize the chart on document ready
-    $sql = $objDatabase->selectKeyValueArray ("select MONTH(date),count(*) from observations where observerid=\"" . $user . "\" group by MONTH(date)", "MONTH(date)", "count(*)");
-    $sql2 = $objDatabase->selectKeyValueArray ( "select MONTH(date),count(*) from cometobservations where observerid=\"" . $user . "\" group by MONTH(date);", "MONTH(date)", "count(*)" );
+    $sql = $objDatabase->selectKeyValueArray(
+        "select MONTH(date),count(*) from observations where observerid=\"" . $user . "\" group by MONTH(date)", "MONTH(date)", "count(*)"
+    );
+    $sql2 = $objDatabase->selectKeyValueArray(
+        "select MONTH(date),count(*) from cometobservations where observerid=\"" . $user . "\" group by MONTH(date);", "MONTH(date)", "count(*)"
+    );
 
     echo "<script type=\"text/javascript\">
                 var chart;
                         var data = [";
-                        for($i = 1; $i <= 12; $i ++) {
-                            if (array_key_exists($i, $sql)) {
-                                $obs = $sql[$i];
-                            } else {
-                                $obs = 0;
-                            }
-                            if ($i != 12) {
-                                echo $obs . ", ";
-                            } else {
-                                echo $obs;
-                            }
-                        }
-                        echo "];
-                        var cometdata = [";
-                            for($i = 1; $i <= 12; $i ++) {
-                                if (array_key_exists($i, $sql2)) {
-                                    $obs = $sql2[$i];
-                                } else {
-                                    $obs = 0;
-                                }
-                                if ($i != 12) {
-                                    echo $obs . ", ";
-                                } else {
-                                    echo $obs;
-                                }
-                            }
-                            echo "];
+    for ($i = 1; $i <= 12; $i++) {
+        if (array_key_exists($i, $sql)) {
+            $obs = $sql[$i];
+        } else {
+            $obs = 0;
+        }
+        if ($i != 12) {
+            echo $obs . ", ";
+        } else {
+            echo $obs;
+        }
+    }
+    echo "];
+        var cometdata = [";
+    for ($i = 1; $i <= 12; $i ++) {
+        if (array_key_exists($i, $sql2)) {
+            $obs = $sql2[$i];
+        } else {
+            $obs = 0;
+        }
+        if ($i != 12) {
+            echo $obs . ", ";
+        } else {
+            echo $obs;
+        }
+    }
+    echo "];
                         var dataSum = 0;
                         for (var i=0;i < data.length;i++) {
                         dataSum += data[i];
@@ -538,7 +619,9 @@ function view_observer() {
                     marginBottom: 25
                   },
                   title: {
-                    text: \"" . GraphTitleMonths . ": " . html_entity_decode ( $firstname, ENT_QUOTES, "UTF-8" ) . " " . html_entity_decode ( $name, ENT_QUOTES, "UTF-8" ) . "\",
+                    text: \"" . GraphTitleMonths . ": " 
+        . html_entity_decode($firstname, ENT_QUOTES, "UTF-8") . " " 
+        . html_entity_decode($name, ENT_QUOTES, "UTF-8") . "\",
                     x: -20 //center
                   },
                   subtitle: {
