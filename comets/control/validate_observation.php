@@ -34,7 +34,7 @@ function validate_observation()
 	        $objCometObservation->setLocationId($current_observation, $_POST['site']);
 	        if(!($objObserver->getObserverProperty($loggedUser,'UT')))
 	          $objCometObservation->setLocalDateAndTime($current_observation, $date, $time);
-	  	    $objCometObservation->setDescription($current_observation, nl2br(htmlentities($_POST['description'])));
+	  	    $objCometObservation->setDescription($current_observation, nl2br($_POST['description']));
 	        $objCometObservation->setInstrumentId($current_observation, $_POST['instrument']);
 	        $objCometObservation->setComa($current_observation, $objUtil->checkRequestKey('coma',-99));
 	        $objCometObservation->setTail($current_observation, $objUtil->checkRequestKey('tail_length',-99));

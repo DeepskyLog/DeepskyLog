@@ -27,7 +27,7 @@ function validate_change_observation()
 	  if(($role==ROLEADMIN)||($role==ROLECOMETADMIN)||($loggedUser == $objCometObservation->getObserverId($_POST['observation'])))
 	  { $date = $_POST['year'] . sprintf("%02d", $_POST['month']) . sprintf("%02d", $_POST['day']);
 	    $time = ($_POST['hours'] * 100) + $_POST['minutes'];
-	    $objCometObservation->setDescription($_POST['observation'], nl2br(htmlentities($_POST['description'])));
+	    $objCometObservation->setDescription($_POST['observation'], nl2br($_POST['description']));
 	    $objCometObservation->setLocationId($_POST['observation'], $_POST['site']);
 	    if(!($objObserver->getObserverProperty($loggedUser,'UT')))
 	      $objCometObservation->setLocalDateAndTime($_POST['observation'], $date, $time);
