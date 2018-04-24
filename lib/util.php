@@ -2697,709 +2697,987 @@ class Utils
         }
     }
 
-    public function pdfReportPersonalised($reportuser, $reportname, $reportlayout, $result, $sort = '') // Creates a pdf document from an array of objects
+    /**
+     * Creates a pdf document from an array of objects.
+     *
+     * @param string $reportuser   The user for whom to create the report.
+     * @param string $reportname   The name for the report.
+     * @param string $reportlayout The name of the layout to use.
+     * @param array  $result       The array with the objects.
+     * @param string $sort         The column to sort on.
+     *
+     * @return None
+     */
+    public function pdfReportPersonalised($reportuser, $reportname, $reportlayout, $result, $sort = '')
     {
         global $objReportLayout, $dateformat, $baseURL, $instDir, $objObserver, $loggedUser, $objLocation, $objInstrument, $objPresentations;
 
         $result = $this->sortResult($result);
 
-      $reportdata = $objReportLayout->getReportData ( $reportuser, $reportname, $reportlayout );
-      if ($sort == 'objectconstellation')
-         $sort = 'con';
-      else
-         $sort = '';
-      $indexlist = array ();
+        $reportdata = $objReportLayout->getReportData($reportuser, $reportname, $reportlayout);
+        if ($sort == 'objectconstellation') {
+            $sort = 'con';
+        } else {
+            $sort = '';
+        }
+        $indexlist = array();
 
-      $pagesize = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'pagesize' );
-      $pageorientation = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'pageorientation' );
-      $bottom = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'bottom' );
-      $top = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'top' );
-      $header = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'header' );
-      $footer = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'footer' );
-      $xleft = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'xleft' );
-      $xmid = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'xmid' );
-      $fontSizeSection = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'fontSizeSection' );
-      $fontSizeText = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'fontSizeText' );
-      $sectionBarSpace = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'sectionbarspace' );
-      $deltalineSection = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'deltalineSection' );
-      $deltaline = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'deltalineExtra' ) + $fontSizeText;
-      $deltaobjectline = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'deltaobjectline' );
-      $pagenr = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'startpagenumber' );
-      $sectionBarHeight = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'sectionBarHeightextra' ) + $fontSizeSection;
-      $SectionBarWidth = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'SectionBarWidthbase' ) + $sectionBarSpace;
-      $showelements = $objReportLayout->getLayoutFieldPosition ( $reportuser, $reportname, $reportlayout, 'showelements' );
+        $pagesize = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'pagesize');
+        $pageorientation = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'pageorientation');
+        $bottom = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'bottom');
+        $top = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'top');
+        $header = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'header');
+        $footer = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'footer');
+        $xleft = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'xleft');
+        $xmid = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'xmid');
+        $fontSizeSection = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'fontSizeSection');
+        $fontSizeText = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'fontSizeText');
+        $sectionBarSpace = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'sectionbarspace');
+        $deltalineSection = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'deltalineSection');
+        $deltaline = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'deltalineExtra') + $fontSizeText;
+        $deltaobjectline = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'deltaobjectline');
+        $pagenr = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'startpagenumber');
+        $sectionBarHeight = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'sectionBarHeightextra') + $fontSizeSection;
+        $SectionBarWidth = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'SectionBarWidthbase') + $sectionBarSpace;
+        $showelements = $objReportLayout->getLayoutFieldPosition($reportuser, $reportname, $reportlayout, 'showelements');
 
-      $pdf = new Cezpdf ( $pagesize, $pageorientation );
-      $pdf->selectFont ( $instDir . 'lib/fonts/Helvetica.afm' );
+        $pdf = new Cezpdf($pagesize, $pageorientation);
+        $pdf->selectFont($instDir . 'lib/fonts/Helvetica.afm');
 
-      $actualsort = '';
-      $theDate = date ( 'd/m/Y' );
-      $this->firstpage ( $y, $top, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $showelements, $reportdata );
+        $actualsort = '';
+        $theDate = date('d/m/Y');
+        $this->firstpage(
+            $y, $top, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, 
+            $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, 
+            $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, 
+            $showelements, $reportdata
+        );
 
-      while ( list ( $key, $valueA ) = each ( $result ) ) {
-         $con = $valueA ['objectconstellation'];
-         $deltaymax = 0;
-         reset ( $reportdata );
-         while ( list ( $key, $dataelement ) = each ( $reportdata ) ) {
-            if ($dataelement ['fieldwidth']) {
-               if (($dataelement ['fieldname'] == "objectlistdescription")) {
-                  if (array_key_exists ( 'objectlistdescription', $valueA ) && $valueA ['objectlistdescription'])
-                     $deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
-               } elseif ($dataelement ['fieldname'] == "objectdescription") {
-                  if (array_key_exists ( 'objectdescription', $valueA ) && ($valueA ['objectdescription'] != ''))
-                     $deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
-               } else
-                  $deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
+        while (list($key, $valueA) = each($result)) {
+            $con = $valueA['objectconstellation'];
+            $deltaymax = 0;
+            reset($reportdata);
+            while (list($key, $dataelement) = each($reportdata)) {
+                if ($dataelement['fieldwidth']) {
+                    if (($dataelement['fieldname'] == "objectlistdescription")) {
+                        if (array_key_exists('objectlistdescription', $valueA) && $valueA['objectlistdescription']) {
+                            $deltaymax = max($deltaymax, $dataelement['fieldline']);
+                        }
+                    } elseif ($dataelement['fieldname'] == "objectdescription") {
+                        if (array_key_exists('objectdescription', $valueA) && ($valueA ['objectdescription'] != '')) {
+                            $deltaymax = max($deltaymax, $dataelement['fieldline']);
+                        }
+                    } else {
+                        $deltaymax = max($deltaymax, $dataelement['fieldline']);
+                    }
+                }
             }
-         }
-         $deltaymax++;
-         if (($y - ($deltaline * $deltaymax) < $bottom) && $sort)
-            $this->newpage ( $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, "", "", $showelements, $reportdata );
-         elseif (($y - ($deltaline * $deltaymax) < $bottom) && (! ($sort))) {
-            $this->newpage ( $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, "", "", $showelements, $reportdata );
-            if (strpos ( $showelements, 's' ) !== FALSE) {
-               $pdf->setLineStyle ( 0.5 );
-               $pdf->line ( $xbase - $sectionBarSpace, $y + (($deltaline + $deltaobjectline) * .75), $xbase + $SectionBarWidth, $y + (($deltaline + $deltaobjectline) * .75) );
-               $pdf->setLineStyle ( 1 );
-            }
-         } elseif ($sort && ($$sort != $actualsort)) {
-            if (($y - ($deltaline * $deltaymax) - $sectionBarSpace - $deltalineSection) < $bottom)
-               $this->newpage ( $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, "", "", $showelements, $reportdata );
-            else {
-               $y -= $deltalineSection;
-               $pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-               $pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
-               $y -= $deltaline + $deltalineSection;
-            }
-            $indexlist [$$sort] = $pagenr;
-         } else if (strpos ( $showelements, 's' ) !== FALSE) {
-            $pdf->setLineStyle ( 0.5 );
-            $pdf->line ( $xbase - $sectionBarSpace, $y + (($deltaline + $deltaobjectline) * .75), $xbase + $SectionBarWidth, $y + (($deltaline + $deltaobjectline) * .75) );
-            $pdf->setLineStyle ( 1 );
-         }
-         reset($reportdata);
-         $deltaymax = 0;
-         while ( list ( $key, $dataelement ) = each ( $reportdata ) ) {
-            if ($dataelement ['fieldwidth']) {
-               if ($y - ($deltaline * $dataelement ['fieldline']) < $bottom) {
-                  $this->newpage ( $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, "", "", $showelements, $reportdata );
-               }
-               $justification = 'left';
-               $i = '';
-               $b = '';
-               if (strpos ( $dataelement ['fieldstyle'], 'r' ) !== false)
-                  $justification = 'right';
-               if (strpos ( $dataelement ['fieldstyle'], 'c' ) !== false)
-                  $justification = 'center';
-               if (strpos ( $dataelement ['fieldstyle'], 'b' ) !== false) {
-                  $b = "<b>";
-                  $pdf->addText ( 0, 0, $fontSizeText, '<b>' );
-               }
-               if (strpos ( $dataelement ['fieldstyle'], 'i' ) !== false) {
-                  $i = '<i>';
-                  $pdf->addText ( 0, 0, $fontSizeText, '<i>' );
-               }
-               if ($dataelement ['fieldname'] == "showname") {
-                  if ($valueA [$dataelement ['fieldname']]) {
-                     $pdf->addTextWrap(
-                         $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), 
-                         $fontSizeText, utf8_decode ( $dataelement ['fieldafter'] . html_entity_decode ( $valueA [$dataelement ['fieldname']] ) . $dataelement ['fieldafter'] ),
-                         $dataelement ['fieldwidth'], $justification
-                        );
-                     $deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
-                  }
-               } else if ($dataelement ['fieldname'] == "objectuseratlaspage") {
-                  $pdf->addTextWrap(
-                      $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), 
-                      $fontSizeText, 
-                      utf8_decode ( $dataelement ['fieldbefore'] . html_entity_decode ( $valueA [($loggedUser ? $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ) : 'urano')] ) . $dataelement ['fieldafter'] ), 
-                      $dataelement ['fieldwidth'], $justification
+            $deltaymax++;
+            if (($y - ($deltaline * $deltaymax) < $bottom) && $sort) {
+                $this->newpage(
+                    $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, 
+                    $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, 
+                    $sectionBarSpace, $sort, $con, $deltalineSection, 
+                    $sectionBarHeight, $fontSizeSection, $deltaline, "", "", 
+                    $showelements, $reportdata
+                );
+            } elseif (($y - ($deltaline * $deltaymax) < $bottom) && (! ($sort))) {
+                $this->newpage(
+                    $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, 
+                    $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, 
+                    $sectionBarSpace, $sort, $con, $deltalineSection, 
+                    $sectionBarHeight, $fontSizeSection, $deltaline, "", "", 
+                    $showelements, $reportdata
+                );
+                if (strpos($showelements, 's') !== false) {
+                    $pdf->setLineStyle(0.5);
+                    $pdf->line(
+                        $xbase - $sectionBarSpace, $y + (($deltaline + $deltaobjectline) * .75), 
+                        $xbase + $SectionBarWidth, $y + (($deltaline + $deltaobjectline) * .75)
                     );
-                  $deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
-               } else if (($dataelement ['fieldname'] == "objectlistdescription")) {
-                  if (array_key_exists ( 'objectlistdescription', $valueA ) && ($valueA ['objectlistdescription'] != '')) {
-                     $theText = $dataelement ['fieldbefore'] . html_entity_decode ( $objPresentations->br2nl ( $valueA ['objectlistdescription'] ) ) . $dataelement ['fieldafter'];
-                     $theText = $pdf->addTextWrap(
-                         $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $fontSizeText, 
-                         utf8_decode ( $theText ), $dataelement ['fieldwidth'], $justification
-                        );
-                     while ( $theText ) {
-                        $y -= $deltaline;
-                        if ($y - ($deltaline * $dataelement ['fieldline']) < $bottom) {
-                           $this->newpage ( $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $i, $b, $showelements, $reportdata );
-                           $y += ($deltaline * $dataelement ['fieldline']);
-                        }
-                        $theText = $pdf->addTextWrap(
-                            $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $fontSizeText, 
-                            utf8_decode ( $theText ), $dataelement ['fieldwidth'], $justification
-                        );
-                     }
-                     $deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
-                  }
-               } elseif ($dataelement ['fieldname'] == "objectdescription") {
-                  if (array_key_exists ( 'objectlistdescription', $valueA ) && ($valueA ['objectlistdescription'] != '')) {
-                     $theText = $dataelement ['fieldbefore'] . html_entity_decode ( $objPresentations->br2nl ( $valueA ['objectlistdescription'] ) ) . $dataelement ['fieldafter'];
-                     $theText = $pdf->addTextWrap(
-                         $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $fontSizeText, 
-                         utf8_decode ( $theText ), $dataelement ['fieldwidth'], $justification );
-                     while ( $theText ) {
-                        $y -= $deltaline;
-                        if ($y - ($deltaline * $dataelement ['fieldline']) < $bottom) {
-                           $this->newpage ( $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $i, $b, $showelements, $reportdata );
-                           $y += ($deltaline * $dataelement ['fieldline']);
-                        }
-                        $theText = $pdf->addTextWrap(
-                            $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), 
-                            $fontSizeText, utf8_decode ( $theText ), $dataelement ['fieldwidth'], $justification
-                        );
-                     }
-                     $deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
-                  } else if (array_key_exists ( 'objectdescription', $valueA ) && ($valueA ['objectdescription'] != '')) {
-                     $theText = $dataelement ['fieldbefore'] . html_entity_decode ( $objPresentations->br2nl ( $valueA ['objectdescription'] ) ) . $dataelement ['fieldafter'];
-                        $theText = $pdf->addTextWrap(
-                            $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $fontSizeText, utf8_decode ( $theText ), $dataelement ['fieldwidth'], $justification
-                        );
-                     while ( $theText ) {
-                        $y -= $deltaline;
-                        if ($y - ($deltaline * $dataelement ['fieldline']) < $bottom) {
-                           $this->newpage ( $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $i, $b, $showelements, $reportdata );
-                           $y += ($deltaline * $dataelement ['fieldline']);
-                        }
-                        $theText = $pdf->addTextWrap(
-                            $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), 
-                            $fontSizeText, utf8_decode ( $theText ), $dataelement ['fieldwidth'], $justification );
-                     }
-                     $deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
-                  }
-               } else {
-                  if (trim ( $valueA [$dataelement ['fieldname']] ) != '') {
-                    $pdf->addTextWrap($xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), 
-                        $fontSizeText, utf8_decode ( html_entity_decode ( $dataelement ['fieldbefore'] . $valueA [$dataelement ['fieldname']] . $dataelement ['fieldafter'] ) ), 
-                        $dataelement ['fieldwidth'], $justification
+                    $pdf->setLineStyle(1);
+                }
+            } elseif ($sort && ($$sort != $actualsort)) {
+                if (($y - ($deltaline * $deltaymax) - $sectionBarSpace - $deltalineSection) < $bottom) {
+                    $this->newpage(
+                        $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, 
+                        $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, 
+                        $sectionBarSpace, $sort, $con, $deltalineSection, 
+                        $sectionBarHeight, $fontSizeSection, $deltaline, "", "", 
+                        $showelements, $reportdata
                     );
-                     $deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
-                  }
-               }
-               if (strpos ( $dataelement ['fieldstyle'], 'b' ) !== FALSE)
-                  $pdf->addText ( 0, 0, $fontSizeText, '</b>' );
-               if (strpos ( $dataelement ['fieldstyle'], 'i' ) !== FALSE)
-                  $pdf->addText ( 0, 0, $fontSizeText, '</i>' );
+                } else {
+                    $y -= $deltalineSection;
+                    $pdf->rectangle($xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
+                    $pdf->addText($xbase, $y, $fontSizeSection, utf8_decode($GLOBALS[$$sort]));
+                    $y -= $deltaline + $deltalineSection;
+                }
+                $indexlist [$$sort] = $pagenr;
+            } else if (strpos($showelements, 's') !== false) {
+                $pdf->setLineStyle(0.5);
+                $pdf->line(
+                    $xbase - $sectionBarSpace, $y + (($deltaline + $deltaobjectline) * .75), 
+                    $xbase + $SectionBarWidth, $y + (($deltaline + $deltaobjectline) * .75)
+                );
+                $pdf->setLineStyle(1);
             }
-         }
-         $y -= $deltaline * ($deltaymax);
-         $y -= ($deltaline + $deltaobjectline);
-         if ($sort)
-            $actualsort = $$sort;
-      }
-      if ((strpos ( $showelements, 'i' ) !== FALSE) && (count ( $indexlist ) > 0) && ($sort)) {
-         $base = $xmid;
-         $this->newpage ( $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, '', '', $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, "", "", $showelements, $reportdata );
-         $pdf->setLineStyle ( 0.5 );
-         $y = $top;
-         while ( list ( $key, $value ) = each ( $indexlist ) ) {
-            $pdf->line ( $xbase - $sectionBarSpace, $y + (($deltaline + $deltaobjectline) * .75), $xbase + $SectionBarWidth, $y + (($deltaline + $deltaobjectline) * .75) );
-            $pdf->addTextWrap(
-                $xbase, $y, $fontSizeText, utf8_decode ( $key ), 50, 'left'
-            );
-            $pdf->addTextWrap(
-                $xbase + $SectionBarWidth - $sectionBarSpace - 50, $y, $fontSizeText, utf8_decode ( trim ( $value ) ), 50, 'right'
-            );
-
+            reset($reportdata);
+            $deltaymax = 0;
+            while (list($key, $dataelement) = each($reportdata)) {
+                if ($dataelement['fieldwidth']) {
+                    if ($y - ($deltaline * $dataelement['fieldline']) < $bottom) {
+                        $this->newpage(
+                            $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, 
+                            $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, 
+                            $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, 
+                            $fontSizeSection, $deltaline, "", "", $showelements, $reportdata
+                        );
+                    }
+                    $justification = 'left';
+                    $i = '';
+                    $b = '';
+                    if (strpos($dataelement['fieldstyle'], 'r') !== false) {
+                        $justification = 'right';
+                    }
+                    if (strpos($dataelement['fieldstyle'], 'c') !== false) {
+                        $justification = 'center';
+                    }
+                    if (strpos($dataelement['fieldstyle'], 'b') !== false) {
+                        $b = "<b>";
+                        $pdf->addText(0, 0, $fontSizeText, '<b>');
+                    }
+                    if (strpos($dataelement['fieldstyle'], 'i') !== false) {
+                        $i = '<i>';
+                        $pdf->addText(0, 0, $fontSizeText, '<i>');
+                    }
+                    if ($dataelement ['fieldname'] == "showname") {
+                        if ($valueA [$dataelement ['fieldname']]) {
+                            $pdf->addTextWrap(
+                                $xbase + $dataelement['fieldposition'], $y - ($deltaline * $dataelement['fieldline']), 
+                                $fontSizeText, 
+                                utf8_decode(
+                                    $dataelement['fieldafter'] . 
+                                    html_entity_decode($valueA[$dataelement['fieldname']]) . 
+                                    $dataelement['fieldafter']
+                                ),
+                                $dataelement['fieldwidth'], $justification
+                            );
+                            $deltaymax = max($deltaymax, $dataelement['fieldline']);
+                        }
+                    } else if ($dataelement['fieldname'] == "objectuseratlaspage") {
+                        $pdf->addTextWrap(
+                            $xbase + $dataelement['fieldposition'], $y - ($deltaline * $dataelement['fieldline']), 
+                            $fontSizeText, 
+                            utf8_decode(
+                                $dataelement ['fieldbefore'] . 
+                                html_entity_decode($valueA [($loggedUser ? $objObserver->getObserverProperty($loggedUser, 'standardAtlasCode', 'urano') : 'urano')]) . 
+                                $dataelement ['fieldafter']
+                            ), 
+                            $dataelement ['fieldwidth'], $justification
+                        );
+                        $deltaymax = max($deltaymax, $dataelement['fieldline']);
+                    } else if (($dataelement['fieldname'] == "objectlistdescription")) {
+                        if (array_key_exists('objectlistdescription', $valueA) && ($valueA['objectlistdescription'] != '')) {
+                            $theText = $dataelement ['fieldbefore'] . 
+                                html_entity_decode($objPresentations->br2nl($valueA ['objectlistdescription'])) . 
+                                $dataelement ['fieldafter'];
+                            $theText = $pdf->addTextWrap(
+                                $xbase + $dataelement['fieldposition'], $y - ($deltaline * $dataelement['fieldline']), 
+                                $fontSizeText, 
+                                utf8_decode($theText), 
+                                $dataelement['fieldwidth'], 
+                                $justification
+                            );
+                            while ( $theText ) {
+                                $y -= $deltaline;
+                                if ($y - ($deltaline * $dataelement ['fieldline']) < $bottom) {
+                                    $this->newpage(
+                                        $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, 
+                                        $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, 
+                                        $sectionBarSpace, $sort, $con, $deltalineSection, 
+                                        $sectionBarHeight, $fontSizeSection, $deltaline, $i, $b, 
+                                        $showelements, $reportdata
+                                    );
+                                    $y += ($deltaline * $dataelement['fieldline']);
+                                }
+                                $theText = $pdf->addTextWrap(
+                                    $xbase + $dataelement['fieldposition'], 
+                                    $y - ($deltaline * $dataelement['fieldline']), $fontSizeText, 
+                                    utf8_decode($theText), $dataelement['fieldwidth'], $justification
+                                );
+                            }
+                            $deltaymax = max($deltaymax, $dataelement['fieldline']);
+                        }
+                    } elseif ($dataelement ['fieldname'] == "objectdescription") {
+                        if (array_key_exists('objectlistdescription', $valueA) && ($valueA['objectlistdescription'] != '')) {
+                            $theText = $dataelement['fieldbefore'] . 
+                                html_entity_decode(
+                                    $objPresentations->br2nl($valueA['objectlistdescription'])
+                                ) . $dataelement ['fieldafter'];
+                            $theText = $pdf->addTextWrap(
+                                $xbase + $dataelement['fieldposition'], $y - ($deltaline * $dataelement['fieldline']), 
+                                $fontSizeText, 
+                                utf8_decode($theText), 
+                                $dataelement['fieldwidth'], 
+                                $justification
+                            );
+                            while ( $theText ) {
+                                $y -= $deltaline;
+                                if ($y - ($deltaline * $dataelement['fieldline']) < $bottom) {
+                                    $this->newpage(
+                                        $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, 
+                                        $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, 
+                                        $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, 
+                                        $fontSizeSection, $deltaline, $i, $b, $showelements, $reportdata
+                                    );
+                                    $y += ($deltaline * $dataelement['fieldline']);
+                                }
+                                $theText = $pdf->addTextWrap(
+                                    $xbase + $dataelement['fieldposition'], 
+                                    $y - ($deltaline * $dataelement['fieldline']), 
+                                    $fontSizeText, 
+                                    utf8_decode($theText), 
+                                    $dataelement['fieldwidth'], 
+                                    $justification
+                                );
+                            }
+                            $deltaymax = max($deltaymax, $dataelement['fieldline']);
+                        } else if (array_key_exists('objectdescription', $valueA) && ($valueA['objectdescription'] != '')) {
+                            $theText = $dataelement ['fieldbefore'] . 
+                                html_entity_decode($objPresentations->br2nl($valueA['objectdescription'])) . 
+                                $dataelement['fieldafter'];
+                            $theText = $pdf->addTextWrap(
+                                $xbase + $dataelement['fieldposition'], 
+                                $y - ($deltaline * $dataelement ['fieldline']), 
+                                $fontSizeText, 
+                                utf8_decode($theText), 
+                                $dataelement['fieldwidth'], 
+                                $justification
+                            );
+                            while ($theText) {
+                                $y -= $deltaline;
+                                if ($y - ($deltaline * $dataelement['fieldline']) < $bottom) {
+                                    $this->newpage(
+                                        $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, 
+                                        $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, 
+                                        $sectionBarSpace, $sort, $con, $deltalineSection, 
+                                        $sectionBarHeight, $fontSizeSection, $deltaline, $i, $b, 
+                                        $showelements, $reportdata
+                                    );
+                                    $y += ($deltaline * $dataelement['fieldline']);
+                                }
+                                $theText = $pdf->addTextWrap(
+                                    $xbase + $dataelement['fieldposition'], $y - ($deltaline * $dataelement['fieldline']), 
+                                    $fontSizeText, utf8_decode($theText), $dataelement['fieldwidth'], $justification
+                                );
+                            }
+                            $deltaymax = max($deltaymax, $dataelement['fieldline']);
+                        }
+                    } else {
+                        if (trim($valueA[$dataelement['fieldname']]) != '') {
+                            $pdf->addTextWrap(
+                                $xbase + $dataelement['fieldposition'], 
+                                $y - ($deltaline * $dataelement['fieldline']), 
+                                $fontSizeText, 
+                                utf8_decode(
+                                    html_entity_decode(
+                                        $dataelement['fieldbefore'] . 
+                                        $valueA[$dataelement['fieldname']] . 
+                                        $dataelement['fieldafter']
+                                    )
+                                ), 
+                                $dataelement['fieldwidth'], 
+                                $justification
+                            );
+                            $deltaymax = max($deltaymax, $dataelement['fieldline']);
+                        }
+                    }
+                    if (strpos($dataelement['fieldstyle'], 'b') !== false) {
+                        $pdf->addText(0, 0, $fontSizeText, '</b>');
+                    }
+                    if (strpos($dataelement['fieldstyle'], 'i') !== false) {
+                        $pdf->addText(0, 0, $fontSizeText, '</i>');
+                    }
+                }
+            }
+            $y -= $deltaline * ($deltaymax);
             $y -= ($deltaline + $deltaobjectline);
-            if (($y - ($deltaline + $deltaobjectline)) < $bottom) {
-               $this->newpage ( $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, '', '', $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, "", "", $showelements, $reportdata );
-               $pdf->setLineStyle ( 0.5 );
+            if ($sort) {
+                $actualsort = $$sort;
             }
-         }
-      }
-      $pdf->ezStream ();
-   }
+        }
+        if ((strpos($showelements, 'i') !== false) && (count($indexlist) > 0) && ($sort)) {
+            $base = $xmid;
+            $this->newpage(
+                $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, 
+                $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, 
+                $sectionBarSpace, '', '', $deltalineSection, $sectionBarHeight, 
+                $fontSizeSection, $deltaline, "", "", $showelements, $reportdata
+            );
+            $pdf->setLineStyle(0.5);
+            $y = $top;
+            while (list($key, $value) = each($indexlist)) {
+                $pdf->line(
+                    $xbase - $sectionBarSpace, $y + (($deltaline + $deltaobjectline) * .75), 
+                    $xbase + $SectionBarWidth, $y + (($deltaline + $deltaobjectline) * .75)
+                );
+                $pdf->addTextWrap(
+                    $xbase, $y, $fontSizeText, utf8_decode($key), 50, 'left'
+                );
+                $pdf->addTextWrap(
+                    $xbase + $SectionBarWidth - $sectionBarSpace - 50, $y, $fontSizeText, 
+                    utf8_decode(trim($value)), 50, 'right'
+                );
 
-
-   public function pdfObservations($result) // Creates a pdf document from an array of observations
-{
-      global $loggedUser, $dateformat, $instDir, $objObservation, $objObserver, $objInstrument, $objLocation, $objPresentations, $objObject, $objFilter, $objEyepiece, $objLens;
-      $result = $this->sortResult ( $result );
-      $pdf = new Cezpdf ( 'a4', 'portrait' );
-      $pdf->ezStartPageNumbers ( 300, 30, 10 );
-      $pdf->selectFont ( $instDir . 'lib/fonts/Helvetica.afm' );
-      $pdf->ezText ( utf8_decode ( html_entity_decode ( $_GET ['pdfTitle'] ) ) . "\n" );
-      $i = 0;
-      while ( list ( $key, $value ) = each ( $result ) ) {
-         if ($i ++ > 0)
-            $pdf->ezNewPage ();
-         $obs = $objObservation->getAllInfoDsObservation ( $value ['observationid'] );
-         $object = $objObject->getAllInfoDsObject ( $obs ['objectname'] );
-         if ($loggedUser && ($objObserver->getObserverProperty ( $loggedUser, 'UT' )))
-            $date = sscanf ( $obs ["date"], "%4d%2d%2d" );
-         else
-            $date = sscanf ( $obs ["localdate"], "%4d%2d%2d" );
-         if ($obs ['seeing'] > - 1) {
-            $seeing = true;
-         } else {
-            $seeing = false;
-         }
-         $formattedDate = date ( $dateformat, mktime ( 0, 0, 0, $date [1], $date [2], $date [0] ) );
-         $temp = array (
-               "Name" => html_entity_decode ( LangPDFMessage1 ) . " : " . $obs ['objectname'],
-               "altname" => html_entity_decode ( LangPDFMessage2 ) . " : " . $object ["altname"],
-               "type" => $GLOBALS [$object ['type']] . html_entity_decode ( LangPDFMessage12 ) . $GLOBALS [$object ['con']],
-               "visibility" => (($obs ['visibility']) ? (html_entity_decode ( LangViewObservationField22 ) . " : " . $GLOBALS ['Visibility' . $obs ['visibility']]) : ''),
-               "seeing" => (($seeing) ? (LangViewObservationField6 . " : " . $GLOBALS ['Seeing' . $obs ['seeing']]) : ''),
-               "limmag" => (($obs ['limmag']) ? (LangViewObservationField7 . " : " . $obs ['limmag']) : ''),
-               "filter" => (($obs ['filterid']) ? (LangViewObservationField31 . " : " . $objFilter->getFilterPropertyFromId ( $obs ['filterid'], 'name' )) : ''),
-               "eyepiece" => (($obs ['eyepieceid']) ? (LangViewObservationField30 . " : " . $objEyepiece->getEyepiecePropertyFromId ( $obs ['eyepieceid'], 'name' )) : ''),
-               "lens" => (($obs ['lensid']) ? (LangViewObservationField32 . " : " . $objLens->getLensPropertyFromId ( $obs ['lensid'], 'name' )) : ''),
-               "observer" => html_entity_decode ( LangPDFMessage13 ) . $objObserver->getObserverProperty ( $obs ['observerid'], 'firstname' ) . " " . $objObserver->getObserverProperty ( $obs ['observerid'], 'name' ) . html_entity_decode ( LangPDFMessage14 ) . $formattedDate,
-               "instrument" => html_entity_decode ( LangPDFMessage11 ) . " : " . $objInstrument->getInstrumentPropertyFromId ( $obs ['instrumentid'], 'name' ),
-               "location" => html_entity_decode ( LangPDFMessage10 ) . " : " . $objLocation->getLocationPropertyFromId ( $obs ['locationid'], 'name' ),
-               "description" => $objPresentations->br2nl ( html_entity_decode ( $obs ['description'] ) ),
-               "desc" => html_entity_decode ( LangPDFMessage15 )
-         );
-         $obs1 [] = $temp;
-         $nm = $obs ['objectname'];
-         if ($object ["altname"])
-            $nm = $nm . " (" . $object ["altname"] . ")";
-         $pdf->ezText ( $nm, "14" );
-         $tmp = array (
-               array (
-                     "type" => $temp ["type"]
-               )
-         );
-         $pdf->ezTable ( $tmp, array (
-               "type" => utf8_decode ( html_entity_decode ( LangPDFMessage5 ) )
-         ), "", array (
-               "width" => "500",
-               "showHeadings" => "0",
-               "showLines" => "0",
-               "shaded" => "0"
-         ) );
-         $tmp = array (
-               array (
-                     "location" => $temp ["location"],
-                     "instrument" => $temp ["instrument"]
-               )
-         );
-         $pdf->ezTable ( $tmp, array (
-               "location" => utf8_decode ( html_entity_decode ( LangPDFMessage1 ) ),
-               "instrument" => utf8_decode ( html_entity_decode ( LangPDFMessage2 ) )
-         ), "", array (
-               "width" => "500",
-               "showHeadings" => "0",
-               "showLines" => "0",
-               "shaded" => "0"
-         ) );
-         $tmp = array (
-               array (
-                     "eyepiece" => $temp ["eyepiece"]
-               )
-         );
-         if ($obs ['eyepieceid'])
-            $pdf->ezTable ( $tmp, array (
-                  "eyepiece" => "test"
-            ), "", array (
-                  "width" => "500",
-                  "showHeadings" => "0",
-                  "showLines" => "0",
-                  "shaded" => "0"
-            ) );
-         $tmp = array (
-               array (
-                     "filter" => $temp ["filter"]
-               )
-         );
-         if ($obs ['filterid'])
-            $pdf->ezTable ( $tmp, array (
-                  "filter" => "test"
-            ), "", array (
-                  "width" => "500",
-                  "showHeadings" => "0",
-                  "showLines" => "0",
-                  "shaded" => "0"
-            ) );
-         $tmp = array (
-               array (
-                     "lens" => $temp ["lens"]
-               )
-         );
-         if ($obs ['lensid'])
-            $pdf->ezTable ( $tmp, array (
-                  "lens" => "test"
-            ), "", array (
-                  "width" => "500",
-                  "showHeadings" => "0",
-                  "showLines" => "0",
-                  "shaded" => "0"
-            ) );
-         $tmp = array (
-               array (
-                     "seeing" => $temp ["seeing"]
-               )
-         );
-         if ($seeing)
-            $pdf->ezTable ( $tmp, array (
-                  "seeing" => "test"
-            ), "", array (
-                  "width" => "500",
-                  "showHeadings" => "0",
-                  "showLines" => "0",
-                  "shaded" => "0"
-            ) );
-         $tmp = array (
-               array (
-                     "limmag" => $temp ["limmag"]
-               )
-         );
-         if ($obs ['limmag'])
-            $pdf->ezTable ( $tmp, array (
-                  "limmag" => "test"
-            ), "", array (
-                  "width" => "500",
-                  "showHeadings" => "0",
-                  "showLines" => "0",
-                  "shaded" => "0"
-            ) );
-         $tmp = array (
-               array (
-                     "visibility" => $temp ["visibility"]
-               )
-         );
-         if ($obs ['visibility'])
-            $pdf->ezTable ( $tmp, array (
-                  "visibility" => "test"
-            ), "", array (
-                  "width" => "500",
-                  "showHeadings" => "0",
-                  "showLines" => "0",
-                  "shaded" => "0"
-            ) );
-         $tmp = array (
-               array (
-                     "observer" => $temp ["observer"]
-               )
-         );
-         $pdf->ezTable ( $tmp, array (
-               "observer" => utf8_decode ( html_entity_decode ( LangPDFMessage1 ) )
-         ), "", array (
-               "width" => "500",
-               "showHeadings" => "0",
-               "showLines" => "0",
-               "shaded" => "0"
-         ) );
-         $pdf->ezText ( utf8_decode ( LangPDFMessage15 ), "12" );
-         $pdf->ezText ( "" );
-         $tmp = array (
-               array (
-                     "description" => $temp ["description"]
-               )
-         );
-         $pdf->ezTable ( $tmp, array (
-               "description" => utf8_decode ( html_entity_decode ( LangPDFMessage1 ) )
-         ), "", array (
-               "width" => "500",
-               "showHeadings" => "0",
-               "showLines" => "0",
-               "shaded" => "0"
-         ) );
-         if ($objObservation->getDsObservationProperty ( $value ['observationid'], 'hasDrawing' )) {
-            $pdf->ezText ( "" );
-            $pdf->ezImage ( $instDir . "deepsky/drawings/" . $value ['observationid'] . ".jpg", 0, 500, "none", "left" );
-         }
-         $pdf->ezText ( "" );
-      }
-      $pdf->ezStream ();
-   }
-   public function recordsetSort(array $data /*$name, $order, $mode*/)
-  {
-      $_argList = func_get_args ();
-      $_data = array_shift ( $_argList );
-      if (empty ( $_data ))
-         return $_data;
-      $_max = count ( $_argList );
-      $_params = array ();
-      $_cols = array ();
-      $_rules = array ();
-      for($_i = 0; $_i < $_max; $_i += 3) {
-         $_name = ( string ) $_argList [$_i];
-         if (! in_array ( $_name, array_keys ( current ( $_data ) ) ))
-            continue;
-         if (! isset ( $_argList [($_i + 1)] ) || is_string ( $_argList [($_i + 1)] )) {
-            $_order = SORT_ASC;
-            $_mode = SORT_REGULAR;
-            $_i -= 2;
-         } else if (3 > $_argList [($_i + 1)]) {
-            $_order = SORT_ASC;
-            $_mode = $_argList [($_i + 1)];
-            $_i --;
-         } else {
-            $_order = $_argList [($_i + 1)] == SORT_ASC ? SORT_ASC : SORT_DESC;
-            if (! isset ( $_argList [($_i + 2)] ) || is_string ( $_argList [($_i + 2)] )) {
-               $_mode = SORT_REGULAR;
-               $_i --;
-            } else
-               $_mode = $_argList [($_i + 2)];
-         }
-         $_mode = (($_mode != SORT_NUMERIC) ? (($_argList [($_i + 2)] != SORT_STRING) ? SORT_REGULAR : SORT_STRING) : SORT_NUMERIC);
-         $_rules [] = array (
-               'name' => $_name,
-               'order' => $_order,
-               'mode' => $_mode
-         );
-      }
-      foreach ( $_data as $_k => $_row ) {
-         foreach ( $_rules as $_rule ) {
-            if (! isset ( $_cols [$_rule ['name']] )) {
-               $_cols [$_rule ['name']] = array ();
-               $_params [] = &$_cols [$_rule ['name']];
-               $_params [] = $_rule ['order'];
-               $_params [] = $_rule ['mode'];
+                $y -= ($deltaline + $deltaobjectline);
+                if (($y - ($deltaline + $deltaobjectline)) < $bottom) {
+                    $this->newpage(
+                        $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, 
+                        $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, 
+                        $sectionBarSpace, '', '', $deltalineSection, $sectionBarHeight, 
+                        $fontSizeSection, $deltaline, "", "", $showelements, $reportdata
+                    );
+                    $pdf->setLineStyle(0.5);
+                }
             }
-            $_cols [$_rule ['name']] [$_k] = strtolower ( $_row [$_rule ['name']] );
-         }
-      }
-      $_params [] = &$_data;
-      call_user_func_array ( 'array_multisort', $_params );
-      return $_data;
-   }
-   public function removeFromLink($link, $value) {
-      return (($a = strpos ( $link, $value )) ? (($b = strpos ( $link, '&', $a + 1 )) ? substr ( $link, 0, $a ) . substr ( $link, $b ) : substr ( $link, 0, $a - 5 )) : $link);
-   }
-   public function rssObservations() // Creates an rss feed for DeepskyLog
-{
-      global $objObservation, $objInstrument, $objLocation, $objPresentations, $objObserver, $baseURL, $objUtil;
-      $dom = new DomDocument ( '1.0', 'US-ASCII' );
+        }
+        $pdf->ezStream();
+    }
 
-      // add root fcga -> The header
-      $rssInfo = $dom->createElement ( 'rss' );
-      $rssDom = $dom->appendChild ( $rssInfo );
+    /**
+     * Creates a pdf document from an array of observations.
+     *
+     * @param array $result The array with the observations.
+     *
+     * @return string The pdf file with the observations.
+     */
+    public function pdfObservations($result)
+    {
+        global $loggedUser, $dateformat, $instDir, $objObservation, $objObserver;
+        global $objInstrument, $objLocation, $objPresentations, $objObject;
+        global $objFilter, $objEyepiece, $objLens;
+      
+        $result = $this->sortResult($result);
+        $pdf = new Cezpdf('a4', 'portrait');
+        $pdf->ezStartPageNumbers(300, 30, 10);
+        $pdf->selectFont($instDir . 'lib/fonts/Helvetica.afm');
+        $pdf->ezText(utf8_decode(html_entity_decode($_GET['pdfTitle'])) . "\n");
+        $i = 0;
+        while (list($key, $value) = each($result)) {
+            if ($i ++ > 0) {
+                $pdf->ezNewPage();
+            }
+            $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
+            $object = $objObject->getAllInfoDsObject($obs['objectname']);
+            if ($loggedUser && ($objObserver->getObserverProperty($loggedUser, 'UT'))) {
+                $date = sscanf($obs["date"], "%4d%2d%2d");
+            } else {
+                $date = sscanf($obs["localdate"], "%4d%2d%2d");
+            }
+            if ($obs['seeing'] > - 1) {
+                $seeing = true;
+            } else {
+                $seeing = false;
+            }
+            $formattedDate = date($dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0]));
+            $temp = array (
+                "Name" => html_entity_decode(LangPDFMessage1) . " : " . $obs['objectname'],
+                "altname" => html_entity_decode(LangPDFMessage2) . " : " . $object["altname"],
+                "type" => $GLOBALS[$object['type']] . html_entity_decode(LangPDFMessage12) . $GLOBALS[$object['con']],
+                "visibility" => (($obs['visibility']) ? (html_entity_decode(LangViewObservationField22) . " : " . $GLOBALS['Visibility' . $obs['visibility']]) : ''),
+                "seeing" => (($seeing) ? (LangViewObservationField6 . " : " . $GLOBALS['Seeing' . $obs ['seeing']]) : ''),
+                "limmag" => (($obs['limmag']) ? (LangViewObservationField7 . " : " . $obs ['limmag']) : ''),
+                "filter" => (($obs['filterid']) ? (LangViewObservationField31 . " : " . $objFilter->getFilterPropertyFromId($obs['filterid'], 'name')) : ''),
+                "eyepiece" => (($obs['eyepieceid']) ? (LangViewObservationField30 . " : " . $objEyepiece->getEyepiecePropertyFromId($obs['eyepieceid'], 'name')) : ''),
+                "lens" => (($obs['lensid']) ? (LangViewObservationField32 . " : " . $objLens->getLensPropertyFromId($obs['lensid'], 'name')) : ''),
+                "observer" => html_entity_decode(LangPDFMessage13) . $objObserver->getObserverProperty($obs['observerid'], 'firstname') . " " . $objObserver->getObserverProperty($obs['observerid'], 'name') . html_entity_decode(LangPDFMessage14) . $formattedDate,
+                "instrument" => html_entity_decode(LangPDFMessage11) . " : " . $objInstrument->getInstrumentPropertyFromId($obs['instrumentid'], 'name'),
+                "location" => html_entity_decode(LangPDFMessage10) . " : " . $objLocation->getLocationPropertyFromId($obs['locationid'], 'name'),
+                "description" => $objPresentations->br2nl(html_entity_decode($obs['description'])),
+                "desc" => html_entity_decode(LangPDFMessage15)
+            );
+            $obs1[] = $temp;
+            $nm = $obs['objectname'];
+            if ($object["altname"]) {
+                $nm = $nm . " (" . $object["altname"] . ")";
+            }
+            $pdf->ezText($nm, "14");
+            $tmp = array (
+                array (
+                    "type" => $temp ["type"]
+                )
+            );
+            $pdf->ezTable(
+                $tmp, array(
+                    "type" => utf8_decode(html_entity_decode(LangPDFMessage5))
+                ), "", 
+                array(
+                    "width" => "500",
+                    "showHeadings" => "0",
+                    "showLines" => "0",
+                    "shaded" => "0"
+                )
+            );
+            $tmp = array (
+                array (
+                    "location" => $temp["location"],
+                    "instrument" => $temp["instrument"]
+               )
+            );
+            $pdf->ezTable(
+                $tmp, 
+                array(
+                    "location" => utf8_decode(html_entity_decode(LangPDFMessage1)),
+                    "instrument" => utf8_decode(html_entity_decode(LangPDFMessage2))
+                ), "", array(
+                    "width" => "500",
+                    "showHeadings" => "0",
+                    "showLines" => "0",
+                    "shaded" => "0"
+                )
+            );
+            $tmp = array(
+                array(
+                    "eyepiece" => $temp["eyepiece"]
+                )
+            );
+            if ($obs['eyepieceid']) {
+                $pdf->ezTable(
+                    $tmp, 
+                    array(
+                        "eyepiece" => "test"
+                    ), "", array(
+                        "width" => "500",
+                        "showHeadings" => "0",
+                        "showLines" => "0",
+                        "shaded" => "0"
+                    )
+                );
+            }
+            $tmp = array(
+                array(
+                    "filter" => $temp["filter"]
+                )
+            );
+            if ($obs['filterid']) {
+                $pdf->ezTable(
+                    $tmp, array(
+                        "filter" => "test"
+                    ), "", array (
+                        "width" => "500",
+                        "showHeadings" => "0",
+                        "showLines" => "0",
+                        "shaded" => "0"
+                    )
+                );
+            }
+            $tmp = array(
+                array(
+                    "lens" => $temp["lens"]
+                )
+            );
+            if ($obs['lensid']) {
+                $pdf->ezTable(
+                    $tmp, array(
+                        "lens" => "test"
+                    ), "", array (
+                        "width" => "500",
+                        "showHeadings" => "0",
+                        "showLines" => "0",
+                        "shaded" => "0"
+                    )
+                );
+            }
+            $tmp = array(
+                array(
+                    "seeing" => $temp["seeing"]
+                )
+            );
+            if ($seeing) {
+                $pdf->ezTable(
+                    $tmp, array(
+                        "seeing" => "test"
+                    ), "", array(
+                        "width" => "500",
+                        "showHeadings" => "0",
+                        "showLines" => "0",
+                        "shaded" => "0"
+                    )
+                );
+            }
+            $tmp = array(
+                array(
+                    "limmag" => $temp["limmag"]
+               )
+            );
+            if ($obs['limmag']) {
+                $pdf->ezTable(
+                    $tmp, array(
+                        "limmag" => "test"
+                    ), "", array(
+                        "width" => "500",
+                        "showHeadings" => "0",
+                        "showLines" => "0",
+                        "shaded" => "0"
+                    )
+                );
+            }
+            $tmp = array(
+                array(
+                    "visibility" => $temp["visibility"]
+                )
+            );
+            if ($obs['visibility']) {
+                $pdf->ezTable(
+                    $tmp, array(
+                        "visibility" => "test"
+                    ), "", array(
+                        "width" => "500",
+                        "showHeadings" => "0",
+                        "showLines" => "0",
+                        "shaded" => "0"
+                    )
+                );
+            }
+            $tmp = array(
+                array(
+                    "observer" => $temp["observer"]
+                )
+            );
+            $pdf->ezTable(
+                $tmp, array(
+                    "observer" => utf8_decode(html_entity_decode(LangPDFMessage1))
+                ), "", array(
+                    "width" => "500",
+                    "showHeadings" => "0",
+                    "showLines" => "0",
+                    "shaded" => "0"
+                )
+            );
+            $pdf->ezText("");
 
-      $attr = $dom->createAttribute ( "version" );
-      $rssInfo->appendChild ( $attr );
+            $pdf->ezText(utf8_decode(LangPDFMessage15), "12");
+            $pdf->ezText("");
+            $tmp = array(
+                array(
+                    "description" => $temp["description"]
+                )
+            );
+         
+            $pdf->ezTable(
+                $tmp, 
+                array(
+                    "description" => utf8_decode(html_entity_decode(LangPDFMessage1))
+                ), "", array (
+                    "width" => "500",
+                    "showHeadings" => "0",
+                    "showLines" => "0",
+                    "shaded" => "0"
+                )
+            );
+            if ($objObservation->getDsObservationProperty($value['observationid'], 'hasDrawing')) {
+                $pdf->ezText("");
+                $pdf->ezImage($instDir . "deepsky/drawings/" . $value['observationid'] . ".jpg", 0, 500, "none", "left");
+            }
+            $pdf->ezText("");
+        }
+        $pdf->ezStream();
+    }
 
-      $attrText = $dom->createTextNode ( "2.0" );
-      $attr->appendChild ( $attrText );
+    /**
+     * Sorts a record set.
+     *
+     * @param array $data The record set to sort
+     *
+     * @return array The sorted record set.
+     */
+    public function recordsetSort(array $data)
+    {
+        $_argList = func_get_args();
+        $_data = array_shift($_argList);
+        if (empty($_data)) {
+            return $_data;
+        }
+        $_max = count($_argList);
+        $_params = array();
+        $_cols = array();
+        $_rules = array();
+        for ($_i = 0; $_i < $_max; $_i += 3) {
+            $_name = ( string ) $_argList [$_i];
+            if (!in_array($_name, array_keys(current($_data)))) {
+                continue;
+            }
+            if (!isset($_argList[($_i + 1)]) || is_string($_argList[($_i + 1)])) {
+                $_order = SORT_ASC;
+                $_mode = SORT_REGULAR;
+                $_i -= 2;
+            } else if (3 > $_argList[($_i + 1)]) {
+                $_order = SORT_ASC;
+                $_mode = $_argList[($_i + 1)];
+                $_i--;
+            } else {
+                $_order = $_argList[($_i + 1)] == SORT_ASC ? SORT_ASC : SORT_DESC;
+                if (!isset($_argList[($_i + 2)]) || is_string($_argList[($_i + 2)])) {
+                    $_mode = SORT_REGULAR;
+                    $_i--;
+                } else {
+                    $_mode = $_argList[($_i + 2)];
+                }
+            }
+            $_mode = (($_mode != SORT_NUMERIC) ? (($_argLis [($_i + 2)] != SORT_STRING) ? SORT_REGULAR : SORT_STRING) : SORT_NUMERIC);
+            $_rules[] = array (
+                'name' => $_name,
+                'order' => $_order,
+                'mode' => $_mode
+            );
+        }
+        foreach ( $_data as $_k => $_row ) {
+            foreach ( $_rules as $_rule ) {
+                if (!isset($_cols[$_rule['name']])) {
+                    $_cols[$_rule['name']] = array();
+                    $_params[] = &$_cols[$_rule['name']];
+                    $_params[] = $_rule['order'];
+                    $_params[] = $_rule['mode'];
+                }
+                $_cols[$_rule['name']][$_k] = strtolower($_row[$_rule['name']]);
+            }
+        }
+        $_params[] = &$_data;
+        call_user_func_array('array_multisort', $_params);
+        return $_data;
+    }
 
-      $attr = $dom->createAttribute ( "xmlns:content" );
-      $rssInfo->appendChild ( $attr );
+    /**
+     * Removes a string from a link.
+     *
+     * @param string $link  The link to use.
+     * @param string $value The value to remove from the link.
+     *
+     * @return string The link without the string.
+     */
+    public function removeFromLink($link, $value) 
+    {
+        return (($a = strpos($link, $value)) ? (($b = strpos($link, '&', $a + 1)) ? substr($link, 0, $a) . substr($link, $b) : substr($link, 0, $a - 5)) : $link);
+    }
 
-      $attrText = $dom->createTextNode ( "http://purl.org/rss/1.0/modules/content/" );
-      $attr->appendChild ( $attrText );
+    /**
+     * Returns an rss file with deepsky and comet observations of the last month.
+     *
+     * @return string The rss file with observations.
+     */
+    public function rssObservations()
+    {
+        global $objObservation, $objInstrument, $objLocation, $objPresentations, $objObserver, $baseURL, $objUtil;
+        $dom = new DomDocument('1.0', 'US-ASCII');
 
-      $attr = $dom->createAttribute ( "xmlns:dc" );
-      $rssInfo->appendChild ( $attr );
+        // add root fcga -> The header
+        $rssInfo = $dom->createElement('rss');
+        $rssDom = $dom->appendChild($rssInfo);
 
-      $attrText = $dom->createTextNode ( "http://purl.org/dc/elements/1.1/" );
-      $attr->appendChild ( $attrText );
+        $attr = $dom->createAttribute("version");
+        $rssInfo->appendChild($attr);
 
-      $attr = $dom->createAttribute ( "xmlns:atom" );
-      $rssInfo->appendChild ( $attr );
+        $attrText = $dom->createTextNode("2.0");
+        $attr->appendChild($attrText);
 
-      $attrText = $dom->createTextNode ( "http://www.w3.org/2005/Atom" );
-      $attr->appendChild ( $attrText );
+        $attr = $dom->createAttribute("xmlns:content");
+        $rssInfo->appendChild($attr);
 
-      // add root - <channel>
-      $channelDom = $rssDom->appendChild ( $dom->createElement ( 'channel' ) );
+        $attrText = $dom->createTextNode("http://purl.org/rss/1.0/modules/content/");
+        $attr->appendChild($attrText);
 
-      // add root - <channel> - <title>
-      $titleDom = $channelDom->appendChild ( $dom->createElement ( 'title' ) );
-      $titleDom->appendChild ( $dom->createTextNode ( "DeepskyLog" ) );
+        $attr = $dom->createAttribute("xmlns:dc");
+        $rssInfo->appendChild($attr);
 
-      // add root - <channel> - <description>
-      $descDom = $channelDom->appendChild ( $dom->createElement ( 'description' ) );
-      $descDom->appendChild ( $dom->createTextNode ( "DeepskyLog - visual deepsky and comets observations" ) );
+        $attrText = $dom->createTextNode("http://purl.org/dc/elements/1.1/");
+        $attr->appendChild($attrText);
 
-      // add root - <channel> - <atom>
-      $atomDom = $channelDom->appendChild ( $dom->createElement ( 'atom:link' ) );
+        $attr = $dom->createAttribute("xmlns:atom");
+        $rssInfo->appendChild($attr);
 
-      $attr = $dom->createAttribute ( "href" );
-      $atomDom->appendChild ( $attr );
+        $attrText = $dom->createTextNode("http://www.w3.org/2005/Atom");
+        $attr->appendChild($attrText);
 
-      $attrText = $dom->createTextNode ( $baseURL . "observations.rss" );
-      $attr->appendChild ( $attrText );
+        // add root - <channel>
+        $channelDom = $rssDom->appendChild($dom->createElement('channel'));
 
-      $attr = $dom->createAttribute ( "rel" );
-      $atomDom->appendChild ( $attr );
+        // add root - <channel> - <title>
+        $titleDom = $channelDom->appendChild($dom->createElement('title'));
+        $titleDom->appendChild($dom->createTextNode("DeepskyLog"));
 
-      $attrText = $dom->createTextNode ( "self" );
-      $attr->appendChild ( $attrText );
+        // add root - <channel> - <description>
+        $descDom = $channelDom->appendChild($dom->createElement('description'));
+        $descDom->appendChild($dom->createTextNode("DeepskyLog - visual deepsky and comets observations"));
 
-      $attr = $dom->createAttribute ( "type" );
-      $atomDom->appendChild ( $attr );
+        // add root - <channel> - <atom>
+        $atomDom = $channelDom->appendChild($dom->createElement('atom:link'));
 
-      $attrText = $dom->createTextNode ( "application/rss+xml" );
-      $attr->appendChild ( $attrText );
+        $attr = $dom->createAttribute("href");
+        $atomDom->appendChild($attr);
 
-      // add root - <channel> - <link>
-      $linkDom = $channelDom->appendChild ( $dom->createElement ( 'link' ) );
-      $linkDom->appendChild ( $dom->createTextNode ( "http://www.deepskylog.org/" ) );
+        $attrText = $dom->createTextNode($baseURL . "observations.rss");
+        $attr->appendChild($attrText);
 
-      $theDate = date ( 'r' );
+        $attr = $dom->createAttribute("rel");
+        $atomDom->appendChild($attr);
 
-      // add root - <channel> - <link>
-      $lbdDom = $channelDom->appendChild ( $dom->createElement ( 'lastBuildDate' ) );
-      $lbdDom->appendChild ( $dom->createTextNode ( $theDate ) );
+        $attrText = $dom->createTextNode("self");
+        $attr->appendChild($attrText);
 
-      // Get the new deepsky observations of the last month
-      $theDate = date ( 'Ymd', strtotime ( '-1 month' ) );
+        $attr = $dom->createAttribute("type");
+        $atomDom->appendChild($attr);
 
-      $_GET ['minyear'] = substr ( $theDate, 0, 4 );
+        $attrText = $dom->createTextNode("application/rss+xml");
+        $attr->appendChild($attrText);
 
-      $_GET ['minmonth'] = substr ( $theDate, 4, 2 );
+        // add root - <channel> - <link>
+        $linkDom = $channelDom->appendChild($dom->createElement('link'));
+        $linkDom->appendChild($dom->createTextNode("http://www.deepskylog.org/"));
 
-      $_GET ['minday'] = substr ( $theDate, 6, 2 );
+        $theDate = date('r');
 
-      $query = array (
+        // add root - <channel> - <link>
+        $lbdDom = $channelDom->appendChild($dom->createElement('lastBuildDate'));
+        $lbdDom->appendChild($dom->createTextNode($theDate));
+
+        // Get the new deepsky observations of the last month
+        $theDate = date('Ymd', strtotime('-1 month'));
+
+        $_GET['minyear'] = substr($theDate, 0, 4);
+        $_GET['minmonth'] = substr($theDate, 4, 2);
+        $_GET['minday'] = substr($theDate, 6, 2);
+
+        $query = array (
             "catalog" => '%',
-            "mindate" => $objUtil->checkGetDate ( 'minyear', 'minmonth', 'minday' )
-      );
+            "mindate" => $objUtil->checkGetDate('minyear', 'minmonth', 'minday')
+        );
 
-      $result = $objObservation->getObservationFromQuery ( $query, 'A' );
+        $result = $objObservation->getObservationFromQuery($query, 'A');
 
-      while ( list ( $key, $value ) = each ( $result ) ) {
-         // add root - <channel> - <item>
-         $itemDom = $channelDom->appendChild ( $dom->createElement ( 'item' ) );
+        while (list($key, $value) = each($result)) {
+            // add root - <channel> - <item>
+            $itemDom = $channelDom->appendChild($dom->createElement('item'));
 
-         $titleDom = $itemDom->appendChild ( $dom->createElement ( 'title' ) );
-         $titleDom->appendChild ( $dom->createTextNode ( $value ['observername'] . " : " . $value ['objectname'] . " with " . htmlspecialchars_decode ( $objInstrument->getInstrumentPropertyFromId ( $value ['instrumentid'], 'name' ) ) . " from " . $objLocation->getLocationPropertyFromId ( $objObservation->getDsObservationProperty ( $value ['observationid'], 'locationid' ), 'name' ) ) );
-         $linkDom = $itemDom->appendChild ( $dom->createElement ( 'link' ) );
-         $linkDom->appendChild ( $dom->createCDATASection ( $baseURL . "index.php?indexAction=detail_observation&observation=" . $value ['observationid'] . "&QobsKey=0&dalm=D" ) );
+            $titleDom = $itemDom->appendChild($dom->createElement('title'));
+            $titleDom->appendChild(
+                $dom->createTextNode(
+                    $value['observername'] . " : " . $value['objectname'] . " with " . 
+                    htmlspecialchars_decode($objInstrument->getInstrumentPropertyFromId($value['instrumentid'], 'name')) . 
+                    " from " . 
+                    $objLocation->getLocationPropertyFromId($objObservation->getDsObservationProperty($value['observationid'], 'locationid'), 'name')
+                )
+            );
+            $linkDom = $itemDom->appendChild($dom->createElement('link'));
+            $linkDom->appendChild(
+                $dom->createCDATASection(
+                    $baseURL . "index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&QobsKey=0&dalm=D"
+                )
+            );
 
-         $descDom = $itemDom->appendChild ( $dom->createElement ( 'description' ) );
-         $descDom->appendChild ( $dom->createCDATASection ( $objPresentations->br2nl ( utf8_encode ( $value ['observationdescription'] ) ) ) );
+            $descDom = $itemDom->appendChild($dom->createElement('description'));
+            $descDom->appendChild(
+                $dom->createCDATASection(
+                    $objPresentations->br2nl(utf8_encode($value['observationdescription']))
+                )
+            );
 
-         $authorDom = $itemDom->appendChild ( $dom->createElement ( 'dc:creator' ) );
-         $authorDom->appendChild ( $dom->createCDATASection ( $value ['observername'] ) );
+            $authorDom = $itemDom->appendChild($dom->createElement('dc:creator'));
+            $authorDom->appendChild($dom->createCDATASection($value['observername']));
 
-         $guidDom = $itemDom->appendChild ( $dom->createElement ( 'guid' ) );
-         $guidDom->appendChild ( $dom->createTextNode ( "deepsky" . $value ['observationid'] ) );
+            $guidDom = $itemDom->appendChild($dom->createElement('guid'));
+            $guidDom->appendChild($dom->createTextNode("deepsky" . $value['observationid']));
 
-         $attr = $dom->createAttribute ( "isPermaLink" );
-         $guidDom->appendChild ( $attr );
+            $attr = $dom->createAttribute("isPermaLink");
+            $guidDom->appendChild($attr);
 
-         $attrText = $dom->createTextNode ( "false" );
-         $attr->appendChild ( $attrText );
+            $attrText = $dom->createTextNode("false");
+            $attr->appendChild($attrText);
 
-         $pubDateDom = $itemDom->appendChild ( $dom->createElement ( 'pubDate' ) );
+            $pubDateDom = $itemDom->appendChild($dom->createElement('pubDate'));
 
-         date_default_timezone_set ( 'UTC' );
+            date_default_timezone_set('UTC');
 
-         $time = - 999;
+            $time = -999;
 
-         $obs = $objObservation->getAllInfoDsObservation ( $value ['observationid'] );
-         $time = $obs ['time'];
+            $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
+            $time = $obs['time'];
 
-         if ($time >= "0") {
-            $hour = ( int ) ($time / 100);
-            $minute = $time - (100 * $hour);
-         } else {
-            $hour = 0;
-            $minute = 0;
-         }
-         $date = $value ['observationdate'];
+            if ($time >= "0") {
+                $hour = (int)($time / 100);
+                $minute = $time - (100 * $hour);
+            } else {
+                $hour = 0;
+                $minute = 0;
+            }
+            $date = $value['observationdate'];
 
-         $year = substr ( $date, 0, 4 );
-         $month = substr ( $date, 4, 2 );
-         $day = substr ( $date, 6, 2 );
+            $year = substr($date, 0, 4);
+            $month = substr($date, 4, 2);
+            $day = substr($date, 6, 2);
 
-         $pubDateDom->appendChild ( $dom->createTextNode ( date ( "r", mktime ( $hour, $minute, 0, $month, $day, $year ) ) ) );
-      }
+            $pubDateDom->appendChild($dom->createTextNode(date("r", mktime($hour, $minute, 0, $month, $day, $year))));
+        }
 
-      include_once "cometobjects.php";
-      include_once "observers.php";
-      include_once "instruments.php";
-      include_once "locations.php";
-      include_once "cometobservations.php";
-      include_once "icqmethod.php";
-      include_once "icqreferencekey.php";
-      global $instDir, $objCometObject;
-      $objects = new CometObjects ();
-      $observer = new Observers ();
-      $instrument = new Instruments ();
-      $observation = new CometObservations ();
-      $location = new Locations ();
-      $util = $this;
-      $ICQMETHODS = new ICQMETHOD ();
-      $ICQREFERENCEKEYS = new ICQREFERENCEKEY ();
+        include_once "cometobjects.php";
+        include_once "observers.php";
+        include_once "instruments.php";
+        include_once "locations.php";
+        include_once "cometobservations.php";
+        include_once "icqmethod.php";
+        include_once "icqreferencekey.php";
+        global $instDir, $objCometObject;
+        $objects = new CometObjects();
+        $observer = new Observers();
+        $instrument = new Instruments();
+        $observation = new CometObservations();
+        $location = new Locations();
+        $util = $this;
+        $ICQMETHODS = new ICQMETHOD();
+        $ICQREFERENCEKEYS = new ICQREFERENCEKEY();
 
-      $cometsResult = $observation->getObservationFromQuery ( $query );
+        $cometsResult = $observation->getObservationFromQuery($query);
 
-      while ( list ( $key, $value ) = each ( $cometsResult ) ) {
-         $objectname = $objCometObject->getName ( $observation->getObjectId ( $value ) );
+        while (list($key, $value) = each($cometsResult)) {
+            $objectname = $objCometObject->getName($observation->getObjectId($value));
 
-         // add root - <channel> - <item>
-         $itemDom = $channelDom->appendChild ( $dom->createElement ( 'item' ) );
+            // add root - <channel> - <item>
+            $itemDom = $channelDom->appendChild($dom->createElement('item'));
 
-         $title = htmlspecialchars_decode ( $objectname );
+            $title = htmlspecialchars_decode($objectname);
 
-         // Location and instrument
-         if ($observation->getLocationId ( $value ) != 0 && $observation->getLocationId ( $value ) != 1) {
-            $title = $title . " from " . htmlspecialchars_decode ( $location->getLocationPropertyFromId ( $observation->getLocationId ( $value ), 'name' ) );
-         }
+            // Location and instrument
+            if ($observation->getLocationId($value) != 0 && $observation->getLocationId($value) != 1) {
+                $title = $title . " from " . 
+                    htmlspecialchars_decode(
+                        $location->getLocationPropertyFromId(
+                            $observation->getLocationId($value), 'name'
+                        )
+                    );
+            }
 
-         if ($observation->getInstrumentId ( $value ) != 0) {
-            $title = $title . " with " . htmlspecialchars_decode ( $instrument->getInstrumentPropertyFromId ( $observation->getInstrumentId ( $value ), 'name' ) );
-         }
+            if ($observation->getInstrumentId($value) != 0) {
+                $title = $title . " with " . 
+                    htmlspecialchars_decode(
+                        $instrument->getInstrumentPropertyFromId($observation->getInstrumentId($value), 'name')
+                    );
+            }
 
-         $titleDom = $itemDom->appendChild ( $dom->createElement ( 'title' ) );
-         $titleDom->appendChild ( $dom->createTextNode ( $title ) );
-         $linkDom = $itemDom->appendChild ( $dom->createElement ( 'link' ) );
-         $linkDom->appendChild ( $dom->createCDATASection ( $baseURL . "index.php?indexAction=comets_detail_observation&observation=" . $value ) );
+            $titleDom = $itemDom->appendChild($dom->createElement('title'));
+            $titleDom->appendChild($dom->createTextNode($title));
+            $linkDom = $itemDom->appendChild($dom->createElement('link'));
+            $linkDom->appendChild(
+                $dom->createCDATASection(
+                    $baseURL . 
+                    "index.php?indexAction=comets_detail_observation&observation=" . 
+                    $value
+                )
+            );
 
-         // Description
-         $description = $observation->getDescription ( $value );
+            // Description
+            $description = $observation->getDescription($value);
 
-         if (strcmp ( $description, "" ) != 0) {
-            $descDom = $itemDom->appendChild ( $dom->createElement ( 'description' ) );
-            $descDom->appendChild ( $dom->createCDATASection ( $objPresentations->br2nl ( utf8_encode ( $description ) ) ) );
-         } else {
-            $descDom = $itemDom->appendChild ( $dom->createElement ( 'description' ) );
-            $descDom->appendChild ( $dom->createCDATASection ( "" ) );
-         }
+            if (strcmp($description, "") != 0) {
+                $descDom = $itemDom->appendChild($dom->createElement('description'));
+                $descDom->appendChild($dom->createCDATASection($objPresentations->br2nl(utf8_encode($description))));
+            } else {
+                $descDom = $itemDom->appendChild($dom->createElement('description'));
+                $descDom->appendChild($dom->createCDATASection(""));
+            }
 
-         $observerid = $observation->getObserverId ( $value );
-         $observername = $observer->getObserverProperty ( $observerid, 'firstname' ) . " " . $observer->getObserverProperty ( $observerid, 'name' );
+            $observerid = $observation->getObserverId($value);
+            $observername = $observer->getObserverProperty($observerid, 'firstname') . 
+                " " . $observer->getObserverProperty($observerid, 'name');
 
-         $authorDom = $itemDom->appendChild ( $dom->createElement ( 'dc:creator' ) );
-         $authorDom->appendChild ( $dom->createCDATASection ( $observername ) );
+            $authorDom = $itemDom->appendChild($dom->createElement('dc:creator'));
+            $authorDom->appendChild($dom->createCDATASection($observername));
 
-         $guidDom = $itemDom->appendChild ( $dom->createElement ( 'guid' ) );
-         $guidDom->appendChild ( $dom->createTextNode ( "comet" . $value ) );
+            $guidDom = $itemDom->appendChild($dom->createElement('guid'));
+            $guidDom->appendChild($dom->createTextNode("comet" . $value));
 
-         $attr = $dom->createAttribute ( "isPermaLink" );
-         $guidDom->appendChild ( $attr );
+            $attr = $dom->createAttribute("isPermaLink");
+            $guidDom->appendChild($attr);
 
-         $attrText = $dom->createTextNode ( "false" );
-         $attr->appendChild ( $attrText );
+            $attrText = $dom->createTextNode("false");
+            $attr->appendChild($attrText);
 
-         $pubDateDom = $itemDom->appendChild ( $dom->createElement ( 'pubDate' ) );
+            $pubDateDom = $itemDom->appendChild($dom->createElement('pubDate'));
 
-         date_default_timezone_set ( 'UTC' );
+            date_default_timezone_set('UTC');
 
-         $date = sscanf ( $observation->getLocalDate ( $value ), "%4d%2d%2d" );
-         $time = $observation->getLocalTime ( $value );
+            $date = sscanf($observation->getLocalDate($value), "%4d%2d%2d");
+            $time = $observation->getLocalTime($value);
 
-         $hour = ( int ) ($time / 100);
-         $minute = $time - $hour * 100;
+            $hour = (int) ($time / 100);
+            $minute = $time - $hour * 100;
 
-         $pubDateDom->appendChild ( $dom->createTextNode ( date ( "r", mktime ( $hour, $minute, 0, $date [1], $date [2], $date [0] ) ) ) );
-      }
+            $pubDateDom->appendChild(
+                $dom->createTextNode(
+                    date(
+                        "r", 
+                        mktime($hour, $minute, 0, $date[1], $date[2], $date[0])
+                    )
+                )
+            );
+        }
 
-      // generate xml
-      $dom->formatOutput = true; // set the formatOutput attribute of
-                                 // domDocument to true
-                                 // save XML as string or file
-      $test1 = $dom->saveXML (); // put string in test1
+        // generate xml
+        $dom->formatOutput = true; // set the formatOutput attribute of
+                                   // domDocument to true
+                                   // save XML as string or file
+        $out = $dom->saveXML();   // put string in test1
 
-      print $test1;
-   }
-   private function utilitiesCheckIndexActionAdmin($action, $includefile) {
-      if (array_key_exists ( 'indexAction', $_REQUEST ) && ($_REQUEST ['indexAction'] == $action) && array_key_exists ( 'admin', $_SESSION ) && ($_SESSION ['admin'] == "yes"))
-         return $includefile;
-   }
-   private function utilitiesCheckIndexActionAll($action, $includefile) {
-      if (array_key_exists ( 'indexAction', $_GET ) && ($_GET ['indexAction'] == $action))
-         return $includefile;
-   }
+        print $out;
+    }
+
+    /**
+     * Checks if the action is requested and the logged in user is an administrator.
+     *
+     * @param string $action      The action to check.
+     * @param string $includefile The file to include when the action is requested.
+     * 
+     * @return string The file to include or no file at all.
+     */
+    private function _utilitiesCheckIndexActionAdmin($action, $includefile) 
+    {
+        if (array_key_exists('indexAction', $_REQUEST) 
+            && ($_REQUEST['indexAction'] == $action) 
+            && array_key_exists('admin', $_SESSION) 
+            && ($_SESSION['admin'] == "yes")
+        ) {
+            return $includefile;
+        }
+    }
+
+    /**
+     * Checks if the action is requested and permitted for all users (even if not logged in).
+     *
+     * @param string $action      The action to check.
+     * @param string $includefile The file to include when the action is requested.
+     * 
+     * @return string The file to include or no file at all.
+     */
+    private function _utilitiesCheckIndexActionAll($action, $includefile) {
+        if (array_key_exists('indexAction', $_GET) && ($_GET['indexAction'] == $action)) {
+            return $includefile;
+        }
+    }
+
+    /**
+     * Checks if the action is requested and permitted for a logged in user.
+     *
+     * @param string $action      The action to check.
+     * @param string $includefile The file to include when the action is requested.
+     * 
+     * @return string The file to include or no file at all.
+     */
+    private function _utilitiesCheckIndexActionMember($action, $includefile) 
+    {
+        global $loggedUser;
+        if (array_key_exists('indexAction', $_GET) && ($_GET['indexAction'] == $action) && $loggedUser) {
+            return $includefile;
+        }
+    }
+  
    private function utilitiesCheckIndexActionDSquickPick() {
       global $objObject, $entryMessage;
       if ($this->checkGetKey ( 'indexAction' ) == 'quickpick') {
@@ -3433,95 +3711,95 @@ class Utils
       }
    }
    public function utilitiesDispatchIndexAction() {
-      if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_csv', 'deepsky/content/new_observationcsv.php' )))
-         if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_xml', 'deepsky/content/newObservationXml.php' )))
-            if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_object', 'deepsky/content/new_object.php' )))
-               if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_observation', 'deepsky/content/new_observation.php' )))
-                  if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_object', 'deepsky/content/view_object.php' )))
-                     if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'changeToken', 'common/content/change_password.php' )))
-                        if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observation', 'deepsky/content/view_observation.php' )))
-                           if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_catalogs', 'deepsky/content/view_catalogs.php' )))
-                              if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'atlaspage', 'deepsky/content/dsatlas.php' )))
-                                 if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'downloadAstroImageCatalogs', 'deepsky/content/downloadastroimagecatalogs.php' )))
-                                    if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'import_csv_list', 'deepsky/content/new_listdatacsv.php' )))
-                                       if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'listaction', 'deepsky/content/tolist.php' )))
-                                          if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAdmin ( 'manage_csv_object', 'deepsky/content/manage_objects_csv.php' )))
-                                             if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'query_objects', 'deepsky/content/setup_objects_query.php' )))
-                                                if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'query_observations', 'deepsky/content/setup_observations_query.php' )))
-                                                   if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'rank_objects', 'deepsky/content/top_objects.php' )))
-                                                      if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'rank_observers', 'deepsky/content/top_observers.php' )))
-                                                         if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'statistics', 'common/content/statistics.php' )))
-                                                            if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_lenses', 'common/content/view_lenses.php' )))
-                                                               if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAdmin ( 'overview_lenses', 'common/content/overview_lenses.php' )))
-                                                                  if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_query_objects', 'deepsky/content/selected_objects.php' )))
-                                                                     if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_selected_observations', 'deepsky/content/selected_observations.php' )))
-                                                                        if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_selected_sessions', 'deepsky/content/selected_sessions.php' )))
-                                                                           if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_my_sessions', 'deepsky/content/my_sessions.php' )))
-                                                                              if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_observer_catalog', 'deepsky/content/details_observer_catalog.php' )))
-                                                                                 if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'objectsSets', 'common/content/objectsSets.php' )))
-                                                                                    if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_atlaspages', 'common/content/atlasPages.php' )))
-                                                                                       if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'change_account', 'common/content/change_account.php' )))
-                                                                                          if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_eyepiece', 'common/content/change_eyepiece.php' )))
-                                                                                             if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_filter', 'common/content/change_filter.php' )))
-                                                                                                if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_instrument', 'common/content/change_instrument.php' )))
-                                                                                                   if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_lens', 'common/content/change_lens.php' )))
-                                                                                                      if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_site', 'common/content/change_site.php' )))
-                                                                                                         if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_session', 'deepsky/content/change_session.php' )))
-                                                                                                            if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_session', 'deepsky/content/new_session.php' )))
-                                                                                                               if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_eyepiece', 'common/content/new_eyepiece.php' )))
-                                                                                                                  if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_filter', 'common/content/new_filter.php' )))
-                                                                                                                     if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_instrument', 'common/content/new_instrument.php' )))
-                                                                                                                        if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_lens', 'common/content/new_lens.php' )))
-                                                                                                                           if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_sites', 'common/content/locations.php' )))
-                                                                                                                              if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_lists', 'deepsky/content/view_list.php' )))
-                                                                                                                                 if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_eyepiece', 'common/content/change_eyepiece.php' )))
-                                                                                                                                    if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_filter', 'common/content/change_filter.php' )))
-                                                                                                                                       if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_instrument', 'common/content/change_instrument.php' )))
-                                                                                                                                          if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_lens', 'common/content/change_lens.php' )))
-                                                                                                                                             if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_location', 'common/content/change_site.php' )))
-                                                                                                                                                if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observer', 'common/content/view_observer.php' )))
-                                                                                                                                                   if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observer1', 'common/content/view_observer1.php' )))
-                                                                                                                                                      if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observer2', 'common/content/view_observer2.php' )))
-                                                                                                                                                         if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observer3', 'common/content/view_observer3.php' )))
-                                                                                                                                                            if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'message', 'common/content/message.php' )))
-                                                                                                                                                               if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'reportsLayout', 'common/content/reportslayout.php' )))
-                                                                                                                                                                  if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'search_sites', 'common/content/search_locations.php' )))
-                                                                                                                                                                     if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'site_result', 'common/content/getLocation.php' )))
-                                                                                                                                                                        if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'subscribe', 'common/content/register.php' )))
-                                                                                                                                                                           if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'overview_eyepieces', 'common/content/overview_eyepieces.php' )))
-                                                                                                                                                                              if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_eyepieces', 'common/content/view_eyepieces.php' )))
-                                                                                                                                                                                 if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_filters', 'common/content/view_filters.php' )))
-                                                                                                                                                                                    if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'overview_filters', 'common/content/overview_filters.php' )))
-                                                                                                                                                                                       if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_instruments', 'common/content/view_instruments.php' )))
-                                                                                                                                                                                          if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'overview_instruments', 'common/content/overview_instruments.php' )))
-                                                                                                                                                                                             if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_lenses', 'common/content/overview_lenses.php' )))
-                                                                                                                                                                                                if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'overview_locations', 'common/content/overview_locations.php' )))
-                                                                                                                                                                                                   if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_location', 'common/content/new_location.php' )))
-                                                                                                                                                                                                      if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_observers', 'common/content/overview_observers.php' )))
-                                                                                                                                                                                                         if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'show_messages', 'common/content/messages.php' )))
-                                                                                                                                                                                                            if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_message', 'common/content/view_message.php' )))
-                                                                                                                                                                                                               if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'new_message', 'common/content/new_message.php' )))
-                                                                                                                                                                                                                  if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'admin_check_objects', 'deepsky/control/admincheckobjects.php' )))
+      if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'add_csv', 'deepsky/content/new_observationcsv.php' )))
+         if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'add_xml', 'deepsky/content/newObservationXml.php' )))
+            if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'add_object', 'deepsky/content/new_object.php' )))
+               if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'add_observation', 'deepsky/content/new_observation.php' )))
+                  if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'detail_object', 'deepsky/content/view_object.php' )))
+                     if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'changeToken', 'common/content/change_password.php' )))
+                        if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'detail_observation', 'deepsky/content/view_observation.php' )))
+                           if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'view_catalogs', 'deepsky/content/view_catalogs.php' )))
+                              if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'atlaspage', 'deepsky/content/dsatlas.php' )))
+                                 if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'downloadAstroImageCatalogs', 'deepsky/content/downloadastroimagecatalogs.php' )))
+                                    if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'import_csv_list', 'deepsky/content/new_listdatacsv.php' )))
+                                       if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'listaction', 'deepsky/content/tolist.php' )))
+                                          if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAdmin ( 'manage_csv_object', 'deepsky/content/manage_objects_csv.php' )))
+                                             if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'query_objects', 'deepsky/content/setup_objects_query.php' )))
+                                                if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'query_observations', 'deepsky/content/setup_observations_query.php' )))
+                                                   if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'rank_objects', 'deepsky/content/top_objects.php' )))
+                                                      if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'rank_observers', 'deepsky/content/top_observers.php' )))
+                                                         if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'statistics', 'common/content/statistics.php' )))
+                                                            if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'view_lenses', 'common/content/view_lenses.php' )))
+                                                               if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAdmin ( 'overview_lenses', 'common/content/overview_lenses.php' )))
+                                                                  if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'result_query_objects', 'deepsky/content/selected_objects.php' )))
+                                                                     if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'result_selected_observations', 'deepsky/content/selected_observations.php' )))
+                                                                        if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'result_selected_sessions', 'deepsky/content/selected_sessions.php' )))
+                                                                           if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'result_my_sessions', 'deepsky/content/my_sessions.php' )))
+                                                                              if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'view_observer_catalog', 'deepsky/content/details_observer_catalog.php' )))
+                                                                                 if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'objectsSets', 'common/content/objectsSets.php' )))
+                                                                                    if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'view_atlaspages', 'common/content/atlasPages.php' )))
+                                                                                       if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'change_account', 'common/content/change_account.php' )))
+                                                                                          if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'adapt_eyepiece', 'common/content/change_eyepiece.php' )))
+                                                                                             if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'adapt_filter', 'common/content/change_filter.php' )))
+                                                                                                if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'adapt_instrument', 'common/content/change_instrument.php' )))
+                                                                                                   if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'adapt_lens', 'common/content/change_lens.php' )))
+                                                                                                      if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'adapt_site', 'common/content/change_site.php' )))
+                                                                                                         if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'adapt_session', 'deepsky/content/change_session.php' )))
+                                                                                                            if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'add_session', 'deepsky/content/new_session.php' )))
+                                                                                                               if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'add_eyepiece', 'common/content/new_eyepiece.php' )))
+                                                                                                                  if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'add_filter', 'common/content/new_filter.php' )))
+                                                                                                                     if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'add_instrument', 'common/content/new_instrument.php' )))
+                                                                                                                        if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'add_lens', 'common/content/new_lens.php' )))
+                                                                                                                           if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'view_sites', 'common/content/locations.php' )))
+                                                                                                                              if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'view_lists', 'deepsky/content/view_list.php' )))
+                                                                                                                                 if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'detail_eyepiece', 'common/content/change_eyepiece.php' )))
+                                                                                                                                    if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'detail_filter', 'common/content/change_filter.php' )))
+                                                                                                                                       if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'detail_instrument', 'common/content/change_instrument.php' )))
+                                                                                                                                          if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'detail_lens', 'common/content/change_lens.php' )))
+                                                                                                                                             if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'detail_location', 'common/content/change_site.php' )))
+                                                                                                                                                if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'detail_observer', 'common/content/view_observer.php' )))
+                                                                                                                                                   if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'detail_observer1', 'common/content/view_observer1.php' )))
+                                                                                                                                                      if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'detail_observer2', 'common/content/view_observer2.php' )))
+                                                                                                                                                         if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'detail_observer3', 'common/content/view_observer3.php' )))
+                                                                                                                                                            if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'message', 'common/content/message.php' )))
+                                                                                                                                                               if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'reportsLayout', 'common/content/reportslayout.php' )))
+                                                                                                                                                                  if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'search_sites', 'common/content/search_locations.php' )))
+                                                                                                                                                                     if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'site_result', 'common/content/getLocation.php' )))
+                                                                                                                                                                        if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'subscribe', 'common/content/register.php' )))
+                                                                                                                                                                           if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'overview_eyepieces', 'common/content/overview_eyepieces.php' )))
+                                                                                                                                                                              if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'view_eyepieces', 'common/content/view_eyepieces.php' )))
+                                                                                                                                                                                 if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'view_filters', 'common/content/view_filters.php' )))
+                                                                                                                                                                                    if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'overview_filters', 'common/content/overview_filters.php' )))
+                                                                                                                                                                                       if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'view_instruments', 'common/content/view_instruments.php' )))
+                                                                                                                                                                                          if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'overview_instruments', 'common/content/overview_instruments.php' )))
+                                                                                                                                                                                             if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'view_lenses', 'common/content/overview_lenses.php' )))
+                                                                                                                                                                                                if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'overview_locations', 'common/content/overview_locations.php' )))
+                                                                                                                                                                                                   if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'add_location', 'common/content/new_location.php' )))
+                                                                                                                                                                                                      if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'view_observers', 'common/content/overview_observers.php' )))
+                                                                                                                                                                                                         if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'show_messages', 'common/content/messages.php' )))
+                                                                                                                                                                                                            if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'view_message', 'common/content/view_message.php' )))
+                                                                                                                                                                                                               if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'new_message', 'common/content/new_message.php' )))
+                                                                                                                                                                                                                  if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'admin_check_objects', 'deepsky/control/admincheckobjects.php' )))
 
-                                                                                                                                                                                                                     if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_all_observations', 'comets/content/overview_observations.php' )))
-                                                                                                                                                                                                                        if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_detail_object', 'comets/content/view_object.php' )))
-                                                                                                                                                                                                                           if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_detail_observation', 'comets/content/view_observation.php' )))
-                                                                                                                                                                                                                              if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'comets_adapt_observation', 'comets/content/new_observation.php' )))
-                                                                                                                                                                                                                                 if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'comets_add_observation', 'comets/content/new_observation.php' )))
-                                                                                                                                                                                                                                    if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_result_query_observations', 'comets/content/selected_observations.php' )))
-                                                                                                                                                                                                                                       if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_detail_observation', 'comets/content/view_observation.php' )))
-                                                                                                                                                                                                                                          if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'comets_add_object', 'comets/content/new_object.php' )))
-                                                                                                                                                                                                                                             if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_detail_object', 'comets/content/view_object.php' )))
-                                                                                                                                                                                                                                                if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_view_objects', 'comets/content/overview_objects.php' )))
-                                                                                                                                                                                                                                                   if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_all_observations', 'comets/content/overview_observations.php' )))
-                                                                                                                                                                                                                                                      if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_result_query_objects', 'comets/content/execute_query_objects.php' )))
-                                                                                                                                                                                                                                                         if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_result_selected_observations', 'comets/content/selected_observations2.php' )))
-                                                                                                                                                                                                                                                            if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_rank_observers', 'comets/content/top_observers.php' )))
-                                                                                                                                                                                                                                                               if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_rank_objects', 'comets/content/top_objects.php' )))
-                                                                                                                                                                                                                                                                  if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_query_observations', 'comets/content/setup_observations_query.php' )))
+                                                                                                                                                                                                                     if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_all_observations', 'comets/content/overview_observations.php' )))
+                                                                                                                                                                                                                        if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_detail_object', 'comets/content/view_object.php' )))
+                                                                                                                                                                                                                           if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_detail_observation', 'comets/content/view_observation.php' )))
+                                                                                                                                                                                                                              if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'comets_adapt_observation', 'comets/content/new_observation.php' )))
+                                                                                                                                                                                                                                 if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'comets_add_observation', 'comets/content/new_observation.php' )))
+                                                                                                                                                                                                                                    if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_result_query_observations', 'comets/content/selected_observations.php' )))
+                                                                                                                                                                                                                                       if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_detail_observation', 'comets/content/view_observation.php' )))
+                                                                                                                                                                                                                                          if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionMember ( 'comets_add_object', 'comets/content/new_object.php' )))
+                                                                                                                                                                                                                                             if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_detail_object', 'comets/content/view_object.php' )))
+                                                                                                                                                                                                                                                if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_view_objects', 'comets/content/overview_objects.php' )))
+                                                                                                                                                                                                                                                   if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_all_observations', 'comets/content/overview_observations.php' )))
+                                                                                                                                                                                                                                                      if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_result_query_objects', 'comets/content/execute_query_objects.php' )))
+                                                                                                                                                                                                                                                         if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_result_selected_observations', 'comets/content/selected_observations2.php' )))
+                                                                                                                                                                                                                                                            if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_rank_observers', 'comets/content/top_observers.php' )))
+                                                                                                                                                                                                                                                               if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_rank_objects', 'comets/content/top_objects.php' )))
+                                                                                                                                                                                                                                                                  if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'comets_query_observations', 'comets/content/setup_observations_query.php' )))
                                                                                                                                                                                                                                                                      if (! ($indexActionInclude = $this->utilitiesCheckIndexActionall ( 'comets_query_objects', 'comets/content/setup_objects_query.php' )))
-                                                                                                                                                                                                                                                                        if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'main', 'deepsky/content/main.php' )))
-                                                                                                                                                                                                                                                                           if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'downloadForms', 'common/content/downloadForms.php' )))
+                                                                                                                                                                                                                                                                        if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'main', 'deepsky/content/main.php' )))
+                                                                                                                                                                                                                                                                           if (! ($indexActionInclude = $this->_utilitiesCheckIndexActionAll ( 'downloadForms', 'common/content/downloadForms.php' )))
                                                                                                                                                                                                                                                                               if (! ($indexActionInclude = $this->utilitiesCheckIndexActionDSquickPick ()))
                                                                                                                                                                                                                                                                                  $indexActionInclude = $this->utilitiesGetIndexActionDefaultAction ();
       return $indexActionInclude;
@@ -3563,11 +3841,6 @@ class Utils
          $_GET ['maxdc'] = '';
          return 'comets/content/selected_observations2.php';
       }
-   }
-   private function utilitiesCheckIndexActionMember($action, $includefile) {
-      global $loggedUser;
-      if (array_key_exists ( 'indexAction', $_GET ) && ($_GET ['indexAction'] == $action) && $loggedUser)
-         return $includefile;
    }
    public function utilitiesSetModuleCookie($module) {
       if ((! array_key_exists ( 'module', $_SESSION )) || (array_key_exists ( 'module', $_SESSION ) && ($_SESSION ['module'] != $module))) {
@@ -3915,7 +4188,7 @@ class Utils
       echo "</script>";
    }
    function addPager($name, $count, $tableSelector = true) {
-      // We limit the number of rows in a table to 3000.
+      // We limit the number of rows in a table to 1000.
       $max = 1000;
 
       // For internet explorer, we limit the number of rows in the tables to 500 items.
