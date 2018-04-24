@@ -1,5 +1,5 @@
 <?php
-// printaltas.php
+// printatlas.php
 // functions for printing the atlas
 
 global $inIndex;
@@ -2094,7 +2094,7 @@ class PrintAtlas
 			$sort='';
 	    $actualsort='';
 			$theDate=date('d/m/Y');
-	    $objUtil->firstpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,'',$showelements,$reportdata);
+	    $objUtil->firstpage($y,$top,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$showelements,$reportdata);
 	    for($j=0;$j<$k;$j++)
 	    { $y-=$deltalineSection;
 		    $this->pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
@@ -2121,10 +2121,10 @@ class PrintAtlas
 				  }
 				  $deltaymax++;
 		      if(($y-($deltaline*$deltaymax)<$bottom) && $sort)
-		      { $this->$objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
+		      { $this->$objUtil->newpage($y,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
 		      }
 		      elseif(($y-($deltaline*$deltaymax)<$bottom) && (!($sort)))
-		      { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
+		      { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
 		        if(strpos($showelements,'s')!==FALSE)
 		        { $this->pdf->setLineStyle(0.5);
 		          $this->pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
@@ -2133,7 +2133,7 @@ class PrintAtlas
 		      }
 		      elseif($sort && ($$sort!=$actualsort))
 					{ if(($y-($deltaline*$deltaymax)-$sectionBarSpace-$deltalineSection)<$bottom)
-					  { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
+					  { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
 					  }
 					  else
 		        { $y-=$deltalineSection;
@@ -2153,7 +2153,7 @@ class PrintAtlas
 					while(list($key,$dataelement)=each($reportdata))
 					{ if($dataelement['fieldwidth'])
 					  { if($y-($deltaline*$dataelement['fieldline'])<$bottom)
-		          { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
+		          { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
 		          }
 		          $justification='left';
 					  	$i='';$b='';
@@ -2201,7 +2201,13 @@ class PrintAtlas
 			  	  		  while($theText)
 						  	  { $y-=$deltaline;
 			              if($y-($deltaline*$dataelement['fieldline'])<$bottom)
-			              { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$i,$b,$showelements,$reportdata);
+			              { 
+                                $objUtil->newpage(
+                                    $y,$top,$bottom,$xbase,$xmid,
+                                    $pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,
+                                    $footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,
+                                    $sectionBarHeight,$fontSizeSection,$deltaline,$i,$b,$showelements,$reportdata
+                                );
 			                $y+=($deltaline*$dataelement['fieldline']);
 			              }
 							     $theText= $this->pdf->addTextWrap(
@@ -2222,7 +2228,7 @@ class PrintAtlas
 			  	  		  while($theText)
 						  	  { $y-=$deltaline;
 			              if($y-($deltaline*$dataelement['fieldline'])<$bottom)
-			              { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$i,$b,$showelements,$reportdata);
+			              { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$i,$b,$showelements,$reportdata);
 			                $y+=($deltaline*$dataelement['fieldline']);
 			              }
 							     $theText= $this->pdf->addTextWrap(
@@ -2241,7 +2247,7 @@ class PrintAtlas
 			  	  		  while($theText)
 		              { $y-=$deltaline;
 			              if($y-($deltaline*$dataelement['fieldline'])<$bottom)
-			              { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$i,$b,$showelements,$reportdata);
+			              { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$i,$b,$showelements,$reportdata);
 			                $y+=($deltaline*$dataelement['fieldline']);
 			              }
 			              $theText= $this->pdf->addTextWrap(
@@ -2275,7 +2281,7 @@ class PrintAtlas
 				}
 				if((strpos($showelements,'i')!==FALSE)&&(count($indexlist)>0)&&($sort))
 				{ $base=$xmid;
-				  $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
+				  $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
 				  $this->pdf->setLineStyle(0.5);
 		      $y=$top;
 					while(list($key,$value)=each($indexlist))
@@ -2285,7 +2291,7 @@ class PrintAtlas
 
 					  $y-=($deltaline+$deltaobjectline);
 					  if(($y-($deltaline+$deltaobjectline))<$bottom)
-					  { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
+					  { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
 					    $this->pdf->setLineStyle(0.5);
 					  }
 		      }
