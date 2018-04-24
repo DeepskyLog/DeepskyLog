@@ -1362,7 +1362,9 @@ class Utils
                 . $objPresentations->presentationInt1($valueA['objectsurfacebrightness'], 99.9, '') . ";"
                 . $valueA['objectsize'] . ";" . $objPresentations->presentationInt($valueA['objectpa'], 999, '') . ";"
                 . $valueA[$objObserver->getObserverProperty($loggedUser, 'standardAtlasCode', 'urano')] . ";"
-                . $valueA['objectcontrast'] . ";" . $valueA['objectoptimalmagnification'] . ";" . $valueA['objectseen'] . ";"
+                . $valueA['objectcontrast'] . ";" 
+                . trim(preg_replace('/\s+/', ' ', $valueA['objectoptimalmagnification']))
+                . ";" . $valueA['objectseen'] . ";"
                 . $valueA['objectlastseen'] . "\n";
         }
     }
@@ -1376,55 +1378,40 @@ class Utils
       */
     public function skylistObjects($result)
     {
-        // TODO: Check Issue 674
         global $objObject, $objPresentations, $objObserver, $loggedUser;
-        $result = $this->sortResult ( $result );
+        $result = $this->sortResult($result);
 
         echo "SkySafariObservingListVersion=3.0\n";
 
-        while (list($key, $row) = each($result))
-        {
+        while (list($key, $row) = each($result)) {
             echo "\n";
             echo "SkyObject=BeginObject\n";
 
             $objectType = $row['objecttype'];
             $objectId = $this->getSkyListObjectId($objectType);
-            //echo "----ObjectType=" . $objectType . "\n";
 
             $objectNames = $this->getObjectNames($row, $objectId);
 
-            echo "   ObjectID=" . $objectId . /*",-1,-1" .*/ "\n";
-            while (list($key, $objectName) = each($objectNames))
+            echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
+            while (list($key, $objectName) = each($objectNames)) {
                 echo "   CatalogNumber=" . $objectName . "\n";
-
-
-            $dslObjectName = trim($row['objectname']);
-            if (!in_array($dslObjectName, $objectNames))
-                echo "   Comment=DeepskyLog: " . implode(",", $objObject->getAlternativeNames($row['objectname'])) . "\n";
-
-            $dateLastSeen = trim($row['objectlastseen']);
-            //echo "---Date=" . $dateLastSeen . "\n";
-            if ($dateLastSeen != "")
-                echo "   DateObserved=" . ($this->getJulianDay($dateLastSeen) + 1) . "\n";
-
-            //          while (list($key, $value) = each($row))
-            //             echo "---" . $key . "=" . $value . "\n";
+            }
 
             echo "EndObject=SkyObject\n";
         }
     }
 
-     /**
-      * Returns a list of objectnames. Will return the name of the object if the name starts with 
-      * M, NGC, IC, C, Cr, Tr, STF, STFA, HD, Mel, or SAO. If the object does not belong in one 
-      * of these catalogues, we return an array with all the names / alternative names of this
-      * object. Used in the export to skylist format (SkySafari).
-      *
-      * @param array   $row      The array with the objectnames.
-      * @param integer $objectId The id of the type of the object in SkySafari.
-      *
-      * @return array An array with the object names.
-      */    
+    /**
+     * Returns a list of objectnames. Will return the name of the object if the name starts with 
+     * M, NGC, IC, C, Cr, Tr, STF, STFA, HD, Mel, or SAO. If the object does not belong in one 
+     * of these catalogues, we return an array with all the names / alternative names of this
+     * object. Used in the export to skylist format (SkySafari).
+     *
+     * @param array   $row      The array with the objectnames.
+     * @param integer $objectId The id of the type of the object in SkySafari.
+     *
+     * @return array An array with the object names.
+     */    
     function getObjectNames($row, &$objectId)
     {
         global $objObject;
@@ -1510,350 +1497,406 @@ class Utils
         return $objectName;
     }
 
-   function startsWith($haystack, $needle)
-   {
-      $length = strlen($needle);
-      return (substr($haystack, 0, $length) === $needle);
-   }
+    /**
+     * Returns the corrected name of the object. Used in the export to skylist format (SkySafari).
+     *
+     * @param string $haystack The string to search in.
+     * @param string $needle   The id of the type of the object in SkySafari.
+     *
+     * @return boolean True if the haystack starts with the needle.
+     */    
+    function startsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
+    }
 
+    /**
+     * Returns the object type in skysafari format. 
+     * 2 for a double or multiple star, 4 for a deepsky object.
+     *
+     * @param string $objectType The DeepskyLog object type.
+     *
+     * @return integer 2 for double / multiple star, 4 for deepsky.
+     */    
+    function getSkyListObjectId($objectType)
+    {
+        if (preg_match("/(?i)^AA\d+STAR$/", $objectType)) {
+            return 2;
+        } else if ($objectType == "DS") {
+            return 2;
+        } else {
+            return 4;
+        }
+    }
 
-   function getSkyListObjectId($objectType)
-   {
-      if (preg_match("/(?i)^AA\d+STAR$/", $objectType))
-         return 2;
-      else
-          return 4;
-   }
+    /**
+     * Returns the julian day when the normal day (and optionally time) is given.
+     *
+     * @param string  $dateYYYYMMDD The date in the YYYYMMDD format.
+     * @param integer $timeHHMM     The time in HHMM format, or null.
+     *
+     * @return integer The julian day.
+     */    
+    function getJulianDay($dateYYYYMMDD, $timeHHMM = null)
+    {
+        $dateStrArray = sscanf($dateYYYYMMDD, "%4d%2d%2d");
+        $dateStr = $dateStrArray[2] . "-" . $dateStrArray[1] . "-" . $dateStrArray[0];
+        $date = strtotime($dateStr);
 
-   function getJulianDay($dateYYYYMMDD, $timeHHMM = NULL)
-   {
-      $dateStrArray = sscanf($dateYYYYMMDD, "%4d%2d%2d");
-      $dateStr = $dateStrArray [2] . "-" . $dateStrArray [1] . "-" . $dateStrArray [0];
-      $date = strtotime ($dateStr);
-
-      if ($timeHHMM != NULL)
-      {
-         $timeStr = $timeHHMM;
-         if ($timeStr >= "0")
-         {
-            $hours = (int)($timeStr / 100);
-            $minutes = $timeStr - (100 * $hours);
-            $timeStr = sprintf("%d:%02d", $hours, $minutes);
-         }
-         else
-            $timeStr = "";
-         $time = strtotime ($timeStr);
-         $dayFraction = - 0.5 + ($time % (24*60*60)) / (24*60*60);
-      }
-      else
-         $dayFraction = 0;
-
-      return unixtojd($date) + $dayFraction;
-   }
-
-   public function csvObjectsList($result) // Creates a csv file from an array of list objects
-{
-      global $objObject, $objPresentations, $objObserver, $loggedUser;
-      echo html_entity_decode ( LangCSVMessage7List ) . "\n";
-      while ( list ( $key, $valueA ) = each ( $result ) ) {
-         $alt = "";
-         $alts = $objObject->getAlternativeNames ( $valueA ['objectname'] );
-         while ( list ( $key1, $value ) = each ( $alts ) )
-            if ($value != $valueA ['objectname'])
-               $alt .= " - " . trim ( $value );
-         $alt = ($alt ? substr ( $alt, 3 ) : '');
-         echo $valueA ['showname'] . ";" . $valueA ['objectname'] . ";" . $alt . ";" . $objPresentations->raToString ( $valueA ['objectra'] ) . ";" . $objPresentations->decToString ( $valueA ['objectdecl'], 0 ) . ";" . $GLOBALS [$valueA ['objectconstellation']] . ";" . $GLOBALS [$valueA ['objecttype']] . ";" . $objPresentations->presentationInt1 ( $valueA ['objectmagnitude'], 99.9, '' ) . ";" . $objPresentations->presentationInt1 ( $valueA ['objectsurfacebrightness'], 99.9, '' ) . ";" . $valueA ['objectsize'] . ";" . $objPresentations->presentationInt ( $valueA ['objectpa'], 999, '' ) . ";" . $valueA [$objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' )] . ";" . $valueA ['objectcontrast'] . ";" . $valueA ['objectoptimalmagnification'] . ";" . $valueA ['objectseen'] . ";" . $valueA ['objectlastseen'] . "\n";
-      }
-   }
-   public function csvObservations($result) // Creates a csv file from an array of observations
-{
-      global $objLens, $objFilter, $objEyepiece, $objLocation, $objPresentations, $objObservation, $objObserver, $objInstrument;
-      while ( list ( $key, $value ) = each ( $result ) ) {
-         $obs = $objObservation->getAllInfoDsObservation ( $value ['observationid'] );
-         $date = sscanf ( $obs ['date'], "%4d%2d%2d" );
-         $time = $obs ['time'];
-         if ($time >= "0") {
-            $hours = ( int ) ($time / 100);
-            $minutes = $time - (100 * $hours);
-            $time = sprintf ( "%d:%02d", $hours, $minutes );
-         } else
-            $time = "";
-         echo html_entity_decode ( $obs ['objectname'] ) . ";" . html_entity_decode ( $objObserver->getObserverProperty ( $obs ['observerid'], 'firstname' ) . " " . $objObserver->getObserverProperty ( $obs ['observerid'], 'name' ) ) . ";" . $date [2] . "-" . $date [1] . "-" . $date [0] . ";" . $time . ";" . html_entity_decode ( $objLocation->getLocationPropertyFromId ( $obs ['locationid'], 'name' ) ) . ";" . html_entity_decode ( $objInstrument->getInstrumentPropertyFromId ( $obs ['instrumentid'], 'name' ) ) . ";" . html_entity_decode ( $objEyepiece->getEyepiecePropertyFromId ( $obs ['eyepieceid'], 'name' ) ) . ";" . html_entity_decode ( $objFilter->getFilterPropertyFromId ( $obs ['filterid'], 'name' ) ) . ";" . html_entity_decode ( $objLens->getLensPropertyFromId ( $obs ['lensid'], 'name' ) ) . ";" . $obs ['seeing'] . ";" . $obs ['limmag'] . ";" . $objPresentations->presentationInt ( $obs ['visibility'], "0", "" ) . ";" . $obs ['language'] . ";" . preg_replace ( "/(\")/", "", preg_replace ( "/(\r\n|\n|\r)/", "", preg_replace ( "/;/", ",", $objPresentations->br2nl ( html_entity_decode ( $obs ['description'], ENT_COMPAT, 'UTF-8' ) ) ) ) ) . "\n";
-      }
-   }
-   public function csvObservationsImportErrors($result) // Creates a csv file from an array of error csv import observations
-{
-      global $objLens, $objFilter, $objEyepiece, $objLocation, $objPresentations, $objObservation, $objObserver, $objInstrument;
-      for($i = 0; $i < count ( $_SESSION ['csvImportErrorData'] ); $i ++) {
-         for($j = 0; $j < 13; $j ++)
-            echo $this->checkArrayKey ( $_SESSION ['csvImportErrorData'] [$i], $j, '' ) . ";";
-         echo preg_replace ( "/(\")/", "", preg_replace ( "/(\r\n|\n|\r)/", "", preg_replace ( "/;/", ",", $objPresentations->br2nl ( html_entity_decode ( $this->checkArrayKey ( $_SESSION ['csvImportErrorData'] [$i], 13, '' ) ) ) ) ) );
-         echo "\n";
-      }
-   }
-
-   public function skylistObservations($result) // Creates a skylist file from an array of observations
-   {
-      global $objLens, $objFilter, $objEyepiece, $objLocation, $objPresentations, $objObservation, $objObserver, $objInstrument;
-
-      echo "SkySafariObservingListVersion=3.0\n";
-
-      while (list($key, $value) = each($result))
-      {
-         $obs = $objObservation->getAllInfoDsObservation($value ['observationid']);
-
-         echo "\n";
-         echo "SkyObject=BeginObject\n";
-
-          $objectId = $this->getSkyListObjectId($value['objecttype']);
-          echo "   ObjectID=" . $objectId . /*",-1,-1" .*/ "\n";
-
-          //echo "   CatalogNumber=" . $this->fixObjectName(html_entity_decode($obs['objectname'])) . "\n";
-         $objectNames = $this->getObjectNames($obs);
-         while (list($key, $objectName) = each($objectNames))
-            echo "   CatalogNumber=" . $objectName . "\n";
-
-         echo "   DateObserved=" . $this->getJulianDay($obs['date'], $obs['time']) . "\n";
-         echo "   Location=" . html_entity_decode($objLocation->getLocationPropertyFromId($obs['locationid'], 'name')) . "\n";
-         echo "   Comment=" . preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",", $objPresentations->br2nl(html_entity_decode($obs['description'], ENT_COMPAT, 'UTF-8'))))) . "\n";
-         $instrument = html_entity_decode($objInstrument->getInstrumentPropertyFromId($obs['instrumentid'], 'name'));
-         $eyepiece = html_entity_decode($objEyepiece->getEyepiecePropertyFromId($obs['$eyepieceid'], 'name'));
-         $lens = html_entity_decode($objLens->getLensPropertyFromId($obs['lensid'], 'name'));
-         $filter = html_entity_decode($objFilter->getFilterPropertyFromId($obs['filterid'], 'name'));
-         echo "   Equipment=" . $instrument;
-         if (!empty($eyepiece))
-            echo ", " . $eyepiece;
-         if (!empty($lens))
-            echo ", " . $lens;
-         if (!empty($filter))
-            echo ", " . $filter;
-         echo ("\n");
-
-         if (!in_array($dslObjectName, $objectNames))
-            echo "   Comment=DeepskyLog: " . $dslObjectName . "\n";
-
-         echo "EndObject=SkyObject\n";
-      }
-   }
-   public function pdfCometObservations($result) // Creates a pdf document from an array of comet observations
-{
-      include_once "cometobjects.php";
-      include_once "observers.php";
-      include_once "instruments.php";
-      include_once "locations.php";
-      include_once "cometobservations.php";
-      include_once "icqmethod.php";
-      include_once "icqreferencekey.php";
-      include_once "setup/vars.php";
-      include_once "setup/databaseInfo.php";
-      global $instDir, $objCometObject, $loggedUser, $dateformat;
-      $result = $this->sortResult ( $result );
-
-      $objects = new CometObjects ();
-      $observer = new Observers ();
-      $instrument = new Instruments ();
-      $observation = new CometObservations ();
-      $location = new Locations ();
-      $util = $this;
-      $ICQMETHODS = new ICQMETHOD ();
-      $ICQREFERENCEKEYS = new ICQREFERENCEKEY ();
-      $_GET ['pdfTitle'] = "CometObservations.pdf";
-      // Create pdf file
-      $pdf = new Cezpdf ( 'a4', 'portrait' );
-      $pdf->ezStartPageNumbers ( 300, 30, 10 );
-
-      $fontdir = $instDir . 'lib/fonts/Helvetica.afm';
-      $pdf->selectFont ( $fontdir );
-      $pdf->ezText ( utf8_decode ( html_entity_decode ( LangPDFTitle3 ) ) . "\n" );
-
-      while ( list ( $key, $value ) = each ( $result ) ) {
-         $objectname = $objCometObject->getName ( $observation->getObjectId ( $value ) );
-
-         $pdf->ezText ( utf8_decode ( $objectname ), "14" );
-
-         $observerid = $observation->getObserverId ( $value );
-
-         if ($observer->getObserverProperty ( $loggedUser, 'UT' )) {
-            $date = sscanf ( $observation->getDate ( $value ), "%4d%2d%2d" );
-            $time = $observation->getTime ( $value );
-         } else {
-            $date = sscanf ( $observation->getLocalDate ( $value ), "%4d%2d%2d" );
-            $time = $observation->getLocalTime ( $value );
-         }
-         $hour = ( int ) ($time / 100);
-         $minute = $time - $hour * 100;
-         $formattedDate = date ( $dateformat, mktime ( 0, 0, 0, $date [1], $date [2], $date [0] ) );
-
-         if ($minute < 10) {
-            $minute = "0" . $minute;
-         }
-
-         $observername = LangPDFMessage13 . $observer->getObserverProperty ( $observerid, 'firstname' ) . " " . $observer->getObserverProperty ( $observerid, 'name' ) . html_entity_decode ( LangPDFMessage14 ) . $formattedDate . " (" . $hour . ":" . $minute . ")";
-
-         $pdf->ezText ( utf8_decode ( $observername ), "12" );
-
-         // Location and instrument
-         if (($observation->getLocationId ( $value ) != 0 && $observation->getLocationId ( $value ) != 1) || $observation->getInstrumentId ( $value ) != 0) {
-            if ($observation->getLocationId ( $value ) != 0 && $observation->getLocationId ( $value ) != 1) {
-               $locationname = LangPDFMessage10 . " : " . $location->getLocationPropertyFromId ( $observation->getLocationId ( $value ), 'name' );
-               $extra = ", ";
+        if ($timeHHMM != null) {
+            $timeStr = $timeHHMM;
+            if ($timeStr >= "0") {
+                $hours = (int)($timeStr / 100);
+                $minutes = $timeStr - (100 * $hours);
+                $timeStr = sprintf("%d:%02d", $hours, $minutes);
             } else {
-               $locationname = "";
+                $timeStr = "";
+            }
+            $time = strtotime($timeStr);
+            $dayFraction = -0.5 + ($time % (24*60*60)) / (24*60*60);
+        } else {
+            $dayFraction = 0;
+        }
+
+        return unixtojd($date) + $dayFraction;
+    }
+
+    /**
+     * Creates a CSV file with the observations.
+     *
+     * @param array $result The array with the observations.
+     *
+     * @return string A csv file with the observations.
+     */    
+    public function csvObservations($result) // Creates a csv file from an array of observations
+    {
+        global $objLens, $objFilter, $objEyepiece, $objLocation, $objPresentations, $objObservation, $objObserver, $objInstrument;
+        while (list($key, $value) = each($result)) {
+            $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
+            $date = sscanf($obs ['date'], "%4d%2d%2d");
+            $time = $obs['time'];
+            if ($time >= "0") {
+                $hours = (int) ($time / 100);
+                $minutes = $time - (100 * $hours);
+                $time = sprintf("%d:%02d", $hours, $minutes);
+            } else {
+                $time = "";
+            }
+            echo html_entity_decode($obs['objectname']) 
+                . ";" . html_entity_decode($objObserver->getObserverProperty($obs['observerid'], 'firstname') . " " . $objObserver->getObserverProperty($obs['observerid'], 'name')) . ";" 
+                . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";" 
+                . html_entity_decode($objLocation->getLocationPropertyFromId($obs['locationid'], 'name')) 
+                . ";" . html_entity_decode($objInstrument->getInstrumentPropertyFromId($obs['instrumentid'], 'name')) 
+                . ";" . html_entity_decode($objEyepiece->getEyepiecePropertyFromId($obs['eyepieceid'], 'name')) 
+                . ";" . html_entity_decode($objFilter->getFilterPropertyFromId($obs['filterid'], 'name')) 
+                . ";" . html_entity_decode($objLens->getLensPropertyFromId($obs['lensid'], 'name')) 
+                . ";" . $obs['seeing'] . ";" . $obs['limmag'] . ";" 
+                . $objPresentations->presentationInt($obs['visibility'], "0", "") . ";" 
+                . $obs['language'] . ";" 
+                . preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",", $objPresentations->br2nl(html_entity_decode($obs['description'], ENT_COMPAT, 'UTF-8'))))) 
+                . "\n";
+        }
+    }
+
+     /**
+      * Creates a skylist file from an array of observations.
+      *
+      * @param array $result The array of objects.
+      *
+      * @return string The string with skySafari file with the observations.
+      */
+    public function skylistObservations($result)
+    {
+        global $objLens, $objFilter, $objEyepiece, $objLocation, $objPresentations, $objObservation, $objObserver, $objInstrument;
+
+        echo "SkySafariObservingListVersion=3.0\n";
+
+        while (list($key, $value) = each($result)) {
+            $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
+
+            echo "\n";
+            echo "SkyObject=BeginObject\n";
+
+            $objectId = $this->getSkyListObjectId($value['objecttype']);
+            echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
+
+            //echo "   CatalogNumber=" . $this->fixObjectName(html_entity_decode($obs['objectname'])) . "\n";
+            $objectNames = $this->getObjectNames($obs);
+            while (list($key, $objectName) = each($objectNames)) {
+                echo "   CatalogNumber=" . $objectName . "\n";
             }
 
-            if ($observation->getInstrumentId ( $value ) != 0) {
-               $instr = $instrument->getInstrumentPropertyFromId ( $observation->getInstrumentId ( $value ), 'name' );
-               if ($instr == "Naked eye") {
-                  $instr = InstrumentsNakedEye;
-               }
+            echo "   DateObserved=" . $this->getJulianDay($obs['date'], $obs['time']) . "\n";
+            echo "   Location=" . html_entity_decode($objLocation->getLocationPropertyFromId($obs['locationid'], 'name')) . "\n";
+            echo "   Comment=" . preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",", $objPresentations->br2nl(html_entity_decode($obs['description'], ENT_COMPAT, 'UTF-8'))))) . "\n";
+            $instrument = html_entity_decode($objInstrument->getInstrumentPropertyFromId($obs['instrumentid'], 'name'));
+            $eyepiece = html_entity_decode($objEyepiece->getEyepiecePropertyFromId($obs['$eyepieceid'], 'name'));
+            $lens = html_entity_decode($objLens->getLensPropertyFromId($obs['lensid'], 'name'));
+            $filter = html_entity_decode($objFilter->getFilterPropertyFromId($obs['filterid'], 'name'));
+            echo "   Equipment=" . $instrument;
+            if (!empty($eyepiece)) {
+                echo ", " . $eyepiece;
+            }
+            if (!empty($lens)) {
+                echo ", " . $lens;
+            }
+            if (!empty($filter)) {
+                echo ", " . $filter;
+            }
+            echo ("\n");
 
-               $locationname = $locationname . $extra . html_entity_decode ( LangPDFMessage11 ) . " : " . $instr;
+            echo "EndObject=SkyObject\n";
+        }
+    }
 
-               if (strcmp ( $observation->getMagnification ( $value ), "" ) != 0) {
-                  $locationname = $locationname . " (" . $observation->getMagnification ( $value ) . " x)";
-               }
+     /**
+      * Creates a pdf file from an array of comet observations.
+      *
+      * @param array $result The array of comet observations.
+      *
+      * @return string The pdf file with the comet observations.
+      */
+    public function pdfCometObservations($result)
+    {
+        include_once "cometobjects.php";
+        include_once "observers.php";
+        include_once "instruments.php";
+        include_once "locations.php";
+        include_once "cometobservations.php";
+        include_once "icqmethod.php";
+        include_once "icqreferencekey.php";
+        include_once "setup/vars.php";
+        include_once "setup/databaseInfo.php";
+        global $instDir, $objCometObject, $loggedUser, $dateformat;
+        $result = $this->sortResult($result);
+
+        $objects = new CometObjects();
+        $observer = new Observers();
+        $instrument = new Instruments();
+        $observation = new CometObservations();
+        $location = new Locations();
+        $util = $this;
+        $ICQMETHODS = new ICQMETHOD();
+        $ICQREFERENCEKEYS = new ICQREFERENCEKEY();
+        $_GET['pdfTitle'] = "CometObservations.pdf";
+        // Create pdf file
+        $pdf = new Cezpdf('a4', 'portrait');
+        $pdf->ezStartPageNumbers(300, 20, 10);
+
+        $fontdir = $instDir . 'lib/fonts/Helvetica.afm';
+        $pdf->selectFont($fontdir);
+        $pdf->ezText(utf8_decode(html_entity_decode(LangPDFTitle3)) . "\n");
+
+        while (list($key, $value) = each($result)) {
+            $objectname = $objCometObject->getName($observation->getObjectId($value));
+
+            $pdf->ezText(html_entity_decode($objectname), "14");
+
+            $observerid = $observation->getObserverId($value);
+
+            if ($observer->getObserverProperty($loggedUser, 'UT')) {
+                $date = sscanf($observation->getDate($value), "%4d%2d%2d");
+                $time = $observation->getTime($value);
+            } else {
+                $date = sscanf($observation->getLocalDate($value), "%4d%2d%2d");
+                $time = $observation->getLocalTime($value);
+            }
+            $hour = (int) ($time / 100);
+            $minute = $time - $hour * 100;
+            $formattedDate = date($dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0]));
+
+            if ($minute < 10) {
+                $minute = "0" . $minute;
             }
 
-            $pdf->ezText ( utf8_decode ( $locationname ), "12" );
-         }
+            $observername = LangPDFMessage13 
+                . $observer->getObserverProperty($observerid, 'firstname') . " " 
+                . $observer->getObserverProperty($observerid, 'name') 
+                . html_entity_decode(LangPDFMessage14) 
+                . $formattedDate . " (" . $hour . ":" . $minute . ")";
 
-         // Methode
-         $method = $observation->getMethode ( $value );
+            $pdf->ezText(html_entity_decode($observername), "12");
 
-         if (strcmp ( $method, "" ) != 0) {
-            $methodstr = html_entity_decode ( LangViewObservationField15 ) . " : " . $method . " - " . $ICQMETHODS->getDescription ( $method );
+            // Location and instrument
+            if (($observation->getLocationId($value) != 0 && $observation->getLocationId($value) != 1) || $observation->getInstrumentId($value) != 0) {
+                if ($observation->getLocationId($value) != 0 && $observation->getLocationId($value) != 1) {
+                    $locationname = LangPDFMessage10 . " : " . $location->getLocationPropertyFromId($observation->getLocationId($value), 'name');
+                    $extra = ", ";
+                } else {
+                    $locationname = "";
+                }
 
-            $pdf->ezText ( utf8_decode ( $methodstr ), "12" );
-         }
+                if ($observation->getInstrumentId($value) != 0) {
+                    $instr = $instrument->getInstrumentPropertyFromId($observation->getInstrumentId($value), 'name');
+                    if ($instr == "Naked eye") {
+                        $instr = InstrumentsNakedEye;
+                    }
 
-         // Used chart
-         $chart = $observation->getChart ( $value );
+                    $locationname = $locationname . $extra . html_entity_decode(LangPDFMessage11) . " : " . $instr;
 
-         if (strcmp ( $chart, "" ) != 0) {
-            $chartstr = html_entity_decode ( LangViewObservationField17 ) . " : " . $chart . " - " . $ICQREFERENCEKEYS->getDescription ( $chart );
+                    if (strcmp($observation->getMagnification($value), "") != 0) {
+                        $locationname = $locationname . " (" . $observation->getMagnification($value) . " x)";
+                    }
+                }
 
-            $pdf->ezText ( utf8_decode ( $chartstr ), "12" );
-         }
-
-         // Magnitude
-         $magnitude = $observation->getMagnitude ( $value );
-
-         if ($magnitude != - 99.9) {
-            $magstr = "";
-
-            if ($observation->getMagnitudeWeakerThan ( $value )) {
-               $magstr = $magstr . LangNewComet3 . " ";
-            }
-            $magstr = $magstr . html_entity_decode ( LangViewObservationField16 ) . " : " . sprintf ( "%.01f", $magnitude );
-
-            if ($observation->getMagnitudeUncertain ( $value )) {
-               $magstr = $magstr . " (" . LangNewComet2 . ")";
+                $pdf->ezText(html_entity_decode($locationname), "12");
             }
 
-            $pdf->ezText ( utf8_decode ( $magstr ), "12" );
-         }
+            // Method
+            $method = $observation->getMethode($value);
 
-         // Degree of condensation
-         $dc = $observation->getDc ( $value );
-         $coma = $observation->getComa ( $value );
+            if (strcmp($method, "") != 0) {
+                $methodstr = html_entity_decode(LangViewObservationField15) 
+                    . " : " . $method . " - " 
+                    . $ICQMETHODS->getDescription($method);
 
-         $dcstr = "";
-         $extra = "";
-
-         if (strcmp ( $dc, "" ) != 0 || $coma != - 99) {
-            if (strcmp ( $dc, "" ) != 0) {
-               $dcstr = $dcstr . html_entity_decode ( LangNewComet8 ) . " : " . $dc;
-               $extra = ", ";
+                $pdf->ezText(html_entity_decode($methodstr), "12");
             }
 
-            // Coma
+            // Used chart
+            $chart = $observation->getChart($value);
 
-            if ($coma != - 99) {
-               $dcstr = $dcstr . $extra . html_entity_decode ( LangNewComet9 ) . " : " . $coma . "'";
+            if (strcmp($chart, "") != 0) {
+                $chartstr = html_entity_decode(LangViewObservationField17) 
+                    . " : " . $chart . " - " 
+                    . $ICQREFERENCEKEYS->getDescription($chart);
+
+                $pdf->ezText(html_entity_decode($chartstr), "12");
             }
 
-            $pdf->ezText ( utf8_decode ( $dcstr ), "12" );
-         }
+            // Magnitude
+            $magnitude = $observation->getMagnitude($value);
 
-         // Tail
-         $tail = $observation->getTail ( $value );
-         $pa = $observation->getPa ( $value );
+            if ($magnitude != - 99.9) {
+                $magstr = "";
 
-         $tailstr = "";
-         $extra = "";
+                if ($observation->getMagnitudeWeakerThan($value)) {
+                    $magstr = $magstr . LangNewComet3 . " ";
+                }
+                $magstr = $magstr . html_entity_decode(LangViewObservationField16) 
+                    . " : " . sprintf("%.01f", $magnitude);
 
-         if ($tail != - 99 || $pa != - 99) {
-            if ($tail != - 99) {
-               $tailstr = $tailstr . html_entity_decode ( LangNewComet10 ) . " : " . $tail . "'";
-               $extra = ", ";
+                if ($observation->getMagnitudeUncertain($value)) {
+                    $magstr = $magstr . " (" . LangNewComet2 . ")";
+                }
+
+                $pdf->ezText(html_entity_decode($magstr), "12");
             }
 
-            if ($pa != - 99) {
-               $tailstr = $tailstr . $extra . html_entity_decode ( LangNewComet11 ) . " : " . $pa . "";
+            // Degree of condensation
+            $dc = $observation->getDc($value);
+            $coma = $observation->getComa($value);
+
+            $dcstr = "";
+            $extra = "";
+
+            if (strcmp($dc, "") != 0 || $coma != - 99) {
+                if (strcmp($dc, "") != 0) {
+                    $dcstr = $dcstr . html_entity_decode(LangNewComet8) . " : " . $dc;
+                    $extra = ", ";
+                }
+
+                // Coma
+                if ($coma != - 99) {
+                    $dcstr = $dcstr . $extra . html_entity_decode(LangNewComet9) . " : " . $coma . "'";
+                }
+
+                $pdf->ezText(html_entity_decode($dcstr), "12");
             }
 
-            $pdf->ezText ( utf8_decode ( $tailstr ), "12" );
-         }
+            // Tail
+            $tail = $observation->getTail($value);
+            $pa = $observation->getPa($value);
 
-         // Description
-         $description = $observation->getDescription ( $value );
+            $tailstr = "";
+            $extra = "";
 
-         if (strcmp ( $description, "" ) != 0) {
-            $descstr = html_entity_decode ( LangPDFMessage15 ) . " : " . strip_tags ( $description );
-            $pdf->ezText ( utf8_decode ( $descstr ), "12" );
-         }
+            if ($tail != - 99 || $pa != - 99) {
+                if ($tail != - 99) {
+                    $tailstr = $tailstr . html_entity_decode(LangNewComet10) . " : " . $tail . "'";
+                    $extra = ", ";
+                }
 
-         $upload_dir = $instDir . 'comets/' . 'cometdrawings';
-         $dir = opendir ( $upload_dir );
+                if ($pa != - 99) {
+                    $tailstr = $tailstr . $extra . html_entity_decode(LangNewComet11) 
+                        . " : " . $pa . "";
+                }
 
-         while ( FALSE !== ($file = readdir ( $dir )) ) {
-            if ("." == $file or ".." == $file) {
-               continue; // skip current directory and directory above
+                $pdf->ezText(html_entity_decode($tailstr), "12");
             }
-            if (fnmatch ( $value . ".gif", $file ) || fnmatch ( $value . ".jpg", $file ) || fnmatch ( $value . ".png", $file )) {
-               $pdf->ezImage ( $upload_dir . "/" . $value . ".jpg", 0, 500, "none", "left" );
+
+            // Description
+            $description = $observation->getDescription($value);
+
+            if (strcmp($description, "") != 0) {
+                $descstr = LangPDFMessage15 . " : " . strip_tags($description);
+                $pdf->ezText(html_entity_decode($descstr), "12");
             }
-         }
 
-         $pdf->ezText ( "" );
-      }
+            $upload_dir = $instDir . 'comets/' . 'cometdrawings';
+            $dir = opendir($upload_dir);
 
-      $pdf->ezStream ();
-   }
-   public function pdfObjectnames($result) // Creates a pdf document from an array of objects
-{
-      global $instDir;
-      $page = 1;
-      $i = 0;
-      $result = $this->sortResult ( $result );
-      while ( list ( $key, $valueA ) = each ( $result ) )
-         $obs1 [] = array (
-               $valueA ['showname']
-         );
-         // Create pdf file
-      $pdf = new Cezpdf ( 'a4', 'landscape' );
-      $pdf->ezStartPageNumbers ( 450, 15, 10 );
-      $pdf->selectFont ( $instDir . 'lib/fonts/Helvetica.afm' );
-      $pdf->ezText ( utf8_decode ( html_entity_decode ( $_GET ['pdfTitle'] ) ), 18 );
-      $pdf->ezColumnsStart ( array (
-            'num' => 10
-      ) );
-      $pdf->ezTable ( $obs1, '', '', array (
+            while (false !== ($file = readdir($dir))) {
+                if ("." == $file or ".." == $file) {
+                    continue; // skip current directory and directory above
+                }
+                if (fnmatch($value . ".gif", $file) || fnmatch($value . ".jpg", $file) || fnmatch($value . ".png", $file)) {
+                    $pdf->ezImage($upload_dir . "/" . $value . ".jpg", 0, 500, "none", "left");
+                }
+            }
+
+            $pdf->ezText("");
+        }
+
+        $pdf->ezStream();
+    }
+
+     /**
+      * Creates a pdf document from an array of objects.
+      *
+      * @param array $result The array of objects.
+      *
+      * @return string The pdf file with the object.
+      */
+    public function pdfObjectnames($result) 
+    {
+        global $instDir;
+        $page = 1;
+        $i = 0;
+        $result = $this->sortResult($result);
+        while (list($key, $valueA) = each($result)) {
+            $obs1[] = array (
+               $valueA['showname']
+            );
+        }
+        // Create pdf file
+        $pdf = new Cezpdf('a4', 'landscape');
+        $pdf->ezStartPageNumbers(450, 15, 10);
+        $pdf->selectFont($instDir . 'lib/fonts/Helvetica.afm');
+        $pdf->ezText(utf8_decode(html_entity_decode($_GET['pdfTitle'])), 18);
+        $pdf->ezColumnsStart(array('num' => 10));
+        $pdf->ezTable(
+            $obs1, '', '', array(
             "width" => "750",
-            "cols" => array (
-                  array (
-                        'justification' => 'left',
-                        'width' => 80
-                  )
+            "cols" => array(
+                array(
+                    'justification' => 'left',
+                    'width' => 80
+                )
             ),
             "fontSize" => "7",
             "showLines" => "0",
             "showHeadings" => "0",
             "rowGap" => "0",
             "colGap" => "0"
-      ) );
-      $pdf->ezStream ();
-   }
+            )
+        );
+        $pdf->ezStream();
+    }
+
+    // TODO: Close Issue 674
+
    public function sortResult($result) {
       // Sort the result based on the 'sortOrder' cookie.
       $sortOrderArray = explode ( ",", trim ( $_COOKIE ['sortOrder'], "|" ) );

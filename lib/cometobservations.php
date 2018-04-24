@@ -395,7 +395,7 @@ class CometObservations {
 	// setDescription sets a new Description for the given observation
 	function setDescription($id, $description) {
 		global $objDatabase;
-		$sql = "UPDATE cometobservations SET description = \"$description\" WHERE id = \"$id\" ";
+		$sql = "UPDATE cometobservations SET description = \"" . $description . "\" WHERE id = \"$id\" ";
 		$run = $objDatabase->execSQL ( $sql );
 	}
 
