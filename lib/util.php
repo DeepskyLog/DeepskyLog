@@ -4941,8 +4941,6 @@ class Utils
         default:
             return $this->_utilitiesGetIndexActionDefaultAction();
         }
-
-//        return $indexActionInclude;
     }
 
     /**
