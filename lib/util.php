@@ -4778,15 +4778,6 @@ class Utils
         case 'detail_observer':
             return 'common/content/view_observer.php';
             break;
-        case 'detail_observer1':
-            return 'common/content/view_observer1.php';
-            break;
-        case 'detail_observer2':
-            return 'common/content/view_observer2.php';
-            break;
-        case 'detail_observer3':
-            return 'common/content/view_observer3.php';
-            break;
         case 'message':
             return 'common/content/message.php';
             break;
