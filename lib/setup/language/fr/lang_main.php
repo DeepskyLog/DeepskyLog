@@ -1898,7 +1898,7 @@ define("LangValidateXMLMessage"														,"L'importation du fichier XML est 
 
 //List import
 define("LangCSVListTitle"																	,"Importez les objets du fichier CSV vers votre liste");
-define("LangCSVListMessage1"															,"Ce formulaire vous donne la possibilit&#233; de rajouter plusieurs objets &#224; la fois &#224; partir d&#8217;un fichier CSV (comma separated value). De cette fa&#231;on vous pouvez rajouter facilement et tr&#232;s vite des objets en une seul manipulation. Ce formulaire vous permet &#233;galement de rajouter facilement &#224; la liste de DeepslyLog des objets m&#233;moris&#233;s dans d&#8217;autres banques de donn&#233;es.");
+define("LangCSVListMessage1"															,"Ce formulaire vous donne la possibilit&#233; de rajouter plusieurs objets &#224; la fois &#224; partir d&#8217;un fichier CSV (comma separated value). De cette fa&#231;on vous pouvez rajouter facilement et tr&#232;s vite des objets en une seul manipulation. Ce formulaire vous permet &#233;galement de rajouter facilement &#224; la liste de DeepskyLog des objets m&#233;moris&#233;s dans d&#8217;autres banques de donn&#233;es.");
 define("LangCSVListMessage2"															,"Le ficier CSV doit commencer avec la d&#233;fintion suivante dans la premi&egrave;re ligne, les lignes suivantes contiennent les donn&eacute;es:");
 define("LangCSVListMessage3"															,"Nom de l'objet;Nom &agrave; montrer (optionel);champs libres;ils ne sont pas pris en consid&#233;ration ...");
 define("LangCSVListMessage4"															,"");
