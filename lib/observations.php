@@ -9,7 +9,7 @@
  * @package  DeepskyLog
  * @author   DeepskyLog Developers <developers@deepskylog.be>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
- * @link     http://www.deepslylog.org
+ * @link     http://www.deepskylog.org
  */
 global $inIndex;
 
@@ -25,7 +25,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
  * @package  DeepskyLog
  * @author   DeepskyLog Developers <developers@deepskylog.be>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
- * @link     http://www.deepslylog.org
+ * @link     http://www.deepskylog.org
  */
 class Observations
 {
