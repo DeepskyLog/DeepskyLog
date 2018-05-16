@@ -7,7 +7,7 @@
 | bootstrap-tour | 0.12.0 | 20/04/2018 | | https://github.com/sorich87/bootstrap-tour/releases |
 | tablesorter | 2.30.1 | 14/04/2017 | | https://github.com/Mottie/tablesorter/releases |
 | lightbox | 2.9.0 | 20/04/2018 | | https://github.com/lokesh/lightbox2/releases |
-| Highcharts | 5.0.10 | 20/04/2018 | | https://www.highcharts.com/download |
+| Highcharts | 6.1.0 | 20/04/2018 | | https://www.highcharts.com/download |
 | jquery-ui-bootstrap | 1.0.0 | 22/05/2015 | | https://github.com/jquery-ui-bootstrap/jquery-ui-bootstrap/releases |
 | bootstrap-fileinput |	4.3.9 |	14/04/2017 | |https://github.com/kartik-v/bootstrap-fileinput/releases |
 | bootstrap-strength-meter | 1.1.3 | 07/10/2015 | |  |
