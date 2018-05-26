@@ -1213,6 +1213,8 @@ define("LangAddSiteField7"																,"Typische maximal Magnitude");
 define("LangAddSiteField7Expl"														,"(Limitierende Magnitude f&uuml;r diesen Beobachtungsplatz)");
 define("LangAddSiteField8"																,"Typische Himmelsaufhellung");
 define("LangAddSiteField8Expl"														,"(Wert der von einem Sky Quality Meter ermittelt wurde)");
+define("LangAddSiteField9"																,"Bortle-Skala");
+define("LangAddSiteField9Expl"														,"(Skala von 1 (extrem dunkel) bis 9 (Innenstadt) - Sehe <a href=\"https://www.handprint.com/ASTRO/bortle.html\">Website</a>)");
 define("LangAddSiteFieldSearchDatabase"										,"Suchen nach einem Beobachtungsplatz in der Datenbank");
 define("LangAddSiteFieldOr"																,"oder");
 define("LangAddSiteFieldManually"													,"legen Sie einen neuen Beobachtungsplatz an");

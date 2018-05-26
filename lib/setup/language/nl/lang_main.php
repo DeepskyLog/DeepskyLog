@@ -1198,6 +1198,8 @@ define("LangAddSiteField7"																,"Typische grensmagnitude");
 define("LangAddSiteField7Expl"														,"(Typische grensmagnitude van deze plaats)");
 define("LangAddSiteField8"																,"Typische hemelachtergrond");
 define("LangAddSiteField8Expl"														,"(Typisch getal van de Sky Quality Meter)");
+define("LangAddSiteField9"																,"Bortle Schaal");
+define("LangAddSiteField9Expl"														,"(Schaal van 1 (Uitstekende donkere hemel) tot 9 (hemel midden in de stad) - Zie <a href=\"https://www.handprint.com/ASTRO/bortle.html\">Website</a>)");
 define("LangAddSiteFieldSearchDatabase"										,"Zoek een locatie uit de database");
 define("LangAddSiteFieldOr"																,"of");
 define("LangAddSiteFieldManually"													,"voeg de gegevens manueel in");

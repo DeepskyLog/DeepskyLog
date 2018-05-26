@@ -1169,6 +1169,8 @@ define("LangAddSiteField7"																,"Magnitude limite typique");
 define("LangAddSiteField7Expl"														,"(Magnitude Limite typique pour cet endroit)");
 define("LangAddSiteField8"																,"Luminosit&eacute; typique du ciel");
 define("LangAddSiteField8Expl"														,"(Num&#233;ro retourn&#233; par le Sky Quality Meter)");
+define("LangAddSiteField9"																,"&Eacute;chelle de Bortle");
+define("LangAddSiteField9Expl"														,"(&Eacute;chelle de 1 (Excellent ciel noir) jusqu'&agrave; 9 (Ciel de centre-ville) - <a href=\"https://www.handprint.com/ASTRO/bortle.html\">Website</a>)");
 define("LangAddSiteFieldSearchDatabase"										,"Recherche d'un endroit dans la base de donn&eacute;es");
 define("LangAddSiteFieldOr"																,"ou");
 define("LangAddSiteFieldManually"													,"rentrez les donn&eacute;es vous m&ecirc;me");

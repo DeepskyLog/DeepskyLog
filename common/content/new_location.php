@@ -10,7 +10,7 @@
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     http://www.deepskylog.org
  */
-if ((! isset($inIndex)) || (!$inIndex)) {
+if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 } elseif (! $loggedUser) {
     throw new Exception(LangException002);
@@ -76,6 +76,14 @@ function newLocation()
     echo "<span class=\"help-block\">" . LangAddSiteField8Expl . "</span>";
     echo "</div>";
 
+    echo "<div class=\"form-group\">
+                <label>" . LangAddSiteField9 . "</label>";
+    echo "<div class=\"form-inline\">";
+    echo "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" " 
+        . "class=\"form-control\" maxlength=\"5\" name=\"sb\" size=\"5\" />";
+    echo "</div>";
+    echo "<span class=\"help-block\">" . LangAddSiteField9Expl . "</span>";
+    echo "</div>";
     echo "</div></ol></form><br /><br />";
 
     echo "<script type=\"text/javascript\" " 

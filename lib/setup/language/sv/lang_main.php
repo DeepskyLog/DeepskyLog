@@ -1214,6 +1214,8 @@ define("LangAddSiteField7"																,"Typical naked eye limiting magnitude
 define("LangAddSiteField7Expl"														,"(Typical naked eye limiting magnitude of this location)");
 define("LangAddSiteField8"																,"Typical sky brightness");
 define("LangAddSiteField8Expl"														,"(Number returned from Sky Quality Meter)");
+define("LangAddSiteField9"																,"Bortle Scale");
+define("LangAddSiteField9Expl"														,"(Scale from 1 (Excellent dark-sky site) to 9 (Inner-city sky) - See <a href=\"https://www.handprint.com/ASTRO/bortle.html\">Website</a>)");
 define("LangAddSiteFieldSearchDatabase"										,"Search a location from the database");
 define("LangAddSiteFieldOr"																,"or");
 define("LangAddSiteFieldManually"													,"specify your location details manually");
