@@ -141,8 +141,6 @@ function head() {
 		$TitleText = LangAddLensButton;
 	elseif ($includeFile == 'common/content/message.php')
 		$TitleText = "";
-	elseif ($includeFile == 'common/content/search_locations.php')
-		$TitleText = LangSearchLocations0;
 	elseif ($includeFile == 'common/content/getLocation.php')
 		$TitleText = LangGetLocation1;
 	elseif ($includeFile == 'common/content/register.php')

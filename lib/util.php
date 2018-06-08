@@ -4786,11 +4786,6 @@ class Utils
                 return 'common/content/reportslayout.php';
             }
             break;
-        case 'search_sites':
-            if ($loggedUser) {
-                return 'common/content/search_locations.php';
-            }
-            break;
         case 'site_result':
             if ($loggedUser) {
                 return 'common/content/getLocation.php';
