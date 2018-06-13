@@ -51,7 +51,7 @@ try {
 	</li>";
 
 	// Add logo for oal
-	echo "<li><a href=\"http://groups.google.com/group/openastronomylog\" rel=\"external\">";
+	echo "<li><a href=\"https://github.com/openastronomylog/openastronomylog\" rel=\"external\">";
 	echo "<img width=\"24\" height=\"24\" src=\"" . $baseURL . "styles/images/oallogo_small.jpg\" alt=\"OAL\"/>";
 	echo "</a></li>";
 

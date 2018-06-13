@@ -41,12 +41,12 @@ function instructions() {
 {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		$_SESSION ['lco'] = $_GET ['lco'];
-		setcookie ( "lco", $_SESSION ['lco'], $cookietime, "/" );
+		setcookie("lco", $_SESSION ['lco'], $cookietime, "/", "", true, true);
 	} elseif (array_key_exists ( 'lco', $_COOKIE ) && (($_COOKIE ['lco'] == "L") || ($_COOKIE ['lco'] == "C") || ($_COOKIE ['lco'] == "O"))) // lco = List, Compact or compactlO;
 		$_SESSION ['lco'] = $_COOKIE ['lco'];
 	elseif ((! array_key_exists ( 'lco', $_SESSION )) || (! (($_SESSION ['lco'] == "L") || ($_SESSION ['lco'] == "C") || ($_SESSION ['lco'] == "O")))) {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "lco", "L", $cookietime, "/" );
+		setcookie("lco", "L", $cookietime, "/", "", true, true);
 		$_SESSION ['lco'] = "L";
 	}
 	if (($_SESSION ['lco'] == "O") && (! $loggedUser))
@@ -82,7 +82,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['steps'] ) )
 			$stepscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "steps", $stepscookie, $cookietime, "/" );
+		setcookie("steps", $stepscookie, $cookietime, "/", "", true, true);
 		reset ( $_SESSION ['steps'] );
 	}
 	// collapsed menus ================================================================================================================================================================
@@ -93,7 +93,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/", "", true, true);
 	} elseif (array_key_exists ( 'menuDownloads', $_POST )) {
 		$menuDownloads = $_POST ['menuDownloads'];
 		$_SESSION ['menus'] ['menuDownloads'] = $menuDownloads;
@@ -101,7 +101,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/", "", true, true);
 	} elseif (array_key_exists ( 'menus', $_SESSION ) && array_key_exists ( 'menuDownloads', $_SESSION ['menus'] ))
 		$menuDownloads = $_SESSION ['menus'] ['menuDownloads'];
 	elseif (array_key_exists ( 'menus', $_COOKIE )) {
@@ -122,7 +122,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/", "", true, true);
 	} elseif (array_key_exists ( 'menuView', $_POST )) {
 		$menuView = $_POST ['menuView'];
 		$_SESSION ['menus'] ['menuView'] = $menuView;
@@ -130,7 +130,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/", "", true, true);
 	} elseif (array_key_exists ( 'menus', $_SESSION ) && array_key_exists ( 'menuView', $_SESSION ['menus'] ))
 		$menuView = $_SESSION ['menus'] ['menuView'];
 	elseif (array_key_exists ( 'menus', $_COOKIE )) {
@@ -151,7 +151,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/", "", true, true);
 	} elseif (array_key_exists ( 'menuAddChange', $_POST )) {
 		$menuAddChange = $_POST ['menuAddChange'];
 		$_SESSION ['menus'] ['menuAddChange'] = $menuAddChange;
@@ -159,7 +159,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/", "", true, true);
 	} elseif (array_key_exists ( 'menus', $_SESSION ) && array_key_exists ( 'menuAddChange', $_SESSION ['menus'] )) {
 		$menuAddChange = $_SESSION ['menus'] ['menuAddChange'];
 	} elseif (array_key_exists ( 'menus', $_COOKIE )) {
@@ -180,7 +180,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/", "", true, true);
 	} elseif (array_key_exists ( 'menuMoon', $_POST )) {
 		$menuMoon = $_POST ['menuMoon'];
 		$_SESSION ['menus'] ['menuMoon'] = $menuMoon;
@@ -188,7 +188,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/", "", true, true);
 	} elseif (array_key_exists ( 'menus', $_SESSION ) && array_key_exists ( 'menuMoon', $_SESSION ['menus'] )) {
 		$menuMoon = $_SESSION ['menus'] ['menuMoon'];
 	} elseif (array_key_exists ( 'menus', $_COOKIE )) {
@@ -204,59 +204,59 @@ function instructions() {
 	}
 	if ($objUtil->checkGetKey ( 'topmenu' ) == 'hidden') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "topmenu", 'hidden', $cookietime, "/" );
+		setcookie("topmenu", 'hidden', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'topmenu' ) == 'show') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "topmenu", 'show', $cookietime, "/" );
+		setcookie("topmenu", 'show', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'leftmenu' ) == 'hidden') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "leftmenu", 'hidden', $cookietime, "/" );
+		setcookie("leftmenu", 'hidden', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'leftmenu' ) == 'show') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "leftmenu", 'show', $cookietime, "/" );
+		setcookie("leftmenu", 'show', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'viewobjectextrainfo' ) == 'hidden') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "viewobjectextrainfo", 'hidden', $cookietime, "/" );
+		setcookie("viewobjectextrainfo", 'hidden', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'viewobjectextrainfo' ) == 'show') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "viewobjectextrainfo", 'show', $cookietime, "/" );
+		setcookie("viewobjectextrainfo", 'show', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'viewobjectdetails' ) == 'hidden') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "viewobjectdetails", 'hidden', $cookietime, "/" );
+		setcookie("viewobjectdetails", 'hidden', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'viewobjectdetails' ) == 'show') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "viewobjectdetails", 'show', $cookietime, "/" );
+		setcookie("viewobjectdetails", 'show', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'viewobjectephemerides' ) == 'hidden') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "viewobjectephemerides", 'hidden', $cookietime, "/" );
+		setcookie("viewobjectephemerides", 'hidden', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'viewobjectephemerides' ) == 'show') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "viewobjectephemerides", 'show', $cookietime, "/" );
+		setcookie("viewobjectephemerides", 'show', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'viewobjectobjectsnearby' ) == 'hidden') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "viewobjectobjectsnearby", 'hidden', $cookietime, "/" );
+		setcookie("viewobjectobjectsnearby", 'hidden', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'viewobjectobjectsnearby' ) == 'show') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "viewobjectobjectsnearby", 'show', $cookietime, "/" );
+		setcookie("viewobjectobjectsnearby", 'show', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'viewobjectobservations' ) == 'hidden') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "viewobjectobservations", 'hidden', $cookietime, "/" );
+		setcookie("viewobjectobservations", 'hidden', $cookietime, "/", "", true, true);
 	}
 	if ($objUtil->checkGetKey ( 'viewobjectobservations' ) == 'show') {
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "viewobjectobservations", 'show', $cookietime, "/" );
+		setcookie("viewobjectobservations", 'show', $cookietime, "/", "", true, true);
 	}
 	if (array_key_exists ( 'menuAdmin', $_GET )) {
 		$menuAdmin = $_GET ['menuAdmin'];
@@ -265,7 +265,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/", "", true, true);
 	} elseif (array_key_exists ( 'menuAdmin', $_POST )) {
 		$menuAdmin = $_POST ['menuAdmin'];
 		$_SESSION ['menus'] ['menuAdmin'] = $menuAdmin;
@@ -273,7 +273,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/", "", true, true);
 	} elseif (array_key_exists ( 'menus', $_SESSION ) && array_key_exists ( 'menuAdmin', $_SESSION ['menus'] )) {
 		$menuAdmin = $_SESSION ['menus'] ['menuAdmin'];
 	} elseif (array_key_exists ( 'menus', $_COOKIE )) {
@@ -294,7 +294,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/");
 	} elseif (array_key_exists ( 'menuLogin', $_POST )) {
 		$menuLogin = $_POST ['menuLogin'];
 		$_SESSION ['menus'] ['menuLogin'] = $menuLogin;
@@ -302,7 +302,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/", "", true, true);
 	} elseif (array_key_exists ( 'menus', $_SESSION ) && array_key_exists ( 'menuLogin', $_SESSION ['menus'] )) {
 		$menuLogin = $_SESSION ['menus'] ['menuLogin'];
 	} elseif (array_key_exists ( 'menus', $_COOKIE )) {
@@ -323,7 +323,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/");
 	} elseif (array_key_exists ( 'menuSearch', $_POST )) {
 		$menuSearch = $_POST ['menuSearch'];
 		$_SESSION ['menus'] ['menuSearch'] = $menuSearch;
@@ -331,7 +331,7 @@ function instructions() {
 		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
-		setcookie ( "menus", $menuscookie, $cookietime, "/" );
+		setcookie("menus", $menuscookie, $cookietime, "/");
 	} elseif (array_key_exists ( 'menus', $_SESSION ) && array_key_exists ( 'menuSearch', $_SESSION ['menus'] )) {
 		$menuSearch = $_SESSION ['menus'] ['menuSearch'];
 	} elseif (array_key_exists ( 'menus', $_COOKIE )) {
@@ -349,7 +349,7 @@ function instructions() {
 	while ( list ( $key, $value ) = each ( $modules ) ) // change module
 		if ($objUtil->checkGetKey ( 'indexAction' ) == 'module' . $value) {
 			$_SESSION ['module'] = $value;
-			setcookie ( "module", $value, time () + (365 * 24 * 60 * 60), "/" );
+			setcookie("module", $value, time () + (365 * 24 * 60 * 60), "/", "", true, true);
 		}
 	if ($objUtil->checkGetKey ( 'indexAction' ) == "validate_delete_eyepiece") // delete eyepiece
 {

@@ -481,7 +481,7 @@ class Observers {
 					// Make sure we are still logged in.
 					session_regenerate_id ( true );
 					$cookietime = time () + (365 * 24 * 60 * 60); // 1 year
-					setcookie ( "deepskylogsec", $newPassword . $login, $cookietime, "/" );
+					setcookie("deepskylogsec", $newPassword . $login, $cookietime, "/", "", true, true);
 
 					$_GET ['user'] = $loggedUser;
 				}
