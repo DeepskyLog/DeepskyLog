@@ -491,7 +491,7 @@ define("LangpdfseriesExplain2"  ,"Elke set bevat even veel kaarten als gespecifi
 define("LangpdfseriesExplain3"  ,"Elke kaart gespecifieerd in het vak FoVs, toont sterren en objecten zoals gespecifieerd in de respectievelijke vakken.");
 define("LangpdfseriesExplain4"  ,"Elk magnitudevak moet even veel magnitudes bevatten als er FoVs zijn.");
 define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pdf samenvoegprogramma samenstellen tot &eacute;&eacute;n catalogus-atlas.");
-define("LangpdfseriesExplain5b" ,"Als u alles in &eacute;&eacute;n keer aanmaakt, reken dan op een lange verwerkingstijd, tot 30 seconden of meer per oject. Let op: deze optie is beschikbaar in alle browsers behalve Microsoft Internet Explorer.");
+define("LangpdfseriesExplain5b" ,"Als u alles in &eacute;&eacute;n keer aanmaakt, reken dan op een lange verwerkingstijd, tot 30 seconden of meer per object. Let op: deze optie is beschikbaar in alle browsers behalve Microsoft Internet Explorer.");
 define("LangpdfseriesExplain6"  ,"Voor elk object kan u een datasectie toevoegen. Dit bevat de elementaire data, een objectbeschrijving indien beschikbaar, en 2 foto's met de door u aangeduide grootte (15, 30 of 60 boogminuten;, of geen).");
 define("LangpdfseriesExplain7"  ,"Na elk object kan u een inhoudstafel toevoegen. Deze bevat een overzicht van elk van de objecten die op de verschillende kaarten staan.");
 define("LangpdfseriesButton"    ,"Maak alles aan");
