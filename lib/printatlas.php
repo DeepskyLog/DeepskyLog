@@ -1928,7 +1928,7 @@ class PrintAtlas
     	$liney=25;
       if($thephotos[0]>75)
        $thephotos[0]=75;
-    	$url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[0].'.0&w='.$thephotos[0].'&f=gif&c=none&fov=NONE&v3=';
+        $url='https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[0].'.0&w='.$thephotos[0].'&f=gif&c=none&fov=NONE&v3=';
       $this->pdf->addText(50, $liney-15, 10, LangViewDSSImageTitle.$thephotos[0].'x'.$thephotos[0].' '.LangNewObjectSizeUnits1);
     	if($img=@imagecreatefromgif($url))
       { imagefilter($img, IMG_FILTER_NEGATE);
@@ -1959,7 +1959,7 @@ class PrintAtlas
       if(is_array($thephotos) && array_key_exists(1,$thephotos) && ($thephotos[1]>0))
       { if($thephotos[1]>75)
          $thephotos[1]=75;
-        $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[1].'.0&w='.$thephotos[1].'&f=gif&c=none&fov=NONE&v3=';
+        $url='https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[1].'.0&w='.$thephotos[1].'&f=gif&c=none&fov=NONE&v3=';
         $this->pdf->rectangle(448,$liney-2,354,354);
         $this->pdf->addText(450, $liney-15, 10, LangViewDSSImageTitle.$thephotos[1].'x'.$thephotos[1].' '.LangNewObjectSizeUnits1);
         if($img=@imagecreatefromgif($url))
