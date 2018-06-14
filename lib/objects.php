@@ -1637,7 +1637,7 @@ class Objects {
 		echo '  <td colspan="3">Aladin</td>';
 		echo '  <td colspan="100">';
 		echo '    <div id="aladin-lite-div" style="width:600px;height:400px;"></div>';
-		echo '    <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>';
+		echo '    <script type="text/javascript" src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>';
 		echo '    <script type="text/javascript">';
 		echo '      var aladin = A.aladin(\'#aladin-lite-div\', {survey: "P/DSS2/color", fov:' . $this->getFov($object) . ', target: "' . $this->raDecToAladin ( $ra, $dec ) . '"});';
 		echo '    </script>';

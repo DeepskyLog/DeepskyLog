@@ -55,9 +55,6 @@ try {
 	echo "<img width=\"24\" height=\"24\" src=\"" . $baseURL . "styles/images/oallogo_small.jpg\" alt=\"OAL\"/>";
 	echo "</a></li>";
 
-	// Add link to google+ page
-	echo "<li><a href=\"https://plus.google.com/+DeepskylogOrg/\" style=\"text-decoration: none; color: #333;\"><img src=\"https://ssl.gstatic.com/images/icons/gplus-16.png\" width=\"24\" height=\"24\" style=\"border: 0;\"/></a></li>";
-
 	// Add link to facebook page
 	echo "<li><a href=\"https://www.facebook.com/deepskylog\" style=\"text-decoration: none; color: #333;\"><img src=\"" . $baseURL . "img/FB-f-Logo__blue_29.png\" width=\"24\" height=\"24\" style=\"border: 0;\"/></a></li>";
 
