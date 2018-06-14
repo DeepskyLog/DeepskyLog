@@ -240,8 +240,8 @@ class Locations {
 
 					echo "<td>" . "<span class=\"hidden\">" . $objLocation->getLocationPropertyFromId ( $value, 'locationactive' ) . "</span><input id=\"locationactive" . $value . "\" type=\"checkbox\" " . ($objLocation->getLocationPropertyFromId ( $value, 'locationactive' ) ? " checked=\"checked\" " : "") . " onclick=\"setactivation('location'," . $value . ");var order = this.checked ? '1' : '0'; $(this).prev().html(order);$(this).parents('table').trigger('update');\" />" . "</td>";
 					echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_site&amp;location=" . urlencode ( $value ) . "\">" . $sitename . "</a></td>";
-					echo "<td><a href=\"http://clearoutside.com/forecast/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'latitude' ), 2 ) . "/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'longitude' ), 2 ) . "\">
-							  <img src=\"http://clearoutside.com/forecast_image_small/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'latitude' ), 2 ) . "/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'longitude' ), 2 ) . "/forecast.png\" /></a></td>";
+					echo "<td><a href=\"https://clearoutside.com/forecast/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'latitude' ), 2 ) . "/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'longitude' ), 2 ) . "\">
+							  <img src=\"https://clearoutside.com/forecast_image_small/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'latitude' ), 2 ) . "/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'longitude' ), 2 ) . "/forecast.png\" /></a></td>";
 					echo "<td>" . $country . "</td>";
 					echo "<td>" . $elevation . "m</td>";
 					echo "<td>" . $limmag . "</td>";

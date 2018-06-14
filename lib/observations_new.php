@@ -95,7 +95,7 @@ if ($loggedUser == ""){
 						'<div class="idc'+d.observationid+'"></div>'+
 							d.observationdescription+
 						'</div>'+
-						        '<script src="http://translate.google.com/translate_a/element.js?cb=translateInit'+d.observationid+'&ug=section&hl=<?=$usedLang?>" />';
+						        '<script src="https://translate.google.com/translate_a/element.js?cb=translateInit'+d.observationid+'&ug=section&hl=<?=$usedLang?>" />';
 		            } else {
 			    		result += d.observationdescription;
 			    	}
