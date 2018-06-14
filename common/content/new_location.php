@@ -8,7 +8,7 @@
  * @package  DeepskyLog
  * @author   DeepskyLog Developers <developers@deepskylog.be>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
- * @link     http://www.deepskylog.org
+ * @link     https://www.deepskylog.org
  */
 if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
@@ -76,6 +76,7 @@ function newLocation()
     echo "<span class=\"help-block\">" . LangAddSiteField8Expl . "</span>";
     echo "</div>";
 
+    // Bortle Scale
     echo "<div class=\"form-group\">
                 <label>" . LangAddSiteField9 . "</label>";
     echo "<div class=\"form-inline\">";
@@ -88,7 +89,8 @@ function newLocation()
 
     echo "<script type=\"text/javascript\" " 
         . "src=\"https://maps.googleapis.com/maps/api/" 
-        . "js?v=3.exp&language=en&sensor=true&libraries=places\">" 
+        . "js?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE" 
+        . "&v=3.exp&language=en&libraries=places\">" 
         . "</script>";
 
     echo "<script>
@@ -193,7 +195,8 @@ function newLocation()
           });
 
           // Find the timezone
-        url = 'https://maps.googleapis.com/maps/api/timezone/json?location=' 
+        url = 'https://maps.googleapis.com/maps/api/timezone/json" 
+            . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&location=' 
             + latLng.lat() + ',' + latLng.lng() + '&timestamp=' 
             + new Date().getTime() / 1000;
         var xmlhttp = new XMLHttpRequest();

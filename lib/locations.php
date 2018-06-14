@@ -262,7 +262,8 @@ class Locations
                     );
 
                     $url = "https://maps.googleapis.com/maps/" 
-                        . "api/timezone/json?location=" 
+                        . "api/timezone/json" 
+                        . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&location=" 
                         . $latitude . "," . $longitude . "&timestamp=0";
                     $json = file_get_contents($url);
                     $obj = json_decode($json);
@@ -273,7 +274,9 @@ class Locations
 
                         // Get the elevation
                         $url = "https://maps.googleapis.com/maps/" 
-                            . "api/elevation/json?locations=" 
+                            . "api/elevation/json" 
+                            . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE" 
+                            . "&locations=" 
                             . $latitude . "," . $longitude;
                         $json = file_get_contents($url);
                         $obj = json_decode($json);
@@ -286,10 +289,11 @@ class Locations
 
                             // Get the country
                             $url = "https://maps.googleapis.com/maps/" 
-                                . "api/geocode/json?latlng=" 
+                                . "api/geocode/json" 
+                                . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE" 
+                                . "&latlng=" 
                                 . $latitude . "," . $longitude 
-                                . "&language=en&key=" 
-                                . "AIzaSyDGQJvhs1ItqmrFfYPRrh3vNpBzNbWntis";
+                                . "&language=en";
                             $json = file_get_contents($url);
                             $obj = json_decode($json);
                             if ($obj->status == "OK") {

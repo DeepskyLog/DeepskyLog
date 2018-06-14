@@ -119,8 +119,9 @@ function changeSite()
     echo "</div></form><br /><br />";
 
     echo "<script type=\"text/javascript\"" 
-        . " src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&language=en"
-        . "&sensor=true&libraries=places\"></script>";
+        . " src=\"https://maps.googleapis.com/maps/api/js" 
+        . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&v=3.exp&language=en"
+        . "&libraries=places\"></script>";
 
     echo "<script>
       var geocoder;
@@ -215,7 +216,8 @@ function changeSite()
           });
 
           // Find the timezone
-        url = 'https://maps.googleapis.com/maps/api/timezone/json?location='" 
+        url = 'https://maps.googleapis.com/maps/api/timezone/json" 
+        . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&location='" 
         . " + latLng.lat() + ',' + latLng.lng() + '&timestamp=' " 
         . "+ new Date().getTime() / 1000;
         var xmlhttp = new XMLHttpRequest();
