@@ -157,14 +157,14 @@ class Locations {
 					$latitude = $objLocation->getLocationPropertyFromId ( $location ['id'], "latitude" );
 					$longitude = $objLocation->getLocationPropertyFromId ( $location ['id'], "longitude" );
 
-					$url = "https://maps.googleapis.com/maps/api/timezone/json?location=" . $latitude . "," . $longitude . "&timestamp=0";
+					$url = "https://maps.googleapis.com/maps/api/timezone/json?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&location=" . $latitude . "," . $longitude . "&timestamp=0";
 					$json = file_get_contents ( $url );
 					$obj = json_decode ( $json );
 					if ($obj->status == "OK") {
 						$objLocation->setLocationProperty ( $location ['id'], "timezone", $obj->timeZoneId );
 
 						// Get the elevation
-						$url = "https://maps.googleapis.com/maps/api/elevation/json?locations=" . $latitude . "," . $longitude;
+						$url = "https://maps.googleapis.com/maps/api/elevation/json?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&locations=" . $latitude . "," . $longitude;
 						$json = file_get_contents ( $url );
 						$obj = json_decode ( $json );
 						if ($obj->status == "OK") {
@@ -172,7 +172,7 @@ class Locations {
 							$objLocation->setLocationProperty ( $location ['id'], "elevation", (( int ) $results->elevation) );
 
 							// Get the country
-							$url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&language=en&key=AIzaSyDGQJvhs1ItqmrFfYPRrh3vNpBzNbWntis";
+							$url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&language=en&key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&";
 							$json = file_get_contents ( $url );
 							$obj = json_decode ( $json );
 							if ($obj->status == "OK") {
