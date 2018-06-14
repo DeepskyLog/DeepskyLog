@@ -15,13 +15,12 @@ function head() {
     echo "<base href=\"" . $baseURL . "\" />";
 	echo "<link rel=\"shortcut icon\" href=\"" . $baseURL . "styles/images/favicon.png\" />";
 	echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"DeepskyLog - latest observations\" href=\"observations.rss\" />";
-	echo "<link href=\"https://plus.google.com/105963409869875462537/\" rel=\"publisher\" />";
 	// Load the javascript for using php functions in javascript.
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/phpjs.js\"></script>";
 	// Load the javascript for jquery.
 	echo "<script src=\"" . $baseURL . "lib/javascript/jquery-2.2.4.min.js\" type=\"text/javascript\"></script>";
 	// Load Lightbox to show nice pictures when clicking on the images.
-	echo "<link href='http://fonts.googleapis.com/css?family=Yellowtail' rel='stylesheet' type='text/css'>";
+	echo "<link href='https://fonts.googleapis.com/css?family=Yellowtail' rel='stylesheet' type='text/css'>";
 	// Load the javascript for jquery-ui.
 	echo "<script src=\"" . $baseURL . "lib/javascript/jquery-ui.min.js\" type=\"text/javascript\"></script>";
 	echo "<link rel=\"stylesheet\" href=\"" . $baseURL . "styles/jquery-ui.min.css\">";
