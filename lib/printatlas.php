@@ -3,10 +3,13 @@
 // functions for printing the atlas
 
 global $inIndex;
-if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+if ((!isset($inIndex))||(!$inIndex)) {
+    include "../../redirect.php";
+}
 
 class PrintAtlas
-{ var $astroObjectsArr,
+{
+    var $astroObjectsArr,
       $atlasmagnitude=0,
       $atlaspagedecldeg=0,
       $atlaspagerahr=0,
@@ -91,119 +94,165 @@ class PrintAtlas
       $thePageSize,
       $ty=0;
 
-  var $pdf;
+    var $pdf;
 
-  var $gridDimensions=  Array(
-    Array(180,80.00,2.000,3),                                                 // FoV, L grid distance in deg, D grid distance in deg, default limiting star magnitude level for this zoom level
-    Array(150,60.00,2.000,3),
-    Array(120,50.00,2.000,3),
-    Array( 90,40.00,2.666,4),
-    Array( 75,30.00,2.000,4),
-    Array( 60,24.50,1.666,5),
-    Array( 45,20.00,1.333,5),
-    Array( 35,15.00,1.000,6),
-    Array( 30,12.00,0.800,6),
-    Array( 25,10.00,0.666,6),
-    Array( 20, 8.00,0.633,6),
-    Array( 15, 6.00,0.400,7),
-    Array( 10, 4.00,0.266,7),
-    Array(  7, 3.00,0.200,8),
-    Array(  5, 2.00,0.133,8),
-    Array(  4, 1.50,0.100,9),
-    Array(  3, 1.00,0.066,9),
-    Array(  2, 0.80,0.050,10),
-    Array(  1, 0.40,0.026,11),
-    Array(0.5, 0.20,0.012,12),
-    Array(0.25,0.20,0.012,14),
-    Array(0.2 ,0.20,0.012,16),
-    Array(0.15 ,0.20,0.012,16),
-    Array(0.1 ,0.20,0.012,16)
-  );
+    var $gridDimensions=  Array(
+        Array(180,80.00,2.000,3),                                                 // FoV, L grid distance in deg, D grid distance in deg, default limiting star magnitude level for this zoom level
+        Array(150,60.00,2.000,3),
+        Array(120,50.00,2.000,3),
+        Array( 90,40.00,2.666,4),
+        Array( 75,30.00,2.000,4),
+        Array( 60,24.50,1.666,5),
+        Array( 45,20.00,1.333,5),
+        Array( 35,15.00,1.000,6),
+        Array( 30,12.00,0.800,6),
+        Array( 25,10.00,0.666,6),
+        Array( 20, 8.00,0.633,6),
+        Array( 15, 6.00,0.400,7),
+        Array( 10, 4.00,0.266,7),
+        Array(  7, 3.00,0.200,8),
+        Array(  5, 2.00,0.133,8),
+        Array(  4, 1.50,0.100,9),
+        Array(  3, 1.00,0.066,9),
+        Array(  2, 0.80,0.050,10),
+        Array(  1, 0.40,0.026,11),
+        Array(0.5, 0.20,0.012,12),
+        Array(0.25,0.20,0.012,14),
+        Array(0.2 ,0.20,0.012,16),
+        Array(0.15 ,0.20,0.012,16),
+        Array(0.1 ,0.20,0.012,16)
+    );
 
-  function astroDrawBRTNBObject($i)
-  { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
-    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
-    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
-    $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
-    $this->pdf->rectangle($cx-$d1,$cy-$d1,$d1*2,$d1*2);
-    $this->astroDrawObjectLabel($cx,$cy,$d1,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
-  }
+    function astroDrawBRTNBObject($i)
+    { 
+        $this->gridLDrad(
+            $this->astroObjectsArr[$i]["ra"],
+            $this->astroObjectsArr[$i]["decl"]
+        );
+        $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+        $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+        $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
+        $this->pdf->rectangle($cx-$d1, $cy-$d1, $d1*2, $d1*2);
+        $this->astroDrawObjectLabel(
+            $cx, $cy, $d1, $this->astroObjectsArr[$i]["name"], 
+            $this->astroObjectsArr[$i]["seen"]
+        );
+    }
 
-  function astroDrawCLANBObject($i)
-	{ $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
-    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
-    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
-    $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
-    $d2=$this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam2"]*.5);
-    $this->pdf->rectangle($cx-$d1+1,$cy-$d1+1,$d1*2-2,$d1*2-2);
-    $this->pdf->setLineStyle(0.5,'','',array(3));
-    $this->pdf->rectangle($cx-$d1-1,$cy-$d1-1,$d1*2+2,$d1*2+2);
-    $this->pdf->setLineStyle(0.5,'','',array());
-    $this->astroDrawObjectLabel($cx,$cy,$d1+1,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
-	}
+    function astroDrawCLANBObject($i)
+    { 
+        $this->gridLDrad(
+            $this->astroObjectsArr[$i]["ra"],
+            $this->astroObjectsArr[$i]["decl"]
+        );
+        $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+        $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+        $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
+        $d2=$this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam2"]*.5);
+        $this->pdf->rectangle($cx-$d1+1, $cy-$d1+1, $d1*2-2, $d1*2-2);
+        $this->pdf->setLineStyle(0.5, '', '', array(3));
+        $this->pdf->rectangle($cx-$d1-1, $cy-$d1-1, $d1*2+2, $d1*2+2);
+        $this->pdf->setLineStyle(0.5, '', '', array());
+        $this->astroDrawObjectLabel(
+            $cx, $cy, $d1+1, 
+            $this->astroObjectsArr[$i]["name"],
+            $this->astroObjectsArr[$i]["seen"]
+        );
+    }
 
-  function astroDrawConstellations()
-  { global $objConstellation;
-    $this->pdf->setLineStyle(2,'round');
-    $this->conBoundries=$objConstellation->getAllBoundries();
-    $cons = Array();
-    for($i=0;$i<count($this->conBoundries);$i++)
-    { if($this->gridDrawLongLineLD($this->conBoundries[$i]['ra0'], $this->conBoundries[$i]['decl0'], $this->conBoundries[$i]['ra1'], $this->conBoundries[$i]['decl1']))
-      { if((!in_array($this->conBoundries[$i]['con0'],$cons))||
-           (!in_array($this->conBoundries[$i]['con1'],$cons)))
-        { $cons[count($cons)]=($this->conBoundries[$i]['con0']);
-          $cons[count($cons)]=($this->conBoundries[$i]['con1']);
-          $tempx=max(min((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2.75),$this->gridOffsetXpx+$this->gridWidthXpx-($this->fontSize1b*3)),$this->gridOffsetXpx+1);
-          $tempx2=max(min((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1.5),$this->gridOffsetXpx+$this->gridWidthXpx-($this->fontSize1b*3)),$this->gridOffsetXpx+1);
-          $tempy=min(max(($this->canvasY1px+$this->canvasY2px)/2,$this->gridOffsetYpx+1),$this->gridOffsetYpx+$this->gridHeightYpx-($this->fontSize1b>>1)-2);
-          $tempy2=min(max(($this->canvasY1px+$this->canvasY2px)/2,$this->gridOffsetYpx-($this->fontSize1a>>1)-2),$this->gridOffsetYpx+$this->gridHeightYpx);
-          if($this->conBoundries[$i]['con0pos']=="L")
-            $this->labelsArr[]=array($tempx,$tempy,50,$this->fontSize1b,$this->conBoundries[$i]['con0'].' '.$this->conBoundries[$i]['con1'],'left');
-          if($this->conBoundries[$i]['con0pos']=="R")
-            $this->labelsArr[]=array($tempx,$tempy,50,$this->fontSize1b,$this->conBoundries[$i]['con1'].' '.$this->conBoundries[$i]['con0'],'left');
-          if($this->conBoundries[$i]['con0pos']=="A")
-          { $this->labelsArr[]=array($tempx2,$tempy2+2,20,$this->fontSize1b,$this->conBoundries[$i]['con0'],'left');
-            $this->labelsArr[]=array($tempx2,$tempy2-($this->fontSize1a>>1)-2,20,$this->fontSize1b,$this->conBoundries[$i]['con1'],'left');
-          }
-          if($this->conBoundries[$i]['con0pos']=="B")
-          { $this->labelsArr[]=array($tempx2,$tempy2+2,20,$this->fontSize1b,$this->conBoundries[$i]['con1'],'left');
-            $this->labelsArr[]=array($tempx2,$tempy2-($this->fontSize1a>>1)-2,20,$this->fontSize1b,$this->conBoundries[$i]['con0'],'left');
-          }
+    function astroDrawConstellations()
+    { 
+        global $objConstellation;
+        $this->pdf->setLineStyle(2, 'round');
+        $this->conBoundries=$objConstellation->getAllBoundries();
+        $cons = Array();
+        for ($i=0;$i<count($this->conBoundries);$i++) { 
+            if ($this->gridDrawLongLineLD($this->conBoundries[$i]['ra0'], $this->conBoundries[$i]['decl0'], $this->conBoundries[$i]['ra1'], $this->conBoundries[$i]['decl1'])) {
+                if ((!in_array($this->conBoundries[$i]['con0'], $cons))
+                    || (!in_array($this->conBoundries[$i]['con1'], $cons))
+                ) {
+                    $cons[count($cons)]=($this->conBoundries[$i]['con0']);
+                    $cons[count($cons)]=($this->conBoundries[$i]['con1']);
+                    $tempx=max(
+                        min(
+                            (($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2.75),
+                            $this->gridOffsetXpx+$this->gridWidthXpx-($this->fontSize1b*3)
+                        ), $this->gridOffsetXpx+1
+                    );
+                    $tempx2=max(
+                        min(
+                            (($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1.5),
+                            $this->gridOffsetXpx+$this->gridWidthXpx-($this->fontSize1b*3)
+                        ), $this->gridOffsetXpx+1
+                    );
+                    $tempy=min(
+                        max(
+                            ($this->canvasY1px+$this->canvasY2px)/2, $this->gridOffsetYpx+1
+                        ), $this->gridOffsetYpx+$this->gridHeightYpx-($this->fontSize1b>>1)-2
+                    );
+                    $tempy2=min(
+                        max(
+                            ($this->canvasY1px+$this->canvasY2px)/2,
+                            $this->gridOffsetYpx-($this->fontSize1a>>1)-2
+                        ), $this->gridOffsetYpx+$this->gridHeightYpx
+                    );
+                    if ($this->conBoundries[$i]['con0pos']=="L") {
+                        $this->labelsArr[]=array(
+                            $tempx,
+                            $tempy,
+                            50,
+                            $this->fontSize1b,
+                            $this->conBoundries[$i]['con0'].' '.$this->conBoundries[$i]['con1'],
+                            'left'
+                        );
+                    }
+                    if ($this->conBoundries[$i]['con0pos']=="R") {
+                        $this->labelsArr[]=array($tempx,$tempy,50,$this->fontSize1b,$this->conBoundries[$i]['con1'].' '.$this->conBoundries[$i]['con0'],'left');
+                    }
+                    if ($this->conBoundries[$i]['con0pos']=="A") {
+                        $this->labelsArr[]=array($tempx2,$tempy2+2,20,$this->fontSize1b,$this->conBoundries[$i]['con0'],'left');
+                        $this->labelsArr[]=array($tempx2,$tempy2-($this->fontSize1a>>1)-2,20,$this->fontSize1b,$this->conBoundries[$i]['con1'],'left');
+                    }
+                    if ($this->conBoundries[$i]['con0pos']=="B") {
+                        $this->labelsArr[]=array($tempx2,$tempy2+2,20,$this->fontSize1b,$this->conBoundries[$i]['con1'],'left');
+                        $this->labelsArr[]=array($tempx2,$tempy2-($this->fontSize1a>>1)-2,20,$this->fontSize1b,$this->conBoundries[$i]['con0'],'left');
+                    }
+                }
+                /*if(($this->conBoundries[$i]['con1']) && (!in_array($this->conBoundries[$i]['con1'],$cons)))
+                { $cons[count($cons)]=($this->conBoundries[$i]['con1']);
+                if($this->conBoundries[$i]['con1pos']=="L")
+                $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3)-5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,$this->fontSize1b,$this->conBoundries[$i]['con1'],'left');
+                if($this->conBoundries[$i]['con1pos']=="R")
+                $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,$this->fontSize1b,$this->conBoundries[$i]['con1'],'left');
+                if($this->conBoundries[$i]['con1pos']=="A")
+                $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1),($this->canvasY1px+$this->canvasY2px)/2+2,20,$this->fontSize1b,$this->conBoundries[$i]['con1'],'left');
+                if($this->conBoundries[$i]['con1pos']=="B")
+                $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1),($this->canvasY1px+$this->canvasY2px)/2 - $this->fontSize1a-2,20,$this->fontSize1b,$this->conBoundries[$i]['con1'],'left');
+                }*/
+            }
         }
-        /*if(($this->conBoundries[$i]['con1']) && (!in_array($this->conBoundries[$i]['con1'],$cons)))
-        { $cons[count($cons)]=($this->conBoundries[$i]['con1']);
-          if($this->conBoundries[$i]['con1pos']=="L")
-            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3)-5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,$this->fontSize1b,$this->conBoundries[$i]['con1'],'left');
-          if($this->conBoundries[$i]['con1pos']=="R")
-            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,$this->fontSize1b,$this->conBoundries[$i]['con1'],'left');
-          if($this->conBoundries[$i]['con1pos']=="A")
-            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1),($this->canvasY1px+$this->canvasY2px)/2+2,20,$this->fontSize1b,$this->conBoundries[$i]['con1'],'left');
-          if($this->conBoundries[$i]['con1pos']=="B")
-            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1),($this->canvasY1px+$this->canvasY2px)/2 - $this->fontSize1a-2,20,$this->fontSize1b,$this->conBoundries[$i]['con1'],'left');
-        }*/
-      }
+        if (count($cons)==0) {
+            $this->gridLxRad=$this->gridL0rad;
+            $this->gridDyRad=$this->gridD0rad;
+            $this->labelsArr[]=array($this->canvasDimensionXpx-$this->gridOffsetXpx-(3*$this->fontSize1b), $this->gridOffsetYpx+3,20, $this->fontSize1b, $this->astroGetConstellationFromCoordinates($this->gridL0rad*$this->f12OverPi,$this->gridD0rad*$this->f180OverPi),'left');
+        }
+        $this->pdf->setLineStyle(0.5, 'round');
     }
-    if(count($cons)==0)
-    { $this->gridLxRad=$this->gridL0rad;
-      $this->gridDyRad=$this->gridD0rad;
-      $this->labelsArr[]=array($this->canvasDimensionXpx-$this->gridOffsetXpx-(3*$this->fontSize1b), $this->gridOffsetYpx+3,20, $this->fontSize1b, $this->astroGetConstellationFromCoordinates($this->gridL0rad*$this->f12OverPi,$this->gridD0rad*$this->f180OverPi),'left');
+
+    function astroDrawDRKNBObject($i)
+    { 
+        $this->gridLDrad($this->astroObjectsArr[$i]["ra"], $this->astroObjectsArr[$i]["decl"]);
+        $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+        $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+        $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
+        $this->pdf->setLineStyle(0.5, '', '', array(3));
+        $this->pdf->rectangle($cx-$d1, $cy-$d1, $d1*2, $d1*2);
+        $this->astroDrawObjectLabel($cx, $cy, $d1, $this->astroObjectsArr[$i]["name"], $this->astroObjectsArr[$i]["seen"]);
+        $this->pdf->setLineStyle(0.5, '', '', array());
     }
-    $this->pdf->setLineStyle(0.5,'round');
-  }
 
-  function astroDrawDRKNBObject($i)
-  { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
-    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
-    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
-    $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
-    $this->pdf->setLineStyle(0.5,'','',array(3));
-		$this->pdf->rectangle($cx-$d1,$cy-$d1,$d1*2,$d1*2);
-    $this->astroDrawObjectLabel($cx,$cy,$d1,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
-	  $this->pdf->setLineStyle(0.5,'','',array());
-  }
-
-	function astroDrawGCObject($i)
-	{ $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
+    function astroDrawGCObject($i)
+    { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
     $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
     $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
     $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
@@ -211,10 +260,10 @@ class PrintAtlas
     $this->pdf->line($cx-$d, $cy, $cx+$d, $cy);
     $this->pdf->line($cx, $cy-$d, $cx, $cy+$d);
     $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
-	}
+    }
 
   function astroDrawGXCLObject($i)
-	{ $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
+    { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
     $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
     $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
     $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
@@ -252,7 +301,7 @@ class PrintAtlas
     $y2=$y+(($d2+1)>>1);
     $this->pdf->line($x1,$y1,$x2,$y2);
     $this->astroDrawObjectLabel($cx,$cy,($d1>>1),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
-	}
+    }
 
   function astroDrawGXObject($i)
   { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
@@ -265,20 +314,20 @@ class PrintAtlas
     }
     else
       $d2=$this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam2"]*0.5);
-		$this->pdf->ellipse($cx,$cy,$d1,$d2,($pa=Nzx($this->astroObjectsArr[$i]["pa"],0))-90);
+        $this->pdf->ellipse($cx,$cy,$d1,$d2,($pa=Nzx($this->astroObjectsArr[$i]["pa"],0))-90);
     $this->astroDrawObjectLabel($cx,$cy-(cos($pa*$this->fPiOver180)*$d1),(5*abs(cos($pa*$this->fPiOver180)))+abs($d1*sin($pa*$this->fPiOver180)),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
   }
 
   function atlasDrawLegend()
   { for($i=11,$legendx=30;$i>=0;$i--)
-	  { $this->pdf->filledEllipse($this->Legend1x+$legendx,$this->canvasDimensionYpx-$this->Legend1y-3,(.25*$i + 0.5),(.25*$i + 0.5),0,$this->nsegmente);
-	    $legendx+=(0.5*$i)+5;
-	    $this->pdf->addText($this->Legend1x+$legendx, $this->canvasDimensionYpx-$this->Legend1y-5, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
-	    $legendx+=$this->pdf->getTextWidth($this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
-	    $legendx+=10;
+      { $this->pdf->filledEllipse($this->Legend1x+$legendx,$this->canvasDimensionYpx-$this->Legend1y-3,(.25*$i + 0.5),(.25*$i + 0.5),0,$this->nsegmente);
+        $legendx+=(0.5*$i)+5;
+        $this->pdf->addText($this->Legend1x+$legendx, $this->canvasDimensionYpx-$this->Legend1y-5, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
+        $legendx+=$this->pdf->getTextWidth($this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
+        $legendx+=10;
      }
-	  $legendx-=$this->pdf->getTextWidth($this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
-	  $legendx-=10;
+      $legendx-=$this->pdf->getTextWidth($this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
+      $legendx-=10;
     $this->pdf->setColor(0.7,0.7,0.7);
     $this->pdf->filledEllipse($this->Legend1x+$legendx,$this->canvasDimensionYpx-$this->Legend1y-3,.25,.25,0,$this->nsegmente);
     $this->pdf->setColor(0,0,0);
@@ -421,7 +470,7 @@ class PrintAtlas
     }
   }
   function astroDrawStarxObject($i)
-	{ //$d=max(floor(2*(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["mag"]))+1),3);
+    { //$d=max(floor(2*(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["mag"]))+1),3);
     $d=max(floor(2*(($this->starsmagnitude)-($this->astroObjectsArr[$i]["mag"]))+1),3);
     $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
     $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
@@ -430,144 +479,144 @@ class PrintAtlas
        (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
     { //$this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
       $d=round($d*0.75);
-	    //$this->pdf->line($cx-$d,$cy,$cx+$d,$cy);
+        //$this->pdf->line($cx-$d,$cy,$cx+$d,$cy);
       //$this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
     }
-	}
+    }
 
 
-	function astroDrawObjects($theobject='')
-	{ global $objObject,$objUtil,$objObjectOutlines;
-	  $excludelist=Array('Sh','Simeis','Dwb');
-	  $this->astroObjectsArr=$objObject->getObjectsMag($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,-999999,$this->atlasmagnitude,$objObject->getExactDsObject($objUtil->checkRequestKey('object'),$theobject));
-	  $z=count($this->astroObjectsArr);
-	  for($i=0;$i<$z;$i++)
-	  { $thecat = substr($this->astroObjectsArr[$i]["name"],0,strrpos($this->astroObjectsArr[$i]["name"]," "));
-	  	if (in_array($this->astroObjectsArr[$i]["name"], $objObjectOutlines->getAllObjects())) {
-  	    	$this->astroDrawObjectOutline($i);
-  	    } else if((!(in_array($thecat,$excludelist)))&&($this->astroObjectsArr[$i]["type"]!='AASTAR1')) {
-  	      if(($this->astroObjectsArr[$i]["mag"]>$this->maxshowndsomag)&&($this->astroObjectsArr[$i]["mag"]<99))
-  	      		$this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
-		  else if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
-	        $this->astroDrawStar1Object($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
-	        $this->astroDrawStarxObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
-	        $this->astroDrawOCObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('BRTNB','EMINB','ENRNN','ENSTR','GXADN','LMCDN','REFNB','RNHII','SMCDN','SNREM','STNEB','WRNEB')))
-	        $this->astroDrawBRTNBObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('CLANB','GACAN','LMCCN','SMCCN','GXADN','LMCDN','HII')))
-	        $this->astroDrawCLANBObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('DRKNB')))
-	        $this->astroDrawDRKNBObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('GALCL')))
-	        $this->astroDrawGXCLObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('GALXY')))
-	        $this->astroDrawGXObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('GLOCL','GXAGC','LMCGC','SMCGC')))
-	        $this->astroDrawGCObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('PLNNB')))
-	        $this->astroDrawPNObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('QUASR')))
-	        $this->astroDrawQSRObject($i);
-	      else
-	        $this->astroDrawBRTNBObject($i);
-  	    if((isset($_SESSION['atlasPagesIndex']))&&(!(in_array($this->astroObjectsArr[$i]["type"],array('AA1STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))))
-  	    { $indexDistance=sqrt((abs($this->gridD0rad - $this->gridDyRad))^2 + ((abs($this->gridL0rad - $this->gridLxRad)*cos($this->gridLxRad))^2));
-  	    	if(!(in_array($this->astroObjectsArr[$i]["name"],$_SESSION['atlasPagesIndex'])))
-  	      { $_SESSION['atlasPagesIndex'][$this->astroObjectsArr[$i]["name"]]=Array($indexDistance,$this->theItemPage);
-  	      }
-  	      else
-  	      { if($_SESSION['atlasPagesIndex'][$this->astroObjectsArr[$i]["name"]][0]>$indexDistance)
-  	          $_SESSION['atlasPagesIndex'][$this->astroObjectsArr[$i]["name"]]=Array($indexDistance,$this->theItemPage);
-  	      }
-  	    }
-  	  }
-	  }
-	}
+    function astroDrawObjects($theobject='')
+    { global $objObject,$objUtil,$objObjectOutlines;
+      $excludelist=Array('Sh','Simeis','Dwb');
+      $this->astroObjectsArr=$objObject->getObjectsMag($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,-999999,$this->atlasmagnitude,$objObject->getExactDsObject($objUtil->checkRequestKey('object'),$theobject));
+      $z=count($this->astroObjectsArr);
+      for($i=0;$i<$z;$i++)
+      { $thecat = substr($this->astroObjectsArr[$i]["name"],0,strrpos($this->astroObjectsArr[$i]["name"]," "));
+          if (in_array($this->astroObjectsArr[$i]["name"], $objObjectOutlines->getAllObjects())) {
+              $this->astroDrawObjectOutline($i);
+          } else if((!(in_array($thecat,$excludelist)))&&($this->astroObjectsArr[$i]["type"]!='AASTAR1')) {
+            if(($this->astroObjectsArr[$i]["mag"]>$this->maxshowndsomag)&&($this->astroObjectsArr[$i]["mag"]<99))
+                    $this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
+          else if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
+            $this->astroDrawStar1Object($i);
+          else if(in_array($this->astroObjectsArr[$i]["type"],array('AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
+            $this->astroDrawStarxObject($i);
+          else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
+            $this->astroDrawOCObject($i);
+          else if(in_array($this->astroObjectsArr[$i]["type"],array('BRTNB','EMINB','ENRNN','ENSTR','GXADN','LMCDN','REFNB','RNHII','SMCDN','SNREM','STNEB','WRNEB')))
+            $this->astroDrawBRTNBObject($i);
+          else if(in_array($this->astroObjectsArr[$i]["type"],array('CLANB','GACAN','LMCCN','SMCCN','GXADN','LMCDN','HII')))
+            $this->astroDrawCLANBObject($i);
+          else if(in_array($this->astroObjectsArr[$i]["type"],array('DRKNB')))
+            $this->astroDrawDRKNBObject($i);
+          else if(in_array($this->astroObjectsArr[$i]["type"],array('GALCL')))
+            $this->astroDrawGXCLObject($i);
+          else if(in_array($this->astroObjectsArr[$i]["type"],array('GALXY')))
+            $this->astroDrawGXObject($i);
+          else if(in_array($this->astroObjectsArr[$i]["type"],array('GLOCL','GXAGC','LMCGC','SMCGC')))
+            $this->astroDrawGCObject($i);
+          else if(in_array($this->astroObjectsArr[$i]["type"],array('PLNNB')))
+            $this->astroDrawPNObject($i);
+          else if(in_array($this->astroObjectsArr[$i]["type"],array('QUASR')))
+            $this->astroDrawQSRObject($i);
+          else
+            $this->astroDrawBRTNBObject($i);
+          if((isset($_SESSION['atlasPagesIndex']))&&(!(in_array($this->astroObjectsArr[$i]["type"],array('AA1STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))))
+          { $indexDistance=sqrt((abs($this->gridD0rad - $this->gridDyRad))^2 + ((abs($this->gridL0rad - $this->gridLxRad)*cos($this->gridLxRad))^2));
+              if(!(in_array($this->astroObjectsArr[$i]["name"],$_SESSION['atlasPagesIndex'])))
+            { $_SESSION['atlasPagesIndex'][$this->astroObjectsArr[$i]["name"]]=Array($indexDistance,$this->theItemPage);
+            }
+            else
+            { if($_SESSION['atlasPagesIndex'][$this->astroObjectsArr[$i]["name"]][0]>$indexDistance)
+                $_SESSION['atlasPagesIndex'][$this->astroObjectsArr[$i]["name"]]=Array($indexDistance,$this->theItemPage);
+            }
+          }
+        }
+      }
+    }
 
-	function astroDrawObject($theobject='')
-	{ global $objObject,$objUtil,$objObjectOutlines;
-	  $this->astroObjectsArr=$objObject->getObject($theobject);
-	  $z=count($this->astroObjectsArr);
-	  for($i=0;$i<$z;$i++)
-	  { if($this->astroObjectsArr[$i]["type"]!='AASTAR1')
-  	  { if (in_array($this->astroObjectsArr[$i]["name"], $objObjectOutlines->getAllObjects())) {
-  	    	$this->astroDrawObjectOutline($i);
-  	    } else {
-  	  		if(($this->astroObjectsArr[$i]["mag"]>$this->maxshowndsomag)&&($this->astroObjectsArr[$i]["mag"]<99))
-  	      		$this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
-			if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
-	        	$this->astroDrawStar1Object($i);
-		    else if(in_array($this->astroObjectsArr[$i]["type"],array('AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
-		        $this->astroDrawStarxObject($i);
-	    	else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
-	        	$this->astroDrawOCObject($i);
-		    else if(in_array($this->astroObjectsArr[$i]["type"],array('BRTNB','EMINB','ENRNN','ENSTR','GXADN','LMCDN','REFNB','RNHII','SMCDN','SNREM','STNEB','WRNEB')))
-		        $this->astroDrawBRTNBObject($i);
-	    	else if(in_array($this->astroObjectsArr[$i]["type"],array('CLANB','GACAN','LMCCN','SMCCN','GXADN','LMCDN','HII')))
-	        	$this->astroDrawCLANBObject($i);
-		    else if(in_array($this->astroObjectsArr[$i]["type"],array('DRKNB')))
-		        $this->astroDrawDRKNBObject($i);
-	    	else if(in_array($this->astroObjectsArr[$i]["type"],array('GALCL')))
-	        	$this->astroDrawGXCLObject($i);
-		    else if(in_array($this->astroObjectsArr[$i]["type"],array('GALXY')))
-		        $this->astroDrawGXObject($i);
-	    	else if(in_array($this->astroObjectsArr[$i]["type"],array('GLOCL','GXAGC','LMCGC','SMCGC')))
-	        	$this->astroDrawGCObject($i);
-		    else if(in_array($this->astroObjectsArr[$i]["type"],array('PLNNB')))
-		        $this->astroDrawPNObject($i);
-	    	else if(in_array($this->astroObjectsArr[$i]["type"],array('QUASR')))
-	        	$this->astroDrawQSRObject($i);
-		    else
-		        $this->astroDrawBRTNBObject($i);
-  	  	}
-  	  }
-	  }
-	}
+    function astroDrawObject($theobject='')
+    { global $objObject,$objUtil,$objObjectOutlines;
+      $this->astroObjectsArr=$objObject->getObject($theobject);
+      $z=count($this->astroObjectsArr);
+      for($i=0;$i<$z;$i++)
+      { if($this->astroObjectsArr[$i]["type"]!='AASTAR1')
+        { if (in_array($this->astroObjectsArr[$i]["name"], $objObjectOutlines->getAllObjects())) {
+              $this->astroDrawObjectOutline($i);
+          } else {
+                if(($this->astroObjectsArr[$i]["mag"]>$this->maxshowndsomag)&&($this->astroObjectsArr[$i]["mag"]<99))
+                    $this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
+            if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
+                $this->astroDrawStar1Object($i);
+            else if(in_array($this->astroObjectsArr[$i]["type"],array('AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
+                $this->astroDrawStarxObject($i);
+            else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
+                $this->astroDrawOCObject($i);
+            else if(in_array($this->astroObjectsArr[$i]["type"],array('BRTNB','EMINB','ENRNN','ENSTR','GXADN','LMCDN','REFNB','RNHII','SMCDN','SNREM','STNEB','WRNEB')))
+                $this->astroDrawBRTNBObject($i);
+            else if(in_array($this->astroObjectsArr[$i]["type"],array('CLANB','GACAN','LMCCN','SMCCN','GXADN','LMCDN','HII')))
+                $this->astroDrawCLANBObject($i);
+            else if(in_array($this->astroObjectsArr[$i]["type"],array('DRKNB')))
+                $this->astroDrawDRKNBObject($i);
+            else if(in_array($this->astroObjectsArr[$i]["type"],array('GALCL')))
+                $this->astroDrawGXCLObject($i);
+            else if(in_array($this->astroObjectsArr[$i]["type"],array('GALXY')))
+                $this->astroDrawGXObject($i);
+            else if(in_array($this->astroObjectsArr[$i]["type"],array('GLOCL','GXAGC','LMCGC','SMCGC')))
+                $this->astroDrawGCObject($i);
+            else if(in_array($this->astroObjectsArr[$i]["type"],array('PLNNB')))
+                $this->astroDrawPNObject($i);
+            else if(in_array($this->astroObjectsArr[$i]["type"],array('QUASR')))
+                $this->astroDrawQSRObject($i);
+            else
+                $this->astroDrawBRTNBObject($i);
+            }
+        }
+      }
+    }
 
-	function astroDrawObjectOutline($i) {
-		global $objObject,$objUtil,$objObjectOutlines;
+    function astroDrawObjectOutline($i) {
+        global $objObject,$objUtil,$objObjectOutlines;
 
-		$outlines = $objObjectOutlines->getOutlines($this->astroObjectsArr[$i]["name"]);
+        $outlines = $objObjectOutlines->getOutlines($this->astroObjectsArr[$i]["name"]);
 
-		// Check the number of different parts of the nebula
- 		$numberOfVertices = 0;
- 		for ($j=0;$j<count($outlines);$j++) {
-   			if($outlines[$j]['type'] == "start") {
-     			$numberOfVertices++;
-   			}
- 		}
+        // Check the number of different parts of the nebula
+         $numberOfVertices = 0;
+         for ($j=0;$j<count($outlines);$j++) {
+               if($outlines[$j]['type'] == "start") {
+                 $numberOfVertices++;
+               }
+         }
 
- 		$counter = 0;
- 		for ($j=0;$j<$numberOfVertices;$j++) {
-  			$polygonCoordinates = Array();
-  			while($outlines[$counter]['type'] != "end") {
-  				$this->gridLDrad($outlines[$counter]['ra'], $outlines[$counter]['decl']);
-  				$cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
-  				$cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
-   				array_push($polygonCoordinates, $cx, $cy);
-   				$counter++;
-  			}
-			$this->gridLDrad($outlines[$counter]['ra'], $outlines[$counter]['decl']);
-  			$cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
-  			$cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
-   			array_push($polygonCoordinates, $cx, $cy);
-  			$counter++;
+         $counter = 0;
+         for ($j=0;$j<$numberOfVertices;$j++) {
+              $polygonCoordinates = Array();
+              while($outlines[$counter]['type'] != "end") {
+                  $this->gridLDrad($outlines[$counter]['ra'], $outlines[$counter]['decl']);
+                  $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+                  $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+                   array_push($polygonCoordinates, $cx, $cy);
+                   $counter++;
+              }
+            $this->gridLDrad($outlines[$counter]['ra'], $outlines[$counter]['decl']);
+              $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+              $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+               array_push($polygonCoordinates, $cx, $cy);
+              $counter++;
 
-			// Close the polygon
-			array_push($polygonCoordinates, $polygonCoordinates[0], $polygonCoordinates[1]);
-			$this->pdf->setLineStyle(0.5,'','');
-		    $this->pdf->polygon($polygonCoordinates, count($polygonCoordinates) / 2);
-		    $this->pdf->setLineStyle(0.5,'','');
-	 	}
-	    $d = 10;
-	    $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
-	}
+            // Close the polygon
+            array_push($polygonCoordinates, $polygonCoordinates[0], $polygonCoordinates[1]);
+            $this->pdf->setLineStyle(0.5,'','');
+            $this->pdf->polygon($polygonCoordinates, count($polygonCoordinates) / 2);
+            $this->pdf->setLineStyle(0.5,'','');
+         }
+        $d = 10;
+        $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+    }
 
-	function astroDrawPNObject($i)
-	{ $this->pdf->addText(10,10,$this->fontSize1b,"PN");
-		$this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
+    function astroDrawPNObject($i)
+    { $this->pdf->addText(10,10,$this->fontSize1b,"PN");
+        $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
     $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
     $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
     $d=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
@@ -577,11 +626,11 @@ class PrintAtlas
     $this->pdf->line($cx, $cy-$d, $cx, $cy-($d<<1));
     $this->pdf->line($cx, $cy+$d, $cx, $cy+($d<<1));
     $this->astroDrawObjectLabel($cx,$cy,$d<<1,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
-	}
+    }
 
-	function astroDrawQSRObject($i)
-	{ $this->pdf->addText(10,10,$this->fontSize1b,"PN");
-		$this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
+    function astroDrawQSRObject($i)
+    { $this->pdf->addText(10,10,$this->fontSize1b,"PN");
+        $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
     $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
     $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
     $d=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
@@ -590,7 +639,7 @@ class PrintAtlas
     $this->pdf->line($cx, $cy-$d, $cx, $cy-($d>>1));
     $this->pdf->line($cx, $cy+$d, $cx, $cy+($d>>1));
     $this->astroDrawObjectLabel($cx,$cy,$d<<1,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
-			}
+            }
 
   function astroDrawStarsArr()
   { global $objStar;
@@ -601,19 +650,19 @@ class PrintAtlas
       else
         $this->pdf->setColor(0,0,0);
       if($this->gridD0rad>0)
-    	{ if(($this->gridD0rad+($this->gridSpanDrad/1))>=($this->fPiOver2))
-    		  $this->astroObjectsArr=$objStar->getStarsMagnitude(24,0,$this->gridldDdeg,90,$m,$m);
-    		else
-    		  $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->gridldDdeg,$this->griduDdeg,$m,$m);
-    	}
-    	else
-    	{ if(($this->gridD0rad-($this->gridSpanDrad/1))<=(-$this->fPiOver2))
-    	    $this->astroObjectsArr=$objStar->getStarsMagnitude(24,0,-90,$this->gridluDdeg,$m,$m);
-    	  else
-    	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridldLhr,$this->gridrdLhr,$this->griddDdeg,$this->gridluDdeg,$m,$m);
-    	}
+        { if(($this->gridD0rad+($this->gridSpanDrad/1))>=($this->fPiOver2))
+              $this->astroObjectsArr=$objStar->getStarsMagnitude(24,0,$this->gridldDdeg,90,$m,$m);
+            else
+              $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->gridldDdeg,$this->griduDdeg,$m,$m);
+        }
+        else
+        { if(($this->gridD0rad-($this->gridSpanDrad/1))<=(-$this->fPiOver2))
+            $this->astroObjectsArr=$objStar->getStarsMagnitude(24,0,-90,$this->gridluDdeg,$m,$m);
+          else
+            $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridldLhr,$this->gridrdLhr,$this->griddDdeg,$this->gridluDdeg,$m,$m);
+        }
 
-    	$z=count($this->astroObjectsArr);
+        $z=count($this->astroObjectsArr);
       for($i=0;$i<$z;$i++)
         if(($this->starsmagnitude)>($this->astroObjectsArr[$i]["vMag"]/100.0))
           $this->canvasDrawStar($i);
@@ -687,21 +736,21 @@ class PrintAtlas
   }
 
   function coordDeclDecToDegMin($theDeg)
-	{ if($theDeg>90) $theDeg=90;
-	  if($theDeg<-90) $theDeg=-90;
-	  $sign='';
-	  if($theDeg<0) {$theDeg=-$theDeg; $sign='-';}
-	  $this->dsl_deg=floor($theDeg);
-	  $this->dsl_amn=round(($theDeg-$this->dsl_deg)*60);
-	  if($this->dsl_amn==60)
-	  { $this->dsl_amn=0;
-	    ++$this->dsl_deg;
-	  }
-	  $this->dsl_deg=$sign.$this->dsl_deg;
-	  if($this->dsl_amn>0)
-	    return $this->dsl_deg.'�'.$this->dsl_amn.'\'';
-	  return $this->dsl_deg.'�';
-	}
+    { if($theDeg>90) $theDeg=90;
+      if($theDeg<-90) $theDeg=-90;
+      $sign='';
+      if($theDeg<0) {$theDeg=-$theDeg; $sign='-';}
+      $this->dsl_deg=floor($theDeg);
+      $this->dsl_amn=round(($theDeg-$this->dsl_deg)*60);
+      if($this->dsl_amn==60)
+      { $this->dsl_amn=0;
+        ++$this->dsl_deg;
+      }
+      $this->dsl_deg=$sign.$this->dsl_deg;
+      if($this->dsl_amn>0)
+        return $this->dsl_deg.'�'.$this->dsl_amn.'\'';
+      return $this->dsl_deg.'�';
+    }
 
   function coordHrDecToHrMin($theHr)
   { while(($theHr)>24) $theHr-=24;
@@ -719,36 +768,36 @@ class PrintAtlas
     return $dsl_hr.'h';
   }
 
-	function coordHrDecToHrMinSec($theHr)
-	{ while(($theHr)>24) $theHr-=24;
-		while(($theHr)<0)  $theHr+=24;
-		$this->dsl_hr=floor($theHr);
-		$this->dsl_min=floor(($theHr-$this->dsl_hr)*60);
-		$this->dsl_sec=$this->roundPrecision(($theHr-$this->dsl_hr-($this->dsl_min/60))*3600,10);
-		if($this->dsl_sec==60)
-		{ ++$this->dsl_min;
-		  $this->dsl_sec=0;
-		}
-		if($this->dsl_min==60)
-		{ $this->dsl_min=0;
-		  ++$this->dsl_hr;
-		}
-		if($this->dsl_hr==24)
-		 $this->dsl_hr=0;
-		if($this->dsl_sec>0)
-		 return $this->dsl_hr.'h'.$this->dsl_min.'m'.$this->dsl_sec.'s';
-		else if($this->dsl_min>0)
-		 return $this->dsl_hr.'h'.$this->dsl_min.'m';
-		return $this->dsl_hr.'h';
-	}
+    function coordHrDecToHrMinSec($theHr)
+    { while(($theHr)>24) $theHr-=24;
+        while(($theHr)<0)  $theHr+=24;
+        $this->dsl_hr=floor($theHr);
+        $this->dsl_min=floor(($theHr-$this->dsl_hr)*60);
+        $this->dsl_sec=$this->roundPrecision(($theHr-$this->dsl_hr-($this->dsl_min/60))*3600,10);
+        if($this->dsl_sec==60)
+        { ++$this->dsl_min;
+          $this->dsl_sec=0;
+        }
+        if($this->dsl_min==60)
+        { $this->dsl_min=0;
+          ++$this->dsl_hr;
+        }
+        if($this->dsl_hr==24)
+         $this->dsl_hr=0;
+        if($this->dsl_sec>0)
+         return $this->dsl_hr.'h'.$this->dsl_min.'m'.$this->dsl_sec.'s';
+        else if($this->dsl_min>0)
+         return $this->dsl_hr.'h'.$this->dsl_min.'m';
+        return $this->dsl_hr.'h';
+    }
 
-	function coordGridLxDyToString()
-	{ $this->coordHrDecToHrMinSec($this->gridLxRad*$this->f12OverPi);
-	  $this->coordDeclDecToDegMin($this->gridDyRad*$this->f180OverPi);
-	  return sprintf('%02d',$this->dsl_hr).'h'.sprintf('%02d',$this->dsl_min).'m'.sprintf('%02d',$this->dsl_sec).'s,'.sprintf('%02d',$this->dsl_deg).'�'.sprintf('%02d',$this->dsl_amn).'\'';
-	}
+    function coordGridLxDyToString()
+    { $this->coordHrDecToHrMinSec($this->gridLxRad*$this->f12OverPi);
+      $this->coordDeclDecToDegMin($this->gridDyRad*$this->f180OverPi);
+      return sprintf('%02d',$this->dsl_hr).'h'.sprintf('%02d',$this->dsl_min).'m'.sprintf('%02d',$this->dsl_sec).'s,'.sprintf('%02d',$this->dsl_deg).'�'.sprintf('%02d',$this->dsl_amn).'\'';
+    }
 
-	function gridDiam1SecToPxMin($Diam1Sec)
+    function gridDiam1SecToPxMin($Diam1Sec)
   { return max(round($this->diam1SecToPxCt*$Diam1Sec),$this->minObjectSize);
   }
 
@@ -1077,11 +1126,11 @@ class PrintAtlas
 
   function gridShowInfo()
   { $t1 =html_entity_decode(atlasPageFoV).' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."� - ";
-	  $t1.=html_entity_decode(atlasPageDSLM).' '.($this->maxshowndsomag==-99?'-':$this->maxshowndsomag)." - ";
-	  $t1.=html_entity_decode(atlasPageStarLM).' '.$this->starsmagnitude.' - ';
-	  $t1.='('.html_entity_decode(atlasPageCenteredOn).$this->coordHrDecToHrMin($this->atlaspagerahr).','.$this->coordDeclDecToDegMin($this->atlaspagedecldeg).')';
-	  $this->pdf->addText($this->gridOffsetXpx,20,$this->fontSize1a,$t1);
-	}
+      $t1.=html_entity_decode(atlasPageDSLM).' '.($this->maxshowndsomag==-99?'-':$this->maxshowndsomag)." - ";
+      $t1.=html_entity_decode(atlasPageStarLM).' '.$this->starsmagnitude.' - ';
+      $t1.='('.html_entity_decode(atlasPageCenteredOn).$this->coordHrDecToHrMin($this->atlaspagerahr).','.$this->coordDeclDecToDegMin($this->atlaspagedecldeg).')';
+      $this->pdf->addText($this->gridOffsetXpx,20,$this->fontSize1a,$t1);
+    }
 
   function gridXpx($Lrad)
   { return (($this->gridWidthXpx2*$Lrad/$this->gridSpanLrad));
@@ -1189,14 +1238,14 @@ class PrintAtlas
     if(!(isset($_SESSION['atlasPagesIndex'])))
       $_SESSION['atlasPagesIndex']=Array();
     set_time_limit(120);
-	  $this->theItemPage=$objUtil->checkRequestKey('item',0);
+      $this->theItemPage=$objUtil->checkRequestKey('item',0);
     $object='';
     $this->atlaspagerahr=$objUtil->checkRequestKey('ra',0);
-	  $this->atlaspagedecldeg=$objUtil->checkRequestKey('decl',0);
-	  if($this->atlaspagedecldeg==90)
-	    $this->atlaspagedecldeg=89.99;
-	  if($this->atlaspagedecldeg==-90)
-	    $this->atlaspagedecldeg=-89.99;
+      $this->atlaspagedecldeg=$objUtil->checkRequestKey('decl',0);
+      if($this->atlaspagedecldeg==90)
+        $this->atlaspagedecldeg=89.99;
+      if($this->atlaspagedecldeg==-90)
+        $this->atlaspagedecldeg=-89.99;
     if($object=$objObject->getExactDsObject($objUtil->checkRequestKey('object'),''))
     { $this->atlaspagerahr=$objObject->getDsoProperty($object,'ra',0);
       $this->atlaspagedecldeg=$objObject->getDsoProperty($object,'decl',0);
@@ -1298,12 +1347,12 @@ class PrintAtlas
       $this->gridDyRad=$this->gridluDdeg*$this->fPiOver180;
     $pageupper=$objAtlas->calculateAtlasPage($atlastype,$this->atlaspagerahr,$this->gridDyRad*$this->f180OverPi);
     if($pageupper!=$this->theItemPage)
-    {	$thetextsize=$this->pdf->getTextWidth($this->fontSize1a,$pageupper);
-    	$this->pdf->setColor(1,1,1);
-    	$this->pdf->filledrectangle($this->gridCenterOffsetXpx+-($thetextsize>>1)-3,$this->canvasDimensionYpx-$this->gridOffsetYpx-$this->fontSize1a-2,$thetextsize+6,$this->fontSize1a+2);
-    	$this->pdf->setColor(0,0,0);
-    	$this->pdf->rectangle($this->gridCenterOffsetXpx+-($thetextsize>>1)-3,$this->canvasDimensionYpx-$this->gridOffsetYpx-$this->fontSize1a-2,$thetextsize+6,$this->fontSize1a+2);
-    	$this->pdf->addText($this->gridCenterOffsetXpx-($thetextsize>>1),$this->canvasDimensionYpx-$this->gridOffsetYpx-$this->fontSize1a+1,$this->fontSize1a,$pageupper);
+    {    $thetextsize=$this->pdf->getTextWidth($this->fontSize1a,$pageupper);
+        $this->pdf->setColor(1,1,1);
+        $this->pdf->filledrectangle($this->gridCenterOffsetXpx+-($thetextsize>>1)-3,$this->canvasDimensionYpx-$this->gridOffsetYpx-$this->fontSize1a-2,$thetextsize+6,$this->fontSize1a+2);
+        $this->pdf->setColor(0,0,0);
+        $this->pdf->rectangle($this->gridCenterOffsetXpx+-($thetextsize>>1)-3,$this->canvasDimensionYpx-$this->gridOffsetYpx-$this->fontSize1a-2,$thetextsize+6,$this->fontSize1a+2);
+        $this->pdf->addText($this->gridCenterOffsetXpx-($thetextsize>>1),$this->canvasDimensionYpx-$this->gridOffsetYpx-$this->fontSize1a+1,$this->fontSize1a,$pageupper);
     }
 
     if($this->atlaspagedecldeg>0)
@@ -1349,40 +1398,40 @@ class PrintAtlas
     $this->pdf->newPage();
     if(count($_SESSION['atlasPagesIndex'])>0)
     { $theindex=$_SESSION['atlasPagesIndex'];
-	    uksort($theindex,"strnatcmp");
+        uksort($theindex,"strnatcmp");
 
-	    $j=0;
-	    $columnX=0;
-	    while(list($theobject,$theobjectdata)=each($theindex))
-	    { if($this->canvasDimensionYpx-$topborderIndexWidth-($j*10)<$topborderIndexWidth)
-	      { $j=0;
-	        $columnX+=($columnIndexWidth+$columnIndexSeparation);
-	        if(($columnX+$columnIndexWidth)>($this->canvasDimensionXpx-$sideborderIndexWidth))
-	        { $this->pdf->newPage();
-	        	$columnX=0;
-	        }
-	      }
-	    	$thetextwidth0=min($this->pdf->getTextWidth($indexFontSize,$theobject),$nameIndexMaxWidth);
-	      $thetextwidth3=$this->pdf->getTextWidth($indexFontSize,$theobjectdata[1]);
-	      $this->pdf->addTextWrap(
+        $j=0;
+        $columnX=0;
+        while(list($theobject,$theobjectdata)=each($theindex))
+        { if($this->canvasDimensionYpx-$topborderIndexWidth-($j*10)<$topborderIndexWidth)
+          { $j=0;
+            $columnX+=($columnIndexWidth+$columnIndexSeparation);
+            if(($columnX+$columnIndexWidth)>($this->canvasDimensionXpx-$sideborderIndexWidth))
+            { $this->pdf->newPage();
+                $columnX=0;
+            }
+          }
+            $thetextwidth0=min($this->pdf->getTextWidth($indexFontSize,$theobject),$nameIndexMaxWidth);
+          $thetextwidth3=$this->pdf->getTextWidth($indexFontSize,$theobjectdata[1]);
+          $this->pdf->addTextWrap(
               $sideborderIndexWidth+$columnX+$thetextwidth0+$extraspacerdotline,
               $this->canvasDimensionYpx-$topborderIndexWidth-($j*10),
               $indexFontSize,
               '......................................................................................................................................................',
               $columnIndexWidth-$thetextwidth0-$thetextwidth3-$extraspacerdotline-$extraspacerdotline
             );
-	    	$this->pdf->addTextWrap(
+            $this->pdf->addTextWrap(
                 $sideborderIndexWidth+$columnX,
                 $this->canvasDimensionYpx-$topborderIndexWidth-($j*10),
                 $indexFontSize,$theobject,$thetextwidth0
             );
-	    	$this->pdf->addTextWrap(
+            $this->pdf->addTextWrap(
                 $sideborderIndexWidth+$columnX+$columnIndexWidth-100,
                 $this->canvasDimensionYpx-$topborderIndexWidth-($j*10),
                 $indexFontSize,$theobjectdata[1],100,'right'
             );
-	    	$j++;
-	    }
+            $j++;
+        }
     }
     else
       $this->pdf->addText(100,100,12,LangNoIndexEntries);
@@ -1431,7 +1480,7 @@ class PrintAtlas
     $this->pdf->addTextWrap(0,10,10,$theShowname,$this->pdf->ez['pageWidth']-10,'right');
     if($datapage=='true')
     { $firstpage=false;
-    	$theobjectdata=$objObject->getSeenObjectDetails(array($theobject => array(0,$theobject)));
+        $theobjectdata=$objObject->getSeenObjectDetails(array($theobject => array(0,$theobject)));
       $theobjectdata=$theobjectdata[0];
       $liney=$this->canvasDimensionYpx-50;
       $this->pdf->addTextWrap( 50, $liney, $this->canvasDimensionXpx-100, 'Atlas pages for '.$theShowname, 15,  'center');
@@ -1459,8 +1508,8 @@ class PrintAtlas
       { $this->pdf->addTextWrap( 50, $liney, 10, LangViewObjectFieldOptimumDetectionMagnification.': '.$theobjectdata['objectoptimalmagnification'], 4500,  'left');
         $this->pdf->addTextWrap(550, $liney, 10, LangOverviewObjectsHeader8.': '.($theobjectdata['objectlastseen']?$theobjectdata['objectlastseen']:'-'), 200,  'left');
         $liney-=15;
-      	$this->pdf->addTextWrap( 50, $liney, 10, Reportobjectcontrast.': '.($theobjectdata['objectcontrast']!='0.0'?$theobjectdata['objectcontrast'].' - ':'').stripslashes($theobjectdata['objectcontrastpopup']), 750,  'left');
-      	$liney-=15;
+          $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectcontrast.': '.($theobjectdata['objectcontrast']!='0.0'?$theobjectdata['objectcontrast'].' - ':'').stripslashes($theobjectdata['objectcontrastpopup']), 750,  'left');
+          $liney-=15;
         if($ephemerides=='true')
         { $liney-=15;
           $theYear=$objUtil->checkSessionKey('globalYear',date("Y"));
@@ -1468,36 +1517,36 @@ class PrintAtlas
           $theDay=$objUtil->checkSessionKey('globalDay',date('j'));
           $dateTimeText0=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear));
           $dateTimeText1=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear)+(60*60*24));
-        	if($dateformat=='d-M-Y')
-        	{ if(substr($dateTimeText0,-8)==substr($dateTimeText1,-8))
+            if($dateformat=='d-M-Y')
+            { if(substr($dateTimeText0,-8)==substr($dateTimeText1,-8))
               $dateTimeText0=substr($dateTimeText0,0,2);
             elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
               $dateTimeText0=substr($dateTimeText0,0,5);
           }
-					elseif($dateformat=="d/m/Y")
-					{ if(substr($dateTimeText0,-7)==substr($dateTimeText1,-7))
-					    $dateTimeText0=substr($dateTimeText0,0,2);
-					  elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
-					    $dateTimeText0=substr($dateTimeText0,0,5);
-					}
+                    elseif($dateformat=="d/m/Y")
+                    { if(substr($dateTimeText0,-7)==substr($dateTimeText1,-7))
+                        $dateTimeText0=substr($dateTimeText0,0,2);
+                      elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
+                        $dateTimeText0=substr($dateTimeText0,0,5);
+                    }
           elseif($dateformat=='d-m-Y')
-        	{ if(substr($dateTimeText0,-7)==substr($dateTimeText1,-7))
+            { if(substr($dateTimeText0,-7)==substr($dateTimeText1,-7))
               $dateTimeText0=substr($dateTimeText0,0,2);
             elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
               $dateTimeText0=substr($dateTimeText0,0,5);
           }
           elseif($dateformat=='M-d-Y')
-        	{ if(substr($dateTimeText0,0,3)==substr($dateTimeText1,0,3))
-        	  { $dateTimeText0=substr($dateTimeText0,0,6);
-        	    $dateTimeText1=substr($dateTimeText1,-7);
-        	  }
-        	  elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
+            { if(substr($dateTimeText0,0,3)==substr($dateTimeText1,0,3))
+              { $dateTimeText0=substr($dateTimeText0,0,6);
+                $dateTimeText1=substr($dateTimeText1,-7);
+              }
+              elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
               $dateTimeText0=substr($dateTimeText0,0,6);
           }
           $this->pdf->addTextWrap( 50, $liney, 10, ReportEpehemeridesFor.' '.$dateTimeText0."-".$dateTimeText1.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'). ReportInLocalTime, 600 ,  'left');
           $liney-=5;
           $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
-        	$liney-=15;
+            $liney-=15;
           $this->pdf->addTextWrap( 50, $liney, 10, LangMoonSun.' '.LangMoonSet.': '.$_SESSION['efemerides']['sset'], 150,  'left');
           $this->pdf->addTextWrap(250, $liney, 10, LangMoonSun.' '.LangMoonRise.': '.$_SESSION['efemerides']['srise'], 150,  'left');
           $this->pdf->addTextWrap(450, $liney, 10, LangMoon.' '.LangMoonRise.': '.$_SESSION['efemerides']['moon0'], 150,  'left');
@@ -1532,326 +1581,326 @@ class PrintAtlas
           $timezone=$objLocation->getLocationPropertyFromId($theLocation,'timezone');
           $dateTimeZone=new DateTimeZone($timezone);
           for($i=1;$i<13;$i++)
-			    { $datestr=sprintf("%02d",$i)."/".sprintf("%02d",1)."/".$_SESSION['globalYear'];
-	          $dateTime = new DateTime($datestr, $dateTimeZone);
-	          $timedifference = $dateTimeZone->getOffset($dateTime);
-	          if (strncmp($timezone, "Etc/GMT", 7)==0)
-	            $timedifference = -$timedifference;
-			      date_default_timezone_set ("UTC");
-						$theTimeDifference1[$i]=$timedifference;
-			      $theEphemerides1[$i]=$objObject->getEphemerides($object,1,$i,2010);
-			      $theNightEphemerides1[$i]=date_sun_info(strtotime("2010"."-".$i."-"."1"), $latitude, $longitude);
-						$datestr=sprintf("%02d",$i)."/".sprintf("%02d",1)."/".$_SESSION['globalYear'];
-			      $dateTime = new DateTime($datestr, $dateTimeZone);
-			      $timedifference = $dateTimeZone->getOffset($dateTime);
-			      if (strncmp($timezone, "Etc/GMT", 7)==0)
-			        $timedifference = -$timedifference;
-			      date_default_timezone_set ("UTC");
-						$theTimeDifference15[$i]=$timedifference;
-			      $theEphemerides15[$i]=$objObject->getEphemerides($object,15,$i,2010);
-			      $theNightEphemerides15[$i]=date_sun_info(strtotime("2010"."-".$i."-"."15"), $latitude, $longitude);
-					}
-			    $this->pdf->addTextWrap( 50, $liney, 8, LangMonth, 100,'center');
-			    for($i=1;$i<7;$i++)
-			    { $this->pdf->addTextWrap( 100+(100*$i), $liney, 8, $i, 50,'center');
-			    }
-			    $liney-=15;
-			    $this->pdf->addTextWrap( 50, $liney, 8, LangMaxAltitude, 100,'center');
-				  for($i=1;$i<7;$i++)
-				  { $colorclass="";
-					  $colorclass2="";
-					  if($i==1)
-					  { if(($theEphemerides1[$i]['altitude']!='-') &&
-					       (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
-					        ($theEphemerides1[$i]['altitude']==$theEphemerides15[12]['altitude'])))
-					    { $colorclass="<c:uline><b>";
-					      $colorclass2="</c:uline></b>";
-					    }
-					  }
-			      else
-			        if(($theEphemerides1[$i]['altitude']!='-') &&
-			           (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
-					        ($theEphemerides1[$i]['altitude']==$theEphemerides15[$i-1]['altitude'])))
-					    { $colorclass="<c:uline><b>";
-					      $colorclass2="</c:uline></b>";
-					    }
-			      $this->pdf->addTextWrap(
+                { $datestr=sprintf("%02d",$i)."/".sprintf("%02d",1)."/".$_SESSION['globalYear'];
+              $dateTime = new DateTime($datestr, $dateTimeZone);
+              $timedifference = $dateTimeZone->getOffset($dateTime);
+              if (strncmp($timezone, "Etc/GMT", 7)==0)
+                $timedifference = -$timedifference;
+                  date_default_timezone_set ("UTC");
+                        $theTimeDifference1[$i]=$timedifference;
+                  $theEphemerides1[$i]=$objObject->getEphemerides($object,1,$i,2010);
+                  $theNightEphemerides1[$i]=date_sun_info(strtotime("2010"."-".$i."-"."1"), $latitude, $longitude);
+                        $datestr=sprintf("%02d",$i)."/".sprintf("%02d",1)."/".$_SESSION['globalYear'];
+                  $dateTime = new DateTime($datestr, $dateTimeZone);
+                  $timedifference = $dateTimeZone->getOffset($dateTime);
+                  if (strncmp($timezone, "Etc/GMT", 7)==0)
+                    $timedifference = -$timedifference;
+                  date_default_timezone_set ("UTC");
+                        $theTimeDifference15[$i]=$timedifference;
+                  $theEphemerides15[$i]=$objObject->getEphemerides($object,15,$i,2010);
+                  $theNightEphemerides15[$i]=date_sun_info(strtotime("2010"."-".$i."-"."15"), $latitude, $longitude);
+                    }
+                $this->pdf->addTextWrap( 50, $liney, 8, LangMonth, 100,'center');
+                for($i=1;$i<7;$i++)
+                { $this->pdf->addTextWrap( 100+(100*$i), $liney, 8, $i, 50,'center');
+                }
+                $liney-=15;
+                $this->pdf->addTextWrap( 50, $liney, 8, LangMaxAltitude, 100,'center');
+                  for($i=1;$i<7;$i++)
+                  { $colorclass="";
+                      $colorclass2="";
+                      if($i==1)
+                      { if(($theEphemerides1[$i]['altitude']!='-') &&
+                           (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
+                            ($theEphemerides1[$i]['altitude']==$theEphemerides15[12]['altitude'])))
+                        { $colorclass="<c:uline><b>";
+                          $colorclass2="</c:uline></b>";
+                        }
+                      }
+                  else
+                    if(($theEphemerides1[$i]['altitude']!='-') &&
+                       (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
+                            ($theEphemerides1[$i]['altitude']==$theEphemerides15[$i-1]['altitude'])))
+                        { $colorclass="<c:uline><b>";
+                          $colorclass2="</c:uline></b>";
+                        }
+                  $this->pdf->addTextWrap(
                       50+(100*$i), $liney, 8, $colorclass.$this->filterdegpart($theEphemerides1[$i]['altitude']).$colorclass2, 50,'center'
                     );
-			      $colorclass="";
-					  $colorclass2="";
-  	        if(($theEphemerides15[$i]['altitude']!='-') &&
-	           (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
-			        ($theEphemerides15[$i]['altitude']==$theEphemerides1[$i+1]['altitude'])))
-			      { $colorclass="<c:uline><b>";
-			        $colorclass2="</c:uline></b>";
-			      }
-			      $this->pdf->addTextWrap( 100+(100*$i), $liney, 8, $colorclass.$this->filterdegpart($theEphemerides15[$i]['altitude']).$colorclass2, 50,'center');
-					}
-		      $colorclass="";
-		      $colorclass2="";
-					if(($theEphemerides1[7]['altitude']!='-') &&
-					       (($theEphemerides1[7]['altitude']==$theEphemerides15[7]['altitude']) ||
-					        ($theEphemerides1[7]['altitude']==$theEphemerides15[6]['altitude'])))
-		      { $colorclass="<c:uline><b>";
-		        $colorclass2="</c:uline></b>";
-		      }
-			    $this->pdf->addTextWrap( 50+(100*7), $liney, 8,  $colorclass.$this->filterdegpart($theEphemerides1[7]['altitude']).$colorclass2, 50,'center');
+                  $colorclass="";
+                      $colorclass2="";
+              if(($theEphemerides15[$i]['altitude']!='-') &&
+               (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
+                    ($theEphemerides15[$i]['altitude']==$theEphemerides1[$i+1]['altitude'])))
+                  { $colorclass="<c:uline><b>";
+                    $colorclass2="</c:uline></b>";
+                  }
+                  $this->pdf->addTextWrap( 100+(100*$i), $liney, 8, $colorclass.$this->filterdegpart($theEphemerides15[$i]['altitude']).$colorclass2, 50,'center');
+                    }
+              $colorclass="";
+              $colorclass2="";
+                    if(($theEphemerides1[7]['altitude']!='-') &&
+                           (($theEphemerides1[7]['altitude']==$theEphemerides15[7]['altitude']) ||
+                            ($theEphemerides1[7]['altitude']==$theEphemerides15[6]['altitude'])))
+              { $colorclass="<c:uline><b>";
+                $colorclass2="</c:uline></b>";
+              }
+                $this->pdf->addTextWrap( 50+(100*7), $liney, 8,  $colorclass.$this->filterdegpart($theEphemerides1[7]['altitude']).$colorclass2, 50,'center');
 
           $liney-=15;
-					$this->pdf->addTextWrap( 50, $liney, 8, LangTransit,100,'center');
-					for($i=1;$i<7;$i++)
-					{ $colorclass="";
-					  $colorclass2="";
-					  if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00") &&
-					      $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['transit'],
-					                               date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),
-					                               date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])))
-					  { $colorclass="<c:uline><b>";
-					    $colorclass2="</c:uline></b>";
-					  }
-					  $this->pdf->addTextWrap(50+(100*$i), $liney, 8, $colorclass.$theEphemerides1[$i]['transit'].$colorclass2, 50,"center");
-					  $colorclass="";
-					  $colorclass2="";
-					  if((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00") &&
-					      $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['transit'],
-					                               date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),
-					                               date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])))
-					  { $colorclass="<c:uline><b>";
-					    $colorclass2="</c:uline></b>";
-					  }
-					  $this->pdf->addTextWrap(100+(100*$i), $liney, 8, $colorclass.$theEphemerides15[$i]['transit'].$colorclass2, 50,"center");
-					}
-		      $colorclass="";
-		      $colorclass2="";
-					if((date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"])!="00:00") &&
-					     $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[7]['transit'],
-					                              date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"]+$theTimeDifference1[7]),
-					                              date("H:i", $theNightEphemerides1[7]["astronomical_twilight_begin"]+$theTimeDifference1[7])))
-					{ $colorclass="<c:uline><b>";
-					  $colorclass2="</c:uline></b>";
-					}
-					$this->pdf->addTextWrap(50+(100*$i), $liney, 8, $colorclass.$theEphemerides1[7]['transit'].$colorclass2, 50,"center");
+                    $this->pdf->addTextWrap( 50, $liney, 8, LangTransit,100,'center');
+                    for($i=1;$i<7;$i++)
+                    { $colorclass="";
+                      $colorclass2="";
+                      if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00") &&
+                          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['transit'],
+                                                   date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),
+                                                   date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])))
+                      { $colorclass="<c:uline><b>";
+                        $colorclass2="</c:uline></b>";
+                      }
+                      $this->pdf->addTextWrap(50+(100*$i), $liney, 8, $colorclass.$theEphemerides1[$i]['transit'].$colorclass2, 50,"center");
+                      $colorclass="";
+                      $colorclass2="";
+                      if((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00") &&
+                          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['transit'],
+                                                   date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),
+                                                   date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])))
+                      { $colorclass="<c:uline><b>";
+                        $colorclass2="</c:uline></b>";
+                      }
+                      $this->pdf->addTextWrap(100+(100*$i), $liney, 8, $colorclass.$theEphemerides15[$i]['transit'].$colorclass2, 50,"center");
+                    }
+              $colorclass="";
+              $colorclass2="";
+                    if((date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"])!="00:00") &&
+                         $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[7]['transit'],
+                                                  date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"]+$theTimeDifference1[7]),
+                                                  date("H:i", $theNightEphemerides1[7]["astronomical_twilight_begin"]+$theTimeDifference1[7])))
+                    { $colorclass="<c:uline><b>";
+                      $colorclass2="</c:uline></b>";
+                    }
+                    $this->pdf->addTextWrap(50+(100*$i), $liney, 8, $colorclass.$theEphemerides1[7]['transit'].$colorclass2, 50,"center");
 
-			    $liney-=15;
-			    $this->pdf->addTextWrap( 50, $liney-4, 8, LangAstroNight,100,'center');
-			    for($i=1;$i<7;$i++)
-			    { if(date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap(50+(100*$i), $liney-4, 8, "-", 50, "center");
-			      else
-			      { $this->pdf->addTextWrap(50+(100*$i), $liney  , 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]  +$theTimeDifference1[$i]), 50,"center");
-			        $this->pdf->addTextWrap(50+(100*$i), $liney-7, 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i]), 50,'center');
-			      }
-			      if(date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap(100+(100*$i), $liney-4, 8, "-", 50, "center");
-			      else
-			      { $this->pdf->addTextWrap(100+(100*$i), $liney  , 50, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]  +$theTimeDifference15[$i]),"center");
-			        $this->pdf->addTextWrap(100+(100*$i), $liney-7, 50, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i]),'center');
-			      }
-			    }
-			    if(date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"])=="00:00")
-			      $this->pdf->addTextWrap(50+(100*7), $liney-7, 8, "-", 50, "center");
-			    else
-			    { $this->pdf->addTextWrap(50+(100*7), $liney  , 8,date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"]  +$theTimeDifference1[7]), 50,"center");
-			      $this->pdf->addTextWrap(50+(100*7), $liney-7, 8,date("H:i", $theNightEphemerides1[7]["astronomical_twilight_begin"]+$theTimeDifference1[7]), 50,'center');
-			    }
+                $liney-=15;
+                $this->pdf->addTextWrap( 50, $liney-4, 8, LangAstroNight,100,'center');
+                for($i=1;$i<7;$i++)
+                { if(date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])=="00:00")
+                    $this->pdf->addTextWrap(50+(100*$i), $liney-4, 8, "-", 50, "center");
+                  else
+                  { $this->pdf->addTextWrap(50+(100*$i), $liney  , 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]  +$theTimeDifference1[$i]), 50,"center");
+                    $this->pdf->addTextWrap(50+(100*$i), $liney-7, 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i]), 50,'center');
+                  }
+                  if(date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])=="00:00")
+                    $this->pdf->addTextWrap(100+(100*$i), $liney-4, 8, "-", 50, "center");
+                  else
+                  { $this->pdf->addTextWrap(100+(100*$i), $liney  , 50, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]  +$theTimeDifference15[$i]),"center");
+                    $this->pdf->addTextWrap(100+(100*$i), $liney-7, 50, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i]),'center');
+                  }
+                }
+                if(date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"])=="00:00")
+                  $this->pdf->addTextWrap(50+(100*7), $liney-7, 8, "-", 50, "center");
+                else
+                { $this->pdf->addTextWrap(50+(100*7), $liney  , 8,date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"]  +$theTimeDifference1[7]), 50,"center");
+                  $this->pdf->addTextWrap(50+(100*7), $liney-7, 8,date("H:i", $theNightEphemerides1[7]["astronomical_twilight_begin"]+$theTimeDifference1[7]), 50,'center');
+                }
 
-			    $liney-=25;
-			    $this->pdf->addTextWrap( 50, $liney-4, 8, LangNauticalNight,100,'center');
-			    for($i=1;$i<7;$i++)
-			    { if(date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap(50+(100*$i), $liney-4, 8, "-", 50, "center");
-			      else
-			      { $this->pdf->addTextWrap(50+(100*$i), $liney  , 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]  +$theTimeDifference1[$i]), 50,"center");
-			        $this->pdf->addTextWrap(50+(100*$i), $liney-7, 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i]), 50,'center');
-			      }
-			      if(date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap(100+(100*$i), $liney-4, 8, "-", 50, "center");
-			      else
-			      { $this->pdf->addTextWrap(100+(100*$i), $liney  , 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]  +$theTimeDifference15[$i]), 50,"center");
-			        $this->pdf->addTextWrap(100+(100*$i), $liney-7, 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i]), 50,'center');
-			      }
-			    }
-			    if(date("H:i", $theNightEphemerides1[7]["nautical_twilight_end"])=="00:00")
-			      $this->pdf->addTextWrap(50+(100*7), $liney-7, 8, "-", 50, "center");
-			    else
-			    { $this->pdf->addTextWrap(50+(100*7), $liney  , 8,date("H:i", $theNightEphemerides1[7]["nautical_twilight_end"]  +$theTimeDifference1[7]), 50,"center");
-			      $this->pdf->addTextWrap(50+(100*7), $liney-7, 8,date("H:i", $theNightEphemerides1[7]["nautical_twilight_begin"]+$theTimeDifference1[7]), 50,'center');
-			    }
+                $liney-=25;
+                $this->pdf->addTextWrap( 50, $liney-4, 8, LangNauticalNight,100,'center');
+                for($i=1;$i<7;$i++)
+                { if(date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])=="00:00")
+                    $this->pdf->addTextWrap(50+(100*$i), $liney-4, 8, "-", 50, "center");
+                  else
+                  { $this->pdf->addTextWrap(50+(100*$i), $liney  , 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]  +$theTimeDifference1[$i]), 50,"center");
+                    $this->pdf->addTextWrap(50+(100*$i), $liney-7, 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i]), 50,'center');
+                  }
+                  if(date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])=="00:00")
+                    $this->pdf->addTextWrap(100+(100*$i), $liney-4, 8, "-", 50, "center");
+                  else
+                  { $this->pdf->addTextWrap(100+(100*$i), $liney  , 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]  +$theTimeDifference15[$i]), 50,"center");
+                    $this->pdf->addTextWrap(100+(100*$i), $liney-7, 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i]), 50,'center');
+                  }
+                }
+                if(date("H:i", $theNightEphemerides1[7]["nautical_twilight_end"])=="00:00")
+                  $this->pdf->addTextWrap(50+(100*7), $liney-7, 8, "-", 50, "center");
+                else
+                { $this->pdf->addTextWrap(50+(100*7), $liney  , 8,date("H:i", $theNightEphemerides1[7]["nautical_twilight_end"]  +$theTimeDifference1[7]), 50,"center");
+                  $this->pdf->addTextWrap(50+(100*7), $liney-7, 8,date("H:i", $theNightEphemerides1[7]["nautical_twilight_begin"]+$theTimeDifference1[7]), 50,'center');
+                }
 
-			    $liney-=25;
-			    $this->pdf->addTextWrap( 50, $liney-4, 8, LangObjectRiseSet2,100,'center');
+                $liney-=25;
+                $this->pdf->addTextWrap( 50, $liney-4, 8, LangObjectRiseSet2,100,'center');
           for($i=1;$i<7;$i++)
-			    { if($theEphemerides1[$i]['rise']=='-')
-			        $this->pdf->addTextWrap(50+(100*$i), $liney-4, 8, "-", 50, "center");
-			      else
-			      { $this->pdf->addTextWrap(50+(100*$i), $liney  , 8,$theEphemerides1[$i]['rise'], 50,"center");
-			        $this->pdf->addTextWrap(50+(100*$i), $liney-7, 8,$theEphemerides1[$i]['set'], 50,'center');
-			      }
-	          if($theEphemerides1[$i]['rise']=='-')
-			        $this->pdf->addTextWrap(100+(100*$i), $liney-4, 8, "-", 50, "center");
-			      else
-			      { $this->pdf->addTextWrap(100+(100*$i), $liney  , 8,($theEphemerides15[$i]['rise']), 50,"center");
-			        $this->pdf->addTextWrap(100+(100*$i), $liney-7, 8,($theEphemerides15[$i]['set']), 50,'center');
-			      }
-			    }
+                { if($theEphemerides1[$i]['rise']=='-')
+                    $this->pdf->addTextWrap(50+(100*$i), $liney-4, 8, "-", 50, "center");
+                  else
+                  { $this->pdf->addTextWrap(50+(100*$i), $liney  , 8,$theEphemerides1[$i]['rise'], 50,"center");
+                    $this->pdf->addTextWrap(50+(100*$i), $liney-7, 8,$theEphemerides1[$i]['set'], 50,'center');
+                  }
+              if($theEphemerides1[$i]['rise']=='-')
+                    $this->pdf->addTextWrap(100+(100*$i), $liney-4, 8, "-", 50, "center");
+                  else
+                  { $this->pdf->addTextWrap(100+(100*$i), $liney  , 8,($theEphemerides15[$i]['rise']), 50,"center");
+                    $this->pdf->addTextWrap(100+(100*$i), $liney-7, 8,($theEphemerides15[$i]['set']), 50,'center');
+                  }
+                }
           if($theEphemerides1[7]['rise']=='-')
-		        $this->pdf->addTextWrap(50+(100*7), $liney-4, 8, "-", 50, "center");
-		      else
-		      { $this->pdf->addTextWrap(50+(100*7), $liney  , 8,$theEphemerides1[7]['rise'], 50,"center");
-		        $this->pdf->addTextWrap(50+(100*7), $liney-7, 8,$theEphemerides1[7]['set'], 50,'center');
-		      }
+                $this->pdf->addTextWrap(50+(100*7), $liney-4, 8, "-", 50, "center");
+              else
+              { $this->pdf->addTextWrap(50+(100*7), $liney  , 8,$theEphemerides1[7]['rise'], 50,"center");
+                $this->pdf->addTextWrap(50+(100*7), $liney-7, 8,$theEphemerides1[7]['set'], 50,'center');
+              }
 
-			    $liney-=35;
-			    $this->pdf->addTextWrap( 50, $liney, 8, LangMonth, 100,'center');
-			    for($i=7;$i<13;$i++)
-			    { $this->pdf->addTextWrap( 100+(100*$i)-600, $liney, 8, $i, 50,'center');
-			    }
-			    $liney-=15;
-			    $this->pdf->addTextWrap( 50, $liney, 8, LangMaxAltitude, 100,'center');
-			    for($i=7;$i<13;$i++)
-				  { $colorclass="";
-					  $colorclass2="";
-					  if(($theEphemerides1[$i]['altitude']!='-') &&
-			         (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
-					      ($theEphemerides1[$i]['altitude']==$theEphemerides15[$i-1]['altitude'])))
-					  { $colorclass="<c:uline><b>";
-					    $colorclass2="</c:uline></b>";
-					  }
-			      $this->pdf->addTextWrap((100*$i)-550, $liney, 8, $colorclass.$this->filterdegpart($theEphemerides1[$i]['altitude']).$colorclass2, 50,'center');
-		        $colorclass="";
-		        $colorclass2="";
-			      if($i==12)
-					  { if(($theEphemerides15[$i]['altitude']!='-') &&
-					       (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
-					        ($theEphemerides15[$i]['altitude']==$theEphemerides1[1]['altitude'])))
-					      { $colorclass="<c:uline><b>";
-					        $colorclass2="</c:uline></b>";
-					      }
-					  }
-			      else
-			        if(($theEphemerides15[$i]['altitude']!='-') &&
-			           (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
-					        ($theEphemerides15[$i]['altitude']==$theEphemerides1[$i+1]['altitude'])))
-					      { $colorclass="<c:uline><b>";
-					        $colorclass2="</c:uline></b>";
-					      }
-			      $this->pdf->addTextWrap((100*$i)-500, $liney, 8, $colorclass.$this->filterdegpart($theEphemerides15[$i]['altitude']).$colorclass2, 50,'center');
-					}
-		      $colorclass="";
-		      $colorclass2="";
-					if(($theEphemerides1[1]['altitude']!='-') &&
-					       (($theEphemerides1[1]['altitude']==$theEphemerides15[12]['altitude']) ||
-					        ($theEphemerides1[1]['altitude']==$theEphemerides15[1]['altitude'])))
-		      { $colorclass="<c:uline><b>";
-		        $colorclass2="</c:uline></b>";
-		      }
-			    $this->pdf->addTextWrap(50+(100*7), $liney, 8,  $colorclass.$this->filterdegpart($theEphemerides1[1]['altitude']).$colorclass2, 50,'center');
+                $liney-=35;
+                $this->pdf->addTextWrap( 50, $liney, 8, LangMonth, 100,'center');
+                for($i=7;$i<13;$i++)
+                { $this->pdf->addTextWrap( 100+(100*$i)-600, $liney, 8, $i, 50,'center');
+                }
+                $liney-=15;
+                $this->pdf->addTextWrap( 50, $liney, 8, LangMaxAltitude, 100,'center');
+                for($i=7;$i<13;$i++)
+                  { $colorclass="";
+                      $colorclass2="";
+                      if(($theEphemerides1[$i]['altitude']!='-') &&
+                     (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
+                          ($theEphemerides1[$i]['altitude']==$theEphemerides15[$i-1]['altitude'])))
+                      { $colorclass="<c:uline><b>";
+                        $colorclass2="</c:uline></b>";
+                      }
+                  $this->pdf->addTextWrap((100*$i)-550, $liney, 8, $colorclass.$this->filterdegpart($theEphemerides1[$i]['altitude']).$colorclass2, 50,'center');
+                $colorclass="";
+                $colorclass2="";
+                  if($i==12)
+                      { if(($theEphemerides15[$i]['altitude']!='-') &&
+                           (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
+                            ($theEphemerides15[$i]['altitude']==$theEphemerides1[1]['altitude'])))
+                          { $colorclass="<c:uline><b>";
+                            $colorclass2="</c:uline></b>";
+                          }
+                      }
+                  else
+                    if(($theEphemerides15[$i]['altitude']!='-') &&
+                       (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
+                            ($theEphemerides15[$i]['altitude']==$theEphemerides1[$i+1]['altitude'])))
+                          { $colorclass="<c:uline><b>";
+                            $colorclass2="</c:uline></b>";
+                          }
+                  $this->pdf->addTextWrap((100*$i)-500, $liney, 8, $colorclass.$this->filterdegpart($theEphemerides15[$i]['altitude']).$colorclass2, 50,'center');
+                    }
+              $colorclass="";
+              $colorclass2="";
+                    if(($theEphemerides1[1]['altitude']!='-') &&
+                           (($theEphemerides1[1]['altitude']==$theEphemerides15[12]['altitude']) ||
+                            ($theEphemerides1[1]['altitude']==$theEphemerides15[1]['altitude'])))
+              { $colorclass="<c:uline><b>";
+                $colorclass2="</c:uline></b>";
+              }
+                $this->pdf->addTextWrap(50+(100*7), $liney, 8,  $colorclass.$this->filterdegpart($theEphemerides1[1]['altitude']).$colorclass2, 50,'center');
 
 
           $liney-=15;
-					$this->pdf->addTextWrap( 50, $liney, 8, LangTransit,100,'center');
-					for($i=7;$i<13;$i++)
-					{ $colorclass="";
-					  $colorclass2="";
-					  if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00") &&
-					        $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['transit'],
-					                                  date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),
-					                                  date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])))
-					  { $colorclass="<c:uline><b>";
-					    $colorclass2="</c:uline></b>";
-					  }
-					  $this->pdf->addTextWrap((100*$i)-550, $liney  , 8, $colorclass.$theEphemerides1[$i]['transit'].$colorclass2, 50,"center");
-		        $colorclass="";
-		        $colorclass2="";
-					  if((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00") &&
-					        $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['transit'],
-					                                  date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),
-					                                  date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])))
-					  { $colorclass="<c:uline><b>";
-					    $colorclass2="</c:uline></b>";
-					  }
-					  $this->pdf->addTextWrap((100*$i)-500, $liney, 8, $colorclass.$theEphemerides15[$i]['transit'].$colorclass2, 50,"center");
-					}
-		      $colorclass="";
-		      $colorclass2="";
-		      if((date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])!="00:00") &&
-		            $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['transit'],
-		                                     date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1]),
-		                                     date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1])))
-					  { $colorclass="<c:uline><b>";
-					    $colorclass2="</c:uline></b>";
-					  }
-					$this->pdf->addTextWrap((100*$i)-550, $liney  , 8, $colorclass.$theEphemerides1[1]['transit'].$colorclass2, 50,"center");
+                    $this->pdf->addTextWrap( 50, $liney, 8, LangTransit,100,'center');
+                    for($i=7;$i<13;$i++)
+                    { $colorclass="";
+                      $colorclass2="";
+                      if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00") &&
+                            $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['transit'],
+                                                      date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),
+                                                      date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])))
+                      { $colorclass="<c:uline><b>";
+                        $colorclass2="</c:uline></b>";
+                      }
+                      $this->pdf->addTextWrap((100*$i)-550, $liney  , 8, $colorclass.$theEphemerides1[$i]['transit'].$colorclass2, 50,"center");
+                $colorclass="";
+                $colorclass2="";
+                      if((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00") &&
+                            $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['transit'],
+                                                      date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),
+                                                      date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])))
+                      { $colorclass="<c:uline><b>";
+                        $colorclass2="</c:uline></b>";
+                      }
+                      $this->pdf->addTextWrap((100*$i)-500, $liney, 8, $colorclass.$theEphemerides15[$i]['transit'].$colorclass2, 50,"center");
+                    }
+              $colorclass="";
+              $colorclass2="";
+              if((date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])!="00:00") &&
+                    $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['transit'],
+                                             date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1]),
+                                             date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1])))
+                      { $colorclass="<c:uline><b>";
+                        $colorclass2="</c:uline></b>";
+                      }
+                    $this->pdf->addTextWrap((100*$i)-550, $liney  , 8, $colorclass.$theEphemerides1[1]['transit'].$colorclass2, 50,"center");
 
-			    $liney-=15;
-			    $this->pdf->addTextWrap( 50, $liney-4, 8, LangAstroNight, 100,'center');
-			    for($i=7;$i<13;$i++)
-			    { if(date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap((100*$i)-550, $liney-4, 8, "-", 50, "center");
-			      else
-			      { $this->pdf->addTextWrap((100*$i)-550, $liney  , 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]  +$theTimeDifference1[$i]), 50,"center");
-			        $this->pdf->addTextWrap((100*$i)-550, $liney-7, 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i]), 50,'center');
-			      }
-			      if(date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap((100*$i)-500, $liney-4, 8, "-", 50, "center");
-			      else
-			      { $this->pdf->addTextWrap((100*$i)-500, $liney  , 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]  +$theTimeDifference15[$i]), 50,"center");
-			        $this->pdf->addTextWrap((100*$i)-500, $liney-7, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i]), 50,'center');
-			      }
-			    }
-			    if(date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])=="00:00")
-			      $this->pdf->addTextWrap((100*13)-550, $liney-7, 8, "-", 50, "center");
-			    else
-			    { $this->pdf->addTextWrap((100*13)-550, $liney  , 8,date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]  +$theTimeDifference1[1]), 50,"center");
-			      $this->pdf->addTextWrap((100*13)-550, $liney-7, 8,date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1]), 50,'center');
-			    }
+                $liney-=15;
+                $this->pdf->addTextWrap( 50, $liney-4, 8, LangAstroNight, 100,'center');
+                for($i=7;$i<13;$i++)
+                { if(date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])=="00:00")
+                    $this->pdf->addTextWrap((100*$i)-550, $liney-4, 8, "-", 50, "center");
+                  else
+                  { $this->pdf->addTextWrap((100*$i)-550, $liney  , 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]  +$theTimeDifference1[$i]), 50,"center");
+                    $this->pdf->addTextWrap((100*$i)-550, $liney-7, 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i]), 50,'center');
+                  }
+                  if(date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])=="00:00")
+                    $this->pdf->addTextWrap((100*$i)-500, $liney-4, 8, "-", 50, "center");
+                  else
+                  { $this->pdf->addTextWrap((100*$i)-500, $liney  , 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]  +$theTimeDifference15[$i]), 50,"center");
+                    $this->pdf->addTextWrap((100*$i)-500, $liney-7, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i]), 50,'center');
+                  }
+                }
+                if(date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])=="00:00")
+                  $this->pdf->addTextWrap((100*13)-550, $liney-7, 8, "-", 50, "center");
+                else
+                { $this->pdf->addTextWrap((100*13)-550, $liney  , 8,date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]  +$theTimeDifference1[1]), 50,"center");
+                  $this->pdf->addTextWrap((100*13)-550, $liney-7, 8,date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1]), 50,'center');
+                }
 
-			    $liney-=25;
-			    $this->pdf->addTextWrap( 50, $liney-4, 8, LangNauticalNight,100,'center');
-			    for($i=7;$i<13;$i++)
-			    { if(date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap((100*$i)-550, $liney-4, 8, "-", 50, "center");
-			      else
-			      { $this->pdf->addTextWrap((100*$i)-550, $liney  , 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]  +$theTimeDifference1[$i]), 50,"center");
-			        $this->pdf->addTextWrap((100*$i)-550, $liney-7, 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i]), 50,'center');
-			      }
-			      if(date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap((100*$i)-500, $liney-4, 8, "-", 50, "center");
-			      else
-			      { $this->pdf->addTextWrap((100*$i)-500, $liney  , 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]  +$theTimeDifference15[$i]), 50,"center");
-			        $this->pdf->addTextWrap((100*$i)-500, $liney-7, 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i]), 50,'center');
-			      }
-			    }
-			    if(date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"])=="00:00")
-			      $this->pdf->addTextWrap((100*13)-550, $liney-7, 8, "-", 50, "center");
-			    else
-			    { $this->pdf->addTextWrap((100*13)-550, $liney  , 8,date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"]  +$theTimeDifference1[1]), 50,"center");
-			      $this->pdf->addTextWrap((100*13)-550, $liney-7, 8,date("H:i", $theNightEphemerides1[1]["nautical_twilight_begin"]+$theTimeDifference1[1]), 50,'center');
-			    }
+                $liney-=25;
+                $this->pdf->addTextWrap( 50, $liney-4, 8, LangNauticalNight,100,'center');
+                for($i=7;$i<13;$i++)
+                { if(date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])=="00:00")
+                    $this->pdf->addTextWrap((100*$i)-550, $liney-4, 8, "-", 50, "center");
+                  else
+                  { $this->pdf->addTextWrap((100*$i)-550, $liney  , 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]  +$theTimeDifference1[$i]), 50,"center");
+                    $this->pdf->addTextWrap((100*$i)-550, $liney-7, 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i]), 50,'center');
+                  }
+                  if(date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])=="00:00")
+                    $this->pdf->addTextWrap((100*$i)-500, $liney-4, 8, "-", 50, "center");
+                  else
+                  { $this->pdf->addTextWrap((100*$i)-500, $liney  , 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]  +$theTimeDifference15[$i]), 50,"center");
+                    $this->pdf->addTextWrap((100*$i)-500, $liney-7, 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i]), 50,'center');
+                  }
+                }
+                if(date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"])=="00:00")
+                  $this->pdf->addTextWrap((100*13)-550, $liney-7, 8, "-", 50, "center");
+                else
+                { $this->pdf->addTextWrap((100*13)-550, $liney  , 8,date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"]  +$theTimeDifference1[1]), 50,"center");
+                  $this->pdf->addTextWrap((100*13)-550, $liney-7, 8,date("H:i", $theNightEphemerides1[1]["nautical_twilight_begin"]+$theTimeDifference1[1]), 50,'center');
+                }
 
-			    $liney-=25;
-			    $this->pdf->addTextWrap( 50, $liney-4, 8, LangObjectRiseSet2,100,'center');
+                $liney-=25;
+                $this->pdf->addTextWrap( 50, $liney-4, 8, LangObjectRiseSet2,100,'center');
           for($i=7;$i<13;$i++)
-			    { if($theEphemerides1[$i]['rise']=='-')
-			        $this->pdf->addTextWrap((100*$i)-550, $liney-4, 8, "-", 50, "center");
-			      else
-			      { $this->pdf->addTextWrap((100*$i)-550, $liney  , 8,$theEphemerides1[$i]['rise'], 50,"center");
-			        $this->pdf->addTextWrap((100*$i)-550, $liney-7, 8,$theEphemerides1[$i]['set'], 50,'center');
-			      }
-	          if($theEphemerides1[$i]['rise']=='-')
-			        $this->pdf->addTextWrap((100*$i)-500, $liney-4, 8, "-", 50, "center");
-			      else
-			      { $this->pdf->addTextWrap((100*$i)-500, $liney  , 8,($theEphemerides15[$i]['rise']), 50,"center");
-			        $this->pdf->addTextWrap((100*$i)-500, $liney-7, 8,($theEphemerides15[$i]['set']), 50,'center');
-			      }
-			    }
+                { if($theEphemerides1[$i]['rise']=='-')
+                    $this->pdf->addTextWrap((100*$i)-550, $liney-4, 8, "-", 50, "center");
+                  else
+                  { $this->pdf->addTextWrap((100*$i)-550, $liney  , 8,$theEphemerides1[$i]['rise'], 50,"center");
+                    $this->pdf->addTextWrap((100*$i)-550, $liney-7, 8,$theEphemerides1[$i]['set'], 50,'center');
+                  }
+              if($theEphemerides1[$i]['rise']=='-')
+                    $this->pdf->addTextWrap((100*$i)-500, $liney-4, 8, "-", 50, "center");
+                  else
+                  { $this->pdf->addTextWrap((100*$i)-500, $liney  , 8,($theEphemerides15[$i]['rise']), 50,"center");
+                    $this->pdf->addTextWrap((100*$i)-500, $liney-7, 8,($theEphemerides15[$i]['set']), 50,'center');
+                  }
+                }
           if($theEphemerides1[1]['rise']=='-')
-		        $this->pdf->addTextWrap(50+(100*7), $liney-4, 8, "-", 50, "center");
-		      else
-		      { $this->pdf->addTextWrap(50+(100*7), $liney  , 8,$theEphemerides1[1]['rise'], 50,"center");
-		        $this->pdf->addTextWrap(50+(100*7), $liney-7, 8,$theEphemerides1[1]['set'], 50,'center');
-		      }
+                $this->pdf->addTextWrap(50+(100*7), $liney-4, 8, "-", 50, "center");
+              else
+              { $this->pdf->addTextWrap(50+(100*7), $liney  , 8,$theEphemerides1[1]['rise'], 50,"center");
+                $this->pdf->addTextWrap(50+(100*7), $liney-7, 8,$theEphemerides1[1]['set'], 50,'center');
+              }
 
         }
 
@@ -1860,16 +1909,16 @@ class PrintAtlas
       if(($listname=$objUtil->checkSessionKey('listname'))&&($objList->checkObjectInMyActiveList($theobject)))
       { $textextra=$this->pdf->addTextWrap( 50, $liney, 10, LangViewObservationField8, 750,  'left');
         $liney-=5;
-      	$this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
+          $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
         $liney-=15;
-      	$textextra=$this->pdf->addTextWrap( 50, $liney, 10, $objList->getListObjectDescription($theobject), 750,  'left');
+          $textextra=$this->pdf->addTextWrap( 50, $liney, 10, $objList->getListObjectDescription($theobject), 750,  'left');
       }
       elseif($theobjectdata['objectdescription'])
       { $textextra=$this->pdf->addTextWrap( 50, $liney, 10, LangViewObservationField8, 750,  'left');
         $liney-=5;
-      	$this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
-      	$liney-=15;
-      	$this->pdf->addTextWrap( 50, $liney, 10, $theobjectdata['objectdescription'], 750,  'left');
+          $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
+          $liney-=15;
+          $this->pdf->addTextWrap( 50, $liney, 10, $theobjectdata['objectdescription'], 750,  'left');
       }
       $liney-=15;
       while($textextra)
@@ -1886,15 +1935,15 @@ class PrintAtlas
     if(is_array($thephotos) && array_key_exists(0,$thephotos) && ($thephotos[0]>0))
     { if($firstpage)
       { $firstpage=false;
-    	}
-    	else
-    	{ $this->pdf->newPage();
-    	}
+        }
+        else
+        { $this->pdf->newPage();
+        }
 
-    	// show small lookup map
+        // show small lookup map
       $theView=120;
       $minDegs=$theView/120;
-    	$i=$this->gridMaxDimension;
+        $i=$this->gridMaxDimension;
       while($i && ($this->gridDimensions[$i][0]<$minDegs))
         $i--;
       $this->gridActualDimension=$i;
@@ -1925,41 +1974,45 @@ class PrintAtlas
       $this->pdf->rectangle($tempx,$tempy,$tempw,$temph);
       $this->pdf->addTextWrap(0,10,10,$theShowname,$this->pdf->ez['pageWidth']-10,'right');
 
-    	$liney=25;
-      if($thephotos[0]>75)
-       $thephotos[0]=75;
-    	$url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[0].'.0&w='.$thephotos[0].'&f=gif&c=none&fov=NONE&v3=';
-      $this->pdf->addText(50, $liney-15, 10, LangViewDSSImageTitle.$thephotos[0].'x'.$thephotos[0].' '.LangNewObjectSizeUnits1);
-    	if($img=@imagecreatefromgif($url))
-      { imagefilter($img, IMG_FILTER_NEGATE);
+        $liney=25;
+    if($thephotos[0]>120) {
+        $thephotos[0]=120;
+    }
+    $url='https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[0].'.0&w='.$thephotos[0].'&f=gif&c=none&fov=NONE&v3=';
+    $this->pdf->addText(50, $liney-15, 10, LangViewDSSImageTitle.$thephotos[0].'x'.$thephotos[0].' '.LangNewObjectSizeUnits1);
+    if($img=@imagecreatefromgif($url))
+    { 
+        imagefilter($img, IMG_FILTER_NEGATE);
         $this->pdf->addImage($img,50,$liney,350);
 
         if($thephotos[0]==60)
         { $theView=60;
-	      	$minDegs=$theView/120;
-		    	$i=$this->gridMaxDimension;
-		      while($i && ($this->gridDimensions[$i][0]<$minDegs))
-		        $i--;
-		      $this->gridActualDimension=$i;
-		      $this->atlasmagnitude=-10;
+              $minDegs=$theView/120;
+                $i=$this->gridMaxDimension;
+              while($i && ($this->gridDimensions[$i][0]<$minDegs))
+                $i--;
+              $this->gridActualDimension=$i;
+              $this->atlasmagnitude=-10;
 
-		      $tempw=350;
-		      $temph=350;
-		      $tempx=50;
-		      $tempy=$liney;
-		      $this->pdf->setLineStyle(0.5);
-		      $this->gridInitSpecial($tempx,$tempy,$tempw,$temph);
-		      $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
-	        $this->astroDrawObject($theobject);
-	        $this->pdf->setStrokeColor(0,0,0);
+              $tempw=350;
+              $temph=350;
+              $tempx=50;
+              $tempy=$liney;
+              $this->pdf->setLineStyle(0.5);
+              $this->gridInitSpecial($tempx,$tempy,$tempw,$temph);
+              $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
+            $this->astroDrawObject($theobject);
+            $this->pdf->setStrokeColor(0,0,0);
         }
       }
       $this->pdf->rectangle(48,$liney-2,354,354);
 
       if(is_array($thephotos) && array_key_exists(1,$thephotos) && ($thephotos[1]>0))
-      { if($thephotos[1]>75)
-         $thephotos[1]=75;
-        $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[1].'.0&w='.$thephotos[1].'&f=gif&c=none&fov=NONE&v3=';
+      { 
+          if($thephotos[1]>120) {
+            $thephotos[1]=120;
+          }
+        $url='https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[1].'.0&w='.$thephotos[1].'&f=gif&c=none&fov=NONE&v3=';
         $this->pdf->rectangle(448,$liney-2,354,354);
         $this->pdf->addText(450, $liney-15, 10, LangViewDSSImageTitle.$thephotos[1].'x'.$thephotos[1].' '.LangNewObjectSizeUnits1);
         if($img=@imagecreatefromgif($url))
@@ -1969,8 +2022,8 @@ class PrintAtlas
       }
       $this->pdf->rectangle(448,$liney-2,354,354);
 
-		  $this->pdf->setColor(0,0,0);
-     	$liney=$this->canvasDimensionYpx-50;
+          $this->pdf->setColor(0,0,0);
+         $liney=$this->canvasDimensionYpx-50;
       $this->pdf->addTextWrap( 50, $liney, 15, ReportImagesFor.$theShowname, $this->canvasDimensionXpx-100,  'center');
       $liney-=5;
       $this->pdf->line(50,$liney,$this->canvasDimensionXpx-250,$liney);
@@ -1980,19 +2033,19 @@ class PrintAtlas
       if($datapage!='true')
       { $theobjectdata=$objObject->getSeenObjectDetails(array($theobject => array(0,$theobject)));
         $theobjectdata=$theobjectdata[0];
-      	$this->pdf->addTextWrap(50, $liney, 10, Reportaltname.": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'), 450,  'left');
-      	$liney-=25;
-	      $this->pdf->addTextWrap( 50, $liney, 10, Reportobjecttypefull.': '.$theobjectdata['objecttypefull'], 200,  'left');
-	      $this->pdf->addTextWrap(300, $liney, 10, Reportobjectmagnitude.': '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'), 200,  'left');
-	      $liney-=15;
-	      $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectconstellationfull.': '.$theobjectdata['objectconstellationfull'], 200,  'left');
-	      $this->pdf->addTextWrap(300, $liney, 10, Reportobjectsurfacebrightness.': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'), 200,  'left');
-	      $liney-=15;
-	      $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectra.': '.$theobjectdata['objectrahms'], 200,  'left');
-	      $this->pdf->addTextWrap(300, $liney, 10, LangViewObjectField9.': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'), 200,  'left');
-	      $liney-=15;
-	      $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectdecl.': '.$theobjectdata['objectdecldms'], 200,  'left');
-	      $this->pdf->addTextWrap(300, $liney, 10, LangViewObjectField12.': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa), 200,  'left');
+          $this->pdf->addTextWrap(50, $liney, 10, Reportaltname.": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'), 450,  'left');
+          $liney-=25;
+          $this->pdf->addTextWrap( 50, $liney, 10, Reportobjecttypefull.': '.$theobjectdata['objecttypefull'], 200,  'left');
+          $this->pdf->addTextWrap(300, $liney, 10, Reportobjectmagnitude.': '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'), 200,  'left');
+          $liney-=15;
+          $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectconstellationfull.': '.$theobjectdata['objectconstellationfull'], 200,  'left');
+          $this->pdf->addTextWrap(300, $liney, 10, Reportobjectsurfacebrightness.': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'), 200,  'left');
+          $liney-=15;
+          $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectra.': '.$theobjectdata['objectrahms'], 200,  'left');
+          $this->pdf->addTextWrap(300, $liney, 10, LangViewObjectField9.': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'), 200,  'left');
+          $liney-=15;
+          $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectdecl.': '.$theobjectdata['objectdecldms'], 200,  'left');
+          $this->pdf->addTextWrap(300, $liney, 10, LangViewObjectField12.': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa), 200,  'left');
       }
     $this->labelsArr=array();
     }
@@ -2001,47 +2054,47 @@ class PrintAtlas
     { if(is_numeric($theSet[$k]) && is_numeric($thedsos[$k]) && is_numeric($thestars[$k]))
       { if($firstpage)
         { $firstpage=false;
-    	  }
-    	  else
-    	  { $this->pdf->newPage();
-    	  }
-      	$minDegs=$theSet[$k]/120;
-	    	$i=$this->gridMaxDimension;
-	      while($i && ($this->gridDimensions[$i][0]<$minDegs))
-	        $i--;
-	      $this->gridActualDimension=$i;
-	      $this->atlasmagnitude=max(min((int)(($thedsos[$k])),99),8);
-	      $this->starsmagnitude=max(min((int)(($thestars[$k])),16),8);
+          }
+          else
+          { $this->pdf->newPage();
+          }
+          $minDegs=$theSet[$k]/120;
+            $i=$this->gridMaxDimension;
+          while($i && ($this->gridDimensions[$i][0]<$minDegs))
+            $i--;
+          $this->gridActualDimension=$i;
+          $this->atlasmagnitude=max(min((int)(($thedsos[$k])),99),8);
+          $this->starsmagnitude=max(min((int)(($thestars[$k])),16),8);
 
-	      $this->pdf->setLineStyle(0.5);
-	      $this->gridInit();
-	      $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
-	      $this->pdf->setStrokeColor(0.9,0.9,0.9);
-	      $this->pdf->setLineStyle(0.5,'','',array(1));
-	      $this->gridDrawCoordLines();
-	      $this->pdf->setLineStyle(0.5,'','',array());
-	      $this->pdf->setStrokeColor(0.7,0.7,0.7);
-	      $this->astroDrawConstellations();
-	      $this->pdf->setStrokeColor(0,0,0);
-	      $this->astroDrawStarsArr();
-	      $this->astroDrawObjects($theobject);
+          $this->pdf->setLineStyle(0.5);
+          $this->gridInit();
+          $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
+          $this->pdf->setStrokeColor(0.9,0.9,0.9);
+          $this->pdf->setLineStyle(0.5,'','',array(1));
+          $this->gridDrawCoordLines();
+          $this->pdf->setLineStyle(0.5,'','',array());
+          $this->pdf->setStrokeColor(0.7,0.7,0.7);
+          $this->astroDrawConstellations();
+          $this->pdf->setStrokeColor(0,0,0);
+          $this->astroDrawStarsArr();
+          $this->astroDrawObjects($theobject);
 
-	      $this->pdf->setColor(1,1,1);
-	      $this->pdf->filledRectangle(0,0,$this->gridOffsetXpx,$this->canvasDimensionYpx);
-	      $this->pdf->filledRectangle(0,0,$this->canvasDimensionXpx,$this->gridOffsetYpx);
-	      $this->pdf->filledRectangle($this->canvasDimensionXpx-$this->gridOffsetXpx,0,$this->gridOffsetXpx,$this->canvasDimensionYpx);
-	      $this->pdf->filledRectangle(0,$this->canvasDimensionYpx-$this->gridOffsetYpx,$this->canvasDimensionXpx,$this->gridOffsetYpx);
-	      $this->pdf->setColor(0,0,0);
-	      $this->gridShowInfo();
-	      $this->atlasDrawLegend();
-	      $temp=$objObserver->getObserverProperty($loggedUser,'firstname')." ".$objObserver->getObserverProperty($loggedUser,'name')." - ".date('d M Y');
-	      $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx-(strlen($temp)*5),$this->canvasDimensionYpx-$this->Legend1y-10,$this->fontSize1b,$temp);
-	      $this->pdf->setLineStyle(2,'round');
-	      $this->pdf->rectangle($this->gridOffsetXpx-1,$this->gridOffsetYpx-1,
-	                           ($this->canvasDimensionXpx-($this->gridOffsetXpx<<1))+2,($this->canvasDimensionYpx-($this->gridOffsetYpx<<1))+2);
+          $this->pdf->setColor(1,1,1);
+          $this->pdf->filledRectangle(0,0,$this->gridOffsetXpx,$this->canvasDimensionYpx);
+          $this->pdf->filledRectangle(0,0,$this->canvasDimensionXpx,$this->gridOffsetYpx);
+          $this->pdf->filledRectangle($this->canvasDimensionXpx-$this->gridOffsetXpx,0,$this->gridOffsetXpx,$this->canvasDimensionYpx);
+          $this->pdf->filledRectangle(0,$this->canvasDimensionYpx-$this->gridOffsetYpx,$this->canvasDimensionXpx,$this->gridOffsetYpx);
+          $this->pdf->setColor(0,0,0);
+          $this->gridShowInfo();
+          $this->atlasDrawLegend();
+          $temp=$objObserver->getObserverProperty($loggedUser,'firstname')." ".$objObserver->getObserverProperty($loggedUser,'name')." - ".date('d M Y');
+          $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx-(strlen($temp)*5),$this->canvasDimensionYpx-$this->Legend1y-10,$this->fontSize1b,$temp);
+          $this->pdf->setLineStyle(2,'round');
+          $this->pdf->rectangle($this->gridOffsetXpx-1,$this->gridOffsetYpx-1,
+                               ($this->canvasDimensionXpx-($this->gridOffsetXpx<<1))+2,($this->canvasDimensionYpx-($this->gridOffsetYpx<<1))+2);
 
-	      for($i=0,$z=count($this->labelsArr);$i<$z;$i++)
-	        $this->pdf->addTextWrap(
+          for($i=0,$z=count($this->labelsArr);$i<$z;$i++)
+            $this->pdf->addTextWrap(
                 $this->labelsArr[$i][0],
                 $this->labelsArr[$i][1],
                 $this->labelsArr[$i][3],
@@ -2049,261 +2102,261 @@ class PrintAtlas
                 $this->labelsArr[$i][2],
                 $this->labelsArr[$i][5]
             );
-	      $this->labelsArr=array();
-	      $temp='(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
-	        $this->pdf->addTextWrap(
+          $this->labelsArr=array();
+          $temp='(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
+            $this->pdf->addTextWrap(
                 0,10,10,$theShowname,$this->pdf->ez['pageWidth']-10,'right'
             );
-	      $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
-	      $astroObjects[$k]=$objObject->getSeenObjectDetails($this->astroObjectsArr);
+          $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
+          $astroObjects[$k]=$objObject->getSeenObjectDetails($this->astroObjectsArr);
       }
     }
     if($reportlayoutselect)
     { if($firstpage)
       { $firstpage=false;
-    	}
-    	else
-    	{ $this->pdf->newPage();
-	      $this->pdf->addTextWrap(0,10,10,$theShowname,$this->pdf->ez['pageWidth']-10,'right');
-    	}
+        }
+        else
+        { $this->pdf->newPage();
+          $this->pdf->addTextWrap(0,10,10,$theShowname,$this->pdf->ez['pageWidth']-10,'right');
+        }
       $this->pdf->setLineStyle(1);
       $reportuser=substr($reportlayoutselect,0,strpos($reportlayoutselect,": "));
       $reportname='ReportQueryOfObjects';
       $reportlayout=substr($reportlayoutselect,strpos($reportlayoutselect,": ")+2);
       $reportdata=$objReportLayout->getReportData($reportuser,$reportname,$reportlayout);
-	    $pagesize         = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'pagesize');
-	    $pageorientation  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'pageorientation');
-	    $bottom           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'bottom');
-	    $top              = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'top');
-	    $header           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'header');
-	    $footer           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'footer');
-	    $xleft            = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'xleft');
-	    $xmid             = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'xmid');
-	    $fontSizeSection  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'fontSizeSection');
-	    $fontSizeText     = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'fontSizeText');
-	    $sectionBarSpace  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionbarspace');
-	    $deltalineSection = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltalineSection');
-	    $deltaline        = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltalineExtra')+$fontSizeText;
-	    $deltaobjectline  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltaobjectline');
-	    $pagenr           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'startpagenumber');
-			$sectionBarHeight = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionBarHeightextra')+$fontSizeSection;
-			$SectionBarWidth  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'SectionBarWidthbase')+$sectionBarSpace;
-	    $showelements     = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'showelements');
+        $pagesize         = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'pagesize');
+        $pageorientation  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'pageorientation');
+        $bottom           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'bottom');
+        $top              = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'top');
+        $header           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'header');
+        $footer           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'footer');
+        $xleft            = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'xleft');
+        $xmid             = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'xmid');
+        $fontSizeSection  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'fontSizeSection');
+        $fontSizeText     = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'fontSizeText');
+        $sectionBarSpace  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionbarspace');
+        $deltalineSection = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltalineSection');
+        $deltaline        = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltalineExtra')+$fontSizeText;
+        $deltaobjectline  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltaobjectline');
+        $pagenr           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'startpagenumber');
+            $sectionBarHeight = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionBarHeightextra')+$fontSizeSection;
+            $SectionBarWidth  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'SectionBarWidthbase')+$sectionBarSpace;
+        $showelements     = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'showelements');
 
-	    $this->pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');
-			$sort='';
-	    $actualsort='';
-			$theDate=date('d/m/Y');
-	    $objUtil->firstpage($y,$top,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$showelements,$reportdata);
-	    for($j=0;$j<$k;$j++)
-	    { $y-=$deltalineSection;
-		    $this->pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-		    $this->pdf->addText($xbase, $y, $fontSizeSection, 'Chart '.($j+1));
-		    $y-=$deltaline+$deltalineSection;
-		    $result=$astroObjects[$j];
-		    while(list($key, $valueA) = each($result))
-		    { $con = $valueA['objectconstellation'];
-		      $deltaymax=0;
-		      reset($reportdata);
-				  while(list($key,$dataelement)=each($reportdata))
-				  { if($dataelement['fieldwidth'])
-				    { if(($dataelement['fieldname']=="objectlistdescription"))
-			        { if(array_key_exists('objectlistdescription',$valueA) && $valueA['objectlistdescription'])
-			            $deltaymax=max($deltaymax,$dataelement['fieldline']);
-				 		  }
-				      elseif($dataelement['fieldname']=="objectdescription")
-		  	      { if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']!=''))
-		  	          $deltaymax=max($deltaymax,$dataelement['fieldline']);
-				      }
-				      else
-				        $deltaymax=max($deltaymax,$dataelement['fieldline']);
-				    }
-				  }
-				  $deltaymax++;
-		      if(($y-($deltaline*$deltaymax)<$bottom) && $sort)
-		      { $this->$objUtil->newpage($y,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
-		      }
-		      elseif(($y-($deltaline*$deltaymax)<$bottom) && (!($sort)))
-		      { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
-		        if(strpos($showelements,'s')!==FALSE)
-		        { $this->pdf->setLineStyle(0.5);
-		          $this->pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
-		          $this->pdf->setLineStyle(1);
-		        }
-		      }
-		      elseif($sort && ($$sort!=$actualsort))
-					{ if(($y-($deltaline*$deltaymax)-$sectionBarSpace-$deltalineSection)<$bottom)
-					  { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
-					  }
-					  else
-		        { $y-=$deltalineSection;
-		          $this->pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-		          $this->pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);
-		          $y-=$deltaline+$deltalineSection;
-		        }
-		        $indexlist[$$sort]=$pagenr;
-					}
-					else if(strpos($showelements,'s')!==FALSE)
-		      { $this->pdf->setLineStyle(0.5);
-		        $this->pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
-		        $this->pdf->setLineStyle(1);
-		      }
-					reset($reportdata);
-					$deltaymax=0;
-					while(list($key,$dataelement)=each($reportdata))
-					{ if($dataelement['fieldwidth'])
-					  { if($y-($deltaline*$dataelement['fieldline'])<$bottom)
-		          { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
-		          }
-		          $justification='left';
-					  	$i='';$b='';
-					  	if(strpos($dataelement['fieldstyle'],'r')!==FALSE)
-					      $justification='right';
-					  	if(strpos($dataelement['fieldstyle'],'c')!==FALSE)
-					      $justification='center';
-					  	if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
-					  	{ $b="<c:uline><b>";
-					  	  $this->pdf->addText(0,0,$fontSizeText,'<b>');
-					  	}
-					  	if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
-					    { $i='<i>';
-					      $this->pdf->addText(0,0,$fontSizeText,'<i>');
-					    }
-					    if($dataelement['fieldname']=="showname")
-					    { if($valueA[$dataelement['fieldname']])
-					      { $this->pdf->addText(0,0,$fontSizeText,'<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($valueA['objectname']).'>');
-					        $this->pdf->addTextWrap(
+        $this->pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');
+            $sort='';
+        $actualsort='';
+            $theDate=date('d/m/Y');
+        $objUtil->firstpage($y,$top,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$showelements,$reportdata);
+        for($j=0;$j<$k;$j++)
+        { $y-=$deltalineSection;
+            $this->pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
+            $this->pdf->addText($xbase, $y, $fontSizeSection, 'Chart '.($j+1));
+            $y-=$deltaline+$deltalineSection;
+            $result=$astroObjects[$j];
+            while(list($key, $valueA) = each($result))
+            { $con = $valueA['objectconstellation'];
+              $deltaymax=0;
+              reset($reportdata);
+                  while(list($key,$dataelement)=each($reportdata))
+                  { if($dataelement['fieldwidth'])
+                    { if(($dataelement['fieldname']=="objectlistdescription"))
+                    { if(array_key_exists('objectlistdescription',$valueA) && $valueA['objectlistdescription'])
+                        $deltaymax=max($deltaymax,$dataelement['fieldline']);
+                           }
+                      elseif($dataelement['fieldname']=="objectdescription")
+                    { if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']!=''))
+                        $deltaymax=max($deltaymax,$dataelement['fieldline']);
+                      }
+                      else
+                        $deltaymax=max($deltaymax,$dataelement['fieldline']);
+                    }
+                  }
+                  $deltaymax++;
+              if(($y-($deltaline*$deltaymax)<$bottom) && $sort)
+              { $this->$objUtil->newpage($y,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
+              }
+              elseif(($y-($deltaline*$deltaymax)<$bottom) && (!($sort)))
+              { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
+                if(strpos($showelements,'s')!==FALSE)
+                { $this->pdf->setLineStyle(0.5);
+                  $this->pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
+                  $this->pdf->setLineStyle(1);
+                }
+              }
+              elseif($sort && ($$sort!=$actualsort))
+                    { if(($y-($deltaline*$deltaymax)-$sectionBarSpace-$deltalineSection)<$bottom)
+                      { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
+                      }
+                      else
+                { $y-=$deltalineSection;
+                  $this->pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
+                  $this->pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);
+                  $y-=$deltaline+$deltalineSection;
+                }
+                $indexlist[$$sort]=$pagenr;
+                    }
+                    else if(strpos($showelements,'s')!==FALSE)
+              { $this->pdf->setLineStyle(0.5);
+                $this->pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
+                $this->pdf->setLineStyle(1);
+              }
+                    reset($reportdata);
+                    $deltaymax=0;
+                    while(list($key,$dataelement)=each($reportdata))
+                    { if($dataelement['fieldwidth'])
+                      { if($y-($deltaline*$dataelement['fieldline'])<$bottom)
+                  { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
+                  }
+                  $justification='left';
+                          $i='';$b='';
+                          if(strpos($dataelement['fieldstyle'],'r')!==FALSE)
+                          $justification='right';
+                          if(strpos($dataelement['fieldstyle'],'c')!==FALSE)
+                          $justification='center';
+                          if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
+                          { $b="<c:uline><b>";
+                            $this->pdf->addText(0,0,$fontSizeText,'<b>');
+                          }
+                          if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
+                        { $i='<i>';
+                          $this->pdf->addText(0,0,$fontSizeText,'<i>');
+                        }
+                        if($dataelement['fieldname']=="showname")
+                        { if($valueA[$dataelement['fieldname']])
+                          { $this->pdf->addText(0,0,$fontSizeText,'<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($valueA['objectname']).'>');
+                            $this->pdf->addTextWrap(
                                 $xbase+$dataelement['fieldposition'] , 
                                 $y-($deltaline*$dataelement['fieldline']),  
                                 $fontSizeText, 
                                 $dataelement['fieldafter'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],
                                 $dataelement['fieldwidth'], $justification
                             );
-				  		    $this->pdf->addText(0,0,$fontSizeText,'</c:alink>');
-					        $deltaymax=max($deltaymax,$dataelement['fieldline']);
-					      }
-					    }
-					    else if($dataelement['fieldname']=="objectuseratlaspage")
-					    { $this->pdf->addTextWrap(
+                              $this->pdf->addText(0,0,$fontSizeText,'</c:alink>');
+                            $deltaymax=max($deltaymax,$dataelement['fieldline']);
+                          }
+                        }
+                        else if($dataelement['fieldname']=="objectuseratlaspage")
+                        { $this->pdf->addTextWrap(
                             $xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),
                             $fontSizeText,$dataelement['fieldbefore'].html_entity_decode($valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')]).$dataelement['fieldafter'],
                             $dataelement['fieldwidth'], $justification
                         );
-		  			    $deltaymax=max($deltaymax,$dataelement['fieldline']);
-					    }
-					    else if(($dataelement['fieldname']=="objectlistdescription"))
-			        { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']!=''))
-			          { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
-				  		    $theText= $this->pdf->addTextWrap(
+                          $deltaymax=max($deltaymax,$dataelement['fieldline']);
+                        }
+                        else if(($dataelement['fieldname']=="objectlistdescription"))
+                    { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']!=''))
+                      { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
+                              $theText= $this->pdf->addTextWrap(
                                   $xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']) ,
                                   $fontSizeText, $theText, $dataelement['fieldwidth'],$justification
                                 );
-			  	  		  while($theText)
-						  	  { $y-=$deltaline;
-			              if($y-($deltaline*$dataelement['fieldline'])<$bottom)
-			              { 
+                              while($theText)
+                                { $y-=$deltaline;
+                          if($y-($deltaline*$dataelement['fieldline'])<$bottom)
+                          { 
                                 $objUtil->newpage(
                                     $y,$top,$bottom,$xbase,$xmid,
                                     $pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,
                                     $footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,
                                     $sectionBarHeight,$fontSizeSection,$deltaline,$i,$b,$showelements,$reportdata
                                 );
-			                $y+=($deltaline*$dataelement['fieldline']);
-			              }
-							     $theText= $this->pdf->addTextWrap(
+                            $y+=($deltaline*$dataelement['fieldline']);
+                          }
+                                 $theText= $this->pdf->addTextWrap(
                                      $xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']),
                                      $fontSizeText, $theText, $dataelement['fieldwidth'],$justification
                                     );
-			  		  	  }
-					        $deltaymax=max($deltaymax,$dataelement['fieldline']);
-			          }
-				   		}
-					    elseif($dataelement['fieldname']=="objectdescription")
-		  	      { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']!=''))
-			          { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
-				  		    $theText= $this->pdf->addTextWrap(
+                              }
+                            $deltaymax=max($deltaymax,$dataelement['fieldline']);
+                      }
+                           }
+                        elseif($dataelement['fieldname']=="objectdescription")
+                    { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']!=''))
+                      { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
+                              $theText= $this->pdf->addTextWrap(
                                   $xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), 
                                   $fontSizeText, $theText,$dataelement['fieldwidth'] ,$justification
                                 );
-			  	  		  while($theText)
-						  	  { $y-=$deltaline;
-			              if($y-($deltaline*$dataelement['fieldline'])<$bottom)
-			              { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$i,$b,$showelements,$reportdata);
-			                $y+=($deltaline*$dataelement['fieldline']);
-			              }
-							     $theText= $this->pdf->addTextWrap(
+                              while($theText)
+                                { $y-=$deltaline;
+                          if($y-($deltaline*$dataelement['fieldline'])<$bottom)
+                          { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$i,$b,$showelements,$reportdata);
+                            $y+=($deltaline*$dataelement['fieldline']);
+                          }
+                                 $theText= $this->pdf->addTextWrap(
                                      $xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']),
                                      $fontSizeText, $theText, $dataelement['fieldwidth'],$justification
                                     );
-			  		  	  }
-					        $deltaymax=max($deltaymax,$dataelement['fieldline']);
-			          }
-			          else if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']!=''))
-		  	        { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectdescription'])).$dataelement['fieldafter'];
-			   			    $theText= $this->pdf->addTextWrap(
+                              }
+                            $deltaymax=max($deltaymax,$dataelement['fieldline']);
+                      }
+                      else if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']!=''))
+                      { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectdescription'])).$dataelement['fieldafter'];
+                               $theText= $this->pdf->addTextWrap(
                                    $xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']),
                                    $fontSizeText, $theText, $dataelement['fieldwidth'],$justification
                                 );
-			  	  		  while($theText)
-		              { $y-=$deltaline;
-			              if($y-($deltaline*$dataelement['fieldline'])<$bottom)
-			              { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$i,$b,$showelements,$reportdata);
-			                $y+=($deltaline*$dataelement['fieldline']);
-			              }
-			              $theText= $this->pdf->addTextWrap(
+                              while($theText)
+                      { $y-=$deltaline;
+                          if($y-($deltaline*$dataelement['fieldline'])<$bottom)
+                          { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$i,$b,$showelements,$reportdata);
+                            $y+=($deltaline*$dataelement['fieldline']);
+                          }
+                          $theText= $this->pdf->addTextWrap(
                               $xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']),
                               $fontSizeText, $theText, $dataelement['fieldwidth'],$justification
                             );
-			  			    }
-					        $deltaymax=max($deltaymax,$dataelement['fieldline']);
-		  	        }
-						  }
-					    else
-					    { if($valueA[$dataelement['fieldname']]!='')
-					      { $this->pdf->addTextWrap(
+                              }
+                            $deltaymax=max($deltaymax,$dataelement['fieldline']);
+                      }
+                          }
+                        else
+                        { if($valueA[$dataelement['fieldname']]!='')
+                          { $this->pdf->addTextWrap(
                               $xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']), 
                               $fontSizeText, $dataelement['fieldbefore'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],
                               $dataelement['fieldwidth'], $justification
                             );
-					        $deltaymax=max($deltaymax,$dataelement['fieldline']);
-					      }
-					    }
-					    if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
-					      $this->pdf->addText(0,0,$fontSizeText,'</b>');
-					    if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
-					      $this->pdf->addText(0,0,$fontSizeText,'</i>');
-					  }
-					}
-					$y-=$deltaline*($deltaymax);
-		      $y-=($deltaline+$deltaobjectline);
-					if($sort)
-					  $actualsort = $$sort;
-				}
-				if((strpos($showelements,'i')!==FALSE)&&(count($indexlist)>0)&&($sort))
-				{ $base=$xmid;
-				  $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
-				  $this->pdf->setLineStyle(0.5);
-		      $y=$top;
-					while(list($key,$value)=each($indexlist))
-					{ $this->pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
-		        $this->pdf->addTextWrap($xbase,$y,$fontSizeText,$key,50, 'left');
-		        $this->pdf->addTextWrap($xbase+$SectionBarWidth-$sectionBarSpace-50,$y,$fontSizeText,trim($value),50,'right');
+                            $deltaymax=max($deltaymax,$dataelement['fieldline']);
+                          }
+                        }
+                        if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
+                          $this->pdf->addText(0,0,$fontSizeText,'</b>');
+                        if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
+                          $this->pdf->addText(0,0,$fontSizeText,'</i>');
+                      }
+                    }
+                    $y-=$deltaline*($deltaymax);
+              $y-=($deltaline+$deltaobjectline);
+                    if($sort)
+                      $actualsort = $$sort;
+                }
+                if((strpos($showelements,'i')!==FALSE)&&(count($indexlist)>0)&&($sort))
+                { $base=$xmid;
+                  $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
+                  $this->pdf->setLineStyle(0.5);
+              $y=$top;
+                    while(list($key,$value)=each($indexlist))
+                    { $this->pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
+                $this->pdf->addTextWrap($xbase,$y,$fontSizeText,$key,50, 'left');
+                $this->pdf->addTextWrap($xbase+$SectionBarWidth-$sectionBarSpace-50,$y,$fontSizeText,trim($value),50,'right');
 
-					  $y-=($deltaline+$deltaobjectline);
-					  if(($y-($deltaline+$deltaobjectline))<$bottom)
-					  { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
-					    $this->pdf->setLineStyle(0.5);
-					  }
-		      }
-				}
-	    }
+                      $y-=($deltaline+$deltaobjectline);
+                      if(($y-($deltaline+$deltaobjectline))<$bottom)
+                      { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
+                        $this->pdf->setLineStyle(0.5);
+                      }
+              }
+                }
+        }
     }
     if(!$nostream)
       $this->pdf->ezStream();
   }
 
-	function roundPrecision($theValue,$thePrecision)
-	{ return(round($theValue/$thePrecision)*$thePrecision);
-	}
+    function roundPrecision($theValue,$thePrecision)
+    { return(round($theValue/$thePrecision)*$thePrecision);
+    }
 }
 ?>
