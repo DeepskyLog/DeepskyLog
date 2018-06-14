@@ -51,9 +51,9 @@ function changeSite()
     echo stripslashes($objLocation->getLocationPropertyFromId($locationid, 'name'));
     echo "</h4>";
     echo "<hr />";
-    echo "<a href=\"http://clearoutside.com/forecast/" 
+    echo "<a href=\"https://clearoutside.com/forecast/" 
         . round($latitude, 2) . "/" . round($longitude, 2) . "\">
-                <img src=\"http://clearoutside.com/forecast_image_small/" 
+                <img src=\"https://clearoutside.com/forecast_image_small/" 
         . round($latitude, 2) . "/" . round($longitude, 2) . "/forecast.png\" />
         </a>";
     echo "<br /><br />";
