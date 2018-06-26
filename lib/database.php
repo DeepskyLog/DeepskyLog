@@ -96,8 +96,9 @@ class Database {
 		$result = array ();
 		while ( $get = $run->fetch ( PDO::FETCH_OBJ ) ) {
 			$resultparts = array ();
-			while ( list ( $key, $value ) = each ( $get ) )
-				$resultparts [$key] = $value;
+			foreach ($get as $key => $value) {
+                $resultparts[$key] = $value;
+            }
 			$result [] = $resultparts;
 		}
 

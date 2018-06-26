@@ -346,7 +346,7 @@ function instructions() {
 			$menuSearch = $_SESSION ['menus'] ['menuSearch'];
 	}
 	// ============================================================================== COMMON INSTRUCTIONS
-	while ( list ( $key, $value ) = each ( $modules ) ) // change module
+	foreach ($modules as $key => $value) // change module
 		if ($objUtil->checkGetKey ( 'indexAction' ) == 'module' . $value) {
 			$_SESSION ['module'] = $value;
 			setcookie("module", $value, time () + (365 * 24 * 60 * 60), "/", "", true, true);

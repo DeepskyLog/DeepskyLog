@@ -358,7 +358,6 @@ class Observations
                                 trim($parts_array[$i][4]), ENT_COMPAT, "UTF-8", 0
                             ), $loggedUser
                         );
-
                         $parsed_date = date_parse_from_format("d-m-Y", $dates[$i]);
                         $date = sprintf(
                             "%04d%02d%02d", $parsed_date["year"], 

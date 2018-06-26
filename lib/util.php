@@ -1411,7 +1411,7 @@ class Utils
             $begin = $observation->appendChild($dom->createElement('begin'));
             $begin->appendChild($dom->createTextNode($date . $time));
 
-            if ($obs ["SQM"] > 0) {
+            if ($obs["SQM"] > 0) {
                 $magPerSquareArcsecond = $observation->appendChild(
                     $dom->createElement('sky-quality')
                 );
