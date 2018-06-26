@@ -58,20 +58,24 @@ function newLocation()
         . "name=\"add\" value=\"" 
         . LangAddSiteButton . "\" />";
 
+    // Limiting magnitude
     echo "</div><br />
             <label>" . LangAddSiteField7 . "</label>";
     echo "<div class=\"form-inline\">";
-    echo "<input type=\"number\" min=\"0\" max=\"9.9\" step=\"0.1\" " 
-        . "class=\"form-control\" maxlength=\"5\" name=\"lm\" size=\"5\" />";
+    echo "<input type=\"number\" min=\"0\" max=\"8.9\" step=\"0.1\" " 
+        . "class=\"form-control\" maxlength=\"5\" id=\"lm\"" 
+        . " name=\"lm\" size=\"5\" />";
     echo "</div>";
     echo "<span class=\"help-block\">" . LangAddSiteField7Expl . "</span>";
     echo "</div>";
 
+    // SQM
     echo "<div class=\"form-group\">
                 <label>" . LangAddSiteField8 . "</label>";
     echo "<div class=\"form-inline\">";
     echo "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" " 
-        . "class=\"form-control\" maxlength=\"5\" name=\"sb\" size=\"5\" />";
+        . "class=\"form-control\" maxlength=\"5\" id=\"sqm\"" 
+        . " name=\"sb\" size=\"5\" />";
     echo "</div>";
     echo "<span class=\"help-block\">" . LangAddSiteField8Expl . "</span>";
     echo "</div>";
@@ -80,12 +84,135 @@ function newLocation()
     echo "<div class=\"form-group\">
                 <label>" . LangAddSiteField9 . "</label>";
     echo "<div class=\"form-inline\">";
-    echo "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" " 
-        . "class=\"form-control\" maxlength=\"5\" name=\"sb\" size=\"5\" />";
+    echo "<input type=\"number\" min=\"1\" max=\"9\" step=\"1\" " 
+        . "class=\"form-control\" maxlength=\"5\" id=\"bortle\"" 
+        . " name=\"bortle\" size=\"5\" />";
     echo "</div>";
     echo "<span class=\"help-block\">" . LangAddSiteField9Expl . "</span>";
     echo "</div>";
     echo "</div></ol></form><br /><br />";
+
+    // Javascript to convert from limiting magnitude to sqm and bortle
+    echo '<script type="text/javascript">
+        $("#lm").keyup(function(event) {
+            lm = event.target.value;
+            if (lm < 0) {
+                lm = 0.0;
+                $("#lm").val(lm);
+            }
+            sqm = Math.round(((21.58 
+                - 5 * log10(pow(10, (1.586 - lm / 5.0)) - 1.0)
+                )) * 100) / 100; 
+            if (sqm > 22.0) {
+                sqm = 22.0;
+            }
+            $("#sqm").val(sqm);
+
+            if (sqm <= 18.0) {
+                bortle = 9;
+            } else if (sqm <= 18.38) {
+                bortle = 8;
+            } else if (sqm <= 18.94) {
+                bortle = 7;
+            } else if (sqm <= 19.50) {
+                bortle = 6;
+            } else if (sqm <= 20.49) {
+                bortle = 5;
+            } else if (sqm <= 21.69) {
+                bortle = 4;
+            } else if (sqm <= 21.89) {
+                bortle = 3;
+            } else if (sqm <= 21.99) {
+                bortle = 2;
+            } else {
+                bortle = 1;
+            }
+            $("#bortle").val(bortle);
+
+        });
+        </script>';
+  
+    // TODO: Move these methods to lib/locations.php or lib/contrast.php
+    // TODO: Fix formulae. It is impossible to get magnitude 8 and bortle scale 1 with these formulae...
+    // Javascript to convert from sqm to limiting magnitude and bortle
+    echo '<script type="text/javascript">
+        $("#sqm").keyup(function(event) {
+            sqm = event.target.value;
+
+            if (sqm > 22.0) {
+                sqm = 22.0;
+                $("#sqm").val(22.0);
+            }
+
+            lm = Math.round((7.97 
+                - 5 * log10(1 + pow(10, 4.316 - sqm / 5.0))) * 100) / 100; 
+            if (lm < 2.5) {
+                lm = 2.5;
+            }
+            $("#lm").val(lm);
+
+            if (sqm <= 18.0) {
+                bortle = 9;
+            } else if (sqm <= 18.38) {
+                bortle = 8;
+            } else if (sqm <= 18.94) {
+                bortle = 7;
+            } else if (sqm <= 19.50) {
+                bortle = 6;
+            } else if (sqm <= 20.49) {
+                bortle = 5;
+            } else if (sqm <= 21.69) {
+                bortle = 4;
+            } else if (sqm <= 21.89) {
+                bortle = 3;
+            } else if (sqm <= 21.99) {
+                bortle = 2;
+            } else {
+                bortle = 1;
+            }
+            $("#bortle").val(bortle);
+
+        });
+        </script>';
+
+    // Javascript to convert from bortle to limiting magnitude and sqm
+    echo '<script type="text/javascript">
+        $("#bortle").keyup(function(event) {
+            bortle = event.target.value; 
+
+            if (bortle == 1) {
+                lm = 6.66;
+                sqm = 22.0;
+            } else if (bortle == 2) {
+                lm = 6.64;
+                sqm = 21.95;
+            } else if (bortle == 3) {
+                lm = 6.5;
+                sqm = 21.79;
+            } else if (bortle == 4) {
+                lm = 6.2;
+                sqm = 21.1;
+            } else if (bortle == 5) {
+                lm = 5.5;
+                sqm = 20.0;
+            } else if (bortle == 6) {
+                lm = 5.0;
+                sqm = 19.28;
+            } else if (bortle == 7) {
+                lm = 4.5;
+                sqm = 18.66;
+            } else if (bortle == 8) {
+                lm = 4.0;
+                sqm = 18.0;
+            } else {
+                lm = 3.75;
+                sqm = 17.7;
+            }
+            $("#lm").val(lm);
+            $("#sqm").val(sqm);
+
+        });
+        </script>';
 
     echo "<script type=\"text/javascript\" " 
         . "src=\"https://maps.googleapis.com/maps/api/" 

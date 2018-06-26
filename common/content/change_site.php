@@ -217,9 +217,9 @@ function changeSite()
 
           // Find the timezone
         url = 'https://maps.googleapis.com/maps/api/timezone/json" 
-        . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&location='" 
-        . " + latLng.lat() + ',' + latLng.lng() + '&timestamp=' " 
-        . "+ new Date().getTime() / 1000;
+            . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&location='
+            + latLng.lat() + ',' + latLng.lng() + '&timestamp=' 
+            + new Date().getTime() / 1000;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
