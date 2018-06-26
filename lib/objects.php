@@ -158,7 +158,7 @@ class Objects {
 		array_unshift ( $ret, "M", "NGC", "Caldwell", "H400", "HII", "IC" );
 		if (array_key_exists ( 'deepskylog_id', $_SESSION ) && $loggedUser) {
 			$lsts = $objList->getLists ();
-			while ( list ( $key, $value ) = each ( $lsts ) )
+			foreach ($lsts as $key => $value)
 				$ret [] = 'List:' . $value;
 		}
 		return $ret;
@@ -1190,9 +1190,9 @@ class Objects {
 					2.083,
 					2.556 
 			);
-		$popup = "";
-		$magnificationsName = '';
-		$fov = '';
+        $popup = "";
+        $magnificationsName = array();
+        $fov = array();
 		if (! ($loggedUser))
 			$popup = LangContrastNotLoggedIn;
 		else {
