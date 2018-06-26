@@ -436,9 +436,9 @@ function instructions() {
 		$_GET ['indexAction'] = 'view_lenses';
 	}
 	if ($objUtil->checkPostKey ( 'indexAction' ) == "validate_site") // validate location
-{
-		$entryMessage .= $objLocation->validateSaveLocation ();
-		$_GET ['indexAction'] = "view_sites";
+    {
+		$entryMessage .= $objLocation->validateSaveLocation();
+		$_GET['indexAction'] = "view_sites";
 	}
 	// ============================================================================== DEEPSKY INSTRUCTIONS
 	$object = $objUtil->checkPostKey ( 'object', $objUtil->checkGetKey ( 'object' ) );
