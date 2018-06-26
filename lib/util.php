@@ -1086,10 +1086,10 @@ class Utils
                                     $GLOBALS['objInstrument']->
                                     getInstrumentPropertyFromId(
                                         $value, 'fd'
-                                    ) * $GLOBALS['objInstrument']->
-                                    getInstrumentPropertyFromId(
-                                        $value, 'diameter'
-                                    )
+                                    ) * $GLOBALS['objInstrument']
+                                        ->getInstrumentPropertyFromId(
+                                            $value, 'diameter'
+                                        )
                                 )
                             );
                         }
