@@ -544,13 +544,19 @@ class Objects {
 					$popup4 = $obs [$j] ["objectname"] . LangAltitude . $ristraset [3] . LangRistrasetIn . addslashes ( $location );
 				}
 				$obs [$j] ['objectrise'] = $ristraset [0];
-				$obs [$j] ['objectriseorder'] = ($ristraset [0] != '-' ? ($ristraset [0] < 10 ? (substr ( $ristraset [0], 0, 1 ) * 100) + 2400 + substr ( $ristraset [0], 2, 2 ) : ($ristraset [0] < 12 ? (substr ( $ristraset [0], 0, 2 ) * 100) + 2400 + substr ( $ristraset [0], 3, 2 ) : (substr ( $ristraset [0], 0, 2 ) * 100) + substr ( $ristraset [0], 3, 2 ))) : 9999);
-				$obs [$j] ['objecttransit'] = $ristraset [1];
-				$obs [$j] ['objecttransitorder'] = ($ristraset [1] != '-' ? ($ristraset [1] < 10 ? (substr ( $ristraset [1], 0, 1 ) * 100) + 2400 + substr ( $ristraset [1], 2, 2 ) : ($ristraset [1] < 12 ? (substr ( $ristraset [1], 0, 2 ) * 100) + 2400 + substr ( $ristraset [1], 3, 2 ) : (substr ( $ristraset [1], 0, 2 ) * 100) + substr ( $ristraset [1], 3, 2 ))) : 9999);
+				$obs [$j] ['objectriseorder'] = ($ristraset [0] != '-' ? ($ristraset [0] < 10 ? (intval(substr ( $ristraset [0], 0, 1 )) * 100) + 2400 + intval(substr ( $ristraset [0], 2, 2 )) : ($ristraset [0] < 12 ? (intval(substr ( $ristraset [0], 0, 2 )) * 100) + 2400 + intval(substr ( $ristraset [0], 3, 2 )) : (intval(substr ( $ristraset [0], 0, 2 )) * 100) + intval(substr ( $ristraset [0], 3, 2 )))) : 9999);
+                $obs [$j] ['objecttransit'] = $ristraset [1];
+                $obs [$j] ['objecttransitorder'] = ($ristraset[1] != '-' 
+                    ? ($ristraset[1] < 10 
+                    ? (intval(substr($ristraset[1], 0, 2)) * 100) + 2400 + intval(substr($ristraset[1], 2, 2))
+                    : ($ristraset [1] < 12 
+                    ? (intval(substr ( $ristraset [1], 0, 2 )) * 100) + 2400 + intval(substr ( $ristraset [1], 3, 2 )) 
+                    : (intval(substr ( $ristraset [1], 0, 2 )) * 100) + intval(substr ( $ristraset [1], 3, 2 )))) : 9999);
+
 				$obs [$j] ['objectset'] = $ristraset [2];
-				$obs [$j] ['objectsetorder'] = ($ristraset [2] != '-' ? ($ristraset [2] < 10 ? (substr ( $ristraset [2], 0, 1 ) * 100) + 2400 + substr ( $ristraset [2], 2, 2 ) : ($ristraset [2] < 12 ? (substr ( $ristraset [2], 0, 2 ) * 100) + 2400 + substr ( $ristraset [2], 3, 2 ) : (substr ( $ristraset [2], 0, 2 ) * 100) + substr ( $ristraset [2], 3, 2 ))) : 9999);
+				$obs [$j] ['objectsetorder'] = ($ristraset [2] != '-' ? ($ristraset [2] < 10 ? (intval(substr ( $ristraset [2], 0, 1 )) * 100) + 2400 + intval(substr ( $ristraset [2], 2, 2 )) : ($ristraset [2] < 12 ? (intval(substr ( $ristraset [2], 0, 2 )) * 100) + 2400 + intval(substr ( $ristraset [2], 3, 2 )) : (intval(substr ( $ristraset [2], 0, 2 )) * 100) + intval(substr ( $ristraset [2], 3, 2 )))) : 9999);
 				$obs [$j] ['objectbest'] = $ristraset [4];
-				$obs [$j] ['objectbestorder'] = ($ristraset [4] != '-' ? ($ristraset [4] < 10 ? (substr ( $ristraset [4], 0, 1 ) * 1000000) + 24000000 + (substr ( $ristraset [4], 2, 2 ) * 10000) : ($ristraset [4] < 12 ? (substr ( $ristraset [4], 0, 2 ) * 1000000) + 24000000 + (substr ( $ristraset [4], 3, 2 ) * 10000) : (substr ( $ristraset [4], 0, 2 ) * 1000000) + (substr ( $ristraset [4], 3, 2 ) * 10000) + ($obs [$j] ['objectsetorder']))) : 99999999);
+				$obs [$j] ['objectbestorder'] = ($ristraset [4] != '-' ? ($ristraset [4] < 10 ? (intval(substr ( $ristraset [4], 0, 1 )) * 1000000) + 24000000 + (intval(substr ( $ristraset [4], 2, 2 )) * 10000) : ($ristraset [4] < 12 ? (intval(substr ( $ristraset [4], 0, 2 )) * 1000000) + 24000000 + (intval(substr ( $ristraset [4], 3, 2 )) * 10000) : (intval(substr ( $ristraset [4], 0, 2 )) * 1000000) + (intval(substr ( $ristraset [4], 3, 2 )) * 10000) + ($obs [$j] ['objectsetorder']))) : 99999999);
 				$obs [$j] ['objectmaxaltitude'] = $ristraset [3];
 				$obs [$j] ['objectrisepopup'] = $popup1;
 				$obs [$j] ['objecttransitpopup'] = $popup2;

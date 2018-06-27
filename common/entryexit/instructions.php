@@ -55,7 +55,7 @@ function instructions() {
 	if (! array_key_exists ( 'steps', $_SESSION )) {
 		if (array_key_exists ( 'steps', $_COOKIE )) {
 			$stepsbase = explode ( ";", $_COOKIE ['steps'] );
-			while ( list ( $key, $value ) = each ( $stepsbase ) ) {
+			foreach ($stepsbase as $key=>$value) {
 				if ($value) {
 					$stepsbaseitems = explode ( ":", $value );
 					$_SESSION ['steps'] [$stepsbaseitems [0]] = $stepsbaseitems [1];
@@ -79,7 +79,7 @@ function instructions() {
 		$_SESSION ['steps'] [$stepsType] = $steps;
 		reset ( $_SESSION ['steps'] );
 		$stepscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['steps'] ) )
+		foreach ($_SESSION['steps'] as $key=>$value)
 			$stepscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "steps", $stepscookie, $cookietime, "/" );
@@ -98,7 +98,7 @@ function instructions() {
 		$menuDownloads = $_POST ['menuDownloads'];
 		$_SESSION ['menus'] ['menuDownloads'] = $menuDownloads;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach ($_SESSION['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -106,7 +106,7 @@ function instructions() {
 		$menuDownloads = $_SESSION ['menus'] ['menuDownloads'];
 	elseif (array_key_exists ( 'menus', $_COOKIE )) {
 		$menubase = explode ( ";", $_COOKIE ['menus'] );
-		while ( list ( $key, $value ) = each ( $menubase ) ) {
+		foreach ($menubase as $key=>$value) {
 			if ($value) {
 				$menubaseitems = explode ( ":", $value );
 				$_SESSION ['menus'] [$menubaseitems [0]] = $menubaseitems [1];
@@ -119,7 +119,7 @@ function instructions() {
 		$menuView = $_GET ['menuView'];
 		$_SESSION ['menus'] ['menuView'] = $menuView;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach ($_SESSION['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -127,7 +127,7 @@ function instructions() {
 		$menuView = $_POST ['menuView'];
 		$_SESSION ['menus'] ['menuView'] = $menuView;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach ($_SESSION ['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -135,7 +135,7 @@ function instructions() {
 		$menuView = $_SESSION ['menus'] ['menuView'];
 	elseif (array_key_exists ( 'menus', $_COOKIE )) {
 		$menubase = explode ( ";", $_COOKIE ['menus'] );
-		while ( list ( $key, $value ) = each ( $menubase ) ) {
+		foreach ($menubase as $key=>$value) {
 			if ($value) {
 				$menubaseitems = explode ( ":", $value );
 				$_SESSION ['menus'] [$menubaseitems [0]] = $menubaseitems [1];
@@ -148,7 +148,7 @@ function instructions() {
 		$menuAddChange = $_GET ['menuAddChange'];
 		$_SESSION ['menus'] ['menuAddChange'] = $menuAddChange;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach ($_SESSION['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -156,7 +156,7 @@ function instructions() {
 		$menuAddChange = $_POST ['menuAddChange'];
 		$_SESSION ['menus'] ['menuAddChange'] = $menuAddChange;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach ($_SESSION['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -164,7 +164,7 @@ function instructions() {
 		$menuAddChange = $_SESSION ['menus'] ['menuAddChange'];
 	} elseif (array_key_exists ( 'menus', $_COOKIE )) {
 		$menubase = explode ( ";", $_COOKIE ['menus'] );
-		while ( list ( $key, $value ) = each ( $menubase ) ) {
+		foreach ($menubase as $key=>$value) {
 			if ($value) {
 				$menubaseitems = explode ( ":", $value );
 				$_SESSION ['menus'] [$menubaseitems [0]] = $menubaseitems [1];
@@ -177,7 +177,7 @@ function instructions() {
 		$menuMoon = $_GET ['menuMoon'];
 		$_SESSION ['menus'] ['menuMoon'] = $menuMoon;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach ($_SESSION['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -185,7 +185,7 @@ function instructions() {
 		$menuMoon = $_POST ['menuMoon'];
 		$_SESSION ['menus'] ['menuMoon'] = $menuMoon;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach ($_SESSION['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -193,7 +193,7 @@ function instructions() {
 		$menuMoon = $_SESSION ['menus'] ['menuMoon'];
 	} elseif (array_key_exists ( 'menus', $_COOKIE )) {
 		$menubase = explode ( ";", $_COOKIE ['menus'] );
-		while ( list ( $key, $value ) = each ( $menubase ) ) {
+		foreach ($menubase as $key=>$value) {
 			if ($value) {
 				$menubaseitems = explode ( ":", $value );
 				$_SESSION ['menus'] [$menubaseitems [0]] = $menubaseitems [1];
@@ -262,7 +262,7 @@ function instructions() {
 		$menuAdmin = $_GET ['menuAdmin'];
 		$_SESSION ['menus'] ['menuAdmin'] = $menuAdmin;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach ($_SESSION['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -270,7 +270,7 @@ function instructions() {
 		$menuAdmin = $_POST ['menuAdmin'];
 		$_SESSION ['menus'] ['menuAdmin'] = $menuAdmin;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach ($_SESSION['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -278,7 +278,7 @@ function instructions() {
 		$menuAdmin = $_SESSION ['menus'] ['menuAdmin'];
 	} elseif (array_key_exists ( 'menus', $_COOKIE )) {
 		$menubase = explode ( ";", $_COOKIE ['menus'] );
-		while ( list ( $key, $value ) = each ( $menubase ) ) {
+		foreach ($menubase as $key=>$value) {
 			if ($value) {
 				$menubaseitems = explode ( ":", $value );
 				$_SESSION ['menus'] [$menubaseitems [0]] = $menubaseitems [1];
@@ -291,7 +291,7 @@ function instructions() {
 		$menuLogin = $_GET ['menuLogin'];
 		$_SESSION ['menus'] ['menuLogin'] = $menuLogin;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach ($_SESSION['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -299,7 +299,7 @@ function instructions() {
 		$menuLogin = $_POST ['menuLogin'];
 		$_SESSION ['menus'] ['menuLogin'] = $menuLogin;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach ($_SESSION['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -307,7 +307,7 @@ function instructions() {
 		$menuLogin = $_SESSION ['menus'] ['menuLogin'];
 	} elseif (array_key_exists ( 'menus', $_COOKIE )) {
 		$menubase = explode ( ";", $_COOKIE ['menus'] );
-		while ( list ( $key, $value ) = each ( $menubase ) ) {
+		foreach ($menubase as $key=>$value) {
 			if ($value) {
 				$menubaseitems = explode ( ":", $value );
 				$_SESSION ['menus'] [$menubaseitems [0]] = $menubaseitems [1];
@@ -320,7 +320,7 @@ function instructions() {
 		$menuSearch = $_GET ['menuSearch'];
 		$_SESSION ['menus'] ['menuSearch'] = $menuSearch;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach ($_SESSION['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -328,7 +328,7 @@ function instructions() {
 		$menuSearch = $_POST ['menuSearch'];
 		$_SESSION ['menus'] ['menuSearch'] = $menuSearch;
 		$menuscookie = "";
-		while ( list ( $key, $value ) = each ( $_SESSION ['menus'] ) )
+		foreach  ($_SESSION['menus'] as $key=>$value)
 			$menuscookie .= $key . ":" . $value . ";";
 		$cookietime = time () + 365 * 24 * 60 * 60; // 1 year
 		setcookie ( "menus", $menuscookie, $cookietime, "/" );
@@ -336,7 +336,7 @@ function instructions() {
 		$menuSearch = $_SESSION ['menus'] ['menuSearch'];
 	} elseif (array_key_exists ( 'menus', $_COOKIE )) {
 		$menubase = explode ( ";", $_COOKIE ['menus'] );
-		while ( list ( $key, $value ) = each ( $menubase ) ) {
+		foreach ($menubase as $key=>$value) {
 			if ($value) {
 				$menubaseitems = explode ( ":", $value );
 				$_SESSION ['menus'] [$menubaseitems [0]] = $menubaseitems [1];
@@ -346,7 +346,7 @@ function instructions() {
 			$menuSearch = $_SESSION ['menus'] ['menuSearch'];
 	}
 	// ============================================================================== COMMON INSTRUCTIONS
-	while ( list ( $key, $value ) = each ( $modules ) ) // change module
+	foreach ($modules as $key=>$value) // change module
 		if ($objUtil->checkGetKey ( 'indexAction' ) == 'module' . $value) {
 			$_SESSION ['module'] = $value;
 			setcookie ( "module", $value, time () + (365 * 24 * 60 * 60), "/" );
@@ -502,7 +502,7 @@ function instructions() {
 	if (array_key_exists ( 'indexAction', $_GET ) && $_GET ['indexAction'] == "addXmlObservations")
 		include_once "deepsky/control/addXmlObservations.php";
 	if (array_key_exists ( 'noShowName', $_GET ) && (array_key_exists ( "Qobj", $_SESSION ))) {
-		while ( list ( $key, $value ) = each ( $_SESSION ["Qobj"] ) )
+		foreach ($_SESSION['Qobj'] as $key=>$value)
 			if (strpos ( $_SESSION ["Qobj"] [$key] ["showname"], "(" ))
 				$_SESSION ["Qobj"] [$key] ["showname"] = substr ( $_SESSION ["Qobj"] [$key] ["showname"], strpos ( $_SESSION ["Qobj"] [$key] ["showname"], "(" ) + 1, strpos ( $_SESSION ["Qobj"] [$key] ["showname"], ")" ) - strpos ( $_SESSION ["Qobj"] [$key] ["showname"], "(" ) - 1 ) . " (" . substr ( $_SESSION ["Qobj"] [$key] ["showname"], 0, strpos ( $_SESSION ["Qobj"] [$key] ["showname"], "(" ) - 1 ) . ")";
 		reset ( $_SESSION ["Qobj"] );

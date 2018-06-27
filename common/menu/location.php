@@ -32,7 +32,7 @@ function menu_location() {
 			if ($url == $baseURL || $url == $baseURL . "#" || $url = $baseURL . "index.php") {
 				$url = $baseURL . "index.php?title=Home";
 			}
-			while ( list ( $key, $value ) = each ( $result ) ) {
+			foreach ($result as $key=>$value) {
 				echo "  <li><a href=\"" . $url . "&amp;activeLocationId=" . $value . "\">" . $objLocation->getLocationPropertyFromId ( $value, 'name' ) . "</a></li>";
 			}
 

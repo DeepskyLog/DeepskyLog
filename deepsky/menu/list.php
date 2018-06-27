@@ -50,7 +50,7 @@ function menu_list() {
 		echo "<select class=\"form-control\" name=\"activatelist\" onchange=\"location=this.options[this.selectedIndex].value;\">";
 		if ((! array_key_exists ( 'listname', $_SESSION )) || (! $_SESSION ['listname']))
 			$_SESSION ['listname'] = "----------";
-		while ( list ( $key, $value ) = each ( $result ) ) {
+		foreach ($result as $key=>$value) {
 			// If the list is a Public list, we add 'Public: ' to the name of the list.
  			if (in_array($value, $publicLists)) {
  				$listname = LangPublicList . $value;
