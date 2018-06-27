@@ -13,7 +13,7 @@ function menu_date() {
 	global $baseURL, $loggedUser, $thisDay, $thisMonth, $thisYear;
 	$link = $baseURL . "index.php?";
 	reset ( $_GET );
-	while ( list ( $key, $value ) = each ( $_GET ) )
+	foreach ($_GET as $key=>$value)
 		if (! (in_array ( $key, array (
 				'changeDay',
 				'changeMonth',
@@ -22,7 +22,7 @@ function menu_date() {
 			$link .= $key . '=' . urlencode ( $value ) . '&amp;';
 	$link2 = "index.php?";
 	reset ( $_GET );
-	while ( list ( $key, $value ) = each ( $_GET ) )
+	foreach ($_GET as $key=>$value)
 		if (! (in_array ( $key, array (
 				'changeDay',
 				'changeMonth',

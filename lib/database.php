@@ -53,7 +53,7 @@ class Database {
 		$result = array ();
 		$run = $this->mysql_query_encaps ( $sql );
 		if ($get = $run->fetch ( PDO::FETCH_OBJ ))
-			while ( list ( $key, $value ) = each ( $get ) )
+			foreach ($get as $key => $value)
 				$result [$key] = $value;
 		return $result;
 	}
@@ -73,7 +73,7 @@ class Database {
 		$result = array ();
 		while ( $get = $run->fetch ( PDO::FETCH_OBJ ) ) {
 			$resultparts = array ();
-			while ( list ( $key, $value ) = each ( $get ) )
+			foreach ($get as $key => $value)
 				$resultparts [$key] = $value;
 				$result [] = $resultparts;
 		}
@@ -96,7 +96,7 @@ class Database {
 		$result = array ();
 		while ( $get = $run->fetch ( PDO::FETCH_OBJ ) ) {
 			$resultparts = array ();
-			while ( list ( $key, $value ) = each ( $get ) )
+			foreach ($get as $key => $value)
 				$resultparts [$key] = $value;
 			$result [] = $resultparts;
 		}

@@ -262,7 +262,7 @@ function viewObserver()
 
                 $url = $baseURL . "index.php?indexAction=detail_observer&user=" 
                     . $loggedUser;
-                while (list($key, $value) = each($result)) {
+                foreach ($result as $key=>$value) {
                     echo "  <li><a href=\"" . $url . "&amp;activeLocationId=" 
                         . $value . "\">" 
                         . $objLocation->getLocationPropertyFromId($value, 'name') 
@@ -311,7 +311,7 @@ function viewObserver()
 
                 $url = $baseURL . "index.php?indexAction=detail_observer&user=" 
                     . $loggedUser;
-                while (list($key, $value) = each($result)) {
+                foreach ($result as $key=>$value) {
                     echo "  <li><a href=\"" . $url . "&amp;activeTelescopeId=" 
                         . $value . "\">" 
                         . $objInstrument->getInstrumentPropertyFromId(
@@ -526,7 +526,7 @@ function viewObserver()
 
     if (sizeof($sql) == 0) {
         $startYear = min(array_keys($sql2));
-    } else if (sizeof($sql2 == 0)) {
+    } else if (sizeof($sql2) == 0) {
         $startYear = min(array_keys($sql));
     } else {
         $startYear = min([min(array_keys($sql)), min(array_keys($sql2))]);
@@ -631,7 +631,8 @@ function viewObserver()
                             Highcharts.numberFormat(this.y / cometdataYearSum * 100) 
                             + '%)';
                     }
-                  }
+                  },
+                  useHTML: true,
                               },
                               legend: {
                               layout: 'vertical',
@@ -773,7 +774,8 @@ function viewObserver()
                             Highcharts.numberFormat(this.y / cometdataSum * 100) 
                             + '%)';
                     }
-                  }
+                  },
+                  useHTML: true,
                               },
                               legend: {
                               layout: 'vertical',
@@ -1103,7 +1105,8 @@ function viewObserver()
                         formatter: function() {
                             return '<b>'+ this.point.name +'</b>: '
                                 + Math.round(this.percentage * 100) / 100 + '%';
-                        }
+                        },
+                        useHTML: true,
                     },
                     plotOptions: {
                         pie: {
@@ -1125,7 +1128,7 @@ function viewObserver()
                         name: 'Objects seen',
                         data: [";
 
-    foreach ( $objectsArray as $key => $value ) {
+    foreach ($objectsArray as $key => $value) {
         if ($key != "REST") {
             print "{name: \"" 
                 . html_entity_decode($GLOBALS[$key], ENT_QUOTES, "UTF-8") 
@@ -1208,7 +1211,8 @@ function viewObserver()
                             return '<b>'+ this.point.name 
                                 +'</b>: '
                                 + Math.round(this.percentage * 100) / 100 + '%';
-                        }
+                        },
+                        useHTML: true,
                     },
                     plotOptions: {
                         pie: {
@@ -1230,7 +1234,7 @@ function viewObserver()
                         name: 'Objects seen',
                         data: [";
 
-    foreach ( $countriesArray as $key => $value ) {
+    foreach ($countriesArray as $key => $value) {
         print "{name: \"" . $key . "\", y: " . $value . "},";
     }
     echo "

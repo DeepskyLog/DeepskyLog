@@ -12,7 +12,7 @@ function menu_quickpick() {
 	echo "<li><form role=\"form\" action=\"" . $baseURL . "index.php\" method=\"get\">";
 	reset ( $_GET );
 	$link = "";
-	while ( list ( $key, $value ) = each ( $_GET ) )
+	foreach ($_GET as $key=>$value)
 		if ($key != "menuSearch")
 			$link .= "&amp;" . $key . "=" . urlencode ( $value );
 	reset ( $_GET );

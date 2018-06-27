@@ -126,7 +126,7 @@ function menu_moon()
 	echo "<li>";
 	reset($_GET);
 	$link="";
-	while(list($key,$value)=each($_GET))
+	foreach ($_GET as $key=>$value)
 	  if($key!="menuMoon")
 	    $link.="&amp;".$key."=".urlencode($value);
 	reset($_GET);
