@@ -162,10 +162,10 @@ function statistics() {
 	} else {
 		$sql = $objDatabase->selectKeyValueArray ("select YEAR(date),count(*) from observations JOIN locations ON observations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" group by YEAR(date)", "YEAR(date)", "count(*)");
 		$sql2 = $objDatabase->selectKeyValueArray ( "select YEAR(date),count(*) from cometobservations JOIN locations ON cometobservations.locationid=locations.id WHERE locations.country = \"" . $selectedCountry . "\" group by YEAR(date);", "YEAR(date)", "count(*)" );
-	}
+    }
 	if (sizeof($sql) == 0) {
 		$startYear = min(array_keys($sql2));
-	} else if (sizeof($sql2 == 0)) {
+	} else if (sizeof($sql2) == 0) {
 		$startYear = min(array_keys($sql));
 	} else {
 		$startYear = min ( [min(array_keys($sql)), min(array_keys ( $sql2 ) )] );
@@ -261,7 +261,8 @@ function statistics() {
 									return '<b>'+ this.series.name +'</b><br/>'+
 														this.x +': '+ this.y + ' (' + Highcharts.numberFormat(this.y / cometdataYearSum * 100) + '%)';
 								}
-	  	        }
+                  },
+                  useHTML: true,
 	  	                    },
 	  	                    legend: {
 	  	                    layout: 'vertical',
@@ -390,7 +391,8 @@ function statistics() {
 									return '<b>'+ this.series.name +'</b><br/>'+
 														this.x +': '+ this.y + ' (' + Highcharts.numberFormat(this.y / cometdataSum * 100) + '%)';
 								}
-	  	        }
+                  },
+                  useHTML: true,
 	  	                    },
 	  	                    legend: {
 	  	                    layout: 'vertical',
@@ -710,7 +712,8 @@ function statistics() {
 					tooltip: {
 						formatter: function() {
 							return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage * 100) / 100 + '%';
-						}
+                        },
+                        useHTML: true,
 					},
 					plotOptions: {
 						pie: {
@@ -775,7 +778,8 @@ function statistics() {
 				tooltip: {
 					formatter: function() {
 						return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage * 100) / 100 + '%';
-					}
+                    },
+                    useHTML: true,
 				},
 				plotOptions: {
 					pie: {
