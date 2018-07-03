@@ -69,7 +69,7 @@ function head() {
 		$TitleText = LangXMLTitle;
 	elseif ($includeFile == 'deepsky/content/new_object.php')
 		$TitleText = LangNewObjectTitle;
-	elseif ($includeFile == 'deepsky/content/new_observation.php')
+	elseif ($includeFile == 'deepsky/content/NewObservation.php')
 		$TitleText = LangNewObservationTitle . $theObject;
 	elseif ($includeFile == 'deepsky/content/view_object.php')
 		$TitleText = LangViewObjectTitle . $theObject;

@@ -4501,7 +4501,7 @@ class Utils
                     if (array_key_exists('searchObservationsQuickPick', $_GET)) {
                         return 'lib/observations_new.php';
                     } elseif (array_key_exists('newObservationQuickPick', $_GET)) {
-                        return 'deepsky/content/new_observation.php';
+                        return 'deepsky/content/newObservation.php';
                     } else {
                         return 'deepsky/content/view_object.php';
                     }
@@ -4519,7 +4519,7 @@ class Utils
                 if (array_key_exists('searchObservationsQuickPick', $_GET)) {
                     return 'deepsky/content/setup_observations_query.php';
                 } elseif (array_key_exists('newObservationQuickPick', $_GET)) {
-                    return 'deepsky/content/new_observation.php';
+                    return 'deepsky/content/newObservation.php';
                 } else {
                     return 'deepsky/content/setup_objects_query.php';
                 }
@@ -4612,7 +4612,7 @@ class Utils
             break;
         case 'add_observation':
             if ($loggedUser) {
-                return 'deepsky/content/new_observation.php';
+                return 'deepsky/content/newObservation.php';
             }
             break;
         case 'detail_object':

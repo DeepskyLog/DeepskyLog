@@ -12,7 +12,7 @@ function tolist() {
 	if ($listname) {
 		$link = $baseURL . "index.php?indexAction=listaction";
 		reset ( $_GET );
-		while ( list ( $key, $value ) = each ( $_GET ) )
+		foreach ($_GET as $key=>$value)
 			if (! in_array ( $key, array (
 					'addobservationstolist',
 					'restoreColumns',

@@ -21,12 +21,13 @@ class catalogs
       { $result2[$k]['objectname']=$result2[$k]['objectname'].'/'.$result[$i]['altname'];
       }
     }
-    uksort($result2,"strnatcasecmp");
-    $t=count($result2);
-    while(list($key,$value)=each($result2))
-      $result3[]=$value;
-    return $result3;
-  }
+        uksort($result2, "strnatcasecmp");
+        $t=count($result2);
+        foreach ($result2 as $key=>$value) {
+            $result3[]=$value;
+        }
+        return $result3;
+    }
   private function formatIndex($theformat,$theindex)
   { if($theformat=="2MASX")
     { $returnindex='J';
@@ -470,7 +471,7 @@ class catalogs
       return trim($thenewcatalog0.' '.$theindex);
   	else
   	{ $tocheck=array("2MASX","MCG","APMUKS(BJ)","BD",'CGCG','IRAS','KUG','MAC','NPM1G','PK','PKS','QSO','SAO','SBS','SDSS','WRAY');
-      while(list($key,$value)=each($tocheck))
+      foreach ($tocheck as $key=>$value)
         if(strtoupper($thenewcatalog0)==$value)
           return $value.' '.$this->formatIndex($value,trim($theindex));
 	    return trim($thenewcatalog0.' '.$theindex);
