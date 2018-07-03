@@ -262,7 +262,7 @@ function viewObserver()
 
                 $url = $baseURL . "index.php?indexAction=detail_observer&user=" 
                     . $loggedUser;
-                foreach ($result as $key=>$value) {
+                foreach ($result as $key2=>$value) {
                     echo "  <li><a href=\"" . $url . "&amp;activeLocationId=" 
                         . $value . "\">" 
                         . $objLocation->getLocationPropertyFromId($value, 'name') 
@@ -311,7 +311,7 @@ function viewObserver()
 
                 $url = $baseURL . "index.php?indexAction=detail_observer&user=" 
                     . $loggedUser;
-                foreach ($result as $key=>$value) {
+                foreach ($result as $key2=>$value) {
                     echo "  <li><a href=\"" . $url . "&amp;activeTelescopeId=" 
                         . $value . "\">" 
                         . $objInstrument->getInstrumentPropertyFromId(
