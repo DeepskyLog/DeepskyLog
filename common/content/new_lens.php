@@ -22,7 +22,7 @@ function new_lens() {
 	echo "<hr />";
 	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"add\" value=\"" . LangAddLensButton . "\" />&nbsp;";
 	echo "<div class=\"form-group\">
-	       <label for=\"catalog\">" . LangAddLensExisting . "</label>";
+	       <label for=\"catalog\">" . _("Select an existing lens") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $content1b;
 	echo "</div></div>";

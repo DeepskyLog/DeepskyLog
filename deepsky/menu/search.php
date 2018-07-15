@@ -22,21 +22,21 @@ function menu_search() {
 	if (($loggedUser) && ($loggedUser != "admin")) { // admin doesn't have own observations
 		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . urlencode ( $loggedUser ) . "\">" . LangSearchMenuItem1 . "</a></li>";
 		echo "  <li class=\"disabled\">───────────────────</li>";
-		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_lists\">" . LangViewLists . "</a></li>";
+		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_lists\">" . _("My observing lists") . "</a></li>";
 		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=result_my_sessions\">" . LangSearchMenuItem11 . "</a></li>";
 		echo "  <li class=\"disabled\">───────────────────</li>";
-		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_instruments\">" . LangViewInstruments . "</a></li>";
-		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_sites\">" . LangViewLocations . "</a></li>";
-		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_eyepieces\">" . LangViewEyepieces . "</a></li>";
-		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_filters\">" . LangViewFilters . "</a></li>";
-		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_lenses\">" . LangViewLenses . "</a></li>";
+		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_instruments\">" . _("My instruments") . "</a></li>";
+		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_sites\">" . _("My locations") . "</a></li>";
+		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_eyepieces\">" . _("My eyepieces") . "</a></li>";
+		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_filters\">" . _("My filters") . "</a></li>";
+		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_lenses\">" . _("My lenses") . "</a></li>";
 		echo "  <li class=\"disabled\">───────────────────</li>";
 	}
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay&amp;newobservations=true\">" . LangSearchMenuItem9 . "</a></li>";
 	echo "  <li class=\"disabled\">───────────────────</li>";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=rank_observers\">" . LangSearchMenuItem6 . "</a></li>";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=rank_objects\">" . LangSearchMenuItem7 . "</a></li>";
-	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=statistics\">" . LangStatistics . "</a></li>";
+	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=statistics\">" . _("Statistics") . "</a></li>";
 	echo "  <li class=\"disabled\">───────────────────</li>";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=view_catalogs\">" . LangSearchMenuItem10 . "</a></li>";
 	echo " </ul>";

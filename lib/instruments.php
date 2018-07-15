@@ -101,7 +101,7 @@ class Instruments {
 			echo "<th>" . LangOverviewInstrumentsFixedMagnification . "</th>";
 			echo "<th>" . LangOverviewInstrumentsType . "</th>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangChangeAccountField8 . "</th>";
-			echo "<th>" . LangRemove . "</th>";
+			echo "<th>" . _("Delete") . "</th>";
 			echo "<th>" . LangTopObserversHeader3 . "</th>";
 			echo "</thead>";
 			$count=0;

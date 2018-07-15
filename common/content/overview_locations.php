@@ -41,7 +41,7 @@ function overviewLocations()
     echo "<th>" . LangViewLocationCountry . "</th>";
     echo "<th>" . LangViewLocationLongitude . "</th>";
     echo "<th>" . LangViewLocationLatitude . "</th>";
-    echo "<th>" . LangViewLocationElevation . "</th>";
+    echo "<th>" . _("Elevation") . "</th>";
     echo "<th>" . LangAddSiteField6 . "</th>";
     echo "<th>" . LangViewLocationLimMag . "</th>";
     echo "<th>" . LangViewLocationSB . "</th>";
@@ -112,7 +112,7 @@ function overviewLocations()
                 echo "<a href=\"" . $baseURL 
                     . "index.php?indexAction=validate_delete_location" 
                     . "&amp;locationid=" 
-                    . urlencode($value) . "\">" . LangRemove . "</a>";
+                    . urlencode($value) . "\">" . _("Delete") . "</a>";
             }
             echo "</td>";
             echo "</tr>";

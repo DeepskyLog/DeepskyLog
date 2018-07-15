@@ -9,7 +9,7 @@
  * @package  DeepskyLog
  * @author   DeepskyLog Developers <developers@deepskylog.be>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
- * @link     http://www.deepskylog.org
+ * @link     https://www.deepskylog.org
  */
 
 global $inIndex;
@@ -27,7 +27,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
  * @package  DeepskyLog
  * @author   DeepskyLog Developers <developers@deepskylog.be>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
- * @link     http://www.deepskylog.org
+ * @link     https://www.deepskylog.org
  */
 class Locations
 {
@@ -332,19 +332,20 @@ class Locations
 
             echo "<th data-priority=\"critical\">" 
                 . LangViewLocationLocation . "</th>";
-            echo "<th>" . LangViewLocationWeatherPrediction . "</th>";
+            echo "<th>" . _("Weather forecast") . "</th>";
             echo "<th>" . LangViewLocationCountry . "</th>";
-            echo "<th>" . LangViewLocationElevation . "</th>";
+            echo "<th>" . _("Elevation") . "</th>";
             echo "<th>" . LangViewLocationLimMag . "</th>";
             echo "<th>" . LangViewLocationSB . "</th>";
+            echo "<th>" . LangAddSiteField9 . "</th>";
             echo "<th class=\"filter-false columnSelector-disable\"" 
                 . " data-sorter=\"false\">" 
                 . LangViewLocationStd . "</th>";
-            echo "<th>" . LangRemove . "</th>";
+            echo "<th>" . _("Delete") . "</th>";
             echo "<th>" . LangTopObserversHeader3 . "</th>";
             echo "</tr></thead>";
             $count = 0;
-            while (list($key, $value) = each($sites)) {
+            foreach ($sites as $key=>$value) {
                 $sitename = stripslashes(
                     $objLocation->getLocationPropertyFromId($value, 'name')
                 );
@@ -414,6 +415,9 @@ class Locations
                         )
                     );
                 }
+                if ($sb > 0) {
+                    $bortle = $objContrast->calculateBortleFromSQM($sb);
+                }
                 if ($value != "1") {
                     echo "<tr>";
 
@@ -459,6 +463,7 @@ class Locations
                     echo "<td>" . $elevation . "m</td>";
                     echo "<td>" . $limmag . "</td>";
                     echo "<td>" . $sb . "</td>";
+                    echo "<td>" . $bortle . "</td>";
                     echo "<td><input type=\"radio\" name=\"stdlocation\" value=\"" 
                         . $value 
                         . "\"" 
@@ -565,17 +570,17 @@ class Locations
                     $locationname, $longitude, $latitude, 
                     $country, $timezone, $elevation
                 );
-                if (array_key_exists('lm', $_POST) && $_POST['lm']) {
+                if (array_key_exists('sb', $_POST) && $_POST['sb']) {
+                    $this->setLocationProperty($id, 'skyBackground', $_POST['sb']);
+                    $this->setLocationProperty($id, 'limitingMagnitude', -999);
+                } else if (array_key_exists('lm', $_POST) && $_POST['lm']) {
                     $this->setLocationProperty(
                         $id, 'limitingMagnitude', $_POST['lm']
                     );
-                    $this->setLocationProperty($id, 'skyBackground', - 999);
-                } elseif (array_key_exists('sb', $_POST) && $_POST['sb']) {
-                    $this->setLocationProperty($id, 'skyBackground', $_POST['sb']);
-                    $this->setLocationProperty($id, 'limitingMagnitude', - 999);
+                    $this->setLocationProperty($id, 'skyBackground', -999);
                 } else {
-                    $this->setLocationProperty($id, 'skyBackground', - 999);
-                    $this->setLocationProperty($id, 'limitingMagnitude', - 999);
+                    $this->setLocationProperty($id, 'skyBackground', -999);
+                    $this->setLocationProperty($id, 'limitingMagnitude', -999);
                 }
                 $this->setLocationProperty($id, 'observer', $loggedUser);
 
@@ -600,18 +605,18 @@ class Locations
                 $this->setLocationProperty($_POST['id'], 'elevation', $elevation);
                 $this->setLocationProperty($_POST['id'], 'observer', $loggedUser);
                 $this->setLocationProperty($_POST['id'], 'checked', 1);
-                if ($objUtil->checkPostKey('lm')) {
-                    $this->setLocationProperty(
-                        $_POST['id'], 'limitingMagnitude', $_POST['lm']
-                    );
-                    $this->setLocationProperty($_POST['id'], 'skyBackground', -999);
-                } elseif ($objUtil->checkPostKey('sb')) {
+                if ($objUtil->checkPostKey('sb')) {
                     $this->setLocationProperty(
                         $_POST['id'], 'skyBackground', $_POST['sb']
                     );
                     $this->setLocationProperty(
                         $_POST['id'], 'limitingMagnitude', -999
                     );
+                } else if ($objUtil->checkPostKey('lm')) {
+                    $this->setLocationProperty(
+                        $_POST['id'], 'limitingMagnitude', $_POST['lm']
+                    );
+                    $this->setLocationProperty($_POST['id'], 'skyBackground', -999);
                 } else {
                     $this->setLocationProperty($_POST['id'], 'skyBackground', -999);
                     $this->setLocationProperty(

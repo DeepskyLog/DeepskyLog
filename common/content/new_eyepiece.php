@@ -26,7 +26,7 @@ function new_eyepiece() {
 	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"add\" value=\"".LangAddEyepieceButton."\" />&nbsp;";
 
 	echo "<div class=\"form-group\">
-	       <label for=\"catalog\">". LangAddEyepieceExisting."</label>";
+	       <label for=\"catalog\">". _("Select an existing eyepiece")."</label>";
 	echo "<div class=\"form-inline\">";
 	echo $content1b;
 	echo "</div></div>";

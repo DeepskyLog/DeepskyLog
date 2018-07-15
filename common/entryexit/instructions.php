@@ -549,7 +549,7 @@ function instructions() {
 		$objObject->deleteObject($objectname);
 		unset ( $_POST ['objectToDelete'] );
 		unset ( $_POST ['object'] );
-		$entryMessage .= LangDeleteSuccess . " <strong>" . $objectname . "</strong>";
+        $entryMessage .= sprintf(_("Successfully deleted %s."), " <strong>" . $objectname . "</strong>");
 	}
 	if ($objUtil->checkGetKey ( 'addList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' ))) {
 		unset ( $_SESSION ['QobjParams'] );

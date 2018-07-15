@@ -472,11 +472,11 @@ class Observers {
 			// We check if we can change the password
 			if (strcmp($passwd_db, $passwd) == 0) {
 				if (strcmp ($newPassword, $confirmNewPassword) != 0) {
-					$entryMessage = LangNewPasswordNotCorrect;
+					$entryMessage = _("The new password and the confirmed password are not the same. Unable to change the password.");
 				} else {
 					$this->setObserverProperty ( $loggedUser, 'password', $newPassword );
 
-					$entryMessage = LangPasswordChanged;
+					$entryMessage = _("The password is successfully changed.");
 
 					// Make sure we are still logged in.
 					session_regenerate_id ( true );
@@ -487,7 +487,7 @@ class Observers {
 				}
 			} else {
 				// Current password is not correct, show an error message
-				$entryMessage = LangCurrentPasswordIncorrect;
+				$entryMessage = _("The current password you entered is incorrect. Unable to change the password.");
 			}
 		}
 		// Return to the change account page.
@@ -500,11 +500,11 @@ class Observers {
 
 		// We check if we can change the password
 		if (strcmp ($newPassword, $confirmNewPassword) != 0) {
-			$entryMessage = LangNewPasswordNotCorrect;
+			$entryMessage = _("The new password and the confirmed password are not the same. Unable to change the password.");
 		} else {
 			$this->setObserverProperty ( $login, 'password', $newPassword );
 
-			$entryMessage = LangPasswordChanged;
+			$entryMessage = _("The password is successfully changed.");
 		}
 		// Return to the change account page.
 		$_GET ['indexAction'] = 'main';
@@ -525,7 +525,10 @@ class Observers {
 
 				// If mail is empty, show message that the userid is not correct.
 				if (strcmp($email, "") == 0) {
-					$entryMessage = LangUnknownUsername1 . "<strong>" . $userid . "</strong>" . LangUnknownUsername2;
+					$entryMessage = sprintf(
+                        _("The username %s is not known by DeepskyLog. Impossible to request a new password."),
+                        "<strong>" . $userid . "</strong>"
+                    );
 					return;
 				}
 			} elseif ($email != "") {
@@ -533,11 +536,13 @@ class Observers {
 				$userid = $this->getUserIdFromEmail($email);
 
 				if (strcmp($userid, "") == 0) {
-					$entryMessage = LangUnknownMailAddress1 . "<strong>" . $email . "</strong>" . LangUnknownMailAddress2;
+					$entryMessage = sprintf(
+                        _("The mail address %s is not known by DeepskyLog. Impossible to request a new password."),
+                        "<strong>" . $email . "</strong>");;
 					return;
 				}
 			} else {
-				$entryMessage = LangUnknownMailAndUsername;
+				$entryMessage = _("The given username and mail address are not known by DeepskyLog. Impossible to request a new password.");
 				return;
 			}
 
@@ -552,13 +557,17 @@ class Observers {
 			$cancelLink = $baseURL . "index.php?indexAction=removeToken&amp;t=" . $token;
 
 			// Send nice looking mail
-			$subject = LangRequestNewPasswordSubject;
-			$message = LangRequestNewPasswordMail1 . $baseURL;
-			$message .= LangRequestNewPasswordMail2;
+			$subject = _("DeepskyLog Change Password Request");
+            $message = "\n" 
+                . sprintf(
+                    _("You have (or someone impersonating you has) requested to change your %s password.
+                    <br />To complete the change, visit the following link:"), 
+                    "<a href=\"" . $baseURL . "\">DeepskyLog</a>") . "<br /><br />";
 			$message .= "<a href=\"" . $confirmLink . "\">" . $confirmLink . "</a>";
-			$message .= LangRequestNewPasswordMail3;
+            $message .= "<br /><br />" 
+                . _("If you are not the person who made this request, or you wish to cancel this request, visit the following link:")
+                . "<br /><br />";
 			$message .= "<a href=\"" . $cancelLink . "\">" . $cancelLink . "</a>";
-			$message .= LangRequestNewPasswordMail4;
 
 			// Get correct date (in all languages)
 			include_once $instDir . "/lib/setup/language.php";
@@ -566,17 +575,21 @@ class Observers {
 			$lang = new Language();
 			$lang->setLocale();
 
-    	$message .= iconv('ISO-8859-1', 'UTF-8', strftime('%A %d %B %Y, %R UTC', time() + 24*60*60));
+            $message .= "<br /><br />" 
+                . sprintf(_("If you do nothing, the request will lapse after 24 hours (on %s) or when you log in successfully."), 
+                iconv('ISO-8859-1', 'UTF-8', strftime('%A %d %B %Y, %R UTC', time() + 24*60*60)));
 
-			$message .= LangRequestNewPasswordMail5;
-			$message .= LangRequestNewPasswordMail6;
+			$message .= "<br /><h2><a href=\"mailto:developers@deepskylog.be\">" . _("The DeepskyLog team") . "</a></h2>";
 
 			// Send the mail
 			$objMessages->sendEmail($subject, $message, $userid);
 
 			// Show message
 			// Show which username and which email we use for requesting the new password
-			$entryMessage = LangTokenMailed1 . "<strong>" . $userid . "</strong>" . LangTokenMailed2 . "<strong>" . $email . "</strong>" . LangTokenMailed3;
+            $entryMessage = sprintf(_("A token for changing the password of %s has been emailed to %s. Follow the instructions in that email to change your password."), 
+                "<strong>" . $userid . "</strong>",
+                "<strong>" . $email . "</strong>"
+            );
 		}
 	}
 }

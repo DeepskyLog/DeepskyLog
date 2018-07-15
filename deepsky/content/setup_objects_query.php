@@ -57,14 +57,14 @@ function setup_objects_query() {
 	echo "<tr><td><strong>" . LangQueryObjectsField1 . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	echo "<select id=\"catalog\" name=\"catalog\" class=\"form-control\">";
-	echo "<option value=\"\">" . LangSelectCatalog . "</option>";
+	echo "<option value=\"\">" . _("Select catalog") . "</option>";
 	while ( list ( $key, $value ) = each ( $DSOcatalogs ) )
 		echo "<option" . (($value == $catalog) ? " selected=\"selected\"" : "") . " value=\"" . $value . "\">$value</option>";
 	echo "</select>";
 	if ($catNumber == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
 			$catNumber = $_SESSION ['QobjParams'] ['catNumber'];
-	echo "<input id=\"catNumber\" placeholder=\"" . LangCatalogNumber . "\" name=\"catNumber\" type=\"text\" class=\"form-control\" maxlength=\"255\" size=\"30\" value=\"" . $catNumber . "\" />";
+	echo "<input id=\"catNumber\" placeholder=\"" . _("Enter number in catalog") . "\" name=\"catNumber\" type=\"text\" class=\"form-control\" maxlength=\"255\" size=\"30\" value=\"" . $catNumber . "\" />";
 	echo "</td></tr>";
 
 	// ATLAS PAGE NUMBER

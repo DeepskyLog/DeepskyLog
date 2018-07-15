@@ -38,7 +38,7 @@ function overview_filters() {
 			echo "<td>" . $objFilter->getFilterPropertyFromId ( $value, 'observer' ) . "</td>";
 			echo "<td>";
 			if (! ($objFilter->getFilterUsedFromId ( $value )))
-				echo "<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_filter&amp;filterid=" . urlencode ( $value ) . "\">" . LangRemove . "</a>";
+				echo "<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_filter&amp;filterid=" . urlencode ( $value ) . "\">" . _("Delete") . "</a>";
 			echo "</td>";
 			echo "</tr>";
 		}

@@ -1,125 +1,4 @@
 <?php //FR
-define("LangOverviewObjectsHeader4Short", "Typ");
-define("LangNumberOfPersonalDrawings", "Number of own drawings");
-define("LangLastPersonalObservation", "Last own observation");
-define("LangPersonalObservations", "Number of own observations");
-define("LangObservationOf", "Observation of ");
-define("LangReportIssue","Report issue");
-define("LangViewNotActive","Not active");
-define("LangViewLocationElevation", "Elevation");
-define("LangViewLocationWeatherPrediction", "Weather forecast");
-define("IntroText", "<h2>Welcome to DeepskyLog!</h2>
-In close collaboration with the Astronomical Society of Belgium (<a href=\"http://www.vvs.be\">Vereniging Voor Sterrenkunde (VVS)</a>) we are glad to offer a comprehensive and free database for deepsky objects. The database is developed by the deepsky-section of the VVS. The database already contains tens of thousands observations and thousands of sketches and drawings made by amateur astronomers around the world. After you have registered for DeepskyLog, you get access to a variety of useful tools:<br /><br />
-<ul><li>Information on the observations you made, the objects observed and sketches made,</li>
-    <li>observing lists with different deepsky objects,</li>
-    <li>you can share your observations with other observers,</li>
-    <li>translate function to read observations in other languages,</li>
-    <li>free atlasses,</li>
-    <li>create your own file with maps and DSS images of the objects,</li>
-    <li>interactive star atlas down to magnitude 16,</li>
-    <li>suggestions for objects visible in your instruments,</li>
-    <li>information about the objects that are visible from your observation sites.</li>
-</ul>
-To start recording your observations, you need an account, which you can get after registration. Please contact the <a href=\"mailto:developers@deepskylog.be\">DeepskyLog developers</a> if you encounter problems or have questions.");
-define("LangDownloadAtlasses","Download atlasses");
-define("LangMessageRealMail","Send as real mail");
-define("LangChangeAccountSendMailExpl","Send messages as email.");
-define("LangChangeAccountSendMail","Send emails");
-define('LangTour1Title', 'Add one or more instruments');
-define('LangTour1Expl', 'Click on Change and select Instruments. Add at least 1 instrument.');
-define('LangTour2Title', 'Add at least one instrument!');
-define('LangTour2Expl', 'DeepskyLog can calculate visibilities of objects when an instrument is inserted. You can also only add new observations when an instrument is known by DeepskyLog.');
-define('LangTour3Title', 'Add one or more locations');
-define('LangTour3Expl', 'Click on Change and select Locations. Add at least 1 location.');
-define('LangTour4Title', 'Add at least one location!');
-define('LangTour4Expl', 'DeepskyLog can calculate visibilities of objects when a location is inserted. You can also only add new observations when a location is known by DeepskyLog.');
-define('LangTour5Title', 'Add a picture of yourself');
-define('LangTour5Expl', 'Click on your name and select Settings. Add a picture of yourself.');
-define('LangTour6Title', 'Add a picture of yourself!');
-define('LangTour6Expl', 'When you add a picture, others will see your picture when you send them a message.');
-define('LangTour7Title', 'Read your messages');
-define('LangTour7Expl', 'Other observers can send you messages in DeepskyLog. Here, you can read the messages.');
-define('LangComets', 'comets');
-define('LangComet', 'comet');
-define('LangObject', 'object');
-define('LangNebula', 'nebula');
-define('LangGalaxy', 'galaxy');
-define('LangPlanetaryNebula', 'planetary nebula');
-define('LangGlobularCluster', 'globular cluster');
-define('LangOpenCluster', 'open cluster');
-define('LangDifferentComets', 'different comets');
-define('LangDrawCheckout', ' and receive a DeepskyLog star! Check out your DeepskyLog stars at ');
-define('LangDrawCongrats', 'Congratulations! You have drawn ');
-define('LangCheckout', ' and receive a DeepskyLog star! Check out your DeepskyLog stars at ');
-define('LangCongrats', 'Congratulations! You have observed ');
-define('LangAccomplishmentsObjects', 'objects');
-define('LangAccomplishmentsDifferentObjects', 'different objects');
-define('LangNewCertificat', 'New DeepskyLog star! ');
-define('LangObserved', ' observed!');
-define('LangAccomplishmentsDrawn', ' drawn!');
-define('LangCometDrawings', 'Drawings of comets');
-define('LangDifferentObjectsDrawings', 'Drawings of different objects');
-define('LangNebulaeDrawings', 'Drawings of nebulae');
-define('LangGalaxyDrawings', 'Drawings of galaxies');
-define('LangPlanetaryNebulaDrawings', 'Drawings of planetary nebulae');
-define('LangDifferentCometsSeen', 'Different comets');
-define('LangTotalCometsSeen', 'Total comet observations');
-define('LangDifferentObjectsSeen', 'Different objects');
-define('LangNebulaeSeen', 'Nebulae');
-define('LangGalaxiesSeen', 'Galaxies');
-define('LangPlanetaryNebulaeSeen', 'Planetary Nebulae');
-define('LangOpenClusters', 'Open clusters');
-define('LangOpenClusterDrawings', 'Drawings of open clusters');
-define('LangGlobularClusters', 'Globular clusters');
-define('LangGlobularClusterDrawings', 'Drawings of globular clusters');
-define('LangMessier','Messier objects');
-define('LangMessierDrawings','Drawings of Messier objects');
-define('LangCaldwell','Caldwell objects');
-define('LangCaldwellDrawings','Drawings of Caldwell objects');
-define('LangHerschel400','Herschel 400 objects');
-define('LangHerschel400Drawings','Drawings of Herschel 400 objects');
-define('LangHerschelII','Herschel II objects');
-define('LangHerschelIIDrawings','Drawings of Herschel II objects');
-define('LangTotalDrawings','Total number of drawings');
-define('LangAccomplishmentsBronze','Bronze');
-define('LangAccomplishmentsSilver','Argent');
-define('LangAccomplishmentsGold','Or');
-define('LangAccomplishmentsDiamond','Diamant');
-define('LangAccomplishmentsPlatina','Platine');
-define('LangAccomplishmentsNewbie', 'Newbie');
-define('LangAccomplishmentsRookie', 'Rookie');
-define('LangAccomplishmentsBeginner', 'Beginner');
-define('LangAccomplishmentsTalented', 'Talented');
-define('LangAccomplishmentsSkilled', 'Skilled');
-define('LangAccomplishmentsIntermediate', 'Intermediate');
-define('LangAccomplishmentsExperienced', 'Experienced');
-define('LangAccomplishmentsAdvanced', 'Advanced');
-define('LangAccomplishmentsSenior', 'Senior');
-define('LangAccomplishmentsExpert', 'Expert');
-define('LangAccomplishmentsMessierBronze', "Bronze Messier certificat! You observed 25 different Messier objects!");
-define('LangAccomplishmentsMessierSilver', "Silver Messier certificat! You observed 50 different Messier objects!");
-define('LangAccomplishmentsMessierGold', "Golden Messier certificat! You observed all 110 different Messier objects!");
-define('LangMessierBronzeToAccomplish'   , "Observe at least 25 different Messier objects to get this certificat!");
-define('LangMessierSilverToAccomplish'   , "Observe at least 50 different Messier objects to get this certificat!");
-define('LangMessierGoldToAccomplish'     , "Observe all 110 Messier objects to get this certificat!");
-define('LangAccomplishmentsMessierBronzeDr', "Bronze Messier drawing-certificat! You drawed 25 different Messier objects!");
-define('LangAccomplishmentsMessierSilverDr', "Silver Messier drawing-certificat! You drawed 50 different Messier objects!");
-define('LangAccomplishmentsMessierGoldDr'  , "Golden Messier drawing-certificat! You drawed all 110 Messier objects!");
-define('LangMessierBronzeToAccomplishDr'   , "Draw at least 25 different Messier objects to get this certificat!");
-define('LangMessierSilverToAccomplishDr'   , "Draw at least 50 different Messier objects to get this certificat!");
-define('LangMessierGoldToAccomplishDr'     , "Draw all 110 Messier objects to get this certificat!");
-define('LangAccomplishmentsCaldwellBronze', "Bronze Caldwell certificat! You observed 25 different Caldwell objects!");
-define('LangAccomplishmentsCaldwellSilver', "Silver Caldwell certificat! You observed 50 different Caldwell objects!");
-define('LangAccomplishmentsCaldwellGold', "Golden Caldwell certificat! You observed all 110 different Caldwell objects!");
-define('LangCaldwellBronzeToAccomplish'   , "Observe at least 25 different Caldwell objects to get this certificat!");
-define('LangCaldwellSilverToAccomplish'   , "Observe at least 50 different Caldwell objects to get this certificat!");
-define('LangCaldwellGoldToAccomplish'     , "Observe all 110 Caldwell objects to get this certificat!");
-define('LangAccomplishmentsCaldwellBronzeDr', "Bronze Caldwell drawing-certificat! You drawed 25 different Caldwell objects!");
-define('LangAccomplishmentsCaldwellSilverDr', "Silver Caldwell drawing-certificat! You drawed 50 different Caldwell objects!");
-define('LangAccomplishmentsCaldwellGoldDr'  , "Golden Caldwell drawing-certificat! You drawed all 110 Caldwell objects!");
-define('LangCaldwellBronzeToAccomplishDr'   , "Draw at least 25 different Caldwell objects to get this certificat!");
-define('LangCaldwellSilverToAccomplishDr'   , "Draw at least 50 different Caldwell objects to get this certificat!");
-define('LangCaldwellGoldToAccomplishDr'     , "Draw all 110 Caldwell objects to get this certificat!");
 define('LangAccomplishmentsH400Bronze', "Bronze Herschel 400 certificat! You observed 25 different Herschel 400 objects!");
 define('LangAccomplishmentsH400Silver', "Silver Herschel 400 certificat! You observed 50 different Herschel 400 objects!");
 define('LangAccomplishmentsH400Gold', "Golden Herschel 400 certificat! You observed 100 different Herschel 400 objects!");
@@ -973,7 +852,6 @@ define("LangOverviewSiteTitle"														,"Endroits d'observation de");
 define("LangAddSiteExisting"															,"Rajoutez un endroit existant");
 
 define("LangOverviewEyepieceTitle"												,"Oculaires de");
-define("LangAddEyepieceExisting"													,"S&eacute;lectionnez les donn&eacute;es de l'oculaire de la liste");
 define("LangAddEyepieceManually"													,"specifiez manuellement les d&eacute;tails de l'oculaire");
 define("LangAddEyepieceTitle"															,"Rajoutez un novel oculaire");
 define("LangAddEyepieceField1"														,"Nom");
@@ -1015,7 +893,6 @@ define("LangViewFilterColor"															,"Couleur");
 define("LangViewFilterWratten"														,"Num&#233;ro Wratten");
 define("LangViewFilterSchott"															,"Num&#233;ro Schott");
 define("LangAddFilterTitle"																,"Rajoutez un nouveau filtre");
-define("LangAddFilterExisting"														,"rajoutez un filtre existant");
 define("LangAddFilterFieldManually"												,"Specifiez manuellement les d&eacute;tails du filtre");
 define("LangAddFilterField1"															,"Nom");
 define("LangAddFilterField1Expl"													,"(ex Lumicon O-III)");
@@ -1113,7 +990,6 @@ define("LangAddInstrumentField6Expl"											,"Uniquement pour jumelles, cherc
 define("LangAddInstrumentOr"															,"ou");
 define("LangAddInstrumentAdd"															,"Rajoutez un instrument");
 define("LangAddInstrumentStdTelescope"										,"Modifier l'instrument standard");
-define("LangAddInstrumentExisting"												,"Rajouter un instrument existant");
 define("LangAddInstrumentManually"												,"rajouter manuellement un nouvel instrument");
 define("LangDetailInstrument"                             ,"D&#233;tails de l'instrument");
 
@@ -1729,9 +1605,6 @@ define("LangObservationQueryError3"												,"Toutes les observations");
 define("LangObservationNoResults"													,"Votre recherche n'a pas donn&eacute; de r&eacute;sultat");
 define("LangQueryObservationsButton1"											,"Recherche d'observations");
 define("LangQueryObservationsButton2"											,"Videz les champs");
-
-// remove instrument/location column
-define("LangRemove"																				,"Supprimez");
 
 // content/new_observationcsv.php
 define("LangCSVTitle"																			,"Importez les observations a partir d'un fichier csv");

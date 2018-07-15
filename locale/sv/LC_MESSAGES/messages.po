@@ -6,12 +6,11 @@ msgstr ""
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: fr\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.9\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: index.php:92 deepsky/content/view_list.php:21
 #: deepsky/content/view_list.php:31
@@ -32,20 +31,20 @@ msgstr ""
 
 #: comets/menu/change.php:16 deepsky/menu/change.php:20
 msgid "Add"
-msgstr "Ajoutez"
+msgstr ""
 
 #: comets/menu/change.php:19 deepsky/menu/change.php:22
 msgid "Observation"
-msgstr "Observation"
+msgstr ""
 
 #: comets/menu/change.php:25 deepsky/menu/change.php:33
 msgid "Object"
-msgstr "Objet"
+msgstr ""
 
 #: comets/menu/search.php:27 common/menu/head.php:110
 #: deepsky/menu/search.php:39
 msgid "Statistics"
-msgstr "Statistiques"
+msgstr ""
 
 #: common/entryexit/instructions.php:552
 #, php-format
@@ -60,15 +59,15 @@ msgstr ""
 #: lib/filters.php:156 lib/lenses.php:60 lib/eyepieces.php:68
 #: lib/locations.php:344
 msgid "Delete"
-msgstr "Supprimez"
+msgstr ""
 
 #: common/content/new_lens.php:25
 msgid "Select an existing lens"
-msgstr "Rajouter une lentille existante"
+msgstr ""
 
 #: common/content/new_instrument.php:27
 msgid "Select an existing instrument"
-msgstr "Rajouter un instrument existant"
+msgstr ""
 
 #: common/content/new_message.php:53
 msgid "Send as real mail"
@@ -80,16 +79,16 @@ msgstr ""
 
 #: common/content/view_observer.php:128 common/content/statistics.php:106
 msgid "Observations per month"
-msgstr "Observations par mois"
+msgstr ""
 
 #: common/content/view_observer.php:132 common/content/view_observer.php:1202
 #: common/content/statistics.php:109 common/content/statistics.php:773
 msgid "Observations per country"
-msgstr "Observations par pays"
+msgstr ""
 
 #: common/content/view_observer.php:725 common/content/statistics.php:350
 msgid "Number of observations per month"
-msgstr "Nombre d’observations par mois"
+msgstr ""
 
 #: common/content/view_observer.php:1257 lib/accomplishments.php:458
 msgid "Messier objects"
@@ -100,7 +99,7 @@ msgstr ""
 #: common/content/view_observer.php:1353 common/content/view_observer.php:1384
 #: common/content/view_observer.php:1410 common/content/view_observer.php:1436
 msgid "Bronze"
-msgstr "Bronze"
+msgstr ""
 
 #: common/content/view_observer.php:1263
 msgid "Bronze Messier certificat! You observed 25 Messier objects!"
@@ -115,7 +114,7 @@ msgstr ""
 #: common/content/view_observer.php:1358 common/content/view_observer.php:1388
 #: common/content/view_observer.php:1414 common/content/view_observer.php:1440
 msgid "Silver"
-msgstr "Argent"
+msgstr ""
 
 #: common/content/view_observer.php:1268
 msgid "Silver Messier certificat! You observed 50 Messier objects!"
@@ -130,7 +129,7 @@ msgstr ""
 #: common/content/view_observer.php:1363 common/content/view_observer.php:1392
 #: common/content/view_observer.php:1418 common/content/view_observer.php:1444
 msgid "Gold"
-msgstr "Or"
+msgstr ""
 
 #: common/content/view_observer.php:1273
 msgid "Golden Messier certificat! You observed all 110 Messier objects!"
@@ -232,12 +231,12 @@ msgstr ""
 #: common/content/view_observer.php:1368 common/content/view_observer.php:1396
 #: common/content/view_observer.php:1422 common/content/view_observer.php:1448
 msgid "Diamond"
-msgstr "Diamant"
+msgstr ""
 
 #: common/content/view_observer.php:1373 common/content/view_observer.php:1400
 #: common/content/view_observer.php:1426 common/content/view_observer.php:1452
 msgid "Platinum"
-msgstr "Platine"
+msgstr ""
 
 #: common/content/view_observer.php:1381
 msgid "Drawings of Herschel 400 objects"
@@ -317,15 +316,15 @@ msgstr ""
 
 #: common/content/register.php:100 common/content/change_account.php:222
 msgid "License for drawings"
-msgstr "Licence pour les dessins"
+msgstr ""
 
 #: common/content/register.php:109 common/content/change_account.php:279
 msgid "No license (Not recommended!)"
-msgstr "Aucune licence (Non recommandé!)"
+msgstr ""
 
 #: common/content/register.php:110 common/content/change_account.php:286
 msgid "Enter your own copyright text"
-msgstr "Entrez votre propre texte copyright"
+msgstr ""
 
 #: common/content/register.php:115 common/content/change_account.php:291
 msgid ""
@@ -333,76 +332,73 @@ msgid ""
 "strong>! For help, see the <a href=\"http://creativecommons.org/choose/"
 "\">Creative Commons license-choosing tool</a>."
 msgstr ""
-"Il est important de sélectionner le <strong>licence correcte pour vos "
-"dessins</strong>! Pour de l’aide, voir le <a href=“http://creativecommons."
-"org/choose/“>Creative Commons outil de licence</a>."
 
 #: common/content/new_filter.php:25
 msgid "Select an existing filter"
-msgstr "Rajoutez un filtre existant"
+msgstr ""
 
 #: common/content/locations.php:39 common/content/new_location.php:58
 #: common/content/new_location.php:66 common/menu/head.php:204
 msgid "Add site"
-msgstr "Rajoutez un endroit"
+msgstr ""
 
 #: common/content/statistics.php:82
 msgid "Select country"
-msgstr "Choisissez le pays"
+msgstr ""
 
 #: common/content/new_eyepiece.php:29
 msgid "Select an existing eyepiece"
-msgstr "Sélectionnez les données de l’oculaire de la liste"
+msgstr ""
 
 #: common/content/change_site.php:70 common/content/new_location.php:33
 #: common/content/new_location.php:42
 msgid "Search location"
-msgstr "Cherchez votre endroit"
+msgstr ""
 
 #: common/content/change_site.php:136 common/content/new_location.php:101
 #: deepsky/content/newObservation.php:417
 msgid "Excellent dark-sky site"
-msgstr "Ciel noir excellent"
+msgstr ""
 
 #: common/content/change_site.php:137 common/content/new_location.php:102
 #: deepsky/content/newObservation.php:418
 msgid "Typical truly dark site"
-msgstr "Ciel noir typique"
+msgstr ""
 
 #: common/content/change_site.php:138 common/content/new_location.php:103
 #: deepsky/content/newObservation.php:419
 msgid "Rural sky"
-msgstr "Ciel rural"
+msgstr ""
 
 #: common/content/change_site.php:139 common/content/new_location.php:104
 #: deepsky/content/newObservation.php:420
 msgid "Rural/suburban transition"
-msgstr "Transition rural/périurbain"
+msgstr ""
 
 #: common/content/change_site.php:140 common/content/new_location.php:105
 #: deepsky/content/newObservation.php:421
 msgid "Suburban sky"
-msgstr "Ciel de banlieue"
+msgstr ""
 
 #: common/content/change_site.php:141 common/content/new_location.php:106
 #: deepsky/content/newObservation.php:422
 msgid "Bright suburban sky"
-msgstr "Ciel de banlieue éclairée"
+msgstr ""
 
 #: common/content/change_site.php:142 common/content/new_location.php:107
 #: deepsky/content/newObservation.php:423
 msgid "Suburban/urban transition"
-msgstr "Transition banlieue/ville"
+msgstr ""
 
 #: common/content/change_site.php:143 common/content/new_location.php:108
 #: deepsky/content/newObservation.php:424
 msgid "City sky"
-msgstr "Ciel urbain"
+msgstr ""
 
 #: common/content/change_site.php:144 common/content/new_location.php:109
 #: deepsky/content/newObservation.php:425
 msgid "Inner-city sky"
-msgstr "Ciel de centre-ville"
+msgstr ""
 
 #: common/content/change_site.php:418 common/content/new_location.php:430
 msgid "Not active"
@@ -427,7 +423,7 @@ msgstr ""
 #: common/content/change_account.php:150 common/content/change_account.php:438
 #: common/content/change_account.php:454 common/content/change_password.php:29
 msgid "Change password"
-msgstr "Nouveau mot de passe"
+msgstr ""
 
 #: common/content/change_account.php:177
 msgid "Send emails"
@@ -439,15 +435,15 @@ msgstr ""
 
 #: common/content/change_account.php:331
 msgid "Preferred unit for instrument diameter"
-msgstr "Unité préférée pour le diamètre de l’instrument"
+msgstr ""
 
 #: common/content/change_account.php:444
 msgid "Current password"
-msgstr "Mot de passe actuel"
+msgstr ""
 
 #: common/content/change_account.php:446 common/content/change_password.php:22
 msgid "New password"
-msgstr "Mot de passe nouveau"
+msgstr ""
 
 #: common/content/new_location.php:32
 #, php-format
@@ -455,8 +451,6 @@ msgid ""
 "Set your location on the map or by entering the name and pressing the %s "
 "button."
 msgstr ""
-"Définiez votre position sur la carte ou entrez le nom et appuyez sur le "
-"bouton %s."
 
 #: common/content/new_location.php:57
 #, php-format
@@ -464,8 +458,6 @@ msgid ""
 "Define your own name for this location, eventually add a naked eye limiting "
 "magnitude (or SQM value) and press the %s button."
 msgstr ""
-"Définiez votre propre nom pour ce lieu, éventuellement ajoutez une magnitude "
-"limite (ou la valeur SQM) et appuyez sur le bouton %s."
 
 #: common/menu/help.php:17
 msgid "Report issue"
@@ -477,7 +469,7 @@ msgstr ""
 
 #: common/menu/head.php:132
 msgid "Change site"
-msgstr "Changez l’entroit"
+msgstr ""
 
 #: common/menu/head.php:196 deepsky/menu/search.php:28
 msgid "My instruments"
@@ -501,39 +493,35 @@ msgstr ""
 
 #: common/menu/headmenu.php:142 common/menu/headmenu.php:157
 msgid "Forgot password?"
-msgstr "Mot de passe oublié?"
+msgstr ""
 
 #: common/menu/headmenu.php:160
 msgid "Please enter your DeepskyLog username <strong>or</strong> your email."
 msgstr ""
-"Veuillez entrez votre nom d’utilisateur DeepskyLog <strong> ou </strong> "
-"votre adresse émail."
 
 #: common/menu/headmenu.php:164
 msgid "DeepskyLog username"
-msgstr "Nom d’utilisateur DeepskyLog"
+msgstr ""
 
 #: common/menu/headmenu.php:171
 msgid "Request new password"
-msgstr "Changer mot de passe"
+msgstr ""
 
 #: common/control/changeToken.php:52 common/control/changeToken.php:61
 #: common/control/removeToken.php:29 common/control/removeToken.php:38
 msgid "A DeepskyLog Change Password Request was canceled"
-msgstr "DeepskyLog Demande de changer le mot de passe a été annulée"
+msgstr ""
 
 #: common/control/changeToken.php:53 common/control/removeToken.php:30
 #, php-format
 msgid "A request was canceled from the ip-address %s"
-msgstr "Demande de changer le mot de passe a été annulée de %s"
+msgstr ""
 
 #: common/control/changeToken.php:55 common/control/removeToken.php:32
 msgid ""
 "If you did not request this, it could be either an honest mistake or someone "
 "attempting to break into your DeepskyLog account."
 msgstr ""
-"Si vous n’avez pas demandé cela, il pourrait être une erreur honnête ou "
-"quelqu’un qui essaie de pénétrer dans votre compte DeepskyLog."
 
 #: deepsky/content/main.php:21
 msgid "What's new in DeepskyLog since version "
@@ -566,6 +554,41 @@ msgid ""
 "developers@deepskylog.be\">DeepskyLog developers</a> if you encounter "
 "problems or have questions."
 msgstr ""
+"<h2>Välkommen till DeepskyLog!</h2>\n"
+"I ett nära samarbete med den astronomiska föreningen VVS (Vereniging Voor "
+"Sterrenkunde) i Belgien kan Djuprymdssektionen i SAAF (Svensk "
+"AmatörAstronomisk Förening) erbjuda en heltäckande och kostnadsfri databas "
+"fö djuprymdsobjekt. DeepskyLog är utvecklad av den belgiska föreningens "
+"djuprymdssektion och är en internationell databas med många funktioner och "
+"verktyg. Databasen innehåller 10 000-tals observationsrapporter och 1 000-"
+"tals skisser och teckningar gjorda av amatörastronomer runt om i världen och "
+"tjänar som SAAF/Djuprymdssektionens officiella observationsarkiv.\n"
+"<br /><br />\n"
+"Med DeepskyLog får du tillgång till en mängd nyttiga verktyg, till exempel:"
+"<br /><br />\n"
+"<ul><li>Statistik över dina observationer, objekttyper och skisser,</li>\n"
+"\t<li>Möjlighet att dela dina observationer med andra observatörer,</li>\n"
+"\t<li>Observationslistor med olika djuprymdsobjekt,</li>\n"
+"\t<li>Tillgång till flera olika objektkataloger, </li>\n"
+"\t<li>Skapa egna kataloger med kartor och DSS-bilder för objekten,</li>\n"
+"\t<li>Generera kartblad över området för det objekt du är intresserad av,</"
+"li>\n"
+"\t<li>Interaktiv stjärnatlas ner till magnitud 16, </li>\n"
+"\t<li>Förslag på observationsobjekt som är lämpliga för din utrustning,</"
+"li>\n"
+"\t<li>Information om vilka objekt som är synliga från din "
+"observationsplats,\n"
+"\t<li>Olika språkversioner</li>\n"
+"</ul>\n"
+"För att registrera dina observationer på DeepskyLog behöver du skapa ett "
+"konto, vilket du gör på DeepskyLogs hemsida. Hör av dig för information om "
+"Djuprymdssekionens verksamhet eller om du har frågor om databasen!\n"
+"<br /><br />\n"
+"Mikael Anderlund<br />\n"
+"SAAF/Djuprymdssektionen<br />\n"
+"mikael.anderlund@saaf.se<br />\n"
+"<br /><a href=\\”http://saaf.se/sektioner.php\\”><img width=\\”200\\” src="
+"\\”images/SAAF_nylogo.jpg\\”></a>."
 
 #: deepsky/content/main.php:110 deepsky/content/main.php:113
 msgid "Download atlases"
@@ -578,12 +601,12 @@ msgstr ""
 #: deepsky/content/setup_observations_query.php:62
 #: deepsky/content/setup_objects_query.php:60
 msgid "Select catalog"
-msgstr "Sélectionnez catalogue"
+msgstr ""
 
 #: deepsky/content/setup_observations_query.php:69
 #: deepsky/content/setup_objects_query.php:67
 msgid "Enter number in catalog"
-msgstr "Numéro dans le catalogue"
+msgstr ""
 
 #: deepsky/content/tolist.php:39 deepsky/content/tolist.php:52
 #: deepsky/content/tolist.php:95 lib/lists.php:242 lib/lists.php:282
@@ -609,11 +632,11 @@ msgstr ""
 
 #: deepsky/content/view_observation.php:7
 msgid "No observation to display."
-msgstr "Pas d’observation à afficher."
+msgstr ""
 
 #: deepsky/content/view_observation.php:10
 msgid "The requested observation does not exist."
-msgstr "L’observation demandé n’existe pas."
+msgstr ""
 
 #: deepsky/content/view_observation.php:68
 msgid "Observation of "
@@ -701,26 +724,22 @@ msgstr ""
 
 #: deepsky/menu/quickpick.php:25
 msgid "Enter object name"
-msgstr "Entrez le nom de l’objet"
+msgstr ""
 
 #: lib/observers.php:475 lib/observers.php:503
 msgid ""
 "The new password and the confirmed password are not the same. Unable to "
 "change the password."
 msgstr ""
-"Le nouveau mot de passe et le mot de passe confirmé ne sont pas les mêmes. "
-"Impossible de changer le mot de passe."
 
 #: lib/observers.php:479 lib/observers.php:507
 msgid "The password is successfully changed."
-msgstr "Le mot de passe est changé avec succès."
+msgstr ""
 
 #: lib/observers.php:490
 msgid ""
 "The current password you entered is incorrect. Unable to change the password."
 msgstr ""
-"Le mot de passe actuel que vous avez entré est incorrect. Impossible de "
-"changer le mot de passe."
 
 #: lib/observers.php:529
 #, php-format
@@ -728,8 +747,6 @@ msgid ""
 "The username %s is not known by DeepskyLog. Impossible to request a new "
 "password."
 msgstr ""
-"Le nom d’utilisateur %s n’est pas connu par DeepskyLog. Impossible de "
-"demander un nouveau mot de passe."
 
 #: lib/observers.php:540
 #, php-format
@@ -737,20 +754,16 @@ msgid ""
 "The mail address %s is not known by DeepskyLog. Impossible to request a new "
 "password."
 msgstr ""
-"L’émail %s n’est pas connu par DeepskyLog. Impossible de demander un nouveau "
-"mot de passe."
 
 #: lib/observers.php:545
 msgid ""
 "The given username and mail address are not known by DeepskyLog. Impossible "
 "to request a new password."
 msgstr ""
-"Le nom d’utilisateur donné et l’émail ne sont pas connus par DeepskyLog. "
-"Impossible de demander un nouveau mot de passe."
 
 #: lib/observers.php:560
 msgid "DeepskyLog Change Password Request"
-msgstr "DeepskyLog Demande de changer le mot de passe"
+msgstr ""
 
 #: lib/observers.php:563
 #, php-format
@@ -759,18 +772,12 @@ msgid ""
 "password.\n"
 "                    <br />To complete the change, visit the following link:"
 msgstr ""
-"Vous avez (ou quelqu’un qui vous imite) demandé de changer votre %s mot de "
-"passe.\n"
-"                    <br />Pour compléter le changement, visitez le lien "
-"suivant:"
 
 #: lib/observers.php:568
 msgid ""
 "If you are not the person who made this request, or you wish to cancel this "
 "request, visit the following link:"
 msgstr ""
-"Si vous n’êtes pas la personne qui a fait cette demande, ou si vous "
-"souhaitez annuler cette demande, visitez le lien suivant:"
 
 #: lib/observers.php:579
 #, php-format
@@ -778,12 +785,10 @@ msgid ""
 "If you do nothing, the request will lapse after 24 hours (on %s) or when you "
 "log in successfully."
 msgstr ""
-"Si vous ne faites rien, la demande expire après 24 heures (le %s) ou lorsque "
-"vous vous connectez avec succès."
 
 #: lib/observers.php:582
 msgid "The DeepskyLog team"
-msgstr "Le DeepskyLog team"
+msgstr ""
 
 #: lib/observers.php:589
 #, php-format
@@ -791,8 +796,6 @@ msgid ""
 "A token for changing the password of %s has been emailed to %s. Follow the "
 "instructions in that email to change your password."
 msgstr ""
-"Un token pour changer le mot de passe de %s a été envoyé à %s. Suivez les "
-"instructions dans ce message pour changer votre mot de passe."
 
 #: lib/locations.php:335
 msgid "Weather forecast"
@@ -949,7 +952,7 @@ msgstr ""
 
 #: lib/objects.php:1794
 msgid "Typ"
-msgstr "Typ"
+msgstr ""
 
 #: lib/objects.php:1802
 msgid "Best"
@@ -965,13 +968,8 @@ msgid ""
 "A public list with the same name (%s) as your list already exists. Please "
 "rename your list before making the list public."
 msgstr ""
-"Une liste publique avec le même nom (%s) que votre liste existe déjà. "
-"Renommez votre liste avant de faire la liste publique."
 
 #: lib/messages.php:187
 #, php-format
 msgid "DeepskyLog message from %s:"
-msgstr "DeepskyLog message de %s:"
-
-#~ msgid " button."
-#~ msgstr " ."
+msgstr ""

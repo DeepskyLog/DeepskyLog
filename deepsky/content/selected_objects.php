@@ -46,7 +46,7 @@ function selected_objects() {
 		} else {
 			echo "<a href=\"" . $link . "&amp;showPartOfs=1\" class=\"btn btn-primary\">" . LangListQueryObjectsMessage13 . "</a>&nbsp;";
 		}
-		echo "<a href=\"" . $link . "&amp;noShowName=noShowName\" class=\"btn btn-primary\">" . LangListQueryObjectsMessage17 . "</a>";
+		echo "<a href=\"" . $link . "&amp;noShowName=noShowName\" class=\"btn btn-primary\">" . _("Switch names and alternative names") . "</a>";
 		echo $addButtons;
 		echo "</span><br />";
 

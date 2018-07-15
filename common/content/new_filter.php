@@ -22,7 +22,7 @@ function new_filter() {
 	echo "<hr />";
 	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"add\" value=\"" . LangAddFilterButton . "\" />&nbsp;";
 	echo "<div class=\"form-group\">
-	       <label for=\"catalog\">" . LangAddFilterExisting . "</label>";
+	       <label for=\"catalog\">" . _("Select an existing filter") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $content1b;
 	echo "</div></div>";

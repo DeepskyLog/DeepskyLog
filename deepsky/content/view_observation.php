@@ -4,10 +4,10 @@
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 else if (! ($observationid = $objUtil->checkGetKey ( 'observation' ))) {
-	print LangNoObservationToDisplay;
+	print _("No observation to display.");
 } else if (! ($object = $objObservation->getDsObservationProperty ( $observationid, 'objectname' ))) {
 	// check if observation exists
-	print LangRequestedObservationDoesNotExist;
+	print _("The requested observation does not exist.");
 } else {
 	view_observation ();
 }
@@ -65,7 +65,7 @@ function view_observation() {
 		$AOid = array ();
 	}
 	while ( list ( $key, $LOid ) = each ( $AOid ) ) {
-		echo "<strong>" . LangObservationOf . $object . "</strong>";
+		echo "<strong>" . _("Observation of ") . $object . "</strong>";
 		$objObservation->showObservation ( $LOid );
 	}
 	if ($loggedUser != "") {

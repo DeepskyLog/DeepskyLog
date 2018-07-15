@@ -15,6 +15,30 @@ else {
 function preludesA() {
 	global $language, $objDatabase, $objLanguage, $objObserver, $objSession, $objUtil, $objMessages;
 
+    // This is needed to use the po files for the translations
+    if ($language == "nl") {
+        $locale = "nl_NL";
+    } else if ($language == "fr") {
+        $locale = "fr_FR";
+    } else if ($language == "de") {
+        $locale = "de_DE";
+    } else if ($language == "sv") {
+        $locale = "sv_SE";
+    } else {
+        $locale = "en_US";
+    }
+
+    if (defined('LC_MESSAGES')) {
+        setlocale(LC_MESSAGES, $locale); // Linux
+        bindtextdomain("messages", "./locale");
+    } else {
+        putenv("LC_ALL={$locale}"); // windows
+        bindtextdomain("messages", ".\locale");
+    }
+
+    textdomain("messages");
+
+    // Start the session
 	if (! session_id ())
 		session_start ();
 	require_once "lib/setup/vars.php";

@@ -24,7 +24,7 @@ function menu_search() {
 	echo "  <li class=\"disabled\">─────────────────</li>";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=comets_rank_observers\" >" . LangSearchMenuItem6 . "</a></li>";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=comets_rank_objects\" >" . LangSearchMenuItem7 . "</a></li>";
-	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=statistics\">" . LangStatistics . "</a></li>";
+	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=statistics\">" . _("Statistics") . "</a></li>";
 	echo " </ul>";
 	echo "</li>
 			  </ul>";

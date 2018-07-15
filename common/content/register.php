@@ -97,7 +97,7 @@ function register() {
         </script>';
 
   echo '<div class="form-group">
-          <label>' . LangCCLicense . '</label><br />
+          <label>' . _("License for drawings") . '</label><br />
           <span class="form-inline">
             <select name="cclicense" id="cclicense" onchange="enableDisableCopyright();" class="inputfield form-control">';
   echo '<option value="0" selected>Attribution CC BY</option>';
@@ -106,13 +106,13 @@ function register() {
   echo '<option value="3">Attribution-NonCommercial CC BY-NC</option>';
   echo '<option value="4">Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>';
   echo '<option value="5">Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>';
-  echo '<option value="6">' . LangNoLicense . '</option>';
-  echo '<option value="7">' . LangOwnLicense . '</option>';
+  echo '<option value="6">' . _("No license (Not recommended!)") . '</option>';
+  echo '<option value="7">' . _("Enter your own copyright text") . '</option>';
 
   echo '    </select>
           </span>
           <span class="help-block">' .
-            LangSelectLicenseInfo . '
+          _('It is important to select the <strong>correct license for your drawings</strong>! For help, see the <a href="http://creativecommons.org/choose/">Creative Commons license-choosing tool</a>.') . '
           </span>
         </div>';
 

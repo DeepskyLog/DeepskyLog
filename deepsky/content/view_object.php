@@ -69,26 +69,27 @@ function showObjectDetails($object_ss) {
 
     echo '<div class="pull-right">';
 		if ($obsCnt == 0) {
-			echo '<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#removeObject">' . LangRemoveObject . '</button>';
+			echo '<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#removeObject">' . _("Remove Object") . '</button>';
 
 			echo "<div class=\"modal fade\" id=\"removeObject\" tabindex=\"-1\">
 							<div class=\"modal-dialog\">
 								<div class=\"modal-content\">
 									<div class=\"modal-header\">
 										<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>
-										<h4 class=\"modal-title\" id=\"myModalLabel\">" . LangRemoveObject . "</h4>
+										<h4 class=\"modal-title\" id=\"myModalLabel\">" . _("Remove Object") . "</h4>
 									</div>
-									<div class=\"modal-body\">" .
-									LangRemoveModal1 . "<strong>" . $object_ss . "</strong>?
-									 <br />" . LangRemoveModal2 . "<strong>" . $object_ss . "</strong>" .
-									 LangRemoveModal3 . "<strong>" . $object_ss . "</strong>" . LangRemoveModal4 . "
+                                    <div class=\"modal-body\">" .
+                                    sprintf(_("Do you really want to delete %s?", "<strong>" . $object_ss . "</strong><br />")) .
+                                    sprintf(_("There are no observations of %s, so removing %s should be relatively safe.", 
+                                        "<strong>" . $object_ss . "</strong>",
+                                        "<strong>" . $object_ss . "</strong>")) . "
 										<form action=\"".$baseURL."index.php?indexAction=deleteObject\" method=\"post\">
 										 <input type=\"hidden\" name=\"indexAction\" value=\"deleteObject\" />
 										 <input type=\"hidden\" name=\"object\" value=\"" . $object_ss . "\" />
 										</div>
 										<div class=\"modal-footer\">
-										<button type=\"button\" class=\"btn btn-success\" data-dismiss=\"modal\">" . LangKeepObject . "</button>
-										<input class=\"btn btn-danger\" type=\"submit\" name=\"objectToDelete\" value=\"" . LangRemoveObject . "!\" />
+										<button type=\"button\" class=\"btn btn-success\" data-dismiss=\"modal\">" . _("Keep Object") . "</button>
+										<input class=\"btn btn-danger\" type=\"submit\" name=\"objectToDelete\" value=\"" . _("Remove Object") . "!\" />
 							 </form>
 									</div>
 								 </div><!-- /.modal-content -->
@@ -96,38 +97,39 @@ function showObjectDetails($object_ss) {
 							 </div><!-- /.modal -->";
 
 		} else {
-			echo '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#forceRemoveObject">' . LangForceRemoveObject . '</button>';
+			echo '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#forceRemoveObject">' . _("Force Remove Object") . '</button>';
 
 			echo "<div class=\"modal fade\" id=\"forceRemoveObject\" tabindex=\"-1\">
 							<div class=\"modal-dialog\">
 								<div class=\"modal-content\">
 									<div class=\"modal-header\">
 										<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>
-										<h4 class=\"modal-title\" id=\"myModalLabel\">" . LangForceRemoveObject . "</h4>
+										<h4 class=\"modal-title\" id=\"myModalLabel\">" . _("Force Remove Object") . "</h4>
 									</div>
 									<div class=\"modal-body\">" .
-									 LangRemoveModal1 ."<strong>" . $object_ss . "</strong>" . LangRemoveModal6 . "<strong>" .
-									 $obsCnt . "</strong>" . LangRemoveModal7 . "?
-									 <br />" . LangRemoveModal5 . "
+                                    sprintf(_("Do you really want to delete %s?", "<strong>" . $object_ss . "</strong><br />")) . 
+                                    sprintf(_(", which has %s observations?", "<strong>" .
+									 $obsCnt . "</strong>")) . "
+									 <br />" . _("All the observations will also be removed!") . "
 				            <form action=\"".$baseURL."index.php?indexAction=deleteObject\" method=\"post\">
 				             <input type=\"hidden\" name=\"indexAction\" value=\"deleteObject\" />
 										 <input type=\"hidden\" name=\"object\" value=\"" . $object_ss . "\" />
 				            </div>
 				            <div class=\"modal-footer\">
-				            <button type=\"button\" class=\"btn btn-success\" data-dismiss=\"modal\">" . LangKeepObject . "</button>
-				            <input class=\"btn btn-danger\" type=\"submit\" name=\"objectToDelete\" value=\"" . LangForceRemoveObject . "!\" />
+				            <button type=\"button\" class=\"btn btn-success\" data-dismiss=\"modal\">" . _("Keep Object") . "</button>
+				            <input class=\"btn btn-danger\" type=\"submit\" name=\"objectToDelete\" value=\"" . _("Force Remove Object") . "!\" />
 						   </form>
 				          </div>
 				         </div><!-- /.modal-content -->
 				        </div><!-- /.modal-dialog -->
 				       </div><!-- /.modal -->";
 		}
-    echo '&nbsp;<button class="btn btn-warning">' . LangSaveObject . '</button>&nbsp;</div>';
+    echo '&nbsp;<button class="btn btn-warning">' . _("Save") . '</button>&nbsp;</div>';
 
 		echo '<br />';
 	}
-	echo "<hr />";
-	$objObject->showObject ( $object );
+    echo "<hr />";
+    $objObject->showObject($object);
 }
 function showObjectsNearby() {
 	global $baseURL, $FF, $step, $objObject, $objPresentations, $objUtil;

@@ -42,7 +42,7 @@ function overview_lenses() {
 			echo "</td>";
 			echo "<td>";
 			if (! ($objLens->getLensUsedFromId ( $value )))
-				echo ("<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_lens&amp;lensid=" . urlencode ( $value ) . "\">" . LangRemove . "</a>");
+				echo ("<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_lens&amp;lensid=" . urlencode ( $value ) . "\">" . _("Delete") . "</a>");
 			echo "</td>";
 			echo "</tr>";
 		}

@@ -1,127 +1,4 @@
 <?php //NL
-define("LangOverviewObjectsHeader4Short", "Typ");
-define("LangViewObjectFieldMagnificationHeader", "Best");
-define("LangNumberOfPersonalDrawings", "Aantal eigen tekeningen");
-define("LangLastPersonalObservation", "Laatste eigen tekening");
-define("LangPersonalObservations", "Aantal eigen waarnemingen");
-define("LangObservationOf", "Waarneming van ");
-define("LangReportIssue","Rapporteer probleem");
-define("LangViewNotActive","Niet actief");
-define("LangViewLocationElevation", "Hoogte");
-define("LangViewLocationWeatherPrediction", "Weersvoorspelling");
-define("IntroText", "<h2>Welkom bij DeepskyLog!</h2>
-In nauwe samenwerking met de <a href=\"http://www.vvs.be\">Vereniging Voor Sterrenkunde (VVS)</a> uit België bieden wij een uitgebreide en gratis database aan voor deepsky objecten. De database is ontwikkeld door de werkgroep deepsky van de VVS. De database bevat al tienduizenden waarnemingen en duizenden schetsen en tekeningen gemaakt door amateur-astronomen over de hele wereld. Nadat je geregistreerd bent op DeepskyLog krijgt u toegang tot een scala aan handige tools:<br /><br />
-<ul><li>Informatie over de waarnemingen, de waargenomen objecten en schetsen die je hebt gemaakt,</li>
-    <li>Waarneemlijsten met verschillende deepsky objecten,</li>
-    <li>u kunt uw waarnemingen te delen met andere waarnemers,</li>
-    <li>vertaalfunctie om waarnemingen in andere talen te lezen,</li>
-    <li>gratis steratlassen,</li>
-    <li>maak je eigen map met kaarten en DSS beelden van de objecten,</li>
-    <li>genereer pagina's van de objecten met de items waarin u geïnteresseerd bent,</li>
-    <li>interactieve ster atlas tot magnitude 16,</li>
-    <li>suggesties voor objecten die zichtbaar zijn met uw apparatuur,</li>
-    <li>informatie over de objecten die zichtbaar zijn vanaf uw waarneemplaats.</li>
-</ul>
-Om waarnemingen in te geven heb je een account nodig. Dit krijg je nadat u registreert. Neem contact op met de <a href=\"mailto:developers@deepskylog.be\">DeepskyLog ontwikkelaars</a> bij problemen of vragen.");
-define("LangDownloadAtlasses","Download atlassen");
-define("LangMessageRealMail","Stuur als echte mail");
-define("LangChangeAccountSendMailExpl","Stuur berichten ook als mail.");
-define("LangChangeAccountSendMail","Stuur emails");
-define('LangTour1Title', 'Voeg minimaal 1 instrument toe');
-define('LangTour1Expl', 'Klik op Wijzigen en selecteer Instrumenten. Voeg minimaal 1 instrument toe.');
-define('LangTour2Title', 'Voeg minimaal 1 instrument toe!');
-define('LangTour2Expl', 'DeepskyLog kan zichtbaarheden van objecten berekenen, maar daarvoor moet er wel een instrument zijn toegevoegd. Je kan ook pas waarnemingen toevoegen wanneer er een instrument is gekend.');
-define('LangTour3Title', 'Voeg minimaal 1 waarneemplaats toe');
-define('LangTour3Expl', 'Klik op Wijzigen en selecteer Waarneemplaatsen. Voeg minimaal 1 waarneemplaats toe.');
-define('LangTour4Title', 'Voeg minimaal 1 waarneemplaats toe!');
-define('LangTour4Expl', 'DeepskyLog kan zichtbaarheden van objecten berekenen, maar daarvoor moet er wel een waarneemplaats zijn toegevoegd. Je kan ook pas waarnemingen toevoegen wanneer er een waarneemplaats is gekend.');
-define('LangTour5Title', 'Voeg een foto van jezelf toe');
-define('LangTour5Expl', 'Klik op je naam en selecteer Instellingen. Voeg een foto van jezelf toe.');
-define('LangTour6Title', 'Voeg een foto van jezelf toe!');
-define('LangTour6Expl', 'Andere waarnemers zien je foto als je ze een bericht verstuurd of als ze &eacute;&eacute;n van je waarnemingen bekijken.');
-define('LangTour7Title', 'Lees je berichten');
-define('LangTour7Expl', 'Andere waarnemers kunnen jou een bericht zenden in DeepskyLog. Klik om je berichten te lezen.');
-define('LangComets', 'kometen');
-define('LangComet', 'komeet');
-define('LangObject', 'object');
-define('LangNebula', 'nevel');
-define('LangGalaxy', 'sterrenstelsel');
-define('LangPlanetaryNebula', 'planetaire nevel');
-define('LangGlobularCluster', 'bolvormige sterrenhoop');
-define('LangOpenCluster', 'open sterrenhoop');
-define('LangDifferentComets', 'verschillende kometen');
-define('LangDrawCheckout', ' getekend en ontvangt een DeepskyLog ster! Bekijk je DeepskyLog sterren op ');
-define('LangDrawCongrats', 'Proficiat! Je hebt ');
-define('LangCheckout', ' waargenomen en ontvangt een DeepskyLog ster! Bekijk je DeepskyLog sterren op ');
-define('LangCongrats', 'Proficiat! Je hebt ');
-define('LangNewCertificat', 'Nieuwe DeepskyLog ster! ');
-define('LangAccomplishmentsObjects', 'objecten');
-define('LangAccomplishmentsDifferentObjects', 'verschillende objecten');
-define('LangObserved', ' waargenomen!');
-define('LangAccomplishmentsDrawn', ' getekend!');
-define('LangCometDrawings', 'Tekeningen van kometen');
-define('LangDifferentObjectsDrawings', 'Tekeningen van verschillende objecten');
-define('LangNebulaeDrawings', 'Tekeningen van nevels');
-define('LangGalaxyDrawings', 'Tekeningen van sterrenstelsels');
-define('LangPlanetaryNebulaDrawings', 'Tekeningen van planetaire nevels');
-define('LangDifferentCometsSeen', 'Verschillende kometen');
-define('LangTotalCometsSeen', 'Totaal aantal kometen');
-define('LangDifferentObjectsSeen', 'Verschillende objecten');
-define('LangNebulaeSeen', 'Nevels');
-define('LangGalaxiesSeen', 'Sterrenstelsels');
-define('LangPlanetaryNebulaeSeen', 'Planetaire nevels');
-define('LangOpenClusters', 'Open sterrenhopen');
-define('LangOpenClusterDrawings', 'Tekeningen van open sterrenhopen');
-define('LangGlobularClusters', 'Bolhopen');
-define('LangGlobularClusterDrawings', 'Tekeningen van bolhopen');
-define('LangMessier','Messier objecten');
-define('LangMessierDrawings','Tekeningen van Messier objecten');
-define('LangCaldwell','Caldwell objecten');
-define('LangCaldwellDrawings','Tekeningen van Caldwell objecten');
-define('LangHerschel400','Herschel 400 objecten');
-define('LangHerschel400Drawings','Tekeningen van Herschel 400 objecten');
-define('LangHerschelII','Herschel II objecten');
-define('LangHerschelIIDrawings','Tekeningen van Herschel II objecten');
-define('LangTotalDrawings','Totaal aantal tekeningen');
-define('LangAccomplishmentsBronze','Brons');
-define('LangAccomplishmentsSilver','Zilver');
-define('LangAccomplishmentsGold','Goud');
-define('LangAccomplishmentsDiamond','Diamant');
-define('LangAccomplishmentsPlatina','Platina');
-define('LangAccomplishmentsNewbie', 'Newbie');
-define('LangAccomplishmentsRookie', 'Rookie');
-define('LangAccomplishmentsBeginner', 'Beginner');
-define('LangAccomplishmentsTalented', 'Talented');
-define('LangAccomplishmentsSkilled', 'Skilled');
-define('LangAccomplishmentsIntermediate', 'Intermediate');
-define('LangAccomplishmentsExperienced', 'Experienced');
-define('LangAccomplishmentsAdvanced', 'Advanced');
-define('LangAccomplishmentsSenior', 'Senior');
-define('LangAccomplishmentsExpert', 'Expert');
-define('LangAccomplishmentsMessierBronze'  , "Bronzen Messier certificaat! Je hebt 25 verschillende Messier objecten waargenomen!");
-define('LangAccomplishmentsMessierSilver'  , "Zilveren Messier certificaat! Je hebt 50 verschillende Messier objecten waargenomen!");
-define('LangAccomplishmentsMessierGold'    , "Gouden Messier certificaat! Je hebt alle 110 Messier objecten waargenomen!");
-define('LangMessierBronzeToAccomplish'     , "Neem minimaal 25 verschillende Messier objecten waar om dit certificaat te krijgen!");
-define('LangMessierSilverToAccomplish'     , "Neem minimaal 50 verschillende Messier objecten waar om dit certificaat te krijgen!");
-define('LangMessierGoldToAccomplish'       , "Neem alle 110 Messier objecten waar om dit certificaat te krijgen!");
-define('LangAccomplishmentsMessierBronzeDr', "Bronzen Messier teken-certificaat! Je hebt 25 verschillende Messier objecten getekend!");
-define('LangAccomplishmentsMessierSilverDr', "Zilveren Messier teken-certificaat! Je hebt 50 verschillende Messier objecten getekend!");
-define('LangAccomplishmentsMessierGoldDr'  , "Gouden Messier teken-certificaat! Je hebt alle 110 Messier objecten getekend!");
-define('LangMessierBronzeToAccomplishDr'   , "Teken minimaal 25 verschillende Messier objecten om dit certificaat te krijgen!");
-define('LangMessierSilverToAccomplishDr'   , "Teken minimaal 50 verschillende Messier objecten om dit certificaat te krijgen!");
-define('LangMessierGoldToAccomplishDr'     , "Teken alle 110 Messier objecten om dit certificaat te krijgen!");
-define('LangAccomplishmentsCaldwellBronze'  , "Bronzen Caldwell certificaat! Je hebt 25 verschillende Caldwell objecten waargenomen!");
-define('LangAccomplishmentsCaldwellSilver'  , "Zilveren Caldwell certificaat! Je hebt 50 verschillende Caldwell objecten waargenomen!");
-define('LangAccomplishmentsCaldwellGold'    , "Gouden Caldwell certificaat! Je hebt alle 110 Caldwell objecten waargenomen!");
-define('LangCaldwellBronzeToAccomplish'     , "Neem minimaal 25 verschillende Caldwell objecten waar om dit certificaat te krijgen!");
-define('LangCaldwellSilverToAccomplish'     , "Neem minimaal 50 verschillende Caldwell objecten waar om dit certificaat te krijgen!");
-define('LangCaldwellGoldToAccomplish'       , "Neem alle 110 Caldwell objecten waar om dit certificaat te krijgen!");
-define('LangAccomplishmentsCaldwellBronzeDr', "Bronzen Caldwell teken-certificaat! Je hebt 25 verschillende Caldwell objecten getekend!");
-define('LangAccomplishmentsCaldwellSilverDr', "Zilveren Caldwell teken-certificaat! Je hebt 50 verschillende Caldwell objecten getekend!");
-define('LangAccomplishmentsCaldwellGoldDr'  , "Gouden Caldwell teken-certificaat! Je hebt alle 110 Caldwell objecten getekend!");
-define('LangCaldwellBronzeToAccomplishDr'   , "Teken minimaal 25 verschillende Caldwell objecten om dit certificaat te krijgen!");
-define('LangCaldwellSilverToAccomplishDr'   , "Teken minimaal 50 verschillende Caldwell objecten om dit certificaat te krijgen!");
-define('LangCaldwellGoldToAccomplishDr'     , "Teken alle 110 Caldwell objecten om dit certificaat te krijgen!");
 define('LangAccomplishmentsH400Bronze', "Bronzen Herschel 400 certificaat! Je hebt 25 verschillende Herschel 400 objecten waargenomen!");
 define('LangAccomplishmentsH400Silver', "Zilveren Herschel 400 certificaat! Je hebt 50 verschillende Herschel 400 objecten waargenomen!");
 define('LangAccomplishmentsH400Gold', "Gouden Herschel 400 certificaat! Je hebt 100 verschillende Herschel 400 objecten waargenomen!");
@@ -1002,7 +879,6 @@ define("LangOverviewSiteTitle"														,"Waarneemplaatsen van");
 define("LangAddSiteExisting"															,"Voeg bestaande waarneemplaats toe");
 
 define("LangOverviewEyepieceTitle"												,"Oculairs van");
-define("LangAddEyepieceExisting"													,"Selecteer de oculairgegevens uit de lijst");
 define("LangAddEyepieceManually"													,"voeg de oculairgegevens manueel in");
 define("LangAddEyepieceTitle"															,"Voeg een nieuw oculair toe");
 define("LangAddEyepieceField1"														,"Naam");
@@ -1044,7 +920,6 @@ define("LangViewFilterColor"															,"Kleur");
 define("LangViewFilterWratten"														,"Wratten nummer");
 define("LangViewFilterSchott"															,"Schott nummer");
 define("LangAddFilterTitle"																,"Nieuwe filter");
-define("LangAddFilterExisting"														,"Selecteer bestaande filter");
 define("LangAddFilterFieldManually"												,"voeg de gegevens manueel in");
 define("LangAddFilterField1"															,"Naam");
 define("LangAddFilterField1Expl"													,"(bv Lumicon O-III)");
@@ -1142,7 +1017,6 @@ define("LangAddInstrumentField6Expl"											,"Enkel voor verrekijkers, zoeker
 define("LangAddInstrumentOr"															,"of");
 define("LangAddInstrumentAdd"															,"Voeg instrument toe");
 define("LangAddInstrumentStdTelescope"										,"Pas standaard instrument aan");
-define("LangAddInstrumentExisting"												,"Selecteer een bestaand instrument");
 define("LangAddInstrumentManually"												,"voeg de gegevens manueel in");
 define("LangDetailInstrument"                             ,"Details instrument");
 
@@ -1758,9 +1632,6 @@ define("LangObservationQueryError3"												,"Bekijk alle waarnemingen");
 define("LangObservationNoResults"													,"Sorry, je zoekopdracht heeft geen resultaten opgeleverd");
 define("LangQueryObservationsButton1"											,"Zoek waarnemingen");
 define("LangQueryObservationsButton2"											,"Wis velden");
-
-// remove instrument/location column
-define("LangRemove"																				,"Verwijder");
 
 // content/new_observationcsv.php
 define("LangCSVTitle"																			,"Importeer waarnemingen vanuit CSV bestand");

@@ -81,10 +81,10 @@ function change_account()
 
   // We make some tabs.
   echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">
-          <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">" . PersonalInfo . "</a></li>
-          <li><a href=\"#observingDetails\" data-toggle=\"tab\">" . ObservingDetails . "</a></li>
-          <li><a href=\"#atlases\" data-toggle=\"tab\">" . Atlases . "</a></li>
-          <li><a href=\"#languages\" data-toggle=\"tab\">" . Languages . "</a></li>
+          <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">" . _("Personal") . "</a></li>
+          <li><a href=\"#observingDetails\" data-toggle=\"tab\">" . _("Observing") . "</a></li>
+          <li><a href=\"#atlases\" data-toggle=\"tab\">" . _("Atlases") . "</a></li>
+          <li><a href=\"#languages\" data-toggle=\"tab\">" . _("Languages") . "</a></li>
         </ul>";
 
   echo "<div id=\"my-tab-content\" class=\"tab-content\">";
@@ -147,7 +147,7 @@ function change_account()
 			    <input type=\"text\" required disabled class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />
         </div>";
   echo "<div class=\"col-sm-3\">
-          <button type=\"button\" class=\"btn btn-danger\" data-toggle=\"modal\" data-target=\"#changePassword\">" . LangChangePassword . "</button>
+          <button type=\"button\" class=\"btn btn-danger\" data-toggle=\"modal\" data-target=\"#changePassword\">" . _("Change password") . "</button>
         </div>";
 	echo "<p class=\"form-control-static\">" .
         LangChangeAccountField1Expl . "</p></div>";
@@ -174,11 +174,11 @@ function change_account()
         LangChangeAccountField4Expl . "</p></div>";
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountSendMail . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Send emails") . "</label>";
 	echo "<div class=\"col-sm-6\">
 			<input type=\"checkbox\" class=\"inputfield\" name=\"send_mail\"".(($objObserver->getObserverProperty($loggedUser,'sendMail'))?"checked":"")." />";
-	echo "</div><p class=\"form-control-static\">" .
-        LangChangeAccountSendMailExpl . "</p></div>";
+	echo "</div><p class=\"form-control-static\">"
+        . _("Send messages as email.") . "</p></div>";
 
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField11 . "</label>";
@@ -219,7 +219,7 @@ function change_account()
         </script>';
 
   echo '<div class="form-group">
-          <label class="col-sm-2 control-label">' . LangCCLicense . '</label>
+          <label class="col-sm-2 control-label">' . _("License for drawings") . '</label>
           <div class="col-sm-6">
             <select name="cclicense" id="cclicense" onchange="enableDisableCopyright();" class="inputfield">';
   echo '<option value="0"';
@@ -276,19 +276,19 @@ function change_account()
     echo ' selected="selected"';
     $copyrightStr = "";
   }
-  echo '>' . LangNoLicense . '</option>';
+  echo '>' . _("No license (Not recommended!)") . '</option>';
 
   echo '<option value="7"';
   if ( $ownLicense ) {
     echo ' selected="selected"';
     $copyrightStr = $copyright;
   }
-  echo '>' . LangOwnLicense . '</option>';
+  echo '>' . _("Enter your own copyright text") . '</option>';
 
   echo '    </select>
           </div>
           <p class="form-control-static">' .
-            LangSelectLicenseInfo . '
+          _('It is important to select the <strong>correct license for your drawings</strong>! For help, see the <a href="http://creativecommons.org/choose/">Creative Commons license-choosing tool</a>.') . '
           </p>
         </div>';
 	echo "<div class=\"form-group\">";
@@ -328,7 +328,7 @@ function change_account()
 	$mmSelected = ($showInches == '0')?"selected":"";
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField14 . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Preferred unit for instrument diameter") . "</label>";
 	echo "<div class=\"col-sm-6\">";
 	echo "<select name=\"showInches\" class=\"form-control\" >";
 	echo "<option ".$inchSelected." value='1'>inch</option>";
@@ -435,15 +435,15 @@ function change_account()
          <div class=\"modal-content\">
           <div class=\"modal-header\">
            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-           <h4 class=\"modal-title\">" . LangChangePassword . "</h4>
+           <h4 class=\"modal-title\">" . _("Change password") . "</h4>
           </div>
           <div class=\"modal-body\">
            <!-- Ask for the name of the list. -->
            <form action=\"".$baseURL."index.php?indexAction=changepassword\" method=\"post\">
              <input type=\"hidden\" name=\"userid\" value=\"" . $loggedUser . "\" />" .
-             LangCurrentPassword . "
+             _("Current password") . "
              <input type=\"password\" name=\"currentPassword\" class=\"strength\" required autofocus data-show-meter=\"false\">" .
-             LangNewPassword . "
+             _("New password") . "
              <input type=\"password\" name=\"newPassword\" class=\"strength\" required>" .
              LangChangeAccountField6 . "
              <input type=\"password\" name=\"confirmPassword\" class=\"strength\" required data-show-meter=\"false\">
@@ -451,7 +451,7 @@ function change_account()
             </div>
             <div class=\"modal-footer\">
             <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-            <input class=\"btn btn-danger\" type=\"submit\" name=\"changePassword\" value=\"" . LangChangePassword . "\" />
+            <input class=\"btn btn-danger\" type=\"submit\" name=\"changePassword\" value=\"" . _("Change password") . "\" />
 		      </form>
           </div>
          </div><!-- /.modal-content -->

@@ -129,7 +129,7 @@ function change_session() {
 	}
 
 	echo "<span class=\"pull-right\">";
-	echo "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=validate_delete_existingsession&amp;sessionid=" . urlencode ( $_GET ['sessionid'] ) . "\">" . LangRemove . "</a>&nbsp;";
+	echo "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=validate_delete_existingsession&amp;sessionid=" . urlencode ( $_GET ['sessionid'] ) . "\">" . _("Delete") . "</a>&nbsp;";
 	echo "<input class=\"btn btn-primary\" type=\"submit\" name=\"add\" value=\"" . $sessionButton . "\" />&nbsp;";
 	echo "</span><br />";
 

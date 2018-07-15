@@ -17,7 +17,7 @@ class Lists {
 				$sql = "SELECT observations.id, observations.description FROM observations WHERE observations.objectname=\"" . $theobject . "\";";
 				$get2 = $objDatabase->selectRecordsetArray ( $sql );
 				$sortarray = array ();
-				while ( list ( $key, $value ) = each ( $get2 ) ) {
+				foreach ($get2 as $key=>$value) {
 					$sortarray [strlen ( $value ['description'] )] = $value ['id'];
 				}
 				if (count ( $sortarray ) > 0) {
@@ -156,8 +156,9 @@ class Lists {
 		if ($loggedUser) {
 			$sql = 'SELECT listname FROM observerobjectlist WHERE objectname="' . $theobject . '" AND observerid="' . $loggedUser . '"';
 			$results = $objDatabase->selectSingleArray ( $sql, 'listname' );
-			while ( list ( $key, $value ) = each ( $results ) )
-				$result .= "/" . $value;
+			foreach ($results as $key=>$value) {
+                $result .= "/" . $value;
+            }
 		}
 		return substr ( $result, 1 );
 	}
@@ -167,8 +168,9 @@ class Lists {
 		$results = array ();
 		$sql = 'SELECT listname FROM observerobjectlist WHERE objectname="' . $theobject . '" AND public = "1"';
 		$results = $objDatabase->selectSingleArray ( $sql, 'listname' );
-		while ( list ( $key, $value ) = each ( $results ) )
-			$result .= "/" . $value;
+		foreach ($results as $key=>$value) {
+            $result .= "/" . $value;
+        }
 		return substr ( $result, 1 );
 	}
 	public function getLists() {
@@ -234,16 +236,16 @@ class Lists {
 		echo "<table class=\"table sort-table" . $tablename . " table-condensed table-striped table-hover tablesorter custom-popup\">";
 		echo "<thead>";
 		echo "<tr><th>";
-		echo LangListName;
+		echo _("Name");
 		echo "</th>";
 		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
-		echo LangChangeName;
+		echo _("Change name");
 		echo "</th>";
 		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
 		if ($public) {
-			echo LangMakePrivate;
+			echo _("Make private");
 		} else {
-			echo LangMakePublic;
+			echo _("Make public");
 		}
 		echo "</th>";
 		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
@@ -277,7 +279,7 @@ class Lists {
 				// Add a button to change the name.
 				echo "<td style=\"vertical-align: middle\">";
 
-				echo "<button type=\"button\" title=\"" . LangChangeName . "\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#changeListName" . str_replace ( ' ', '_', str_replace ( ':', '_', $listname ) ) . "\" >
+				echo "<button type=\"button\" title=\"" . _("Change name") . "\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#changeListName" . str_replace ( ' ', '_', str_replace ( ':', '_', $listname ) ) . "\" >
                        <span class=\"glyphicon glyphicon-pencil\"></span>
                       </button>";
 
@@ -287,11 +289,11 @@ class Lists {
 				echo "<td style=\"vertical-align: middle\">";
 
 				if ($public) {
-					echo "<a title=\"" . LangMakePrivate . "\" class=\"btn btn-default\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivate=switchPublicPrivate&amp;listname=" . $listname . "\">
+					echo "<a title=\"" . _("Make private") . "\" class=\"btn btn-default\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivate=switchPublicPrivate&amp;listname=" . $listname . "\">
                        <span class=\"glyphicon glyphicon-user\"></span>
                       </a>";
 				} else {
-					echo "<a title=\"" . LangMakePublic . "\" class=\"btn btn-default\"  href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivate=switchPublicPrivate&amp;listname=" . $listname . "\">
+					echo "<a title=\"" . _("Make public") . "\" class=\"btn btn-default\"  href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivate=switchPublicPrivate&amp;listname=" . $listname . "\">
                        <span class=\"glyphicon glyphicon-share\"></span>
                       </a>";
 				}
@@ -320,11 +322,11 @@ class Lists {
                         <div class=\"modal-content\">
                          <div class=\"modal-header\">
                           <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-                          <h4 class=\"modal-title\">" . LangChangeName . "</h4>
+                          <h4 class=\"modal-title\">" . _("Change name") . "</h4>
                          </div>
                          <div class=\"modal-body\">
                           <!-- Ask for the new name of the list. -->
-                          <h1 class=\"text-center login-title\">" . LangNewNameList . "</h1>
+                          <h1 class=\"text-center login-title\">" . _("New name for the observing list") . "</h1>
                           <form action=\"" . $baseURL . "index.php?indexAction=listaction\">
                            <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />
                            <input type=\"hidden\" name=\"listnamefrom\" value=\"" . $listname . "\" />";
@@ -340,7 +342,7 @@ class Lists {
 				if ($publicList) {
 					echo "checked ";
 				}
-				echo "    name=\"PublicList\" value=\"1\" />&nbsp;" . LangToListPublic . "
+				echo "    name=\"PublicList\" value=\"1\" />&nbsp;" . _("Make this list a public list") . "
                           </div>
                           <div class=\"modal-footer\">
                            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
@@ -364,7 +366,7 @@ class Lists {
 			$run = $objDatabase->selectRecordset ( "SELECT listname FROM observerobjectlist WHERE listname=\"" . $listName . "\" AND public=\"1\"" );
 			$get = $run->fetch ( PDO::FETCH_OBJ );
 			if (!empty($get)) {
-				$entryMessage = LangPublicListAlreadyExists . "<strong>" . $listName . "</strong>" . LangPublicListAlreadyExists2;
+				$entryMessage = sprintf(_("A public list with the same name (%s) as your list already exists. Please rename your list before making the list public."), "<strong>" . $listName . "</strong>");
 				return;
 			}
 			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"1\" where listname=\"" . $listName . "\" AND observerid = \"" . $loggedUser . "\"");

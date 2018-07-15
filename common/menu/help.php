@@ -14,8 +14,8 @@ function help() {
 		echo "  <li><a href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/Handleidinghttps://github.com/DeepskyLog/DeepskyLog/wiki/Handleiding\" rel=\"external\">Handleiding</a></li>";
 	}
 	echo "   <li>" . LangMailtoLink . "</li>";
-	echo "   <li><a href=\"https://github.com/DeepskyLog/DeepskyLog/issues\">" . LangReportIssue . "</a></li>";
-	echo "   <li><a href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog\">" . LangWhatsNew . "</a></li>";
+	echo "   <li><a href=\"https://github.com/DeepskyLog/DeepskyLog/issues\">" . _("Report issue") . "</a></li>";
+	echo "   <li><a href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog\">" . _("What's new in DeepskyLog") . "</a></li>";
 	echo "  </ul>";
 	echo " </li>
           </ul>";

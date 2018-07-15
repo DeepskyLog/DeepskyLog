@@ -17,11 +17,11 @@ function menu_change() {
 		reset ( $_GET );
 		echo "<ul class=\"nav navbar-nav\">
 			  <li class=\"dropdown\">
-	       <a class=\"tour1 tour3\" href=\"http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"] . "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . LangChangeMenuTitle . "<b class=\"caret\"></b></a>";
+	       <a class=\"tour1 tour3\" href=\"http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"] . "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . _("Add") . "<b class=\"caret\"></b></a>";
 		echo " <ul class=\"dropdown-menu\">";
-		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe waarneming\">" . LangChangeMenuItem2 . "</a></li>";
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe waarneming\">" . _("Observation") . "</a></li>";
 		echo "  <li class=\"disabled\">─────────────────</li>";
-		echo "  <li><a data-toggle=\"modal\" data-target=\"#addList\">" . LangAddNewList . "</a></li>";
+		echo "  <li><a data-toggle=\"modal\" data-target=\"#addList\">" . _("Observing list") . "</a></li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_session\">" . LangChangeMenuItem9 . "</a></li>";
 		echo "  <li class=\"disabled\">─────────────────</li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_instrument\">" . LangChangeMenuItem3 . "</a></li>";
@@ -30,7 +30,7 @@ function menu_change() {
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_filter\">" . LangChangeMenuItem7 . "</a></li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_lens\">" . LangChangeMenuItem8 . "</a></li>";
 		echo "  <li class=\"disabled\">─────────────────</li>";
-		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_object\">" . LangChangeMenuItem5 . "</a></li>";
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_object\">" . _("Object") . "</a></li>";
 		echo " </ul>";
 		echo "</li>
 			  </ul>";

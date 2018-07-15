@@ -59,14 +59,14 @@ function setup_observations_query() {
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
 			$catalog = $_SESSION ['QobsParams'] ['catalog'];
 	echo "<select id=\"catalog\" class=\"form-control\" name=\"catalog\" class=\"inputfield\">";
-	echo "<option value=\"\">" . LangSelectCatalog . "</option>";
+	echo "<option value=\"\">" . _("Select catalog") . "</option>";
 	while ( list ( $key, $value ) = each ( $DSOcatalogs ) )
 		echo "<option" . (($value == $catalog) ? " selected=\"selected\"" : "") . " value=\"" . $value . "\">" . $value . "</option>";
 	echo "</select>";
 	if (($catNumber = $objUtil->checkGetKey ( 'number' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
 			$catNumber = $_SESSION ['QobsParams'] ['number'];
-	echo "<input id=\"number\" placeholder=\"" . LangCatalogNumber . "\" name=\"number\" type=\"text\" class=\"form-control\" maxlength=\"255\" size=\"40\" value=\"" . $catNumber . "\" />";
+	echo "<input id=\"number\" placeholder=\"" . _("Enter number in catalog") . "\" name=\"number\" type=\"text\" class=\"form-control\" maxlength=\"255\" size=\"40\" value=\"" . $catNumber . "\" />";
 	echo "</td></tr>";
 	// ATLAS PAGE NUMBER
 	echo "<tr><td><strong>" . LangQueryObjectsField12 . "</strong></td>";

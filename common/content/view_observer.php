@@ -125,11 +125,11 @@ function viewObserver()
           <li><a href=\"#observationsPerYear\" data-toggle=\"tab\">" 
         . GraphObservationsTitle . "</a></li>
                     <li><a href=\"#observationsPerMonth\" data-toggle=\"tab\">" 
-        . GraphObservationsMonthTitle . "</a></li>
+        . _("Observations per month") . "</a></li>
           <li><a href=\"#objectTypes\" data-toggle=\"tab\">" 
         . GraphObservationsType . "</a></li>
                     <li><a href=\"#countries\" data-toggle=\"tab\">" 
-        . GraphObservationsPerCountry . "</a></li>
+        . _("Observations per country") . "</a></li>
           <li><a href=\"#stars\" data-toggle=\"tab\">" 
           . GraphAccomplishments . "</a></li>
         </ul>";
@@ -722,7 +722,7 @@ function viewObserver()
                     marginBottom: 25
                   },
                   title: {
-                    text: \"" . GraphTitleMonths . ": " 
+                    text: \"" . _("Number of observations per month") . ": " 
         . html_entity_decode($firstname, ENT_QUOTES, "UTF-8") . " " 
         . html_entity_decode($name, ENT_QUOTES, "UTF-8") . "\",
                     x: -20 //center
@@ -1199,7 +1199,7 @@ function viewObserver()
                         plotShadow: false
                     },
                     title: {
-                        text: \"" . GraphObservationsPerCountry . ": " 
+                        text: \"" . _("Observations per country") . ": " 
         . html_entity_decode($firstname, ENT_QUOTES, "UTF-8") . " " 
         . html_entity_decode($name, ENT_QUOTES, "UTF-8") . "\"
                     },
@@ -1254,110 +1254,123 @@ function viewObserver()
 
     // Messier
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangMessier . "</h4>";
+    echo "<h4>" . _('Messier objects') . "</h4>";
 
     $accomplishments = $objAccomplishments->getAllAccomplishments($user);
 
     drawStar(
-        $accomplishments['messierBronze'], LangAccomplishmentsBronze, "bronze", 
-        LangAccomplishmentsMessierBronze, LangMessierBronzeToAccomplish
+        $accomplishments['messierBronze'], _('Bronze'), "bronze", 
+        _("Bronze Messier certificat! You observed 25 Messier objects!"),
+        _("Observe at least 25 Messier objects to get this certificat!")
     );
     drawStar(
-        $accomplishments['messierSilver'], LangAccomplishmentsSilver, "silver", 
-        LangAccomplishmentsMessierSilver, LangMessierSilverToAccomplish
+        $accomplishments['messierSilver'], _('Silver'), "silver", 
+        _("Silver Messier certificat! You observed 50 Messier objects!"),
+        _("Observe at least 50 Messier objects to get this certificat!")
     );
     drawStar(
-        $accomplishments['messierGold'], LangAccomplishmentsGold, "gold", 
-        LangAccomplishmentsMessierGold, LangMessierGoldToAccomplish
+        $accomplishments['messierGold'], _('Gold'), "gold", 
+        _("Golden Messier certificat! You observed all 110 Messier objects!"),
+        _("Observe all 110 Messier objects to get this certificat!")
     );
 
     echo "</div>";
 
     // Messier Drawings
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangMessierDrawings . "</h4>";
+    echo "<h4>" . _('Drawings of Messier objects') . "</h4>";
 
     drawStar(
-        $accomplishments['messierDrawingsBronze'], LangAccomplishmentsBronze, 
+        $accomplishments['messierDrawingsBronze'], _('Bronze'), 
         "bronze", 
-        LangAccomplishmentsMessierBronzeDr, LangMessierBronzeToAccomplishDr
+        _("Bronze Messier drawing-certificat! You drawed 25 Messier objects!"), 
+        _("Draw at least 25 different Messier objects to get this certificat!")
     );
     drawStar(
-        $accomplishments['messierDrawingsSilver'], LangAccomplishmentsSilver, 
-        "silver", LangAccomplishmentsMessierSilverDr, 
-        LangMessierSilverToAccomplishDr
+        $accomplishments['messierDrawingsSilver'], _('Silver'), 
+        "silver", 
+        _("Silver Messier drawing-certificat! You drawed 50 Messier objects!"), 
+        _("Draw at least 50 Messier objects to get this certificat!")
     );
     drawStar(
-        $accomplishments['messierDrawingsGold'], LangAccomplishmentsGold, 
-        "gold", LangAccomplishmentsMessierGoldDr, LangMessierGoldToAccomplishDr
+        $accomplishments['messierDrawingsGold'], _('Gold'), 
+        "gold",
+        _("Golden Messier drawing-certificat! You drawed all 110 Messier objects!"),
+        _("Draw all 110 Messier objects to get this certificat!")
     );
     echo "</div>";
 
     // Caldwell
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangCaldwell . "</h4>";
+    echo "<h4>" . _('Caldwell objects') . "</h4>";
 
     drawStar(
-        $accomplishments['caldwellBronze'], LangAccomplishmentsBronze, "bronze", 
-        LangAccomplishmentsCaldwellBronze, LangCaldwellBronzeToAccomplish
+        $accomplishments['caldwellBronze'], _('Bronze'), "bronze", 
+        _("Bronze Caldwell certificat! You observed 25 Caldwell objects!"), 
+        _("Observe at least 25 Caldwell objects to get this certificat!")
     );
     drawStar(
-        $accomplishments['caldwellSilver'], LangAccomplishmentsSilver, "silver",
-        LangAccomplishmentsCaldwellSilver, LangCaldwellSilverToAccomplish
+        $accomplishments['caldwellSilver'], _('Silver'), "silver",
+        _("Silver Caldwell certificat! You observed 50 Caldwell objects!"),
+        _("Observe at least 50 Caldwell objects to get this certificat!")
     );
     drawStar(
-        $accomplishments['caldwellGold'], LangAccomplishmentsGold, "gold", 
-        LangAccomplishmentsCaldwellGold, LangCaldwellGoldToAccomplish
+        $accomplishments['caldwellGold'], _('Gold'), "gold", 
+        _("Golden Caldwell certificat! You observed all 110 Caldwell objects!"),
+        _("Observe all 110 Caldwell objects to get this certificat!")
     );
     echo "</div>";
 
     // Caldwell drawings
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangCaldwellDrawings . "</h4>";
+    echo "<h4>" . _('Drawings of Caldwell objects') . "</h4>";
 
     drawStar(
-        $accomplishments['caldwellDrawingsBronze'], LangAccomplishmentsBronze, 
-        "bronze", LangAccomplishmentsCaldwellBronzeDr, 
-        LangCaldwellBronzeToAccomplishDr
+        $accomplishments['caldwellDrawingsBronze'], _('Bronze'), 
+        "bronze",
+        _("Bronze Caldwell drawing-certificat! You drawed 25 Caldwell objects!"), 
+        _("Draw at least 25 Caldwell objects to get this certificat!")
     );
     drawStar(
-        $accomplishments['caldwellDrawingsSilver'], LangAccomplishmentsSilver, 
-        "silver", LangAccomplishmentsCaldwellSilverDr, 
-        LangCaldwellSilverToAccomplishDr
+        $accomplishments['caldwellDrawingsSilver'], _('Silver'), 
+        "silver", 
+        _("Silver Caldwell drawing-certificat! You drawed 50 Caldwell objects!"), 
+        _("Draw at least 50 Caldwell objects to get this certificat!")
     );
     drawStar(
-        $accomplishments['caldwelldrawingsGold'], LangAccomplishmentsGold, 
-        "gold", LangAccomplishmentsCaldwellGoldDr, 
-        LangCaldwellGoldToAccomplishDr
+        $accomplishments['caldwelldrawingsGold'], _('Gold'), 
+        "gold", 
+        _("Golden Caldwell drawing-certificat! You drawed all 110 Caldwell objects!"), 
+        _("Draw all 110 Caldwell objects to get this certificat!")
     );
     echo "</div>";
 
     // Herschel - 400
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangHerschel400 . "</h4>";
+    echo "<h4>" . _('Herschel 400 objects') . "</h4>";
 
     drawStar(
-        $accomplishments['herschelBronze'], LangAccomplishmentsBronze, 
+        $accomplishments['herschelBronze'], _('Bronze'), 
         "bronze", LangAccomplishmentsH400Bronze, 
         LangH400BronzeToAccomplish
     );
     drawStar(
-        $accomplishments['herschelSilver'], LangAccomplishmentsSilver, 
+        $accomplishments['herschelSilver'], _('Silver'), 
         "silver", LangAccomplishmentsH400Silver, 
         LangH400SilverToAccomplish
     );
     drawStar(
-        $accomplishments['herschelGold'], LangAccomplishmentsGold, 
+        $accomplishments['herschelGold'], _('Gold'), 
         "gold", LangAccomplishmentsH400Gold, 
         LangH400GoldToAccomplish
     );
     drawStar(
-        $accomplishments['herschelDiamond'], LangAccomplishmentsDiamond, 
+        $accomplishments['herschelDiamond'], _('Diamond'), 
         "diamond", LangAccomplishmentsH400Diamond, 
         LangH400DiamondToAccomplish
     );
     drawStar(
-        $accomplishments['herschelPlatina'], LangAccomplishmentsPlatina, 
+        $accomplishments['herschelPlatina'], _('Platinum'), 
         "platinum", LangAccomplishmentsH400Platina, 
         LangH400PlatinaToAccomplish
     );
@@ -1365,85 +1378,85 @@ function viewObserver()
 
     // Herschel 400 drawings
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangHerschel400Drawings . "</h4>";
+    echo "<h4>" . _('Drawings of Herschel 400 objects') . "</h4>";
 
     drawStar(
-        $accomplishments['herschelDrawingsBronze'], LangAccomplishmentsBronze, 
+        $accomplishments['herschelDrawingsBronze'], _('Bronze'), 
         "bronze", LangAccomplishmentsH400BronzeDr, LangH400BronzeToAccomplishDr
     );
     drawStar(
-        $accomplishments['herschelDrawingsSilver'], LangAccomplishmentsSilver,
+        $accomplishments['herschelDrawingsSilver'], _('Silver'),
         "silver", LangAccomplishmentsH400SilverDr, LangH400SilverToAccomplishDr
     );
     drawStar(
-        $accomplishments['herschelDrawingsGold'], LangAccomplishmentsGold, 
+        $accomplishments['herschelDrawingsGold'], _('Gold'), 
         "gold", LangAccomplishmentsH400GoldDr, LangH400GoldToAccomplishDr
     );
     drawStar(
-        $accomplishments['herschelDrawingsDiamond'], LangAccomplishmentsDiamond, 
+        $accomplishments['herschelDrawingsDiamond'], _('Diamond'), 
         "diamond", LangAccomplishmentsH400DiamondDr, LangH400DiamondToAccomplishDr
     );
     drawStar(
-        $accomplishments['herschelDrawingsPlatina'], LangAccomplishmentsPlatina, 
+        $accomplishments['herschelDrawingsPlatina'], _('Platinum'), 
         "platinum", LangAccomplishmentsH400PlatinaDr, LangH400PlatinaToAccomplishDr
     );
     echo "</div>";
 
     // Herschel II
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangHerschelII . "</h4>";
+    echo "<h4>" . _('Herschel II objects') . "</h4>";
 
     drawStar(
-        $accomplishments['herschelIIBronze'], LangAccomplishmentsBronze, "bronze",
+        $accomplishments['herschelIIBronze'], _('Bronze'), "bronze",
         LangAccomplishmentsHIIBronze, LangHIIBronzeToAccomplish
     );
     drawStar(
-        $accomplishments['herschelIISilver'], LangAccomplishmentsSilver,
+        $accomplishments['herschelIISilver'], _('Silver'),
         "silver", LangAccomplishmentsHIISilver, LangHIISilverToAccomplish
     );
     drawStar(
-        $accomplishments['herschelIIGold'], LangAccomplishmentsGold, 
+        $accomplishments['herschelIIGold'], _('Gold'), 
         "gold", LangAccomplishmentsHIIGold, LangHIIGoldToAccomplish
     );
     drawStar(
-        $accomplishments['herschelIIDiamond'], LangAccomplishmentsDiamond, 
+        $accomplishments['herschelIIDiamond'], _('Diamond'), 
         "diamond", LangAccomplishmentsHIIDiamond, LangHIIDiamondToAccomplish
     );
     drawStar(
-        $accomplishments['herschelIIPlatina'], LangAccomplishmentsPlatina, 
+        $accomplishments['herschelIIPlatina'], _('Platinum'), 
         "platinum", LangAccomplishmentsHIIPlatina, LangHIIPlatinaToAccomplish
     );
     echo "</div>";
 
     // Herschel II drawings
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangHerschelIIDrawings . "</h4>";
+    echo "<h4>" . _('Drawings of Herschel II objects') . "</h4>";
 
     drawStar(
-        $accomplishments['herschelIIDrawingsBronze'], LangAccomplishmentsBronze, 
+        $accomplishments['herschelIIDrawingsBronze'], _('Bronze'), 
         "bronze", LangAccomplishmentsHIIBronzeDr, LangHIIBronzeToAccomplishDr
     );
     drawStar(
-        $accomplishments['herschelIIDrawingsSilver'], LangAccomplishmentsSilver, 
+        $accomplishments['herschelIIDrawingsSilver'], _('Silver'), 
         "silver", LangAccomplishmentsHIISilverDr, LangHIISilverToAccomplishDr
     );
     drawStar(
-        $accomplishments['herschelIIDrawingsGold'], LangAccomplishmentsGold, 
+        $accomplishments['herschelIIDrawingsGold'], _('Gold'), 
         "gold", LangAccomplishmentsHIIGoldDr, LangHIIGoldToAccomplishDr
     );
     drawStar(
-        $accomplishments['herschelIIDrawingsDiamond'], LangAccomplishmentsDiamond, 
+        $accomplishments['herschelIIDrawingsDiamond'], _('Diamond'), 
         "diamond", LangAccomplishmentsHIIDiamondDr, LangHIIDiamondToAccomplishDr
     );
     drawStar(
-        $accomplishments['herschelIIDrawingsPlatina'], LangAccomplishmentsPlatina, 
+        $accomplishments['herschelIIDrawingsPlatina'], _('Platinum'), 
         "platinum", LangAccomplishmentsHIIPlatinaDr, LangHIIPlatinaToAccomplishDr
     );
     echo "</div>";
 
     // Total number of drawings
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangTotalDrawings . "</h4>";
+    echo "<h4>" . _('Total number of drawings') . "</h4>";
 
     drawStar(
         $accomplishments['drawingsNewbie'], 1, "newbie", 
@@ -1490,7 +1503,7 @@ function viewObserver()
 
     // Total number of open clusters
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangOpenClusters . "</h4>";
+    echo "<h4>" . _('Open clusters') . "</h4>";
 
     drawStar(
         $accomplishments['openClusterNewbie'], 1, "newbie", 
@@ -1546,7 +1559,7 @@ function viewObserver()
 
     // Total number of open clusters drawn
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangOpenClusterDrawings . "</h4>";
+    echo "<h4>" . _('Drawings of open clusters') . "</h4>";
 
     drawStar(
         $accomplishments['openClusterDrawingsNewbie'], 1, "newbie", 
@@ -1608,7 +1621,7 @@ function viewObserver()
 
     // Total number of globular clusters
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangGlobularClusters . "</h4>";
+    echo "<h4>" . _('Globular clusters') . "</h4>";
 
     drawStar( 
         $accomplishments['globularClusterNewbie'], 1, "newbie", 
@@ -1660,7 +1673,7 @@ function viewObserver()
 
     // Total number of globular clusters drawn
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangGlobularClusterDrawings . "</h4>";
+    echo "<h4>" . _('Drawings of globular clusters') . "</h4>";
 
     drawStar( 
         $accomplishments['globularClusterDrawingsNewbie'], 1, "newbie", 
@@ -1717,7 +1730,7 @@ function viewObserver()
 
     // Total number of planetary nebulae
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangPlanetaryNebulaeSeen . "</h4>";
+    echo "<h4>" . _('Planetary Nebulae') . "</h4>";
 
     drawStar( 
         $accomplishments['planetaryNebulaNewbie'], 1, "newbie", 
@@ -1775,7 +1788,7 @@ function viewObserver()
 
     // Total number of planetary nebulae drawn
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangPlanetaryNebulaDrawings . "</h4>";
+    echo "<h4>" . _('Drawings of planetary nebulae') . "</h4>";
 
     drawStar( 
         $accomplishments['planetaryNebulaDrawingsNewbie'], 1, "newbie", 
@@ -1840,7 +1853,7 @@ function viewObserver()
 
     // Total number of galaxies
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangGalaxiesSeen . "</h4>";
+    echo "<h4>" . _('Galaxies') . "</h4>";
 
     drawStar( 
         $accomplishments['galaxyNewbie'], 1, "newbie", 
@@ -1886,7 +1899,7 @@ function viewObserver()
 
     // Total number of galaxies drawn
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangGalaxyDrawings . "</h4>";
+    echo "<h4>" . _('Drawings of galaxies') . "</h4>";
 
     drawStar( 
         $accomplishments['galaxyDrawingsNewbie'], 1, "newbie", 
@@ -1933,7 +1946,7 @@ function viewObserver()
 
     // Total number of nebulae
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangNebulaeSeen . "</h4>";
+    echo "<h4>" . _('Nebulae') . "</h4>";
 
     drawStar( 
         $accomplishments['nebulaNewbie'], 1, "newbie", 
@@ -1989,7 +2002,7 @@ function viewObserver()
 
     // Total number of nebulae drawn
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangNebulaeDrawings . "</h4>";
+    echo "<h4>" . _('Drawings of nebulae') . "</h4>";
 
     drawStar( 
         $accomplishments['nebulaDrawingsNewbie'], 1, "newbie", 
@@ -2048,7 +2061,7 @@ function viewObserver()
 
     // Total number of different objects
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangDifferentObjectsSeen . "</h4>";
+    echo "<h4>" . _('Different objects') . "</h4>";
 
     drawStar( 
         $accomplishments['objectsNewbie'], 1, "newbie", 
@@ -2094,7 +2107,7 @@ function viewObserver()
 
     // Total number of nebulae drawn
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangDifferentObjectsDrawings . "</h4>";
+    echo "<h4>" . _('Drawings of different objects') . "</h4>";
 
     drawStar( 
         $accomplishments['objectsDrawingsNewbie'], 1, "newbie", 
@@ -2141,7 +2154,7 @@ function viewObserver()
 
     // Total number of comet observations
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangTotalCometsSeen . "</h4>";
+    echo "<h4>" . _('Total comet observations') . "</h4>";
 
     drawStar( 
         $accomplishments['cometObservationsNewbie'], 1, "newbie", 
@@ -2187,7 +2200,7 @@ function viewObserver()
 
     // Total number of different comets seen
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangDifferentCometsSeen . "</h4>";
+    echo "<h4>" . _('Different comets') . "</h4>";
 
     drawStar( 
         $accomplishments['cometsObservedNewbie'], 1, "newbie", 
@@ -2234,7 +2247,7 @@ function viewObserver()
 
     // Total number of different comet drawings
     echo "<div class=\"accomplishmentRow\">";
-    echo "<h4>" . LangCometDrawings . "</h4>";
+    echo "<h4>" . _('Drawings of comets') . "</h4>";
 
     drawStar( 
         $accomplishments['cometDrawingsNewbie'], 1, "newbie", 
