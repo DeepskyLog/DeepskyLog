@@ -27,15 +27,19 @@ function newLocation()
 {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
     echo "<form>";
-    echo "<ol><li>" . LangAddSiteStep1 . "<strong>\"" . LangSearchLocations0 
-        . "\"</strong>" . LangAddSiteStep1Button . "<br /><br /></li>";
+    echo "<ol><li>" 
+        . sprintf(
+            _("Set your location on the map or by entering the name and pressing the %s button."), 
+            "<strong>\"" . _("Search location") 
+            . "\"</strong>"
+        ) . "<br /><br /></li>";
     echo "<div class=\"form-inline\">
              <input type=\"text\" class=\"form-control\" id=\"address\" " 
         . "onkeypress=\"searchKeyPress(event);\" placeholder=\"La Silla, Chile\"" 
         . " autofocus></input>
              <input type=\"button\" class=\"btn btn-primary\" id=\"btnSearch\"" 
         . " value=\"" 
-        . LangSearchLocations0 . "\" onclick=\"codeAddress();\" ></input>
+        . _("Search location") . "\" onclick=\"codeAddress();\" ></input>
             </div>
            </form>
            <div id=\"map\"></div>
@@ -48,95 +52,86 @@ function newLocation()
     echo "<input type=\"hidden\" name=\"country\" id=\"country\" />";
     echo "<input type=\"hidden\" name=\"elevation\" id=\"elevation\" />";
     echo "<input type=\"hidden\" name=\"timezone\" id=\"timezone\" />";
-    echo "<li>" . LangAddSiteStep2 . "<strong>\"" . LangAddSiteButton 
-        . "\"</strong>" . LangAddSiteStep1Button . "<br /><br /></li>";
+    echo "<li>" 
+        . sprintf(
+            _("Define your own name for this location, eventually add a naked eye limiting magnitude (or SQM value) and press the %s button."),  
+            "<strong>\"" . _("Add site") . "\"</strong>"
+        ) . "<br /><br /></li>";
     echo "<div class=\"form-inline\">
             <input type=\"text\" required class=\"form-control\" " 
         . "name=\"locationname\" placeholder=\"" 
         . LangAddSiteField1 . "\"></input>";
     echo "  <input type=\"submit\" class=\"btn btn-success tour4\" " 
         . "name=\"add\" value=\"" 
-        . LangAddSiteButton . "\" />";
-
+        . _("Add site") . "\" />";
+        
     // Limiting magnitude
     echo "</div><br />
-            <label>" . LangAddSiteField7 . "</label>";
-    echo "<div class=\"form-inline\">";
-    echo "<input type=\"number\" min=\"0\" max=\"8.9\" step=\"0.1\" " 
+            <table class='table'>
+            <tr>
+                <th>" . LangAddSiteField7 . "</th>
+                <th>" . LangAddSiteField8 . "</th>
+                <th>" . LangAddSiteField9 . "</th>
+                <th><a class='btn btn-primary' href='#' role='button'" 
+            . " id='lightpollutioninfo'>" 
+            . LangAddSiteField10 . "</a></th>
+            </tr>";
+    echo "  <tr>
+                <td><div class=\"form-inline\">";
+    echo "<input type=\"number\" min=\"0\" max=\"8.0\" step=\"0.1\" " 
         . "class=\"form-control\" maxlength=\"5\" id=\"lm\"" 
         . " name=\"lm\" size=\"5\" />";
     echo "</div>";
-    echo "<span class=\"help-block\">" . LangAddSiteField7Expl . "</span>";
-    echo "</div>";
+    echo "</td>";
 
     // SQM
-    echo "<div class=\"form-group\">
-                <label>" . LangAddSiteField8 . "</label>";
+    echo "<td>";
     echo "<div class=\"form-inline\">";
     echo "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" " 
         . "class=\"form-control\" maxlength=\"5\" id=\"sqm\"" 
         . " name=\"sb\" size=\"5\" />";
     echo "</div>";
-    echo "<span class=\"help-block\">" . LangAddSiteField8Expl . "</span>";
-    echo "</div>";
+    echo "</td>";
 
     // Bortle Scale
-    echo "<div class=\"form-group\">
-                <label>" . LangAddSiteField9 . "</label>";
+    echo "<td>";
     echo "<div class=\"form-inline\">";
-    echo "<input type=\"number\" min=\"1\" max=\"9\" step=\"1\" " 
-        . "class=\"form-control\" maxlength=\"5\" id=\"bortle\"" 
-        . " name=\"bortle\" size=\"5\" />";
+    echo '<select id="bortle" name="bortle">
+            <option></option>
+            <option value="1">1 - ' . _("Excellent dark-sky site") . '</option>
+            <option value="2">2 - ' . _("Typical truly dark site") . '</option>
+            <option value="3">3 - ' . _("Rural sky") . '</option>
+            <option value="4">4 - ' . _("Rural/suburban transition") . '</option>
+            <option value="5">5 - ' . _("Suburban sky") . '</option>
+            <option value="6">6 - ' . _("Bright suburban sky") . '</option>
+            <option value="7">7 - ' . _("Suburban/urban transition") . '</option>
+            <option value="8">8 - ' . _("City sky") . '</option>
+            <option value="9">9 - ' . _("Inner-city sky") . '</option>
+          </select>';
     echo "</div>";
-    echo "<span class=\"help-block\">" . LangAddSiteField9Expl . "</span>";
-    echo "</div>";
-    echo "</div></ol></form><br /><br />";
+    echo "</td>
+          <td></td></table></ol></form><br /><br />";
 
     // Javascript to convert from limiting magnitude to sqm and bortle
+    echo '<script src="' . $baseURL 
+        . 'lib/javascript/sqm.js" type="text/javascript"></script>';
     echo '<script type="text/javascript">
+        var bortleChange = 1;
         $("#lm").keyup(function(event) {
             lm = event.target.value;
             if (lm < 0) {
                 lm = 0.0;
                 $("#lm").val(lm);
             }
-            sqm = Math.round(((21.58 
-                - 5 * log10(pow(10, (1.586 - lm / 5.0)) - 1.0)
-                )) * 100) / 100; 
-            if (sqm > 22.0) {
-                sqm = 22.0;
-            }
+            sqm = lmToSqm(lm);
             $("#sqm").val(sqm);
 
-            if (sqm <= 18.0) {
-                bortle = 9;
-            } else if (sqm <= 18.38) {
-                bortle = 8;
-            } else if (sqm <= 18.94) {
-                bortle = 7;
-            } else if (sqm <= 19.50) {
-                bortle = 6;
-            } else if (sqm <= 20.49) {
-                bortle = 5;
-            } else if (sqm <= 21.69) {
-                bortle = 4;
-            } else if (sqm <= 21.89) {
-                bortle = 3;
-            } else if (sqm <= 21.99) {
-                bortle = 2;
-            } else {
-                bortle = 1;
-            }
-            $("#bortle").val(bortle);
-
+            bortleChange = 0;
+            $("#bortle").val(sqmToBortle(sqm)).change();
         });
-        </script>';
   
-    // TODO: Move these methods to lib/locations.php or lib/contrast.php
-    // TODO: Fix formulae. It is impossible to get magnitude 8 and bortle scale 1 with these formulae...
-    // Javascript to convert from sqm to limiting magnitude and bortle
-    echo '<script type="text/javascript">
-        $("#sqm").keyup(function(event) {
+        // Javascript to convert from sqm to limiting magnitude and bortle
+        $("#sqm").on("keyup change", function(event) {
             sqm = event.target.value;
 
             if (sqm > 22.0) {
@@ -144,73 +139,57 @@ function newLocation()
                 $("#sqm").val(22.0);
             }
 
-            lm = Math.round((7.97 
-                - 5 * log10(1 + pow(10, 4.316 - sqm / 5.0))) * 100) / 100; 
-            if (lm < 2.5) {
-                lm = 2.5;
-            }
+            lm = sqmToLm(sqm);
             $("#lm").val(lm);
 
-            if (sqm <= 18.0) {
-                bortle = 9;
-            } else if (sqm <= 18.38) {
-                bortle = 8;
-            } else if (sqm <= 18.94) {
-                bortle = 7;
-            } else if (sqm <= 19.50) {
-                bortle = 6;
-            } else if (sqm <= 20.49) {
-                bortle = 5;
-            } else if (sqm <= 21.69) {
-                bortle = 4;
-            } else if (sqm <= 21.89) {
-                bortle = 3;
-            } else if (sqm <= 21.99) {
-                bortle = 2;
-            } else {
-                bortle = 1;
-            }
-            $("#bortle").val(bortle);
-
+            bortleChange = 0;
+            $("#bortle").val(sqmToBortle(sqm)).change();
         });
-        </script>';
 
-    // Javascript to convert from bortle to limiting magnitude and sqm
-    echo '<script type="text/javascript">
-        $("#bortle").keyup(function(event) {
-            bortle = event.target.value; 
+        // Javascript to convert from bortle to limiting magnitude and sqm
+        $(document).ready(function() {  
+            $("#bortle").change(function(){
+                bortle = $(this).find("option:selected").attr("value");
 
-            if (bortle == 1) {
-                lm = 6.66;
-                sqm = 22.0;
-            } else if (bortle == 2) {
-                lm = 6.64;
-                sqm = 21.95;
-            } else if (bortle == 3) {
-                lm = 6.5;
-                sqm = 21.79;
-            } else if (bortle == 4) {
-                lm = 6.2;
-                sqm = 21.1;
-            } else if (bortle == 5) {
-                lm = 5.5;
-                sqm = 20.0;
-            } else if (bortle == 6) {
-                lm = 5.0;
-                sqm = 19.28;
-            } else if (bortle == 7) {
-                lm = 4.5;
-                sqm = 18.66;
-            } else if (bortle == 8) {
-                lm = 4.0;
-                sqm = 18.0;
-            } else {
-                lm = 3.75;
-                sqm = 17.7;
-            }
-            $("#lm").val(lm);
-            $("#sqm").val(sqm);
+                if (bortleChange == 1) {
+                    $("#lm").val(bortleToLm(bortle));
+                    $("#sqm").val(bortleToSqm(bortle));
+                } else {
+                    bortleChange = 1;
+                }
+            });
+            // Javascript to fill out the limiting magnitude, 
+            // SQM and Bortle automatically from lightpollutioninfo.info
+            $("#lightpollutioninfo").on("click", function(event) {
+                // Prevent following the link
+                event.preventDefault(); 
 
+                // Get the value from the lightpollution.info site
+                // We use yql. This will work cross-domain and will return json.
+                url = "https://www.lightpollutionmap.info/" 
+                    + "QueryRaster/?ql=wa_2015&qt=point&qd=" 
+                    + $("#longitude").val() + "," 
+                    + $("#latitude").val() + "&key=6hDh3zLAIhFXdpaX";
+                var yql = "http://query.yahooapis.com/v1/public/yql?q=" 
+                    + encodeURIComponent(
+                        "select * from htmlstring where url=\"" + url 
+                        + "\" and xpath=\"//body\""
+                    ) + "&format=json"
+                + "&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";  
+
+                $.getJSON(yql,function(data){
+                    data = data.query.results.result;
+                    // Remove the html tags and convert to a number
+                    lpNumber = Number(data.replace(/<\/?[^>]+(>|$)/g, ""));
+                    // We need to add 0.132025599479675, which is the natural sky
+                    // brightness.
+                    lpNumber += 0.132025599479675;
+                    sqm = Math.log10(lpNumber / 108000000) / -0.4;
+
+                    // Set the sqm in the field and update the field
+                    $("#sqm").val(Math.round(sqm * 100) / 100).change();
+                });
+            });
         });
         </script>';
 
@@ -246,7 +225,7 @@ function newLocation()
           });
            document.getElementById('latitude').value = loca.latLng.lat();
            document.getElementById('longitude').value = loca.latLng.lng();
-          fillHiddenFields(loca);
+           fillHiddenFields(loca);
           addLocations();
         }
       }
@@ -448,7 +427,7 @@ function newLocation()
         if ($objLocation->getLocationPropertyFromId($location, "locationactive")) {
             echo LangViewActive;
         } else {
-            echo LangViewNotActive;
+            echo _("Not active");
         }
 
         echo "\";
@@ -472,6 +451,14 @@ function newLocation()
             });
 
             myLocations.push(marker);
+
+              map.addListener('center_changed', function(){
+                document.getElementById('latitude').value = map.getCenter().lat();
+                document.getElementById('longitude').value = map.getCenter().lng();
+                fillHiddenFields(map.getCenter());
+              });
+
+
             google.maps.event.addListener(marker, 'mouseover', function() {
                 infowindow.setContent(this.html);
                 infowindow.open(map, this);

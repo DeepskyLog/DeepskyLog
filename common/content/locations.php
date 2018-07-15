@@ -36,7 +36,7 @@ function locations()
         . "index.php\" method=\"post\"><div>";
     echo "<input type=\"hidden\" name=\"indexAction\" value=\"add_location\" />";
     echo "<input type=\"submit\" class=\"btn btn-success pull-right tour4\"" 
-        . " name=\"add\" value=\"" . LangAddSiteButton . "\" />&nbsp;";
+        . " name=\"add\" value=\"" . _("Add site") . "\" />&nbsp;";
     echo "</form>";
     $objLocation->showLocationsObserver();
     echo "<br /><br />";

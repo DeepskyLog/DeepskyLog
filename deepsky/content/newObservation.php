@@ -33,6 +33,40 @@ function newObservation()
 
     echo "<script type=\"text/javascript\" src=\"" . $baseURL 
         . "lib/javascript/checkUtils.js\"></script>";
+    echo '<script type="text/javascript">
+            $(document).ready(function() {
+                $("#sqm").change();
+                $("#site").change(function() {
+                    // We have the id of the location, we need to find the sqm now...
+                    var id = ($(this).find("option:selected").attr("value"));
+                    // Read from ajaxinterface.php -> getLocationSqm, using id
+                    var url="' . $baseURL 
+        . 'ajaxinterface.php?instruction=getLocationSqm&id=" + id;
+
+                    var jsonhttp;
+                    if(window.XMLHttpRequest)
+                      jsonhttp=new XMLHttpRequest();
+                    else if(window.activeXObject)
+                      jsonhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                    jsonhttp.onreadystatechange=function()
+                    { 
+                      if(jsonhttp.readyState==4)
+                      { 
+                        // We now have the sqm from the selected location
+                        // Convert to number...
+                        $("#sqm").val(Number(JSON.parse(jsonhttp.responseText))).change();
+                      }
+                    };
+                    jsonhttp.open("GET",url,true);
+                    jsonhttp.send(null);
+                });
+            });
+            </script>';
+
+    // Function to convert between bortle, sqm and limiting magnitude
+    echo '<script src="' . $baseURL 
+        . 'lib/javascript/sqm.js" type="text/javascript"></script>';
+    
     // Script to change the visibility when we are observing a resolved open cluster
     echo "<script type=\"text/javascript\">
     function setOptions(opn, oc1, oc2, oc3, oc4, oc5, oc6, oc7, 
@@ -212,11 +246,13 @@ function newObservation()
             ? $objObservation->getDsObservationProperty(
                 $_GET['observation'], 'locationid'
             ) : $objUtil->checkPostKey('site'));
-        $contentLoc = "<select required class=\"form-control\" name=\"site\">";
+        $contentLoc = "<select required class=\"form-control\" name=\"site\"" 
+            . " id=\"site\">";
         foreach ($sites as $key=>$value) {
             $contentLoc .= "<option " 
                 . (($value[0] == $theLoc) ? "selected=\"selected\"" : '') 
-                . " value=\"" . $value[0] . "\">" . $value[1] . "</option>";
+                . "\" value=\"" . $value[0] . "\">" 
+                . $value[1] . "</option>";
         }
         $contentLoc .= "</select>&nbsp;";
         // Date and time =====================================================
@@ -344,25 +380,51 @@ function newObservation()
                 . ">" . $value . "</option>";
         }
         $contentLanguage .= "</select>&nbsp;";
-        // Limiting Magnitude and SQM ========================================
+        // Limiting Magnitude, SQM, and Bortle ===============================
         $theLM = (($observationid) 
             ? $objObservation->getDsObservationProperty(
                 $observationid, 'limmag'
             ) : $objUtil->checkPostKey('limit'));
-        $contentLM = "<input type=\"number\" min=\"0.0\" max=\"9.9\" step=\"0.1\"" 
-            . " class=\"form-control\" maxlength=\"3\" name=\"limit\" size=\"4\"" 
+        $contentLM = "<input type=\"number\" min=\"0.0\" max=\"8.0\" step=\"0.1\"" 
+            . " class=\"form-control\" maxlength=\"3\" name=\"limit\" id=\"lm\"" 
+            . " size=\"4\"" 
             . " value=\"" . ($theLM ? sprintf("%1.1f", $theLM) : '') . "\" />";
+        $knownSQM = $objUtil->checkPostKey('sqm');
+        if ($knownSQM == '') {
+            // We read the standard SQM value of the location
+            $knownSQM = $objLocation->getLocationPropertyFromId(
+                $theLoc, 'skyBackground', ''
+            );
+        }
         $theSQM = (($observationid) 
             ? ((($tempSQM = $objObservation->getDsObservationProperty(
                 $_GET['observation'], 'SQM'
-            )) != - 1) ? $tempSQM : '') : $objUtil->checkPostKey('sqm'));
+            )) != - 1) ? $tempSQM : '') : $knownSQM);
         if ($theSQM < 10) {
             $theSQM = '';
         }
+
+
+
         $contentSQM = "<input type=\"number\" min=\"10.00\" max=\"25.00\"" 
-            . " step=\"0.01\" class=\"form-control\" maxlength=\"4\" name=\"sqm\"" 
-            . " size=\"4\"  value=\"" . ($theSQM ? sprintf("%2.1f", $theSQM) : '') 
+            . " step=\"0.01\" class=\"form-control\" maxlength=\"4\" id=\"sqm\"" 
+            . "  name=\"sqm\" size=\"4\"  value=\"" 
+            . ($theSQM ? sprintf("%2.1f", $theSQM) : '') 
             . "\" />";
+
+        $contentBortle =  '<select id="bortle" name="bortle">
+                <option></option>
+                <option value="1">1 - ' . _("Excellent dark-sky site") . '</option>
+                <option value="2">2 - ' . _("Typical truly dark site") . '</option>
+                <option value="3">3 - ' . _("Rural sky") . '</option>
+                <option value="4">4 - ' . _("Rural/suburban transition") . '</option>
+                <option value="5">5 - ' . _("Suburban sky") . '</option>
+                <option value="6">6 - ' . _("Bright suburban sky") . '</option>
+                <option value="7">7 - ' . _("Suburban/urban transition") . '</option>
+                <option value="8">8 - ' . _("City sky") . '</option>
+                <option value="9">9 - ' . _("Inner-city sky") . '</option>
+              </select>';
+    
         // Seeing ============================================================
         $theSeeing = (($observationid) 
             ? $objObservation->getDsObservationProperty($observationid, 'seeing') 
@@ -804,9 +866,9 @@ function newObservation()
 
         echo "<div class=\"form-group\">
                    <label>" . LangViewObservationField7 . " / " 
-            . LangViewObservationField34 . "</label>";
+            . LangViewObservationField34 . " / " . LangAddSiteField9 . "</label>";
         echo "<div class=\"form-inline\">";
-        echo $contentLM . " / " . $contentSQM;
+        echo $contentLM . " / " . $contentSQM . " / " . $contentBortle;
         echo "</div>";
         echo "</div>";
 
@@ -920,6 +982,54 @@ function newObservation()
         echo $objPresentations->getDSSDeepskyLiveLinks1($object);
         echo $objPresentations->getDSSDeepskyLiveLinks2($object);
         $objObject->showObject($object);
+
+        echo '<script type="text/javascript">
+        var bortleChange = 1;
+        // Javascript to convert from bortle to limiting magnitude and sqm
+        $(document).ready(function() {  
+            $("#bortle").change(function(){
+                bortleChange = 1;
+                bortle = $(this).find("option:selected").attr("value");
+
+                if (bortleChange == 1) {
+                    $("#lm").val(bortleToLm(bortle));
+                    $("#sqm").val(bortleToSqm(bortle));
+                } else {
+                    bortleChange = 1;
+                }
+            });
+        });
+
+        $("#lm").on("keyup change", function(event) {
+            lm = event.target.value;
+            if (lm < 0) {
+                lm = 0.0;
+                $("#lm").val(lm);
+            }
+            sqm = lmToSqm(lm);
+            $("#sqm").val(sqm);
+            bortleChange = 0;
+            $("#bortle").val(sqmToBortle(sqm)).change();
+        });
+
+        // Javascript to convert from sqm to limiting magnitude and bortle
+        $("#sqm").on("keyup change", function(event) {
+            sqm = event.target.value;
+
+            if (sqm > 22.0) {
+                sqm = 22.0;
+                $("#sqm").val(22.0);
+            }
+
+            lm = sqmToLm(sqm);
+            $("#lm").val(lm);
+
+            bortleChange = 0;
+            $("#bortle").val(sqmToBortle(sqm)).change();
+        });
+
+        </script>';
+    
     } else {
         // no object found or not pushed on search button yet
         echo "<h4>" . LangNewObservationTitle . "</h4>";
