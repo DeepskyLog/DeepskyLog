@@ -1,0 +1,1040 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: DeepskyLog\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-07-13 12:06+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.9\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: index.php:92 deepsky/content/view_list.php:21
+#: deepsky/content/view_list.php:31
+msgid "Create a new observing list"
+msgstr "Maak nieuwe lijst aan"
+
+#: index.php:96
+msgid "Name for the new observing list"
+msgstr "Naam voor de nieuwe waarneemlijst"
+
+#: index.php:101 deepsky/content/tolist.php:112 lib/lists.php:345
+msgid "Make this list a public list"
+msgstr "Maak van deze lijst een publieke lijst"
+
+#: index.php:105 deepsky/content/main.php:137 deepsky/content/main.php:140
+msgid "Create list"
+msgstr "Maak lijst aan"
+
+#: comets/menu/change.php:16 deepsky/menu/change.php:20
+msgid "Add"
+msgstr "Toevoegen"
+
+#: comets/menu/change.php:19 deepsky/menu/change.php:22
+msgid "Observation"
+msgstr "Waarneming"
+
+#: comets/menu/change.php:25 deepsky/menu/change.php:33
+msgid "Object"
+msgstr "Object"
+
+#: comets/menu/search.php:27 common/menu/head.php:110
+#: deepsky/menu/search.php:39
+msgid "Statistics"
+msgstr "Statistieken"
+
+#: common/entryexit/instructions.php:552
+#, php-format
+msgid "Successfully deleted %s."
+msgstr "%s werd succesvol verwijderd."
+
+#: common/content/overview_eyepieces.php:39
+#: common/content/overview_instruments.php:84
+#: common/content/overview_locations.php:115
+#: common/content/overview_lenses.php:45 common/content/overview_filters.php:41
+#: deepsky/content/change_session.php:132 lib/instruments.php:104
+#: lib/filters.php:156 lib/lenses.php:60 lib/eyepieces.php:68
+#: lib/locations.php:344
+msgid "Delete"
+msgstr "Verwijder"
+
+#: common/content/new_lens.php:25
+msgid "Select an existing lens"
+msgstr "Selecteer bestaande lens"
+
+#: common/content/new_instrument.php:27
+msgid "Select an existing instrument"
+msgstr "Selecteer een bestaand instrument"
+
+#: common/content/new_message.php:53
+msgid "Send as real mail"
+msgstr "Stuur als echte mail"
+
+#: common/content/overview_locations.php:44 lib/locations.php:337
+msgid "Elevation"
+msgstr "Hoogte"
+
+#: common/content/view_observer.php:128 common/content/statistics.php:106
+msgid "Observations per month"
+msgstr "Waarnemingen per maand"
+
+#: common/content/view_observer.php:132 common/content/view_observer.php:1202
+#: common/content/statistics.php:109 common/content/statistics.php:773
+msgid "Observations per country"
+msgstr "Waarnemingen per land"
+
+#: common/content/view_observer.php:725 common/content/statistics.php:350
+msgid "Number of observations per month"
+msgstr "Aantal waarnemingen per maand"
+
+#: common/content/view_observer.php:1257 lib/accomplishments.php:458
+msgid "Messier objects"
+msgstr "Messier objecten"
+
+#: common/content/view_observer.php:1262 common/content/view_observer.php:1284
+#: common/content/view_observer.php:1308 common/content/view_observer.php:1329
+#: common/content/view_observer.php:1353 common/content/view_observer.php:1384
+#: common/content/view_observer.php:1410 common/content/view_observer.php:1436
+msgid "Bronze"
+msgstr "Brons"
+
+#: common/content/view_observer.php:1263
+msgid "Bronze Messier certificat! You observed 25 Messier objects!"
+msgstr "Bronzen Messier certificaat! Je hebt 25 Messier objecten waargenomen!"
+
+#: common/content/view_observer.php:1264
+msgid "Observe at least 25 Messier objects to get this certificat!"
+msgstr "Neem minimaal 25 Messier objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1267 common/content/view_observer.php:1290
+#: common/content/view_observer.php:1313 common/content/view_observer.php:1335
+#: common/content/view_observer.php:1358 common/content/view_observer.php:1388
+#: common/content/view_observer.php:1414 common/content/view_observer.php:1440
+msgid "Silver"
+msgstr "Zilver"
+
+#: common/content/view_observer.php:1268
+msgid "Silver Messier certificat! You observed 50 Messier objects!"
+msgstr "Zilveren Messier certificaat! Je hebt 50 Messier objecten waargenomen!"
+
+#: common/content/view_observer.php:1269
+msgid "Observe at least 50 Messier objects to get this certificat!"
+msgstr "Neem minimaal 50 Messier objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1272 common/content/view_observer.php:1296
+#: common/content/view_observer.php:1318 common/content/view_observer.php:1341
+#: common/content/view_observer.php:1363 common/content/view_observer.php:1392
+#: common/content/view_observer.php:1418 common/content/view_observer.php:1444
+msgid "Gold"
+msgstr "Goud"
+
+#: common/content/view_observer.php:1273
+msgid "Golden Messier certificat! You observed all 110 Messier objects!"
+msgstr ""
+"Gouden Messier certificaat! Je hebt alle 110 Messier objecten waargenomen!"
+
+#: common/content/view_observer.php:1274
+msgid "Observe all 110 Messier objects to get this certificat!"
+msgstr "Neem alle 110 Messier objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1281
+msgid "Drawings of Messier objects"
+msgstr "Tekeningen van Messier objecten"
+
+#: common/content/view_observer.php:1286
+msgid "Bronze Messier drawing-certificat! You drawed 25 Messier objects!"
+msgstr ""
+"Bronzen Messier teken-certificaat! Je hebt 25 Messier objecten getekend!"
+
+#: common/content/view_observer.php:1287
+msgid "Draw at least 25 different Messier objects to get this certificat!"
+msgstr "Teken minimaal 25 Messier objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1292
+msgid "Silver Messier drawing-certificat! You drawed 50 Messier objects!"
+msgstr ""
+"Zilveren Messier teken-certificaat! Je hebt 50 Messier objecten getekend!"
+
+#: common/content/view_observer.php:1293
+msgid "Draw at least 50 Messier objects to get this certificat!"
+msgstr "Teken minimaal 50 Messier objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1298
+msgid "Golden Messier drawing-certificat! You drawed all 110 Messier objects!"
+msgstr ""
+"Gouden Messier teken-certificaat! Je hebt alle 110 Messier objecten getekend!"
+
+#: common/content/view_observer.php:1299
+msgid "Draw all 110 Messier objects to get this certificat!"
+msgstr "Teken alle 110 Messier objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1305 lib/accomplishments.php:460
+msgid "Caldwell objects"
+msgstr "Caldwell objecten"
+
+#: common/content/view_observer.php:1309
+msgid "Bronze Caldwell certificat! You observed 25 Caldwell objects!"
+msgstr ""
+"Bronzen Caldwell certificaat! Je hebt 25 Caldwell objecten waargenomen!"
+
+#: common/content/view_observer.php:1310
+msgid "Observe at least 25 Caldwell objects to get this certificat!"
+msgstr "Neem minimaal 25 Caldwell objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1314
+msgid "Silver Caldwell certificat! You observed 50 Caldwell objects!"
+msgstr ""
+"Zilveren Caldwell certificaat! Je hebt 50 Caldwell objecten waargenomen!"
+
+#: common/content/view_observer.php:1315
+msgid "Observe at least 50 Caldwell objects to get this certificat!"
+msgstr "Neem minimaal 50 Caldwell objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1319
+msgid "Golden Caldwell certificat! You observed all 110 Caldwell objects!"
+msgstr ""
+"Gouden Caldwell certificaat! Je hebt alle 110 Caldwell objecten waargenomen!"
+
+#: common/content/view_observer.php:1320
+msgid "Observe all 110 Caldwell objects to get this certificat!"
+msgstr "Neem alle 110 Caldwell objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1326
+msgid "Drawings of Caldwell objects"
+msgstr "Tekeningen van Caldwell objecten"
+
+#: common/content/view_observer.php:1331
+msgid "Bronze Caldwell drawing-certificat! You drawed 25 Caldwell objects!"
+msgstr ""
+"Bronzen Caldwell teken-certificaat! Je hebt 25 Caldwell objecten getekend!"
+
+#: common/content/view_observer.php:1332
+msgid "Draw at least 25 Caldwell objects to get this certificat!"
+msgstr "Teken minimaal 25 Caldwell objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1337
+msgid "Silver Caldwell drawing-certificat! You drawed 50 Caldwell objects!"
+msgstr ""
+"Zilveren Caldwell teken-certificaat! Je hebt 50 Caldwell objecten getekend!"
+
+#: common/content/view_observer.php:1338
+msgid "Draw at least 50 Caldwell objects to get this certificat!"
+msgstr "Teken minimaal 50 Caldwell objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1343
+msgid ""
+"Golden Caldwell drawing-certificat! You drawed all 110 Caldwell objects!"
+msgstr ""
+"Gouden Caldwell teken-certificaat! Je hebt alle 110 Caldwell objecten "
+"getekend!"
+
+#: common/content/view_observer.php:1344
+msgid "Draw all 110 Caldwell objects to get this certificat!"
+msgstr "Teken alle 110 Caldwell objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1350 lib/accomplishments.php:462
+msgid "Herschel 400 objects"
+msgstr "Herschel 400 objecten"
+
+#: common/content/view_observer.php:1368 common/content/view_observer.php:1396
+#: common/content/view_observer.php:1422 common/content/view_observer.php:1448
+msgid "Diamond"
+msgstr "Diamant"
+
+#: common/content/view_observer.php:1373 common/content/view_observer.php:1400
+#: common/content/view_observer.php:1426 common/content/view_observer.php:1452
+msgid "Platinum"
+msgstr "Platina"
+
+#: common/content/view_observer.php:1381
+msgid "Drawings of Herschel 400 objects"
+msgstr "Tekeningen van Herschel 400 objecten"
+
+#: common/content/view_observer.php:1407 lib/accomplishments.php:464
+msgid "Herschel II objects"
+msgstr "Herschel II objecten"
+
+#: common/content/view_observer.php:1433
+msgid "Drawings of Herschel II objects"
+msgstr "Tekeningen van Herschel II objecten"
+
+#: common/content/view_observer.php:1459
+msgid "Total number of drawings"
+msgstr "Totaal aantal tekeningen"
+
+#: common/content/view_observer.php:1506 lib/accomplishments.php:466
+msgid "Open clusters"
+msgstr "Open sterrenhopen"
+
+#: common/content/view_observer.php:1562
+msgid "Drawings of open clusters"
+msgstr "Tekeningen van open sterrenhopen"
+
+#: common/content/view_observer.php:1624 lib/accomplishments.php:468
+msgid "Globular clusters"
+msgstr "Bolhopen"
+
+#: common/content/view_observer.php:1676
+msgid "Drawings of globular clusters"
+msgstr "Tekeningen van bolhopen"
+
+#: common/content/view_observer.php:1733 lib/accomplishments.php:470
+msgid "Planetary Nebulae"
+msgstr "Planetaire nevels"
+
+#: common/content/view_observer.php:1791
+msgid "Drawings of planetary nebulae"
+msgstr "Tekeningen van planetaire nevels"
+
+#: common/content/view_observer.php:1856 lib/accomplishments.php:472
+msgid "Galaxies"
+msgstr "Sterrenstelsels"
+
+#: common/content/view_observer.php:1902
+msgid "Drawings of galaxies"
+msgstr "Tekeningen van sterrenstelsels"
+
+#: common/content/view_observer.php:1949 lib/accomplishments.php:474
+msgid "Nebulae"
+msgstr "Nevels"
+
+#: common/content/view_observer.php:2005
+msgid "Drawings of nebulae"
+msgstr "Tekeningen van nevels"
+
+#: common/content/view_observer.php:2064
+msgid "Different objects"
+msgstr "Verschillende objecten"
+
+#: common/content/view_observer.php:2110
+msgid "Drawings of different objects"
+msgstr "Tekeningen van verschillende objecten"
+
+#: common/content/view_observer.php:2157
+msgid "Total comet observations"
+msgstr "Totaal aantal kometen"
+
+#: common/content/view_observer.php:2203
+msgid "Different comets"
+msgstr "Verschillende kometen"
+
+#: common/content/view_observer.php:2250
+msgid "Drawings of comets"
+msgstr "Tekeningen van kometen"
+
+#: common/content/register.php:100 common/content/change_account.php:222
+msgid "License for drawings"
+msgstr "Licentie voor tekeningen"
+
+#: common/content/register.php:109 common/content/change_account.php:279
+msgid "No license (Not recommended!)"
+msgstr "Geen licentie (niet aanbevolen!)"
+
+#: common/content/register.php:110 common/content/change_account.php:286
+msgid "Enter your own copyright text"
+msgstr "Voer je eigen copyright tekst in"
+
+#: common/content/register.php:115 common/content/change_account.php:291
+msgid ""
+"It is important to select the <strong>correct license for your drawings</"
+"strong>! For help, see the <a href=\"http://creativecommons.org/choose/"
+"\">Creative Commons license-choosing tool</a>."
+msgstr ""
+"Selecteer de <strong>correcte licentie voor uw tekeningen</strong>! Voor "
+"meer informatie, gebruik de <a href=“http://creativecommons.org/"
+"choose/“>Creative Commons licentie-selectie tool</a>."
+
+#: common/content/new_filter.php:25
+msgid "Select an existing filter"
+msgstr "Selecteer bestaande filter"
+
+#: common/content/locations.php:39 common/content/new_location.php:58
+#: common/content/new_location.php:66 common/menu/head.php:204
+msgid "Add site"
+msgstr "Voeg locatie toe"
+
+#: common/content/statistics.php:82
+msgid "Select country"
+msgstr "Kies land"
+
+#: common/content/new_eyepiece.php:29
+msgid "Select an existing eyepiece"
+msgstr "Selecteer bestaand oculair"
+
+#: common/content/change_site.php:70 common/content/new_location.php:33
+#: common/content/new_location.php:42
+msgid "Search location"
+msgstr "Zoek locatie"
+
+#: common/content/change_site.php:136 common/content/new_location.php:101
+#: deepsky/content/newObservation.php:417
+msgid "Excellent dark-sky site"
+msgstr "Uitstekende donkere hemel"
+
+#: common/content/change_site.php:137 common/content/new_location.php:102
+#: deepsky/content/newObservation.php:418
+msgid "Typical truly dark site"
+msgstr "Donkere hemel"
+
+#: common/content/change_site.php:138 common/content/new_location.php:103
+#: deepsky/content/newObservation.php:419
+msgid "Rural sky"
+msgstr "Platteland"
+
+#: common/content/change_site.php:139 common/content/new_location.php:104
+#: deepsky/content/newObservation.php:420
+msgid "Rural/suburban transition"
+msgstr "Halfstedelijk gebied"
+
+#: common/content/change_site.php:140 common/content/new_location.php:105
+#: deepsky/content/newObservation.php:421
+msgid "Suburban sky"
+msgstr "Voorstad"
+
+#: common/content/change_site.php:141 common/content/new_location.php:106
+#: deepsky/content/newObservation.php:422
+msgid "Bright suburban sky"
+msgstr "Grote voorstad"
+
+#: common/content/change_site.php:142 common/content/new_location.php:107
+#: deepsky/content/newObservation.php:423
+msgid "Suburban/urban transition"
+msgstr "Overgang voorstad / stad"
+
+#: common/content/change_site.php:143 common/content/new_location.php:108
+#: deepsky/content/newObservation.php:424
+msgid "City sky"
+msgstr "Stadshemel"
+
+#: common/content/change_site.php:144 common/content/new_location.php:109
+#: deepsky/content/newObservation.php:425
+msgid "Inner-city sky"
+msgstr "Hemel midden in de stad"
+
+#: common/content/change_site.php:418 common/content/new_location.php:430
+msgid "Not active"
+msgstr "Niet actief"
+
+#: common/content/change_account.php:84
+msgid "Personal"
+msgstr "Persoonlijk"
+
+#: common/content/change_account.php:85
+msgid "Observing"
+msgstr "Waarnemen"
+
+#: common/content/change_account.php:86
+msgid "Atlases"
+msgstr "Atlassen"
+
+#: common/content/change_account.php:87
+msgid "Languages"
+msgstr "Talen"
+
+#: common/content/change_account.php:150 common/content/change_account.php:438
+#: common/content/change_account.php:454 common/content/change_password.php:29
+msgid "Change password"
+msgstr "Wijzig wachtwoord"
+
+#: common/content/change_account.php:177
+msgid "Send emails"
+msgstr "Stuur emails"
+
+#: common/content/change_account.php:181
+msgid "Send messages as email."
+msgstr "Stuur berichten ook als mail."
+
+#: common/content/change_account.php:331
+msgid "Preferred unit for instrument diameter"
+msgstr "Gewenste eenheid voor instrumentdiameter"
+
+#: common/content/change_account.php:444
+msgid "Current password"
+msgstr "Huidig wachtwoord"
+
+#: common/content/change_account.php:446 common/content/change_password.php:22
+msgid "New password"
+msgstr "Nieuw wachtwoord"
+
+#: common/content/new_location.php:32
+#, php-format
+msgid ""
+"Set your location on the map or by entering the name and pressing the %s "
+"button."
+msgstr ""
+"Kies je locatie op de map of typ de naam van de locatie in en druk op de %s "
+"knop."
+
+#: common/content/new_location.php:57
+#, php-format
+msgid ""
+"Define your own name for this location, eventually add a naked eye limiting "
+"magnitude (or SQM value) and press the %s button."
+msgstr ""
+"Kies een naam voor deze locatie, voeg eventueel een grensmagnitude (of SQM "
+"waarde) toe en druk op de %s knop."
+
+#: common/menu/help.php:17
+msgid "Report issue"
+msgstr "Rapporteer probleem"
+
+#: common/menu/help.php:18 deepsky/content/main.php:34
+msgid "What's new in DeepskyLog"
+msgstr "Nieuw in DeepskyLog"
+
+#: common/menu/head.php:132
+msgid "Change site"
+msgstr "Wijzig locatie"
+
+#: common/menu/head.php:196 deepsky/menu/search.php:28
+msgid "My instruments"
+msgstr "Mijn instrumenten"
+
+#: common/menu/head.php:198 deepsky/menu/search.php:30
+msgid "My eyepieces"
+msgstr "Mijn oculairs"
+
+#: common/menu/head.php:200 deepsky/menu/search.php:31
+msgid "My filters"
+msgstr "Mijn filters"
+
+#: common/menu/head.php:202 deepsky/menu/search.php:32
+msgid "My lenses"
+msgstr "Mijn lenzen"
+
+#: common/menu/head.php:206 deepsky/menu/search.php:29
+msgid "My locations"
+msgstr "Mijn locaties"
+
+#: common/menu/headmenu.php:142 common/menu/headmenu.php:157
+msgid "Forgot password?"
+msgstr "Wachtwoord vergeten?"
+
+#: common/menu/headmenu.php:160
+msgid "Please enter your DeepskyLog username <strong>or</strong> your email."
+msgstr ""
+"Gelieve je DeepskyLog gebruikersnaam <strong>of</strong> je in DeepskyLog "
+"gekend emailadres in te voeren."
+
+#: common/menu/headmenu.php:164
+msgid "DeepskyLog username"
+msgstr "DeepskyLog gebruikersnaam"
+
+#: common/menu/headmenu.php:171
+msgid "Request new password"
+msgstr "Vraag nieuw wachtwoord aan"
+
+#: common/control/changeToken.php:52 common/control/changeToken.php:61
+#: common/control/removeToken.php:29 common/control/removeToken.php:38
+msgid "A DeepskyLog Change Password Request was canceled"
+msgstr "Een DeepskyLog aanvraag om je wachtwoord te wijzigen is geannuleerd"
+
+#: common/control/changeToken.php:53 common/control/removeToken.php:30
+#, php-format
+msgid "A request was canceled from the ip-address %s"
+msgstr ""
+"Een aanvraag om je wachtwoord te wijzigen is geannuleerd vanaf het ip-adres "
+"%s"
+
+#: common/control/changeToken.php:55 common/control/removeToken.php:32
+msgid ""
+"If you did not request this, it could be either an honest mistake or someone "
+"attempting to break into your DeepskyLog account."
+msgstr ""
+"Als je dit niet hebt aangevraagd, zou het een eerlijke vergissing kunnen "
+"zijn of iemand die probeert in te breken in jouw DeepskyLog account."
+
+#: deepsky/content/main.php:21
+msgid "What's new in DeepskyLog since version "
+msgstr "Nieuw in DeepskyLog sinds versie "
+
+#: deepsky/content/main.php:45
+msgid ""
+"<h2>Welcome to DeepskyLog!</h2>\n"
+"In close collaboration with the Astronomical Society of Belgium (<a href="
+"\"http://www.vvs.be\">Vereniging Voor Sterrenkunde (VVS)</a>) we are glad to "
+"offer a comprehensive and free database for deepsky objects. The database is "
+"developed by the deepsky-section of the VVS. The database already contains "
+"tens of thousands observations and thousands of sketches and drawings made "
+"by amateur astronomers around the world. After you have registered for "
+"DeepskyLog, you get access to a variety of useful tools:<br /><br />\n"
+"<ul><li>Information on the observations you made, the objects observed and "
+"sketches made,</li>\n"
+"    <li>observing lists with different deepsky objects,</li>\n"
+"    <li>you can share your observations with other observers,</li>\n"
+"    <li>translate function to read observations in other languages,</li>\n"
+"    <li>free atlases,</li>\n"
+"    <li>create your own file with maps and DSS images of the objects,</li>\n"
+"    <li>interactive star atlas down to magnitude 16,</li>\n"
+"    <li>suggestions for objects visible in your instruments,</li>\n"
+"    <li>information about the objects that are visible from your observation "
+"sites.</li>\n"
+"</ul>\n"
+"To start recording your observations, you need an account, which you can get "
+"after registration. Please contact the <a href=\"mailto:"
+"developers@deepskylog.be\">DeepskyLog developers</a> if you encounter "
+"problems or have questions."
+msgstr ""
+"<h2>Welkom bij DeepskyLog!</h2>\n"
+"In nauwe samenwerking met de <a href=\\”http://www.vvs.be\\”>Vereniging Voor "
+"Sterrenkunde (VVS)</a> uit België bieden wij een uitgebreide en gratis "
+"database aan voor deepsky objecten. De database is ontwikkeld door de "
+"werkgroep deepsky van de VVS. De database bevat al tienduizenden "
+"waarnemingen en duizenden schetsen en tekeningen gemaakt door amateur-"
+"astronomen over de hele wereld. Nadat je geregistreerd bent op DeepskyLog "
+"krijgt u toegang tot een scala aan handige tools:<br /><br />\n"
+"<ul><li>Informatie over de waarnemingen, de waargenomen objecten en schetsen "
+"die je hebt gemaakt,</li>\n"
+"    <li>Waarneemlijsten met verschillende deepsky objecten,</li>\n"
+"    <li>u kunt uw waarnemingen te delen met andere waarnemers,</li>\n"
+"    <li>vertaalfunctie om waarnemingen in andere talen te lezen,</li>\n"
+"    <li>gratis steratlassen,</li>\n"
+"    <li>maak je eigen map met kaarten en DSS beelden van de objecten,</li>\n"
+"    <li>genereer pagina’s van de objecten met de items waarin u "
+"geïnteresseerd bent,</li>\n"
+"    <li>interactieve ster atlas tot magnitude 16,</li>\n"
+"    <li>suggesties voor objecten die zichtbaar zijn met uw apparatuur,</li>\n"
+"    <li>informatie over de objecten die zichtbaar zijn vanaf uw "
+"waarneemplaats.</li>\n"
+"</ul>\n"
+"Om waarnemingen in te geven heb je een account nodig. Dit krijg je nadat u "
+"registreert. Neem contact op met de <a href=\\”mailto:developers@deepskylog."
+"be\\”>DeepskyLog ontwikkelaars</a> bij problemen of vragen."
+
+#: deepsky/content/main.php:110 deepsky/content/main.php:113
+msgid "Download atlases"
+msgstr "Download atlassen"
+
+#: deepsky/content/main.php:147
+msgid "New drawings"
+msgstr "Nieuwe tekeningen"
+
+#: deepsky/content/setup_observations_query.php:62
+#: deepsky/content/setup_objects_query.php:60
+msgid "Select catalog"
+msgstr "Kies cataloog"
+
+#: deepsky/content/setup_observations_query.php:69
+#: deepsky/content/setup_objects_query.php:67
+msgid "Enter number in catalog"
+msgstr "Nummer in cataloog"
+
+#: deepsky/content/tolist.php:39 deepsky/content/tolist.php:52
+#: deepsky/content/tolist.php:95 lib/lists.php:242 lib/lists.php:282
+#: lib/lists.php:325
+msgid "Change name"
+msgstr "Verander naam"
+
+#: deepsky/content/tolist.php:45 lib/lists.php:246 lib/lists.php:292
+msgid "Make private"
+msgstr "Maak privaat"
+
+#: deepsky/content/tolist.php:47 lib/lists.php:248 lib/lists.php:296
+msgid "Make public"
+msgstr "Maak publiek"
+
+#: deepsky/content/tolist.php:53
+msgid "Add new list"
+msgstr "Maak een nieuwe waarneemlijst aan"
+
+#: deepsky/content/tolist.php:99 lib/lists.php:329
+msgid "New name for the observing list"
+msgstr "Nieuwe naam voor de waarneemlijst"
+
+#: deepsky/content/view_observation.php:7
+msgid "No observation to display."
+msgstr "Geen waarneming te tonen."
+
+#: deepsky/content/view_observation.php:10
+msgid "The requested observation does not exist."
+msgstr "De gevraagde waarneming bestaat niet."
+
+#: deepsky/content/view_observation.php:68
+msgid "Observation of "
+msgstr "Waarneming van "
+
+#: deepsky/content/view_object.php:72 deepsky/content/view_object.php:79
+#: deepsky/content/view_object.php:92
+msgid "Remove Object"
+msgstr "Verwijder object"
+
+#: deepsky/content/view_object.php:82 deepsky/content/view_object.php:110
+#, php-format
+msgid "Do you really want to delete %s?"
+msgstr "Wil je %s echt verwijderen?"
+
+#: deepsky/content/view_object.php:83
+#, php-format
+msgid ""
+"There are no observations of %s, so removing %s should be relatively safe."
+msgstr ""
+"Er zijn geen waarnemingen van %s, dus het verwijderen van %s zou veilig "
+"moeten zijn."
+
+#: deepsky/content/view_object.php:91 deepsky/content/view_object.php:119
+msgid "Keep Object"
+msgstr "Behoud object"
+
+#: deepsky/content/view_object.php:100 deepsky/content/view_object.php:107
+#: deepsky/content/view_object.php:120
+msgid "Force Remove Object"
+msgstr "Verwijder object"
+
+#: deepsky/content/view_object.php:111
+#, php-format
+msgid ", which has %s observations?"
+msgstr ", samen met de %s waarnemingen?"
+
+#: deepsky/content/view_object.php:113
+msgid "All the observations will also be removed!"
+msgstr "Alle waarnemingen zullen ook verwijderd worden!"
+
+#: deepsky/content/view_object.php:127
+msgid "Save"
+msgstr "Bewaar"
+
+#: deepsky/content/view_list.php:5
+msgid "Active list"
+msgstr "Actieve lijst"
+
+#: deepsky/content/view_list.php:11
+msgid ""
+" is your active list. You can search for objects and add these objects to "
+"this list."
+msgstr ""
+" is jouw actieve lijst. Je kan objecten zoeken en deze toevoegen aan deze "
+"lijst."
+
+#: deepsky/content/view_list.php:13
+msgid ""
+"There is no active list. Select one of the lists to make that list active. "
+"You can search for objects and add these objects to your active lists."
+msgstr ""
+"Je hebt geen actieve lijst geselecteerd. Kies één van de lijsten om deze "
+"lijst actief te maken. Je kan objecten zoeken en deze toevoegen aan jouw "
+"actieve lijsten."
+
+#: deepsky/content/view_list.php:17
+#, php-format
+msgid "Public lists of %s"
+msgstr "Publieke lijsten van %s"
+
+#: deepsky/content/view_list.php:27
+#, php-format
+msgid "Private lists of %s"
+msgstr "Private lijsten van %s"
+
+#: deepsky/content/selected_objects.php:49 lib/objects.php:1772
+msgid "Switch names and alternative names"
+msgstr "Wissel namen en alternatieve namen"
+
+#: deepsky/menu/change.php:24
+msgid "Observing list"
+msgstr "Waarneemlijst"
+
+#: deepsky/menu/search.php:25
+msgid "My observing lists"
+msgstr "Mijn waarneemlijsten"
+
+#: deepsky/menu/list.php:56
+msgid "Public: "
+msgstr "Publiek: "
+
+#: deepsky/menu/quickpick.php:25
+msgid "Enter object name"
+msgstr "Voer objectnaam in"
+
+#: lib/observers.php:475 lib/observers.php:503
+msgid ""
+"The new password and the confirmed password are not the same. Unable to "
+"change the password."
+msgstr ""
+"Het nieuwe wachtwoord en de bevestiging zijn niet gelijk. Onmogelijk om het "
+"wachtwoord aan te passen."
+
+#: lib/observers.php:479 lib/observers.php:507
+msgid "The password is successfully changed."
+msgstr "Het wachtwoord is gewijzigd."
+
+#: lib/observers.php:490
+msgid ""
+"The current password you entered is incorrect. Unable to change the password."
+msgstr ""
+"Het huidige wachtwoord is incorrect ingegeven. Onmogelijk om het wachtwoord "
+"aan te passen."
+
+#: lib/observers.php:529
+#, php-format
+msgid ""
+"The username %s is not known by DeepskyLog. Impossible to request a new "
+"password."
+msgstr ""
+"De gebruikersnaam %s is niet gekend in DeepskyLog. Onmogelijk om een nieuw "
+"wachtwoord aan te vragen."
+
+#: lib/observers.php:540
+#, php-format
+msgid ""
+"The mail address %s is not known by DeepskyLog. Impossible to request a new "
+"password."
+msgstr ""
+"Het emailadres %s is niet gekend in DeepskyLog. Onmogelijk om een nieuw "
+"wachtwoord aan te vragen."
+
+#: lib/observers.php:545
+msgid ""
+"The given username and mail address are not known by DeepskyLog. Impossible "
+"to request a new password."
+msgstr ""
+"De gebruikersnaam en het mailadres zijn niet gekend in DeepskyLog. "
+"Onmogelijk om een nieuw wachtwoord aan te vragen."
+
+#: lib/observers.php:560
+msgid "DeepskyLog Change Password Request"
+msgstr "DeepskyLog aanvraag om wachtwoord aan te passen"
+
+#: lib/observers.php:563
+#, php-format
+msgid ""
+"You have (or someone impersonating you has) requested to change your %s "
+"password.\n"
+"                    <br />To complete the change, visit the following link:"
+msgstr ""
+"Je hebt (of iemand die je nadoet heeft) verzocht om jouw %s wachtwoord te "
+"wijzigen.\n"
+"                    <br />Om de wijziging te voltooien, klik op de volgende "
+"link:"
+
+#: lib/observers.php:568
+msgid ""
+"If you are not the person who made this request, or you wish to cancel this "
+"request, visit the following link:"
+msgstr ""
+"Als je niet de persoon bent die dit verzoek heeft ingediend, of je dit "
+"verzoek wenst te annuleren, klik op de volgende link:"
+
+#: lib/observers.php:579
+#, php-format
+msgid ""
+"If you do nothing, the request will lapse after 24 hours (on %s) or when you "
+"log in successfully."
+msgstr ""
+"Als je niets doet, vervalt het verzoek na 24 uur (op %s) of wanneer je "
+"succesvol inlogt."
+
+#: lib/observers.php:582
+msgid "The DeepskyLog team"
+msgstr "Het DeepskyLog team"
+
+#: lib/observers.php:589
+#, php-format
+msgid ""
+"A token for changing the password of %s has been emailed to %s. Follow the "
+"instructions in that email to change your password."
+msgstr ""
+"Een token om het wachtwoord van %s te wijzigen is naar %s verzonden. Volg de "
+"instructies in die mail om je wachtwoord te wijzigen."
+
+#: lib/locations.php:335
+msgid "Weather forecast"
+msgstr "Weersvoorspelling"
+
+#: lib/accomplishments.php:342
+#, php-format
+msgid "New DeepskyLog star! %s observed!"
+msgstr "Nieuwe DeepskyLog ster! %s waargenomen!"
+
+#: lib/accomplishments.php:356
+#, php-format
+msgid ""
+"Congratulations! You have observed %s and receive a DeepskyLog star! Check "
+"out your DeepskyLog stars at %s"
+msgstr ""
+"Proficiat! Je hebt %s waargenomen en ontvangt een DeepskyLog ster! Bekijk je "
+"DeepskyLog sterren op %s"
+
+#: lib/accomplishments.php:370
+#, php-format
+msgid "New DeepskyLog star! %s drawn!"
+msgstr "Nieuwe DeepskyLog ster! %s getekend!"
+
+#: lib/accomplishments.php:384
+#, php-format
+msgid ""
+"Congratulations! You have drawn %s and receive a DeepskyLog star! Check out "
+"your DeepskyLog stars at %s"
+msgstr ""
+"Proficiat! Je hebt %s getekend en ontvangt een DeepskyLog ster! Bekijk je "
+"DeepskyLog sterren op %s"
+
+#: lib/accomplishments.php:476 lib/accomplishments.php:492
+#: lib/accomplishments.php:574 lib/accomplishments.php:578
+#: lib/accomplishments.php:582 lib/accomplishments.php:586
+#: lib/accomplishments.php:590 lib/accomplishments.php:594
+#: lib/accomplishments.php:598 lib/accomplishments.php:602
+#: lib/accomplishments.php:606 lib/accomplishments.php:610
+#: lib/accomplishments.php:652 lib/accomplishments.php:656
+#: lib/accomplishments.php:660 lib/accomplishments.php:664
+#: lib/accomplishments.php:668 lib/accomplishments.php:672
+#: lib/accomplishments.php:676 lib/accomplishments.php:680
+#: lib/accomplishments.php:684 lib/accomplishments.php:688
+#: lib/accomplishments.php:730 lib/accomplishments.php:734
+#: lib/accomplishments.php:738 lib/accomplishments.php:742
+#: lib/accomplishments.php:746 lib/accomplishments.php:750
+#: lib/accomplishments.php:754 lib/accomplishments.php:758
+#: lib/accomplishments.php:762 lib/accomplishments.php:766
+msgid "object"
+msgstr "object"
+
+#: lib/accomplishments.php:478 lib/accomplishments.php:494
+msgid "objects"
+msgstr "objecten"
+
+#: lib/accomplishments.php:482
+msgid "open cluster"
+msgstr "open sterrenhoop"
+
+#: lib/accomplishments.php:484
+msgid "globular cluster"
+msgstr "bolvormige sterrenhoop"
+
+#: lib/accomplishments.php:486
+msgid "planetary nebula"
+msgstr "planetaire nevel"
+
+#: lib/accomplishments.php:488
+msgid "galaxy"
+msgstr "sterrenstelsel"
+
+#: lib/accomplishments.php:490
+msgid "nebula"
+msgstr "nevel"
+
+#: lib/introductionTour.php:10
+msgid "Add one or more instruments"
+msgstr "Voeg minimaal 1 instrument toe"
+
+#: lib/introductionTour.php:11
+msgid "Click on Change and select Instruments. Add at least 1 instrument."
+msgstr ""
+"Klik op Wijzigen en selecteer Instrumenten. Voeg minimaal 1 instrument toe."
+
+#: lib/introductionTour.php:17
+msgid "Add at least one instrument!"
+msgstr "Voeg minimaal 1 instrument toe!"
+
+#: lib/introductionTour.php:18
+msgid ""
+"DeepskyLog can calculate visibilities of objects when an instrument is "
+"inserted. You can also only add new observations when an instrument is known "
+"by DeepskyLog."
+msgstr ""
+"DeepskyLog kan zichtbaarheden van objecten berekenen, maar daarvoor moet er "
+"wel een instrument zijn toegevoegd. Je kan ook pas waarnemingen toevoegen "
+"wanneer er een instrument is gekend."
+
+#: lib/introductionTour.php:23
+msgid "Add one or more locations"
+msgstr "Voeg minimaal 1 waarneemplaats toe"
+
+#: lib/introductionTour.php:24
+msgid "Click on Change and select Locations. Add at least 1 location."
+msgstr ""
+"Klik op Wijzigen en selecteer Waarneemplaatsen. Voeg minimaal 1 "
+"waarneemplaats toe."
+
+#: lib/introductionTour.php:30
+msgid "Add at least one location!"
+msgstr "Voeg minimaal 1 waarneemplaats toe!"
+
+#: lib/introductionTour.php:31
+msgid ""
+"DeepskyLog can calculate visibilities of objects when a location is "
+"inserted. You can also only add new observations when a location is known by "
+"DeepskyLog."
+msgstr ""
+"DeepskyLog kan zichtbaarheden van objecten berekenen, maar daarvoor moet er "
+"wel een waarneemplaats zijn toegevoegd. Je kan ook pas waarnemingen "
+"toevoegen wanneer er een waarneemplaats is gekend."
+
+#: lib/introductionTour.php:36
+msgid "Add a picture of yourself"
+msgstr "Voeg een foto van jezelf toe"
+
+#: lib/introductionTour.php:37
+msgid "Click on your name and select Settings. Add a picture of yourself."
+msgstr ""
+"Klik op je naam en selecteer Instellingen. Voeg een foto van jezelf toe."
+
+#: lib/introductionTour.php:42
+msgid "Add a picture of yourself!"
+msgstr "Voeg een foto van jezelf toe!"
+
+#: lib/introductionTour.php:43
+msgid ""
+"When you add a picture, others will see your picture when you send them a "
+"message."
+msgstr ""
+"Andere waarnemers zien je foto als je ze een bericht verstuurd of als ze "
+"&eacute;&eacute;n van je waarnemingen bekijken."
+
+#: lib/introductionTour.php:49
+msgid "Read your messages"
+msgstr "Lees je berichten"
+
+#: lib/introductionTour.php:50
+msgid ""
+"Other observers can send you messages in DeepskyLog. Here, you can read the "
+"messages."
+msgstr ""
+"Andere waarnemers kunnen jou een bericht zenden in DeepskyLog. Klik om je "
+"berichten te lezen."
+
+#: lib/objects.php:639
+msgid "Number of own observations"
+msgstr "Aantal eigen tekeningen"
+
+#: lib/objects.php:645
+msgid "Last own observation"
+msgstr "Laatste eigen waarneming"
+
+#: lib/objects.php:653
+msgid "Number of own drawings"
+msgstr "Aantal eigen tekeningen"
+
+#: lib/objects.php:1454
+msgid "Create new empty catalog"
+msgstr "Maak een nieuwe lege cataloog"
+
+#: lib/objects.php:1794
+msgid "Typ"
+msgstr "Typ"
+
+#: lib/objects.php:1802
+msgid "Best"
+msgstr "Best"
+
+#: lib/lists.php:239
+msgid "Name"
+msgstr "Naam"
+
+#: lib/lists.php:369
+#, php-format
+msgid ""
+"A public list with the same name (%s) as your list already exists. Please "
+"rename your list before making the list public."
+msgstr ""
+"Er bestaat al een publieke lijst met dezelfde naam (%s) als jouw lijst. "
+"Hernoem jouw lijst vooraleer ze publiek te maken."
+
+#: lib/messages.php:187
+#, php-format
+msgid "DeepskyLog message from %s:"
+msgstr "DeepskyLog bericht van %s:"
+
+#~ msgid " button."
+#~ msgstr " knop."

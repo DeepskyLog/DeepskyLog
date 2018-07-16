@@ -79,7 +79,7 @@ function statistics() {
 	echo '<form action="' . $baseURL . 'index.php" method="post" class="form-inline">
 					<input type="hidden" name="indexAction" value="statistics" />
   				<div class="form-group">
-						<label class="control-label">' . LangSelectCountry . '&nbsp;&nbsp;</label>';
+						<label class="control-label">' . _("Select country") . '&nbsp;&nbsp;</label>';
 
 	echo "			<select  name=\"country\" class=\"form-control\" onchange=\"submit();\">";
 	echo "				<option value=\"All\">All</option>";
@@ -103,10 +103,10 @@ function statistics() {
 	echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">
           <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">" . GraphInfo . "</a></li>
           <li><a href=\"#observationsPerYear\" data-toggle=\"tab\">" . GraphObservationsTitle . "</a></li>
-					<li><a href=\"#observationsPerMonth\" data-toggle=\"tab\">" . GraphObservationsMonthTitle . "</a></li>
+					<li><a href=\"#observationsPerMonth\" data-toggle=\"tab\">" . _("Observations per month") . "</a></li>
           <li><a href=\"#objectTypes\" data-toggle=\"tab\">" . GraphObservationsType . "</a></li>";
 	if (strcmp($selectedCountry, "All") == 0) {
- 		echo "<li><a href=\"#countries\" data-toggle=\"tab\">" . GraphObservationsPerCountry . "</a></li>";
+ 		echo "<li><a href=\"#countries\" data-toggle=\"tab\">" . _("Observations per country") . "</a></li>";
 	}
   echo "</ul>";
 
@@ -347,7 +347,7 @@ function statistics() {
 	  	          marginBottom: 25
 	  	        },
 	  	        title: {
-	  	          text: \"" . GraphTitleMonths . "\",
+	  	          text: \"" . _("Number of observations per month") . "\",
 	  	          x: -20 //center
 	  	        },
 	  	        subtitle: {
@@ -770,7 +770,7 @@ function statistics() {
 					plotShadow: false
 				},
 				title: {
-					text: \"" . GraphObservationsPerCountry . "\"
+					text: \"" . _("Observations per country") . "\"
 				},
 				subtitle: {
 					text: '" . GraphSource . $baseURL . "'

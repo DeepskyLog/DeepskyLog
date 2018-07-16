@@ -57,7 +57,7 @@ class Lenses {
 			echo "<th>" . LangViewActive . "</td>";
 			echo "<th data-priority=\"critical\">" . LangViewLensName . "</th>";
 			echo "<th>" . LangViewLensFactor . "</th>";
-			echo "<th>" . LangRemove . "</th>";
+			echo "<th>" . _("Delete") . "</th>";
 			echo "<th>" . LangTopObserversHeader3 . "</th>";
 			echo "</tr></thead>";
 			$count = 0;

@@ -534,34 +534,34 @@ class Objects {
 				if ($ristraset [2] == "-" && strncmp ( $ristraset [3], "-", 1 ) == 0) {
 					$popup3 = $obs [$j] ["objectname"] . LangDoesntrise;
 				} else if ($ristraset [2] == "-") {
-					$popup3 = $obs [$j] ["objectname"] . LangCircumpolar;
+					$popup3 = $obs[$j] ["objectname"] . LangCircumpolar;
 				} else {
-					$popup3 = $obs [$j] ["objectname"] . LangSet . $ristraset [2] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes ( $location );
+					$popup3 = $obs[$j] ["objectname"] . LangSet . $ristraset [2] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes ( $location );
 				}
 				if ($ristraset [3] == "-") {
-					$popup4 = $obs [$j] ["objectname"] . LangDoesntrise;
+					$popup4 = $obs[$j] ["objectname"] . LangDoesntrise;
 				} else {
-					$popup4 = $obs [$j] ["objectname"] . LangAltitude . $ristraset [3] . LangRistrasetIn . addslashes ( $location );
+					$popup4 = $obs[$j] ["objectname"] . LangAltitude . $ristraset [3] . LangRistrasetIn . addslashes ( $location );
 				}
-				$obs [$j] ['objectrise'] = $ristraset [0];
-				$obs [$j] ['objectriseorder'] = ($ristraset [0] != '-' ? ($ristraset [0] < 10 ? (intval(substr ( $ristraset [0], 0, 1 )) * 100) + 2400 + intval(substr ( $ristraset [0], 2, 2 )) : ($ristraset [0] < 12 ? (intval(substr ( $ristraset [0], 0, 2 )) * 100) + 2400 + intval(substr ( $ristraset [0], 3, 2 )) : (intval(substr ( $ristraset [0], 0, 2 )) * 100) + intval(substr ( $ristraset [0], 3, 2 )))) : 9999);
-                $obs [$j] ['objecttransit'] = $ristraset [1];
-                $obs [$j] ['objecttransitorder'] = ($ristraset[1] != '-' 
+				$obs[$j]['objectrise'] = $ristraset [0];
+				$obs[$j]['objectriseorder'] = ($ristraset [0] != '-' ? ($ristraset [0] < 10 ? (intval(substr ( $ristraset [0], 0, 1 )) * 100) + 2400 + intval(substr ( $ristraset [0], 2, 2 )) : ($ristraset [0] < 12 ? (intval(substr ( $ristraset [0], 0, 2 )) * 100) + 2400 + intval(substr ( $ristraset [0], 3, 2 )) : (intval(substr ( $ristraset [0], 0, 2 )) * 100) + intval(substr ( $ristraset [0], 3, 2 )))) : 9999);
+                $obs[$j]['objecttransit'] = $ristraset [1];
+                $obs[$j]['objecttransitorder'] = ($ristraset[1] != '-' 
                     ? ($ristraset[1] < 10 
                     ? (intval(substr($ristraset[1], 0, 2)) * 100) + 2400 + intval(substr($ristraset[1], 2, 2))
                     : ($ristraset [1] < 12 
                     ? (intval(substr ( $ristraset [1], 0, 2 )) * 100) + 2400 + intval(substr ( $ristraset [1], 3, 2 )) 
                     : (intval(substr ( $ristraset [1], 0, 2 )) * 100) + intval(substr ( $ristraset [1], 3, 2 )))) : 9999);
 
-				$obs [$j] ['objectset'] = $ristraset [2];
-				$obs [$j] ['objectsetorder'] = ($ristraset [2] != '-' ? ($ristraset [2] < 10 ? (intval(substr ( $ristraset [2], 0, 1 )) * 100) + 2400 + intval(substr ( $ristraset [2], 2, 2 )) : ($ristraset [2] < 12 ? (intval(substr ( $ristraset [2], 0, 2 )) * 100) + 2400 + intval(substr ( $ristraset [2], 3, 2 )) : (intval(substr ( $ristraset [2], 0, 2 )) * 100) + intval(substr ( $ristraset [2], 3, 2 )))) : 9999);
-				$obs [$j] ['objectbest'] = $ristraset [4];
-				$obs [$j] ['objectbestorder'] = ($ristraset [4] != '-' ? ($ristraset [4] < 10 ? (intval(substr ( $ristraset [4], 0, 1 )) * 1000000) + 24000000 + (intval(substr ( $ristraset [4], 2, 2 )) * 10000) : ($ristraset [4] < 12 ? (intval(substr ( $ristraset [4], 0, 2 )) * 1000000) + 24000000 + (intval(substr ( $ristraset [4], 3, 2 )) * 10000) : (intval(substr ( $ristraset [4], 0, 2 )) * 1000000) + (intval(substr ( $ristraset [4], 3, 2 )) * 10000) + ($obs [$j] ['objectsetorder']))) : 99999999);
-				$obs [$j] ['objectmaxaltitude'] = $ristraset [3];
-				$obs [$j] ['objectrisepopup'] = $popup1;
-				$obs [$j] ['objecttransitpopup'] = $popup2;
-				$obs [$j] ['objectsetpopup'] = $popup3;
-				$obs [$j] ['objectmaxaltitudepopup'] = $popup4;
+				$obs[$j]['objectset'] = $ristraset [2];
+				$obs[$j]['objectsetorder'] = ($ristraset [2] != '-' ? ($ristraset [2] < 10 ? (intval(substr ( $ristraset [2], 0, 1 )) * 100) + 2400 + intval(substr ( $ristraset [2], 2, 2 )) : ($ristraset [2] < 12 ? (intval(substr ( $ristraset [2], 0, 2 )) * 100) + 2400 + intval(substr ( $ristraset [2], 3, 2 )) : (intval(substr ( $ristraset [2], 0, 2 )) * 100) + intval(substr ( $ristraset [2], 3, 2 )))) : 9999);
+				$obs[$j]['objectbest'] = $ristraset [4];
+				$obs[$j]['objectbestorder'] = ($ristraset [4] != '-' ? ($ristraset [4] < 10 ? (intval(substr ( $ristraset [4], 0, 1 )) * 1000000) + 24000000 + (intval(substr ( $ristraset [4], 2, 2 )) * 10000) : ($ristraset [4] < 12 ? (intval(substr ( $ristraset [4], 0, 2 )) * 1000000) + 24000000 + (intval(substr ( $ristraset [4], 3, 2 )) * 10000) : (intval(substr ( $ristraset [4], 0, 2 )) * 1000000) + (intval(substr ( $ristraset [4], 3, 2 )) * 10000) + ($obs [$j] ['objectsetorder']))) : 99999999);
+				$obs[$j]['objectmaxaltitude'] = $ristraset [3];
+				$obs[$j]['objectrisepopup'] = $popup1;
+				$obs[$j]['objecttransitpopup'] = $popup2;
+				$obs[$j]['objectsetpopup'] = $popup3;
+				$obs[$j]['objectmaxaltitudepopup'] = $popup4;
 			}
 		} else {
 			for($j = 0; $j < count ( $obs ); $j ++) {
@@ -636,13 +636,13 @@ class Objects {
 			if ($get3->PersObsCnt > 0) {
 				// The number of personal observations of this object.
 				echo " <tr>";
-				echo "  <td>" . LangPersonalObservations . "</td>";
+				echo "  <td>" . _("Number of own observations") . "</td>";
 				echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog=" . $cat . "&number=" . rawurlencode ( $number ) . "&observer=" . $loggedUser . "\">" . $get3->PersObsCnt . "</a></td>";
 				echo " </tr>";
 				
 				// The date of observer's last observation of this object.
 				echo " <tr>";
-				echo "  <td>" . LangLastPersonalObservation . "</td>";
+				echo "  <td>" . _("Last own observation") . "</td>";
 				$date = $get3->PersObsMaxDate;
 				$dateArray = sscanf ( $date, "%4d%2d%2d" );
 				echo "  <td>" . date ( $dateformat, mktime ( 0, 0, 0, $dateArray [1], $dateArray [2], $dateArray [0] ) ) . "</td>";
@@ -650,7 +650,7 @@ class Objects {
 				
 				// The number of drawings the observer has made.
 				echo " <tr>";
-				echo "  <td>" . LangNumberOfPersonalDrawings . "</td>";
+				echo "  <td>" . _("Number of own drawings") . "</td>";
 				$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7 AND hasDrawing=1" );
 				$persDrawings = $run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt;
 				if ($persDrawings > 0) {
@@ -668,10 +668,10 @@ class Objects {
 		global $objDatabase;
 		$i = 0;
 		$objectPartOfs = array ();
-		while ( list ( $key, $value ) = each ( $objects ) ) {
+		foreach ($objects as $key=>$value) {
 			$objectsPartOfs [$key] = $value;
 			$partofs = $objDatabase->selectSingleArray ( "SELECT objectname FROM objectpartof WHERE partofname=\"" . $value [1] . "\"", "objectname" );
-			while ( list ( $key2, $value2 ) = each ( $partofs ) )
+			foreach ($partofs as $key2=>$value2)
 				$objectsPartOfs [$value2] = array (
 						$i ++,
 						$value2 
@@ -716,7 +716,7 @@ class Objects {
 		if ($obscnt > 0) {
 			$j = 0;
 			reset ( $obs );
-			while ( list ( $key, $value ) = each ( $obs ) ) {
+			foreach ($obs as $key=>$value) {
 				if (array_key_exists ( 'name', $value ))
 					$object = $value ['name'];
 				else
@@ -734,7 +734,7 @@ class Objects {
 					$result2 [$j] ['objecttypefull'] = $GLOBALS [$get->type];
 					$altnames = $this->getAlternativeNames ( $object );
 					$alt = "";
-					while ( list ( $keyaltnames, $valuealtnames ) = each ( $altnames ) )
+					foreach ($altnames as $keyaltnames=>$valuealtnames)
 						if (trim ( $valuealtnames ) != trim ( $object ))
 							$alt .= ($alt ? "/" : "") . (trim ( $valuealtnames ));
 					$result2 [$j] ['altname'] = $alt;
@@ -769,7 +769,7 @@ class Objects {
 					if (is_array ( $value ) && count ( $value ) == 3)
 						$result2 [$j] ['objectlistdescription'] = $value [2];
 					reset ( $objAtlas->atlasCodes );
-					while ( list ( $key, $value ) = each ( $objAtlas->atlasCodes ) )
+					foreach ( $objAtlas->atlasCodes as $key=>$value)
 						$result2 [$j] [$key] = $get->$key;
 					$result2 [$j] ['objectcontrast'] = '-';
 					$result2 [$j] ['objectcontrasttype'] = '-';
@@ -1196,9 +1196,9 @@ class Objects {
 					2.083,
 					2.556 
 			);
-		$popup = "";
-		$magnificationsName = array();
-		$fov = array();
+        $popup = "";
+        $magnificationsName = array();
+        $fov = array();
 		if (! ($loggedUser))
 			$popup = LangContrastNotLoggedIn;
 		else {
@@ -1376,7 +1376,7 @@ class Objects {
 		$_SESSION ['object'] = $object;
 		$altnames = $this->getAlternativeNames ( $object );
 		$alt = "";
-		while ( list ( $key, $value ) = each ( $altnames ) )
+		foreach ($altnames as $key=>$value)
 			if (trim ( $value ) != trim ( $object )) {
 				$alt .= ($alt ? "/" : "") . (trim ( $value ));
 			}
@@ -1386,7 +1386,7 @@ class Objects {
 		$partoft = "";
 		$containstip = "";
 		$partoftip = "";
-		while ( list ( $key, $value ) = each ( $contains ) )
+		foreach ($contains as $key=>$value)
 			if (trim ( $value ) != trim ( $object )) {
 				$containst .= ($containst ? "/" : "") . "(<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( trim ( $value ) ) . "\">" . trim ( $value ) . "</a>)";
 				$containstip .= ($containstip ? "/" : "") . addslashes ( trim ( $value ) );
@@ -1434,7 +1434,7 @@ class Objects {
 			echo '<td colspan="3">';
 			echo '  <select class="form-inline" name="newcatalog">';
 			echo '    <option value="">&nbsp;</option>';
-			while ( list ( $key, $value ) = each ( $DSOcatalogs ) ) {
+			foreach ($DSOcatalogs as $key=>$value) {
 				if ($value == $thecatalog) {
 					$selected = 'selected';
 				} else {
@@ -1451,7 +1451,7 @@ class Objects {
 			// We add a button to create a new Catalog
 			// TODO: Show a modal to add a new, empty catalog
 			echo '<td colspan="3">';
-			echo '<span class="pull-right"><button type="button" class="btn btn-success" data-dismiss="modal">' . LangCreateNewCatalog . '</button></span>';
+			echo '<span class="pull-right"><button type="button" class="btn btn-success" data-dismiss="modal">' . _("Create new empty catalog") . '</button></span>';
 			echo '</td>';
 			echo '<td colspan="3">';
 			echo '</td>';
@@ -1769,7 +1769,7 @@ class Objects {
 		}
 		
 		if ($observingList) {
-			echo "  <a class=\"btn btn-success\" href=\"" . $link . "&amp;noShowName=noShowName\">" . LangListQueryObjectsMessage17 . "</a>";
+			echo "  <a class=\"btn btn-success\" href=\"" . $link . "&amp;noShowName=noShowName\">" . _("Switch names and alternative names") . "</a>";
 		}
 		echo "<table class=\"table sort-tablenearobjectlist table-condensed table-striped table-hover custom-popup\"  data-sortlist=\"[[" . $nameLocation . ",0]]\">";
 		echo "<thead>";
@@ -1791,7 +1791,7 @@ class Objects {
 		echo "<th data-priority=\"7\" id=\"objectmagnitude\">" . LangOverviewObjectsHeader3 . "</th>";
 		echo "<th data-priority=\"7\" class=\"columnSelector-false\"  id=\"objectsurfacebrightness\">" . LangOverviewObjectsHeader3b . "</th>";
 		echo "<th data-priority=\"6\" id=\"objecttypefull\">" . LangOverviewObjectsHeader4 . "</th>";
-		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objecttypefull\">" . LangOverviewObjectsHeader4Short . "</th>";
+		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objecttypefull\">" . _("Typ") . "</th>";
 		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectsizepa\">" . LangOverviewObjectsHeader10 . "</th>";
 		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectradecl\">" . LangOverviewObjectsHeader5 . "</th>";
 		echo "<th data-priority=\"6\" id=\"objectdecl\" class=\"columnSelector-false sorter-digit\">" . LangOverviewObjectsHeader6 . "</th>";
@@ -1799,7 +1799,7 @@ class Objects {
 			$atlas = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' );
 			echo "<th data-priority=\"6\" id=\"" . $atlas . "\">" . $objAtlas->atlasCodes [$atlas] . "</th>";
 			echo "<th data-priority=\"7\" id=\"objectcontrast\">" . LangViewObjectFieldContrastReserve . "</th>";
-			echo "<th data-priority=\"6\" id=\"objectoptimalmagnification\">" . LangViewObjectFieldMagnificationHeader . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectoptimalmagnification\">" . _("Best") . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectriseorder\" class=\"columnSelector-false sorter-astrotime\">" . LangMoonRise . "</th>";
 			echo "<th data-priority=\"6\" id=\"objecttransitorder\" class=\"columnSelector-false sorter-astrotime\">" . LangTransit . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectsetorder\" class=\"columnSelector-false sorter-astrotime\">" . LangMoonSet . "</th>";
@@ -1934,7 +1934,7 @@ class Objects {
 		echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 		echo "<thead>";
 		echo "<tr>";
-		while ( list ( $key, $value ) = each ( $fields ) ) {
+		foreach ($fields as $key=>$value) {
 			if ($value == "showrank")
 				echo "<th>" . LangOverviewObjectsHeader9 . "</th>";
 			if ($value == "showownrank")
@@ -1965,7 +1965,7 @@ class Objects {
 		while ( $max && ($count < $max) ) {
 			echo "<tr>";
 			reset ( $fields );
-			while ( list ( $key, $value ) = each ( $fields ) ) {
+			foreach ($fields as $key=>$value) {
 				if (($value == "showownrank") && $myList)
 					echo "<td><a href=\"#\" onclick=\"theplace = prompt('" . LangNewPlaceInList . "','" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "'); location.href='" . $link . "&amp;ObjectFromPlaceInList=" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "&amp;ObjectToPlaceInList='+theplace+'&amp;min=" . $min . "'; return false;\" title=\"" . LangToListMoved6 . "\">" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</a></td>";
 				if ($value == "showrank")
@@ -2134,7 +2134,7 @@ class Objects {
 	public function checknames() {
 		global $objDatabase, $objCatalog;
 		$theobjects = $objDatabase->selectSingleArray ( 'SELECT name FROM objects', 'name' );
-		while ( list ( $key, $theobject ) = each ( $theobjects ) ) {
+		foreach ($theobjects as $key=>$theobject) {
 			$thenewobject = $objCatalog->checkObject ( $theobject );
 			if ($thenewobject != $theobject) {
 				$firstspace = strpos ( $thenewobject, ' ', 0 );
@@ -2146,7 +2146,7 @@ class Objects {
 		}
 		
 		$theobjects = $objDatabase->selectSingleArray ( 'SELECT altname FROM objectnames;', 'altname' );
-		while ( list ( $key, $theobject ) = each ( $theobjects ) ) {
+		foreach ($theobjects as $key=>$theobject) {
 			$thenewobject = $objCatalog->checkObject ( $theobject );
 			if ($thenewobject != $theobject) {
 				$firstspace = strpos ( $thenewobject, ' ', 0 );

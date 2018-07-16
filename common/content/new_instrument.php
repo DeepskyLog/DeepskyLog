@@ -24,7 +24,7 @@ function new_instrument() {
 	echo "<input type=\"submit\" class=\"btn btn-success pull-right tour2\" name=\"add\" value=\"" . LangAddInstrumentAdd . "\" />&nbsp;";
 
 	echo "<div class=\"form-group\">
-	       <label for=\"catalog\">" . LangAddInstrumentExisting . "</label>";
+	       <label for=\"catalog\">" . _("Select an existing instrument") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $content1b;
 	echo "</div></div>";

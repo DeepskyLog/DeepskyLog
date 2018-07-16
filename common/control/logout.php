@@ -6,7 +6,8 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else logout();
 
 function logout()
-{ setcookie("deepskylogsec","",time()-3600,"/");// delete cookie
+{ 
+    setcookie("deepskylogsec","",time()-3600,"/", "", true, true);// delete cookie
 	//setcookie("PHPSESSID","",time()-3600,"/");// delete cookie
 	/*
 	session_unregister($_SESSION['deepskylog_id']);
@@ -33,6 +34,6 @@ function logout()
 	$_SESSION['deepskylog_id']='';												// destroy session
 	$_SESSION['lco']='L';
 	$cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
-	setcookie("lco","L",$cookietime, "/");
+	setcookie("lco","L",$cookietime, "/", "", true, true);
 }
 ?>

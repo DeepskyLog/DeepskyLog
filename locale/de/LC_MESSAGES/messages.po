@@ -1,0 +1,981 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: DeepskyLog\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-07-13 12:06+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.9\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: index.php:92 deepsky/content/view_list.php:21
+#: deepsky/content/view_list.php:31
+msgid "Create a new observing list"
+msgstr ""
+
+#: index.php:96
+msgid "Name for the new observing list"
+msgstr ""
+
+#: index.php:101 deepsky/content/tolist.php:112 lib/lists.php:345
+msgid "Make this list a public list"
+msgstr ""
+
+#: index.php:105 deepsky/content/main.php:137 deepsky/content/main.php:140
+msgid "Create list"
+msgstr ""
+
+#: comets/menu/change.php:16 deepsky/menu/change.php:20
+msgid "Add"
+msgstr "Neue"
+
+#: comets/menu/change.php:19 deepsky/menu/change.php:22
+msgid "Observation"
+msgstr "Beobachtung"
+
+#: comets/menu/change.php:25 deepsky/menu/change.php:33
+msgid "Object"
+msgstr "Objekt"
+
+#: comets/menu/search.php:27 common/menu/head.php:110
+#: deepsky/menu/search.php:39
+msgid "Statistics"
+msgstr "Statistiken"
+
+#: common/entryexit/instructions.php:552
+#, php-format
+msgid "Successfully deleted %s."
+msgstr ""
+
+#: common/content/overview_eyepieces.php:39
+#: common/content/overview_instruments.php:84
+#: common/content/overview_locations.php:115
+#: common/content/overview_lenses.php:45 common/content/overview_filters.php:41
+#: deepsky/content/change_session.php:132 lib/instruments.php:104
+#: lib/filters.php:156 lib/lenses.php:60 lib/eyepieces.php:68
+#: lib/locations.php:344
+msgid "Delete"
+msgstr "Löschen"
+
+#: common/content/new_lens.php:25
+msgid "Select an existing lens"
+msgstr "Linse hinzufügen"
+
+#: common/content/new_instrument.php:27
+msgid "Select an existing instrument"
+msgstr "Beobachtungsgerät anlegen"
+
+#: common/content/new_message.php:53
+msgid "Send as real mail"
+msgstr ""
+
+#: common/content/overview_locations.php:44 lib/locations.php:337
+msgid "Elevation"
+msgstr ""
+
+#: common/content/view_observer.php:128 common/content/statistics.php:106
+msgid "Observations per month"
+msgstr "Beobachtungen pro Monat"
+
+#: common/content/view_observer.php:132 common/content/view_observer.php:1202
+#: common/content/statistics.php:109 common/content/statistics.php:773
+msgid "Observations per country"
+msgstr "Beobachtungen pro Land"
+
+#: common/content/view_observer.php:725 common/content/statistics.php:350
+msgid "Number of observations per month"
+msgstr "Anzahl der Beobachtungen pro Monat"
+
+#: common/content/view_observer.php:1257 lib/accomplishments.php:458
+msgid "Messier objects"
+msgstr ""
+
+#: common/content/view_observer.php:1262 common/content/view_observer.php:1284
+#: common/content/view_observer.php:1308 common/content/view_observer.php:1329
+#: common/content/view_observer.php:1353 common/content/view_observer.php:1384
+#: common/content/view_observer.php:1410 common/content/view_observer.php:1436
+msgid "Bronze"
+msgstr "Bronze"
+
+#: common/content/view_observer.php:1263
+msgid "Bronze Messier certificat! You observed 25 Messier objects!"
+msgstr ""
+
+#: common/content/view_observer.php:1264
+msgid "Observe at least 25 Messier objects to get this certificat!"
+msgstr ""
+
+#: common/content/view_observer.php:1267 common/content/view_observer.php:1290
+#: common/content/view_observer.php:1313 common/content/view_observer.php:1335
+#: common/content/view_observer.php:1358 common/content/view_observer.php:1388
+#: common/content/view_observer.php:1414 common/content/view_observer.php:1440
+msgid "Silver"
+msgstr "Silber"
+
+#: common/content/view_observer.php:1268
+msgid "Silver Messier certificat! You observed 50 Messier objects!"
+msgstr ""
+
+#: common/content/view_observer.php:1269
+msgid "Observe at least 50 Messier objects to get this certificat!"
+msgstr ""
+
+#: common/content/view_observer.php:1272 common/content/view_observer.php:1296
+#: common/content/view_observer.php:1318 common/content/view_observer.php:1341
+#: common/content/view_observer.php:1363 common/content/view_observer.php:1392
+#: common/content/view_observer.php:1418 common/content/view_observer.php:1444
+msgid "Gold"
+msgstr "Gold"
+
+#: common/content/view_observer.php:1273
+msgid "Golden Messier certificat! You observed all 110 Messier objects!"
+msgstr ""
+
+#: common/content/view_observer.php:1274
+msgid "Observe all 110 Messier objects to get this certificat!"
+msgstr ""
+
+#: common/content/view_observer.php:1281
+msgid "Drawings of Messier objects"
+msgstr ""
+
+#: common/content/view_observer.php:1286
+msgid "Bronze Messier drawing-certificat! You drawed 25 Messier objects!"
+msgstr ""
+
+#: common/content/view_observer.php:1287
+msgid "Draw at least 25 different Messier objects to get this certificat!"
+msgstr ""
+
+#: common/content/view_observer.php:1292
+msgid "Silver Messier drawing-certificat! You drawed 50 Messier objects!"
+msgstr ""
+
+#: common/content/view_observer.php:1293
+msgid "Draw at least 50 Messier objects to get this certificat!"
+msgstr ""
+
+#: common/content/view_observer.php:1298
+msgid "Golden Messier drawing-certificat! You drawed all 110 Messier objects!"
+msgstr ""
+
+#: common/content/view_observer.php:1299
+msgid "Draw all 110 Messier objects to get this certificat!"
+msgstr ""
+
+#: common/content/view_observer.php:1305 lib/accomplishments.php:460
+msgid "Caldwell objects"
+msgstr ""
+
+#: common/content/view_observer.php:1309
+msgid "Bronze Caldwell certificat! You observed 25 Caldwell objects!"
+msgstr ""
+
+#: common/content/view_observer.php:1310
+msgid "Observe at least 25 Caldwell objects to get this certificat!"
+msgstr ""
+
+#: common/content/view_observer.php:1314
+msgid "Silver Caldwell certificat! You observed 50 Caldwell objects!"
+msgstr ""
+
+#: common/content/view_observer.php:1315
+msgid "Observe at least 50 Caldwell objects to get this certificat!"
+msgstr ""
+
+#: common/content/view_observer.php:1319
+msgid "Golden Caldwell certificat! You observed all 110 Caldwell objects!"
+msgstr ""
+
+#: common/content/view_observer.php:1320
+msgid "Observe all 110 Caldwell objects to get this certificat!"
+msgstr ""
+
+#: common/content/view_observer.php:1326
+msgid "Drawings of Caldwell objects"
+msgstr ""
+
+#: common/content/view_observer.php:1331
+msgid "Bronze Caldwell drawing-certificat! You drawed 25 Caldwell objects!"
+msgstr ""
+
+#: common/content/view_observer.php:1332
+msgid "Draw at least 25 Caldwell objects to get this certificat!"
+msgstr ""
+
+#: common/content/view_observer.php:1337
+msgid "Silver Caldwell drawing-certificat! You drawed 50 Caldwell objects!"
+msgstr ""
+
+#: common/content/view_observer.php:1338
+msgid "Draw at least 50 Caldwell objects to get this certificat!"
+msgstr ""
+
+#: common/content/view_observer.php:1343
+msgid ""
+"Golden Caldwell drawing-certificat! You drawed all 110 Caldwell objects!"
+msgstr ""
+
+#: common/content/view_observer.php:1344
+msgid "Draw all 110 Caldwell objects to get this certificat!"
+msgstr ""
+
+#: common/content/view_observer.php:1350 lib/accomplishments.php:462
+msgid "Herschel 400 objects"
+msgstr ""
+
+#: common/content/view_observer.php:1368 common/content/view_observer.php:1396
+#: common/content/view_observer.php:1422 common/content/view_observer.php:1448
+msgid "Diamond"
+msgstr "Diamant"
+
+#: common/content/view_observer.php:1373 common/content/view_observer.php:1400
+#: common/content/view_observer.php:1426 common/content/view_observer.php:1452
+msgid "Platinum"
+msgstr "Platin"
+
+#: common/content/view_observer.php:1381
+msgid "Drawings of Herschel 400 objects"
+msgstr ""
+
+#: common/content/view_observer.php:1407 lib/accomplishments.php:464
+msgid "Herschel II objects"
+msgstr ""
+
+#: common/content/view_observer.php:1433
+msgid "Drawings of Herschel II objects"
+msgstr ""
+
+#: common/content/view_observer.php:1459
+msgid "Total number of drawings"
+msgstr ""
+
+#: common/content/view_observer.php:1506 lib/accomplishments.php:466
+msgid "Open clusters"
+msgstr ""
+
+#: common/content/view_observer.php:1562
+msgid "Drawings of open clusters"
+msgstr ""
+
+#: common/content/view_observer.php:1624 lib/accomplishments.php:468
+msgid "Globular clusters"
+msgstr ""
+
+#: common/content/view_observer.php:1676
+msgid "Drawings of globular clusters"
+msgstr ""
+
+#: common/content/view_observer.php:1733 lib/accomplishments.php:470
+msgid "Planetary Nebulae"
+msgstr ""
+
+#: common/content/view_observer.php:1791
+msgid "Drawings of planetary nebulae"
+msgstr ""
+
+#: common/content/view_observer.php:1856 lib/accomplishments.php:472
+msgid "Galaxies"
+msgstr ""
+
+#: common/content/view_observer.php:1902
+msgid "Drawings of galaxies"
+msgstr ""
+
+#: common/content/view_observer.php:1949 lib/accomplishments.php:474
+msgid "Nebulae"
+msgstr ""
+
+#: common/content/view_observer.php:2005
+msgid "Drawings of nebulae"
+msgstr ""
+
+#: common/content/view_observer.php:2064
+msgid "Different objects"
+msgstr ""
+
+#: common/content/view_observer.php:2110
+msgid "Drawings of different objects"
+msgstr ""
+
+#: common/content/view_observer.php:2157
+msgid "Total comet observations"
+msgstr ""
+
+#: common/content/view_observer.php:2203
+msgid "Different comets"
+msgstr ""
+
+#: common/content/view_observer.php:2250
+msgid "Drawings of comets"
+msgstr ""
+
+#: common/content/register.php:100 common/content/change_account.php:222
+msgid "License for drawings"
+msgstr "Lizenz für Zeichnungen"
+
+#: common/content/register.php:109 common/content/change_account.php:279
+msgid "No license (Not recommended!)"
+msgstr "Keine Lizenz (nicht empfohlen!)"
+
+#: common/content/register.php:110 common/content/change_account.php:286
+msgid "Enter your own copyright text"
+msgstr "Geben Sie Ihren eigenen Copyright-Text"
+
+#: common/content/register.php:115 common/content/change_account.php:291
+msgid ""
+"It is important to select the <strong>correct license for your drawings</"
+"strong>! For help, see the <a href=\"http://creativecommons.org/choose/"
+"\">Creative Commons license-choosing tool</a>."
+msgstr ""
+"Es ist wichtig, die <strong>richtige Lizenz für Ihre Zeichnungen</strong> zu "
+"wählen! Weitere Informationen: <a href=“http://creativecommons.org/"
+"choose/“>Creative Commons Lizenz-Auswahl-Tool</a>."
+
+#: common/content/new_filter.php:25
+msgid "Select an existing filter"
+msgstr "Filter hinzufügen"
+
+#: common/content/locations.php:39 common/content/new_location.php:58
+#: common/content/new_location.php:66 common/menu/head.php:204
+msgid "Add site"
+msgstr "Beobachtungsplatz anlegen"
+
+#: common/content/statistics.php:82
+msgid "Select country"
+msgstr "Land auswählen"
+
+#: common/content/new_eyepiece.php:29
+msgid "Select an existing eyepiece"
+msgstr "Wähle die Okulardetails von der Liste"
+
+#: common/content/change_site.php:70 common/content/new_location.php:33
+#: common/content/new_location.php:42
+msgid "Search location"
+msgstr "Suche Beobachtungsplatz"
+
+#: common/content/change_site.php:136 common/content/new_location.php:101
+#: deepsky/content/newObservation.php:417
+msgid "Excellent dark-sky site"
+msgstr "Extrem Dunkel"
+
+#: common/content/change_site.php:137 common/content/new_location.php:102
+#: deepsky/content/newObservation.php:418
+msgid "Typical truly dark site"
+msgstr "Sehr Dunkel"
+
+#: common/content/change_site.php:138 common/content/new_location.php:103
+#: deepsky/content/newObservation.php:419
+msgid "Rural sky"
+msgstr "Land"
+
+#: common/content/change_site.php:139 common/content/new_location.php:104
+#: deepsky/content/newObservation.php:420
+msgid "Rural/suburban transition"
+msgstr "Übergang Land/Vorstadt"
+
+#: common/content/change_site.php:140 common/content/new_location.php:105
+#: deepsky/content/newObservation.php:421
+msgid "Suburban sky"
+msgstr "Vorstadt"
+
+#: common/content/change_site.php:141 common/content/new_location.php:106
+#: deepsky/content/newObservation.php:422
+msgid "Bright suburban sky"
+msgstr "Helle Vorstadt"
+
+#: common/content/change_site.php:142 common/content/new_location.php:107
+#: deepsky/content/newObservation.php:423
+msgid "Suburban/urban transition"
+msgstr "Übergang Vorstadt/Stadt"
+
+#: common/content/change_site.php:143 common/content/new_location.php:108
+#: deepsky/content/newObservation.php:424
+msgid "City sky"
+msgstr "Stadt"
+
+#: common/content/change_site.php:144 common/content/new_location.php:109
+#: deepsky/content/newObservation.php:425
+msgid "Inner-city sky"
+msgstr "Innenstadt"
+
+#: common/content/change_site.php:418 common/content/new_location.php:430
+msgid "Not active"
+msgstr ""
+
+#: common/content/change_account.php:84
+msgid "Personal"
+msgstr ""
+
+#: common/content/change_account.php:85
+msgid "Observing"
+msgstr ""
+
+#: common/content/change_account.php:86
+msgid "Atlases"
+msgstr ""
+
+#: common/content/change_account.php:87
+msgid "Languages"
+msgstr ""
+
+#: common/content/change_account.php:150 common/content/change_account.php:438
+#: common/content/change_account.php:454 common/content/change_password.php:29
+msgid "Change password"
+msgstr "Passwort ändern"
+
+#: common/content/change_account.php:177
+msgid "Send emails"
+msgstr ""
+
+#: common/content/change_account.php:181
+msgid "Send messages as email."
+msgstr ""
+
+#: common/content/change_account.php:331
+msgid "Preferred unit for instrument diameter"
+msgstr "Einheit für Instrumentendurchmesser"
+
+#: common/content/change_account.php:444
+msgid "Current password"
+msgstr "Heutiges Passwort"
+
+#: common/content/change_account.php:446 common/content/change_password.php:22
+msgid "New password"
+msgstr "Neues Passwort"
+
+#: common/content/new_location.php:32
+#, php-format
+msgid ""
+"Set your location on the map or by entering the name and pressing the %s "
+"button."
+msgstr ""
+"Stellen Sie Ihren Ort auf der Karte ein oder gebe des Namens ein und Drücke "
+"der Taste %s."
+
+#: common/content/new_location.php:57
+#, php-format
+msgid ""
+"Define your own name for this location, eventually add a naked eye limiting "
+"magnitude (or SQM value) and press the %s button."
+msgstr ""
+"Definieren Sie Ihre eigenen Namen für die Position, schließlich fügen Sie "
+"einen Grenzgröße (oder SQM-Wert) zu und drücken Sie die Taste %s."
+
+#: common/menu/help.php:17
+msgid "Report issue"
+msgstr ""
+
+#: common/menu/help.php:18 deepsky/content/main.php:34
+msgid "What's new in DeepskyLog"
+msgstr ""
+
+#: common/menu/head.php:132
+msgid "Change site"
+msgstr "Beobachtungsplatz ändern"
+
+#: common/menu/head.php:196 deepsky/menu/search.php:28
+msgid "My instruments"
+msgstr ""
+
+#: common/menu/head.php:198 deepsky/menu/search.php:30
+msgid "My eyepieces"
+msgstr ""
+
+#: common/menu/head.php:200 deepsky/menu/search.php:31
+msgid "My filters"
+msgstr ""
+
+#: common/menu/head.php:202 deepsky/menu/search.php:32
+msgid "My lenses"
+msgstr ""
+
+#: common/menu/head.php:206 deepsky/menu/search.php:29
+msgid "My locations"
+msgstr ""
+
+#: common/menu/headmenu.php:142 common/menu/headmenu.php:157
+msgid "Forgot password?"
+msgstr "Passwort vergessen?"
+
+#: common/menu/headmenu.php:160
+msgid "Please enter your DeepskyLog username <strong>or</strong> your email."
+msgstr ""
+"Bitte geben Sie Ihren Benutzernamen <strong> oder </strong> Ihre E-Mail ein."
+
+#: common/menu/headmenu.php:164
+msgid "DeepskyLog username"
+msgstr "DeepskyLog Benutzernamen"
+
+#: common/menu/headmenu.php:171
+msgid "Request new password"
+msgstr "Neues Passwort anfordern"
+
+#: common/control/changeToken.php:52 common/control/changeToken.php:61
+#: common/control/removeToken.php:29 common/control/removeToken.php:38
+msgid "A DeepskyLog Change Password Request was canceled"
+msgstr "Eine DeepskyLog Passwortänderunganforderung wird abgesagt"
+
+#: common/control/changeToken.php:53 common/control/removeToken.php:30
+#, php-format
+msgid "A request was canceled from the ip-address %s"
+msgstr "Eine Passwortänderunganforderung wird abgesagt von %s"
+
+#: common/control/changeToken.php:55 common/control/removeToken.php:32
+msgid ""
+"If you did not request this, it could be either an honest mistake or someone "
+"attempting to break into your DeepskyLog account."
+msgstr ""
+"Wenn Sie dies nicht angefordert haben, könnte es ein ehrlicher Fehler sein "
+"oder jemand versucht in Ihr DeepskyLog Konto zu brechen."
+
+#: deepsky/content/main.php:21
+msgid "What's new in DeepskyLog since version "
+msgstr ""
+
+#: deepsky/content/main.php:45
+msgid ""
+"<h2>Welcome to DeepskyLog!</h2>\n"
+"In close collaboration with the Astronomical Society of Belgium (<a href="
+"\"http://www.vvs.be\">Vereniging Voor Sterrenkunde (VVS)</a>) we are glad to "
+"offer a comprehensive and free database for deepsky objects. The database is "
+"developed by the deepsky-section of the VVS. The database already contains "
+"tens of thousands observations and thousands of sketches and drawings made "
+"by amateur astronomers around the world. After you have registered for "
+"DeepskyLog, you get access to a variety of useful tools:<br /><br />\n"
+"<ul><li>Information on the observations you made, the objects observed and "
+"sketches made,</li>\n"
+"    <li>observing lists with different deepsky objects,</li>\n"
+"    <li>you can share your observations with other observers,</li>\n"
+"    <li>translate function to read observations in other languages,</li>\n"
+"    <li>free atlases,</li>\n"
+"    <li>create your own file with maps and DSS images of the objects,</li>\n"
+"    <li>interactive star atlas down to magnitude 16,</li>\n"
+"    <li>suggestions for objects visible in your instruments,</li>\n"
+"    <li>information about the objects that are visible from your observation "
+"sites.</li>\n"
+"</ul>\n"
+"To start recording your observations, you need an account, which you can get "
+"after registration. Please contact the <a href=\"mailto:"
+"developers@deepskylog.be\">DeepskyLog developers</a> if you encounter "
+"problems or have questions."
+msgstr ""
+
+#: deepsky/content/main.php:110 deepsky/content/main.php:113
+msgid "Download atlases"
+msgstr "Download Atlanten"
+
+#: deepsky/content/main.php:147
+msgid "New drawings"
+msgstr ""
+
+#: deepsky/content/setup_observations_query.php:62
+#: deepsky/content/setup_objects_query.php:60
+msgid "Select catalog"
+msgstr "Katalog Auswahl"
+
+#: deepsky/content/setup_observations_query.php:69
+#: deepsky/content/setup_objects_query.php:67
+msgid "Enter number in catalog"
+msgstr "Nummer im Katalog"
+
+#: deepsky/content/tolist.php:39 deepsky/content/tolist.php:52
+#: deepsky/content/tolist.php:95 lib/lists.php:242 lib/lists.php:282
+#: lib/lists.php:325
+msgid "Change name"
+msgstr ""
+
+#: deepsky/content/tolist.php:45 lib/lists.php:246 lib/lists.php:292
+msgid "Make private"
+msgstr ""
+
+#: deepsky/content/tolist.php:47 lib/lists.php:248 lib/lists.php:296
+msgid "Make public"
+msgstr ""
+
+#: deepsky/content/tolist.php:53
+msgid "Add new list"
+msgstr ""
+
+#: deepsky/content/tolist.php:99 lib/lists.php:329
+msgid "New name for the observing list"
+msgstr ""
+
+#: deepsky/content/view_observation.php:7
+msgid "No observation to display."
+msgstr "Keine Beobachtung zum anzeigen."
+
+#: deepsky/content/view_observation.php:10
+msgid "The requested observation does not exist."
+msgstr "Die angeforderte Beobachtung existiert nicht."
+
+#: deepsky/content/view_observation.php:68
+msgid "Observation of "
+msgstr ""
+
+#: deepsky/content/view_object.php:72 deepsky/content/view_object.php:79
+#: deepsky/content/view_object.php:92
+msgid "Remove Object"
+msgstr ""
+
+#: deepsky/content/view_object.php:82 deepsky/content/view_object.php:110
+#, php-format
+msgid "Do you really want to delete %s?"
+msgstr ""
+
+#: deepsky/content/view_object.php:83
+#, php-format
+msgid ""
+"There are no observations of %s, so removing %s should be relatively safe."
+msgstr ""
+
+#: deepsky/content/view_object.php:91 deepsky/content/view_object.php:119
+msgid "Keep Object"
+msgstr ""
+
+#: deepsky/content/view_object.php:100 deepsky/content/view_object.php:107
+#: deepsky/content/view_object.php:120
+msgid "Force Remove Object"
+msgstr ""
+
+#: deepsky/content/view_object.php:111
+#, php-format
+msgid ", which has %s observations?"
+msgstr ""
+
+#: deepsky/content/view_object.php:113
+msgid "All the observations will also be removed!"
+msgstr ""
+
+#: deepsky/content/view_object.php:127
+msgid "Save"
+msgstr ""
+
+#: deepsky/content/view_list.php:5
+msgid "Active list"
+msgstr ""
+
+#: deepsky/content/view_list.php:11
+msgid ""
+" is your active list. You can search for objects and add these objects to "
+"this list."
+msgstr ""
+
+#: deepsky/content/view_list.php:13
+msgid ""
+"There is no active list. Select one of the lists to make that list active. "
+"You can search for objects and add these objects to your active lists."
+msgstr ""
+
+#: deepsky/content/view_list.php:17
+#, php-format
+msgid "Public lists of %s"
+msgstr ""
+
+#: deepsky/content/view_list.php:27
+#, php-format
+msgid "Private lists of %s"
+msgstr ""
+
+#: deepsky/content/selected_objects.php:49 lib/objects.php:1772
+msgid "Switch names and alternative names"
+msgstr ""
+
+#: deepsky/menu/change.php:24
+msgid "Observing list"
+msgstr ""
+
+#: deepsky/menu/search.php:25
+msgid "My observing lists"
+msgstr ""
+
+#: deepsky/menu/list.php:56
+msgid "Public: "
+msgstr ""
+
+#: deepsky/menu/quickpick.php:25
+msgid "Enter object name"
+msgstr "Geben Sie Objektnamen ein"
+
+#: lib/observers.php:475 lib/observers.php:503
+msgid ""
+"The new password and the confirmed password are not the same. Unable to "
+"change the password."
+msgstr ""
+"Das neue Passwort und die Passwort Bestätigung sind nicht dasselbe. Die "
+"password is nicht verändert."
+
+#: lib/observers.php:479 lib/observers.php:507
+msgid "The password is successfully changed."
+msgstr "Das Passwort ist erfolgreich geändert."
+
+#: lib/observers.php:490
+msgid ""
+"The current password you entered is incorrect. Unable to change the password."
+msgstr ""
+"Die von Ihnen gewählte aktuelle Passwort ist nicht korrekt. Die password is "
+"nicht verändert."
+
+#: lib/observers.php:529
+#, php-format
+msgid ""
+"The username %s is not known by DeepskyLog. Impossible to request a new "
+"password."
+msgstr ""
+"Die Benutzername %s ist nicht durch DeepskyLog bekannt. Unmöglich, ein neues "
+"Passwort an zu fordern."
+
+#: lib/observers.php:540
+#, php-format
+msgid ""
+"The mail address %s is not known by DeepskyLog. Impossible to request a new "
+"password."
+msgstr ""
+"Die E-Mail Adresse %s ist nicht durch DeepskyLog bekannt. Unmöglich, ein "
+"neues Passwort an zu fordern."
+
+#: lib/observers.php:545
+msgid ""
+"The given username and mail address are not known by DeepskyLog. Impossible "
+"to request a new password."
+msgstr ""
+"Die angegebene Benutzername und E-Mail Adresse sind nicht durch DeepskyLog "
+"bekannt. Unmöglich, ein neues Passwort an zu fordern."
+
+#: lib/observers.php:560
+msgid "DeepskyLog Change Password Request"
+msgstr "DeepskyLog passwort Änderungsanforderung"
+
+#: lib/observers.php:563
+#, php-format
+msgid ""
+"You have (or someone impersonating you has) requested to change your %s "
+"password.\n"
+"                    <br />To complete the change, visit the following link:"
+msgstr ""
+"Sie haben (oder jemanden, der Sie imitiert) aufgefordert Ihr %s Passwort zu "
+"ändern.\n"
+"                    <br />Um die Änderung abzuschließen, besuchen Sie den "
+"folgenden Link:"
+
+#: lib/observers.php:568
+msgid ""
+"If you are not the person who made this request, or you wish to cancel this "
+"request, visit the following link:"
+msgstr ""
+"Wenn Sie nicht die Person bist, die diesen Antrag hat gestellt, oder Sie "
+"diese Anforderung abbrechen möchten, besuchen Sie den folgenden Link:"
+
+#: lib/observers.php:579
+#, php-format
+msgid ""
+"If you do nothing, the request will lapse after 24 hours (on %s) or when you "
+"log in successfully."
+msgstr ""
+"Wenn Sie nichts tun, wird die Anforderung nach 24 Stunden verfallen (am %s) "
+"oder Wenn Sie sich erfolgreich anmeldet."
+
+#: lib/observers.php:582
+msgid "The DeepskyLog team"
+msgstr "Das DeepskyLog team"
+
+#: lib/observers.php:589
+#, php-format
+msgid ""
+"A token for changing the password of %s has been emailed to %s. Follow the "
+"instructions in that email to change your password."
+msgstr ""
+"Ein Token zum ändern des Passworts %s wurde Ihnen per E-Mail nach %s "
+"geschickt. Folgen Sie den Anweisungen in dieser E-Mail um Ihr Passwort zu "
+"ändern."
+
+#: lib/locations.php:335
+msgid "Weather forecast"
+msgstr ""
+
+#: lib/accomplishments.php:342
+#, php-format
+msgid "New DeepskyLog star! %s observed!"
+msgstr ""
+
+#: lib/accomplishments.php:356
+#, php-format
+msgid ""
+"Congratulations! You have observed %s and receive a DeepskyLog star! Check "
+"out your DeepskyLog stars at %s"
+msgstr ""
+
+#: lib/accomplishments.php:370
+#, php-format
+msgid "New DeepskyLog star! %s drawn!"
+msgstr ""
+
+#: lib/accomplishments.php:384
+#, php-format
+msgid ""
+"Congratulations! You have drawn %s and receive a DeepskyLog star! Check out "
+"your DeepskyLog stars at %s"
+msgstr ""
+
+#: lib/accomplishments.php:476 lib/accomplishments.php:492
+#: lib/accomplishments.php:574 lib/accomplishments.php:578
+#: lib/accomplishments.php:582 lib/accomplishments.php:586
+#: lib/accomplishments.php:590 lib/accomplishments.php:594
+#: lib/accomplishments.php:598 lib/accomplishments.php:602
+#: lib/accomplishments.php:606 lib/accomplishments.php:610
+#: lib/accomplishments.php:652 lib/accomplishments.php:656
+#: lib/accomplishments.php:660 lib/accomplishments.php:664
+#: lib/accomplishments.php:668 lib/accomplishments.php:672
+#: lib/accomplishments.php:676 lib/accomplishments.php:680
+#: lib/accomplishments.php:684 lib/accomplishments.php:688
+#: lib/accomplishments.php:730 lib/accomplishments.php:734
+#: lib/accomplishments.php:738 lib/accomplishments.php:742
+#: lib/accomplishments.php:746 lib/accomplishments.php:750
+#: lib/accomplishments.php:754 lib/accomplishments.php:758
+#: lib/accomplishments.php:762 lib/accomplishments.php:766
+#, fuzzy
+#| msgid "Object"
+msgid "object"
+msgstr "Objekt"
+
+#: lib/accomplishments.php:478 lib/accomplishments.php:494
+#, fuzzy
+#| msgid "Object"
+msgid "objects"
+msgstr "Objekt"
+
+#: lib/accomplishments.php:482
+msgid "open cluster"
+msgstr ""
+
+#: lib/accomplishments.php:484
+msgid "globular cluster"
+msgstr ""
+
+#: lib/accomplishments.php:486
+msgid "planetary nebula"
+msgstr ""
+
+#: lib/accomplishments.php:488
+msgid "galaxy"
+msgstr ""
+
+#: lib/accomplishments.php:490
+msgid "nebula"
+msgstr ""
+
+#: lib/introductionTour.php:10
+msgid "Add one or more instruments"
+msgstr ""
+
+#: lib/introductionTour.php:11
+msgid "Click on Change and select Instruments. Add at least 1 instrument."
+msgstr ""
+
+#: lib/introductionTour.php:17
+msgid "Add at least one instrument!"
+msgstr ""
+
+#: lib/introductionTour.php:18
+msgid ""
+"DeepskyLog can calculate visibilities of objects when an instrument is "
+"inserted. You can also only add new observations when an instrument is known "
+"by DeepskyLog."
+msgstr ""
+
+#: lib/introductionTour.php:23
+msgid "Add one or more locations"
+msgstr ""
+
+#: lib/introductionTour.php:24
+msgid "Click on Change and select Locations. Add at least 1 location."
+msgstr ""
+
+#: lib/introductionTour.php:30
+msgid "Add at least one location!"
+msgstr ""
+
+#: lib/introductionTour.php:31
+msgid ""
+"DeepskyLog can calculate visibilities of objects when a location is "
+"inserted. You can also only add new observations when a location is known by "
+"DeepskyLog."
+msgstr ""
+
+#: lib/introductionTour.php:36
+msgid "Add a picture of yourself"
+msgstr ""
+
+#: lib/introductionTour.php:37
+msgid "Click on your name and select Settings. Add a picture of yourself."
+msgstr ""
+
+#: lib/introductionTour.php:42
+msgid "Add a picture of yourself!"
+msgstr ""
+
+#: lib/introductionTour.php:43
+msgid ""
+"When you add a picture, others will see your picture when you send them a "
+"message."
+msgstr ""
+
+#: lib/introductionTour.php:49
+msgid "Read your messages"
+msgstr ""
+
+#: lib/introductionTour.php:50
+msgid ""
+"Other observers can send you messages in DeepskyLog. Here, you can read the "
+"messages."
+msgstr ""
+
+#: lib/objects.php:639
+msgid "Number of own observations"
+msgstr ""
+
+#: lib/objects.php:645
+msgid "Last own observation"
+msgstr ""
+
+#: lib/objects.php:653
+msgid "Number of own drawings"
+msgstr ""
+
+#: lib/objects.php:1454
+msgid "Create new empty catalog"
+msgstr ""
+
+#: lib/objects.php:1794
+msgid "Typ"
+msgstr "Typ"
+
+#: lib/objects.php:1802
+msgid "Best"
+msgstr "Best"
+
+#: lib/lists.php:239
+msgid "Name"
+msgstr ""
+
+#: lib/lists.php:369
+#, php-format
+msgid ""
+"A public list with the same name (%s) as your list already exists. Please "
+"rename your list before making the list public."
+msgstr ""
+"Eine öffentliche Liste mit dem gleichen Namen (%s)  is bereits vorhanden. "
+"Bitte benennen Sie die Liste, bevor die Liste öffentlich zu machen."
+
+#: lib/messages.php:187
+#, php-format
+msgid "DeepskyLog message from %s:"
+msgstr "DeepskyLog Nachricht von %s:"
+
+#~ msgid " button."
+#~ msgstr " ."

@@ -153,7 +153,7 @@ class Filters {
 			echo "<th>" . LangViewFilterColor . "</th>";
 			echo "<th>" . LangViewFilterWratten . "</th>";
 			echo "<th>" . LangViewFilterSchott . "</th>";
-			echo "<th>" . LangRemove . "</th>";
+			echo "<th>" . _("Delete") . "</th>";
 			echo "<th>" . LangTopObserversHeader3 . "</th>";
 			echo "</tr></thead>";
 			$count=0;

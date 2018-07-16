@@ -139,7 +139,7 @@ function headmenu() {
 										<div class=\"text-center\">
 											<a href=\"" . $baseURL . "index.php?indexAction=subscribe&amp;title=" . urlencode ( LangLoginMenuRegister ) . "\">" . LangLoginMenuRegister . "</a>
 											&nbsp;&nbsp;-&nbsp;&nbsp;
-											<a href=\"\" data-toggle=\"modal\" data-target=\"#forgotPassword\">" . LangForgotPassword . "</a>
+											<a href=\"\" data-toggle=\"modal\" data-target=\"#forgotPassword\">" . _("Forgot password?") . "</a>
 										</div>
   		          </div>
   	  	        </div>
@@ -154,21 +154,21 @@ function headmenu() {
 					          <div class=\"modal-content\">
 											<div class=\"modal-header\">
 												<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-												<h1 class=\"text-center login-title\">" . LangForgotPassword . "</h1>
+												<h1 class=\"text-center login-title\">" . _("Forgot password?") . "</h1>
 											</div>
 								  		<div class=\"modal-body\">" .
-												LangForgotPasswordText1 . "
+                                          _("Please enter your DeepskyLog username <strong>or</strong> your email.") . "
 								        <form class=\"form-signin\" action=\"" . $baseURL . "index.php\" method=\"post\">
 								        	<input type=\"hidden\" name=\"indexAction\" value=\"requestPassword\" />
 													<div class=\"form-group\">
-														<label for=\"deepskylog_id\">" . LangUserId . "</label>
+														<label for=\"deepskylog_id\">" . _("DeepskyLog username") . "</label>
 								          	<input type=\"text\" class=\"form-control\" autofocus name=\"deepskylog_id\" id=\"deepskylog_id\">
 													</div>
 													<div class=\"form-group\">
 														<label for=\"mail\">". LangChangeAccountField2 . "</label>
 								          	<input type=\"email\" class=\"form-control\" name=\"mail\" id=\"mail\">
 													</div>
-								          <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">" . LangRequestNewPassword . "</button>
+								          <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">" . _("Request new password") . "</button>
 													<br />
 								        </form>
 								  	  </div>

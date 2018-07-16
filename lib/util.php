@@ -1086,10 +1086,10 @@ class Utils
                                     $GLOBALS['objInstrument']->
                                     getInstrumentPropertyFromId(
                                         $value, 'fd'
-                                    ) * $GLOBALS['objInstrument']->
-                                    getInstrumentPropertyFromId(
-                                        $value, 'diameter'
-                                    )
+                                    ) * $GLOBALS['objInstrument']
+                                        ->getInstrumentPropertyFromId(
+                                            $value, 'diameter'
+                                        )
                                 )
                             );
                         }
@@ -1411,7 +1411,7 @@ class Utils
             $begin = $observation->appendChild($dom->createElement('begin'));
             $begin->appendChild($dom->createTextNode($date . $time));
 
-            if ($obs ["SQM"] > 0) {
+            if ($obs["SQM"] > 0) {
                 $magPerSquareArcsecond = $observation->appendChild(
                     $dom->createElement('sky-quality')
                 );
@@ -4501,7 +4501,7 @@ class Utils
                     if (array_key_exists('searchObservationsQuickPick', $_GET)) {
                         return 'lib/observations_new.php';
                     } elseif (array_key_exists('newObservationQuickPick', $_GET)) {
-                        return 'deepsky/content/new_observation.php';
+                        return 'deepsky/content/newObservation.php';
                     } else {
                         return 'deepsky/content/view_object.php';
                     }
@@ -4519,7 +4519,7 @@ class Utils
                 if (array_key_exists('searchObservationsQuickPick', $_GET)) {
                     return 'deepsky/content/setup_observations_query.php';
                 } elseif (array_key_exists('newObservationQuickPick', $_GET)) {
-                    return 'deepsky/content/new_observation.php';
+                    return 'deepsky/content/newObservation.php';
                 } else {
                     return 'deepsky/content/setup_objects_query.php';
                 }
@@ -4612,7 +4612,7 @@ class Utils
             break;
         case 'add_observation':
             if ($loggedUser) {
-                return 'deepsky/content/new_observation.php';
+                return 'deepsky/content/newObservation.php';
             }
             break;
         case 'detail_object':
@@ -4786,11 +4786,6 @@ class Utils
                 return 'common/content/reportslayout.php';
             }
             break;
-        case 'search_sites':
-            if ($loggedUser) {
-                return 'common/content/search_locations.php';
-            }
-            break;
         case 'site_result':
             if ($loggedUser) {
                 return 'common/content/getLocation.php';
@@ -4949,7 +4944,7 @@ class Utils
         ) {
             $_SESSION['module'] = $module;
             $cookietime = time() + 365 * 24 * 60 * 60; // 1 year
-            setcookie("module", $module, $cookietime, "/");
+            setcookie("module", $module, $cookietime, "/", "", true, true);
         }
     }
 

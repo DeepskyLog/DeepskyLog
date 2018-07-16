@@ -53,7 +53,7 @@ function menu_list() {
 		foreach ($result as $key=>$value) {
 			// If the list is a Public list, we add 'Public: ' to the name of the list.
  			if (in_array($value, $publicLists)) {
- 				$listname = LangPublicList . $value;
+ 				$listname = _("Public: ") . $value;
 				$public = 1;
  			} else {
 				$listname = $value;

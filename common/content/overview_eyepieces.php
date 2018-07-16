@@ -36,7 +36,7 @@ function overview_eyepieces() {
 			echo "<td>" . $eyepieceProperties ['observer'] . "</td>";
 			echo "<td>";
 			if (! ($objEyepiece->getEyepieceUsedFromId ( $value )))
-				echo "<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_eyepiece&amp;eyepieceid=" . urlencode ( $value ) . "\">" . LangRemove . "</a>";
+				echo "<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_eyepiece&amp;eyepieceid=" . urlencode ( $value ) . "\">" . _("Delete") . "</a>";
 			echo "</td>";
 			echo "</tr>";
 		}

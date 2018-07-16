@@ -12,7 +12,7 @@ function setup_objects_query() {
 		$entryMessage .= LangInstructionsNoObjectFound . $_GET ['object'];
 	$link = $baseURL . "index.php?indexAction=query_objects";
 	reset ( $_GET );
-	while ( list ( $key, $value ) = each ( $_GET ) )
+    while ( list ( $key, $value ) = each ( $_GET ) )
 		if (($key != 'indexAction') && ($key != 'multiplepagenr') && ($key != 'sort') && ($key != 'sortdirection') && ($key != 'showPartOfs'))
 			$link .= '&amp;' . $key . '=' . $value;
 	echo "<div id=\"main\">";
@@ -22,7 +22,7 @@ function setup_objects_query() {
 	echo "<input type=\"hidden\" name=\"source\" value=\"setup_objects_query\" />";
 	echo "<input type=\"hidden\" name=\"showPartOfs\" value=\"0\" />";
 	$content1 = LangSeen;
-	$seen = $objUtil->checkGetKey ( 'seen' );
+    $seen = $objUtil->checkGetKey ( 'seen' );
 	if ($seen == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
 			$seen = $_SESSION ['QobjParams'] ['seen'];
@@ -31,7 +31,7 @@ function setup_objects_query() {
 	$content2 .= "<option value=\"XY\" " . ($seen == "XY" ? "selected=\"selected\"" : "") . ">" . LangSeenByMeOrSomeoneElse . "</option>";
 	$content2 .= "<option value=\"SD\" " . ($seen == "SD" ? "selected=\"selected\"" : "") . ">" . LangDrawn . "</option>";
 	$content2 .= "<option value=\"-\"  " . ($seen == "-" ? "selected=\"selected\"" : "") . ">" . LangNotSeen . "</option>";
-	$content2 .= "<option value=\"-Z\" " . ($seen == "-Z" ? "selected=\"selected\"" : "") . ">" . LangNotDrawn . "</option>";
+    $content2 .= "<option value=\"-Z\" " . ($seen == "-Z" ? "selected=\"selected\"" : "") . ">" . LangNotDrawn . "</option>";
 	if ($loggedUser) {
 		$content2 .= "<option value=\"Y\"   " . ($seen == "Y" ? "selected=\"selected\"" : "") . ">" . LangSeenByMe . "</option>";
 		$content2 .= "<option value=\"D\"   " . ($seen == "D" ? "selected=\"selected\"" : "") . ">" . LangDrawnByMe . "</option>";
@@ -46,7 +46,6 @@ function setup_objects_query() {
 	echo "<h4>" . LangQueryObjectsTitle . "</h4>";
 	echo "<span class=\"pull-right\">" . $content3 . "</span>";
 	echo "<br /><hr />";
-
 	echo "<table><tr><td><strong>" . $content1 . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">" . $content2;
 	echo "</td></tr>";
@@ -58,14 +57,14 @@ function setup_objects_query() {
 	echo "<tr><td><strong>" . LangQueryObjectsField1 . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	echo "<select id=\"catalog\" name=\"catalog\" class=\"form-control\">";
-	echo "<option value=\"\">" . LangSelectCatalog . "</option>";
+	echo "<option value=\"\">" . _("Select catalog") . "</option>";
 	while ( list ( $key, $value ) = each ( $DSOcatalogs ) )
 		echo "<option" . (($value == $catalog) ? " selected=\"selected\"" : "") . " value=\"" . $value . "\">$value</option>";
 	echo "</select>";
 	if ($catNumber == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
 			$catNumber = $_SESSION ['QobjParams'] ['catNumber'];
-	echo "<input id=\"catNumber\" placeholder=\"" . LangCatalogNumber . "\" name=\"catNumber\" type=\"text\" class=\"form-control\" maxlength=\"255\" size=\"30\" value=\"" . $catNumber . "\" />";
+	echo "<input id=\"catNumber\" placeholder=\"" . _("Enter number in catalog") . "\" name=\"catNumber\" type=\"text\" class=\"form-control\" maxlength=\"255\" size=\"30\" value=\"" . $catNumber . "\" />";
 	echo "</td></tr>";
 
 	// ATLAS PAGE NUMBER

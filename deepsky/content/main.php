@@ -18,7 +18,7 @@ if ($loggedUser) {
     // Check if the version in the database is the same as the 
     // version of DeepskyLog. If not, we show the logo.
     if ($objObserver->getLastVersion($loggedUser) != VERSIONINFO) {
-        echo "<a title=\"" . LangWhatsNew . LangSinceVersion 
+        echo "<a title=\"" . _("What's new in DeepskyLog since version ") 
             . $objObserver->getLastVersion($loggedUser) 
             . " \" href=\"https://github.com/DeepskyLog/DeepskyLog/" 
             . "wiki/What's-New-in-DeepskyLog\">";
@@ -31,7 +31,7 @@ if ($loggedUser) {
         );
     }
 } else {
-    echo "<a title=\"" . LangWhatsNew 
+    echo "<a title=\"" . _("What's new in DeepskyLog") 
         . " \" href=\"https://github.com/DeepskyLog/DeepskyLog/" 
         . "wiki/What's-New-in-DeepskyLog\">";
     echo "<img class=\"img-responsive img-rounded\" src=\"" 
@@ -42,7 +42,19 @@ echo "</div>";
 echo "<br />";
 
 if (!$loggedUser) {
-    echo IntroText;
+    echo _("<h2>Welcome to DeepskyLog!</h2>
+In close collaboration with the Astronomical Society of Belgium (<a href=\"http://www.vvs.be\">Vereniging Voor Sterrenkunde (VVS)</a>) we are glad to offer a comprehensive and free database for deepsky objects. The database is developed by the deepsky-section of the VVS. The database already contains tens of thousands observations and thousands of sketches and drawings made by amateur astronomers around the world. After you have registered for DeepskyLog, you get access to a variety of useful tools:<br /><br />
+<ul><li>Information on the observations you made, the objects observed and sketches made,</li>
+    <li>observing lists with different deepsky objects,</li>
+    <li>you can share your observations with other observers,</li>
+    <li>translate function to read observations in other languages,</li>
+    <li>free atlases,</li>
+    <li>create your own file with maps and DSS images of the objects,</li>
+    <li>interactive star atlas down to magnitude 16,</li>
+    <li>suggestions for objects visible in your instruments,</li>
+    <li>information about the objects that are visible from your observation sites.</li>
+</ul>
+To start recording your observations, you need an account, which you can get after registration. Please contact the <a href=\"mailto:developers@deepskylog.be\">DeepskyLog developers</a> if you encounter problems or have questions.");
     echo "<br /><br />";
 }
 
@@ -95,10 +107,10 @@ echo " </div>";
 echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL 
     . "index.php?indexAction=view_atlaspages\">";
-echo "    <img title=\"" . LangDownloadAtlasses . "\" src=\"" . $baseURL 
+echo "    <img title=\"" . _("Download atlases") . "\" src=\"" . $baseURL 
     . "images/downloadAtlas.png\">";
 echo "    <div class=\"caption\">";
-echo "     <h4 class=\"text-center\">" . LangDownloadAtlasses . "</h4>";
+echo "     <h4 class=\"text-center\">" . _("Download atlases") . "</h4>";
 echo "    </div>";
 echo "   </a>";
 echo " </div>";
@@ -122,17 +134,17 @@ if ($loggedUser) {
     echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
     echo "   <a class=\"thumbnail thumbnail-no-border\" data-toggle=\"modal\"" 
         . " data-target=\"#addList\">";
-    echo "    <img title=\"" . LangAddList . "\" src=\"" . $baseURL 
+    echo "    <img title=\"" . _("Create list") . "\" src=\"" . $baseURL 
         . "images/clipboard.png\">";
     echo "    <div class=\"caption\">";
-    echo "     <h4 class=\"text-center\">" . LangAddList . "</h4>";
+    echo "     <h4 class=\"text-center\">" . _("Create list") . "</h4>";
     echo "    </div>";
     echo "   </a>";
     echo " </div>";
 }
 echo "</div>";
 
-echo "<h2>" . LangNewDrawings . "</h2>";
+echo "<h2>" . _("New drawings") . "</h2>";
 $drawings = $objObservation->getLastObservationsWithDrawing();
 echo "<div class=\"row\">";
 foreach ($drawings as $drawing => $key) {

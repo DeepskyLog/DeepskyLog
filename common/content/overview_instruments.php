@@ -81,7 +81,7 @@ function overview_instruments() {
 		// $obs = $objObservation->getObservationFromQuery($queries, "", "1", "False");
 		// $obscom = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
 		if (! ($objInstrument->getInstrumentUsedFromId ( $value ))) // no observations with instrument yet
-			echo "<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_instrument&amp;instrumentid=" . urlencode ( $value ) . "\">" . LangRemove . "</a>";
+			echo "<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_instrument&amp;instrumentid=" . urlencode ( $value ) . "\">" . _("Delete") . "</a>";
 		echo "</td>";
 		echo "</tr>";
 		$count ++;

@@ -12,7 +12,7 @@ function tolist() {
 	if ($listname) {
 		$link = $baseURL . "index.php?indexAction=listaction";
 		reset ( $_GET );
-		while ( list ( $key, $value ) = each ( $_GET ) )
+		foreach ($_GET as $key=>$value)
 			if (! in_array ( $key, array (
 					'addobservationstolist',
 					'restoreColumns',
@@ -36,21 +36,21 @@ function tolist() {
 			// Add a button to remove the list.
 			$content1 = "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>&nbsp;" . LangToListMyListsRemove . "</a>  ";
 			// Add a button to rename the list.
-			$content1 .= "<button type=\"button\" title=\"" . LangChangeName . "\" class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#changeListName" . str_replace ( ' ', '_', str_replace ( ':', '_', $listname ) ) . "\" >
+			$content1 .= "<button type=\"button\" title=\"" . _("Change name") . "\" class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#changeListName" . str_replace ( ' ', '_', str_replace ( ':', '_', $listname ) ) . "\" >
 							<span class=\"glyphicon glyphicon-pencil\"></span>&nbsp;" . LangToListRename . "
                       	  </button>&nbsp;";
 
 			// Add a button to change from private to public or vice-versa
 			if ($objList->isPublic ( $listname, $loggedUser )) {
-				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivateList=switchPublicPrivateList&amp;listname=" . $listname . "\"><span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>&nbsp;" . LangMakePrivate . "</a>  ";
+				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivateList=switchPublicPrivateList&amp;listname=" . $listname . "\"><span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>&nbsp;" . _("Make private") . "</a>  ";
 			} else {
-				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivateList=switchPublicPrivateList&amp;listname=" . $listname . "\"><span class=\"glyphicon glyphicon-share\" aria-hidden=\"true\"></span>&nbsp;" . LangMakePublic . "</a>  ";
+				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivateList=switchPublicPrivateList&amp;listname=" . $listname . "\"><span class=\"glyphicon glyphicon-share\" aria-hidden=\"true\"></span>&nbsp;" . _("Make public") . "</a>  ";
 
 			}
 
 			// Add a button to create a new list
-			$content1 .= "<button type=\"button\" title=\"" . LangChangeName . "\" class=\"btn btn-success pull-right\" data-toggle=\"modal\" data-target=\"#addList\" >
-							<span class=\"glyphicon glyphicon-plus\"></span>&nbsp;" . LangNewList . "
+			$content1 .= "<button type=\"button\" title=\"" . _("Change name") . "\" class=\"btn btn-success pull-right\" data-toggle=\"modal\" data-target=\"#addList\" >
+							<span class=\"glyphicon glyphicon-plus\"></span>&nbsp;" . _("Add new list") . "
                       	  </button>&nbsp;";
 
 			$content2 = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=import_csv_list\">" . LangToListImport . "</a>  ";
@@ -92,11 +92,11 @@ function tolist() {
                         <div class=\"modal-content\">
                          <div class=\"modal-header\">
                           <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-                          <h4 class=\"modal-title\">" . LangChangeName . "</h4>
+                          <h4 class=\"modal-title\">" . _("Change name") . "</h4>
                          </div>
                          <div class=\"modal-body\">
                           <!-- Ask for the new name of the list. -->
-                          <h1 class=\"text-center login-title\">" . LangNewNameList . "</h1>
+                          <h1 class=\"text-center login-title\">" . _("New name for the observing list") . "</h1>
                           <form action=\"" . $baseURL . "index.php?indexAction=listaction\">
                            <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />
 													 <input type=\"hidden\" name=\"listnamefrom\" value=\"" . $listname . "\" />";
@@ -109,7 +109,7 @@ function tolist() {
 		if ($publicList) {
 			echo "checked ";
 		}
-		echo "    name=\"PublicList\" value=\"1\" />&nbsp;" . LangToListPublic . "
+		echo "    name=\"PublicList\" value=\"1\" />&nbsp;" . _("Make this list a public list") . "
                           </div>
                           <div class=\"modal-footer\">
                            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>

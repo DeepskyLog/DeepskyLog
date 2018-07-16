@@ -12,7 +12,7 @@ function head() {
 	echo "<meta name=\"revisit-after\" content=\"1 day\" />";
 	echo "<meta name=\"author\" content=\"DeepskyLog - VVS\" />";
 	echo "<meta name=\"keywords\" content=\"VVS, Vereniging Voor Sterrenkunde, astronomie, sterrenkunde, Deepsky, waarnemingen, kometen\" />";
-	echo "<base href=\"" . $baseURL . "\" />";
+    echo "<base href=\"" . $baseURL . "\" />";
 	echo "<link rel=\"shortcut icon\" href=\"" . $baseURL . "styles/images/favicon.png\" />";
 	echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"DeepskyLog - latest observations\" href=\"observations.rss\" />";
 	// Load the javascript for using php functions in javascript.
@@ -69,7 +69,7 @@ function head() {
 		$TitleText = LangXMLTitle;
 	elseif ($includeFile == 'deepsky/content/new_object.php')
 		$TitleText = LangNewObjectTitle;
-	elseif ($includeFile == 'deepsky/content/new_observation.php')
+	elseif ($includeFile == 'deepsky/content/NewObservation.php')
 		$TitleText = LangNewObservationTitle . $theObject;
 	elseif ($includeFile == 'deepsky/content/view_object.php')
 		$TitleText = LangViewObjectTitle . $theObject;
@@ -107,7 +107,7 @@ function head() {
 	elseif ($theDispatch == 'detail_observer')
 		$TitleText = LangDetailObserver;
 	elseif ($theDispatch == 'statistics')
-	$TitleText = LangStatistics;
+	$TitleText = _("Statistics");
 	elseif ($includeFile == 'common/content/change_account.php')
 		$TitleText = LangChangeAccountTitle;
 	elseif ($theDispatch == 'detail_eyepiece')
@@ -129,7 +129,7 @@ function head() {
 	elseif ($theDispatch == 'detail_location')
 		$TitleText = LangDetailSite;
 	elseif ($includeFile == 'common/content/change_site.php')
-		$TitleText = LangAddSiteButton2;
+		$TitleText = _("Change site");
 	elseif ($includeFile == 'common/content/new_eyepiece.php')
 		$TitleText = LangAddEyepieceButton;
 	elseif ($includeFile == 'common/content/new_filter.php')
@@ -140,8 +140,6 @@ function head() {
 		$TitleText = LangAddLensButton;
 	elseif ($includeFile == 'common/content/message.php')
 		$TitleText = "";
-	elseif ($includeFile == 'common/content/search_locations.php')
-		$TitleText = LangSearchLocations0;
 	elseif ($includeFile == 'common/content/getLocation.php')
 		$TitleText = LangGetLocation1;
 	elseif ($includeFile == 'common/content/register.php')
@@ -195,17 +193,17 @@ function head() {
 	elseif ($includeFile == 'comets/content/setup_objects_query.php')
 		$TitleText = LangQueryObjectsTitle;
 	elseif ($includeFile == 'common/content/view_instruments.php')
-		$TitleText = LangViewInstruments;
+		$TitleText = _("My instruments");
 	elseif ($includeFile == 'common/content/view_eyepieces.php')
-		$TitleText = LangViewEyepieces;
+		$TitleText = _("My eyepieces");
 	elseif ($includeFile == 'common/content/view_filters.php')
-		$TitleText = LangViewFilters;
+		$TitleText = _("My filters");
 	elseif ($includeFile == 'common/content/view_lenses.php')
-		$TitleText = LangViewLenses;
+		$TitleText = _("My lenses");
 	elseif ($includeFile == 'common/content/new_location.php')
-		$TitleText = LangAddSiteButton;
+		$TitleText = _("Add site");
 	elseif ($includeFile == 'common/content/locations.php')
-		$TitleText = LangViewLocations;
+		$TitleText = _("My locations");
 	elseif ($objUtil->checkRequestKey ( 'title' ))
 		$TitleText = $objUtil->checkRequestKey ( 'title', '' ); // 20081209 Here should come a better solution, see bug report 44
 	elseif ($objUtil->checkRequestKey ( ('titleobject') ))

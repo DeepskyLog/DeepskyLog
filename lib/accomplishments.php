@@ -338,7 +338,10 @@ class Accomplishments
     */
     public function getSeenSubject($catalog, $numberOfObjects)
     {
-        return LangNewCertificat . round($numberOfObjects) . ' ' . $catalog . LangObserved;
+        return sprintf(
+            _('New DeepskyLog star! %s observed!'),
+            round($numberOfObjects) . ' ' . $catalog
+        );
     }
 
     /** Gets the body for the message when a new accomplishment is earned (because of extra objects seen)
@@ -349,7 +352,11 @@ class Accomplishments
     public function getSeenMessage($catalog, $numberOfObjects, $observerId)
     {
         global $baseURL;
-        return LangCongrats . round($numberOfObjects) . " " . $catalog . LangCheckout . " " . $baseURL . "/index.php?indexAction=detail_observer3&user=" . urlencode($observerId) . "";
+        return sprintf(
+            _('Congratulations! You have observed %s and receive a DeepskyLog star! Check out your DeepskyLog stars at %s'),
+            round($numberOfObjects) . " " . $catalog, 
+            $baseURL . "/index.php?indexAction=detail_observer&user=" . urlencode($observerId) . ""
+        );
     }
 
     /** Gets the subject for the message when a new accomplishment is earned (because of extra objects drawn)
@@ -359,7 +366,10 @@ class Accomplishments
     */
     public function getDrawSubject($catalog, $numberOfObjects)
     {
-        return LangNewCertificat . round($numberOfObjects) . ' ' . $catalog . LangAccomplishmentsDrawn;
+        return sprintf(
+            _('New DeepskyLog star! %s drawn!'),
+            round($numberOfObjects) . ' ' . $catalog
+        );
     }
 
     /** Gets the body for the message when a new accomplishment is earned (because of extra objects drawn)
@@ -370,7 +380,12 @@ class Accomplishments
     public function getDrawMessage($catalog, $numberOfObjects, $observerId)
     {
         global $baseURL;
-        return LangDrawCongrats . round($numberOfObjects) . " " . $catalog . LangDrawCheckout . " " . $baseURL . "/index.php?indexAction=detail_observer3&user=" . urlencode($observerId) . "";
+        return sprintf(
+            _('Congratulations! You have drawn %s and receive a DeepskyLog star! Check out your DeepskyLog stars at %s'), 
+            round($numberOfObjects) . " " . $catalog, 
+            " " . $baseURL . "/index.php?indexAction=detail_observer&user=" 
+            . urlencode($observerId) . ""
+        );
     }
 
     /** Recalculates the number of objects seen or drawn and send a mail when a new accomplishment is reached.
@@ -440,43 +455,43 @@ class Accomplishments
     {
         if ($numberOfObjects > 1) {
             if ($catalog == "messier") {
-                return LangMessier;
+                return _('Messier objects');
             } elseif ($catalog == "Caldwell") {
-                return LangCaldwell;
+                return _('Caldwell objects');
             } elseif ($catalog == "Herschel") {
-                return LangHerschel400;
+                return _('Herschel 400 objects');
             } elseif ($catalog == "HerschelII") {
-                return LangHerschelII;
+                return _('Herschel II objects');
             } elseif ($catalog == "OpenCluster") {
-                return strtolower(LangOpenClusters);
+                return strtolower(_('Open clusters'));
             } elseif ($catalog == "GlobularCluster") {
-                return strtolower(LangGlobularClusters);
+                return strtolower(_('Globular clusters'));
             } elseif ($catalog == "PlanetaryNebula") {
-                return strtolower(LangPlanetaryNebulaeSeen);
+                return strtolower(_('Planetary Nebulae'));
             } elseif ($catalog == "Galaxy") {
-                return strtolower(LangGalaxiesSeen);
+                return strtolower(_('Galaxies'));
             } elseif ($catalog == "Nebula") {
-                return strtolower(LangNebulaeSeen);
+                return strtolower(_('Nebulae'));
             } elseif ($catalog == "Objects") {
-                return LangObject;
+                return _('object');
             } elseif ($catalog == "Drawings") {
-                return LangAccomplishmentsObjects;
+                return _('objects');
             }
         } else {
             if ($catalog == "OpenCluster") {
-                return LangOpenCluster;
+                return _('open cluster');
             } elseif ($catalog == "GlobularCluster") {
-                return LangGlobularCluster;
+                return _('globular cluster');
             } elseif ($catalog == "PlanetaryNebula") {
-                return LangPlanetaryNebula;
+                return _('planetary nebula');
             } elseif ($catalog == "Galaxy") {
-                return LangGalaxy;
+                return _('galaxy');
             } elseif ($catalog == "Nebula") {
-                return LangNebula;
+                return _('nebula');
             } elseif ($catalog == "Objects") {
-                return LangObject;
+                return _('object');
             } elseif ($catalog == "Drawings") {
-                return LangAccomplishmentsObjects;
+                return _('objects');
             }
         }
     }
@@ -556,43 +571,43 @@ class Accomplishments
         $objDatabase->execSQL($sql);
 
         if ($oldCometObservations[0] == 0 && $CometObservations[0] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 1), $this->getSeenMessage(LangObject, 1, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 1), $this->getSeenMessage(_('object'), 1, $observerId));
         }
 
         if ($oldCometObservations[1] == 0 && $CometObservations[1] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 10), $this->getSeenMessage(LangObject, 10, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 10), $this->getSeenMessage(_('object'), 10, $observerId));
         }
 
         if ($oldCometObservations[2] == 0 && $CometObservations[2] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 25), $this->getSeenMessage(LangObject, 25, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 25), $this->getSeenMessage(_('object'), 25, $observerId));
         }
 
         if ($oldCometObservations[3] == 0 && $CometObservations[3] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 50), $this->getSeenMessage(LangObject, 50, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 50), $this->getSeenMessage(_('object'), 50, $observerId));
         }
 
         if ($oldCometObservations[4] == 0 && $CometObservations[4] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 100), $this->getSeenMessage(LangObject, 100, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 100), $this->getSeenMessage(_('object'), 100, $observerId));
         }
 
         if ($oldCometObservations[5] == 0 && $CometObservations[5] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 250), $this->getSeenMessage(LangObject, 250, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 250), $this->getSeenMessage(_('object'), 250, $observerId));
         }
 
         if ($oldCometObservations[6] == 0 && $CometObservations[6] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 500), $this->getSeenMessage(LangObject, 500, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 500), $this->getSeenMessage(_('object'), 500, $observerId));
         }
 
         if ($oldCometObservations[7] == 0 && $CometObservations[7] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 1000), $this->getSeenMessage(LangObject, 1000, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 1000), $this->getSeenMessage(_('object'), 1000, $observerId));
         }
 
         if ($oldCometObservations[8] == 0 && $CometObservations[8] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 2500), $this->getSeenMessage(LangObject, 2500, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 2500), $this->getSeenMessage(_('object'), 2500, $observerId));
         }
 
         if ($oldCometObservations[9] == 0 && $CometObservations[9] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 5000), $this->getSeenMessage(LangObject, 5000, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 5000), $this->getSeenMessage(_('object'), 5000, $observerId));
         }
     }
 
@@ -634,43 +649,43 @@ class Accomplishments
         $objDatabase->execSQL($sql);
 
         if ($oldCometsObserved[0] == 0 && $CometsObserved[0] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 1), $this->getSeenMessage(LangObject, 1, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 1), $this->getSeenMessage(_('object'), 1, $observerId));
         }
 
         if ($oldCometsObserved[1] == 0 && $CometsObserved[1] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 10), $this->getSeenMessage(LangObject, 10, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 10), $this->getSeenMessage(_('object'), 10, $observerId));
         }
 
         if ($oldCometsObserved[2] == 0 && $CometsObserved[2] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 25), $this->getSeenMessage(LangObject, 25, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 25), $this->getSeenMessage(_('object'), 25, $observerId));
         }
 
         if ($oldCometsObserved[3] == 0 && $CometsObserved[3] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 50), $this->getSeenMessage(LangObject, 50, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 50), $this->getSeenMessage(_('object'), 50, $observerId));
         }
 
         if ($oldCometsObserved[4] == 0 && $CometsObserved[4] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 100), $this->getSeenMessage(LangObject, 100, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 100), $this->getSeenMessage(_('object'), 100, $observerId));
         }
 
         if ($oldCometsObserved[5] == 0 && $CometsObserved[5] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 250), $this->getSeenMessage(LangObject, 250, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 250), $this->getSeenMessage(_('object'), 250, $observerId));
         }
 
         if ($oldCometsObserved[6] == 0 && $CometsObserved[6] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 500), $this->getSeenMessage(LangObject, 500, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 500), $this->getSeenMessage(_('object'), 500, $observerId));
         }
 
         if ($oldCometsObserved[7] == 0 && $CometsObserved[7] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 1000), $this->getSeenMessage(LangObject, 1000, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 1000), $this->getSeenMessage(_('object'), 1000, $observerId));
         }
 
         if ($oldCometsObserved[8] == 0 && $CometsObserved[8] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 2500), $this->getSeenMessage(LangObject, 2500, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 2500), $this->getSeenMessage(_('object'), 2500, $observerId));
         }
 
         if ($oldCometsObserved[9] == 0 && $CometsObserved[9] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 5000), $this->getSeenMessage(LangObject, 5000, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 5000), $this->getSeenMessage(_('object'), 5000, $observerId));
         }
     }
 
@@ -712,43 +727,43 @@ class Accomplishments
         $objDatabase->execSQL($sql);
 
         if ($oldCometDrawings[0] == 0 && $CometDrawings[0] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 1), $this->getSeenMessage(LangObject, 1, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 1), $this->getSeenMessage(_('object'), 1, $observerId));
         }
 
         if ($oldCometDrawings[1] == 0 && $CometDrawings[1] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 10), $this->getSeenMessage(LangObject, 10, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 10), $this->getSeenMessage(_('object'), 10, $observerId));
         }
 
         if ($oldCometDrawings[2] == 0 && $CometDrawings[2] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 25), $this->getSeenMessage(LangObject, 25, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 25), $this->getSeenMessage(_('object'), 25, $observerId));
         }
 
         if ($oldCometDrawings[3] == 0 && $CometDrawings[3] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 50), $this->getSeenMessage(LangObject, 50, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 50), $this->getSeenMessage(_('object'), 50, $observerId));
         }
 
         if ($oldCometDrawings[4] == 0 && $CometDrawings[4] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 100), $this->getSeenMessage(LangObject, 100, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 100), $this->getSeenMessage(_('object'), 100, $observerId));
         }
 
         if ($oldCometDrawings[5] == 0 && $CometDrawings[5] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 250), $this->getSeenMessage(LangObject, 250, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 250), $this->getSeenMessage(_('object'), 250, $observerId));
         }
 
         if ($oldCometDrawings[6] == 0 && $CometDrawings[6] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 500), $this->getSeenMessage(LangObject, 500, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 500), $this->getSeenMessage(_('object'), 500, $observerId));
         }
 
         if ($oldCometDrawings[7] == 0 && $CometDrawings[7] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 1000), $this->getSeenMessage(LangObject, 1000, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 1000), $this->getSeenMessage(_('object'), 1000, $observerId));
         }
 
         if ($oldCometDrawings[8] == 0 && $CometDrawings[8] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 2500), $this->getSeenMessage(LangObject, 2500, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 2500), $this->getSeenMessage(_('object'), 2500, $observerId));
         }
 
         if ($oldCometDrawings[9] == 0 && $CometDrawings[9] == 1) {
-            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 5000), $this->getSeenMessage(LangObject, 5000, $observerId));
+            $objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(_('object'), 5000), $this->getSeenMessage(_('object'), 5000, $observerId));
         }
     }
 }

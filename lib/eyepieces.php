@@ -65,7 +65,7 @@ class Eyepieces {
 			echo "<th>" . LangViewEyepieceFocalLength . "</th>";
 			echo "<th>" . LangViewEyepieceMaxFocalLength . "</th>";
 			echo "<th>" . LangViewEyepieceApparentFieldOfView . "</th>";
-			echo "<th>" . LangRemove . "</th>";
+			echo "<th>" . _("Delete") . "</th>";
 			echo "<th>" . LangTopObserversHeader3 . "</th>";
 			echo "</tr></thead>";
 			$count = 0;

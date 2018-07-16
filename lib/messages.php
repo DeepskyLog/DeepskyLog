@@ -184,7 +184,7 @@ class Messages {
 		// We check whether the observer wants to receive the DeepskyLog messages as email. If so, we send an email.
 		if ($objObserver->getObserverProperty ( $receiver, 'sendMail' )) {
 			$senderName = $objObserver->getFullName($sender);
-			$message = LangDeepskyLogMessage . $senderName . ":<br /><br />" . $message . "<br /><br />";
+			$message = sprintf(_("DeepskyLog message from %s:"), $senderName) . "<br /><br />" . $message . "<br /><br />";
 			$this->sendEmail($subject, $message, $receiver);
 		}
 
