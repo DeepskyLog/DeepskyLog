@@ -2021,7 +2021,7 @@ class Observations
                 . ($seen = $objObject->getseen($value['objectname']));
             $title = trim(
                 $value['objectname'] . " " 
-                . LangMessageBy . $value['observername']
+                . _('by ') . $value['observername']
             );
 
             $LOid = $this->getLOObservationId(
@@ -2739,7 +2739,7 @@ class Observations
                 // Moon is under the horizon
                 $moon = "<img src=\"" . $baseURL 
                     . "/lib/moonpics/below.png\" class=\"moonpic\" title=\"" 
-                    . $MoonIllum . "% - " . LangUnderHorizon . "\" alt=\"" 
+                    . $MoonIllum . "% - " . _('under the horizon') . "\" alt=\"" 
                     . $MoonIllum . "%\" />";
             }
         }
@@ -2867,7 +2867,7 @@ class Observations
             echo "</div>";
         }
 
-        $title = $object . " " . LangMessageBy 
+        $title = $object . " " . _('by ') 
             . $this->getDsObservationProperty($LOid, 'observerid');
 
         if ($this->getDsObservationProperty($LOid, 'hasDrawing')) {

@@ -865,35 +865,35 @@ class Objects {
 							$a = floor ( $maxaltstart + 1 );
 							$b = $maxaltstart + 1 - $a;
 							if ($b == 0.75)
-								$c = LangMonthEnd;
+								$c = _("end");
 							else if ($b == 0.5)
-								$c = LangMonthMid;
+								$c = _("mid");
 							else if ($b == 0.25)
-								$c = LangMonthStart;
+								$c = _("begin");
 							else
-								$c = LangMonthTransit;
+								$c = _("start");
 							$result2 [$j] ['objectmaxaltstarttext'] = $c . ' ' . $GLOBALS ['Month' . $a . 'Short'];
 							$a = floor ( $maxaltend + 1 );
 							$b = $maxaltend + 1 - $a;
 							if ($b == 0.75)
-								$c = LangMonthEnd;
+								$c = _("end");
 							else if ($b == 0.5)
-								$c = LangMonthMid;
+								$c = _("mid");
 							else if ($b == 0.25)
-								$c = LangMonthStart;
+								$c = _("begin");
 							else
-								$c = LangMonthTransit;
+								$c = _("start");
 							$result2 [$j] ['objectmaxaltendtext'] = $c . ' ' . $GLOBALS ['Month' . $a . 'Short'];
 							$a = floor ( $maxaltmid + 1 );
 							$b = $maxaltmid + 1 - $a;
 							if ($b == 0.75)
-								$c = LangMonthEnd;
+								$c = _("end");
 							else if ($b == 0.5)
-								$c = LangMonthMid;
+								$c = _("mid");
 							else if ($b == 0.25)
-								$c = LangMonthStart;
+								$c = _("begin");
 							else
-								$c = LangMonthTransit;
+								$c = _("start");
 							$result2 [$j] ['objectmaxaltmidtext'] = $c . ' ' . $GLOBALS ['Month' . $a . 'Short'];
 						}
 					}
@@ -1545,7 +1545,7 @@ class Objects {
 		$inlists = $objList->getInPrivateLists ( $object );
 		if ($inlists != "") {
 			echo "<tr>";
-			echo "<td colspan=\"3\">" . LangInPrivateLists . "</td>";
+			echo "<td colspan=\"3\">" . _('In my lists') . "</td>";
 			echo "<td colspan=\"9\">" . $inlists . "</td>";
 			echo "</tr>";
 		}
@@ -1553,7 +1553,7 @@ class Objects {
 		$inlists = $objList->getInPublicLists ( $object );
 		if ($inlists != "") {
 			echo "<tr>";
-			echo "<td colspan=\"3\">" . LangInPublicLists . "</td>";
+			echo "<td colspan=\"3\">" . _('In public lists') . "</td>";
 			echo "<td colspan=\"9\">" . $inlists . "</td>";
 			echo "</tr>";
 		}
@@ -1809,10 +1809,10 @@ class Objects {
 			echo "<th data-priority=\"4\" id=\"objectlastseen\">" . LangOverviewObjectsHeader8 . "</th>";
 		}
 		if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'stdLocation' )) {
-			echo "<th data-priority=\"6\" id=\"objectmaxalt\" class=\"sorter-degrees\">" . LangObjectHighestAlt . "</th>";
-			echo "<th data-priority=\"6\" id=\"objectmaxaltstart\" class=\"columnSelector-false sorter-months\">" . LangObjectHighestFrom . "</th>";
-			echo "<th data-priority=\"6\" id=\"objectmaxaltend\" class=\"columnSelector-false sorter-months\">" . LangObjectHighestTo . "</th>";
-			echo "<th data-priority=\"7\" id=\"objectmaxaltmid\" class=\"sorter-months\">" . LangObjectHighestAround . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectmaxalt\" class=\"sorter-degrees\">" . _("Highest Alt.") . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectmaxaltstart\" class=\"columnSelector-false sorter-months\">" . _("Highest from") . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectmaxaltend\" class=\"columnSelector-false sorter-months\">" . _("Highest to") . "</th>";
+			echo "<th data-priority=\"7\" id=\"objectmaxaltmid\" class=\"sorter-months\">" . _("Highest around") . "</th>";
 		}
 		echo "</tr>";
 		echo "</thead><tbody>";

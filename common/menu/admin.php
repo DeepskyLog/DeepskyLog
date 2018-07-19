@@ -14,11 +14,11 @@ function admin()
 		  	  <li class=\"dropdown\">
 	         <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . LangAdminMenuTitle."<b class=\"caret\"></b></a>";
   	echo " <ul class=\"dropdown-menu\">";
-    echo "  <li><a href=\"".$baseURL."index.php?indexAction=new_message&amp;receiver=all\">".LangAdminMenuItem8."</a></li>";
+    echo "  <li><a href=\"".$baseURL."index.php?indexAction=new_message&amp;receiver=all\">"._('Send message to all')."</a></li>";
     echo "  <li class=\"disabled\">─────────────────</li>";
 	  echo "  <li><a href=\"".$baseURL."index.php?indexAction=view_observers\">".LangAdminMenuItem1."</a></li>";
     echo "  <li class=\"disabled\">─────────────────</li>";
-    echo "  <li><a href=\"".$baseURL."index.php?indexAction=admin_check_objects\">".LangAdminMenuItem7."</a></li>";
+    echo "  <li><a href=\"".$baseURL."index.php?indexAction=admin_check_objects\">"._('Check Objects')."</a></li>";
     echo "  <li class=\"disabled\">─────────────────</li>";
 	  echo "  <li><a href=\"".$baseURL."index.php?indexAction=overview_locations\">".LangAdminMenuItem2."</a></li>";
 	  echo "  <li><a href=\"".$baseURL."index.php?indexAction=overview_instruments\">".LangAdminMenuItem3."</a></li>";

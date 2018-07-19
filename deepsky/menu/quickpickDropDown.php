@@ -19,7 +19,7 @@ function menu_quickpickDropDown()
 	echo "  <li><a href=\"".$baseURL."index.php?indexAction=quickpick&myLanguages=true&searchObservationsQuickPick\">".LangQuickPickSearchObservations."</a></li>";
 	if (($loggedUser) && ($loggedUser != "admin")) { // admin doesn't have own observations
 		echo "  <li class=\"disabled\">─────────────────</li>";
-		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_sessions\">" . LangSearchMenuItem12 . "</a></li>";
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_sessions\">" . _("All sessions") . "</a></li>";
 	}
 	echo " </ul>";
 	echo "</li>

@@ -146,7 +146,7 @@ class Messages {
 	public function validateMessage() {
 		global $loggedUser;
 		if (! ($loggedUser))
-			throw new Exception ( LangMessageNotLoggedIn );
+			throw new Exception (_('You should be logged in to be able to send messages.'));
 
 		if (array_key_exists ( 'send_mail', $_POST ) && ($_POST ['send_mail'] == "on")) {
 			$this->sendRealMessage ( $loggedUser, $_POST ['receiver'], $_POST ['subject'], nl2br ( addslashes ( $_POST ['message'] ) ) );
@@ -281,14 +281,14 @@ class Messages {
 		// Making the header for the mails
 		echo "<thead><tr>";
 		echo "<th data-priority=\"critical\">";
-		echo LangMessageSubject;
+		echo _('Subject');
 		echo "</th>";
 		echo "<th>";
-		echo LangMessageSender;
+		echo _('Sender');
 		echo "</th>";
 
 		echo "<th>";
-		echo LangMessageDate;
+		echo _('Date');
 		echo "</th>";
 
 		echo "</tr></thead>";

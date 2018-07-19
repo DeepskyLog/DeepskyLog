@@ -36,7 +36,7 @@
     	<a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?=LangTopObjectsTitle?></a>
     </li>
     <li role="presentation">
-    	<a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?=LangTopObjectsDrawnTitle?></a>
+    	<a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?=_('Most popular objects (drawings)')?></a>
     </li>
  </ul>
 
@@ -46,13 +46,13 @@
 			<thead>
 		    	<tr>
 		          <th><?= LangOverviewObjectsHeader1 ?></th>
-		          <th><?= GraphObservations ?></th>
+		          <th><?= _("Observations") ?></th>
 		        </tr>
 			</thead>
 		    <tfoot>
 				<tr>
 					<th><?= LangOverviewObjectsHeader1 ?></th>
-					<th><?= GraphObservations ?></th>
+					<th><?= _("Observations") ?></th>
 				</tr>
 			</tfoot>
 		</table>
@@ -62,13 +62,13 @@
 			<thead>
 		    	<tr>
 		          <th><?= LangOverviewObjectsHeader1 ?></th>
-		          <th><?= GraphObservations ?></th>
+		          <th><?= _("Observations") ?></th>
 		        </tr>
 			</thead>
 		    <tfoot>
 				<tr>
 					<th><?= LangOverviewObjectsHeader1 ?></th>
-					<th><?= GraphObservations ?></th>
+					<th><?= _("Observations") ?></th>
 				</tr>
 			</tfoot>
 		</table>

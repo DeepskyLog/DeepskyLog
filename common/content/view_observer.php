@@ -121,17 +121,17 @@ function viewObserver()
     // We make some tabs.
     echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">
           <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">" 
-        . GraphInfo . "</a></li>
+        . _("Info") . "</a></li>
           <li><a href=\"#observationsPerYear\" data-toggle=\"tab\">" 
-        . GraphObservationsTitle . "</a></li>
+        . _("Observations per year") . "</a></li>
                     <li><a href=\"#observationsPerMonth\" data-toggle=\"tab\">" 
         . _("Observations per month") . "</a></li>
           <li><a href=\"#objectTypes\" data-toggle=\"tab\">" 
-        . GraphObservationsType . "</a></li>
+        . _("Object types observed") . "</a></li>
                     <li><a href=\"#countries\" data-toggle=\"tab\">" 
         . _("Observations per country") . "</a></li>
           <li><a href=\"#stars\" data-toggle=\"tab\">" 
-          . GraphAccomplishments . "</a></li>
+          . _('DeepskyLog stars') . "</a></li>
         </ul>";
 
     echo "<div id=\"my-tab-content\" class=\"tab-content\">";
@@ -482,7 +482,7 @@ function viewObserver()
             echo "<a class=\"btn btn-primary\" href=\"" . $baseURL 
                 . "index.php?indexAction=new_message&amp;receiver=" . $user . "\">";
             echo "<span class=\"glyphicon glyphicon-envelope\"></span> " 
-                . LangMessagePublicList5 . $firstname . "</a>";
+                . _('Send message to ') . $firstname . "</a>";
         }
     }
 
@@ -585,13 +585,13 @@ function viewObserver()
                     marginBottom: 40
                   },
                   title: {
-                    text: \"" . GraphTitle1 
+                    text: \"" . _("Number of observations per year") 
         . ": " . html_entity_decode($firstname, ENT_QUOTES, "UTF-8") . " " 
         . html_entity_decode($name, ENT_QUOTES, "UTF-8") . "\",
                     x: -20 //center
                   },
                   subtitle: {
-                    text: '" . GraphSource . $baseURL . "',
+                    text: '" . _("Source: ") . $baseURL . "',
                     x: -20
                   },
                   xAxis: {
@@ -609,7 +609,7 @@ function viewObserver()
                   },
                   yAxis: {
                     title: {
-                      text: '" . GraphObservations . "'
+                      text: '" . _("Observations") . "'
                   },
                             min: 0,
                   plotLines: [{
@@ -728,7 +728,7 @@ function viewObserver()
                     x: -20 //center
                   },
                   subtitle: {
-                    text: '" . GraphSource . $baseURL . "',
+                    text: '" . _("Source: ") . $baseURL . "',
                     x: -20
                   },
                   xAxis: {
@@ -753,7 +753,7 @@ function viewObserver()
                             },
                   yAxis: {
                     title: {
-                      text: '" . GraphObservations . "'
+                      text: '" . _("Observations") . "'
                   },
                             min: 0,
                   plotLines: [{
@@ -1094,12 +1094,12 @@ function viewObserver()
                         plotShadow: false
                     },
                     title: {
-                        text: \"" . ObjectsSeenGraph . ": " 
+                        text: \"" . _("Object types seen") . ": " 
         . html_entity_decode($firstname, ENT_QUOTES, "UTF-8") . " " 
         . html_entity_decode($name, ENT_QUOTES, "UTF-8") . "\"
                     },
                 subtitle: {
-                  text: '" . GraphSource . $baseURL . "'
+                  text: '" . _("Source: ") . $baseURL . "'
                 },
                     tooltip: {
                         formatter: function() {
@@ -1204,7 +1204,7 @@ function viewObserver()
         . html_entity_decode($name, ENT_QUOTES, "UTF-8") . "\"
                     },
                 subtitle: {
-                  text: '" . GraphSource . $baseURL . "'
+                  text: '" . _("Source: ") . $baseURL . "'
                 },
                     tooltip: {
                         formatter: function() {
@@ -1283,19 +1283,19 @@ function viewObserver()
     drawStar(
         $accomplishments['messierDrawingsBronze'], _('Bronze'), 
         "bronze", 
-        _("Bronze Messier drawing-certificat! You drawed 25 Messier objects!"), 
+        _("Bronze Messier drawing-certificat! You drew 25 Messier objects!"), 
         _("Draw at least 25 different Messier objects to get this certificat!")
     );
     drawStar(
         $accomplishments['messierDrawingsSilver'], _('Silver'), 
         "silver", 
-        _("Silver Messier drawing-certificat! You drawed 50 Messier objects!"), 
+        _("Silver Messier drawing-certificat! You drew 50 Messier objects!"), 
         _("Draw at least 50 Messier objects to get this certificat!")
     );
     drawStar(
         $accomplishments['messierDrawingsGold'], _('Gold'), 
         "gold",
-        _("Golden Messier drawing-certificat! You drawed all 110 Messier objects!"),
+        _("Golden Messier drawing-certificat! You drew all 110 Messier objects!"),
         _("Draw all 110 Messier objects to get this certificat!")
     );
     echo "</div>";
@@ -1328,19 +1328,19 @@ function viewObserver()
     drawStar(
         $accomplishments['caldwellDrawingsBronze'], _('Bronze'), 
         "bronze",
-        _("Bronze Caldwell drawing-certificat! You drawed 25 Caldwell objects!"), 
+        _("Bronze Caldwell drawing-certificat! You drew 25 Caldwell objects!"), 
         _("Draw at least 25 Caldwell objects to get this certificat!")
     );
     drawStar(
         $accomplishments['caldwellDrawingsSilver'], _('Silver'), 
         "silver", 
-        _("Silver Caldwell drawing-certificat! You drawed 50 Caldwell objects!"), 
+        _("Silver Caldwell drawing-certificat! You drew 50 Caldwell objects!"), 
         _("Draw at least 50 Caldwell objects to get this certificat!")
     );
     drawStar(
         $accomplishments['caldwelldrawingsGold'], _('Gold'), 
         "gold", 
-        _("Golden Caldwell drawing-certificat! You drawed all 110 Caldwell objects!"), 
+        _("Golden Caldwell drawing-certificat! You drew all 110 Caldwell objects!"), 
         _("Draw all 110 Caldwell objects to get this certificat!")
     );
     echo "</div>";
@@ -1351,28 +1351,33 @@ function viewObserver()
 
     drawStar(
         $accomplishments['herschelBronze'], _('Bronze'), 
-        "bronze", LangAccomplishmentsH400Bronze, 
-        LangH400BronzeToAccomplish
+        "bronze", 
+        _("Bronze Herschel 400 certificat! You observed 25 Herschel 400 objects!"), 
+        _("Observe at least 25 Herschel 400 objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelSilver'], _('Silver'), 
-        "silver", LangAccomplishmentsH400Silver, 
-        LangH400SilverToAccomplish
+        "silver", 
+        _("Silver Herschel 400 certificat! You observed 50 Herschel 400 objects!"), 
+        _("Observe at least 50 Herschel 400 objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelGold'], _('Gold'), 
-        "gold", LangAccomplishmentsH400Gold, 
-        LangH400GoldToAccomplish
+        "gold", 
+        _("Golden Herschel 400 certificat! You observed 100 Herschel 400 objects!"), 
+        _("Observe at least 100 Herschel 400 objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelDiamond'], _('Diamond'), 
-        "diamond", LangAccomplishmentsH400Diamond, 
-        LangH400DiamondToAccomplish
+        "diamond", 
+        _("Diamond Herschel 400 certificat! You observed 200 Herschel 400 objects!"), 
+        _("Observe at least 200 Herschel 400 objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelPlatina'], _('Platinum'), 
-        "platinum", LangAccomplishmentsH400Platina, 
-        LangH400PlatinaToAccomplish
+        "platinum", 
+        _("Platinum Herschel 400 certificat! You observed all 400 Herschel 400 objects!"), 
+        _("Observe all 400 Herschel 400 objects to get this certificat!")
     );
     echo "</div>";
 
@@ -1382,23 +1387,33 @@ function viewObserver()
 
     drawStar(
         $accomplishments['herschelDrawingsBronze'], _('Bronze'), 
-        "bronze", LangAccomplishmentsH400BronzeDr, LangH400BronzeToAccomplishDr
+        "bronze", 
+        _("Bronze Herschel 400 drawing-certificat! You drew 25 Herschel 400 objects!"), 
+        _("Draw at least 25 Herschel 400 objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelDrawingsSilver'], _('Silver'),
-        "silver", LangAccomplishmentsH400SilverDr, LangH400SilverToAccomplishDr
+        "silver", 
+        _("Silver Herschel 400 drawing-certificat! You drew 50 Herschel 400 objects!"), 
+        _("Draw at least 50 Herschel 400 objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelDrawingsGold'], _('Gold'), 
-        "gold", LangAccomplishmentsH400GoldDr, LangH400GoldToAccomplishDr
+        "gold", 
+        _("Golden Herschel 400 drawing-certificat! You drew 100 Herschel 400 objects!"), 
+        _("Draw at least 100 Herschel 400 objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelDrawingsDiamond'], _('Diamond'), 
-        "diamond", LangAccomplishmentsH400DiamondDr, LangH400DiamondToAccomplishDr
+        "diamond", 
+        _("Diamond Herschel 400 drawing-certificat! You drew 200 Herschel 400 objects!"), 
+        _("Draw at least 200 Herschel 400 objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelDrawingsPlatina'], _('Platinum'), 
-        "platinum", LangAccomplishmentsH400PlatinaDr, LangH400PlatinaToAccomplishDr
+        "platinum", 
+        _("Platinum Herschel 400 drawing-certificat! You drew all 400 Herschel 400 objects!"), 
+        _("Draw all 400 Herschel 400 objects to get this certificat!")
     );
     echo "</div>";
 
@@ -1408,23 +1423,32 @@ function viewObserver()
 
     drawStar(
         $accomplishments['herschelIIBronze'], _('Bronze'), "bronze",
-        LangAccomplishmentsHIIBronze, LangHIIBronzeToAccomplish
+        _("Bronze Herschel II certificat! You observed 25 Herschel II objects!"), 
+        _("Observe at least 25 Herschel II objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelIISilver'], _('Silver'),
-        "silver", LangAccomplishmentsHIISilver, LangHIISilverToAccomplish
+        "silver", 
+        _("Silver Herschel II certificat! You observed 50 Herschel II objects!"), 
+        _("Observe at least 50 Herschel II objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelIIGold'], _('Gold'), 
-        "gold", LangAccomplishmentsHIIGold, LangHIIGoldToAccomplish
+        "gold", 
+        _("Golden Herschel II certificat! You observed 100 Herschel II objects!"), 
+        _("Observe at least 100 Herschel II objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelIIDiamond'], _('Diamond'), 
-        "diamond", LangAccomplishmentsHIIDiamond, LangHIIDiamondToAccomplish
+        "diamond", 
+        _("Diamond Herschel II certificat! You observed 200 Herschel II objects!"), 
+        _("Observe at least 200 Herschel II objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelIIPlatina'], _('Platinum'), 
-        "platinum", LangAccomplishmentsHIIPlatina, LangHIIPlatinaToAccomplish
+        "platinum", 
+        _("Platinum Herschel II certificat! You observed all II Herschel II objects!"), 
+        _("Observe all II Herschel II objects to get this certificat!")
     );
     echo "</div>";
 
@@ -1434,23 +1458,33 @@ function viewObserver()
 
     drawStar(
         $accomplishments['herschelIIDrawingsBronze'], _('Bronze'), 
-        "bronze", LangAccomplishmentsHIIBronzeDr, LangHIIBronzeToAccomplishDr
+        "bronze", 
+        _("Bronze Herschel II drawing-certificat! You drew 25 Herschel II objects!"), 
+        _("Draw at least 25 Herschel II objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelIIDrawingsSilver'], _('Silver'), 
-        "silver", LangAccomplishmentsHIISilverDr, LangHIISilverToAccomplishDr
+        "silver", 
+        _("Silver Herschel II drawing-certificat! You drew 50 Herschel II objects!"), 
+        _("Draw at least 50 Herschel II objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelIIDrawingsGold'], _('Gold'), 
-        "gold", LangAccomplishmentsHIIGoldDr, LangHIIGoldToAccomplishDr
+        "gold", 
+        _("Golden Herschel II drawing-certificat! You drew 100 Herschel II objects!"), 
+        _("Draw at least 100 Herschel II objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelIIDrawingsDiamond'], _('Diamond'), 
-        "diamond", LangAccomplishmentsHIIDiamondDr, LangHIIDiamondToAccomplishDr
+        "diamond", 
+        _("Diamond Herschel II drawing-certificat! You drew 200 Herschel II objects!"), 
+        _("Draw at least 200 Herschel II objects to get this certificat!")
     );
     drawStar(
         $accomplishments['herschelIIDrawingsPlatina'], _('Platinum'), 
-        "platinum", LangAccomplishmentsHIIPlatinaDr, LangHIIPlatinaToAccomplishDr
+        "platinum", 
+        _("Platinum Herschel II drawing-certificat! You drew all II Herschel II objects!"), 
+        _("Draw all II Herschel II objects to get this certificat!")
     );
     echo "</div>";
 

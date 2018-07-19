@@ -458,7 +458,29 @@ class Observers {
 		// After registration, all old messages are removed
 		$objMessages->removeAllMessages ( $id );
 		// After registration, a welcome message is sent
-		$objMessages->sendMessage ( "DeepskyLog", $id, LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!", LangMessageWelcomeSubject . $this->getObserverProperty ( $id, 'firstname' ) . "!<br /><br />" . LangMessageWelcome1 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_instrument\">" . LangMessageWelcome2 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_location\">" . LangMessageWelcome3 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=change_account\">" . LangMessageWelcome4 );
+        $objMessages->sendMessage(
+            "DeepskyLog", 
+            $id, 
+            sprintf(
+                _('Welcome in DeepskyLog, %s!'), 
+                $this->getObserverProperty($id, 'firstname')
+            ), 
+            sprintf(
+                _('Welcome in DeepskyLog, %s!') ."<br /><br />",
+                $this->getObserverProperty($id, 'firstname')
+            )
+            . _('We hope you will have a lot of fun using DeepskyLog. You can already find some interesting links to get you started :') 
+            . '<br /><br />' 
+            . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_instrument\">" 
+            . _('Add an instrument') . '</a><br /><br />'
+            . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_location\">" 
+            . _('Add an observing site') . '</a><br />' 
+            . _('After entering a typical limiting magnitude or a typical SQM-value, DeepskyLog will calculate visibility of all objects! Do not forget to select a standard observation site!') 
+            . '<br /><br />'
+            . "<a href=\"http://www.deepskylog.org/index.php?indexAction=change_account\">" 
+            . _('Set your standard observing atlas and set a picture of yourself.') 
+            . '</a><br /><br />' 
+            . _('A lot of fun using DeepskyLog!') . '<br /><br />' . _('The DeepskyLog developers'));
 
 		$objAccomplishments->addObserver ( $id );
 

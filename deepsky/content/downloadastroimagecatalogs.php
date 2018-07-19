@@ -2,7 +2,7 @@
 global $objObject,$baseURL;
 
 
-echo "<h4>" . LangSearchMenuItem14 . "</h4>";
+echo "<h4>" . _("Image Catalogs") . "</h4>";
 
 echo "<div id=\"carousel-example-generic\" class=\"carousel slide\" data-ride=\"carousel\"  data-interval=\"10000\">
        <!-- Indicators -->
@@ -15,16 +15,17 @@ echo "<div id=\"carousel-example-generic\" class=\"carousel slide\" data-ride=\"
        <div class=\"carousel-inner\">
         <div class=\"item active\">
          <img src=\"". $baseURL . "images/AbellExample.png\" alt=\"...\">
-         <div class=\"carousel-caption\" style=\"background: gray;\"><p>" .
-         		 ImageCatalogDescription1 .
+         <div class=\"carousel-caption\" style=\"background: gray;\"><p>"
+        . _("DeepskyLog is a very powerful tool, where you can create personalized atlases and image catalogs.") .
          "</p>
          </div>
         </div>
         <div class=\"item\">
          <img src=\"". $baseURL . "images/AbellExample2.png\" alt=\"...\">
-         <div class=\"carousel-caption\" style=\"background: gray;\"><p>" .
-         		 ImageCatalogDescription2 . ImageCatalogDescription3 .
-         "</p>
+         <div class=\"carousel-caption\" style=\"background: gray;\"><p>"
+        . _("However, making your own image catalog is time consuming. To help you, we created some interesting image catalogs and made them available for download.")
+        . _("They are very useful for telescopes with a goto system, where the goto system guides you to the neighbourhood of the object. Using the images, it is very easy to find the final object.")
+        . "</p>
          </div>
         </div>
        </div>
@@ -40,8 +41,9 @@ echo "</div>";
 
 echo "<br />";
 echo "<table class=\"table\">
-       <tr><th class=\"catalog\">" . ImageCatalogDescription4 . "</th></tr>
-       <tr><td><a href=\"" . $dirAstroImageCatalogs . "Abell.pdf\">" . ImageCatalogAbell . "</a></td></tr>
+       <tr><th class=\"catalog\">" . _("Catalogs sorted by name") . "</th></tr>
+       <tr><td><a href=\"" . $dirAstroImageCatalogs . "Abell.pdf\">" 
+    . _("The Abell Planetary Nebula Catalog") . "</a></td></tr>
       </table>";
 
 $constellations = Array("AND", "ANT", "AQL", "AQR", "ARI", "AUR", "BOO", "CAE", "CAM", "CAP",
@@ -56,20 +58,20 @@ $constellations = Array("AND", "ANT", "AQL", "AQR", "ARI", "AUR", "BOO", "CAE", 
 // Add for constellations
 echo "<br />";
 echo "<table class=\"table\">
-       <tr><th colspan=\"3\" class=\"catalog\">" . ImageCatalogDescription5 . "</th></tr>";
+       <tr><th colspan=\"3\" class=\"catalog\">" . _("Catalogs sorted by constellation") . "</th></tr>";
 
 // We have to add these manually, because we don't have all the files
 
 
 
-while(list($key, $value) = each($constellations))
+foreach ($constellations as $key=>$value)
 {  $cons[$value] = $GLOBALS[$value];
 }
 asort($cons);
 reset($cons);
 $count = 0;
 echo "<tr>";
-while(list($key, $value) = each($cons)) {
+foreach ($cons as $key=>$value) {
   if ($count % 3 == 0) {
     print "</tr><tr>";
   }

@@ -173,8 +173,15 @@ function view_observation() {
 			$date = sscanf ( $objCometObservation->getDate ( $_GET ['observation'] ), "%4d%2d%2d" );
 			$object = $objCometObject->getName ( $objCometObservation->getObjectId ( $_GET ['observation'] ) );
 
-			$subject = LangMessageYourObservation . $object . LangMessageOn . $date [2] . "/" . $date [1] . "/" . $date [0];
-			echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=new_message&amp;receiver=" . urlencode ( $observerid ) . "&amp;subject=" . urlencode ( $subject ) . "\"><span class=\"glyphicon glyphicon-envelope\"></span> " . $name . LangMessageAboutObservation . "</a>";
+			$subject = sprintf(
+                _('Your observation of %s on %s'), 
+                $object, 
+                $date[2] . "/" . $date[1] . "/" . $date[0]
+            );
+            echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=new_message&amp;receiver=" . urlencode ( $observerid ) . "&amp;subject=" . urlencode($subject) . "\"><span class=\"glyphicon glyphicon-envelope\"></span> " 
+                . sprintf(
+                    _('%s about this observation') . "</a>", 
+                    $name);
 			echo "<br /><br />";
 		}
 	}

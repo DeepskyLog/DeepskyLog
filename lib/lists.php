@@ -54,10 +54,14 @@ class Lists {
 			if ($isPublic) {
 				$username = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
 
-				$subject = LangMessagePublicList1 . $name . LangMessagePublicList2 . $username;
-				$message = LangMessagePublicList3;
-				$message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $name ) . "\">" . $name . "</a><br /><br />";
-				$message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $name ) . "\">" . $username . "</a>";
+				$subject = sprintf(
+                    _('Public list created with name %s by %s'), 
+                    $name,
+                    $username
+                );
+				$message = _('A new public list is available in DeepskyLog.') . '<br /><br />';
+				$message = $message . _('Go to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $name ) . "\">" . $name . "</a><br /><br />";
+				$message = $message . _('Send message to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $name ) . "\">" . $username . "</a>";
 				$public = 1;
 				$objMessages->sendMessage ( "DeepskyLog", "all", $subject, $message );
 			} else {
@@ -372,10 +376,14 @@ class Lists {
 			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"1\" where listname=\"" . $listName . "\" AND observerid = \"" . $loggedUser . "\"");
 
 			$username = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
-			$subject = LangMessagePublicList1 . $listName . LangMessagePublicList2 . $username;
-			$message = LangMessagePublicList3;
-			$message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $listName ) . "\">" . $listName . "</a><br /><br />";
-			$message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listName ) . "\">" . $username . "</a>";
+            $subject = sprintf(
+                _('Public list created with name %s by %s'), 
+                $listName,
+                $username
+            );
+			$message = _('A new public list is available in DeepskyLog.') . '<br /><br />';
+			$message = $message . _('Go to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $listName ) . "\">" . $listName . "</a><br /><br />";
+			$message = $message . _('Send message to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listName ) . "\">" . $username . "</a>";
 
 			$objMessages->sendMessage ( "DeepskyLog", "all", $subject, $message );
 		}
@@ -481,10 +489,14 @@ class Lists {
 					// Remove the public from the list
 					$listname = $nameTo;
 
-					$subject = LangMessagePublicList1 . $listname . LangMessagePublicList2 . $username;
-					$message = LangMessagePublicList3;
-					$message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $listname ) . "\">" . $listname . "</a><br /><br />";
-					$message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listname ) . "\">" . $username . "</a><br /><br />";
+                    $subject = sprintf(
+                        _('Public list created with name %s by %s'), 
+                        $listname,
+                        $username
+                    );
+					$message = _('A new public list is available in DeepskyLog.') . '<br /><br />';
+					$message = $message . _('Go to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $listname ) . "\">" . $listname . "</a><br /><br />";
+					$message = $message . _('Send message to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listname ) . "\">" . $username . "</a><br /><br />";
 
 					$objMessages->sendMessage ( "DeepskyLog", "all", $subject, $message );
 				}

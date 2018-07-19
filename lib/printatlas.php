@@ -1128,7 +1128,7 @@ class PrintAtlas
   { $t1 =html_entity_decode(atlasPageFoV).' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."� - ";
       $t1.=html_entity_decode(atlasPageDSLM).' '.($this->maxshowndsomag==-99?'-':$this->maxshowndsomag)." - ";
       $t1.=html_entity_decode(atlasPageStarLM).' '.$this->starsmagnitude.' - ';
-      $t1.='('.html_entity_decode(atlasPageCenteredOn).$this->coordHrDecToHrMin($this->atlaspagerahr).','.$this->coordDeclDecToDegMin($this->atlaspagedecldeg).')';
+      $t1.='('.html_entity_decode(_('Centered on ')).$this->coordHrDecToHrMin($this->atlaspagerahr).','.$this->coordDeclDecToDegMin($this->atlaspagedecldeg).')';
       $this->pdf->addText($this->gridOffsetXpx,20,$this->fontSize1a,$t1);
     }
 
@@ -1301,7 +1301,7 @@ class PrintAtlas
           $this->labelsArr[$i][2],
           $this->labelsArr[$i][5]
         );
-    $temp=html_entity_decode(LangAtlasDataSource);
+    $temp=html_entity_decode(_("(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia)."));
     $this->pdf->addText($this->gridOffsetXpx,7,$this->fontSizeAck,$temp);
     if($objUtil->checkRequestKey('item',0)!='0')
     { $this->pdf->addText($this->canvasDimensionXpx-30,13,$this->fontSize1a,$objUtil->checkRequestKey('item',0));
@@ -1434,7 +1434,7 @@ class PrintAtlas
         }
     }
     else
-      $this->pdf->addText(100,100,12,LangNoIndexEntries);
+      $this->pdf->addText(100,100,12,_("No index entries"));
     $this->pdf->ezStream();
   }
   public function pdfAtlasObjectSets($item,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)

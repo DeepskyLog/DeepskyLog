@@ -23,7 +23,7 @@ function menu_search() {
 		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . urlencode ( $loggedUser ) . "\">" . LangSearchMenuItem1 . "</a></li>";
 		echo "  <li class=\"disabled\">───────────────────</li>";
 		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_lists\">" . _("My observing lists") . "</a></li>";
-		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=result_my_sessions\">" . LangSearchMenuItem11 . "</a></li>";
+		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=result_my_sessions\">" . _("My sessions") . "</a></li>";
 		echo "  <li class=\"disabled\">───────────────────</li>";
 		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_instruments\">" . _("My instruments") . "</a></li>";
 		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=view_sites\">" . _("My locations") . "</a></li>";

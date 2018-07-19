@@ -22,7 +22,7 @@ function menu_change() {
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe waarneming\">" . _("Observation") . "</a></li>";
 		echo "  <li class=\"disabled\">─────────────────</li>";
 		echo "  <li><a data-toggle=\"modal\" data-target=\"#addList\">" . _("Observing list") . "</a></li>";
-		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_session\">" . LangChangeMenuItem9 . "</a></li>";
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_session\">" . _("Sessions") . "</a></li>";
 		echo "  <li class=\"disabled\">─────────────────</li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_instrument\">" . LangChangeMenuItem3 . "</a></li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_location\">" . LangChangeMenuItem4 . "</a></li>";

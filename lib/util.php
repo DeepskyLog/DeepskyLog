@@ -4957,7 +4957,7 @@ class Utils
      */
     public function getDrawAccomplishment($number)
     {
-        return LangDrawAccomplishment1 . (int) $number . LangDrawAccomplishment2;
+        return sprintf(_('You have made %s drawings'), $number);
     }
 
     /**
@@ -4969,7 +4969,10 @@ class Utils
      */
     public function getDrawToAccomplish($number) 
     {
-        return LangDrawToAccomplish1 . (int) $number . LangDrawToAccomplish2;
+        return sprintf(
+            _('Make %s drawings to receive this DeepskyLog star!'),
+            $number
+        );
     }
 
     /**
@@ -4981,7 +4984,7 @@ class Utils
      */
     public function getSeenAccomplishment($number)
     {
-        return LangSeenAccomplishment1 . (int) $number . LangSeenAccomplishment2;
+        return sprintf(_('You have made %s observations!'), $number);
     }
 
     /**
@@ -4993,7 +4996,10 @@ class Utils
      */
     public function getSeenToAccomplish($number) 
     {
-        return LangSeenToAccomplish1 . (int) $number . LangSeenToAccomplish2;
+        return sprintf(
+            _('Make %s observations to receive this DeepskyLog star!'), 
+            $number
+        );
     }
 
     /**
@@ -5010,7 +5016,7 @@ class Utils
             <div class=\"columnSelectorWrapper\">
               <input id=\"colSelect1\" type=\"checkbox\" class=\"hidden\">
               <label class=\"columnSelectorButton\" for=\"colSelect1\">" . 
-            LangSelectColumns . 
+              _('Select columns') . 
             "</label>
               <div id=\"columnSelector\" class=\"columnSelector\">
               </div>
@@ -5137,11 +5143,11 @@ class Utils
                   // format your data for normalization
                   var months = s.split(\" \");
               var fraction = 0.75;
-              if (months[0] == \"" . LangMonthTransit . "\") {
+              if (months[0] == \"" . _("start") . "\") {
                 fraction = 0.0;
-              } else if (months[0] == \"" . LangMonthStart . "\") {
+              } else if (months[0] == \"" . _("begin") . "\") {
                 fraction = 0.25;
-              } else if (months[0] == \"" . LangMonthMid . "\") {
+              } else if (months[0] == \"" . _("mid") . "\") {
                 fraction = 0.5;
               }
 

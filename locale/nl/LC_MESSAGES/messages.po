@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-13 12:06+0200\n"
+"POT-Creation-Date: 2018-07-19 20:58+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -22,13 +22,25 @@ msgstr "Maak nieuwe lijst aan"
 msgid "Name for the new observing list"
 msgstr "Naam voor de nieuwe waarneemlijst"
 
-#: index.php:101 deepsky/content/tolist.php:112 lib/lists.php:345
+#: index.php:101 deepsky/content/tolist.php:112 lib/lists.php:349
 msgid "Make this list a public list"
 msgstr "Maak van deze lijst een publieke lijst"
 
 #: index.php:105 deepsky/content/main.php:137 deepsky/content/main.php:140
 msgid "Create list"
 msgstr "Maak lijst aan"
+
+#: comets/content/view_observation.php:177
+#: deepsky/content/view_observation.php:78
+#, php-format
+msgid "Your observation of %s on %s"
+msgstr "Jouw waarneming van %s op %s"
+
+#: comets/content/view_observation.php:183
+#: deepsky/content/view_observation.php:84
+#, php-format
+msgid "%s about this observation"
+msgstr "%s over deze waarneming"
 
 #: comets/menu/change.php:16 deepsky/menu/change.php:20
 msgid "Add"
@@ -55,7 +67,8 @@ msgstr "%s werd succesvol verwijderd."
 #: common/content/overview_eyepieces.php:39
 #: common/content/overview_instruments.php:84
 #: common/content/overview_locations.php:115
-#: common/content/overview_lenses.php:45 common/content/overview_filters.php:41
+#: common/content/overview_lenses.php:45 common/content/view_message.php:74
+#: common/content/overview_filters.php:41
 #: deepsky/content/change_session.php:132 lib/instruments.php:104
 #: lib/filters.php:156 lib/lenses.php:60 lib/eyepieces.php:68
 #: lib/locations.php:344
@@ -70,26 +83,102 @@ msgstr "Selecteer bestaande lens"
 msgid "Select an existing instrument"
 msgstr "Selecteer een bestaand instrument"
 
-#: common/content/new_message.php:53
+#: common/content/new_message.php:24
+msgid "New message"
+msgstr "Nieuw bericht"
+
+#: common/content/new_message.php:26
+msgid "Send message"
+msgstr "Zend bericht"
+
+#: common/content/new_message.php:35
+msgid "All DeepskyLog users"
+msgstr "Alle DeepskyLog gebruikers"
+
+#: common/content/new_message.php:43 lib/messages.php:287
+msgid "Sender"
+msgstr "Afzender"
+
+#: common/content/new_message.php:48
+msgid "Receiver"
+msgstr "Bestemmeling"
+
+#: common/content/new_message.php:54
 msgid "Send as real mail"
 msgstr "Stuur als echte mail"
+
+#: common/content/new_message.php:73 lib/messages.php:284
+msgid "Subject"
+msgstr "Onderwerp"
+
+#: common/content/new_message.php:87
+msgid "Message"
+msgstr "Bericht"
+
+#: common/content/new_message.php:107 lib/sessions.php:31 lib/sessions.php:483
+#: lib/messages.php:149
+msgid "You should be logged in to be able to send messages."
+msgstr "U dient ingelogd te zijn om berichten te sturen."
 
 #: common/content/overview_locations.php:44 lib/locations.php:337
 msgid "Elevation"
 msgstr "Hoogte"
 
+#: common/content/view_observer.php:124 common/content/statistics.php:104
+msgid "Info"
+msgstr "Info"
+
+#: common/content/view_observer.php:126 common/content/statistics.php:105
+msgid "Observations per year"
+msgstr "Waarnemingen per jaar"
+
 #: common/content/view_observer.php:128 common/content/statistics.php:106
 msgid "Observations per month"
 msgstr "Waarnemingen per maand"
+
+#: common/content/view_observer.php:130 common/content/statistics.php:107
+msgid "Object types observed"
+msgstr "Object types waargenomen"
 
 #: common/content/view_observer.php:132 common/content/view_observer.php:1202
 #: common/content/statistics.php:109 common/content/statistics.php:773
 msgid "Observations per country"
 msgstr "Waarnemingen per land"
 
+#: common/content/view_observer.php:134
+msgid "DeepskyLog stars"
+msgstr "DeepskyLog sterren"
+
+#: common/content/view_observer.php:485 lib/sessions.php:208 lib/lists.php:64
+#: lib/lists.php:386 lib/lists.php:499
+msgid "Send message to "
+msgstr "Stuur bericht naar "
+
+#: common/content/view_observer.php:588 common/content/statistics.php:224
+msgid "Number of observations per year"
+msgstr "Aantal waarnemingen per jaar"
+
+#: common/content/view_observer.php:594 common/content/view_observer.php:731
+#: common/content/view_observer.php:1102 common/content/view_observer.php:1207
+#: common/content/statistics.php:228 common/content/statistics.php:354
+#: common/content/statistics.php:710 common/content/statistics.php:776
+msgid "Source: "
+msgstr "Bron: "
+
+#: common/content/view_observer.php:612 common/content/view_observer.php:756
+#: common/content/statistics.php:246 common/content/statistics.php:376
+#: deepsky/content/top_objects.php:49 deepsky/content/top_objects.php:55
+#: deepsky/content/top_objects.php:65 deepsky/content/top_objects.php:71
+msgid "Observations"
+msgstr "Waarnemingen"
+
 #: common/content/view_observer.php:725 common/content/statistics.php:350
 msgid "Number of observations per month"
 msgstr "Aantal waarnemingen per maand"
+
+#: common/content/view_observer.php:1097 common/content/statistics.php:707
+msgid "Object types seen"
+msgstr "Object types"
 
 #: common/content/view_observer.php:1257 lib/accomplishments.php:458
 msgid "Messier objects"
@@ -97,8 +186,8 @@ msgstr "Messier objecten"
 
 #: common/content/view_observer.php:1262 common/content/view_observer.php:1284
 #: common/content/view_observer.php:1308 common/content/view_observer.php:1329
-#: common/content/view_observer.php:1353 common/content/view_observer.php:1384
-#: common/content/view_observer.php:1410 common/content/view_observer.php:1436
+#: common/content/view_observer.php:1353 common/content/view_observer.php:1389
+#: common/content/view_observer.php:1425 common/content/view_observer.php:1460
 msgid "Bronze"
 msgstr "Brons"
 
@@ -112,8 +201,8 @@ msgstr "Neem minimaal 25 Messier objecten waar om dit certificaat te krijgen!"
 
 #: common/content/view_observer.php:1267 common/content/view_observer.php:1290
 #: common/content/view_observer.php:1313 common/content/view_observer.php:1335
-#: common/content/view_observer.php:1358 common/content/view_observer.php:1388
-#: common/content/view_observer.php:1414 common/content/view_observer.php:1440
+#: common/content/view_observer.php:1359 common/content/view_observer.php:1395
+#: common/content/view_observer.php:1430 common/content/view_observer.php:1466
 msgid "Silver"
 msgstr "Zilver"
 
@@ -127,8 +216,8 @@ msgstr "Neem minimaal 50 Messier objecten waar om dit certificaat te krijgen!"
 
 #: common/content/view_observer.php:1272 common/content/view_observer.php:1296
 #: common/content/view_observer.php:1318 common/content/view_observer.php:1341
-#: common/content/view_observer.php:1363 common/content/view_observer.php:1392
-#: common/content/view_observer.php:1418 common/content/view_observer.php:1444
+#: common/content/view_observer.php:1365 common/content/view_observer.php:1401
+#: common/content/view_observer.php:1436 common/content/view_observer.php:1472
 msgid "Gold"
 msgstr "Goud"
 
@@ -146,7 +235,7 @@ msgid "Drawings of Messier objects"
 msgstr "Tekeningen van Messier objecten"
 
 #: common/content/view_observer.php:1286
-msgid "Bronze Messier drawing-certificat! You drawed 25 Messier objects!"
+msgid "Bronze Messier drawing-certificat! You drew 25 Messier objects!"
 msgstr ""
 "Bronzen Messier teken-certificaat! Je hebt 25 Messier objecten getekend!"
 
@@ -155,7 +244,7 @@ msgid "Draw at least 25 different Messier objects to get this certificat!"
 msgstr "Teken minimaal 25 Messier objecten om dit certificaat te krijgen!"
 
 #: common/content/view_observer.php:1292
-msgid "Silver Messier drawing-certificat! You drawed 50 Messier objects!"
+msgid "Silver Messier drawing-certificat! You drew 50 Messier objects!"
 msgstr ""
 "Zilveren Messier teken-certificaat! Je hebt 50 Messier objecten getekend!"
 
@@ -164,7 +253,7 @@ msgid "Draw at least 50 Messier objects to get this certificat!"
 msgstr "Teken minimaal 50 Messier objecten om dit certificaat te krijgen!"
 
 #: common/content/view_observer.php:1298
-msgid "Golden Messier drawing-certificat! You drawed all 110 Messier objects!"
+msgid "Golden Messier drawing-certificat! You drew all 110 Messier objects!"
 msgstr ""
 "Gouden Messier teken-certificaat! Je hebt alle 110 Messier objecten getekend!"
 
@@ -208,7 +297,7 @@ msgid "Drawings of Caldwell objects"
 msgstr "Tekeningen van Caldwell objecten"
 
 #: common/content/view_observer.php:1331
-msgid "Bronze Caldwell drawing-certificat! You drawed 25 Caldwell objects!"
+msgid "Bronze Caldwell drawing-certificat! You drew 25 Caldwell objects!"
 msgstr ""
 "Bronzen Caldwell teken-certificaat! Je hebt 25 Caldwell objecten getekend!"
 
@@ -217,7 +306,7 @@ msgid "Draw at least 25 Caldwell objects to get this certificat!"
 msgstr "Teken minimaal 25 Caldwell objecten om dit certificaat te krijgen!"
 
 #: common/content/view_observer.php:1337
-msgid "Silver Caldwell drawing-certificat! You drawed 50 Caldwell objects!"
+msgid "Silver Caldwell drawing-certificat! You drew 50 Caldwell objects!"
 msgstr ""
 "Zilveren Caldwell teken-certificaat! Je hebt 50 Caldwell objecten getekend!"
 
@@ -226,8 +315,7 @@ msgid "Draw at least 50 Caldwell objects to get this certificat!"
 msgstr "Teken minimaal 50 Caldwell objecten om dit certificaat te krijgen!"
 
 #: common/content/view_observer.php:1343
-msgid ""
-"Golden Caldwell drawing-certificat! You drawed all 110 Caldwell objects!"
+msgid "Golden Caldwell drawing-certificat! You drew all 110 Caldwell objects!"
 msgstr ""
 "Gouden Caldwell teken-certificaat! Je hebt alle 110 Caldwell objecten "
 "getekend!"
@@ -240,89 +328,302 @@ msgstr "Teken alle 110 Caldwell objecten om dit certificaat te krijgen!"
 msgid "Herschel 400 objects"
 msgstr "Herschel 400 objecten"
 
-#: common/content/view_observer.php:1368 common/content/view_observer.php:1396
-#: common/content/view_observer.php:1422 common/content/view_observer.php:1448
+#: common/content/view_observer.php:1355
+msgid "Bronze Herschel 400 certificat! You observed 25 Herschel 400 objects!"
+msgstr ""
+"Bronzen Herschel 400 certificaat! Je hebt 25 Herschel 400 objecten "
+"waargenomen!"
+
+#: common/content/view_observer.php:1356
+msgid "Observe at least 25 Herschel 400 objects to get this certificat!"
+msgstr ""
+"Neem minimaal 25 Herschel 400 objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1361
+msgid "Silver Herschel 400 certificat! You observed 50 Herschel 400 objects!"
+msgstr ""
+"Zilveren Herschel 400 certificaat! Je hebt 50 Herschel 400 objecten "
+"waargenomen!"
+
+#: common/content/view_observer.php:1362
+msgid "Observe at least 50 Herschel 400 objects to get this certificat!"
+msgstr ""
+"Neem minimaal 50 Herschel 400 objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1367
+msgid "Golden Herschel 400 certificat! You observed 100 Herschel 400 objects!"
+msgstr ""
+"Gouden Herschel 400 certificaat! Je hebt 100 Herschel 400 objecten "
+"waargenomen!"
+
+#: common/content/view_observer.php:1368
+msgid "Observe at least 100 Herschel 400 objects to get this certificat!"
+msgstr ""
+"Neem minimaal 100 Herschel 400 objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1371 common/content/view_observer.php:1407
+#: common/content/view_observer.php:1442 common/content/view_observer.php:1478
 msgid "Diamond"
 msgstr "Diamant"
 
-#: common/content/view_observer.php:1373 common/content/view_observer.php:1400
-#: common/content/view_observer.php:1426 common/content/view_observer.php:1452
+#: common/content/view_observer.php:1373
+msgid "Diamond Herschel 400 certificat! You observed 200 Herschel 400 objects!"
+msgstr ""
+"Diamanten Herschel 400 certificaat! Je hebt 200 Herschel 400 objecten "
+"waargenomen!"
+
+#: common/content/view_observer.php:1374
+msgid "Observe at least 200 Herschel 400 objects to get this certificat!"
+msgstr ""
+"Neem minimaal 200 Herschel 400 objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1377 common/content/view_observer.php:1413
+#: common/content/view_observer.php:1448 common/content/view_observer.php:1484
 msgid "Platinum"
 msgstr "Platina"
 
-#: common/content/view_observer.php:1381
+#: common/content/view_observer.php:1379
+msgid ""
+"Platinum Herschel 400 certificat! You observed all 400 Herschel 400 objects!"
+msgstr ""
+"Platina Herschel 400 certificaat! Je hebt alle 400 Herschel 400 objecten "
+"waargenomen!"
+
+#: common/content/view_observer.php:1380
+msgid "Observe all 400 Herschel 400 objects to get this certificat!"
+msgstr ""
+"Neem alle 400 Herschel 400 objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1386
 msgid "Drawings of Herschel 400 objects"
 msgstr "Tekeningen van Herschel 400 objecten"
 
-#: common/content/view_observer.php:1407 lib/accomplishments.php:464
+#: common/content/view_observer.php:1391
+msgid ""
+"Bronze Herschel 400 drawing-certificat! You drew 25 Herschel 400 objects!"
+msgstr ""
+"Bronzen Herschel 400 certificaat! Je hebt 25 Herschel 400 objecten getekend!"
+
+#: common/content/view_observer.php:1392
+msgid "Draw at least 25 Herschel 400 objects to get this certificat!"
+msgstr "Teken minimaal 25 Herschel 400 objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1397
+msgid ""
+"Silver Herschel 400 drawing-certificat! You drew 50 Herschel 400 objects!"
+msgstr ""
+"Zilveren Herschel 400 certificaat! Je hebt 50 Herschel 400 objecten getekend!"
+
+#: common/content/view_observer.php:1398
+msgid "Draw at least 50 Herschel 400 objects to get this certificat!"
+msgstr "Teken minimaal 50 Herschel 400 objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1403
+msgid ""
+"Golden Herschel 400 drawing-certificat! You drew 100 Herschel 400 objects!"
+msgstr ""
+"Gouden Herschel 400 certificaat! Je hebt 100 Herschel 400 objecten getekend!"
+
+#: common/content/view_observer.php:1404
+msgid "Draw at least 100 Herschel 400 objects to get this certificat!"
+msgstr ""
+"Teken minimaal 100 Herschel 400 objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1409
+msgid ""
+"Diamond Herschel 400 drawing-certificat! You drew 200 Herschel 400 objects!"
+msgstr ""
+"Diamanten Herschel 400 certificaat! Je hebt 200 Herschel 400 objecten "
+"getekend!"
+
+#: common/content/view_observer.php:1410
+msgid "Draw at least 200 Herschel 400 objects to get this certificat!"
+msgstr ""
+"Teken minimaal 200 Herschel 400 objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1415
+msgid ""
+"Platinum Herschel 400 drawing-certificat! You drew all 400 Herschel 400 "
+"objects!"
+msgstr ""
+"Platina Herschel 400 certificaat! Je hebt alle 400 Herschel 400 objecten "
+"getekend!"
+
+#: common/content/view_observer.php:1416
+msgid "Draw all 400 Herschel 400 objects to get this certificat!"
+msgstr "Teken alle 400 Herschel 400 objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1422 lib/accomplishments.php:464
 msgid "Herschel II objects"
 msgstr "Herschel II objecten"
 
+#: common/content/view_observer.php:1426
+msgid "Bronze Herschel II certificat! You observed 25 Herschel II objects!"
+msgstr ""
+"Bronzen Herschel II certificaat! Je hebt 25 Herschel II objecten waargenomen!"
+
+#: common/content/view_observer.php:1427
+msgid "Observe at least 25 Herschel II objects to get this certificat!"
+msgstr ""
+"Neem minimaal 25 Herschel II objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1432
+msgid "Silver Herschel II certificat! You observed 50 Herschel II objects!"
+msgstr ""
+"Zilveren Herschel II certificaat! Je hebt 50 Herschel II objecten "
+"waargenomen!"
+
 #: common/content/view_observer.php:1433
+msgid "Observe at least 50 Herschel II objects to get this certificat!"
+msgstr ""
+"Neem minimaal 50 Herschel II objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1438
+msgid "Golden Herschel II certificat! You observed 100 Herschel II objects!"
+msgstr ""
+"Gouden Herschel II certificaat! Je hebt 100 Herschel II objecten waargenomen!"
+
+#: common/content/view_observer.php:1439
+msgid "Observe at least 100 Herschel II objects to get this certificat!"
+msgstr ""
+"Neem minimaal 100 Herschel II objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1444
+msgid "Diamond Herschel II certificat! You observed 200 Herschel II objects!"
+msgstr ""
+"Diamanten Herschel II certificaat! Je hebt 200 Herschel II objecten "
+"waargenomen!"
+
+#: common/content/view_observer.php:1445
+msgid "Observe at least 200 Herschel II objects to get this certificat!"
+msgstr ""
+"Neem minimaal 200 Herschel II objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1450
+msgid ""
+"Platinum Herschel II certificat! You observed all II Herschel II objects!"
+msgstr ""
+"Platina Herschel II certificaat! Je hebt alle 400 Herschel II objecten "
+"waargenomen!"
+
+#: common/content/view_observer.php:1451
+msgid "Observe all II Herschel II objects to get this certificat!"
+msgstr "Neem alle 400 Herschel II objecten waar om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1457
 msgid "Drawings of Herschel II objects"
 msgstr "Tekeningen van Herschel II objecten"
 
-#: common/content/view_observer.php:1459
+#: common/content/view_observer.php:1462
+msgid "Bronze Herschel II drawing-certificat! You drew 25 Herschel II objects!"
+msgstr ""
+"Bronzen Herschel II certificaat! Je hebt 25 Herschel II objecten getekend!"
+
+#: common/content/view_observer.php:1463
+msgid "Draw at least 25 Herschel II objects to get this certificat!"
+msgstr "Teken minimaal 25 Herschel II objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1468
+msgid "Silver Herschel II drawing-certificat! You drew 50 Herschel II objects!"
+msgstr ""
+"Zilveren Herschel II certificaat! Je hebt 50 Herschel II objecten getekend!"
+
+#: common/content/view_observer.php:1469
+msgid "Draw at least 50 Herschel II objects to get this certificat!"
+msgstr "Teken minimaal 50 Herschel II objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1474
+msgid ""
+"Golden Herschel II drawing-certificat! You drew 100 Herschel II objects!"
+msgstr ""
+"Gouden Herschel II certificaat! Je hebt 100 Herschel II objecten getekend!"
+
+#: common/content/view_observer.php:1475
+msgid "Draw at least 100 Herschel II objects to get this certificat!"
+msgstr "Teken minimaal 100 Herschel II objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1480
+msgid ""
+"Diamond Herschel II drawing-certificat! You drew 200 Herschel II objects!"
+msgstr ""
+"Diamanten Herschel II certificaat! Je hebt 200 Herschel II objecten getekend!"
+
+#: common/content/view_observer.php:1481
+msgid "Draw at least 200 Herschel II objects to get this certificat!"
+msgstr "Teken minimaal 200 Herschel II objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1486
+msgid ""
+"Platinum Herschel II drawing-certificat! You drew all II Herschel II objects!"
+msgstr ""
+"Platina Herschel II certificaat! Je hebt alle 400 Herschel II objecten "
+"getekend!"
+
+#: common/content/view_observer.php:1487
+msgid "Draw all II Herschel II objects to get this certificat!"
+msgstr "Teken alle 400 Herschel II objecten om dit certificaat te krijgen!"
+
+#: common/content/view_observer.php:1493
 msgid "Total number of drawings"
 msgstr "Totaal aantal tekeningen"
 
-#: common/content/view_observer.php:1506 lib/accomplishments.php:466
+#: common/content/view_observer.php:1540 lib/accomplishments.php:466
 msgid "Open clusters"
 msgstr "Open sterrenhopen"
 
-#: common/content/view_observer.php:1562
+#: common/content/view_observer.php:1596
 msgid "Drawings of open clusters"
 msgstr "Tekeningen van open sterrenhopen"
 
-#: common/content/view_observer.php:1624 lib/accomplishments.php:468
+#: common/content/view_observer.php:1658 lib/accomplishments.php:468
 msgid "Globular clusters"
 msgstr "Bolhopen"
 
-#: common/content/view_observer.php:1676
+#: common/content/view_observer.php:1710
 msgid "Drawings of globular clusters"
 msgstr "Tekeningen van bolhopen"
 
-#: common/content/view_observer.php:1733 lib/accomplishments.php:470
+#: common/content/view_observer.php:1767 lib/accomplishments.php:470
 msgid "Planetary Nebulae"
 msgstr "Planetaire nevels"
 
-#: common/content/view_observer.php:1791
+#: common/content/view_observer.php:1825
 msgid "Drawings of planetary nebulae"
 msgstr "Tekeningen van planetaire nevels"
 
-#: common/content/view_observer.php:1856 lib/accomplishments.php:472
+#: common/content/view_observer.php:1890 lib/accomplishments.php:472
 msgid "Galaxies"
 msgstr "Sterrenstelsels"
 
-#: common/content/view_observer.php:1902
+#: common/content/view_observer.php:1936
 msgid "Drawings of galaxies"
 msgstr "Tekeningen van sterrenstelsels"
 
-#: common/content/view_observer.php:1949 lib/accomplishments.php:474
+#: common/content/view_observer.php:1983 lib/accomplishments.php:474
 msgid "Nebulae"
 msgstr "Nevels"
 
-#: common/content/view_observer.php:2005
+#: common/content/view_observer.php:2039
 msgid "Drawings of nebulae"
 msgstr "Tekeningen van nevels"
 
-#: common/content/view_observer.php:2064
+#: common/content/view_observer.php:2098
 msgid "Different objects"
 msgstr "Verschillende objecten"
 
-#: common/content/view_observer.php:2110
+#: common/content/view_observer.php:2144
 msgid "Drawings of different objects"
 msgstr "Tekeningen van verschillende objecten"
 
-#: common/content/view_observer.php:2157
+#: common/content/view_observer.php:2191
 msgid "Total comet observations"
 msgstr "Totaal aantal kometen"
 
-#: common/content/view_observer.php:2203
+#: common/content/view_observer.php:2237
 msgid "Different comets"
 msgstr "Verschillende kometen"
 
-#: common/content/view_observer.php:2250
+#: common/content/view_observer.php:2284
 msgid "Drawings of comets"
 msgstr "Tekeningen van kometen"
 
@@ -357,6 +658,234 @@ msgstr "Selecteer bestaande filter"
 msgid "Add site"
 msgstr "Voeg locatie toe"
 
+#: common/content/atlasPages.php:21
+msgid "Lookup atlas page for M 45"
+msgstr "Lookup atlas pagina voor M 45"
+
+#: common/content/atlasPages.php:22
+msgid "DeepskyLog atlases"
+msgstr "DeepskyLog atlassen"
+
+#: common/content/atlasPages.php:37
+msgid ""
+"The <b>overview</b> atlases have pages of 20 degrees, and show stars to "
+"magnitude 10."
+msgstr ""
+"De <b>overzicht</b> atlassen hebben paginas van 20 graden, en tonen sterren "
+"tot magnitude 10."
+
+#: common/content/atlasPages.php:38 common/content/atlasPages.php:46
+#: common/content/atlasPages.php:54
+msgid ""
+"The atlases mention if the objects are already seen in Deepskylog (dotted "
+"underline) or by yourself (personalised atlases for registered users, full "
+"underline, or overline if sketched)."
+msgstr ""
+"De atlassen vermelden of de objecten al gezien zijn in Deepskylog (streepjes "
+"onderlijnd) of door jezelf (bij de gepersonaliseerde atlassen voor "
+"geregistreerde gebruikers, volledig onderlijnd, of ook overlijnd indien "
+"geschetst)."
+
+#: common/content/atlasPages.php:45
+msgid ""
+"The <b>lookup</b> atlases have pages of 12 degrees, and show stars to "
+"magnitude 12."
+msgstr ""
+"De <b>opzoek</b> atlassen hebben paginas van 12 graden, en tonen sterren tot "
+"magnitude 12."
+
+#: common/content/atlasPages.php:53
+msgid ""
+"The <b>detail</b> atlases have page of 6 degrees, and show stars to "
+"magnitude 15."
+msgstr ""
+"De <b>detail</b> atlassen hebben paginas van 6 graden, en tonen sterren tot "
+"magnitude 15."
+
+#: common/content/atlasPages.php:71
+msgid "General Atlases / Personalised Atlases"
+msgstr "Algemene atlassen / gepersonaliseerde atlassen"
+
+#: common/content/atlasPages.php:72
+msgid ""
+"You can either go for general atlases, or (if you are a registered user) "
+"personalised atlases.<br />- General atlases are precompiled and are ready "
+"to download as one big pdf file.<br />- Personalised atlases are generated, "
+"page per page, for you in pdf format.<br /><br />Personalised atlases take "
+"some time (one page) or much more time (complete atlas) to generate and you "
+"will have to use some software to put the pages together yourself for the "
+"complete atlas."
+msgstr ""
+"Je kan kiezen voor algemene atlassen, of (als je een geregistreerde "
+"gebruiker bent) voor gepersonaliseerde atlassen.<br>- Algemene atlassen zijn "
+"voorgecompileerde atlassen die je als een pdf kan downloaden.<br/>- "
+"Gepersonaliseerde atlassen worden pagina per pagina voor je aangemaakt, "
+"onder vorm van pdf bestanden.<br /><br />Het aanmaken van gepersonaliseerde "
+"atlassen kan enige tijd duren (voor één pagina) of veel meer tijd (complete "
+"atlas).<br />Bij de gepersonaliseerde atlassen zal je zelf nog software "
+"moeten gebruiken om de bladzijden tot een volledig boek samen te voegen (bv. "
+"pdfsam via google)."
+
+#: common/content/atlasPages.php:74
+msgid "First choose your page layout"
+msgstr "Kies eerst je pagina layout"
+
+#: common/content/atlasPages.php:78
+msgid "Page orientation:"
+msgstr "Pagina oriëntatie:"
+
+#: common/content/atlasPages.php:81
+msgid "portrait"
+msgstr "portret"
+
+#: common/content/atlasPages.php:84
+msgid "landscape"
+msgstr "landscape"
+
+#: common/content/atlasPages.php:88
+msgid "Page size:"
+msgstr "Pagina-grootte:"
+
+#: common/content/atlasPages.php:100
+msgid "General Atlases"
+msgstr "Algemene atlassen"
+
+#: common/content/atlasPages.php:101
+msgid "Choose one of the three available formats, they will download as a pdf:"
+msgstr ""
+"Kies een van de drie beschikbare formaten, ze worden gedownload als een pdf:"
+
+#: common/content/atlasPages.php:102
+msgid "Overview"
+msgstr "Overzicht"
+
+#: common/content/atlasPages.php:103
+msgid "Lookup"
+msgstr "Opzoeken"
+
+#: common/content/atlasPages.php:104
+msgid "Detail"
+msgstr "Detail"
+
+#: common/content/atlasPages.php:107
+msgid "Personalised Atlases"
+msgstr "Gepersonaliseerde atlassen"
+
+#: common/content/atlasPages.php:108
+msgid ""
+"The personalised atlases are only available in Firefox, Chrome and Opera at "
+"this time."
+msgstr ""
+"De gepersonaliseerde atlassen zijn enkel beschikbaar in Firefox, Chrome en "
+"Opera op dit moment."
+
+#: common/content/atlasPages.php:109
+msgid ""
+"You can download an individual page, with top-left coordinates to be "
+"specified by you, or you can download all the pages of the complete "
+"helisphere."
+msgstr ""
+"Je kan een individuele pagina downloaden, met de door jou gespecifieerde "
+"coördinaten, of je kan alle bladzijden van de hele hemel laten genereren."
+
+#: common/content/atlasPages.php:112
+msgid "Generate a page"
+msgstr "Genereer een pagina"
+
+#: common/content/atlasPages.php:114
+msgid "Right ascension (h m s):"
+msgstr "Rechte klimming (h m s):"
+
+#: common/content/atlasPages.php:122
+msgid "declination (h m s):"
+msgstr "declinatie (h m s):"
+
+#: common/content/atlasPages.php:130
+msgid "Overview - Page"
+msgstr "Overzicht - Pagina"
+
+#: common/content/atlasPages.php:131
+msgid "Lookup - Page"
+msgstr "Opzoeken - Pagina"
+
+#: common/content/atlasPages.php:132
+msgid "Detail - Page"
+msgstr "Detail - Pagina"
+
+#: common/content/atlasPages.php:134
+msgid "Generate the whole atlas (not available in Internet Explorer)"
+msgstr "Genereer de volledige atlas (niet beschikbaar in Internet Explorer)"
+
+#: common/content/atlasPages.php:135
+msgid ""
+"Generation times may take from 20 minutes (Overview A4) up to several hours "
+"(Lookup A3)."
+msgstr ""
+"Generatietijden variëren van 20 minuten (overzicht A4) tot enkele uren "
+"(Opzoeken A3)."
+
+#: common/content/atlasPages.php:139
+msgid "Overview - Whole atlas"
+msgstr "Overzicht - Hele atlas"
+
+#: common/content/atlasPages.php:140
+msgid "Lookup - Whole atlas"
+msgstr "Opzoeken - Hele atlas"
+
+#: common/content/atlasPages.php:141
+msgid "Detail - Whole atlas"
+msgstr "Detail - Hele atlas"
+
+#: common/content/downloadForms.php:21
+msgid "Example page for Abell 84"
+msgstr "Voorbeeld pagina voor Abell 84"
+
+#: common/content/downloadForms.php:22
+msgid "Sketch and observation forms"
+msgstr "Schets- en observatieformulieren"
+
+#: common/content/downloadForms.php:37 common/content/downloadForms.php:68
+msgid "Compact sketch form"
+msgstr "Compact schetsformulier"
+
+#: common/content/downloadForms.php:37 common/content/downloadForms.php:69
+msgid ""
+"A compact sketch form that folds in half so you can do two sketches on one "
+"piece of paper. <br/>This format allows you to sketch on top of a book like "
+"your PSA."
+msgstr ""
+"Een compact schetsformulier dat je dubbel kan vouwen zodat je twee schetsen "
+"op een vel papier kunt maken. <br/>Het formaat past gemakkelijk op een boek "
+"zoals je PSA."
+
+#: common/content/downloadForms.php:44 common/content/downloadForms.php:72
+msgid "Big sketch form"
+msgstr "Groot schetsformulier"
+
+#: common/content/downloadForms.php:44 common/content/downloadForms.php:73
+msgid ""
+"Utilizes the maximum amount of drawing space for your sketch. With a 17cm "
+"sketch circle and simplified details area."
+msgstr ""
+"Gebruikt de maximale grootte voor je schets. Bevat een 17cm schetscirkel en "
+"een vereenvoudigd details formulier."
+
+#: common/content/downloadForms.php:51 common/content/downloadForms.php:77
+msgid "Observation log form"
+msgstr "Observatie logformulier"
+
+#: common/content/downloadForms.php:51 common/content/downloadForms.php:78
+msgid ""
+"If you want to jot down multiple brief observation notes on one piece of "
+"paper."
+msgstr ""
+"Voor als je snelle aantekeningen over meerdere objecten op papier wil zetten."
+
+#: common/content/downloadForms.php:70 common/content/downloadForms.php:74
+#: common/content/downloadForms.php:79
+msgid "Download"
+msgstr "Download"
+
 #: common/content/statistics.php:82
 msgid "Select country"
 msgstr "Kies land"
@@ -364,6 +893,22 @@ msgstr "Kies land"
 #: common/content/new_eyepiece.php:29
 msgid "Select an existing eyepiece"
 msgstr "Selecteer bestaand oculair"
+
+#: common/content/reportslayout.php:112
+msgid "Highest altitude during the year"
+msgstr "Hoogste altitude in jaar"
+
+#: common/content/reportslayout.php:113
+msgid "Highest from the month"
+msgstr "Hoogst vanaf maand"
+
+#: common/content/reportslayout.php:114
+msgid "Highest around the month"
+msgstr "Hoogst rond maand"
+
+#: common/content/reportslayout.php:115
+msgid "Highest till the month"
+msgstr "Hoogst tot maand"
 
 #: common/content/change_site.php:70 common/content/new_location.php:33
 #: common/content/new_location.php:42
@@ -419,6 +964,19 @@ msgstr "Hemel midden in de stad"
 msgid "Not active"
 msgstr "Niet actief"
 
+#: common/content/view_message.php:56 lib/observations.php:2024
+#: lib/observations.php:2870
+msgid "by "
+msgstr "door "
+
+#: common/content/view_message.php:72
+msgid "Reply"
+msgstr "Beantwoord"
+
+#: common/content/view_message.php:79
+msgid "You have no permission to see this message."
+msgstr "U hebt niet de toelating om dit bericht te bekijken."
+
 #: common/content/change_account.php:84
 msgid "Personal"
 msgstr "Persoonlijk"
@@ -427,7 +985,7 @@ msgstr "Persoonlijk"
 msgid "Observing"
 msgstr "Waarnemen"
 
-#: common/content/change_account.php:86
+#: common/content/change_account.php:86 deepsky/menu/downloads.php:17
 msgid "Atlases"
 msgstr "Atlassen"
 
@@ -477,6 +1035,10 @@ msgid ""
 msgstr ""
 "Kies een naam voor deze locatie, voeg eventueel een grensmagnitude (of SQM "
 "waarde) toe en druk op de %s knop."
+
+#: common/content/messages.php:34
+msgid "View messages"
+msgstr "Bekijk berichten"
 
 #: common/menu/help.php:17
 msgid "Report issue"
@@ -528,6 +1090,14 @@ msgstr "DeepskyLog gebruikersnaam"
 msgid "Request new password"
 msgstr "Vraag nieuw wachtwoord aan"
 
+#: common/menu/admin.php:17
+msgid "Send message to all"
+msgstr "Stuur bericht naar iedereen"
+
+#: common/menu/admin.php:21
+msgid "Check Objects"
+msgstr "Controleer objecten"
+
 #: common/control/changeToken.php:52 common/control/changeToken.php:61
 #: common/control/removeToken.php:29 common/control/removeToken.php:38
 msgid "A DeepskyLog Change Password Request was canceled"
@@ -547,6 +1117,10 @@ msgid ""
 msgstr ""
 "Als je dit niet hebt aangevraagd, zou het een eerlijke vergissing kunnen "
 "zijn of iemand die probeert in te breken in jouw DeepskyLog account."
+
+#: deepsky/content/view_catalogs.php:23
+msgid "Click on a list to view its details"
+msgstr "Klik op een lijst om de details te zien"
 
 #: deepsky/content/main.php:21
 msgid "What's new in DeepskyLog since version "
@@ -613,6 +1187,10 @@ msgstr "Download atlassen"
 msgid "New drawings"
 msgstr "Nieuwe tekeningen"
 
+#: deepsky/content/top_objects.php:39
+msgid "Most popular objects (drawings)"
+msgstr "Meest getekende objecten"
+
 #: deepsky/content/setup_observations_query.php:62
 #: deepsky/content/setup_objects_query.php:60
 msgid "Select catalog"
@@ -623,17 +1201,153 @@ msgstr "Kies cataloog"
 msgid "Enter number in catalog"
 msgstr "Nummer in cataloog"
 
+#: deepsky/content/change_session.php:120
+msgid "Adapt a session"
+msgstr "Pas een sessie aan"
+
+#: deepsky/content/change_session.php:126 deepsky/content/new_session.php:112
+#: deepsky/content/new_session.php:299 lib/sessions.php:341
+msgid "Add session"
+msgstr "Voeg locatie toeVoeg sessie toe"
+
+#: deepsky/content/change_session.php:128
+#: deepsky/content/change_session.php:458
+msgid "Adapt session"
+msgstr "Pas sessie aan"
+
+#: deepsky/content/change_session.php:137 deepsky/content/new_session.php:115
+#: lib/sessions.php:315 lib/sessions.php:383 lib/lists.php:243
+msgid "Name"
+msgstr "Naam"
+
+#: deepsky/content/change_session.php:140 deepsky/content/new_session.php:118
+msgid ""
+"When you leave this field blank, DeepskyLog makes a name with begin- and "
+"enddate."
+msgstr ""
+"Als je geen naam invult, maakt DeepskyLog zelf een naam met de begin- en "
+"einddatum aan."
+
+#: deepsky/content/change_session.php:170
+#: deepsky/content/change_session.php:173
+#: deepsky/content/change_session.php:412 deepsky/content/new_session.php:143
+msgid "Start of the session *"
+msgstr "Begin van de sessie *"
+
+#: deepsky/content/change_session.php:177 deepsky/content/new_session.php:147
+msgid "The start of your observing session."
+msgstr "De start van je waarneemsessie."
+
+#: deepsky/content/change_session.php:206
+#: deepsky/content/change_session.php:209
+#: deepsky/content/change_session.php:418 deepsky/content/new_session.php:171
+msgid "End of the session *"
+msgstr "Einde van de sessie *"
+
+#: deepsky/content/change_session.php:213 deepsky/content/new_session.php:175
+msgid "The end of your observing session."
+msgstr "Het einde van je waarneemsessie."
+
+#: deepsky/content/change_session.php:236
+msgid " (will be added by DeepskyLog)"
+msgstr " (wordt toegevoegd door DeepskyLog)"
+
+#: deepsky/content/change_session.php:242
+#: deepsky/content/change_session.php:426 deepsky/content/new_session.php:189
+msgid "Location *"
+msgstr "Waarneemplaats *"
+
+#: deepsky/content/change_session.php:246 deepsky/content/new_session.php:193
+msgid "The location of your observing session."
+msgstr "De waarneemplaats van je sessie."
+
+#: deepsky/content/change_session.php:258
+#: deepsky/content/change_session.php:432 deepsky/content/new_session.php:205
+msgid "Language *"
+msgstr "Taal *"
+
+#: deepsky/content/change_session.php:262 deepsky/content/new_session.php:209
+msgid "Language of the observations during your observing session."
+msgstr "Taal van de waarnemingen tijdens je sessie."
+
+#: deepsky/content/change_session.php:276
+#: deepsky/content/change_session.php:443 deepsky/content/new_session.php:219
+msgid "Observers *"
+msgstr "Waarnemers *"
+
+#: deepsky/content/change_session.php:280 deepsky/content/new_session.php:223
+msgid ""
+"Observers during this session. The other observers will get a message to "
+"make a similar session."
+msgstr ""
+"Waarnemers tijdens deze sessie. De andere waarnemers krijgen een bericht om "
+"deze sessie ook aan te maken."
+
+#: deepsky/content/change_session.php:304 deepsky/content/new_session.php:239
+msgid "Add observer"
+msgstr "Voeg waarnemer toe"
+
+#: deepsky/content/change_session.php:308 deepsky/content/new_session.php:243
+msgid "Select an observer to add to your observing session."
+msgstr "Selecteer hier een waarnemer om toe te voegen aan de sessie."
+
+#: deepsky/content/change_session.php:320 deepsky/content/new_session.php:253
+msgid "Remove observer"
+msgstr "Verwijder waarnemer"
+
+#: deepsky/content/change_session.php:324 deepsky/content/new_session.php:257
+msgid "Select an observer to remove from your observing session."
+msgstr "Selecteer hier een waarnemer om te verwijderen van de sessie."
+
+#: deepsky/content/change_session.php:342
+#: deepsky/content/change_session.php:446 deepsky/content/new_session.php:270
+msgid "Weather"
+msgstr "Weersomstandigheden"
+
+#: deepsky/content/change_session.php:344 deepsky/content/new_session.php:272
+msgid "The weather during your observing session."
+msgstr "Het weer tijdens je waarneemsessie."
+
+#: deepsky/content/change_session.php:349
+#: deepsky/content/change_session.php:449 deepsky/content/new_session.php:277
+msgid "Instruments"
+msgstr "Gebruikte instrumenten"
+
+#: deepsky/content/change_session.php:351 deepsky/content/new_session.php:279
+msgid "Comments about the used instruments during your observing session."
+msgstr "Commentaar over de gebruikte instrumenten tijdens je sessie."
+
+#: deepsky/content/change_session.php:356
+#: deepsky/content/change_session.php:452 deepsky/content/new_session.php:284
+msgid "Comments"
+msgstr "Commentaar"
+
+#: deepsky/content/change_session.php:358 deepsky/content/new_session.php:286
+msgid "Comments on your observing session."
+msgstr "Commentaar over je waarneemsessie."
+
+#: deepsky/content/change_session.php:363 deepsky/content/new_session.php:291
+#: lib/sessions.php:388 lib/sessions.php:417
+msgid "Picture"
+msgstr "Afbeelding"
+
+#: deepsky/content/change_session.php:367 deepsky/content/new_session.php:296
+msgid ""
+"A picture showing the location of the session, a weather satellite "
+"picture, ..."
+msgstr "Een foto van de waarneemlocatie, van de waarnemers, …"
+
 #: deepsky/content/tolist.php:39 deepsky/content/tolist.php:52
-#: deepsky/content/tolist.php:95 lib/lists.php:242 lib/lists.php:282
-#: lib/lists.php:325
+#: deepsky/content/tolist.php:95 lib/lists.php:246 lib/lists.php:286
+#: lib/lists.php:329
 msgid "Change name"
 msgstr "Verander naam"
 
-#: deepsky/content/tolist.php:45 lib/lists.php:246 lib/lists.php:292
+#: deepsky/content/tolist.php:45 lib/lists.php:250 lib/lists.php:296
 msgid "Make private"
 msgstr "Maak privaat"
 
-#: deepsky/content/tolist.php:47 lib/lists.php:248 lib/lists.php:296
+#: deepsky/content/tolist.php:47 lib/lists.php:252 lib/lists.php:300
 msgid "Make public"
 msgstr "Maak publiek"
 
@@ -641,7 +1355,7 @@ msgstr "Maak publiek"
 msgid "Add new list"
 msgstr "Maak een nieuwe waarneemlijst aan"
 
-#: deepsky/content/tolist.php:99 lib/lists.php:329
+#: deepsky/content/tolist.php:99 lib/lists.php:333
 msgid "New name for the observing list"
 msgstr "Nieuwe naam voor de waarneemlijst"
 
@@ -657,17 +1371,49 @@ msgstr "De gevraagde waarneming bestaat niet."
 msgid "Observation of "
 msgstr "Waarneming van "
 
-#: deepsky/content/view_object.php:72 deepsky/content/view_object.php:79
-#: deepsky/content/view_object.php:92
+#: deepsky/content/view_object.php:17
+msgid "Only object details"
+msgstr "Enkel object details"
+
+#: deepsky/content/view_object.php:22 deepsky/content/view_object.php:27
+msgid "Object details"
+msgstr "Object details"
+
+#: deepsky/content/view_object.php:33
+msgid "Only object ephemerides"
+msgstr "Enkel object efemeriden"
+
+#: deepsky/content/view_object.php:38 deepsky/content/view_object.php:43
+msgid "Object ephemerides"
+msgstr "Object efemeriden"
+
+#: deepsky/content/view_object.php:49
+msgid "Only nearby objects"
+msgstr "Enkel nabije objecten"
+
+#: deepsky/content/view_object.php:54 deepsky/content/view_object.php:57
+msgid "Nearby objects"
+msgstr "Nabije objecten"
+
+#: deepsky/content/view_object.php:61
+msgid "Only object observations"
+msgstr "Enkel object observaties"
+
+#: deepsky/content/view_object.php:65 deepsky/content/view_object.php:67
+msgid "Object observations"
+msgstr "Object observaties"
+
+#: deepsky/content/view_object.php:83 deepsky/content/view_object.php:90
+#: deepsky/content/view_object.php:103
 msgid "Remove Object"
 msgstr "Verwijder object"
 
-#: deepsky/content/view_object.php:82 deepsky/content/view_object.php:110
+#: deepsky/content/view_object.php:93 deepsky/content/view_object.php:121
 #, php-format
 msgid "Do you really want to delete %s?"
 msgstr "Wil je %s echt verwijderen?"
 
-#: deepsky/content/view_object.php:83
+#: deepsky/content/view_object.php:94
 #, php-format
 msgid ""
 "There are no observations of %s, so removing %s should be relatively safe."
@@ -675,27 +1421,83 @@ msgstr ""
 "Er zijn geen waarnemingen van %s, dus het verwijderen van %s zou veilig "
 "moeten zijn."
 
-#: deepsky/content/view_object.php:91 deepsky/content/view_object.php:119
+#: deepsky/content/view_object.php:102 deepsky/content/view_object.php:130
 msgid "Keep Object"
 msgstr "Behoud object"
 
-#: deepsky/content/view_object.php:100 deepsky/content/view_object.php:107
-#: deepsky/content/view_object.php:120
+#: deepsky/content/view_object.php:111 deepsky/content/view_object.php:118
+#: deepsky/content/view_object.php:131
 msgid "Force Remove Object"
 msgstr "Verwijder object"
 
-#: deepsky/content/view_object.php:111
+#: deepsky/content/view_object.php:122
 #, php-format
 msgid ", which has %s observations?"
 msgstr ", samen met de %s waarnemingen?"
 
-#: deepsky/content/view_object.php:113
+#: deepsky/content/view_object.php:124
 msgid "All the observations will also be removed!"
 msgstr "Alle waarnemingen zullen ook verwijderd worden!"
 
-#: deepsky/content/view_object.php:127
+#: deepsky/content/view_object.php:138
 msgid "Save"
 msgstr "Bewaar"
+
+#: deepsky/content/view_object.php:532
+msgid "Show or remove extra info..."
+msgstr "Toon of verwijder extra informatie…"
+
+#: deepsky/content/new_session.php:102
+msgid "Select one of the sessions added by other observers"
+msgstr "Selecteer een sessie die door iemand is aangemaakt"
+
+#: deepsky/content/new_session.php:107
+msgid "Add a new session"
+msgstr "Voeg een nieuwe sessie toe"
+
+#: deepsky/content/downloadastroimagecatalogs.php:5
+#: deepsky/menu/downloads.php:16
+msgid "Image Catalogs"
+msgstr "Beeldencatalogi"
+
+#: deepsky/content/downloadastroimagecatalogs.php:19
+msgid ""
+"DeepskyLog is a very powerful tool, where you can create personalized "
+"atlases and image catalogs."
+msgstr ""
+"DeepskyLog is een zeer krachtige applicatie, die het mogelijk maakt om "
+"gepersonaliseerde atlassen en beeldencatalogi aan te maken."
+
+#: deepsky/content/downloadastroimagecatalogs.php:26
+msgid ""
+"However, making your own image catalog is time consuming. To help you, we "
+"created some interesting image catalogs and made them available for download."
+msgstr ""
+"Het kan echter een hele tijd duren voor een beelden cataloog is aangemaakt. "
+"Om de gebruikers het leven eenvoudiger te maken, hebben we enkele "
+"interessante catalogi aangemaakt en beschikbaar gemaakt."
+
+#: deepsky/content/downloadastroimagecatalogs.php:27
+msgid ""
+"They are very useful for telescopes with a goto system, where the goto "
+"system guides you to the neighbourhood of the object. Using the images, it "
+"is very easy to find the final object."
+msgstr ""
+"De catalogi zijn zeer nuttig voor goto-telescopen, waar het goto systeem je "
+"al in de buurt van het object brengt. Met behulp van de beeldjes, is het "
+"eenvoudig om het object te vinden."
+
+#: deepsky/content/downloadastroimagecatalogs.php:44
+msgid "Catalogs sorted by name"
+msgstr "Catalogi gesorteerd op naam"
+
+#: deepsky/content/downloadastroimagecatalogs.php:46
+msgid "The Abell Planetary Nebula Catalog"
+msgstr "De Abell Planetaire Nevel cataloog"
+
+#: deepsky/content/downloadastroimagecatalogs.php:61
+msgid "Catalogs sorted by constellation"
+msgstr "Catalogi gesorteerd op sterrenbeeld"
 
 #: deepsky/content/view_list.php:5
 msgid "Active list"
@@ -736,9 +1538,25 @@ msgstr "Wissel namen en alternatieve namen"
 msgid "Observing list"
 msgstr "Waarneemlijst"
 
+#: deepsky/menu/change.php:25
+msgid "Sessions"
+msgstr "Sessies"
+
+#: deepsky/menu/downloads.php:14
+msgid "Downloads"
+msgstr "Downloads"
+
+#: deepsky/menu/downloads.php:18
+msgid "Forms"
+msgstr "Formulieren"
+
 #: deepsky/menu/search.php:25
 msgid "My observing lists"
 msgstr "Mijn waarneemlijsten"
+
+#: deepsky/menu/search.php:26
+msgid "My sessions"
+msgstr "Mijn sessies"
 
 #: deepsky/menu/list.php:56
 msgid "Public: "
@@ -748,7 +1566,54 @@ msgstr "Publiek: "
 msgid "Enter object name"
 msgstr "Voer objectnaam in"
 
-#: lib/observers.php:475 lib/observers.php:503
+#: deepsky/menu/quickpickDropDown.php:22 lib/sessions.php:367
+msgid "All sessions"
+msgstr "Alle sessies"
+
+#: lib/observers.php:465 lib/observers.php:469
+#, php-format
+msgid "Welcome in DeepskyLog, %s!"
+msgstr "Welkom in DeepskyLog, %s!"
+
+#: lib/observers.php:472
+msgid ""
+"We hope you will have a lot of fun using DeepskyLog. You can already find "
+"some interesting links to get you started :"
+msgstr ""
+"We hopen dat je veel plezier aan DeepskyLog zal beleven. Om je op weg te "
+"zetten kan je hier alvast enkele nuttige links vinden :"
+
+#: lib/observers.php:475
+msgid "Add an instrument"
+msgstr "Voeg een instrument toe"
+
+#: lib/observers.php:477
+msgid "Add an observing site"
+msgstr "Voeg een waarneemplaats toe"
+
+#: lib/observers.php:478
+msgid ""
+"After entering a typical limiting magnitude or a typical SQM-value, "
+"DeepskyLog will calculate visibility of all objects! Do not forget to select "
+"a standard observation site!"
+msgstr ""
+"Als je een typische grensmagnitude of een typische SQM bij je waarneemplaats "
+"ingeeft, dan berekent DeepskyLog voor jou de zichtbaarheid van alle "
+"objecten! Vergeet niet om een standaard waarneemplaats te kiezen!"
+
+#: lib/observers.php:481
+msgid "Set your standard observing atlas and set a picture of yourself."
+msgstr "Stel je standaardatlas in en stuur een foto van jezelf door."
+
+#: lib/observers.php:483
+msgid "A lot of fun using DeepskyLog!"
+msgstr "Veel plezier met DeepskyLog!"
+
+#: lib/observers.php:483
+msgid "The DeepskyLog developers"
+msgstr "De DeepskyLog ontwikkelaars"
+
+#: lib/observers.php:497 lib/observers.php:525
 msgid ""
 "The new password and the confirmed password are not the same. Unable to "
 "change the password."
@@ -756,18 +1621,18 @@ msgstr ""
 "Het nieuwe wachtwoord en de bevestiging zijn niet gelijk. Onmogelijk om het "
 "wachtwoord aan te passen."
 
-#: lib/observers.php:479 lib/observers.php:507
+#: lib/observers.php:501 lib/observers.php:529
 msgid "The password is successfully changed."
 msgstr "Het wachtwoord is gewijzigd."
 
-#: lib/observers.php:490
+#: lib/observers.php:512
 msgid ""
 "The current password you entered is incorrect. Unable to change the password."
 msgstr ""
 "Het huidige wachtwoord is incorrect ingegeven. Onmogelijk om het wachtwoord "
 "aan te passen."
 
-#: lib/observers.php:529
+#: lib/observers.php:551
 #, php-format
 msgid ""
 "The username %s is not known by DeepskyLog. Impossible to request a new "
@@ -776,7 +1641,7 @@ msgstr ""
 "De gebruikersnaam %s is niet gekend in DeepskyLog. Onmogelijk om een nieuw "
 "wachtwoord aan te vragen."
 
-#: lib/observers.php:540
+#: lib/observers.php:562
 #, php-format
 msgid ""
 "The mail address %s is not known by DeepskyLog. Impossible to request a new "
@@ -785,7 +1650,7 @@ msgstr ""
 "Het emailadres %s is niet gekend in DeepskyLog. Onmogelijk om een nieuw "
 "wachtwoord aan te vragen."
 
-#: lib/observers.php:545
+#: lib/observers.php:567
 msgid ""
 "The given username and mail address are not known by DeepskyLog. Impossible "
 "to request a new password."
@@ -793,11 +1658,11 @@ msgstr ""
 "De gebruikersnaam en het mailadres zijn niet gekend in DeepskyLog. "
 "Onmogelijk om een nieuw wachtwoord aan te vragen."
 
-#: lib/observers.php:560
+#: lib/observers.php:582
 msgid "DeepskyLog Change Password Request"
 msgstr "DeepskyLog aanvraag om wachtwoord aan te passen"
 
-#: lib/observers.php:563
+#: lib/observers.php:585
 #, php-format
 msgid ""
 "You have (or someone impersonating you has) requested to change your %s "
@@ -809,7 +1674,7 @@ msgstr ""
 "                    <br />Om de wijziging te voltooien, klik op de volgende "
 "link:"
 
-#: lib/observers.php:568
+#: lib/observers.php:590
 msgid ""
 "If you are not the person who made this request, or you wish to cancel this "
 "request, visit the following link:"
@@ -817,7 +1682,7 @@ msgstr ""
 "Als je niet de persoon bent die dit verzoek heeft ingediend, of je dit "
 "verzoek wenst te annuleren, klik op de volgende link:"
 
-#: lib/observers.php:579
+#: lib/observers.php:601
 #, php-format
 msgid ""
 "If you do nothing, the request will lapse after 24 hours (on %s) or when you "
@@ -826,11 +1691,11 @@ msgstr ""
 "Als je niets doet, vervalt het verzoek na 24 uur (op %s) of wanneer je "
 "succesvol inlogt."
 
-#: lib/observers.php:582
+#: lib/observers.php:604
 msgid "The DeepskyLog team"
 msgstr "Het DeepskyLog team"
 
-#: lib/observers.php:589
+#: lib/observers.php:611
 #, php-format
 msgid ""
 "A token for changing the password of %s has been emailed to %s. Follow the "
@@ -838,6 +1703,99 @@ msgid ""
 msgstr ""
 "Een token om het wachtwoord van %s te wijzigen is naar %s verzonden. Volg de "
 "instructies in die mail om je wachtwoord te wijzigen."
+
+#: lib/printatlas.php:1131
+msgid "Centered on "
+msgstr "Centrum op "
+
+#: lib/printatlas.php:1304
+msgid ""
+"(c) www.deepskylog.org - No publishing without written autorisation - Object "
+"Database originally based on Eye&Telescope - Star Database by Tycho 2+ and "
+"USNO UCAC3 (Zacharia)."
+msgstr ""
+"(c) www.deepskylog.org - Geen publicatie zonder schriftelijke toestemming - "
+"Object-databank origineel gebaseerd op Eye&Telescope - Ster-databank door "
+"Tycho 2+ en USNO UCAC3 (Zacharia)."
+
+#: lib/printatlas.php:1437
+msgid "No index entries"
+msgstr "Geen index elementen"
+
+#: lib/observations.php:2742 lib/moonpic.php:73
+msgid "under the horizon"
+msgstr "onder de horizon"
+
+#: lib/sessions.php:103
+msgid ""
+"The new session overlaps with an existing session. Please adapt the date so "
+"that there is no longer an overlap."
+msgstr ""
+"De nieuwe sessie overlapt met een bestaande sessie. Gelieve de datum aan te "
+"passen zodat er geen overlap is."
+
+#: lib/sessions.php:112 lib/sessions.php:247
+#, php-format
+msgid "Observing session from %s"
+msgstr "Waarneemsessie van %s"
+
+#: lib/sessions.php:117 lib/sessions.php:252
+#, php-format
+msgid "Observing session from %s till %s"
+msgstr "Waarneemsessie van %s tot %s"
+
+#: lib/sessions.php:200
+#, php-format
+msgid "%s made a new session where you are an observer"
+msgstr "%s heeft een nieuwe sessie aangemaakt met jou als waarnemer"
+
+#: lib/sessions.php:203
+#, php-format
+msgid "%s made the session '%s'."
+msgstr "%s heeft de sessie ‘%s’ aangemaakt."
+
+#: lib/sessions.php:206
+#, php-format
+msgid ""
+"A similar session is prepared for you. Check %sAdd/Sessions</a> to validate "
+"the session."
+msgstr ""
+"Een gelijkaardige sessie is voor jou voorbereid. Kijk bij %sToevoegen/"
+"sessies</a> om de sessie te valideren."
+
+#: lib/sessions.php:316 lib/sessions.php:384
+msgid "Begin"
+msgstr "Begin"
+
+#: lib/sessions.php:317 lib/sessions.php:385
+msgid "End"
+msgstr "Einde"
+
+#: lib/sessions.php:318 lib/sessions.php:386
+msgid "Location"
+msgstr "Waarneemplaats"
+
+#: lib/sessions.php:319 lib/sessions.php:387
+msgid "Extra observers"
+msgstr "Extra waarnemers"
+
+#: lib/sessions.php:344
+msgid "Delete session"
+msgstr "Verwijder sessie"
+
+#: lib/sessions.php:360
+#, php-format
+msgid "No sessions available for %s!"
+msgstr "Geen sessies beschikbaar voor %s!"
+
+#: lib/sessions.php:370
+#, php-format
+msgid "Sessions of %s"
+msgstr "Sessies van %s"
+
+#: lib/sessions.php:444
+msgid "The session is removed from DeepskyLog."
+msgstr "De sessie is verwijderd uit DeepskyLog."
 
 #: lib/locations.php:335
 msgid "Weather forecast"
@@ -1006,9 +1964,36 @@ msgstr "Laatste eigen waarneming"
 msgid "Number of own drawings"
 msgstr "Aantal eigen tekeningen"
 
+#: lib/objects.php:868 lib/objects.php:879 lib/objects.php:890
+msgid "end"
+msgstr "eind"
+
+#: lib/objects.php:870 lib/objects.php:881 lib/objects.php:892
+#: lib/util.php:5150
+msgid "mid"
+msgstr "mid"
+
+#: lib/objects.php:872 lib/objects.php:883 lib/objects.php:894
+#: lib/util.php:5148
+msgid "begin"
+msgstr "begin"
+
+#: lib/objects.php:874 lib/objects.php:885 lib/objects.php:896
+#: lib/util.php:5146
+msgid "start"
+msgstr "start"
+
 #: lib/objects.php:1454
 msgid "Create new empty catalog"
 msgstr "Maak een nieuwe lege cataloog"
+
+#: lib/objects.php:1548
+msgid "In my lists"
+msgstr "In mijn lijsten"
+
+#: lib/objects.php:1556
+msgid "In public lists"
+msgstr "In publieke lijsten"
 
 #: lib/objects.php:1794
 msgid "Typ"
@@ -1018,11 +2003,36 @@ msgstr "Typ"
 msgid "Best"
 msgstr "Best"
 
-#: lib/lists.php:239
-msgid "Name"
-msgstr "Naam"
+#: lib/objects.php:1812
+msgid "Highest Alt."
+msgstr "Hoogste alt."
 
-#: lib/lists.php:369
+#: lib/objects.php:1813
+msgid "Highest from"
+msgstr "Hoogst van"
+
+#: lib/objects.php:1814
+msgid "Highest to"
+msgstr "Hoogst tot"
+
+#: lib/objects.php:1815
+msgid "Highest around"
+msgstr "Hoogst rond"
+
+#: lib/lists.php:58 lib/lists.php:380 lib/lists.php:493
+#, php-format
+msgid "Public list created with name %s by %s"
+msgstr "Publieke lijst met naam %s aangemaakt door %s"
+
+#: lib/lists.php:62 lib/lists.php:384 lib/lists.php:497
+msgid "A new public list is available in DeepskyLog."
+msgstr "Er is een nieuwe publieke lijst beschikbaar in DeepskyLog."
+
+#: lib/lists.php:63 lib/lists.php:385 lib/lists.php:498
+msgid "Go to "
+msgstr "Bekijk "
+
+#: lib/lists.php:373
 #, php-format
 msgid ""
 "A public list with the same name (%s) as your list already exists. Please "
@@ -1031,10 +2041,44 @@ msgstr ""
 "Er bestaat al een publieke lijst met dezelfde naam (%s) als jouw lijst. "
 "Hernoem jouw lijst vooraleer ze publiek te maken."
 
+#: lib/util.php:4960
+#, php-format
+msgid "You have made %s drawings"
+msgstr "Je hebt %s tekeningen gemaakt"
+
+#: lib/util.php:4973
+#, php-format
+msgid "Make %s drawings to receive this DeepskyLog star!"
+msgstr "Maak %s tekeningen om deze DeepskyLog ster te ontvangen!"
+
+#: lib/util.php:4987
+#, php-format
+msgid "You have made %s observations!"
+msgstr "Je hebt %s waarnemingen!"
+
+#: lib/util.php:5000
+#, php-format
+msgid "Make %s observations to receive this DeepskyLog star!"
+msgstr "Doe %s waarnemingen om deze DeepskyLog ster te ontvangen!"
+
+#: lib/util.php:5019
+msgid "Select columns"
+msgstr "Kies kolommen"
+
 #: lib/messages.php:187
 #, php-format
 msgid "DeepskyLog message from %s:"
 msgstr "DeepskyLog bericht van %s:"
+
+#: lib/messages.php:291
+msgid "Date"
+msgstr "Datum"
+
+#~ msgid ""
+#~ "Bronze Herschel II drawing-certificat! You drew 25 different Herschel II "
+#~ "objects!"
+#~ msgstr ""
+#~ "Bronzen Herschel II certificaat! Je hebt 25 Herschel II objecten getekend!"
 
 #~ msgid " button."
 #~ msgstr " knop."

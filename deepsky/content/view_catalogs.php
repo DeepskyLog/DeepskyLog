@@ -20,7 +20,7 @@ echo '  </div>
        </form>';
 echo '<br /><br />';
 echo '<div id="view_catalogs_right" class="view_catalogs_right">';
-echo LangClickToViewCatalogDetails;
+echo _('Click on a list to view its details');
 echo '</div>';
 echo '</div>';
 ?>

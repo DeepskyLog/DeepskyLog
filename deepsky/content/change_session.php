@@ -117,15 +117,15 @@ function change_session() {
 	echo "	</script>";
 
 	echo "<div id=\"main\">";
-	echo "<h4>" . LangChangeSessionTitle . "</h4>";
+	echo "<h4>" . _("Adapt a session") . "</h4>";
 	echo "<hr />";
 	echo "<form id=\"sessionForm\" enctype=\"multipart/form-data\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_session\" />";
 	echo "<input type=\"hidden\" name=\"sessionid\" value=\"" . $objUtil->checkRequestKey ( 'sessionid' ) . "\" />";
 	if ($objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), "active" ) == 0) {
-		$sessionButton = LangAddSessionButton;
+		$sessionButton = _("Add session");
 	} else {
-		$sessionButton = LangChangeSessionButton;
+		$sessionButton = _("Adapt session");
 	}
 
 	echo "<span class=\"pull-right\">";
@@ -134,9 +134,11 @@ function change_session() {
 	echo "</span><br />";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField1 . "</label>";
+	       <label>" . _("Name") . "</label>";
 	echo "<input type=\"text\" class=\"form-control\" maxlength=\"64\" name=\"sessionname\" size=\"30\" value=\"" . stripslashes ( $objUtil->checkRequestKey ( 'sessionname' ) ) . stripslashes ( $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'name' ) ) . "\" />";
-	echo "<span class=\"help-block\">" . LangAddSessionField1Expl . "</span>";
+    echo "<span class=\"help-block\">" 
+        . _("When you leave this field blank, DeepskyLog makes a name with begin- and enddate.") 
+        . "</span>";
 	echo "</div>";
 
 
@@ -165,14 +167,14 @@ function change_session() {
 															 calBegin.showCalendar('DateAnchor2');
 	                             return false;\"
 										 name=\"DateAnchor2\"
-										 id=\"DateAnchor2\">" . LangAddSessionField2 . "</a>";
+										 id=\"DateAnchor2\">" . _("Start of the session *") . "</a>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField2 . "</label>";
+	       <label>" . _("Start of the session *") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $contentBeginDate . "&nbsp;" . $contentBeginTime;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField2Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("The start of your observing session.") . "</span>";
 	echo "</div>";
 
 	// End date field
@@ -201,14 +203,14 @@ function change_session() {
 															 calEnd.showCalendar('DateAnchor3');
 	                             return false;\"
 										 name=\"DateAnchor3\"
-										 id=\"DateAnchor3\">" . LangAddSessionField3 . "</a>";
+										 id=\"DateAnchor3\">" . _("End of the session *") . "</a>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField3 . "</label>";
+	       <label>" . _("End of the session *") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $contentEndDate . "&nbsp;" . $contentEndTime;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField3Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("The end of your observing session.") . "</span>";
 	echo "</div>";
 
 	// Location of the session
@@ -231,16 +233,17 @@ function change_session() {
 	while ( list ( $key, $value ) = each ( $sites ) )
 		$contentLoc .= "<option " . (($value [0] == $theLoc) ? "selected=\"selected\"" : '') . " value=\"" . $value [0] . "\">" . $value [1] . "</option>";
 	if ($found == 0) {
-		$contentLoc .= "<option selected=\"selected\" value=\"" . $theLoc . "\">" . $theLocName . " (" . LangAddLocationSession . ")</option>";
+		$contentLoc .= "<option selected=\"selected\" value=\"" . $theLoc . "\">" . $theLocName . _(" (will be added by DeepskyLog)") . "</option>";
 	}
 	$contentLoc .= "</select>&nbsp;";
 
 	echo "<div class=\"form-group\">
-	       <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_location\" title=\"" . LangChangeAccountField7Expl . "\" >" . LangAddSessionField4 . "</a>" . "</label>";
+           <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_location\" title=\"" . LangChangeAccountField7Expl . "\" >" 
+        . _("Location *") . "</a>" . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $contentLoc;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField4Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("The location of your observing session.") . "</span>";
 	echo "</div>";
 
 	// Language
@@ -252,11 +255,11 @@ function change_session() {
 	$contentLanguage .= "</select>&nbsp;";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField8 . "</label>";
+	       <label>" . _("Language *") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $contentLanguage;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField8Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Language of the observations during your observing session.") . "</span>";
 	echo "</div>";
 
 	// Other observers
@@ -270,11 +273,11 @@ function change_session() {
 	}
 	$observersCont .= "</textarea>";
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField9 . "</label>";
+	       <label>" . _("Observers *") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $observersCont;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField9Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Observers during this session. The other observers will get a message to make a similar session.") . "</span>";
 	echo "</div>";
 
 	// Add observer
@@ -298,11 +301,11 @@ function change_session() {
 	$addObserver .= "</select>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField10 . "</label>";
+	       <label>" . _("Add observer") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $addObserver;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField10Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Select an observer to add to your observing session.") . "</span>";
 	echo "</div>";
 
 	// Delete observer
@@ -314,11 +317,11 @@ function change_session() {
 	$deleteObserver .= "</select>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField11 . "</label>";
+	       <label>" . _("Remove observer") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $deleteObserver;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField11Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Select an observer to remove from your observing session.") . "</span>";
 	echo "</div>";
 
 	// Hidden field with all the observers
@@ -336,32 +339,32 @@ function change_session() {
 
 	// Weather
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField5 . "</label>";
+	       <label>" . _("Weather") . "</label>";
 	echo "<textarea maxlength=\"500\" name=\"weather\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'weather' ) . "</textarea>";
-	echo "<span class=\"help-block\">" . LangAddSessionField5Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("The weather during your observing session.") . "</span>";
 	echo "</div>";
 
 	// Equipment
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField6 . "</label>";
+	       <label>" . _("Instruments") . "</label>";
 	echo "<textarea maxlength=\"500\" name=\"equipment\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'equipment' ) . "</textarea>";
-	echo "<span class=\"help-block\">" . LangAddSessionField6Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Comments about the used instruments during your observing session.") . "</span>";
 	echo "</div>";
 
 	// Comments
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField7 . "</label>";
+	       <label>" . _("Comments") . "</label>";
 	echo "<textarea maxlength=\"5000\" name=\"comments\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'comments' ) . "</textarea>";
-	echo "<span class=\"help-block\">" . LangAddSessionField7Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Comments on your observing session.") . "</span>";
 	echo "</div>";
 
 	// Pictures
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField12 . "</label>";
+	       <label>" . _("Picture") . "</label>";
 	echo "<div class=\"form\">";
 	echo "<input type=\"file\" id=\"picture\" name=\"picture\" data-show-remove=\"false\" accept=\"image/*\" class=\"file-loading\"/>";
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField12Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("A picture showing the location of the session, a weather satellite picture, ...") . "</span>";
 	echo "</div>";
 
 	echo "</div></form>";
@@ -406,13 +409,13 @@ function view_session() {
 	$beginday = $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'begindate' );
 	$contentBeginDate = $beginday;
 	echo "<table class=\"table\">";
-	echo "<tr><td>" . LangAddSessionField2 . "</td><td>" . $contentBeginDate . "</td></tr>";
+	echo "<tr><td>" . _("Start of the session *") . "</td><td>" . $contentBeginDate . "</td></tr>";
 
 	// End date field
 	// Add the begindate field
 	$endday = $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'enddate' );
 	$contentEndDate = $endday;
-	echo "<tr><td>" . LangAddSessionField3 . "</td><td>" . $contentEndDate . "</td></tr>";
+	echo "<tr><td>" . _("End of the session *") . "</td><td>" . $contentEndDate . "</td></tr>";
 
 	// Location of the session
 	$sites = $objLocation->getSortedLocationsList ( "name", $loggedUser );
@@ -420,12 +423,13 @@ function view_session() {
 	$theLoc = $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'locationid' );
 	$theLocName = $objLocation->getLocationPropertyFromId ( $theLoc, "name" );
 
-	echo "<tr><td>" . LangAddSessionField4 . "</td><td>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_location&location=" . $theLoc . "\">" . $theLocName . "</a>" . "</td></tr>";
+    echo "<tr><td>" . _("Location *") . "</td><td>" 
+        . "<a href=\"" . $baseURL . "index.php?indexAction=detail_location&location=" . $theLoc . "\">" . $theLocName . "</a>" . "</td></tr>";
 
 	// Language
 	$theLanguage = $objObserver->getObserverProperty ( $loggedUser, 'observationlanguage' );
 	$allLanguages = $objLanguage->getAllLanguages ( $objObserver->getObserverProperty ( $loggedUser, 'language' ) );
-	echo "<tr><td>" . LangAddSessionField8 . "</td><td>" . $allLanguages [$theLanguage] . "</td></tr>";
+	echo "<tr><td>" . _("Language *") . "</td><td>" . $allLanguages [$theLanguage] . "</td></tr>";
 
 	// Other observers
 	$theObserver = $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'observerid' );
@@ -436,22 +440,22 @@ function view_session() {
 		$observersCont .= " - ";
 		$observersCont .= "<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $observersArray [$i] ['observer'] . "\">" . $objObserver->getObserverProperty ( $observersArray [$i] ['observer'], "firstname" ) . "&nbsp;" . $objObserver->getObserverProperty ( $observersArray [$i] ['observer'], "name" ) . "</a>";
 	}
-	echo "<tr><td>" . LangAddSessionField9 . "</td><td>" . $observersCont . "</td></tr>";
+	echo "<tr><td>" . _("Observers *") . "</td><td>" . $observersCont . "</td></tr>";
 
 	// Weather
-	echo "<tr><td>" . LangAddSessionField5 . "</td><td>" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'weather' ) . "</td></tr>";
+	echo "<tr><td>" . _("Weather") . "</td><td>" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'weather' ) . "</td></tr>";
 
 	// Equipment
-	echo "<tr><td>" . LangAddSessionField6 . "</td><td>" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'equipment' ) . "</td></tr>";
+	echo "<tr><td>" . _("Instruments") . "</td><td>" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'equipment' ) . "</td></tr>";
 
 	// Comments
-	echo "<tr><td>" . LangAddSessionField7 . "</td><td>" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'comments' ) . "</td></tr>";
+	echo "<tr><td>" . _("Comments") . "</td><td>" . $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'comments' ) . "</td></tr>";
 
 	echo "</table>";
 
 	if (strcmp ( $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'observerid' ), $loggedUser ) == 0) {
 		$linkToAdapt = "<a class=\"btn btn-success\" href=\"" . $baseURL . 'index.php?indexAction=adapt_session&sessionid=' . $objUtil->checkRequestKey ( 'sessionid' ) . "&adapt=1\">";
-		$linkToAdapt .= LangChangeSessionButton . "</a>";
+		$linkToAdapt .= _("Adapt session") . "</a>";
 		echo $linkToAdapt;
 	}
 

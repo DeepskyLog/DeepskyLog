@@ -101,10 +101,10 @@ function statistics() {
 
 	// We make some tabs.
 	echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">
-          <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">" . GraphInfo . "</a></li>
-          <li><a href=\"#observationsPerYear\" data-toggle=\"tab\">" . GraphObservationsTitle . "</a></li>
+          <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">" . _("Info") . "</a></li>
+          <li><a href=\"#observationsPerYear\" data-toggle=\"tab\">" . _("Observations per year") . "</a></li>
 					<li><a href=\"#observationsPerMonth\" data-toggle=\"tab\">" . _("Observations per month") . "</a></li>
-          <li><a href=\"#objectTypes\" data-toggle=\"tab\">" . GraphObservationsType . "</a></li>";
+          <li><a href=\"#objectTypes\" data-toggle=\"tab\">" . _("Object types observed") . "</a></li>";
 	if (strcmp($selectedCountry, "All") == 0) {
  		echo "<li><a href=\"#countries\" data-toggle=\"tab\">" . _("Observations per country") . "</a></li>";
 	}
@@ -221,11 +221,11 @@ function statistics() {
 	  	          marginBottom: 40
 	  	        },
 	  	        title: {
-	  	          text: \"" . GraphTitle1 . "\",
+	  	          text: \"" . _("Number of observations per year") . "\",
 	  	          x: -20 //center
 	  	        },
 	  	        subtitle: {
-	  	          text: '" . GraphSource . $baseURL . "',
+	  	          text: '" . _("Source: ") . $baseURL . "',
 	  	          x: -20
 	  	        },
 	  	        xAxis: {
@@ -243,7 +243,7 @@ function statistics() {
 	  	        },
 	  	        yAxis: {
 	  	          title: {
-	  	            text: '" . GraphObservations . "'
+	  	            text: '" . _("Observations") . "'
 	  	        },
 							min: 0,
 	  	        plotLines: [{
@@ -351,7 +351,7 @@ function statistics() {
 	  	          x: -20 //center
 	  	        },
 	  	        subtitle: {
-	  	          text: '" . GraphSource . $baseURL . "',
+	  	          text: '" . _("Source: ") . $baseURL . "',
 	  	          x: -20
 	  	        },
 	  	        xAxis: {
@@ -373,7 +373,7 @@ function statistics() {
 							},
 	  	        yAxis: {
 	  	          title: {
-	  	            text: '" . GraphObservations . "'
+	  	            text: '" . _("Observations") . "'
 	  	        },
 							min: 0,
 	  	        plotLines: [{
@@ -704,10 +704,10 @@ function statistics() {
 						plotShadow: false
 					},
 					title: {
-						text: \"" . ObjectsSeenGraph . "\"
+						text: \"" . _("Object types seen") . "\"
 					},
                 subtitle: {
-                  text: '" . GraphSource . $baseURL . "'
+                  text: '" . _("Source: ") . $baseURL . "'
                 },
 					tooltip: {
 						formatter: function() {
@@ -773,7 +773,7 @@ function statistics() {
 					text: \"" . _("Observations per country") . "\"
 				},
 				subtitle: {
-					text: '" . GraphSource . $baseURL . "'
+					text: '" . _("Source: ") . $baseURL . "'
 				},
 				tooltip: {
 					formatter: function() {

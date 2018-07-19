@@ -109,10 +109,10 @@ function reportsLayout()
         titles['objectbestpopup']='".Reportobjectbestpopup."';
         titles['objectmaxaltitude']='".Reportobjectmaxaltitude."';
         titles['objectmaxaltitudepopup']='".Reportobjectmaxaltitudepopup."';
-        titles['objectmaxalt']='".LangReportObjectHighestAlt."';
-        titles['objectmaxaltstarttext']='".LangReportObjectHighestFrom."';
-        titles['objectmaxaltmidtext']='".LangReportObjectHighestAround."';
-        titles['objectmaxaltendtext']='".LangReportObjectHighestTo."';
+        titles['objectmaxalt']='"._("Highest altitude during the year")."';
+        titles['objectmaxaltstarttext']='"._("Highest from the month")."';
+        titles['objectmaxaltmidtext']='"._("Highest around the month")."';
+        titles['objectmaxaltendtext']='"._("Highest till the month")."';
 
         thereport='".$reportName."';
 	      setLayoutPage();
