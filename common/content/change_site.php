@@ -413,7 +413,7 @@ function changeSite()
                     $location, "locationactive"
                 )
                 ) {
-                    echo LangViewActive;
+                    echo _("Active");
                 } else {
                     echo _("Not active");
                 }

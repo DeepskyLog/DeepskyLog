@@ -1600,7 +1600,7 @@ class PrintAtlas
                   $theEphemerides15[$i]=$objObject->getEphemerides($object,15,$i,2010);
                   $theNightEphemerides15[$i]=date_sun_info(strtotime("2010"."-".$i."-"."15"), $latitude, $longitude);
                     }
-                $this->pdf->addTextWrap( 50, $liney, 8, LangMonth, 100,'center');
+                $this->pdf->addTextWrap( 50, $liney, 8, _("Month"), 100,'center');
                 for($i=1;$i<7;$i++)
                 { $this->pdf->addTextWrap( 100+(100*$i), $liney, 8, $i, 50,'center');
                 }
@@ -1683,7 +1683,7 @@ class PrintAtlas
                     $this->pdf->addTextWrap(50+(100*$i), $liney, 8, $colorclass.$theEphemerides1[7]['transit'].$colorclass2, 50,"center");
 
                 $liney-=15;
-                $this->pdf->addTextWrap( 50, $liney-4, 8, LangAstroNight,100,'center');
+                $this->pdf->addTextWrap( 50, $liney-4, 8, _("Astronomical night"),100,'center');
                 for($i=1;$i<7;$i++)
                 { if(date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])=="00:00")
                     $this->pdf->addTextWrap(50+(100*$i), $liney-4, 8, "-", 50, "center");
@@ -1706,7 +1706,7 @@ class PrintAtlas
                 }
 
                 $liney-=25;
-                $this->pdf->addTextWrap( 50, $liney-4, 8, LangNauticalNight,100,'center');
+                $this->pdf->addTextWrap( 50, $liney-4, 8, _("Nautical night"),100,'center');
                 for($i=1;$i<7;$i++)
                 { if(date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])=="00:00")
                     $this->pdf->addTextWrap(50+(100*$i), $liney-4, 8, "-", 50, "center");
@@ -1729,7 +1729,7 @@ class PrintAtlas
                 }
 
                 $liney-=25;
-                $this->pdf->addTextWrap( 50, $liney-4, 8, LangObjectRiseSet2,100,'center');
+                $this->pdf->addTextWrap( 50, $liney-4, 8, _("Object rise-set"),100,'center');
           for($i=1;$i<7;$i++)
                 { if($theEphemerides1[$i]['rise']=='-')
                     $this->pdf->addTextWrap(50+(100*$i), $liney-4, 8, "-", 50, "center");
@@ -1752,7 +1752,7 @@ class PrintAtlas
               }
 
                 $liney-=35;
-                $this->pdf->addTextWrap( 50, $liney, 8, LangMonth, 100,'center');
+                $this->pdf->addTextWrap( 50, $liney, 8, _("Month"), 100,'center');
                 for($i=7;$i<13;$i++)
                 { $this->pdf->addTextWrap( 100+(100*$i)-600, $liney, 8, $i, 50,'center');
                 }
@@ -1834,7 +1834,7 @@ class PrintAtlas
                     $this->pdf->addTextWrap((100*$i)-550, $liney  , 8, $colorclass.$theEphemerides1[1]['transit'].$colorclass2, 50,"center");
 
                 $liney-=15;
-                $this->pdf->addTextWrap( 50, $liney-4, 8, LangAstroNight, 100,'center');
+                $this->pdf->addTextWrap( 50, $liney-4, 8, _("Astronomical night"), 100,'center');
                 for($i=7;$i<13;$i++)
                 { if(date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])=="00:00")
                     $this->pdf->addTextWrap((100*$i)-550, $liney-4, 8, "-", 50, "center");
@@ -1857,7 +1857,7 @@ class PrintAtlas
                 }
 
                 $liney-=25;
-                $this->pdf->addTextWrap( 50, $liney-4, 8, LangNauticalNight,100,'center');
+                $this->pdf->addTextWrap( 50, $liney-4, 8, _("Nautical night"),100,'center');
                 for($i=7;$i<13;$i++)
                 { if(date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])=="00:00")
                     $this->pdf->addTextWrap((100*$i)-550, $liney-4, 8, "-", 50, "center");
@@ -1880,7 +1880,7 @@ class PrintAtlas
                 }
 
                 $liney-=25;
-                $this->pdf->addTextWrap( 50, $liney-4, 8, LangObjectRiseSet2,100,'center');
+                $this->pdf->addTextWrap( 50, $liney-4, 8, _("Object rise-set"),100,'center');
           for($i=7;$i<13;$i++)
                 { if($theEphemerides1[$i]['rise']=='-')
                     $this->pdf->addTextWrap((100*$i)-550, $liney-4, 8, "-", 50, "center");

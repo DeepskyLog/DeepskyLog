@@ -29,28 +29,28 @@ function objectsSets()
   $k=count($_SESSION['Qobj']);
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."common/content/objectsSets.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
-	echo LangpdfseriesExplain1.'<br />';
-	echo LangpdfseriesExplain2.'<br />';
-	echo LangpdfseriesExplain3.'<br />';
-	echo LangpdfseriesExplain4.'<br />'.'<br />';		
-	echo LangpdfseriesExplain6.'<br />'.'<br />';		
-	echo LangpdfseriesExplain7.'<br />'.'<br />';		
-	echo LangpdfseriesExplain5.'<br />'.'<br />';		
-	echo LangpdfseriesExplain5b.'<br />'.'<br />';		
+	echo _("Generate a set of charts for each object.").'<br />';
+	echo _("Each set contains a number of charts specified by the FoVs asked below.").'<br />';
+	echo _("Each chart specified by the FoVs, shows stars and objects up to the specified magnitudes.").'<br />';
+	echo _("Each magnitude field should contain as many magnitudes as there are FoVs.").'<br />'.'<br />';		
+	echo _("Before each object, you can add a data section. This contains the elementary data, an object description when available, and 2 photos by the size indicated by you (15, 30 or 60 arc minutes, or nothing).").'<br />'.'<br />';		
+	echo _("You can add an index after each section. This index contains an overview of all the objects on each of the maps.").'<br />'.'<br />';		
+	echo _("You can save each set and use a pdf merger to make one large atlas-catalogue if you wish.").'<br />'.'<br />';		
+	echo _("If you choose to make all objects in one pass, please remember that each object can take up to 30 seconds or more to generate. Attention: this option is available in all browsers except for Microsoft Internet Explorer.").'<br />'.'<br />';		
 	if(!($MSIE))
-	  echo "<input type=\"button\" class=\"btn btn-primary\" value=\"".LangpdfseriesButton."\" onclick=\"generateallonepass(0,".($MSIE?'true':'false').");\"/>";
+	  echo "<input type=\"button\" class=\"btn btn-primary\" value=\""._("Generate all")."\" onclick=\"generateallonepass(0,".($MSIE?'true':'false').");\"/>";
 	echo "&nbsp;"."<div id='thecounter'> &nbsp; </div>";
 	echo '<br />';	
-  echo LangpdfseriesAddDataPage."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
+  echo _("Add a data page")."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
   if($loggedUser)
-    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesWithEphemerides."<input id=\"ephemerides\" type=\"checkbox\" />";
+    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"._("with ephemerides")."<input id=\"ephemerides\" type=\"checkbox\" />";
   else
     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input style=\"visibility:hidden;\" id=\"ephemerides\" type=\"checkbox\" />";
   if($loggedUser)
-    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesWithYearEphemerides."<input id=\"yearephemerides\" type=\"checkbox\" />";
+    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"._("with yearephemerides")."<input id=\"yearephemerides\" type=\"checkbox\" />";
   else
     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input style=\"visibility:hidden;\" id=\"yearephemerides\" type=\"checkbox\" />";
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesAddIndexPage."<input id=\"indexpage\" type=\"checkbox\" onclick=\"if(document.getElementById('indexpage').checked==true) {document.getElementById('reportlayoutselect').style.visibility='visible'; alert('".Langpdfserieschoselayout."');} else document.getElementById('reportlayoutselect').style.visibility='hidden';\" value=\"\" />";
+  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"._("Add an index page")."<input id=\"indexpage\" type=\"checkbox\" onclick=\"if(document.getElementById('indexpage').checked==true) {document.getElementById('reportlayoutselect').style.visibility='visible'; alert('".Langpdfserieschoselayout."');} else document.getElementById('reportlayoutselect').style.visibility='hidden';\" value=\"\" />";
   echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<select id=\"reportlayoutselect\" name=\"reportlayoutselect\" class=\"form-control\" style=\"visibility:hidden;\" >";
   $defaults=$objReportLayout->getLayoutListDefault("ReportQueryOfObjects");
   while(list($key, $value) = each($defaults))

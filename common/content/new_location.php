@@ -425,7 +425,7 @@ function newLocation()
         echo $limmag . "<br />SQM: " . $sb . "<br />";
 
         if ($objLocation->getLocationPropertyFromId($location, "locationactive")) {
-            echo LangViewActive;
+            echo _("Active");
         } else {
             echo _("Not active");
         }

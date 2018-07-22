@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-19 20:58+0200\n"
+"POT-Creation-Date: 2018-07-22 20:20+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -960,6 +960,12 @@ msgstr "Stadshemel"
 msgid "Inner-city sky"
 msgstr "Hemel midden in de stad"
 
+#: common/content/change_site.php:416 common/content/new_location.php:428
+#: lib/instruments.php:96 lib/filters.php:150 lib/lenses.php:57
+#: lib/eyepieces.php:63 lib/locations.php:331
+msgid "Active"
+msgstr "Actief"
+
 #: common/content/change_site.php:418 common/content/new_location.php:430
 msgid "Not active"
 msgstr "Niet actief"
@@ -1035,6 +1041,83 @@ msgid ""
 msgstr ""
 "Kies een naam voor deze locatie, voeg eventueel een grensmagnitude (of SQM "
 "waarde) toe en druk op de %s knop."
+
+#: common/content/objectsSets.php:32
+msgid "Generate a set of charts for each object."
+msgstr "Maak een set van kaarten voor elk object."
+
+#: common/content/objectsSets.php:33
+msgid "Each set contains a number of charts specified by the FoVs asked below."
+msgstr "Elke set bevat even veel kaarten als gespecifieerd in het FoV vak."
+
+#: common/content/objectsSets.php:34
+msgid ""
+"Each charts specified by the FoVs, shows stars and objects up to the "
+"specified magnitudes."
+msgstr ""
+"Elke kaart gespecifieerd in het vak FoVs, toont sterren en objecten zoals "
+"gespecifieerd in de respectievelijke vakken."
+
+#: common/content/objectsSets.php:35
+msgid ""
+"Each magnitude field should contain as many magnitudes as there are FoVs."
+msgstr "Elk magnitudevak moet even veel magnitudes bevatten als er FoVs zijn."
+
+#: common/content/objectsSets.php:36
+msgid ""
+"Before each object, you can add a data section. This contains the elementary "
+"data, an object description when available, and 2 photos by the size "
+"indicated by you (15, 30 or 60 arc minutes, or nothing)."
+msgstr ""
+"Voor elk object kan u een datasectie toevoegen. Dit bevat de elementaire "
+"data, een objectbeschrijving indien beschikbaar, en 2 foto’s met de door u "
+"aangeduide grootte (15, 30 of 60 boogminuten, of geen)."
+
+#: common/content/objectsSets.php:37
+msgid ""
+"You can add an index after each section. This index contains an overview of "
+"all the objects on each of the maps."
+msgstr ""
+"Na elk object kan u een inhoudstafel toevoegen. Deze bevat een overzicht van "
+"elk van de objecten die op de verschillende kaarten staan."
+
+#: common/content/objectsSets.php:38
+msgid ""
+"You can save each set and use a pdf merger to make one large atlas-catalogue "
+"if you wish."
+msgstr ""
+"U kan elke set opslaan en eventueel met een pdf samenvoegprogramma "
+"samenstellen tot één catalogus-atlas."
+
+#: common/content/objectsSets.php:39
+msgid ""
+"If you choose to make all objects in one pass, please remember that each "
+"object can take up to 30 seconds or more to generate. Attention: this option "
+"is available in all browsers except for Microsoft Internet Explorer."
+msgstr ""
+"Als u alles in één keer aanmaakt, reken dan op een lange verwerkingstijd, "
+"tot 30 seconden of meer per object. Let op: deze optie is beschikbaar in "
+"alle browsers behalve Microsoft Internet Explorer."
+
+#: common/content/objectsSets.php:41
+msgid "Generate all"
+msgstr "Maak alles aan"
+
+#: common/content/objectsSets.php:44
+msgid "Add a data page"
+msgstr "Voeg een datapagina toe"
+
+#: common/content/objectsSets.php:46
+msgid "with ephemerides"
+msgstr "met efemeriden"
+
+#: common/content/objectsSets.php:50
+msgid "with yearephemerides"
+msgstr "met jaarefemeriden"
+
+#: common/content/objectsSets.php:53
+msgid "Add an index page"
+msgstr "Voeg een inhoudstafel toe"
 
 #: common/content/messages.php:34
 msgid "View messages"
@@ -1403,17 +1486,21 @@ msgstr "Enkel object observaties"
 msgid "Object observations"
 msgstr "Object observaties"
 
-#: deepsky/content/view_object.php:83 deepsky/content/view_object.php:90
-#: deepsky/content/view_object.php:103
+#: deepsky/content/view_object.php:78
+msgid "Hide the object details"
+msgstr "Verberg de objectdetails"
+
+#: deepsky/content/view_object.php:84 deepsky/content/view_object.php:91
+#: deepsky/content/view_object.php:104
 msgid "Remove Object"
 msgstr "Verwijder object"
 
-#: deepsky/content/view_object.php:93 deepsky/content/view_object.php:121
+#: deepsky/content/view_object.php:94 deepsky/content/view_object.php:122
 #, php-format
 msgid "Do you really want to delete %s?"
 msgstr "Wil je %s echt verwijderen?"
 
-#: deepsky/content/view_object.php:94
+#: deepsky/content/view_object.php:95
 #, php-format
 msgid ""
 "There are no observations of %s, so removing %s should be relatively safe."
@@ -1421,29 +1508,56 @@ msgstr ""
 "Er zijn geen waarnemingen van %s, dus het verwijderen van %s zou veilig "
 "moeten zijn."
 
-#: deepsky/content/view_object.php:102 deepsky/content/view_object.php:130
+#: deepsky/content/view_object.php:103 deepsky/content/view_object.php:131
 msgid "Keep Object"
 msgstr "Behoud object"
 
-#: deepsky/content/view_object.php:111 deepsky/content/view_object.php:118
-#: deepsky/content/view_object.php:131
+#: deepsky/content/view_object.php:112 deepsky/content/view_object.php:119
+#: deepsky/content/view_object.php:132
 msgid "Force Remove Object"
 msgstr "Verwijder object"
 
-#: deepsky/content/view_object.php:122
+#: deepsky/content/view_object.php:123
 #, php-format
 msgid ", which has %s observations?"
 msgstr ", samen met de %s waarnemingen?"
 
-#: deepsky/content/view_object.php:124
+#: deepsky/content/view_object.php:125
 msgid "All the observations will also be removed!"
 msgstr "Alle waarnemingen zullen ook verwijderd worden!"
 
-#: deepsky/content/view_object.php:138
+#: deepsky/content/view_object.php:139
 msgid "Save"
 msgstr "Bewaar"
 
-#: deepsky/content/view_object.php:532
+#: deepsky/content/view_object.php:152
+msgid "Hide the nearby objects"
+msgstr "Verberg de nabije objecten"
+
+#: deepsky/content/view_object.php:237 lib/printatlas.php:1603
+#: lib/printatlas.php:1755
+msgid "Month"
+msgstr "Maand"
+
+#: deepsky/content/view_object.php:301 lib/printatlas.php:1686
+#: lib/printatlas.php:1837
+msgid "Astronomical night"
+msgstr "Astronomische nacht"
+
+#: deepsky/content/view_object.php:309 lib/printatlas.php:1709
+#: lib/printatlas.php:1860
+msgid "Nautical night"
+msgstr "Nautische nacht"
+
+#: deepsky/content/view_object.php:317
+msgid "Object rise<br />-<br />set"
+msgstr "Object opgang<br />-<br />ondergang"
+
+#: deepsky/content/view_object.php:390
+msgid "Hide the observations"
+msgstr "Verberg de waarnemingen"
+
+#: deepsky/content/view_object.php:535
 msgid "Show or remove extra info..."
 msgstr "Toon of verwijder extra informatie…"
 
@@ -1721,6 +1835,10 @@ msgstr ""
 #: lib/printatlas.php:1437
 msgid "No index entries"
 msgstr "Geen index elementen"
+
+#: lib/printatlas.php:1732 lib/printatlas.php:1883
+msgid "Object rise-set"
+msgstr "Object op-ondergang"
 
 #: lib/observations.php:2742 lib/moonpic.php:73
 msgid "under the horizon"

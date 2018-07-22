@@ -2,38 +2,6 @@
 $REST = "Reste";
 
 // prior to 4.1
-define("ObjectDetailsShow"      ,"Montrer les détails de l'objet");
-define("ObjectDetailsHide"      ,"Cacher les détails de l'objets");
-define("ObjectNearbyObjectsShow","Montrer les autres objects proches");
-define("ObjectNearbyObjectsHide","Cacher les autres objets proches");
-define("ObjectObservationsShow" ,"Montrer les observations");
-define("ObjectObservationsHide" ,"Cacher les observations");
-
-
-define("LangViewActive"	        ,"Active&eaigu;");
-
-
-define("LangMonth"              ,"Mois");
-define("LangAstroNight"         ,"Nuit astronomique");
-define("LangNauticalNight"      ,"Nuit nautique");
-define("LangObjectRiseSet"      ,"Montant de l'objet<br />-<br />descandant");
-define("LangObjectRiseSet2"     ,"Mont.-desc. obj.");
-
-
-define("LangpdfseriesExplain1"  ,"Generez une collection de cartes pour chaque objet.");
-define("LangpdfseriesExplain2"  ,"Chaque collection contient le nombre de cartes spécifié par le nombre de champs de vue spécifiés.");
-define("LangpdfseriesExplain3"  ,"Chaque carte spécifié par les champs de vue, montre des étoiles et des objets juqsu'à la magnitude spécifié dans les cases correspondantes.");
-define("LangpdfseriesExplain4"  ,"Chaque case de magnitude devra contenir autant de valuers que spécifiés par les champs de vue.");
-define("LangpdfseriesExplain5"  ,"Vous pouvez sauvegarder chaque collection et éventuellement les réunir dans un seule fichier pdf catalogue - atlas avec des outils libres disponibles sur l'internet.");
-define("LangpdfseriesExplain5b" ,"Si vous faites tout d'un coup, comptez sur une longue durée de traitement, jusqu'à 30 secondes ou plus par objet. Attention: cette option est disponible dans tous les navigateurs, sauf dans Microsoft Internet Explorer.");
-define("LangpdfseriesExplain6"  ,"Pour chaque objet, vous avez la possibilité derajouter une page de données. Celle-ci contient les données de base de l'objet, eune description de l'objet si disponible, et deux photos avec la taille spécifié par vous (15, 30 ou 60 minutes d'arc, ou rien).");
-define("LangpdfseriesExplain7"  ,"Par objet, vous pouvez rajouter une table de contenu. Celli-ci contient l'aper&ccedil;u de toutes les objet figurant sur les cartes correspondantes.");
-define("LangpdfseriesButton"    ,"Generez tous");
-define("LangpdfseriesAddDataPage","Rajoutez une page de données");
-define("LangpdfseriesWithEphemerides","avec les éphémerides");
-define("LangpdfseriesWithYearEphemerides","avec les éphémerides pour toute l'année");
-define("LangpdfseriesAddIndexPage","Rajoutez une table de contenu");
-
 define("LangpdfseriesObject"    ,"Objet");
 define("LangpdfseriesSize"      ,"Taille");
 define("LangpdfseriesFoVs"      ,"Champs de vue");
@@ -70,7 +38,7 @@ define("ReportMoonUp",           'Lever lune: ');
 define("ReportPreparedForDate"    ," pour les observations du ");
 
 define("ReportLink"               ,"Rapport");
-define("ReportQueryOfObjects"     ,"aper&ccedil;u des objets");
+define("ReportQueryOfObjects"     ,"aperçu des objets");
 
 define("ReportTitle"              ,"Mises en page pour ");
 define("ReportKnownLayouts"       ,"Mises en pages connues");
@@ -164,11 +132,11 @@ define("LangSaveFormLayout4"                             ,"Effacer");
 
 
 define("profilefovmagnitude"                            ,"Les champs de vue standard de l'atlas:");
-define("profilefovmagnitudeselect"                      ,"aper&ccedil;u / recherche / détail");
+define("profilefovmagnitudeselect"                      ,"aperçu / recherche / détail");
 define("profiledsosmagnitude"                           ,"Les magnitudes des objets dans l'atlas:");
-define("profiledsosmagnitudeselect"                     ,"aper&ccedil;u / recherche / détail");
+define("profiledsosmagnitudeselect"                     ,"aperçu / recherche / détail");
 define("profilestarsmagnitude"                          ,"Les magnitudes des étoiles:");
-define("profilestarsmagnitudeselect"                    ,"aper&ccedil;u / recherche / détail");
+define("profilestarsmagnitudeselect"                    ,"aperçu / recherche / détail");
 define("profilephotosizes"                              ,"Taille standard des photos:");
 define("profilephotosizesselect"                        ,"photo 1 / photo 2");
 
@@ -187,7 +155,7 @@ define('LangRistrasetOn'                                 ,' le ');
 define('LangRistrasetIn'                                 ,' à ');
 
 
-define('OverviewChart'                                   ,'Aper&ccedil;u');
+define('OverviewChart'                                   ,'Aperçu');
 define('LookupChart'                                     ,'Recherche');
 define('DetailChart'                                     ,'Détail');
 
@@ -405,7 +373,7 @@ define("LangShowWithoutPartOfs"														,"Voir sans objets fait-partie-de")
 define("LangShowWithPartOfs"															,"Voir avec objets fait-partie-de");
 
 define("LangShowAllLanguages"															,"Montrer toutes les languages");
-define("LangShowInterfaceLanguage"												,"Ne montrer que les observations en Fran&ccedil;ais");
+define("LangShowInterfaceLanguage"												,"Ne montrer que les observations en Français");
 define("LangShowMyLanguages"															,"Ne montrer que les observations dans les languages de mon profil");
 define("LangAllLanguagesShown"														,"toutes les languages");
 define("LangSelectedLanguagesShown"												,"juste les languages sélectionées");
@@ -560,7 +528,7 @@ define("LangLoginMenuItem2"																,"Mot de passe");
 define("LangLoginMenuButton"															,"Connection");
 define("LangLoginMenuRegister"														,"Enregistrer");
 
-define("LangSearchMenuTitle"															,"Aper&ccedil;u");
+define("LangSearchMenuTitle"															,"Aperçu");
 define("LangSearchMenuItem1"															,"Mes observations");
 define("LangSearchMenuItem2"															,"Toutes les observations");
 define("LangSearchMenuItem3"															,"Recherche d'observations");
@@ -790,7 +758,7 @@ define("LangValidateObjectMessage8"												,"Magnitude erronée!");
 
 // content/overview_objects.php
 
-define("LangOverviewObjectsTitle"													,"Aper&ccedil;u de tous les objets");
+define("LangOverviewObjectsTitle"													,"Aperçu de tous les objets");
 define("LangOverviewObjectsFirstlink"											,"DEBUT");
 define("LangOverviewObjectsLastlink"											,"FIN");
 define("LangOverviewObjectsHeader0"												,"N&#176;");
@@ -810,7 +778,7 @@ define("LangOverviewObjectsHeader10"		  								,"Dimensions");
 
 // content/execute_query_objects.php
 
-define("LangSelectedObjectsTitle"													,"Aper&ccedil;u des objets sélectionnés");
+define("LangSelectedObjectsTitle"													,"Aperçu des objets sélectionnés");
 define("LangExecuteQueryObjectsMessage1"									,"Nouvelle recherche");
 define("LangExecuteQueryObjectsMessage2"									,"Votre recherche n'a pas donné de résultat.");
 define("LangExecuteQueryObjectsMessage2a"									,"Nouvelle recherche");
@@ -914,7 +882,7 @@ define("LangViewObjectDreyerDescription"									,"Codes de Dreyer, NGC/IC");
 
 // content/view_observers.php
 
-define("LangViewObserverTitle"														,"Aper&ccedil;u des observateurs");
+define("LangViewObserverTitle"														,"Aperçu des observateurs");
 define("LangViewObserverName"															,"Nom");
 define("LangViewObserverFirstName"												,"Prénom");
 define("LangViewObserverRole"															,"R&ocirc;le");
@@ -938,7 +906,7 @@ define("LangChangeObject"																	,"Changez la comète");
 
 // content/overview_locations.php
 
-define("LangViewLocationTitle"														,"Aper&ccedil;u des endroits");
+define("LangViewLocationTitle"														,"Aperçu des endroits");
 define("LangViewLocationLocation"													,"Endroit");
 define("LangViewLocationProvince"													,"Province / Etat");
 define("LangViewLocationCountry"													,"Pays");
@@ -1058,9 +1026,9 @@ define("LangDeleteObservation"														,"Supprimez l'observation");
 define("LangOverviewObservations"													,"Liste");
 define("LangCompactObservations"													,"Compact");
 define("LangCompactObservationsLO"									 			,"Comparer");
-define("LangOverviewObservationTitle"											,"Aper&ccedil;u avec une seule ligne d'information par observation");
-define("LangCompactObservationsTitle"											,"Aper&ccedil;u, avec égallement la description à c&ocirc;té de la ligne d'information");
-define("LangCompactObservationsLOTitle"										,"Aper&ccedil;u avec la ligne d'information, la description et votre dernière observation");
+define("LangOverviewObservationTitle"											,"Aperçu avec une seule ligne d'information par observation");
+define("LangCompactObservationsTitle"											,"Aperçu, avec égallement la description à c&ocirc;té de la ligne d'information");
+define("LangCompactObservationsLOTitle"										,"Aperçu avec la ligne d'information, la description et votre dernière observation");
 
 // content/change_observation.php
 
@@ -1075,12 +1043,12 @@ define("LangViewDSSImageTitle"														,"Image DSS - ");
 
 // content/selected_observations.php
 
-define("LangSelectedObservationsTitle"										,"Aper&ccedil;u de toutes les observations de ");
+define("LangSelectedObservationsTitle"										,"Aperçu de toutes les observations de ");
 define("LangNoObservations"																,"Aucune observation de disponible");
 
 // content/overview_observations.php
 
-define("LangOverviewObservationsTitle"										,"Aper&ccedil;u de toutes les observations");
+define("LangOverviewObservationsTitle"										,"Aperçu de toutes les observations");
 define("LangOverviewObservationsHeader1"									,"Nom&nbsp;de&nbsp;l'objet");
 define("LangOverviewObservationsHeader2"									,"Observateur");
 define("LangOverviewObservationsHeader3"									,"Instrument");
@@ -1323,8 +1291,8 @@ define("LangTopObserversHeader8"													,"Dessins durant la dernière anné
 define("LangTopObservers1"															  ,"Total");
 
 // content/details_observer_messier
-define("LangTopObserversMessierHeader1"										,"Aper&ccedil;u d'objets Messier");
-define("LangTopObserversMessierHeader2"										,"Aper&ccedil;u d'objets");
+define("LangTopObserversMessierHeader1"										,"Aperçu d'objets Messier");
+define("LangTopObserversMessierHeader2"										,"Aperçu d'objets");
 define("LangTopObserversMessierHeader3"										,"objets");
 
 // content/top_objects.php
@@ -1357,7 +1325,7 @@ define("LangQueryObservationsButton2"											,"Videz les champs");
 
 // content/new_observationcsv.php
 define("LangCSVTitle"																			,"Importez les observations a partir d'un fichier csv");
-define("LangCSVMessage1"																	,"Ce formulaire vous donne la possibilité de rentrer plusieures observations à la fois à l'aide d'un fichier csv (comma separated value). Cette fa&ccedil;on facile et rapide vous permet de rentrer plusieures observations à la fois. Le formulaire vous permet également de copier facilement vos observations que vous auriez stockées dans une autre base de données et de les enregistrer dans DeepskyLog. A titre d'information: juste les observations avec votre nom et prénom seront rajoutées.");
+define("LangCSVMessage1"																	,"Ce formulaire vous donne la possibilité de rentrer plusieures observations à la fois à l'aide d'un fichier csv (comma separated value). Cette façon facile et rapide vous permet de rentrer plusieures observations à la fois. Le formulaire vous permet également de copier facilement vos observations que vous auriez stockées dans une autre base de données et de les enregistrer dans DeepskyLog. A titre d'information: juste les observations avec votre nom et prénom seront rajoutées.");
 define("LangCSVMessage2"																	,"Le fichier csv utilise le format suivant:");
 define("LangCSVMessage3"																	,"<strong><i> 1-Objet; 2-Observateur; 3-Date; 4-TU; 5-Endroit; 6-Instrument; 7-Oculaire; 8-Filtre; 9-Lentille; 10-Seeing; 11-LimMag ou SQM comme vous voulez; 12-Visibilité; 13-Langue; 14-Description</i></strong>");
 define("LangCSVMessage4"																	,"Le fichier <strong>ne contient pas</strong> <u>une ligne de tête</u>,
@@ -1403,7 +1371,7 @@ define("LangValidateCSVMessage"														,"L'importation du fichier CSV est 
 // content/newObservationXml.php
 define("LangXMLTitle"																			,"Importez les observations à partir d'un fichier XML");
 define("LangXMLMessage1"																	,"Ce formulaire vous donne la possibilité d'ajouter différentes observations en utilisant un fichier OpenAstonomyLog XML.");
-define("LangXMLMessage2"																	,"De cette fa&ccedil;on, vous pouvez échanger facilement et rapidement des observations entre différentes applications qui supportent le format OpenAstonomyLog XML (comme <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>, <a href=\"http://knightware.biz/dsp/\">Deep-Sky Planner</a>, <a href=\"https://skysafariastronomy.com/\">SkySafari 6+</a>, ...)");
+define("LangXMLMessage2"																	,"De cette façon, vous pouvez échanger facilement et rapidement des observations entre différentes applications qui supportent le format OpenAstonomyLog XML (comme <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>, <a href=\"http://knightware.biz/dsp/\">Deep-Sky Planner</a>, <a href=\"https://skysafariastronomy.com/\">SkySafari 6+</a>, ...)");
 define("LangXMLMessage3"																	,"Informations: uniquement les observations avec votre nom (prénom et nom) seront ajoutées. Les observations qui sont déjà disponibles dans deepskylog ne seront pas importées une seconde fois.");
 define("LangXMLError1"																		,"DeepskyLog ne supporte que openAstronomyLog version 2.0");
 define("LangXMLError2"																		,"Pas d'observations pour cet utilisateur ");
@@ -1459,8 +1427,8 @@ define("LangVisibility7"																	,"L'objet n'est pas visible");
 
 // content/selected_observations.php
 
-define("LangSelectedObservationsTitle2"										,"Aper&ccedil;u des observations sélectionnées");
-define("LangSelectedObservationsTitle3"										,"Aper&ccedil;u des observations de la dernière année");
+define("LangSelectedObservationsTitle2"										,"Aperçu des observations sélectionnées");
+define("LangSelectedObservationsTitle3"										,"Aperçu des observations de la dernière année");
 define("LangSelectedObservationsSelectedLanguagesIndication"
  																													,"languages sélectionées");
 define("LangSelectedObservationsAllLanguagesIndication"		,"toutes les languages");
@@ -1610,8 +1578,8 @@ $AtlasNameDSLDL    			="Deepskylog Détail Paysage";
 $AtlasNameDSLDP 	  		="Deepskylog Détail Portrait";
 $AtlasNameDSLLL 		  	="Deepskylog Chercher Paysage";
 $AtlasNameDSLLP 			  ="Deepskylog Chercher Portrait";
-$AtlasNameDSLOL 		  	="Deepskylog Aper&ccedil;u Paysage";
-$AtlasNameDSLOP 			  ="Deepskylog Aper&ccedil;u Portrait";
+$AtlasNameDSLOL 		  	="Deepskylog Aperçu Paysage";
+$AtlasNameDSLOP 			  ="Deepskylog Aperçu Portrait";
 $AtlasNameDeepskyHunter     ="Deep Sky Hunter";
 $AtlasNameInterstellarum    ="Interstellarum Deep Sky Atlas";
 

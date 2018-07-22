@@ -54,7 +54,7 @@ class Lenses {
 
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
-			echo "<th>" . LangViewActive . "</td>";
+			echo "<th>" . _("Active") . "</td>";
 			echo "<th data-priority=\"critical\">" . LangViewLensName . "</th>";
 			echo "<th>" . LangViewLensFactor . "</th>";
 			echo "<th>" . _("Delete") . "</th>";

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-19 20:58+0200\n"
+"POT-Creation-Date: 2018-07-22 20:22+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -898,9 +898,15 @@ msgstr "Stadt"
 msgid "Inner-city sky"
 msgstr "Innenstadt"
 
+#: common/content/change_site.php:416 common/content/new_location.php:428
+#: lib/instruments.php:96 lib/filters.php:150 lib/lenses.php:57
+#: lib/eyepieces.php:63 lib/locations.php:331
+msgid "Active"
+msgstr "Aktif"
+
 #: common/content/change_site.php:418 common/content/new_location.php:430
 msgid "Not active"
-msgstr ""
+msgstr "Nicht aktiv"
 
 #: common/content/view_message.php:56 lib/observations.php:2024
 #: lib/observations.php:2870
@@ -973,6 +979,88 @@ msgid ""
 msgstr ""
 "Definieren Sie Ihre eigenen Namen für die Position, schließlich fügen Sie "
 "einen Grenzgröße (oder SQM-Wert) zu und drücken Sie die Taste %s."
+
+#: common/content/objectsSets.php:32
+msgid "Generate a set of charts for each object."
+msgstr "Kartensammlung zu einem Objekt erstellen."
+
+#: common/content/objectsSets.php:33
+msgid "Each set contains a number of charts specified by the FoVs asked below."
+msgstr ""
+"Jede Kartensammlung enthält mehrere Aufsuchkarten mit den jeweils unten "
+"angegebenen Gesichtsfeldwerten."
+
+#: common/content/objectsSets.php:34
+msgid ""
+"Each chart specified by the FoVs, shows stars and objects up to the "
+"specified magnitudes."
+msgstr ""
+"Jede Aufsuchkarte zeigt Sterne und Objekte bis zur unten angegebenen max. "
+"Helligkeit."
+
+#: common/content/objectsSets.php:35
+msgid ""
+"Each magnitude field should contain as many magnitudes as there are FoVs."
+msgstr ""
+"Die max. Helligkeitsfelder unten sollten soviele Einträge haben, wie "
+"Gesichtsfelder angegeben wurden."
+
+#: common/content/objectsSets.php:36
+msgid ""
+"Before each object, you can add a data section. This contains the elementary "
+"data, an object description when available, and 2 photos by the size "
+"indicated by you (15, 30 or 60 arc minutes, or nothing)."
+msgstr ""
+"Vor jedem Objekt können Sie einen Datenbereich angeben. Dieser enthält "
+"grundlegende Daten, eine Objektbeschreibung (falls verfügbar) sowie 2 Fotos "
+"in der von Ihnen angegebenen Größe (15, 30 oder 60 Bogenminuten)."
+
+#: common/content/objectsSets.php:37
+msgid ""
+"You can add an index after each section. This index contains an overview of "
+"all the objects on each of the maps."
+msgstr ""
+"Sie können einen Index nach jedem Abschnitt anlegen lassen. Dieser Index "
+"enthält eine übersicht über alle Objekte auf jeder Karte."
+
+#: common/content/objectsSets.php:38
+msgid ""
+"You can save each set and use a pdf merger to make one large atlas-catalogue "
+"if you wish."
+msgstr ""
+"Sie können die Kartensammlungen speichern und mit einem PDF Merger "
+"zusammenfügen. Damit können Sie Ihren eigenen Sternkartenatlas erstellen."
+
+#: common/content/objectsSets.php:39
+msgid ""
+"If you choose to make all objects in one pass, please remember that each "
+"object can take up to 30 seconds or more to generate. Attention: this option "
+"is available in all browsers except for Microsoft Internet Explorer."
+msgstr ""
+"Sie können auch angeben, alle Kartensammlungen in einem Durchgang zu "
+"erstellen, bedenken Sie jedoch, daß dies etwas länger zur Generierung "
+"benötigt. Achtung: diese Option ist verfügbar in jedem Browser, aber nicht "
+"in Microsoft Internet Explorer."
+
+#: common/content/objectsSets.php:41
+msgid "Generate all"
+msgstr "Alle generieren"
+
+#: common/content/objectsSets.php:44
+msgid "Add a data page"
+msgstr "Datenbereich hinzufügen"
+
+#: common/content/objectsSets.php:46
+msgid "with ephemerides"
+msgstr "mit Ephemeriden"
+
+#: common/content/objectsSets.php:50
+msgid "with yearephemerides"
+msgstr "mit Jahresephemeriden"
+
+#: common/content/objectsSets.php:53
+msgid "Add an index page"
+msgstr "Index hinzufügen"
 
 #: common/content/messages.php:34
 msgid "View messages"
@@ -1319,45 +1407,76 @@ msgstr "Nur Objekt Beobachtungen"
 msgid "Object observations"
 msgstr "Objekt Beobachtungen"
 
-#: deepsky/content/view_object.php:83 deepsky/content/view_object.php:90
-#: deepsky/content/view_object.php:103
+#: deepsky/content/view_object.php:78
+msgid "Hide the object details"
+msgstr "Objekt Details ausblenden"
+
+#: deepsky/content/view_object.php:84 deepsky/content/view_object.php:91
+#: deepsky/content/view_object.php:104
 msgid "Remove Object"
 msgstr ""
 
-#: deepsky/content/view_object.php:93 deepsky/content/view_object.php:121
+#: deepsky/content/view_object.php:94 deepsky/content/view_object.php:122
 #, php-format
 msgid "Do you really want to delete %s?"
 msgstr ""
 
-#: deepsky/content/view_object.php:94
+#: deepsky/content/view_object.php:95
 #, php-format
 msgid ""
 "There are no observations of %s, so removing %s should be relatively safe."
 msgstr ""
 
-#: deepsky/content/view_object.php:102 deepsky/content/view_object.php:130
+#: deepsky/content/view_object.php:103 deepsky/content/view_object.php:131
 msgid "Keep Object"
 msgstr ""
 
-#: deepsky/content/view_object.php:111 deepsky/content/view_object.php:118
-#: deepsky/content/view_object.php:131
+#: deepsky/content/view_object.php:112 deepsky/content/view_object.php:119
+#: deepsky/content/view_object.php:132
 msgid "Force Remove Object"
 msgstr ""
 
-#: deepsky/content/view_object.php:122
+#: deepsky/content/view_object.php:123
 #, php-format
 msgid ", which has %s observations?"
 msgstr ""
 
-#: deepsky/content/view_object.php:124
+#: deepsky/content/view_object.php:125
 msgid "All the observations will also be removed!"
 msgstr ""
 
-#: deepsky/content/view_object.php:138
+#: deepsky/content/view_object.php:139
 msgid "Save"
 msgstr ""
 
-#: deepsky/content/view_object.php:532
+#: deepsky/content/view_object.php:152
+msgid "Hide the nearby objects"
+msgstr "Nahegelegene Objekte ausblenden"
+
+#: deepsky/content/view_object.php:237 lib/printatlas.php:1603
+#: lib/printatlas.php:1755
+msgid "Month"
+msgstr "Monat"
+
+#: deepsky/content/view_object.php:301 lib/printatlas.php:1686
+#: lib/printatlas.php:1837
+msgid "Astronomical night"
+msgstr "Astronomische Nacht"
+
+#: deepsky/content/view_object.php:309 lib/printatlas.php:1709
+#: lib/printatlas.php:1860
+msgid "Nautical night"
+msgstr "Nautische Nacht"
+
+#: deepsky/content/view_object.php:317
+msgid "Object rise<br />-<br />set"
+msgstr "Objekt Auf-<br />-<br />Untergang"
+
+#: deepsky/content/view_object.php:390
+msgid "Hide the observations"
+msgstr "Beobachtungen ausblende"
+
+#: deepsky/content/view_object.php:535
 msgid "Show or remove extra info..."
 msgstr "Anzeigen/Ausblenden von Zusatzinformationen…"
 
@@ -1633,6 +1752,10 @@ msgstr ""
 #: lib/printatlas.php:1437
 msgid "No index entries"
 msgstr "Keine index Einträge"
+
+#: lib/printatlas.php:1732 lib/printatlas.php:1883
+msgid "Object rise-set"
+msgstr "Objekt Auf-Untergang"
 
 #: lib/observations.php:2742 lib/moonpic.php:73
 msgid "under the horizon"

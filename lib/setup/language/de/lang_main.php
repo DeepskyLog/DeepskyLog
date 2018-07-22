@@ -2,36 +2,6 @@
 $REST = "Rest";
 
 // prior to 4.1
-define("ObjectDetailsShow"      ,"Objekt Details anzeigen");         // TO TRANSLATE
-define("ObjectDetailsHide"      ,"Objekt Details ausblenden");         // TO TRANSLATE
-define("ObjectNearbyObjectsShow","Nahegelegene Objekte anzeigen");         // TO TRANSLATE
-define("ObjectNearbyObjectsHide","Nahegelegene Objekte ausblenden");         // TO TRANSLATE
-define("ObjectObservationsShow" ,"Beobachtungen anzeigen");           // TO TRANSLATE
-define("ObjectObservationsHide" ,"Beobachtungen ausblenden");           // TO TRANSLATE
-
-define("LangViewActive"					,"Actif");                           // TO TRANSLATE
-
-
-define("LangMonth"              ,"Monat");
-define("LangAstroNight"         ,"Astronomische Nacht");
-define("LangNauticalNight"      ,"Nautische Nacht");
-define("LangObjectRiseSet"      ,"Objekt Auf-<br />-<br />Untergang");
-define("LangObjectRiseSet2"     ,"Objekt Auf-Untergang");
-
-define("LangpdfseriesExplain1"  ,"Kartensammlung zu einem Objekt erstellen.");
-define("LangpdfseriesExplain2"  ,"Jede Kartensammlung enthält mehrere Aufsuchkarten mit den jeweils unten angegebenen Gesichtsfeldwerten.");
-define("LangpdfseriesExplain3"  ,"Jede Aufsuchkarte zeigt Sterne und Objekte bis zur unten angegebenen max. Helligkeit.");
-define("LangpdfseriesExplain4"  ,"Die max. Helligkeitsfelder unten sollten soviele Einträge haben, wie Gesichtsfelder angegeben wurden.");
-define("LangpdfseriesExplain5"  ,"Sie können die Kartensammlungen speichern und mit einem PDF Merger zusammenfügen. Damit können Sie Ihren eigenen Sternkartenatlas erstellen.");
- define("LangpdfseriesExplain5b" ,"Sie können auch angeben, alle Kartensammlungen in einem Durchgang zu erstellen, bedenken Sie jedoch, daß dies etwas länger zur Generierung benötigt. Achtun: diesen Option ist present in jedem Browser, aber nicht in Microsoft Internet Explorer."); // TO TRANSLATE: please check second phrase
-define("LangpdfseriesExplain6"  ,"Vor jedem Objekt können Sie einen Datenbereich angeben. Dieser enthält grundlegende Daten, eine Objektbeschreibung (falls verfügbar) sowie 2 Fotos in der von Ihnen angegebenen Größe (15, 30 oder 60 Bogenminuten).");
-define("LangpdfseriesExplain7"  ,"Sie können einen Index nach jedem Abschnitt anlegen lassen. Dieser Index enthält eine übersicht über alle Objekte auf jeder Karte.");
-define("LangpdfseriesButton"    ,"Alle generieren");
-define("LangpdfseriesAddDataPage","Datenbereich hinzufügen");
-define("LangpdfseriesWithEphemerides","mit Ephemeriden");
-define("LangpdfseriesWithYearEphemerides","mit Jahresephemeriden");
-define("LangpdfseriesAddIndexPage","Index hinzufügen");
-
 define("LangpdfseriesObject"    ,"Objekt");
 define("LangpdfseriesSize"      ,"Größe");
 define("LangpdfseriesFoVs"      ,"Gesichtsfelder:");

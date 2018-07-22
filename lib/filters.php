@@ -147,7 +147,7 @@ class Filters {
 
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
-			echo "<th>" . LangViewActive . "</th>";
+			echo "<th>" . _("Active") . "</th>";
 			echo "<th data-priority=\"critical\">" . LangViewFilterName . "</th>";
 			echo "<th>" . LangViewFilterType . "</th>";
 			echo "<th>" . LangViewFilterColor . "</th>";

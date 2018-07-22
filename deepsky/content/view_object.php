@@ -74,7 +74,8 @@ function showButtons($theLocation, $viewobjectdetails, $viewobjectephemerides, $
 function showObjectDetails($object_ss) {
 	global $baseURL, $object, $objObject, $objPresentations, $objUtil,$objDatabase;
 	$seen = $objObject->getDSOseenLink ( $object );
-	echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden' . "\" title=\"" . ObjectDetailsHide . "\">-</a> " . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . '&nbsp;-&nbsp;' . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "</h4>";
+    echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden' . "\" title=\"" 
+        . _("Hide the object details") . "\">-</a> " . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . '&nbsp;-&nbsp;' . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "</h4>";
 	if (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes") {
 		$obsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object_ss . "\"", 'ObsCnt' );
 
@@ -147,7 +148,8 @@ function showObjectsNearby() {
 	$link = $baseURL . 'index.php?indexAction=detail_object&amp;object=' . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( 'zoom', 30 ) . '&amp;SID=Qobj';
 
 	$content1 = "<h4>";
-	$content1 .= "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectobjectsnearby=hidden' . "\" title=\"" . ObjectNearbyObjectsHide . "\">-</a> ";
+    $content1 .= "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectobjectsnearby=hidden' . "\" title=\"" 
+        . _("Hide the nearby objects") . "\">-</a> ";
 	$content1 .= $_GET ['object'];
 	if (count ( $_SESSION ['Qobj'] ) > 2)
 		$content1 .= ' ' . LangViewObjectAndNearbyObjects . ' ' . (count ( $_SESSION ['Qobj'] ) - 1) . ' ' . LangViewObjectNearbyObjects;
@@ -232,7 +234,7 @@ function showObjectEphemerides($theLocation) {
 	echo "<hr />";
 	echo "<table class=\"table table-condensed\">";
 	echo "<tr class=\"type10\">";
-	echo "<th class=\"right\">" . LangMonth . " > </th>";
+	echo "<th class=\"right\">" . _("Month") . " > </th>";
 	for($i = 1; $i < 13; $i ++) {
 		$background1 = '';
 		$background15 = '';
@@ -296,7 +298,7 @@ function showObjectEphemerides($theLocation) {
 	echo "<td class=\"centered " . $colorclass . "\">" . $theEphemerides1 [1] ['transit'] . "</td>";
 	echo "</tr>";
 	echo "<tr class=\"type20\">";
-	echo "<td class=\"centered\">" . LangAstroNight . "</td>";
+	echo "<td class=\"centered\">" . _("Astronomical night") . "</td>";
 	for($i = 1; $i < 13; $i ++) {
 		echo "<td class=\"centered\">" . ((date ( "H:i", $theNightEphemerides1 [$i] ["astronomical_twilight_end"] ) != "00:00") ? date ( "H:i", $theNightEphemerides1 [$i] ["astronomical_twilight_end"] + $theTimeDifference1 [$i] ) . "<br />-<br />" . date ( "H:i", $theNightEphemerides1 [$i] ["astronomical_twilight_begin"] + $theTimeDifference1 [$i] ) : "-") . "</td>";
 		echo "<td class=\"centered\">" . ((date ( "H:i", $theNightEphemerides15 [$i] ["astronomical_twilight_end"] ) != "00:00") ? date ( "H:i", $theNightEphemerides15 [$i] ["astronomical_twilight_end"] + $theTimeDifference15 [$i] ) . "<br />-<br />" . date ( "H:i", $theNightEphemerides15 [$i] ["astronomical_twilight_begin"] + $theTimeDifference15 [$i] ) : "-") . "</td>";
@@ -304,7 +306,7 @@ function showObjectEphemerides($theLocation) {
 	echo "<td class=\"centered\">" . ((date ( "H:i", $theNightEphemerides1 [1] ["astronomical_twilight_end"] ) != "00:00") ? date ( "H:i", $theNightEphemerides1 [1] ["astronomical_twilight_end"] + $theTimeDifference1 [1] ) . "<br />-<br />" . date ( "H:i", $theNightEphemerides1 [1] ["astronomical_twilight_begin"] + $theTimeDifference1 [1] ) : "-") . "</td>";
 	echo "</tr>";
 	echo "<tr class=\"type10\">";
-	echo "<td class=\"centered\">" . LangNauticalNight . "</td>";
+	echo "<td class=\"centered\">" . _("Nautical night") . "</td>";
 	for($i = 1; $i < 13; $i ++) {
 		echo "<td class=\"centered\">" . ((date ( "H:i", $theNightEphemerides1 [$i] ["nautical_twilight_end"] ) != "00:00") ? date ( "H:i", $theNightEphemerides1 [$i] ["nautical_twilight_end"] + $theTimeDifference1 [$i] ) . "<br />-<br />" . date ( "H:i", $theNightEphemerides1 [$i] ["nautical_twilight_begin"] + $theTimeDifference1 [$i] ) : "-") . "</td>";
 		echo "<td class=\"centered\">" . ((date ( "H:i", $theNightEphemerides15 [$i] ["nautical_twilight_end"] ) != "00:00") ? date ( "H:i", $theNightEphemerides15 [$i] ["nautical_twilight_end"] + $theTimeDifference15 [$i] ) . "<br />-<br />" . date ( "H:i", $theNightEphemerides15 [$i] ["nautical_twilight_begin"] + $theTimeDifference15 [$i] ) : "-") . "</td>";
@@ -312,7 +314,7 @@ function showObjectEphemerides($theLocation) {
 	echo "<td class=\"centered\">" . ((date ( "H:i", $theNightEphemerides1 [1] ["nautical_twilight_end"] ) != "00:00") ? date ( "H:i", $theNightEphemerides1 [1] ["nautical_twilight_end"] + $theTimeDifference1 [1] ) . "<br />-<br />" . date ( "H:i", $theNightEphemerides1 [1] ["nautical_twilight_begin"] + $theTimeDifference1 [1] ) : "-") . "</td>";
 	echo "</tr>";
 	echo "<tr class=\"type20\">";
-	echo "<td class=\"centered\">" . LangObjectRiseSet . "</td>";
+	echo "<td class=\"centered\">" . _("Object rise<br />-<br />set") . "</td>";
 	for($i = 1; $i < 13; $i ++) {
 		$colorclass = "";
 		if ($theEphemerides1 [$i] ['rise'] == '-') {
@@ -384,7 +386,8 @@ function showObjectObservations() {
 		echo "<p>" . "<a href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangSearchDetailPage . "</a>" . "</p>";
 	} else {
 		$theDate = date ( 'Ymd', strtotime ( '-1 year' ) );
-		$content1 = "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectobservations=hidden' . "\" title=\"" . ObjectObservationsHide . "\">-</a> ";
+        $content1 = "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectobservations=hidden' . "\" title=\"" 
+            . _("Hide the observations") . "\">-</a> ";
 		if (array_key_exists ( 'minyear', $_GET ) && ($_GET ['minyear'] == substr ( $theDate, 0, 4 )) && array_key_exists ( 'minmonth', $_GET ) && ($_GET ['minmonth'] == substr ( $theDate, 4, 2 )) && array_key_exists ( 'minday', $_GET ) && ($_GET ['minday'] == substr ( $theDate, 6, 2 )))
 			$content1 .= LangSelectedObservationsTitle3;
 		elseif ($object)

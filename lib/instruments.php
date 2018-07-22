@@ -93,7 +93,7 @@ class Instruments {
 
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead>";
-			echo "<th>" . LangViewActive . "</td>";
+			echo "<th>" . _("Active") . "</td>";
 
 			echo "<th data-priority=\"critical\">" . LangOverviewInstrumentsName . "</th>";
 			echo "<th>" . LangOverviewInstrumentsDiameter . "</th>";

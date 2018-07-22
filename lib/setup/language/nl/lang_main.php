@@ -1,37 +1,6 @@
 <?php //NL
 $REST = "Rest";
 // Prior to 4.1
-define("ObjectDetailsShow"      ,"Toon de objectdetails");
-define("ObjectDetailsHide"      ,"Verberg de objectdetails");
-define("ObjectNearbyObjectsShow","Toon de nabije objecten");
-define("ObjectNearbyObjectsHide","Verberg de nabije objecten");
-define("ObjectObservationsShow" ,"Toon de waarnemingen");
-define("ObjectObservationsHide" ,"Verberg de waarnemingen");
-
-
-define("LangViewActive"					,"Aktief");
-
-
-define("LangMonth"              ,"Maand");
-define("LangAstroNight"         ,"Astronomische nacht");
-define("LangNauticalNight"      ,"Nautische nacht");
-define("LangObjectRiseSet"      ,"Object opgang<br />-<br />ondergang");
-define("LangObjectRiseSet2"     ,"Object op-ondergang");
-
-define("LangpdfseriesExplain1"  ,"Maak een set van kaarten voor elk object.");
-define("LangpdfseriesExplain2"  ,"Elke set bevat even veel kaarten als gespecifieerd in het FoV vak.");
-define("LangpdfseriesExplain3"  ,"Elke kaart gespecifieerd in het vak FoVs, toont sterren en objecten zoals gespecifieerd in de respectievelijke vakken.");
-define("LangpdfseriesExplain4"  ,"Elk magnitudevak moet even veel magnitudes bevatten als er FoVs zijn.");
-define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pdf samenvoegprogramma samenstellen tot &eacute;&eacute;n catalogus-atlas.");
-define("LangpdfseriesExplain5b" ,"Als u alles in &eacute;&eacute;n keer aanmaakt, reken dan op een lange verwerkingstijd, tot 30 seconden of meer per object. Let op: deze optie is beschikbaar in alle browsers behalve Microsoft Internet Explorer.");
-define("LangpdfseriesExplain6"  ,"Voor elk object kan u een datasectie toevoegen. Dit bevat de elementaire data, een objectbeschrijving indien beschikbaar, en 2 foto's met de door u aangeduide grootte (15, 30 of 60 boogminuten;, of geen).");
-define("LangpdfseriesExplain7"  ,"Na elk object kan u een inhoudstafel toevoegen. Deze bevat een overzicht van elk van de objecten die op de verschillende kaarten staan.");
-define("LangpdfseriesButton"    ,"Maak alles aan");
-define("LangpdfseriesAddDataPage","Voeg een datapagina toe");
-define("LangpdfseriesWithEphemerides","met efemeriden");
-define("LangpdfseriesWithYearEphemerides","met jaarefemeriden");
-define("LangpdfseriesAddIndexPage","Voeg een indexpagina toe");
-
 define("LangpdfseriesObject"    ,"Object");
 define("LangpdfseriesSize"      ,"Grootte");
 define("LangpdfseriesFoVs"      ,"FoVs: Afgebeelde beeldvelden");
@@ -491,8 +460,8 @@ define("LangToListEmptied"																, "Lijst geledigd: ");
 define("LangToListMoved1"																	, "Het object ");
 define("LangToListMoved2"																	, " is naar achter geschoven in de lijst ");
 define("LangToListMoved3"																	, " is naar voor geschoven in de lijst ");
-define("LangToListMoved4"																	, "Schuif het object &eacute;&eacute;n plaats naar voor in de lijst.");
-define("LangToListMoved5"																	, "Schuif het object &eacute;&eacute;n plaats naar achter in de lijst.");
+define("LangToListMoved4"																	, "Schuif het object één plaats naar voor in de lijst.");
+define("LangToListMoved5"																	, "Schuif het object één plaats naar achter in de lijst.");
 define("LangToListMoved6"																	, "Plaats het object op een bepaalde plaats in de lijst.");
 define("LangToListMoved7"																	, "Het object is verplaatst naar plaats ");
 define("LangToListObjectRemoved"													, " is verwijderd uit de lijst ");
@@ -1086,7 +1055,7 @@ define("LangDeleteObservation"														,"Verwijder waarneming");
 define("LangOverviewObservations"													,"Lijst");
 define("LangCompactObservations"													,"Compact");
 define("LangCompactObservationsLO"												,"Vergelijk");
-define("LangOverviewObservationTitle"											,"Overzicht met &eacute;&eacute;n enkele lijn van informatie per waarneming");
+define("LangOverviewObservationTitle"											,"Overzicht met één enkele lijn van informatie per waarneming");
 define("LangCompactObservationsTitle"											,"Overzicht met naast de informatielijn eveneens de beschrijving van de waarneming");
 define("LangCompactObservationsLOTitle"										,"Overzicht met de informatielijn, de beschrijving en uw laatste waarneming");
 

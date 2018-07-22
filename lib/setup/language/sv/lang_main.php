@@ -2,24 +2,6 @@
 $REST = "Rest";
 
 // Prior to 4.1
-define("ObjectDetailsShow"      ,"Show the object details");
-define("ObjectDetailsHide"      ,"Hide the object details");
-define("ObjectNearbyObjectsShow","Show the nearby objects");
-define("ObjectNearbyObjectsHide","Hide the nearby objects");
-define("ObjectObservationsShow" ,"Show the observations");
-define("ObjectObservationsHide" ,"Hide the observations");
-
-
-define("LangViewActive"					,"Actif");
-
-
-define("LangMonth"              ,"Month");
-define("LangAstroNight"         ,"Astronomical night");
-define("LangNauticalNight"      ,"Nautical night");
-define("LangObjectRiseSet"      ,"Object rise<br />-<br />set");
-define("LangObjectRiseSet2"     ,"Object rise-set");
-
-
 define("LangpdfseriesExplain1"  ,"Generate a set of charts for each object.");
 define("LangpdfseriesExplain2"  ,"Each set contains a number of charts specified by the FoVs asked below.");
 define("LangpdfseriesExplain3"  ,"Each charts specified by the FoVs, shows stars and object up to the specified magnitudes.");

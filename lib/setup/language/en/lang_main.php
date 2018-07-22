@@ -1,37 +1,5 @@
 <?php //EN
 // Prior to 4.1
-define("ObjectDetailsShow"      ,"Show the object details");
-define("ObjectDetailsHide"      ,"Hide the object details");
-define("ObjectNearbyObjectsShow","Show the nearby objects");
-define("ObjectNearbyObjectsHide","Hide the nearby objects");
-define("ObjectObservationsShow" ,"Show the observations");
-define("ObjectObservationsHide" ,"Hide the observations");
-
-
-define("LangViewActive"					,"Active");
-
-
-define("LangMonth"              ,"Month");
-define("LangAstroNight"         ,"Astronomical night");
-define("LangNauticalNight"      ,"Nautical night");
-define("LangObjectRiseSet"      ,"Object rise<br />-<br />set");
-define("LangObjectRiseSet2"     ,"Object rise-set");
-
-
-define("LangpdfseriesExplain1"  ,"Generate a set of charts for each object.");
-define("LangpdfseriesExplain2"  ,"Each set contains a number of charts specified by the FoVs asked below.");
-define("LangpdfseriesExplain3"  ,"Each charts specified by the FoVs, shows stars and object up to the specified magnitudes.");
-define("LangpdfseriesExplain4"  ,"Each magnitude field should contain as many magnitudes as there are FoVs.");
-define("LangpdfseriesExplain5"  ,"You can save each set and use a pdf merger to make one large atlas-catalogue if you wish.");
-define("LangpdfseriesExplain5b" ,"If you choose to make all objects in one pass, please remember that each object can take up to 30 seconds or more to generate. Attention: this option is available in all browsers except for Microsoft Internet Explorer.");
-define("LangpdfseriesExplain6"  ,"Before each object, you can add a data section. This contains the elementary data, an object description when available, and 2 photos by the size indicated by you (15, 30 or 60 arc minutes, or nothing).");
-define("LangpdfseriesExplain7"  ,"You can add an index after each section. This index contains an overview of all the objects on each of the maps.");
-define("LangpdfseriesButton"    ,"Generate all");
-define("LangpdfseriesAddDataPage","Add a data page");
-define("LangpdfseriesWithEphemerides","with ephemerides");
-define("LangpdfseriesWithYearEphemerides","with yearephemerides");
-define("LangpdfseriesAddIndexPage","Add an index page");
-
 define("LangpdfseriesObject"    ,"Object");
 define("LangpdfseriesSize"      ,"Size");
 define("LangpdfseriesFoVs"      ,"FoVs: shown field of views");
@@ -42,9 +10,6 @@ define("Langpdfseriesclickok"   ,'Click "Ok", only when ');
 define("Langpdfserieswhenfinished",' is finished!');
 define("LangpdfseriesGenerating",'Generating ');
 define("Langpdfserieschoselayout","Please select a layout for the index page.");
-
-// TO DO:
-
 define("LangStoredQueries"      ,"Stored searches:");
 define("LangSaveAs"             ,"Save As...");
 define("LangRemoveQuery"        ,"Remove");
