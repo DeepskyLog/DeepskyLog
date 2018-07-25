@@ -1555,7 +1555,7 @@ class PrintAtlas
           $this->pdf->addTextWrap( 50, $liney, 10, LangAstronomicalTwilight.' '.LangFrom.' '.$_SESSION['efemerides']['astroe'].LangTo.$_SESSION['efemerides']['astrob'], 350,  'left');
           $this->pdf->addTextWrap(450, $liney, 10, LangNauticalTwilight.' '.LangFrom.' '.$_SESSION['efemerides']['naute'].LangTo.$_SESSION['efemerides']['nautb'], 350,  'left');
           $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 10, LangpdfseriesObject.' '.LangMoonRise.': '.$theobjectdata['objectrise'], 150,  'left');
+          $this->pdf->addTextWrap( 50, $liney, 10, _("Object").' '.LangMoonRise.': '.$theobjectdata['objectrise'], 150,  'left');
           $this->pdf->addTextWrap(250, $liney, 10, LangTransit.': '.$theobjectdata['objecttransit'], 150,  'left');
           $this->pdf->addTextWrap(450, $liney, 10, LangMoonSet.': '.$theobjectdata['objectset'], 150,  'left');
           $this->pdf->addTextWrap(650, $liney, 10, LangMaxAltitude.": ".$objPresentations->decToString($theobjectdata['objectmaxaltitude'],0), 150,  'left');

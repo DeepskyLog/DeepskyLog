@@ -1,29 +1,6 @@
 <?php //NL
 $REST = "Rest";
 // Prior to 4.1
-define("LangpdfseriesObject"    ,"Object");
-define("LangpdfseriesSize"      ,"Grootte");
-define("LangpdfseriesFoVs"      ,"FoVs: Afgebeelde beeldvelden");
-define("Langpdfseriesdsos"      ,"Respectievelijke objectenmagnitudes");
-define("Langpdfseriesstars"     ,"Respectievelijke sterrenmagnitudes");
-define("Langpdfseriesphotos"    ,"Respectievelijke foto's (boogminuten)");
-define("Langpdfseriesclickok"   ,'Klik "Ok", alleen als ');
-define("Langpdfserieswhenfinished",' gedaan is!');
-define("LangpdfseriesGenerating",'Generen ');
-define("Langpdfserieschoselayout","Gelieve een layout voor de index te kiezen.");
-
-
-
-// TO DO:
-
-
-define("LangStoredQueries"      ,"Opgeslagen zoekopdrachten:");
-define("LangSaveAs"             ,"Bewaar als...");
-define("LangRemoveQuery"        ,"Verwijder");
-
-
-define("LangExclude",            "Uitgezonderd:");
-define("LangDescriptioncontains","NGC omschrijving bevat:");
 define("LangShowAll",            'toon alle');
 
 define("LangOn",                 'op');

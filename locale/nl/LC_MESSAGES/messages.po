@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-22 20:20+0200\n"
+"POT-Creation-Date: 2018-07-25 19:20+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -50,7 +50,8 @@ msgstr "Toevoegen"
 msgid "Observation"
 msgstr "Waarneming"
 
-#: comets/menu/change.php:25 deepsky/menu/change.php:33
+#: comets/menu/change.php:25 common/content/objectsSets.php:86
+#: deepsky/menu/change.php:33 lib/printatlas.php:1558
 msgid "Object"
 msgstr "Object"
 
@@ -658,6 +659,25 @@ msgstr "Selecteer bestaande filter"
 msgid "Add site"
 msgstr "Voeg locatie toe"
 
+#: common/content/atlasPages.php:12 common/content/downloadForms.php:12
+#: common/content/objectsSets.php:13
+msgid "Click \"Ok\", only when "
+msgstr "Klik “Ok”, alleen als "
+
+#: common/content/atlasPages.php:13 common/content/downloadForms.php:13
+#: common/content/objectsSets.php:14
+msgid " is finished!"
+msgstr " klaar is!"
+
+#: common/content/atlasPages.php:14 common/content/downloadForms.php:14
+msgid "Generating "
+msgstr "Generen "
+
+#: common/content/atlasPages.php:15 common/content/downloadForms.php:15
+#: common/content/objectsSets.php:16 common/content/objectsSets.php:53
+msgid "Please select a layout for the index page."
+msgstr "Gelieve een layout voor de index te kiezen."
+
 #: common/content/atlasPages.php:21
 msgid "Lookup atlas page for M 45"
 msgstr "Lookup atlas pagina voor M 45"
@@ -1052,7 +1072,7 @@ msgstr "Elke set bevat even veel kaarten als gespecifieerd in het FoV vak."
 
 #: common/content/objectsSets.php:34
 msgid ""
-"Each charts specified by the FoVs, shows stars and objects up to the "
+"Each chart specified by the FoVs, shows stars and objects up to the "
 "specified magnitudes."
 msgstr ""
 "Elke kaart gespecifieerd in het vak FoVs, toont sterren en objecten zoals "
@@ -1118,6 +1138,26 @@ msgstr "met jaarefemeriden"
 #: common/content/objectsSets.php:53
 msgid "Add an index page"
 msgstr "Voeg een inhoudstafel toe"
+
+#: common/content/objectsSets.php:88
+msgid "Size"
+msgstr "Grootte"
+
+#: common/content/objectsSets.php:89
+msgid "FoVs: shown field of views"
+msgstr "FoVs: Afgebeelde beeldvelden"
+
+#: common/content/objectsSets.php:90
+msgid "Object magnitudes"
+msgstr "Respectievelijke objectenmagnitudes"
+
+#: common/content/objectsSets.php:91
+msgid "Stellar magnitudes"
+msgstr "Respectievelijke sterrenmagnitudes"
+
+#: common/content/objectsSets.php:92
+msgid "Photos (arc minutes)"
+msgstr "Respectievelijke foto’s (boogminuten)"
 
 #: common/content/messages.php:34
 msgid "View messages"
@@ -1283,6 +1323,21 @@ msgstr "Kies cataloog"
 #: deepsky/content/setup_objects_query.php:67
 msgid "Enter number in catalog"
 msgstr "Nummer in cataloog"
+
+#: deepsky/content/setup_observations_query.php:592
+#: deepsky/content/setup_objects_query.php:357
+msgid "Stored searches:"
+msgstr "Opgeslagen zoekopdrachten:"
+
+#: deepsky/content/setup_observations_query.php:595
+#: deepsky/content/setup_objects_query.php:359
+msgid "Save As..."
+msgstr "Bewaar als…"
+
+#: deepsky/content/setup_observations_query.php:596
+#: deepsky/content/setup_objects_query.php:360
+msgid "Remove"
+msgstr "Verwijder"
 
 #: deepsky/content/change_session.php:120
 msgid "Adapt a session"
@@ -1453,6 +1508,14 @@ msgstr "De gevraagde waarneming bestaat niet."
 #: deepsky/content/view_observation.php:68
 msgid "Observation of "
 msgstr "Waarneming van "
+
+#: deepsky/content/setup_objects_query.php:314
+msgid "NGC Decription contains:"
+msgstr "NGC omschrijving bevat:"
+
+#: deepsky/content/setup_objects_query.php:321
+msgid "Exclude:"
+msgstr "Uitgezonderd:"
 
 #: deepsky/content/view_object.php:17
 msgid "Only object details"

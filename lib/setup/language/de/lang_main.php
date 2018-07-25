@@ -2,24 +2,6 @@
 $REST = "Rest";
 
 // prior to 4.1
-define("LangpdfseriesObject"    ,"Objekt");
-define("LangpdfseriesSize"      ,"Größe");
-define("LangpdfseriesFoVs"      ,"Gesichtsfelder:");
-define("Langpdfseriesdsos"      ,"Objekt Helligkeit");
-define("Langpdfseriesstars"     ,"Stern Helligkeit");
-define("Langpdfseriesphotos"    ,"Fotos (Bogenminuten)");
-define("Langpdfseriesclickok"   ,'Drücken Sie "Ok", nur wenn ');
-define("Langpdfserieswhenfinished",' Sie wirklich fertig sind!');
-define("LangpdfseriesGenerating",'Generiere ');
-define("Langpdfserieschoselayout","Bitte wählen Sie ein Layout für den Index.");
-
-define("LangStoredQueries"      ,"Gespeicherte Abfragen:");
-define("LangSaveAs"             ,"Speichern als...");
-define("LangRemoveQuery"        ,"Entfernen");
-
-define("LangExclude",            "Ausnahme:");
-define("LangDescriptioncontains","NGC Beschreibung enthält:");
-
 define("LangShowAll",            'Alle anzeigen');
 
 define("LangOn",                 "am");

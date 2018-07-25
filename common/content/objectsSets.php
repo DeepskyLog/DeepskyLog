@@ -10,10 +10,10 @@ else objectsSets();
 function objectsSets()
 { global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil, $MSIE;
   echo "<script type=\"text/javascript\">";
-  echo "var Langpdfseriesclickok='".Langpdfseriesclickok."';";
-  echo "var Langpdfserieswhenfinished='".Langpdfserieswhenfinished."';";
+  echo "var Langpdfseriesclickok='"._('Click "Ok", only when ')."';";
+  echo "var Langpdfserieswhenfinished='"._(' is finished!')."';";
   echo "var LangpdfseriesGenerating='".LangpdfseriesGenerating."';";
-  echo "var Langpdfserieschoselayout='".Langpdfserieschoselayout."';";
+  echo "var Langpdfserieschoselayout='"._("Please select a layout for the index page.")."';";
   echo "</script>";
   $fovo=$objObserver->getObserverProperty($loggedUser,'overviewFoV','');
   $fovl=$objObserver->getObserverProperty($loggedUser,'lookupFoV','');
@@ -50,7 +50,7 @@ function objectsSets()
     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"._("with yearephemerides")."<input id=\"yearephemerides\" type=\"checkbox\" />";
   else
     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input style=\"visibility:hidden;\" id=\"yearephemerides\" type=\"checkbox\" />";
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"._("Add an index page")."<input id=\"indexpage\" type=\"checkbox\" onclick=\"if(document.getElementById('indexpage').checked==true) {document.getElementById('reportlayoutselect').style.visibility='visible'; alert('".Langpdfserieschoselayout."');} else document.getElementById('reportlayoutselect').style.visibility='hidden';\" value=\"\" />";
+  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"._("Add an index page")."<input id=\"indexpage\" type=\"checkbox\" onclick=\"if(document.getElementById('indexpage').checked==true) {document.getElementById('reportlayoutselect').style.visibility='visible'; alert('"._("Please select a layout for the index page.")."');} else document.getElementById('reportlayoutselect').style.visibility='hidden';\" value=\"\" />";
   echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<select id=\"reportlayoutselect\" name=\"reportlayoutselect\" class=\"form-control\" style=\"visibility:hidden;\" >";
   $defaults=$objReportLayout->getLayoutListDefault("ReportQueryOfObjects");
   while(list($key, $value) = each($defaults))
@@ -83,13 +83,13 @@ function objectsSets()
   echo "<td>"."<span class=\"form-inline\"><input type=\"text\" class=\"form-control\" id=\"RD"."photos"."\" value=\"".$foto1." ".$foto2."\"/><input id=\"RCB"."photos"."\" class=\"btn btn-primary btn-sm\" type=\"button\" value=\"V\" onclick=\"setCheckedValues('photos',".$k.",document.getElementById('RDphotos').value);\" />"."</span></td>";
   echo "</tr>";  
   echo "<tr>";
-  echo "<th><strong>".LangpdfseriesObject."</strong></th>";
+  echo "<th><strong>"._("Object")."</strong></th>";
   echo "<th> &nbsp; </th>";
-  echo "<th><strong>".LangpdfseriesSize."</strong></th>";
-  echo "<th><strong>".LangpdfseriesFoVs."</strong></th>";
-  echo "<th><strong>".Langpdfseriesdsos."</strong></th>";
-  echo "<th><strong>".Langpdfseriesstars."</strong></th>";
-  echo "<th><strong>".Langpdfseriesphotos."</strong></th>";
+  echo "<th><strong>"._("Size")."</strong></th>";
+  echo "<th><strong>"._("FoVs: shown field of views")."</strong></th>";
+  echo "<th><strong>"._("Object magnitudes")."</strong></th>";
+  echo "<th><strong>"._("Stellar magnitudes")."</strong></th>";
+  echo "<th><strong>"._("Photos (arc minutes)")."</strong></th>";
   
   echo "</tr>";
   for($i=0;$i<$k;$i++)

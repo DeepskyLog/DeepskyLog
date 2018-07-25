@@ -589,11 +589,11 @@ function setup_observations_query() {
 	echo "<hr />";
 	if ($loggedUser) {
 		echo "<form role=\"form\"><div class=\"form-inline\">";
-		$content = LangStoredQueries . "&nbsp;";
+		$content = _("Stored searches:") . "&nbsp;";
 
 		$content .= '<select id="observerqueries" class="form-control" onchange="restoreQuery();"><option value="-----">-----</option></select>' . '&nbsp;';
-		$content .= '<input id="savequeryas" class="btn btn-success" type="button" value="' . LangSaveAs . '" onclick="saveObserverQueryAs();"/>' . '&nbsp;';
-		$content .= '<input id="deletequery" class="btn btn-danger" type="button" value="' . LangRemoveQuery . '" class="hidden" onclick="removeQuery();"/>' . '&nbsp;';
+		$content .= '<input id="savequeryas" class="btn btn-success" type="button" value="' . _("Save As...") . '" onclick="saveObserverQueryAs();"/>' . '&nbsp;';
+		$content .= '<input id="deletequery" class="btn btn-danger" type="button" value="' . _("Remove") . '" class="hidden" onclick="removeQuery();"/>' . '&nbsp;';
 
 		echo $content;
 	}

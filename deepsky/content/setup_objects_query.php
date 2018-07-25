@@ -311,14 +311,14 @@ function setup_objects_query() {
 		if (($descriptioncontains = $objUtil->checkGetKey ( 'descriptioncontains' )) == '')
 			if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
 				$descriptioncontains = $_SESSION ['QobjParams'] ['descriptioncontains'];
-		echo "<tr><td><strong>" . LangDescriptioncontains . "</strong></td>";
+		echo "<tr><td><strong>" . _("NGC Decription contains:") . "</strong></td>";
 		echo "<td colspan=\"3\" class=\"form-inline\">";
 		echo "<input id=\"descriptioncontains\" name=\"descriptioncontains\" type=\"text\" class=\"form-control\" maxlength=\"50\" size=\"30\" value=\"" . $descriptioncontains . "\" />";
 		echo "</td></tr>";
 	}
 	// EXCLUDE LARGE CATALOGS
 	echo "<tr>";
-	echo "<td><strong>" . LangExclude . "</strong></td>";
+	echo "<td><strong>" . _("Exclude:") . "</strong></td>";
 	$j = 1;
 	reset ( $DSOcatalogs );
 	$temp = "";
@@ -354,10 +354,10 @@ function setup_objects_query() {
 	echo "</table><hr />";
 	if ($loggedUser) {
 		echo "<form role=\"form\"><div class=\"form-inline\">";
-		$content = LangStoredQueries . "&nbsp;";
+		$content = _("Stored searches:") . "&nbsp;";
 		$content .= '<select id="observerqueries" class="form-control" onchange="restoreQuery();"><option value="-----">-----</option></select>' . '&nbsp;';
-		$content .= '<input id="savequeryas" class="btn btn-success" type="button" value="' . LangSaveAs . '" onclick="saveObserverQueryAs();"/>' . '&nbsp;';
-		$content .= '<input id="deletequery" class="btn btn-danger" type="button" value="' . LangRemoveQuery . '" class="hidden" onclick="removeQuery();"/>' . '&nbsp;';
+		$content .= '<input id="savequeryas" class="btn btn-success" type="button" value="' . _("Save As...") . '" onclick="saveObserverQueryAs();"/>' . '&nbsp;';
+		$content .= '<input id="deletequery" class="btn btn-danger" type="button" value="' . _("Remove") . '" class="hidden" onclick="removeQuery();"/>' . '&nbsp;';
 		echo $content;
 		echo "</div></form>";
 	}

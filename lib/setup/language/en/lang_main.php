@@ -1,23 +1,5 @@
 <?php //EN
 // Prior to 4.1
-define("LangpdfseriesObject"    ,"Object");
-define("LangpdfseriesSize"      ,"Size");
-define("LangpdfseriesFoVs"      ,"FoVs: shown field of views");
-define("Langpdfseriesdsos"      ,"Object magnitudes");
-define("Langpdfseriesstars"     ,"Stellar magnitudes");
-define("Langpdfseriesphotos"    ,"Photos (arc minutes)");
-define("Langpdfseriesclickok"   ,'Click "Ok", only when ');
-define("Langpdfserieswhenfinished",' is finished!');
-define("LangpdfseriesGenerating",'Generating ');
-define("Langpdfserieschoselayout","Please select a layout for the index page.");
-define("LangStoredQueries"      ,"Stored searches:");
-define("LangSaveAs"             ,"Save As...");
-define("LangRemoveQuery"        ,"Remove");
-
-
-define("LangExclude",            "Exclude:");
-define("LangDescriptioncontains","NGC Decription contains:");
-
 define("LangShowAll",            'show all');
 
 define("LangOn",                 "on");

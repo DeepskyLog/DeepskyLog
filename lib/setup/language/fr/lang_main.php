@@ -2,25 +2,6 @@
 $REST = "Reste";
 
 // prior to 4.1
-define("LangpdfseriesObject"    ,"Objet");
-define("LangpdfseriesSize"      ,"Taille");
-define("LangpdfseriesFoVs"      ,"Champs de vue");
-define("Langpdfseriesdsos"      ,"Magnitudes des objets correspondantes");
-define("Langpdfseriesstars"     ,"Magnitudes des étoiles correspondantes");
-define("Langpdfseriesphotos"    ,"Taille des photos (minutes d'arc)");
-define("Langpdfseriesclickok"   ,'Cliquez "Ok", seulement quand ');
-define("Langpdfserieswhenfinished",' est fait!');
-define("LangpdfseriesGenerating",'Génération en cours: ');
-define("Langpdfserieschoselayout","Prière de sélectionner le type de page à utiliser.");
-
-define("LangStoredQueries"      ,"Recherches connues:");
-define("LangSaveAs"             ,"Sauvegarder commme...");
-define("LangRemoveQuery"        ,"Effacer");
-
-
-define("LangExclude",            "Excepté:");
-define("LangDescriptioncontains","Description NGC contient:");
-
 define("LangShowAll",            'montrez tous');
 
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-22 20:22+0200\n"
+"POT-Creation-Date: 2018-07-25 19:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,7 +54,8 @@ msgstr ""
 msgid "Observation"
 msgstr ""
 
-#: comets/menu/change.php:25 deepsky/menu/change.php:33
+#: comets/menu/change.php:25 common/content/objectsSets.php:86
+#: deepsky/menu/change.php:33 lib/printatlas.php:1558
 msgid "Object"
 msgstr ""
 
@@ -606,6 +607,25 @@ msgstr ""
 msgid "Add site"
 msgstr ""
 
+#: common/content/atlasPages.php:12 common/content/downloadForms.php:12
+#: common/content/objectsSets.php:13
+msgid "Click \"Ok\", only when "
+msgstr ""
+
+#: common/content/atlasPages.php:13 common/content/downloadForms.php:13
+#: common/content/objectsSets.php:14
+msgid " is finished!"
+msgstr ""
+
+#: common/content/atlasPages.php:14 common/content/downloadForms.php:14
+msgid "Generating "
+msgstr ""
+
+#: common/content/atlasPages.php:15 common/content/downloadForms.php:15
+#: common/content/objectsSets.php:16 common/content/objectsSets.php:53
+msgid "Please select a layout for the index page."
+msgstr ""
+
 #: common/content/atlasPages.php:21
 msgid "Lookup atlas page for M 45"
 msgstr ""
@@ -1019,6 +1039,26 @@ msgstr ""
 msgid "Add an index page"
 msgstr ""
 
+#: common/content/objectsSets.php:88
+msgid "Size"
+msgstr ""
+
+#: common/content/objectsSets.php:89
+msgid "FoVs: shown field of views"
+msgstr ""
+
+#: common/content/objectsSets.php:90
+msgid "Object magnitudes"
+msgstr ""
+
+#: common/content/objectsSets.php:91
+msgid "Stellar magnitudes"
+msgstr ""
+
+#: common/content/objectsSets.php:92
+msgid "Photos (arc minutes)"
+msgstr ""
+
 #: common/content/messages.php:34
 msgid "View messages"
 msgstr ""
@@ -1151,6 +1191,21 @@ msgstr ""
 #: deepsky/content/setup_observations_query.php:69
 #: deepsky/content/setup_objects_query.php:67
 msgid "Enter number in catalog"
+msgstr ""
+
+#: deepsky/content/setup_observations_query.php:592
+#: deepsky/content/setup_objects_query.php:357
+msgid "Stored searches:"
+msgstr ""
+
+#: deepsky/content/setup_observations_query.php:595
+#: deepsky/content/setup_objects_query.php:359
+msgid "Save As..."
+msgstr ""
+
+#: deepsky/content/setup_observations_query.php:596
+#: deepsky/content/setup_objects_query.php:360
+msgid "Remove"
 msgstr ""
 
 #: deepsky/content/change_session.php:120
@@ -1317,6 +1372,14 @@ msgstr ""
 
 #: deepsky/content/view_observation.php:68
 msgid "Observation of "
+msgstr ""
+
+#: deepsky/content/setup_objects_query.php:314
+msgid "NGC Decription contains:"
+msgstr ""
+
+#: deepsky/content/setup_objects_query.php:321
+msgid "Exclude:"
 msgstr ""
 
 #: deepsky/content/view_object.php:17
