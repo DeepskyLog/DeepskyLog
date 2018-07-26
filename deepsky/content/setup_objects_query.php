@@ -100,7 +100,7 @@ function setup_objects_query() {
 	while ( list ( $key, $value ) = each ( $cons ) )
 		echo "<option" . (($key == $con) ? " selected=\"selected\"" : "") . " value=\"$key\">" . $value . "</option>";
 	echo "</select>";
-	echo LangTo;
+	echo _(' to ');
 	$conto = $objUtil->checkGetKey ( 'conto', '' );
 	if ($conto == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
@@ -337,7 +337,7 @@ function setup_objects_query() {
 	// NO EXCLUDE IF SEEN
 	echo "<tr>";
 	echo "<td><strong>";
-	echo LangNoExcludeIfSeen;
+	echo _('but not if seen');
 	echo "</strong></td>";
 	$excludeexceptseen = $objUtil->checkGetKey ( 'exclexceptseen' );
 	if ($excludeexceptseen == '')

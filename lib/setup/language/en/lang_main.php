@@ -1,30 +1,5 @@
 <?php //EN
 // Prior to 4.1
-define("LangShowAll",            'show all');
-
-define("LangOn",                 "on");
-define("LangFrom",               "from");
-define('LangTo',                 ' to ');
-
-define("LangNoExcludeIfSeen",    'but not if seen');
-
-define("ReportSunDown",          'Sun down: ');
-define("ReportNautNight",        'Nautical night: ');
-define("ReportAstroNight",       'Astronomical night: ');
-define("ReportMoonUp",           'Moon up: ');
-
-define("ReportPreparedForDate"    ," for observing on ");
-
-
-define("ReportLink"               ,"Report");
-define("ReportQueryOfObjects"     ,"objects overview");
-
-define("ReportTitle"              ,"Reports Layout for ");
-define("ReportKnownLayouts"       ,"Known layouts");
-define("ReportSaveAndGeneratePdf" ,"Save and Generate pdf");
-define("ReportSaveAs"             ,"Save as...");
-define("ReportDelete"             ,"Delete");
-
 define("ReportFieldname"                                       ,"Field name");
 define("ReportFieldlineposition"                               ,"Field is on line ... (0=first)");
 define("ReportFieldxposition"                                  ,"Field is on x-position ... in column");

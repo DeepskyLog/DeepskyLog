@@ -1,30 +1,6 @@
 <?php //NL
 $REST = "Rest";
 // Prior to 4.1
-define("LangShowAll",            'toon alle');
-
-define("LangOn",                 'op');
-define("LangFrom",               "van");
-define("LangTo",                 ' tot ');
-define("LangNoExcludeIfSeen",    'maar niet uitsluiten wanneer gezien');
-
-define("ReportSunDown",          'Zon onder: ');
-define("ReportNautNight",        'Nautische nacht: ');
-define("ReportAstroNight",       'Astronomische nacht: ');
-define("ReportMoonUp",           'Maan op: ');
-
-define("ReportPreparedForDate"    ," voor waarnemen op ");
-
-define("ReportLink"               ,"Rapport");
-define("ReportQueryOfObjects"     ,"objectenoverzicht");
-
-define("ReportTitle"              ,"Gekende layouts voor ");
-define("ReportKnownLayouts"       ,"Gekende layouts");
-define("ReportSaveAndGeneratePdf" ,"Bewaar en Maak pdf");
-define("ReportSaveAs"             ,"Bewaar als...");
-define("ReportDelete"             ,"Verwijder");
-
-
 define("ReportFieldname"                                       ,"Veld");
 define("ReportFieldlineposition"                               ,"Veld is op lijn ... (0=eerste)");
 define("ReportFieldxposition"                                  ,"Veld is op positie x ... in kolom");

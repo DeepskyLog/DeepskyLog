@@ -133,7 +133,7 @@ function menu_moon()
 	echo "<p><br /><h4>";
 	echo (($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))?LangMoonSunMenuTitle:LangMoonMenuTitle)."<br />";
   echo "</h4>";
-	echo"<span style=\"font-weight:normal;\">".LangOn." ".$dateTimeText0."&gt;&lt;".$dateTimeText1."</span>";
+	echo"<span style=\"font-weight:normal;\">"._("on")." ".$dateTimeText0."&gt;&lt;".$dateTimeText1."</span>";
 	echo "</p>";
 	if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))
 	{ echo "<table class=\"table table-condensed\">";

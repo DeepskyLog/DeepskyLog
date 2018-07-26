@@ -1552,8 +1552,8 @@ class PrintAtlas
           $this->pdf->addTextWrap(450, $liney, 10, LangMoon.' '.LangMoonRise.': '.$_SESSION['efemerides']['moon0'], 150,  'left');
           $this->pdf->addTextWrap(650, $liney, 10, LangMoon.' '.LangMoonSet.': '.$_SESSION['efemerides']['moon2'], 150,  'left');
           $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 10, LangAstronomicalTwilight.' '.LangFrom.' '.$_SESSION['efemerides']['astroe'].LangTo.$_SESSION['efemerides']['astrob'], 350,  'left');
-          $this->pdf->addTextWrap(450, $liney, 10, LangNauticalTwilight.' '.LangFrom.' '.$_SESSION['efemerides']['naute'].LangTo.$_SESSION['efemerides']['nautb'], 350,  'left');
+          $this->pdf->addTextWrap( 50, $liney, 10, LangAstronomicalTwilight.' '._("from").' '.$_SESSION['efemerides']['astroe']._(' to ').$_SESSION['efemerides']['astrob'], 350,  'left');
+          $this->pdf->addTextWrap(450, $liney, 10, LangNauticalTwilight.' '._("from").' '.$_SESSION['efemerides']['naute']._(' to ').$_SESSION['efemerides']['nautb'], 350,  'left');
           $liney-=15;
           $this->pdf->addTextWrap( 50, $liney, 10, _("Object").' '.LangMoonRise.': '.$theobjectdata['objectrise'], 150,  'left');
           $this->pdf->addTextWrap(250, $liney, 10, LangTransit.': '.$theobjectdata['objecttransit'], 150,  'left');

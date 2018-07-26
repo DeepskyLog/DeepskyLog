@@ -3079,13 +3079,13 @@ class Utils
             $pdf->addTextWrap(
                 $xleft, $footer - $deltaline, $fontSizeText, 
                 utf8_decode(
-                    ReportSunDown . $_SESSION['efemerides']['sset'] . LangTo . 
-                    $_SESSION['efemerides']['srise'] . " - " . ReportNautNight . 
-                    $_SESSION['efemerides']['naute'] . LangTo . 
-                    $_SESSION['efemerides']['nautb'] . " - " . ReportAstroNight . 
-                    $_SESSION['efemerides']['astroe'] . LangTo . 
-                    $_SESSION['efemerides']['astrob'] . " - " . ReportMoonUp . 
-                    $_SESSION['efemerides']['moon0'] . LangTo . 
+                    _('Sun down: ') . $_SESSION['efemerides']['sset'] . _(' to ') . 
+                    $_SESSION['efemerides']['srise'] . " - " . _('Nautical night: ') . 
+                    $_SESSION['efemerides']['naute'] . _(' to ') . 
+                    $_SESSION['efemerides']['nautb'] . " - " . _('Astronomical night: ') . 
+                    $_SESSION['efemerides']['astroe'] . _(' to ') . 
+                    $_SESSION['efemerides']['astrob'] . " - " . _('Moon up: ') . 
+                    $_SESSION['efemerides']['moon0'] . _(' to ') . 
                     $_SESSION['efemerides']['moon2']
                 ), $xmid + $SectionBarWidth, 'center'
             );
@@ -3259,15 +3259,15 @@ class Utils
                     $pdf->addTextWrap(
                         $xleft, $footer - $deltaline, $fontSizeText, 
                         utf8_decode(
-                            ReportSunDown . $_SESSION['efemerides']['sset'] .
-                            LangTo . $_SESSION['efemerides']['srise'] . " - " . 
-                            ReportNautNight . $_SESSION['efemerides']['naute'] .
-                            LangTo . $_SESSION['efemerides']['nautb'] . " - " . 
-                            ReportAstroNight . 
-                            $_SESSION['efemerides']['astroe'] .LangTo . 
+                            _('Sun down: ') . $_SESSION['efemerides']['sset'] .
+                            _(' to ') . $_SESSION['efemerides']['srise'] . " - " . 
+                            _('Nautical night: ') . $_SESSION['efemerides']['naute'] .
+                            _(' to ') . $_SESSION['efemerides']['nautb'] . " - " . 
+                            _('Astronomical night: ') . 
+                            $_SESSION['efemerides']['astroe'] ._(' to ') . 
                             $_SESSION['efemerides']['astrob'] . " - " . 
-                            ReportMoonUp . 
-                            $_SESSION['efemerides']['moon0'] . LangTo . 
+                            _('Moon up: ') . 
+                            $_SESSION['efemerides']['moon0'] . _(' to ') . 
                             $_SESSION['efemerides']['moon2']
                         ), $xmid + $SectionBarWidth, 'center'
                     );

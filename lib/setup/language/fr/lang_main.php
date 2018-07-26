@@ -2,31 +2,6 @@
 $REST = "Reste";
 
 // prior to 4.1
-define("LangShowAll",            'montrez tous');
-
-
-define("LangOn",                  "le");
-define("LangFrom",                "de");
-define("LangTo",                  ' à ');
-
-define("LangNoExcludeIfSeen",    'mais ne pas exclure si vu');
-
-define("ReportSunDown",          'Couher soleil: ');
-define("ReportNautNight",        'Nuit nautique: ');
-define("ReportAstroNight",       'Nuit astronomique: ');
-define("ReportMoonUp",           'Lever lune: ');
-
-define("ReportPreparedForDate"    ," pour les observations du ");
-
-define("ReportLink"               ,"Rapport");
-define("ReportQueryOfObjects"     ,"aperçu des objets");
-
-define("ReportTitle"              ,"Mises en page pour ");
-define("ReportKnownLayouts"       ,"Mises en pages connues");
-define("ReportSaveAndGeneratePdf" ,"Sauvegarder et génération pdf");
-define("ReportSaveAs"             ,"Sauvegarder comme...");
-define("ReportDelete"             ,"Effacer");
-
 define("ReportFieldname"                                       ,"Nom du champ");
 define("ReportFieldlineposition"                               ,"Le champ est sur la ligne ... (0=premier)");
 define("ReportFieldxposition"                                  ,"Le champ est sur la position x ... dans la colonne");

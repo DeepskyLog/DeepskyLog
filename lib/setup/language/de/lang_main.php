@@ -2,31 +2,6 @@
 $REST = "Rest";
 
 // prior to 4.1
-define("LangShowAll",            'Alle anzeigen');
-
-define("LangOn",                 "am");
-define("LangFrom",               "von");
-define('LangTo',                 ' bis ');
-
-define("LangNoExcludeIfSeen",    'ohne erfolgreiche Beobachtungen');
-
-define("ReportSunDown",          'Sonnenuntergang: ');
-define("ReportNautNight",        'nautische  Dämmerung: ');
-define("ReportAstroNight",       'astronomische  Dämmerung: ');
-define("ReportMoonUp",           'Mond Aufgang: ');
-
-
-
-define("ReportLink"               ,"Bericht");
-
-define("ReportQueryOfObjects"     ,"Objekt Übersicht");
-
-define("ReportTitle"              ,"Berichtslayout für ");
-define("ReportKnownLayouts"       ,"Bekannte Layouts");
-define("ReportSaveAndGeneratePdf" ,"Speichern und PDF generieren");
-define("ReportSaveAs"             ,"Speichern als...");
-define("ReportDelete"             ,"Löschen");
-
 define("ReportFieldname"                                       ,"Feldname");
 define("ReportFieldlineposition"                               ,"Feld ist auf Zeile ... (0=Erste Zeile)");
 define("ReportFieldxposition"                                  ,"Feld ist auf x-Position ... in Spalte");

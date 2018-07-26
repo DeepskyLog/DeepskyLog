@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-25 19:20+0200\n"
+"POT-Creation-Date: 2018-07-26 20:50+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -68,8 +68,8 @@ msgstr ""
 #: common/content/overview_eyepieces.php:39
 #: common/content/overview_instruments.php:84
 #: common/content/overview_locations.php:115
-#: common/content/overview_lenses.php:45 common/content/view_message.php:74
-#: common/content/overview_filters.php:41
+#: common/content/overview_lenses.php:45 common/content/reportslayout.php:44
+#: common/content/view_message.php:74 common/content/overview_filters.php:41
 #: deepsky/content/change_session.php:132 lib/instruments.php:104
 #: lib/filters.php:156 lib/lenses.php:60 lib/eyepieces.php:68
 #: lib/locations.php:344
@@ -850,19 +850,39 @@ msgstr "Choisissez le pays"
 msgid "Select an existing eyepiece"
 msgstr "Sélectionnez les données de l’oculaire de la liste"
 
-#: common/content/reportslayout.php:112
+#: common/content/reportslayout.php:15
+msgid "Reports Layout for "
+msgstr "Mises en page pour "
+
+#: common/content/reportslayout.php:19
+msgid "Known layouts"
+msgstr "Mises en pages connues"
+
+#: common/content/reportslayout.php:20 lib/datatables_setup.php:25
+msgid "show all"
+msgstr "montrez tous"
+
+#: common/content/reportslayout.php:40
+msgid "Save and Generate pdf"
+msgstr "Sauvegarder et génération pdf"
+
+#: common/content/reportslayout.php:42
+msgid "Save as..."
+msgstr "Sauvegarder comme…"
+
+#: common/content/reportslayout.php:115
 msgid "Highest altitude during the year"
 msgstr "Altitude maximale durant l’année"
 
-#: common/content/reportslayout.php:113
+#: common/content/reportslayout.php:116
 msgid "Highest from the month"
 msgstr "Maximal à partir du mois"
 
-#: common/content/reportslayout.php:114
+#: common/content/reportslayout.php:117
 msgid "Highest around the month"
 msgstr "Maximal autour du mois"
 
-#: common/content/reportslayout.php:115
+#: common/content/reportslayout.php:118
 msgid "Highest till the month"
 msgstr "Maximal juqu’au mois"
 
@@ -1104,6 +1124,10 @@ msgstr "Taille des photos (minutes d’arc)"
 #: common/content/messages.php:34
 msgid "View messages"
 msgstr "Voir les messages"
+
+#: common/menu/moon.php:136
+msgid "on"
+msgstr "le"
 
 #: common/menu/help.php:17
 msgid "Report issue"
@@ -1427,6 +1451,13 @@ msgstr "L’observation demandé n’existe pas."
 msgid "Observation of "
 msgstr ""
 
+#: deepsky/content/setup_objects_query.php:103 lib/printatlas.php:1555
+#: lib/printatlas.php:1556 lib/util.php:3082 lib/util.php:3084
+#: lib/util.php:3086 lib/util.php:3088 lib/util.php:3263 lib/util.php:3265
+#: lib/util.php:3267 lib/util.php:3270
+msgid " to "
+msgstr " à "
+
 #: deepsky/content/setup_objects_query.php:314
 msgid "NGC Decription contains:"
 msgstr "Description NGC contient:"
@@ -1434,6 +1465,10 @@ msgstr "Description NGC contient:"
 #: deepsky/content/setup_objects_query.php:321
 msgid "Exclude:"
 msgstr "Excepté:"
+
+#: deepsky/content/setup_objects_query.php:340
+msgid "but not if seen"
+msgstr "mais ne pas exclure si vu"
 
 #: deepsky/content/view_object.php:17
 msgid "Only object details"
@@ -1807,6 +1842,10 @@ msgstr ""
 msgid "No index entries"
 msgstr "Pas d’entrées dans l’index"
 
+#: lib/printatlas.php:1555 lib/printatlas.php:1556
+msgid "from"
+msgstr "de"
+
 #: lib/printatlas.php:1732 lib/printatlas.php:1883
 msgid "Object rise-set"
 msgstr "Mont.-desc. objet"
@@ -2088,6 +2127,10 @@ msgstr "Sup. à"
 msgid "Highest around"
 msgstr "Sup. autour de"
 
+#: lib/objects.php:1921
+msgid "Report"
+msgstr "Rapport"
+
 #: lib/lists.php:58 lib/lists.php:380 lib/lists.php:493
 #, php-format
 msgid "Public list created with name %s by %s"
@@ -2109,6 +2152,22 @@ msgid ""
 msgstr ""
 "Une liste publique avec le même nom (%s) que votre liste existe déjà. "
 "Renommez votre liste avant de faire la liste publique."
+
+#: lib/util.php:3082 lib/util.php:3262
+msgid "Sun down: "
+msgstr "Coucher soleil: "
+
+#: lib/util.php:3083 lib/util.php:3264
+msgid "Nautical night: "
+msgstr "Nuit nautique: "
+
+#: lib/util.php:3085 lib/util.php:3266
+msgid "Astronomical night: "
+msgstr "Nuit astronomique: "
+
+#: lib/util.php:3087 lib/util.php:3269
+msgid "Moon up: "
+msgstr "Lever lune: "
 
 #: lib/util.php:4960
 #, php-format
