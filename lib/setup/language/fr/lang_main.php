@@ -2,17 +2,6 @@
 $REST = "Reste";
 
 // prior to 4.1
-define("ReportFieldname"                                       ,"Nom du champ");
-define("ReportFieldlineposition"                               ,"Le champ est sur la ligne ... (0=premier)");
-define("ReportFieldxposition"                                  ,"Le champ est sur la position x ... dans la colonne");
-define("ReportFieldwidth"                                      ,"Montrez la taille du champ");
-define("ReportFieldStyle"                                      ,"Type de police: combination de<br />i (italic), b (gras) and l, r or c (alignement gauche, droite ou milieu)");
-define("ReportFieldTextBefore"                                 ,"Texte devant le champ");
-define("ReportFieldTextAfter"                                  ,"Texte derrière le champ");
-define("ReportFieldLegend"                                     ,"Text de légende");
-
-define("Reportpagesize"                                        ,"Taille papier (A4/A3/LETTER/...)");
-define("Reportpageorientation"                                 ,"Orientation de la page (landscape/portrait)");
 define("Reportstartpagenumber"                                 ,"Numéro de la première page");
 define("Reporttop"                                             ,"Marge en haut de la première ligne (coordonné y)");
 define("Reportheader"                                          ,"Position de la ligne de tête (coordonné y)");
@@ -23,7 +12,7 @@ define("Reportxmid"                                            ,"Position de la 
 define("ReportfontSizeText"                                    ,"Taille de la police");
 define("ReportsectionBarSpace"                                 ,"ReportsectionBarSpace");
 define("ReportfontSizeSection"                                 ,"Taille de la police des titres");
-define("Reportdeltalineextra"                                  ,"Egcard entre les lignes");
+define("Reportdeltalineextra"                                  ,"Ecard entre les lignes");
 define("ReportsectionBarHeightextra"                           ,"Ecard devant les titres");
 define("ReportdeltalineSection"                                ,"Ecard après les titres");
 define("Reportdeltaobjectline"                                 ,"Ecard supplémentaire entre les objets");

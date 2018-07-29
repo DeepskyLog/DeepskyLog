@@ -2,17 +2,6 @@
 $REST = "Rest";
 
 // prior to 4.1
-define("ReportFieldname"                                       ,"Feldname");
-define("ReportFieldlineposition"                               ,"Feld ist auf Zeile ... (0=Erste Zeile)");
-define("ReportFieldxposition"                                  ,"Feld ist auf x-Position ... in Spalte");
-define("ReportFieldwidth"                                      ,"Zeige Feldbreite");
-define("ReportFieldStyle"                                      ,"Schriftart:Kombination von<br />i (kursiv), b (fett) and l, r or c (Ausrichtung)");
-define("ReportFieldTextBefore"                                 ,"Text welcher vor dem Feld angezeigt werden soll");
-define("ReportFieldTextAfter"                                  ,"Text welcher nach dem Feld angezeigt werden soll");
-define("ReportFieldLegend"                                     ,"Test für Legende");
-
-define("Reportpagesize"                                        ,"Seitenformat (A4/A3/LETTER/...)");
-define("Reportpageorientation"                                 ,"Seitenorientierung (Landschaft/Portrait)");
 define("Reportstartpagenumber"                                 ,"Erste Seitennummer");
 define("Reporttop"                                             ,"Obere Rahmen Position für Text (y-Koordinate)");
 define("Reportheader"                                          ,"Position der Überschrift (y-Koordinate)");

@@ -1,17 +1,6 @@
 <?php //NL
 $REST = "Rest";
 // Prior to 4.1
-define("ReportFieldname"                                       ,"Veld");
-define("ReportFieldlineposition"                               ,"Veld is op lijn ... (0=eerste)");
-define("ReportFieldxposition"                                  ,"Veld is op positie x ... in kolom");
-define("ReportFieldwidth"                                      ,"Breedte van het veld");
-define("ReportFieldStyle"                                      ,"Font style: combinatie van <br />i (italic), b (bold) en l, r of c (uitlijning)");
-define("ReportFieldTextBefore"                                 ,"Tekst voor het veld");
-define("ReportFieldTextAfter"                                  ,"Tekst achter het veld");
-define("ReportFieldLegend"                                     ,"Legendetekst");
-
-define("Reportpagesize"                                        ,"Paginagrootte (A4/A3/LETTER/...)");
-define("Reportpageorientation"                                 ,"Pagina orientatie (landscape/portrait)");
 define("Reportstartpagenumber"                                 ,"Eerste paginanummer");
 define("Reporttop"                                             ,"Bovenste marge positie voor de tekst (y-coordinate)");
 define("Reportheader"                                          ,"Positie van de hoofdinglijn (y-coordinaat)");

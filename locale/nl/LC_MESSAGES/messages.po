@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-26 20:50+0200\n"
+"POT-Creation-Date: 2018-07-29 22:03+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -933,6 +933,50 @@ msgstr "Bewaar en Maak pdf"
 #: common/content/reportslayout.php:42
 msgid "Save as..."
 msgstr "Bewaar als…"
+
+#: common/content/reportslayout.php:53
+msgid "Field name"
+msgstr "Veld"
+
+#: common/content/reportslayout.php:54
+msgid "Field is on line ... (0=first)"
+msgstr "Veld is op lijn … (0=eerste)"
+
+#: common/content/reportslayout.php:55
+msgid "Field is on x-position ... in column"
+msgstr "Veld is op positie x … in kolom"
+
+#: common/content/reportslayout.php:56
+msgid "Display width of the field"
+msgstr "Breedte van het veld"
+
+#: common/content/reportslayout.php:57
+msgid ""
+"Font style: combination of<br />i (italic), b (bold) and l, r or c "
+"(alignment)"
+msgstr ""
+"Font stijl: combinatie van <br />i (italic), b (bold) en l, r of c "
+"(uitlijning)"
+
+#: common/content/reportslayout.php:58
+msgid "Text to be shown in front of the field"
+msgstr "Tekst voor het veld"
+
+#: common/content/reportslayout.php:59
+msgid "Text to be shown after the field"
+msgstr "Tekst achter het veld"
+
+#: common/content/reportslayout.php:60
+msgid "Legend text"
+msgstr "Legendetekst"
+
+#: common/content/reportslayout.php:61
+msgid "Page size (A4/A3/LETTER/...)"
+msgstr "Paginagrootte (A4/A3/LETTER/…)"
+
+#: common/content/reportslayout.php:62
+msgid "Page orientation (landscape/portrait)"
+msgstr "Pagina orientatie (landscape/portrait)"
 
 #: common/content/reportslayout.php:115
 msgid "Highest altitude during the year"

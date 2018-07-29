@@ -50,16 +50,16 @@ function reportsLayout()
 	echo "<script type=\"text/javascript\">
 	      /* <![CDATA[ */
 	      var titles=new Array();
-        titles['ReportFieldname']='".ReportFieldname."';
-	      titles['ReportFieldlineposition']='".ReportFieldlineposition."';
-	      titles['ReportFieldxposition']='".ReportFieldxposition."';
-	      titles['ReportFieldwidth']='".ReportFieldwidth."';
-	      titles['ReportFieldStyle']='".ReportFieldStyle."';
-	      titles['ReportFieldTextBefore']='".ReportFieldTextBefore."';
-	      titles['ReportFieldTextAfter']='".ReportFieldTextAfter."';
-	      titles['ReportFieldLegend']='".ReportFieldLegend."';
-	      titles['pagesize']='".Reportpagesize."';
-	      titles['pageorientation']='".Reportpageorientation."';
+        titles['ReportFieldname']='"._("Field name")."';
+	      titles['ReportFieldlineposition']='"._("Field is on line ... (0=first)")."';
+	      titles['ReportFieldxposition']='"._("Field is on x-position ... in column")."';
+	      titles['ReportFieldwidth']='"._("Display width of the field")."';
+	      titles['ReportFieldStyle']='"._("Font style: combination of<br />i (italic), b (bold) and l, r or c (alignment)")."';
+	      titles['ReportFieldTextBefore']='"._("Text to be shown in front of the field")."';
+	      titles['ReportFieldTextAfter']='"._("Text to be shown after the field")."';
+	      titles['ReportFieldLegend']='"._("Legend text")."';
+	      titles['pagesize']='"._("Page size (A4/A3/LETTER/...)")."';
+	      titles['pageorientation']='"._("Page orientation (landscape/portrait)")."';
         titles['startpagenumber']='".Reportstartpagenumber."';
         titles['top']='".Reporttop."';
         titles['header']='".Reportheader."';

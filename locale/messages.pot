@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-26 20:50+0200\n"
+"POT-Creation-Date: 2018-07-29 22:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -848,6 +848,48 @@ msgstr ""
 
 #: common/content/reportslayout.php:42
 msgid "Save as..."
+msgstr ""
+
+#: common/content/reportslayout.php:53
+msgid "Field name"
+msgstr ""
+
+#: common/content/reportslayout.php:54
+msgid "Field is on line ... (0=first)"
+msgstr ""
+
+#: common/content/reportslayout.php:55
+msgid "Field is on x-position ... in column"
+msgstr ""
+
+#: common/content/reportslayout.php:56
+msgid "Display width of the field"
+msgstr ""
+
+#: common/content/reportslayout.php:57
+msgid ""
+"Font style: combination of<br />i (italic), b (bold) and l, r or c "
+"(alignment)"
+msgstr ""
+
+#: common/content/reportslayout.php:58
+msgid "Text to be shown in front of the field"
+msgstr ""
+
+#: common/content/reportslayout.php:59
+msgid "Text to be shown after the field"
+msgstr ""
+
+#: common/content/reportslayout.php:60
+msgid "Legend text"
+msgstr ""
+
+#: common/content/reportslayout.php:61
+msgid "Page size (A4/A3/LETTER/...)"
+msgstr ""
+
+#: common/content/reportslayout.php:62
+msgid "Page orientation (landscape/portrait)"
 msgstr ""
 
 #: common/content/reportslayout.php:115
