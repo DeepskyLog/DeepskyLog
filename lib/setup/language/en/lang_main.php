@@ -1,28 +1,5 @@
 <?php //EN
 // Prior to 4.1
-define("Reportstartpagenumber"                                 ,"First page number");
-define("Reporttop"                                             ,"Top margin position for text (y-coordinate)");
-define("Reportheader"                                          ,"Position of the header line (y-coordinate)");
-define("Reportxleft"                                           ,"Position of the 1st column (x-coordinate)");
-define("Reportbottom"                                          ,"Bottom margin position for the text (y-coordinate)");
-define("Reportfooter"                                          ,"Position of the footer line (y-coordinate)");
-define("Reportxmid"                                            ,"Position of the 2nd column (x-coordinate");
-define("ReportfontSizeText"                                    ,"Font size text");
-define("ReportsectionBarSpace"                                 ,"ReportsectionBarSpace");
-define("ReportfontSizeSection"                                 ,"Font size for section bar");
-define("Reportdeltalineextra"                                  ,"Extra line separation");
-define("ReportsectionBarHeightextra"                           ,"Extra section bar height");
-define("ReportdeltalineSection"                                ,"Extra space after a section bar");
-define("Reportdeltaobjectline"                                 ,"Extra separation between the different objects");
-define("ReportSectionBarSpace"                                 ,"Reverse indent of the section bar");
-define("ReportSectionBarWidthbase"                             ,"Width of the section title bars (e.b. constellation)");
-define("ReportShowElements"                                    ,"Show (t) title, (h) made up for, (e) efemerides, (p) page numbers, (l) legend, (s) separation lines, (i) index");
-define("Reportobjectseen"                                      ,"Object seen by you or others");
-define("Reportobjectlastseen"                                  ,"Object last seen date");
-define("Reportshowname"                                        ,"Object name as in search (e.g. Caldwell number)");
-define("Reportobjectname"                                      ,"Object prinicpal name");
-define("Reportaltname"                                         ,"Alternative object names");
-define("Reportobjecttype"                                      ,"Object type abbreviation");
 define("Reportobjecttypefull"                                  ,"Object type");
 define("Reportobjectconstellation"                             ,"Constellation abbreviation");
 define("Reportobjectconstellationfull"                         ,"Constellation name");

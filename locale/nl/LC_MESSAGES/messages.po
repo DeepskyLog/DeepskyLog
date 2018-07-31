@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-29 22:03+0200\n"
+"POT-Creation-Date: 2018-07-31 21:35+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -977,6 +977,99 @@ msgstr "Paginagrootte (A4/A3/LETTER/…)"
 #: common/content/reportslayout.php:62
 msgid "Page orientation (landscape/portrait)"
 msgstr "Pagina orientatie (landscape/portrait)"
+
+#: common/content/reportslayout.php:63
+msgid "First page number"
+msgstr "Eerste paginanummer"
+
+#: common/content/reportslayout.php:64
+msgid "Top margin position for text (y-coordinate)"
+msgstr "Bovenste marge positie voor de tekst (y-coordinaat)"
+
+#: common/content/reportslayout.php:65
+msgid "Position of the header line (y-coordinate)"
+msgstr "Positie van de hoofdinglijn (y-coordinaat)"
+
+#: common/content/reportslayout.php:66
+msgid "Position of the 1st column (x-coordinate)"
+msgstr "Positie van de eerste kolom (x-coordinaat)"
+
+#: common/content/reportslayout.php:67
+msgid "Bottom margin position for the text (y-coordinate)"
+msgstr "Bodemmarge positie voor de tekst (y-coordinaat)"
+
+#: common/content/reportslayout.php:68
+msgid "Position of the footer line (y-coordinate)"
+msgstr "Positie voor de voetlijn (y-coordinaat)"
+
+#: common/content/reportslayout.php:69
+msgid "Position of the 2nd column (x-coordinate)"
+msgstr "Positie van de tweede kolom (x-coordinaat)"
+
+#: common/content/reportslayout.php:70
+msgid "Font size text"
+msgstr "Fontgrootte tekst"
+
+#: common/content/reportslayout.php:71
+msgid "Font size for section bar"
+msgstr "Fontgrootte voor de sectietitel"
+
+#: common/content/reportslayout.php:72
+msgid "Extra line separation"
+msgstr "Supplementaire lijn-interlinie"
+
+#: common/content/reportslayout.php:73
+msgid "Extra section bar height"
+msgstr "Supplementaire grootte sectievak"
+
+#: common/content/reportslayout.php:74
+msgid "Extra space after a section bar"
+msgstr "Supplementaire ruimte na sectievak"
+
+#: common/content/reportslayout.php:75
+msgid "Extra separation between the different objects"
+msgstr "Supplementaire ruimte tussen verschillende objecten"
+
+#: common/content/reportslayout.php:76
+msgid "Width of the section title bars (e.g. constellation)"
+msgstr "Breedte van het sectievak (bv. indeling sterrenbeelden)"
+
+#: common/content/reportslayout.php:77
+msgid "Reverse indent of the section bar"
+msgstr "Terugsprong grootte van het sectievak"
+
+#: common/content/reportslayout.php:78
+msgid ""
+"Show (t) title, (h) made up for, (e) efemerides, (p) page numbers, (l) "
+"legend, (s) separation lines, (i) index"
+msgstr ""
+"Toon (t) titel, (h) opgemaakt voor, (e) efemeriden,(p) paginanummers, (l) "
+"legende, (s) separatielijnen, (i) index"
+
+#: common/content/reportslayout.php:79
+msgid "Object seen by you or others"
+msgstr "Object gezien door jou of anderen"
+
+#: common/content/reportslayout.php:80
+msgid "Object last seen date"
+msgstr "Object laatst gezien door jou"
+
+#: common/content/reportslayout.php:81
+msgid "Object name as in search (e.g. Caldwell number)"
+msgstr "Object naam zoals opgezocht (b.v. op Caldwell nummer)"
+
+#: common/content/reportslayout.php:82
+msgid "Object principal name"
+msgstr "Object hoofdnaam"
+
+#: common/content/reportslayout.php:83 lib/printatlas.php:1490
+#: lib/printatlas.php:2036
+msgid "Alternative object names"
+msgstr "Alternatieve objectnamen"
+
+#: common/content/reportslayout.php:84
+msgid "Object type abbreviation"
+msgstr "Object type afkorting"
 
 #: common/content/reportslayout.php:115
 msgid "Highest altitude during the year"

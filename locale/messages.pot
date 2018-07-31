@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-29 22:03+0200\n"
+"POT-Creation-Date: 2018-07-31 21:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -890,6 +890,97 @@ msgstr ""
 
 #: common/content/reportslayout.php:62
 msgid "Page orientation (landscape/portrait)"
+msgstr ""
+
+#: common/content/reportslayout.php:63
+msgid "First page number"
+msgstr ""
+
+#: common/content/reportslayout.php:64
+msgid "Top margin position for text (y-coordinate)"
+msgstr ""
+
+#: common/content/reportslayout.php:65
+msgid "Position of the header line (y-coordinate)"
+msgstr ""
+
+#: common/content/reportslayout.php:66
+msgid "Position of the 1st column (x-coordinate)"
+msgstr ""
+
+#: common/content/reportslayout.php:67
+msgid "Bottom margin position for the text (y-coordinate)"
+msgstr ""
+
+#: common/content/reportslayout.php:68
+msgid "Position of the footer line (y-coordinate)"
+msgstr ""
+
+#: common/content/reportslayout.php:69
+msgid "Position of the 2nd column (x-coordinate)"
+msgstr ""
+
+#: common/content/reportslayout.php:70
+msgid "Font size text"
+msgstr ""
+
+#: common/content/reportslayout.php:71
+msgid "Font size for section bar"
+msgstr ""
+
+#: common/content/reportslayout.php:72
+msgid "Extra line separation"
+msgstr ""
+
+#: common/content/reportslayout.php:73
+msgid "Extra section bar height"
+msgstr ""
+
+#: common/content/reportslayout.php:74
+msgid "Extra space after a section bar"
+msgstr ""
+
+#: common/content/reportslayout.php:75
+msgid "Extra separation between the different objects"
+msgstr ""
+
+#: common/content/reportslayout.php:76
+msgid "Width of the section title bars (e.g. constellation)"
+msgstr ""
+
+#: common/content/reportslayout.php:77
+msgid "Reverse indent of the section bar"
+msgstr ""
+
+#: common/content/reportslayout.php:78
+msgid ""
+"Show (t) title, (h) made up for, (e) efemerides, (p) page numbers, (l) "
+"legend, (s) separation lines, (i) index"
+msgstr ""
+
+#: common/content/reportslayout.php:79
+msgid "Object seen by you or others"
+msgstr ""
+
+#: common/content/reportslayout.php:80
+msgid "Object last seen date"
+msgstr ""
+
+#: common/content/reportslayout.php:81
+msgid "Object name as in search (e.g. Caldwell number)"
+msgstr ""
+
+#: common/content/reportslayout.php:82
+msgid "Object principal name"
+msgstr ""
+
+#: common/content/reportslayout.php:83 lib/printatlas.php:1490
+#: lib/printatlas.php:2036
+msgid "Alternative object names"
+msgstr ""
+
+#: common/content/reportslayout.php:84
+msgid "Object type abbreviation"
 msgstr ""
 
 #: common/content/reportslayout.php:115

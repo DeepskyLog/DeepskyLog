@@ -2,31 +2,8 @@
 $REST = "Reste";
 
 // prior to 4.1
-define("Reportstartpagenumber"                                 ,"Numéro de la première page");
-define("Reporttop"                                             ,"Marge en haut de la première ligne (coordonné y)");
-define("Reportheader"                                          ,"Position de la ligne de tête (coordonné y)");
-define("Reportxleft"                                           ,"Position de la première colonne (coordonné x)");
-define("Reportbottom"                                          ,"Marge en dessous de la dernière ligne (coordonné y)");
-define("Reportfooter"                                          ,"Position de la ligne en bas de page (coordonné y)");
-define("Reportxmid"                                            ,"Position de la deuxième colonne (coordonné y");
-define("ReportfontSizeText"                                    ,"Taille de la police");
-define("ReportsectionBarSpace"                                 ,"ReportsectionBarSpace");
-define("ReportfontSizeSection"                                 ,"Taille de la police des titres");
-define("Reportdeltalineextra"                                  ,"Ecard entre les lignes");
-define("ReportsectionBarHeightextra"                           ,"Ecard devant les titres");
-define("ReportdeltalineSection"                                ,"Ecard après les titres");
-define("Reportdeltaobjectline"                                 ,"Ecard supplémentaire entre les objets");
-define("ReportSectionBarWidthbase"                             ,"Largeur des titres (p.e. les constellations)");
-define("ReportSectionBarSpace"                                 ,"Recul des titres");
-define("ReportShowElements"                                    ,"Montrez les titres (t), l'observateur (h), les éphémerides (e), les numéros de page (p), (l) légende, (s) lignes de séparation, (i) index");
-define("Reportobjectseen"                                      ,"Objet vu par vous ou des autres");
-define("Reportobjectlastseen"                                  ,"Dernière date d'observation");
-define("Reportshowname"                                        ,"Nom de l'objet dans la recherche (p.e. Caldwell x)");
-define("Reportobjectname"                                      ,"Nom principal de l'objet");
-define("Reportaltname"                                         ,"Les noms alternatives de  l'objet");
-define("Reportobjecttype"                                      ,"Abbréviation du type");
 define("Reportobjecttypefull"                                  ,"Type de l'objet");
-define("Reportobjectconstellation"                             ,"Abbreviationde la constellation");
+define("Reportobjectconstellation"                             ,"Abbreviation de la constellation");
 define("Reportobjectconstellationfull"                         ,"Nom de le constellation");
 define("Reportobjectmagnitude"                                 ,"Magnitude de l'objet");
 define("Reportobjectsurfacebrightness"                         ,"Mgnitude de surface de l'objet");

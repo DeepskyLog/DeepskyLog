@@ -2,29 +2,6 @@
 $REST = "Rest";
 
 // prior to 4.1
-define("Reportstartpagenumber"                                 ,"Erste Seitennummer");
-define("Reporttop"                                             ,"Obere Rahmen Position für Text (y-Koordinate)");
-define("Reportheader"                                          ,"Position der Überschrift (y-Koordinate)");
-define("Reportxleft"                                           ,"Position der ersten Spalte (x-Koordinate)");
-define("Reportbottom"                                          ,"Untere Rahmen Position für Text (y-Koordinate)");
-define("Reportfooter"                                          ,"Position der Fußnote (y-Koordinate)");
-define("Reportxmid"                                            ,"Position der zweiten Spalte (x-Koordinate");
-define("ReportfontSizeText"                                    ,"Schriftgröße");
-define("ReportsectionBarSpace"                                 ,"ReportsectionBarSpace");
-define("ReportfontSizeSection"                                 ,"Schriftgröße in Auswahl");
-define("Reportdeltalineextra"                                  ,"Extra Zeilenumbruch");
-define("ReportSectionBarSpace"                                 ,"Inverse Einrückung in Auswahl");
-define("ReportsectionBarHeightextra"                           ,"Extra Absatzzeilengröße");
-define("ReportdeltalineSection"                                ,"Extra Leerzeichen nach Auswahl");
-define("Reportdeltaobjectline"                                 ,"Extra Abstand zwischen verschiedenen Objekten");
-define("ReportSectionBarWidthbase"                             ,"Breite der Auswahl (z.B. Sternbilder)");
-define("ReportShowElements"                                    ,"Zeige (t) Title, (h) hergestellt für, (e) Ephemeride, (p) Seitenanzahl, (l) Legende, (s) Absatzzeilen, (i) Index");
-define("Reportobjectseen"                                      ,"Objekte beobachtet von Ihnen oder anderen");
-define("Reportobjectlastseen"                                  ,"Objekt zuletzt gesehen am");
-define("Reportshowname"                                        ,"Objektname wie in Suchanfrage (z.B. Caldwell Nummer)");
-define("Reportobjectname"                                      ,"Objekt name");
-define("Reportaltname"                                         ,"Alternative Objektnamen");
-define("Reportobjecttype"                                      ,"Objekttyp Abkürzungen");
 define("Reportobjecttypefull"                                  ,"Objecttyp");
 define("Reportobjectconstellation"                             ,"Sternbild Abkürzung");
 define("Reportobjectconstellationfull"                         ,"Sternbildname");

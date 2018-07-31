@@ -1487,7 +1487,7 @@ class PrintAtlas
       $liney-=5;
       $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
       $liney-=15;
-      $this->pdf->addTextWrap(50, $liney, 10, Reportaltname.": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'), 450,  'left');
+      $this->pdf->addTextWrap(50, $liney, 10, _("Alternative object names").": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'), 450,  'left');
       if($loggedUser)
       { $this->pdf->addTextWrap( 550, $liney, 10, LangViewObservationField2.': '.$loggedUserName, 200,  'left');
       }
@@ -2033,7 +2033,7 @@ class PrintAtlas
       if($datapage!='true')
       { $theobjectdata=$objObject->getSeenObjectDetails(array($theobject => array(0,$theobject)));
         $theobjectdata=$theobjectdata[0];
-          $this->pdf->addTextWrap(50, $liney, 10, Reportaltname.": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'), 450,  'left');
+          $this->pdf->addTextWrap(50, $liney, 10, _("Alternative object names").": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'), 450,  'left');
           $liney-=25;
           $this->pdf->addTextWrap( 50, $liney, 10, Reportobjecttypefull.': '.$theobjectdata['objecttypefull'], 200,  'left');
           $this->pdf->addTextWrap(300, $liney, 10, Reportobjectmagnitude.': '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'), 200,  'left');

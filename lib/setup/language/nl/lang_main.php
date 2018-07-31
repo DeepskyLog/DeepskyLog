@@ -1,28 +1,6 @@
 <?php //NL
 $REST = "Rest";
 // Prior to 4.1
-define("Reportstartpagenumber"                                 ,"Eerste paginanummer");
-define("Reporttop"                                             ,"Bovenste marge positie voor de tekst (y-coordinate)");
-define("Reportheader"                                          ,"Positie van de hoofdinglijn (y-coordinaat)");
-define("Reportxleft"                                           ,"Positie van de eerste kolom (x-coordinaat)");
-define("Reportbottom"                                          ,"Bodemmarge positie voor de tekst (y-coordinaat)");
-define("Reportfooter"                                          ,"Positie voor de voetlijn (y-coordinaat)");
-define("Reportxmid"                                            ,"Positie van de tweede kolom (x-coordinaat");
-define("ReportfontSizeText"                                    ,"Fontgrootte tekst");
-define("ReportfontSizeSection"                                 ,"Fontgrootte voor de sectietitel");
-define("Reportdeltalineextra"                                  ,"Supplementaire lijn-interlinie");
-define("ReportsectionBarHeightextra"                           ,"Supplementaire grootte sectievak");
-define("ReportdeltalineSection"                                ,"Supplementaire ruimte na sectievak");
-define("Reportdeltaobjectline"                                 ,"Supplementaire ruimte tussen verschillende objecten");
-define("ReportSectionBarWidthbase"                             ,"Breedte van het sectievak (bv. indeling sterrenbeelden)");
-define("ReportSectionBarSpace"                                 ,"Terugsprong grootte van het sectievak");
-define("ReportShowElements"                                    ,"Toon (t) titel, (h) opgemaakt voor, (e) efemeriden,(p) paginanummers, (l) legende, (s) separatielijnen, (i) index");
-define("Reportobjectseen"                                      ,"Object gezien door jou of anderen");
-define("Reportobjectlastseen"                                  ,"Object laatst gezien door jou");
-define("Reportshowname"                                        ,"Object naam zoals opgezocht (b.v. op Caldwell nummer)");
-define("Reportobjectname"                                      ,"Object hoofdnaam");
-define("Reportaltname"                                         ,"Alternatieve objectnamen");
-define("Reportobjecttype"                                      ,"Object type afkorting");
 define("Reportobjecttypefull"                                  ,"Object type");
 define("Reportobjectconstellation"                             ,"Sterrenbeeld afkorting");
 define("Reportobjectconstellationfull"                         ,"Sterrenbeeld");
