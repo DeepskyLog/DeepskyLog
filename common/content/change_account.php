@@ -342,43 +342,43 @@ function change_account()
 
   echo "<div class=\"tab-pane\" id=\"atlases\">";
   echo "<br />";
-  echo profilefovmagnitude;
+  echo _("Atlas standard object FoVs:");
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . profilefovmagnitudeselect . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Overview / Lookup / Detail") . "</label>";
 	echo "<div class=\"col-sm-2 form\">" .
 			   "<input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" name=\"overviewFoV\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewFoV')."\" /></div>".
 	       "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" name=\"lookupFoV\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupFoV')."\" /></div>".
 	       "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" name=\"detailFoV\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailFoV')."\" /></div>";
 	echo "</div>";
 
-	echo profiledsosmagnitude;
+	echo _("Atlas standard object magnitudes:");
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . profiledsosmagnitudeselect . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Overview / Lookup / Detail") . "</label>";
 	echo "<div class=\"col-sm-2 form\">" .
         " <input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" name=\"overviewdsos\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewdsos')."\" /></div>".
 	      "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" name=\"lookupdsos\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupdsos')."\" /></div>".
 	      "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" name=\"detaildsos\" value=\"".$objObserver->getObserverProperty($loggedUser,'detaildsos')."\" />";
 	echo "</div></div>";
 
-	echo profilestarsmagnitude;
+	echo _("Atlas standard star magnitudes:");
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . profilestarsmagnitudeselect . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Overview / Lookup / Detail") . "</label>";
 	echo "<div class=\"col-sm-2 form\">" .
         "<input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" name=\"overviewstars\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewstars')."\" /></div>".
         "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" name=\"lookupstars\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupstars')."\" /></div>".
         "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered form-control\" name=\"detailstars\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailstars')."\" />";
 	echo "</div></div>";
 
-	echo profilephotosizes;
+	echo _("Standard size of photos:");
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . profilephotosizesselect . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("photo 1 / photo 2") . "</label>";
 	echo "<div class=\"col-sm-2 form\">" .
 			  "<input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" name=\"photosize1\" value=\"".$objObserver->getObserverProperty($loggedUser,'photosize1')."\" /></div>".
 	      "<div class=\"col-sm-2 form\"><input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered form-control\" name=\"photosize2\" value=\"".$objObserver->getObserverProperty($loggedUser,'photosize2')."\" />";
 	echo "</div></div>";
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . AtlasPageFont . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Font size printed atlas pages (6..9)") . "</label>";
 	echo "<div class=\"col-sm-2 form\">" .
          "<input type=\"number\" min=\"6\" max=\"9\" class=\"inputfield centered form-control\" maxlength=\"1\" name=\"atlaspagefont\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'atlaspagefont')."\" />";
 	echo "</div></div>";

@@ -2,68 +2,6 @@
 $REST = "Reste";
 
 // prior to 4.1
-define("Reportobjecttypefull"                                  ,"Type de l'objet");
-define("Reportobjectconstellation"                             ,"Abbreviation de la constellation");
-define("Reportobjectconstellationfull"                         ,"Nom de le constellation");
-define("Reportobjectmagnitude"                                 ,"Magnitude de l'objet");
-define("Reportobjectsurfacebrightness"                         ,"Mgnitude de surface de l'objet");
-define("Reportobjectradecl"                                    ,"Ascension droite et déclination");
-define("Reportobjectra"                                        ,"Ascension droite");
-define("Reportobjectdecl"                                      ,"Déclination");
-define("Reportobjectsizepa"                                    ,"Largeur et position d'angle");
-define("Reportobjectdiam1"                                     ,"Largeur 1");
-define("Reportobjectdiam2"                                     ,"Largeur 2");
-define("Reportobjectsize"                                      ,"Largeur (largeur1 x largeur2)");
-define("Reportobjectpa"                                        ,"Position d'angle");
-define("Reportobjectuseratlaspage"                             ,"Page d'atlas contenant l'objet");
-define("Reportobjectdescription"                               ,"Description de l'object");
-define("Reportobjectcontrast"                                  ,"Valeur de la différence de contrast");
-define("Reportobjectcontrastpopup"                             ,"Explication de la différence de contrast");
-define("Reportobjectcontrasttype"                              ,"Type de différence de contrast");
-define("Reportobjectoptimalmagnification"                      ,"Magnification optimale avec oculaire");
-define("Reportobjectoptimalmagnificationvalue"                 ,"Valeur de magnification optimale");
-define("Reportobjectrise"                                      ,"L'heure du montant de l'objet");
-define("Reportobjectrisepopup"                                 ,"Explication de l'heure du montant de l'objet");
-define("Reportobjecttransit"                                   ,"L'heure du transit de objet");
-define("Reportobjecttransitpopup"                              ,"Explication de l'heure de transit de l'objet");
-define("Reportobjectset"                                       ,"L'heure de la déscente de l'objet");
-define("Reportobjectsetpopup"                                  ,"Explication de l'heure de déscente de l'objet");
-define("Reportobjectbest"                                      ,"Meilleur temps pour l'observation");
-define("Reportobjectbestpopup"                                 ,"Explication du meilleur temps pour l'observation");
-define("Reportobjectmaxaltitude"                               ,"Altitude maximale au moment du meilleur temps");
-define("Reportobjectmaxaltitudepopup"                          ,"Explacation de l'altitude maximale");
-define("ReportEpehemeridesFor"                                 ,"Ephémerides pour");
-define("ReportEpehemeridesForShow"                             ,"Montez les éphémerides");
-define("ReportEpehemeridesForHide"                             ,"Cachez les éphémerides");
-define("ReportEpehemeridesIn"                                  ,"à");
-define("ReportInLocalTime"                                     ," en temps local !");
-define("ReportImagesFor"                                       ,'Les images pour ');
-
-
-define("AtlasPageFont"                                   ,"Taille de la police dans l'atlas (6..9)");
-
-define("LangLoadFormLayout"                              ,"Mise en page: ");
-
-define("LangLoadFormLayout1"                             ,"Fait");
-define("LangLoadFormLayout2"                             ,"Prière d'indiquer le nom de la mise en page");
-
-define("LangSaveFormLayout1"                             ,"Sauvegarder");
-define("LangSaveFormLayout2"                             ,"Prière de donner un nom à la mise en page");
-define("LangSaveFormLayout3"                             ,"Ouvrir");
-define("LangSaveFormLayout4"                             ,"Effacer");
-
-
-define("profilefovmagnitude"                            ,"Les champs de vue standard de l'atlas:");
-define("profilefovmagnitudeselect"                      ,"aperçu / recherche / détail");
-define("profiledsosmagnitude"                           ,"Les magnitudes des objets dans l'atlas:");
-define("profiledsosmagnitudeselect"                     ,"aperçu / recherche / détail");
-define("profilestarsmagnitude"                          ,"Les magnitudes des étoiles:");
-define("profilestarsmagnitudeselect"                    ,"aperçu / recherche / détail");
-define("profilephotosizes"                              ,"Taille standard des photos:");
-define("profilephotosizesselect"                        ,"photo 1 / photo 2");
-
-
-
 define('LangBest'                                        ,'Meilleur');
 define('LangToday'                                       ,"Aujourd'hui");
 define('LangDate'                                        ,'Date');

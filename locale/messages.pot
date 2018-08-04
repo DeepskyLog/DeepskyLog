@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-31 21:35+0200\n"
+"POT-Creation-Date: 2018-08-04 20:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,7 @@ msgid "Observation"
 msgstr ""
 
 #: comets/menu/change.php:25 common/content/objectsSets.php:86
-#: deepsky/menu/change.php:33 lib/printatlas.php:1558
+#: deepsky/menu/change.php:33 lib/printatlas.php:1571
 msgid "Object"
 msgstr ""
 
@@ -975,12 +975,138 @@ msgid "Object principal name"
 msgstr ""
 
 #: common/content/reportslayout.php:83 lib/printatlas.php:1490
-#: lib/printatlas.php:2036
+#: lib/printatlas.php:2061
 msgid "Alternative object names"
 msgstr ""
 
 #: common/content/reportslayout.php:84
 msgid "Object type abbreviation"
+msgstr ""
+
+#: common/content/reportslayout.php:85 lib/printatlas.php:1501
+#: lib/printatlas.php:2063
+msgid "Object type"
+msgstr ""
+
+#: common/content/reportslayout.php:86
+msgid "Constellation abbreviation"
+msgstr ""
+
+#: common/content/reportslayout.php:87 lib/printatlas.php:1497
+#: lib/printatlas.php:2066
+msgid "Constellation name"
+msgstr ""
+
+#: common/content/reportslayout.php:88 lib/printatlas.php:1496
+#: lib/printatlas.php:2064
+msgid "Object magnitude"
+msgstr ""
+
+#: common/content/reportslayout.php:89 lib/printatlas.php:1500
+#: lib/printatlas.php:2067
+msgid "Object surface brightness"
+msgstr ""
+
+#: common/content/reportslayout.php:90
+msgid "Right ascension and declination"
+msgstr ""
+
+#: common/content/reportslayout.php:91 lib/printatlas.php:1495
+#: lib/printatlas.php:2069
+msgid "Right ascension"
+msgstr ""
+
+#: common/content/reportslayout.php:92 lib/printatlas.php:1499
+#: lib/printatlas.php:2072
+msgid "Declination"
+msgstr ""
+
+#: common/content/reportslayout.php:93
+msgid "Object size and position angle"
+msgstr ""
+
+#: common/content/reportslayout.php:94
+msgid "Object size 1"
+msgstr ""
+
+#: common/content/reportslayout.php:95
+msgid "Object size 2"
+msgstr ""
+
+#: common/content/reportslayout.php:96
+msgid "Object size (size1 x size2)"
+msgstr ""
+
+#: common/content/reportslayout.php:97
+msgid "Object orientation - position angle"
+msgstr ""
+
+#: common/content/reportslayout.php:98
+msgid "Atlas page the object is on"
+msgstr ""
+
+#: common/content/reportslayout.php:99
+msgid "Object description"
+msgstr ""
+
+#: common/content/reportslayout.php:100 lib/printatlas.php:1511
+msgid "Object contrast-visibility value"
+msgstr ""
+
+#: common/content/reportslayout.php:101
+msgid "Object contrast-visibility explanation"
+msgstr ""
+
+#: common/content/reportslayout.php:102
+msgid "Object contrast-visibility type"
+msgstr ""
+
+#: common/content/reportslayout.php:103
+msgid "Optimal magnification explanation"
+msgstr ""
+
+#: common/content/reportslayout.php:104
+msgid "Optimal magnification value"
+msgstr ""
+
+#: common/content/reportslayout.php:105
+msgid "Object rise time"
+msgstr ""
+
+#: common/content/reportslayout.php:106
+msgid "Object rise time explanation"
+msgstr ""
+
+#: common/content/reportslayout.php:107
+msgid "Object transit time"
+msgstr ""
+
+#: common/content/reportslayout.php:108
+msgid "Object transit time explanation"
+msgstr ""
+
+#: common/content/reportslayout.php:109
+msgid "Object set time"
+msgstr ""
+
+#: common/content/reportslayout.php:110
+msgid "Object set time explanation"
+msgstr ""
+
+#: common/content/reportslayout.php:111
+msgid "Best observing time"
+msgstr ""
+
+#: common/content/reportslayout.php:112
+msgid "Best observing time explanation"
+msgstr ""
+
+#: common/content/reportslayout.php:113
+msgid "Maximal altitude at best time"
+msgstr ""
+
+#: common/content/reportslayout.php:114
+msgid "Maximal altitude explanation"
 msgstr ""
 
 #: common/content/reportslayout.php:115
@@ -1103,6 +1229,35 @@ msgstr ""
 
 #: common/content/change_account.php:331
 msgid "Preferred unit for instrument diameter"
+msgstr ""
+
+#: common/content/change_account.php:345
+msgid "Atlas standard object FoVs:"
+msgstr ""
+
+#: common/content/change_account.php:347 common/content/change_account.php:356
+#: common/content/change_account.php:365
+msgid "Overview / Lookup / Detail"
+msgstr ""
+
+#: common/content/change_account.php:354
+msgid "Atlas standard object magnitudes:"
+msgstr ""
+
+#: common/content/change_account.php:363
+msgid "Atlas standard star magnitudes:"
+msgstr ""
+
+#: common/content/change_account.php:372
+msgid "Standard size of photos:"
+msgstr ""
+
+#: common/content/change_account.php:374
+msgid "photo 1 / photo 2"
+msgstr ""
+
+#: common/content/change_account.php:381
+msgid "Font size printed atlas pages (6..9)"
 msgstr ""
 
 #: common/content/change_account.php:444
@@ -1531,8 +1686,8 @@ msgstr ""
 msgid "Observation of "
 msgstr ""
 
-#: deepsky/content/setup_objects_query.php:103 lib/printatlas.php:1555
-#: lib/printatlas.php:1556 lib/util.php:3082 lib/util.php:3084
+#: deepsky/content/setup_objects_query.php:103 lib/printatlas.php:1568
+#: lib/printatlas.php:1569 lib/util.php:3082 lib/util.php:3084
 #: lib/util.php:3086 lib/util.php:3088 lib/util.php:3263 lib/util.php:3265
 #: lib/util.php:3267 lib/util.php:3270
 msgid " to "
@@ -1562,96 +1717,107 @@ msgstr ""
 msgid "Only object ephemerides"
 msgstr ""
 
-#: deepsky/content/view_object.php:38 deepsky/content/view_object.php:43
+#: deepsky/content/view_object.php:38 deepsky/content/view_object.php:49
 msgid "Object ephemerides"
 msgstr ""
 
-#: deepsky/content/view_object.php:49
+#: deepsky/content/view_object.php:41 deepsky/content/view_object.php:52
+#: deepsky/content/view_object.php:246 lib/printatlas.php:1551
+#: lib/printatlas.php:1586
+#, php-format
+msgid "Ephemerides for %s in %s"
+msgstr ""
+
+#: deepsky/content/view_object.php:60
 msgid "Only nearby objects"
 msgstr ""
 
-#: deepsky/content/view_object.php:54 deepsky/content/view_object.php:57
+#: deepsky/content/view_object.php:65 deepsky/content/view_object.php:68
 msgid "Nearby objects"
 msgstr ""
 
-#: deepsky/content/view_object.php:61
+#: deepsky/content/view_object.php:72
 msgid "Only object observations"
 msgstr ""
 
-#: deepsky/content/view_object.php:65 deepsky/content/view_object.php:67
+#: deepsky/content/view_object.php:76 deepsky/content/view_object.php:78
 msgid "Object observations"
 msgstr ""
 
-#: deepsky/content/view_object.php:78
+#: deepsky/content/view_object.php:89
 msgid "Hide the object details"
 msgstr ""
 
-#: deepsky/content/view_object.php:84 deepsky/content/view_object.php:91
-#: deepsky/content/view_object.php:104
+#: deepsky/content/view_object.php:95 deepsky/content/view_object.php:102
+#: deepsky/content/view_object.php:115
 msgid "Remove Object"
 msgstr ""
 
-#: deepsky/content/view_object.php:94 deepsky/content/view_object.php:122
+#: deepsky/content/view_object.php:105 deepsky/content/view_object.php:133
 #, php-format
 msgid "Do you really want to delete %s?"
 msgstr ""
 
-#: deepsky/content/view_object.php:95
+#: deepsky/content/view_object.php:106
 #, php-format
 msgid ""
 "There are no observations of %s, so removing %s should be relatively safe."
 msgstr ""
 
-#: deepsky/content/view_object.php:103 deepsky/content/view_object.php:131
+#: deepsky/content/view_object.php:114 deepsky/content/view_object.php:142
 msgid "Keep Object"
 msgstr ""
 
-#: deepsky/content/view_object.php:112 deepsky/content/view_object.php:119
-#: deepsky/content/view_object.php:132
+#: deepsky/content/view_object.php:123 deepsky/content/view_object.php:130
+#: deepsky/content/view_object.php:143
 msgid "Force Remove Object"
 msgstr ""
 
-#: deepsky/content/view_object.php:123
+#: deepsky/content/view_object.php:134
 #, php-format
 msgid ", which has %s observations?"
 msgstr ""
 
-#: deepsky/content/view_object.php:125
+#: deepsky/content/view_object.php:136
 msgid "All the observations will also be removed!"
 msgstr ""
 
-#: deepsky/content/view_object.php:139
+#: deepsky/content/view_object.php:150
 msgid "Save"
 msgstr ""
 
-#: deepsky/content/view_object.php:152
+#: deepsky/content/view_object.php:163
 msgid "Hide the nearby objects"
 msgstr ""
 
-#: deepsky/content/view_object.php:237 lib/printatlas.php:1603
-#: lib/printatlas.php:1755
+#: deepsky/content/view_object.php:244
+msgid "Hide the ephemerides"
+msgstr ""
+
+#: deepsky/content/view_object.php:253 lib/printatlas.php:1624
+#: lib/printatlas.php:1776
 msgid "Month"
 msgstr ""
 
-#: deepsky/content/view_object.php:301 lib/printatlas.php:1686
-#: lib/printatlas.php:1837
+#: deepsky/content/view_object.php:317 lib/printatlas.php:1707
+#: lib/printatlas.php:1858
 msgid "Astronomical night"
 msgstr ""
 
-#: deepsky/content/view_object.php:309 lib/printatlas.php:1709
-#: lib/printatlas.php:1860
+#: deepsky/content/view_object.php:325 lib/printatlas.php:1730
+#: lib/printatlas.php:1881
 msgid "Nautical night"
 msgstr ""
 
-#: deepsky/content/view_object.php:317
+#: deepsky/content/view_object.php:333
 msgid "Object rise<br />-<br />set"
 msgstr ""
 
-#: deepsky/content/view_object.php:390
+#: deepsky/content/view_object.php:406
 msgid "Hide the observations"
 msgstr ""
 
-#: deepsky/content/view_object.php:535
+#: deepsky/content/view_object.php:551
 msgid "Show or remove extra info..."
 msgstr ""
 
@@ -1889,12 +2055,21 @@ msgstr ""
 msgid "No index entries"
 msgstr ""
 
-#: lib/printatlas.php:1555 lib/printatlas.php:1556
+#: lib/printatlas.php:1555 lib/printatlas.php:1590
+msgid " in LOCAL TIME !"
+msgstr ""
+
+#: lib/printatlas.php:1568 lib/printatlas.php:1569
 msgid "from"
 msgstr ""
 
-#: lib/printatlas.php:1732 lib/printatlas.php:1883
+#: lib/printatlas.php:1753 lib/printatlas.php:1904
 msgid "Object rise-set"
+msgstr ""
+
+#: lib/printatlas.php:2050
+#, php-format
+msgid "Images for %s"
 msgstr ""
 
 #: lib/observations.php:2742 lib/moonpic.php:73

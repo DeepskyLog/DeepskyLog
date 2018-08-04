@@ -1492,13 +1492,13 @@ class PrintAtlas
       { $this->pdf->addTextWrap( 550, $liney, 10, LangViewObservationField2.': '.$loggedUserName, 200,  'left');
       }
       $liney-=25;
-      $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectra.': '.$theobjectdata['objectrahms'], 200,  'left');
-      $this->pdf->addTextWrap(300, $liney, 10, Reportobjectmagnitude.': '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'), 200,  'left');
-      $this->pdf->addTextWrap(550, $liney, 10, Reportobjectconstellationfull.': '.$theobjectdata['objectconstellationfull'], 200,  'left');
+      $this->pdf->addTextWrap( 50, $liney, 10, _("Right ascension").': '.$theobjectdata['objectrahms'], 200,  'left');
+      $this->pdf->addTextWrap(300, $liney, 10, _("Object magnitude").': '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'), 200,  'left');
+      $this->pdf->addTextWrap(550, $liney, 10, _("Constellation name").': '.$theobjectdata['objectconstellationfull'], 200,  'left');
       $liney-=15;
-      $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectdecl.': '.$theobjectdata['objectdecldms'], 200,  'left');
-      $this->pdf->addTextWrap(300, $liney, 10, Reportobjectsurfacebrightness.': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'), 200,  'left');
-      $this->pdf->addTextWrap(550, $liney, 10, Reportobjecttypefull.': '.$theobjectdata['objecttypefull'], 200,  'left');
+      $this->pdf->addTextWrap( 50, $liney, 10, _("Declination").': '.$theobjectdata['objectdecldms'], 200,  'left');
+      $this->pdf->addTextWrap(300, $liney, 10, _("Object surface brightness").': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'), 200,  'left');
+      $this->pdf->addTextWrap(550, $liney, 10, _("Object type").': '.$theobjectdata['objecttypefull'], 200,  'left');
       $liney-=15;
       $this->pdf->addTextWrap( 50, $liney, 10, LangViewObjectField9.': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'), 200,  'left');
       $this->pdf->addTextWrap(300, $liney, 10, LangViewObjectField12.': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa), 200,  'left');
@@ -1508,7 +1508,7 @@ class PrintAtlas
       { $this->pdf->addTextWrap( 50, $liney, 10, LangViewObjectFieldOptimumDetectionMagnification.': '.$theobjectdata['objectoptimalmagnification'], 4500,  'left');
         $this->pdf->addTextWrap(550, $liney, 10, LangOverviewObjectsHeader8.': '.($theobjectdata['objectlastseen']?$theobjectdata['objectlastseen']:'-'), 200,  'left');
         $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectcontrast.': '.($theobjectdata['objectcontrast']!='0.0'?$theobjectdata['objectcontrast'].' - ':'').stripslashes($theobjectdata['objectcontrastpopup']), 750,  'left');
+          $this->pdf->addTextWrap( 50, $liney, 10, _("Object contrast-visibility value").': '.($theobjectdata['objectcontrast']!='0.0'?$theobjectdata['objectcontrast'].' - ':'').stripslashes($theobjectdata['objectcontrastpopup']), 750,  'left');
           $liney-=15;
         if($ephemerides=='true')
         { $liney-=15;
@@ -1543,7 +1543,20 @@ class PrintAtlas
               elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
               $dateTimeText0=substr($dateTimeText0,0,6);
           }
-          $this->pdf->addTextWrap( 50, $liney, 10, ReportEpehemeridesFor.' '.$dateTimeText0."-".$dateTimeText1.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'). ReportInLocalTime, 600 ,  'left');
+          $this->pdf->addTextWrap(
+              50, 
+              $liney, 
+              10, 
+              sprintf(
+                _("Ephemerides for %s in %s"), 
+                $dateTimeText0."-".$dateTimeText1, 
+                $objLocation->getLocationPropertyFromId(
+                    $objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'
+                ). _(" in LOCAL TIME !")
+              ), 
+              600,
+              'left'
+            );
           $liney-=5;
           $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
             $liney-=15;
@@ -1566,8 +1579,16 @@ class PrintAtlas
         $liney-=10;
         if($objObserver->getObserverProperty($loggedUser, 'stdLocation') && ($yearephemerides=='true'))
         { $this->pdf->addTextWrap(
-            50, $liney, 
-            10, ReportEpehemeridesFor.' '.$theShowname.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'). ReportInLocalTime,  
+            50,
+            $liney, 
+            10,
+            sprintf(
+                _("Ephemerides for %s in %s"), 
+                $theShowname, 
+                $objLocation->getLocationPropertyFromId(
+                    $objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'
+                ). _(" in LOCAL TIME !")
+            ),  
             $this->canvasDimensionXpx-100, 
             'left'
         );
@@ -2024,7 +2045,11 @@ class PrintAtlas
 
           $this->pdf->setColor(0,0,0);
          $liney=$this->canvasDimensionYpx-50;
-      $this->pdf->addTextWrap( 50, $liney, 15, ReportImagesFor.$theShowname, $this->canvasDimensionXpx-100,  'center');
+      $this->pdf->addTextWrap( 50, $liney, 15, 
+        sprintf(
+            _('Images for %s'),
+            $theShowname
+        ), $this->canvasDimensionXpx-100,  'center');
       $liney-=5;
       $this->pdf->line(50,$liney,$this->canvasDimensionXpx-250,$liney);
       $liney-=15;
@@ -2035,16 +2060,16 @@ class PrintAtlas
         $theobjectdata=$theobjectdata[0];
           $this->pdf->addTextWrap(50, $liney, 10, _("Alternative object names").": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'), 450,  'left');
           $liney-=25;
-          $this->pdf->addTextWrap( 50, $liney, 10, Reportobjecttypefull.': '.$theobjectdata['objecttypefull'], 200,  'left');
-          $this->pdf->addTextWrap(300, $liney, 10, Reportobjectmagnitude.': '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'), 200,  'left');
+          $this->pdf->addTextWrap( 50, $liney, 10, _("Object type").': '.$theobjectdata['objecttypefull'], 200,  'left');
+          $this->pdf->addTextWrap(300, $liney, 10, _("Object magnitude").': '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'), 200,  'left');
           $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectconstellationfull.': '.$theobjectdata['objectconstellationfull'], 200,  'left');
-          $this->pdf->addTextWrap(300, $liney, 10, Reportobjectsurfacebrightness.': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'), 200,  'left');
+          $this->pdf->addTextWrap( 50, $liney, 10, _("Constellation name").': '.$theobjectdata['objectconstellationfull'], 200,  'left');
+          $this->pdf->addTextWrap(300, $liney, 10, _("Object surface brightness").': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'), 200,  'left');
           $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectra.': '.$theobjectdata['objectrahms'], 200,  'left');
+          $this->pdf->addTextWrap( 50, $liney, 10, _("Right ascension").': '.$theobjectdata['objectrahms'], 200,  'left');
           $this->pdf->addTextWrap(300, $liney, 10, LangViewObjectField9.': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'), 200,  'left');
           $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 10, Reportobjectdecl.': '.$theobjectdata['objectdecldms'], 200,  'left');
+          $this->pdf->addTextWrap( 50, $liney, 10, _("Declination").': '.$theobjectdata['objectdecldms'], 200,  'left');
           $this->pdf->addTextWrap(300, $liney, 10, LangViewObjectField12.': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa), 200,  'left');
       }
     $this->labelsArr=array();

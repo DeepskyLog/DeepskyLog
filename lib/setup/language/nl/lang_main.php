@@ -1,68 +1,6 @@
 <?php //NL
 $REST = "Rest";
 // Prior to 4.1
-define("Reportobjecttypefull"                                  ,"Object type");
-define("Reportobjectconstellation"                             ,"Sterrenbeeld afkorting");
-define("Reportobjectconstellationfull"                         ,"Sterrenbeeld");
-define("Reportobjectmagnitude"                                 ,"Object magnitude");
-define("Reportobjectsurfacebrightness"                         ,"Object oppervlaktehelderh.");
-define("Reportobjectradecl"                                    ,"Rechte klimming en declinatie");
-define("Reportobjectra"                                        ,"Rechte klimming");
-define("Reportobjectdecl"                                      ,"Declinatie");
-define("Reportobjectsizepa"                                    ,"Objectgrootte en positiehoek");
-define("Reportobjectdiam1"                                     ,"Objectgrootte 1");
-define("Reportobjectdiam2"                                     ,"Objectgrootte 2");
-define("Reportobjectsize"                                      ,"Object grotte (grootte1 x grootte2)");
-define("Reportobjectpa"                                        ,"Object orientatie - positiehoek");
-define("Reportobjectuseratlaspage"                             ,"Atlas pagina");
-define("Reportobjectdescription"                               ,"Object beschrijving");
-define("Reportobjectcontrast"                                  ,"Object contrast-zichtbaarheidswaarde");
-define("Reportobjectcontrastpopup"                             ,"Object contrast-zichtbaarheidsuitleg");
-define("Reportobjectcontrasttype"                              ,"Object contrast-zichtbaarheidstype");
-define("Reportobjectoptimalmagnification"                      ,"Optimale vergroting - tekst");
-define("Reportobjectoptimalmagnificationvalue"                 ,"Optimale vergroting - waarde");
-define("Reportobjectrise"                                      ,"Opkomsttijd - uur");
-define("Reportobjectrisepopup"                                 ,"Opkomsttijd - tekst");
-define("Reportobjecttransit"                                   ,"Doorgangstijd - uur");
-define("Reportobjecttransitpopup"                              ,"doorgangstijd - tekst");
-define("Reportobjectset"                                       ,"Ondergangstijds - uur");
-define("Reportobjectsetpopup"                                  ,"Ondergangstijd - tekst");
-define("Reportobjectbest"                                      ,"Beste observatiemoment - uur");
-define("Reportobjectbestpopup"                                 ,"Beste observatiemoment - tekst");
-define("Reportobjectmaxaltitude"                               ,"Hoogte bij beste observatietijd");
-define("Reportobjectmaxaltitudepopup"                          ,"Hoogte bij beste observatietijd uitleg");
-define("ReportEpehemeridesFor"                                 ,"Efemeriden voor");
-define("ReportEpehemeridesForShow"                             ,"Toon de efemeriden");
-define("ReportEpehemeridesForHide"                             ,"Verberg de efemeriden");
-define("ReportEpehemeridesIn"                                  ,"in");
-define("ReportInLocalTime"                                     ," in LOKALE TIJD !");
-define("ReportImagesFor"                                       ,'Beelden voor ');
-
-define("AtlasPageFont"                                   ,"Tekengrootte pdf atlaspagina (6..9)");
-
-define("LangLoadFormLayout"                              ,"Layout: &nbsp;");
-
-
-define("LangLoadFormLayout1"                             ,"Openen");
-define("LangLoadFormLayout2"                             ,"Gelieve de naam van de layout op te geven");
-
-define("LangSaveFormLayout1"                             ,"Bewaren");
-define("LangSaveFormLayout2"                             ,"Gelieve de naam van de layout op te geven");
-define("LangSaveFormLayout3"                             ,"Openen");
-define("LangSaveFormLayout4"                             ,"Verwijderen");
-
-
-define("profilefovmagnitude"                             ,"Atlas standaard FoVs:");
-define("profilefovmagnitudeselect"                       ,"overzicht / opzoeken / detail");
-define("profiledsosmagnitude"                            ,"Atlas standaard objectmagnitudes:");
-define("profiledsosmagnitudeselect"                      ,"overzicht / opzoeken / detail");
-define("profilestarsmagnitude"                           ,"Atlas standaard stermagnitudes:");
-define("profilestarsmagnitudeselect"                     ,"overzicht / opzoeken / detail");
-define("profilephotosizes"                               ,"Standaard fotogroottes:");
-define("profilephotosizesselect"                         ,"foto 1 / foto 2");
-
-
-
 define('LangBest'                                        ,'Beste tijd');
 define('LangToday'                                       ,'Vandaag');
 define('LangDate'                                        ,'Datum');

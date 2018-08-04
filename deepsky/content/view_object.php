@@ -36,12 +36,23 @@ function showButtons($theLocation, $viewobjectdetails, $viewobjectephemerides, $
 		if ($viewobjectephemerides == "hidden")
             $content1 .= "<input type=\"button\" class=\"btn\" value=\"+ " 
                 . _("Object ephemerides") . "\"
-		               title=\"" . ReportEpehemeridesFor . "&nbsp;" . $object_ss . ' ' . ReportEpehemeridesIn . ' ' . $objLocation->getLocationPropertyFromId ( $theLocation, 'name' ) . "\"
+                       title=\"" 
+                . sprintf(
+                    _("Ephemerides for %s in %s"), 
+                    $object_ss, 
+                    $objLocation->getLocationPropertyFromId($theLocation, 'name')
+                ) 
+                . "\"
 		               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectephemerides=show' . "';\"/>";
 		else
             $content1 .= "<input type=\"button\" class=\"btn\" value=\"- " 
                 . _("Object ephemerides") . "\"
-		               title=\"" . ReportEpehemeridesFor . "&nbsp;" . $object_ss . ' ' . ReportEpehemeridesIn . ' ' . $objLocation->getLocationPropertyFromId ( $theLocation, 'name' ) . "\"
+                       title=\"" 
+                . sprintf(
+                    _("Ephemerides for %s in %s"),
+                    $object_ss, 
+                    $objLocation->getLocationPropertyFromId($theLocation, 'name')
+                 ) . "\"
 		               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectephemerides=hidden' . "';\"/>";
 	}
 	$content1 .= "&nbsp;" . "&nbsp;" . "&nbsp;";
@@ -230,7 +241,12 @@ function showObjectEphemerides($theLocation) {
 		$theEphemerides15 [$i] = $objObject->getEphemerides ( $object, 15, $i, 2010 );
 		$theNightEphemerides15 [$i] = date_sun_info ( strtotime ( "2010" . "-" . $i . "-" . "15" ), $latitude, $longitude );
 	}
-	echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectephemerides=hidden' . "\" title=\"" . ReportEpehemeridesForHide . "\">-</a> " . ReportEpehemeridesFor . "&nbsp;" . stripslashes ( $object ) . ' ' . ReportEpehemeridesIn . ' ' . $objLocation->getLocationPropertyFromId ( $theLocation, 'name' ) . "</h4>";
+    echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectephemerides=hidden' . "\" title=\"" . _("Hide the ephemerides") . "\">-</a> " 
+        . sprintf(
+            _("Ephemerides for %s in %s"),
+            stripslashes($object), 
+            $objLocation->getLocationPropertyFromId($theLocation, 'name')
+         ) . "</h4>";
 	echo "<hr />";
 	echo "<table class=\"table table-condensed\">";
 	echo "<tr class=\"type10\">";

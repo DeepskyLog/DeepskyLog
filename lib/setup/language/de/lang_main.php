@@ -2,67 +2,6 @@
 $REST = "Rest";
 
 // prior to 4.1
-define("Reportobjecttypefull"                                  ,"Objecttyp");
-define("Reportobjectconstellation"                             ,"Sternbild Abkürzung");
-define("Reportobjectconstellationfull"                         ,"Sternbildname");
-define("Reportobjectmagnitude"                                 ,"Objekt Helligkeit");
-define("Reportobjectsurfacebrightness"                         ,"Objekt Oberflächenhelligkeit");
-define("Reportobjectradecl"                                    ,"RA und Dekl");
-define("Reportobjectra"                                        ,"RA");
-define("Reportobjectdecl"                                      ,"Dekl");
-define("Reportobjectsizepa"                                    ,"Objektgröße und Positionswinkel");
-define("Reportobjectdiam1"                                     ,"Objektgröße 1");
-define("Reportobjectdiam2"                                     ,"Objektgröße 2");
-define("Reportobjectsize"                                      ,"Objektgröße (Größe1 x Größe2)");
-define("Reportobjectpa"                                        ,"Objekt Orientierung - Positionswinkel");
-define("Reportobjectuseratlaspage"                             ,"Seitennummer auf welcher das Objekt im Atlas gefunden werden kann");
-define("Reportobjectdescription"                               ,"Objektbeschreibung");
-define("Reportobjectcontrast"                                  ,"Objekt Kontrast-Sichtbarkeitswert");
-define("Reportobjectcontrastpopup"                             ,"Objekt Kontrast-Sichtbarkeitserklärung");
-define("Reportobjectcontrasttype"                              ,"Objekt Kontrast-Sichtbarkeitstyp");
-define("Reportobjectoptimalmagnification"                      ,"Optimale Vergrößerungsbeschreibung");
-define("Reportobjectoptimalmagnificationvalue"                 ,"Optimaler Vergrößerungswert");
-define("Reportobjectrise"                                      ,"Objekt Aufgangszeit");
-define("Reportobjectrisepopup"                                 ,"Objekt Aufgangszeit Beschreibung");
-define("Reportobjecttransit"                                   ,"Objekt Transitzeit");
-define("Reportobjecttransitpopup"                              ,"Objekt Transitzeit Beschreibung");
-define("Reportobjectset"                                       ,"Objekt Untergangszeit");
-define("Reportobjectsetpopup"                                  ,"Objekt Untergangszeit Beschreibung");
-define("Reportobjectbest"                                      ,"Beste Beobachtungszeit");
-define("Reportobjectbestpopup"                                 ,"Beste Beobachtungzeit Beschreibung");
-define("Reportobjectmaxaltitude"                               ,"Maximale Höhe während der besten Beobachtungszeit");
-define("Reportobjectmaxaltitudepopup"                          ,"Maximale Höhe Beschreibung");
-define("ReportEpehemeridesFor"                                 ,"Ephemeridien für");
-define("ReportEpehemeridesForShow"                             ,"Ephemeridien anzeigen");
-define("ReportEpehemeridesForHide"                             ,"Ephemeridien ausblenden");
-define("ReportEpehemeridesIn"                                  ,"in");
-define("ReportInLocalTime"                                     ," in LOKALER ZEIT !");
-define("ReportImagesFor"                                       ,'Bilder für ');
-
-define("AtlasPageFont"                                   ,"Schriftgröße für Atlas Seitenzahlen (6..9)");
-
-define("LangLoadFormLayout"                              ,"Layout: ");
-
-define("LangLoadFormLayout1"                             ,"Laden");
-define("LangLoadFormLayout2"                             ,"Bitte geben Sie einen Layoutnamen ein");
-
-define("LangSaveFormLayout1"                             ,"Speichern");
-define("LangSaveFormLayout2"                             ,"Bitte geben Sie einen Layoutnamen ein");
-define("LangSaveFormLayout3"                             ,"Öffnen");
-define("LangSaveFormLayout4"                             ,"Löschen");
-
-
-
-define("profilefovmagnitude"                            ,"Standard Fov im Atlas:");
-define("profilefovmagnitudeselect"                      ,"Übersicht / Nachschlagen / Details");
-define("profiledsosmagnitude"                            ,"Standard Objekt Helligkeit im Atlas:");
-define("profiledsosmagnitudeselect"                      ,"Übersicht / Nachschlagen / Details");
-define("profilestarsmagnitude"                           ,"Standard Sterne Helligkeit im Atlas:");
-define("profilestarsmagnitudeselect"                     ,"Übersicht / Nachschlagen / Details");
-define("profilephotosizes"                               ,"Foto Standardgröße:");
-define("profilephotosizesselect"                         ,"Foto 1 / Foto 2");
-
-
 define('LangBest'                                        ,'Beste');
 define('LangToday'                                       ,'Heute');
 define('LangDate'                                        ,'Datum');
