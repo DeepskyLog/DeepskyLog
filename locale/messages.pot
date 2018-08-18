@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-04 20:32+0200\n"
+"POT-Creation-Date: 2018-08-18 20:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: atlas.pdf.php:17 common/content/atlasPages.php:102 lib/presentation.php:182
+msgid "Overview"
+msgstr ""
+
+#: atlas.pdf.php:19 common/content/atlasPages.php:103 lib/presentation.php:183
+msgid "Lookup"
+msgstr ""
+
+#: atlas.pdf.php:21 common/content/atlasPages.php:104 lib/presentation.php:184
+msgid "Detail"
+msgstr ""
 
 #: index.php:92 deepsky/content/view_list.php:21
 #: deepsky/content/view_list.php:31
@@ -701,18 +713,6 @@ msgstr ""
 
 #: common/content/atlasPages.php:101
 msgid "Choose one of the three available formats, they will download as a pdf:"
-msgstr ""
-
-#: common/content/atlasPages.php:102
-msgid "Overview"
-msgstr ""
-
-#: common/content/atlasPages.php:103
-msgid "Lookup"
-msgstr ""
-
-#: common/content/atlasPages.php:104
-msgid "Detail"
 msgstr ""
 
 #: common/content/atlasPages.php:107
@@ -1447,6 +1447,14 @@ msgid ""
 "attempting to break into your DeepskyLog account."
 msgstr ""
 
+#: deepsky/content/selected_observations.php:35
+msgid "Hide object details"
+msgstr ""
+
+#: deepsky/content/selected_observations.php:38
+msgid "Show object details"
+msgstr ""
+
 #: deepsky/content/view_catalogs.php:23
 msgid "Click on a list to view its details"
 msgstr ""
@@ -1687,9 +1695,9 @@ msgid "Observation of "
 msgstr ""
 
 #: deepsky/content/setup_objects_query.php:103 lib/printatlas.php:1568
-#: lib/printatlas.php:1569 lib/util.php:3082 lib/util.php:3084
-#: lib/util.php:3086 lib/util.php:3088 lib/util.php:3263 lib/util.php:3265
-#: lib/util.php:3267 lib/util.php:3270
+#: lib/printatlas.php:1569 lib/util.php:3082 lib/util.php:3085
+#: lib/util.php:3088 lib/util.php:3090 lib/util.php:3265 lib/util.php:3268
+#: lib/util.php:3270 lib/util.php:3273
 msgid " to "
 msgstr ""
 
@@ -1923,6 +1931,10 @@ msgstr ""
 msgid "Public: "
 msgstr ""
 
+#: deepsky/menu/date.php:116 lib/objects.php:1617 lib/messages.php:291
+msgid "Date"
+msgstr ""
+
 #: deepsky/menu/quickpick.php:25
 msgid "Enter object name"
 msgstr ""
@@ -2038,6 +2050,18 @@ msgstr ""
 msgid ""
 "A token for changing the password of %s has been emailed to %s. Follow the "
 "instructions in that email to change your password."
+msgstr ""
+
+#: lib/printatlas.php:1128
+msgid "FoV:"
+msgstr ""
+
+#: lib/printatlas.php:1129
+msgid "Objects to mag:"
+msgstr ""
+
+#: lib/printatlas.php:1130
+msgid "Stars to mag:"
 msgstr ""
 
 #: lib/printatlas.php:1131
@@ -2280,6 +2304,38 @@ msgid ""
 "messages."
 msgstr ""
 
+#: lib/objects.php:527 lib/objects.php:535 lib/objects.php:542
+#: lib/objects.php:1596 lib/objects.php:1604 lib/objects.php:1611
+#, php-format
+msgid "%s does not rise above horizon"
+msgstr ""
+
+#: lib/objects.php:529 lib/objects.php:537 lib/objects.php:1598
+#: lib/objects.php:1606
+#, php-format
+msgid "%s is circumpolar"
+msgstr ""
+
+#: lib/objects.php:531 lib/objects.php:1600
+#, php-format
+msgid "%s rises at %s on %s in %s"
+msgstr ""
+
+#: lib/objects.php:533 lib/objects.php:1602
+#, php-format
+msgid "%s transits at %s on %s in %s"
+msgstr ""
+
+#: lib/objects.php:539 lib/objects.php:1608
+#, php-format
+msgid "%s sets at %s on %s in %s"
+msgstr ""
+
+#: lib/objects.php:544 lib/objects.php:1613
+#, php-format
+msgid "%s reaches an altitude of %s in %s"
+msgstr ""
+
 #: lib/objects.php:639
 msgid "Number of own observations"
 msgstr ""
@@ -2297,17 +2353,17 @@ msgid "end"
 msgstr ""
 
 #: lib/objects.php:870 lib/objects.php:881 lib/objects.php:892
-#: lib/util.php:5150
+#: lib/util.php:5153
 msgid "mid"
 msgstr ""
 
 #: lib/objects.php:872 lib/objects.php:883 lib/objects.php:894
-#: lib/util.php:5148
+#: lib/util.php:5151
 msgid "begin"
 msgstr ""
 
 #: lib/objects.php:874 lib/objects.php:885 lib/objects.php:896
-#: lib/util.php:5146
+#: lib/util.php:5149
 msgid "start"
 msgstr ""
 
@@ -2321,6 +2377,10 @@ msgstr ""
 
 #: lib/objects.php:1556
 msgid "In public lists"
+msgstr ""
+
+#: lib/objects.php:1632 lib/objects.php:1806 lib/objects.php:1885
+msgid "Best Time"
 msgstr ""
 
 #: lib/objects.php:1794
@@ -2371,51 +2431,51 @@ msgid ""
 "rename your list before making the list public."
 msgstr ""
 
-#: lib/util.php:3082 lib/util.php:3262
+#: lib/util.php:3064 lib/util.php:3244
+msgid " on "
+msgstr ""
+
+#: lib/util.php:3082 lib/util.php:3264
 msgid "Sun down: "
 msgstr ""
 
-#: lib/util.php:3083 lib/util.php:3264
+#: lib/util.php:3084 lib/util.php:3266
 msgid "Nautical night: "
 msgstr ""
 
-#: lib/util.php:3085 lib/util.php:3266
+#: lib/util.php:3087 lib/util.php:3269
 msgid "Astronomical night: "
 msgstr ""
 
-#: lib/util.php:3087 lib/util.php:3269
+#: lib/util.php:3089 lib/util.php:3272
 msgid "Moon up: "
 msgstr ""
 
-#: lib/util.php:4960
+#: lib/util.php:4963
 #, php-format
 msgid "You have made %s drawings"
 msgstr ""
 
-#: lib/util.php:4973
+#: lib/util.php:4976
 #, php-format
 msgid "Make %s drawings to receive this DeepskyLog star!"
 msgstr ""
 
-#: lib/util.php:4987
+#: lib/util.php:4990
 #, php-format
 msgid "You have made %s observations!"
 msgstr ""
 
-#: lib/util.php:5000
+#: lib/util.php:5003
 #, php-format
 msgid "Make %s observations to receive this DeepskyLog star!"
 msgstr ""
 
-#: lib/util.php:5019
+#: lib/util.php:5022
 msgid "Select columns"
 msgstr ""
 
 #: lib/messages.php:187
 #, php-format
 msgid "DeepskyLog message from %s:"
-msgstr ""
-
-#: lib/messages.php:291
-msgid "Date"
 msgstr ""

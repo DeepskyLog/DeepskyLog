@@ -2,31 +2,6 @@
 $REST = "Rest";
 
 // prior to 4.1
-define('LangBest'                                        ,'Beste');
-define('LangToday'                                       ,'Heute');
-define('LangDate'                                        ,'Datum');
-define('LangCircumpolar'                                 ,' ist zirkumpolar');
-define('LangDoesntrise'                                  ,' übersteigt nicht den Horizont');
-define('LangRise'                                        ,' Aufgang um ');
-define('LangTransitPopup'                                ,' transit um ');
-define('LangSet'                                         ,' Untergang um ');
-define('LangAltitude'                                    ,' Erreicht eine Höhe von ');
-define('LangRistrasetOn'                                 ,' am ');
-define('LangRistrasetIn'                                 ,' in ');
-
-
-define('OverviewChart'                                   ,'Übersicht');
-define('LookupChart'                                     ,'Nachschlagen');
-define('DetailChart'                                     ,'Detail');
-
-define('atlasPageFoV'                                    ,'FoV:');
-define('atlasPageDSLM'                                   ,'Objekte bis mag:');
-define('atlasPageStarLM'                                 ,'Sterne bis mag:');
-
-
-define("LangShowObjectDetails"                            ,"Zeige Objekt Details");
-define("LangHideObjectDetails"                            ,"Verstecke Objekt Details");
-
 define("LangObjectsFilter"                                ,"Marke");
 define("LangObjectsFilterLocation"                        ,"Lokation");
 define("LangObjectsFilterLocationExpl"                    ,"Markiere die Objekte welche nicht sichtbar sind von der ausgewählten Lokation.");

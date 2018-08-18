@@ -2,33 +2,6 @@
 $REST = "Reste";
 
 // prior to 4.1
-define('LangBest'                                        ,'Meilleur');
-define('LangToday'                                       ,"Aujourd'hui");
-define('LangDate'                                        ,'Date');
-define('LangCircumpolar'                                 ,' est circumpolair');
-define('LangDoesntrise'                                  ," ne monte pas au-dessus de l'horizon");
-define('LangRise'                                        ,' monte à ');
-define('LangTransitPopup'                                ,' passe à ');
-define('LangSet'                                         ,' déscend à ');
-define('LangAltitude'                                    ,' atteint une altitude de ');
-define('LangRistrasetOn'                                 ,' le ');
-define('LangRistrasetIn'                                 ,' à ');
-
-
-define('OverviewChart'                                   ,'Aperçu');
-define('LookupChart'                                     ,'Recherche');
-define('DetailChart'                                     ,'Détail');
-
-define('atlasPageFoV'                                    ,'Champ de vue:');
-define('atlasPageDSLM'                                   ,"Objets jusqu'à mag.:");
-define('atlasPageStarLM'                                 ,"Etoiles jusqu'à mag:");
-
-
-define("LangShowObjectDetails"                            ,"Montrer del détails de l'objet");
-define("LangHideObjectDetails"                            ,"Cacher les détails de l'objet");
-
-
-
 define("LangObjectsFilter"                                ,"Marquer");
 define("LangObjectsFilterLocation"                        ,"Endroit d'observation");
 define("LangObjectsFilterLocationExpl"                    ,"Marquez les objets qui ne sont pas visibles à partir du lieu d'observation sélectionné.");

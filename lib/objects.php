@@ -524,24 +524,24 @@ class Objects {
 				$dec = $obs [$j] ["objectdecl"];
 				$ristraset = $objAstroCalc->calculateRiseTransitSettingTime ( $longitude, $latitude, $ra, $dec, $jd, $timedifference );
 				if ($ristraset [0] == "-" && strncmp ( $ristraset [3], "-", 1 ) == 0) {
-					$popup1 = $obs [$j] ["objectname"] . LangDoesntrise;
+					$popup1 = sprintf(_('%s does not rise above horizon'), $obs[$j]["objectname"]);
 				} else if ($ristraset [0] == "-") {
-					$popup1 = $obs [$j] ["objectname"] . LangCircumpolar;
+					$popup1 = sprintf(_('%s is circumpolar'), $obs[$j]["objectname"]);
 				} else {
-					$popup1 = $obs [$j] ["objectname"] . LangRise . $ristraset [0] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes ( $location );
+					$popup1 = sprintf(_('%s rises at %s on %s in %s'), $obs[$j]["objectname"], $ristraset[0], $dateTimeText, addslashes($location));
 				}
-				$popup2 = $obs [$j] ["objectname"] . LangTransitPopup . $ristraset [1] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes ( $location );
+				$popup2 = sprintf(_('%s transits at %s on %s in %s'), $obs[$j]["objectname"], $ristraset[1], $dateTimeText, addslashes($location));
 				if ($ristraset [2] == "-" && strncmp ( $ristraset [3], "-", 1 ) == 0) {
-					$popup3 = $obs [$j] ["objectname"] . LangDoesntrise;
+					$popup3 = sprintf(_('%s does not rise above horizon'), $obs[$j]["objectname"]);
 				} else if ($ristraset [2] == "-") {
-					$popup3 = $obs[$j] ["objectname"] . LangCircumpolar;
+					$popup3 = sprintf(_('%s is circumpolar'), $obs[$j]["objectname"]);
 				} else {
-					$popup3 = $obs[$j] ["objectname"] . LangSet . $ristraset [2] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes ( $location );
+					$popup3 = sprintf(_('%s sets at %s on %s in %s'), $obs[$j]["objectname"], $ristraset[2], $dateTimeText, addslashes($location));
 				}
 				if ($ristraset [3] == "-") {
-					$popup4 = $obs[$j] ["objectname"] . LangDoesntrise;
+					$popup4 = sprintf(_('%s does not rise above horizon'), $obs[$j]["objectname"]);
 				} else {
-					$popup4 = $obs[$j] ["objectname"] . LangAltitude . $ristraset [3] . LangRistrasetIn . addslashes ( $location );
+					$popup4 = sprintf(_('%s reaches an altitude of %s in %s'), $obs[$j]["objectname"], $ristraset[3], addslashes($location));
 				}
 				$obs[$j]['objectrise'] = $ristraset [0];
 				$obs[$j]['objectriseorder'] = ($ristraset [0] != '-' ? ($ristraset [0] < 10 ? (intval(substr ( $ristraset [0], 0, 1 )) * 100) + 2400 + intval(substr ( $ristraset [0], 2, 2 )) : ($ristraset [0] < 12 ? (intval(substr ( $ristraset [0], 0, 2 )) * 100) + 2400 + intval(substr ( $ristraset [0], 3, 2 )) : (intval(substr ( $ristraset [0], 0, 2 )) * 100) + intval(substr ( $ristraset [0], 3, 2 )))) : 9999);
@@ -1593,28 +1593,28 @@ class Objects {
 			$location = $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdLocation' ), 'name' );
 			
 			if ($ristraset [0] == "-" && strncmp ( $ristraset [3], "-", 1 ) == 0) {
-				$popup1 = $object . LangDoesntrise;
+				$popup1 = sprintf(_('%s does not rise above horizon'), $object);
 			} else if ($ristraset [0] == "-") {
-				$popup1 = $object . LangCircumpolar;
+				$popup1 = sprintf(_('%s is circumpolar'), $object);
 			} else {
-				$popup1 = $object . LangRise . $ristraset [0] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes ( $location );
+				$popup1 = sprintf(_('%s rises at %s on %s in %s'), $object, $ristraset[0], $dateTimeText, addslashes($location));
 			}
-			$popup2 = $object . LangTransitPopup . $ristraset [1] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes ( $location );
+			$popup2 = sprintf(_('%s transits at %s on %s in %s'), $object, $ristraset[1], $dateTimeText, addslashes($location));
 			if ($ristraset [2] == "-" && strncmp ( $ristraset [3], "-", 1 ) == 0) {
-				$popup3 = $object . LangDoesntrise;
+				$popup3 = sprintf(_('%s does not rise above horizon'), $object);
 			} else if ($ristraset [2] == "-") {
-				$popup3 = $object . LangCircumpolar;
+				$popup3 = sprintf(_('%s is circumpolar'), $object);
 			} else {
-				$popup3 = $object . LangSet . $ristraset [2] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes ( $location );
+				$popup3 = sprintf(_('%s sets at %s on %s in %s'), $object, $ristraset[2], $dateTimeText, addslashes($location));
 			}
 			if ($ristraset [3] == "-") {
-				$popup4 = $object . LangDoesntrise;
+				$popup4 = sprintf(_('%s does not rise above horizon'), $object);
 			} else {
-				$popup4 = $object . LangAltitude . $ristraset [3] . LangRistrasetIn . addslashes ( $location );
+				$popup4 = sprintf(_('%s reaches an altitude of %s in %s'), $object, $ristraset[3], addslashes($location));
 			}
 			
 			echo "<tr>";
-			echo "<td>" . LangDate . "</td>";
+			echo "<td>" . _('Date') . "</td>";
 			echo "<td>" . date ( $dateformat, mktime ( 0, 0, 0, $theMonth, $theDay, $theYear ) ) . "</td>";
 			echo "<td>" . LangMoonRise . "</td>";
 			
@@ -1629,7 +1629,7 @@ class Objects {
 			echo '<td>
 							<span data-toggle="tooltip" data-placement="bottom" title="' . $popup3 . '">' . $ristraset [2] . '</span>
 						</td>';
-			echo "<td>" . LangBest . "</td>";
+			echo "<td>" . _('Best Time') . "</td>";
 			echo "<td>" . $ristraset [4] . "</td>";
 			echo "<td>" . LangMaxAltitude . "</td>";
 			echo '<td>
@@ -1803,7 +1803,7 @@ class Objects {
 			echo "<th data-priority=\"6\" id=\"objectriseorder\" class=\"columnSelector-false sorter-astrotime\">" . LangMoonRise . "</th>";
 			echo "<th data-priority=\"6\" id=\"objecttransitorder\" class=\"columnSelector-false sorter-astrotime\">" . LangTransit . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectsetorder\" class=\"columnSelector-false sorter-astrotime\">" . LangMoonSet . "</th>";
-			echo "<th data-priority=\"5\" id=\"objectbestorder\" class=\"sorter-astrotime\">" . LangBest . "</th>";
+			echo "<th data-priority=\"5\" id=\"objectbestorder\" class=\"sorter-astrotime\">" . _('Best Time') . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectmaxaltitude\" class=\"string-max sorter-degrees\">" . LangMaxAltitude . "</th>";
 			echo "<th data-priority=\"3\" id=\"objectseen\">" . LangOverviewObjectsHeader7 . "</th>";
 			echo "<th data-priority=\"4\" id=\"objectlastseen\">" . LangOverviewObjectsHeader8 . "</th>";
@@ -1882,7 +1882,7 @@ class Objects {
 				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectrisepopup'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectrise'] . "</span></td>";
 				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objecttransitpopup'] . "\">" . $_SESSION ['Qobj'] [$count] ['objecttransit'] . "</span></td>";
 				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectsetpopup'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectset'] . "</span></td>";
-				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangBest . ": " . $_SESSION ['Qobj'] [$count] ['objectbest'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectbest'] . "</span></td>";
+				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . _('Best Time') . ": " . $_SESSION ['Qobj'] [$count] ['objectbest'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectbest'] . "</span></td>";
 				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectmaxaltitudepopup'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectmaxaltitude'] . "<span></td>";
 				echo "<td><span class=\"" . $seenclass . "\">" . $_SESSION ['Qobj'] [$count] ['objectseenlink'] . "</span></td>";
 				echo "<td><span class=\"" . $seenclass . "\">" . $_SESSION ['Qobj'] [$count] ['objectlastseenlink'] . "</span></td>";

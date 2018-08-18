@@ -32,10 +32,10 @@ function selected_observations() {
 	if ($object && $objObject->getExactDsObject ( $object )) {
 		$object_ss = stripslashes ( $object );
 		$seen = $objObject->getDSOseenLink ( $object );
-		$collapsedtext = "<a href=\"" . $link2 . "&amp;collapsed=collapsed\" title=\"" . LangHideObjectDetails . "\">-</a>&nbsp;";
+		$collapsedtext = "<a href=\"" . $link2 . "&amp;collapsed=collapsed\" title=\"" . _("Hide object details") . "\">-</a>&nbsp;";
 		$collapsed = false;
 		if ($objUtil->checkRequestKey ( 'collapsed' ) == 'collapsed') {
-			$collapsedtext = "<a href=\"" . $link2 . "\" title=\"" . LangShowObjectDetails . "\">+</a>&nbsp;";
+			$collapsedtext = "<a href=\"" . $link2 . "\" title=\"" . _("Show object details") . "\">+</a>&nbsp;";
 			$collapsed = true;
 			$link .= "&amp;collapsed=collapsed";
 		}

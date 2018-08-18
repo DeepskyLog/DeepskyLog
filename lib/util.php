@@ -3061,7 +3061,7 @@ class Utils
                                 $loggedUser, 'stdlocation'
                             ), 'name'
                         ) . 
-                        LangRistrasetOn . $this->checkSessionKey('globalDay')
+                        _(' on ') . $this->checkSessionKey('globalDay')
                         . ' ' . 
                         $GLOBALS ['Month' . $this->checkSessionKey('globalMonth')]
                         . ' ' . $this->checkSessionKey('globalYear')
@@ -3080,9 +3080,11 @@ class Utils
                 $xleft, $footer - $deltaline, $fontSizeText, 
                 utf8_decode(
                     _('Sun down: ') . $_SESSION['efemerides']['sset'] . _(' to ') . 
-                    $_SESSION['efemerides']['srise'] . " - " . _('Nautical night: ') . 
+                    $_SESSION['efemerides']['srise'] . " - " 
+                        . _('Nautical night: ') . 
                     $_SESSION['efemerides']['naute'] . _(' to ') . 
-                    $_SESSION['efemerides']['nautb'] . " - " . _('Astronomical night: ') . 
+                    $_SESSION['efemerides']['nautb'] . " - " 
+                        . _('Astronomical night: ') . 
                     $_SESSION['efemerides']['astroe'] . _(' to ') . 
                     $_SESSION['efemerides']['astrob'] . " - " . _('Moon up: ') . 
                     $_SESSION['efemerides']['moon0'] . _(' to ') . 
@@ -3239,7 +3241,7 @@ class Utils
                                         $loggedUser, 'stdlocation'
                                     ), 'name'
                                 ) . 
-                                LangRistrasetOn . 
+                                _(' on ') . 
                                 $this->checkSessionKey('globalDay') . ' ' . 
                                 $GLOBALS['Month' . 
                                 $this->checkSessionKey('globalMonth')]
@@ -3261,7 +3263,8 @@ class Utils
                         utf8_decode(
                             _('Sun down: ') . $_SESSION['efemerides']['sset'] .
                             _(' to ') . $_SESSION['efemerides']['srise'] . " - " . 
-                            _('Nautical night: ') . $_SESSION['efemerides']['naute'] .
+                            _('Nautical night: ') .
+                            $_SESSION['efemerides']['naute'] .
                             _(' to ') . $_SESSION['efemerides']['nautb'] . " - " . 
                             _('Astronomical night: ') . 
                             $_SESSION['efemerides']['astroe'] ._(' to ') . 

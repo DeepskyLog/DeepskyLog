@@ -1125,9 +1125,9 @@ class PrintAtlas
 
 
   function gridShowInfo()
-  { $t1 =html_entity_decode(atlasPageFoV).' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."� - ";
-      $t1.=html_entity_decode(atlasPageDSLM).' '.($this->maxshowndsomag==-99?'-':$this->maxshowndsomag)." - ";
-      $t1.=html_entity_decode(atlasPageStarLM).' '.$this->starsmagnitude.' - ';
+  { $t1 =html_entity_decode(_('FoV:')).' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."� - ";
+      $t1.=html_entity_decode(_('Objects to mag:')).' '.($this->maxshowndsomag==-99?'-':$this->maxshowndsomag)." - ";
+      $t1.=html_entity_decode(_('Stars to mag:')).' '.$this->starsmagnitude.' - ';
       $t1.='('.html_entity_decode(_('Centered on ')).$this->coordHrDecToHrMin($this->atlaspagerahr).','.$this->coordDeclDecToDegMin($this->atlaspagedecldeg).')';
       $this->pdf->addText($this->gridOffsetXpx,20,$this->fontSize1a,$t1);
     }

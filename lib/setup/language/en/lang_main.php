@@ -1,30 +1,5 @@
 <?php //EN
 // Prior to 4.1
-define('LangBest'                                        ,'Best Time');
-define('LangToday'                                       ,'Today');
-define('LangDate'                                        ,'Date');
-define('LangCircumpolar'                                 ,' is circumpolar');
-define('LangDoesntrise'                                  ,' does not rise above horizon');
-define('LangRise'                                        ,' rises at ');
-define('LangTransitPopup'                                ,' transits at ');
-define('LangSet'                                         ,' sets at ');
-define('LangAltitude'                                    ,' reaches an altitude of ');
-define('LangRistrasetOn'                                 ,' on ');
-define('LangRistrasetIn'                                 ,' in ');
-
-
-define('OverviewChart'                                   ,'Overview');
-define('LookupChart'                                     ,'Lookup');
-define('DetailChart'                                     ,'Detail');
-
-define('atlasPageFoV'                                    ,'FoV:');
-define('atlasPageDSLM'                                   ,'Objects to mag:');
-define('atlasPageStarLM'                                 ,'Stars to mag:');
-
-
-define("LangShowObjectDetails"                            ,"Show object details");
-define("LangHideObjectDetails"                            ,"Hide object details");
-
 define("LangObjectsFilter"                                ,"Mark");
 define("LangObjectsFilterLocation"                        ,"Location");
 define("LangObjectsFilterLocationExpl"                    ,"Mark the objects that are not visible from the selected observation location.");
@@ -32,8 +7,6 @@ define("LangObjectsFilterLocationOffExpl"                 ,"Unmark the objects t
 define("LangObjectsFilterDateTime"                        ,"Date-Time");
 define("LangObjectsFilterDateTimeExpl"                    ,"Mark the objects that are not visible on the selected date and time.");
 define("LangObjectsFilterDateTimeOffExpl"                 ,"Unmark the objects that are not visible from the selected date and time.");
-
-
 
 define("LangMarkAllAsRead"                                ,"Mark all as read.");
 define("LangMarkUpToHereAsRead"                           ,"Mark up to here as read.");

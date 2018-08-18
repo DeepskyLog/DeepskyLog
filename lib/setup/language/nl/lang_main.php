@@ -1,31 +1,6 @@
 <?php //NL
 $REST = "Rest";
 // Prior to 4.1
-define('LangBest'                                        ,'Beste tijd');
-define('LangToday'                                       ,'Vandaag');
-define('LangDate'                                        ,'Datum');
-define('LangCircumpolar'                                 ,' is circumpolair');
-define('LangDoesntrise'                                  ,' komt niet boven de horizon');
-define('LangRise'                                        ,' komt op om ');
-define('LangTransitPopup'                                ,' heeft een doorgang om ');
-define('LangSet'                                         ,' gaat onder om ');
-define('LangAltitude'                                    ,' bereikt een hoogte van ');
-define('LangRistrasetOn'                                 ,' op ');
-define('LangRistrasetIn'                                 ,' in ');
-
-
-define('OverviewChart'                                   ,'Overzicht');
-define('LookupChart'                                     ,'Zoeken');
-define('DetailChart'                                     ,'Detail');
-
-define('atlasPageFoV'                                    ,'FoV:');
-define('atlasPageDSLM'                                   ,'Objecten tot mag:');
-define('atlasPageStarLM'                                 ,'Sterren tot mag:');
-
-
-define("LangShowObjectDetails"                            ,"Toon object details");
-define("LangHideObjectDetails"                            ,"Verberg object details");
-
 define("LangObjectsFilter"                                ,"Markeer");
 define("LangObjectsFilterLocation"                        ,"Waarneemplaats");
 define("LangObjectsFilterLocationExpl"                    ,"Markeer de objecten aan die niet zichtbaar zijn vanop de geselecteerde waarneemplaats.");

@@ -113,7 +113,7 @@ function menu_date() {
 	echo "<form class=\"nav navbar-nav navbar-right\">";
 
  	echo "<div class=\"form-group\">";
- 	echo "<p class=\"navbar-text\">" . LangDate . " ";
+ 	echo "<p class=\"navbar-text\">" . _('Date') . " ";
     echo "<span class=\"form-inline\">";
 	echo "<input class=\"form-control\" type=\"text\" value=\"" . $_SESSION ['globalDay'] . "/" . $_SESSION ['globalMonth'] . "/" . $_SESSION ['globalYear'] . "\" id=\"datepicker\" size=\"10\" >";
 	echo "</span>";
