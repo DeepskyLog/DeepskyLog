@@ -2,42 +2,6 @@
 $REST = "Reste";
 
 // prior to 4.1
-define("LangObjectsFilter"                                ,"Marquer");
-define("LangObjectsFilterLocation"                        ,"Endroit d'observation");
-define("LangObjectsFilterLocationExpl"                    ,"Marquez les objets qui ne sont pas visibles à partir du lieu d'observation sélectionné.");
-define("LangObjectsFilterLocationOffExpl"                 ,"Démarquez les objets qui ne sont pas visibles à partir du lieu d'observation sélectionné.");
-define("LangObjectsFilterDateTime"                        ,"Date-Temps");
-define("LangObjectsFilterDateTimeExpl"                    ,"Marquez les objets invisibles à l'endroit et la date sélectionnés.");
-define("LangObjectsFilterDateTimeOffExpl"                 ,"Ne marquez plus les objets invisibles à l'endroit et la date sélectionnés.");
-
-
-define("LangMarkAllAsRead"                                ,"Marquez tout comme lu.");
-define("LangMarkUpToHereAsRead"                           ,"Marquez les observations précédentes comme lu.");
-
-define("LangValidateMessage1"                             ,"Tous les champs obligatoires doivent &#234;tre remplis!");
-define("LangNoOwnColor"                                   , "Ne marquez plus mes propres observations");
-define("LangOwnColor"                                     , "Marquez mes propres observations");
-
-// Text for transit
-define("LangTransit"                                      ,"Passage");
-define("LangMaxAltitude"                                  ,"Alt. max.");
-
-// Text for moon menu
-define("LangMoonMenuTitle"                                ,"Lune");
-define("LangMoonSunMenuTitle"                             ,"Lune / Soleil");
-define("LangMoonMenuNewMoon"                              ,"Nouvelle lune");
-define("LangMoonMenuActualMoon"                           ,"Lune actuelle:");
-define("LangMoonRise"                                     ,"Montant");
-define("LangMoonSet"                                      ,"Coucher");
-define("LangMoon"                                         ,"Lune");
-define("LangMoonNight"                                    ,"Nuit");
-define("LangMoonSun"                                      ,"Soleil");
-define("LangMoonTwilight"                                 ,"Crépuscule");
-define("LangMoonNaut"                                     ,"Naut.");
-define("LangMoonAstro"                                    ,"Astro.");
-define("LangAstronomicalTwilight"                         ,"Crepuscule astronomique");
-define("LangNauticalTwilight"                             ,"Crepuscule nautique");
-
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas interactif");
 

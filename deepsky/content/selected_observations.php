@@ -93,10 +93,12 @@ function selected_observations() {
 		if ($loggedUser && ($objUtil->checkSessionKey ( 'lco', '' ) != "O"))
 			$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=O\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
 		if ($loggedUser && $objUtil->checkSessionKey ( 'lco', '' ) == "L") {
-			$toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=no\">" . LangOwnColor . "</a>";
+            $toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=no\">" 
+                . _("Highlight own observations") . "</a>";
 			if ($objUtil->checkGetKey ( 'noOwnColor' )) {
 				if ($objUtil->checkGetKey ( 'noOwnColor' ) == "no") {
-					$toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=yes\">" . LangNoOwnColor . "</a>";
+                    $toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=yes\">" 
+                        . _("Don't highlight own observations") . "</a>";
 				}
 			}
 			$content5 .= $toAdd;

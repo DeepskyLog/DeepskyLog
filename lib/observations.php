@@ -1950,7 +1950,7 @@ class Observations
         echo "&nbsp;";
         if (($loggedUser) && ($lastReadObservation >= 0)) {
             echo "<a href=\"" . $link . "&amp;markAsRead=All\" title=\"" 
-                . LangMarkAllAsRead . "\">!</a>";
+                . _("Mark all as read.") . "\">!</a>";
         }
         echo "</th>";
         if ($myList) {
@@ -2129,7 +2129,7 @@ class Observations
             ) {
                 echo "&nbsp;<a href=\"" . $link . "&amp;markAsRead=" 
                     . $value['observationid'] . "\" title=\"" 
-                    . LangMarkUpToHereAsRead . "\">!</a>";
+                    . _("Mark up to here as read.") . "\">!</a>";
             }
             echo "</td>";
             if ($myList) {

@@ -93,7 +93,7 @@ function menu_date() {
 			    beforeShowDay: function(date) {
                   var highlight = eventDates[date];
                   if (highlight) {
-			        return [true, \"event\", \"" . LangMoonMenuNewMoon . "\"];
+			        return [true, \"event\", \"" . _("New moon") . "\"];
                   } else {
                     return [true, '', ''];
                   }

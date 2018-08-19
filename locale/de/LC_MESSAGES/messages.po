@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-18 20:40+0200\n"
+"POT-Creation-Date: 2018-08-19 20:47+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1418,9 +1418,34 @@ msgstr "Fotos (Bogenminuten)"
 msgid "View messages"
 msgstr "Nachrichten anzeigen"
 
+#: common/menu/moon.php:51 deepsky/menu/date.php:96
+msgid "New moon"
+msgstr "Nächster Neumond"
+
+#: common/menu/moon.php:134
+msgid "Moon / Sun"
+msgstr "Mond / Sonne"
+
+#: common/menu/moon.php:134 common/menu/moon.php:142 lib/printatlas.php:1565
+#: lib/printatlas.php:1566
+msgid "Moon"
+msgstr "Mond"
+
 #: common/menu/moon.php:136
 msgid "on"
 msgstr "am"
+
+#: common/menu/moon.php:145 lib/printatlas.php:1563 lib/printatlas.php:1564
+msgid "Sun"
+msgstr "Sonne"
+
+#: common/menu/moon.php:148
+msgid "Naut."
+msgstr "Naut."
+
+#: common/menu/moon.php:152
+msgid "Astro."
+msgstr "Astro."
 
 #: common/menu/help.php:17
 msgid "Report issue"
@@ -1504,6 +1529,16 @@ msgstr "Verstecke Objekt Details"
 #: deepsky/content/selected_observations.php:38
 msgid "Show object details"
 msgstr "Zeige Objekt Details"
+
+#: deepsky/content/selected_observations.php:97
+#: deepsky/content/view_object.php:433
+msgid "Highlight own observations"
+msgstr "Eigene Beobachtungen hervorheben"
+
+#: deepsky/content/selected_observations.php:101
+#: deepsky/content/view_object.php:437
+msgid "Don't highlight own observations"
+msgstr "Eigene Beobachtungen nicht hervorheben"
 
 #: deepsky/content/view_catalogs.php:23
 msgid "Click on a list to view its details"
@@ -1867,6 +1902,18 @@ msgstr "Ephemeriden ausblenden"
 msgid "Month"
 msgstr "Monat"
 
+#: deepsky/content/view_object.php:271 lib/printatlas.php:1574
+#: lib/printatlas.php:1629 lib/printatlas.php:1781 lib/objects.php:1634
+#: lib/objects.php:1807
+msgid "Max Alt"
+msgstr "Max Höhe"
+
+#: deepsky/content/view_object.php:294 lib/printatlas.php:1572
+#: lib/printatlas.php:1672 lib/printatlas.php:1823 lib/objects.php:1624
+#: lib/objects.php:1804
+msgid "Transit"
+msgstr "Transit"
+
 #: deepsky/content/view_object.php:317 lib/printatlas.php:1707
 #: lib/printatlas.php:1858
 msgid "Astronomical night"
@@ -1885,7 +1932,7 @@ msgstr "Objekt Auf-<br />-<br />Untergang"
 msgid "Hide the observations"
 msgstr "Beobachtungen ausblende"
 
-#: deepsky/content/view_object.php:551
+#: deepsky/content/view_object.php:553
 msgid "Show or remove extra info..."
 msgstr "Anzeigen/Ausblenden von Zusatzinformationen…"
 
@@ -2182,9 +2229,27 @@ msgstr "Keine index Einträge"
 msgid " in LOCAL TIME !"
 msgstr " in LOKALER ZEIT !"
 
+#: lib/printatlas.php:1563 lib/printatlas.php:1566 lib/printatlas.php:1573
+#: lib/objects.php:1628 lib/objects.php:1805
+msgid "Set"
+msgstr "Untergang"
+
+#: lib/printatlas.php:1564 lib/printatlas.php:1565 lib/printatlas.php:1571
+#: lib/objects.php:1619 lib/objects.php:1803
+msgid "Rise"
+msgstr "Aufgang"
+
+#: lib/printatlas.php:1568
+msgid "Astronomical twilight"
+msgstr "Astronomische Dämmerung"
+
 #: lib/printatlas.php:1568 lib/printatlas.php:1569
 msgid "from"
 msgstr "von"
+
+#: lib/printatlas.php:1569
+msgid "Nautical twilight"
+msgstr "Nautische Dämmerung"
 
 #: lib/printatlas.php:1753 lib/printatlas.php:1904
 msgid "Object rise-set"
@@ -2194,6 +2259,19 @@ msgstr "Objekt Auf-Untergang"
 #, php-format
 msgid "Images for %s"
 msgstr "Bilder für %s"
+
+#: lib/instruments.php:228 lib/filters.php:217 lib/lenses.php:116
+#: lib/eyepieces.php:126 lib/locations.php:629
+msgid "All required fields must be filled in!"
+msgstr "Alle Pflichtfelder müssen ausgefüllt sein!"
+
+#: lib/observations.php:1953
+msgid "Mark all as read."
+msgstr "Alle als gelesen markieren."
+
+#: lib/observations.php:2132
+msgid "Mark up to here as read."
+msgstr "Bis hierher alle als gelesen markieren."
 
 #: lib/observations.php:2742 lib/moonpic.php:73
 msgid "under the horizon"
@@ -2242,7 +2320,7 @@ msgstr "Anfang"
 msgid "End"
 msgstr "Ende"
 
-#: lib/sessions.php:318 lib/sessions.php:386
+#: lib/sessions.php:318 lib/sessions.php:386 lib/objects.php:1916
 msgid "Location"
 msgstr "Beobachtungsplatz"
 
@@ -2508,7 +2586,43 @@ msgstr "Am höchsten bis"
 msgid "Highest around"
 msgstr "Am höchsten um"
 
+#: lib/objects.php:1911
+msgid "Mark"
+msgstr "Marke"
+
+#: lib/objects.php:1913
+msgid ""
+"Unmark the objects that are not visible from the selected observation "
+"location."
+msgstr ""
+"Entferne die Markierung der Objekte welche nicht sichtbar sind von der "
+"ausgewählten Lokation."
+
+#: lib/objects.php:1915
+msgid ""
+"Mark the objects that are not visible from the selected observation location."
+msgstr ""
+"Markiere die Objekte welche nicht sichtbar sind von der ausgewählten "
+"Lokation."
+
+#: lib/objects.php:1918
+msgid ""
+"Unmark the objects that are not visible from the selected date and time."
+msgstr ""
+"Entferne die Markierung an Objekten welche nicht sichtbar sind an dem "
+"ausgewählten Datum und Uhrzeit"
+
+#: lib/objects.php:1920
+msgid "Mark the objects that are not visible on the selected date and time."
+msgstr ""
+"Markiere die Objekte welche nicht sichtbar sind an dem ausgewählten Datum "
+"und Uhrzeit"
+
 #: lib/objects.php:1921
+msgid "Date-Time"
+msgstr "Datum-Zeit"
+
+#: lib/objects.php:1930
 msgid "Report"
 msgstr "Bericht"
 

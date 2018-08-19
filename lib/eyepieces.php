@@ -123,7 +123,7 @@ class Eyepieces {
 			$this->setEyepieceProperty ( $_POST ['id'], 'maxFocalLength', $objUtil->checkPostKey ( 'maxFocalLength', - 1 ) );
 			return LangValidateEyepieceMessage5 . ' ' . LangValidateEyepieceMessage4;
 		} else
-			return LangValidateMessage1;
+			return _("All required fields must be filled in!");
 	}
 }
 ?>

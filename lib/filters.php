@@ -214,7 +214,7 @@ class Filters {
 			// $this->setFilterProperty($_POST['id'], 'observer', $loggedUser);
 			return LangValidateFilterMessage5;
 		} else
-			return LangValidateMessage1;
+			return _("All required fields must be filled in!");
 	}
 }
 ?>

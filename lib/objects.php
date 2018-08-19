@@ -1616,22 +1616,22 @@ class Objects {
 			echo "<tr>";
 			echo "<td>" . _('Date') . "</td>";
 			echo "<td>" . date ( $dateformat, mktime ( 0, 0, 0, $theMonth, $theDay, $theYear ) ) . "</td>";
-			echo "<td>" . LangMoonRise . "</td>";
+			echo "<td>" . _("Rise") . "</td>";
 			
 			echo '<td>
 							<span data-toggle="tooltip" data-placement="bottom" title="' . $popup1 . '">' . $ristraset [0] . '</span>
 						</td>';
-			echo "<td>" . LangTransit . "</td>";
+			echo "<td>" . _("Transit") . "</td>";
 			echo '<td>
 							<span data-toggle="tooltip" data-placement="bottom" title="' . $popup2 . '">' . $ristraset [1] . '</span>
 						</td>';
-			echo "<td>" . LangMoonSet . "</td>";
+			echo "<td>" . _("Set") . "</td>";
 			echo '<td>
 							<span data-toggle="tooltip" data-placement="bottom" title="' . $popup3 . '">' . $ristraset [2] . '</span>
 						</td>';
 			echo "<td>" . _('Best Time') . "</td>";
 			echo "<td>" . $ristraset [4] . "</td>";
-			echo "<td>" . LangMaxAltitude . "</td>";
+			echo "<td>" . _("Max Alt") . "</td>";
 			echo '<td>
 							<span data-toggle="tooltip" data-placement="bottom" title="' . $popup4 . '">' . $ristraset [3] . '</span>
 						</td>';
@@ -1800,11 +1800,11 @@ class Objects {
 			echo "<th data-priority=\"6\" id=\"" . $atlas . "\">" . $objAtlas->atlasCodes [$atlas] . "</th>";
 			echo "<th data-priority=\"7\" id=\"objectcontrast\">" . LangViewObjectFieldContrastReserve . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectoptimalmagnification\">" . _("Best") . "</th>";
-			echo "<th data-priority=\"6\" id=\"objectriseorder\" class=\"columnSelector-false sorter-astrotime\">" . LangMoonRise . "</th>";
-			echo "<th data-priority=\"6\" id=\"objecttransitorder\" class=\"columnSelector-false sorter-astrotime\">" . LangTransit . "</th>";
-			echo "<th data-priority=\"6\" id=\"objectsetorder\" class=\"columnSelector-false sorter-astrotime\">" . LangMoonSet . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectriseorder\" class=\"columnSelector-false sorter-astrotime\">" . _("Rise") . "</th>";
+			echo "<th data-priority=\"6\" id=\"objecttransitorder\" class=\"columnSelector-false sorter-astrotime\">" . _("Transit") . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectsetorder\" class=\"columnSelector-false sorter-astrotime\">" . _("Set") . "</th>";
 			echo "<th data-priority=\"5\" id=\"objectbestorder\" class=\"sorter-astrotime\">" . _('Best Time') . "</th>";
-			echo "<th data-priority=\"6\" id=\"objectmaxaltitude\" class=\"string-max sorter-degrees\">" . LangMaxAltitude . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectmaxaltitude\" class=\"string-max sorter-degrees\">" . _("Max Alt") . "</th>";
 			echo "<th data-priority=\"3\" id=\"objectseen\">" . LangOverviewObjectsHeader7 . "</th>";
 			echo "<th data-priority=\"4\" id=\"objectlastseen\">" . LangOverviewObjectsHeader8 . "</th>";
 		}
@@ -1908,8 +1908,17 @@ class Objects {
 		
 		if ($loggedUser) {
 			if (! (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes")) {
-				$content1 = LangObjectsFilter . ": <a href=\"" . (($objUtil->checkRequestKey ( 'filteron' ) == 'location') ? $objUtil->removeFromLink ( $link, 'filteron=location' ) . "\" title=\"" . LangObjectsFilterLocationOffExpl . "\"" : $link . "&amp;filteron=location" . "\" title=\"" . LangObjectsFilterLocationExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterLocation . "</a>" . "&nbsp;";
-				$content1 .= "<a href=\"" . (($objUtil->checkRequestKey ( 'filteron1' ) == 'time') ? $objUtil->removeFromLink ( $link, 'filteron1=time' ) . "\" title=\"" . LangObjectsFilterDateTimeOffExpl . "\"" : $link . "&amp;filteron1=time" . "\" title=\"" . LangObjectsFilterDateTimeExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterDateTime . "</a>";
+                $content1 = _("Mark") 
+                    . ": <a href=\"" . (($objUtil->checkRequestKey ( 'filteron' ) == 'location') ? $objUtil->removeFromLink ( $link, 'filteron=location' ) . "\" title=\"" 
+                    . _("Unmark the objects that are not visible from the selected observation location.") 
+                    . "\"" : $link . "&amp;filteron=location" . "\" title=\"" 
+                    . _("Mark the objects that are not visible from the selected observation location.") 
+                    . "\"") . " class=\"btn btn-primary\">" . _("Location") . "</a>" . "&nbsp;";
+                $content1 .= "<a href=\"" . (($objUtil->checkRequestKey ( 'filteron1' ) == 'time') ? $objUtil->removeFromLink ( $link, 'filteron1=time' ) . "\" title=\"" 
+                    . _("Unmark the objects that are not visible from the selected date and time.") 
+                    . "\"" : $link . "&amp;filteron1=time" . "\" title=\"" 
+                    . _("Mark the objects that are not visible on the selected date and time.") 
+                    . "\"") . " class=\"btn btn-primary\">" . _("Date-Time") . "</a>";
 				
 				$content = $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objects.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4a ) . "&nbsp;";
 				$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectnames.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4b ) . "&nbsp;";

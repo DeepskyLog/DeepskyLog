@@ -2,69 +2,6 @@
 $REST = "Rest";
 
 // Prior to 4.1
-define('LangBest'                                        ,'Best Time');
-define('LangToday'                                       ,'Today');
-define('LangDate'                                        ,'Date');
-define('LangCircumpolar'                                 ,' is circumpolar');
-define('LangDoesntrise'                                  ,' does not rise above horizon');
-define('LangRise'                                        ,' rises at ');
-define('LangTransitPopup'                                ,' transits at ');
-define('LangSet'                                         ,' sets at ');
-define('LangAltitude'                                    ,' reaches an altitude of ');
-define('LangRistrasetOn'                                 ,' on ');
-define('LangRistrasetIn'                                 ,' in ');
-
-
-define('OverviewChart'                                   ,'Overview');
-define('LookupChart'                                     ,'Lookup');
-define('DetailChart'                                     ,'Detail');
-
-define('atlasPageFoV'                                    ,'FoV:');
-define('atlasPageDSLM'                                   ,'Objects to mag:');
-define('atlasPageStarLM'                                 ,'Stars to mag:');
-
-
-define("LangShowObjectDetails"                            ,"Show object details");
-define("LangHideObjectDetails"                            ,"Hide object details");
-
-define("LangObjectsFilter"                                ,"Mark");
-define("LangObjectsFilterLocation"                        ,"Location");
-define("LangObjectsFilterLocationExpl"                    ,"Mark the objects that are not visible from the selected observation location.");
-define("LangObjectsFilterLocationOffExpl"                 ,"Unmark the objects that are not visible from the selected observation location.");
-define("LangObjectsFilterDateTime"                        ,"Date-Time");
-define("LangObjectsFilterDateTimeExpl"                    ,"Mark the objects that are not visible on the selected date and time.");
-define("LangObjectsFilterDateTimeOffExpl"                 ,"Unmark the objects that are not visible from the selected date and time.");
-
-
-
-define("LangMarkAllAsRead"                                ,"Mark all as read.");
-define("LangMarkUpToHereAsRead"                           ,"Mark up to here as read.");
-
-define("LangValidateMessage1"                             ,"All required fields must be filled in!");
-define("LangNoOwnColor"                                   , "Don't highlight own observations");
-define("LangOwnColor"                                     , "Highlight own observations");
-
-// Text for transit
-define("LangTransit"                                      ,"Transit");
-define("LangMaxAltitude"                                  ,"Max Alt");
-
-// Text for moon menu
-define("LangMoonMenuTitle"                                ,"Moon");
-define("LangMoonSunMenuTitle"                             ,"Moon / Sun");
-define("LangMoonMenuNewMoon"                              ,"New moon");
-define("LangMoonMenuActualMoon"                           ,"Actual moon:");
-define("LangMoonRise"                                     ,"Rise");
-define("LangMoonSet"                                      ,"Set");
-define("LangMoon"                                         ,"Moon");
-define("LangMoonNight"                                    ,"Night");
-define("LangMoonSun"                                      ,"Sun");
-define("LangMoonTwilight"                                 ,"Twilight");
-define("LangMoonNaut"                                     ,"Naut.");
-define("LangMoonAstro"                                    ,"Astro.");
-define("LangAstronomicalTwilight"                         ,"Astronomical twilight");
-define("LangNauticalTwilight"                             ,"Nautical twilight");
-
-
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Interactive Atlas");
 define("LangAtlasHelp"                                    ,"Help page - use H to turn it on or off");

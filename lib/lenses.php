@@ -113,7 +113,7 @@ class Lenses {
 			// $this->setLensProperty($_POST['id'], 'observer', $loggedUser);
 			return LangValidateLensMessage5;
 		} else
-			return LangValidateMessage1;
+			return _("All required fields must be filled in!");
 	}
 }
 ?>

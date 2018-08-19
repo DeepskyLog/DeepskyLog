@@ -2,50 +2,9 @@
 $REST = "Rest";
 
 // prior to 4.1
-define("LangObjectsFilter"                                ,"Marke");
-define("LangObjectsFilterLocation"                        ,"Lokation");
-define("LangObjectsFilterLocationExpl"                    ,"Markiere die Objekte welche nicht sichtbar sind von der ausgewählten Lokation.");
-define("LangObjectsFilterLocationOffExpl"                 ,"Entferne die Markierung der Objekte welche nicht sichtbar sind von der ausgewählten Lokation.");
-define("LangObjectsFilterDateTime"                        ,"Datum-Zeit");
-define("LangObjectsFilterDateTimeExpl"                    ,"Markiere die Objekte welche nicht sichtbar sind an dem ausgewählten Datum und Uhrzeit");
-define("LangObjectsFilterDateTimeOffExpl"                 ,"Entferne die Makierung an Objekten welche nicht sichtbar sind an dem ausgewählten Datum und Uhrzeit");
-
-
-
-define("LangMarkAllAsRead"                                ,"Alle als gelesen markieren");
-define("LangMarkUpToHereAsRead"                           ,"Bis hierher alle als gelesen markieren");
-
 define("LangChangeAccountCopyright"                       ,"Copyright Hinweis");
 define("LangChangeAccountCopyrightExpl"                   ,"Sie können einen Copyright Hinweis angeben der unterhalb ihrer Beobachtungen und Zeichnungen erscheint.");
 
-
-//LangCSVMessage3 (SQM) en nog enkele andere lijnen daarrond
-//define("LangViewObserverinstrumentCount"                  ,"Aantal instrumenten");
-// define("LangViewObserverChangeNameFirstname"              ,"Verander voornaam/naam");
-
-define("LangValidateMessage1"                             ,"Alle Pflichtfelder müssen ausgefüllt sein!");
-define("LangNoOwnColor"                                   , "Eigene Beobachtungen nicht hervorheben");
-define("LangOwnColor"                                     , "Eigene Beobachtungen hervorheben");
-
-// Text for transit
-define("LangTransit"                                      ,"Transit");
-define("LangMaxAltitude"                                  ,"Max Höhe");
-
-// Text for moon menu
-define("LangMoonMenuTitle"                                ,"Mond");
-define("LangMoonSunMenuTitle"                             ,"Mond / Sonne");
-define("LangMoonMenuNewMoon"                              ,"Nächster Neumond");
-define("LangMoonMenuActualMoon"                           ,"Aktueller Mond:");
-define("LangMoonRise"                                     ,"Aufgang");
-define("LangMoonSet"                                      ,"Untergang");
-define("LangMoon"                                         ,"Mond");
-define("LangMoonNight"                                    ,"Nacht");
-define("LangMoonSun"                                      ,"Sonne");
-define("LangMoonTwilight"                                 ,"Dämmerung");
-define("LangMoonNaut"                                     ,"Naut.");
-define("LangMoonAstro"                                    ,"Astro.");
-define("LangAstronomicalTwilight"                         ,"Astronomical twilight");
-define("LangNauticalTwilight"                             ,"Nautical twilight");
 
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Interaktiver Atlas");

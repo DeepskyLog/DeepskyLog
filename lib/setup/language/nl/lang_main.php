@@ -1,42 +1,6 @@
 <?php //NL
 $REST = "Rest";
 // Prior to 4.1
-define("LangObjectsFilter"                                ,"Markeer");
-define("LangObjectsFilterLocation"                        ,"Waarneemplaats");
-define("LangObjectsFilterLocationExpl"                    ,"Markeer de objecten aan die niet zichtbaar zijn vanop de geselecteerde waarneemplaats.");
-define("LangObjectsFilterLocationOffExpl"                 ,"On-markeer de objecten aan die niet zichtbaar zijn vanop de geselecteerde waarneemplaats.");
-define("LangObjectsFilterDateTime"                        ,"Datum-Tijd");
-define("LangObjectsFilterDateTimeExpl"                    ,"Markeer de objecten aan die niet zichtbaar zijn op de geselecteerde datum en tijd.");
-define("LangObjectsFilterDateTimeOffExpl"                 ,"On-markeer de objecten aan die niet zichtbaar zijn op de geselecteerde datum en tijd.");
-
-define("LangMarkAllAsRead"                                ,"Allen markeren als gelezen.");
-define("LangMarkUpToHereAsRead"                           ,"Tot hier als gelezen markeren.");
-
-define("LangValidateMessage1"                             ,"Alle verplichte velden moeten worden ingevuld!");
-
-define("LangNoOwnColor"                                   , "Eigen waarnemingen niet oplichten");
-define("LangOwnColor"                                     , "Eigen waarnemingen oplichten");
-
-// Text for transit
-define("LangTransit"                                      ,"Doorgang");
-define("LangMaxAltitude"                                  ,"Max hoogte");
-
-// Text for moon menu
-define("LangMoonMenuTitle"                                ,"Maan");
-define("LangMoonSunMenuTitle"                             ,"Maan / Zon");
-define("LangMoonMenuNewMoon"                              ,"Nieuwe maan");
-define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
-define("LangMoonRise"                                     ,"Op");
-define("LangMoonSet"                                      ,"Onder");
-define("LangMoon"                                         ,"Maan");
-define("LangMoonNight"                                    ,"Nacht");
-define("LangMoonSun"                                      ,"Zon");
-define("LangMoonTwilight"                                 ,"Schemering");
-define("LangMoonNaut"                                     ,"Naut.");
-define("LangMoonAstro"                                    ,"Astro.");
-define("LangAstronomicalTwilight"                         ,"Astronomische schemering");
-define("LangNauticalTwilight"                             ,"Maritieme schemering");
-
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Interactieve atlas");
 

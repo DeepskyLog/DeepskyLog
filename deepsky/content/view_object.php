@@ -268,7 +268,7 @@ function showObjectEphemerides($theLocation) {
 	echo "<th" . $background1 . ">&nbsp;</th>";
 	echo "</tr>";
 	echo "<tr class=\"type20\">";
-	echo "<td class=\"centered\">" . LangMaxAltitude . "</td>";
+	echo "<td class=\"centered\">" . _("Max Alt") . "</td>";
 	for($i = 1; $i < 13; $i ++) {
 		$colorclass = "";
 		if ($i == 1) {
@@ -291,7 +291,7 @@ function showObjectEphemerides($theLocation) {
 	echo "<td class=\"centered " . $colorclass . "\">" . $theEphemerides1 [1] ['altitude'] . "</td>";
 	echo "</tr>";
 	echo "<tr class=\"type10\">";
-	echo "<td class=\"centered\">" . LangTransit . "</td>";
+	echo "<td class=\"centered\">" . _("Transit") . "</td>";
 	for($i = 1; $i < 13; $i ++) {
 		$colorclass = "";
 		if ((date ( "H:i", $theNightEphemerides1 [$i] ["astronomical_twilight_end"] ) != "00:00") && $objUtil->checkNightHourMinuteBetweenOthers ( $theEphemerides1 [$i] ['transit'], date ( "H:i", $theNightEphemerides1 [$i] ["astronomical_twilight_end"] + $theTimeDifference1 [$i] ), date ( "H:i", $theNightEphemerides1 [$i] ["astronomical_twilight_begin"] + $theTimeDifference1 [$i] ) ))
@@ -429,10 +429,12 @@ function showObjectObservations() {
 	if ($loggedUser && ($objUtil->checkSessionKey ( 'lco', '' ) != "O"))
 		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=O\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
 	if ($loggedUser && $objUtil->checkSessionKey ( 'lco', '' ) == "L") {
-		$toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=no\">" . LangOwnColor . "</a>";
+        $toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=no\">" 
+            . _("Highlight own observations") . "</a>";
 		if ($objUtil->checkGetKey ( 'noOwnColor' )) {
 			if ($objUtil->checkGetKey('noOwnColor') == "no") {
-				$toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=yes\">" . LangNoOwnColor . "</a>";
+				$toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=yes\">" 
+                    . _("Don't highlight own observations") . "</a>";
 			}
 		}
 		$content5 .= $toAdd;

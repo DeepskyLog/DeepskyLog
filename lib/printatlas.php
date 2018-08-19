@@ -1560,18 +1560,18 @@ class PrintAtlas
           $liney-=5;
           $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
             $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 10, LangMoonSun.' '.LangMoonSet.': '.$_SESSION['efemerides']['sset'], 150,  'left');
-          $this->pdf->addTextWrap(250, $liney, 10, LangMoonSun.' '.LangMoonRise.': '.$_SESSION['efemerides']['srise'], 150,  'left');
-          $this->pdf->addTextWrap(450, $liney, 10, LangMoon.' '.LangMoonRise.': '.$_SESSION['efemerides']['moon0'], 150,  'left');
-          $this->pdf->addTextWrap(650, $liney, 10, LangMoon.' '.LangMoonSet.': '.$_SESSION['efemerides']['moon2'], 150,  'left');
+          $this->pdf->addTextWrap( 50, $liney, 10, _("Sun").' '._("Set").': '.$_SESSION['efemerides']['sset'], 150,  'left');
+          $this->pdf->addTextWrap(250, $liney, 10, _("Sun").' '._("Rise").': '.$_SESSION['efemerides']['srise'], 150,  'left');
+          $this->pdf->addTextWrap(450, $liney, 10, _("Moon").' '._("Rise").': '.$_SESSION['efemerides']['moon0'], 150,  'left');
+          $this->pdf->addTextWrap(650, $liney, 10, _("Moon").' '._("Set").': '.$_SESSION['efemerides']['moon2'], 150,  'left');
           $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 10, LangAstronomicalTwilight.' '._("from").' '.$_SESSION['efemerides']['astroe']._(' to ').$_SESSION['efemerides']['astrob'], 350,  'left');
-          $this->pdf->addTextWrap(450, $liney, 10, LangNauticalTwilight.' '._("from").' '.$_SESSION['efemerides']['naute']._(' to ').$_SESSION['efemerides']['nautb'], 350,  'left');
+          $this->pdf->addTextWrap( 50, $liney, 10, _("Astronomical twilight").' '._("from").' '.$_SESSION['efemerides']['astroe']._(' to ').$_SESSION['efemerides']['astrob'], 350,  'left');
+          $this->pdf->addTextWrap(450, $liney, 10, _("Nautical twilight").' '._("from").' '.$_SESSION['efemerides']['naute']._(' to ').$_SESSION['efemerides']['nautb'], 350,  'left');
           $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 10, _("Object").' '.LangMoonRise.': '.$theobjectdata['objectrise'], 150,  'left');
-          $this->pdf->addTextWrap(250, $liney, 10, LangTransit.': '.$theobjectdata['objecttransit'], 150,  'left');
-          $this->pdf->addTextWrap(450, $liney, 10, LangMoonSet.': '.$theobjectdata['objectset'], 150,  'left');
-          $this->pdf->addTextWrap(650, $liney, 10, LangMaxAltitude.": ".$objPresentations->decToString($theobjectdata['objectmaxaltitude'],0), 150,  'left');
+          $this->pdf->addTextWrap( 50, $liney, 10, _("Object").' '._("Rise").': '.$theobjectdata['objectrise'], 150,  'left');
+          $this->pdf->addTextWrap(250, $liney, 10, _("Transit").': '.$theobjectdata['objecttransit'], 150,  'left');
+          $this->pdf->addTextWrap(450, $liney, 10, _("Set").': '.$theobjectdata['objectset'], 150,  'left');
+          $this->pdf->addTextWrap(650, $liney, 10, _("Max Alt").": ".$objPresentations->decToString($theobjectdata['objectmaxaltitude'],0), 150,  'left');
 
           $liney-=15;
         }
@@ -1626,7 +1626,7 @@ class PrintAtlas
                 { $this->pdf->addTextWrap( 100+(100*$i), $liney, 8, $i, 50,'center');
                 }
                 $liney-=15;
-                $this->pdf->addTextWrap( 50, $liney, 8, LangMaxAltitude, 100,'center');
+                $this->pdf->addTextWrap( 50, $liney, 8, _("Max Alt"), 100,'center');
                   for($i=1;$i<7;$i++)
                   { $colorclass="";
                       $colorclass2="";
@@ -1669,7 +1669,7 @@ class PrintAtlas
                 $this->pdf->addTextWrap( 50+(100*7), $liney, 8,  $colorclass.$this->filterdegpart($theEphemerides1[7]['altitude']).$colorclass2, 50,'center');
 
           $liney-=15;
-                    $this->pdf->addTextWrap( 50, $liney, 8, LangTransit,100,'center');
+                    $this->pdf->addTextWrap( 50, $liney, 8, _("Transit"),100,'center');
                     for($i=1;$i<7;$i++)
                     { $colorclass="";
                       $colorclass2="";
@@ -1778,7 +1778,7 @@ class PrintAtlas
                 { $this->pdf->addTextWrap( 100+(100*$i)-600, $liney, 8, $i, 50,'center');
                 }
                 $liney-=15;
-                $this->pdf->addTextWrap( 50, $liney, 8, LangMaxAltitude, 100,'center');
+                $this->pdf->addTextWrap( 50, $liney, 8, _("Max Alt"), 100,'center');
                 for($i=7;$i<13;$i++)
                   { $colorclass="";
                       $colorclass2="";
@@ -1820,7 +1820,7 @@ class PrintAtlas
 
 
           $liney-=15;
-                    $this->pdf->addTextWrap( 50, $liney, 8, LangTransit,100,'center');
+                    $this->pdf->addTextWrap( 50, $liney, 8, _("Transit"),100,'center');
                     for($i=7;$i<13;$i++)
                     { $colorclass="";
                       $colorclass2="";
