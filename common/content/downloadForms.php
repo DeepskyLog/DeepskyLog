@@ -8,13 +8,6 @@ else downloadForms();
 
 function downloadForms()
 { global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil, $MSIE,$dirAtlasses, $language;
-  echo "<script type=\"text/javascript\">";
-  echo "var Langpdfseriesclickok='"._('Click "Ok", only when ')."';";
-  echo "var Langpdfserieswhenfinished='"._(' is finished!')."';";
-  echo "var LangpdfseriesGenerating='"._('Generating ')."';";
-  echo "var Langpdfserieschoselayout='"._("Please select a layout for the index page.")."';";
-  echo "</script>";
-
   echo "<script type=\"text/javascript\" src=\"".$baseURL."common/content/atlasPages.js\"></script>";
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
 

@@ -24,7 +24,7 @@ function overview_observations() {
 	echo "<div id=\"main\">";
 	$link = $baseURL . "index.php?indexAction=comets_all_observations";
 
-	echo "<h4>" . LangOverviewObservationsTitle . "</h4>";
+	echo "<h4>" . _("Overview all observations") . "</h4>";
 	echo "<hr />";
 
 	if (sizeof ( $obs ) > 0) {
@@ -33,14 +33,14 @@ function overview_observations() {
 		echo "<table class=\"table sort-tableallcometobservations table-condensed table-striped table-hover tablesorter custom-popup\">
 	      <thead>
 		  <tr>
-	      <th>" . LangOverviewObservationsHeader1 . "</th>
-	      <th>" . LangOverviewObservationsHeader2 . "</th>
-	      <th>" . LangOverviewObservationsHeader4 . "</th>
-	      <th>" . LangNewComet1 . "</th>
-	      <th>" . LangViewObservationField3 . "</th>
-	      <th>" . LangViewObservationField19 . "</th>
-	      <th>" . LangViewObservationField18b . "</th>
-	      <th>" . LangViewObservationField20b . "</th>
+	      <th>" . _("Object name") . "</th>
+	      <th>" . _("Observer") . "</th>
+	      <th>" . _("Date") . "</th>
+	      <th>" . _("Magnitude") . "</th>
+	      <th>" . _("Instrument") . "</th>
+	      <th>" . _("Coma") . "</th>
+	      <th>" . _("DC") . "</th>
+	      <th>" . _("Tail") . "</th>
 	      <th class=\"filter-false columnSelector-disable\" data-sorter=\"false\"></th>
 	      </tr>
 	      </thead>";
@@ -75,7 +75,7 @@ function overview_observations() {
 			$instrument = $objInstrument->getInstrumentPropertyFromId ( $temp, 'name' );
 			$instrumentsize = round ( $objInstrument->getInstrumentPropertyFromId ( $temp, 'diameter' ), 0 );
 			if ($instrument == "Naked eye") {
-				$instrument = InstrumentsNakedEye;
+				$instrument = _("Naked Eye");
 			}
 
 			// MAGNITUDE
@@ -136,7 +136,7 @@ function overview_observations() {
 
 			printf ( "%02d", $time [1] );
 
-			if ($instrument != InstrumentsNakedEye && $instrumentsize != "0" && $instrumentsize != "1") {
+			if ($instrument != _("Naked Eye") && $instrumentsize != "0" && $instrumentsize != "1") {
 				$instrument = $instrument . "(" . $instrumentsize . "&nbsp;mm" . ")";
 			}
 
@@ -157,7 +157,7 @@ function overview_observations() {
 					continue; // skip current directory and directory above
 				if (fnmatch ( $value . "_resized.gif", $file ) || fnmatch ( $value . "_resized.jpg", $file ) || fnmatch ( $value . "_resized.png", $file )) {
 					echo ("&nbsp;+&nbsp;");
-					echo LangDrawing;
+					echo _("drawing");
 				}
 			}
 

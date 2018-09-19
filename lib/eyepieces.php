@@ -61,12 +61,12 @@ class Eyepieces {
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
 			echo "<th>" . _("Active") . "</td>";
-			echo "<th data-priority=\"critical\">" . LangViewEyepieceName . "</th>";
-			echo "<th>" . LangViewEyepieceFocalLength . "</th>";
-			echo "<th>" . LangViewEyepieceMaxFocalLength . "</th>";
-			echo "<th>" . LangViewEyepieceApparentFieldOfView . "</th>";
+			echo "<th data-priority=\"critical\">" . _("Name") . "</th>";
+			echo "<th>" . _("Focal Length (in mm)") . "</th>";
+			echo "<th>" . _("Max focal length (in mm)") . "</th>";
+			echo "<th>" . _("Apparent FOV (°)") . "</th>";
 			echo "<th>" . _("Delete") . "</th>";
-			echo "<th>" . LangTopObserversHeader3 . "</th>";
+			echo "<th>" . _("Number of observations") . "</th>";
 			echo "</tr></thead>";
 			$count = 0;
 			while ( list ( $key, $value ) = each ( $eyeps ) ) {
@@ -87,9 +87,9 @@ class Eyepieces {
 				echo "<td>";
 				echo "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . $loggedUser . "&amp;eyepiece=" . $value . "&amp;exactinstrumentlocation=true\">";
 				if ($obsCnt != 1) {
-					echo $obsCnt . ' ' . LangGeneralObservations . "</a>";
+					echo $obsCnt . ' ' . _("observations") . "</a>";
 				} else {
-					echo $obsCnt . ' ' . LangGeneralObservation . "</a>";
+					echo $obsCnt . ' ' . _("observation") . "</a>";
 				}
 				echo "</td></tr>";
 				$count++;
@@ -103,8 +103,8 @@ class Eyepieces {
 {
 		global $objUtil, $objDatabase;
 		if (($eyepieceid = $objUtil->checkGetKey ( 'eyepieceid' )) && $objUtil->checkAdminOrUserID ( $this->getEyepiecePropertyFromId ( $eyepieceid, 'observer' ) ) && (! ($this->getEyepieceUsedFromId ( $eyepieceid )))) {
-			$objDatabase->execSQL ( "DELETE FROM eyepieces WHERE id=\"" . $eyepieceid . "\"" );
-			return LangValidateEyepieceMessage6;
+			$objDatabase->execSQL("DELETE FROM eyepieces WHERE id=\"" . $eyepieceid . "\"");
+			return _("The eyepiece is removed from your equipment list.");
 		}
 	}
 	public function validateSaveEyepiece() // validates and saves an eyepiece and returns a message
@@ -114,14 +114,14 @@ class Eyepieces {
 			$id = $this->addEyepiece ( $_POST ['eyepiecename'], $_POST ['focalLength'], $_POST ['apparentFOV'] );
 			$this->setEyepieceProperty ( $id, 'observer', $loggedUser );
 			$this->setEyepieceProperty ( $id, 'maxFocalLength', $objUtil->checkPostKey ( 'maxFocalLength', - 1 ) );
-			return LangValidateEyepieceMessage2;
+			return _("The eyepiece is added to your equipment list");
 		} elseif ($objUtil->checkPostKey ( 'id' ) && $objUtil->checkPostKey ( 'eyepiecename' ) && $objUtil->checkPostKey ( 'focalLength' ) && $objUtil->checkPostKey ( 'apparentFOV' ) && $objUtil->checkPostKey ( 'change' ) && $objUtil->checkAdminOrUserID ( $this->getEyepiecePropertyFromId ( $_POST ['id'], 'observer' ) )) {
 			$this->setEyepieceProperty ( $_POST ['id'], 'name', $_POST ['eyepiecename'] );
 			$this->setEyepieceProperty ( $_POST ['id'], 'focalLength', $_POST ['focalLength'] );
 			$this->setEyepieceProperty ( $_POST ['id'], 'apparentFOV', $_POST ['apparentFOV'] );
 			// $this->setEyepieceProperty($_POST['id'],'observer', $loggedUser);
 			$this->setEyepieceProperty ( $_POST ['id'], 'maxFocalLength', $objUtil->checkPostKey ( 'maxFocalLength', - 1 ) );
-			return LangValidateEyepieceMessage5 . ' ' . LangValidateEyepieceMessage4;
+			return _("The eyepiece is changed in your equipment list") . ' ' . _("Eyepiece changed");
 		} else
 			return _("All required fields must be filled in!");
 	}

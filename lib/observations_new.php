@@ -19,28 +19,28 @@ if ($loggedUser == ""){
 		result += '<td colspan="4">'+d.moonpic+'</td>'+
 			'</tr>'+
 			'<tr>'+
-		    	'<td><?=LangViewObservationField4?></td>'+
+		    	'<td><?=_("Location")?></td>'+
             	'<td><a href="/index.php?indexAction=detail_location&location='+d.locationid+'">'+d.locationname+'</a></td>'+
-		    	'<td><?=LangViewObservationField9?></td>'+
+		    	'<td><?=_("Time (UT)")?></td>'+
             	'<td>'+d.displaytime+'</td>'+
 	            '<td></td>'+	
 	            '<td></td>'+	           	
             '</tr>'+
 		        '<tr>'+
-		            '<td><?=LangViewObservationField7?> / <?=LangViewObservationField34?></td>'+
+		            '<td><?=_("Limiting magnitude")?> / <?=_("SQM")?></td>'+
 		            '<td>'+d.limmag+' / '+d.sqm+'</td>'+
-		            '<td><?=LangViewObservationField6?></td>'+
+		            '<td><?=_("Seeing")?></td>'+
 		            '<td>'+d.seeing+'</td>'+	
 		            '<td></td>'+	
 		            '<td></td>'+			            
 		        '</tr>'+
 		        '<tr>'+
-		            '<td><?=LangViewObservationField3?></td>'+
+		            '<td><?=_("Instrument")?></td>'+
 		            '<td>'+
 		            	'<a href="index.php?indexAction=detail_instrument&instrument='+d.instrumentid+'">'+d.instrumentname+' ('+d.instrumentdiameter+' '+d.diameterformat+')</a>'+
 			    	'</td>'+
 
-			        '<td><?=LangViewObservationField31?></td>'+
+			        '<td><?=_("Filter")?></td>'+
 		            '<td>';					
 						if(d.filterid != 0){
 			            	result += '<a href="index.php?indexAction=detail_filter&filter='+d.filterid+'">'+d.filterdescription+'</a>';
@@ -48,7 +48,7 @@ if ($loggedUser == ""){
 							result += d.filterdescription;
 						}	
 	            	result += '</td>'+	
-		            '<td><?=LangViewObservationField32?></td>'+
+		            '<td><?=_("Lens")?></td>'+
 		            '<td>';					
 					if(d.lensid != 0){
 		            	result += '<a href="index.php?indexAction=detail_lens&lens='+d.lensid+'">'+d.lensdescription+'</a>';
@@ -58,7 +58,7 @@ if ($loggedUser == ""){
             	result += '</td>'+		            
 	        	'</tr>'+	
 		    	'<tr>'+
-		    		'<td><?=LangViewObservationField30?></td>'+
+		    		'<td><?=_("Eyepiece")?></td>'+
 	            	'<td>';					
 						if(d.eyepieceid != 0){
 		            		result += '<a href="index.php?indexAction=detail_eyepiece&eyepiece='+d.eyepieceid+'">'+d.eyepiecedescription+'</a>';
@@ -66,13 +66,13 @@ if ($loggedUser == ""){
 							result += d.eyepiecedescription;
 						}	
             	result += '</td>'+
-		            '<td><?=LangViewObservationField33?></td>'+
+		            '<td><?=_("Estimated diameter")?></td>'+
 		            '<td>'+d.size+'</td>'+		
-		            '<td><?=LangViewObservationField40?></td>'+
+		            '<td><?=_("Cluster type")?></td>'+
 		            '<td>'+d.clustertype+'</td>'+	             	
             	'</tr>'+	        	
 		        '<tr>'+
-		            '<td><?=LangViewObservationField22?></td>'+
+		            '<td><?=_("Visibility")?></td>'+
 		            '<td>'+d.visibility+'</td>'+           
 	        	'</tr>'+	
 	        		        			        
@@ -130,7 +130,7 @@ if ($loggedUser == ""){
 	            { "data": "instrumentdiameter", "visible": false},
 	            { "data": "sortdate", "visible": false},
 		        { "data": "date", "orderData": 6 },
-		        { "orderable" : false, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observation&observation='+row.observationid+'&dalm=D" title="<?=LangDetail ?>"><img src="/styles/images/details.png"/></a>'+(row.hasdrawing==1?'&nbsp;<img src="/styles/images/img.png" title="<?=LangImage ?>"/>':'') }}		      
+		        { "orderable" : false, "data": function ( row, type, val, meta ) { return '<a href="index.php?indexAction=detail_observation&observation='+row.observationid+'&dalm=D" title="<?=_("Details of this observation") ?>"><img src="/styles/images/details.png"/></a>'+(row.hasdrawing==1?'&nbsp;<img src="/styles/images/img.png" title="<?=_("This observation contains an image") ?>"/>':'') }}		      
 	        ];
 
 		var dt = $('#observations').DataTable( datatablesConfig );
@@ -174,32 +174,32 @@ if ($loggedUser == ""){
 	<thead>
     	<tr>
 			<th></th>											<!--0 + detailknop -->
-			<th><?= LangOverviewObservationsHeader1 ?></th>		<!--1 Object -->
-			<th><?= LangViewObservationField1b ?></th>			<!--2 Constellation -->
-			<th><?= LangOverviewObservationsHeader2 ?></th>		<!--3 Observer -->
-			<th><?= LangOverviewObservationsHeader10 ?></th>	<!--4 Instrument diameter -->
+			<th><?= _("Object name") ?></th>		<!--1 Object -->
+			<th><?= _("Constellation") ?></th>			<!--2 Constellation -->
+			<th><?= _("Observer") ?></th>		<!--3 Observer -->
+			<th><?= _("Instrument diameter") ?></th>	<!--4 Instrument diameter -->
 			<th></th>											<!--5 (Hidden) diameter -->			
 			<th></th>											<!--6 (Hidden) sortdate -->
-			<th><?= LangOverviewObservationsHeader4 ?></th>		<!--7 Date -->
+			<th><?= _("Date") ?></th>		<!--7 Date -->
 			<th style="width:40px"></th>											<!--8 Details -->
         </tr>
 	</thead>
     <tfoot>
 		<tr>
 			<th></th>
-			<th><?= LangOverviewObservationsHeader1 ?></th>
-			<th><?= LangViewObservationField1b ?></th>
-			<th><?= LangOverviewObservationsHeader2 ?></th>
-			<th><?= LangOverviewObservationsHeader10 ?></th>			
+			<th><?= _("Object name") ?></th>
+			<th><?= _("Constellation") ?></th>
+			<th><?= _("Observer") ?></th>
+			<th><?= _("Instrument diameter") ?></th>			
 			<th></th>
 			<th></th>
-			<th><?= LangOverviewObservationsHeader4 ?></th>
+			<th><?= _("Date") ?></th>
 			<th></th>
 		</tr>
 	</tfoot>
 </table>	
 
-<a class="btn btn-primary" href="index.php?indexAction=query_objects&source=observation_query"><?=LangExecuteQueryObjectsMessage9?></a>
-<a class="btn btn-primary" href="observations.pdf.php?SID=Qobs"><span class="glyphicon glyphicon-download"></span>&nbsp;<?=LangExecuteQueryObjectsMessage4a?></a>
-<a class="btn btn-primary" href="observations.csv"><span class="glyphicon glyphicon-download"></span>&nbsp;<?=LangExecuteQueryObjectsMessage5?></a>
-<a class="btn btn-primary" href="observations.xml"><span class="glyphicon glyphicon-download"></span>&nbsp;<?=LangExecuteQueryObjectsMessage10?></a>
+<a class="btn btn-primary" href="index.php?indexAction=query_objects&source=observation_query"><?=_("Filter objects")?></a>
+<a class="btn btn-primary" href="observations.pdf.php?SID=Qobs"><span class="glyphicon glyphicon-download"></span>&nbsp;<?=_("pdf")?></a>
+<a class="btn btn-primary" href="observations.csv"><span class="glyphicon glyphicon-download"></span>&nbsp;<?=_("CSV")?></a>
+<a class="btn btn-primary" href="observations.xml"><span class="glyphicon glyphicon-download"></span>&nbsp;<?=_("<OAL>")?></a>

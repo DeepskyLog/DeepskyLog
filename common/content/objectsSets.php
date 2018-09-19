@@ -3,18 +3,12 @@
 // allows the user to generate a pdf series with object data, DSS photos, DSL charts an index pages
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!$loggedUser) throw new Exception(LangException002);
+elseif(!$loggedUser) throw new Exception(_("You need to be logged in to change your locations or equipment."));
 else objectsSets();
 
 
 function objectsSets()
 { global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil, $MSIE;
-  echo "<script type=\"text/javascript\">";
-  echo "var Langpdfseriesclickok='"._('Click "Ok", only when ')."';";
-  echo "var Langpdfserieswhenfinished='"._(' is finished!')."';";
-  echo "var LangpdfseriesGenerating='".LangpdfseriesGenerating."';";
-  echo "var Langpdfserieschoselayout='"._("Please select a layout for the index page.")."';";
-  echo "</script>";
   $fovo=$objObserver->getObserverProperty($loggedUser,'overviewFoV','');
   $fovl=$objObserver->getObserverProperty($loggedUser,'lookupFoV','');
   $fovd=$objObserver->getObserverProperty($loggedUser,'detailFoV','');

@@ -33,7 +33,7 @@
 
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
-    	<a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?=LangTopObjectsTitle?></a>
+    	<a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?=_("Most popular objects")?></a>
     </li>
     <li role="presentation">
     	<a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?=_('Most popular objects (drawings)')?></a>
@@ -45,13 +45,13 @@
 		<table id="table1" class="table table-striped table-bordered">
 			<thead>
 		    	<tr>
-		          <th><?= LangOverviewObjectsHeader1 ?></th>
+		          <th><?= _("Name") ?></th>
 		          <th><?= _("Observations") ?></th>
 		        </tr>
 			</thead>
 		    <tfoot>
 				<tr>
-					<th><?= LangOverviewObjectsHeader1 ?></th>
+					<th><?= _("Name") ?></th>
 					<th><?= _("Observations") ?></th>
 				</tr>
 			</tfoot>
@@ -61,13 +61,13 @@
 		<table id="table2" class="table table-striped table-bordered">
 			<thead>
 		    	<tr>
-		          <th><?= LangOverviewObjectsHeader1 ?></th>
+		          <th><?= _("Name") ?></th>
 		          <th><?= _("Observations") ?></th>
 		        </tr>
 			</thead>
 		    <tfoot>
 				<tr>
-					<th><?= LangOverviewObjectsHeader1 ?></th>
+					<th><?= _("Name") ?></th>
 					<th><?= _("Observations") ?></th>
 				</tr>
 			</tfoot>

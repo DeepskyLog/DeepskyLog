@@ -22,65 +22,64 @@ function register() {
 	echo "<div id=\"main\">";
 	echo "<form action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\" />";
-	echo "<input type=\"hidden\" name=\"title\" value=\"" . LangRegisterNewTitle . "\" />";
-	echo "<h4>" . LangRegisterNewTitle;
-	echo "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />";
+	echo "<input type=\"hidden\" name=\"title\" value=\"" . _("Register") . "\" />";
+	echo "<h4>" . _("Register");
+	echo "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"register\" value=\"" . _("Register") . "\" />";
 	echo "&nbsp;</h4>";
 	echo "<hr />";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangChangeAccountField1 . "</label>";
+	       <label>" . _("Username") . "</label>";
 	echo "<input type=\"text\" class=\"form-control\" maxlength=\"64\" name=\"deepskylog_id\" required size=\"50\" value=\"" . $objUtil->checkPostKey ( 'deepskylog_id' ) . "\" />";
-	echo "<span class=\"help-block\">" . LangChangeAccountField1Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("This is the name you will use to log in") . "</span>";
 	echo "</div>";
 
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangChangeAccountField2 . "</label>";
+	       <label>" . _("Email address") . "</label>";
 	echo "<input type=\"email\" class=\"form-control\" maxlength=\"64\" name=\"email\" size=\"50\" required value=\"" . $objUtil->checkPostKey ( 'email' ) . "\" />";
-	echo "<span class=\"help-block\">" . LangChangeAccountField2Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Your email address will remain confidential") . "</span>";
 	echo "</div>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangChangeAccountField3 . "</label>";
+	       <label>" . _("First name") . "</label>";
 	echo "<input type=\"text\" class=\"form-control\" maxlength=\"64\" name=\"firstname\" size=\"50\" required value=\"" . $objUtil->checkPostKey ( 'firstname' ) . "\" />";
-	echo "<span class=\"help-block\">" . LangChangeAccountField3Expl . "</span>";
 	echo "</div>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangChangeAccountField4 . "</label>";
+	       <label>" . _("Last Name") . "</label>";
 	echo "<input type=\"text\" class=\"form-control\" maxlength=\"64\" name=\"name\" size=\"50\" required value=\"" . $objUtil->checkPostKey ( 'name' ) . "\" />";
-	echo "<span class=\"help-block\">" . LangChangeAccountField4Expl . "</span>";
 	echo "</div>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangChangeAccountField13 . "</label>";
+	       <label>" . _("Motivation") . "</label>";
 	echo "<input type=\"text\" class=\"form-control\" maxlength=\"64\" name=\"motivation\" size=\"120\" required value=\"" . $objUtil->checkPostKey ( 'explanation' ) . "\" />";
-	echo "<span class=\"help-block\">" . LangChangeAccountField13Expl . "</span>";
+    echo "<span class=\"help-block\">" . 
+        _("Please tell us briefly why you register, this allows us to eliminate automatic registrations.") . 
+        "</span>";
 	echo "</div>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangChangeAccountField5 . "</label>";
+	       <label>" . _("Password") . "</label>";
 	echo "<input type=\"password\" class=\"strength\" maxlength=\"64\" name=\"passwd\" size=\"50\" required value=\"" . $objUtil->checkPostKey ( 'passwd' ) . "\" />";
-	echo "<span class=\"help-block\">" . LangChangeAccountField5Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("This is not your email account's password") . "</span>";
 	echo "</div>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangChangeAccountField6 . "</label>";
+	       <label>" . _("Confirm password") . "</label>";
 	echo "<input type=\"password\" class=\"form-control\" maxlength=\"64\" name=\"passwd_again\" size=\"50\" required value=\"" . $objUtil->checkPostKey ( 'passwd_again' ) . "\" />";
-	echo "<span class=\"help-block\">" . LangChangeAccountField6Expl . "</span>";
 	echo "</div>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangChangeAccountObservationLanguage . "</label><br />";
+	       <label>" . _("Standard language for observations") . "</label><br />";
 	echo "<span class=\"form-inline\">" . $tempAllList . "</span>";
-	echo "<span class=\"help-block\">" . LangChangeAccountObservationLanguageExpl . "</span>";
+	echo "<span class=\"help-block\">" . _("The standard language to enter the observations") . "</span>";
 	echo "</div>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangChangeAccountLanguage . "</label><br />";
+	       <label>" . _("Default language") . "</label><br />";
 	echo "<span class=\"form-inline\">" . $tempList . "</span>";
-	echo "<span class=\"help-block\">" . LangChangeAccountLanguageExpl . "</span>";
+	echo "<span class=\"help-block\">" . _("The language for DeepskyLog") . "</span>";
 	echo "</div>";
 
 	// javascript to disable the copyright field when one of the CC options is selected.
@@ -117,16 +116,16 @@ function register() {
         </div>';
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangChangeAccountCopyright . "</label>";
+	       <label>" . _("Copyright notice") . "</label>";
 	echo "<input type=\"text\" disabled id=\"copyright\" class=\"form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"" . $objObserver->getObserverProperty ( $objUtil->checkSessionKey ( 'deepskylog_id' ), 'copyright' ) . "\" />";
-	echo "<span class=\"help-block\">" . LangChangeAccountCopyrightExpl . "</span>";
+	echo "<span class=\"help-block\">" . _("You can specify a copyright notice that will appear under your observations and drawings.") . "</span>";
 	echo "</div>";
 
 	reset ( $allLanguages );
 	$usedLanguages = $languagesDuringRegistration;
 
 	echo "<div class=\"form-group\">";
-	echo "<label>" . LangChangeVisibleLanguages . "</label>";
+	echo "<label>" . _("Languages for observations") . "</label>";
 	echo "<table class=\"table table-condensed borderless\">";
 
 	$j = 0;
@@ -143,7 +142,7 @@ function register() {
 	}
 	echo "</tr></table>";
 
-	echo "<input class=\"btn btn-success\" type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />";
+	echo "<input class=\"btn btn-success\" type=\"submit\" name=\"register\" value=\"" . _("Register") . "\" />";
 	echo "</div></div>";
 	echo "<hr />";
 	echo "</div></form>";

@@ -66,10 +66,10 @@ echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL
     . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick" 
     . "&myLanguages=true&object=" 
     . "&searchObservationsQuickPick=Zoek%C2%A0waarnemingen\">";
-echo "    <img title=\"" . LangSearchMenuItem3 . "\" src=\"" . $baseURL 
+echo "    <img title=\"" . _("Search observations") . "\" src=\"" . $baseURL 
     . "images/findObservation.png\">";
 echo "    <div class=\"caption\">";
-echo "     <h4 class=\"text-center\">" . LangSearchMenuItem3 . "</h4>";
+echo "     <h4 class=\"text-center\">" . _("Search observations") . "</h4>";
 echo "    </div>";
 echo "   </a>";
 echo " </div>";
@@ -78,10 +78,10 @@ echo " <div class=\"col-xs-4 col-sm-2 col-md-2\">";
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL 
     . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick" 
     . "&myLanguages=true&object=&searchObjectQuickPickQuickPick=Zoek%C2%A0object\">";
-echo "    <img title=\"" . LangSearchMenuItem5 . "\" src=\"" . $baseURL 
+echo "    <img title=\"" . _("Search objects") . "\" src=\"" . $baseURL 
     . "images/findObject.png\">";
 echo "    <div class=\"caption\">";
-echo "     <h4 class=\"text-center\">" . LangSearchMenuItem5 . "</h4>";
+echo "     <h4 class=\"text-center\">" . _("Search objects") . "</h4>";
 echo "    </div>";
 echo "   </a>";
 echo " </div>";
@@ -96,10 +96,10 @@ echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL
     . "index.php?indexAction=result_selected_observations&amp;myLanguages=true" 
     . "&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth" 
     . "&amp;minday=$lastMinDay&amp;newobservations=true\">";
-echo "    <img title=\"" . LangSearchMenuItem9 . "\" src=\"" . $baseURL 
+echo "    <img title=\"" . _("Latest observations") . "\" src=\"" . $baseURL 
     . "images/new_badge.png\">";
 echo "    <div class=\"caption\">";
-echo "     <h4 class=\"text-center\">" . LangSearchMenuItem9 . "</h4>";
+echo "     <h4 class=\"text-center\">" . _("Latest observations") . "</h4>";
 echo "    </div>";
 echo "   </a>";
 echo " </div>";
@@ -122,10 +122,10 @@ if ($loggedUser) {
         . "&titleobjectaction=Zoeken&source=quickpick" 
         . "&myLanguages=true&object=" 
         . "&newObservationQuickPick=Nieuwe%C2%A0waarneming\">";
-    echo "    <img title=\"" . LangViewObservationButton1 . "\" src=\"" . $baseURL 
+    echo "    <img title=\"" . _("Add observation") . "\" src=\"" . $baseURL 
         . "images/pencil.png\">";
     echo "    <div class=\"caption\">";
-    echo "     <h4 class=\"text-center\">" . LangViewObservationButton1 . "</h4>";
+    echo "     <h4 class=\"text-center\">" . _("Add observation") . "</h4>";
     echo "    </div>";
     echo "   </a>";
     echo " </div>";

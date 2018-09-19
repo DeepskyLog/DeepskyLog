@@ -15,22 +15,22 @@ function view_observation() {
 	global $baseURL, $object, $loggedUser, $myList, $observationid, $listname_ss, $objObservation, $objObject, $objPresentations, $objUtil, $objList, $objObserver;
 	echo "<div id=\"main\">";
 	$object_ss = stripslashes ( $object );
-	echo "<h4>" . LangViewObjectTitle . "&nbsp;-&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\">" . $object_ss . "</a></h4>";
+	echo "<h4>" . _("Object details") . "&nbsp;-&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\">" . $object_ss . "</a></h4>";
 	$seenDetails = $objObject->getSeenComprehensive ( $object );
 	echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
 	echo $objPresentations->getDSSDeepskyLiveLinks2 ( $object );
 	echo "</div>";
 
-	$topline = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\">" . LangViewObjectViewNearbyObject . " " . $object_ss . "</a>";
+	$topline = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\">" . _("Nearby objects") . " " . $object_ss . "</a>";
 	if (substr ( $objObject->getSeen ( $object ), 0, 1 ) != '-')
-		$topline .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\">" . LangViewObjectObservations . "&nbsp;" . $object_ss . "</a>";
+		$topline .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\">" . _("All observations") . "&nbsp;" . $object_ss . "</a>";
 	if ($loggedUser)
-		$topline .= "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode ( $object ) . "\">" . LangViewObjectAddObservation . "&nbsp;" . $object_ss . "</a>";
+		$topline .= "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode ( $object ) . "\">" . _("New observation") . "&nbsp;" . $object_ss . "</a>";
 	if ($myList) {
 		if ($objList->checkObjectInMyActiveList ( $object ))
-			$topline .= "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "&amp;removeObjectFromList=" . urlencode ( $object ) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";
+			$topline .= "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object ) . "\">" . sprintf(_("%s to remove from the list %s"), $object_ss, $listname_ss) . "</a>";
 		else
-			$topline .= "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "&amp;addObjectToList=" . urlencode ( $object ) . "&amp;showname=" . urlencode ( $object ) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
+			$topline .= "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . sprintf(_("%s to add to the list %s"), $object_ss, $listname_ss) . "</a>";
 	}
 	echo $topline;
 	echo "<br /><br />";
@@ -39,16 +39,16 @@ function view_observation() {
 	if ($loggedUser) // LOGGED IN
 {
 		if ($_GET ['dalm'] != "D")
-			$content = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText . "</a>" . "&nbsp;";
+			$content = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=D\" title=\"" . _("Details of this observation") . "\">" . "D" . "</a>" . "&nbsp;";
 		if ($_GET ["dalm"] != "AO")
-			$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=AO\" title=\"" . LangAO . "\">" . LangAOText . "</a>" . "&nbsp;";
+			$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=AO\" title=\"" . _("Compare this observation with all observations of this object") . "\">" . "AO" . "</a>" . "&nbsp;";
 		if ($objObservation->getObservationsUserObject ( $loggedUser, $object ) > 0) {
 			if ($_GET ['dalm'] != "MO")
-				$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=MO\" title=\"" . LangMO . "\">" . LangMOText . "</a>" . "&nbsp;";
+				$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=MO\" title=\"" . _("Compare this observation with all my observations of this object") . "\">" . "MO" . "</a>" . "&nbsp;";
 			if ($_GET ['dalm'] != "LO")
-				$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=LO\" title=\"" . LangLO . "\">" . LangLOText . "</a>" . "&nbsp;";
+				$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=LO\" title=\"" . _("Compare this observation with my last observation of this object") . "\">" . "LO" . "</a>" . "&nbsp;";
 		}
-		$content .= LangOverviewObservationsHeader5a;
+		$content .= _("(*) All Observations(AO), My observations(MO), my Last observations(LO) of this object");
 		echo $content;
 		echo "<br /><br />";
 	}

@@ -5,7 +5,7 @@
 global $inIndex,$loggedUser;
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!$loggedUser) throw new Exception(LangException002);
+elseif(!$loggedUser) throw new Exception(_("You need to be logged in to change your locations or equipment."));
 else add_csv_listdata();
 
 function add_csv_listdata()
@@ -18,7 +18,7 @@ function add_csv_listdata()
 	for($i=0;$i<count($data_array);$i++ )
 	  $parts_array[$i]=explode(";",$data_array[$i]);
 	if(!is_array($parts_array))
-	  throw new Exception(LangInvalidCSVListFile);
+	  throw new Exception(_("Invalid list data."));
 	else
 	{ $objects = array();
 		$objectsMissing = array();
@@ -37,7 +37,8 @@ function add_csv_listdata()
 			}
 	  }
 	  if(count($objectsMissing) > 0)
-	  { $errormessage = LangCSVListError1 . "<br /> <ul><li>" . LangCSVListError2 . "<ul>";
+      { $errormessage = _("Errors have occured during the import.") . 
+            "<br /> <ul><li>" . _("Unknown objects:") . "<ul>";
 	    for ($i = 0;$i < count($objectsMissing);$i++ )
 	      $errormessage = $errormessage . "<li>" . $objectsMissing[$i] . "</li>";
 	    $errormessage = $errormessage .  "</ul></li></ul>";
@@ -51,7 +52,7 @@ function add_csv_listdata()
 				$_GET['indexAction']='listaction';
 			}
 			else
-		 		throw new Exception(LangListImportError2);
+		 		throw new Exception(_("You have to select a list of your own if you want to import into it."));
 	  }
 	}
 }

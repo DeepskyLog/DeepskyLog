@@ -35,7 +35,7 @@ class Lists {
 						$objDatabase->execSQL ( "UPDATE observerobjectlist SET description = \"" . substr ( (($get3 ['description']) ? ($get3 ['description'] . " ") : '') . $description, 0, 4096 ) . "\" WHERE observerid = \"" . $loggedUser . "\" AND listname=\"" . $listname . "\" AND objectname=\"" . $theobject . "\"" );
 				}
 			}
-			$entryMessage .= LangToListMyListsAddedLongestObsDescription;
+			$entryMessage .= _("Observations added (longest)");
 		}
 	}
 	public function removeObservations($thetype) {
@@ -45,7 +45,7 @@ class Lists {
 		if ($thetype == "all") {
 			$sql = "UPDATE observerobjectlist " . "SET description = (SELECT objects.description FROM objects WHERE objects.name=observerobjectlist.objectname) " . "WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\" AND objectname <>\"\"";
 			$run = $objDatabase->execSQL ( $sql );
-			$entryMessage .= LangToListMyListsRemovedObsDescription;
+			$entryMessage .= _("Observations removed");
 		}
 	}
 	public function addList($name, $isPublic) {
@@ -253,7 +253,7 @@ class Lists {
 		}
 		echo "</th>";
 		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
-		echo LangToListMyListsRemove;
+		echo _("Remove the list");
 		echo "</th></tr>";
 		echo "</thead>";
 		echo "<tbody>";
@@ -350,7 +350,7 @@ class Lists {
                           </div>
                           <div class=\"modal-footer\">
                            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-                           <input class=\"btn btn-success\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" /></button>
+                           <input class=\"btn btn-success\" type=\"submit\" name=\"renameList\" value=\"" . _("Rename") . "\" /></button>
    		                  </form>
                          </div>
                         </div><!-- /.modal-content -->
@@ -435,7 +435,7 @@ class Lists {
 			}
 			if (array_key_exists ( 'QobjParams', $_SESSION ) && array_key_exists ( 'source', $_SESSION ['QobjParams'] ) && ($_SESSION ['QobjParams'] ['source'] == 'tolist'))
 				unset ( $_SESSION ['QobjParams'] );
-			return LangToListMoved7 . $_GET ['ObjectToPlaceInList'] . ".";
+			return sprintf(_("The object has been moved to place %s."), $_GET['ObjectToPlaceInList']);
 		} else
 			return '';
 	}

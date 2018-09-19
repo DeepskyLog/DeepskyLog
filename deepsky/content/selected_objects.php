@@ -26,25 +26,26 @@ function selected_objects() {
 	if (count ( $_SESSION ['Qobj'] ) > 1) 	// =============================================== valid result, multiple objects found
 	{
 		echo "<div>";
-		$title = "<h4>" . LangSelectedObjectsTitle;
+		$title = "<h4>" . _("Overview selected objects");
 		if ($showPartOfs)
-			$title .= LangListQueryObjectsMessage10;
+			$title .= _(" (with associated objects)");
 		else
-			$title .= LangListQueryObjectsMessage11;
+			$title .= _(" (without associated objects)");
 		$title .= "</h4>";
 
 		echo $title;
 
 		if ($myList) {
-			$addButtons = "&nbsp;<a href=\"" . $link . "&amp;addAllObjectsFromQueryToList=true\" title=\"" . LangListQueryObjectsMessage5 . $listname_ss . "\" class=\"btn btn-primary\">" . LangListQueryObjectsMessage4 . "</a>";
+            $addButtons = "&nbsp;<a href=\"" . $link . "&amp;addAllObjectsFromQueryToList=true\" title=\"" . _("Active list: ") . $listname_ss 
+                . "\" class=\"btn btn-primary\">" . _("Add all results to the list ") . "</a>";
 		} else {
 			$addButtons = "";
 		}
 		echo "<span class=\"pull-right\">";
 		if ($showPartOfs) {
-			echo "<a href=\"" . $link . "&amp;showPartOfs=0\" class=\"btn btn-primary\">" . LangListQueryObjectsMessage12 . "</a>&nbsp;";
+			echo "<a href=\"" . $link . "&amp;showPartOfs=0\" class=\"btn btn-primary\">" . _("Show no associated objects") . "</a>&nbsp;";
 		} else {
-			echo "<a href=\"" . $link . "&amp;showPartOfs=1\" class=\"btn btn-primary\">" . LangListQueryObjectsMessage13 . "</a>&nbsp;";
+			echo "<a href=\"" . $link . "&amp;showPartOfs=1\" class=\"btn btn-primary\">" . _("Show associated objects") . "</a>&nbsp;";
 		}
 		echo "<a href=\"" . $link . "&amp;noShowName=noShowName\" class=\"btn btn-primary\">" . _("Switch names and alternative names") . "</a>";
 		echo $addButtons;
@@ -59,9 +60,9 @@ function selected_objects() {
 	} else 	// ========================================================================no results found
 	{
 		echo "<div id=\"main\">";
-		echo "<h4>" . LangSelectedObjectsTitle . "</h4>";
-		echo LangExecuteQueryObjectsMessage2;
-		echo "<a href=\"" . $baseURL . "index.php?indexAction=query_objects\">" . LangExecuteQueryObjectsMessage2a . "</a>";
+		echo "<h4>" . _("Overview selected objects") . "</h4>";
+		echo _("Sorry, no objects found!");
+		echo "<a href=\"" . $baseURL . "index.php?indexAction=query_objects\">" . _("Perform another search") . "</a>";
 		echo "</div>";
 	}
 }

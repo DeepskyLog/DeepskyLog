@@ -171,7 +171,7 @@ class Utils
         global $objObserver, $loggedUser, $objPresentations, $objAtlas;
         $result = $this->sortResult($result);
 
-        while (list($key, $valueA) = each($result)) {
+        foreach ($result as $key=>$valueA) {
             echo "DSL " . $valueA ['objectname'] . "|" . 
                     $objPresentations->raArgoToString($valueA['objectra']) . 
                     "|" . $objPresentations->decToArgoString(
@@ -521,7 +521,7 @@ class Utils
 
         $allObs = $result;
 
-        while (list($key, $value) = each($result)) {
+        foreach ($result as $key=>$value) {
             $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
             $objectname = $obs['objectname'];
             $observerid = $obs['observerid'];
@@ -607,7 +607,7 @@ class Utils
         // add root - <observers>
         $observersDom = $fcgaDom->appendChild($dom->createElement('observers'));
 
-        while (list($key, $value) = each($observers)) {
+        foreach ($observers as $key=>$value) {
             $observer2 = $dom->createElement('observer');
             $observerChild = $observersDom->appendChild($observer2);
             $attr = $dom->createAttribute("id");
@@ -657,7 +657,7 @@ class Utils
         // add root - <sites>
         $observersDom = $fcgaDom->appendChild($dom->createElement('sites'));
 
-        while (list($key, $value) = each($sites)) {
+        foreach ($sites as $key=>$value) {
             $site2 = $dom->createElement('site');
             $siteChild = $observersDom->appendChild($site2);
             $attr = $dom->createAttribute("id");
@@ -806,7 +806,7 @@ class Utils
         // add root - <targets>
         $observersDom = $fcgaDom->appendChild($dom->createElement('targets'));
 
-        while (list($key, $value) = each($objects)) {
+        foreach ($objects as $key=>$value) {
             $object2 = $dom->createElement('target');
             $objectChild = $observersDom->appendChild($object2);
             $attr = $dom->createAttribute("id");
@@ -871,7 +871,7 @@ class Utils
             );
 
             $altnames = $GLOBALS['objObject']->getAlternativeNames($value);
-            while (list($key2, $value2) = each($altnames)) {
+            foreach ($altnames as $key2=>$value2) {
                 // go through names array
                 if (trim($value2) != trim($value)) {
                     if (trim($value2) != "") {
@@ -971,7 +971,7 @@ class Utils
         // add root - <scopes>
         $observersDom = $fcgaDom->appendChild($dom->createElement('scopes'));
 
-        while (list($key, $value) = each($scopes)) {
+        foreach ($scopes as $key=>$value) {
             $fixMag = $GLOBALS ['objInstrument']->getInstrumentPropertyFromId(
                 $value, 'fixedMagnification'
             );
@@ -1101,7 +1101,7 @@ class Utils
         // add root - <eyepieces>
         $observersDom = $fcgaDom->appendChild($dom->createElement('eyepieces'));
 
-        while (list($key, $value) = each($eyepieces)) {
+        foreach ($eyepieces as $key=>$value) {
             if ($value != "" && $value > 0) {
                 $eyepiece2 = $dom->createElement('eyepiece');
                 $eyepieceChild = $observersDom->appendChild($eyepiece2);
@@ -1171,7 +1171,7 @@ class Utils
         // add root - <lenses>
         $observersDom = $fcgaDom->appendChild($dom->createElement('lenses'));
 
-        while (list($key, $value) = each($lenses)) {
+        foreach ($lenses as $key=>$value) {
             if ($value != "" && $value > 0) {
                 $lens2 = $dom->createElement('lens');
                 $lensChild = $observersDom->appendChild($lens2);
@@ -1204,7 +1204,7 @@ class Utils
         // add root - <filters>
         $observersDom = $fcgaDom->appendChild($dom->createElement('filters'));
 
-        while (list($key, $value) = each($filters)) {
+        foreach ($filters as $key=>$value) {
             if ($value != "" && $value > 0) {
                 $filter2 = $dom->createElement('filter');
                 $filterChild = $observersDom->appendChild($filter2);
@@ -1330,7 +1330,7 @@ class Utils
         $observersDom = $fcgaDom->appendChild($dom->createElement('imagers'));
 
         // Add the observations.
-        while (list($key, $value) = each($allObs)) {
+        foreach ($allObs as $key=>$value) {
             $obs = $GLOBALS['objObservation']->getAllInfoDsObservation(
                 $value['observationid']
             );
@@ -1710,11 +1710,11 @@ class Utils
     {
         global $objObject, $objPresentations, $objObserver, $loggedUser;
         $result = $this->sortResult($result);
-        echo html_entity_decode(LangCSVMessage7) . "\n";
-        while (list($key, $valueA) = each($result)) {
+        echo html_entity_decode(_("Name;Altname;RA;Decl;Constellation;Type;Magnitude;SurfaceBrightness;Diameter;Position Angle;Page;ContrastReserve;OptimalMagnification;Seen;Last Seen")) . "\n";
+        foreach ($result as $key=>$valueA) {
             $alt = "";
             $alts = $objObject->getAlternativeNames($valueA['objectname']);
-            while (list($key, $value) = each($alts)) {
+            foreach ($alts as $key=>$value) {
                 if ($value != $valueA['objectname']) {
                     $alt .= " - " . trim($value);
                 }
@@ -1757,7 +1757,7 @@ class Utils
 
         echo "SkySafariObservingListVersion=3.0\n";
 
-        while (list($key, $row) = each($result)) {
+        foreach ($result as $key=>$row) {
             echo "\n";
             echo "SkyObject=BeginObject\n";
 
@@ -1767,7 +1767,7 @@ class Utils
             $objectNames = $this->getObjectNames($row, $objectId);
 
             echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
-            while (list($key, $objectName) = each($objectNames)) {
+            foreach ($objectNames as $key=>$objectName) {
                 echo "   CatalogNumber=" . $objectName . "\n";
             }
 
@@ -1802,7 +1802,7 @@ class Utils
         // Get all the alternative names for the given object.
         $altNames = $objObject->getAlternativeNames($row['objectname']);
         // Loop over all the alternative names
-        while (list($key, $altName) = each($altNames)) {
+        foreach ($altNames as $key=>$altName) {
             // Fix the names
             $altName = $this->fixObjectName(trim($altName), $objectId);
             // If name is not the same as the objectname, we add the alternative
@@ -1815,7 +1815,7 @@ class Utils
         $objectName = "";
         reset($names);
         // We loop over the names array.
-        while (list($key, $name) = each($names)) {
+        foreach ($names as $key=>$name) {
             if (preg_match("/(?i)^(M|NGC|IC|C|Cr|Tr|STF|STFA|HD)\s*\d+$/", $name)) { 
                 // These catalogs are best known to Skysafari
                 $objectName = $name;
@@ -1835,7 +1835,7 @@ class Utils
         } else {
             reset($names);
             // Loop over the objectnames and add all names and alternative names. 
-            while (list($key, $name) = each($names)) {
+            foreach ($names as $key=>$name) {
                 array_push($objectNames, $name);
             }
         }
@@ -1956,7 +1956,7 @@ class Utils
     {
         global $objLens, $objFilter, $objEyepiece, $objLocation, $objPresentations;
         global $objObservation, $objObserver, $objInstrument;
-        while (list($key, $value) = each($result)) {
+        foreach ($result as $key=>$value) {
             $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
             $date = sscanf($obs ['date'], "%4d%2d%2d");
             $time = $obs['time'];
@@ -2024,7 +2024,7 @@ class Utils
 
         echo "SkySafariObservingListVersion=3.0\n";
 
-        while (list($key, $value) = each($result)) {
+        foreach ($result as $key=>$value) {
             $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
 
             echo "\n";
@@ -2034,7 +2034,7 @@ class Utils
             echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
 
             $objectNames = $this->getObjectNames($obs);
-            while (list($key, $objectName) = each($objectNames)) {
+            foreach ($objectNames as $key=>$objectName) {
                 echo "   CatalogNumber=" . $objectName . "\n";
             }
 
@@ -2123,9 +2123,9 @@ class Utils
 
         $fontdir = $instDir . 'lib/fonts/Helvetica.afm';
         $pdf->selectFont($fontdir);
-        $pdf->ezText(utf8_decode(html_entity_decode(LangPDFTitle3)) . "\n");
+        $pdf->ezText(utf8_decode(html_entity_decode(_("DeepskyLog Comet Observations"))) . "\n");
 
-        while (list($key, $value) = each($result)) {
+        foreach ($result as $key=>$value) {
             $objectname = $objCometObject->getName(
                 $observation->getObjectId($value)
             );
@@ -2151,11 +2151,12 @@ class Utils
                 $minute = "0" . $minute;
             }
 
-            $observername = LangPDFMessage13 
-                . $observer->getObserverProperty($observerid, 'firstname') . " " 
-                . $observer->getObserverProperty($observerid, 'name') 
-                . html_entity_decode(LangPDFMessage14) 
-                . $formattedDate . " (" . $hour . ":" . $minute . ")";
+            $observername = sprintf(
+                _("Observed by %s on %s"), 
+                $observer->getObserverProperty($observerid, 'firstname') . " " .
+                $observer->getObserverProperty($observerid, 'name'), 
+                $formattedDate . " (" . $hour . ":" . $minute . ")"
+            );
 
             $pdf->ezText(html_entity_decode($observername), "12");
 
@@ -2167,7 +2168,7 @@ class Utils
                 if ($observation->getLocationId($value) != 0 
                     && $observation->getLocationId($value) != 1
                 ) {
-                    $locationname = LangPDFMessage10 . " : " 
+                    $locationname = _("Location") . " : " 
                         . $location->getLocationPropertyFromId(
                             $observation->getLocationId($value), 'name'
                         );
@@ -2181,11 +2182,11 @@ class Utils
                         $observation->getInstrumentId($value), 'name'
                     );
                     if ($instr == "Naked eye") {
-                        $instr = InstrumentsNakedEye;
+                        $instr = _("Naked Eye");
                     }
 
                     $locationname = $locationname . $extra 
-                        . html_entity_decode(LangPDFMessage11) . " : " . $instr;
+                        . html_entity_decode(_("Instrument")) . " : " . $instr;
 
                     if (strcmp($observation->getMagnification($value), "") != 0) {
                         $locationname = $locationname . " (" 
@@ -2200,7 +2201,7 @@ class Utils
             $method = $observation->getMethode($value);
 
             if (strcmp($method, "") != 0) {
-                $methodstr = html_entity_decode(LangViewObservationField15) 
+                $methodstr = html_entity_decode(_("Magnitude method")) 
                     . " : " . $method . " - " 
                     . $ICQMETHODS->getDescription($method);
 
@@ -2211,7 +2212,7 @@ class Utils
             $chart = $observation->getChart($value);
 
             if (strcmp($chart, "") != 0) {
-                $chartstr = html_entity_decode(LangViewObservationField17) 
+                $chartstr = html_entity_decode(_("Magnitude reference chart")) 
                     . " : " . $chart . " - " 
                     . $ICQREFERENCEKEYS->getDescription($chart);
 
@@ -2225,13 +2226,13 @@ class Utils
                 $magstr = "";
 
                 if ($observation->getMagnitudeWeakerThan($value)) {
-                    $magstr = $magstr . LangNewComet3 . " ";
+                    $magstr = $magstr . _("Weaker than") . " ";
                 }
-                $magstr = $magstr . html_entity_decode(LangViewObservationField16) 
+                $magstr = $magstr . html_entity_decode(_("Magnitude")) 
                     . " : " . sprintf("%.01f", $magnitude);
 
                 if ($observation->getMagnitudeUncertain($value)) {
-                    $magstr = $magstr . " (" . LangNewComet2 . ")";
+                    $magstr = $magstr . " (" . _("Uncertain") . ")";
                 }
 
                 $pdf->ezText(html_entity_decode($magstr), "12");
@@ -2246,14 +2247,14 @@ class Utils
 
             if (strcmp($dc, "") != 0 || $coma != - 99) {
                 if (strcmp($dc, "") != 0) {
-                    $dcstr = $dcstr . html_entity_decode(LangNewComet8) . " : " 
+                    $dcstr = $dcstr . html_entity_decode(_("Degree of condensation")) . " : " 
                         . $dc;
                     $extra = ", ";
                 }
 
                 // Coma
                 if ($coma != - 99) {
-                    $dcstr = $dcstr . $extra . html_entity_decode(LangNewComet9) 
+                    $dcstr = $dcstr . $extra . html_entity_decode(_("Coma")) 
                         . " : " . $coma . "'";
                 }
 
@@ -2269,14 +2270,14 @@ class Utils
 
             if ($tail != - 99 || $pa != - 99) {
                 if ($tail != - 99) {
-                    $tailstr = $tailstr . html_entity_decode(LangNewComet10) 
+                    $tailstr = $tailstr . html_entity_decode(_("Tail length")) 
                         . " : " . $tail . "'";
                     $extra = ", ";
                 }
 
                 if ($pa != - 99) {
                     $tailstr = $tailstr . $extra 
-                        . html_entity_decode(LangNewComet11) 
+                        . html_entity_decode(_("Position angle of tail")) 
                         . " : " . $pa . "";
                 }
 
@@ -2287,7 +2288,7 @@ class Utils
             $description = $observation->getDescription($value);
 
             if (strcmp($description, "") != 0) {
-                $descstr = LangPDFMessage15 . " : " . strip_tags($description);
+                $descstr = _("Description") . " : " . strip_tags($description);
                 $pdf->ezText(html_entity_decode($descstr), "12");
             }
 
@@ -2327,7 +2328,7 @@ class Utils
         $page = 1;
         $i = 0;
         $result = $this->sortResult($result);
-        while (list($key, $valueA) = each($result)) {
+        foreach ($result as $key=>$valueA) {
             $obs1[] = array (
                $valueA['showname']
             );
@@ -2427,7 +2428,7 @@ class Utils
 
         $result = $this->sortResult($result);
 
-        while (list($key, $valueA) = each($result)) {
+        foreach ($result as $key=>$valueA) {
             $obs1[] = array(
                 "Name" => $valueA['showname'],
                 "ra" => $objPresentations->raToString($valueA['objectra']),
@@ -2461,24 +2462,24 @@ class Utils
         $pdf->selectFont($fontdir);
         $pdf->ezTable(
             $obs1, array(
-                "Name" => html_entity_decode(LangPDFMessage1),
-                "ra" => html_entity_decode(LangPDFMessage3),
-                "decl" => html_entity_decode(LangPDFMessage4),
-                "type" => html_entity_decode(LangPDFMessage5),
-                "con" => html_entity_decode(LangPDFMessage6),
-                "mag" => html_entity_decode(LangPDFMessage7),
-                "sb" => html_entity_decode(LangPDFMessage8),
-                "diam" => html_entity_decode(LangPDFMessage9),
-                "pa" => html_entity_decode(LangPDFMessage16),
+                "Name" => html_entity_decode(_("Name")),
+                "ra" => html_entity_decode(_("Right Ascension")),
+                "decl" => html_entity_decode(_("Declination")),
+                "type" => html_entity_decode(_("Type")),
+                "con" => html_entity_decode(_("Constellation")),
+                "mag" => html_entity_decode(_("Mag.")),
+                "sb" => html_entity_decode(_("Surf. Brig.")),
+                "diam" => html_entity_decode(_("Diameter")),
+                "pa" => html_entity_decode(_("Pos. Angle")),
                 "page" => html_entity_decode(
                     $objAtlas->atlasCodes[$objObserver->getObserverProperty(
                         $loggedUser, 'standardAtlasCode', 'urano'
                     )]
                 ),
-                "contrast" => html_entity_decode(LangPDFMessage17),
-                "magnification" => html_entity_decode(LangPDFMessage18),
-                "seen" => html_entity_decode(LangOverviewObjectsHeader7),
-                "seendate" => html_entity_decode(LangOverviewObjectsHeader8)
+                "contrast" => html_entity_decode(_("Contr. res.")),
+                "magnification" => html_entity_decode(_("Opt. mag.")),
+                "seen" => html_entity_decode(_("Seen")),
+                "seendate" => html_entity_decode(_("Last Seen"))
             ), utf8_decode(html_entity_decode($_GET['pdfTitle'])), 
             array (
             "width" => "750",
@@ -2600,21 +2601,22 @@ class Utils
                 $xleft, $footer, 8, 
                 utf8_decode(
                     html_entity_decode(
-                        LangPDFMessage19 . 
-                        $objObserver->getObserverProperty($loggedUser, 'firstname')
-                        . ' ' . 
-                        $objObserver->getObserverProperty($loggedUser, 'name')
-                        . ' ' . LangPDFMessage20 . 
-                        $objInstrument->getInstrumentPropertyFromId(
-                            $objObserver->getObserverProperty(
-                                $loggedUser, 'stdtelescope'
-                            ), 'name'
-                        ) . ' ' . LangPDFMessage21 . 
-                        $objLocation->getLocationPropertyFromId(
-                            $objObserver->getObserverProperty(
-                                $loggedUser, 'stdlocation'
+                        sprintf(
+                            _("Prepared for %s with %s at %s"), 
+                            $objObserver->getObserverProperty($loggedUser, 'firstname')
+                            . ' ' . 
+                            $objObserver->getObserverProperty($loggedUser, 'name'), 
+                            $objInstrument->getInstrumentPropertyFromId(
+                                $objObserver->getObserverProperty(
+                                    $loggedUser, 'stdtelescope'
+                                ), 'name'
                             ), 
-                            'name'
+                            $objLocation->getLocationPropertyFromId(
+                                $objObserver->getObserverProperty(
+                                    $loggedUser, 'stdlocation'
+                                ), 
+                                'name'
+                            )
                         )
                     )
                 ), $xmid + $SectionBarWidth, 'center'
@@ -2628,9 +2630,9 @@ class Utils
       
         $pdf->addTextWrap(
             $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 8, 
-            utf8_decode(LangPDFMessage22 . '1'), 100, 'right' 
+            utf8_decode(_("Page ") . '1'), 100, 'right' 
         );
-        while (list($key, $valueA) = each($result)) {
+        foreach ($result as $key=>$valueA) {
             $con = $valueA['objectconstellation'];
             if ($y < $bottom) {
                 $y = $top;
@@ -2659,23 +2661,24 @@ class Utils
                                 $xleft, $footer, 8, 
                                 utf8_decode(
                                     html_entity_decode(
-                                        LangPDFMessage19 . 
-                                        $objObserver->getObserverProperty(
-                                            $loggedUser, 'name'
-                                        ) . ' ' . 
-                                        $objObserver->getObserverProperty(
-                                            $loggedUser, 'firstname'
-                                        ) . ' ' . 
-                                        LangPDFMessage20 . 
-                                        $objInstrument->getInstrumentPropertyFromId(
+                                        sprintf(
+                                            _("Prepared for %s with %s at %s"), 
                                             $objObserver->getObserverProperty(
-                                                $loggedUser, 'stdtelescope'
-                                            ), 'name'
-                                        ) . ' ' . LangPDFMessage21 . 
-                                        $objLocation->getLocationPropertyFromId(
+                                                $loggedUser, 'name'
+                                            ) . ' ' . 
                                             $objObserver->getObserverProperty(
-                                                $loggedUser, 'stdlocation'
-                                            ), 'name'
+                                                $loggedUser, 'firstname'
+                                            ), 
+                                            $objInstrument->getInstrumentPropertyFromId(
+                                                $objObserver->getObserverProperty(
+                                                    $loggedUser, 'stdtelescope'
+                                                ), 'name'
+                                            ), 
+                                            $objLocation->getLocationPropertyFromId(
+                                                $objObserver->getObserverProperty(
+                                                    $loggedUser, 'stdlocation'
+                                                ), 'name'
+                                            )
                                         )
                                     )
                                 ), 
@@ -2689,7 +2692,7 @@ class Utils
                         );
                         $pdf->addTextWrap(
                             $xmid + $SectionBarWidth - $sectionBarSpace - 100, 
-                            $header, 8, utf8_decode(LangPDFMessage22 . $pagenr),
+                            $header, 8, utf8_decode(_("Page ") . $pagenr),
                             100, 'right'
                         );
                     }
@@ -2786,30 +2789,33 @@ class Utils
                                         $xleft, $footer, 8, 
                                         utf8_decode(
                                             html_entity_decode(
-                                                LangPDFMessage19 
-                                                . $objObserver->getObserverProperty(
-                                                    $loggedUser, 'name'
-                                                ) . ' ' 
-                                                . $objObserver->getObserverProperty(
-                                                    $loggedUser, 'firstname'
-                                                ) . LangPDFMessage20
-                                                . $objInstrument
-                                                    ->getInstrumentPropertyFromId(
-                                                        $objObserver
+                                                sprintf(
+                                                    _("Prepared for %s with %s at %s"),  
+                                                    $objObserver
+                                                        ->getObserverProperty(
+                                                            $loggedUser, 'name'
+                                                        ) . ' ' .
+                                                    $objObserver
+                                                        ->getObserverProperty(
+                                                            $loggedUser, 'firstname'
+                                                        ), 
+                                                    $objInstrument
+                                                        ->getInstrumentPropertyFromId(
+                                                            $objObserver
                                                             ->getObserverProperty(
                                                                 $loggedUser, 
                                                                 'stdtelescope'
                                                             ), 'name'
-                                                    ) . 
-                                                ' ' . LangPDFMessage21 . 
-                                                $objLocation
-                                                    ->getLocationPropertyFromId(
-                                                        $objObserver
-                                                            ->getObserverProperty(
-                                                                $loggedUser, 
-                                                                'stdlocation'
-                                                            ), 'name'
-                                                    )
+                                                        ),  
+                                                    $objLocation
+                                                        ->getLocationPropertyFromId(
+                                                            $objObserver
+                                                                ->getObserverProperty(
+                                                                    $loggedUser, 
+                                                                    'stdlocation'
+                                                                ), 'name'
+                                                        )
+                                                )
                                             )
                                         ), 
                                         $xmid + $SectionBarWidth, 'center'
@@ -2825,7 +2831,7 @@ class Utils
                                     $xmid + $SectionBarWidth - $sectionBarSpace 
                                     - 100, 
                                     $header, 8, 
-                                    utf8_decode(LangPDFMessage22 . $pagenr), 
+                                    utf8_decode(_("Page ") . $pagenr), 
                                     100, 'right'
                                 );
                             }
@@ -2906,30 +2912,31 @@ class Utils
                                         $xleft, $footer, 8, 
                                         utf8_decode(
                                             html_entity_decode(
-                                                LangPDFMessage19 . 
-                                                $objObserver->getObserverProperty(
-                                                    $loggedUser, 'firstname'
-                                                ) . ' ' . 
-                                                $objObserver->getObserverProperty(
-                                                    $loggedUser, 'name'
-                                                ) . LangPDFMessage20 . 
-                                                $objInstrument
-                                                    ->getInstrumentPropertyFromId(
-                                                        $objObserver
-                                                            ->getObserverProperty(
-                                                                $loggedUser, 
-                                                                'stdtelescope'
-                                                            ), 'name'
+                                                sprintf(
+                                                    _("Prepared for %s with %s at %s"),  
+                                                    $objObserver->getObserverProperty(
+                                                        $loggedUser, 'firstname'
                                                     ) . ' ' . 
-                                                LangPDFMessage21 . 
-                                                $objLocation
-                                                    ->getLocationPropertyFromId(
-                                                        $objObserver
-                                                            ->getObserverProperty(
-                                                                $loggedUser, 
-                                                                'stdlocation'
-                                                            ), 'name'
-                                                    )
+                                                    $objObserver->getObserverProperty(
+                                                        $loggedUser, 'name'
+                                                    ), 
+                                                    $objInstrument
+                                                        ->getInstrumentPropertyFromId(
+                                                            $objObserver
+                                                                ->getObserverProperty(
+                                                                    $loggedUser, 
+                                                                    'stdtelescope'
+                                                                ), 'name'
+                                                        ), 
+                                                    $objLocation
+                                                        ->getLocationPropertyFromId(
+                                                            $objObserver
+                                                                ->getObserverProperty(
+                                                                    $loggedUser, 
+                                                                    'stdlocation'
+                                                                ), 'name'
+                                                        )
+                                                )
                                             )
                                         ),
                                         $xmid + $SectionBarWidth, 'center'
@@ -2944,7 +2951,7 @@ class Utils
                                 $pdf->addTextWrap(
                                     $xmid + $SectionBarWidth - $sectionBarSpace 
                                     - 100, $header, 8, 
-                                    utf8_decode(LangPDFMessage22 . $pagenr), 
+                                    utf8_decode(_("Page ") . $pagenr), 
                                     100, 'right'
                                 );
                             }
@@ -3046,25 +3053,26 @@ class Utils
                 $xleft, $footer, $fontSizeText, 
                 utf8_decode(
                     html_entity_decode(
-                        LangPDFMessage19 . 
-                        $objObserver->getObserverProperty($loggedUser, 'firstname') .
-                        ' ' . 
-                        $objObserver->getObserverProperty($loggedUser, 'name') . 
-                        ' ' . LangPDFMessage20 . 
-                        $objInstrument->getInstrumentPropertyFromId(
-                            $objObserver->getObserverProperty(
-                                $loggedUser, 'stdtelescope'
-                            ), 'name'
-                        ) . ' ' . LangPDFMessage21 . 
-                        $objLocation->getLocationPropertyFromId(
-                            $objObserver->getObserverProperty(
-                                $loggedUser, 'stdlocation'
-                            ), 'name'
-                        ) . 
-                        _(' on ') . $this->checkSessionKey('globalDay')
-                        . ' ' . 
-                        $GLOBALS ['Month' . $this->checkSessionKey('globalMonth')]
-                        . ' ' . $this->checkSessionKey('globalYear')
+                        sprintf(
+                            _("Prepared for %s with %s at %s"), 
+                            $objObserver->getObserverProperty($loggedUser, 'firstname') .
+                            ' ' . 
+                            $objObserver->getObserverProperty($loggedUser, 'name'), 
+                            $objInstrument->getInstrumentPropertyFromId(
+                                $objObserver->getObserverProperty(
+                                    $loggedUser, 'stdtelescope'
+                                ), 'name'
+                            ), 
+                            $objLocation->getLocationPropertyFromId(
+                                $objObserver->getObserverProperty(
+                                    $loggedUser, 'stdlocation'
+                                ), 'name'
+                            ) . 
+                            _(' on ') . $this->checkSessionKey('globalDay')
+                            . ' ' . 
+                            $GLOBALS ['Month' . $this->checkSessionKey('globalMonth')]
+                            . ' ' . $this->checkSessionKey('globalYear')
+                        )
                     )
                 ), $xmid + $SectionBarWidth, 'center'
             );
@@ -3096,7 +3104,7 @@ class Utils
             $pdf->addTextWrap(
                 $xmid + $SectionBarWidth - $sectionBarSpace - 100, 
                 $header, $fontSizeText, 
-                utf8_decode(LangPDFMessage22 . $pagenr), 
+                utf8_decode(_("Page ") . $pagenr), 
                 100, 'right'
             );
         }
@@ -3114,7 +3122,7 @@ class Utils
             );
             reset($reportdata);
             $deltaymax = 0;
-            while (list($key, $dataelement) = each($reportdata)) {
+            foreach ($reportdata as $key=>$dataelement) {
                 if ($dataelement['fieldwidth']) {
                     $justification = 'left';
                     if (strpos($dataelement['fieldstyle'], 'r') !== false) {
@@ -3226,26 +3234,29 @@ class Utils
                         $xleft, $footer, $fontSizeText, 
                         utf8_decode(
                             html_entity_decode(
-                                LangPDFMessage19 . $objObserver->getObserverProperty(
-                                    $loggedUser, 'firstname'
-                                ) . ' ' . $objObserver->getObserverProperty(
-                                    $loggedUser, 'name'
-                                ) . ' ' . LangPDFMessage20 . 
-                                $objInstrument->getInstrumentPropertyFromId(
+                                sprintf(
+                                    _("Prepared for %s with %s at %s"), 
                                     $objObserver->getObserverProperty(
-                                        $loggedUser, 'stdtelescope'
-                                    ), 'name'
-                                ) . ' ' . LangPDFMessage21 . 
-                                $objLocation->getLocationPropertyFromId(
-                                    $objObserver->getObserverProperty(
-                                        $loggedUser, 'stdlocation'
-                                    ), 'name'
-                                ) . 
-                                _(' on ') . 
-                                $this->checkSessionKey('globalDay') . ' ' . 
-                                $GLOBALS['Month' . 
-                                $this->checkSessionKey('globalMonth')]
-                                . ' ' . $this->checkSessionKey('globalYear')
+                                        $loggedUser, 'firstname'
+                                    ) . ' ' . $objObserver->getObserverProperty(
+                                        $loggedUser, 'name'
+                                    ), 
+                                    $objInstrument->getInstrumentPropertyFromId(
+                                        $objObserver->getObserverProperty(
+                                            $loggedUser, 'stdtelescope'
+                                        ), 'name'
+                                    ), 
+                                    $objLocation->getLocationPropertyFromId(
+                                        $objObserver->getObserverProperty(
+                                            $loggedUser, 'stdlocation'
+                                        ), 'name'
+                                    ) . 
+                                    _(' on ') . 
+                                    $this->checkSessionKey('globalDay') . ' ' . 
+                                    $GLOBALS['Month' . 
+                                    $this->checkSessionKey('globalMonth')]
+                                    . ' ' . $this->checkSessionKey('globalYear')
+                                )
                             )
                         ), $xmid + $SectionBarWidth, 'center'
                     );
@@ -3279,7 +3290,7 @@ class Utils
                     $pdf->addTextWrap(
                         $xmid + $SectionBarWidth - $sectionBarSpace - 100, 
                         $header, $fontSizeText, 
-                        utf8_decode(LangPDFMessage22 . $pagenr), 100, 'right'
+                        utf8_decode(_("Page ") . $pagenr), 100, 'right'
                     );
                 }
                 if (strpos($showelements, 't') !== false) {
@@ -3311,7 +3322,7 @@ class Utils
             );
             reset($reportdata);
             $deltaymax = 0;
-            while (list($key, $dataelement) = each($reportdata)) {
+            foreach ($reportdata as $key=>$dataelement) {
                 if ($dataelement['fieldwidth']) {
                     $justification = 'left';
                     if (strpos($dataelement['fieldstyle'], 'r') !== false) {
@@ -3464,11 +3475,11 @@ class Utils
             $showelements, $reportdata
         );
 
-        while (list($key, $valueA) = each($result)) {
+        foreach ($result as $key=>$valueA) {
             $con = $valueA['objectconstellation'];
             $deltaymax = 0;
             reset($reportdata);
-            while (list($key, $dataelement) = each($reportdata)) {
+            foreach ($reportdata as $key=>$dataelement) {
                 if ($dataelement['fieldwidth']) {
                     if (($dataelement['fieldname'] == "objectlistdescription")) {
                         if (array_key_exists('objectlistdescription', $valueA) 
@@ -3549,7 +3560,7 @@ class Utils
             }
             reset($reportdata);
             $deltaymax = 0;
-            while (list($key, $dataelement) = each($reportdata)) {
+            foreach ($reportdata as $key=>$dataelement) {
                 if ($dataelement['fieldwidth']) {
                     if ($y - ($deltaline * $dataelement['fieldline']) < $bottom) {
                         $this->newpage(
@@ -3784,7 +3795,7 @@ class Utils
             );
             $pdf->setLineStyle(0.5);
             $y = $top;
-            while (list($key, $value) = each($indexlist)) {
+            foreach ($indexlist as $key=>$value) {
                 $pdf->line(
                     $xbase - $sectionBarSpace, 
                     $y + (($deltaline + $deltaobjectline) * .75), 
@@ -3834,7 +3845,7 @@ class Utils
         $pdf->selectFont($instDir . 'lib/fonts/Helvetica.afm');
         $pdf->ezText(utf8_decode(html_entity_decode($_GET['pdfTitle'])) . "\n");
         $i = 0;
-        while (list($key, $value) = each($result)) {
+        foreach ($result as $key=>$value) {
             if ($i ++ > 0) {
                 $pdf->ezNewPage();
             }
@@ -3856,26 +3867,26 @@ class Utils
                 $dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0])
             );
             $temp = array (
-                "Name" => html_entity_decode(LangPDFMessage1) . " : " 
+                "Name" => html_entity_decode(_("Name")) . " : " 
                     . $obs['objectname'],
-                "altname" => html_entity_decode(LangPDFMessage2) . " : " 
+                "altname" => html_entity_decode(_("Alternative name")) . " : " 
                     . $object["altname"],
                 "type" => $GLOBALS[$object['type']] 
-                    . html_entity_decode(LangPDFMessage12) 
+                    . html_entity_decode(_(" in ")) 
                     . $GLOBALS[$object['con']],
                 "visibility" => (($obs['visibility']) 
-                    ? (html_entity_decode(LangViewObservationField22) . " : " 
+                    ? (html_entity_decode(_("Visibility")) . " : " 
                     . $GLOBALS['Visibility' . $obs['visibility']]) 
                     : ''),
-                "seeing" => (($seeing) ? (LangViewObservationField6 . " : " 
+                "seeing" => (($seeing) ? (_("Seeing") . " : " 
                     . $GLOBALS['Seeing' . $obs ['seeing']]) : ''),
-                "limmag" => (($obs['limmag']) ? (LangViewObservationField7 . " : " 
+                "limmag" => (($obs['limmag']) ? (_("Limiting magnitude") . " : " 
                     . $obs ['limmag']) : ''),
-                "filter" => (($obs['filterid']) ? (LangViewObservationField31 
+                "filter" => (($obs['filterid']) ? (_("Filter") 
                     . " : " 
                     . $objFilter->getFilterPropertyFromId($obs['filterid'], 'name'))
                     : ''),
-                "eyepiece" => (($obs['eyepieceid']) ? (LangViewObservationField30 
+                "eyepiece" => (($obs['eyepieceid']) ? (_("Eyepiece") 
                     . " : " 
                     . $objEyepiece->getEyepiecePropertyFromId(
                         $obs['eyepieceid'], 'name'
@@ -3883,27 +3894,31 @@ class Utils
                     ) 
                     : ''),
                 "lens" => (($obs['lensid']) 
-                    ? (LangViewObservationField32 . " : " 
+                    ? (_("Lens") . " : " 
                     . $objLens->getLensPropertyFromId($obs['lensid'], 'name')) : ''),
-                "observer" => html_entity_decode(LangPDFMessage13) 
-                    . $objObserver->getObserverProperty(
-                        $obs['observerid'], 'firstname'
-                    ) 
-                    . " " 
-                    . $objObserver->getObserverProperty($obs['observerid'], 'name') 
-                    . html_entity_decode(LangPDFMessage14) . $formattedDate,
-                "instrument" => html_entity_decode(LangPDFMessage11) . " : " 
+                "observer" => html_entity_decode(
+                    sprintf(
+                        _("Observed by %s on %s"),  
+                        $objObserver->getObserverProperty(
+                            $obs['observerid'], 'firstname'
+                        ) 
+                        . " " 
+                        . $objObserver->getObserverProperty($obs['observerid'], 'name'), 
+                        $formattedDate
+                    )
+                ),
+                "instrument" => html_entity_decode(_("Instrument")) . " : " 
                     . $objInstrument->getInstrumentPropertyFromId(
                         $obs['instrumentid'], 'name'
                     ),
-                "location" => html_entity_decode(LangPDFMessage10) . " : " 
+                "location" => html_entity_decode(_("Location")) . " : " 
                     . $objLocation->getLocationPropertyFromId(
                         $obs['locationid'], 'name'
                     ),
                 "description" => $objPresentations->br2nl(
                     html_entity_decode($obs['description'])
                 ),
-                "desc" => html_entity_decode(LangPDFMessage15)
+                "desc" => html_entity_decode(_("Description"))
             );
             $obs1[] = $temp;
             $nm = $obs['objectname'];
@@ -3918,7 +3933,7 @@ class Utils
             );
             $pdf->ezTable(
                 $tmp, array(
-                    "type" => utf8_decode(html_entity_decode(LangPDFMessage5))
+                    "type" => utf8_decode(html_entity_decode(_("Type")))
                 ), "", 
                 array(
                     "width" => "500",
@@ -3936,8 +3951,8 @@ class Utils
             $pdf->ezTable(
                 $tmp, 
                 array(
-                    "location" => utf8_decode(html_entity_decode(LangPDFMessage1)),
-                    "instrument" => utf8_decode(html_entity_decode(LangPDFMessage2))
+                    "location" => utf8_decode(html_entity_decode(_("Name"))),
+                    "instrument" => utf8_decode(html_entity_decode(_("Alternative name")))
                 ), "", array(
                     "width" => "500",
                     "showHeadings" => "0",
@@ -4055,7 +4070,7 @@ class Utils
             );
             $pdf->ezTable(
                 $tmp, array(
-                    "observer" => utf8_decode(html_entity_decode(LangPDFMessage1))
+                    "observer" => utf8_decode(html_entity_decode(_("Name")))
                 ), "", array(
                     "width" => "500",
                     "showHeadings" => "0",
@@ -4065,7 +4080,7 @@ class Utils
             );
             $pdf->ezText("");
 
-            $pdf->ezText(utf8_decode(LangPDFMessage15), "12");
+            $pdf->ezText(utf8_decode(_("Description")), "12");
             $pdf->ezText("");
             $tmp = array(
                 array(
@@ -4076,7 +4091,7 @@ class Utils
             $pdf->ezTable(
                 $tmp, 
                 array(
-                    "description" => utf8_decode(html_entity_decode(LangPDFMessage1))
+                    "description" => utf8_decode(html_entity_decode(_("Name")))
                 ), "", array (
                     "width" => "500",
                     "showHeadings" => "0",
@@ -4283,7 +4298,7 @@ class Utils
 
         $result = $objObservation->getObservationFromQuery($query, 'A');
 
-        while (list($key, $value) = each($result)) {
+        foreach ($result as $key=>$value) {
             // add root - <channel> - <item>
             $itemDom = $channelDom->appendChild($dom->createElement('item'));
 
@@ -4385,7 +4400,7 @@ class Utils
 
         $cometsResult = $observation->getObservationFromQuery($query);
 
-        while (list($key, $value) = each($cometsResult)) {
+        foreach ($cometsResult as $key=>$value) {
             $objectname = $objCometObject->getName(
                 $observation->getObjectId($value)
             );

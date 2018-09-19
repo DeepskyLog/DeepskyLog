@@ -386,7 +386,7 @@ class Sessions {
 				echo "<th>" . _("Location") . "</th>";
 				echo "<th>" . _("Extra observers") . "</th>";
 				echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . _("Picture") . "</th>";
-				echo "<th>" . ucfirst ( LangGeneralObservations ) . "</th>";
+				echo "<th>" . ucfirst(_("observations")) . "</th>";
 				echo "</tr>";
 				echo "</thead>";
 				for($cnt = 0; $cnt < count ( $sessions ); $cnt ++) {
@@ -423,7 +423,7 @@ class Sessions {
 
 					// the number of observations
 					$numberOfObservations = $objDatabase->selectRecordsetArray ( "SELECT COUNT(sessionid) from sessionObservations where sessionid = \"" . $allSessions [$cnt] ["id"] . "\";" );
-					echo $numberOfObservations [0] ['COUNT(sessionid)'] . " " . LangGeneralObservations;
+					echo $numberOfObservations[0]['COUNT(sessionid)'] . " " . _("observations");
 					echo "</a></td></tr>";
 				}
 				echo "</table>";

@@ -135,15 +135,15 @@ class Observers {
 
 		echo "<thead>";
 		echo "<tr>";
-		echo "<th>" . LangTopObserversHeader1 . "</th>";
-		echo "<th>" . LangTopObserversHeader2 . "</th>";
-		echo "<th>" . LangTopObserversHeader3 . "</th>";
-		echo "<th>" . LangTopObserversHeader7 . "</th>";
-		echo "<th>" . LangTopObserversHeader4 . "</th>";
-		echo "<th>" . LangTopObserversHeader8 . "</th>";
+		echo "<th>" . _("Rank") . "</th>";
+		echo "<th>" . _("Observer") . "</th>";
+		echo "<th>" . _("Number of observations") . "</th>";
+		echo "<th>" . _("Number of drawings") . "</th>";
+		echo "<th>" . _("Observations last year") . "</th>";
+		echo "<th>" . _("Drawings last year") . "</th>";
 		echo "<th class=\"filter-false columnSelector-disable\">";
 		echo "<select class=\"form-control\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
-		while ( list ( $key, $value ) = each ( $DSOcatalogsLists ) ) {
+		foreach ($DSOcatalogsLists as $key=>$value) {
 			if (! ($value))
 				$value = "-----------";
 			if ($value == stripslashes ( $catalog ))
@@ -153,7 +153,7 @@ class Observers {
 		}
 		echo "</select>";
 		echo "</th>";
-		echo "<th>" . LangTopObserversHeader6 . "</td>";
+		echo "<th>" . _("Different objects") . "</td>";
 		echo "</tr>";
 		$numberOfObservations = $objObservation->getNumberOfDsObservations ();
 		$numberOfDrawings = $objObservation->getNumberOfDsDrawings ();
@@ -162,7 +162,7 @@ class Observers {
 		$numberOfDifferentObjects = $objObservation->getNumberOfDifferentObservedDSObjects ();
 		echo "</thead>";
 		echo "<tfoot>";
-		echo "<tr><td>" . LangTopObservers1 . "</td><td></td>" . "<td class=\"centered\">$numberOfObservations</td>" . "<td class=\"centered\">$numberOfDrawings</td>" . "<td class=\"centered\">$numberOfObservationsThisYear</td>" . "<td class=\"centered\">$numberOfDrawingsThisYear</td>" . "<td class=\"centered\">" . $objectsInCatalog . "</td>" . "<td class=\"centered\">" . $numberOfDifferentObjects . "</td></tr>";
+		echo "<tr><td>" . _("Total") . "</td><td></td>" . "<td class=\"centered\">$numberOfObservations</td>" . "<td class=\"centered\">$numberOfDrawings</td>" . "<td class=\"centered\">$numberOfObservationsThisYear</td>" . "<td class=\"centered\">$numberOfDrawingsThisYear</td>" . "<td class=\"centered\">" . $objectsInCatalog . "</td>" . "<td class=\"centered\">" . $numberOfDifferentObjects . "</td></tr>";
 		echo "</tfoot>";
 		echo "<tbody id=\"topobs_list\" class=\"tbody_obs\">";
 		$count = 0;
@@ -234,7 +234,7 @@ class Observers {
 		global $entryMessage, $objUtil, $objLanguage, $objMessages, $developversion, $loggedUser, $allLanguages, $mailTo, $mailFrom, $objMessages, $baseURL, $instDir;
 
 		if (! $_POST ['email'] || ! $_POST ['firstname'] || ! $_POST ['name']) {
-			$entryMessage .= LangValidateAccountMessage1;
+			$entryMessage .= _("Please, fill in all fields!");
 			if ($objUtil->checkPostKey ( 'change' )) {
 				$_GET ['indexAction'] = 'change_account';
 			} else {
@@ -243,22 +243,22 @@ class Observers {
 				}
 			}
 		} elseif (!$objUtil->checkPostKey ( 'change' ) && ($_POST ['passwd'] != $_POST ['passwd_again'])) {
-			$entryMessage .= LangValidateAccountMessage2;
+			$entryMessage .= _("Password not confirmed!");
 			$_GET ['indexAction'] = 'subscribe';
 		} elseif ($_POST ['firstname'] == $_POST ['name']) {
-			$entryMessage .= LangValidateAccountMessage6;
+			$entryMessage .= _("Your name and / or first name are not correct.");
 			if ($objUtil->checkPostKey ( 'change' ))
 				$_GET ['indexAction'] = 'change_account';
 			else
 				$_GET ['indexAction'] = 'subscribe';
 		} elseif (array_key_exists ( 'motivation', $_POST ) && $_POST ['motivation'] == '' && ! $loggedUser) {
-			$entryMessage .= LangValidateAccountMessage7;
+			$entryMessage .= _("The field 'Motivation' is not filled in.");
 			if ($objUtil->checkPostKey ( 'change' ))
 				$_GET ['indexAction'] = 'change_account';
 			else
 				$_GET ['indexAction'] = 'subscribe';
 		} elseif (! preg_match ( "/.*@.*..*/", $_POST ['email'] ) | preg_match ( "/(<|>)/", $_POST ['email'] )) {
-			$entryMessage .= LangValidateAccountMessage3; // check if email address is legal (contains @ symbol)
+			$entryMessage .= _("Wrong email address!"); // check if email address is legal (contains @ symbol)
 			if ($objUtil->checkPostKey ( 'change' ))
 				$_GET ['indexAction'] = 'change_account';
 			else
@@ -266,15 +266,16 @@ class Observers {
 		} elseif (array_key_exists ( 'register', $_POST ) && array_key_exists ( 'deepskylog_id', $_POST ) && $_POST ['register'] && $_POST ['deepskylog_id']) {
 			if ($this->getObserverProperty ( $_POST ['deepskylog_id'], 'name' )) 			// user doesn't exist yet
 			{
-				$entryMessage .= LangValidateAccountMessage4; // check if email address is legal (contains @ symbol)
-				if ($objUtil->checkPostKey ( 'change' ))
+				$entryMessage .= _("There is already someone with this account name, please choose another one!"); // check if email address is legal (contains @ symbol)
+				if ($objUtil->checkPostKey('change')) {
 					$_GET ['indexAction'] = 'change_account';
-				else
-					$_GET ['indexAction'] = 'subscribe';
+                } else {
+                    $_GET ['indexAction'] = 'subscribe';
+                }
 			} else {
 				$this->addObserver ( $_POST ['deepskylog_id'], $_POST ['name'], $_POST ['firstname'], $_POST ['email'], md5 ( $_POST ['passwd'] ) );
 				$allLanguages = $objLanguage->getAllLanguages ( $_SESSION ['lang'] ); // READ ALL THE LANGUAGES FROM THE CHECKBOXES
-				while ( list ( $key, $value ) = each ( $allLanguages ) )
+				foreach ($allLanguages as $key=>$value)
 					if (array_key_exists ( $key, $_POST ))
 						$usedLanguages [] = $key;
 				$this->setUsedLanguages ( $_POST ['deepskylog_id'], $usedLanguages );
@@ -282,17 +283,21 @@ class Observers {
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'observationlanguage', $_POST ['description_language'] );
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'language', $_POST ['language'] );
 				$this->setObserverProperty ( $_POST ['deepskylog_id'], 'registrationDate', date ( "Ymd H:i" ) );
-				$body = LangValidateAccountEmailLine1 . "<br /><br />" . 				// send mail to administrator
-								"<table><tr><td><strong>" . LangValidateAccountEmailLine1bis . "</strong></td><td>" . $_POST ['deepskylog_id'] . "</td></tr>" .
-								"<tr><td><strong>" . LangValidateAccountEmailLine2 . "</strong></td><td>" . $_POST ['email'] . "</td></tr>" .
-								"<tr><td><strong>" . LangValidateAccountEmailLine3 . "</strong></td><td>" . html_entity_decode ( $_POST ['firstname'] ) . " " . html_entity_decode ( $_POST ['name'] ) . "</td></tr>" .
-								"<tr><td><strong>" . LangValidateAccountEmailLine5 . "</strong></td><td>" . html_entity_decode ( $_POST ['motivation'] ) . "</td></tr></table><br />" . LangValidateAccountEmailLine4 . "<br /><br />";
+				$body = _("Details deepskylog account") . ": <br /><br />" . 				// send mail to administrator
+								"<table><tr><td><strong>" . _("Account name") . "</strong></td><td>" . $_POST['deepskylog_id'] . "</td></tr>" .
+								"<tr><td><strong>" . _("Email") . "</strong></td><td>" . $_POST['email'] . "</td></tr>" .
+								"<tr><td><strong>" . _("Name") . "</strong></td><td>" . html_entity_decode($_POST['firstname']) . " " . html_entity_decode($_POST['name'] ) . "</td></tr>" .
+                                "<tr><td><strong>" . _("Motivation") . "</strong></td><td>" . html_entity_decode($_POST['motivation']) . "</td></tr></table><br />" . 
+                                _("This email has automatically been sent by the DeepskyLog application") . "<br /><br />";
 
 				if (isset ( $developversion ) && ($developversion == true))
-					$entryMessage .= "On the live server, a mail would be sent with the subject: " . LangValidateAccountEmailTitle . ".<p>";
+					$entryMessage .= "On the live server, a mail would be sent with the subject: " . _("DeepskyLog - registration") . ".<p>";
 				else
-					$objMessages->sendEmail ( LangValidateAccountEmailTitle, $body, "developers" );
-				$entryMessage = LangAccountSubscribed1 . LangAccountSubscribed2 . LangAccountSubscribed3 . LangAccountSubscribed4 . LangAccountSubscribed5 . LangAccountSubscribed6 . LangAccountSubscribed7 . LangAccountSubscribed8 . LangAccountSubscribed9;
+					$objMessages->sendEmail(_("DeepskyLog - registration"), $body, "developers");
+                $entryMessage = _("Your DeepskyLog account has been created. One of our developers will validate your account as soon as possible. You will receive an email confirmation when this happens. 
+                Please remember that DeepskyLog is the work of only a very small group of volunteers, and that it can take up to a day or so to get validated. 
+                On very rare occasions, all developers are on an astronomical observing session for a week. Normally, there is a backup person in these periods. 
+                If your account is not validated within 24 hours, you can send an email to developers at deepskylog.be to be sure.");
 				$_GET ['user'] = $_POST ['deepskylog_id'];
 				$_GET ['indexAction'] = 'detail_observer';
 			}
@@ -300,11 +305,11 @@ class Observers {
 		{
 			if (! $loggedUser) 			// extra control on login
 			{
-				$entryMessage .= LangValidateAccountMessage1;
+				$entryMessage .= _("Please, fill in all fields!");
 				$_GET ['indexAction'] = 'change_account';
 			} else {
 				$usedLanguages = array ();
-				while ( list ( $key, $value ) = each ( $allLanguages ) ) {
+				foreach ($allLanguages as $key=>$value) {
 					if (array_key_exists ( $key, $_POST )) {
 						$usedLanguages [] = $key;
 					}
@@ -351,7 +356,7 @@ class Observers {
 					$new_image = image_createThumb ( $original_image, $destination_image, 300, 300, 75 );
 				}
 
-				$entryMessage .= LangValidateAccountMessage5;
+				$entryMessage .= _("Your account has been successfully updated!");
 				$_GET ['user'] = $loggedUser;
 				$_GET ['indexAction'] = 'change_account';
 			}
@@ -425,7 +430,7 @@ class Observers {
 	{
 		global $objDatabase, $objUtil, $entryMessage, $loggedUser, $developversion, $mailTo, $mailFrom, $objMessages, $objObserver;
 		if (! ($objUtil->checkSessionKey ( 'admin' ) == 'yes'))
-			throw new Exception ( LangException001 );
+			throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 		$objDatabase->execSQL ( "DELETE FROM observers WHERE id=\"" . ($id = $objUtil->checkGetKey ( 'validateDelete' )) . "\"" );
 		$id = html_entity_decode ( $id, ENT_QUOTES, "UTF-8" );
 		if (isset ( $developversion ) && ($developversion == 1))
@@ -439,21 +444,22 @@ class Observers {
 	{
 		global $objDatabase, $objUtil, $entryMessage, $developversion, $mailTo, $mailFrom, $objMessages, $objAccomplishments;
 		if (! ($objUtil->checkSessionKey ( 'admin' ) == 'yes'))
-			throw new Exception ( LangException001 );
+			throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 		$objDatabase->execSQL ( "UPDATE observers SET role = \"" . ($role = ROLEUSER) . "\" WHERE id=\"" . ($id = $objUtil->checkGetKey ( 'validate' )) . "\"" );
 		if ($role == ROLEADMIN)
-			$ad = "<br /><br />" . LangValidateAdmin;
+			$ad = "<br /><br />" . _("One of the administrators made you a new administrator.");
 		else
 			$ad = "";
 
-		$body = LangValidateMail1 . html_entity_decode ( $this->getObserverProperty ( $id, 'firstname' ) ) . ' ' . html_entity_decode ( $this->getObserverProperty ( $id, 'name' ) ) .
-			          ", <br /><br />" . LangValidateMail2 . "<strong>" . $id . "</strong>" . LangValidateMail2b . "<br /><br />" . LangValidateMail2c .
-								$ad . "<br /><br />" . LangValidateMail3 . "<br /><br />";
+        $body = sprintf(_("Dear %s, <br /><br />Your application for a DeepskyLog account is approved.<br /><br />You can now log in using your userid %s and password. <br /><br /> %s Enjoy using <a href=\"http://www.deepskylog.org/\">DeepskyLog</a>. Greetings,<br /><br />The DeepskyLog Team<br /><br />"), 
+            html_entity_decode($this->getObserverProperty($id, 'firstname')) . ' ' . 
+            html_entity_decode($this->getObserverProperty($id, 'name')), 
+			"<strong>" . $id . "</strong>", $ad);
 
 		if (isset ( $developversion ) && ($developversion == 1))
-			$entryMessage .= "On the live server, a mail would be sent with the subject: " . LangValidateSubject . ".<br />";
+			$entryMessage .= "On the live server, a mail would be sent with the subject: " . _("DeepskyLog - account application approved") . ".<br />";
 		else
-			$objMessages->sendEmail ( LangValidateSubject, $body, $id, true );
+			$objMessages->sendEmail (_("DeepskyLog - account application approved"), $body, $id, true );
 
 		// After registration, all old messages are removed
 		$objMessages->removeAllMessages ( $id );
@@ -484,7 +490,7 @@ class Observers {
 
 		$objAccomplishments->addObserver ( $id );
 
-		return LangValidateObserverMessage1 . ' ' . LangValidateObserverMessage2;
+		return _("The user has successfully been updated!") . ' <br />' . _("User updated.");
 	}
 	public function updatePassword($login, $passwd, $newPassword, $confirmNewPassword) {
 		global $entryMessage, $loggedUser;

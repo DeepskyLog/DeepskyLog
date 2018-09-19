@@ -4,7 +4,7 @@
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! $loggedUser)
-	throw new Exception ( LangException002 );
+	throw new Exception(_("You need to be logged in to change your locations or equipment."));
 else
 	new_object ();
 function new_object() {
@@ -19,19 +19,24 @@ function new_object() {
 	$content4 = "";
 	$content5 = "";
 	if ($phase == 2) {
-		$content = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"newobject\" value=\"" . LangNewObjectButton1 . "\" />&nbsp;";
+		$content = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"newobject\" value=\"" . _("Add object") . "\" />&nbsp;";
 		echo "<input type=\"hidden\" name=\"indexAction\" id=\"indexAction\" value=\"validate_object\" />";
-		$entryMessage .= LangNewObjectPhase2;
+		$entryMessage .= _("Now continue entering the object details.".
+            "When all is ready, confirm using the button above, named 'Add object'.");
 	} elseif ($phase == 1) {
-		$content = "<a href=\"" . $baseURL . "index.php?indexAction=defaultAction\">" . "<input class=\"btn btn-danger pull-right\" type=\"button\" name=\"cancelnewobject\" value=\"" . LangCancelNewObjectButton1 . "\" />&nbsp;" . "</a>";
-		$content4 = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"phase20\" id=\"phase20\" value=\"" . LangCheckRA . "\" />";
-		$content3 = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"phase2\" id=\"phase2\" value=\"" . LangObjectNotFound . "\" />";
+		$content = "<a href=\"" . $baseURL . "index.php?indexAction=defaultAction\">" . "<input class=\"btn btn-danger pull-right\" type=\"button\" name=\"cancelnewobject\" value=\"" . _("Cancel adding") . "\" />&nbsp;" . "</a>";
+		$content4 = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"phase20\" id=\"phase20\" value=\"" . _("Check the coordinates") . "\" />";
+		$content3 = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"phase2\" id=\"phase2\" value=\"" . _("Confirm") . "\" />";
 		echo "<input type=\"hidden\" name=\"phase\" id=\"phase\" value=\"1\" />";
 		echo "<input type=\"hidden\" name=\"indexAction\" id=\"indexAction\" value=\"add_object\" />";
-		if ($objUtil->checkRequestKey ( ('phase20') ))
-			$entryMessage .= LangNewObjectPhase20;
-		else
-			$entryMessage .= LangNewObjectPhase1;
+		if ($objUtil->checkRequestKey(('phase20'))) {
+			$entryMessage .= _("Now you have to check if the name doesn't already exist in the list below, based on its coordinates. Take your time to carefully check the entries. ".
+            "If the object is in the list, you can leave this section by e.g. clicking the object to verify it's the right one. ".
+            "If the object is not in the list, you can continue entering it by clicking the 'Confirm' button. Attention: it's possible you have to scroll to see the whole list.");
+        } else {
+			$entryMessage .= _("Now you give the coordinates of the object: right ascension and declination. ".
+                "Our coordinates are in the epoch 2000 reference system (J2000).");
+        }
 		$link .= "&amp;phase=1&amp;phase20=phase20&amp;catalog=" . urlencode ( $objUtil->checkRequestKey ( 'catalog' ) ) . "&amp;number=" . urlencode ( $objUtil->checkRequestKey ( 'number' ) );
 		$link .= "&amp;RAhours=" . urlencode ( $objUtil->checkRequestKey ( 'RAhours' ) );
 		$link .= "&amp;RAminutes=" . urlencode ( $objUtil->checkRequestKey ( 'RAminutes' ) );
@@ -40,18 +45,22 @@ function new_object() {
 		$link .= "&amp;DeclMinutes=" . urlencode ( $objUtil->checkRequestKey ( 'DeclMinutes' ) );
 		$link .= "&amp;DeclSeconds=" . urlencode ( $objUtil->checkRequestKey ( 'DeclSeconds' ) );
 	} else {
-		$content = "<a href=\"" . $baseURL . "index.php?indexAction=defaultAction\">" . "<input class=\"btn btn-danger pull-right\" type=\"button\" name=\"cancelnewobject\" value=\"" . LangCancelNewObjectButton1 . "\" />&nbsp;" . "</a>";
-		$content2 = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"phase10\" id=\"phase10\" value=\"" . LangCheckName . "\" />";
-		$content3 = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"phase1\" id=\"phase1\" value=\"" . LangObjectNotFound . "\" />";
+		$content = "<a href=\"" . $baseURL . "index.php?indexAction=defaultAction\">" . "<input class=\"btn btn-danger pull-right\" type=\"button\" name=\"cancelnewobject\" value=\"" . _("Cancel adding") . "\" />&nbsp;" . "</a>";
+		$content2 = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"phase10\" id=\"phase10\" value=\"" . _("Check the name") . "\" />";
+		$content3 = "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"phase1\" id=\"phase1\" value=\"" . _("Confirm") . "\" />";
 		echo "<input type=\"hidden\" name=\"phase\" id=\"phase\" value=\"0\" />";
 		echo "<input type=\"hidden\" name=\"indexAction\" id=\"indexAction\" value=\"add_object\" />";
-		if ($objUtil->checkRequestKey ( ('phase10') ))
-			$entryMessage .= LangNewObjectPhase10;
-		else
-			$entryMessage .= LangNewObjectPhase0;
+		if ($objUtil->checkRequestKey ( ('phase10') )) {
+			$entryMessage .= _("Now you have to check if the name doesn't already exist in the list below, based on its name. Take your time to carefully check the entries. ".
+                "If the object is in the list, you can leave this section by e.g. clicking the object to verify it's the right one. ".
+                "If the object is not in the list, you can continue entering it by clicking the 'Confirm' button. Attention: it's possible you have to scroll to see the whole list.");
+        } else {
+			$entryMessage .= _("Only enter new objects that are not in the system yet. First, you have to enter the name of the object. ".
+                "In the first box, you enter the catalog name, in the second box, you enter the number of the object within the catalog (e.g. M in the first box, 1 in the second box). ");
+        }
 		$link .= "&amp;phase=0&amp;phase10=phase10&amp;catalog=" . urlencode ( $objUtil->checkRequestKey ( 'catalog' ) ) . "&amp;number=" . urlencode ( $objUtil->checkRequestKey ( 'number' ) );
 	}
-	echo "<h4>" . LangNewObjectTitle . "</h4>";
+	echo "<h4>" . _("Add new object") . "</h4>";
 	echo "<hr />";
 	echo $content;
 	$disabled = " disabled=\"disabled\" ";
@@ -60,7 +69,7 @@ function new_object() {
 	if ($phase == 0)
 		if ($_SESSION ['admin'] == "yes") {
 			echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField1 . "</label>";
+	               <label>" . _("Name") . "</label>";
 			echo "<div class=\"form-inline\">";
 			echo "<input type=\"text\" required class=\"form-control\" maxlength=\"20\" name=\"catalog\" size=\"20\" value=\"" . $objUtil->checkRequestKey ( 'catalog' ) . "\" " . (($phase == 0) ? "" : $disabled) . "/>" . "&nbsp;&nbsp;" . "<input type=\"text\" required class=\"form-control\" maxlength=\"20\" name=\"number\" size=\"20\" value=\"" . $objUtil->checkRequestKey ( 'number' ) . "\" " . (($phase == 0) ? "" : $disabled) . "/>";
 			echo $content2;
@@ -74,7 +83,7 @@ function new_object() {
 			$tempcat .= ("</select>");
 			
 			echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField1 . "</label>";
+	               <label>" . _("Name") . "</label>";
 			echo "<div class=\"form-inline\">";
 			echo $tempcat . "&nbsp;&nbsp;" . "<input type=\"text\" required class=\"form-control\" maxlength=\"20\" name=\"number\" size=\"20\" value=\"" . $objUtil->checkRequestKey ( 'number' ) . "\" " . (($phase == 0) ? "" : $disabled) . "/>";
 			echo $content2;
@@ -83,7 +92,7 @@ function new_object() {
 		}
 	else {
 		echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField1 . "</label>";
+	               <label>" . _("Name") . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo "<input type=\"text\" required class=\"form-control\" maxlength=\"20\" name=\"catalog0\" size=\"20\" value=\"" . $objUtil->checkRequestKey ( 'catalog' ) . "\" " . $disabled . "/>" . "&nbsp;&nbsp;" . "<input type=\"text\" required class=\"form-control\" maxlength=\"20\" name=\"number0\" size=\"20\" value=\"" . $objUtil->checkRequestKey ( 'number' ) . "\" " . $disabled . "/>";
 		echo "</div>";
@@ -100,7 +109,7 @@ function new_object() {
 			$content .= "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" name=\"RAseconds\" size=\"3\" value=\"" . $objUtil->checkRequestKey ( 'RAseconds' ) . "\" " . (($phase == 1) ? "" : $disabled) . "/>&nbsp;s&nbsp;";
 			
 			echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField3 . "</label>";
+	               <label>" . _("RA") . "</label>";
 			echo "<div class=\"form-inline\">";
 			echo $content;
 			echo "</div>";
@@ -110,7 +119,7 @@ function new_object() {
 			$content .= "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" name=\"DeclMinutes\" size=\"3\" value=\"" . $objUtil->checkRequestKey ( 'DeclMinutes' ) . "\" " . (($phase == 1) ? "" : $disabled) . "/>&nbsp;m&nbsp;";
 			$content .= "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" name=\"DeclSeconds\" size=\"3\" value=\"" . $objUtil->checkRequestKey ( 'DeclSeconds' ) . "\" " . (($phase == 1) ? "" : $disabled) . "/>&nbsp;s&nbsp;";
 			echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField4 . "</label>";
+	               <label>" . _("Declination") . "</label>";
 			echo "<div class=\"form-inline\">";
 			echo $content;
 			echo $content4;
@@ -121,7 +130,7 @@ function new_object() {
 			$content .= "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" name=\"RAminutes1\" size=\"3\" value=\"" . $objUtil->checkRequestKey ( 'RAminutes' ) . "\" " . (($phase == 1) ? "" : $disabled) . "/>&nbsp;m&nbsp;";
 			$content .= "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" name=\"RAseconds1\" size=\"3\" value=\"" . $objUtil->checkRequestKey ( 'RAseconds' ) . "\" " . (($phase == 1) ? "" : $disabled) . "/>&nbsp;s&nbsp;";
 			echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField3 . "</label>";
+	               <label>" . _("RA") . "</label>";
 			echo "<div class=\"form-inline\">";
 			echo $content;
 			echo "</div>";
@@ -130,7 +139,7 @@ function new_object() {
 			$content .= "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" name=\"DeclMinutes1\" size=\"3\" value=\"" . $objUtil->checkRequestKey ( 'DeclMinutes' ) . "\" " . (($phase == 1) ? "" : $disabled) . "/>&nbsp;m&nbsp;";
 			$content .= "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" name=\"DeclSeconds1\" size=\"3\" value=\"" . $objUtil->checkRequestKey ( 'DeclSeconds' ) . "\" " . (($phase == 1) ? "" : $disabled) . "/>&nbsp;s&nbsp;";
 			echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField4 . "</label>";
+	               <label>" . _("Declination") . "</label>";
 			echo "<div class=\"form-inline\">";
 			echo $content;
 			echo $content4;
@@ -148,7 +157,7 @@ function new_object() {
 			$thecon = $objConstellation->getConstellationFromCoordinates ( $objUtil->checkRequestKey ( 'RAhours', 0 ) + ($objUtil->checkRequestKey ( 'RAminutes', 0 ) / 60) + ($objUtil->checkRequestKey ( 'RAhours', 0 ) / 3600), $objUtil->checkRequestKey ( 'DeclDegrees', 0 ) + ($objUtil->checkRequestKey ( 'DeclMinutes', 0 ) / 60) + ($objUtil->checkRequestKey ( 'DeclSeconds', 0 ) / 3600) );
 			$content = "<input type=\"text\" required class=\"form-control\" maxlength=\"3\" disabled=\"disabled\" name=\"showcon\" size=\"3\" value=\"" . $thecon . "\" />";
 			echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField5 . "</label>";
+	               <label>" . _("Constellation") . "</label>";
 			echo "<div class=\"form-inline\">";
 			echo $content;
 			echo "<input type=\"hidden\" name=\"con\" value=\"" . $thecon . "\" />";
@@ -166,7 +175,7 @@ function new_object() {
 			$content .= "<option value=\"" . $key . "\"" . (($key == $objUtil->checkRequestKey ( 'type' )) ? " selected=\"selected\" " : "") . ">" . $value . "</option>";
 		$content .= "</select>";
 		echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField6 . "</label>";
+	               <label>" . _("Type") . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $content; 
 		echo "</div>";
@@ -174,7 +183,7 @@ function new_object() {
 		// MAGNITUDE
 		$content = "<input type=\"number\" min=\"-5.5\" max=\"20.0\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" name=\"magnitude\" size=\"4\" value=\"" . $objUtil->checkRequestKey ( 'magnitude' ) . "\" " . (($phase == 2) ? "" : $disabled) . "/>";
 		echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField7 . "</label>";
+	               <label>" . _("Magnitude") . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $content; 
 		echo "</div>";
@@ -182,23 +191,23 @@ function new_object() {
 		// SURFACE BRIGHTNESS
 		$content = "<input type=\"number\" min=\"-5.5\" max=\"20.0\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" name=\"sb\" size=\"4\" value=\"" . $objUtil->checkRequestKey ( 'sb' ) . "\" " . (($phase == 2) ? "" : $disabled) . "/>";
 		echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField8 . "</label>";
+	               <label>" . _("Surface brightness") . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $content; 
 		echo "</div>";
 		echo "</div>";
 		// SIZE
 		$content = "<input type=\"number\" class=\"form-control\" maxlength=\"4\" name=\"size_x\" size=\"4\" value=\"" . $objUtil->checkRequestKey ( 'size_x' ) . "\"" . (($phase == 2) ? "" : $disabled) . "/>&nbsp;&nbsp;";
-		$content .= "<select class=\"form-control\" name=\"size_x_units\"" . (($phase == 2) ? "" : $disabled) . "> <option value=\"min\"" . (("min" == $objUtil->checkRequestKey ( 'size_x_units' )) ? " selected=\"selected\" " : "") . ">" . LangNewObjectSizeUnits1 . "</option>
-					                               <option value=\"sec\"" . (("sec" == $objUtil->checkRequestKey ( 'size_x_units' )) ? " selected=\"selected\" " : "") . ">" . LangNewObjectSizeUnits2 . "</option>";
+		$content .= "<select class=\"form-control\" name=\"size_x_units\"" . (($phase == 2) ? "" : $disabled) . "> <option value=\"min\"" . (("min" == $objUtil->checkRequestKey ( 'size_x_units' )) ? " selected=\"selected\" " : "") . ">" . _("arcminutes") . "</option>
+					                               <option value=\"sec\"" . (("sec" == $objUtil->checkRequestKey ( 'size_x_units' )) ? " selected=\"selected\" " : "") . ">" . _("arcseconds") . "</option>";
 		$content .= "</select>";
 		$content .= "&nbsp;&nbsp;X&nbsp;&nbsp;";
 		$content .= "<input type=\"number\" class=\"form-control\" maxlength=\"4\" name=\"size_y\" size=\"4\" value=\"" . $objUtil->checkRequestKey ( 'size_y' ) . "\"" . (($phase == 2) ? "" : $disabled) . "/>&nbsp;&nbsp;";
-		$content .= "<select class=\"form-control\" name=\"size_y_units\"" . (($phase == 2) ? "" : $disabled) . "> <option value=\"min\"" . (("min" == $objUtil->checkRequestKey ( 'size_y_units' )) ? " selected=\"selected\" " : "") . ">" . LangNewObjectSizeUnits1 . "</option>
-					                               <option value=\"sec\"" . (("sec" == $objUtil->checkRequestKey ( 'size_y_units' )) ? " selected=\"selected\" " : "") . ">" . LangNewObjectSizeUnits2 . "</option>";
+		$content .= "<select class=\"form-control\" name=\"size_y_units\"" . (($phase == 2) ? "" : $disabled) . "> <option value=\"min\"" . (("min" == $objUtil->checkRequestKey ( 'size_y_units' )) ? " selected=\"selected\" " : "") . ">" . _("arcminutes") . "</option>
+					                               <option value=\"sec\"" . (("sec" == $objUtil->checkRequestKey ( 'size_y_units' )) ? " selected=\"selected\" " : "") . ">" . _("arcseconds") . "</option>";
 		$content .= "</select>";
 		echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField9 . "</label>";
+	               <label>" . _("Size") . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $content; 
 		echo "</div>";
@@ -206,7 +215,7 @@ function new_object() {
 		// POSITION ANGLE
 		$content = "<input type=\"number\" min=\"-360\" max=\"360\" class=\"form-control\" maxlength=\"3\" name=\"posangle\" size=\"3\" value=\"" . $objUtil->checkRequestKey ( 'posangle' ) . "\" " . (($phase == 2) ? "" : $disabled) . "/>&deg;";
 		echo "<div class=\"form-group\">
-	               <label>" . LangViewObjectField12 . "</label>";
+	               <label>" . _("Position angle") . "</label>";
 		echo "<div class=\"form-inline\">";
 		echo $content; 
 		echo "</div>";
@@ -214,9 +223,9 @@ function new_object() {
 	}
 	echo "<hr />";
 	if ($objUtil->checkRequestKey ( ('phase10') )) {
-		echo "<h4>" . LangPossibleCandidateObjects . "</h4>";
+		echo "<h4>" . _("Possible candidates") . "</h4>";
 		
-		echo LangPossibleCandidateObjectsExplanation;
+		echo _("Please confirm that the object is not listed below");
 		echo $content3;
 		
 		echo "<hr />";
@@ -233,9 +242,9 @@ function new_object() {
 		echo "<hr />";
 	}
 	if ($objUtil->checkRequestKey ( ('phase20') )) {
-		echo "<h4>" . LangPossibleCandidateObjects . "</h4>";
+		echo "<h4>" . _("Possible candidates") . "</h4>";
 		
-		echo LangPossibleCandidateObjectsExplanation;
+		echo _("Please confirm that the object is not listed below");
 		echo $content3;
 		echo "<hr />";
 		$objObject->showObjectsFields ( $link, 0, 100, "", 0, array (

@@ -5,7 +5,7 @@ global $inIndex, $loggedUser, $objUtil;
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! ($loggedUser))
-	throw new Exception ( LangException001 );
+	throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 else
 	new_observation ();
 function new_observation() {
@@ -20,8 +20,8 @@ function new_observation() {
 		echo "<input type=\"hidden\" name=\"observation\" value=\"" . $obsid . "\" />";
 	}
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"" . ($adapt ? "comets_validate_change_observation" : "comets_validate_observation") . "\" />";
-	echo "<h4>" . LangNewObservationTitle . "</h4>";
-	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"addobservation\" value=\"" . ($adapt ? LangChangeObservationTitle : LangViewObservationButton1) . "\" />&nbsp;";
+	echo "<h4>" . _("New observation") . "</h4>";
+	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"addobservation\" value=\"" . ($adapt ? _("Change observation") : _("Add observation")) . "\" />&nbsp;";
 	echo "<hr />";
 	$id = $objUtil->checkSessionKey ( 'observedobject', $objUtil->checkGetKey ( 'observedobject' ) );
 	$content = "<select name=\"comet\" class=\"form-control\">";
@@ -34,7 +34,7 @@ function new_observation() {
 	while ( list ( $key, $value ) = each ( $catalogs ) )
 		$content .= "<option value=\"" . $value [0] . "\"" . (($objID == $objCometObject->getId ( $value [0] )) ? " selected=\"selected\" " : "") . ">" . $value [0] . "</option>";
 	$content .= "</select>";
-	echo "<strong>" . LangQueryObjectsField1 . "&nbsp;*</strong><br />";
+	echo "<strong>" . _("Object name") . "&nbsp;*</strong><br />";
 	echo "<span class=\"form-inline\">" . $content . "</span><br />";
 
 	$content = "<input type=\"number\" min=\"1\" max=\"31\" required class=\"form-control\" maxlength=\"2\" size=\"3\" name=\"day\"  value=\"" . ($adapt ? substr ( $objCometObservation->getDate ( $obsid ), 6, 2 ) : $objUtil->checkSessionKey ( 'day' )) . "\" />";
@@ -45,20 +45,20 @@ function new_observation() {
 	$content .= "</select>";
 	$content .= "&nbsp;&nbsp;";
 	$content .= "<input type=\"number\" min=\"1609\" required class=\"form-control\" maxlength=\"4\" size=\"5\" name=\"year\" value=\"" . ($adapt ? substr ( $objCometObservation->getDate ( $obsid ), 0, 4 ) : $objUtil->checkSessionKey ( 'year' )) . "\" />";
-	echo "<strong>" . LangViewObservationField5 . "&nbsp;*</strong><br />";
+	echo "<strong>" . _("Date") . "&nbsp;*</strong><br />";
 	echo "<span class=\"form-inline\">" . $content;
-	echo "&nbsp;" . LangViewObservationField10 . "</span>";
+	echo "&nbsp;" . _("(day-month-year)") . "</span>";
 	if ($objObserver->getObserverProperty ( $loggedUser, 'UT' ))
-		$content1 = LangViewObservationField9 . "&nbsp;*";
+		$content1 = _("Time (UT)") . "&nbsp;*";
 	else
-		$content1 = LangViewObservationField9lt . "&nbsp;*";
+		$content1 = _("Time (local time)") . "&nbsp;*";
 	$content2 = "<input type=\"number\" min=\"0\" max=\"23\" required class=\"form-control\" maxlength=\"2\" size=\"3\" name=\"hours\" value=\"" . ($adapt ? ( int ) ($objCometObservation->getTime ( $obsid ) / 100) : "") . "\" />&nbsp;&nbsp;" . "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" size=\"3\" name=\"minutes\" value=\"" . ($adapt ? ($objCometObservation->getTime ( $obsid ) % 100) : "") . "\" />";
-	$content3 = LangViewObservationField11;
+	$content3 = _("(hours-minutes)");
 	echo "<br /><strong>" . $content1 . "</strong><br />";
     echo "<span class=\"form-inline\">" . $content2;
     echo "&nbsp;" . $content3 . "</span>";
 
-    $content1 = LangViewObservationField4;
+    $content1 = _("Location");
 	$content2 = "<select name=\"site\" class=\"form-control\">";
 	$sites = $objLocation->getSortedLocationsList ( "name", $loggedUser );
 	if ($adapt)
@@ -69,12 +69,12 @@ function new_observation() {
 	for($i = 0; $i < count ( $sites ); $i ++)
 		$content2 .= "<option " . (($theLocation == $sites [$i] [0]) ? (" selected=\"selected\" ") : "") . " value=\"" . $sites [$i] [0] . "\" >" . $sites [$i] [1] . "</option>";
 	$content2 .= "</select>";
-	$content3 = "<a href=\"" . $baseURL . "index.php?indexAction=add_location\">" . LangChangeAccountField7Expl . "</a>";
+	$content3 = "<a href=\"" . $baseURL . "index.php?indexAction=add_location\">" . _("Add new observing site") . "</a>";
 	echo "<br /><strong>" . $content1 . "</strong>";
 	echo "<br /><span class=\"form-inline\">" . $content2;
 	echo "&nbsp;" . $content3 . "</span><br />";
 
-	$content1 = LangViewObservationField3;
+	$content1 = _("Instrument");
 	$content2 = "<select name=\"instrument\" class=\"form-control\">";
 	$instr = $objInstrument->getSortedInstrumentsList ( "name", $loggedUser );
 	$content2 .= "<option value=\"\">&nbsp;</option>";
@@ -85,56 +85,56 @@ function new_observation() {
 			$theInstrument = $objCometObservation->getInstrumentId ( $obsid );
 		elseif (! ($theInstrument = $objUtil->checkSessionKey ( 'instrument' )))
 			$theInstrument = $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' );
-		$content2 .= "<option " . (($key == $theInstrument) ? " selected=\"selected\"" : "") . " value=\"" . $key . "\">" . (($value == "Naked eye") ? InstrumentsNakedEye : $value) . "</option>";
+		$content2 .= "<option " . (($key == $theInstrument) ? " selected=\"selected\"" : "") . " value=\"" . $key . "\">" . (($value == "Naked eye") ? _("Naked Eye") : $value) . "</option>";
 	}
 	$content2 .= "</select>";
-	$content3 = "<a href=\"" . $baseURL . "index.php?indexAction=add_instrument\">" . LangChangeAccountField8Expl . "</a>";
+	$content3 = "<a href=\"" . $baseURL . "index.php?indexAction=add_instrument\">" . _("Add instrument") . "</a>";
 	echo "<strong>" . $content1 . "</strong>";
 	echo "<br /><span class=\"form-inline\">" . $content2;
 	echo "&nbsp;" . $content3 . "</span><br />";
 
-	echo "<strong>" . LangNewComet4 . "</strong><br />";
+	echo "<strong>" . _("Magnification") . "</strong><br />";
     echo "<input type=\"number\" min=\"0.0\" step=\"0.1\" class=\"form-control form-inline\" maxlength=\"3\" name=\"magnification\" size=\"4\" value=\"" . ($adapt ? $objCometObservation->getMagnification ( $obsid ) : "") . "\"/><br />";
 
 	$ICQMETHODS = new ICQMETHOD ();
 	$methods = $ICQMETHODS->getIds ();
-	$content1 = LangNewComet5;
+	$content1 = _("Magnitude method key");
 	$content2 = "<select name=\"icq_method\" class=\"form-control\">";
 	$content2 .= "<option value=\"\">&nbsp;</option>";
 	while ( list ( $key, $value ) = each ( $methods ) )
 		$content2 .= "<option value=\"" . $value . "\"" . ($adapt ? ($objCometObservation->getMethode ( $obsid ) == $value ? " selected=\"selected\" " : "") : "") . ">" . $value . " - " . $ICQMETHODS->getDescription ( $value ) . "</option>";
 	$content2 .= "</select>";
-	$content3 = "<a href=\"http://cfa-www.harvard.edu/icq/ICQKeys.html\" rel=\"external\">" . LangNewComet7 . "</a>";
+	$content3 = "<a href=\"http://cfa-www.harvard.edu/icq/ICQKeys.html\" rel=\"external\">" . _("More info about the codes") . "</a>";
 	echo "<strong>" . $content1 . "</strong>";
 	echo "<br /><span class=\"form-inline\">" . $content2;
 	echo "&nbsp;" . $content3 . "</span><br />";
 
-	$ICQREFERENCEKEYS = new ICQREFERENCEKEY ();
-	$methods = $ICQREFERENCEKEYS->getIds ();
-	$content1 = LangNewComet6;
+	$ICQREFERENCEKEYS = new ICQREFERENCEKEY();
+	$methods = $ICQREFERENCEKEYS->getIds();
+	$content1 = _("Magnitude reference key");
 	$content2 = "<select name=\"icq_reference_key\" class=\"form-control\">";
 	$content2 .= "<option value=\"\">&nbsp;</option>";
 	while ( list ( $key, $value ) = each ( $methods ) )
 		$content2 .= "<option value=\"$value\"" . ($adapt ? ($objCometObservation->getChart ( $obsid ) == $value ? " selected=\"selected\" " : "") : "") . ">" . $value . " - " . $ICQREFERENCEKEYS->getDescription ( $value ) . "</option>";
 	$content2 .= "</select>";
-	$content3 = "<a href=\"http://cfa-www.harvard.edu/icq/ICQRec.html\" rel=\"external\">" . LangNewComet7 . "</a>";
+	$content3 = "<a href=\"http://cfa-www.harvard.edu/icq/ICQRec.html\" rel=\"external\">" . _("More info about the codes") . "</a>";
 	echo "<strong>" . $content1 . "</strong>";
 	echo "<br /><span class=\"form-inline\">" . $content2;
 	echo "&nbsp;" . $content3 . "</span><br />";
 
-	$content1 = LangNewComet1;
+	$content1 = _("Magnitude");
 	$content2 = "<select name=\"smaller\" class=\"form-control\">";
 	$content2 .= "<option value=\"0\">&nbsp;</option>";
-	$content2 .= "<option value=\"1\"" . ($adapt && $objCometObservation->getMagnitudeWeakerThan ( $obsid ) ? " selected=\"selected\" " : "") . ">" . LangNewComet3 . "</option>";
+	$content2 .= "<option value=\"1\"" . ($adapt && $objCometObservation->getMagnitudeWeakerThan($obsid) ? " selected=\"selected\" " : "") . ">" . _("Weaker than") . "</option>";
 	$content2 .= "</select>";
 	$content2 .= "&nbsp;";
 	$content2 .= "<input type=\"number\" min=\"-5.00\" step=\"0.01\" class=\"form-control\" maxlength=\"4\" name=\"mag\" size=\"4\" value=\"" . ($adapt ? ($objCometObservation->getMagnitude ( $obsid ) != - 99.9 ? $objCometObservation->getMagnitude ( $obsid ) : '') : "") . "\"/>";
-	$content2 .= "&nbsp;<input type=\"checkbox\" name=\"uncertain\" " . ($adapt && $objCometObservation->getMagnitudeUncertain ( $obsid ) ? " checked=\"checked\" " : "") . " />" . LangNewComet2;
+	$content2 .= "&nbsp;<input type=\"checkbox\" name=\"uncertain\" " . ($adapt && $objCometObservation->getMagnitudeUncertain ( $obsid ) ? " checked=\"checked\" " : "") . " />" . _("Uncertain");
 	echo "<strong>" . $content1 . "</strong>";
 	echo "<br /><span class=\"form-inline\">" . $content2;
 	echo "</span><br />";
 
-	$content1 = LangNewComet8;
+	$content1 = _("Degree of condensation");
 	$content2 = "<select name=\"condensation\" class=\"form-control\">";
 	$content2 .= "<option value=\"\">&nbsp;</option>";
 	for($i = 0; $i <= 9; $i ++)
@@ -144,28 +144,28 @@ function new_observation() {
 	echo "<br /><span class=\"form-inline\">" . $content2;
 	echo "</span><br />";
 
-	$content1 = LangNewComet9;
+	$content1 = _("Coma");
 	$content2 = "<input type=\"number\" min=\"0.0\" step=\"0.1\" class=\"form-control\" maxlength=\"3\" name=\"coma\" size=\"4\" value=\"" . ($adapt ? ($objCometObservation->getComa ( $obsid ) != - 99 ? $objCometObservation->getComa ( $obsid ) : '') : "") . "\" />";
-	$content3 = LangNewComet13;
+	$content3 = _("arcminutes");
 	echo "<strong>" . $content1 . "</strong>";
 	echo "<br /><span class=\"form-inline\">" . $content2;
 	echo "&nbsp;" . $content3 . "</span><br />";
 
-	$content1 = LangNewComet10;
+	$content1 = _("Tail length");
 	$content2 = "<input type=\"number\" min=\"0.0\" step=\"0.1\" class=\"form-control\" maxlength=\"3\" name=\"tail_length\" size=\"4\" value=\"" . ($adapt ? ($objCometObservation->getTail ( $obsid ) != - 99 ? $objCometObservation->getTail ( $obsid ) : '') : "") . "\" />";
-	$content3 = LangNewComet13;
+	$content3 = _("arcminutes");
 	echo "<strong>" . $content1 . "</strong>";
 	echo "<br /><span class=\"form-inline\">" . $content2;
 	echo "&nbsp;" . $content3 . "</span><br />";
 
-	$content1 = LangNewComet11;
+	$content1 = _("Position angle of tail");
 	$content2 = "<input type=\"number\" min=\"0.0\" max=\"360.0\" step=\"0.1\" class=\"form-control\" maxlength=\"3\" name=\"position_angle\" size=\"4\" value=\"" . ($adapt ? ($objCometObservation->getPa ( $obsid ) != - 99 ? $objCometObservation->getPa ( $obsid ) : '') : "") . "\" />";
-	$content3 = LangNewComet12;
+	$content3 = _("degrees");
 	echo "<strong>" . $content1 . "</strong>";
 	echo "<br /><span class=\"form-inline\">" . $content2;
 	echo "&nbsp;" . $content3 . "</span><br />";
 
-	$content1 = LangViewObservationField12;
+	$content1 = _("Drawing");
 	$content2 = "<input type=\"file\" id=\"drawing\" name=\"drawing\" data-show-remove=\"false\" accept=\"image/*\" class=\"file-loading\" />";
 
   // Make sure to show the current drawing
@@ -206,7 +206,7 @@ function new_observation() {
 			removeTitle: '',
 			layoutTemplates: {actionDelete: ''},
 			allowedFileTypes: [\"image\"],
-			initialCaption: \"" . LangViewObservationField12 . "\",
+			initialCaption: \"" . _("Drawing") . "\",
 		});
 	});";
 	echo "</script>";
@@ -215,14 +215,14 @@ function new_observation() {
 	echo "<br /><span class=\"form\">" . $content2;
 	echo "</span><br />";
 
-	$content1 = LangViewObservationField8;
+	$content1 = _("Description");
 	$content2 = "<textarea maxlength=\"500\" name=\"description\" class=\"form-control\" rows=\"5\" >" . ($adapt ? $objCometObservation->getDescription ( $obsid ) : "") . "</textarea>";
 	echo "<strong>" . $content1 . "</strong>";
 	echo "<br />" . $content2;
 	echo "<br />";
 
 	echo "</div>";
-	echo "<input type=\"submit\" class=\"btn btn-success\" name=\"addobservation\" value=\"" . ($adapt ? LangChangeObservationTitle : LangViewObservationButton1) . "\" />&nbsp;";
+	echo "<input type=\"submit\" class=\"btn btn-success\" name=\"addobservation\" value=\"" . ($adapt ? _("Change observation") : _("Add observation")) . "\" />&nbsp;";
 
 	echo "</form>";
 	echo "<hr />";

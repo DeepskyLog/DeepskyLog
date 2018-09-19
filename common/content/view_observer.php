@@ -13,7 +13,7 @@
 if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 } elseif (!($user = $objUtil->checkGetKey('user'))) {
-    throw new Exception(LangException015b);
+    throw new Exception(_("You wanted to watch an observer, but none is specified. Please contact the developers with this message."));
 } else {
     viewObserver();
 }
@@ -147,13 +147,13 @@ function viewObserver()
         echo "<input type=\"hidden\" name=\"user\" value=\"" . $user . "\" />";
         echo "<div class=\"form-group\">";
         echo "<label class=\"col-sm-2 control-label\">" 
-            . LangChangeAccountField1 . "</label>";
+            . _("Username") . "</label>";
         echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">" 
             . $objObserver->getObserverProperty($user, 'id') . "</p>";
         echo "</div></div>";
         echo "<div class=\"form-group\">
              <label for=\"email\" class=\"col-sm-2 control-label\">" 
-            . LangChangeAccountField2 . "</label>
+            . _("Email address") . "</label>
              <div class=\"col-sm-5\">
               <input type=\"email\" name=\"email\" class=\"form-control\" " 
               . "id=\"email\" value=\"" 
@@ -162,7 +162,7 @@ function viewObserver()
             </div>";
         echo "<div class=\"form-group\">
              <label for=\"firstname\" class=\"col-sm-2 control-label\">" 
-            . LangChangeAccountField3 . "</label>
+            . _("First name") . "</label>
              <div class=\"col-sm-5\">
               <input type=\"text\" name=\"firstname\" class=\"form-control\"" 
             . " id=\"firstname\" value=\"" 
@@ -170,11 +170,11 @@ function viewObserver()
                      </div>
                         <input type=\"submit\" class=\"btn btn-danger\"" 
             . " name=\"change_email_name_firstname\" value=\""
-            .LangViewObserverChangeNameFirstname."\" />
+            ._("Change email / firstname / name")."\" />
             </div>";
         echo "<div class=\"form-group\">
              <label for=\"name\" class=\"col-sm-2 control-label\">" 
-             . LangChangeAccountField4 . "</label>
+             . _("Last Name") . "</label>
              <div class=\"col-sm-5\">
               <input type=\"text\" name=\"name\" class=\"form-control\"" 
               . " id=\"name\" value=\"" 
@@ -183,7 +183,7 @@ function viewObserver()
             </div>";
         echo "<div class=\"form-group\">
              <label for=\"password\" class=\"col-sm-2 control-label\">" 
-            . LangChangeAccountField5 . "</label>
+            . _("Password") . "</label>
              <div class=\"col-sm-3\">
               <input type=\"text\" name=\"password\" class=\"form-control\"" 
             . " id=\"password\" value=\"\" />
@@ -195,14 +195,14 @@ function viewObserver()
             </div>";
         echo "<div class=\"form-group\">";
         echo "<label class=\"col-sm-2 control-label\">" 
-            . LangChangeAccountField7 . "</label>";
+            . _("Default observing site") . "</label>";
         echo "<div class=\"col-sm-5\"><p class=\"form-control-static\"><a href=\"" 
             . $baseURL . "index.php?indexAction=detail_location&amp;location=" 
             . urlencode($location_id) . "\">" . $location_name . "</a></p>";
         echo "</div></div>";
         echo "<div class=\"form-group\">";
         echo "<label class=\"col-sm-2 control-label\">" 
-            . LangChangeAccountField8 . "</label>";
+            . _("Default instrument") . "</label>";
         // Here, we set the name of the default instrument. For the current user, 
         // we need to make it possible to change the default instrument.
         echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">";
@@ -213,7 +213,7 @@ function viewObserver()
                     $objObserver->getObserverProperty($user, 'stdtelescope')
                 ) . "\">" 
                 . (($instrumentname == "Naked eye") 
-                    ? InstrumentsNakedEye : $instrumentname) 
+                    ? _("Naked Eye") : $instrumentname) 
                 . "</a>";
         } else {
             echo "";
@@ -223,18 +223,18 @@ function viewObserver()
     } else {
         echo "<table class=\"table table-striped\">";
         echo " <tr>
-                <td>" . LangChangeAccountField3 . "</td>
+                <td>" . _("First name") . "</td>
                 <td>" 
             . $objObserver->getObserverProperty($user, 'firstname') . "</td>
                </tr>";
 
         echo " <tr>
-                <td>" . LangChangeAccountField4 . "</td>
+                <td>" . _("Last Name") . "</td>
                 <td>" . $objObserver->getObserverProperty($user, 'name') . "</td>
                </tr>";
         // Setting the default location
         echo " <tr>
-                <td>" . LangChangeAccountField7 . "</td>";
+                <td>" . _("Default observing site") . "</td>";
         echo "<td>";
         if ($loggedUser == $user) {
             if (array_key_exists('activeLocationId', $_GET) 
@@ -283,7 +283,7 @@ function viewObserver()
         }
         // Setting the default instrument
         echo " <tr>
-              <td>" . LangChangeAccountField8 . "</td>";
+              <td>" . _("Default instrument") . "</td>";
         echo "<td>";
         if ($loggedUser == $user) {
             if (array_key_exists('activeTelescopeId', $_GET) 
@@ -332,13 +332,13 @@ function viewObserver()
                     $objObserver->getObserverProperty($user, 'stdtelescope')
                 ) . "\">" 
                 . (($instrumentname == "Naked eye") 
-                    ? InstrumentsNakedEye : $instrumentname) . "</a>" 
+                    ? _("Naked Eye") : $instrumentname) . "</a>" 
                 : "") . "</td>
               </tr>";
         }
         echo '<tr>
                <td>';
-        echo LangChangeAccountCopyright;
+        echo _("Copyright notice");
         echo ' </td>
                <td>';
         echo $objObserver->getCopyright($user);
@@ -357,44 +357,44 @@ function viewObserver()
         if ($user != "admin") {
             echo "<div class=\"form-group\">
                 <label for=\"role\" class=\"col-sm-2 control-label\">" 
-                . LangViewObserverRole . "</label>
+                . _("Role") . "</label>
                 <div class=\"col-sm-3\">
                      <select name=\"role\" class=\"form-control\">
                  <option " 
                 . (($observerRole == ROLEADMIN) 
                 ? "selected=\"selected\"" : "") . " value=\"0\">" 
-                 . LangViewObserverAdmin . "</option>
+                 . _("Admin") . "</option>
                  <option " 
                 . (($observerRole == ROLEUSER) 
                 ? "selected=\"selected\"" : "") . " value=\"1\">" 
-                . LangViewObserverUser . "</option>
+                . _("User") . "</option>
                 <option " 
                 . (($observerRole == ROLECOMETADMIN) 
                 ? "selected=\"selected\"" : "") . " value=\"4\">" 
-                . LangViewObserverCometAdmin . "</option>
+                . _("Comet admin") . "</option>
                 <option " 
                 . (($observerRole == ROLEWAITLIST) 
                 ? "selected=\"selected\"" : "") . " value=\"2\">" 
-                . LangViewObserverWaitlist . "</option>
+                . _("Waitlist") . "</option>
                </select>&nbsp;
            </div>
            <div class=\"col-sm-2\">
                 <button type=\"submit\" class=\"btn btn-default\" name=\"change\">" 
-            . LangViewObserverChange . "</button>
+            . _("Change role") . "</button>
            </div>
             </div>";
         } elseif ($observerRole == ROLEWAITLIST) {
             echo "<div class=\"form-group\">";
             echo "<label class=\"col-sm-2 control-label\">" 
-                . LangViewObserverRole . "</label>";
-            echo "<div class=\"col-sm-5\">" . LangViewObserverWaitlist;
+                . _("Role") . "</label>";
+            echo "<div class=\"col-sm-5\">" . _("Waitlist");
             echo "</div></div>";
         } else {
             // fixed admin role
             echo "<div class=\"form-group\">";
             echo "<label class=\"col-sm-2 control-label\">" 
-                . LangViewObserverRole . "</label>";
-            echo "<div class=\"col-sm-5\">" . LangViewObserverAdmin;
+                . _("Role") . "</label>";
+            echo "<div class=\"col-sm-5\">" . _("Admin");
             echo "</div></div>";
         }
         echo "</div></form>";
@@ -411,7 +411,7 @@ function viewObserver()
     echo " </tr>";
 
     echo " <tr>";
-    echo "  <td>" . LangViewObserverNumberOfObservations . "</td>";
+    echo "  <td>" . _("Number of observations") . "</td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . $information[$i][0];
         echo " </td>";
@@ -419,7 +419,7 @@ function viewObserver()
     echo " </tr>";
 
     echo " <tr>";
-    echo "  <td>" . LangTopObserversHeader4 . "</td>";
+    echo "  <td>" . _("Observations last year") . "</td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . $information[$i][1];
         echo " </td>";
@@ -427,7 +427,7 @@ function viewObserver()
     echo " </tr>";
 
     echo " <tr>";
-    echo "  <td>" . LangTopObserversHeader6 . "</td>";
+    echo "  <td>" . _("Different objects") . "</td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . $information[$i][2];
         echo " </td>";
@@ -435,7 +435,7 @@ function viewObserver()
     echo " </tr>";
 
     echo " <tr>";
-    echo "  <td>" . LangTopObserversHeader5 . "</td>";
+    echo "  <td>" . _("Messier objects") . "</td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . (($key == $i) ? $userMobjects . " / 110" : "-");
         echo " </td>";
@@ -443,7 +443,7 @@ function viewObserver()
     echo " </tr>";
 
     echo " <tr>";
-    echo "  <td>" . LangTopObserversHeader5b . "</td>";
+    echo "  <td>" . _("Caldwell objects") . "</td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . (($key == $i) ? $userCaldwellObjects . " / 110" : "-");
         echo " </td>";
@@ -451,7 +451,7 @@ function viewObserver()
     echo " </tr>";
 
     echo " <tr>";
-    echo "  <td>" . LangTopObserversHeader5c . "</td>";
+    echo "  <td>" . _("H400 objects") . "</td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . (($key == $i) ? $userH400objects . " / 400" : "-");
         echo " </td>";
@@ -459,7 +459,7 @@ function viewObserver()
     echo " </tr>";
 
     echo " <tr>";
-    echo "  <td>" . LangTopObserversHeader5d . "</td>";
+    echo "  <td>" . _("H II objects") . "</td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . (($key == $i) ? $userHIIobjects . " / 400" : "-");
         echo " </td>";
@@ -467,7 +467,7 @@ function viewObserver()
     echo " </tr>";
 
     echo " <tr>";
-    echo "  <td>" . LangViewObserverRank . "</td>";
+    echo "  <td>" . _("Rank") . "</td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . $information[$i][4];
         echo " </td>";
@@ -1447,8 +1447,8 @@ function viewObserver()
     drawStar(
         $accomplishments['herschelIIPlatina'], _('Platinum'), 
         "platinum", 
-        _("Platinum Herschel II certificat! You observed all II Herschel II objects!"), 
-        _("Observe all II Herschel II objects to get this certificat!")
+        _("Platinum Herschel II certificat! You observed all 400 Herschel II objects!"), 
+        _("Observe all 400 Herschel II objects to get this certificat!")
     );
     echo "</div>";
 
@@ -1483,8 +1483,8 @@ function viewObserver()
     drawStar(
         $accomplishments['herschelIIDrawingsPlatina'], _('Platinum'), 
         "platinum", 
-        _("Platinum Herschel II drawing-certificat! You drew all II Herschel II objects!"), 
-        _("Draw all II Herschel II objects to get this certificat!")
+        _("Platinum Herschel II drawing-certificat! You drew all 400 Herschel II objects!"), 
+        _("Draw all 400 Herschel II objects to get this certificat!")
     );
     echo "</div>";
 

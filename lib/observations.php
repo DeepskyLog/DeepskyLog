@@ -83,7 +83,7 @@ class Observations
         }
 
         if (!is_array($objects)) {
-            throw new Exception(LangInvalidCSVfile);
+            throw new Exception(_("You didn't provide a valid CSV file!"));
         } else {
             $noDates = array();
             $wrongDates = array();
@@ -209,9 +209,9 @@ class Observations
 
             // error catching
             if (count($errorlist) > 0) {
-                $errormessage = LangCSVError1 . "<br />";
+                $errormessage = _("The CSV file is not completely imported because: ") . "<br />";
                 if (count($wrongDates) > 0) {
-                    $errormessage .= "<ul><li>" . LangCSVError9 . " : <ul>";
+                    $errormessage .= "<ul><li>" . _("The following date(s) are in the future") . " : <ul>";
                     for ($i = 0; $i < count($wrongDates); $i++) {
                         $errormessage .= "<li>" 
                             . ($wrongDates[$i] ? $wrongDates[$i] : "&nbsp;") 
@@ -220,13 +220,16 @@ class Observations
                     $errormessage .= "</ul></li></ul>";
                 }
                 if (count($objectsMissing) > 0) {
-                    $errormessage .= "<ul><li>" . LangCSVError2 . " : <ul>";
+                    $errormessage .= "<ul><li>" . _("The following objects are not available in DeepskyLog") . " : <ul>";
                     for ($i = 0; $i < count($objectsMissing); $i++) {
                         // Only show the first 10 objects missing, then add the 
                         // number of other objects missing
                         if ($i == 10) {
-                            $errormessage .= "<li>" . LangCSVError2b 
-                                . (count($objectsMissing) - 10) . LangCSVError2c
+                            $errormessage .= "<li>" . 
+                                sprintf(
+                                    _("And %s other objects missing."), 
+                                    (count($objectsMissing) - 10)
+                                )
                                 . "</li>";
                             break;
                         }
@@ -237,13 +240,16 @@ class Observations
                     $errormessage .= "</ul></li></ul>";
                 }
                 if (count($locationsMissing) > 0) {
-                    $errormessage .= "<ul><li>" . LangCSVError3 . " : <ul>";
+                    $errormessage .= "<ul><li>" . _("The following locations are not available in DeepskyLog") . " : <ul>";
                     for ($i = 0; $i < count($locationsMissing); $i++) {
                         // Only show the first 10 locations missing, then add the
                         // number of other locations missing
                         if ($i == 10) {
-                            $errormessage .= "<li>" . LangCSVError2b 
-                                . (count($locationsMissing) - 10) . LangCSVError3b 
+                            $errormessage .= "<li>" 
+                                . sprintf(
+                                    _("%s other locations missing."),  
+                                    count($locationsMissing) - 10
+                                )
                                 . "</li>";
                             break;
                         }
@@ -254,14 +260,16 @@ class Observations
                     $errormessage .= "</ul></li></ul>";
                 }
                 if (count($instrumentsMissing) > 0) {
-                    $errormessage .= "<ul><li>" . LangCSVError4 . " : <ul>";
+                    $errormessage .= "<ul><li>" . _("The following instruments are not available in DeepskyLog") . " : <ul>";
                     for ($i = 0; $i < count($instrumentsMissing); $i++) {
                         // Only show the first 10 instruments missing, 
                         // then add the number of other instruments missing
                         if ($i == 10) {
-                            $errormessage .= "<li>" . LangCSVError2b 
-                                . (count($instrumentsMissing) - 10) 
-                                . LangCSVError4b . "</li>";
+                            $errormessage .= "<li>" 
+                                . sprintf(
+                                    _("%s other instruments missing."),
+                                    count($instrumentsMissing) - 10
+                                ) . "</li>";
                             break;
                         }
                         $errormessage .= "<li>" 
@@ -272,13 +280,16 @@ class Observations
                     $errormessage .= "</ul></li></ul>";
                 }
                 if (count($filtersMissing) > 0) {
-                    $errormessage .= "<ul><li>" . LangCSVError5 . " : <ul>";
+                    $errormessage .= "<ul><li>" . _("The following filters are not available in DeepskyLog") . " : <ul>";
                     for ($i = 0; $i < count($filtersMissing); $i++) {
                         // Only show the first 10 filters missing, 
                         // then add the number of other filters missing
                         if ($i == 10) {
-                            $errormessage .= "<li>" . LangCSVError2b 
-                                . (count($filtersMissing) - 10) . LangCSVError5b 
+                            $errormessage .= "<li>" 
+                                . sprintf(
+                                    _("%s other filters missing."),
+                                    count($filtersMissing) - 10
+                                )
                                 . "</li>";
                             break;
                         }
@@ -289,13 +300,16 @@ class Observations
                     $errormessage .= "</ul></li></ul>";
                 }
                 if (count($eyepiecesMissing) > 0) {
-                    $errormessage .= "<ul><li>" . LangCSVError6 . " : <ul>";
+                    $errormessage .= "<ul><li>" . _("The following eyepieces are not available in DeepskyLog") . " : <ul>";
                     for ($i = 0; $i < count($eyepiecesMissing); $i ++) {
                         // Only show the first 10 eyepieces missing, 
                         // then add the number of other eyepieces missing
                         if ($i == 10) {
-                            $errormessage .= "<li>" . LangCSVError2b 
-                                . (count($eyepiecesMissing) - 10) . LangCSVError6b 
+                            $errormessage .= "<li>" 
+                                . sprintf(
+                                    _("%s other eyepieces missing."), 
+                                    count($eyepiecesMissing) - 10
+                                )
                                 . "</li>";
                             break;
                         }
@@ -307,13 +321,16 @@ class Observations
                     $errormessage .= "</ul></li></ul>";
                 }
                 if (count($lensesMissing) > 0) {
-                    $errormessage .= "<ul><li>" . LangCSVError7 . " : <ul>";
+                    $errormessage .= "<ul><li>" . _("The following lenses are not available in DeepskyLog") . " : <ul>";
                     for ($i = 0; $i < count($lensesMissing); $i++) {
                         // Only show the first 10 lenses missing, 
                         // then add the number of other lenses missing
                         if ($i == 10) {
-                            $errormessage .= "<li>" . LangCSVError2b 
-                                . (count($lensesMissing) - 10) . LangCSVError7b 
+                            $errormessage .= "<li>" . 
+                                sprintf(
+                                    _("And %s other lenses missing."), 
+                                    (count($lensesMissing) - 10)
+                                )
                                 . "</li>";
                             break;
                         }
@@ -328,11 +345,15 @@ class Observations
                 while (list($key, $j) = each($errorlist)) {
                     $_SESSION['csvImportErrorData'][$key] = $parts_array[$j];
                 }
-                $messageLines = "<h4>" . LangCSVError0 . "</h4>" 
+                $messageLines = "<h4>" . _("The CSV observation import completed with problems.") . "</h4>" 
                     . $errormessage . "<p>"
-                    . LangCSVError10 . "<a href=\"" . $baseURL 
-                    . "index.php?indexAction=add_csv\">" . LangCSVError10a . "</a>"
-                    . LangCSVError10b . "</p>";
+                    . sprintf(_("Only the correct observations have been read.
+
+You first have to solve the problems mentionned above and then %sreimport%s the observations.
+You may limit the reimport to the faulty observations, or you may again use all of them.
+Correct observations which have been imported will not be registered for a second time."), 
+                        "<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">", 
+                        "</a>") . "</p>";
                 $_GET['indexAction'] = 'default_action';
             }
 
@@ -422,9 +443,17 @@ class Observations
                     unset($_SESSION['QobsParams']);
                 }
             }
-            return LangCSVMessage8 . ": " . $added . LangCSVMessage9 . ": " 
-                . count($errorlist) . LangCSVMessage10 . ": "
-                . $double . ".<br />" . $messageLines;
+            return sprintf(_("Observations added: %s"), $added) 
+                . "; " 
+                . sprintf(
+                    _("observations rejected with problems: %s"), 
+                    count($errorlist) 
+                ) . "; "
+                . sprintf(
+                    _("observations dropped because already present: %s"), 
+                    $double
+                ) 
+                . ".<br />" . $messageLines;
         }
     }
 
@@ -1008,7 +1037,7 @@ class Observations
      *                        observations.
      *                        + mindiameter, maxdiameter: The interval of telescope
      *                        diameter for the observations.
-     *                        + type: The object type, eg GALXY.
+     *                        + type: The object type, e.g. GALXY.
      *                        + con: The constellation where the observation was
      *                        made.
      *                        + minmag, maxmag: The interval of the magnitudes of
@@ -1957,28 +1986,28 @@ class Observations
             echo "<th class=\"filter-false columnSelector-disable\" " 
                 . "data-sorter=\"false\">&nbsp;</th>";
         }
-        echo "<th id=\"objectname\">" . LangOverviewObservationsHeader1 . "</th>";
+        echo "<th id=\"objectname\">" . _("Object name") . "</th>";
         echo "<th id=\"objectconstellation\">" 
-            . LangViewObservationField1b . "</th>";
+            . _("Constellation") . "</th>";
         echo "<th id=\"observername\">" 
-            . LangOverviewObservationsHeader2 . "</th>";
+            . _("Observer") . "</th>";
         echo "<th id=\"instrumentname\">" 
-            . LangOverviewObservationsHeader3 . "</th>";
+            . _("Instrument") . "</th>";
         echo "<th id=\"observationdate\">" 
-            . LangOverviewObservationsHeader4 . "</th>";
+            . _("Date") . "</th>";
         if ($lco != "O") {
             echo "<th class=\"filter-false columnSelector-disable\" " 
                 . "data-sorter=\"false\">&nbsp;</th>";
         } else {
             echo "<th class=\"filter-false columnSelector-disable\" " 
                 . "data-sorter=\"false\">" 
-                . LangOverviewObservationsHeader8 
+                . _("My LO instrument") 
                 . "</th>" . "<th class=\"filter-false columnSelector-disable\" " 
                 . "data-sorter=\"false\">" 
-                . LangOverviewObservationsHeader9 . "</th>" 
+                . _("My LO date") . "</th>" 
                 . "<th class=\"filter-false columnSelector-disable\" " 
                 . "data-sorter=\"false\">" 
-                . LangOverviewObservationsHeader5 . "</th>";
+                . "(*)" . "</th>";
         }
         echo "</tr>";
         echo "</thead>";
@@ -2005,19 +2034,19 @@ class Observations
             }
             $alt = substr($alt, 6);
             $explanation = "(" . $GLOBALS[$value['objecttype']] 
-                . " " . LangOverviewObservations12 . " " 
+                . " " . _("in") . " " 
                 . $GLOBALS[$value['objectconstellation']] 
                 . (($value['objectmagnitude'] != '') 
                 && ($value['objectmagnitude'] < 99.9) ? ", " 
-                . LangOverviewObservations13 . " " 
+                . _("mag.") . " " 
                 . sprintf("%.1f", $value['objectmagnitude']) : "") 
                 . (($value['objectsurfacebrigthness'] != '') 
                 && ($value['objectsurfacebrigthness'] < 99.9) ? ", " 
-                . LangOverviewObservations14 . " " 
+                . _("surf. br.") . " " 
                 . sprintf("%.1f", $value['objectsurfacebrigthness']) : "") 
-                . (($alt) ? (", " . LangOverviewObservations15 . " ") 
+                . (($alt) ? (", " . _("alt. names") . " ") 
                 . $objPresentations->br2dash($alt) : "") . ")";
-            $explanation1 = LangOverviewObservations16 . " " 
+            $explanation1 = _("Seen") . ": " 
                 . ($seen = $objObject->getseen($value['objectname']));
             $title = trim(
                 $value['objectname'] . " " 
@@ -2047,7 +2076,7 @@ class Observations
                 );
             }
             if ($LOinstrument == "Naked eye") {
-                $LOinstrument = InstrumentsNakedEye;
+                $LOinstrument = _("Naked Eye");
             }
             if ($loggedUser
                 && (!($objObserver->getObserverProperty($loggedUser, 'UT')))
@@ -2143,22 +2172,28 @@ class Observations
                 ) {
                     echo "<a  href=\"" . $link . "&amp;addObservationToList=" 
                         . urlencode($value['observationid']) . "\" title=\"" 
-                        . LangViewObservationField44 . "\">E</a>";
+                        . _("Add the observation to the list ") . "\">E</a>";
                     echo "&nbsp;-&nbsp;";
                     echo "<a  href=\"" . $link . "&amp;removeObjectFromList=" 
                         . urlencode($value['objectname']) . "\" title=\"" 
-                        . $value['objectname'] . LangListQueryObjectsMessage3 
-                        . $listname_ss . "\">R</a>";
+                        . sprintf(
+                            _("%s to remove from the list %s"), 
+                            $value['objectname'],
+                            $listname_ss
+                        ) . "\">R</a>";
                 } else {
                     echo "<a  href=\"" . $link . "&amp;addObjectToList=" 
                         . urlencode($value['objectname']) . "&amp;showname=" 
                         . urlencode($value['objectname']) . "\" title=\"" 
-                        . $value['objectname'] . LangListQueryObjectsMessage2 
-                        . $listname_ss . "\">L</a>";
+                        . sprintf(
+                            _("%s to add to the list %s"), 
+                            $value['objectname'],
+                            $listname_ss
+                        ) . "\">L</a>";
                     echo "&nbsp;-&nbsp;";
                     echo "<a  href=\"" . $link . "&amp;addObservationToList=" 
                         . urlencode($value['observationid']) . "\" title=\"" 
-                        . LangViewObservationField44 . "\">E</a>";
+                        . _("Add the observation to the list ") . "\">E</a>";
                 }
                 echo "</td>";
             }
@@ -2175,23 +2210,23 @@ class Observations
                 echo "<a  href=\"" . $baseURL 
                     . "index.php?indexAction=detail_observation&amp;observation=" 
                     . $value['observationid'] . "&amp;QobsKey=" . $obsKey 
-                    . "&amp;dalm=D\" title=\"" . LangDetail . "\">" 
-                    . LangDetailText . ($hasDrawing ? LangDetailDrawingText : "") 
+                    . "&amp;dalm=D\" title=\"" . _("Details of this observation") . "\">" 
+                    . "D" . ($hasDrawing ? "D" : "") 
                     . "</a>&nbsp;";
                 echo "<a  href=\"" . $baseURL 
                     . "index.php?indexAction=detail_observation&amp;observation=" 
                     . $value['observationid'] . "&amp;dalm=AO\" title=\"" 
-                    . LangAO . "\">" . LangAOText . "</a>";
+                    . _("Compare this observation with all observations of this object") . "\">" . "AO" . "</a>";
                 
                 if ($loggedUser && $LOid) {
                     echo "&nbsp;<a  href=\"" . $baseURL 
                       . "index.php?indexAction=detail_observation&amp;observation=" 
                       . $value['observationid'] . "&amp;dalm=MO\" title=\"" 
-                      . LangMO . "\">" . LangMOText . "</a>";
+                      . _("Compare this observation with all my observations of this object") . "\">" . "MO" . "</a>";
                     echo "&nbsp;<a  href=\"" . $baseURL 
                       . "index.php?indexAction=detail_observation&amp;observation=" 
                       . $value ['observationid'] . "&amp;dalm=LO\" title=\"" 
-                      . LangLO . "\">" . LangLOText . "</a>";
+                      . _("Compare this observation with my last observation of this object") . "\">" . "LO" . "</a>";
                 }
                 echo "</td>";
                 echo "</tr>";
@@ -2212,7 +2247,7 @@ class Observations
                     . "index.php?indexAction=detail_instrument&amp;instrument=" 
                     . urlencode($value['instrumentid']) . "\">" 
                     . (($value['instrumentname'] == "Naked eye") 
-                    ? InstrumentsNakedEye : $value['instrumentname'] 
+                    ? _("Naked Eye") : $value['instrumentname'] 
                     . " &nbsp;(" . round($value['instrumentdiameter'], 0) 
                     . "&nbsp;mm)") . "</a></td>";
                 echo "<td>" . date(
@@ -2223,7 +2258,7 @@ class Observations
                         . "index.php?indexAction=detail_instrument&amp;instrument=" 
                         . urlencode($LOinstrumentId) . "\">" . $LOinstrument 
                         . " &nbsp;" 
-                        . (($LOinstrument != InstrumentsNakedEye) 
+                        . (($LOinstrument != _("Naked Eye")) 
                         ? ("(" . $LOinstrumentsize . "&nbsp;mm" . ")") : "") 
                         . "</a>" : "") . "</td>";
                     echo "<td>" 
@@ -2238,26 +2273,26 @@ class Observations
                 echo "<a  href=\"" . $baseURL 
                     . "index.php?indexAction=detail_observation&amp;observation=" 
                     . $value['observationid'] . "&amp;QobsKey=" . $obsKey 
-                    . "&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText 
+                    . "&amp;dalm=D\" title=\"" . _("Details of this observation") . "\">" . "D" 
                     . (($this->getDsObservationProperty(
                         $value['observationid'], 'hasDrawing'
-                    )) ? LangDetailDrawingText : "") 
+                    )) ? "D" : "") 
                     . "</a>&nbsp;";
                 echo "<a  href=\"" . $baseURL 
                     . "index.php?indexAction=detail_observation&amp;observation=" 
                     . $value['observationid'] . "&amp;dalm=AO\" title=\"" 
-                    . LangAO . "\">" . LangAOText . "</a>";
+                    . _("Compare this observation with all observations of this object") . "\">" . "AO" . "</a>";
                 if ($loggedUser && $LOid) {
                     echo "&nbsp;<a  href=\"" . $baseURL 
                         . "index.php?indexAction=" 
                         . "detail_observation&amp;observation=" 
                         . $value['observationid'] . "&amp;dalm=MO\" title=\"" 
-                        . LangMO . "\">" . LangMOText . "</a>";
+                        . _("Compare this observation with all my observations of this object") . "\">" . "MO" . "</a>";
                     echo "&nbsp;<a  href=\"" . $baseURL 
                         . "index.php?indexAction=detail_observation" 
                         . "&amp;observation=" . $value['observationid'] 
-                        . "&amp;dalm=LO\" title=\"" . LangLO 
-                        . "\">" . LangLOText . "</a>";
+                        . "&amp;dalm=LO\" title=\"" . _("Compare this observation with my last observation of this object") 
+                        . "\">" . "LO" . "</a>";
                 }
                 echo "</td>";
             }
@@ -2456,7 +2491,7 @@ class Observations
             $this->getDsObservationProperty($LOid, 'instrumentid'), 'name'
         );
         if ($inst == "Naked eye") {
-            $inst = InstrumentsNakedEye;
+            $inst = _("Naked Eye");
         }
         $dateTimeText = "";
         if ($loggedUser 
@@ -2478,10 +2513,10 @@ class Observations
                 && (!($objObserver->getObserverProperty($loggedUser, 'UT')))
             ) {
                 $date = sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
-                $dateTimeLabelText = "&nbsp;" . LangViewObservationField9lt;
+                $dateTimeLabelText = "&nbsp;" . _("Time (local time)");
                 $time = $this->getDsObservationLocalTime($LOid);
             } else {
-                $dateTimeLabelText = "&nbsp;" . LangViewObservationField9;
+                $dateTimeLabelText = "&nbsp;" . _("Time (UT)");
                 $time = $this->getDsObservationProperty($LOid, 'time');
             }
         }
@@ -2509,84 +2544,84 @@ class Observations
                         $LOid, 'smalldiameter'
                     )) 
                     ? sprintf("x %.1f ", $smallDiameter / 60.0) : '')
-                    . LangNewObjectSizeUnits1;
+                    . _("arcminutes");
             } else {
                 $diameterText = sprintf("%.1f ", $largeDiameter) 
                     . (($smallDiameter = $this->getDsObservationProperty(
                         $LOid, 'smalldiameter'
                     ))
                     ? sprintf("x %.1f ", $smallDiameter) : '') 
-                    . LangNewObjectSizeUnits2;
+                    . _("arcseconds");
             }
         } else {
             $diameterText = "-";
         }
         $details1Text = "";
         if ($this->getDsObservationProperty($LOid, 'stellar') > 0) {
-            $details1Text .= ", " . LangViewObservationField35;
+            $details1Text .= ", " . _("Stellar");
         }
         if ($this->getDsObservationProperty($LOid, 'extended') > 0) {
-            $details1Text .= ", " . LangViewObservationField36;
+            $details1Text .= ", " . _("Extended");
         }
         if ($this->getDsObservationProperty($LOid, 'resolved') > 0) {
-            $details1Text .= ", " . LangViewObservationField37;
+            $details1Text .= ", " . _("Resolved");
         }
         if ($this->getDsObservationProperty($LOid, 'mottled') > 0) {
-            $details1Text .= ", " . LangViewObservationField38;
+            $details1Text .= ", " . _("Mottled");
         }
         if ($this->getDsObservationProperty($LOid, 'component1') == 1) {
-            $details1Text .= ", " . LangDetailDSColor1;
+            $details1Text .= ", " . _("white");
         }
         if ($this->getDsObservationProperty($LOid, 'component1') == 2) {
-            $details1Text .= ", " . LangDetailDSColor2;
+            $details1Text .= ", " . _("red");
         }
         if ($this->getDsObservationProperty($LOid, 'component1') == 3) {
-            $details1Text .= ", " . LangDetailDSColor3;
+            $details1Text .= ", " . _("orange");
         }
         if ($this->getDsObservationProperty($LOid, 'component1') == 4) {
-            $details1Text .= ", " . LangDetailDSColor4;
+            $details1Text .= ", " . _("yellow");
         }
         if ($this->getDsObservationProperty($LOid, 'component1') == 5) {
-            $details1Text .= ", " . LangDetailDSColor5;
+            $details1Text .= ", " . _("green");
         }
         if ($this->getDsObservationProperty($LOid, 'component1') == 6) {
-            $details1Text .= ", " . LangDetailDSColor6;
+            $details1Text .= ", " . _("blue");
         }
         if ($this->getDsObservationProperty($LOid, 'component2') == 1) {
-            $details1Text .= "-" . LangDetailDSColor1;
+            $details1Text .= "-" . _("white");
         }
         if ($this->getDsObservationProperty($LOid, 'component2') == 2) {
-            $details1Text .= "-" . LangDetailDSColor2;
+            $details1Text .= "-" . _("red");
         }
         if ($this->getDsObservationProperty($LOid, 'component2') == 3) {
-            $details1Text .= "-" . LangDetailDSColor3;
+            $details1Text .= "-" . _("orange");
         }
         if ($this->getDsObservationProperty($LOid, 'component2') == 4) {
-            $details1Text .= "-" . LangDetailDSColor4;
+            $details1Text .= "-" . _("yellow");
         }
         if ($this->getDsObservationProperty($LOid, 'component2') == 5) {
-            $details1Text .= "-" . LangDetailDSColor5;
+            $details1Text .= "-" . _("green");
         }
         if ($this->getDsObservationProperty($LOid, 'component2') == 6) {
-            $details1Text .= "-" . LangDetailDSColor6;
+            $details1Text .= "-" . _("blue");
         }
         $details1Text = substr($details1Text, 2);
         $details2Text = "";
 
         if ($this->getDsObservationProperty($LOid, 'unusualShape') > 0) {
-            $details2Text .= ", " . LangViewObservationField41;
+            $details2Text .= ", " . _("Unusual Shape");
         }
         if ($this->getDsObservationProperty($LOid, 'partlyUnresolved') > 0) {
-            $details2Text .= ", " . LangViewObservationField42;
+            $details2Text .= ", " . _("Partly unresolved");
         }
         if ($this->getDsObservationProperty($LOid, 'colorContrasts') > 0) {
-            $details2Text .= ", " . LangViewObservationField43;
+            $details2Text .= ", " . _("Color contrasts");
         }
         if ($this->getDsObservationProperty($LOid, 'equalBrightness') > 0) {
-            $details2Text .= ", " . LangDetailDS1;
+            $details2Text .= ", " . _("Equal Brightness");
         }
         if ($this->getDsObservationProperty($LOid, 'niceField') > 0) {
-            $details2Text .= ", " . LangDetailDS2;
+            $details2Text .= ", " . _("in nice field");
         }
         $details2Text = substr($details2Text, 2);
         $charTypeText = "-";
@@ -2613,7 +2648,7 @@ class Observations
 
         echo "<table class=\"table\">";
         echo "<tr>";
-        echo "<td>" . LangViewObservationField2 . "</td>";
+        echo "<td>" . _("Observer") . "</td>";
         $observer = $this->getDsObservationProperty($LOid, 'observerid');
         echo "<td><a href=\"" . $baseURL 
             . "index.php?indexAction=detail_observer&amp;user=" 
@@ -2643,7 +2678,7 @@ class Observations
 
         echo "</td>";
 
-        echo "<td>" . LangViewObservationField3 . "</td>";
+        echo "<td>" . _("Instrument") . "</td>";
         echo "<td><a href=\"" . $baseURL 
             . "index.php?indexAction=detail_instrument&amp;instrument=" 
             . urlencode($this->getDsObservationProperty($LOid, 'instrumentid'))
@@ -2747,9 +2782,9 @@ class Observations
 
         echo "</tr>";
         echo "<tr>";
-        echo "<td>" . LangViewObservationField5 . $dateTimeLabelText . "</td>";
+        echo "<td>" . _("Date") . $dateTimeLabelText . "</td>";
         echo "<td>" . $dateTimeText . "</td>";
-        echo "<td>" . LangViewObservationField4 . "</td>";
+        echo "<td>" . _("Location") . "</td>";
         echo "<td>" . "<a href=\"" . $baseURL 
             . "index.php?indexAction=detail_location&amp;location=" 
             . urlencode($this->getDsObservationProperty($LOid, 'locationid')) 
@@ -2761,20 +2796,20 @@ class Observations
         echo "</tr>";
 
         echo "<tr>";
-        echo "<td>" . LangViewObservationField7 . "/" 
-            . LangViewObservationField34 . "</td>";
+        echo "<td>" . _("Limiting magnitude") . "/" 
+            . _("SQM") . "</td>";
         $limmag = $this->getDsObservationProperty($LOid, 'limmag');
         echo "<td>" . ($limmag ? sprintf("%1.1f", $limmag) : "-") . "/" 
             . ((($sqm = $this->getDsObservationProperty($LOid, 'SQM')) != - 1)
             ? sprintf("%2.1f", $sqm) : '-') . "</td>";
-        echo "<td>" . LangViewObservationField6 . "</td>";
+        echo "<td>" . _("Seeing") . "</td>";
         echo "<td>" . (($seeing) ? $GLOBALS ['Seeing' . $seeing] : "-") . "</td>";
         echo "<td></td>";
         echo "<td></td>";
         echo "</tr>";
 
         echo "<tr>";
-        echo "<td>" . LangViewObservationField30 . "</td>";
+        echo "<td>" . _("Eyepiece") . "</td>";
         $eyepiece = $this->getDsObservationProperty($LOid, 'eyepieceid');
         $mag = $this->getDsObservationProperty($LOid, 'magnification');
         echo "<td>" . ((($eyepiece == "") || ($eyepiece == 0)) 
@@ -2785,7 +2820,7 @@ class Observations
                 $objEyepiece->getEyepiecePropertyFromId($eyepiece, 'name')
             ) 
             . "</a>") . (($mag == "") ? "" : " (" . $mag . "x)") . "</td>";
-        echo "<td>" . LangViewObservationField31 . "</td>";
+        echo "<td>" . _("Filter") . "</td>";
         $filter = $this->getDsObservationProperty($LOid, 'filterid');
         echo "<td>" . ((($filter == "") || ($filter == 0)) 
             ? "-" : "<a  href=\"" . $baseURL 
@@ -2794,7 +2829,7 @@ class Observations
             . $objFilter->getFilterPropertyFromId($filter, 'name') . "</a>") 
             . "</td>";
         
-        echo "<td>" . LangViewObservationField32 . "</td>";
+        echo "<td>" . _("Lens") . "</td>";
         $lens = $this->getDsObservationProperty($LOid, 'lensid');
         echo "<td>" . ((($lens == "") || ($lens == 0)) 
             ? "-" : "<a  href=\"" . $baseURL 
@@ -2807,14 +2842,14 @@ class Observations
         $objType = $objObject->getDsoProperty($object, 'type');
         if (in_array($objType, array ("DS"))) {
             echo "<tr>";
-            echo "<td>" . LangViewObservationField22 . "</td>";
+            echo "<td>" . _("Visibility") . "</td>";
             $visibility = $this->getDsObservationProperty($LOid, 'visibility');
             echo "<td>" 
                 . ($visibility ? $GLOBALS['VisibilityDS' . $visibility] : "-") 
                 . "</td>";
-            echo "<td>" . LangViewObservationField33 . "</td>";
+            echo "<td>" . _("Estimated diameter") . "</td>";
             echo "<td>" . $diameterText . "</td>";
-            echo "<td>" . LangViewObservationField40 . "</td>";
+            echo "<td>" . _("Cluster type") . "</td>";
             echo "<td>" . $charTypeText . "</td>";
             echo "</tr>";
             echo "</table>";
@@ -2823,27 +2858,27 @@ class Observations
             && $this->getDsObservationProperty($LOid, 'resolved') > 0
         ) {
             echo "<tr>";
-            echo "<td>" . LangViewObservationField22 . "</td>";
+            echo "<td>" . _("Visibility") . "</td>";
             $visibility = $this->getDsObservationProperty($LOid, 'visibility');
             echo "<td>" 
                 . ($visibility ? $GLOBALS['VisibilityOC' . $visibility] : "-") 
                 . "</td>";
-            echo "<td>" . LangViewObservationField33 . "</td>";
+            echo "<td>" . _("Estimated diameter") . "</td>";
             echo "<td>" . $diameterText . "</td>";
-            echo "<td>" . LangViewObservationField40 . "</td>";
+            echo "<td>" . _("Cluster type") . "</td>";
             echo "<td>" . $charTypeText . "</td>";
             echo "</tr>";
             echo "</table>";
             echo $details1Text . " " . $details2Text;
         } else {
             echo "<tr>";
-            echo "<td>" . LangViewObservationField22 . "</td>";
+            echo "<td>" . _("Visibility") . "</td>";
             $visibility = $this->getDsObservationProperty($LOid, 'visibility');
             echo "<td>" . ($visibility ? $GLOBALS['Visibility' . $visibility] : "-") 
                 . "</td>";
-            echo "<td>" . LangViewObservationField33 . "</td>";
+            echo "<td>" . _("Estimated diameter") . "</td>";
             echo "<td>" . $diameterText . "</td>";
-            echo "<td>" . LangViewObservationField40 . "</td>";
+            echo "<td>" . _("Cluster type") . "</td>";
             echo "<td>" . $charTypeText . "</td>";
             echo "</tr>";
             echo "</table>";
@@ -2888,7 +2923,7 @@ class Observations
             $bottomline .= "<a class=\"btn btn-success\" href=\"" . $link . $linkamp 
                 . "addObservationToList=" . urlencode($LOid) 
                 . "\"><span class=\"glyphicon glyphicon-plus\"></span> " 
-                . LangViewObservationField44 . $listname_ss . "</a>";
+                . _("Add the observation to the list ") . $listname_ss . "</a>";
             if ($objDatabase->selectSingleValue(
                 "SELECT Count(observerobjectlist.objectname) As ObjCnt" 
                 . " FROM observerobjectlist WHERE observerid = \"" . $loggedUser 
@@ -2900,15 +2935,22 @@ class Observations
                     . $linkamp . "removeObjectFromList=" . urlencode($object) 
                     . "&amp;showname=" . urlencode($object) 
                     . "\"><span class=\"glyphicon glyphicon-minus\"></span> " 
-                    . $object_ss . LangListQueryObjectsMessage3 . $listname_ss 
+                    . sprintf(
+                        _("%s to remove from the list %s"), 
+                        $object_ss, 
+                        $listname_ss 
+                    )
                     . "</a><br /><br />";
             } else {
                 $bottomline .= "&nbsp;<a class=\"btn btn-success\" href=\"" . $link 
                     . $linkamp . "addObjectToList=" . urlencode($object) 
                     . "&amp;showname=" . urlencode($object) 
                     . "\"><span class=\"glyphicon glyphicon-plus\"></span> " 
-                    . $object_ss . LangListQueryObjectsMessage2 . $listname_ss 
-                    . "</a><br /><br />";
+                    . sprintf(
+                        _("%s to add to the list %s"), 
+                        $object_ss, 
+                        $listname_ss
+                    ) . "</a><br /><br />";
             }
             echo $bottomline;
         }
@@ -2918,11 +2960,11 @@ class Observations
         ) {
             $bottomline = "<a class=\"btn btn-success\" href=\"" . $baseURL 
                 . "index.php?indexAction=add_observation&amp;observation=" 
-                . $LOid . "\">" . LangChangeObservationTitle . "</a>";
+                . $LOid . "\">" . _("Change observation") . "</a>";
             $bottomline .= "&nbsp;<a class=\"btn btn-danger\" href=\"" . $baseURL 
                 . "index.php?indexAction=validate_delete_observation" 
                 . "&amp;observationid=" 
-                . $LOid . "\">" . LangDeleteObservation . "</a>";
+                . $LOid . "\">" . _("Delete observation") . "</a>";
             echo $bottomline . "<br /><br />";
         }
     }
@@ -2952,7 +2994,7 @@ class Observations
             $_SESSION['QobsParams'] = array();
             // Recalculate the accomplishments
             $objAccomplishments->recalculateDeepsky($user);
-            return LangObservationDeleted;
+            return _("The observation has been removed");
         }
     }
 
@@ -2969,7 +3011,7 @@ class Observations
 
         $addObs = $objUtil->checkSessionKey('addObs', 0);
         if (!($loggedUser)) {
-            throw new Exception(LangException002b);
+            throw new Exception(_("You need to be logged in to validate an observation."));
         } elseif ($addObs != $objUtil->checkPostKey('timestamp', - 1)) {
             $_GET ['indexAction'] = "default_action";
             $_GET ['dalm'] = 'D';
@@ -3006,7 +3048,7 @@ class Observations
                 $_POST['limit'] = 0;
                 $_POST['sqm'] = - 1;
             }
-            $entryMessage .= LangValidateObservationMessage1;
+            $entryMessage .= _("You did not fill in a required field!");
             $_GET['indexAction'] = 'add_observation';
         } else {
             // all fields filled in
@@ -3023,7 +3065,7 @@ class Observations
                 . sprintf("%02d", $_POST['month']) . sprintf("%02d", $_POST['day']);
             if ($_FILES['drawing']['size'] > $maxFileSize) {
                 // file size of drawing too big
-                $entryMessage .= LangValidateObservationMessage6;
+                $entryMessage .= _("Please, only upload drawings smaller than 2mb!");
                 $_GET['indexAction'] = 'add_observation';
             } elseif ((!is_numeric($_POST ['month'])) 
                 || (!is_numeric($_POST['day'])) || (!is_numeric($_POST['year'])) 
@@ -3031,17 +3073,17 @@ class Observations
                 || ($date < '19500000') 
                 || ($date > date('Ymd', strtotime('+1 day')))
             ) {
-                $entryMessage .= LangValidateObservationMessage2;
+                $entryMessage .= _("You filled in an invalid date!");
                 $_GET['indexAction'] = 'add_observation';
             } elseif ($date > date('Ymd')) {
-                $entryMessage .= LangValidateObservationMessage3;
+                $entryMessage .= _("You filled in a future date!");
                 $_GET['indexAction'] = 'add_observation';
             } elseif (($time > - 9999) && ((!is_numeric($_POST['hours'])) 
                 || (!is_numeric($_POST['minutes'])) || ($_POST['hours'] < 0)
                 || ($_POST['hours'] > 23) || ($_POST['minutes'] < 0) 
                 || ($_POST['minutes'] > 59))
             ) {
-                $entryMessage .= LangValidateObservationMessage4;
+                $entryMessage .= _("You filled in an invalid time!");
                 $_GET['indexAction'] = 'add_observation';
             } else {
                 if ($objUtil->checkPostKey('limit')) {

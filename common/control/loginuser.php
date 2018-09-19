@@ -134,7 +134,7 @@ function login() {
 			$_SESSION ['lang'] = $_POST ['language'];
 		$_GET ['indexAction'] = 'default_action';
 	}
-	$language = $objLanguage->getPath ( $_SESSION ['lang'] );
+	$language = $_SESSION['lang'];
 	if ($loggedUser) {
 		$allLanguages = $objLanguage->getAllLanguages ( $objObserver->getObserverProperty ( $loggedUser, 'language' ) );
 		$_SESSION ['alllanguages'] = $allLanguages;

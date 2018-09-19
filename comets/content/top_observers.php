@@ -11,16 +11,16 @@ function top_observers() {
 	$rank = $objCometObservation->getPopularObservers ();
 	$link = $baseURL . "index.php?indexAction=comets_rank_observers";
 	echo "<div id=\"main\">";
-	echo "<h4>" . LangTopObserversTitle . "</h4>";
+	echo "<h4>" . _("Most active observers") . "</h4>";
 	echo "<hr />";
 	$count = 0;
 	echo "<table class=\"table sort-tablecometobservers table-condensed table-striped table-hover tablesorter custom-popup\">";
 	echo "<thead><tr>";
-	echo "<th class=\"filter-false columnSelector-disable\">" . LangTopObserversHeader1 . "</th>";
-	echo "<th>" . LangTopObserversHeader2 . "</th>";
-	echo "<th>" . LangTopObserversHeader3 . "</th>";
-	echo "<th>" . LangTopObserversHeader4 . "</th>";
-	echo "<th>" . LangTopObserversHeader6 . "</th>";
+	echo "<th class=\"filter-false columnSelector-disable\">" . _("Rank") . "</th>";
+	echo "<th>" . _("Observer") . "</th>";
+	echo "<th>" . _("Number of observations") . "</th>";
+	echo "<th>" . _("Observations last year") . "</th>";
+	echo "<th>" . _("Different objects") . "</th>";
 	echo "</tr></thead><tbody>";
 	$numberOfObservations = $objCometObservation->getNumberOfObservations ();
 	$numberOfObservationsThisYear = $objCometObservation->getNumberOfObservationsThisYear ();
@@ -44,7 +44,7 @@ function top_observers() {
 		echo "</tr>";
 		$count ++;
 	}
-	echo "</tbody><tfoot><tr><td>" . LangTopObservers1 . "</td><td></td><td>$numberOfObservations</td><td>$numberOfObservationsThisYear</td><td>$numberOfDifferentObjects</td></tr></tfoot>";
+	echo "</tbody><tfoot><tr><td>" . _("Total") . "</td><td></td><td>$numberOfObservations</td><td>$numberOfObservationsThisYear</td><td>$numberOfDifferentObjects</td></tr></tfoot>";
 	echo "</table>";
 	$objUtil->addPager ( "cometobservers", $count );
 

@@ -39,7 +39,9 @@ function headmenu() {
 	// Select the modules
 	echo "<ul class=\"nav navbar-nav navbar-right\">
 			  <li class=\"dropdown\">
-	       <a href=\"http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"] . "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . $GLOBALS [$_SESSION ['module']] . "<b class=\"caret\"></b></a>";
+           <a href=\"http://" . $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] . 
+        "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . 
+        $GLOBALS[$_SESSION['module']] . "<b class=\"caret\"></b></a>";
 	echo " <ul class=\"dropdown-menu\">";
 
 	for($i = 0; $i < count ( $modules ); $i ++) {
@@ -66,19 +68,19 @@ function headmenu() {
 		echo "<li class=\"dropdown\">
 	         <a class=\"tour5\" href=\"http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"] . "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . "<b class=\"caret\"></b></a>";
 		echo " <ul class=\"dropdown-menu\">";
-		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $loggedUser . "\">" . LangDetails . "</a></li>";
-		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=change_account\">" . LangChangeMenuItem1 . "</a></li>";
+		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $loggedUser . "\">" . _("Details") . "</a></li>";
+		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=change_account\">" . _("Settings") . "</a></li>";
 		echo "  <li class=\"disabled\">─────────────────</li>";
-		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=logout&amp;title=" . urlencode ( LangLogoutMenuItem1 ) . "\">" . LangLogoutMenuItem1 . "</a></li>";
+		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=logout&amp;title=" . urlencode(_("Log out")) . "\">" . _("Log out") . "</a></li>";
 		echo " </ul>";
 		echo "</li>";
 		echo "</ul>";
 	} else {
 		// Let's make a sign in / register tab
 		echo "<span class=\"pull-right\">";
-		echo "<button type=\"button\" class=\"btn btn-default navbar-btn\" data-toggle=\"modal\" data-target=\"#login\">" . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . "&nbsp;" . LangLoginMenuTitle . "</button>&nbsp;";
+		echo "<button type=\"button\" class=\"btn btn-default navbar-btn\" data-toggle=\"modal\" data-target=\"#login\">" . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . "&nbsp;" . _("Login") . "</button>&nbsp;";
 		if ($register == "yes") { // includes register link
-			echo "<a class=\"btn btn-success navbar-btn\" href=\"" . $baseURL . "index.php?indexAction=subscribe&amp;title=" . urlencode ( LangLoginMenuRegister ) . "\">" . LangLoginMenuRegister . "</a>&nbsp;";
+			echo "<a class=\"btn btn-success navbar-btn\" href=\"" . $baseURL . "index.php?indexAction=subscribe&amp;title=" . urlencode(_("Register")) . "\">" . _("Register") . "</a>&nbsp;";
 		}
 		echo "</span>";
 		echo "</ul>";
@@ -130,14 +132,14 @@ function headmenu() {
                   <div class=\"account-wall\">
                     <form class=\"form-signin\" action=\"" . $baseURL . "index.php\" method=\"post\">
                     	<input type=\"hidden\" name=\"indexAction\" value=\"check_login\" />
-                      <input type=\"hidden\" name=\"title\"       value=\"" . LangLoginMenuTitle . "\" />
-                      <input type=\"text\" class=\"form-control\" placeholder=\"" . LangLoginMenuItem1 . "\" required autofocus maxlength=\"64\" name=\"deepskylog_id\" id=\"deepskylog_id\">
-                      <input type=\"password\" class=\"form-control\" placeholder=\"" . LangLoginMenuItem2 . "\" required maxlength=\"64\" name=\"passwd\" id=\"passwd\">
-                      <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">" . LangLoginMenuTitle . "</button>
+                      <input type=\"hidden\" name=\"title\"       value=\"" . _("Login") . "\" />
+                      <input type=\"text\" class=\"form-control\" placeholder=\"" . _("Username") . "\" required autofocus maxlength=\"64\" name=\"deepskylog_id\" id=\"deepskylog_id\">
+                      <input type=\"password\" class=\"form-control\" placeholder=\"" . _("Password") . "\" required maxlength=\"64\" name=\"passwd\" id=\"passwd\">
+                      <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">" . _("Login") . "</button>
 											<br />
                     </form>
 										<div class=\"text-center\">
-											<a href=\"" . $baseURL . "index.php?indexAction=subscribe&amp;title=" . urlencode ( LangLoginMenuRegister ) . "\">" . LangLoginMenuRegister . "</a>
+											<a href=\"" . $baseURL . "index.php?indexAction=subscribe&amp;title=" . urlencode(_("Register")) . "\">" . _("Register") . "</a>
 											&nbsp;&nbsp;-&nbsp;&nbsp;
 											<a href=\"\" data-toggle=\"modal\" data-target=\"#forgotPassword\">" . _("Forgot password?") . "</a>
 										</div>
@@ -165,7 +167,7 @@ function headmenu() {
 								          	<input type=\"text\" class=\"form-control\" autofocus name=\"deepskylog_id\" id=\"deepskylog_id\">
 													</div>
 													<div class=\"form-group\">
-														<label for=\"mail\">". LangChangeAccountField2 . "</label>
+														<label for=\"mail\">". _("Email address") . "</label>
 								          	<input type=\"email\" class=\"form-control\" name=\"mail\" id=\"mail\">
 													</div>
 								          <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">" . _("Request new password") . "</button>

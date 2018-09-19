@@ -13,7 +13,7 @@
 if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 } elseif (!$loggedUser) {
-    throw new Exception(LangException002);
+    throw new Exception(_("You need to be logged in to change your locations or equipment."));
 } else {
     locations();
 }
@@ -30,7 +30,7 @@ function locations()
     $sort = $objUtil->checkRequestKey('sort', 'name');
     $sites = $objLocation->getSortedLocations($sort, $loggedUser);
     echo "<div id=\"main\">";
-    echo "<h4>" . LangOverviewSiteTitle . " " . $loggedUserName . "</h4>";
+    echo "<h4>" . sprintf(_("Observing sites of %s"), $loggedUserName) . "</h4>";
     echo "<hr />";
     echo "<form role=\"form\" action=\"" . $baseURL 
         . "index.php\" method=\"post\"><div>";

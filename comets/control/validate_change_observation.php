@@ -14,11 +14,11 @@ function validate_change_observation()
 	   (!$_POST['year'])||
 	   ((!$_POST['hours']) &&
 	     strcmp($_POST['hours'],0)!="0")||(!$_POST['minutes']&& strcmp($_POST['minutes'], 0)!="0"))
-	{ $entryMessage=LangValidateObservationMessage1;
+	{ $entryMessage=_("You did not fill in a required field!");
 	  $_GET['indexAction']='default_action';
 	}
 	elseif($_FILES['drawing']['size']>$maxFileSize) // file size of drawing too big
-	{ $entryMessage=LangValidateObservationMessage6;
+	{ $entryMessage=_("Please, only upload drawings smaller than 2mb!");
 	  $_GET['indexAction']='default_action';
 	}
 	elseif($_POST['observation']) // all fields filled in and observationid given

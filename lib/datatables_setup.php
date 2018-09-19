@@ -5,16 +5,16 @@
 <script>
 	var datatablesConfig = {
     	"language": {
-    	    "search": 		  "<?=LangSearch?>",
+    	    "search": 		  "<?=_("Search")?>",
     	    "lengthMenu":	  "_MENU_",
     	    "info":           "_START_ - _END_ (_TOTAL_)",
     	    "infoEmpty":      "",
-    	    "loadingRecords": '<img src="/img/loading.gif">&nbsp;<?=LangIndexPleaseWait?>',
-    	    "emptyTable":     "<?=LangObservationNoResults?>",
-    	    "zeroRecords":    "<?=LangObservationNoResults?>",
+    	    "loadingRecords": '<img src="/img/loading.gif">&nbsp;<?=_("Please wait a moment while loading data...")?>',
+    	    "emptyTable":     "<?=_("Sorry, no observations found!")?>",
+    	    "zeroRecords":    "<?=_("Sorry, no observations found!")?>",
     	    "paginate": {
-    	        "next":       "<?=LangResultNext?>",
-    	        "previous":   "<?=LangResultPrevious?>" }   	    
+    	        "next":       "<?=_("Next")?>",
+    	        "previous":   "<?=_("Previous")?>" }   	    
    		 },   		 
    		"stateSave": true,
    		"stateLoadParams": function (settings, data) {

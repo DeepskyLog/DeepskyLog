@@ -123,7 +123,7 @@ function statistics() {
 	echo " </tr>";
 
 	echo " <tr>";
-	echo "  <td>" . LangViewObserverNumberOfObservations . "</td>";
+	echo "  <td>" . _("Number of observations") . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
 		echo " <td>" . $information [$i] [0];
 		echo " </td>";
@@ -131,7 +131,7 @@ function statistics() {
 	echo " </tr>";
 
 	echo " <tr>";
-	echo "  <td>" . LangTopObserversHeader4 . "</td>";
+	echo "  <td>" . _("Observations last year") . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
 		echo " <td>" . $information [$i] [1];
 		echo " </td>";
@@ -139,7 +139,7 @@ function statistics() {
 	echo " </tr>";
 
 	echo " <tr>";
-	echo "  <td>" . LangTopObserversHeader6 . "</td>";
+	echo "  <td>" . _("Different objects") . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
 		echo " <td>" . $information [$i] [2];
 		echo " </td>";

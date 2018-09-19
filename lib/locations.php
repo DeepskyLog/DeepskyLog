@@ -331,18 +331,18 @@ class Locations
             echo "<th>" . _("Active") . "</td>";
 
             echo "<th data-priority=\"critical\">" 
-                . LangViewLocationLocation . "</th>";
+                . _("Location") . "</th>";
             echo "<th>" . _("Weather forecast") . "</th>";
-            echo "<th>" . LangViewLocationCountry . "</th>";
+            echo "<th>" . _("Country") . "</th>";
             echo "<th>" . _("Elevation") . "</th>";
-            echo "<th>" . LangViewLocationLimMag . "</th>";
-            echo "<th>" . LangViewLocationSB . "</th>";
-            echo "<th>" . LangAddSiteField9 . "</th>";
+            echo "<th>" . _("NELM") . "</th>";
+            echo "<th>" . _("SQM") . "</th>";
+            echo "<th>" . _("Bortle Scale") . "</th>";
             echo "<th class=\"filter-false columnSelector-disable\"" 
                 . " data-sorter=\"false\">" 
-                . LangViewLocationStd . "</th>";
+                . _("Std location") . "</th>";
             echo "<th>" . _("Delete") . "</th>";
-            echo "<th>" . LangTopObserversHeader3 . "</th>";
+            echo "<th>" . _("Number of observations") . "</th>";
             echo "</tr></thead>";
             $count = 0;
             foreach ($sites as $key=>$value) {
@@ -491,9 +491,9 @@ class Locations
                         . $loggedUser . "&amp;site=" . $value 
                         . "&amp;exactinstrumentlocation=true\">";
                     if ($obsCnt != 1) {
-                        echo $obsCnt . ' ' . LangGeneralObservations . "</a>";
+                        echo $obsCnt . ' ' . _("observations") . "</a>";
                     } else {
-                        echo $obsCnt . ' ' . LangGeneralObservation . "</a>";
+                        echo $obsCnt . ' ' . _("observation") . "</a>";
                     }
                     echo "</td>";
                     echo "</tr>";
@@ -532,7 +532,7 @@ class Locations
             $objDatabase->execSQL(
                 "DELETE FROM locations WHERE id=\"" . $locationid . "\""
             );
-            return LangValidateLocationMessage3;
+            return _("The location is removed from your list");
         }
     }
 
@@ -584,7 +584,7 @@ class Locations
                 }
                 $this->setLocationProperty($id, 'observer', $loggedUser);
 
-                return LangValidateSiteMessage2;
+                return _("The location is added to the database");
             }
             if ($objUtil->checkPostKey('change') 
                 && $objUtil->checkAdminOrUserID(
@@ -623,7 +623,7 @@ class Locations
                         $_POST['id'], 'limitingMagnitude', -999
                     );
                 }
-                return LangValidateSiteMessage5;
+                return _("The location is changed in the database");
             }
         } else {
             return _("All required fields must be filled in!");

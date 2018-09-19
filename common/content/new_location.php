@@ -13,7 +13,7 @@
 if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 } elseif (! $loggedUser) {
-    throw new Exception(LangException002);
+    throw new Exception(_("You need to be logged in to change your locations or equipment."));
 } else {
     newLocation();
 }
@@ -60,7 +60,7 @@ function newLocation()
     echo "<div class=\"form-inline\">
             <input type=\"text\" required class=\"form-control\" " 
         . "name=\"locationname\" placeholder=\"" 
-        . LangAddSiteField1 . "\"></input>";
+        . _("Location name") . "\"></input>";
     echo "  <input type=\"submit\" class=\"btn btn-success tour4\" " 
         . "name=\"add\" value=\"" 
         . _("Add site") . "\" />";
@@ -69,12 +69,12 @@ function newLocation()
     echo "</div><br />
             <table class='table'>
             <tr>
-                <th>" . LangAddSiteField7 . "</th>
-                <th>" . LangAddSiteField8 . "</th>
-                <th>" . LangAddSiteField9 . "</th>
+                <th>" . _("Typical naked eye limiting magnitude") . "</th>
+                <th>" . _("Sky Quality Meter (SQM) value") . "</th>
+                <th>" . _("Bortle Scale") . "</th>
                 <th><a class='btn btn-primary' href='#' role='button'" 
             . " id='lightpollutioninfo'>" 
-            . LangAddSiteField10 . "</a></th>
+            . _("Use value from lightpollutionmap.info") . "</a></th>
             </tr>";
     echo "  <tr>
                 <td><div class=\"form-inline\">";
@@ -401,8 +401,10 @@ function newLocation()
     foreach ($objLocation->getSortedLocations("id", $loggedUser) as $location) {
         echo "// Let's add the existing locations to the map.
                          var contentString = \"<strong>" 
-            . html_entity_decode(
-                $objLocation->getLocationPropertyFromId($location, "name")
+            . htmlspecialchars(
+                html_entity_decode(
+                    $objLocation->getLocationPropertyFromId($location, "name")
+                )
             ) . "</strong><br /><br />Limiting magnitude: ";
         $limmag = $objLocation->getLocationPropertyFromId(
             $location, 'limitingMagnitude'
@@ -445,8 +447,10 @@ function newLocation()
               map: map,
               html: contentString,
               title: \"" 
-            . html_entity_decode(
-                $objLocation->getLocationPropertyFromId($location, "name")
+            . htmlspecialchars(
+                html_entity_decode(
+                    $objLocation->getLocationPropertyFromId($location, "name")
+                )
             ) . "\"
             });
 

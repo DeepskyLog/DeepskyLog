@@ -13,7 +13,7 @@
 if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 } elseif (! $loggedUser) {
-    throw new Exception(LangException002);
+    throw new Exception(_("You need to be logged in to change your locations or equipment."));
 } else {
     newObservation();
 }
@@ -208,7 +208,7 @@ function newObservation()
         echo "<input type=\"hidden\" name=\"indexAction\"" 
             . " value=\"validate_observation\" />";
         echo "<input type=\"hidden\" name=\"titleobject\"   value=\"" 
-            . LangQuickPickNewObservation . "\" />";
+            . _("New Observation") . "\" />";
         echo "<input type=\"hidden\" name=\"observationid\" value=\"" 
             . $observationid . "\" />";
         echo "<input type=\"hidden\" name=\"timestamp\"     value=\"" 
@@ -218,16 +218,16 @@ function newObservation()
         if ($observationid) {
             $content = "<input class=\"btn btn-success pull-right\" type=\"submit\"" 
                 . " name=\"changeobservation\" value=\"" 
-                . LangChangeObservationButton . "\" />&nbsp;";
-            echo "<h4>" . LangNewObservationSubtitle3B 
-                . LangNewObservationSubtitle3C 
+                . _("Change observation") . "\" />&nbsp;";
+            echo "<h4>" . _("Change the observation details ") 
+                . " - " 
                 . $object . "</h4>";
             echo $content;
         } else {
             $content = "<input class=\"btn btn-success pull-right\" type=\"submit\"" 
                 . " name=\"addobservation\" value=\"" 
-                . LangViewObservationButton1 . "\" />&nbsp;";
-            echo "<h4>" . LangNewObservationSubtitle3 . LangNewObservationSubtitle3C 
+                . _("Add observation") . "\" />&nbsp;";
+            echo "<h4>" . _("Enter observation details ") . " - " 
                 . $object . "</h4>";
             echo $content;
         }
@@ -562,25 +562,25 @@ function newObservation()
         $contentDiameter .= "<select name=\"size_units\" class=\"form-control\">";
         $contentDiameter .= "<option value=\"min\"" 
             . ($theDiameterUnit == 'min' ? " selected=\"selected\"" : "") 
-            . ">" . LangNewObjectSizeUnits1 . "</option>";
+            . ">" . _("arcminutes") . "</option>";
         $contentDiameter .= "<option value=\"sec\"" 
             . ($theDiameterUnit == 'sec' ? " selected=\"selected\"" : "") 
-            . ">" . LangNewObjectSizeUnits2 . "</option>";
+            . ">" . _("arcseconds") . "</option>";
         $contentDiameter .= "</select>&nbsp;";
         // Misc ========================================================
         $contentMisc1 = "<input type=\"radio\" name=\"stellarextended\"" 
             . " value=\"stellar\" " 
             . (($objUtil->checkPostKey("stellarextended") == "stellar") 
             ? "checked=\"checked\" " : "") 
-            . "/>" . LangViewObservationField35 . "&nbsp;";
+            . "/>" . _("Stellar") . "&nbsp;";
         $contentMisc1 .= "<input type=\"radio\" name=\"stellarextended\"" 
             . " value=\"extended\" " 
             . (($objUtil->checkPostKey("stellarextended") == "extended") 
             ? "checked=\"checked\" " : "") 
-            . " />" . LangViewObservationField36 . "&nbsp;";
+            . " />" . _("Extended") . "&nbsp;";
         $contentMisc1 .= "<input type=\"checkbox\" name=\"mottled\" " 
             . ($objUtil->checkPostKey("mottled") ? "checked " : "") 
-            . "/>" . LangViewObservationField38 . "&nbsp;";
+            . "/>" . _("Mottled") . "&nbsp;";
         $contentMisc2 = "";
         $contentMisc3 = "";
         $contentMisc4 = "";
@@ -614,18 +614,18 @@ function newObservation()
                 . " '$visOc[7]', '$vis[1]', '$vis[2]', '$vis[3]', '$vis[4]'," 
                 . " '$vis[5]', '$vis[6]', '$vis[7]')\"" 
                 . ($objUtil->checkPostKey("resolved") ? "checked " : "") . "/>" 
-                . LangViewObservationField37 . "&nbsp;";
+                . _("Resolved") . "&nbsp;";
             $contentMisc2 .= "<input type=\"checkbox\" name=\"unusualShape\" />" 
-                . LangViewObservationField41 . "&nbsp;";
+                . _("Unusual Shape") . "&nbsp;";
             $contentMisc2 .= "<input type=\"checkbox\" name=\"partlyUnresolved\" />" 
-                . LangViewObservationField42 . "&nbsp;";
+                . _("Partly unresolved") . "&nbsp;";
             $contentMisc2 .= "<input type=\"checkbox\" name=\"colorContrasts\" />" 
-                . LangViewObservationField43;
+                . _("Color contrasts");
             if ($objObject->getDsoProperty($object, 'type') != "GLOCL") {
-                $contentMisc3 .= "<a href=\"" . OpenClustersLink 
+                $contentMisc3 .= "<a href=\"" . _("https://github.com/DeepskyLog/DeepskyLog/wiki/Open-Cluster-types") 
                 . "\" rel=\"external\" title=\"" 
-                    . LangViewObservationField40Expl . "\" >" 
-                    . LangViewObservationField40 . "</a>";
+                    . _("More information") . "\" >" 
+                    . _("Cluster type") . "</a>";
                 $theClustertype = ($observationid 
                     ? $objObservation->getDsObservationProperty(
                         $observationid, 'clusterType'
@@ -684,11 +684,11 @@ function newObservation()
         )
         ) {
             $contentMisc2 .= "<input type=\"checkbox\" name=\"equalBrightness\" />" 
-                . LangDetailDS1 . "&nbsp;";
+                . _("Equal Brightness") . "&nbsp;";
             $contentMisc2 .= "<input type=\"checkbox\" name=\"niceField\" />" 
-                . LangDetailDS2;
+                . _("in nice field");
             if ($objObject->getDsoProperty($object, 'type') != "GLOCL") {
-                $contentMisc4 = LangDetailDS3 . "&nbsp;";
+                $contentMisc4 = _("component 1") . "&nbsp;";
                 $theComponent1Color = ($observationid 
                     ? $objObservation->getDsObservationProperty(
                         $observationid, 'component1'
@@ -699,30 +699,30 @@ function newObservation()
                 $contentMisc4 .= "<option value=\"1\"" 
                 . (($theComponent1Color == '1') 
                     ? " selected=\"selected\" " : '') . ">" 
-                    . LangDetailDSColor1 . "</option>";
+                    . _("white") . "</option>";
                 $contentMisc4 .= "<option value=\"2\"" 
                 . (($theComponent1Color == '2') 
                     ? " selected=\"selected\" " : '') . ">" 
-                    . LangDetailDSColor2 . "</option>";
+                    . _("red") . "</option>";
                 $contentMisc4 .= "<option value=\"3\"" 
                 . (($theComponent1Color == '3') 
                     ? " selected=\"selected\" " : '') . ">" 
-                    . LangDetailDSColor3 . "</option>";
+                    . _("orange") . "</option>";
                 $contentMisc4 .= "<option value=\"4\"" 
                 . (($theComponent1Color == '4') 
                     ? " selected=\"selected\" " : '') . ">" 
-                    . LangDetailDSColor4 . "</option>";
+                    . _("yellow") . "</option>";
                 $contentMisc4 .= "<option value=\"5\"" 
                 . (($theComponent1Color == '5') 
                     ? " selected=\"selected\" " : '') . ">" 
-                    . LangDetailDSColor5 . "</option>";
+                    . _("green") . "</option>";
                 $contentMisc4 .= "<option value=\"6\"" 
                 . (($theComponent1Color == '6') 
                     ? " selected=\"selected\" " : '') . ">" 
-                    . LangDetailDSColor6 . "</option>";
+                    . _("blue") . "</option>";
                 $contentMisc4 .= "</select>&nbsp;";
 
-                $contentMisc4 .= "&nbsp;" . LangDetailDS4 . "&nbsp;";
+                $contentMisc4 .= "&nbsp;" . _("component 2") . "&nbsp;";
                 $theComponent2Color = ($observationid 
                     ? $objObservation->getDsObservationProperty(
                         $observationid, 'component2'
@@ -734,27 +734,27 @@ function newObservation()
                 $contentMisc4 .= "<option value=\"1\"" 
                     . (($theComponent2Color == '1') 
                     ? " selected=\"selected\" " : '') 
-                    . ">" . LangDetailDSColor1 . "</option>";
+                    . ">" . _("white") . "</option>";
                 $contentMisc4 .= "<option value=\"2\"" 
                     . (($theComponent2Color == '2') 
                     ? " selected=\"selected\" " : '') 
-                    . ">" . LangDetailDSColor2 . "</option>";
+                    . ">" . _("red") . "</option>";
                 $contentMisc4 .= "<option value=\"3\"" 
                     . (($theComponent2Color == '3') 
                     ? " selected=\"selected\" " : '') 
-                    . ">" . LangDetailDSColor3 . "</option>";
+                    . ">" . _("orange") . "</option>";
                 $contentMisc4 .= "<option value=\"4\"" 
                     . (($theComponent2Color == '4') 
                     ? " selected=\"selected\" " : '') 
-                    . ">" . LangDetailDSColor4 . "</option>";
+                    . ">" . _("yellow") . "</option>";
                 $contentMisc4 .= "<option value=\"5\"" 
                     . (($theComponent2Color == '5') 
                     ? " selected=\"selected\" " : '') 
-                    . ">" . LangDetailDSColor5 . "</option>";
+                    . ">" . _("green") . "</option>";
                 $contentMisc4 .= "<option value=\"6\"" 
                     . (($theComponent2Color == '6') 
                     ? " selected=\"selected\" " : '') 
-                    . ">" . LangDetailDSColor6 . "</option>";
+                    . ">" . _("blue") . "</option>";
                 $contentMisc4 .= "</select>&nbsp;";
             }
         }
@@ -762,7 +762,7 @@ function newObservation()
         echo "<div class=\"form-group\">
                    <label>" . "<a href=\"" . $baseURL 
             . "index.php?indexAction=add_location\" title=\"" 
-            . LangChangeAccountField7Expl . "\" >" . LangViewObservationField4 
+            . _("Add new observing site") . "\" >" . _("Location") 
             . "</a></label>";
         echo "<div class=\"form-inline\">";
         echo $contentLoc;
@@ -770,7 +770,7 @@ function newObservation()
         echo "</div>";
 
         echo "<div class=\"form-group\">
-                   <label>" . LangViewObservationField5 . "</label>";
+                   <label>" . _("Date") . "</label>";
         echo "<div class=\"form-inline\">";
         echo $contentDate;
         echo "</div>";
@@ -779,16 +779,16 @@ function newObservation()
         echo "<div class=\"form-group\">
                    <label>" 
             . (($objObserver->getObserverProperty($loggedUser, 'UT')) 
-            ? LangViewObservationField9 : LangViewObservationField9lt) . "</label>";
+            ? _("Time (UT)") : _("Time (local time)")) . "</label>";
         echo "<div class=\"form-inline\">";
-        echo $contentTime . LangViewObservationField11;
+        echo $contentTime . _("(hours-minutes)");
         echo "</div>";
         echo "</div>";
 
         echo "<div class=\"form-group\">
                    <label>" . "<a href=\"" . $baseURL 
             . "index.php?indexAction=add_instrument\" title=\"" 
-            . LangChangeAccountField8Expl . "\" >" . LangViewObservationField3 
+            . _("Add instrument") . "\" >" . _("Instrument") 
             . "</a></label>";
         echo "<div class=\"form-inline\">";
         echo $contentInstrument;
@@ -796,16 +796,12 @@ function newObservation()
         echo "</div>";
 
         echo "<div class=\"form-group\">
-                   <label>" . LangViewObservationField8 . "</label>";
+                   <label>" . _("Description") . "</label>";
         echo $contentDescription;
-        echo "<span class=\"help-block\">" 
-            . "<a href=\"http://www.distant-targets.be/beschrijven\"" 
-            . " rel=\"external\">" 
-            . LangViewObservationFieldHelpDescription . "</a>" . "</span>";
         echo "</div>";
 
         echo "<div class=\"form-group\">
-                   <label>" . LangViewObservationField12 . "</label>";
+                   <label>" . _("Drawing") . "</label>";
         echo "<div class=\"form\">";
         echo "<input type=\"file\" id=\"drawing\" name=\"drawing\"" 
             . " data-show-remove=\"false\" accept=\"image/*\"" 
@@ -851,22 +847,22 @@ function newObservation()
         echo "</script>";
 
         echo "<div class=\"form-group\">
-                   <label>" . LangViewObservationField29 . "</label>";
+                   <label>" . _("Language") . "</label>";
         echo "<div class=\"form-inline\">";
         echo $contentLanguage;
         echo "</div>";
         echo "</div>";
 
         echo "<div class=\"form-group\">
-                   <label>" . LangViewObservationField6 . "</label>";
+                   <label>" . _("Seeing") . "</label>";
         echo "<div class=\"form-inline\">";
         echo $contentSeeing;
         echo "</div>";
         echo "</div>";
 
         echo "<div class=\"form-group\">
-                   <label>" . LangViewObservationField7 . " / " 
-            . LangViewObservationField34 . " / " . LangAddSiteField9 . "</label>";
+                   <label>" . _("Limiting magnitude") . " / " 
+            . _("SQM") . " / " . _("Bortle Scale") . "</label>";
         echo "<div class=\"form-inline\">";
         echo $contentLM . " / " . $contentSQM . " / " . $contentBortle;
         echo "</div>";
@@ -875,8 +871,8 @@ function newObservation()
         echo "<div class=\"form-group\">
                    <label>" . "<a href=\"" . $baseURL 
                 . "index.php?indexAction=add_eyepiece\" title=\"" 
-                . LangViewObservationField30Expl . "\">" 
-                . LangViewObservationField30 . "</a></label>";
+                . _("Add a new eyepiece") . "\">" 
+                . _("Eyepiece") . "</a></label>";
         echo "<div class=\"form-inline\">";
         echo $contentEyepiece;
         echo "</div>";
@@ -885,8 +881,8 @@ function newObservation()
         echo "<div class=\"form-group\">
                 <label>" . "<a href=\"" . $baseURL 
             . "index.php?indexAction=add_lens\" title=\"" 
-            . LangViewObservationField32Expl . "\" >" 
-            . LangViewObservationField32 . "</a></label>";
+            . _("Add a new lens") . "\" >" 
+            . _("Lens") . "</a></label>";
         echo "<div class=\"form-inline\">";
         echo $contentLens;
         echo "</div>";
@@ -895,8 +891,8 @@ function newObservation()
         echo "<div class=\"form-group\">
                 <label>" . "<a href=\"" . $baseURL 
             . "index.php?indexAction=add_filter\" title=\"" 
-            . LangViewObservationField31Expl . "\" >" 
-            . LangViewObservationField31 . "</a></label>";
+            . _("Add a new filter") . "\" >" 
+            . _("Filter") . "</a></label>";
 
         echo "<div class=\"form-inline\">";
         echo $contentFilter;
@@ -904,7 +900,7 @@ function newObservation()
         echo "</div>";
 
         echo "<div class=\"form-group\">
-                   <label>" . LangViewObservationField39 . "</label>";
+                   <label>" . _("Magnification used") . "</label>";
         echo "<div class=\"form-inline\">";
         echo $contentMagnification;
         echo "</div>";
@@ -919,28 +915,28 @@ function newObservation()
         )
         ) {
             echo "<div class=\"form-group\">
-                   <label>" . LangViewObservationField22 . "</label>";
+                   <label>" . _("Visibility") . "</label>";
             echo "<div class=\"form-inline\">";
             echo $contentVisibilityDs;
             echo "</div>";
             echo "</div>";
 
             echo "<div class=\"form-group\">
-                   <label>" . LangViewObservationField33 . "</label>";
+                   <label>" . _("Estimated diameter") . "</label>";
             echo "<div class=\"form-inline\">";
             echo $contentDiameter;
             echo "</div>";
             echo "</div>";
         } else {
             echo "<div class=\"form-group\">
-                   <label>" . LangViewObservationField22 . "</label>";
+                   <label>" . _("Visibility") . "</label>";
             echo "<div class=\"form-inline\">";
             echo $contentVisibility;
             echo "</div>";
             echo "</div>";
 
             echo "<div class=\"form-group\">
-                   <label>" . LangViewObservationField33 . "</label>";
+                   <label>" . _("Estimated diameter") . "</label>";
             echo "<div class=\"form-inline\">";
             echo $contentDiameter;
             echo "</div>";
@@ -960,11 +956,11 @@ function newObservation()
         if ($observationid) {
             $content = "<input class=\"btn btn-success\" type=\"submit\"" 
                 . " name=\"changeobservation\" value=\"" .
-                 LangChangeObservationButton . "\" />&nbsp;";
+                _("Change observation") . "\" />&nbsp;";
             echo $content;
         } else {
             $content = "<input class=\"btn btn-success\" type=\"submit\"" 
-                . " name=\"addobservation\" value=\"" . LangViewObservationButton1 
+                . " name=\"addobservation\" value=\"" . _("Add observation") 
                 . "\" />&nbsp;";
             echo $content;
         }
@@ -977,7 +973,7 @@ function newObservation()
         echo "<hr />";
         $seen = $objObject->getDSOseenLink($object);
 
-        echo "<h4>" . LangViewObjectTitle . "&nbsp;" 
+        echo "<h4>" . _("Object details") . "&nbsp;" 
             . $object . "&nbsp;:&nbsp;" . $seen . "</h4>";
         echo $objPresentations->getDSSDeepskyLiveLinks1($object);
         echo $objPresentations->getDSSDeepskyLiveLinks2($object);
@@ -1032,14 +1028,14 @@ function newObservation()
     
     } else {
         // no object found or not pushed on search button yet
-        echo "<h4>" . LangNewObservationTitle . "</h4>";
+        echo "<h4>" . _("New observation") . "</h4>";
         echo "<hr />";
-        $content = LangNewObservationSubtitle1a . ", ";
+        $content = _("Search the object in the database") . ", ";
         $content .= "<a href=\"" . $baseURL 
-            . "index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b 
-            . "</a>" . LangNewObservationSubtitle1abis;
+            . "index.php?indexAction=add_csv\">" . _("import observations from a CSV file") 
+            . "</a>" . _(" or ");
         $content .= "<a href=\"" . $baseURL 
-            . "index.php?indexAction=add_xml\">" . LangNewObservationSubtitle1c 
+            . "index.php?indexAction=add_xml\">" . _("import observations from an <OAL> (XML) file") 
             . "</a>";
         echo $content;
         echo "<form role=\"form\" action=\"" . $baseURL 
@@ -1047,7 +1043,7 @@ function newObservation()
         echo "<input type=\"hidden\" name=\"indexAction\"" 
             . " value=\"add_observation\" />";
         echo "<input type=\"hidden\" name=\"titleobject\" value=\"" 
-            . LangQuickPickNewObservation . "\" />";
+            . _("New Observation") . "\" />";
         $content = "<select name=\"catalog\" class=\"form-control\">";
         $content .= "<option value=\"\">&nbsp;</option>";
         foreach ($DSOcatalogs as $key=>$value) {
@@ -1058,10 +1054,10 @@ function newObservation()
         $content .= "<input type=\"text\" class=\"form-control\" maxlength=\"255\"" 
             . " name=\"number\" size=\"50\" value=\"\" />";
         $content3 = "<input class=\"btn btn-success\" type=\"submit\"" 
-            . " name=\"objectsearch\" value=\"" . LangNewObservationButton1 
+            . " name=\"objectsearch\" value=\"" . _("Search object") 
             . "\" />";
         echo "<div class=\"form-group\">
-                   <label>" . LangViewObjectField1 . "</label>";
+                   <label>" . _("Name") . "</label>";
         echo "<div class=\"form-inline\">";
         echo $content;
         echo "</div>";

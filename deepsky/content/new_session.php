@@ -4,7 +4,7 @@
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! $loggedUser)
-	throw new Exception ( LangException002 );
+	throw new Exception(_("You need to be logged in to change your locations or equipment."));
 else
 	new_session ();
 function new_session() {
@@ -185,7 +185,7 @@ function new_session() {
 	$contentLoc .= "</select>&nbsp;";
 
 	echo "<div class=\"form-group\">
-           <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_location\" title=\"" . LangChangeAccountField7Expl . "\" >" 
+           <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_location\" title=\"" . _("Add new observing site") . "\" >" 
         . _("Location *") . "</a>" . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $contentLoc;

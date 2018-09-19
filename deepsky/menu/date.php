@@ -6,7 +6,7 @@ global $inIndex, $loggedUser, $objUtil;
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! ($objUtil->checkAdminOrUserID ( $loggedUser )))
-	throw new Exception ( LangException012 );
+	throw new Exception(_("You need to be logged in to execute these operations."));
 else
 	menu_date ();
 function menu_date() {

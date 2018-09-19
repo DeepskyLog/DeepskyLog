@@ -5,7 +5,7 @@ global $inIndex;
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 class Objects {
-	public function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $datasource) // addObject adds a new object to the database. The name, alternative name, type, constellation, right ascension, declination, magnitude, surface brightness, diam1, diam2, position angle and info about the catalogs should be given as parameters. The chart numbers for different atlasses are put in the database. $datasource describes where the data comes from eg : SAC7.2, DeepskyLogUser or E&T 2.5
+	public function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $datasource) // addObject adds a new object to the database. The name, alternative name, type, constellation, right ascension, declination, magnitude, surface brightness, diam1, diam2, position angle and info about the catalogs should be given as parameters. The chart numbers for different atlasses are put in the database. $datasource describes where the data comes from e.g. : SAC7.2, DeepskyLogUser or E&T 2.5
 {
 		global $objDatabase;
 		$array = array (
@@ -30,31 +30,51 @@ class Objects {
 		$popupT = "";
 		$contrastCalc = "";
 		$magni = $magnitude;
-		if ($popup == LangContrastNotLoggedIn)
+		if ($popup == _("Contrast reserve can only be calculated when you are logged in..."))
 			return;
 		if (($magnitude == 99.9) || ($magnitude == ""))
-			$popup = LangContrastNoMagnitude;
+			$popup = _("Contrast reserve can only be calculated when the object has a known magnitude");
 		else {
 			$diam1 = $diam1 / 60.0;
 			if ($diam1 == 0)
-				$popup = LangContrastNoDiameter;
+				$popup = _("Contrast reserve can only be calculated when the object has a known diameter");
 			else {
 				$diam2 = $diam2 / 60.0;
 				if ($diam2 == 0)
 					$diam2 = $diam1;
 				$contrastCalc = $objContrast->calculateContrast ( $magni, $SBobj, $diam1, $diam2 );
-				if ($contrastCalc [0] < - 0.2)
-					$popup = $showname . LangContrastNotVisible . $_SESSION ['location'] . LangContrastPlace . $_SESSION ['telescope'];
-				else if ($contrastCalc [0] < 0.1)
-					$popup = LangContrastQuestionable . $showname . LangContrastQuestionableB . $_SESSION ['location'] . LangContrastPlace . $_SESSION ['telescope'];
-				else if ($contrastCalc [0] < 0.35)
-					$popup = $showname . LangContrastDifficult . $_SESSION ['location'] . LangContrastPlace . $_SESSION ['telescope'];
-				else if ($contrastCalc [0] < 0.5)
-					$popup = $showname . LangContrastQuiteDifficult . $_SESSION ['location'] . LangContrastPlace . $_SESSION ['telescope'];
-				else if ($contrastCalc [0] < 1.0)
-					$popup = $showname . LangContrastEasy . $_SESSION ['location'] . LangContrastPlace . $_SESSION ['telescope'];
-				else
-					$popup = $showname . LangContrastVeryEasy . $_SESSION ['location'] . LangContrastPlace . $_SESSION ['telescope'];
+				if ($contrastCalc [0] < - 0.2) {
+                    $popup = sprintf(
+                        _("%s is not visible from %s with your %s"), 
+                        $showname, $_SESSION['location'], $_SESSION['telescope']
+                    );
+                } else if ($contrastCalc [0] < 0.1) {
+                    $popup = sprintf(
+                        _("Visibility of %s is questionable from %s with your %s"), 
+                        $showname, $_SESSION['location'], $_SESSION['telescope']
+                    );
+                } else if ($contrastCalc [0] < 0.35) {
+                    $popup = sprintf(
+                        _("%s is difficult to see from %s with your %s"), 
+                        $showname, $_SESSION['location'], $_SESSION['telescope']
+                    );
+                }
+				else if ($contrastCalc [0] < 0.5) {
+                    $popup = sprintf(
+                        _("%s is quite difficult to see from %s with your %s"), 
+                        $showname, $_SESSION['location'], $_SESSION['telescope']
+                    );
+                } else if ($contrastCalc [0] < 1.0) {
+                    $popup = sprintf(
+                        _("%s is easy to see from %s with your %s"), 
+                        $showname, $_SESSION['location'], $_SESSION['telescope']
+                    );
+                } else {
+                    $popup = sprintf(
+                        _("%s is very easy to see from %s with your %s"), 
+                        $showname, $_SESSION['location'], $_SESSION['telescope']
+                    );
+                }
 				$contrast = $contrastCalc [0];
 			}
 		}
@@ -191,16 +211,19 @@ class Objects {
 {
 		global $baseURL, $loggedUser;
 		$seenDetails = $this->getSeen ( $object );
-		$seen = "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
+        $seen = "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\" title=\"" . 
+            _("Object not logged in Deepskylog") . "\">-</a>";
 		if (substr ( $seenDetails, 0, 1 ) == "X") // object has been seen already
-			$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
+            $seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . 
+                _("Object already observed by others, but not by me") . "\">" . $seenDetails . "</a>";
 		if ($loggedUser) {
 			if (substr ( $seenDetails, 0, 1 ) == "Y") {
 				// object has been seen by the observer logged in
 				$obj = preg_split ( "/ /", $object );
 				$cat = $obj [0];
 				$number = $obj [1];
-				$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;catalog=" . $cat . "&amp;number=" . rawurlencode ( $number ) . "&amp;observer=" . urlencode ( $loggedUser ) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
+                $seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;catalog=" . $cat . "&amp;number=" . rawurlencode ( $number ) . "&amp;observer=" . urlencode ( $loggedUser ) . "\" title=\"" . 
+                    _("Object already observed by me") . "\">" . $seenDetails . "</a>";
 			}
 		}
 		return $seen;
@@ -614,10 +637,11 @@ class Objects {
 		       <div class=\"col-md-6\">";
 		echo "<table class=\"table table-bordered table-condensed table-striped table-hover table-responsive\">";
 		echo " <tr>";
-		echo "  <td>" . LangViewObserverNumberOfObservations . "</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectYSeen . "\">" . $ObsCnt . "</a></td>";
+        echo "  <td>" . _("Number of observations") . "</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . 
+            _("Object already observed by me") . "\">" . $ObsCnt . "</a></td>";
 		echo " </tr>";
 		echo " <tr>";
-		echo "  <td>" . LangTopObserversHeader7 . "</td>";
+		echo "  <td>" . _("Number of drawings") . "</td>";
 		$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As totDraw FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 AND hasDrawing=1" );
 		$totDraw = $run4->fetch ( PDO::FETCH_OBJ )->totDraw;
 		if ($totDraw > 0) {
@@ -682,14 +706,16 @@ class Objects {
 	private function getSeenLastseenLink($object, &$seen, &$seenlink, &$lastseen, &$lastseenlink) {
 		global $baseURL, $objDatabase, $loggedUser;
 		$seen = "-";
-		$seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectNSeen . "\" >-</a>";
+        $seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\" title=\"" . 
+            _("Object not logged in Deepskylog") . "\" >-</a>";
 		$lastseenlink = "-";
 		$lastseenlink = "-";
 		$ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' );
 		$DrwCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As DrwCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 AND hasDrawing=1", 'DrwCnt' );
 		if ($ObsCnt) {
 			$seen = 'X' . ($DrwCnt ? 'S' : 'Z') . '(' . $ObsCnt . '/' . $DrwCnt . ')';
-			$seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangObjectXSeen . "\" >" . 'X' . ($DrwCnt ? 'S' : 'Z') . '(' . $ObsCnt . '/' . $DrwCnt . ')' . "</a>";
+            $seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . 
+                _("Object already observed by others, but not by me") . "\" >" . 'X' . ($DrwCnt ? 'S' : 'Z') . '(' . $ObsCnt . '/' . $DrwCnt . ')' . "</a>";
 			if ($loggedUser) {
 				$run3 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7" );
 				$get3 = $run3->fetch ( PDO::FETCH_OBJ );
@@ -697,13 +723,16 @@ class Objects {
 					$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7 AND hasDrawing=1" );
 					if ($run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt > 0) {
 						$seen = 'YD(' . $ObsCnt . '/' . $get3->PersObsCnt . ')';
-						$seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangObjectYDSeen . "\" >" . 'YD(' . $ObsCnt . '/' . $get3->PersObsCnt . ')' . "</a>";
+                        $seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . 
+                            _("Object already observed and sketched by me") . "\" >" . 'YD(' . $ObsCnt . '/' . $get3->PersObsCnt . ')' . "</a>";
 					} else {
 						$seen = 'Y' . ($DrwCnt ? 'S' : 'Z') . '(' . $ObsCnt . '/' . $get3->PersObsCnt . ')';
-						$seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangObjectYSeen . "\" >" . 'Y' . ($DrwCnt ? 'S' : 'Z') . '(' . $ObsCnt . '/' . $get3->PersObsCnt . ')' . "</a>";
+                        $seenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . 
+                            _("Object already observed by me") . "\" >" . 'Y' . ($DrwCnt ? 'S' : 'Z') . '(' . $ObsCnt . '/' . $get3->PersObsCnt . ')' . "</a>";
 					}
 					$lastseen = $get3->PersObsMaxDate;
-					$lastseenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . urlencode ( $loggedUser ) . "&amp;sort=observationdate&amp;sortdirection=desc&amp;object=" . urlencode ( $object ) . "\"  data-toggle=\"tooltip\" data-placement=\"bottom\"  title=\"" . LangObjectYSeen . "\" >" . $get3->PersObsMaxDate . "</a>";
+                    $lastseenlink = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . urlencode ( $loggedUser ) . "&amp;sort=observationdate&amp;sortdirection=desc&amp;object=" . urlencode ( $object ) . "\"  data-toggle=\"tooltip\" data-placement=\"bottom\"  title=\"" . 
+                        _("Object already observed by me") . "\" >" . $get3->PersObsMaxDate . "</a>";
 				}
 			}
 		}
@@ -1199,16 +1228,16 @@ class Objects {
         $popup = "";
         $magnificationsName = array();
         $fov = array();
-		if (! ($loggedUser))
-			$popup = LangContrastNotLoggedIn;
+		if (!($loggedUser))
+			$popup = _("Contrast reserve can only be calculated when you are logged in...");
 		else {
 			$sql5 = "SELECT stdlocation, stdtelescope from observers where id = \"" . $loggedUser . "\"";
 			$run5 = $objDatabase->selectRecordset ( $sql5 );
 			$get5 = $run5->fetch ( PDO::FETCH_OBJ );
 			if ($get5->stdlocation == 0)
-				$popup = LangContrastNoStandardLocation;
+				$popup = _("Contrast reserve can only be calculated when you have set a standard location...");
 			elseif ($get5->stdtelescope == 0)
-				$popup = LangContrastNoStandardInstrument;
+				$popup = _("Contrast reserve can only be calculated when you have set a standard instrument...");
 			else { // Check for eyepieces or a fixed magnification
 				$sql6 = "SELECT fixedMagnification, diameter, fd from instruments where id = \"" . $get5->stdtelescope . "\"";
 				$run6 = $objDatabase->selectRecordset ( $sql6 );
@@ -1248,15 +1277,15 @@ class Objects {
 						}
 					}
 				} else {
-					$magnifications [] = $get6->fixedMagnification;
-					$magnificationsName [] = "";
-					$fov [] = "";
+					$magnifications[] = $get6->fixedMagnification;
+					$magnificationsName[] = "";
+					$fov[] = "";
 				}
-				$_SESSION ['magnifications'] = $magnifications;
-				$_SESSION ['magnificationsName'] = $magnificationsName;
-				$_SESSION ['fov'] = $fov;
-				if (count ( $magnifications ) == 0) {
-					$popup = LangContrastNoEyepiece;
+				$_SESSION['magnifications'] = $magnifications;
+				$_SESSION['magnificationsName'] = $magnificationsName;
+				$_SESSION['fov'] = $fov;
+				if (count($magnifications) == 0) {
+					$popup = _("Contrast reserve can only be calculate when the standard instrument has a fixed magnification or when there are eyepieces defined...");
 				} else {
 					$sql6 = "SELECT limitingMagnitude, skyBackground, name from locations where id = \"" . $get5->stdlocation . "\"";
 					$run6 = $objDatabase->selectRecordset ( $sql6 );
@@ -1268,7 +1297,7 @@ class Objects {
 					$fstOffset = $get6bis->fstOffset;
 					
 					if (($get6->limitingMagnitude < - 900) && ($get6->skyBackground < - 900))
-						$popup = LangContrastNoLimMag;
+						$popup = _("Contrast reserve can only be calculated when you have set a typical limiting magnitude or sky background for your standard location...");
 					else {
 						if ($get6->skyBackground < - 900)
 							$limmag = $get6->limitingMagnitude + $fstOffset;
@@ -1422,7 +1451,7 @@ class Objects {
 		echo "<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>";
 		echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
 		echo "<tr>";
-		echo "<td colspan=\"3\">" . LangViewObjectField1 . "</td>";
+		echo "<td colspan=\"3\">" . _("Name") . "</td>";
 		if (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes") {
 			// We show all possible Catalogs
 			global $DSOcatalogs;
@@ -1459,8 +1488,8 @@ class Objects {
 			echo "<td colspan=\"3\">" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( stripslashes ( $object ) ) . "\">" . (stripslashes ( $object )) . "</a>" . "</td>";
 			
 			if ($loggedUser && ($standardAtlasCode = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ))) {
-				echo "<td colspan=\"3\"><span class=\"pull-right\">" . $objAtlas->atlasCodes [$standardAtlasCode] . LangViewObjectField10 . "</span></td>";
-				echo "<td colspan=\"3\">" . $this->getDsoProperty ( $object, $standardAtlasCode ) . "</td>";
+				echo "<td colspan=\"3\"><span class=\"pull-right\">" . $objAtlas->atlasCodes[$standardAtlasCode] . _(" page") . "</span></td>";
+				echo "<td colspan=\"3\">" . $this->getDsoProperty($object, $standardAtlasCode) . "</td>";
 			} else {
 				echo "<td colspan=\"3\">&nbsp;</td>";
 				echo "<td colspan=\"3\">&nbsp;</td>";
@@ -1469,61 +1498,61 @@ class Objects {
 		echo "</tr>";
 		
 		echo "<tr>";
-		echo "<td colspan=\"3\">" . LangViewObjectField3 . "</td>";
+		echo "<td colspan=\"3\">" . _("RA") . "</td>";
 		echo "<td colspan=\"3\">" . $objPresentations->raToString ( $this->getDsoProperty ( $object, 'ra' ) ) . "</td>";
-		echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectField4 . "</span></td>";
+		echo "<td colspan=\"3\"><span class=\"pull-right\">" . _("Declination") . "</span></td>";
 		echo "<td colspan=\"3\">" . $objPresentations->decToStringDegMinSec ( $this->getDsoProperty ( $object, 'decl' ) ) . "</td>";
 		echo "</tr>";
 		
 		echo "<tr>";
-		echo "<td colspan=\"3\">" . LangViewObjectField5 . "</td>";
+		echo "<td colspan=\"3\">" . _("Constellation") . "</td>";
 		echo "<td colspan=\"3\">" . $GLOBALS [$this->getDsoProperty ( $object, 'con' )] . "</td>";
-		echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectField6 . "</span></td>";
+		echo "<td colspan=\"3\"><span class=\"pull-right\">" . _("Type") . "</span></td>";
 		echo "<td colspan=\"3\">" . $GLOBALS [$this->getDsoProperty ( $object, 'type' )] . "</td>";
 		echo "</tr>";
 		
 		echo "<tr>";
-		echo "<td colspan=\"3\">" . LangViewObjectField7 . "</td>";
+		echo "<td colspan=\"3\">" . _("Magnitude") . "</td>";
 		echo "<td colspan=\"3\">" . ((($magnitude == 99.9) || ($magnitude == "")) ? $magnitude = "-" : $magnitude) . "</td>";
-		echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectField8 . "</span></td>";
+		echo "<td colspan=\"3\"><span class=\"pull-right\">" . _("Surface brightness") . "</span></td>";
 		echo "<td colspan=\"3\">" . ((($sb == 99.9) || ($sb == "")) ? "-" : $sb) . "</td>";
 		echo "</tr>";
 		
 		echo "<tr>";
-		echo "<td colspan=\"3\">" . LangViewObjectField9 . "</td>";
+		echo "<td colspan=\"3\">" . _("Size") . "</td>";
 		echo "<td colspan=\"3\">" . (($size = $this->getSize ( $object )) ? $size : "-") . "</td>";
-		echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectField12 . "</span></td>";
+		echo "<td colspan=\"3\"><span class=\"pull-right\">" . _("Position angle") . "</span></td>";
 		echo "<td colspan=\"3\">" . (($this->getDsoProperty ( $object, 'pa' ) != 999) ? ($this->getDsoProperty ( $object, 'pa' ) . "&deg;") : "-") . "</td>";
 		echo "</tr>";
 		
 		if (! (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes")) {
 			
 			echo "<tr>";
-			echo "<td colspan=\"3\">" . LangViewObjectFieldContrastReserve . "</td>";
+			echo "<td colspan=\"3\">" . _("Contrast reserve") . "</td>";
 			echo '<td colspan="3">
 					  <span class="' . $contype . '" data-toggle="tooltip" data-placement="bottom" title="' . $popup . '">' . $contrast . '</span>
 					</td>';
-			echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectFieldOptimumDetectionMagnification . "</span></td>";
+			echo "<td colspan=\"3\"><span class=\"pull-right\">" . _("Optimum detection magnification") . "</span></td>";
 			echo "<td colspan=\"3\">" . $prefMag . "</td>";
 			echo "</tr>";
 		}
 		if ($alt) {
 			echo "<tr>";
-			echo "<td colspan=\"3\">" . LangViewObjectField2 . "</td>";
+			echo "<td colspan=\"3\">" . _("Alternative name") . "</td>";
 			echo '<td colspan="9">' . $alt . '</td>';
 			echo "</tr>";
 		}
 		
 		if ($partoft || $containst) {
 			echo "<tr>";
-			echo "<td colspan=\"3\">" . LangViewObjectField2b . "</td>";
+			echo "<td colspan=\"3\">" . _("(Contains)/Part of") . "</td>";
 			echo '<td colspan="9">' . ($containst ? $containst . "/" : "(-)/") . ($partoft ? $partoft : "-") . "</td>";
 			echo "</tr>";
 		}
 		
 		if ($listname && ($objList->checkObjectInMyActiveList ( $object ))) {
 			echo "<tr>";
-			echo "<td colspan=\"3\">" . LangViewObjectListDescription . ' (' . "<a href=\"" . DreyerDescriptionLink . "\" rel=\"external\">" . LangViewObjectDreyerDescription . "</a>)" . "</td>";
+			echo "<td colspan=\"3\">" . _("List description") . ' (' . "<a href=\"" . _("https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions") . "\" rel=\"external\">" . _("NGC/IC, Dreyer codes") . "</a>)" . "</td>";
 			if ($myList) {
 				echo "<td colspan=\"9\">" . "<textarea maxlength=\"1024\" name=\"description\" class=\"form-control\" onchange=\"submit()\">" . $objList->getListObjectDescription ( $object ) . "</textarea>" . "</td>";
 			} else {
@@ -1532,12 +1561,12 @@ class Objects {
 			echo "</tr>";
 		} elseif ($descriptionDsOject = $this->getDsoProperty ( $object, 'description' )) {
 			echo "<tr>";
-			echo "<td colspan=\"3\">" . LangViewObjectNGCDescription . ' (' . "<a href=\"" . DreyerDescriptionLink . "\" rel=\"external\">" . LangViewObjectDreyerDescription . "</a>" . ')' . "</td>";
+			echo "<td colspan=\"3\">" . _("Description") . ' (' . "<a href=\"" . _("https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions") . "\" rel=\"external\">" . _("NGC/IC, Dreyer codes") . "</a>" . ')' . "</td>";
 			echo "<td colspan=\"9\">" . htmlentities ( $descriptionDsOject ) . "</td>";
 			echo "</tr>";
 		} else {
 			echo "<tr>";
-			echo "<td colspan=\"3\">" . LangViewObjectNGCDescription . ' (' . "<a href=\"" . DreyerDescriptionLink . "\" rel=\"external\">" . LangViewObjectDreyerDescription . "</a>" . ')' . "</td>";
+			echo "<td colspan=\"3\">" . _("Description") . ' (' . "<a href=\"" . _("https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions") . "\" rel=\"external\">" . _("NGC/IC, Dreyer codes") . "</a>" . ')' . "</td>";
 			echo "<td colspan=\"9\">" . htmlentities ( $descriptionDsOject ) . "</td>";
 			echo "</tr>";
 		}
@@ -1778,35 +1807,35 @@ class Objects {
 			echo "<th id=\"objectpositioninlist\">#</th>";
 		if ($loggedUser) {
 			if (($myList) && ($pageListAction == "addAllObjectsFromPageToList"))
-				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\"><a href=\"" . $link . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
+				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\"><a href=\"" . $link . "&amp;addAllObjectsFromPageToList=true\" title=\"" . sprintf(_("Add all results of the page to list %s"), $listname_ss) . "\">&nbsp;P&nbsp;</a></td>");
 			elseif (($myList) && ($pageListAction == "removePageObjectsFromList"))
-				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\"><a href=\"" . $link . "&amp;removePageObjectsFromList=true\" title=\"" . LangListQueryObjectsMessage1b . $listname_ss . "\">&nbsp;&nbsp;</a></td>");
+				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\"><a href=\"" . $link . "&amp;removePageObjectsFromList=true\" title=\"" . sprintf(_("Remove all results of the page from list %s"), $listname_ss) . "\">&nbsp;&nbsp;</a></td>");
 			elseif ($myList)
-				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangList . "</td>");
+				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . _("The list") . "</td>");
 		}
 		
-		echo "<th data-priority=\"critical\" id=\"showname\">" . LangOverviewObjectsHeader1 . "</th>";
-		echo "<th data-priority=\"5\" id=\"objectconstellationfull\">" . LangOverviewObjectsHeader2 . "</th>";
-		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objectconstellationfull\">" . LangOverviewObjectsHeader2Short . "</th>";
-		echo "<th data-priority=\"7\" id=\"objectmagnitude\">" . LangOverviewObjectsHeader3 . "</th>";
-		echo "<th data-priority=\"7\" class=\"columnSelector-false\"  id=\"objectsurfacebrightness\">" . LangOverviewObjectsHeader3b . "</th>";
-		echo "<th data-priority=\"6\" id=\"objecttypefull\">" . LangOverviewObjectsHeader4 . "</th>";
+		echo "<th data-priority=\"critical\" id=\"showname\">" . _("Name") . "</th>";
+		echo "<th data-priority=\"5\" id=\"objectconstellationfull\">" . _("Constellation") . "</th>";
+		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objectconstellationfull\">" . _("Const.") . "</th>";
+		echo "<th data-priority=\"7\" id=\"objectmagnitude\">" . _("Mag") . "</th>";
+		echo "<th data-priority=\"7\" class=\"columnSelector-false\"  id=\"objectsurfacebrightness\">" . _("SB") . "</th>";
+		echo "<th data-priority=\"6\" id=\"objecttypefull\">" . _("Type") . "</th>";
 		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objecttypefull\">" . _("Typ") . "</th>";
-		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectsizepa\">" . LangOverviewObjectsHeader10 . "</th>";
-		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectradecl\">" . LangOverviewObjectsHeader5 . "</th>";
-		echo "<th data-priority=\"6\" id=\"objectdecl\" class=\"columnSelector-false sorter-digit\">" . LangOverviewObjectsHeader6 . "</th>";
+		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectsizepa\">" . _("Size") . "</th>";
+		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectradecl\">" . _("RA") . "</th>";
+		echo "<th data-priority=\"6\" id=\"objectdecl\" class=\"columnSelector-false sorter-digit\">" . _("Decl") . "</th>";
 		if ($loggedUser) {
 			$atlas = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' );
 			echo "<th data-priority=\"6\" id=\"" . $atlas . "\">" . $objAtlas->atlasCodes [$atlas] . "</th>";
-			echo "<th data-priority=\"7\" id=\"objectcontrast\">" . LangViewObjectFieldContrastReserve . "</th>";
+			echo "<th data-priority=\"7\" id=\"objectcontrast\">" . _("Contrast reserve") . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectoptimalmagnification\">" . _("Best") . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectriseorder\" class=\"columnSelector-false sorter-astrotime\">" . _("Rise") . "</th>";
 			echo "<th data-priority=\"6\" id=\"objecttransitorder\" class=\"columnSelector-false sorter-astrotime\">" . _("Transit") . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectsetorder\" class=\"columnSelector-false sorter-astrotime\">" . _("Set") . "</th>";
 			echo "<th data-priority=\"5\" id=\"objectbestorder\" class=\"sorter-astrotime\">" . _('Best Time') . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectmaxaltitude\" class=\"string-max sorter-degrees\">" . _("Max Alt") . "</th>";
-			echo "<th data-priority=\"3\" id=\"objectseen\">" . LangOverviewObjectsHeader7 . "</th>";
-			echo "<th data-priority=\"4\" id=\"objectlastseen\">" . LangOverviewObjectsHeader8 . "</th>";
+			echo "<th data-priority=\"3\" id=\"objectseen\">" . _("Seen") . "</th>";
+			echo "<th data-priority=\"4\" id=\"objectlastseen\">" . _("Last Seen") . "</th>";
 		}
 		if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'stdLocation' )) {
 			echo "<th data-priority=\"6\" id=\"objectmaxalt\" class=\"sorter-degrees\">" . _("Highest Alt.") . "</th>";
@@ -1834,17 +1863,17 @@ class Objects {
 			
 			echo "<tr " . (($_SESSION ['Qobj'] [$count] ['objectname'] == $ownShow) ? "class=\"type3\"" : "") . ">";
 			if (($showRank == 1) && $myList)
-				echo "<td><a href=\"#\" data-toggle=\"tooltip\" data-placement=\"bottom\" onclick=\"theplace = prompt('" . LangNewPlaceInList . "','" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "'); location.href='" . $link . "&amp;ObjectFromPlaceInList=" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "&amp;ObjectToPlaceInList='+theplace; return false;\" title=\"" . LangToListMoved6 . "\">" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</a></td>";
+				echo "<td><a href=\"#\" data-toggle=\"tooltip\" data-placement=\"bottom\" onclick=\"theplace = prompt('" . _("Please enter the new position") . "','" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "'); location.href='" . $link . "&amp;ObjectFromPlaceInList=" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "&amp;ObjectToPlaceInList='+theplace; return false;\" title=\"" . _("Move the object to a specific place in the list.") . "\">" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</a></td>";
 			elseif ($showRank)
 				echo "<td>" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</td>";
 			if ($myList) {
 				echo ("<td>");
 				if ($objList->checkObjectInMyActiveList ( $_SESSION ['Qobj'] [$count] ['objectname'] )) {
-					echo "<a href=\"" . $link . "&amp;removeObjectFromList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\"  data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage3 . $listname_ss . "\">
+					echo "<a href=\"" . $link . "&amp;removeObjectFromList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\"  data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . sprintf(_("%s to remove from the list %s"), $_SESSION['Qobj'][$count]['objectname'], $listname_ss) . "\">
 							<span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span>
 							</a>";
 				} else {
-					echo "<a href=\"" . $link . "&amp;addObjectToList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;showname=" . urlencode ( $_SESSION ['Qobj'] [$count] ['showname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\"  data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage2 . $listname_ss . "\">
+					echo "<a href=\"" . $link . "&amp;addObjectToList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;showname=" . urlencode ( $_SESSION ['Qobj'] [$count] ['showname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\"  data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . sprintf(_("%s to add to the list %s"), $_SESSION['Qobj'][$count]['objectname'], $listname_ss) . "\">
 							<span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span>
 							</a>";
 				}
@@ -1852,11 +1881,11 @@ class Objects {
 			}
 			echo "<td class=\"" . $specialclass . "\"><a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "\" >" . $_SESSION ['Qobj'] [$count] ['showname'] . "</a></td>";
 			echo "<td>" . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objectconstellation']] . "</td>";
-			echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangOverviewObjectsHeader2 . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objectconstellation']] . "\">" . $_SESSION ['Qobj'] [$count] ['objectconstellation'] . "</span></td>";
+			echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . _("Constellation") . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objectconstellation']] . "\">" . $_SESSION ['Qobj'] [$count] ['objectconstellation'] . "</span></td>";
 			echo "<td>" . (($_SESSION ['Qobj'] [$count] ['objectmagnitude'] == 99.9) || ($_SESSION ['Qobj'] [$count] ['objectmagnitude'] == '') ? "&nbsp;&nbsp;-&nbsp;" : sprintf ( "%01.1f", $_SESSION ['Qobj'] [$count] ['objectmagnitude'] )) . "</td>";
 			echo "<td>" . (($_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] == 99.9) || ($_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] == '') ? "&nbsp;&nbsp;-&nbsp;" : sprintf ( "%01.1f", $_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] )) . "</td>";
 			echo "<td>" . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objecttype']] . "</td>";
-			echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangOverviewObjectsHeader4 . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objecttype']] . "\">" . $_SESSION ['Qobj'] [$count] ['objecttype'] . "</span></td>";
+			echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . _("Type") . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objecttype']] . "\">" . $_SESSION ['Qobj'] [$count] ['objecttype'] . "</span></td>";
 			echo "<td>" . $_SESSION ['Qobj'] [$count] ['objectsizepa'] . "</td>";
 			echo "<td>" . $_SESSION ['Qobj'] [$count] ['objectrahms'] . "</td>";
 			echo "<td>" . $_SESSION ['Qobj'] [$count] ['objectdecldms'] . "</td>";
@@ -1878,7 +1907,7 @@ class Objects {
 				}
 				
 				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectcontrastpopup'] . "\" class=\"" . $_SESSION ['Qobj'] [$count] ['objectcontrasttype'] . "\" >" . $contrast . "</span></td>";
-				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . LangViewObjectFieldMagnification . ": " . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnification'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnificationvalue'] . "</span></td>";
+				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . _("Best magnification") . ": " . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnification'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnificationvalue'] . "</span></td>";
 				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectrisepopup'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectrise'] . "</span></td>";
 				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objecttransitpopup'] . "\">" . $_SESSION ['Qobj'] [$count] ['objecttransit'] . "</span></td>";
 				echo "<td><span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectsetpopup'] . "\">" . $_SESSION ['Qobj'] [$count] ['objectset'] . "</span></td>";
@@ -1920,17 +1949,17 @@ class Objects {
                     . _("Mark the objects that are not visible on the selected date and time.") 
                     . "\"") . " class=\"btn btn-primary\">" . _("Date-Time") . "</a>";
 				
-				$content = $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objects.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4a ) . "&nbsp;";
-				$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectnames.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4b ) . "&nbsp;";
-				$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectsDetails.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4c ) . "&nbsp;";
-				$content .= "<a href=\"" . $baseURL . "objects.argo?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage8 . "</a>&nbsp;";
-				$content .= "<a href=\"" . $baseURL . "objects.csv?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage6 . "</a>";
+				$content = $objPresentations->promptWithLinkText (_("Please enter the title"), _("DeepskyLog Objects"), $baseURL . "objects.pdf.php?SID=Qobj", _("pdf")) . "&nbsp;";
+				$content .= $objPresentations->promptWithLinkText (_("Please enter the title"), _("DeepskyLog Objects"), $baseURL . "objectnames.pdf.php?SID=Qobj", _("names pdf")) . "&nbsp;";
+				$content .= $objPresentations->promptWithLinkText (_("Please enter the title"), _("DeepskyLog Objects"), $baseURL . "objectsDetails.pdf.php?SID=Qobj", _("details pdf")) . "&nbsp;";
+				$content .= "<a href=\"" . $baseURL . "objects.argo?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . _("Argo Navis") . "</a>&nbsp;";
+				$content .= "<a href=\"" . $baseURL . "objects.csv?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . _("CSV") . "</a>";
 				
                 $content .= "&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;pdfTitle=Test\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " 
                     . _("Report") . "</a>&nbsp;";
-				$content .= "<a href=\"" . $baseURL . "index.php?indexAction=objectsSets" . "\" rel=\"external\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage11 . "</a>";
+				$content .= "<a href=\"" . $baseURL . "index.php?indexAction=objectsSets" . "\" rel=\"external\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . _("Maps") . "</a>";
 				
-				$content .= "&nbsp;<a href=\"" . $baseURL . "objects.skylist?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage12 . "</a>";
+				$content .= "&nbsp;<a href=\"" . $baseURL . "objects.skylist?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . _("skylist") . "</a>";
 				
 				echo $content1 . "<br /><br />";
 				echo $content;
@@ -1946,25 +1975,25 @@ class Objects {
 		echo "<tr>";
 		foreach ($fields as $key=>$value) {
 			if ($value == "showrank")
-				echo "<th>" . LangOverviewObjectsHeader9 . "</th>";
+				echo "<th>" . _("Position") . "</th>";
 			if ($value == "showownrank")
-				echo "<th>" . LangOverviewObjectsHeader9 . "</th>";
+				echo "<th>" . _("Position") . "</th>";
 			if ($value == "showname")
-				echo "<th>" . LangOverviewObjectsHeader1 . "</th>";
+				echo "<th>" . _("Name") . "</th>";
 			if ($value == "objectconstellation")
-				echo "<th>" . LangOverviewObjectsHeader2 . "</th>";
+				echo "<th>" . _("Constellation") . "</th>";
 			if ($value == "objectmagnitude")
-				echo "<th>" . LangOverviewObjectsHeader3 . "</th>";
+				echo "<th>" . _("Mag") . "</th>";
 			if ($value == "objectsurfacebrightness")
-				echo "<th>" . LangOverviewObjectsHeader3b . "</th>";
+				echo "<th>" . _("SB") . "</th>";
 			if ($value == "objectra")
-				echo "<th>" . LangOverviewObjectsHeader5 . "</th>";
+				echo "<th>" . _("RA") . "</th>";
 			if ($value == "objectdecl")
-				echo "<th>" . LangOverviewObjectsHeader6 . "</th>";
+				echo "<th>" . _("Decl") . "</th>";
 			if ($value == "objectdiam")
-				echo "<th>" . LangOverviewObjectsHeader10 . "</th>";
+				echo "<th>" . _("Size") . "</th>";
 			if ($value == "objecttype")
-				echo "<th>" . LangOverviewObjectsHeader4 . "</th>";
+				echo "<th>" . _("Type") . "</th>";
 		}
 		echo "</tr>";
 		echo "</thead>";
@@ -1977,7 +2006,7 @@ class Objects {
 			reset ( $fields );
 			foreach ($fields as $key=>$value) {
 				if (($value == "showownrank") && $myList)
-					echo "<td><a href=\"#\" onclick=\"theplace = prompt('" . LangNewPlaceInList . "','" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "'); location.href='" . $link . "&amp;ObjectFromPlaceInList=" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "&amp;ObjectToPlaceInList='+theplace+'&amp;min=" . $min . "'; return false;\" title=\"" . LangToListMoved6 . "\">" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</a></td>";
+					echo "<td><a href=\"#\" onclick=\"theplace = prompt('" . _("Please enter the new position") . "','" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "'); location.href='" . $link . "&amp;ObjectFromPlaceInList=" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "&amp;ObjectToPlaceInList='+theplace+'&amp;min=" . $min . "'; return false;\" title=\"" . _("Move the object to a specific place in the list.") . "\">" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</a></td>";
 				if ($value == "showrank")
 					echo "<td>" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</td>";
 				if ($value == "showname")
@@ -2008,7 +2037,7 @@ class Objects {
 {
 		global $objUtil, $objObject, $objObserver, $entryMessage, $loggedUser, $developversion, $mailTo, $mailFrom, $objMessage;
 		if (! ($loggedUser))
-			new Exception ( LangException002c );
+			new Exception(_("You need to be logged in to add an object."));
 		if ($objUtil->checkPostKey ( 'newobject' )) {
 			$check = true;
 			$ra = $objUtil->checkPostKey ( 'RAhours', 0 ) + ($objUtil->checkPostKey ( 'RAminutes', 0 ) / 60) + ($objUtil->checkPostKey ( 'RAseconds', 0 ) / 3600);
@@ -2017,7 +2046,7 @@ class Objects {
 			else
 				$declination = $objUtil->checkPostKey ( 'DeclDegrees', 0 ) + ($objUtil->checkPostKey ( 'DeclMinutes', 0 ) / 60) + ($objUtil->checkPostKey ( 'DeclSeconds', 0 ) / 3600);
 			if (! $objUtil->checkPostKey ( 'number' ) || ! $objUtil->checkPostKey ( 'type' ) || ! $objUtil->checkPostKey ( 'con' ) || ($ra == 0.0) || ($declination == 0.0)) {
-				$entryMessage = LangValidateObjectMessage1; // check if required fields are filled in
+				$entryMessage = _("You didn't fill in a required field!"); // check if required fields are filled in
 				$_GET ['indexAction'] = 'add_object';
 			}
 			if ($check) // check name
@@ -2036,7 +2065,7 @@ class Objects {
 				);
 				if ($objObject->getObjectFromQuery ( $query1, 1 )) // object already exists
 {
-					$entryMessage = LangValidateObjectMessage2;
+					$entryMessage = _("There is already an object with this (alternative) name!");
 					$_GET ['object'] = $name;
 					$_GET ['indexAction'] = 'detail_object';
 					$check = false;
@@ -2044,13 +2073,13 @@ class Objects {
 			}
 			if ($check) // calculate right ascension
 				if ((! $objUtil->checkLimitsInclusive ( $objUtil->checkPostKey ( 'RAhours', - 1 ), 0, 23 )) || (! $objUtil->checkLimitsInclusive ( $objUtil->checkPostKey ( 'RAminutes', - 1 ), 0, 59 )) || (! $objUtil->checkLimitsInclusive ( $objUtil->checkPostKey ( 'RAseconds', - 1 ), 0, 59 ))) {
-					$entryMessage = LangValidateObjectMessage4;
+					$entryMessage = _("Wrong right ascension!");
 					$_GET ['indexAction'] = 'add_object';
 					$check = false;
 				}
 			if ($check) // calculate declination
 				if ((! $objUtil->checkLimitsInclusive ( $objUtil->checkPostKey ( 'DeclDegrees', - 100 ), - 90, 90 )) || (! $objUtil->checkLimitsInclusive ( $objUtil->checkPostKey ( 'DeclMinutes', - 1 ), 0, 59 )) || (! $objUtil->checkLimitsInclusive ( $objUtil->checkPostKey ( 'DeclSeconds', - 1 ), 0, 59 ))) {
-					$entryMessage = LangValidateObjectMessage5;
+					$entryMessage = _("Wrong declination!");
 					$_GET ['indexAction'] = 'add_object';
 					$check = false;
 				}
@@ -2058,7 +2087,7 @@ class Objects {
 {
 				$magnitude = "99.9";
 				if ($objUtil->checkPostKey ( 'magnitude' ) && (! (preg_match ( '/^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$/', abs ( $_POST ['magnitude'] ), $matches )))) {
-					$entryMessage = LangValidateObjectMessage8;
+					$entryMessage = _("Wrong magnitude format!");
 					$_GET ['indexAction'] = 'add_object';
 					$check = false;
 				} elseif ($objUtil->checkPostKey ( 'magnitude' )) {
@@ -2075,11 +2104,11 @@ class Objects {
 			if ($check) // position angle
 {
 				$posangle = "999";
-				if (! $objUtil->checkLimitsInclusive ( 'posangle', 0, 359 )) {
-					$entryMessage = LangValidateObjectMessage6;
+				if (! $objUtil->checkLimitsInclusive('posangle', 0, 359)) {
+					$entryMessage = _("Wrong position angle!");
 					$_GET ['indexAction'] = 'add_object';
 					$check = false;
-				} elseif ($objUtil->checkPostKey ( 'posangle' ))
+				} elseif ($objUtil->checkPostKey('posangle'))
 					$posangle = $_POST ['posangle'];
 			}
 			if ($check) // surface brightness
@@ -2102,7 +2131,7 @@ class Objects {
 					elseif ($objUtil->checkPostKey ( 'size_x_units' ) == "sec")
 						$diam1 = $objUtil->checkPostKey ( 'size_x' );
 					else {
-						$entryMessage = LangValidateObjectMessage7;
+						$entryMessage = _("You did not provide any object size units!");
 						$_GET ['indexAction'] = 'add_object';
 						$check = false;
 					}
@@ -2117,7 +2146,7 @@ class Objects {
 					elseif ($objUtil->checkPostKey ( 'size_y_units' ) == "sec")
 						$diam2 = $objUtil->checkPostKey ( 'size_y', 0 );
 					else {
-						$entryMessage = LangValidateObjectMessage7;
+						$entryMessage = _("You did not provide any object size units!");
 						$_GET ['indexAction'] = 'add_object';
 						$check = false;
 					}
@@ -2126,12 +2155,12 @@ class Objects {
 			if ($check) // fill database
 {
 				$objObject->addDSObject ( $name, $catalog, ucwords ( trim ( $_POST ['number'] ) ), $_POST ['type'], $_POST ['con'], $ra, $declination, $magnitude, $sb, $diam1, $diam2, $posangle, "DeepskyLogUser " . $loggedUser . " " . date ( 'Ymd' ) );
-				$body = LangValidateAccountEmailTitleObject . " <a href=\"www.deepskylog.org/index.php?indexAction=detail_object&object=" . urlencode ( $name ) . "\">" . $name . "</a> " . LangValidateAccountEmailTitleObjectObserver . " " . "<a href=\"www.deepskylog.org/index.php?indexAction=detail_observer&user=" . urlencode ( $loggedUser ) . "\">" . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . "</a><br /><br />";
+				$body = _("DeepskyLog - New Object ") . " <a href=\"www.deepskylog.org/index.php?indexAction=detail_object&object=" . urlencode ( $name ) . "\">" . $name . "</a> " . _("by observer ") . " " . "<a href=\"www.deepskylog.org/index.php?indexAction=detail_observer&user=" . urlencode ( $loggedUser ) . "\">" . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . "</a><br /><br />";
 				
 				if (isset ( $developversion ) && ($developversion == 1))
-					$entryMessage .= "On the live server, a mail would be sent with the subject: " . LangValidateAccountEmailTitleObject . " " . $name . ".<br />";
+					$entryMessage .= "On the live server, a mail would be sent with the subject: " . _("DeepskyLog - New Object ") . " " . $name . ".<br />";
 				else
-					$objMessage->sendEmail ( LangValidateAccountEmailTitleObject . " " . $name, $body, "developers" );
+					$objMessage->sendEmail(_("DeepskyLog - New Object ") . " " . $name, $body, "developers");
 				
 				$_GET ['indexAction'] = 'detail_object';
 				$_GET ['object'] = $name;
@@ -2139,7 +2168,7 @@ class Objects {
 		} elseif ($objUtil->checkPostKey ( 'clearfields' )) // pushed clear fields button
 			$_GET ['indexAction'] = "add_object";
 		else
-			throw new Exception ( LangException000 );
+			throw new Exception(_("An unknown error occured. Please do contact the developers with this messsage."));
 	}
 	public function checknames() {
 		global $objDatabase, $objCatalog;

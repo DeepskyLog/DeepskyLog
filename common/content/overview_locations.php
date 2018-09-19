@@ -13,9 +13,9 @@
 if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 } elseif (!$loggedUser) {
-    throw new Exception(LangException002);
+    throw new Exception(_("You need to be logged in to change your locations or equipment."));
 } elseif ($_SESSION['admin'] != "yes") {
-    throw new Exception(LangException001);
+    throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 } else {
     overviewLocations();
 }
@@ -32,20 +32,20 @@ function overviewLocations()
     $sites = $objLocation->getSortedLocations("name");
     $locs = $objObserver->getListOfLocations();
     echo "<div id=\"main\">";
-    echo "<h4>" . LangViewLocationTitle . "</h4>";
+    echo "<h4>" . _("Locations overview") . "</h4>";
     echo "<hr />";
     echo "<table class=\"table sort-table table-condensed table-striped " 
         . "table-hover tablesorter custom-popup\">";
     echo "<thead><tr>";
-    echo "<th>" . LangViewLocationLocation . "</th>";
-    echo "<th>" . LangViewLocationCountry . "</th>";
-    echo "<th>" . LangViewLocationLongitude . "</th>";
-    echo "<th>" . LangViewLocationLatitude . "</th>";
+    echo "<th>" . _("Location") . "</th>";
+    echo "<th>" . _("Country") . "</th>";
+    echo "<th>" . _("Longitude") . "</th>";
+    echo "<th>" . _("Latitude") . "</th>";
     echo "<th>" . _("Elevation") . "</th>";
-    echo "<th>" . LangAddSiteField6 . "</th>";
-    echo "<th>" . LangViewLocationLimMag . "</th>";
-    echo "<th>" . LangViewLocationSB . "</th>";
-    echo "<th>" . LangViewObservationField2 . "</th>";
+    echo "<th>" . _("Time Zone") . "</th>";
+    echo "<th>" . _("NELM") . "</th>";
+    echo "<th>" . _("SQM") . "</th>";
+    echo "<th>" . _("Observer") . "</th>";
     echo "<th class=\"filter-false columnSelector-disable\"" 
         . " data-sorter=\"false\"></th>";
     echo "</tr></thead>";

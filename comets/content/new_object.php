@@ -4,7 +4,7 @@
 
 global $inIndex,$loggedUser,$objUtil;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!($loggedUser)) throw new Exception(LangException001);
+elseif(!($loggedUser)) throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 else new_object();
 
 function new_object()
@@ -12,16 +12,16 @@ function new_object()
          $objPresentations;
 	echo "<div id=\"main\">";
 	echo "<form action=\"".$baseURL."index.php?indexAction=comets_validate_object\" method=\"post\">";
-	echo "<h4>".LangNewObjectTitle."</h4>";
-  echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"newobject\" value=\"" . LangViewObservationButton1 . "\" />";
+	echo "<h4>"._("Add new object")."</h4>";
+  echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"newobject\" value=\"" . _("Add observation") . "\" />";
   echo "<br /><hr />";
 	$content="<input type=\"text\" required class=\"form-control\" name=\"name\" value=\"\" />";
-	echo "<strong>" . LangViewObjectField1."&nbsp;*</strong>";
+	echo "<strong>" . _("Name")."&nbsp;*</strong>";
 	echo $content;
 	$content="<input type=\"text\" required class=\"form-control\" name=\"icqname\" value=\"\" />";
-	echo "<strong>" . LangNewObjectIcqname."&nbsp;*</strong>";
+	echo "<strong>" . _("ICQ name")."&nbsp;*</strong>";
 	echo $content;
-  echo "<br /><br /><input type=\"submit\" class=\"btn btn-success\" name=\"newobject\" value=\"" . LangViewObservationButton1 . "\" />";
+  echo "<br /><br /><input type=\"submit\" class=\"btn btn-success\" name=\"newobject\" value=\"" . _("Add observation") . "\" />";
 	echo "<hr />";
 	echo "</form>";
 	echo "</div>";

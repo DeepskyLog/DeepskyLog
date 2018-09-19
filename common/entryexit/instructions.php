@@ -460,7 +460,8 @@ function instructions() {
 		if (array_key_exists ( 'number', $_POST ) && (! $_POST ['number']))
 			$_GET ['indexAction'] = "query_objects";
 		elseif (array_key_exists ( 'number', $_POST ) && (! ($_GET ['object'] = $objObject->getExactDsObject ( trim ( $objUtil->checkPostKey ( 'catalog' ) ) . ' ' . trim ( $objUtil->checkPostKey ( 'number' ) ), '', '' )))) {
-			$entryMessage .= LangInstructionsNoObjectFound . $objUtil->checkPostKey ( 'catalog' ) . " " . $objUtil->checkPostKey ( 'number' );
+            $entryMessage .= sprintf(_("No corresponding object found for %s"), 
+                $objUtil->checkPostKey('catalog') . " " . $objUtil->checkPostKey('number'));
 			$_GET ['indexAction'] = "query_objects";
 		} else {
 			$_POST ['year'] = $objUtil->checkPostKey ( 'year', $objUtil->checkArrayKey ( $_SESSION, 'newObsYear' ) );
@@ -511,20 +512,32 @@ function instructions() {
 	// ============================================================================ LIST COMMANDS
 	if ($objUtil->checkGetKey ( 'emptyList' ) && $myList) {
 		$objList->emptyList ( $listname );
-		$entryMessage .= LangToListEmptied . $listname_ss . ".";
+		$entryMessage .= _("List emptied: ") . $listname_ss . ".";
 		unset ( $_SESSION ['QobjParams'] );
 		unset ( $_GET ['emptyList'] );
 	}
 	if ($objUtil->checkGetKey ( 'ObjectDownInList' ) && $myList) {
 		$objList->ObjectDownInList ( $_GET ['ObjectDownInList'] );
 		unset ( $_SESSION ['QobjParams'] );
-		$entryMessage .= LangToListMoved1 . $_GET ['ObjectDownInList'] . LangToListMoved3 . "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;manage=manage\">" . $listname_ss . "</a>.";
-		unset ( $_GET ['ObjectDownInList'] );
+		$entryMessage .= sprintf(
+            _("The object %s is moved up in the list %s"), 
+            $_GET['ObjectDownInList'], 
+            "<a href=\"" . $baseURL . 
+            "index.php?indexAction=listaction&amp;manage=manage\">" . 
+            $listname_ss . "</a>."
+        );
+		unset($_GET ['ObjectDownInList']);
 	}
 	if ($objUtil->checkGetKey ( 'ObjectUpInList' ) && $myList) {
 		$objList->ObjectUpInList ( $_GET ['ObjectUpInList'] );
 		unset ( $_SESSION ['QobjParams'] );
-		$entryMessage .= LangToListMoved1 . $_GET ['ObjectUpInList'] . LangToListMoved2 . "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;manage=manage\">" . $listname_ss . "</a>.";
+		$entryMessage .= sprintf(
+            _("The object %s is moved down in the list %s"),
+            $_GET['ObjectUpInList'],
+            "<a href=\"" . $baseURL . 
+            "index.php?indexAction=listaction&amp;manage=manage\">" . 
+            $listname_ss . "</a>."
+        );
 		unset ( $_GET ['ObjectUpInList'] );
 	}
 
@@ -541,7 +554,7 @@ function instructions() {
 				$count ++;
 			}
 			unset ( $_SESSION ['QobjParams'] );
-			$entryMessage .= LangToListPageRemoved;
+			$entryMessage .= _("The objects have been removed from the list.");
 		}
 		unset ( $_GET ['removePageObjectsFromList'] );
 	}
@@ -554,14 +567,14 @@ function instructions() {
 	if ($objUtil->checkGetKey ( 'addList' ) && ($listnameToAdd = $objUtil->checkGetKey ( 'addlistname' ))) {
 		unset ( $_SESSION ['QobjParams'] );
 		if ($objList->checkList ( $listnameToAdd ) != 0) {
-			$entryMessage .= LangToListList . stripslashes ( $listnameToAdd ) . LangToListExists;
+			$entryMessage .= sprintf(_("The list \"%s\" already exists."), stripslashes($listnameToAdd));
 		} else {
 			$objList->addList ( $listnameToAdd, $objUtil->checkGetKey ( "PublicList", false ) );
 			$_SESSION ['listname'] = $listnameToAdd;
 			$listname = $_SESSION ['listname'];
 			$listname_ss = stripslashes ( $listname );
 			$myList = true;
-			$entryMessage .= LangToListList . $listname_ss . LangToListAdded;
+			$entryMessage .= sprintf(_("The list \"%s\" has been added."), $listname_ss);
 		}
 		unset ( $_GET ['addList'] );
 	}
@@ -604,14 +617,14 @@ function instructions() {
 		$listnameTo = $_GET ['addlistname'];
 
 		if ($objList->checkList ( $listnameTo ) != 0 && $objUtil->checkGetKey ( "PublicList", false ) === $objList->isPublic ( $listNameFrom, $loggedUser )) {
-			$entryMessage .= LangToListList . stripslashes ( $listnameTo ) . LangToListExists;
+			$entryMessage .= sprintf(_("The list \"%s\" already exists."), stripslashes($listnameTo));
 		} else {
 			$objList->renameList ( $listNameFrom, $listnameTo, $objUtil->checkGetKey ( "PublicList", false ) );
 			$_SESSION ['listname'] = $listnameTo;
 			$listname = $_SESSION ['listname'];
 			$listname_ss = stripslashes ( $listname );
 			$myList = true;
-			$entryMessage .= LangToListRenamed . $listname_ss . "\".";
+			$entryMessage .= sprintf(_("The list is renamed in \"%s\"."), $listname_ss);
 		}
 		unset ( $_GET ['renameList'] );
 	}
@@ -620,13 +633,13 @@ function instructions() {
 		if ($objUtil->checkGetKey ( 'listname' ) != "" && $objUtil->checkGetKey ( 'listname' ) != "----------") {
 			$listname = $objUtil->checkGetKey ( 'listname' );
 			$objList->removeList ( $listname );
-			$entryMessage .= LangToListRemoved . stripslashes ( $listname ) . ".";
+			$entryMessage .= _("List removed: ") . stripslashes($listname) . ".";
 		} else {
 			$objList->removeList ( $listname );
 			$listname = '';
 			$listname_ss = '';
 			$myList = False;
-			$entryMessage .= LangToListRemoved . stripslashes ( $_SESSION ['listname'] ) . ".";
+			$entryMessage .= _("List removed: ") . stripslashes($_SESSION['listname']) . ".";
 			$_SESSION ['listname'] = "----------";
 		}
 		unset ( $_GET ['removeList'] );
@@ -647,7 +660,7 @@ function instructions() {
 			$myList = True;
 		if ($_GET ['listname'] != "----------") {
 			if ($myList)
-				$toastMessage = LangToListList . $listname_ss . LangToListActivation1;
+				$toastMessage = sprintf(_("The list \"%s\" is activated."), $listname_ss);
 		} else
 			$_GET ['indexAction'] = "defaultAction";
 		unset ( $_GET ['activateList'] );
@@ -656,17 +669,19 @@ function instructions() {
 		$objList->addObjectToList ( $_GET ['addObjectToList'], $objUtil->checkGetKey ( 'showname', $_GET ['addObjectToList'] ) );
 
 		// Show a toast message.
-		$toastMessage = LangListQueryObjectsMessage8 . $_GET ['showname'] . LangListQueryObjectsMessage6 . $listname_ss;
+        $toastMessage = sprintf(_(" The object %s is added to the list %s"), 
+            $_GET['showname'], $listname_ss);
 		unset ( $_GET ['addObjectToList'] );
 	}
 	if ($objUtil->checkGetKey ( 'addObservationToList' ) && $myList) {
 		$objList->addObservationToList ( $_GET ['addObservationToList'] );
-		$toastMessage = LangListQueryObjectsMessage16 . LangListQueryObjectsMessage6 . $listname_ss;
+		$toastMessage = sprintf(_(" The observation is added to the list %s"), $listname_ss);
 		unset ( $_GET ['addObservationToList'] );
 	}
 	if (array_key_exists ( 'removeObjectFromList', $_GET ) && $_GET ['removeObjectFromList'] && $myList) {
 		$objList->removeObjectFromList ( $_GET ['removeObjectFromList'] );
-		$toastMessage = LangListQueryObjectsMessage8 . $_GET ['removeObjectFromList'] . LangListQueryObjectsMessage7 . $listname_ss;
+        $toastMessage = sprintf(_(" The object %s is removed from the list %s"), 
+            $_GET['removeObjectFromList'], $listname_ss);
 		unset ( $_GET ['removeObjectFromList'] );
 	}
 
@@ -676,7 +691,7 @@ function instructions() {
 			$objList->addObjectToList ( $_SESSION ['Qobj'] [$count] ['objectname'], $_SESSION ['Qobj'] [$count] ['showname'] );
 			$count ++;
 		}
-		$toastMessage = LangListQueryObjectsMessage9 . $listname_ss;
+		$toastMessage = sprintf(_(" The objects have been added to the list %s"), $listname_ss);
 		unset ( $_GET ['addAllObjectsFromPageToList'] );
 	}
 	if (array_key_exists ( 'addAllObjectsFromQueryToList', $_GET ) && $_GET ['addAllObjectsFromQueryToList'] && $myList) {
@@ -685,7 +700,7 @@ function instructions() {
 			$objList->addObjectToList ( $_SESSION ['Qobj'] [$count] ['objectname'], $_SESSION ['Qobj'] [$count] ['showname'] );
 			$count ++;
 		}
-		$toastMessage = LangListQueryObjectsMessage9 . $_SESSION ['listname'];
+		$toastMessage = sprintf(_(" The objects have been added to the list %s"), $_SESSION['listname']);
 		unset ( $_GET ['addAllObjectsFromQueryToList'] );
 	}
 	if (array_key_exists ( 'editListObjectDescription', $_GET ) && $_GET ['editListObjectDescription'] && array_key_exists ( 'object', $_GET ) && $_GET ['object'] && array_key_exists ( 'description', $_GET ) && $myList) {
@@ -764,35 +779,35 @@ function instructions() {
 				$objObject->removeAndReplaceObjectBy ( $_GET ['object'], $_GET ['newcatalog'], $_GET ['newnumber'] );
 				$_GET ['object'] = trim ( $_GET ['newcatalog'] . " " . ucwords ( trim ( $_GET ['newnumber'] ) ) );
 			}
-			if ($_GET ['newaction'] == "LangObjectSetRA") {
+			if ($_GET ['newaction'] == "ObjectSetRA") {
 				$objObject->setDsoProperty ( $_GET ['object'], 'ra', $_GET ['newnumber'] );
 				$objObject->setDsObjectAtlasPages ( $_GET ['object'] );
 			}
-			if ($_GET ['newaction'] == "LangObjectSetDECL") {
+			if ($_GET ['newaction'] == "ObjectSetDECL") {
 				$objObject->setDsoProperty ( $_GET ['object'], 'decl', $_GET ['newnumber'] );
 				$objObject->setDsObjectAtlasPages ( $_GET ['object'] );
 			}
-			if ($_GET ['newaction'] == "LangObjectSetCon")
+			if ($_GET ['newaction'] == "ObjectSetCon")
 				$objObject->setDsoProperty ( $_GET ['object'], 'con', $_GET ['newnumber'] );
-			if ($_GET ['newaction'] == "LangObjectSetType")
+			if ($_GET ['newaction'] == "SetType")
 				$objObject->setDsoProperty ( $_GET ['object'], 'type', $_GET ['newnumber'] );
-			if ($_GET ['newaction'] == "LangObjectSetMag") {
+			if ($_GET ['newaction'] == "ObjectSetMag") {
 				$objObject->setDsoProperty ( $_GET ['object'], 'mag', $_GET ['newnumber'] );
 				$objObject->setDsObjectSBObj ( $_GET ['object'] );
 			}
-			if ($_GET ['newaction'] == "LangObjectSetSUBR")
+			if ($_GET ['newaction'] == "ObjectSetSUBR")
 				$objObject->setDsoProperty ( $_GET ['object'], 'subr', $_GET ['newnumber'] );
-			if ($_GET ['newaction'] == "LangObjectSetDiam1") {
+			if ($_GET ['newaction'] == "ObjectSetDiam1") {
 				$objObject->setDsoProperty ( $_GET ['object'], 'diam1', $_GET ['newnumber'] );
 				$objObject->setDsObjectSBObj ( $_GET ['object'] );
 			}
-			if ($_GET ['newaction'] == "LangObjectSetDiam2") {
+			if ($_GET ['newaction'] == "ObjectSetDiam2") {
 				$objObject->setDsoProperty ( $_GET ['object'], 'diam2', $_GET ['newnumber'] );
 				$objObject->setDsObjectSBObj ( $_GET ['object'] );
 			}
-			if ($_GET ['newaction'] == "LangObjectSetPA")
+			if ($_GET ['newaction'] == "ObjectSetPA")
 				$objObject->setDsoProperty ( $_GET ['object'], 'pa', $_GET ['newnumber'] );
-			if ($_GET ['newaction'] == "LangObjectSetDESC")
+			if ($_GET ['newaction'] == "ObjectSetDESC")
 				$objObject->setDsoProperty ( $_GET ['object'], 'description', $_GET ['newnumber'] );
 		}
 	}

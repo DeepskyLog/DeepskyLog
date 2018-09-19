@@ -13,7 +13,7 @@ function help() {
 	if ($_SESSION ['lang'] == "nl") {
 		echo "  <li><a href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/Handleidinghttps://github.com/DeepskyLog/DeepskyLog/wiki/Handleiding\" rel=\"external\">Handleiding</a></li>";
 	}
-	echo "   <li>" . LangMailtoLink . "</li>";
+	echo "   <li><a href=\"mailto:&#100;&#101;v&#101;lop&#101;rs&#64;&#100;&#101;&#101;pskylog.&#98;&#101;\">" . _("Ask question") . "</a></li>";
 	echo "   <li><a href=\"https://github.com/DeepskyLog/DeepskyLog/issues\">" . _("Report issue") . "</a></li>";
 	echo "   <li><a href=\"https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog\">" . _("What's new in DeepskyLog") . "</a></li>";
 	echo "  </ul>";

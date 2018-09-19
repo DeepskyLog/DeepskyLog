@@ -4,7 +4,7 @@
 // or another user to view the filter details
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!($filterid=$objUtil->checkGetKey('filter'))) throw new Exception(LangException005b);
+elseif(!($filterid=$objUtil->checkGetKey('filter'))) throw new Exception(_("You wanted to watch a filter, but none is specified. Please contact the developers with this message."));
 elseif(!($objFilter->getFilterPropertyFromId($filterid,'name'))) throw new Exception("Filter not found in change_filter.php, please contact the developers with this message:".$filterid);
 else change_filter();
 
@@ -15,7 +15,7 @@ function change_filter()
 	if(($loggedUser) &&
 	   ($objUtil->checkAdminOrUserID($objFilter->getFilterPropertyFromId($filterid,'observer',''))))
 	  $disabled="";
-	$content=($disabled?"":"<input type=\"submit\" class=\"btn btn-primary pull-right\" name=\"change\" value=\"".LangChangeFilterButton."\" />&nbsp;");
+	$content=($disabled?"":"<input type=\"submit\" class=\"btn btn-primary pull-right\" name=\"change\" value=\""._("Change filter")."\" />&nbsp;");
 	$filter=$objFilter->getFilterPropertiesFromId($filterid);
 	echo "<div id=\"main\">";
 	echo "<form role=\"form\" action=\"".$baseURL."index.php\" method=\"post\"><div>";
@@ -26,31 +26,31 @@ function change_filter()
 	echo $content;
 
 	echo "<div class=\"form-group\">
-	       <label for=\"filtername\">". LangAddFilterField1."</label>";
+	       <label for=\"filtername\">". _("Name")."</label>";
 	echo "<input type=\"text\" required class=\"form-control\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\"".stripslashes($filter['name'])."\" ".$disabled." />";
-	echo "<span class=\"help-block\">" . LangAddFilterField1Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("(e.g. Lumicon O-III)") . "</span>";
 	echo "</div>";
 	
 	echo "<div class=\"form-group\">
-	       <label for=\"type\">". LangAddFilterField2."</label>";
+	       <label for=\"type\">". _("Type")."</label>";
 	echo "<div class=\"form-inline\">";
 	echo $objFilter->getEchoListType($filter['type'],$disabled);
 	echo "</div></div>";
 	
 	echo "<div class=\"form-group\">
-	       <label for=\"color\">". LangAddFilterField3."</label>";
+	       <label for=\"color\">". _("Color")."</label>";
 	echo "<div class=\"form-inline\">";
 	echo $objFilter->getEchoListColor($filter['color'],$disabled);
 	echo "</div></div>";
 	
 	echo "<div class=\"form-group\">
-	       <label for=\"wratten\">". LangAddFilterField4."</label>";
+	       <label for=\"wratten\">". _("Wratten number")."</label>";
 	echo "<div class=\"form-inline\">";
 	echo "<input type=\"text\" class=\"inputfield form-control\" maxlength=\"5\" name=\"wratten\" size=\"5\" value=\"".stripslashes($filter['wratten'])."\" ".$disabled." />";
 	echo "</div></div>";
 	
 	echo "<div class=\"form-group\">
-	       <label for=\"schott\">". LangAddFilterField5."</label>";
+	       <label for=\"schott\">". _("Schott number")."</label>";
 	echo "<div class=\"form-inline\">";
 	echo "<input type=\"text\" class=\"inputfield form-control\" maxlength=\"5\" name=\"schott\" size=\"5\" value=\"".stripslashes($filter['schott'])."\" ".$disabled." />";
 	echo "</div></div>";

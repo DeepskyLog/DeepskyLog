@@ -32,30 +32,30 @@ function view_observation() {
 			if ($nextObservation != "")
 				$content .= "<a href=\"" . $baseURL . "index.php?indexAction=comets_detail_observation&amp;observation=" . $nextObservation . "\">&gt;</a> ";
 		}
-		echo "<h4>" . LangViewObservationTitle . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $content . "</h4>";
+		echo "<h4>" . _("Observation details") . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $content . "</h4>";
 
 		echo "<table class=\"table\">";
-		echo "<tr><td><strong>" . LangViewObservationField1 . "</strong></td>";
+		echo "<tr><td><strong>" . _("Object name") . "</strong></td>";
 		echo "<td><a href=\"" . $baseURL . "index.php?indexAction=comets_detail_object&amp;object=" . urlencode ( $objCometObservation->getObjectId ( $_GET ['observation'] ) ) . "\">" . $objCometObject->getName ( $objCometObservation->getObjectId ( $_GET ['observation'] ) ) . "</a></td>";
 		echo "</tr>";
 
-		echo "<tr><td><strong>" . LangViewObservationField2 . "</strong></td>";
+		echo "<tr><td><strong>" . _("Observer") . "</strong></td>";
 		echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode ( $objCometObservation->getObserverId ( $_GET ['observation'] ) ) . "\">" . $objObserver->getObserverProperty ( $objCometObservation->getObserverId ( $_GET ['observation'] ), 'firstname' ) . "&nbsp;" . $objObserver->getObserverProperty ( $objCometObservation->getObserverId ( $_GET ['observation'] ), 'name' ) . "</a></td>";
 		echo "</tr>";
 		$date = sscanf ( $objCometObservation->getDate ( $_GET ['observation'] ), "%4d%2d%2d" );
 		if ($objCometObservation->getTime ( $_GET ['observation'] ) >= 0)
 			if (! ($objObserver->getObserverProperty ( $loggedUser, 'UT' )))
 				$date = sscanf ( $objCometObservation->getLocalDate ( $_GET ['observation'] ), "%4d%2d%2d" );
-		echo "<tr><td><strong>" . LangViewObservationField5 . "</strong></td>";
+		echo "<tr><td><strong>" . _("Date") . "</strong></td>";
 		echo "<td>" . date ( $dateformat, mktime ( 0, 0, 0, $date [1], $date [2], $date [0] ) ) . "</td>";
 		echo "</tr>";
 
 		if ($objCometObservation->getTime ( $_GET ['observation'] ) >= 0) {
 			if (! ($objObserver->getObserverProperty ( $loggedUser, 'UT' ))) {
-				$content1 = LangViewObservationField9lt;
+				$content1 = _("Time (local time)");
 				$time = $objCometObservation->getLocalTime ( $_GET ['observation'] );
 			} else {
-				$content1 = LangViewObservationField9;
+				$content1 = _("Time (UT)");
 				$time = $objCometObservation->getTime ( $_GET ['observation'] );
 			}
 			$time = sscanf ( sprintf ( "%04d", $time ), "%2d%2d" );
@@ -65,26 +65,26 @@ function view_observation() {
 		echo "<td>" . $content2 . "</td>";
 		echo "</tr>";
 		if ($objCometObservation->getLocationId ( $_GET ['observation'] ) != 0 && $objCometObservation->getLocationId ( $_GET ['observation'] ) != 1) {
-			$content1 = LangViewObservationField4;
+			$content1 = _("Location");
 			$content2 = "<a href=\"" . $baseURL . "index.php?indexAction=detail_location&amp;location=" . urlencode ( $objCometObservation->getLocationId ( $_GET ['observation'] ) ) . "\">" . $objLocation->getLocationPropertyFromId ( $objCometObservation->getLocationId ( $_GET ['observation'] ), 'name' ) . "</a>";
 			echo "<tr><td><strong>" . $content1 . "</strong></td>";
 			echo "<td>" . $content2 . "</td>";
 			echo "</tr>";
 		}
 		if ($objCometObservation->getInstrumentId ( $_GET ['observation'] ) != 0) {
-			$content1 = LangViewObservationField3;
+			$content1 = _("Instrument");
 			$inst = $objInstrument->getInstrumentPropertyFromId ( $objCometObservation->getInstrumentId ( $_GET ['observation'] ), 'name' );
 			if ($objCometObservation->getMagnification ( $_GET ['observation'] ) != 0)
 				$inst = $inst . " (" . $objCometObservation->getMagnification ( $_GET ['observation'] ) . "x)";
 			if (strcmp ( $objInstrument->getInstrumentPropertyFromId ( $objCometObservation->getInstrumentId ( $_GET ['observation'] ), 'name' ), "Naked eye" ) == 0)
-				$inst = InstrumentsNakedEye;
+				$inst = _("Naked Eye");
 			$content2 = "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $objCometObservation->getInstrumentId ( $_GET ['observation'] ) ) . "\">" . $inst . "</a>";
 			echo "<tr><td><strong>" . $content1 . "</strong></td>";
 			echo "<td>" . $content2 . "</td>";
 			echo "</tr>";
 		}
 		if ($objCometObservation->getMethode ( $_GET ['observation'] ) != "") {
-			$content1 = LangViewObservationField15;
+			$content1 = _("Magnitude method");
 			$descr = $ICQMETHODS->getDescription ( $objCometObservation->getMethode ( $_GET ['observation'] ) );
 			$content2 = $objCometObservation->getMethode ( $_GET ['observation'] ) . " - " . $descr;
 			echo "<tr><td><strong>" . $content1 . "</strong></td>";
@@ -92,7 +92,7 @@ function view_observation() {
 		echo "</tr>";
 		}
 		if ($objCometObservation->getChart ( $_GET ['observation'] ) != "") {
-			$content1 = LangViewObservationField17;
+			$content1 = _("Magnitude reference chart");
 			$descr = $ICQREFERENCEKEYS->getDescription ( $objCometObservation->getChart ( $_GET ['observation'] ) );
 			$content2 = $objCometObservation->getChart ( $_GET ['observation'] ) . " - " . $descr;
 			echo "<tr><td><strong>" . $content1 . "</strong></td>";
@@ -100,40 +100,40 @@ function view_observation() {
 		echo "</tr>";
 		}
 		if ($objCometObservation->getMagnitude ( $_GET ['observation'] ) > - 90) {
-			$content1 = LangViewObservationField16;
+			$content1 = _("Magnitude");
 			$content2 = "";
 			if ($objCometObservation->getMagnitudeWeakerThan ( $_GET ['observation'] ) == "1")
-				$content2 .= LangNewComet3 . "&nbsp;";
+				$content2 .= _("Weaker than") . "&nbsp;";
 			$content2 .= sprintf ( "%01.1f", $objCometObservation->getMagnitude ( $_GET ['observation'] ) );
 			if ($objCometObservation->getMagnitudeUncertain ( $_GET ['observation'] ) == "1")
-				$content2 .= "&nbsp;(" . LangNewComet2 . ")";
+				$content2 .= "&nbsp;(" . _("Uncertain") . ")";
 			echo "<tr><td><strong>" . $content1 . "</strong></td>";
 		echo "<td>" . $content2. "</td>";
 		echo "</tr>";
 		}
 		if ($objCometObservation->getDc ( $_GET ['observation'] ) != '') {
-			$content1 = LangViewObservationField18;
+			$content1 = _("Degree of condensation");
 			$content2 = $objCometObservation->getDc ( $_GET ['observation'] );
 			echo "<tr><td><strong>" . $content1 . "</strong></td>";
 		echo "<td>" . $content2. "</td>";
 		echo "</tr>";
 		}
 		if ($objCometObservation->getComa ( $_GET ['observation'] ) > - 90) {
-			$content1 = LangViewObservationField19;
-			$content2 = $objCometObservation->getComa ( $_GET ['observation'] ) . "'";
+			$content1 = _("Coma");
+			$content2 = $objCometObservation->getComa($_GET['observation']) . "'";
 			echo "<tr><td><strong>" . $content1 . "</strong></td>";
 		echo "<td>" . $content2. "</td>";
 		echo "</tr>";
 		}
 		if ($objCometObservation->getTail ( $_GET ['observation'] ) > - 90) {
-			$content1 = LangViewObservationField20;
+			$content1 = _("Length of the tail");
 			$content2 = $objCometObservation->getTail ( $_GET ['observation'] ) . "'";
 			echo "<tr><td><strong>" . $content1 . "</strong></td>";
 		echo "<td>" . $content2. "</td>";
 		echo "</tr>";
 		}
 		if ($objCometObservation->getPa ( $_GET ['observation'] ) > - 90) {
-			$content1 = LangViewObservationField21;
+			$content1 = _("Position Angle");
 			$content2 = $objCometObservation->getPa ( $_GET ['observation'] ) . "&deg;";
 			echo "<tr><td><strong>" . $content1 . "</strong></td>";
 		echo "<td>" . $content2 . "</td>";
@@ -141,7 +141,7 @@ function view_observation() {
 		}
 		$description = $objCometObservation->getDescription ( $_GET ['observation'] );
 		if ($description != "") {
-			$content1 = LangViewObservationField8;
+			$content1 = _("Description");
 			$content2 = "<textarea maxlength=\"500\" name=\"description\" class=\"description\" readonly cols=\"100\" rows=\"5\" >" . $objPresentations->br2nl ( $description ) . "</textarea>";
 			echo "<tr><td><strong>" . $content1 . "</strong></td>";
 		echo "<td>" . $content2. "</td>";
@@ -163,8 +163,8 @@ function view_observation() {
 		}
 		$role = $objObserver->getObserverProperty ( $loggedUser, 'role', 2 );
 		if (($loggedUser == $objCometObservation->getObserverId ( $_GET ['observation'] )) || ($role == ROLEADMIN) || ($role == ROLECOMETADMIN)) {
-			echo "<p><a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_adapt_observation&amp;observation=" . $_GET ['observation'] . "\">" . LangChangeObservationTitle . "</a>";
-			echo "&nbsp;&nbsp;<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=comets_validate_delete_observation&amp;observationid=" . $_GET ['observation'] . "\">" . LangDeleteObservation . "</a></p>";
+			echo "<p><a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_adapt_observation&amp;observation=" . $_GET ['observation'] . "\">" . _("Change observation") . "</a>";
+			echo "&nbsp;&nbsp;<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=comets_validate_delete_observation&amp;observationid=" . $_GET ['observation'] . "\">" . _("Delete observation") . "</a></p>";
 		}
 		if ($loggedUser != "") {
 			$observerid = $objCometObservation->getObserverId ( $_GET ['observation'] );

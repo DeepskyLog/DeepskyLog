@@ -15,7 +15,7 @@ try {
 	$includeFile = $objUtil->utilitiesDispatchIndexAction (); // Determine the page to show
 	require_once 'common/entryexit/data.php'; // Get data for the form, object data, observation data, etc.
 	echo "<!DOCTYPE html>";
-	echo "<html>";
+    echo "<html>";
 	require_once 'common/menu/head.php'; // HTML head
 	echo "<body onkeydown=\"bodyOnKeyDown(event);\">";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "common/entryexit/globals.js\"></script>";
@@ -57,6 +57,9 @@ try {
 
 	// Add link to facebook page
 	echo "<li><a href=\"https://www.facebook.com/deepskylog\" style=\"text-decoration: none; color: #333;\"><img src=\"" . $baseURL . "img/FB-f-Logo__blue_29.png\" width=\"24\" height=\"24\" style=\"border: 0;\"/></a></li>";
+
+	// Add link to instagram page
+	echo "<li><a href=\"https://www.instagram.com/deepskylog.be\" style=\"text-decoration: none; color: #333;\"><img src=\"" . $baseURL . "img/instagram-logo.png\" width=\"24\" height=\"24\" style=\"border: 0;\"/></a></li>";
 
 	// Add link to twitter account
 	echo "<li><a href=\"https://twitter.com/DeepskyLog\"><img width=\"24\" height=\"24\" src=\"" . $baseURL . "img/Twitter_logo_blue.png\"></a></li>";

@@ -14,7 +14,7 @@
 if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 } elseif (!($locationid = $objUtil->checkGetKey('location'))) {
-    throw new Exception(LangException011b);
+    throw new Exception(_("You wanted to change a location, but none is specified. Please contact the developers with this message."));
 } elseif (!($objLocation->getLocationPropertyFromId($locationid, 'name'))) {
     throw new Exception(
         "Location not found in change_instrument.php, " 
@@ -87,7 +87,7 @@ function changeSite()
     echo "<div class=\"form-inline\">
             <input type=\"text\" required class=\"form-control\" " 
         . "name=\"locationname\" placeholder=\"" 
-        . LangAddSiteField1 . "\" value=\"" 
+        . _("Location name") . "\" value=\"" 
         . stripslashes($objLocation->getLocationPropertyFromId($locationid, 'name')) 
         . "\"  " . $disabled . "></input>
              ";
@@ -101,12 +101,12 @@ function changeSite()
     echo "</div><br />
             <table class='table'>
             <tr>
-                <th>" . LangAddSiteField7 . "</th>
-                <th>" . LangAddSiteField8 . "</th>
-                <th>" . LangAddSiteField9 . "</th>
+                <th>" . _("Typical naked eye limiting magnitude") . "</th>
+                <th>" . _("Sky Quality Meter (SQM) value") . "</th>
+                <th>" . _("Bortle Scale") . "</th>
                 <th><a class='btn btn-primary' href='#' role='button'" 
             . " id='lightpollutioninfo'>" 
-            . LangAddSiteField10 . "</a></th>
+            . _("Use value from lightpollutionmap.info") . "</a></th>
             </tr>";
 
     echo "  <tr>

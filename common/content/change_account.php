@@ -3,8 +3,8 @@
 // allows the user to view and change his account's details
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!($loggedUser)) throw new Exception(LangException001);
-elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangException012);
+elseif(!($loggedUser)) throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
+elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(_("You need to be logged in to execute these operations."));
 else change_account();
 
 function change_account()
@@ -32,10 +32,10 @@ function change_account()
 	$tempInstrumentList.= "<option value=\"0\">-----</option>";
 	$instr=$objInstrument->getSortedInstruments("name",$loggedUser);
 	$noStd=false;
-	while(list($key,$value)=each($instr))
+	foreach ($instr as $key=>$value)
 	{ $instrumentname=$objInstrument->getInstrumentPropertyFromId($value,'name');
 	  if($instrumentname=="Naked eye")
-	    $instrumentname=InstrumentsNakedEye;
+	    $instrumentname=_("Naked Eye");
 	  if($objObserver->getObserverProperty($loggedUser,'stdtelescope')=="0")
 	    $noStd = 1;
 		if($objObserver->getObserverProperty($loggedUser,'stdtelescope')==$value)
@@ -47,19 +47,19 @@ function change_account()
 
 	$theAtlasKey=$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano');
 	$tempAtlasList="<select name=\"atlas\" style=\"width: 50%\" class=\"inputfield form-control\">";
-	while(list($key,$value)=each($objAtlas->atlasCodes))
+	foreach ($objAtlas->atlasCodes as $key=>$value)
 	  $tempAtlasList.="<option ".(($key==$theAtlasKey)?"selected=\"selected\"":"")." value=\"$key\">" . $value . "</option>";
 	$tempAtlasList.="</select>";
 
 	$tempLangList="<select name=\"language\" style=\"width: 50%\" class=\"inputfield form-control\">";
 	$languages=$objLanguage->getLanguages();
-	while(list($key,$value)=each($languages))
+	foreach ($languages as $key=>$value)
 	  $tempLangList.="<option value=\"".$key."\"".(($objObserver->getObserverProperty($loggedUser,'language')==$key)?" selected=\"selected\"":"").">".$value."</option>";
 	$tempLangList.="</select>";
 
 	$allLanguages=$objLanguage->getAllLanguages($objObserver->getObserverProperty($loggedUser,'language'));
 	$tempAllLangList="<select name=\"description_language\" style=\"width: 50%\" class=\"inputfield form-control\">";
-	while(list($key,$value)=each($allLanguages))
+	foreach ($allLanguages as $key=>$value)
 	  $tempAllLangList.="<option value=\"".$key."\"".(($objObserver->getObserverProperty($loggedUser,'observationlanguage') == $key)?" selected=\"selected\"":"").">".$value."</option>";
 	$tempAllLangList.="</select>";
 	$_SESSION['alllanguages']=$allLanguages;
@@ -71,10 +71,10 @@ function change_account()
 	echo "<form class=\"form-horizontal\" role=\"form\" action=\"".$baseURL."index.php\" enctype=\"multipart/form-data\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\" />";
 
-	echo "<h4>" . LangChangeAccountTitle . LangChangeAccountTitleFor .
+	echo "<h4>" . sprintf(_("Settings for %s"), 
                 $objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'firstname') . " " .
-                $objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name') . "</h4>";
-	$content="<input class=\"pull-right btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
+                $objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')) . "</h4>";
+	$content="<input class=\"pull-right btn btn-success\" type=\"submit\" name=\"change\" value=\""._("Change")."\" />";
 	echo $content;
 
 	echo "<br />";
@@ -95,7 +95,7 @@ function change_account()
   $upload_dir = 'common/observer_pics';
 	$dir = opendir($instDir.$upload_dir);
 
-  echo "<label class=\"control-label\">" . LangChangeAccountPicture . "</label>
+  echo "<label class=\"control-label\">" . _("Change profile picture") . "</label>
         <input id=\"images\" name=\"image\" type=\"file\" data-show-remove=\"false\" accept=\"image/*\" class=\"file-loading\">";
 
   // Check existence of avatar for the observer
@@ -142,7 +142,7 @@ function change_account()
   echo "<br /><br />";
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField1 . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Username") . "</label>";
 	echo "<div class=\"col-sm-3\">
 			    <input type=\"text\" required disabled class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />
         </div>";
@@ -150,28 +150,26 @@ function change_account()
           <button type=\"button\" class=\"btn btn-danger\" data-toggle=\"modal\" data-target=\"#changePassword\">" . _("Change password") . "</button>
         </div>";
 	echo "<p class=\"form-control-static\">" .
-        LangChangeAccountField1Expl . "</p></div>";
+        _("This is the name you will use to log in") . "</p></div>";
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField2 . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Email address") . "</label>";
 	echo "<div class=\"col-sm-6\">
 			<input type=\"email\" required class=\"inputfield form-control requiredField\" maxlength=\"80\" name=\"email\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'email')."\" />";
 	echo "</div><p class=\"form-control-static\">" .
-        LangChangeAccountField2Expl . "</p></div>";
+        _("Your email address will remain confidential") . "</p></div>";
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField3 . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("First name") . "</label>";
 	echo "<div class=\"col-sm-6\">
 			<input type=\"text\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'firstname')."\" />";
-	echo "</div><p class=\"form-control-static\">" .
-        LangChangeAccountField3Expl . "</p></div>";
+	echo "</div></div>";
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField4 . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Last Name") . "</label>";
 	echo "<div class=\"col-sm-6\">
 			<input type=\"text\" required class=\"inputfield form-control requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')."\" />";
-	echo "</div><p class=\"form-control-static\">" .
-        LangChangeAccountField4Expl . "</p></div>";
+	echo "</div></div>";
 
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . _("Send emails") . "</label>";
@@ -181,25 +179,27 @@ function change_account()
         . _("Send messages as email.") . "</p></div>";
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField11 . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Use local time") . "</label>";
 	echo "<div class=\"col-sm-6\">
 			<input type=\"checkbox\" class=\"inputfield\" name=\"local_time\"".(($objObserver->getObserverProperty($loggedUser,'UT'))?"":"checked")." />";
 	echo "</div><p class=\"form-control-static\">" .
-        LangChangeAccountField11Expl . "</p></div>";
+        _("Use local time to enter and search observations") . "</p></div>";
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField10 . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("ICQ observercode") . "</label>";
 	echo "<div class=\"col-sm-6 form-inline\">
 			<input type=\"text\" class=\"inputfield form-control\" maxlength=\"5\" name=\"icq_name\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'icqname')."\" />";
-	echo "</div><p class=\"form-control-static\">" .
-			LangChangeAccountField10Expl . "</p></div>";
+	echo "</div><p class=\"form-control-static\">" . sprintf(
+        _("%s code for comet observations"),
+        "<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a>"
+    ) . "</p></div>";
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField12 . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("fstOffset") . "</label>";
 	echo "<div class=\"col-sm-6 form-inline\">" .
 	    "<input type=\"number\" min=\"-5.0\" max=\"5.0\" step=\"0.1\" class=\"inputfield centered form-control\" maxlength=\"4\" name=\"fstOffset\" size=\"4\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'fstOffset')."\" />";
 	echo "</div><p class=\"form-control-static\">" .
-			  LangChangeAccountField12Expl . "</p></div>";
+        _("Offset between measured SQM value and the faintest visible star.") . "</p></div>";
 
   // The copyright / license settings.
   $copyright = $objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'copyright');
@@ -292,14 +292,14 @@ function change_account()
           </p>
         </div>';
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountCopyright . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Copyright notice") . "</label>";
 	echo "<div class=\"col-sm-6\">" .
          "<input type=\"text\" id=\"copyright\" class=\"inputfield form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"". $copyrightStr ."\" />";
 	echo "</div></div>";
 
 	echo "<p>&nbsp;</p>";
 
-  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
+  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\""._("Change")."\" />";
 
   echo "</div>";
 
@@ -307,19 +307,19 @@ function change_account()
 
   echo "<br />";
   echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField7 . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Default observing site") . "</label>";
 	echo "<div class=\"col-sm-6\">" . $tempLocationList;
 	echo "</div><p class=\"form-control-static\">" .
-			"<a href=\"".$baseURL."index.php?indexAction=add_location\">".LangChangeAccountField7Expl."</a>" . "</p></div>";
+			"<a href=\"".$baseURL."index.php?indexAction=add_location\">"._("Add new observing site")."</a>" . "</p></div>";
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField8 . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Default instrument") . "</label>";
 	echo "<div class=\"col-sm-6\">" . $tempInstrumentList;
 	echo "</div><p class=\"form-control-static\">" .
-			 "<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>" . "</p></div>";
+			 "<a href=\"".$baseURL."index.php?indexAction=add_instrument\">"._("Add instrument")."</a>" . "</p></div>";
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField9 . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Default atlas") . "</label>";
 	echo "<div class=\"col-sm-6\">" . $tempAtlasList;
 	echo "</div></div>";
 
@@ -336,7 +336,7 @@ function change_account()
 	echo "</select>";
 	echo "</div></div>";
 
-    echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
+    echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\""._("Change")."\" />";
 
   echo "</div>";
 
@@ -383,7 +383,7 @@ function change_account()
          "<input type=\"number\" min=\"6\" max=\"9\" class=\"inputfield centered form-control\" maxlength=\"1\" name=\"atlaspagefont\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'atlaspagefont')."\" />";
 	echo "</div></div>";
 
-  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
+  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\""._("Change")."\" />";
 
   echo "</div>";
 
@@ -391,26 +391,26 @@ function change_account()
   echo "<br />";
   if($languageMenu==1) {
 	  echo "<div class=\"form-group\">";
-	  echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountLanguage . "</label>";
+	  echo "<label class=\"col-sm-2 control-label\">" . _("Default language") . "</label>";
 	  echo "<div class=\"col-sm-6\">" .
            $tempLangList;
-	  echo "</div><p class=\"form-control-static\">" . LangChangeAccountLanguageExpl . "</p></div>";
+	  echo "</div><p class=\"form-control-static\">" . _("The language for DeepskyLog") . "</p></div>";
 	}
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountObservationLanguage . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Standard language for observations") . "</label>";
 	echo "<div class=\"col-sm-6\">" .
 			$tempAllLangList;
-	echo "</div><p class=\"form-control-static\">" . LangChangeAccountObservationLanguageExpl . "</p></div>";
+	echo "</div><p class=\"form-control-static\">" . _("The standard language to enter the observations") . "</p></div>";
 	reset($allLanguages);
 
 	echo "<div class=\"form-group\">";
-	echo "<label class=\"col-sm-2 control-label\">" . LangChangeVisibleLanguagesExpl . "</label>";
+	echo "<label class=\"col-sm-2 control-label\">" . _("Define which languages you want to see in the descriptions") . "</label>";
 	echo "<div class=\"col-sm-6\">";
 	echo "<table class=\"table table-condensed borderless\">";
 
 	$j = 0;
 	echo "<tr>";
-	while((list($key,$value)=each($allLanguages)))
+	foreach ($allLanguages as $key=>$value)
 	{ echo "<td><label class=\"checkbox-inline\"><input type=\"checkbox\" ".(in_array($key,$usedLanguages)?"checked=\"checked\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value."</label></td>";
 	  if (($j + 1) % 3 == 0) {
 	  	echo "</tr><tr>";
@@ -422,7 +422,7 @@ function change_account()
 	}
 	echo "</tr></table></div></div>";
 
-  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
+  echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\""._("Change")."\" />";
 
   echo "</div>";
 
@@ -445,7 +445,7 @@ function change_account()
              <input type=\"password\" name=\"currentPassword\" class=\"strength\" required autofocus data-show-meter=\"false\">" .
              _("New password") . "
              <input type=\"password\" name=\"newPassword\" class=\"strength\" required>" .
-             LangChangeAccountField6 . "
+             _("Confirm password") . "
              <input type=\"password\" name=\"confirmPassword\" class=\"strength\" required data-show-meter=\"false\">
              <br /><br />
             </div>

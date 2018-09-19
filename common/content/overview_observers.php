@@ -4,9 +4,9 @@
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! $loggedUser)
-	throw new Exception ( LangException002 );
+	throw new Exception(_("You need to be logged in to change your locations or equipment."));
 elseif ($_SESSION ['admin'] != "yes")
-	throw new Exception ( LangException001 );
+	throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 else
 	overview_observers ();
 function overview_observers() {
@@ -17,20 +17,20 @@ function overview_observers() {
 	$_SESSION ['observersArr'] = $observersArr;
 	$_SESSION ['observersArrSort'] = $sort;
 	echo "<div id=\"main\">";
-	echo "<h4>" . LangViewObserverTitle . "</h4>";
+	echo "<h4>" . _("Observers overview") . "</h4>";
 	echo "<hr />";
 	echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 	echo "<thead><tr>";
 	echo "<th>id</th>";
-	echo "<th>" . LangViewObserverName . "</th>";
-	echo "<th>" . LangViewObserverFirstName . "</th>";
+	echo "<th>" . _("Last Name") . "</th>";
+	echo "<th>" . _("First Name") . "</th>";
 	echo "<th>Email</th>";
 	echo "<th>Reg. Date</th>";
-	echo "<th>" . LangViewObserverRole . "</th>";
+	echo "<th>" . _("Role") . "</th>";
 	echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\"></th>";
 	echo "<th>" . "Observations" . "</th>";
 	echo "<th>" . "comet Observations" . "</th>";
-	echo "<th>" . LangViewObserverinstrumentCount . "</th>";
+	echo "<th>" . _("Number of instruments") . "</th>";
 	echo "<th>" . "list Count" . "</th>";
 	echo "<th>" . "max Max" . "</th>";
 	echo "</tr></thead>";
@@ -43,17 +43,17 @@ function overview_observers() {
 		echo "<td>" . $value ['registrationDate'] . " </td>";
 		$role = $objObserver->getObserverProperty ( $value ['id'], 'role', 2 );
 		if ($role == ROLEADMIN)
-			echo "<td> " . LangViewObserverAdmin . "</td><td></td>";
+			echo "<td> " . _("Admin") . "</td><td></td>";
 		elseif ($role == ROLEUSER) {
-			echo "<td> " . LangViewObserverUser . "</td>";
+			echo "<td> " . _("User") . "</td>";
 			if ($value ['maxMax'])
 				echo "<td class=\"centered\">niet verwijderbaar</td>";
 			else
-				echo "<td class=\"centered\"><a href=\"" . $baseURL . "index.php?indexAction=validate_delete_observer&amp;validateDelete=" . urlencode ( $value ['id'] ) . "\">" . "Verwijder" . "</a></td>";
+				echo "<td class=\"centered\"><a href=\"" . $baseURL . "index.php?indexAction=validate_delete_observer&amp;validateDelete=" . urlencode($value['id']) . "\">" . "Verwijder" . "</a></td>";
 		} elseif ($role == ROLECOMETADMIN)
-			echo "<td> " . LangViewObserverCometAdmin . "</td><td></td>";
+			echo "<td> " . _("Comet admin") . "</td><td></td>";
 		elseif ($role == ROLEWAITLIST)
-			echo "<td> " . LangViewObserverWaitlist . "</td><td class=\"centered\"><a href=\"" . $baseURL . "index.php?indexAction=validate_observer&amp;validate=" . urlencode ( $value ['id'] ) . "\">" . LangViewObserverValidate . "</a> / <a href=\"" . $baseURL . "index.php?indexAction=validate_delete_observer&amp;validateDelete=" . urlencode ( $value ['id'] ) . "\">" . "Verwijder" . "</a></td>";
+			echo "<td> " . _("Waitlist") . "</td><td class=\"centered\"><a href=\"" . $baseURL . "index.php?indexAction=validate_observer&amp;validate=" . urlencode($value['id']) . "\">" . _("Validate") . "</a> / <a href=\"" . $baseURL . "index.php?indexAction=validate_delete_observer&amp;validateDelete=" . urlencode ( $value ['id'] ) . "\">" . "Verwijder" . "</a></td>";
 		echo "<td>" . $value ['obsCount'] . " </td>";
 		echo "<td>" . $value ['cometobsCount'] . " </td>";
 		echo "<td>" . $value ['instrumentCount'] . " </td>";

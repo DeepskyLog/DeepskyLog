@@ -7,12 +7,13 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 class Language
 {function getLanguages()                                                        // getLanguages returns a list of all available translations.
- { $mydir=opendir("lib/setup/language/") ;
-   $exclude=array("index.php",".","..",".svn","languages.xml");
+ { $mydir=opendir("locale/") ;
+   $exclude=array("messages.pot",".","..", ".DS_Store");
    $langs=array();
    while($fn=readdir($mydir))
      if(!in_array($fn,$exclude))
        $langs[] = $fn;
+    $langs[] = "en";
    closedir($mydir);
    for($i=0;$i<count($langs);$i++)                                              // $langs is now a list of all available translations (en, nl, de, ...)
    { $countrylist=$this->getAllLanguages($langs[$i]);
@@ -52,21 +53,18 @@ class Language
      $countrylist[]=sprintf($data->attributes()->code);
    return $countrylist;
  }
- function getPath($lang)                                                        // getPath returns the path to includ for the given language.
- { global $defaultLanguage;
-   $path="language/".($lang?$lang:$defaultLanguage)."/lang_main.php";
-   return $path;
- }
  function setLocale()
  {
    // When adding a new language, also add the correct locale here!
-   // LOCALES: NL: nl_NL, EN: en_US, FR: fr_FR, DE: de_DE
+   // LOCALES: NL: nl_NL, EN: en_US, FR: fr_FR, DE: de_DE, ES: es_ES
    if (strcmp($_SESSION['lang'], "nl") == 0) {
      setlocale(LC_ALL, 'nl_NL');
    } else if (strcmp($_SESSION['lang'], "fr") == 0) {
      setlocale(LC_ALL, 'fr_FR');
    } else if (strcmp($_SESSION['lang'], "de") == 0) {
      setlocale(LC_ALL, 'de_DE');
+   } else if (strcmp($_SESSION['lang'], "es") == 0) {
+     setlocale(LC_ALL, 'es_ES');
    } else {
      setlocale(LC_ALL, 'en_EN');
    }

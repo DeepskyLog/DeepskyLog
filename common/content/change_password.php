@@ -23,7 +23,7 @@ function change_password() {
               <input type=\"hidden\" name=\"userid\" value=\"" . $userid . "\" />
               <input type=\"hidden\" name=\"token\" value=\"" . $token . "\" />
               <input type=\"password\" name=\"newPassword\" class=\"strength\" required>" .
-              LangChangeAccountField6 . "
+              _("Confirm password") . "
               <input type=\"password\" name=\"confirmPassword\" class=\"strength\" required data-show-meter=\"false\">
               <br />
               <input class=\"btn btn-danger\" type=\"submit\" name=\"changePasswordToken\" value=\"" . _("Change password") . "\" />";

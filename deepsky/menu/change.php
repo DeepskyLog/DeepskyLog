@@ -6,9 +6,9 @@ global $inIndex, $loggedUser, $objUtil;
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! ($loggedUser))
-	throw new Exception ( LangException001 );
+	throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 elseif (! ($objUtil->checkAdminOrUserID ( $loggedUser )))
-	throw new Exception ( LangException012 );
+	throw new Exception(_("You need to be logged in to execute these operations."));
 else
 	menu_change ();
 function menu_change() {
@@ -24,11 +24,11 @@ function menu_change() {
 		echo "  <li><a data-toggle=\"modal\" data-target=\"#addList\">" . _("Observing list") . "</a></li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_session\">" . _("Sessions") . "</a></li>";
 		echo "  <li class=\"disabled\">─────────────────</li>";
-		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_instrument\">" . LangChangeMenuItem3 . "</a></li>";
-		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_location\">" . LangChangeMenuItem4 . "</a></li>";
-		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_eyepiece\">" . LangChangeMenuItem6 . "</a></li>";
-		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_filter\">" . LangChangeMenuItem7 . "</a></li>";
-		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_lens\">" . LangChangeMenuItem8 . "</a></li>";
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_instrument\">" . _("Instruments") . "</a></li>";
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_location\">" . _("Locations") . "</a></li>";
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_eyepiece\">" . _("Eyepieces") . "</a></li>";
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_filter\">" . _("Filters") . "</a></li>";
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_lens\">" . _("Lenses") . "</a></li>";
 		echo "  <li class=\"disabled\">─────────────────</li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_object\">" . _("Object") . "</a></li>";
 		echo " </ul>";

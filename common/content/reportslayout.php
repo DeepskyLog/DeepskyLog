@@ -3,7 +3,7 @@
 // allows to specify a report layout
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!($loggedUser)) throw new Exception(LangException001);
+elseif(!($loggedUser)) throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 else reportsLayout();
 
 function reportsLayout()

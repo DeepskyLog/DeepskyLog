@@ -33,12 +33,12 @@ function data_get_observations()
 
 	$selectedLanguages=Array();
 	if($objUtil->checkGetKey('myLanguages','false')=='true')
-	  while(list($key,$value)=each($allLanguages))
+	  foreach ($allLanguages as $key=>$value)
 	    if(array_key_exists($key,$_GET))
 	      $selectedLanguages[]=$key;
 	if((!count($selectedLanguages))&&$objUtil->checkGetKey('myLanguages'))
 	{ reset($allLanguages);
-	  while(list($key,$value)=each($allLanguages))
+	  foreach ($allLanguages as $key=>$value)
 	    if(($loggedUser&&in_array($key,$usedLanguages))
 	    ||((!$loggedUser)&&($key==$_SESSION['lang'])))
 	      $selectedLanguages[]=$key;
@@ -90,11 +90,11 @@ function data_get_observations()
 	$validQobs=false;
 	if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])>1)&&array_key_exists('Qobs',$_SESSION)&&(count($_SESSION['Qobs'])>0)&&array_key_exists('QobsMaxCnt',$_SESSION)&&($_SESSION['QobsMaxCnt']==$MaxCnt))
 	 $validQobs=true;
-	while($validQobs && (list($key,$value) = each($_SESSION['QobsParams'])))
+   while($validQobs && (list($key,$value) = each($_SESSION['QobsParams'])))
 	 if(!array_key_exists($key,$query)||($value!=$query[$key]))
 	   $validQobs=false;
-	while($validQobs && (list($key,$value) = each($query)))
-	 if(!array_key_exists($key,$_SESSION['QobsParams'])||($value!=$_SESSION['QobsParams'][$key]))
+    while($validQobs && (list($key,$value) = each($_SESSION['QobsParams'])))
+       if(!array_key_exists($key,$_SESSION['QobsParams'])||($value!=$_SESSION['QobsParams'][$key]))
 	   $validQobs=false;
 	if(!$validQobs)
 	{ $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen','A'),$objUtil->checkGetKey('exactinstrumentlocation',0));
@@ -113,7 +113,7 @@ function data_get_observations()
 	        $maxdate=$maxdate - 1;
 	      $newkey=0;
 	      $new_obs=Array();
-	      while(list($key, $value)=each($_SESSION['Qobs'])) // go through observations array
+	      foreach ($_SESSION['Qobs'] as $key=>$value)
 	      { $newdate = $objObservation->getDsObservationLocalDate($value['observationid']);
 	        if ($mindate != "" && $maxdate != "")
 	        { if (($newdate >= $mindate) && ($newdate <= $maxdate))
@@ -134,7 +134,7 @@ function data_get_observations()
 	//=========================================== REMOVE EMPTY OBSERVATIONS OF OTHER USERS =======================================
   $nonempty=array();
   if(count($_SESSION['Qobs'])>0)
-  { while(list($key, $value)=each($_SESSION['Qobs']))
+  { foreach ($_SESSION['Qobs'] as $key=>$value)
       if((strlen(trim($value['observationdescription']))>0)||($loggedUser && ($value['observerid']==$loggedUser)))
         $nonempty[]=$value;
   }
@@ -149,7 +149,7 @@ function data_get_observations()
 	if($_SESSION['QobsSort']!=$_GET['sort'])
 	{ if($_GET['sortdirection']=='desc')
 	  { if(count($_SESSION['Qobs'])>1)
-	    { while(list($key, $value)=each($_SESSION['Qobs']))
+	    { foreach ($_SESSION['Qobs'] as $key=>$value)
 		      if($_GET['sort']=='observationdescription')
 		      { $sortarray[strlen($value['observationdescription'])]=$value;
 		      }
@@ -168,7 +168,7 @@ function data_get_observations()
 	  }
 	  else
 	  { if(count($_SESSION['Qobs'])>1)
-	    { while(list($key, $value)=each($_SESSION['Qobs']))
+	    { foreach ($_SESSION['Qobs'] as $key=>$value)
 		      if($_GET['sort']=='observationdescription')
 		      { $sortarray[strlen($value['observationdescription'])]=$value;
 		      }

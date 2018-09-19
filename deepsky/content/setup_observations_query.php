@@ -15,8 +15,9 @@ function setup_observations_query() {
 			}
 		}
 	}
-	if ($objUtil->checkGetKey ( 'object' ))
-		$entryMessage .= LangInstructionsNoObjectFound . $_GET ['object'];
+	if ($objUtil->checkGetKey('object')) {
+        $entryMessage .= sprintf(_("No corresponding object found for %s"), $_GET['object']);
+    }
 	$_SESSION ['result'] = "";
 	if (array_key_exists ( 'atlas', $_GET ) && $_GET ['atlas'])
 		$atlas = $_GET ['atlas'];
@@ -32,20 +33,20 @@ function setup_observations_query() {
 	$content = "";
 	$content1 = "";
 	if ($loggedUser) {
-		$content = LangSeen;
+		$content = _("Seen");
 		$seen = $objUtil->checkGetKey ( 'seen' );
 		if ($seen == '')
 			if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
 				$seen = $_SESSION ['QobsParams'] ['seen'];
 		$content1 = "<select id=\"seen\" class=\"form-control\" name=\"seen\">";
-		$content1 .= "<option " . ($seen == "A" ? "selected=\"selected\"" : "") . " value=\"A\">" . LangSeenDontCare . "</option>";
-		$content1 .= "<option " . ($seen == "X" ? "selected=\"selected\"" : "") . " value=\"X\">" . LangSeenSomeoneElse . "</option>" . "<option value=\"Y\">" . LangSeenByMe . "</option>";
+		$content1 .= "<option " . ($seen == "A" ? "selected=\"selected\"" : "") . " value=\"A\">" . _("All objects, seen or not") . "</option>";
+		$content1 .= "<option " . ($seen == "X" ? "selected=\"selected\"" : "") . " value=\"X\">" . _("Already seen by someone else but not by me") . "</option>" . "<option value=\"Y\">" . _("Only objects that have been seen by me") . "</option>";
 		$content1 .= "</select>";
 	}
-	$content2 = "<input type=\"submit\" class=\"btn btn-success\" name=\"query\" value=\"" . LangQueryObservationsButton1 . "\" />";
-	$content2 .= "&nbsp;" . '<input type="button" class="btn btn-danger" onclick="clearFields();" value="' . LangQueryObservationsButton2 . '"/>';
+	$content2 = "<input type=\"submit\" class=\"btn btn-success\" name=\"query\" value=\"" . _("Search") . "\" />";
+	$content2 .= "&nbsp;" . '<input type="button" class="btn btn-danger" onclick="clearFields();" value="' . _("Clear Fields") . '"/>';
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "deepsky/content/setup_observations_query.js\"></script>";
-	echo "<h4>" . LangQueryObservationsTitle . "</h4>";
+	echo "<h4>" . _("Search observations") . "</h4>";
 	echo "<span class=\"pull-right\">" . $content2 . "</span>";
 
 	echo "<table><tr><td><strong>" . $content . "</strong></td>";
@@ -53,7 +54,7 @@ function setup_observations_query() {
 	echo "</td></tr>";
 	// OBJECT NAME
 	echo "<tr>";
-	echo "<td><strong>" . LangViewObservationField1 . "</strong></td>";
+	echo "<td><strong>" . _("Object name") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	if (($catalog = $objUtil->checkGetKey ( 'catalog' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
@@ -69,7 +70,7 @@ function setup_observations_query() {
 	echo "<input id=\"number\" placeholder=\"" . _("Enter number in catalog") . "\" name=\"number\" type=\"text\" class=\"form-control\" maxlength=\"255\" size=\"40\" value=\"" . $catNumber . "\" />";
 	echo "</td></tr>";
 	// ATLAS PAGE NUMBER
-	echo "<tr><td><strong>" . LangQueryObjectsField12 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Atlas Page") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	if (($atlas = $objUtil->checkGetKey ( 'atlas' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
@@ -88,7 +89,7 @@ function setup_observations_query() {
 	echo "</tr>";
 	// OBJECT CONSTELLATION
 	echo "<tr>";
-	echo "<td><strong>" . LangQueryObjectsField2 . "</strong></td>";
+	echo "<td><strong>" . _("Constellation") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$constellations = $objObject->getConstellations ();
 	while ( list ( $key, $value ) = each ( $constellations ) )
@@ -105,7 +106,7 @@ function setup_observations_query() {
 	echo "</select>";
 	echo "</td>";
 	// MINIMUM DECLINATION
-	echo "<td><strong>" . LangQueryObjectsField9 . "</strong></td>";
+	echo "<td><strong>" . _("Minimum declination") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	if (($minDeclDegrees = $objUtil->checkGetKey ( 'minDeclDegrees' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount) && ($_SESSION ['QobsParams'] ['mindecl'] !== ''))
@@ -123,7 +124,7 @@ function setup_observations_query() {
 	echo "</tr>";
 	// OBJECT TYPE
 	echo "<tr>";
-	echo "<td><strong>" . LangQueryObjectsField11 . "</strong></td>";
+	echo "<td><strong>" . _("Type") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	echo "<select id=\"type\" name=\"type\" class=\"form-control\">";
 	echo "<option value=\"\">-----</option>";
@@ -140,7 +141,7 @@ function setup_observations_query() {
 	echo "</select>";
 	echo "</td>";
 	// MAXIMUM DECLINATION
-	echo "<td><strong>" . LangQueryObjectsField10 . "</strong></td>";
+	echo "<td><strong>" . _("Maximum declination") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	if (($maxDeclDegrees = $objUtil->checkGetKey ( 'maxDeclDegrees' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount) && ($_SESSION ['QobsParams'] ['maxdecl'] !== ''))
@@ -158,7 +159,7 @@ function setup_observations_query() {
 	echo "</tr>";
 	// MAXIMUM MAGNITUDE
 	echo "<tr>";
-	echo "<td><strong>" . LangQueryObjectsField4 . "</strong></td>";
+	echo "<td><strong>" . _("Magnitude brighter than") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	if (($maxMag = $objUtil->checkGetKey ( 'maxmag' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
@@ -166,7 +167,7 @@ function setup_observations_query() {
 	echo "<input id=\"maxmag\" name=\"maxmag\" type=\"number\" min=\"-5\" max=\"24\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" size=\"5\" value=\"" . $maxMag . "\" />";
 	echo "</td>";
 	// MINIMUM RIGHT ASCENSION
-	echo "<td><strong>" . LangQueryObjectsField7 . "</strong></td>";
+	echo "<td><strong>" . _("Minimum RA") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	if (($minRAHours = $objUtil->checkGetKey ( 'minRAHours' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount) && ($_SESSION ['QobsParams'] ['minra'] !== ''))
@@ -184,7 +185,7 @@ function setup_observations_query() {
 	echo "</tr>";
 	// MINIMUM MAGNITUDE
 	echo "<tr>";
-	echo "<td><strong>" . LangQueryObjectsField3 . "</strong></td>";
+	echo "<td><strong>" . _("Magnitude fainter than") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	if (($minMag = $objUtil->checkGetKey ( 'minmag' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
@@ -192,7 +193,7 @@ function setup_observations_query() {
 	echo "<input id=\"minmag\" name=\"minmag\" type=\"number\" min=\"-5\" max=\"24\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" size=\"5\" value=\"" . $minMag . "\" />";
 	echo "</td>";
 	// MAXIMUM RIGHT ASCENSION
-	echo "<td><strong>" . LangQueryObjectsField8 . "</strong></td>";
+	echo "<td><strong>" . _("Maximum RA") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	if (($maxRAHours = $objUtil->checkGetKey ( 'maxRAHours' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount) && ($_SESSION ['QobsParams'] ['maxra'] !== ''))
@@ -210,7 +211,7 @@ function setup_observations_query() {
 	echo "</tr>";
 	// MINIMIM SURFACE BRIGHTNESS
 	echo "<tr>";
-	echo "<td><strong>" . LangQueryObjectsField5 . "</strong></td>";
+	echo "<td><strong>" . _("Surface brightness lower than") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	if (($minSB = $objUtil->checkGetKey ( 'minsb' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
@@ -218,7 +219,7 @@ function setup_observations_query() {
 	echo "<input id=\"minsb\" name=\"minsb\" type=\"number\" min=\"-5\" max=\"24\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" size=\"5\" value=\"" . $minSB . "\" />";
 	echo "</td>";
 	// MINIMIM SIZE
-	echo "<td><strong>" . LangQueryObjectsField13 . "</strong></td>";
+	echo "<td><strong>" . _("Minimum size") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$size_min_units = $objUtil->checkGetKey ( 'size_min_units' );
 	if (($minSize = $objUtil->checkGetKey ( 'minsize' )) == '')
@@ -229,14 +230,14 @@ function setup_observations_query() {
 	echo "<input id=\"minsize\" name=\"minsize\" type=\"number\" min=\"0\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" size=\"4\" value=\"" . $minSize . "\" />";
 	echo "&nbsp;&nbsp;";
 	echo "<select id=\"size_min_units\" name=\"size_min_units\" class=\"form-control\">";
-	echo "<option" . (($size_min_units == "min") ? " selected=\"selected\"" : "") . " value=\"min\">" . LangNewObjectSizeUnits1 . "</option>";
-	echo "<option" . (($size_min_units == "sec") ? " selected=\"selected\"" : "") . " value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>";
+	echo "<option" . (($size_min_units == "min") ? " selected=\"selected\"" : "") . " value=\"min\">" . _("arcminutes") . "</option>";
+	echo "<option" . (($size_min_units == "sec") ? " selected=\"selected\"" : "") . " value=\"sec\">" . _("arcseconds") . "</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "</tr>";
 	// MAXIMUM SURFACE BRIGHTNESS
 	echo "<tr>";
-	echo "<td><strong>" . LangQueryObjectsField6 . "</strong></td>";
+	echo "<td><strong>" . _("Surface brightness higher than") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	if (($maxSB = $objUtil->checkGetKey ( 'maxsb' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
@@ -244,7 +245,7 @@ function setup_observations_query() {
 	echo "<input id=\"maxsb\" name=\"maxsb\" type=\"number\" min=\"-5\" max=\"24\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" size=\"5\" value=\"" . $maxSB . "\" />";
 	echo "</td>";
 	// MAXIMUM SIZE
-	echo "<td><strong>" . LangQueryObjectsField14 . "</strong></td>";
+	echo "<td><strong>" . _("Maximum size") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$size_max_units = $objUtil->checkGetKey ( 'size_max_units' );
 	if (($maxSize = $objUtil->checkGetKey ( 'maxsize' )) == '')
@@ -255,8 +256,8 @@ function setup_observations_query() {
 	echo "<input id=\"maxsize\" name=\"maxsize\" type=\"number\" min=\"0\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" size=\"4\" value=\"" . $maxSize . "\" />";
 	echo "&nbsp;&nbsp;";
 	echo "<select id=\"size_max_units\" name=\"size_max_units\" class=\"form-control\">";
-	echo "<option" . (($size_max_units == "min") ? " selected=\"selected\"" : "") . " value=\"min\">" . LangNewObjectSizeUnits1 . "</option>";
-	echo "<option" . (($size_max_units == "sec") ? " selected=\"selected\"" : "") . " value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>";
+	echo "<option" . (($size_max_units == "min") ? " selected=\"selected\"" : "") . " value=\"min\">" . _("arcminutes") . "</option>";
+	echo "<option" . (($size_max_units == "sec") ? " selected=\"selected\"" : "") . " value=\"sec\">" . _("arcseconds") . "</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "</tr>";
@@ -265,7 +266,7 @@ function setup_observations_query() {
 	echo "<table style=\"width:100%\">";
 	// OBSERVER
 	echo "<tr>";
-	echo "<td><strong>" . LangViewObservationField2 . "</strong></td>";
+	echo "<td><strong>" . _("Observer") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$observer = $objUtil->checkGetKey ( 'observer' );
 	if ($observer == '')
@@ -282,7 +283,7 @@ function setup_observations_query() {
 	// MINIMUM DATE
 	echo "<tr>";
 	echo "<td><strong>";
-    echo LangFromDate;
+    echo _("From");
 	echo "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$minday = $objUtil->checkGetKey ( 'minday' );
@@ -297,18 +298,18 @@ function setup_observations_query() {
 			$minmonth = substr ( $_SESSION ['QobsParams'] ['mindate'], - 4, 2 );
 	echo "<select id=\"minmonth\" name=\"minmonth\" class=\"form-control\">
 		             <option value=\"\">-----</option>
-		             <option" . ($minmonth == '01' ? ' selected="selected"' : "") . " value=\"01\">" . LangNewObservationMonth1 . "</option>
-		             <option" . ($minmonth == '02' ? ' selected="selected"' : "") . " value=\"02\">" . LangNewObservationMonth2 . "</option>
-		             <option" . ($minmonth == '03' ? ' selected="selected"' : "") . " value=\"03\">" . LangNewObservationMonth3 . "</option>
-		             <option" . ($minmonth == '04' ? ' selected="selected"' : "") . " value=\"04\">" . LangNewObservationMonth4 . "</option>
-		             <option" . ($minmonth == '05' ? ' selected="selected"' : "") . " value=\"05\">" . LangNewObservationMonth5 . "</option>
-		             <option" . ($minmonth == '06' ? ' selected="selected"' : "") . " value=\"06\">" . LangNewObservationMonth6 . "</option>
-		             <option" . ($minmonth == '07' ? ' selected,="selected"' : "") . " value=\"07\">" . LangNewObservationMonth7 . "</option>
-		             <option" . ($minmonth == '08' ? ' selected="selected"' : "") . " value=\"08\">" . LangNewObservationMonth8 . "</option>
-		             <option" . ($minmonth == '09' ? ' selected="selected"' : "") . " value=\"09\">" . LangNewObservationMonth9 . "</option>
-		             <option" . ($minmonth == '10' ? ' selected="selected"' : "") . " value=\"10\">" . LangNewObservationMonth10 . "</option>
-		             <option" . ($minmonth == '11' ? ' selected="selected"' : "") . " value=\"11\">" . LangNewObservationMonth11 . "</option>
-		             <option" . ($minmonth == '12' ? ' selected="selected"' : "") . " value=\"12\">" . LangNewObservationMonth12 . "</option>
+		             <option" . ($minmonth == '01' ? ' selected="selected"' : "") . " value=\"01\">" . _("January") . "</option>
+		             <option" . ($minmonth == '02' ? ' selected="selected"' : "") . " value=\"02\">" . _("February") . "</option>
+		             <option" . ($minmonth == '03' ? ' selected="selected"' : "") . " value=\"03\">" . _("March") . "</option>
+		             <option" . ($minmonth == '04' ? ' selected="selected"' : "") . " value=\"04\">" . _("April") . "</option>
+		             <option" . ($minmonth == '05' ? ' selected="selected"' : "") . " value=\"05\">" . _("May") . "</option>
+		             <option" . ($minmonth == '06' ? ' selected="selected"' : "") . " value=\"06\">" . _("June") . "</option>
+		             <option" . ($minmonth == '07' ? ' selected,="selected"' : "") . " value=\"07\">" . _("July") . "</option>
+		             <option" . ($minmonth == '08' ? ' selected="selected"' : "") . " value=\"08\">" . _("August") . "</option>
+		             <option" . ($minmonth == '09' ? ' selected="selected"' : "") . " value=\"09\">" . _("September") . "</option>
+		             <option" . ($minmonth == '10' ? ' selected="selected"' : "") . " value=\"10\">" . _("October") . "</option>
+		             <option" . ($minmonth == '11' ? ' selected="selected"' : "") . " value=\"11\">" . _("November") . "</option>
+		             <option" . ($minmonth == '12' ? ' selected="selected"' : "") . " value=\"12\">" . _("December") . "</option>
 		             </select>";
 	echo "&nbsp;";
 	$minyear = $objUtil->checkGetKey ( 'minyear' );
@@ -318,7 +319,7 @@ function setup_observations_query() {
 	echo "<input id=\"minyear\" name=\"minyear\" type=\"number\" min=\"1609\" class=\"form-control\" maxlength=\"4\" size=\"5\" value=\"" . $minyear . "\" />";
 	echo "</td>";
 	// MINIMUM DIAMETER
-	echo "<td><strong>" . LangViewObservationField13 . "</strong></td>";
+	echo "<td><strong>" . _("Minimum instrument diameter") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$mindiameterunits = $objUtil->checkGetKey ( 'mindiameterunits' );
 	if (($mindiameter = $objUtil->checkGetKey ( 'mindiameter' )) == '')
@@ -335,7 +336,7 @@ function setup_observations_query() {
 	echo "</tr>";
 	// MAXIMUM DATE
 	echo "<tr>";
-	echo "<td><strong>" . LangTillDate . "</strong></td>";
+	echo "<td><strong>" . _("Till") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$maxday = $objUtil->checkGetKey ( 'maxday' );
 	if ($maxday == '')
@@ -349,18 +350,18 @@ function setup_observations_query() {
 			$maxmonth = substr ( $_SESSION ['QobsParams'] ['maxdate'], - 4, 2 );
 	echo "<select id=\"maxmonth\" name=\"maxmonth\" class=\"form-control\">
 		             <option value=\"\">-----</option>
-		             <option" . ($maxmonth == '01' ? ' selected="selected"' : "") . " value=\"01\">" . LangNewObservationMonth1 . "</option>
-		             <option" . ($maxmonth == '02' ? ' selected="selected"' : "") . " value=\"02\">" . LangNewObservationMonth2 . "</option>
-		             <option" . ($maxmonth == '03' ? ' selected="selected"' : "") . " value=\"03\">" . LangNewObservationMonth3 . "</option>
-		             <option" . ($maxmonth == '04' ? ' selected="selected"' : "") . " value=\"04\">" . LangNewObservationMonth4 . "</option>
-		             <option" . ($maxmonth == '05' ? ' selected="selected"' : "") . " value=\"05\">" . LangNewObservationMonth5 . "</option>
-		             <option" . ($maxmonth == '06' ? ' selected="selected"' : "") . " value=\"06\">" . LangNewObservationMonth6 . "</option>
-		             <option" . ($maxmonth == '07' ? ' selected="selected"' : "") . " value=\"07\">" . LangNewObservationMonth7 . "</option>
-		             <option" . ($maxmonth == '08' ? ' selected="selected"' : "") . " value=\"08\">" . LangNewObservationMonth8 . "</option>
-		             <option" . ($maxmonth == '09' ? ' selected="selected"' : "") . " value=\"09\">" . LangNewObservationMonth9 . "</option>
-		             <option" . ($maxmonth == '10' ? ' selected="selected"' : "") . " value=\"10\">" . LangNewObservationMonth10 . "</option>
-		             <option" . ($maxmonth == '11' ? ' selected="selected"' : "") . " value=\"11\">" . LangNewObservationMonth11 . "</option>
-		             <option" . ($maxmonth == '12' ? ' selected="selected"' : "") . " value=\"12\">" . LangNewObservationMonth12 . "</option>
+		             <option" . ($maxmonth == '01' ? ' selected="selected"' : "") . " value=\"01\">" . _("January") . "</option>
+		             <option" . ($maxmonth == '02' ? ' selected="selected"' : "") . " value=\"02\">" . _("February") . "</option>
+		             <option" . ($maxmonth == '03' ? ' selected="selected"' : "") . " value=\"03\">" . _("March") . "</option>
+		             <option" . ($maxmonth == '04' ? ' selected="selected"' : "") . " value=\"04\">" . _("April") . "</option>
+		             <option" . ($maxmonth == '05' ? ' selected="selected"' : "") . " value=\"05\">" . _("May") . "</option>
+		             <option" . ($maxmonth == '06' ? ' selected="selected"' : "") . " value=\"06\">" . _("June") . "</option>
+		             <option" . ($maxmonth == '07' ? ' selected="selected"' : "") . " value=\"07\">" . _("July") . "</option>
+		             <option" . ($maxmonth == '08' ? ' selected="selected"' : "") . " value=\"08\">" . _("August") . "</option>
+		             <option" . ($maxmonth == '09' ? ' selected="selected"' : "") . " value=\"09\">" . _("September") . "</option>
+		             <option" . ($maxmonth == '10' ? ' selected="selected"' : "") . " value=\"10\">" . _("October") . "</option>
+		             <option" . ($maxmonth == '11' ? ' selected="selected"' : "") . " value=\"11\">" . _("November") . "</option>
+		             <option" . ($maxmonth == '12' ? ' selected="selected"' : "") . " value=\"12\">" . _("December") . "</option>
 		             </select>";
 	echo "&nbsp;";
 	$maxyear = $objUtil->checkGetKey ( 'maxyear' );
@@ -370,7 +371,7 @@ function setup_observations_query() {
 	echo "<input id=\"maxyear\" name=\"maxyear\" type=\"number\" min=\"1609\" class=\"form-control\" maxlength=\"4\" size=\"5\" value=\"" . $maxyear . "\" />";
 	echo "</td>";
 	// MAXIMUM DIAMETER
-	echo "<td><strong>" . LangViewObservationField14 . "</strong></td>";
+	echo "<td><strong>" . _("Maximum instrument diameter") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$maxdiameterunits = $objUtil->checkGetKey ( 'maxdiameterunits' );
 	if (($maxdiameter = $objUtil->checkGetKey ( 'maxdiameter' )) == '')
@@ -390,7 +391,7 @@ function setup_observations_query() {
 	echo "<table style=\"width:100%\">";
 	// SITE
 	echo "<tr>";
-	echo "<td><strong>" . LangViewObservationField4 . "</strong></td>";
+	echo "<td><strong>" . _("Location") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$sites = $objLocation->getSortedLocations ( 'name' );
 	$site = $objUtil->checkGetKey ( 'site' );
@@ -409,7 +410,7 @@ function setup_observations_query() {
 	echo "</tr>";
 	// MINIMUM Latitude
 	echo "<tr>";
-	echo "<td><strong>" . LangQueryObjectsField15 . "</strong></td>";
+	echo "<td><strong>" . _("Minimum Latitude") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	if (($minLatDegrees = $objUtil->checkGetKey ( 'minLatDegrees' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount) && ($_SESSION ['QobsParams'] ['minLat'] !== ''))
@@ -425,7 +426,7 @@ function setup_observations_query() {
 	echo "<input id=\"minLatSeconds\" name=\"minLatSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $minLatSeconds . "\" />&nbsp;&quot;&nbsp;";
 	echo "</td>";
 	// MINIMUM LIMITING MAGNITUDE
-	echo "<td><strong>" . LangViewObservationField25 . "</strong></td>";
+	echo "<td><strong>" . _("Worst limiting magnitude") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$minlimmag = $objUtil->checkGetKey ( 'minlimmag' );
 	if ($minlimmag == '')
@@ -436,7 +437,7 @@ function setup_observations_query() {
 	echo "</tr>";
 	// MAXIMUM latitude
 	echo "<tr>";
-	echo "<td><strong>" . LangQueryObjectsField16 . "</strong></td>";
+	echo "<td><strong>" . _("Maximum Latitude") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	if (($maxLatDegrees = $objUtil->checkGetKey ( 'maxLatDegrees' )) == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount) && ($_SESSION ['QobsParams'] ['maxLat'] !== ''))
@@ -452,7 +453,7 @@ function setup_observations_query() {
 	echo "<input id=\"maxLatSeconds\" name=\"maxLatSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $maxLatSeconds . "\" />&nbsp;&quot;&nbsp;";
 	echo "</td>";
 	// MAXIMUM LIMITING MAGNITUDE
-	echo "<td><strong>" . LangViewObservationField26 . "</strong></td>";
+	echo "<td><strong>" . _("Best limiting magnitude") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$maxlimmag = $objUtil->checkGetKey ( 'maxlimmag' );
 	if ($maxlimmag == '')
@@ -463,7 +464,7 @@ function setup_observations_query() {
 	echo "</tr>";
 	// MINIMUM SEEING
 	echo "<tr>";
-	echo "<td><strong>" . LangViewObservationField27 . "</strong></td>";
+	echo "<td><strong>" . _("Worst seeing") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$minseeing = $objUtil->checkGetKey ( 'minseeing' );
 	if ($minseeing == '')
@@ -471,15 +472,15 @@ function setup_observations_query() {
 			$minseeing = $_SESSION ['QobsParams'] ['minseeing'];
 	echo "<select id=\"minseeing\" name=\"minseeing\" class=\"form-control\">";
 	echo "<option value=\"\">-----</option>";
-	echo "<option" . (($minseeing == 1) ? ' selected="selected"' : '') . " value=\"1\">" . SeeingExcellent . "</option>"; // EXCELLENT
-	echo "<option" . (($minseeing == 2) ? ' selected="selected"' : '') . " value=\"2\">" . SeeingGood . "</option>"; // GOOD
-	echo "<option" . (($minseeing == 3) ? ' selected="selected"' : '') . " value=\"3\">" . SeeingModerate . "</option>"; // MODERATE
-	echo "<option" . (($minseeing == 4) ? ' selected="selected"' : '') . " value=\"4\">" . SeeingPoor . "</option>"; // POOR
-	echo "<option" . (($minseeing == 5) ? ' selected="selected"' : '') . " value=\"5\">" . SeeingBad . "</option>"; // BAD
+	echo "<option" . (($minseeing == 1) ? ' selected="selected"' : '') . " value=\"1\">" . _("Excellent") . "</option>"; // EXCELLENT
+	echo "<option" . (($minseeing == 2) ? ' selected="selected"' : '') . " value=\"2\">" . _("Good") . "</option>"; // GOOD
+	echo "<option" . (($minseeing == 3) ? ' selected="selected"' : '') . " value=\"3\">" . _("Moderate") . "</option>"; // MODERATE
+	echo "<option" . (($minseeing == 4) ? ' selected="selected"' : '') . " value=\"4\">" . _("Poor") . "</option>"; // POOR
+	echo "<option" . (($minseeing == 5) ? ' selected="selected"' : '') . " value=\"5\">" . _("Bad") . "</option>"; // BAD
 	echo "</select>";
 	echo "</td>";
 	// MAXIMUM SEEING
-	echo "<td><strong>" . LangViewObservationField28 . "</strong></td>";
+	echo "<td><strong>" . _("Best seeing") . "</strong></td>";
 	echo "<td colspan=\"2\" class=\"form-inline\">";
 	$maxseeing = $objUtil->checkGetKey ( 'maxseeing' );
 	if ($maxseeing == '')
@@ -487,11 +488,11 @@ function setup_observations_query() {
 			$maxseeing = $_SESSION ['QobsParams'] ['maxseeing'];
 	echo "<select id=\"maxseeing\" name=\"maxseeing\" class=\"form-control\">";
 	echo "<option value=\"\">-----</option>";
-	echo "<option" . (($maxseeing == 1) ? ' selected="selected"' : '') . " value=\"1\">" . SeeingExcellent . "</option>"; // EXCELLENT
-	echo "<option" . (($maxseeing == 2) ? ' selected="selected"' : '') . " value=\"2\">" . SeeingGood . "</option>"; // GOOD
-	echo "<option" . (($maxseeing == 3) ? ' selected="selected"' : '') . " value=\"3\">" . SeeingModerate . "</option>"; // MODERATE
-	echo "<option" . (($maxseeing == 4) ? ' selected="selected"' : '') . " value=\"4\">" . SeeingPoor . "</option>"; // POOR
-	echo "<option" . (($maxseeing == 5) ? ' selected="selected"' : '') . " value=\"5\">" . SeeingBad . "</option>"; // BAD
+	echo "<option" . (($maxseeing == 1) ? ' selected="selected"' : '') . " value=\"1\">" . _("Excellent") . "</option>"; // EXCELLENT
+	echo "<option" . (($maxseeing == 2) ? ' selected="selected"' : '') . " value=\"2\">" . _("Good") . "</option>"; // GOOD
+	echo "<option" . (($maxseeing == 3) ? ' selected="selected"' : '') . " value=\"3\">" . _("Moderate") . "</option>"; // MODERATE
+	echo "<option" . (($maxseeing == 4) ? ' selected="selected"' : '') . " value=\"4\">" . _("Poor") . "</option>"; // POOR
+	echo "<option" . (($maxseeing == 5) ? ' selected="selected"' : '') . " value=\"5\">" . _("Bad") . "</option>"; // BAD
 	echo "</select>";
 	echo "</td>";
 	echo "</tr>";
@@ -500,7 +501,7 @@ function setup_observations_query() {
 	echo "<table style=\"width:100%\">";
 	// DRAWINGS
 	echo "<tr>";
-	echo "<td><strong>" . LangQueryObservationsMessage1 . "</strong></td>";
+	echo "<td><strong>" . _("Only observations with drawing") . "</strong></td>";
 	echo "<td>";
 	$drawings = $objUtil->checkGetKey ( 'drawings' );
 	if ($drawings == '')
@@ -511,10 +512,10 @@ function setup_observations_query() {
 	if ($nodrawings == '')
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount))
 			$nodrawings = $_SESSION ['QobsParams'] ['hasNoDrawing'];
-	echo "&nbsp;&nbsp;&nbsp;<strong>" . LangQueryObservationsMessage1b . "</strong>&nbsp;&nbsp;<input id=\"nodrawings\" name=\"nodrawings\" type=\"checkbox\" class=\"inputfield\" " . ($nodrawings == 'on' ? ' checked="on"' : "") . "/>";
+	echo "&nbsp;&nbsp;&nbsp;<strong>" . _("without drawing") . "</strong>&nbsp;&nbsp;<input id=\"nodrawings\" name=\"nodrawings\" type=\"checkbox\" class=\"inputfield\" " . ($nodrawings == 'on' ? ' checked="on"' : "") . "/>";
 	echo "</td>";
 	// MINIMUM VISIBILITY
-	echo "<td><strong>" . LangViewObservationField23 . "</strong></td>";
+	echo "<td><strong>" . _("Worst visibility") . "</strong></td>";
 	echo "<td class=\"form-inline\">";
 	$minvisibility = $objUtil->checkGetKey ( 'minvisibility' );
 	if ($minvisibility == '')
@@ -522,19 +523,19 @@ function setup_observations_query() {
 			$minvisibility = $_SESSION ['QobsParams'] ['minvisibility'];
 	echo "<select id=\"minvisibility\" name=\"minvisibility\" class=\"form-control\">";
 	echo "<option value=\"\">-----</option>";
-	echo "<option" . ($minvisibility == 1 ? ' selected="selected"' : '') . " value=\"1\">" . LangVisibility1 . "</option>"; // Very simple, prominent object
-	echo "<option" . ($minvisibility == 2 ? ' selected="selected"' : '') . " value=\"2\">" . LangVisibility2 . "</option>"; // Object easily percepted with direct vision
-	echo "<option" . ($minvisibility == 3 ? ' selected="selected"' : '') . " value=\"3\">" . LangVisibility3 . "</option>"; // Object perceptable with direct vision
-	echo "<option" . ($minvisibility == 4 ? ' selected="selected"' : '') . " value=\"4\">" . LangVisibility4 . "</option>"; // Averted vision required to percept object
-	echo "<option" . ($minvisibility == 5 ? ' selected="selected"' : '') . " value=\"5\">" . LangVisibility5 . "</option>"; // Object barely perceptable with averted vision
-	echo "<option" . ($minvisibility == 6 ? ' selected="selected"' : '') . " value=\"6\">" . LangVisibility6 . "</option>"; // Perception of object is very questionable
-	echo "<option" . ($minvisibility == 7 ? ' selected="selected"' : '') . " value=\"7\">" . LangVisibility7 . "</option>"; // Object definitely not seen
+	echo "<option" . ($minvisibility == 1 ? ' selected="selected"' : '') . " value=\"1\">" . _("Very simple, prominent object") . "</option>"; // Very simple, prominent object
+	echo "<option" . ($minvisibility == 2 ? ' selected="selected"' : '') . " value=\"2\">" . _("Object easily percepted with direct vision") . "</option>"; // Object easily percepted with direct vision
+	echo "<option" . ($minvisibility == 3 ? ' selected="selected"' : '') . " value=\"3\">" . _("Object perceptable with direct vision") . "</option>"; // Object perceptable with direct vision
+	echo "<option" . ($minvisibility == 4 ? ' selected="selected"' : '') . " value=\"4\">" . _("Averted vision required to percept object") . "</option>"; // Averted vision required to percept object
+	echo "<option" . ($minvisibility == 5 ? ' selected="selected"' : '') . " value=\"5\">" . _("Object barely perceptable with averted vision") . "</option>"; // Object barely perceptable with averted vision
+	echo "<option" . ($minvisibility == 6 ? ' selected="selected"' : '') . " value=\"6\">" . _("Perception of object is very questionable") . "</option>"; // Perception of object is very questionable
+	echo "<option" . ($minvisibility == 7 ? ' selected="selected"' : '') . " value=\"7\">" . _("Object definitely not seen") . "</option>"; // Object definitely not seen
 	echo "</select>";
 	echo "</td>";
 	echo "</tr>";
 	echo ("<tr>");
 	// DESCRIPTION
-	echo "<td><strong>" . LangQueryObservationsMessage2 . "</strong></td>";
+	echo "<td><strong>" . _("Description contains") . "</strong></td>";
 	echo "<td class=\"form-inline\">";
 	$description = $objUtil->checkGetKey ( 'description' );
 	if ($description == '')
@@ -543,7 +544,7 @@ function setup_observations_query() {
 	echo "<input id=\"description\" name=\"description\" type=\"text\" class=\"form-control\" maxlength=\"40\" size=\"35\" value=\"" . $description . "\" />";
 	echo "</td>";
 	// MAXIMUM VISIBILITY
-	echo "<td><strong>" . LangViewObservationField24 . "</strong></td>";
+	echo "<td><strong>" . _("Best visibility") . "</strong></td>";
 	echo "<td class=\"form-inline\">";
 	$maxvisibility = $objUtil->checkGetKey ( 'maxvisibility' );
 	if ($maxvisibility == '')
@@ -551,20 +552,20 @@ function setup_observations_query() {
 			$maxvisibility = $_SESSION ['QobsParams'] ['maxvisibility'];
 	echo "<select id=\"maxvisibility\" name=\"maxvisibility\" class=\"form-control\">";
 	echo "<option value=\"\">-----</option>";
-	echo "<option" . ($maxvisibility == 1 ? ' selected="selected"' : '') . " value=\"1\">" . LangVisibility1 . "</option>"; // Very simple, prominent object
-	echo "<option" . ($maxvisibility == 2 ? ' selected="selected"' : '') . " value=\"2\">" . LangVisibility2 . "</option>"; // Object easily percepted with direct vision
-	echo "<option" . ($maxvisibility == 3 ? ' selected="selected"' : '') . " value=\"3\">" . LangVisibility3 . "</option>"; // Object perceptable with direct vision
-	echo "<option" . ($maxvisibility == 4 ? ' selected="selected"' : '') . " value=\"4\">" . LangVisibility4 . "</option>"; // Averted vision required to percept object
-	echo "<option" . ($maxvisibility == 5 ? ' selected="selected"' : '') . " value=\"5\">" . LangVisibility5 . "</option>"; // Object barely perceptable with averted vision
-	echo "<option" . ($maxvisibility == 6 ? ' selected="selected"' : '') . " value=\"6\">" . LangVisibility6 . "</option>"; // Perception of object is very questionable
-	echo "<option" . ($maxvisibility == 7 ? ' selected="selected"' : '') . " value=\"7\">" . LangVisibility7 . "</option>"; // Object definitely not seen
+	echo "<option" . ($maxvisibility == 1 ? ' selected="selected"' : '') . " value=\"1\">" . _("Very simple, prominent object") . "</option>"; // Very simple, prominent object
+	echo "<option" . ($maxvisibility == 2 ? ' selected="selected"' : '') . " value=\"2\">" . _("Object easily percepted with direct vision") . "</option>"; // Object easily percepted with direct vision
+	echo "<option" . ($maxvisibility == 3 ? ' selected="selected"' : '') . " value=\"3\">" . _("Object perceptable with direct vision") . "</option>"; // Object perceptable with direct vision
+	echo "<option" . ($maxvisibility == 4 ? ' selected="selected"' : '') . " value=\"4\">" . _("Averted vision required to percept object") . "</option>"; // Averted vision required to percept object
+	echo "<option" . ($maxvisibility == 5 ? ' selected="selected"' : '') . " value=\"5\">" . _("Object barely perceptable with averted vision") . "</option>"; // Object barely perceptable with averted vision
+	echo "<option" . ($maxvisibility == 6 ? ' selected="selected"' : '') . " value=\"6\">" . _("Perception of object is very questionable") . "</option>"; // Perception of object is very questionable
+	echo "<option" . ($maxvisibility == 7 ? ' selected="selected"' : '') . " value=\"7\">" . _("Object definitely not seen") . "</option>"; // Object definitely not seen
 	echo "</select>";
 	echo "</td>";
 	echo "<td>" . "&nbsp;" . "</td>";
 	echo "</tr>";
 	// LANGUAGES
 	echo "<tr>";
-	echo "<td><strong>" . LangChangeVisibleLanguages . "</strong></td>";
+	echo "<td><strong>" . _("Languages for observations") . "</strong></td>";
 	$j = 1;
 	$temp = '';
 	while ( list ( $key, $value ) = each ( $allLanguages ) ) {

@@ -15,23 +15,23 @@ function showButtons($theLocation, $viewobjectdetails, $viewobjectephemerides, $
 	$content1 .= "&nbsp;&nbsp;&nbsp;&nbsp;";
 	$content1 .= "<input type=\"button\" class=\"btn btn-success\" value=\">\"
                    title=\"" . _("Only object details") 
-        . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "\"
+        . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . _("Seen") . "&nbsp;:&nbsp;" . $seen . "\"
 	               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=show&amp;viewobjectephemerides=hidden&amp;viewobjectobjectsnearby=hidden&amp;viewobjectobservations=hidden' . "';\"/>";
 	if ($viewobjectdetails == "hidden")
         $content1 .= "<input type=\"button\" class=\"btn\" value=\"+ " 
             . _("Object details") . "\"
-	               title=\"" . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "\"
+	               title=\"" . _("Object details") . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . _("Seen") . "&nbsp;:&nbsp;" . $seen . "\"
 	               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=show' . "';\"/>";
 	else
         $content1 .= "<input type=\"button\" class=\"btn\" value=\"- " 
             . _("Object details") . "\"
-	               title=\"" . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "\"
+	               title=\"" . _("Object details") . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . _("Seen") . "&nbsp;:&nbsp;" . $seen . "\"
 	               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden' . "';\"/>";
 	if ($theLocation) {
 		$content1 .= "&nbsp;" . "&nbsp;" . "&nbsp;";
 		$content1 .= "<input type=\"button\" class=\"btn btn-success\" value=\">\"
                        title=\"" . _("Only object ephemerides") 
-            . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "\"
+            . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . _("Seen") . "&nbsp;:&nbsp;" . $seen . "\"
 		               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden&amp;viewobjectephemerides=show&amp;viewobjectobjectsnearby=hidden&amp;viewobjectobservations=hidden' . "';\"/>";
 		if ($viewobjectephemerides == "hidden")
             $content1 .= "<input type=\"button\" class=\"btn\" value=\"+ " 
@@ -58,7 +58,7 @@ function showButtons($theLocation, $viewobjectdetails, $viewobjectephemerides, $
 	$content1 .= "&nbsp;" . "&nbsp;" . "&nbsp;";
 	$content1 .= "<input type=\"button\" class=\"btn btn-success\" value=\">\"
                    title=\"" . _("Only nearby objects") 
-        . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "\"
+        . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . _("Seen") . "&nbsp;:&nbsp;" . $seen . "\"
 	               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden&amp;viewobjectephemerides=hidden&amp;viewobjectobjectsnearby=show&amp;viewobjectobservations=hidden' . "';\"/>";
 	if ($viewobjectobjectsnearby == "hidden") {
         $content1 .= "<input type=\"button\" class=\"btn\" value=\"+ " 
@@ -70,13 +70,13 @@ function showButtons($theLocation, $viewobjectdetails, $viewobjectephemerides, $
 	$content1 .= "&nbsp;" . "&nbsp;" . "&nbsp;";
 	$content1 .= "<input type=\"button\" class=\"btn btn-success\" value=\">\"
                    title=\"" . _("Only object observations") 
-        . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "\"
+        . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . _("Seen") . "&nbsp;:&nbsp;" . $seen . "\"
 	               onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden&amp;viewobjectephemerides=hidden&amp;viewobjectobjectsnearby=hidden&amp;viewobjectobservations=show' . "';\"/>";
 	if ($viewobjectobservations == "hidden")
 		$content1 .= "<input type=\"button\" class=\"btn\" value=\"+ " . _("Object observations") . "\" onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectobservations=show' . "';\"/>";
 	else
 		$content1 .= "<input type=\"button\" class=\"btn\" value=\"- " . _("Object observations") . "\" onclick=\"location='" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectobservations=hidden' . "';\"/>";
-	$content2 = "<a href=\"" . $baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode ( $object ) . "\"><input type=\"button\" class=\"btn pull-right btn-success\" value=\"" . LangAtlasPage . "\"/></a>";
+	$content2 = "<a href=\"" . $baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode ( $object ) . "\"><input type=\"button\" class=\"btn pull-right btn-success\" value=\"" . _("Interactive Atlas") . "\"/></a>";
 
 	echo $content1;
 	echo $content2;
@@ -86,7 +86,7 @@ function showObjectDetails($object_ss) {
 	global $baseURL, $object, $objObject, $objPresentations, $objUtil,$objDatabase;
 	$seen = $objObject->getDSOseenLink ( $object );
     echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden' . "\" title=\"" 
-        . _("Hide the object details") . "\">-</a> " . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . '&nbsp;-&nbsp;' . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "</h4>";
+        . _("Hide the object details") . "\">-</a> " . _("Object details") . "&nbsp;-&nbsp;" . $object_ss . '&nbsp;-&nbsp;' . _("Seen") . "&nbsp;:&nbsp;" . $seen . "</h4>";
 	if (array_key_exists ( 'admin', $_SESSION ) && $_SESSION ['admin'] == "yes") {
 		$obsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object_ss . "\"", 'ObsCnt' );
 
@@ -163,15 +163,15 @@ function showObjectsNearby() {
         . _("Hide the nearby objects") . "\">-</a> ";
 	$content1 .= $_GET ['object'];
 	if (count ( $_SESSION ['Qobj'] ) > 2)
-		$content1 .= ' ' . LangViewObjectAndNearbyObjects . ' ' . (count ( $_SESSION ['Qobj'] ) - 1) . ' ' . LangViewObjectNearbyObjects;
+		$content1 .= ' ' . _(" and ") . ' ' . (count($_SESSION['Qobj']) - 1) . ' ' . _("nearby objects");
 	elseif (count ( $_SESSION ['Qobj'] ) > 1)
-		$content1 .= ' ' . LangViewObjectAndNearbyObjects . ' ' . (count ( $_SESSION ['Qobj'] ) - 1) . ' ' . LangViewObjectNearbyObject;
+		$content1 .= ' ' . _(" and ") . ' ' . (count($_SESSION['Qobj']) - 1) . ' ' . _("nearby object");
 	else
-		$content1 .= ' ' . LangViewObjectNoNearbyObjects;
+		$content1 .= ' ' . _(" - there are no other objects within the specified distance");
 	$content1 .= "</h4>";
 	echo $content1;
 	$content1 = "<span class=\"pull-right\"><form class=\"form-inline\" action=\"" . $link . "\" method=\"get\"><div>";
-	$content1 .= LangViewObjectNearbyObjectsMoreLess . ":&nbsp;";
+	$content1 .= _("up to about ") . ":&nbsp;";
 	$content1 .= "<select class=\"form-control\" name=\"zoom\" onchange=\"submit();\">";
 	if ($objUtil->checkGetKey ( 'zoom', 30 ) == "180")
 		$content1 .= ("<option selected=\"selected\" value=\"180\">3x3&deg;</option>");
@@ -374,7 +374,7 @@ function showObjectEphemerides($theLocation) {
 }
 function showObjectImage($imagesize) {
 	global $object, $objPresentations, $objUtil;
-	echo "<h4>" . LangViewDSSImageTitle . $object . "&nbsp;(" . $imagesize . "'&nbsp;x&nbsp;" . $imagesize . "')</h4>";
+	echo "<h4>" . _("DSS image") . " - " . $object . "&nbsp;(" . $imagesize . "'&nbsp;x&nbsp;" . $imagesize . "')</h4>";
 	$imagelink = "http://archive.stsci.edu/cgi-bin/dss_search?" . "v=poss2ukstu_red&amp;r=" . urlencode ( $objUtil->checkRequestKey ( 'raDSS' ) ) . ".0&amp;d=" . urlencode ( $objUtil->checkRequestKey ( 'declDSS' ) ) . "&amp;e=J2000&amp;h=" . $imagesize . ".0&amp;w=" . $imagesize . "&amp;f=gif&amp;c=none&amp;fov=NONE&amp;v3=";
 	echo "<p class=\"centered DSSImage\" >
 	       <a href=\"" . $imagelink . "\" data-lightbox=\"image-1\" data-title=\"\">
@@ -396,38 +396,42 @@ function showObjectObservations() {
 	$pageright = '';
 	$pagemax = '';
 	if (count ( $_SESSION ['Qobs'] ) == 0) {
-		echo "<h4>" . LangObservationNoResults . (($objUtil->checkGetKey ( 'myLanguages' )) ? (" (" . LangSelectedObservationsSelectedLanguagesIndication . ")") : (" (" . LangSelectedObservationsAllLanguagesIndication . ")")) . "</h4>";
+		echo "<h4>" . _("Sorry, no observations found!") . (($objUtil->checkGetKey ( 'myLanguages' )) ? (" (" . _("selected languages") . ")") : (" (" . _("all languages") . ")")) . "</h4>";
 		if ($objUtil->checkGetKey ( 'myLanguages' ))
-			echo "<p>" . "<a href=\"" . $link2 . "\">" . LangSearchAllLanguages . "</a>&nbsp;</p>";
-		echo "<p>" . "<a href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangSearchDetailPage . "</a>" . "</p>";
+			echo "<p>" . "<a href=\"" . $link2 . "\">" . _("Look again, using all languages.") . "</a>&nbsp;</p>";
+		echo "<p>" . "<a href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . _("Set up a detailed search.") . "</a>" . "</p>";
 	} else {
 		$theDate = date ( 'Ymd', strtotime ( '-1 year' ) );
         $content1 = "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectobservations=hidden' . "\" title=\"" 
             . _("Hide the observations") . "\">-</a> ";
 		if (array_key_exists ( 'minyear', $_GET ) && ($_GET ['minyear'] == substr ( $theDate, 0, 4 )) && array_key_exists ( 'minmonth', $_GET ) && ($_GET ['minmonth'] == substr ( $theDate, 4, 2 )) && array_key_exists ( 'minday', $_GET ) && ($_GET ['minday'] == substr ( $theDate, 6, 2 )))
-			$content1 .= LangSelectedObservationsTitle3;
-		elseif ($object)
-			$content1 .= LangSelectedObservationsTitle . $object;
-		else
-			$content1 .= LangSelectedObservationsTitle2;
+			$content1 .= _("Overview of last year's observations");
+		elseif ($object) {
+			$content1 .= sprintf(_("Overview of all observations of %s"), $object);
+        } else {
+            $content1 .= _("Overview selected observations");
+        }
 		$content1 .= "</h4>";
 		echo $content1;
 	}
 	if ($objUtil->checkGetKey ( 'myLanguages' )) {
-		$content3 .= " (" . LangSelectedLanguagesShown . ")";
+		$content3 .= " (" . _("selected languages only") . ")";
 		$link .= "&amp;myLanguages=true";
 		$link2 .= "&amp;myLanguages=true";
 	} else
-		$content3 .= " (" . LangAllLanguagesShown . ")";
+		$content3 .= " (" . _("all languages") . ")";
 	$content3 .= "</h4>";
 	echo $content3;
 	$content5 = "<span class=\"pull-right\">";
 	if (($objUtil->checkSessionKey ( 'lco', '' ) != "L"))
-		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=L\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>";
+        $content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=L\" title=\"" . 
+            _("Overview with the basic information on one line per observation") . "\">" . _("List") . "</a>";
 	if (($objUtil->checkSessionKey ( 'lco', '' ) != "C"))
-		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=C\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
+        $content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=C\" title=\"" . 
+            _("Overview with an information line and a description per observation") . "\">" . _("Compact") . "</a>";
 	if ($loggedUser && ($objUtil->checkSessionKey ( 'lco', '' ) != "O"))
-		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=O\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
+        $content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=O\" title=\"" . 
+            _("Overview with an information line, a description and your last observation") . "\">" . _("Compare") . "</a>";
 	if ($loggedUser && $objUtil->checkSessionKey ( 'lco', '' ) == "L") {
         $toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=no\">" 
             . _("Highlight own observations") . "</a>";
@@ -441,11 +445,11 @@ function showObjectObservations() {
 	}
 	$content5 .= "</span>";
 	if ($objUtil->checkGetKey ( 'myLanguages' ))
-		$content6 = "<a class=\"btn btn-success\" href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";
+		$content6 = "<a class=\"btn btn-success\" href=\"" . $link3 . "\">" . _("Show all languages") . "</a>";
 	elseif ($loggedUser)
-		$content6 = "<a class=\"btn btn-success\" href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowMyLanguages . "</a>";
+		$content6 = "<a class=\"btn btn-success\" href=\"" . $link3 . "&amp;myLanguages=true\">" . _("Only show the observations from my profile languages") . "</a>";
 	else
-		$content6 = "<a class=\"btn btn-success\" href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowInterfaceLanguage . "</a>";
+		$content6 = "<a class=\"btn btn-success\" href=\"" . $link3 . "&amp;myLanguages=true\">" . _("Only show observations in English") . "</a>";
 	echo $content5;
 	echo $content6;
 	echo "<hr />";
@@ -453,14 +457,17 @@ function showObjectObservations() {
 	$objObservation->showListObservation ( $link, $_SESSION ['lco'] );
 	echo "<hr />";
 	if ($_SESSION ['lco'] == "O") {
-		echo LangOverviewObservationsHeader5a;
+		echo _("(*) All Observations(AO), My observations(MO), my Last observations(LO) of this object");
 		echo "<br /><br />";
 	}
-	$content1 = "<a class=\"btn btn-primary\" href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a>  ";
-	$content1 .= $objPresentations->promptWithLinkText ( LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf.php?SID=Qobs", LangExecuteQueryObjectsMessage4a );
+	$content1 = "<a class=\"btn btn-primary\" href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . _("Filter objects") . "</a>  ";
+	$content1 .= $objPresentations->promptWithLinkText(
+        _("Please enter a title"), _("DeepskyLog observations"), 
+        $baseURL . "observations.pdf.php?SID=Qobs", _("pdf")
+    );
 	$content1 .= "  ";
-	$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations.csv\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage5 . "</a>  ";
-	$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations.xml\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage10 . "</a>";
+	$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations.csv\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . _("CSV") . "</a>  ";
+	$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations.xml\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . _("<OAL>") . "</a>";
 	echo $content1;
 	echo "<hr />";
 }
@@ -472,22 +479,22 @@ function showAdminObjectFunctions() {
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
 	echo "<select class=\"form-control\" name=\"newaction\">";
 	echo "<option value=\"\">&nbsp;</option>";
-	echo "<option value=\"NewName\">" . LangObjectNewName . "</option>";
-	echo "<option value=\"NewAltName\">" . LangObjectNewAltName . "</option>";
-	echo "<option value=\"RemoveAltNameName\">" . LangObjectRemoveAltNameName . "</option>";
-	echo "<option value=\"NewPartOf\">" . LangObjectNewPartOf . "</option>";
-	echo "<option value=\"RemovePartOf\">" . LangObjectRemovePartOf . "</option>";
-	echo "<option value=\"RemoveAndReplaceObjectBy\">" . LangObjectRemoveAndReplaceObjectBy . "</option>";
-	echo "<option value=\"LangObjectSetRA\">" . LangObjectSetRA . "</option>";
-	echo "<option value=\"LangObjectSetDECL\">" . LangObjectSetDECL . "</option>";
-	echo "<option value=\"LangObjectSetCon\">" . LangObjectSetCon . "</option>";
-	echo "<option value=\"LangObjectSetType\">" . LangObjectSetType . "</option>";
-	echo "<option value=\"LangObjectSetMag\">" . LangObjectSetMag . "</option>";
-	echo "<option value=\"LangObjectSetSUBR\">" . LangObjectSetSUBR . "</option>";
-	echo "<option value=\"LangObjectSetDiam1\">" . LangObjectSetDiam1 . "</option>";
-	echo "<option value=\"LangObjectSetDiam2\">" . LangObjectSetDiam2 . "</option>";
-	echo "<option value=\"LangObjectSetPA\">" . LangObjectSetPA . "</option>";
-	echo "<option value=\"LangObjectSetDESC\">" . LangEditObjectDescription . "</option>";
+	echo "<option value=\"NewName\">" . _("NN-New name") . "</option>";
+	echo "<option value=\"NewAltName\">" . _("AN-New Alt Name") . "</option>";
+	echo "<option value=\"RemoveAltNameName\">" . _("RAN-Remove Alt name") . "</option>";
+	echo "<option value=\"NewPartOf\">" . _("PO-New Part Of") . "</option>";
+	echo "<option value=\"RemovePartOf\">" . _("RPO-Remove Part Of") . "</option>";
+	echo "<option value=\"RemoveAndReplaceObjectBy\">" . _("RRO-Remove the object and replace observations of it by object") . "</option>";
+	echo "<option value=\"ObjectSetRA\">" . _("RA-Set RA (Hour Format: 1.50 for 1h30m)") . "</option>";
+	echo "<option value=\"ObjectSetDECL\">" . _("DE-Set Decl (Degree Format: 25.50 for 25°30')") . "</option>";
+	echo "<option value=\"ObjectSetCon\">" . _("CON-Set Constellation (Three letter capital abbrevation!)") . "</option>";
+	echo "<option value=\"ObjectSetType\">" . _("TYP-Set Type (Five capital abbrevation!)") . "</option>";
+	echo "<option value=\"ObjectSetMag\">" . _("MA-Set Magnitude") . "</option>";
+	echo "<option value=\"ObjectSetSUBR\">" . _("SB-Set Surface Brightness") . "</option>";
+	echo "<option value=\"ObjectSetDiam1\">" . _("D1-Set Diameter 1 (arcseconds!)") . "</option>";
+	echo "<option value=\"ObjectSetDiam2\">" . _("D2-Set Diameter 2 (arcseconds!)") . "</option>";
+	echo "<option value=\"ObjectSetPA\">" . _("PA-Set Position Angle") . "</option>";
+	echo "<option value=\"ObjectSetDESC\">" . _("DESC-Edit Description") . "</option>";
 	echo "</select>";
 	echo "<select class=\"form-control\" name=\"newcatalog\">";
 	echo "<option value=\"\">&nbsp;</option>";
@@ -496,7 +503,7 @@ function showAdminObjectFunctions() {
 	echo "</select>";
 	echo "<input type=\"text\" class=\"form-control\" maxlength=\"255\" name=\"newnumber\" size=\"40\" value=\"\"/>";
 	echo "<input type=\"submit\" name=\"gonew\" class=\"btn btn-success pull-right\" value=\"Go\"/><br /><br />";
-	echo "<a class=\"btn btn-success pull-right\" href=\"" . $baseURL . "index.php?indexAction=manage_csv_object\">" . LangNewObjectSubtitle1b . "</a><br />";
+	echo "<a class=\"btn btn-success pull-right\" href=\"" . $baseURL . "index.php?indexAction=manage_csv_object\">" . _("Manage objects from CSV file") . "</a><br />";
 	echo "</div></form>";
 }
 function view_object() {

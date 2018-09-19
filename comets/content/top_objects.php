@@ -11,14 +11,14 @@ function top_objects() {
 	echo "<div id=\"main\">";
 	$rank = $objCometObservation->getPopularObservations ();
 	$link = $baseURL . "index.php?indexAction=comets_rank_objects";
-	echo "<h4>" . LangTopObjectsTitle . "</h4>";
+	echo "<h4>" . _("Most popular objects") . "</h4>";
 
 	echo "<hr />";
 	echo "<table class=\"table sort-tablecometobjects table-condensed table-striped table-hover tablesorter custom-popup\">";
 	echo "<thead><tr>";
-	echo "<th class=\"filter-false columnSelector-disable\">" . LangTopObjectsHeader1 . "</th>";
-	echo "<th>" . LangTopObjectsHeader2 . "</th>";
-	echo "<th>" . LangTopObjectsHeader5 . "</th>";
+	echo "<th class=\"filter-false columnSelector-disable\">" . _("Rank") . "</th>";
+	echo "<th>" . _("Object") . "</th>";
+	echo "<th>" . _("Number of observations") . "</th>";
 	echo "</tr></thead>";
 	$count = 0;
 	while ( list ( $key, $value ) = each ( $rank ) ) {

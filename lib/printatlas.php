@@ -1489,7 +1489,7 @@ class PrintAtlas
       $liney-=15;
       $this->pdf->addTextWrap(50, $liney, 10, _("Alternative object names").": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'), 450,  'left');
       if($loggedUser)
-      { $this->pdf->addTextWrap( 550, $liney, 10, LangViewObservationField2.': '.$loggedUserName, 200,  'left');
+      { $this->pdf->addTextWrap( 550, $liney, 10, _("Observer").': '.$loggedUserName, 200,  'left');
       }
       $liney-=25;
       $this->pdf->addTextWrap( 50, $liney, 10, _("Right ascension").': '.$theobjectdata['objectrahms'], 200,  'left');
@@ -1500,13 +1500,13 @@ class PrintAtlas
       $this->pdf->addTextWrap(300, $liney, 10, _("Object surface brightness").': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'), 200,  'left');
       $this->pdf->addTextWrap(550, $liney, 10, _("Object type").': '.$theobjectdata['objecttypefull'], 200,  'left');
       $liney-=15;
-      $this->pdf->addTextWrap( 50, $liney, 10, LangViewObjectField9.': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'), 200,  'left');
-      $this->pdf->addTextWrap(300, $liney, 10, LangViewObjectField12.': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa), 200,  'left');
-      $this->pdf->addTextWrap(550, $liney, 10, LangOverviewObjectsHeader7.': '.$theobjectdata['objectseen'], 200,  'left');
+      $this->pdf->addTextWrap( 50, $liney, 10, _("Size").': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'), 200,  'left');
+      $this->pdf->addTextWrap(300, $liney, 10, _("Position angle").': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa), 200,  'left');
+      $this->pdf->addTextWrap(550, $liney, 10, _("Seen").': '.$theobjectdata['objectseen'], 200,  'left');
       $liney-=20;
       if($loggedUser)
-      { $this->pdf->addTextWrap( 50, $liney, 10, LangViewObjectFieldOptimumDetectionMagnification.': '.$theobjectdata['objectoptimalmagnification'], 4500,  'left');
-        $this->pdf->addTextWrap(550, $liney, 10, LangOverviewObjectsHeader8.': '.($theobjectdata['objectlastseen']?$theobjectdata['objectlastseen']:'-'), 200,  'left');
+      { $this->pdf->addTextWrap( 50, $liney, 10, _("Optimum detection magnification").': '.$theobjectdata['objectoptimalmagnification'], 4500,  'left');
+        $this->pdf->addTextWrap(550, $liney, 10, _("Last Seen").': '.($theobjectdata['objectlastseen']?$theobjectdata['objectlastseen']:'-'), 200,  'left');
         $liney-=15;
           $this->pdf->addTextWrap( 50, $liney, 10, _("Object contrast-visibility value").': '.($theobjectdata['objectcontrast']!='0.0'?$theobjectdata['objectcontrast'].' - ':'').stripslashes($theobjectdata['objectcontrastpopup']), 750,  'left');
           $liney-=15;
@@ -1928,14 +1928,14 @@ class PrintAtlas
       }
       $liney-=35;$textextra='';
       if(($listname=$objUtil->checkSessionKey('listname'))&&($objList->checkObjectInMyActiveList($theobject)))
-      { $textextra=$this->pdf->addTextWrap( 50, $liney, 10, LangViewObservationField8, 750,  'left');
+      { $textextra=$this->pdf->addTextWrap( 50, $liney, 10, _("Description"), 750,  'left');
         $liney-=5;
           $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
         $liney-=15;
           $textextra=$this->pdf->addTextWrap( 50, $liney, 10, $objList->getListObjectDescription($theobject), 750,  'left');
       }
       elseif($theobjectdata['objectdescription'])
-      { $textextra=$this->pdf->addTextWrap( 50, $liney, 10, LangViewObservationField8, 750,  'left');
+      { $textextra=$this->pdf->addTextWrap( 50, $liney, 10, _("Description"), 750,  'left');
         $liney-=5;
           $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
           $liney-=15;
@@ -2000,7 +2000,7 @@ class PrintAtlas
         $thephotos[0]=120;
     }
     $url='https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[0].'.0&w='.$thephotos[0].'&f=gif&c=none&fov=NONE&v3=';
-    $this->pdf->addText(50, $liney-15, 10, LangViewDSSImageTitle.$thephotos[0].'x'.$thephotos[0].' '.LangNewObjectSizeUnits1);
+    $this->pdf->addText(50, $liney-15, 10, " - ".$thephotos[0].'x'.$thephotos[0].' '._("arcminutes"));
     if($img=@imagecreatefromgif($url))
     { 
         imagefilter($img, IMG_FILTER_NEGATE);
@@ -2035,7 +2035,7 @@ class PrintAtlas
           }
         $url='https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[1].'.0&w='.$thephotos[1].'&f=gif&c=none&fov=NONE&v3=';
         $this->pdf->rectangle(448,$liney-2,354,354);
-        $this->pdf->addText(450, $liney-15, 10, LangViewDSSImageTitle.$thephotos[1].'x'.$thephotos[1].' '.LangNewObjectSizeUnits1);
+        $this->pdf->addText(450, $liney-15, 10, _("DSS image") . " - ".$thephotos[1].'x'.$thephotos[1].' '._("arcminutes"));
         if($img=@imagecreatefromgif($url))
         { imagefilter($img, IMG_FILTER_NEGATE);
           $this->pdf->addImage($img,450,$liney,350);
@@ -2067,10 +2067,10 @@ class PrintAtlas
           $this->pdf->addTextWrap(300, $liney, 10, _("Object surface brightness").': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'), 200,  'left');
           $liney-=15;
           $this->pdf->addTextWrap( 50, $liney, 10, _("Right ascension").': '.$theobjectdata['objectrahms'], 200,  'left');
-          $this->pdf->addTextWrap(300, $liney, 10, LangViewObjectField9.': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'), 200,  'left');
+          $this->pdf->addTextWrap(300, $liney, 10, _("Size").': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'), 200,  'left');
           $liney-=15;
           $this->pdf->addTextWrap( 50, $liney, 10, _("Declination").': '.$theobjectdata['objectdecldms'], 200,  'left');
-          $this->pdf->addTextWrap(300, $liney, 10, LangViewObjectField12.': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa), 200,  'left');
+          $this->pdf->addTextWrap(300, $liney, 10, _("Position angle").': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa), 200,  'left');
       }
     $this->labelsArr=array();
     }

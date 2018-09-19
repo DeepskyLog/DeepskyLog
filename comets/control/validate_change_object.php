@@ -15,7 +15,7 @@ function validate_change_object()
 	if(!$_POST['name'])
 	{
 	  // error
-	  $entryMessage = LangValidateObservationMessage1;
+	  $entryMessage = _("You did not fill in a required field!");
 	  $_GET['indexAction']='default_action';
 	}
 	else

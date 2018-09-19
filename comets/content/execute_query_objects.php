@@ -27,15 +27,15 @@ function comets_execute_query_objects() {
 			$link = $baseURL . "index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode ( $_GET ['name'] );
 			// OUTPUT RESULT
 			$rank = $objCometObservation->getPopularObservations ();
-			echo "<h4>" . LangSelectedObjectsTitle . "</h4>";
+			echo "<h4>" . _("Overview selected objects") . "</h4>";
 			echo "<hr />";
 			echo "<table class=\"table sort-tablecometobjects table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
-			echo "<th>" . LangOverviewObjectsHeader1 . "</th>";
-			echo "<th>" . LangNewObjectIcqname . "</th>";
+			echo "<th>" . _("Name") . "</th>";
+			echo "<th>" . _("ICQ name") . "</th>";
 			// Check the number of objects. If there are less than 500 objects, we
 			// enable the sorting on seen.
-				echo "<th>" . LangOverviewObjectsHeader7 . "</th>";
+				echo "<th>" . _("Seen") . "</th>";
 			echo "</tr></thead>";
 			while ( list ( $key, $value ) = each ( $result ) ) {
 				// NAME
@@ -70,15 +70,15 @@ function comets_execute_query_objects() {
 			echo "<hr />";
 		} else 		// no results found
 		{
-			echo "<h4>" . LangSelectedObjectsTitle . "</h4>";
+			echo "<h4>" . _("Overview selected objects") . "</h4>";
 			echo "<hr />";
-			echo LangExecuteQueryObjectsMessage2;
+			echo _("Sorry, no objects found!");
 		}
 	} else 	// no query fields filled in
 	{
-		echo "<h4>" . LangSelectedObjectsTitle . "</h4>";
+		echo "<h4>" . _("Overview selected objects") . "</h4>";
 		echo "<hr />";
-		echo LangExecuteQueryObjectsMessage3;
+		echo _("You didn't specify any parameters to search on.");
 	}
 	echo "</div>";
 }

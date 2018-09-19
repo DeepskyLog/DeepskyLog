@@ -4,44 +4,20 @@
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 else {
-	preludesA ();
-	require_once "lib/setup/" . $language;
-	global $loginErrorText, $loginErrorCode;
+    preludesA();
+
+    global $loginErrorText, $loginErrorCode;
 	if ($loginErrorCode || $loginErrorText) {
 		$entryMessage = $loginErrorCode . " " . $loginErrorText;
 	}
-	preludesB ();
+	preludesB();
 }
 function preludesA() {
 	global $language, $objDatabase, $objLanguage, $objObserver, $objSession, $objUtil, $objMessages;
 
-    // This is needed to use the po files for the translations
-    if ($language == "nl") {
-        $locale = "nl_NL";
-    } else if ($language == "fr") {
-        $locale = "fr_FR";
-    } else if ($language == "de") {
-        $locale = "de_DE";
-    } else if ($language == "sv") {
-        $locale = "sv_SE";
-    } else {
-        $locale = "en_US";
-    }
-
-    if (defined('LC_MESSAGES')) {
-        setlocale(LC_MESSAGES, $locale); // Linux
-        bindtextdomain("messages", "./locale");
-    } else {
-        putenv("LC_ALL={$locale}"); // windows
-        bindtextdomain("messages", ".\locale");
-    }
-
-    textdomain("messages");
-
     // Start the session
 	if (! session_id ())
 		session_start ();
-	require_once "lib/setup/vars.php";
 	require_once "lib/setup/databaseInfo.php";
 	require_once "lib/database.php";
 	$objDatabase = new Database ();
@@ -58,8 +34,37 @@ function preludesA() {
 	require_once "common/control/loginuser.php";
 }
 function preludesB() {
-	global $FF, $MSIE, $leftmenu, $topmenu, $thisYear, $thisMonth, $thisDay, $DSOcatalogsLists, $DSOcatalogs, $objAstroCalc, $objAtlas, $objCatalog, $objCometObject, $objCometObservation, $objConstellation, $objContrast, $objDatabase, $objEyepiece, $objFilter, $objFormLayout, $objInstrument, $objLanguage, $objLens, $objList, $objLocation, $objObject, $objObjectOutlines, $objObservation, $objObserverQueries, $objObserver, $objPresentations, $objPrintAtlas, $objReportLayout, $objStar, $objAccomplishments, $objUtil;
+	global $FF, $MSIE, $leftmenu, $topmenu, $thisYear, $thisMonth, $thisDay, $DSOcatalogsLists, $DSOcatalogs, $objAstroCalc, $objAtlas, $objCatalog, $objCometObject, $objCometObservation, $objConstellation, $objContrast, $objDatabase, $objEyepiece, $objFilter, $objFormLayout, $objInstrument, $objLanguage, $objLens, $objList, $objLocation, $objObject, $objObjectOutlines, $objObservation, $objObserverQueries, $objObserver, $objPresentations, $objPrintAtlas, $objReportLayout, $objStar, $objAccomplishments, $objUtil, $language;
 
+    // This is needed to use the po files for the translations
+    if ($language == "nl") {
+        $locale = "nl_NL";
+    } else if ($language == "fr") {
+        $locale = "fr_FR";
+    } else if ($language == "de") {
+        $locale = "de_DE";
+    } else if ($language == "sv") {
+        $locale = "sv_SE";
+    } else if ($language == "es") {
+        $locale = "es_ES";
+    } else {
+        $locale = "en_US";
+    }
+
+    if (defined('LC_MESSAGES')) {
+        setlocale(LC_MESSAGES, $locale); // Linux
+        bindtextdomain("messages", "./locale");
+        textdomain("messages");
+        bind_textdomain_codeset("messages", 'UTF-8');
+    } else {
+        putenv("LC_ALL={$locale}"); // windows
+        bindtextdomain("messages", ".\locale");
+    }
+    
+    textdomain("messages");
+    
+    // We can only include vars.php here, because some of the vars are internationalized.
+    require_once "lib/setup/vars.php";
 	require_once "lib/observerqueries.php";
 	$objObserverQueries = new Observerqueries ();
 	require_once "lib/atlasses.php";

@@ -4,9 +4,9 @@
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! $loggedUser)
-	throw new Exception ( LangException002 );
+	throw new Exception(_("You need to be logged in to change your locations or equipment."));
 elseif ($_SESSION ['admin'] != "yes")
-	throw new Exception ( LangException001 );
+	throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 else
 	overview_filters ();
 function overview_filters() {
@@ -14,16 +14,16 @@ function overview_filters() {
 	$filts = $objFilter->getSortedFilters ( "name", '%' );
 	$min = 0;
 	echo "<div id=\"main\">";
-	echo "<h4>" . LangOverviewFilterTitle1 . "</h4>";
+	echo "<h4>" . _("Overview Filters") . "</h4>";
 	echo "<hr />";
 	echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 	echo "<thead><tr>";
-	echo "<th>" . LangViewFilterName . "</th>";
-	echo "<th>" . LangViewFilterType . "</th>";
-	echo "<th>" . LangViewFilterColor . "</th>";
-	echo "<th>" . LangViewFilterWratten . "</th>";
-	echo "<th>" . LangViewFilterSchott . "</th>";
-	echo "<th>" . LangViewObservationField2 . "</th>";
+	echo "<th>" . _("Name") . "</th>";
+	echo "<th>" . _("Type") . "</th>";
+	echo "<th>" . _("Color") . "</th>";
+	echo "<th>" . _("Wratten number") . "</th>";
+	echo "<th>" . _("Schott number") . "</th>";
+	echo "<th>" . _("Observer") . "</th>";
 	echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\"></th>";
 	echo "</tr></thead>";
 	$count = 0;

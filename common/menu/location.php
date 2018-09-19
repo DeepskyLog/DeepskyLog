@@ -6,9 +6,9 @@ global $inIndex, $loggedUser, $objUtil;
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! ($loggedUser))
-	throw new Exception ( LangException001 );
+	throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 elseif (! ($objUtil->checkAdminOrUserID ( $loggedUser )))
-	throw new Exception ( LangException012 );
+	throw new Exception(_("You need to be logged in to execute these operations."));
 else
 	menu_location ();
 function menu_location() {

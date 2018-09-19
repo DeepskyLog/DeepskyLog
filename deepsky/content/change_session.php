@@ -5,7 +5,7 @@ global $loggedUser;
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! ($sessionid = $objUtil->checkGetKey ( 'sessionid' )))
-	throw new Exception ( LangException003 );
+	throw new Exception(_("You wanted to change a session, but none is specified. Please contact the developers with this message."));
 elseif (! ($objSession->getSessionPropertyFromId ( $sessionid, 'name' )))
 	throw new Exception ( "Session not found in change_session.php, please contact the developers with this message:" . $sessionid );
 elseif (strcmp ( $objSession->getSessionPropertyFromId ( $sessionid, 'observerid' ), $loggedUser ) == 0 && isset ( $_GET ['adapt'] ))
@@ -238,7 +238,7 @@ function change_session() {
 	$contentLoc .= "</select>&nbsp;";
 
 	echo "<div class=\"form-group\">
-           <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_location\" title=\"" . LangChangeAccountField7Expl . "\" >" 
+           <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_location\" title=\"" . _("Add new observing site") . "\" >" 
         . _("Location *") . "</a>" . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $contentLoc;

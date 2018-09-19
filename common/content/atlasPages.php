@@ -8,12 +8,6 @@ else atlasPages();
 
 function atlasPages()
 { global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil, $MSIE,$dirAtlasses, $language;
-  echo "<script type=\"text/javascript\">";
-  echo "var Langpdfseriesclickok='"._('Click "Ok", only when ')."';";
-  echo "var Langpdfserieswhenfinished='"._(' is finished!')."';";
-  echo "var LangpdfseriesGenerating='"._('Generating ')."';";
-  echo "var Langpdfserieschoselayout='"._("Please select a layout for the index page.")."';";
-  echo "</script>";
 
   echo "<script type=\"text/javascript\" src=\"".$baseURL."common/content/atlasPages.js\"></script>";
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
@@ -106,7 +100,7 @@ function atlasPages()
 	echo "<hr />";
     echo "<h3>"._('Personalised Atlases')."</h3>";
 	echo'<p><b>'._('The personalised atlases are only available in Firefox, Chrome and Opera at this time.').'</b></p>';
-	echo "<p>"._("You can download an individual page, with top-left coordinates to be specified by you, or you can download all the pages of the complete helisphere.")."</p>";
+	echo "<p>"._("You can download an individual page, with top-left coordinates to be specified by you, or you can download all the pages of the complete hemisphere.")."</p>";
 	echo "<hr />";
   
   echo "<h4>"._('Generate a page')."</h4>";

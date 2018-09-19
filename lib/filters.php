@@ -19,89 +19,91 @@ class Filters {
 	}
 	public function getEchoColor($color) {
 		if ($color == FILTERCOLORLIGHTRED)
-			return FiltersColorLightRed;
+			return _("Light red");
 		if ($color == FILTERCOLORRED)
-			return FiltersColorRed;
+			return _("Red");
 		if ($color == FILTERCOLORDEEPRED)
-			return FiltersColorDeepRed;
+			return _("Deep red");
 		if ($color == FILTERCOLORORANGE)
-			return FiltersColorOrange;
+			return _("Orange");
 		if ($color == FILTERCOLORLIGHTYELLOW)
-			return FiltersColorLightYellow;
+			return _("Light yellow");
 		if ($color == FILTERCOLORDEEPYELLOW)
-			return FiltersColorDeepYellow;
+			return _("Deep yellow");
 		if ($color == FILTERCOLORYELLOW)
-			return FiltersColorYellow;
+			return _("Yellow");
 		if ($color == FILTERCOLORYELLOWGREEN)
-			return FiltersColorYellowGreen;
+			return _("Yellow-Green");
 		if ($color == FILTERCOLORLIGHTGREEN)
-			return FiltersColorLightGreen;
+			return _("Light green");
 		if ($color == FILTERCOLORGREEN)
-			return FiltersColorGreen;
+			return _("Green");
 		if ($color == FILTERCOLORMEDIUMBLUE)
-			return FiltersColorMediumBlue;
+			return _("Medium blue");
 		if ($color == FILTERCOLORPALEBLUE)
-			return FiltersColorPaleBlue;
+			return _("Pale blue");
 		if ($color == FILTERCOLORBLUE)
-			return FiltersColorBlue;
+			return _("Blue");
 		if ($color == FILTERCOLORDEEPBLUE)
-			return FiltersColorDeepBlue;
+			return _("Deep blue");
 		if ($color == FILTERCOLORDEEPVIOLET)
-			return FiltersColorDeepViolet;
+			return _("Violet");
 		return "-";
 	}
 	public function getEchoListColor($color, $disabled = "") {
 		$tempColorList = "<select name=\"color\" class=\"form-control inputfield\" " . $disabled . " >";
 		$tempColorList .= "<option value=\"\">&nbsp;</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORLIGHTRED) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORLIGHTRED . "\">" . FiltersColorLightRed . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORRED) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORRED . "\">" . FiltersColorRed . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORDEEPRED) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORDEEPRED . "\">" . FiltersColorDeepRed . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORORANGE) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORORANGE . "\">" . FiltersColorOrange . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORLIGHTYELLOW) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORLIGHTYELLOW . "\">" . FiltersColorLightYellow . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORDEEPYELLOW) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORDEEPYELLOW . "\">" . FiltersColorDeepYellow . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORYELLOW) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORYELLOW . "\">" . FiltersColorYellow . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORYELLOWGREEN) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORYELLOWGREEN . "\">" . FiltersColorYellowGreen . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORLIGHTGREEN) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORLIGHTGREEN . "\">" . FiltersColorLightGreen . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORGREEN) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORGREEN . "\">" . FiltersColorGreen . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORMEDIUMBLUE) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORMEDIUMBLUE . "\">" . FiltersColorMediumBlue . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORPALEBLUE) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORPALEBLUE . "\">" . FiltersColorPaleBlue . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORBLUE) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORBLUE . "\">" . FiltersColorBlue . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORDEEPBLUE) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORDEEPBLUE . "\">" . FiltersColorDeepBlue . "</option>";
-		$tempColorList .= "<option " . (($color == FILTERCOLORDEEPVIOLET) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORDEEPVIOLET . "\">" . FiltersColorDeepViolet . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORLIGHTRED) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORLIGHTRED . "\">" . _("Light red") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORRED) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORRED . "\">" . _("Red") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORDEEPRED) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORDEEPRED . "\">" . _("Deep red") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORORANGE) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORORANGE . "\">" . _("Orange") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORLIGHTYELLOW) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORLIGHTYELLOW . "\">" . _("Light yellow") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORDEEPYELLOW) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORDEEPYELLOW . "\">" . _("Deep yellow") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORYELLOW) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORYELLOW . "\">" . _("Yellow") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORYELLOWGREEN) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORYELLOWGREEN . "\">" . _("Yellow-Green") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORLIGHTGREEN) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORLIGHTGREEN . "\">" . _("Light green") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORGREEN) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORGREEN . "\">" . _("Green") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORMEDIUMBLUE) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORMEDIUMBLUE . "\">" . _("Medium blue") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORPALEBLUE) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORPALEBLUE . "\">" . _("Pale blue") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORBLUE) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORBLUE . "\">" . _("Blue") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORDEEPBLUE) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORDEEPBLUE . "\">" . _("Deep blue") . "</option>";
+		$tempColorList .= "<option " . (($color == FILTERCOLORDEEPVIOLET) ? "selected=\"selected\" " : "") . "value=\"" . FILTERCOLORDEEPVIOLET . "\">" . _("Violet") . "</option>";
 		$tempColorList .= "</select>";
 		return $tempColorList;
 	}
 	public function getEchoListType($type, $disabled = "") {
 		$tempTypeList = "<select name=\"type\" class=\"form-control inputfield\" " . $disabled . " >";
-		$tempTypeList .= "<option " . (($type == FILTEROTHER) ? " selected=\"selected\" " : "") . " value=\"" . FILTEROTHER . "\">" . FiltersOther . "</option>";
-		$tempTypeList .= "<option " . (($type == FILTERBROADBAND) ? " selected=\"selected\" " : "") . " value=\"" . FILTERBROADBAND . "\">" . FiltersBroadBand . "</option>";
-		$tempTypeList .= "<option " . (($type == FILTERNARROWBAND) ? " selected=\"selected\" " : "") . " value=\"" . FILTERNARROWBAND . "\">" . FiltersNarrowBand . "</option>";
-		$tempTypeList .= "<option " . (($type == FILTEROIII) ? " selected=\"selected\" " : "") . " value=\"" . FILTEROIII . "\">" . FiltersOIII . "</option>";
-		$tempTypeList .= "<option " . (($type == FILTERHALPHA) ? " selected=\"selected\" " : "") . " value=\"" . FILTERHALPHA . "\">" . FiltersHAlpha . "</option>";
-		$tempTypeList .= "<option " . (($type == FILTERCOLOR) ? " selected=\"selected\" " : "") . " value=\"" . FILTERCOLOR . "\">" . FiltersColor . "</option>";
-		$tempTypeList .= "<option " . (($type == FILTERCORRECTIVE) ? " selected=\"selected\" " : "") . " value=\"" . FILTERCORRECTIVE . "\">" . FiltersCorrective . "</option>";
+		$tempTypeList .= "<option " . (($type == FILTEROTHER) ? " selected=\"selected\" " : "") . " value=\"" . FILTEROTHER . "\">" . _("Other filter") . "</option>";
+		$tempTypeList .= "<option " . (($type == FILTERBROADBAND) ? " selected=\"selected\" " : "") . " value=\"" . FILTERBROADBAND . "\">" . _("Broadband filter") . "</option>";
+		$tempTypeList .= "<option " . (($type == FILTERNARROWBAND) ? " selected=\"selected\" " : "") . " value=\"" . FILTERNARROWBAND . "\">" . _("Narrowband filter") . "</option>";
+		$tempTypeList .= "<option " . (($type == FILTEROIII) ? " selected=\"selected\" " : "") . " value=\"" . FILTEROIII . "\">" . _("O-III filter") . "</option>";
+		$tempTypeList .= "<option " . (($type == FILTERHBETA) ? " selected=\"selected\" " : "") . " value=\"" . FILTERHBETA . "\">" . _("H beta filter") . "</option>";
+		$tempTypeList .= "<option " . (($type == FILTERHALPHA) ? " selected=\"selected\" " : "") . " value=\"" . FILTERHALPHA . "\">" . _("H alpha filter") . "</option>";
+		$tempTypeList .= "<option " . (($type == FILTERCOLOR) ? " selected=\"selected\" " : "") . " value=\"" . FILTERCOLOR . "\">" . _("Color filter") . "</option>";
+		$tempTypeList .= "<option " . (($type == FILTERNEUTRAL) ? " selected=\"selected\" " : "") . " value=\"" . FILTERNEUTRAL . "\">" . _("Neutral filter") . "</option>";
+		$tempTypeList .= "<option " . (($type == FILTERCORRECTIVE) ? " selected=\"selected\" " : "") . " value=\"" . FILTERCORRECTIVE . "\">" . _("Corrective filter") . "</option>";
 		$tempTypeList .= "</select>";
 		return $tempTypeList;
 	}
 	public function getEchoType($type) {
 		if ($type == FILTEROTHER)
-			return FiltersOther;
+			return _("Other filter");
 		if ($type == FILTERBROADBAND)
-			return FiltersBroadBand;
+			return _("Broadband filter");
 		if ($type == FILTERNARROWBAND)
-			return FiltersNarrowBand;
+			return _("Narrowband filter");
 		if ($type == FILTEROIII)
-			return FiltersOIII;
+			return _("O-III filter");
 		if ($type == FILTERHBETA)
-			return FiltersHBeta;
+			return _("H beta filter");
 		if ($type == FILTERHALPHA)
-			return FiltersHAlpha;
+			return _("H alpha filter");
 		if ($type == FILTERCOLOR)
-			return FiltersColor;
+			return _("Color filter");
 		if ($type == FILTERNEUTRAL)
-			return FiltersNeutral;
+			return _("Neutral filter");
 		if ($type == FILTERCORRECTIVE)
-			return FiltersCorrective;
+			return _("Corrective filter");
 		return "-";
 	}
 	public function getFilterId($name, $observer) // returns the id for this instrument
@@ -148,13 +150,13 @@ class Filters {
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
 			echo "<th>" . _("Active") . "</th>";
-			echo "<th data-priority=\"critical\">" . LangViewFilterName . "</th>";
-			echo "<th>" . LangViewFilterType . "</th>";
-			echo "<th>" . LangViewFilterColor . "</th>";
-			echo "<th>" . LangViewFilterWratten . "</th>";
-			echo "<th>" . LangViewFilterSchott . "</th>";
+			echo "<th data-priority=\"critical\">" . _("Name") . "</th>";
+			echo "<th>" . _("Type") . "</th>";
+			echo "<th>" . _("Color") . "</th>";
+			echo "<th>" . _("Wratten number") . "</th>";
+			echo "<th>" . _("Schott number") . "</th>";
 			echo "<th>" . _("Delete") . "</th>";
-			echo "<th>" . LangTopObserversHeader3 . "</th>";
+			echo "<th>" . _("Number of observations") . "</th>";
 			echo "</tr></thead>";
 			$count=0;
 			while ( list ( $key, $value ) = each ( $filts ) ) {
@@ -177,9 +179,9 @@ class Filters {
 				echo "<td>";
 				echo "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . $loggedUser . "&amp;filter=" . $value . "&amp;exactinstrumentlocation=true\">";
 				if ($obsCnt != 1) {
-					echo $obsCnt . ' ' . LangGeneralObservations . "</a>";
+					echo $obsCnt . ' ' . _("observations") . "</a>";
 				} else {
-					echo $obsCnt . ' ' . LangGeneralObservation . "</a>";
+					echo $obsCnt . ' ' . _("observation") . "</a>";
 				}
 				echo "</td>";
 				echo "</tr>";
@@ -194,8 +196,8 @@ class Filters {
 {
 		global $objUtil, $objDatabase;
 		if (($filterid = $objUtil->checkGetKey ( 'filterid' )) && $objUtil->checkAdminOrUserID ( $this->getFilterPropertyFromId ( $filterid, 'observer' ) ) && (! ($this->getFilterUsedFromId ( $filterid )))) {
-			$objDatabase->execSQL ( "DELETE FROM filters WHERE id=\"" . $filterid . "\"" );
-			return LangValidateFilterMessage6;
+			$objDatabase->execSQL("DELETE FROM filters WHERE id=\"" . $filterid . "\"");
+			return _("The filter is removed from your equipment list");
 		}
 	}
 	public function validateSaveFilter() // validates and saves a filter and returns a message
@@ -204,7 +206,7 @@ class Filters {
 		if ($objUtil->checkPostKey ( 'add' ) && $objUtil->checkSessionKey ( 'deepskylog_id' ) && $objUtil->checkPostKey ( 'filtername' )) {
 			$id = $this->addFilter ( $objUtil->checkPostKey ( 'filtername' ), $objUtil->checkPostKey ( 'type' ), $objUtil->checkPostKey ( 'color', 0 ), $objUtil->checkPostKey ( 'wratten' ), $objUtil->checkPostKey ( 'schott' ) );
 			$this->setFilterProperty ( $id, 'observer', $loggedUser );
-			return LangValidateFilterMessage2;
+			return _("The filter is added to your equipment list");
 		} elseif ($objUtil->checkPostKey ( 'change' ) && $objUtil->checkPostKey ( 'id' ) && $objUtil->checkPostKey ( 'filtername' ) && $objUtil->checkAdminOrUserID ( $this->getFilterPropertyFromId ( $_POST ['id'], 'observer' ) )) {
 			$this->setFilterProperty ( $_POST ['id'], 'name', $objUtil->checkPostKey ( 'filtername' ) );
 			$this->setFilterProperty ( $_POST ['id'], 'type', $objUtil->checkPostKey ( 'type' ) );
@@ -212,7 +214,7 @@ class Filters {
 			$this->setFilterProperty ( $_POST ['id'], 'wratten', $objUtil->checkPostKey ( 'wratten' ) );
 			$this->setFilterProperty ( $_POST ['id'], 'schott', $objUtil->checkPostKey ( 'schott' ) );
 			// $this->setFilterProperty($_POST['id'], 'observer', $loggedUser);
-			return LangValidateFilterMessage5;
+			return _("The filter is changed in your equipment list");
 		} else
 			return _("All required fields must be filled in!");
 	}

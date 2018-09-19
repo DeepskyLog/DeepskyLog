@@ -8,8 +8,9 @@ else
 function setup_objects_query() {
 	global $baseURL, $loggedUser, $objPresentations, $objUtil, $objObject, $objList, $objAtlas, $catalog, $catNumber, $atlas, $atlasPageNumber, $entryMessage, $DSOcatalogs, $pageError, $minDeclDegreesError, $minDeclMinutesError, $minDeclSecondsError, $maxDeclDegreesError, $maxDeclMinutesError, $maxDeclSecondsError, $minRAHoursError, $minRAMinutesError, $minRASecondsError, $maxRAHoursError, $maxRAMinutesError, $maxRASecondsError, $maxMagError, $minMagError, $maxSBError, $minSBError, $minSizeError, $maxSizeError, $minContrastError, $maxContrastError, $listError;
 	$QobjParamsCount = 26;
-	if ($objUtil->checkGetKey ( 'object' ))
-		$entryMessage .= LangInstructionsNoObjectFound . $_GET ['object'];
+	if ($objUtil->checkGetKey('object')) {
+        $entryMessage .= sprintf(_("No corresponding object found for %s"), $_GET['object']);
+    }
 	$link = $baseURL . "index.php?indexAction=query_objects";
 	reset ( $_GET );
     while ( list ( $key, $value ) = each ( $_GET ) )
@@ -21,29 +22,29 @@ function setup_objects_query() {
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"query_objects\" />";
 	echo "<input type=\"hidden\" name=\"source\" value=\"setup_objects_query\" />";
 	echo "<input type=\"hidden\" name=\"showPartOfs\" value=\"0\" />";
-	$content1 = LangSeen;
+	$content1 = _("Seen");
     $seen = $objUtil->checkGetKey ( 'seen' );
 	if ($seen == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
 			$seen = $_SESSION ['QobjParams'] ['seen'];
 	$content2 = "<select name=\"seen\" id=\"seen\" class=\"form-control\">";
-	$content2 .= "<option value=\"A\"  " . ($seen == "A" ? "selected=\"selected\"" : "") . ">" . LangSeenDontCare . "</option>";
-	$content2 .= "<option value=\"XY\" " . ($seen == "XY" ? "selected=\"selected\"" : "") . ">" . LangSeenByMeOrSomeoneElse . "</option>";
-	$content2 .= "<option value=\"SD\" " . ($seen == "SD" ? "selected=\"selected\"" : "") . ">" . LangDrawn . "</option>";
-	$content2 .= "<option value=\"-\"  " . ($seen == "-" ? "selected=\"selected\"" : "") . ">" . LangNotSeen . "</option>";
-    $content2 .= "<option value=\"-Z\" " . ($seen == "-Z" ? "selected=\"selected\"" : "") . ">" . LangNotDrawn . "</option>";
+	$content2 .= "<option value=\"A\"  " . ($seen == "A" ? "selected=\"selected\"" : "") . ">" . _("All objects, seen or not") . "</option>";
+	$content2 .= "<option value=\"XY\" " . ($seen == "XY" ? "selected=\"selected\"" : "") . ">" . _("Only objects that have already been seen") . "</option>";
+	$content2 .= "<option value=\"SD\" " . ($seen == "SD" ? "selected=\"selected\"" : "") . ">" . _("Only objects that have been drawn") . "</option>";
+	$content2 .= "<option value=\"-\"  " . ($seen == "-" ? "selected=\"selected\"" : "") . ">" . _("Only objects that haven't been seen") . "</option>";
+    $content2 .= "<option value=\"-Z\" " . ($seen == "-Z" ? "selected=\"selected\"" : "") . ">" . _("Only objects that haven't been drawn") . "</option>";
 	if ($loggedUser) {
-		$content2 .= "<option value=\"Y\"   " . ($seen == "Y" ? "selected=\"selected\"" : "") . ">" . LangSeenByMe . "</option>";
-		$content2 .= "<option value=\"D\"   " . ($seen == "D" ? "selected=\"selected\"" : "") . ">" . LangDrawnByMe . "</option>";
-		$content2 .= "<option value=\"-X\"  " . ($seen == "-X" ? "selected=\"selected\"" : "") . ">" . LangNotSeenByMeOrNotSeenAtAll . "</option>";
-		$content2 .= "<option value=\"-SZ\" " . ($seen == "-SZ" ? "selected=\"selected\"" : "") . ">" . LangNotDrawnByMe . "</option>";
-		$content2 .= "<option value=\"X\"   " . ($seen == "X" ? "selected=\"selected\"" : "") . ">" . LangSeenSomeoneElse . "</option>";
+		$content2 .= "<option value=\"Y\"   " . ($seen == "Y" ? "selected=\"selected\"" : "") . ">" . _("Only objects that have been seen by me") . "</option>";
+		$content2 .= "<option value=\"D\"   " . ($seen == "D" ? "selected=\"selected\"" : "") . ">" . _("Only objects that have been drawn by me") . "</option>";
+		$content2 .= "<option value=\"-X\"  " . ($seen == "-X" ? "selected=\"selected\"" : "") . ">" . _("Only objects that haven't been seen by me") . "</option>";
+		$content2 .= "<option value=\"-SZ\" " . ($seen == "-SZ" ? "selected=\"selected\"" : "") . ">" . _("Only objects that haven't been drawn by me") . "</option>";
+		$content2 .= "<option value=\"X\"   " . ($seen == "X" ? "selected=\"selected\"" : "") . ">" . _("Already seen by someone else but not by me") . "</option>";
 	}
 	$content2 .= "</select>";
-	$content3 = "<input type=\"submit\" class=\"btn btn-success\" name=\"query\" value=\"" . LangQueryObjectsButton1 . "\" />&nbsp;";
-	$content3 .= '<input type="button" class="btn btn-danger" onclick="clearFields();" value="' . LangQueryObjectsButton2 . '"/>';
+	$content3 = "<input type=\"submit\" class=\"btn btn-success\" name=\"query\" value=\"" . _("Search") . "\" />&nbsp;";
+	$content3 .= '<input type="button" class="btn btn-danger" onclick="clearFields();" value="' . _("Clear fields") . '"/>';
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "deepsky/content/setup_objects_query.js\"></script>";
-	echo "<h4>" . LangQueryObjectsTitle . "</h4>";
+	echo "<h4>" . _("Search objects") . "</h4>";
 	echo "<span class=\"pull-right\">" . $content3 . "</span>";
 	echo "<br /><hr />";
 	echo "<table><tr><td><strong>" . $content1 . "</strong></td>";
@@ -54,7 +55,7 @@ function setup_objects_query() {
 	if ($catalog == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
 			$catalog = $_SESSION ['QobjParams'] ['catalog'];
-	echo "<tr><td><strong>" . LangQueryObjectsField1 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Object name") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	echo "<select id=\"catalog\" name=\"catalog\" class=\"form-control\">";
 	echo "<option value=\"\">" . _("Select catalog") . "</option>";
@@ -68,7 +69,7 @@ function setup_objects_query() {
 	echo "</td></tr>";
 
 	// ATLAS PAGE NUMBER
-	echo "<tr><td><strong>" . LangQueryObjectsField12 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Atlas Page") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	if ($atlas == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
@@ -84,7 +85,7 @@ function setup_objects_query() {
 	echo "<input id=\"atlasPageNumber\" name=\"atlasPageNumber\" type=\"number\" min=\"1\" class=\"form-control\" maxlength=\"4\" size=\"4\" value=\"" . $atlasPageNumber . "\" />";
 	echo "</td></tr>";
 	// CONSTELLATION
-	echo "<tr><td><strong>" . LangQueryObjectsField2 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Constellation") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	$constellations = $objObject->getConstellations (); // should be sorted
 	while ( list ( $key, $value ) = each ( $constellations ) )
@@ -119,7 +120,7 @@ function setup_objects_query() {
 	echo "</select>";
 	echo "</td></tr>";
 	// TYPE
-	echo "<tr><td><strong>" . LangQueryObjectsField11 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Type") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	$types = $objObject->getDsObjectTypes ();
 	while ( list ( $key, $value ) = each ( $types ) )
@@ -136,7 +137,7 @@ function setup_objects_query() {
 	echo "</select>";
 	echo "</td></tr>";
 	// MINIMUM DECLINATION
-	echo "<tr><td><strong>" . LangQueryObjectsField9 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Minimum declination") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	if (($minDeclDegrees = $objUtil->checkGetKey ( 'minDeclDegrees' )) == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount) && ($_SESSION ['QobjParams'] ['mindecl'] !== ''))
@@ -152,7 +153,7 @@ function setup_objects_query() {
 	echo "<input id=\"minDeclSeconds\" name=\"minDeclSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $minDeclSeconds . "\" />&nbsp;&quot;&nbsp;";
 	echo "</td></tr>";
 	// MAXIMUM DECLINATION
-	echo "<tr><td><strong>" . LangQueryObjectsField10 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Maximum declination") . "</strong></td>";
 	echo "<td colspan=\"3\"  class=\"form-inline\">";
 	if (($maxDeclDegrees = $objUtil->checkGetKey ( 'maxDeclDegrees' )) == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount) && ($_SESSION ['QobjParams'] ['maxdecl'] !== ''))
@@ -168,7 +169,7 @@ function setup_objects_query() {
 	echo "<input id=\"maxDeclSeconds\" name=\"maxDeclSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $maxDeclSeconds . "\" />&nbsp;&quot;&nbsp;";
 	echo "</td></tr>";
 	// MINIMUM RIGHT ASCENSION
-	echo "<tr><td><strong>" . LangQueryObjectsField7 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Minimum RA") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	if (($minRAHours = $objUtil->checkGetKey ( 'minRAHours' )) == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount) && ($_SESSION ['QobjParams'] ['minra'] !== ''))
@@ -184,7 +185,7 @@ function setup_objects_query() {
 	echo "<input id=\"minRASeconds\" name=\"minRASeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $minRASeconds . "\" />&nbsp;s&nbsp;";
 	echo "</div></div></div>";
 	// MAXIMUM RIGHT ASCENSION
-	echo "<tr><td><strong>" . LangQueryObjectsField8 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Maximum RA") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	if (($maxRAHours = $objUtil->checkGetKey ( 'maxRAHours' )) == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount) && ($_SESSION ['QobjParams'] ['maxra'] !== ''))
@@ -200,7 +201,7 @@ function setup_objects_query() {
 	echo "<input id=\"maxRASeconds\" name=\"maxRASeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $maxRASeconds . "\" />&nbsp;s&nbsp;";
 	echo "</td></tr>";
 	// MAGNITUDE BRIGHTER THAN
-	echo "<tr><td><strong>" . LangQueryObjectsField4 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Magnitude brighter than") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	if (($maxMag = $objUtil->checkGetKey ( 'maxMag' )) == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
@@ -208,7 +209,7 @@ function setup_objects_query() {
 	echo "<input id=\"maxMag\" name=\"maxMag\" type=\"number\" min=\"-5\" max=\"24\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" size=\"4\" value=\"" . $maxMag . "\" />";
 	echo "</td></tr>";
 	// MAGNITUDE LESS THAN
-	echo "<tr><td><strong>" . LangQueryObjectsField3 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Magnitude fainter than") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	if (($minMag = $objUtil->checkGetKey ( 'minMag' )) == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
@@ -216,7 +217,7 @@ function setup_objects_query() {
 	echo "<input id=\"minMag\" name=\"minMag\" type=\"number\" min=\"-5\" max=\"24\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" size=\"4\" value=\"" . $minMag . "\" />";
 	echo "</td></tr>";
 	// SURFACE BRIGHTNESS BRIGHTER THAN
-	echo "<tr><td><strong>" . LangQueryObjectsField6 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Surface brightness higher than") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	if (($maxSB = $objUtil->checkGetKey ( 'maxSB' )) == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
@@ -224,7 +225,7 @@ function setup_objects_query() {
 	echo "<input id=\"maxSB\" name=\"maxSB\" type=\"number\" min=\"-5\" max=\"24\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" size=\"4\" value=\"" . $maxSB . "\" />";
 	echo "</td></tr>";
 	// SURFACE BRIGHTNESS LESS THAN
-	echo "<tr><td><strong>" . LangQueryObjectsField5 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Surface brightness lower than") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	if (($minSB = $objUtil->checkGetKey ( 'minSB' )) == '')
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
@@ -232,7 +233,7 @@ function setup_objects_query() {
 	echo "<input id=\"minSB\" name=\"minSB\" type=\"number\" min=\"-5\" max=\"24\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" size=\"4\" value=\"" . $minSB . "\" />";
 	echo "</td></tr>";
 	// MINIMIM SIZE
-	echo "<tr><td><strong>" . LangQueryObjectsField13 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Minimum size") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	$size_min_units = $objUtil->checkGetKey ( 'size_min_units' );
 	if (($minSize = $objUtil->checkGetKey ( 'minSize' )) == '')
@@ -243,12 +244,12 @@ function setup_objects_query() {
 	echo "<input id=\"minSize\" name=\"minSize\" type=\"number\" min=\"0\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" size=\"4\" value=\"" . $minSize . "\" />";
 	echo "&nbsp;&nbsp;";
 	echo "<select id=\"size_min_units\" name=\"size_min_units\" class=\"form-control\">";
-	echo "<option" . (($size_min_units == "min") ? " selected=\"selected\"" : "") . " value=\"min\">" . LangNewObjectSizeUnits1 . "</option>";
-	echo "<option" . (($size_min_units == "sec") ? " selected=\"selected\"" : "") . " value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>";
+	echo "<option" . (($size_min_units == "min") ? " selected=\"selected\"" : "") . " value=\"min\">" . _("arcminutes") . "</option>";
+	echo "<option" . (($size_min_units == "sec") ? " selected=\"selected\"" : "") . " value=\"sec\">" . _("arcseconds") . "</option>";
 	echo "</select>";
 	echo "</td></tr>";
 	// MAXIMUM SIZE
-	echo "<tr><td><strong>" . LangQueryObjectsField14 . "</strong></td>";
+	echo "<tr><td><strong>" . _("Maximum size") . "</strong></td>";
 	echo "<td colspan=\"3\" class=\"form-inline\">";
 	$size_max_units = $objUtil->checkGetKey ( 'size_max_units' );
 	if (($maxSize = $objUtil->checkGetKey ( 'maxSize' )) == '')
@@ -259,12 +260,12 @@ function setup_objects_query() {
 	echo "<input id=\"maxSize\" name=\"maxSize\" type=\"number\" min=\"0\" step=\"0.1\" class=\"form-control\" maxlength=\"4\" size=\"4\" value=\"" . $maxSize . "\" />";
 	echo "&nbsp;&nbsp;";
 	echo "<select id=\"size_max_units\" name=\"size_max_units\" class=\"form-control\">";
-	echo "<option" . (($size_max_units == "min") ? " selected=\"selected\"" : "") . " value=\"min\">" . LangNewObjectSizeUnits1 . "</option>";
-	echo "<option" . (($size_max_units == "sec") ? " selected=\"selected\"" : "") . " value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>";
+	echo "<option" . (($size_max_units == "min") ? " selected=\"selected\"" : "") . " value=\"min\">" . _("arcminutes") . "</option>";
+	echo "<option" . (($size_max_units == "sec") ? " selected=\"selected\"" : "") . " value=\"sec\">" . _("arcseconds") . "</option>";
 	echo "</select>";
 	echo "</td></tr>";
 	if ($loggedUser) {
-		echo "<tr><td><strong>" . LangQueryObjectsField18 . "</strong></td>";
+		echo "<tr><td><strong>" . _("Minimum contrast reserve") . "</strong></td>";
 		echo "<td colspan=\"3\" class=\"form-inline\">";
 		if (($minContrast = $objUtil->checkGetKey ( 'minContrast' )) == '')
 			if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
@@ -273,7 +274,7 @@ function setup_objects_query() {
 		echo "</td></tr>";
 
 		// MAXIMUM CONTRAST RESERVE
-		echo "<tr><td><strong>" . LangQueryObjectsField17 . "</strong></td>";
+		echo "<tr><td><strong>" . _("Maximum contrast reserve") . "</strong></td>";
 		echo "<td colspan=\"3\" class=\"form-inline\">";
 		if (($maxContrast = $objUtil->checkGetKey ( 'maxContrast' )) == '')
 			if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
@@ -281,7 +282,7 @@ function setup_objects_query() {
 		echo "<input id=\"maxContrast\" name=\"maxContrast\" type=\"number\" min=\"-5.0\" max=\"10.0\" step=\"0.01\" class=\"form-control\" maxlength=\"4\" size=\"5\" value=\"" . $maxContrast . "\" />";
 		echo "</td></tr>";
 		// IN LIST
-		echo "<tr><td><strong>" . LangQueryObjectsField19 . "</strong></td>";
+		echo "<tr><td><strong>" . _("In the list") . "</strong></td>";
 		echo "<td colspan=\"3\" class=\"form-inline\">";
 		$lists = $objList->getLists ();
 		echo "<select id=\"inList\" name=\"inList\" class=\"form-control\">";
@@ -294,7 +295,7 @@ function setup_objects_query() {
 		echo "</select>";
 		echo "</td></tr>";
 		// NOT IN LIST
-		echo "<tr><td><strong>" . LangQueryObjectsField20 . "</strong></td>";
+		echo "<tr><td><strong>" . _("Not in the list") . "</strong></td>";
 		echo "<td colspan=\"3\" class=\"form-inline\">";
 		reset ( $lists );
 		echo "<select id=\"notInList\" name=\"notInList\" class=\"form-control\">";
@@ -311,7 +312,7 @@ function setup_objects_query() {
 		if (($descriptioncontains = $objUtil->checkGetKey ( 'descriptioncontains' )) == '')
 			if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount))
 				$descriptioncontains = $_SESSION ['QobjParams'] ['descriptioncontains'];
-		echo "<tr><td><strong>" . _("NGC Decription contains:") . "</strong></td>";
+		echo "<tr><td><strong>" . _("NGC Description contains:") . "</strong></td>";
 		echo "<td colspan=\"3\" class=\"form-inline\">";
 		echo "<input id=\"descriptioncontains\" name=\"descriptioncontains\" type=\"text\" class=\"form-control\" maxlength=\"50\" size=\"30\" value=\"" . $descriptioncontains . "\" />";
 		echo "</td></tr>";

@@ -33,7 +33,7 @@ function generateallonepass(item,msie)
       }
     }
   };
-  document.getElementById('thecounter').innerHTML=(LangpdfseriesGenerating+document.getElementById('R'+item).value+'.');
+  document.getElementById('thecounter').innerHTML=(_('Generating ')+document.getElementById('R'+item).value+'.');
   var url='ajaxinterface.php?instruction=allonepass'+
   '&theSet='+urlencode(document.getElementById('R'+item+'Dfovs').value)+
   '&thedsos='+urlencode(document.getElementById('R'+item+'Ddsos').value)+
@@ -75,7 +75,7 @@ function generateOne(i,msie)
         '&yearephemerides='+urlencode(document.getElementById('yearephemerides').checked)+
         (document.getElementById('indexpage').checked==true?
         ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):''));
-  document.getElementById('thecounter').innerHTML=(LangpdfseriesGenerating+document.getElementById('R'+i).value+'.');
+  document.getElementById('thecounter').innerHTML=(_('Generating ')+document.getElementById('R'+i).value+'.');
   document.getElementById('T'+i).setAttribute('style','background-color:#DDDDDD;');
   document.getElementById('R'+(i+1)).focus();
 }
