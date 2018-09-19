@@ -13,7 +13,9 @@
 if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 } elseif (! $loggedUser) {
-    throw new Exception(_("You need to be logged in to change your locations or equipment."));
+    throw new Exception(
+        _("You need to be logged in to change your locations or equipment.")
+    );
 } else {
     newLocation();
 }

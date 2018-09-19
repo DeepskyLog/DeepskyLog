@@ -91,8 +91,10 @@ $GLOBALS['VisibilityOC1'] = _("Very prominent and very beautiful cluster");
 $GLOBALS['VisibilityOC2'] = _("Prominent and beautiful cluster");
 $GLOBALS['VisibilityOC3'] = _("Conspicuously seen cluster");
 $GLOBALS['VisibilityOC4'] = _("Cluster hardly attracts attention");
-$GLOBALS['VisibilityOC5'] = _("Very unconspicuously, easily overlooked when slewing");
-$GLOBALS['VisibilityOC6'] = _("Questionable sighting; star density similar to neighborhood");
+$GLOBALS['VisibilityOC5'] 
+    = _("Very unconspicuously, easily overlooked when slewing");
+$GLOBALS['VisibilityOC6']
+    = _("Questionable sighting; star density similar to neighborhood");
 $GLOBALS['VisibilityOC7'] = _("Virtually no stars at catalog position");
 
 // Visibility for double stars
