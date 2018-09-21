@@ -94,7 +94,7 @@ function changeSite()
     $content = $disabled 
         ? "" 
         : "  <input type=\"submit\" class=\"btn btn-primary tour4\" name=\"change\"" 
-        . " value=\"" . ("Change site") . "\" />";
+        . " value=\"" . _("Change site") . "\" />";
     echo $content;
 
     // Limiting magnitude
