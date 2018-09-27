@@ -19,14 +19,14 @@ function change_password() {
       // Add form to change the password.
       echo "<div id=\"main\">
               <form action=\"".$baseURL."index.php?indexAction=changepasswordToken\" method=\"post\">
-              " . LangNewPassword . "
+              " . _("New password") . "
               <input type=\"hidden\" name=\"userid\" value=\"" . $userid . "\" />
               <input type=\"hidden\" name=\"token\" value=\"" . $token . "\" />
               <input type=\"password\" name=\"newPassword\" class=\"strength\" required>" .
-              LangChangeAccountField6 . "
+              _("Confirm password") . "
               <input type=\"password\" name=\"confirmPassword\" class=\"strength\" required data-show-meter=\"false\">
               <br />
-              <input class=\"btn btn-danger\" type=\"submit\" name=\"changePasswordToken\" value=\"" . LangChangePassword . "\" />";
+              <input class=\"btn btn-danger\" type=\"submit\" name=\"changePasswordToken\" value=\"" . _("Change password") . "\" />";
 
       echo "</div>";
     } else {

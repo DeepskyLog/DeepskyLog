@@ -3,8 +3,8 @@
 // check for faulty objects - only for admins
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!$loggedUser) throw new Exception(LangException002);
-elseif($_SESSION['admin']!="yes") throw new Exception(LangException001);
+elseif(!$loggedUser) throw new Exception(_("You need to be logged in to change your locations or equipment."));
+elseif($_SESSION['admin']!="yes") throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 else admincheckobjects();
 
 function admincheckobjects()

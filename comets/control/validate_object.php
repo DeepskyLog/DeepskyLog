@@ -14,7 +14,7 @@ function validate_object()
 	if ($objUtil->checkPostKey('newobject')) // pushed add new object button
 	{ // check if required fields are filled in
 	  if (!($objUtil->checkPostKey('name')))
-	  { $entryMessage = LangValidateObjectMessage1;
+	  { $entryMessage = _("You didn't fill in a required field!");
 	    $_GET['indexAction']='default_action';
 	  }
 	  else // all required fields filled in
@@ -24,7 +24,7 @@ function validate_object()
 	    $query1 = array("name" => $name);
 		  if(count($objects->getObjectFromQuery($query1, "name")) > 0) // object already exists
 	    {
-	    $entryMessage = LangValidateObjectMessage2;
+	    $entryMessage = _("There is already an object with this (alternative) name!");
 	    $_GET['indexAction']='default_action';
 	          }
 	    else

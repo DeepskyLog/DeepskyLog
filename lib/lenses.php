@@ -54,11 +54,11 @@ class Lenses {
 
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
-			echo "<th>" . LangViewActive . "</td>";
-			echo "<th data-priority=\"critical\">" . LangViewLensName . "</th>";
-			echo "<th>" . LangViewLensFactor . "</th>";
-			echo "<th>" . LangRemove . "</th>";
-			echo "<th>" . LangTopObserversHeader3 . "</th>";
+			echo "<th>" . _("Active") . "</td>";
+			echo "<th data-priority=\"critical\">" . _("Name") . "</th>";
+			echo "<th>" . _("Factor") . "</th>";
+			echo "<th>" . _("Delete") . "</th>";
+			echo "<th>" . _("Number of observations") . "</th>";
 			echo "</tr></thead>";
 			$count = 0;
 			while ( list ( $key, $value ) = each ( $lns ) ) {
@@ -79,9 +79,9 @@ class Lenses {
 				echo "<td>";
 				echo "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . $loggedUser . "&amp;lens=" . $value . "&amp;exactinstrumentlocation=true\">";
 				if ($obsCnt != 1) {
-					echo $obsCnt . ' ' . LangGeneralObservations . "</a>";
+					echo $obsCnt . ' ' . _("observations") . "</a>";
 				} else {
-					echo $obsCnt . ' ' . LangGeneralObservation . "</a>";
+					echo $obsCnt . ' ' . _("observation") . "</a>";
 				}
 				echo "</td>";
 				echo "</tr>";
@@ -97,7 +97,7 @@ class Lenses {
 		global $objUtil, $objDatabase;
 		if (($lensid = $objUtil->checkGetKey ( 'lensid' )) && $objUtil->checkAdminOrUserID ( $this->getLensPropertyFromId ( $lensid, 'observer' ) ) && (! ($this->getLensUsedFromId ( $lensid )))) {
 			$objDatabase->execSQL ( "DELETE FROM lenses WHERE id=\"" . $lensid . "\"" );
-			return LangValidateLensMessage1;
+			return _("The lens is removed from your equipment list");
 		}
 	}
 	public function validateSaveLens() // validates and saves a lens and returns a message
@@ -106,14 +106,14 @@ class Lenses {
 		if ($objUtil->checkPostKey ( 'add' ) && $objUtil->checkPostKey ( 'lensname' ) && $objUtil->checkPostKey ( 'factor' ) && $loggedUser) {
 			$id = $this->addLens ( $_POST ['lensname'], $_POST ['factor'] );
 			$this->setLensProperty ( $id, 'observer', $loggedUser );
-			return LangValidateLensMessage2;
+			return _("The lens is added to your equipment list");
 		} elseif ($objUtil->checkPostKey ( 'change' ) && $objUtil->checkAdminOrUserID ( $this->getLensPropertyFromId ( $objUtil->checkPostKey ( 'id' ), 'observer' ) ) && $objUtil->checkPostKey ( 'lensname' ) && $objUtil->checkPostKey ( 'factor' )) {
 			$this->setLensProperty ( $_POST ['id'], 'name', $_POST ['lensname'] );
 			$this->setLensProperty ( $_POST ['id'], 'factor', $_POST ['factor'] );
 			// $this->setLensProperty($_POST['id'], 'observer', $loggedUser);
-			return LangValidateLensMessage5;
+			return _("The lens is changed in your equipment list");
 		} else
-			return LangValidateMessage1;
+			return _("All required fields must be filled in!");
 	}
 }
 ?>

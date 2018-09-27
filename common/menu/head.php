@@ -12,7 +12,7 @@ function head() {
 	echo "<meta name=\"revisit-after\" content=\"1 day\" />";
 	echo "<meta name=\"author\" content=\"DeepskyLog - VVS\" />";
 	echo "<meta name=\"keywords\" content=\"VVS, Vereniging Voor Sterrenkunde, astronomie, sterrenkunde, Deepsky, waarnemingen, kometen\" />";
-	echo "<base href=\"" . $baseURL . "\" />";
+    echo "<base href=\"" . $baseURL . "\" />";
 	echo "<link rel=\"shortcut icon\" href=\"" . $baseURL . "styles/images/favicon.png\" />";
 	echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"DeepskyLog - latest observations\" href=\"observations.rss\" />";
 	// Load the javascript for using php functions in javascript.
@@ -64,159 +64,156 @@ function head() {
 	$theObject = $objUtil->checkRequestKey ( 'object' );
 	$theObject = ($theObject ? " - " . $theObject : "");
 	if ($includeFile == 'deepsky/content/new_observationcsv.php')
-		$TitleText = LangCSVTitle;
+		$TitleText = _("Import observations from a CSV file");
 	elseif ($includeFile == 'deepsky/content/newObservationXml.php')
-		$TitleText = LangXMLTitle;
+		$TitleText = _("Import observations from an XML file");
 	elseif ($includeFile == 'deepsky/content/new_object.php')
-		$TitleText = LangNewObjectTitle;
-	elseif ($includeFile == 'deepsky/content/new_observation.php')
-		$TitleText = LangNewObservationTitle . $theObject;
+		$TitleText = _("Add new object");
+	elseif ($includeFile == 'deepsky/content/NewObservation.php')
+		$TitleText = _("New observation") . $theObject;
 	elseif ($includeFile == 'deepsky/content/view_object.php')
-		$TitleText = LangViewObjectTitle . $theObject;
+		$TitleText = _("Object details") . $theObject;
 	elseif ($includeFile == 'deepsky/content/view_observation.php')
-		$TitleText = LangViewObservationTitle . $theObject;
+		$TitleText = _("Observation details") . $theObject;
 	elseif ($includeFile == 'deepsky/content/dsatlas.php')
-		$TitleText = LangAtlasPage . $theObject;
+		$TitleText = _("Interactive Atlas") . $theObject;
 	elseif ($includeFile == 'deepsky/content/new_listdatacsv.php')
-		$TitleText = LangCSVListTitle;
+		$TitleText = _("Import objects from a CSV file to your list");
 	elseif ($includeFile == 'deepsky/content/tolist.php')
 		$TitleText = $listname;
 	elseif ($includeFile == 'deepsky/content/manage_objects_csv.php')
-		$TitleText = LangCSVObjectTitle;
+		$TitleText = _("Manage objects from CSV file");
 	elseif ($includeFile == 'deepsky/content/setup_objects_query.php')
-		$TitleText = LangQueryObjectsTitle;
+		$TitleText = _("Search objects");
 	elseif ($includeFile == 'deepsky/content/view_object.php')
-		$TitleText = LangSelectedObjectsTitle . $theObject;
+		$TitleText = _("Overview selected objects") . $theObject;
 	elseif ($includeFile == 'deepsky/content/setup_observations_query.php')
-		$TitleText = LangQueryObservationsTitle;
+		$TitleText = _("Search observations");
 	elseif ($includeFile == 'deepsky/content/top_objects.php')
-		$TitleText = LangTopObjectsTitle;
+		$TitleText = _("Most popular objects");
 	elseif ($includeFile == 'deepsky/content/top_observers.php')
-		$TitleText = LangTopObserversTitle;
+		$TitleText = _("Most active observers");
 	elseif ($includeFile == 'deepsky/content/selected_objects.php')
-		$TitleText = LangSelectedObjectsTitle;
+		$TitleText = _("Overview selected objects");
 	elseif ($includeFile == 'deepsky/content/selected_observations.php') {
-		if (array_key_exists ( 'minyear', $_GET ) && ($_GET ['minyear'] == substr ( $theDate, 0, 4 )) && array_key_exists ( 'minmonth', $_GET ) && ($_GET ['minmonth'] == substr ( $theDate, 4, 2 )) && array_key_exists ( 'minday', $_GET ) && ($_GET ['minday'] == substr ( $theDate, 6, 2 )))
-			$TitleText = LangSelectedObservationsTitle3;
-		elseif ($object)
-			$TitleText = LangSelectedObservationsTitle . $object;
-		else
-			$TitleText = LangSelectedObservationsTitle2;
+		if (array_key_exists('minyear', $_GET) && ($_GET ['minyear'] == substr ( $theDate, 0, 4 )) && array_key_exists ( 'minmonth', $_GET ) && ($_GET ['minmonth'] == substr ( $theDate, 4, 2 )) && array_key_exists ( 'minday', $_GET ) && ($_GET ['minday'] == substr ( $theDate, 6, 2 )))
+			$TitleText = _("Overview of last year's observations");
+		elseif ($object) {
+			$TitleText = sprintf(_("Overview of all observations of %s"), $object);
+        } else {
+            $TitleText = _("Overview selected observations");
+        }
 	} elseif ($includeFile == 'deepsky/content/details_observer_catalog.php')
-		$TitleText = LangTopObserversMessierHeader2 . " " . $objUtil->checkGetKey ( 'catalog', 'M' ) . " " . LangTopObserversMessierHeader3 . " - " . $objObserver->getObserverProperty ( $objUtil->checkGetKey ( 'user' ), 'firstname' ) . " " . $objObserver->getObserverProperty ( $objUtil->checkGetKey ( 'user' ), 'name' );
+		$TitleText = _("Overview observed") . " " . $objUtil->checkGetKey ( 'catalog', 'M' ) . " " . _("objects") . " - " . $objObserver->getObserverProperty ( $objUtil->checkGetKey ( 'user' ), 'firstname' ) . " " . $objObserver->getObserverProperty ( $objUtil->checkGetKey ( 'user' ), 'name' );
 	elseif ($theDispatch == 'detail_observer')
-		$TitleText = LangDetailObserver;
+		$TitleText = _("Details observer");
 	elseif ($theDispatch == 'statistics')
-	$TitleText = LangStatistics;
+	$TitleText = _("Statistics");
 	elseif ($includeFile == 'common/content/change_account.php')
-		$TitleText = LangChangeAccountTitle;
+		$TitleText = _("Settings");
 	elseif ($theDispatch == 'detail_eyepiece')
-		$TitleText = LangDetailEyepiece;
+		$TitleText = _("Details eyepiece");
 	elseif ($includeFile == 'common/content/change_eyepiece.php')
-		$TitleText = LangAddEyepieceButton2;
+		$TitleText = _("Adapt eyepiece");
 	elseif ($theDispatch == 'detail_filter')
-		$TitleText = LangDetailFilter;
+		$TitleText = _("Details filter");
 	elseif ($includeFile == 'common/content/change_filter.php')
-		$TitleText = LangChangeFilterButton;
+		$TitleText = _("Change filter");
 	elseif ($theDispatch == 'detail_instrument')
-		$TitleText = LangDetailInstrument;
+		$TitleText = _("Details instrument");
 	elseif ($includeFile == 'common/content/change_instrument.php')
-		$TitleText = LangChangeInstrumentButton;
+		$TitleText = _("Change instrument");
 	elseif ($theDispatch == 'detail_lens')
-		$TitleText = LangDetailLens;
+		$TitleText = _("Details lens");
 	elseif ($includeFile == 'common/content/change_lens.php')
-		$TitleText = LangChangeLensButton;
+		$TitleText = _("Change lens");
 	elseif ($theDispatch == 'detail_location')
-		$TitleText = LangDetailSite;
+		$TitleText = _("Details location");
 	elseif ($includeFile == 'common/content/change_site.php')
-		$TitleText = LangAddSiteButton2;
+		$TitleText = _("Change site");
 	elseif ($includeFile == 'common/content/new_eyepiece.php')
-		$TitleText = LangAddEyepieceButton;
+		$TitleText = _("Add eyepiece");
 	elseif ($includeFile == 'common/content/new_filter.php')
-		$TitleText = LangAddFilterButton;
+		$TitleText = _("Add filter");
 	elseif ($includeFile == 'common/content/new_instrument.php')
-		$TitleText = LangAddInstrumentAdd;
+		$TitleText = _("Add instrument");
 	elseif ($includeFile == 'common/content/new_lens.php')
-		$TitleText = LangAddLensButton;
+		$TitleText = _("Add lens");
 	elseif ($includeFile == 'common/content/message.php')
 		$TitleText = "";
-	elseif ($includeFile == 'common/content/search_locations.php')
-		$TitleText = LangSearchLocations0;
-	elseif ($includeFile == 'common/content/getLocation.php')
-		$TitleText = LangGetLocation1;
 	elseif ($includeFile == 'common/content/register.php')
-		$TitleText = LangRegisterNewTitle;
+		$TitleText = _("Register");
 	elseif ($includeFile == 'common/content/overview_eyepieces.php')
-		$TitleText = LangViewEyepieceTitle;
+		$TitleText = _("Eyepiece overview");
 	elseif ($includeFile == 'common/content/overview_filters.php')
-		$TitleText = LangOverviewFilterTitle;
+		$TitleText = _("Filters of");
 	elseif ($includeFile == 'common/content/overview_instruments.php')
-		$TitleText = LangOverviewInstrumentsTitle;
+		$TitleText = _("Instruments of");
 	elseif ($includeFile == 'common/content/overview_lenses.php')
-		$TitleText = LangOverviewLensTitle;
+		$TitleText = _("Lenses of");
 	elseif ($includeFile == 'common/content/overview_locations.php')
-		$TitleText = LangViewLocationTitle;
+		$TitleText = _("Locations overview");
 	elseif ($includeFile == 'common/content/overview_observers.php')
-		$TitleText = LangViewObserverTitle;
+		$TitleText = _("Observers overview");
 
 	elseif ($includeFile == 'deepsky/control/admincheckobjects.php')
 		$TitleText = "Checking objects";
 
 	elseif ($includeFile == 'comets/content/overview_observations.php')
-		$TitleText = LangOverviewObservationsTitle;
+		$TitleText = _("Overview all observations");
 	elseif ($includeFile == 'comets/content/view_object.php')
-		$TitleText = LangViewObjectTitle;
+		$TitleText = _("Object details");
 	elseif ($includeFile == 'comets/content/view_observation.php')
-		$TitleText = LangViewObservationTitle;
+		$TitleText = _("Observation details");
 	elseif ($includeFile == 'comets/content/new_observation.php')
-		$TitleText = LangNewObservationTitle;
+		$TitleText = _("New observation");
 	elseif ($includeFile == 'comets/content/selected_observations.php')
-		$TitleText = LangSelectedObservationsTitle;
+		$TitleText = _("Overview of all observations of ");
 	elseif ($includeFile == 'comets/content/view_observation.php')
-		$TitleText = LangViewObservationTitle;
+		$TitleText = _("Observation details");
 	elseif ($includeFile == 'comets/content/new_object.php')
-		$TitleText = LangNewObjectTitle;
+		$TitleText = _("Add new object");
 	elseif ($includeFile == 'comets/content/view_object.php')
-		$TitleText = LangViewObjectTitle;
+		$TitleText = _("Object details");
 	elseif ($includeFile == 'comets/content/overview_objects.php')
-		$TitleText = LangOverviewObjectsTitle;
+		$TitleText = _("Overview all objects");
 	elseif ($includeFile == 'comets/content/overview_observations.php')
-		$TitleText = LangOverviewObservationsTitle;
+		$TitleText = _("Overview all observations");
 	elseif ($includeFile == 'comets/content/execute_query_objects.php')
-		$TitleText = LangSelectedObjectsTitle;
+		$TitleText = _("Overview selected objects");
 	elseif ($includeFile == 'comets/content/selected_observations2.php')
-		$TitleText = LangSelectedObservationsTitle2;
+		$TitleText = _("Overview selected observations");
 	elseif ($includeFile == 'comets/content/top_observers.php')
-		$TitleText = LangTopObserversTitle;
+		$TitleText = _("Most active observers");
 	elseif ($includeFile == 'comets/content/top_objects.php')
-		$TitleText = LangTopObjectsTitle;
+		$TitleText = _("Most popular objects");
 	elseif ($includeFile == 'comets/content/setup_observations_query.php')
-		$TitleText = LangQueryObservationsTitle;
+		$TitleText = _("Search observations");
 	elseif ($includeFile == 'comets/content/setup_objects_query.php')
-		$TitleText = LangQueryObjectsTitle;
+		$TitleText = _("Search objects");
 	elseif ($includeFile == 'common/content/view_instruments.php')
-		$TitleText = LangViewInstruments;
+		$TitleText = _("My instruments");
 	elseif ($includeFile == 'common/content/view_eyepieces.php')
-		$TitleText = LangViewEyepieces;
+		$TitleText = _("My eyepieces");
 	elseif ($includeFile == 'common/content/view_filters.php')
-		$TitleText = LangViewFilters;
+		$TitleText = _("My filters");
 	elseif ($includeFile == 'common/content/view_lenses.php')
-		$TitleText = LangViewLenses;
+		$TitleText = _("My lenses");
 	elseif ($includeFile == 'common/content/new_location.php')
-		$TitleText = LangAddSiteButton;
+		$TitleText = _("Add site");
 	elseif ($includeFile == 'common/content/locations.php')
-		$TitleText = LangViewLocations;
+		$TitleText = _("My locations");
 	elseif ($objUtil->checkRequestKey ( 'title' ))
 		$TitleText = $objUtil->checkRequestKey ( 'title', '' ); // 20081209 Here should come a better solution, see bug report 44
 	elseif ($objUtil->checkRequestKey ( ('titleobject') ))
 		$TitleText = $objUtil->checkRequestKey ( 'titleobject', '' ) . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
 	elseif ($objUtil->checkRequestKey ( ('titleobjectaction') )) {
 		if ($objUtil->checkRequestKey ( 'searchObjectQuickPickQuickPick', '' ))
-			$TitleText = LangSelectedObjectsTitle . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
+			$TitleText = _("Overview selected objects") . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
 		elseif ($objUtil->checkRequestKey ( 'searchObservationsQuickPick', '' ))
-			$TitleText = LangSelectedObservationsTitle2 . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
+			$TitleText = _("Overview selected observations") . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
 		elseif ($objUtil->checkRequestKey ( 'newObservationQuickPick', '' ))
-			$TitleText = LangQuickPickNewObservation . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
+			$TitleText = _("New Observation") . " - " . $objUtil->checkGetKey('object'); // 20081209 Here should come a better solution, see bug report 44
 	}
 	if ($TitleText == "" || $TitleText == "Home") {
 		$TitleText = "DeepskyLog";

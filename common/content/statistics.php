@@ -79,7 +79,7 @@ function statistics() {
 	echo '<form action="' . $baseURL . 'index.php" method="post" class="form-inline">
 					<input type="hidden" name="indexAction" value="statistics" />
   				<div class="form-group">
-						<label class="control-label">' . LangSelectCountry . '&nbsp;&nbsp;</label>';
+						<label class="control-label">' . _("Select country") . '&nbsp;&nbsp;</label>';
 
 	echo "			<select  name=\"country\" class=\"form-control\" onchange=\"submit();\">";
 	echo "				<option value=\"All\">All</option>";
@@ -101,12 +101,12 @@ function statistics() {
 
 	// We make some tabs.
 	echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">
-          <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">" . GraphInfo . "</a></li>
-          <li><a href=\"#observationsPerYear\" data-toggle=\"tab\">" . GraphObservationsTitle . "</a></li>
-					<li><a href=\"#observationsPerMonth\" data-toggle=\"tab\">" . GraphObservationsMonthTitle . "</a></li>
-          <li><a href=\"#objectTypes\" data-toggle=\"tab\">" . GraphObservationsType . "</a></li>";
+          <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">" . _("Info") . "</a></li>
+          <li><a href=\"#observationsPerYear\" data-toggle=\"tab\">" . _("Observations per year") . "</a></li>
+					<li><a href=\"#observationsPerMonth\" data-toggle=\"tab\">" . _("Observations per month") . "</a></li>
+          <li><a href=\"#objectTypes\" data-toggle=\"tab\">" . _("Object types observed") . "</a></li>";
 	if (strcmp($selectedCountry, "All") == 0) {
- 		echo "<li><a href=\"#countries\" data-toggle=\"tab\">" . GraphObservationsPerCountry . "</a></li>";
+ 		echo "<li><a href=\"#countries\" data-toggle=\"tab\">" . _("Observations per country") . "</a></li>";
 	}
   echo "</ul>";
 
@@ -123,7 +123,7 @@ function statistics() {
 	echo " </tr>";
 
 	echo " <tr>";
-	echo "  <td>" . LangViewObserverNumberOfObservations . "</td>";
+	echo "  <td>" . _("Number of observations") . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
 		echo " <td>" . $information [$i] [0];
 		echo " </td>";
@@ -131,7 +131,7 @@ function statistics() {
 	echo " </tr>";
 
 	echo " <tr>";
-	echo "  <td>" . LangTopObserversHeader4 . "</td>";
+	echo "  <td>" . _("Observations last year") . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
 		echo " <td>" . $information [$i] [1];
 		echo " </td>";
@@ -139,7 +139,7 @@ function statistics() {
 	echo " </tr>";
 
 	echo " <tr>";
-	echo "  <td>" . LangTopObserversHeader6 . "</td>";
+	echo "  <td>" . _("Different objects") . "</td>";
 	for($i = 0; $i < count ( $modules ); $i ++) {
 		echo " <td>" . $information [$i] [2];
 		echo " </td>";
@@ -221,11 +221,11 @@ function statistics() {
 	  	          marginBottom: 40
 	  	        },
 	  	        title: {
-	  	          text: \"" . GraphTitle1 . "\",
+	  	          text: \"" . _("Number of observations per year") . "\",
 	  	          x: -20 //center
 	  	        },
 	  	        subtitle: {
-	  	          text: '" . GraphSource . $baseURL . "',
+	  	          text: '" . _("Source: ") . $baseURL . "',
 	  	          x: -20
 	  	        },
 	  	        xAxis: {
@@ -243,7 +243,7 @@ function statistics() {
 	  	        },
 	  	        yAxis: {
 	  	          title: {
-	  	            text: '" . GraphObservations . "'
+	  	            text: '" . _("Observations") . "'
 	  	        },
 							min: 0,
 	  	        plotLines: [{
@@ -347,11 +347,11 @@ function statistics() {
 	  	          marginBottom: 25
 	  	        },
 	  	        title: {
-	  	          text: \"" . GraphTitleMonths . "\",
+	  	          text: \"" . _("Number of observations per month") . "\",
 	  	          x: -20 //center
 	  	        },
 	  	        subtitle: {
-	  	          text: '" . GraphSource . $baseURL . "',
+	  	          text: '" . _("Source: ") . $baseURL . "',
 	  	          x: -20
 	  	        },
 	  	        xAxis: {
@@ -373,7 +373,7 @@ function statistics() {
 							},
 	  	        yAxis: {
 	  	          title: {
-	  	            text: '" . GraphObservations . "'
+	  	            text: '" . _("Observations") . "'
 	  	        },
 							min: 0,
 	  	        plotLines: [{
@@ -704,10 +704,10 @@ function statistics() {
 						plotShadow: false
 					},
 					title: {
-						text: \"" . ObjectsSeenGraph . "\"
+						text: \"" . _("Object types seen") . "\"
 					},
                 subtitle: {
-                  text: '" . GraphSource . $baseURL . "'
+                  text: '" . _("Source: ") . $baseURL . "'
                 },
 					tooltip: {
 						formatter: function() {
@@ -770,10 +770,10 @@ function statistics() {
 					plotShadow: false
 				},
 				title: {
-					text: \"" . GraphObservationsPerCountry . "\"
+					text: \"" . _("Observations per country") . "\"
 				},
 				subtitle: {
-					text: '" . GraphSource . $baseURL . "'
+					text: '" . _("Source: ") . $baseURL . "'
 				},
 				tooltip: {
 					formatter: function() {

@@ -12,7 +12,7 @@ function tolist() {
 	if ($listname) {
 		$link = $baseURL . "index.php?indexAction=listaction";
 		reset ( $_GET );
-		while ( list ( $key, $value ) = each ( $_GET ) )
+		foreach ($_GET as $key=>$value)
 			if (! in_array ( $key, array (
 					'addobservationstolist',
 					'restoreColumns',
@@ -28,35 +28,35 @@ function tolist() {
 					'noShowName'
 			) ))
 				$link .= '&amp;' . urlencode ( $key ) . '=' . urlencode ( $value );
-		echo "<h4>" . LangSelectedObjectsTitle . " " . $listname_ss . "</h4>";
+		echo "<h4>" . _("Overview selected objects") . " " . $listname_ss . "</h4>";
 		$content1 = "";
 		$listowner = $objList->getListOwner ();
 
 		if ($myList) {
 			// Add a button to remove the list.
-			$content1 = "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>&nbsp;" . LangToListMyListsRemove . "</a>  ";
+			$content1 = "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>&nbsp;" . _("Remove the list") . "</a>  ";
 			// Add a button to rename the list.
-			$content1 .= "<button type=\"button\" title=\"" . LangChangeName . "\" class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#changeListName" . str_replace ( ' ', '_', str_replace ( ':', '_', $listname ) ) . "\" >
-							<span class=\"glyphicon glyphicon-pencil\"></span>&nbsp;" . LangToListRename . "
+			$content1 .= "<button type=\"button\" title=\"" . _("Change name") . "\" class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#changeListName" . str_replace ( ' ', '_', str_replace ( ':', '_', $listname ) ) . "\" >
+							<span class=\"glyphicon glyphicon-pencil\"></span>&nbsp;" . _("Rename") . "
                       	  </button>&nbsp;";
 
 			// Add a button to change from private to public or vice-versa
 			if ($objList->isPublic ( $listname, $loggedUser )) {
-				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivateList=switchPublicPrivateList&amp;listname=" . $listname . "\"><span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>&nbsp;" . LangMakePrivate . "</a>  ";
+				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivateList=switchPublicPrivateList&amp;listname=" . $listname . "\"><span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>&nbsp;" . _("Make private") . "</a>  ";
 			} else {
-				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivateList=switchPublicPrivateList&amp;listname=" . $listname . "\"><span class=\"glyphicon glyphicon-share\" aria-hidden=\"true\"></span>&nbsp;" . LangMakePublic . "</a>  ";
+				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivateList=switchPublicPrivateList&amp;listname=" . $listname . "\"><span class=\"glyphicon glyphicon-share\" aria-hidden=\"true\"></span>&nbsp;" . _("Make public") . "</a>  ";
 
 			}
 
 			// Add a button to create a new list
-			$content1 .= "<button type=\"button\" title=\"" . LangChangeName . "\" class=\"btn btn-success pull-right\" data-toggle=\"modal\" data-target=\"#addList\" >
-							<span class=\"glyphicon glyphicon-plus\"></span>&nbsp;" . LangNewList . "
+			$content1 .= "<button type=\"button\" title=\"" . _("Change name") . "\" class=\"btn btn-success pull-right\" data-toggle=\"modal\" data-target=\"#addList\" >
+							<span class=\"glyphicon glyphicon-plus\"></span>&nbsp;" . _("Add new list") . "
                       	  </button>&nbsp;";
 
-			$content2 = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=import_csv_list\">" . LangToListImport . "</a>  ";
-			$content2 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;emptyList=emptyList\">" . LangToListEmpty . "</a>  ";
-			$content2 .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;addobservationstolist=longest\">" . LangToListMyListsAddLongestObsDescription . "</a>  ";
-			$content2 .= "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeobservationsfromlist=all\">" . LangToListMyListsRemoveObsDescription . "</a>";
+			$content2 = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=import_csv_list\">" . _("Import data") . "</a>  ";
+			$content2 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;emptyList=emptyList\">" . _("Empty the List") . "</a>  ";
+			$content2 .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;addobservationstolist=longest\">" . _("Add observation (longest)") . "</a>  ";
+			$content2 .= "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeobservationsfromlist=all\">" . _("Remove observations") . "</a>";
 
 			echo $content1 . "<br /><br />";
 			echo $content2;
@@ -72,7 +72,7 @@ function tolist() {
 			}
 
 			// Add a link to send a message to the creator of the list.
-			$name = LangToListListBy . "<a href=\"" . $baseURL . "/index.php?indexAction=new_message&receiver=" . $listowner . "\">";
+			$name = _("List by: ") . "<a href=\"" . $baseURL . "/index.php?indexAction=new_message&receiver=" . $listowner . "\">";
 			$name .= $objObserver->getObserverProperty ( $listowner, 'firstname' ) . ' ' . $objObserver->getObserverProperty ( $listowner, 'name' ) . "</a>";
 			echo "(" . $name . ")";
 		}
@@ -84,7 +84,7 @@ function tolist() {
 			echo "<hr />";
 		} else {
 			echo "<hr />";
-			echo LangToListEmptyList;
+			echo _("The list is empty, there are no objects in the list.");
 		}
 
 		echo "<div class=\"modal fade\" id=\"changeListName" . str_replace ( ' ', '_', str_replace ( ':', '_', $listname ) ) . "\">
@@ -92,11 +92,11 @@ function tolist() {
                         <div class=\"modal-content\">
                          <div class=\"modal-header\">
                           <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-                          <h4 class=\"modal-title\">" . LangChangeName . "</h4>
+                          <h4 class=\"modal-title\">" . _("Change name") . "</h4>
                          </div>
                          <div class=\"modal-body\">
                           <!-- Ask for the new name of the list. -->
-                          <h1 class=\"text-center login-title\">" . LangNewNameList . "</h1>
+                          <h1 class=\"text-center login-title\">" . _("New name for the observing list") . "</h1>
                           <form action=\"" . $baseURL . "index.php?indexAction=listaction\">
                            <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />
 													 <input type=\"hidden\" name=\"listnamefrom\" value=\"" . $listname . "\" />";
@@ -109,11 +109,11 @@ function tolist() {
 		if ($publicList) {
 			echo "checked ";
 		}
-		echo "    name=\"PublicList\" value=\"1\" />&nbsp;" . LangToListPublic . "
+		echo "    name=\"PublicList\" value=\"1\" />&nbsp;" . _("Make this list a public list") . "
                           </div>
                           <div class=\"modal-footer\">
                            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-                           <input class=\"btn btn-success\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" /></button>
+                           <input class=\"btn btn-success\" type=\"submit\" name=\"renameList\" value=\"" . _("Rename") . "\" /></button>
    		                  </form>
                          </div>
                         </div><!-- /.modal-content -->

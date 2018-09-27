@@ -15,7 +15,7 @@ function menu_language() {
 		echo "<select name=\"language\" class=\"btn-default btn-sm\" onchange=\"this.form.submit()\">";
 		$previous_language = $_SESSION ['lang'];
 		$languages = $objLanguage->getLanguages ();
-		while ( list ( $key, $value ) = each ( $languages ) )
+		foreach ($languages as $key=>$value)
 			echo "<option value=\"" . $key . "\"" . (($key == $_SESSION ['lang']) ? " selected=\"selected\"" : '') . ">" . $value . "</option>";
 		echo "</select>";
 		echo "</div>";

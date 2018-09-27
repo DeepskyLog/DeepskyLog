@@ -16,7 +16,7 @@ function login() {
 	$loginErrorText = "";
 	if ($objUtil->checkGetKey ( 'indexAction' ) == 'logout') {
 		$_SESSION ['deepskylog_id'] = '';
-		setcookie ( "deepskylogsec", "", time () - 3600, "/" );
+		setcookie("deepskylogsec", "", time() - 3600, "/", "", true, true);
 		$loggedUser = "";
 		$_GET ['indexAction'] = 'default_action';
 	} elseif (array_key_exists ( 'deepskylogsec', $_COOKIE ) && $_COOKIE ['deepskylogsec']) {
@@ -64,7 +64,7 @@ function login() {
 					$_SESSION ['admin'] = "no"; // set session variable
 					$loggedUser = $_SESSION ['deepskylog_id'];
 					$cookietime = time () + (365 * 24 * 60 * 60); // 1 year
-					setcookie ( "deepskylogsec", $passwd . $login, $cookietime, "/" );
+					setcookie("deepskylogsec", $passwd . $login, $cookietime, "/", "", true, true);
 				} else // administrator logs in
 {
 					session_regenerate_id ( true );
@@ -72,7 +72,7 @@ function login() {
 					$_SESSION ['admin'] = "yes";
 					$loggedUser = $login;
 					$cookietime = time () + (365 * 24 * 60 * 60); // 1 year
-					setcookie ( "deepskylogsec", $passwd . $login, $cookietime, "/" );
+					setcookie("deepskylogsec", $passwd . $login, $cookietime, "/", "", true, true);
 				}
 				unset ( $_SESSION ['QobjParams'] );
 				$_GET ['indexAction'] = 'default_action';
@@ -113,7 +113,7 @@ function login() {
 		}
 	} else {
 		$_SESSION ['deepskylog_id'] = '';
-		setcookie ( "deepskylogsec", "", time () - 3600, "/" );
+		setcookie("deepskylogsec", "", time () - 3600, "/", "", true, true);
 		$loggedUser = "";
 	}
 	if (((! array_key_exists ( 'module', $_SESSION )) || (! $_SESSION ['module'])) && isset ( $_COOKIE ['module'] )) {
@@ -134,7 +134,7 @@ function login() {
 			$_SESSION ['lang'] = $_POST ['language'];
 		$_GET ['indexAction'] = 'default_action';
 	}
-	$language = $objLanguage->getPath ( $_SESSION ['lang'] );
+	$language = $_SESSION['lang'];
 	if ($loggedUser) {
 		$allLanguages = $objLanguage->getAllLanguages ( $objObserver->getObserverProperty ( $loggedUser, 'language' ) );
 		$_SESSION ['alllanguages'] = $allLanguages;
@@ -146,7 +146,7 @@ function login() {
 	}
 	if ($loginErrorCode || $loginErrorText) {
 		$_SESSION ['deepskylog_id'] = '';
-		setcookie ( "deepskylogsec", "", time () - 3600, "/" );
+		setcookie("deepskylogsec", "", time () - 3600, "/", "", true, true);
 	}
 	if ($loggedUser)
 		$loggedUserName = $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' );

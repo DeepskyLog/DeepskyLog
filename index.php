@@ -15,7 +15,7 @@ try {
 	$includeFile = $objUtil->utilitiesDispatchIndexAction (); // Determine the page to show
 	require_once 'common/entryexit/data.php'; // Get data for the form, object data, observation data, etc.
 	echo "<!DOCTYPE html>";
-	echo "<html>";
+    echo "<html>";
 	require_once 'common/menu/head.php'; // HTML head
 	echo "<body onkeydown=\"bodyOnKeyDown(event);\">";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "common/entryexit/globals.js\"></script>";
@@ -51,15 +51,21 @@ try {
 	</li>";
 
 	// Add logo for oal
-	echo "<li><a href=\"http://groups.google.com/group/openastronomylog\" rel=\"external\">";
+	echo "<li><a href=\"https://github.com/openastronomylog/openastronomylog\" rel=\"external\">";
 	echo "<img width=\"24\" height=\"24\" src=\"" . $baseURL . "styles/images/oallogo_small.jpg\" alt=\"OAL\"/>";
 	echo "</a></li>";
 
 	// Add link to facebook page
 	echo "<li><a href=\"https://www.facebook.com/deepskylog\" style=\"text-decoration: none; color: #333;\"><img src=\"" . $baseURL . "img/FB-f-Logo__blue_29.png\" width=\"24\" height=\"24\" style=\"border: 0;\"/></a></li>";
 
+	// Add link to instagram page
+	echo "<li><a href=\"https://www.instagram.com/deepskylog.be\" style=\"text-decoration: none; color: #333;\"><img src=\"" . $baseURL . "img/instagram-logo.png\" width=\"24\" height=\"24\" style=\"border: 0;\"/></a></li>";
+
 	// Add link to twitter account
 	echo "<li><a href=\"https://twitter.com/DeepskyLog\"><img width=\"24\" height=\"24\" src=\"" . $baseURL . "img/Twitter_logo_blue.png\"></a></li>";
+
+	// Add link to youtube channel
+	echo "<li><a href=\"https://www.youtube.com/channel/UC66H7w2Fl9q3krRy_tHRK5g\"><img height=\"24\" src=\"" . $baseURL . "img/youtube_social_icon_red.png\"></a></li>";
 
 	echo "</ul>";
 	echo "  </div>
@@ -89,20 +95,20 @@ if ($_SESSION ['module'] == 'deepsky' && $loggedUser) {
 	<div class=\"modal-content\">
 	<div class=\"modal-header\">
 	<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-	<h4 class=\"modal-title\">" . LangAddObservingList . "</h4>
+	<h4 class=\"modal-title\">" . _("Create a new observing list") . "</h4>
 	</div>
 	<div class=\"modal-body\">
 	<!-- Ask for the name of the list. -->
-	<h1 class=\"text-center login-title\">" . LangNameNewList . "</h1>
+	<h1 class=\"text-center login-title\">" . _("Name for the new observing list") . "</h1>
 	<form action=\"".$baseURL."index.php?indexAction=listaction\">
 	<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />
 	<input type=\"text\" name=\"addlistname\" class=\"form-control\" required autofocus>
 	<br /><br />
-	<input type=\"checkbox\" name=\"PublicList\" value=\"1\" />&nbsp;" . LangToListPublic . "
+	<input type=\"checkbox\" name=\"PublicList\" value=\"1\" />&nbsp;" . _("Make this list a public list") . "
 	</div>
 	<div class=\"modal-footer\">
 	<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-	<input class=\"btn btn-success\" type=\"submit\" name=\"addList\" value=\"" . LangAddList . "\" />
+	<input class=\"btn btn-success\" type=\"submit\" name=\"addList\" value=\"" . _("Create list") . "\" />
 	</form>
 	</div>
 	</div><!-- /.modal-content -->

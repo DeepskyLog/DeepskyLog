@@ -6,16 +6,16 @@ global $inIndex, $loggedUser, $objUtil;
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! ($objUtil->checkAdminOrUserID ( $loggedUser )))
-	throw new Exception ( LangException012 );
+	throw new Exception(_("You need to be logged in to execute these operations."));
 else
 	menu_list ();
 function menu_list() {
 	global $baseURL, $loggedUser, $myList, $objDatabase, $objList;
 	echo "<form id=\"listsSelectForm\" class=\"nav navbar-nav form-inline\">";
 	echo "<div class=\"form-group\">";
-	echo "<p class=\"navbar-text\">" . LangListsTitle;
+	echo "<p class=\"navbar-text\">" . _("List");
 	if ($loggedUser)
-		echo "&nbsp;-&nbsp;" . "<a href=\"" . $baseURL . "index.php?indexAction=listaction\">" . LangManage . "</a>";
+		echo "&nbsp;-&nbsp;" . "<a href=\"" . $baseURL . "index.php?indexAction=listaction\">" . _("Manage") . "</a>";
 	$result1 = array ();
 	$result2 = array ();
 	$sql = "SELECT DISTINCT observerobjectlist.listname " . "FROM observerobjectlist " . "WHERE observerid = \"" . $loggedUser . "\" ORDER BY observerobjectlist.listname";
@@ -53,7 +53,7 @@ function menu_list() {
 		foreach ($result as $key=>$value) {
 			// If the list is a Public list, we add 'Public: ' to the name of the list.
  			if (in_array($value, $publicLists)) {
- 				$listname = LangPublicList . $value;
+ 				$listname = _("Public: ") . $value;
 				$public = 1;
  			} else {
 				$listname = $value;

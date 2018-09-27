@@ -5,8 +5,8 @@
 global $inIndex,$loggedUser;
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!$loggedUser) throw new Exception(LangException002);
-elseif($_SESSION['admin']!="yes") throw new Exception(LangException001);
+elseif(!$loggedUser) throw new Exception(_("You need to be logged in to change your locations or equipment."));
+elseif($_SESSION['admin']!="yes") throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 else manage_csv_objects();
 
 function manage_csv_objects()
@@ -43,7 +43,7 @@ function manage_csv_objects()
 	    $data13[$i] = trim($parts_array[$i][13]);
 	}
 	if(!is_array($object))
-	  throw new Exception(LangInvalidCSVfile);
+	  throw new Exception(_("You didn't provide a valid CSV file!"));
 	else
 	{ $object=array_values($object);
 		$objectsMissing = array();

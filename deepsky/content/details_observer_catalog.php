@@ -29,11 +29,11 @@ function details_observer_catalog() {
 	if ($partof)
 		$observedObjectsFromCatalogPartOf = $objObservation->getObservedFromCatalogPartOf ( html_entity_decode ( $_GET ['user'] ), $cat ); // number of objects observed by this observer
 	$numberOfObjects = $objObject->getNumberOfObjectsInCatalog ( $cat ); // number of objects in catalog
-	echo LangTopObserversMessierHeader2 . " " . $cat . " " . LangTopObserversMessierHeader3 . (($partof) ? LangOrPartOfs : LangNoPartOfsBrackets) . ":&nbsp;" . count ( $observedObjectsFromCatalog ) . " / " . $numberOfObjects;
+	echo _("Overview observed") . " " . $cat . " " . _("objects") . (($partof) ? _(" or part-of objects ") : _(" (no part-of objects)")) . ":&nbsp;" . count ( $observedObjectsFromCatalog ) . " / " . $numberOfObjects;
 	if ($partof)
-		$content = "<a class=\"btn btn-success pull-right\" href=\"" . $baseURL . "index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode ( $cat ) . "&amp;user=" . urlencode ( $_GET ['user'] ) . "&amp;partof=0\">" . LangShowWithoutPartOfs . "</a>";
+		$content = "<a class=\"btn btn-success pull-right\" href=\"" . $baseURL . "index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode ( $cat ) . "&amp;user=" . urlencode ( $_GET ['user'] ) . "&amp;partof=0\">" . _("Show without part-of objects") . "</a>";
 	else
-		$content = "<a class=\"btn btn-success pull-right\" href=\"" . $baseURL . "index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode ( $cat ) . "&amp;user=" . urlencode ( $_GET ['user'] ) . "&amp;partof=1\">" . LangShowWithPartOfs . "</a>";
+		$content = "<a class=\"btn btn-success pull-right\" href=\"" . $baseURL . "index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode ( $cat ) . "&amp;user=" . urlencode ( $_GET ['user'] ) . "&amp;partof=1\">" . _("Show with part-of objects") . "</a>";
 	echo $content;
 	$resultarray = $objObject->getObjectsFromCatalog ( $cat );
 	echo "<br /><br /><table class=\"table\">";

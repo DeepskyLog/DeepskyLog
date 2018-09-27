@@ -46,7 +46,7 @@ function get_data()
 	  }
 	  else
 	  { if($objUtil->checkGetKey('source')=='setup_objects_query')
-	  	  $entryMessage=LangExecuteQueryObjectsMessage2;
+	  	  $entryMessage=_("Sorry, no objects found!");
 	  }
 	}   
 	elseif($includeFile=='deepsky/content/tolist.php')
@@ -55,9 +55,9 @@ function get_data()
 	}
 	elseif($includeFile=='deepsky/content/view_object.php')
 	{ if(!($objUtil->checkGetKey('object'))) 
-	    throw new Exception(LangException016);
+	    throw new Exception(_("You wanted to watch an object, but none is specified. Please contact the developers with this message."));
 	  if(!($_GET['object']=$objObject->getDsObjectName($_GET['object'])))
-	    throw new Exception(LangException016b);
+	    throw new Exception(_("You wanted to watch an object, but the object is not known. Please contact the developers with this message."));
 	  $_GET['source']='objects_nearby';
 	  $_GET['zoom']=$objUtil->checkGetKey('zoom',30);	
     $actualzoom=0;

@@ -17,16 +17,16 @@ function overview_objects() {
 	$link = "" . $baseURL . "index.php?indexAction=comets_view_objects";
 	// PAGE TITLE
 	echo "<div id=\"main\">";
-	echo "<h4>" . LangOverviewObjectsTitle . "</h4>";
+	echo "<h4>" . _("Overview all objects") . "</h4>";
 	echo "<hr />";
 	if (sizeof ( $obstest ) > 0) {
 		$count = 0; // counter for altering table colors
 		            // OBJECT TABLE HEADERS
 		echo "<table class=\"table sort-tableallcomets table-condensed table-striped table-hover tablesorter custom-popup\">";
 		echo "<thead><tr>";
-		echo "<th>" . LangOverviewObjectsHeader1 . "</th>";
-		echo "<th>" . LangNewObjectIcqname . "</th>";
-		echo "<th>" . LangOverviewObjectsHeader7 . "</th>";
+		echo "<th>" . _("Name") . "</th>";
+		echo "<th>" . _("ICQ name") . "</th>";
+		echo "<th>" . _("Seen") . "</th>";
 		echo "</tr></thead>";
 		while ( list ( $key, $value ) = each ( $obs ) ) 		// go through object array
 		{

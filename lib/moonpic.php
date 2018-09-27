@@ -70,7 +70,7 @@ function getMoonPic($date, $realTime, $latitude, $longitude, $timezone){
 			$ext = "";
 			if (!$moonAboveHorizon) {
 				$file = "below.png";
-				$ext = " - " . LangUnderHorizon;
+				$ext = " - " . _('under the horizon');
 			}
 			
 			

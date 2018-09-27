@@ -48,7 +48,7 @@ function menu_moon()
 	$moondata = phase(strtotime($date . ' ' . $time . ' ' . $tzone));
 	$MoonIllum  = $moondata[1];
 	$MoonAge    = $moondata[2];
-	$nextNewMoonText=LangMoonMenuNewMoon.": ";
+	$nextNewMoonText=_("New moon").": ";
 	$phases = array();
 	$phases = phasehunt(strtotime($date));
 	$nextNewMoonText.=date("j M", $phases[4]);
@@ -131,24 +131,25 @@ function menu_moon()
 	    $link.="&amp;".$key."=".urlencode($value);
 	reset($_GET);
 	echo "<p><br /><h4>";
-	echo (($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))?LangMoonSunMenuTitle:LangMoonMenuTitle)."<br />";
+	echo (($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))?_("Moon / Sun"):_("Moon"))."<br />";
   echo "</h4>";
-	echo"<span style=\"font-weight:normal;\">".LangOn." ".$dateTimeText0."&gt;&lt;".$dateTimeText1."</span>";
+	echo"<span style=\"font-weight:normal;\">"._("on")." ".$dateTimeText0."&gt;&lt;".$dateTimeText1."</span>";
 	echo "</p>";
 	if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))
 	{ echo "<table class=\"table table-condensed\">";
     if (isset($_SESSION['efemerides'])) {
 	    echo "<tr>";
-	    echo "<td>".LangMoon."</td>"."<td>".$_SESSION['efemerides']['moon0']."</td>"."<td>".$_SESSION['efemerides']['moon2']."</td>";
+	    echo "<td>"._("Moon")."</td>"."<td>".$_SESSION['efemerides']['moon0']."</td>"."<td>".$_SESSION['efemerides']['moon2']."</td>";
 	    echo "</tr>";
 	    echo "<tr>";
-	    echo "<td>".LangMoonSun."</td>"."<td>".$_SESSION['efemerides']['sset']."</td>"."<td>".$_SESSION['efemerides']['srise']."</td>";
+	    echo "<td>"._("Sun")."</td>"."<td>".$_SESSION['efemerides']['sset']."</td>"."<td>".$_SESSION['efemerides']['srise']."</td>";
 	    echo "</tr>";
 	    echo "<tr>";
-	    echo "<td>".LangMoonNaut."</td>"."<td>".$_SESSION['efemerides']['naute']."</td>"."<td>".$_SESSION['efemerides']['nautb']."</td>";
+        echo "<td>"._("Naut.")
+            ."</td>"."<td>".$_SESSION['efemerides']['naute']."</td>"."<td>".$_SESSION['efemerides']['nautb']."</td>";
 	    echo "</tr>";
 	    echo "<tr>";
-	    echo "<td>".LangMoonAstro."</td>"."<td>".$_SESSION['efemerides']['astroe']."</td>"."<td>".$_SESSION['efemerides']['astrob']."</td>";
+	    echo "<td>"._("Astro.")."</td>"."<td>".$_SESSION['efemerides']['astroe']."</td>"."<td>".$_SESSION['efemerides']['astrob']."</td>";
 	    echo "</tr>";
     }
 	  echo "</table>";

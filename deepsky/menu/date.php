@@ -6,7 +6,7 @@ global $inIndex, $loggedUser, $objUtil;
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! ($objUtil->checkAdminOrUserID ( $loggedUser )))
-	throw new Exception ( LangException012 );
+	throw new Exception(_("You need to be logged in to execute these operations."));
 else
 	menu_date ();
 function menu_date() {
@@ -93,7 +93,7 @@ function menu_date() {
 			    beforeShowDay: function(date) {
                   var highlight = eventDates[date];
                   if (highlight) {
-			        return [true, \"event\", \"" . LangMoonMenuNewMoon . "\"];
+			        return [true, \"event\", \"" . _("New moon") . "\"];
                   } else {
                     return [true, '', ''];
                   }
@@ -113,7 +113,7 @@ function menu_date() {
 	echo "<form class=\"nav navbar-nav navbar-right\">";
 
  	echo "<div class=\"form-group\">";
- 	echo "<p class=\"navbar-text\">" . LangDate . " ";
+ 	echo "<p class=\"navbar-text\">" . _('Date') . " ";
     echo "<span class=\"form-inline\">";
 	echo "<input class=\"form-control\" type=\"text\" value=\"" . $_SESSION ['globalDay'] . "/" . $_SESSION ['globalMonth'] . "/" . $_SESSION ['globalYear'] . "\" id=\"datepicker\" size=\"10\" >";
 	echo "</span>";

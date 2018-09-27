@@ -3,18 +3,12 @@
 // allows the user to generate a pdf series with object data, DSS photos, DSL charts an index pages
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!$loggedUser) throw new Exception(LangException002);
+elseif(!$loggedUser) throw new Exception(_("You need to be logged in to change your locations or equipment."));
 else objectsSets();
 
 
 function objectsSets()
 { global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil, $MSIE;
-  echo "<script type=\"text/javascript\">";
-  echo "var Langpdfseriesclickok='".Langpdfseriesclickok."';";
-  echo "var Langpdfserieswhenfinished='".Langpdfserieswhenfinished."';";
-  echo "var LangpdfseriesGenerating='".LangpdfseriesGenerating."';";
-  echo "var Langpdfserieschoselayout='".Langpdfserieschoselayout."';";
-  echo "</script>";
   $fovo=$objObserver->getObserverProperty($loggedUser,'overviewFoV','');
   $fovl=$objObserver->getObserverProperty($loggedUser,'lookupFoV','');
   $fovd=$objObserver->getObserverProperty($loggedUser,'detailFoV','');
@@ -29,28 +23,28 @@ function objectsSets()
   $k=count($_SESSION['Qobj']);
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."common/content/objectsSets.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
-	echo LangpdfseriesExplain1.'<br />';
-	echo LangpdfseriesExplain2.'<br />';
-	echo LangpdfseriesExplain3.'<br />';
-	echo LangpdfseriesExplain4.'<br />'.'<br />';		
-	echo LangpdfseriesExplain6.'<br />'.'<br />';		
-	echo LangpdfseriesExplain7.'<br />'.'<br />';		
-	echo LangpdfseriesExplain5.'<br />'.'<br />';		
-	echo LangpdfseriesExplain5b.'<br />'.'<br />';		
+	echo _("Generate a set of charts for each object.").'<br />';
+	echo _("Each set contains a number of charts specified by the FoVs asked below.").'<br />';
+	echo _("Each chart specified by the FoVs, shows stars and objects up to the specified magnitudes.").'<br />';
+	echo _("Each magnitude field should contain as many magnitudes as there are FoVs.").'<br />'.'<br />';		
+	echo _("Before each object, you can add a data section. This contains the elementary data, an object description when available, and 2 photos by the size indicated by you (15, 30 or 60 arc minutes, or nothing).").'<br />'.'<br />';		
+	echo _("You can add an index after each section. This index contains an overview of all the objects on each of the maps.").'<br />'.'<br />';		
+	echo _("You can save each set and use a pdf merger to make one large atlas-catalogue if you wish.").'<br />'.'<br />';		
+	echo _("If you choose to make all objects in one pass, please remember that each object can take up to 30 seconds or more to generate. Attention: this option is available in all browsers except for Microsoft Internet Explorer.").'<br />'.'<br />';		
 	if(!($MSIE))
-	  echo "<input type=\"button\" class=\"btn btn-primary\" value=\"".LangpdfseriesButton."\" onclick=\"generateallonepass(0,".($MSIE?'true':'false').");\"/>";
+	  echo "<input type=\"button\" class=\"btn btn-primary\" value=\""._("Generate all")."\" onclick=\"generateallonepass(0,".($MSIE?'true':'false').");\"/>";
 	echo "&nbsp;"."<div id='thecounter'> &nbsp; </div>";
 	echo '<br />';	
-  echo LangpdfseriesAddDataPage."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
+  echo _("Add a data page")."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
   if($loggedUser)
-    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesWithEphemerides."<input id=\"ephemerides\" type=\"checkbox\" />";
+    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"._("with ephemerides")."<input id=\"ephemerides\" type=\"checkbox\" />";
   else
     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input style=\"visibility:hidden;\" id=\"ephemerides\" type=\"checkbox\" />";
   if($loggedUser)
-    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesWithYearEphemerides."<input id=\"yearephemerides\" type=\"checkbox\" />";
+    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"._("with yearephemerides")."<input id=\"yearephemerides\" type=\"checkbox\" />";
   else
     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input style=\"visibility:hidden;\" id=\"yearephemerides\" type=\"checkbox\" />";
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesAddIndexPage."<input id=\"indexpage\" type=\"checkbox\" onclick=\"if(document.getElementById('indexpage').checked==true) {document.getElementById('reportlayoutselect').style.visibility='visible'; alert('".Langpdfserieschoselayout."');} else document.getElementById('reportlayoutselect').style.visibility='hidden';\" value=\"\" />";
+  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"._("Add an index page")."<input id=\"indexpage\" type=\"checkbox\" onclick=\"if(document.getElementById('indexpage').checked==true) {document.getElementById('reportlayoutselect').style.visibility='visible'; alert('"._("Please select a layout for the index page.")."');} else document.getElementById('reportlayoutselect').style.visibility='hidden';\" value=\"\" />";
   echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<select id=\"reportlayoutselect\" name=\"reportlayoutselect\" class=\"form-control\" style=\"visibility:hidden;\" >";
   $defaults=$objReportLayout->getLayoutListDefault("ReportQueryOfObjects");
   while(list($key, $value) = each($defaults))
@@ -83,13 +77,13 @@ function objectsSets()
   echo "<td>"."<span class=\"form-inline\"><input type=\"text\" class=\"form-control\" id=\"RD"."photos"."\" value=\"".$foto1." ".$foto2."\"/><input id=\"RCB"."photos"."\" class=\"btn btn-primary btn-sm\" type=\"button\" value=\"V\" onclick=\"setCheckedValues('photos',".$k.",document.getElementById('RDphotos').value);\" />"."</span></td>";
   echo "</tr>";  
   echo "<tr>";
-  echo "<th><strong>".LangpdfseriesObject."</strong></th>";
+  echo "<th><strong>"._("Object")."</strong></th>";
   echo "<th> &nbsp; </th>";
-  echo "<th><strong>".LangpdfseriesSize."</strong></th>";
-  echo "<th><strong>".LangpdfseriesFoVs."</strong></th>";
-  echo "<th><strong>".Langpdfseriesdsos."</strong></th>";
-  echo "<th><strong>".Langpdfseriesstars."</strong></th>";
-  echo "<th><strong>".Langpdfseriesphotos."</strong></th>";
+  echo "<th><strong>"._("Size")."</strong></th>";
+  echo "<th><strong>"._("FoVs: shown field of views")."</strong></th>";
+  echo "<th><strong>"._("Object magnitudes")."</strong></th>";
+  echo "<th><strong>"._("Stellar magnitudes")."</strong></th>";
+  echo "<th><strong>"._("Photos (arc minutes)")."</strong></th>";
   
   echo "</tr>";
   for($i=0;$i<$k;$i++)

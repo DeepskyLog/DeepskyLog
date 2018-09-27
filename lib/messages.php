@@ -146,7 +146,7 @@ class Messages {
 	public function validateMessage() {
 		global $loggedUser;
 		if (! ($loggedUser))
-			throw new Exception ( LangMessageNotLoggedIn );
+			throw new Exception (_('You should be logged in to be able to send messages.'));
 
 		if (array_key_exists ( 'send_mail', $_POST ) && ($_POST ['send_mail'] == "on")) {
 			$this->sendRealMessage ( $loggedUser, $_POST ['receiver'], $_POST ['subject'], nl2br ( addslashes ( $_POST ['message'] ) ) );
@@ -184,7 +184,7 @@ class Messages {
 		// We check whether the observer wants to receive the DeepskyLog messages as email. If so, we send an email.
 		if ($objObserver->getObserverProperty ( $receiver, 'sendMail' )) {
 			$senderName = $objObserver->getFullName($sender);
-			$message = LangDeepskyLogMessage . $senderName . ":<br /><br />" . $message . "<br /><br />";
+			$message = sprintf(_("DeepskyLog message from %s:"), $senderName) . "<br /><br />" . $message . "<br /><br />";
 			$this->sendEmail($subject, $message, $receiver);
 		}
 
@@ -211,7 +211,7 @@ class Messages {
 		$headers = "From: " . $mailFrom . "\r\n";
 		$headers .= "Reply-To: ". $mailFrom . "\r\n";
 		$headers .= "MIME-Version: 1.0\r\n";
-		$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+		$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
 		// Add header and footer to mail.
 		$messageHeader = '<html><body>';
@@ -281,14 +281,14 @@ class Messages {
 		// Making the header for the mails
 		echo "<thead><tr>";
 		echo "<th data-priority=\"critical\">";
-		echo LangMessageSubject;
+		echo _('Subject');
 		echo "</th>";
 		echo "<th>";
-		echo LangMessageSender;
+		echo _('Sender');
 		echo "</th>";
 
 		echo "<th>";
-		echo LangMessageDate;
+		echo _('Date');
 		echo "</th>";
 
 		echo "</tr></thead>";

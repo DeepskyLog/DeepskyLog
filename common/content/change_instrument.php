@@ -5,7 +5,7 @@
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! ($instrumentid = $objUtil->checkGetKey ( 'instrument' )))
-	throw new Exception ( LangException007b );
+	throw new Exception(_("You wanted to change an instrument, but none is specified. Please contact the developers with this message."));
 elseif (! ($objInstrument->getInstrumentPropertyFromId ( $instrumentid, 'name' )))
 	throw new Exception ( "Instrument not found in change_instrument.php, please contact the developers with this message:" . $eyepieceid );
 else
@@ -15,18 +15,18 @@ function change_instrument() {
 	$disabled = " disabled=\"disabled\"";
 	if (($loggedUser) && ($objUtil->checkAdminOrUserID ( $objInstrument->getInstrumentPropertyFromId ( $instrumentid, 'observer', '' ) )))
 		$disabled = "";
-	$content = ($disabled ? "" : "<input type=\"submit\" class=\"btn btn-primary pull-right\" name=\"change\" value=\"" . LangChangeInstrumentButton . "\" />&nbsp;");
+	$content = ($disabled ? "" : "<input type=\"submit\" class=\"btn btn-primary pull-right\" name=\"change\" value=\"" . _("Change instrument") . "\" />&nbsp;");
 	$name = $objInstrument->getInstrumentPropertyFromId ( $instrumentid, 'name' );
 	echo "<div id=\"main\">";
 	echo "<form role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_instrument\" />";
 	echo "<input type=\"hidden\" name=\"id\" value=\"" . $instrumentid . "\" />";
-	echo "<h4>" . (($name == "Naked eye") ? InstrumentsNakedEye : $name) . "</h4>";
+	echo "<h4>" . (($name == "Naked eye") ? _("Naked Eye") : $name) . "</h4>";
 	echo "<hr />";
 	echo $content;
 	
 	echo "<div class=\"form-group\">
- 	       <label for=\"filtername\">" . LangAddInstrumentField1 . "</label>";
+ 	       <label for=\"filtername\">" . _("Instrument name") . "</label>";
 	echo "<input value=\"" . $name . "\" type=\"text\" required class=\"form-control\" maxlength=\"64\" name=\"instrumentname\" size=\"30\" " . $disabled . " />"; 
 	echo "</div>";
 	
@@ -37,7 +37,7 @@ function change_instrument() {
 	$content .= "</select>";
 
 	echo "<div class=\"form-group\">
- 	       <label for=\"filtername\">" . LangAddInstrumentField2 . "</label>";
+ 	       <label for=\"filtername\">" . _("Diameter") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $content;
 	echo "</div>";
@@ -45,7 +45,7 @@ function change_instrument() {
 	
 	
 	echo "<div class=\"form-group\">
- 	       <label for=\"filtername\">" . LangAddInstrumentField5 . "</label>";
+ 	       <label for=\"filtername\">" . _("Type") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $objInstrument->getInstrumentEchoListType ( $objInstrument->getInstrumentPropertyFromId ( $instrumentid, 'type' ), $disabled );
 	echo "</div></div>";
@@ -55,17 +55,17 @@ function change_instrument() {
 	$content .= "<option>inch</option>";
 	$content .= "<option selected=\"selected\">mm</option>";
 	$content .= "</select>";
-	$content .= ' ' . LangAddInstrumentOr . ' ' . LangAddInstrumentField3 . ' ';
+	$content .= ' ' . _("or F/D") . ' ';
 	$content .= "<input type=\"number\" min=\"0.01\" step=\"0.01\" class=\"form-control\" maxlength=\"64\" name=\"fd\" size=\"10\"  " . $disabled . " />";
 
 	echo "<div class=\"form-group\">
- 	       <label for=\"filtername\">" . LangAddInstrumentField4 . "</label>";
+ 	       <label for=\"filtername\">" . _("Focal length (in mm)") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $content;
 	echo "</div></div>";
 	
 	echo "<div class=\"form-group\">
- 	       <label for=\"filtername\">" . LangAddInstrumentField6 . "</label>";
+ 	       <label for=\"filtername\">" . _("Fixed magnification") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo "<input value=\"" . (($fm = $objInstrument->getInstrumentPropertyFromId ( $instrumentid, 'fixedMagnification' )) ? $fm : "") . "\" type=\"number\" min=\"0.1\" step=\"0.1\" class=\"form-control\" maxlength=\"10\" name=\"fixedMagnification\" size=\"5\" " . $disabled . " />";
 	echo "</div></div>";

@@ -17,7 +17,7 @@ class Lists {
 				$sql = "SELECT observations.id, observations.description FROM observations WHERE observations.objectname=\"" . $theobject . "\";";
 				$get2 = $objDatabase->selectRecordsetArray ( $sql );
 				$sortarray = array ();
-				while ( list ( $key, $value ) = each ( $get2 ) ) {
+				foreach ($get2 as $key=>$value) {
 					$sortarray [strlen ( $value ['description'] )] = $value ['id'];
 				}
 				if (count ( $sortarray ) > 0) {
@@ -35,7 +35,7 @@ class Lists {
 						$objDatabase->execSQL ( "UPDATE observerobjectlist SET description = \"" . substr ( (($get3 ['description']) ? ($get3 ['description'] . " ") : '') . $description, 0, 4096 ) . "\" WHERE observerid = \"" . $loggedUser . "\" AND listname=\"" . $listname . "\" AND objectname=\"" . $theobject . "\"" );
 				}
 			}
-			$entryMessage .= LangToListMyListsAddedLongestObsDescription;
+			$entryMessage .= _("Observations added (longest)");
 		}
 	}
 	public function removeObservations($thetype) {
@@ -45,7 +45,7 @@ class Lists {
 		if ($thetype == "all") {
 			$sql = "UPDATE observerobjectlist " . "SET description = (SELECT objects.description FROM objects WHERE objects.name=observerobjectlist.objectname) " . "WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\" AND objectname <>\"\"";
 			$run = $objDatabase->execSQL ( $sql );
-			$entryMessage .= LangToListMyListsRemovedObsDescription;
+			$entryMessage .= _("Observations removed");
 		}
 	}
 	public function addList($name, $isPublic) {
@@ -54,10 +54,14 @@ class Lists {
 			if ($isPublic) {
 				$username = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
 
-				$subject = LangMessagePublicList1 . $name . LangMessagePublicList2 . $username;
-				$message = LangMessagePublicList3;
-				$message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $name ) . "\">" . $name . "</a><br /><br />";
-				$message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $name ) . "\">" . $username . "</a>";
+				$subject = sprintf(
+                    _('Public list created with name %s by %s'), 
+                    $name,
+                    $username
+                );
+				$message = _('A new public list is available in DeepskyLog.') . '<br /><br />';
+				$message = $message . _('Go to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $name ) . "\">" . $name . "</a><br /><br />";
+				$message = $message . _('Send message to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $name ) . "\">" . $username . "</a>";
 				$public = 1;
 				$objMessages->sendMessage ( "DeepskyLog", "all", $subject, $message );
 			} else {
@@ -156,8 +160,9 @@ class Lists {
 		if ($loggedUser) {
 			$sql = 'SELECT listname FROM observerobjectlist WHERE objectname="' . $theobject . '" AND observerid="' . $loggedUser . '"';
 			$results = $objDatabase->selectSingleArray ( $sql, 'listname' );
-			while ( list ( $key, $value ) = each ( $results ) )
-				$result .= "/" . $value;
+			foreach ($results as $key=>$value) {
+                $result .= "/" . $value;
+            }
 		}
 		return substr ( $result, 1 );
 	}
@@ -167,8 +172,9 @@ class Lists {
 		$results = array ();
 		$sql = 'SELECT listname FROM observerobjectlist WHERE objectname="' . $theobject . '" AND public = "1"';
 		$results = $objDatabase->selectSingleArray ( $sql, 'listname' );
-		while ( list ( $key, $value ) = each ( $results ) )
-			$result .= "/" . $value;
+		foreach ($results as $key=>$value) {
+            $result .= "/" . $value;
+        }
 		return substr ( $result, 1 );
 	}
 	public function getLists() {
@@ -234,20 +240,20 @@ class Lists {
 		echo "<table class=\"table sort-table" . $tablename . " table-condensed table-striped table-hover tablesorter custom-popup\">";
 		echo "<thead>";
 		echo "<tr><th>";
-		echo LangListName;
+		echo _("Name");
 		echo "</th>";
 		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
-		echo LangChangeName;
+		echo _("Change name");
 		echo "</th>";
 		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
 		if ($public) {
-			echo LangMakePrivate;
+			echo _("Make private");
 		} else {
-			echo LangMakePublic;
+			echo _("Make public");
 		}
 		echo "</th>";
 		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
-		echo LangToListMyListsRemove;
+		echo _("Remove the list");
 		echo "</th></tr>";
 		echo "</thead>";
 		echo "<tbody>";
@@ -277,7 +283,7 @@ class Lists {
 				// Add a button to change the name.
 				echo "<td style=\"vertical-align: middle\">";
 
-				echo "<button type=\"button\" title=\"" . LangChangeName . "\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#changeListName" . str_replace ( ' ', '_', str_replace ( ':', '_', $listname ) ) . "\" >
+				echo "<button type=\"button\" title=\"" . _("Change name") . "\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#changeListName" . str_replace ( ' ', '_', str_replace ( ':', '_', $listname ) ) . "\" >
                        <span class=\"glyphicon glyphicon-pencil\"></span>
                       </button>";
 
@@ -287,11 +293,11 @@ class Lists {
 				echo "<td style=\"vertical-align: middle\">";
 
 				if ($public) {
-					echo "<a title=\"" . LangMakePrivate . "\" class=\"btn btn-default\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivate=switchPublicPrivate&amp;listname=" . $listname . "\">
+					echo "<a title=\"" . _("Make private") . "\" class=\"btn btn-default\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivate=switchPublicPrivate&amp;listname=" . $listname . "\">
                        <span class=\"glyphicon glyphicon-user\"></span>
                       </a>";
 				} else {
-					echo "<a title=\"" . LangMakePublic . "\" class=\"btn btn-default\"  href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivate=switchPublicPrivate&amp;listname=" . $listname . "\">
+					echo "<a title=\"" . _("Make public") . "\" class=\"btn btn-default\"  href=\"" . $baseURL . "index.php?indexAction=listaction&amp;switchPublicPrivate=switchPublicPrivate&amp;listname=" . $listname . "\">
                        <span class=\"glyphicon glyphicon-share\"></span>
                       </a>";
 				}
@@ -320,11 +326,11 @@ class Lists {
                         <div class=\"modal-content\">
                          <div class=\"modal-header\">
                           <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-                          <h4 class=\"modal-title\">" . LangChangeName . "</h4>
+                          <h4 class=\"modal-title\">" . _("Change name") . "</h4>
                          </div>
                          <div class=\"modal-body\">
                           <!-- Ask for the new name of the list. -->
-                          <h1 class=\"text-center login-title\">" . LangNewNameList . "</h1>
+                          <h1 class=\"text-center login-title\">" . _("New name for the observing list") . "</h1>
                           <form action=\"" . $baseURL . "index.php?indexAction=listaction\">
                            <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />
                            <input type=\"hidden\" name=\"listnamefrom\" value=\"" . $listname . "\" />";
@@ -340,11 +346,11 @@ class Lists {
 				if ($publicList) {
 					echo "checked ";
 				}
-				echo "    name=\"PublicList\" value=\"1\" />&nbsp;" . LangToListPublic . "
+				echo "    name=\"PublicList\" value=\"1\" />&nbsp;" . _("Make this list a public list") . "
                           </div>
                           <div class=\"modal-footer\">
                            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-                           <input class=\"btn btn-success\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" /></button>
+                           <input class=\"btn btn-success\" type=\"submit\" name=\"renameList\" value=\"" . _("Rename") . "\" /></button>
    		                  </form>
                          </div>
                         </div><!-- /.modal-content -->
@@ -364,16 +370,20 @@ class Lists {
 			$run = $objDatabase->selectRecordset ( "SELECT listname FROM observerobjectlist WHERE listname=\"" . $listName . "\" AND public=\"1\"" );
 			$get = $run->fetch ( PDO::FETCH_OBJ );
 			if (!empty($get)) {
-				$entryMessage = LangPublicListAlreadyExists . "<strong>" . $listName . "</strong>" . LangPublicListAlreadyExists2;
+				$entryMessage = sprintf(_("A public list with the same name (%s) as your list already exists. Please rename your list before making the list public."), "<strong>" . $listName . "</strong>");
 				return;
 			}
 			$objDatabase->execSQL("UPDATE observerobjectlist set public=\"1\" where listname=\"" . $listName . "\" AND observerid = \"" . $loggedUser . "\"");
 
 			$username = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
-			$subject = LangMessagePublicList1 . $listName . LangMessagePublicList2 . $username;
-			$message = LangMessagePublicList3;
-			$message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $listName ) . "\">" . $listName . "</a><br /><br />";
-			$message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listName ) . "\">" . $username . "</a>";
+            $subject = sprintf(
+                _('Public list created with name %s by %s'), 
+                $listName,
+                $username
+            );
+			$message = _('A new public list is available in DeepskyLog.') . '<br /><br />';
+			$message = $message . _('Go to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $listName ) . "\">" . $listName . "</a><br /><br />";
+			$message = $message . _('Send message to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listName ) . "\">" . $username . "</a>";
 
 			$objMessages->sendMessage ( "DeepskyLog", "all", $subject, $message );
 		}
@@ -425,7 +435,7 @@ class Lists {
 			}
 			if (array_key_exists ( 'QobjParams', $_SESSION ) && array_key_exists ( 'source', $_SESSION ['QobjParams'] ) && ($_SESSION ['QobjParams'] ['source'] == 'tolist'))
 				unset ( $_SESSION ['QobjParams'] );
-			return LangToListMoved7 . $_GET ['ObjectToPlaceInList'] . ".";
+			return sprintf(_("The object has been moved to place %s."), $_GET['ObjectToPlaceInList']);
 		} else
 			return '';
 	}
@@ -479,10 +489,14 @@ class Lists {
 					// Remove the public from the list
 					$listname = $nameTo;
 
-					$subject = LangMessagePublicList1 . $listname . LangMessagePublicList2 . $username;
-					$message = LangMessagePublicList3;
-					$message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $listname ) . "\">" . $listname . "</a><br /><br />";
-					$message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listname ) . "\">" . $username . "</a><br /><br />";
+                    $subject = sprintf(
+                        _('Public list created with name %s by %s'), 
+                        $listname,
+                        $username
+                    );
+					$message = _('A new public list is available in DeepskyLog.') . '<br /><br />';
+					$message = $message . _('Go to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . urlencode ( $listname ) . "\">" . $listname . "</a><br /><br />";
+					$message = $message . _('Send message to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $listname ) . "\">" . $username . "</a><br /><br />";
 
 					$objMessages->sendMessage ( "DeepskyLog", "all", $subject, $message );
 				}

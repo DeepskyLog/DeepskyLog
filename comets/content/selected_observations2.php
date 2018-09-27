@@ -172,7 +172,7 @@ function selected_observations() {
 		{
 			$link = $baseURL . "index.php?indexAction=comets_result_selected_observations" . "&amp;object=" . urlencode ( $_GET ['object'] ) . "&amp;instrument=" . urlencode ( $_GET ['instrument'] ) . "&amp;observer=" . urlencode ( $_GET ['observer'] ) . "&amp;site=" . urlencode ( $_GET ['site'] ) . "&amp;minyear=" . $_GET ['minyear'] . "&amp;minmonth=" . $_GET ['minmonth'] . "&amp;minday=" . $_GET ['minday'] . "&amp;maxyear=" . $_GET ['maxyear'] . "&amp;maxmonth=" . $_GET ['maxmonth'] . "&amp;maxday=" . $_GET ['maxday'] . "&amp;maxdiameter=" . $_GET ['maxdiameter'] . "&amp;maxdiameterunits=" . urlencode ( $_GET ['maxdiameterunits'] ) . "&amp;mindiameter=" . $_GET ['mindiameter'] . "&amp;mindiameterunits=" . urlencode ( $_GET ['mindiameterunits'] ) . "&amp;maxmag=" . $_GET ['maxmag'] . "&amp;minmag=" . $_GET ['minmag'] . "&amp;description=" . $_GET ['description'] . "&amp;mindc=" . $_GET ['mindc'] . "&amp;maxdc=" . $_GET ['maxdc'] . "&amp;mincoma=" . $_GET ['mincoma'] . "&amp;maxcoma=" . $_GET ['maxcoma'] . "&amp;mintail=" . $_GET ['mintail'] . "&amp;maxtail=" . $_GET ['maxtail'];
 
-			echo "<h4>" . LangSelectedObservationsTitle2 . "</h4>";
+			echo "<h4>" . _("Overview selected observations") . "</h4>";
 			echo "<hr />";
 			echo "<table class=\"table sort-tablecometobservations table-condensed table-striped table-hover tablesorter custom-popup\">";
 
@@ -180,30 +180,30 @@ function selected_observations() {
 
 			// OBJECT NAME
 
-			echo "<th>" . LangOverviewObservationsHeader1 . "</th>";
+			echo "<th>" . _("Object name") . "</th>";
 
 			// OBSERVER
 
-			echo "<th>" . LangOverviewObservationsHeader2 . "</th>";
+			echo "<th>" . _("Observer") . "</th>";
 
 			// DATE
 
-			echo "<th>" . LangOverviewObservationsHeader4 . "</th>";
+			echo "<th>" . _("Date") . "</th>";
 
 			// MAGNITUDE
-			echo "<th>" . LangNewComet1 . "</th>";
+			echo "<th>" . _("Magnitude") . "</th>";
 
 			// INSTRUMENT
-			echo "<th>" . LangViewObservationField3 . "</th>";
+			echo "<th>" . _("Instrument") . "</th>";
 
 			// COMA
-			echo "<th>" . LangViewObservationField19 . "</th>";
+			echo "<th>" . _("Coma") . "</th>";
 
 			// DC
-			echo "<th>" . LangViewObservationField18b . "</th>";
+			echo "<th>" . _("DC") . "</th>";
 
 			// TAIL
-			echo "<th>" . LangViewObservationField20b . "</td>";
+			echo "<th>" . _("Tail") . "</td>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\"></th></tr></thead>";
 			$count = 0;
 
@@ -223,7 +223,7 @@ function selected_observations() {
 				$instrument = $instruments->getInstrumentPropertyFromId ( $temp, 'name' );
 				$instrumentsize = $instruments->getInstrumentPropertyFromId ( $temp, 'diameter' );
 				if ($instrument == "Naked eye") {
-					$instrument = InstrumentsNakedEye;
+					$instrument = _("Naked Eye");
 				}
 
 				// MAGNITUDE
@@ -269,7 +269,7 @@ function selected_observations() {
 	            <td><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode ( $observer ) . "\">" . $observers->getObserverProperty ( $observer, 'firstname' ) . "&nbsp;" . $observers->getObserverProperty ( $observer, 'name' ) . "</a></td>
 	            <td>");
 
-				if ($instrument != InstrumentsNakedEye && $instrument != "") {
+				if ($instrument != _("Naked Eye") && $instrument != "") {
 					$instrument = $instrument . " (" . $instrumentsize . "&nbsp;mm" . ")";
 				}
 
@@ -320,7 +320,7 @@ function selected_observations() {
 					}
 					if (fnmatch ( $value . "_resized.gif", $file ) || fnmatch ( $value . "_resized.jpg", $file ) || fnmatch ( $value . "_resized.png", $file )) {
 						echo ("&nbsp;+&nbsp;");
-						echo LangDrawing;
+						echo _("drawing");
 					}
 				}
 
@@ -335,19 +335,19 @@ function selected_observations() {
 
 			$_SESSION ['observation_query'] = $obs;
 
-			echo "<p><a class=\"btn btn-primary\" href=\"" . $baseURL . "cometobservations.pdf.php\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage4a . "</a>";
-			echo "  <a class=\"btn btn-primary\" href=\"" . $baseURL . "cometobservations.icq\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage7 . "</a></p>";
+			echo "<p><a class=\"btn btn-primary\" href=\"" . $baseURL . "cometobservations.pdf.php\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . _("pdf") . "</a>";
+			echo "  <a class=\"btn btn-primary\" href=\"" . $baseURL . "cometobservations.icq\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . _("ICQ") . "</a></p>";
 		} else 		// NO OBSERVATIONS FOUND
 		{
-			echo "<p>" . LangObservationNoResults . "</p>";
+			echo "<p>" . _("Sorry, no observations found!") . "</p>";
 		}
-		echo ("<p><a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_query_observations\">" . LangObservationQueryError2 . "</a></p>");
+		echo ("<p><a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_query_observations\">" . _("Perform another search") . "</a></p>");
 	} else 	// no search fields filled in
 	{
-		echo "<p>" . LangObservationQueryError1 . "</p>";
-		echo "<p><a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_query_observations\">" . LangObservationQueryError2 . "</a>";
-		echo " " . LangObservationOR . " ";
-		echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_all_observations\">" . LangObservationQueryError3 . "</a></p>";
+		echo "<p>" . _("You didn't specify any queries to search on!") . "</p>";
+		echo "<p><a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_query_observations\">" . _("Perform another search") . "</a>";
+		echo " " . _("or") . " ";
+		echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_all_observations\">" . _("View all observations") . "</a></p>";
 	}
 	echo ("</div>");
 }

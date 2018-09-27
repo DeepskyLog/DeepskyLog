@@ -13,7 +13,7 @@ function topobservers()
 	$rank=$objObservation->getPopularObserversOverviewCatOrListAllInfo();
 	$link=$baseURL."index.php?indexAction=rank_observers&amp;catalog=".urlencode($catalog);
 	echo "<div id=\"main\">";
-	echo "<h4>".LangTopObserversTitle."</h4>";
+	echo "<h4>"._("Most active observers")."</h4>";
 	echo "<hr />";
 	$objObserver->showTopObservers($catalog,$rank);
 	echo "</div>";

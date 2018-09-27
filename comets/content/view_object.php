@@ -25,13 +25,13 @@ function view_object() {
 	
 	if ($admin) {
 		echo "<form action=\"" . $baseURL . "index.php?indexAction=comets_validate_change_object\" method=\"post\"><div>";
-		echo "<input type=\"hidden\" name=\"object\" value=\"" . $_GET ['object'] . "\" />";
-		$content = "<input type=\"submit\" class=\"btn btn-successpull-right\" name=\"newobject\" value=\"" . LangChangeAccountButton . "\" />";
-		echo "<h4>" . LangChangeObject . " " . $objCometObject->getName ( $_GET ['object'] ) . "</h4>";
+		echo "<input type=\"hidden\" name=\"object\" value=\"" . $_GET['object'] . "\" />";
+		$content = "<input type=\"submit\" class=\"btn btn-successpull-right\" name=\"newobject\" value=\"" . _("Change") . "\" />";
+		echo "<h4>" . _("Change comet") . " " . $objCometObject->getName($_GET['object']) . "</h4>";
 		echo $content;
 		echo "<br /><hr />";
 		$content = "<input type=\"text\" required class=\"form-control\" maxlength=\"40\" name=\"name\" size=\"40\" value=\"" . $objCometObject->getName ( $_GET ['object'] ) . "\" />";
-		echo "<strong>" . LangViewObjectField1 . "&nbsp;*</strong>";
+		echo "<strong>" . _("Name") . "&nbsp;*</strong>";
 		echo $content;
 		
 		if ($objCometObject->getIcqName ( $_GET ['object'] )) {
@@ -40,19 +40,19 @@ function view_object() {
 			$icqname = "";
 		}
 		$content = "<input type=\"text\" required class=\"form-control\" maxlength=\"40\" name=\"icqname\" size=\"40\" value=\"" . $icqname . "\" />";
-		echo "<strong>" . LangNewObjectIcqname . "&nbsp;*</strong>";
+		echo "<strong>" . _("ICQ name") . "&nbsp;*</strong>";
 		echo $content;
 		;
 		echo "<hr />";
 		echo "</div></form>";
 	} else {
-		echo "<h4>" . LangViewObjectTitle . "&nbsp;-&nbsp;" . $objCometObject->getName ( $_GET ['object'] ) . "</h4>";
+		echo "<h4>" . _("Object details") . "&nbsp;-&nbsp;" . $objCometObject->getName ( $_GET ['object'] ) . "</h4>";
 		echo "<hr />";
 		
-		echo "<strong>" . LangViewObjectField1 . "</strong>";
+		echo "<strong>" . _("Name") . "</strong>";
 		echo "<input type=\"text\" disabled class=\"form-control\" maxlength=\"40\" name=\"name\" size=\"40\" value=\"" . $objCometObject->getName ( $_GET ['object'] ) . "\" />";
 		if ($objCometObject->getIcqName ( $_GET ['object'] )) {
-			echo "<strong>" . LangNewObjectIcqname . "</strong>";
+			echo "<strong>" . _("ICQ name") . "</strong>";
 			echo "<input type=\"text\" disabled class=\"form-control\" maxlength=\"40\" name=\"icqname\" size=\"40\" value=\"" . $objCometObject->getIcqName ( $_GET ['object'] ) . "\" />";
 		}
 		echo "<hr />";
@@ -65,7 +65,7 @@ function view_object() {
 	);
 	$content = "";
 	if (count ( $observations->getObservationFromQuery ( $queries ) ) > 0)
-		$content .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_result_query_observations&amp;objectname=" . urlencode ( $_GET ['object'] ) . "\">" . LangViewObjectObservations . " " . $objCometObject->getName ( $_GET ['object'] ) . "</a>";
+		$content .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_result_query_observations&amp;objectname=" . urlencode ( $_GET ['object'] ) . "\">" . _("All observations") . " " . $objCometObject->getName ( $_GET ['object'] ) . "</a>";
 		// extra link to add observation of this object
 	if ($loggedUser) {
 		$_SESSION ['observedobject'] = $_GET ['object'];
@@ -73,7 +73,7 @@ function view_object() {
 		// $_SESSION['observedobject'] = $_SESSION['result'][0]; // use name in database
 		$_SESSION ['found'] = "yes";
 		$_SESSION ['backlink'] = "validate_search_object.php";
-		$content .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_add_observation&amp;observedobject=" . urlencode ( $_GET ['object'] ) . "\">" . LangViewObjectAddObservation . "&nbsp;" . $objCometObject->getName ( $_GET ['object'] ) . "</a>";
+		$content .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=comets_add_observation&amp;observedobject=" . urlencode ( $_GET ['object'] ) . "\">" . _("New observation") . "&nbsp;" . $objCometObject->getName ( $_GET ['object'] ) . "</a>";
 	}
 	echo $content; 
 	echo ("</div>");

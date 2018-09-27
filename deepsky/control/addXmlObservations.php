@@ -15,7 +15,9 @@ global $inIndex, $loggedUser;
 if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 } elseif (! $loggedUser) {
-    throw new Exception(LangException002);
+    throw new Exception(
+        _("You need to be logged in to change your locations or equipment.")
+    );
 } else {
     addXmlObservations();
 }
@@ -36,7 +38,7 @@ function addXmlObservations()
         $xmlfile = $_FILES['xml']['tmp_name'];
     } else {
         // No filename is given, so return an error.
-        $entryMessage .= LangXMLError3;
+        $entryMessage .= _("Invalid XML file!");
         $_GET['indexAction'] = "add_xml";
 
         return;
@@ -54,7 +56,8 @@ function addXmlObservations()
 
     if ($version != "2.0" && $version != "2.1") {
         // Version is too old or too new. We are not sure we can import the file
-        $entryMessage .= LangXMLError1;
+        $entryMessage .= 
+            _("DeepskyLog only supports openAstronomyLog version 2.0 or 2.1");
         $_GET['indexAction'] = "add_xml";
 
         return;
@@ -145,7 +148,10 @@ function addXmlObservations()
         if ($id == "") {
             // If there is no user found, we exit the OAL import and print an
             // error message.            
-            $entryMessage .= LangXMLError2 . $deepskylog_username . LangXMLError2a;
+            $entryMessage .= sprintf(
+                _("No observations for user %s in this OpenAstronomyLog file!"), 
+                $deepskylog_username
+            );
             $_GET['indexAction'] = "add_xml";
 
             return;
@@ -1248,16 +1254,16 @@ function addXmlObservations()
                                     $objeId = $objObject->getDsObjectName(
                                         $targetName
                                     );
-                                    $body = LangValidateAccountEmailTitleObject 
+                                    $body = _("DeepskyLog - New Object ") 
                                         . " <a href=\"http://www.deepskylog.org/"
                                         . "index.php?indexAction=detail_object" 
                                         . "&object="
                                         . urlencode($targetName) . "\">"
                                         . $targetName
                                         . "</a> " 
-                                        . LangValidateAccountEmailTitleObject2
+                                        . _(" added during XML import")
                                         . " " 
-                                        . LangValidateAccountEmailTitleObjectObserver
+                                        . _("by observer ")
                                         . " <a href=\"http://www.deepskylog.org/"
                                         . "index.php?indexAction=detail_observer"
                                         . "&user="
@@ -1279,9 +1285,9 @@ function addXmlObservations()
                                             . ".<br />";
                                     } else {
                                         $objMessage->sendEmail(
-                                            LangValidateAccountEmailTitleObject . " "
+                                            _("DeepskyLog - New Object ") . " "
                                             . $targetName 
-                                            . LangValidateAccountEmailTitleObject2, 
+                                            . _(" added during XML import"), 
                                             $body, "developers"
                                         );
                                     }
@@ -1695,10 +1701,14 @@ function addXmlObservations()
         }
         $_GET['indexAction'] = 'default_action';
 
-        $entryMessage = LangCSVMessage8 . ": " . $added . LangCSVMessage9 . ": "
-            . $errors . LangCSVMessage10 . ": " . $double . ".<br />";
+        $entryMessage = sprintf(
+            _("Observations added: %s"), $added
+        ) . "; " . sprintf(_("observations rejected with problems: %s"), $errors) 
+        . "; " . sprintf(
+                _("observations dropped because already present: %s"), $double
+            ) . ".<br />";
     } else {
-        $entryMessage .= LangXMLError3;
+        $entryMessage .= _("Invalid XML file!");
         $_GET ['indexAction'] = "add_xml";
         return;
     }

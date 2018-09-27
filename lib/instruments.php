@@ -18,38 +18,38 @@ class Instruments {
 	}
 	public function getInstrumentEchoType($instrumentType) {
 		if ($instrumentType == INSTRUMENTNAKEDEYE)
-			return InstrumentsNakedEye;
+			return _("Naked Eye");
 		if ($instrumentType == INSTRUMENTBINOCULARS)
-			return InstrumentsBinoculars;
+			return _("Binoculars");
 		if ($instrumentType == INSTRUMENTFINDERSCOPE)
-			return InstrumentsFinderscope;
+			return _("Finderscope");
 		if ($instrumentType == INSTRUMENTREFLECTOR)
-			return InstrumentsReflector;
+			return _("Reflector");
 		if ($instrumentType == INSTRUMENTREFRACTOR)
-			return InstrumentsRefractor;
+			return _("Refractor");
 		if ($instrumentType == INSTRUMENTREST)
-			return InstrumentsOther;
+			return _("Other");
 		if ($instrumentType == INSTRUMENTCASSEGRAIN)
-			return InstrumentsCassegrain;
+			return _("Cassegrain");
 		if ($instrumentType == INSTRUMENTSCHMIDTCASSEGRAIN)
-			return InstrumentsSchmidtCassegrain;
+			return _("Schmidt Cassegrain");
 		if ($instrumentType == INSTRUMENTKUTTER)
-			return InstrumentsKutter;
+			return _("Kutter");
 		if ($instrumentType == INSTRUMENTMAKSUTOV)
-			return InstrumentsMaksutov;
+			return _("Maksutov");
 		return "unkown instrument type";
 	}
 	public function getInstrumentEchoListType($type, $disabled = "") {
 		$tempTypeList = "<select name=\"type\" class=\"form-control\" " . $disabled . " >";
-		$tempTypeList .= "<option " . (($type == INSTRUMENTREFLECTOR) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTREFLECTOR . "\">" . InstrumentsReflector . "</option>";
-		$tempTypeList .= "<option " . (($type == INSTRUMENTREFRACTOR) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTREFRACTOR . "\">" . InstrumentsRefractor . "</option>";
-		$tempTypeList .= "<option " . (($type == INSTRUMENTCASSEGRAIN) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTCASSEGRAIN . "\">" . InstrumentsCassegrain . "</option>";
-		$tempTypeList .= "<option " . (($type == INSTRUMENTSCHMIDTCASSEGRAIN) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTSCHMIDTCASSEGRAIN . "\">" . InstrumentsSchmidtCassegrain . "</option>";
-		$tempTypeList .= "<option " . (($type == INSTRUMENTKUTTER) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTKUTTER . "\">" . InstrumentsKutter . "</option>";
-		$tempTypeList .= "<option " . (($type == INSTRUMENTMAKSUTOV) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTMAKSUTOV . "\">" . InstrumentsMaksutov . "</option>";
-		$tempTypeList .= "<option " . (($type == INSTRUMENTBINOCULARS) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTBINOCULARS . "\">" . InstrumentsBinoculars . "</option>";
-		$tempTypeList .= "<option " . (($type == INSTRUMENTFINDERSCOPE) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTFINDERSCOPE . "\">" . InstrumentsFinderscope . "</option>";
-		$tempTypeList .= "<option " . (($type == INSTRUMENTOTHER) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTREST . "\">" . InstrumentsOther . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTREFLECTOR) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTREFLECTOR . "\">" . _("Reflector") . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTREFRACTOR) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTREFRACTOR . "\">" . _("Refractor") . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTCASSEGRAIN) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTCASSEGRAIN . "\">" . _("Cassegrain") . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTSCHMIDTCASSEGRAIN) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTSCHMIDTCASSEGRAIN . "\">" . _("Schmidt Cassegrain") . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTKUTTER) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTKUTTER . "\">" . _("Kutter") . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTMAKSUTOV) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTMAKSUTOV . "\">" . _("Maksutov") . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTBINOCULARS) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTBINOCULARS . "\">" . _("Binoculars") . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTFINDERSCOPE) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTFINDERSCOPE . "\">" . _("Finderscope") . "</option>";
+		$tempTypeList .= "<option " . (($type == INSTRUMENTOTHER) ? "selected=\"selected\" " : "") . "value=\"" . INSTRUMENTREST . "\">" . _("Other") . "</option>";
 		$tempTypeList .= "</select>";
 		return $tempTypeList;
 	}
@@ -93,16 +93,16 @@ class Instruments {
 
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead>";
-			echo "<th>" . LangViewActive . "</td>";
+			echo "<th>" . _("Active") . "</td>";
 
-			echo "<th data-priority=\"critical\">" . LangOverviewInstrumentsName . "</th>";
-			echo "<th>" . LangOverviewInstrumentsDiameter . "</th>";
-			echo "<th>" . LangOverviewInstrumentsFD . "</th>";
-			echo "<th>" . LangOverviewInstrumentsFixedMagnification . "</th>";
-			echo "<th>" . LangOverviewInstrumentsType . "</th>";
-			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangChangeAccountField8 . "</th>";
-			echo "<th>" . LangRemove . "</th>";
-			echo "<th>" . LangTopObserversHeader3 . "</th>";
+			echo "<th data-priority=\"critical\">" . _("Name") . "</th>";
+			echo "<th>" . _("Diameter (mm)") . "</th>";
+			echo "<th>" . _("F/D") . "</th>";
+			echo "<th>" . _("Fixed magnification") . "</th>";
+			echo "<th>" . _("Type") . "</th>";
+			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . _("Default instrument") . "</th>";
+			echo "<th>" . _("Delete") . "</th>";
+			echo "<th>" . _("Number of observations") . "</th>";
 			echo "</thead>";
 			$count=0;
 			while ( list ( $key, $value ) = each ( $insts ) ) {
@@ -117,7 +117,7 @@ class Instruments {
 				
 				echo "<td>" . "<span class=\"hidden\">" .  $objInstrument->getInstrumentPropertyFromId ( $value, 'instrumentactive' ) . "</span><input id=\"instrumentactive" . $value . "\" type=\"checkbox\" " . ($objInstrument->getInstrumentPropertyFromId ( $value, 'instrumentactive' ) ? " checked=\"checked\" " : "") . " onclick=\"setactivation('instrument'," . $value . ");var order = this.checked ? '1' : '0'; $(this).prev().html(order);$(this).parents('table').trigger('update');\" />" . "</td>";
 				if ($name == "Naked eye")
-					echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $value ) . "\">" . InstrumentsNakedEye . "</a></td>";
+					echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $value ) . "\">" . _("Naked Eye") . "</a></td>";
 				else
 					echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_instrument&amp;instrument=" . urlencode ( $value ) . "\">" . $name . "</a></td>";
 				echo "<td>$diameter</td>";
@@ -150,9 +150,9 @@ class Instruments {
 				echo "<td>";
 				echo "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . $loggedUser . "&amp;instrument=" . $value . "&amp;exactinstrumentlocation=true\">";
 				if ($obsCnt != 1) {
-					echo $obsCnt . ' ' . LangGeneralObservations . "</a>";
+					echo $obsCnt . ' ' . _("observations") . "</a>";
 				} else {
-					echo $obsCnt . ' ' . LangGeneralObservation . "</a>";
+					echo $obsCnt . ' ' . _("observation") . "</a>";
 				}
 				echo "</td>";
 				echo "</tr>";
@@ -169,7 +169,7 @@ class Instruments {
 		global $objUtil, $objDatabase;
 		if (($instrumentid = $objUtil->checkGetKey ( 'instrumentid' )) && $objUtil->checkAdminOrUserID ( $this->getObserverFromInstrument ( $instrumentid ) ) && (! ($this->getInstrumentUsedFromId ( $instrumentid )))) {
 			$objDatabase->execSQL ( "DELETE FROM instruments WHERE id=\"" . $instrumentid . "\"" );
-			return LangValidateInstrumentMessage5;
+			return _("The instrument is removed from your equipment list!");
 		}
 	}
 	public function validateSaveInstrument() {
@@ -208,7 +208,7 @@ class Instruments {
 					$fd = 0.0;
 				}
 				$this->addInstrument ( $instrumentname, $diameter, $fd, $type, $fixedMag, $loggedUser );
-				return LangValidateInstrumentMessage3;
+				return _("The instrument is added to your equipment list!");
 			}
 			if ($objUtil->checkPostKey ( 'change' ) && $objUtil->checkAdminOrUserID ( $this->getObserverFromInstrument ( $objUtil->checkPostKey ( 'id' ) ) )) {
 				$id = $_POST ['id'];
@@ -222,10 +222,10 @@ class Instruments {
 					$this->setInstrumentProperty ( $_POST ['id'], 'fd', 0 );
 					$this->setInstrumentProperty ( $_POST ['id'], 'fixedMagnification', $objUtil->checkPostKey ( 'fixedMagnification' ) );
 				}
-				return LangValidateInstrumentMessage4;
+				return _("The instrument details have been changed in your equipment list!");
 			}
 		} else
-			return LangValidateMessage1;
+			return _("All required fields must be filled in!");
 	}
 }
 ?>

@@ -28,7 +28,7 @@ class Sessions {
 	public function validateSession() {
 		global $loggedUser, $instDir, $_FILES;
 		if (! ($loggedUser))
-			throw new Exception ( LangMessageNotLoggedIn );
+			throw new Exception (_('You should be logged in to be able to send messages.'));
 
 			// The observers
 		$observers = Array ();
@@ -100,7 +100,7 @@ class Sessions {
 			}
 		}
 		if ($return) {
-			$entryMessage = LangSessionDateOverlap;
+			$entryMessage = _('The new session overlaps with an existing session. Please adapt the date so that there is no longer an overlap.');
 			$_GET ['indexAction'] = 'add_session';
 			return;
 		}
@@ -108,9 +108,16 @@ class Sessions {
 		// Auto-generate the session name
 		if ($name == "") {
 			if ($beginday == $endday && $beginmonth == $endmonth && $beginyear == $endyear) {
-				$name = LangSessionTitle1 . date ( $dateformat, mktime ( 0, 0, 0, $beginmonth, $beginday, $beginyear ) );
+				$name = sprintf(
+                    _("Observing session from %s"), 
+                    date($dateformat, mktime(0, 0, 0, $beginmonth, $beginday, $beginyear))
+                );
 			} else {
-				$name = LangSessionTitle1 . date ( $dateformat, mktime ( 0, 0, 0, $beginmonth, $beginday, $beginyear ) ) . LangSessionTitle2 . date ( $dateformat, mktime ( 0, 0, 0, $endmonth, $endday, $endyear ) );
+				$name = sprintf(
+                    _("Observing session from %s till %s"), 
+                    date($dateformat, mktime(0, 0, 0, $beginmonth, $beginday, $beginyear)), 
+                    date($dateformat, mktime(0, 0, 0, $endmonth, $endday, $endyear))
+                );
 			}
 		}
 
@@ -190,11 +197,15 @@ class Sessions {
 		$objDatabase->execSQL ( "INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $id . "\", \"" . $observer . "\");" );
 
 		$observername = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
-		$subject = $observername . LangAddSessionMessageTitle;
+		$subject = sprintf(_("%s made a new session where you are an observer"), $observername);
 		$sessionname = $this->getSessionPropertyFromId ( $id, "name" );
-		$content = $observername . LangAddSessionMessage1 . $sessionname . LangAddSessionMessage2;
-		$content .= "<br /><br />" . LangAddSessionMessage3 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_session\">" . LangAddSessionMessage4;
-		$content .= "<br /><br />" . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $sessionname ) . "\">" . $observername . "</a>";
+		$content = sprintf(
+            _("%s made the session '%s'."), 
+            $observername, $sessionname);
+        $content .= "<br /><br />" . 
+            sprintf(_("A similar session is prepared for you. Check %sAdd/Sessions</a> to validate the session."), 
+                "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_session\">");
+		$content .= "<br /><br />" . _('Send message to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $sessionname ) . "\">" . $observername . "</a>";
 		$content .= "<br /><br />Zend een bericht naar " . $observername;
 		if ($loggedUser != $observer) {
 			$objMessages->sendMessage ( $loggedUser, $observer, $subject, $content );
@@ -232,9 +243,16 @@ class Sessions {
 			$endmonth = substr ( $enddate, 5, 2 );
 			$endday = substr ( $enddate, 8, 2 );
 			if ($begindate == $enddate) {
-				$name = LangSessionTitle1 . date ( $dateformat, mktime ( 0, 0, 0, $beginmonth, $beginday, $beginyear ) );
+				$name = sprintf(
+                    _("Observing session from %s"), 
+                    date($dateformat, mktime(0, 0, 0, $beginmonth, $beginday, $beginyear))
+                );
 			} else {
-				$name = LangSessionTitle1 . date ( $dateformat, mktime ( 0, 0, 0, $beginmonth, $beginday, $beginyear ) ) . LangSessionTitle2 . date ( $dateformat, mktime ( 0, 0, 0, $endmonth, $endday, $endyear ) );
+				$name = sprintf(
+                    _("Observing session from %s till %s"),
+                    date($dateformat, mktime(0, 0, 0, $beginmonth, $beginday, $beginyear)), 
+                    date($dateformat, mktime(0, 0, 0, $endmonth, $endday, $endyear))
+                );
 			}
 		}
 		$objDatabase->execSQL ( "UPDATE sessions set name=\"" . $name . "\" where id=\"" . $id . "\";" );
@@ -294,11 +312,11 @@ class Sessions {
 		if ($sessions != null) {
 			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead>";
-			echo "<th>" . LangAddSessionField1 . "</th>";
-			echo "<th>" . LangAddSessionField2a . "</th>";
-			echo "<th>" . LangAddSessionField3a . "</th>";
-			echo "<th>" . LangAddSessionField4a . "</th>";
-			echo "<th>" . LangAddSessionField5a . "</th>";
+			echo "<th>" . _("Name") . "</th>";
+			echo "<th>" . _("Begin") . "</th>";
+			echo "<th>" . _("End") . "</th>";
+			echo "<th>" . _("Location") . "</th>";
+			echo "<th>" . _("Extra observers") . "</th>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\"></th>";
 			echo "</thead>";
 			$count=0;
@@ -320,10 +338,10 @@ class Sessions {
 				echo "</td>";
 				echo "<td>";
 				// Add the session
-				echo ("<a href=\"" . $baseURL . "index.php?indexAction=adapt_session&amp;sessionid=" . urlencode ( $value ['id'] ) . "\" class=\"btn btn-primary\" title=\"" . LangAddSessionButton . "\"><span class=\"glyphicon glyphicon-plus\"></span></a>");
+				echo ("<a href=\"" . $baseURL . "index.php?indexAction=adapt_session&amp;sessionid=" . urlencode ( $value ['id'] ) . "\" class=\"btn btn-primary\" title=\"" . _("Add session") . "\"><span class=\"glyphicon glyphicon-plus\"></span></a>");
 				echo "&nbsp;&nbsp;";
 				// Remove the session
-				echo ("<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_existingsession&amp;sessionid=" . urlencode ( $value ['id'] ) . "\" class=\"btn btn-primary\" title=\"" . LangDeleteSessionButton . "\"><span class=\"glyphicon glyphicon-minus\"></span></a>");
+				echo ("<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_existingsession&amp;sessionid=" . urlencode ( $value ['id'] ) . "\" class=\"btn btn-primary\" title=\"" . _("Delete session") . "\"><span class=\"glyphicon glyphicon-minus\"></span></a>");
 				echo "</td></tr>";
 				$count++;
 			}
@@ -338,13 +356,21 @@ class Sessions {
 		// Get the number of sessions
 		if (count ( $sessions ) == 0) 	// ================================================================================================== no result present =======================================================================================
 		{
-			echo "<h4>" . LangSessionNoResults . " " . $objObserver->getObserverProperty ( $observer, "firstname" ) . " " . $objObserver->getObserverProperty ( $observer, "name" ) . "!</h4>";
+			echo "<h4>" . sprintf(
+                _("No sessions available for %s!"),
+                $objObserver->getObserverProperty($observer, "firstname") . " " 
+                . $objObserver->getObserverProperty($observer, "name")
+             ) . "</h4>";
 		} else { // =============================================================================================== START OBSERVATION PAGE OUTPUT =====================================================================================
 			echo "<div id=\"main\">";
 			if ($observer == "-1") {
-				$content1 = "<h4>" . LangSearchMenuItem12;
+				$content1 = "<h4>" . _("All sessions");
 			} else {
-				$content1 = "<h4>" . LangOverviewSessionTitle . $objObserver->getObserverProperty ( $observer, "firstname" ) . " " . $objObserver->getObserverProperty ( $observer, "name" );
+				$content1 = "<h4>" . sprintf(
+                    _("Sessions of %s"),
+                    $objObserver->getObserverProperty($observer, "firstname") . " " 
+                    . $objObserver->getObserverProperty($observer, "name")
+                );
 			}
 			$content1 .= "</h4>";
 
@@ -354,13 +380,13 @@ class Sessions {
 				echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 				echo "<thead>";
 				echo "<tr>";
-				echo "<th>" . LangAddSessionField1 . "</th>";
-				echo "<th>" . LangAddSessionField2a . "</th>";
-				echo "<th>" . LangAddSessionField3a . "</th>";
-				echo "<th>" . LangAddSessionField4a . "</th>";
-				echo "<th>" . LangAddSessionField5a . "</th>";
-				echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangAddSessionField12 . "</th>";
-				echo "<th>" . ucfirst ( LangGeneralObservations ) . "</th>";
+				echo "<th>" . _("Name") . "</th>";
+				echo "<th>" . _("Begin") . "</th>";
+				echo "<th>" . _("End") . "</th>";
+				echo "<th>" . _("Location") . "</th>";
+				echo "<th>" . _("Extra observers") . "</th>";
+				echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . _("Picture") . "</th>";
+				echo "<th>" . ucfirst(_("observations")) . "</th>";
 				echo "</tr>";
 				echo "</thead>";
 				for($cnt = 0; $cnt < count ( $sessions ); $cnt ++) {
@@ -388,7 +414,7 @@ class Sessions {
 					// A link to the picture
 					if (file_exists ( $instDir . 'deepsky/sessions/' . $allSessions [$cnt] ["id"] . ".jpg" )) {
 						echo "</td><td class=\"gallery clearfix\">";
-						echo "<a href=\"" . $baseURL . 'deepsky/sessions/' . $allSessions [$cnt] ["id"] . ".jpg\" data-lightbox=\"image-1\" data-title=\"" . $allSessions [$cnt] ['name'] . "\">" . LangAddSessionField12 . "</a></td>";
+						echo "<a href=\"" . $baseURL . 'deepsky/sessions/' . $allSessions [$cnt] ["id"] . ".jpg\" data-lightbox=\"image-1\" data-title=\"" . $allSessions [$cnt] ['name'] . "\">" . _("Picture") . "</a></td>";
 					} else {
 						echo "</td><td> &nbsp; </td>";
 					}
@@ -397,7 +423,7 @@ class Sessions {
 
 					// the number of observations
 					$numberOfObservations = $objDatabase->selectRecordsetArray ( "SELECT COUNT(sessionid) from sessionObservations where sessionid = \"" . $allSessions [$cnt] ["id"] . "\";" );
-					echo $numberOfObservations [0] ['COUNT(sessionid)'] . " " . LangGeneralObservations;
+					echo $numberOfObservations[0]['COUNT(sessionid)'] . " " . _("observations");
 					echo "</a></td></tr>";
 				}
 				echo "</table>";
@@ -412,10 +438,10 @@ class Sessions {
 	{
 		global $objUtil, $objDatabase;
 		if (($sessionid = $objUtil->checkGetKey ( 'sessionid' )) && $objUtil->checkAdminOrUserID ( $this->getSessionPropertyFromId ( $sessionid, 'observerid' ) )) {
-			$objDatabase->execSQL ( "DELETE FROM sessions WHERE id=\"" . $sessionid . "\"" );
-			$objDatabase->execSQL ( "DELETE FROM sessionObservations WHERE sessionid=\"" . $sessionid . "\"" );
-			$objDatabase->execSQL ( "DELETE FROM sessionObservers WHERE sessionid=\"" . $sessionid . "\"" );
-			return LangValidateSessionMessage1;
+			$objDatabase->execSQL("DELETE FROM sessions WHERE id=\"" . $sessionid . "\"" );
+			$objDatabase->execSQL("DELETE FROM sessionObservations WHERE sessionid=\"" . $sessionid . "\"" );
+			$objDatabase->execSQL("DELETE FROM sessionObservers WHERE sessionid=\"" . $sessionid . "\"" );
+			return _("The session is removed from DeepskyLog.");
 		}
 	}
 	public function addObservationToSessions($current_observation) {
@@ -454,7 +480,7 @@ class Sessions {
 	public function validateChangeSession() {
 		global $loggedUser, $objUtil, $objLocation, $instDir;
 		if (! ($loggedUser))
-			throw new Exception ( LangMessageNotLoggedIn );
+			throw new Exception (_('You should be logged in to be able to send messages.'));
 
 		$sessionid = $objUtil->checkRequestKey ( 'sessionid' );
 

@@ -4,7 +4,7 @@
 
 global $inIndex,$loggedUser,$objUtil;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!($loggedUser)) throw new Exception(LangException001);
+elseif(!($loggedUser)) throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
 else validate_observation();
 
 function validate_observation()
@@ -14,12 +14,12 @@ function validate_observation()
 	{ if($_POST['addobservation']) // pushed add observation button
 	  { if (!$_POST['day'] || !$_POST['month'] || !$_POST['year'] || !$_POST['comet'] || (!$_POST['hours'] && strcmp($_POST['hours'], 0) != "0") || (!$_POST['minutes'] && strcmp($_POST['minutes'],0) != "0"))
 	    { // user forgot required field
-	      $entryMessage = LangValidateObservationMessage1;
+	      $entryMessage = _("You did not fill in a required field!");
 	      $_GET['indexAction']='default_action';
 	    }
 	    else // all fields filled in
 	    { if($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big
-	      { $entryMessage = LangValidateObservationMessage6;
+	      { $entryMessage = _("Please, only upload drawings smaller than 2mb!");
 	        $_GET['indexAction']='default_action';
 	      }
 	      else

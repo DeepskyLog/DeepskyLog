@@ -60,7 +60,9 @@ function ajaxinterface() {
 			$objInstrument->setInstrumentProperty ( $objUtil->checkGetKey ( 'id', - 1 ), 'instrumentactive', $theset );
 		}
 		echo $theset;
-	} 
+    } elseif ($ajaxInstruction == "getLocationSqm") {
+		echo json_encode($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('id', 0), 'skyBackground', ''));
+    } 
 
 	elseif ($ajaxInstruction == "getReportLayout")
 		echo (json_encode ( $objReportLayout->getReportAll ( $objUtil->checkRequestKey ( 'reportuser' ), $objUtil->checkRequestKey ( 'reportname' ), $objUtil->checkRequestKey ( 'reportlayout' ) ) ));

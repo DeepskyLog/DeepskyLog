@@ -12,14 +12,14 @@ function menu_quickpickDropDown()
 
 	echo "<ul class=\"nav navbar-nav\">
 			  <li class=\"dropdown\">
-	      <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . LangSearch."<b class=\"caret\"></b></a>";
+	      <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . _("Search") ."<b class=\"caret\"></b></a>";
 
 	echo " <ul class=\"dropdown-menu\">";
-	echo "  <li><a href=\"".$baseURL."index.php?indexAction=quickpick&searchObjectQuickPickQuickPick\">".LangQuickPickSearchObject."</a></li>";
-	echo "  <li><a href=\"".$baseURL."index.php?indexAction=quickpick&myLanguages=true&searchObservationsQuickPick\">".LangQuickPickSearchObservations."</a></li>";
+	echo "  <li><a href=\"".$baseURL."index.php?indexAction=quickpick&searchObjectQuickPickQuickPick\">"._("Search Object")."</a></li>";
+	echo "  <li><a href=\"".$baseURL."index.php?indexAction=quickpick&myLanguages=true&searchObservationsQuickPick\">"._("Search Observations")."</a></li>";
 	if (($loggedUser) && ($loggedUser != "admin")) { // admin doesn't have own observations
 		echo "  <li class=\"disabled\">─────────────────</li>";
-		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_sessions\">" . LangSearchMenuItem12 . "</a></li>";
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_sessions\">" . _("All sessions") . "</a></li>";
 	}
 	echo " </ul>";
 	echo "</li>

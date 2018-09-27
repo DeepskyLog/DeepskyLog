@@ -4,7 +4,7 @@
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! $loggedUser)
-	throw new Exception ( LangException002 );
+	throw new Exception(_("You need to be logged in to change your locations or equipment."));
 else
 	new_session ();
 function new_session() {
@@ -99,22 +99,24 @@ function new_session() {
 	// Get the list with sessions for this observer, which are not yet active
 	$listWithSessions = $objSession->getListWithInactiveSessions ( $loggedUser );
 	if (count ( $listWithSessions ) > 0) {
-		echo "<h4>" . LangAddExistingSessionTitle . "</h4>";
+		echo "<h4>" . _("Select one of the sessions added by other observers") . "</h4>";
 		echo "<hr />";
 		$objSession->showInactiveSessions ( $loggedUser );
 	}
 
-	echo "<h4>" . LangAddSessionTitle . "</h4>";
+	echo "<h4>" . _("Add a new session") . "</h4>";
 	echo "<hr />";
 	echo "<form role=\"form\" id=\"sessionForm\" enctype=\"multipart/form-data\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_session\" />";
 
-	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"add\" value=\"" . LangAddSessionButton . "\" />";
+	echo "<input type=\"submit\" class=\"btn btn-success pull-right\" name=\"add\" value=\"" . _("Add session") . "\" />";
     echo "<br />";
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField1 . "</label>";
+	       <label>" . _("Name") . "</label>";
 	echo "<input type=\"text\" class=\"form-control\" maxlength=\"64\" name=\"sessionname\" size=\"30\" value=\"" . stripslashes ( $objUtil->checkRequestKey ( 'sessionname' ) ) . stripslashes ( $objSession->getSessionPropertyFromId ( $objUtil->checkRequestKey ( 'sessionid' ), 'name' ) ) . "\" />";
-	echo "<span class=\"help-block\">" . LangAddSessionField1Expl . "</span>";
+    echo "<span class=\"help-block\">" 
+        . _("When you leave this field blank, DeepskyLog makes a name with begin- and enddate.") 
+        . "</span>";
 	echo "</div>";
 
 	// Add the begindate field
@@ -138,11 +140,11 @@ function new_session() {
 	$contentBeginTime .= "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" size=\"4\" name=\"beginminutes\" value=\"" . $theMinute . "\" />&nbsp;&nbsp;";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField2 . "</label>";
+	       <label>" . _("Start of the session *") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $contentBeginDate . "&nbsp;" . $contentBeginTime;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField2Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("The start of your observing session.") . "</span>";
 	echo "</div>";
 
 	// End date field
@@ -166,11 +168,11 @@ function new_session() {
 	$contentEndTime .= "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" size=\"4\" name=\"endminutes\" value=\"" . $theMinute . "\" />&nbsp;&nbsp;";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField3 . "</label>";
+	       <label>" . _("End of the session *") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $contentEndDate . "&nbsp;" . $contentEndTime;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField3Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("The end of your observing session.") . "</span>";
 	echo "</div>";
 
 	// Location of the session
@@ -183,11 +185,12 @@ function new_session() {
 	$contentLoc .= "</select>&nbsp;";
 
 	echo "<div class=\"form-group\">
-	       <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_location\" title=\"" . LangChangeAccountField7Expl . "\" >" . LangAddSessionField4 . "</a>" . "</label>";
+           <label>" . "<a href=\"" . $baseURL . "index.php?indexAction=add_location\" title=\"" . _("Add new observing site") . "\" >" 
+        . _("Location *") . "</a>" . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $contentLoc;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField4Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("The location of your observing session.") . "</span>";
 	echo "</div>";
 
 	// Language
@@ -199,11 +202,11 @@ function new_session() {
 	$contentLanguage .= "</select>&nbsp;";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField8 . "</label>";
+	       <label>" . _("Language *") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $contentLanguage;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField8Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Language of the observations during your observing session.") . "</span>";
 	echo "</div>";
 
 	// Other observers
@@ -213,11 +216,11 @@ function new_session() {
 	$observersCont .= "</textarea>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField9 . "</label>";
+	       <label>" . _("Observers *") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $observersCont;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField9Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Observers during this session. The other observers will get a message to make a similar session.") . "</span>";
 	echo "</div>";
 
 	// Add observer
@@ -233,11 +236,11 @@ function new_session() {
 	$addObserver .= "</select>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField10 . "</label>";
+	       <label>" . _("Add observer") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $addObserver;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField10Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Select an observer to add to your observing session.") . "</span>";
 	echo "</div>";
 
 	// Delete observer
@@ -247,11 +250,11 @@ function new_session() {
 	$deleteObserver .= "</select>";
 
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField11 . "</label>";
+	       <label>" . _("Remove observer") . "</label>";
 	echo "<div class=\"form-inline\">";
 	echo $deleteObserver;
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField11Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Select an observer to remove from your observing session.") . "</span>";
 	echo "</div>";
 
 	// Hidden field with all the observers
@@ -264,36 +267,36 @@ function new_session() {
 
 	// Weather
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField5 . "</label>";
+	       <label>" . _("Weather") . "</label>";
 	echo "<textarea maxlength=\"500\" name=\"weather\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . "</textarea>";
-	echo "<span class=\"help-block\">" . LangAddSessionField5Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("The weather during your observing session.") . "</span>";
 	echo "</div>";
 
 	// Equipment
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField6 . "</label>";
+	       <label>" . _("Instruments") . "</label>";
 	echo "<textarea maxlength=\"500\" name=\"equipment\"  class=\"form-control\" cols=\"50\" rows=\"7\">" . "</textarea>";
-	echo "<span class=\"help-block\">" . LangAddSessionField6Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Comments about the used instruments during your observing session.") . "</span>";
 	echo "</div>";
 
 	// Comments
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField7 . "</label>";
+	       <label>" . _("Comments") . "</label>";
 	echo "<textarea name=\"comments\"  class=\"form-control\" maxlength=\"5000\" cols=\"50\" rows=\"7\">" . "</textarea>";
-	echo "<span class=\"help-block\">" . LangAddSessionField7Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("Comments on your observing session.") . "</span>";
 	echo "</div>";
 
 	// Pictures
 	echo "<div class=\"form-group\">
-	       <label>" . LangAddSessionField12 . "</label>";
+	       <label>" . _("Picture") . "</label>";
 	echo "<div class=\"form\">";
 	echo "<input type=\"file\" id=\"picture\" name=\"picture\" data-show-remove=\"false\" accept=\"image/*\" class=\"file-loading\"/>";
 
 	echo "</div>";
-	echo "<span class=\"help-block\">" . LangAddSessionField12Expl . "</span>";
+	echo "<span class=\"help-block\">" . _("A picture showing the location of the session, a weather satellite picture, ...") . "</span>";
 	echo "</div>";
 
-	echo "<input type=\"submit\" class=\"btn btn-success\" name=\"add\" value=\"" . LangAddSessionButton . "\" />";
+	echo "<input type=\"submit\" class=\"btn btn-success\" name=\"add\" value=\"" . _("Add session") . "\" />";
 
 	echo "</div></form>";
 	echo "</div>";

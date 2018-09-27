@@ -164,9 +164,9 @@ global $loggedUser;
 			$result[$key]['size'] = '-';
 		} else {
 			if($result[$key]['largediameter'] > 60){
-				$result[$key]['size'] = number_format($result[$key]['largediameter']/60, 1)." x ".number_format($result[$key]['smalldiameter']/60, 1)." ".LangNewObjectSizeUnits1;
+				$result[$key]['size'] = number_format($result[$key]['largediameter']/60, 1)." x ".number_format($result[$key]['smalldiameter']/60, 1)." "._("arcminutes");
 			} else {
-				$result[$key]['size'] = number_format($result[$key]['largediameter'], 1)." x ".number_format($result[$key]['smalldiameter'], 1)." ".LangNewObjectSizeUnits2;
+				$result[$key]['size'] = number_format($result[$key]['largediameter'], 1)." x ".number_format($result[$key]['smalldiameter'], 1)." "._("arcseconds");
 			}
 		}
 

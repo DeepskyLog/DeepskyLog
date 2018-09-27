@@ -14,11 +14,11 @@ function atlas()
 	if($objUtil->checkRequestKey('filename'))
 	  $filename=$objUtil->checkRequestKey('filename');
 	elseif(($zoom=$objUtil->checkRequestKey('zoom'))==ATLASOVERVIEWZOOM)
-	  $filename=OverviewChart;
+	  $filename=_('Overview');
 	elseif($zoom==ATLASLOOKUPZOOM)
-	  $filename=LookupChart;
+	  $filename=_('Lookup');
 	elseif($zoom==ATLASDETAILZOOM)
-	  $filename=DetailChart;
+	  $filename=_('Detail');
 	else
 	  $filename="Zoom_".$zoom;
 	$filename.="_".str_replace(' ','_',$objUtil->checkRequestKey('object','Deepskylog_Atlas'));

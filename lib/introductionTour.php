@@ -7,47 +7,47 @@ var tour = new Tour({
   {
     element: \".tour1\",
 	placement: \"left\",
-    title: \"" . LangTour1Title . "\",
-    content: \"" . LangTour1Expl . "\"
+    title: \"" . _('Add one or more instruments') . "\",
+    content: \"" . _('Click on Change and select Instruments. Add at least 1 instrument.') . "\"
   },
   {
     element: \".tour2\",
 	placement: \"bottom\",
 	reflex: \"true\",
-	title: \"" . LangTour2Title . "\",
-    content: \"" . LangTour2Expl . "\"
+	title: \"" . _('Add at least one instrument!') . "\",
+    content: \"" . _('DeepskyLog can calculate visibilities of objects when an instrument is inserted. You can also only add new observations when an instrument is known by DeepskyLog.') . "\"
   },
   {
     element: \".tour3\",
 	placement: \"left\",
-    title: \"" . LangTour3Title . "\",
-    content: \"" . LangTour3Expl . "\"
+    title: \"" . _('Add one or more locations') . "\",
+    content: \"" . _('Click on Change and select Locations. Add at least 1 location.') . "\"
   },
   {
     element: \".tour4\",
 	placement: \"bottom\",
 	reflex: \"true\",
-	title: \"" . LangTour4Title . "\",
-    content: \"" . LangTour4Expl . "\"
+	title: \"" . _('Add at least one location!') . "\",
+    content: \"" . _('DeepskyLog can calculate visibilities of objects when a location is inserted. You can also only add new observations when a location is known by DeepskyLog.') . "\"
   },
   {
     element: \".tour5\",
 	placement: \"right\",
-    title: \"" . LangTour5Title . "\",
-    content: \"" . LangTour5Expl . "\"
+    title: \"" . _('Add a picture of yourself') . "\",
+    content: \"" . _('Click on your name and select Settings. Add a picture of yourself.') . "\"
   },
   {
     element: \".tour6\",
 	placement: \"bottom\",
-	title: \"" . LangTour6Title . "\",
-    content: \"" . LangTour6Expl . "\"
+	title: \"" . _('Add a picture of yourself!') . "\",
+    content: \"" . _('When you add a picture, others will see your picture when you send them a message.') . "\"
   },
   {
     element: \".tour7\",
 	placement: \"left\",
 	reflex: \"true\",
-    title: \"" . LangTour7Title . "\",
-    content: \"" . LangTour7Expl . "\"
+    title: \"" . _('Read your messages') . "\",
+    content: \"" . _('Other observers can send you messages in DeepskyLog. Here, you can read the messages.') . "\"
   }
 ]});
 

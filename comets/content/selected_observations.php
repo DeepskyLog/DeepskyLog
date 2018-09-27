@@ -37,21 +37,21 @@ function selected_observation() {
 		$count = 0; // counter for altering table colors
 
 		$link = "" . $baseURL . "index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET ['objectname'];
-		echo "<h4>" . LangSelectedObservationsTitle . $objects->getName ( $_GET ['objectname'] ) . "</h4>";
+		echo "<h4>" . sprintf(_("Overview of all observations of %s"), $objects->getName($_GET['objectname'])) . "</h4>";
 		echo "<hr />";
 
 		if (sizeof ( $obs ) > 0) {
 			echo "<table class=\"table sort-tablecometobservations table-condensed table-striped table-hover tablesorter custom-popup\">
 	      <thead>
 		  <tr>
-	      <th>" . LangOverviewObservationsHeader1 . "</th>
-	      <th>" . LangOverviewObservationsHeader2 . "</th>
-	      <th>" . LangOverviewObservationsHeader4 . "</th>
-	      <th>" . LangNewComet1 . "</th>
-	      <th>" . LangViewObservationField3 . "</th>
-	      <th>" . LangViewObservationField19 . "</th>
-	      <th>" . LangViewObservationField18b . "</th>
-	      <th>" . LangViewObservationField20b . "</th>
+	      <th>" . _("Object name") . "</th>
+	      <th>" . _("Observer") . "</th>
+	      <th>" . _("Date") . "</th>
+	      <th>" . _("Magnitude") . "</th>
+	      <th>" . _("Instrument") . "</th>
+	      <th>" . _("Coma") . "</th>
+	      <th>" . _("DC") . "</th>
+	      <th>" . _("Tail") . "</th>
 	      <th class=\"filter-false columnSelector-disable\" data-sorter=\"false\"></th>
 	      </tr>
 	      </thead>";
@@ -114,7 +114,7 @@ function selected_observation() {
 				$instrument = $instruments->getInstrumentPropertyFromId ( $temp, 'name' );
 				$instrumentsize = $instruments->getInstrumentPropertyFromId ( $temp, 'diameter' );
 				if ($instrument == "Naked eye") {
-					$instrument = InstrumentsNakedEye;
+					$instrument = _("Naked Eye");
 				}
 
 				// MAGNITUDE
@@ -153,7 +153,7 @@ function selected_observation() {
 					$tail = $tail . "'";
 				}
 
-				if ($instrument != InstrumentsNakedEye && $instrument != "") {
+				if ($instrument != _("Naked Eye") && $instrument != "") {
 					$instrument = $instrument . " (" . $instrumentsize . "&nbsp;mm" . ")";
 				}
 
@@ -176,11 +176,11 @@ function selected_observation() {
 			$objUtil->addPager ( "cometobservations", sizeof ( $obs ) );
 
 			echo "<hr />";
-			echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "cometobservations.pdf.php\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage4a . "</a>";
+			echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "cometobservations.pdf.php\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . _("pdf") . "</a>";
 			echo "<br /><br />";
 		} else 		// no observations of object
 		{
-			echo LangNoObservations;
+			echo _("No observations available");
 		}
 		echo "</div>";
 	} elseif ($_GET ['user']) 	// selection of all observations of one observer
@@ -196,7 +196,12 @@ function selected_observation() {
 		$_SESSION ['obs'] = $obs;
 		$_SESSION ['observation_query'] = $obs;
 		$link = "" . $baseURL . "index.php?indexAction=comets_result_query_observations&amp;user=" . $_GET ['user'];
-		echo "<h4>" . LangSelectedObservationsTitle . $observers->getObserverProperty ( $_GET ['user'], 'firstname' ) . "&nbsp;" . $observers->getObserverProperty ( $_GET ['user'], 'name' ) . "</h4>";
+        echo "<h4>" . 
+            sprintf(
+                _("Overview of all observations of %s"), 
+                $observers->getObserverProperty($_GET['user'], 'firstname') . 
+                "&nbsp;" . $observers->getObserverProperty($_GET['user'], 'name')
+            ) . "</h4>";
 		echo "<hr />";
 
 		// NEW BEGIN
@@ -205,13 +210,13 @@ function selected_observation() {
 			echo "<table class=\"table sort-tablecometobservations table-condensed table-striped table-hover tablesorter custom-popup\">
 			      <thead>
 				  <tr>
-			      <th>" . LangOverviewObservationsHeader1 . "</th>
-			      <th>" . LangOverviewObservationsHeader4 . "</th>
-			      <th>" . LangNewComet1 . "</th>
-			      <th>" . LangViewObservationField3 . "</th>
-			      <th>" . LangViewObservationField19 . "</th>
-			      <th>" . LangViewObservationField18b . "</th>
-			      <th>" . LangViewObservationField20b . "</th>
+			      <th>" . _("Object name") . "</th>
+			      <th>" . _("Date") . "</th>
+			      <th>" . _("Magnitude") . "</th>
+			      <th>" . _("Instrument") . "</th>
+			      <th>" . _("Coma") . "</th>
+			      <th>" . _("DC") . "</th>
+			      <th>" . _("Tail") . "</th>
 			      <th class=\"filter-false columnSelector-disable\" data-sorter=\"false\"></th>
 			      </thead>
 			      </tr>";
@@ -261,7 +266,7 @@ function selected_observation() {
 				$temp = $observations->getInstrumentId ( $value );
 				$instrument = $instruments->getInstrumentPropertyFromId ( $temp, 'name' );
 				if ($instrument == "Naked eye") {
-					$instrument = InstrumentsNakedEye;
+					$instrument = _("Naked Eye");
 				}
 
 				// MAGNITUDE
@@ -319,7 +324,7 @@ function selected_observation() {
 					}
 					if (fnmatch ( $value . "_resized.gif", $file ) || fnmatch ( $value . "_resized.jpg", $file ) || fnmatch ( $value . "_resized.png", $file )) {
 						echo ("&nbsp;+&nbsp;");
-						echo LangDrawing;
+						echo _("drawing");
 					}
 				}
 				echo ("</a></td></tr>");
@@ -329,7 +334,7 @@ function selected_observation() {
 
 			echo "<hr />";
 			$_SESSION ['observation_query'] = $obs;
-			echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "cometobservations.pdf.php\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage4a . "</a>";
+			echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "cometobservations.pdf.php\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . _("pdf") . "</a>";
 		}
 		echo "<br /><br />";
 		echo "</div>";
