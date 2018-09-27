@@ -64,6 +64,9 @@ try {
 	// Add link to twitter account
 	echo "<li><a href=\"https://twitter.com/DeepskyLog\"><img width=\"24\" height=\"24\" src=\"" . $baseURL . "img/Twitter_logo_blue.png\"></a></li>";
 
+	// Add link to youtube channel
+	echo "<li><a href=\"https://www.youtube.com/channel/UC66H7w2Fl9q3krRy_tHRK5g\"><img height=\"24\" src=\"" . $baseURL . "img/youtube_social_icon_red.png\"></a></li>";
+
 	echo "</ul>";
 	echo "  </div>
 	</div>
