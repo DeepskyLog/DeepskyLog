@@ -172,7 +172,7 @@ function newLocation()
                     + "QueryRaster/?ql=wa_2015&qt=point&qd=" 
                     + $("#longitude").val() + "," 
                     + $("#latitude").val() + "&key=6hDh3zLAIhFXdpaX";
-                var yql = "http://query.yahooapis.com/v1/public/yql?q=" 
+                var yql = "https://query.yahooapis.com/v1/public/yql?q=" 
                     + encodeURIComponent(
                         "select * from htmlstring where url=\"" + url 
                         + "\" and xpath=\"//body\""

@@ -94,7 +94,7 @@ function changeSite()
     $content = $disabled 
         ? "" 
         : "  <input type=\"submit\" class=\"btn btn-primary tour4\" name=\"change\"" 
-        . " value=\"" . ("Change site") . "\" />";
+        . " value=\"" . _("Change site") . "\" />";
     echo $content;
 
     // Limiting magnitude
@@ -214,7 +214,7 @@ function changeSite()
                     + "QueryRaster/?ql=wa_2015&qt=point&qd=" 
                     + $("#longitude").val() + "," 
                     + $("#latitude").val() + "&key=6hDh3zLAIhFXdpaX";
-                var yql = "http://query.yahooapis.com/v1/public/yql?q=" 
+                var yql = "https://query.yahooapis.com/v1/public/yql?q=" 
                     + encodeURIComponent(
                         "select * from htmlstring where url=\"" + url 
                         + "\" and xpath=\"//body\""
@@ -379,8 +379,10 @@ function changeSite()
             if ($location != $locationid) {
                 echo "// Let's add the existing locations to the map.
                  var contentString = \"<strong>" 
-                    . html_entity_decode(
-                        $objLocation->getLocationPropertyFromId($location, "name")
+                    . htmlspecialchars(
+                        html_entity_decode(
+                            $objLocation->getLocationPropertyFromId($location, "name")
+                        )
                     ) 
                     . "</strong><br /><br />Limiting magnitude: ";
                 $limmag = $objLocation->getLocationPropertyFromId(
@@ -435,8 +437,10 @@ function changeSite()
               map: map,
               html: contentString,
               title: \""
-                    . html_entity_decode(
-                        $objLocation->getLocationPropertyFromId($location, "name")
+                    . htmlspecialchars(
+                        html_entity_decode(
+                            $objLocation->getLocationPropertyFromId($location, "name")
+                        )
                     ) . "\"
             });
 

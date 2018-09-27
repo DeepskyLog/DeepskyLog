@@ -347,13 +347,17 @@ class Observations
                 }
                 $messageLines = "<h4>" . _("The CSV observation import completed with problems.") . "</h4>" 
                     . $errormessage . "<p>"
-                    . sprintf(_("Only the correct observations have been read.
+                    . sprintf(
+                        _(
+                            "Only the correct observations have been read.
 
 You first have to solve the problems mentionned above and then %sreimport%s the observations.
 You may limit the reimport to the faulty observations, or you may again use all of them.
-Correct observations which have been imported will not be registered for a second time."), 
+Correct observations which have been imported will not be registered for a second time."
+                        ), 
                         "<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">", 
-                        "</a>") . "</p>";
+                        "</a>"
+                    ) . "</p>";
                 $_GET['indexAction'] = 'default_action';
             }
 
