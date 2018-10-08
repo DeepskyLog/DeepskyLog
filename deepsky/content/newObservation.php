@@ -984,7 +984,6 @@ function newObservation()
         // Javascript to convert from bortle to limiting magnitude and sqm
         $(document).ready(function() {  
             $("#bortle").change(function(){
-                bortleChange = 1;
                 bortle = $(this).find("option:selected").attr("value");
 
                 if (bortleChange == 1) {
