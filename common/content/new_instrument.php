@@ -95,7 +95,7 @@ function newInstrument()
                 $objUtil->checkRequestKey('instrumentid'), 'diameter'
             )
         ) . "\" />" 
-        . "<select name=\"diameterunits\" class=\"form-control\"> " 
+        . "<select name=\"diameterunits\" size=\"15\" class=\"form-control\"> " 
         . "<option>inch</option> <option selected=\"selected\">mm</option> " 
         . "</select>";
     echo "</div>";
@@ -109,19 +109,26 @@ function newInstrument()
     echo "</div>";
 
     echo "<div class=\"form-group\">
-           <label for=\"catalog\">" . _("F/D") . "</label>";
+           <label for=\"catalog\">" . _("Focal Length") . "</label>";
     echo "<div class=\"form-inline\">";
+
+    if ($objInstrument->getInstrumentPropertyFromId(
+        $objUtil->checkRequestKey('instrumentid'), 'fd'
+    ) != ''
+    ) {
+        $val = $objInstrument->getInstrumentPropertyFromId(
+            $objUtil->checkRequestKey('instrumentid'), 'diameter'
+        ) * $objInstrument->getInstrumentPropertyFromId(
+            $objUtil->checkRequestKey('instrumentid'), 'fd'
+        );
+    } else {
+        $val = '';
+    }
     echo "<input type=\"number\" min=\"0.0\" step=\"0.0\" class=\"form-control\"" 
         . " maxlength=\"64\" name=\"focallength\" size=\"10\"  value=\"" 
         . stripslashes($objUtil->checkRequestKey('focallength')) 
-        . stripslashes(
-            $objInstrument->getInstrumentPropertyFromId(
-                $objUtil->checkRequestKey('instrumentid'), 'diameter'
-            ) * $objInstrument->getInstrumentPropertyFromId(
-                $objUtil->checkRequestKey('instrumentid'), 'fd'
-            )
-        ) . "\" />" 
-        . "<select class=\"form-control\" name=\"focallengthunits\">" 
+        . stripslashes($val) . "\" />" 
+        . "<select class=\"form-control\" size=\"10\" name=\"focallengthunits\">" 
         . "<option>inch</option> <option selected=\"selected\">mm</option>" 
         . "</select>" 
         . "&nbsp;<span>" . _("or F/D") . "</span>&nbsp;" 

@@ -16,7 +16,12 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 } elseif (!($instrumentid = $objUtil->checkGetKey('instrument'))) {
     throw new Exception(_("You wanted to change an instrument, but none is specified. Please contact the developers with this message."));
 } elseif (!($objInstrument->getInstrumentPropertyFromId($instrumentid, 'name'))) {
-    throw new Exception(_("Instrument not found in change_instrument.php, please contact the developers with this message:" . $eyepieceid));
+    throw new Exception(
+        _(
+            "Instrument not found in change_instrument.php, please contact the developers with this message:"
+            . $eyepieceid
+        )
+    );
 } else {
     changeInstrument();
 }
@@ -70,7 +75,7 @@ function changeInstrument()
     ) . "\" type=\"number\" min=\"0.01\" step=\"0.01\" " 
         . "class=\"form-control\" required maxlength=\"64\" name=\"diameter\" " 
         . "size=\"10\" " . $disabled . " />";
-    $content .= "<select name=\"diameterunits\" class=\"form-control\"" 
+    $content .= "<select name=\"diameterunits\" size=\"10\" class=\"form-control\"" 
         . $disabled . " >";
     $content .= "<option>inch</option>";
     $content .= "<option selected=\"selected\">mm</option>";
@@ -103,7 +108,7 @@ function changeInstrument()
         )) ? $fl : "") 
         . "\" type=\"number\" min=\"0.01\" step=\"0.01\" class=\"form-control\" " 
         . "maxlength=\"64\" name=\"focallength\" size=\"10\" " . $disabled . " />";
-    $content .= "<select class=\"form-control\" name=\"focallengthunits\" " 
+    $content .= "<select class=\"form-control\" size=\"10\" name=\"focallengthunits\" " 
         . $disabled . " >";
     $content .= "<option>inch</option>";
     $content .= "<option selected=\"selected\">mm</option>";
@@ -114,7 +119,7 @@ function changeInstrument()
         . $disabled . " />";
 
     echo "<div class=\"form-group\">
-            <label for=\"filtername\">" . _("Focal length (in mm)") . "</label>";
+            <label for=\"filtername\">" . _("Focal Length") . "</label>";
     echo "<div class=\"form-inline\">";
     echo $content;
     echo "</div></div>";
