@@ -2200,7 +2200,7 @@ class Objects {
 }
 class contrastcompare {
 	var $_reverse;
-	function contrastCompare($reverse) {
+	function __construct($reverse) {
 		$this->_reverse = $reverse;
 	}
 	function compare($a, $b) {
