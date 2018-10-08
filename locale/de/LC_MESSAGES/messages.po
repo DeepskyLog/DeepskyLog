@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-28 16:31+0200\n"
+"POT-Creation-Date: 2018-10-08 21:04+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: new_module/menu/change.php:4 comets/menu/change.php:16
@@ -211,7 +211,7 @@ msgstr "Übersicht ausgewählte Objekte"
 #: deepsky/content/top_objects.php:70 deepsky/content/new_object.php:72
 #: deepsky/content/new_object.php:86 deepsky/content/new_object.php:95
 #: deepsky/content/change_session.php:137 deepsky/content/new_session.php:115
-#: deepsky/content/newObservation.php:1060 lib/observers.php:289
+#: deepsky/content/newObservation.php:1059 lib/observers.php:289
 #: lib/instruments.php:98 lib/filters.php:153 lib/lenses.php:58
 #: lib/eyepieces.php:64 lib/sessions.php:315 lib/sessions.php:383
 #: lib/objects.php:1454 lib/objects.php:1817 lib/objects.php:1982
@@ -570,7 +570,7 @@ msgstr "Alle Beobachtungen"
 #: comets/content/view_object.php:76 comets/content/new_observation.php:23
 #: common/menu/head.php:73 common/menu/head.php:169
 #: deepsky/content/view_observation.php:28
-#: deepsky/content/newObservation.php:1031
+#: deepsky/content/newObservation.php:1030
 msgid "New observation"
 msgstr "Neue Beobachtung"
 
@@ -889,8 +889,7 @@ msgstr "Beobachtungsgeräte"
 msgid "Diameter (mm)"
 msgstr "Durchmesser (mm)"
 
-#: common/content/overview_instruments.php:26
-#: common/content/new_instrument.php:112 lib/instruments.php:100
+#: common/content/overview_instruments.php:26 lib/instruments.php:100
 msgid "F/D"
 msgstr "F/D"
 
@@ -1008,6 +1007,11 @@ msgstr "Instrument Name"
 #: lib/util.php:2472
 msgid "Diameter"
 msgstr "Durchmesser"
+
+#: common/content/new_instrument.php:112
+#: common/content/change_instrument.php:117
+msgid "Focal Length"
+msgstr "Brennweite"
 
 #: common/content/new_instrument.php:127
 #: common/content/change_instrument.php:111
@@ -2821,10 +2825,6 @@ msgstr ""
 msgid "Change instrument"
 msgstr "Beobachtungsgerät ändern"
 
-#: common/content/change_instrument.php:117
-msgid "Focal length (in mm)"
-msgstr "Brennweite (in mm)"
-
 #: common/content/messages.php:34
 msgid "View messages"
 msgstr "Nachrichten anzeigen"
@@ -2967,7 +2967,7 @@ msgid "My locations"
 msgstr "Meine Standorte"
 
 #: common/menu/head.php:216 deepsky/content/newObservation.php:211
-#: deepsky/content/newObservation.php:1046 deepsky/menu/quickpick.php:32
+#: deepsky/content/newObservation.php:1045 deepsky/menu/quickpick.php:32
 msgid "New Observation"
 msgstr "Neue Beobachtung"
 
@@ -4862,23 +4862,23 @@ msgstr "Sichtbarkeit"
 msgid "Estimated diameter"
 msgstr "Geschätzter Durchmesser"
 
-#: deepsky/content/newObservation.php:1033
+#: deepsky/content/newObservation.php:1032
 msgid "Search the object in the database"
 msgstr "Suchen Sie das Objekt in der Datenbank"
 
-#: deepsky/content/newObservation.php:1035
+#: deepsky/content/newObservation.php:1034
 msgid "import observations from a CSV file"
 msgstr "Beobachtungen aus einer CSV-Datei importieren"
 
-#: deepsky/content/newObservation.php:1036
+#: deepsky/content/newObservation.php:1035
 msgid " or "
 msgstr " oder "
 
-#: deepsky/content/newObservation.php:1038
+#: deepsky/content/newObservation.php:1037
 msgid "import observations from an <OAL> (XML) file"
 msgstr "Importieren Sie Beobachtungen aus einer <OAL> (XML) Datei"
 
-#: deepsky/content/newObservation.php:1057
+#: deepsky/content/newObservation.php:1056
 msgid "Search object"
 msgstr "Such Objekt"
 
@@ -6799,6 +6799,9 @@ msgstr "Spalten auswählen"
 #, php-format
 msgid "DeepskyLog message from %s:"
 msgstr "DeepskyLog Nachricht von %s:"
+
+#~ msgid "Focal length (in mm)"
+#~ msgstr "Brennweite (in mm)"
 
 #~ msgid "Click \"Ok\", only when "
 #~ msgstr "Drücken Sie “Ok”, nur wenn "

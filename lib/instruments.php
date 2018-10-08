@@ -105,7 +105,7 @@ class Instruments {
 			echo "<th>" . _("Number of observations") . "</th>";
 			echo "</thead>";
 			$count=0;
-			while ( list ( $key, $value ) = each ( $insts ) ) {
+			foreach ($insts as $key=>$value) {
 				$name = $objInstrument->getInstrumentPropertyFromId ( $value, 'name' );
 				$diameter = round ( $objInstrument->getInstrumentPropertyFromId ( $value, 'diameter' ), 0 );
 				$fd = round ( $objInstrument->getInstrumentPropertyFromId ( $value, 'fd' ), 1 );
