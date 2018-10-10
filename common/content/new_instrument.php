@@ -88,15 +88,17 @@ function newInstrument()
     echo "<div class=\"form-inline\">";
     echo "<input type=\"number\" min=\"0.01\" step=\"0.01\" required " 
         . "class=\"form-control\" maxlength=\"64\" name=\"diameter\" " 
-        . "size=\"10\" value=\"" 
+        . "id=\"diameter\" size=\"10\" value=\"" 
         . stripslashes($objUtil->checkRequestKey('diameter')) 
         . stripslashes(
             $objInstrument->getInstrumentPropertyFromId(
                 $objUtil->checkRequestKey('instrumentid'), 'diameter'
             )
         ) . "\" />" 
-        . "<select name=\"diameterunits\" size=\"15\" class=\"form-control\"> " 
-        . "<option>inch</option> <option selected=\"selected\">mm</option> " 
+        . "<select id=\"dunits\" name=\"diameterunits\" size=\"15\" " 
+        . "class=\"form-control\"> " 
+        . "<option value=\"inch\">inch</option>" 
+        . "<option value=\"mm\" selected=\"selected\">mm</option> " 
         . "</select>";
     echo "</div>";
     echo "</div>";
@@ -125,16 +127,19 @@ function newInstrument()
         $val = '';
     }
     echo "<input type=\"number\" min=\"0.0\" step=\"0.0\" class=\"form-control\"" 
-        . " maxlength=\"64\" name=\"focallength\" size=\"10\"  value=\"" 
+        . " maxlength=\"64\" id=\"focallength\" name=\"focallength\" size=\"10\"" 
+        . " value=\"" 
         . stripslashes($objUtil->checkRequestKey('focallength')) 
         . stripslashes($val) . "\" />" 
-        . "<select class=\"form-control\" size=\"10\" name=\"focallengthunits\">" 
-        . "<option>inch</option> <option selected=\"selected\">mm</option>" 
+        . "<select class=\"form-control\" size=\"10\" id=\"funits\" " 
+        . "name=\"focallengthunits\">" 
+        . "<option value=\"inch\">inch</option>" 
+        . "<option value=\"mm\" selected=\"selected\">mm</option>" 
         . "</select>" 
         . "&nbsp;<span>" . _("or F/D") . "</span>&nbsp;" 
         . "<input type=\"number\" min=\"0.0\" step=\"0.01\" " 
         . "class=\"form-control\" maxlength=\"64\" name=\"fd\" " 
-        . "size=\"10\" value=\"" 
+        . "id=\"fd\" size=\"10\" value=\"" 
         . stripslashes($objUtil->checkRequestKey('fd')) 
         . stripslashes(
             $objInstrument->getInstrumentPropertyFromId(
@@ -165,5 +170,82 @@ function newInstrument()
         . _("Add instrument") . "\" />&nbsp;";
     echo "</div></form>";
     echo "</div>";
+
+    echo '<script type="text/javascript">
+        $(document).ready(function() {
+            var dUnitChange = 1;
+            var fUnitChange = 1;
+
+            // Adapt the F/D whenever the focal length changes
+            $("#focallength").on("keyup change", function(event) {
+                focallength = event.target.value;
+                diameter = $("#diameter").val();
+
+                $("#fd").val(Math.round(focallength / diameter * 100) / 100);
+            });
+
+            // Adapt the focal length whenever the F/D changes
+            $("#fd").on("keyup change", function(event) {
+                fd = event.target.value;
+                diameter = $("#diameter").val();
+
+                $("#focallength").val(Math.round(fd * diameter));
+            });
+
+            // If the unit changes for the diameter, also change the unit for the 
+            // focal length and vice versa
+            $("#dunits").change(function(){
+                diameterUnits = $(this).find("option:selected").attr("value");
+
+                if (dUnitChange == 1) {
+                    dUnitChange = 1;
+                    fUnitChange = 0;
+                    $("#funits").val(diameterUnits).change();
+
+                    if (diameterUnits == "mm") {
+                        $("#diameter").val(
+                            Math.round(($("#diameter").val() * 25.4))
+                        );
+                        $("#focallength").val(
+                            Math.round($("#focallength").val() * 25.4)
+                        );
+                    } else {
+                        $("#diameter").val(
+                            Math.round($("#diameter").val() * 100.0 / 25.4) / 100
+                        );
+                        $("#focallength").val(
+                            Math.round($("#focallength").val() * 1.0 / 25.4)
+                        );
+                    }
+                } else {
+                    dUnitChange = 1;
+                }
+            });
+
+            $("#funits").change(function(){
+                focalLengthUnits = $(this).find("option:selected").attr("value");
+
+                if (fUnitChange == 1) {
+                    fUnitChange = 1;
+                    dUnitChange = 0;
+                    $("#dunits").val(focalLengthUnits).change();
+
+                    if (diameterUnits == "mm") {
+                        $("#diameter").val(Math.round($("#diameter").val() * 25.4));
+                        $("#focallength").val(
+                            Math.round($("#focallength").val() * 25.4)
+                        );
+                    } else {
+                        $("#diameter").val(Math.round($("#diameter").val() / 25.4));
+                        $("#focallength").val(
+                            Math.round($("#focallength").val() / 25.4)
+                        );
+                    }
+                } else {
+                    fUnitChange = 1;
+                }
+            });
+        });
+        </script>';
 }
 ?>
