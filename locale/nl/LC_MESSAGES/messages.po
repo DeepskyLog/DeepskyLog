@@ -5368,11 +5368,11 @@ msgstr "waarneming"
 
 #: lib/instruments.php:172
 msgid "The instrument is removed from your equipment list!"
-msgstr "Het instrument wordt uit uw lijst met uitrustingen verwijderd!"
+msgstr "Het instrument werd uit uw lijst met uitrustingen verwijderd!"
 
 #: lib/instruments.php:211
 msgid "The instrument is added to your equipment list!"
-msgstr "Het instrument wordt toegevoegd aan uw lijst met uitrustingen!"
+msgstr "Het instrument werd toegevoegd aan uw lijst met uitrustingen!"
 
 #: lib/instruments.php:225
 msgid "The instrument details have been changed in your equipment list!"
@@ -6298,7 +6298,7 @@ msgstr "%s  bereikt een hoogte van %s in %s"
 
 #: lib/objects.php:663
 msgid "Number of own observations"
-msgstr "Aantal eigen tekeningen"
+msgstr "Aantal eigen waarnemingen"
 
 #: lib/objects.php:669
 msgid "Last own observation"
