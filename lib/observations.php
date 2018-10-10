@@ -342,7 +342,7 @@ class Observations
                 }
 
                 unset($_SESSION['csvImportErrorData']);
-                while (list($key, $j) = each($errorlist)) {
+                foreach ($errorlist as $key=>$j) {
                     $_SESSION['csvImportErrorData'][$key] = $parts_array[$j];
                 }
                 $messageLines = "<h4>" . _("The CSV observation import completed with problems.") . "</h4>" 
@@ -1010,7 +1010,7 @@ Correct observations which have been imported will not be registered for a secon
         $objects = array();
         $i = 0;
         
-        while (list($key, $observation) = each($observations)) {
+        foreach ($observations as $key=>$observation) {
             if (!array_key_exists($observation['objectname'], $objects)) {
                 $objects[$observation['objectname']] = array(
                         $i++,
@@ -1169,7 +1169,7 @@ Correct observations which have been imported will not be registered for a secon
                 $insts = $objInstrument->getAllInstrumentsIds(
                     $queries["instrument"]
                 );
-                while (list($key, $value) = each($insts)) {
+                foreach ($insts as $key=>$value) {
                     $sqland .= " || observations.instrumentid = \"" . $value . "\" ";
                 }
             }
@@ -1180,7 +1180,7 @@ Correct observations which have been imported will not be registered for a secon
                 . $queries ["eyepiece"] . "\" ";
             if (!$exact) {
                 $eyeps = $objEyepiece->getAllEyepiecesIds($queries["eyepiece"]);
-                while (list($key, $value) = each($eyeps)) {
+                foreach ($eyeps as $key=>$value) {
                     $sqland .= " || observations.eyepieceid = \"" . $value . "\" ";
                 }
             }
@@ -1191,7 +1191,7 @@ Correct observations which have been imported will not be registered for a secon
                 . $queries["filter"] . "\" ";
             if (!$exact) {
                 $filts = $objFilter->getAllFiltersIds($queries["filter"]);
-                while (list($key, $value) = each($filts)) {
+                foreach ($filts as $key=>$value) {
                     $sqland .= " || observations.filterid = \"" . $value . "\" ";
                 }
             }
@@ -1201,7 +1201,7 @@ Correct observations which have been imported will not be registered for a secon
             $sqland .= "AND (observations.lensid = \"" . $queries["lens"] . "\" ";
             if (!$exact) {
                 $lns = $objLens->getAllLensesIds($queries["lens"]);
-                while (list($key, $value) = each($lns)) {
+                foreach ($lns as $key=>$value) {
                     $sqland .= " || observations.lensid = \"" . $value . "\" ";
                 }
             }
@@ -1211,7 +1211,7 @@ Correct observations which have been imported will not be registered for a secon
             $sqland .= "AND (observations.locationid=" . $queries["location"] . " ";
             if (!$exact) {
                 $locs = $objLocation->getAllLocationsIds($queries["location"]);
-                while (list($key, $value) = each($locs)) {
+                foreach ($locs as $key=>$value) {
                     if ($value != $queries["location"]) {
                         $sqland .= " || observations.locationid = " . $value . " ";
                     }
@@ -1464,7 +1464,7 @@ Correct observations which have been imported will not be registered for a secon
                     }
                 }
                 if (($seenpar == "A") || ($seenpar == $seentype)) {
-                    while (list($key, $value) = each($get)) {
+                    foreach ($get as $key=>$value) {
                         $result[$j][$key] = $value;
                     }
                     $j++;
@@ -2021,7 +2021,7 @@ Correct observations which have been imported will not be registered for a secon
         if (!array_key_exists('Qobs', $_SESSION)) {
             $_SESSION['Qobs'] = $objObservation->getLastObservations();
         }
-        while (list($key, $value) = each($_SESSION['Qobs'])) {
+        foreach ($_SESSION['Qobs'] as $key=>$value) {
             $obsKey = $key;
             $LOid = "";
             $LOinstrumentsize = '';
@@ -2031,7 +2031,7 @@ Correct observations which have been imported will not be registered for a secon
             $value = $_SESSION['Qobs'][$obsKey];
             $alt = "";
             $altnames = $objObject->getAlternativeNames($value['objectname']);
-            while (list($key, $altvalue) = each($altnames)) {
+            foreach ($altnames as $key=>$altvalue) {
                 if (trim($altvalue) != trim($value['objectname'])) {
                     $alt .= "<br />" . trim($altvalue);
                 }
@@ -2488,7 +2488,7 @@ Correct observations which have been imported will not be registered for a secon
         $link = $baseURL . "index.php?";
         $linkamp = "";
         reset($_GET);
-        while (list($key, $value) = each($_GET)) {
+        foreach ($_GET as $key=>$value) {
             $linkamp .= $key . "=" . urlencode($value) . "&amp;";
         }
         $inst = $objInstrument->getInstrumentPropertyFromId(

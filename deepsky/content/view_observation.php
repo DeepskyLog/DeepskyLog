@@ -64,7 +64,7 @@ function view_observation() {
 	} else {
 		$AOid = array ();
 	}
-	while ( list ( $key, $LOid ) = each ( $AOid ) ) {
+	foreach ($AOid as $key=>$LOid) {
 		echo "<strong>" . _("Observation of ") . $object . "</strong>";
 		$objObservation->showObservation ( $LOid );
 	}

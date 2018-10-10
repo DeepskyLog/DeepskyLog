@@ -14,7 +14,7 @@ function selected_observations() {
 		$sessionid = $_GET ['sessionid'];
 		$_SESSION ['Qobs'] = $objSession->getObservations ( $sessionid );
 	}
-	while ( list ( $key, $value ) = each ( $_GET ) )
+	foreach ($_GET as $key=>$value)
 		if (! in_array ( $key, array (
 				'indexAction',
 				'lco',
@@ -23,8 +23,6 @@ function selected_observations() {
 				'collapsed'
 		) ))
 			$link2 .= "&amp;" . $key . "=" . urlencode ( $value );
-		// while(list($key,$value)=each($usedLanguages))
-		// $link2=$link2.'&amp;'.$value.'='.$value;
 	$link = $link2;
 
 	// ====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
