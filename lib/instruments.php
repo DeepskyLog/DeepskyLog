@@ -497,26 +497,25 @@ class Instruments
                 if ($objUtil->checkPostKey('diameterunits') == "inch") {
                     $diameter *= 25.4;
                 }
-                if ($_POST['focallength']) {
+                if (array_key_exists('fd', $_POST) 
+                    && $_POST['fd'] 
+                    && array_key_exists('type', $_POST) 
+                ) {
+                    $fd = $objUtil->checkPostKey('fd', 1.0);
+                } else if ($_POST['focallength']) {
                     $focallength = $_POST['focallength'];
                     if (array_key_exists('focallengthunits', $_POST) 
                         && $_POST['focallengthunits'] == "inch" 
-                        && !array_key_exists('fd', $_POST)
                     ) {
                         $focallength = $focallength * 25.4;
                     }
                     if ($diameter > 0) {
                         $fd = $focallength / $diameter;
-                    }
-                } elseif (array_key_exists('fd', $_POST) 
-                    && $_POST['fd'] 
-                    && array_key_exists('type', $_POST) 
-                ) {
-                    $fd = $objUtil->checkPostKey('fd', 1.0);
-                }
+                    }        
+                } 
             }
             if ($objUtil->checkPostKey('add')) {
-                if (! isset($fd)) {
+                if (!isset($fd)) {
                     $fd = 0.0;
                 }
                 if ($fd > 1.0) {
