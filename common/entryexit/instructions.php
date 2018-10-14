@@ -425,10 +425,11 @@ function instructions() {
 		$entryMessage .= $objFilter->validateSaveFilter ();
 		$_GET ['indexAction'] = 'view_filters';
 	}
-	if ($objUtil->checkGetKey ( 'indexAction' ) == "validate_instrument") // validate instrument
-{
-		$entryMessage .= $objInstrument->validateSaveInstrument ();
-		$_GET ['indexAction'] = 'view_instruments';
+	if ($objUtil->checkGetKey ( 'indexAction' ) == "validate_instrument")
+    {
+        // validate instrument
+		$entryMessage .= $objInstrument->validateSaveInstrument();
+		$_GET['indexAction'] = 'view_instruments';
 	}
 	if ($objUtil->checkGetKey ( 'indexAction' ) == "validate_lens") // validate lens
 {
