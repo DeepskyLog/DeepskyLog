@@ -44,6 +44,10 @@ function viewObserver()
     $totalDSYearObservations = $objObservation->getObservationsLastYear('%');
     $userDSObjects = $objObservation->getNumberOfObjects($user);
     $totalDSobjects = $objObservation->getNumberOfDifferentObservedDSObjects();
+    $totalDSDrawings = $objObservation->getNumberOfDsDrawings();
+    $userDSDrawings = $objObserver->getNumberOfDsDrawings($user);
+    $userDSYearDrawings = $objObservation->getDrawingsLastYear($user);
+    $totalDSYearDrawings = $objObservation->getDrawingsLastYear('%');
     $userMobjects = $objObservation->getObservedCountFromCatalogOrList($user, "M");
     $userCaldwellObjects = $objObservation->getObservedCountFromCatalogOrList(
         $user, "Caldwell"
@@ -75,46 +79,75 @@ function viewObserver()
     } else {
         $cometrank ++;
     }
+    $totalCometDrawings = $objCometObservation->getNumberOfDrawings();
+    $userCometDrawings = $objObserver->getNumberOfCometDrawings($user);
+    $userCometYearDrawings = $objCometObservation->getDrawingsLastYear($user);
+    $totalCometYearDrawings = $objCometObservation->getNumberOfDrawingsLastYear();
 
     for ($i = 0; $i < count($modules); $i ++) {
         if (strcmp(${$modules[$i]}, $deepsky) == 0) {
             $key = $i;
-            $information[$i][0] = $userDSobservation . " / " 
-                . $totalDSObservations 
-                . "&nbsp;(" 
-                . sprintf("%.2f", ($userDSobservation / $totalDSObservations) * 100) 
-                . "%)";
-            $information[$i][1] = $userDSYearObservations . " / " 
-                . $totalDSYearObservations . "&nbsp;(" 
-                . sprintf(
-                    "%.2f", $userDSYearObservations / $totalDSYearObservations * 100
-                ) . "%)";
-            $information[$i][2] = $userDSObjects . " / " . $totalDSobjects 
-                . "&nbsp;(" 
-                . sprintf("%.2f", $userDSObjects / $totalDSobjects * 100) . "%)";
+            $information[$i][0] = $userDSobservation;
+            $information[$i][10] = $totalDSObservations;
+
+            $information[$i][1] = $userDSYearObservations;
+            $information[$i][11] = $totalDSYearObservations;
+
+            $information[$i][2] = $userDSObjects;
+            $information[$i][12] = $totalDSobjects;
+            
             $information[$i][4] = $userDSrank;
+
+            $information[$i][5] = $userDSDrawings;
+            $information[$i][15] = $totalDSDrawings;
+            
+            $information[$i][6] = $userDSYearDrawings;
+            $information[$i][16] = $totalDSYearDrawings;
         }
         if (strcmp(${$modules[$i]}, $comets) == 0) {
-            $information[$i][0] = $userCometobservation . " / " 
-                . $totalCometObservations . " (" 
-                . sprintf(
-                    "%.2f", $userCometobservation / $totalCometObservations * 100
-                ) . "%)";
-            $information[$i][1] = $userCometYearObservations . " / " 
-                . $totalCometYearObservations . "&nbsp;(" 
-                . sprintf(
-                    "%.2f", 
-                    $userCometYearObservations / 
-                    ($totalCometYearObservations 
-                    ? $totalCometYearObservations : 1) * 100
-                ) . "%)";
-            $information[$i][2] = $userCometObjects . " / " 
-                . $totalCometobjects . " (" 
-                . sprintf("%.2f", $userCometObjects / $totalCometobjects * 100) 
-                . "%)";
+            $information[$i][0] = $userCometobservation;
+            $information[$i][10] = $totalCometObservations;
+
+            $information[$i][1] = $userCometYearObservations;
+            $information[$i][11] = $totalCometYearObservations;
+
+            $information[$i][2] = $userCometObjects;
+            $information[$i][12] = $totalCometobjects;
+            
             $information[$i][4] = $cometrank;
+
+            $information[$i][5] = $userCometDrawings;
+            $information[$i][15] = $totalCometDrawings;
+
+            $information[$i][6] = $userCometYearDrawings;
+            $information[$i][16] = $totalCometYearDrawings;
         }
     }
+    $information[count($modules)][0] = 0;
+    $information[count($modules)][1] = 0;
+    $information[count($modules)][2] = 0;
+    $information[count($modules)][4] = 0;
+    $information[count($modules)][5] = 0;
+    $information[count($modules)][6] = 0;
+    $information[count($modules)][10] = 0;
+    $information[count($modules)][11] = 0;
+    $information[count($modules)][12] = 0;
+    $information[count($modules)][15] = 0;
+    $information[count($modules)][16] = 0;
+
+    for ($i = 0; $i < count($modules); $i++) {
+        $information[count($modules)][0] += $information[$i][0];
+        $information[count($modules)][10] += $information[$i][10];
+        $information[count($modules)][1] += $information[$i][1];
+        $information[count($modules)][11] += $information[$i][11];
+        $information[count($modules)][2] += $information[$i][2];
+        $information[count($modules)][12] += $information[$i][12];
+        $information[count($modules)][5] += $information[$i][5];
+        $information[count($modules)][15] += $information[$i][15];
+        $information[count($modules)][6] += $information[$i][6];
+        $information[count($modules)][16] += $information[$i][16];
+    }
+
     echo "<div>";
     echo "<h4>" . $firstname . ' ' . $name . "</h4>";
     echo "<hr />";
@@ -404,6 +437,7 @@ function viewObserver()
     echo "<table class=\"table table-striped\">";
     echo " <tr>";
     echo "  <th></th>";
+    echo "  <th>" . _("Total") . "</th>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <th>" . $GLOBALS[$modules[$i]];
         echo " </th>";
@@ -412,30 +446,104 @@ function viewObserver()
 
     echo " <tr>";
     echo "  <td>" . _("Number of observations") . "</td>";
+    echo " <td>" . $information[count($modules)][0]  . " / " 
+        . $information[count($modules)][10] . " (" 
+        . sprintf(
+            "%.2f", 
+            $information[count($modules)][0] 
+            / $information[count($modules)][10] * 100
+        ) . "%)";
+
     for ($i = 0; $i < count($modules); $i++) {
-        echo " <td>" . $information[$i][0];
+        echo " <td>" . $information[$i][0]  . " / " 
+            . $information[$i][10] . " (" 
+            . sprintf(
+                "%.2f", $information[$i][0] / $information[$i][10] * 100
+            ) . "%)";
+        echo " </td>";
+    }
+
+    echo " </tr>";
+
+    echo " <tr>";
+    echo "  <td>" . _("Observations last year") . "</td>";
+    echo " <td>" . $information[count($modules)][1]  . " / " 
+        . $information[count($modules)][11] . " (" 
+        . sprintf(
+            "%.2f", 
+            $information[count($modules)][1] 
+            / $information[count($modules)][11] * 100
+        ) . "%)";
+    for ($i = 0; $i < count($modules); $i++) {
+        echo " <td>" . $information[$i][1]  . " / " 
+            . $information[$i][11] . " (" 
+            . sprintf(
+                "%.2f", $information[$i][1] / $information[$i][11] * 100
+            ) . "%)";
         echo " </td>";
     }
     echo " </tr>";
 
     echo " <tr>";
-    echo "  <td>" . _("Observations last year") . "</td>";
+    echo "  <td>" . _("Number of drawings") . "</td>";
+    echo " <td>" . $information[count($modules)][5]  . " / " 
+        . $information[count($modules)][15] . " (" 
+        . sprintf(
+            "%.2f", 
+            $information[count($modules)][5] 
+            / $information[count($modules)][15] * 100
+        ) . "%)";
     for ($i = 0; $i < count($modules); $i++) {
-        echo " <td>" . $information[$i][1];
+        echo " <td>" . $information[$i][5]  . " / " 
+            . $information[$i][15] . " (" 
+            . sprintf(
+                "%.2f", $information[$i][5] / $information[$i][15] * 100
+            ) . "%)";
+        echo " </td>";
+    }
+    echo " </tr>";
+
+    echo " <tr>";
+    echo "  <td>" . _("Drawings last year") . "</td>";
+    echo " <td>" . $information[count($modules)][6]  . " / " 
+        . $information[count($modules)][16] . " (" 
+        . sprintf(
+            "%.2f", 
+            $information[count($modules)][6] 
+            / $information[count($modules)][16] * 100
+        ) . "%)";
+    for ($i = 0; $i < count($modules); $i++) {
+        echo " <td>" . $information[$i][6]  . " / " 
+            . $information[$i][16] . " (" 
+            . sprintf(
+                "%.2f", $information[$i][6] / $information[$i][16] * 100
+            ) . "%)";
         echo " </td>";
     }
     echo " </tr>";
 
     echo " <tr>";
     echo "  <td>" . _("Different objects") . "</td>";
+    echo " <td>" . $information[count($modules)][2]  . " / " 
+        . $information[count($modules)][12] . " (" 
+        . sprintf(
+            "%.2f", 
+            $information[count($modules)][2] 
+            / $information[count($modules)][12] * 100
+        ) . "%)";
     for ($i = 0; $i < count($modules); $i++) {
-        echo " <td>" . $information[$i][2];
+        echo " <td>" . $information[$i][2]  . " / " 
+            . $information[$i][12] . " (" 
+            . sprintf(
+                "%.2f", $information[$i][2] / $information[$i][12] * 100
+            ) . "%)";
         echo " </td>";
     }
     echo " </tr>";
 
     echo " <tr>";
     echo "  <td>" . _("Messier objects") . "</td>";
+    echo "  <td></td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . (($key == $i) ? $userMobjects . " / 110" : "-");
         echo " </td>";
@@ -444,6 +552,7 @@ function viewObserver()
 
     echo " <tr>";
     echo "  <td>" . _("Caldwell objects") . "</td>";
+    echo "  <td></td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . (($key == $i) ? $userCaldwellObjects . " / 110" : "-");
         echo " </td>";
@@ -452,6 +561,7 @@ function viewObserver()
 
     echo " <tr>";
     echo "  <td>" . _("H400 objects") . "</td>";
+    echo "  <td></td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . (($key == $i) ? $userH400objects . " / 400" : "-");
         echo " </td>";
@@ -460,6 +570,7 @@ function viewObserver()
 
     echo " <tr>";
     echo "  <td>" . _("H II objects") . "</td>";
+    echo "  <td></td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . (($key == $i) ? $userHIIobjects . " / 400" : "-");
         echo " </td>";
@@ -468,6 +579,7 @@ function viewObserver()
 
     echo " <tr>";
     echo "  <td>" . _("Rank") . "</td>";
+    echo "  <td></td>";
     for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . $information[$i][4];
         echo " </td>";
@@ -536,7 +648,7 @@ function viewObserver()
     echo "<script type=\"text/javascript\">
 
                 var chart;
-                        var dataYear = [";
+                var DSdataYear = [";
     if ($startYear < 1900) {
         $startYear = $currentYear;
     }
@@ -567,13 +679,33 @@ function viewObserver()
         }
     }
     echo "];
+                        var dataYear = [";
+    for ($i = $startYear; $i <= $currentYear; $i ++) {
+        $obs = 0;
+        if (array_key_exists($i, $sql2)) {
+            $obs += $sql2[$i];
+        }
+        if (array_key_exists($i, $sql)) {
+            $obs += $sql[$i];
+        }
+        if ($i != $currentYear) {
+            echo $obs . ", ";
+        } else {
+            echo $obs;
+        }
+    }
+    echo "];
                         var dataYearSum = 0;
                         for (var i=0;i < dataYear.length;i++) {
-                        dataYearSum += dataYear[i];
+                            dataYearSum += dataYear[i];
+                        }
+                        var DSdataYearSum = 0;
+                        for (var i=0;i < DSdataYear.length;i++) {
+                            DSdataYearSum += DSdataYear[i];
                         }
                         var cometdataYearSum = 0;
                         for (var i=0;i < cometdataYear.length;i++) {
-                        cometdataYearSum += cometdataYear[i];
+                            cometdataYearSum += cometdataYear[i];
                         }
                 $(document).ready(function() {
                 chart = new Highcharts.Chart({
@@ -620,16 +752,24 @@ function viewObserver()
                 },
                 tooltip: {
                   formatter: function() {
-                    if (this.series.name === \"Deepsky\") {
+                    if (this.series.name === \"" . _("Total") . "\") {
+                        return '<b>'+ this.series.name +'</b><br/>'+
+                                this.x +': '+ this.y + ' (' + 
+                                Highcharts.numberFormat(
+                                    this.y / dataYearSum * 100
+                                ) + '%)';
+                    } else if (this.series.name === \"" . _("Comets") . "\") {
                         return '<b>'+ this.series.name +'</b><br/>'+
                             this.x +': '+ this.y + ' (' + 
-                            Highcharts.numberFormat(this.y / dataYearSum * 100) 
-                            + '%)';
-                    } else {
-                        return '<b>'+ this.series.name +'</b><br/>'+
-                            this.x +': '+ this.y + ' (' + 
-                            Highcharts.numberFormat(this.y / cometdataYearSum * 100) 
-                            + '%)';
+                            Highcharts.numberFormat(
+                                this.y / cometdataYearSum * 100
+                            ) + '%)';
+                    } else if (this.series.name === \"" . _("Deepsky") . "\") {
+                            return '<b>'+ this.series.name +'</b><br/>'+
+                                    this.x +': '+ this.y + ' (' + 
+                                    Highcharts.numberFormat(
+                                        this.y / DSdataYearSum * 100
+                                    ) + '%)';
                     }
                   },
                   useHTML: true,
@@ -642,18 +782,22 @@ function viewObserver()
                                   y: 100,
                               borderWidth: 0
                 },
-                              series: [{
-                                name: '" 
-                    . html_entity_decode($deepsky, ENT_QUOTES, "UTF-8") . "',
-                                  data: dataYear
-                                }, {
-                              name: '" 
-                    . html_entity_decode($comets, ENT_QUOTES, "UTF-8") . "',
-                                data: cometdataYear }]
-                                });
-                                });
+                series: [{
+                    name: '" 
+. _("Total") . "',
+                      data: dataYear
+                    }, {
+                    name: '" 
+. _("Deepsky") . "',
+                      data: DSdataYear
+                    }, {
+                  name: '" 
+. _("Comets") . "',
+                    data: cometdataYear }]
+                    });
+                });
 
-                                </script>";
+                </script>";
 
     // Show graph
     echo "<div id=\"container\" style=\"" 
