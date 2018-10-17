@@ -188,8 +188,7 @@ function selected_observation() {
 		$query = array (
 				"observer" => $_GET ['user']
 		);
-		$sort = "id"; // standard sort on date
-		$obs = $observations->getObservationFromQuery ( $query, $sort );
+		$obs = $observations->getObservationFromQuery ( $query);
 		if (sizeof ( $obs ) > 0)
 			krsort ( $obs );
 			// save $obs as a session variable

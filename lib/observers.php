@@ -51,10 +51,24 @@ class Observers {
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT COUNT(cometobservations.id) As Cnt FROM cometobservations " . ($observerid ? "WHERE observerid = \"" . $observerid . "\"" : ""), 'Cnt', 0 );
 	}
+	public function getNumberOfCometDrawings($observerid) 	// getNumberOfCometDrawings($name) returns the number of comet drawings for the given observerid
+	{
+		global $objDatabase;
+		return $objDatabase->selectSingleValue(
+            "SELECT COUNT(cometobservations.id) As Cnt FROM cometobservations WHERE hasDrawing=1" . ($observerid ? " AND observerid = \"" . $observerid . "\"" : ""), 'Cnt', 0
+        );
+	}
 	public function getNumberOfDsObservations($observerid) 	// getNumberOfObservations($name) returns the number of observations of the given observerid
 	{
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As Cnt FROM observations " . ($observerid ? "WHERE observerid = \"" . $observerid . "\"" : ""), 'Cnt', 0 );
+	}
+	public function getNumberOfDsDrawings($observerid) 	// getNumberOfDrawings($name) returns the number of drawings of the given observerid
+	{
+		global $objDatabase;
+		return $objDatabase->selectSingleValue(
+            "SELECT COUNT(observations.id) As Cnt FROM observations WHERE hasDrawing=1" . ($observerid ? " AND observerid = \"" . $observerid . "\"" : ""), 'Cnt', 0
+        );
 	}
 	public function getObserverProperty($id, $property, $defaultValue = '') {
 		global $objDatabase;

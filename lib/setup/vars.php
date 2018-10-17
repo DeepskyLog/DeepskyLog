@@ -15,7 +15,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 }
 
-define("VERSIONINFO", "2018.10");
+define("VERSIONINFO", "2018.10.2");
 define("COPYRIGHTINFO", "©2004 - 2018, DeepskyLog developers");
 
 define("ATLASOVERVIEWZOOM", 17);

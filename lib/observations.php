@@ -209,9 +209,12 @@ class Observations
 
             // error catching
             if (count($errorlist) > 0) {
-                $errormessage = _("The CSV file is not completely imported because: ") . "<br />";
+                $errormessage = _("The CSV file is not completely imported because: ") 
+                    . "<br />";
                 if (count($wrongDates) > 0) {
-                    $errormessage .= "<ul><li>" . _("The following date(s) are in the future") . " : <ul>";
+                    $errormessage .= "<ul><li>" 
+                        . _("The following date(s) are in the future") 
+                        . " : <ul>";
                     for ($i = 0; $i < count($wrongDates); $i++) {
                         $errormessage .= "<li>" 
                             . ($wrongDates[$i] ? $wrongDates[$i] : "&nbsp;") 
@@ -220,7 +223,9 @@ class Observations
                     $errormessage .= "</ul></li></ul>";
                 }
                 if (count($objectsMissing) > 0) {
-                    $errormessage .= "<ul><li>" . _("The following objects are not available in DeepskyLog") . " : <ul>";
+                    $errormessage .= "<ul><li>" 
+                        . _("The following objects are not available in DeepskyLog") 
+                        . " : <ul>";
                     for ($i = 0; $i < count($objectsMissing); $i++) {
                         // Only show the first 10 objects missing, then add the 
                         // number of other objects missing
@@ -240,7 +245,9 @@ class Observations
                     $errormessage .= "</ul></li></ul>";
                 }
                 if (count($locationsMissing) > 0) {
-                    $errormessage .= "<ul><li>" . _("The following locations are not available in DeepskyLog") . " : <ul>";
+                    $errormessage .= "<ul><li>" 
+                        . _("The following locations are not available in DeepskyLog") 
+                        . " : <ul>";
                     for ($i = 0; $i < count($locationsMissing); $i++) {
                         // Only show the first 10 locations missing, then add the
                         // number of other locations missing
@@ -260,7 +267,9 @@ class Observations
                     $errormessage .= "</ul></li></ul>";
                 }
                 if (count($instrumentsMissing) > 0) {
-                    $errormessage .= "<ul><li>" . _("The following instruments are not available in DeepskyLog") . " : <ul>";
+                    $errormessage .= "<ul><li>" 
+                        . _("The following instruments are not available in DeepskyLog") 
+                        . " : <ul>";
                     for ($i = 0; $i < count($instrumentsMissing); $i++) {
                         // Only show the first 10 instruments missing, 
                         // then add the number of other instruments missing
@@ -280,7 +289,9 @@ class Observations
                     $errormessage .= "</ul></li></ul>";
                 }
                 if (count($filtersMissing) > 0) {
-                    $errormessage .= "<ul><li>" . _("The following filters are not available in DeepskyLog") . " : <ul>";
+                    $errormessage .= "<ul><li>" 
+                        . _("The following filters are not available in DeepskyLog") 
+                        . " : <ul>";
                     for ($i = 0; $i < count($filtersMissing); $i++) {
                         // Only show the first 10 filters missing, 
                         // then add the number of other filters missing
@@ -300,7 +311,9 @@ class Observations
                     $errormessage .= "</ul></li></ul>";
                 }
                 if (count($eyepiecesMissing) > 0) {
-                    $errormessage .= "<ul><li>" . _("The following eyepieces are not available in DeepskyLog") . " : <ul>";
+                    $errormessage .= "<ul><li>" 
+                        . _("The following eyepieces are not available in DeepskyLog") 
+                        . " : <ul>";
                     for ($i = 0; $i < count($eyepiecesMissing); $i ++) {
                         // Only show the first 10 eyepieces missing, 
                         // then add the number of other eyepieces missing
@@ -321,7 +334,9 @@ class Observations
                     $errormessage .= "</ul></li></ul>";
                 }
                 if (count($lensesMissing) > 0) {
-                    $errormessage .= "<ul><li>" . _("The following lenses are not available in DeepskyLog") . " : <ul>";
+                    $errormessage .= "<ul><li>" 
+                        . _("The following lenses are not available in DeepskyLog") 
+                        . " : <ul>";
                     for ($i = 0; $i < count($lensesMissing); $i++) {
                         // Only show the first 10 lenses missing, 
                         // then add the number of other lenses missing
@@ -345,7 +360,9 @@ class Observations
                 foreach ($errorlist as $key=>$j) {
                     $_SESSION['csvImportErrorData'][$key] = $parts_array[$j];
                 }
-                $messageLines = "<h4>" . _("The CSV observation import completed with problems.") . "</h4>" 
+                $messageLines = "<h4>" 
+                    . _("The CSV observation import completed with problems.") 
+                    . "</h4>" 
                     . $errormessage . "<p>"
                     . sprintf(
                         _(
@@ -355,7 +372,8 @@ You first have to solve the problems mentionned above and then %sreimport%s the 
 You may limit the reimport to the faulty observations, or you may again use all of them.
 Correct observations which have been imported will not be registered for a second time."
                         ), 
-                        "<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">", 
+                        "<a href=\"" . $baseURL 
+                            . "index.php?indexAction=add_csv\">", 
                         "</a>"
                     ) . "</p>";
                 $_GET['indexAction'] = 'default_action';
@@ -920,15 +938,28 @@ Correct observations which have been imported will not be registered for a secon
     /** 
      * Returns the number of drawings.
      * 
+     * @param int $country The country for which we want to know the number of
+     *                     drawings. If not given, we are interested in all
+     *                     drawings entered in DeepskyLog.
+     *
      * @return int The number of drawings in DeepskyLog.
      */    
-    public function getNumberOfDsDrawings()
+    public function getNumberOfDsDrawings($country="")
     {
         global $objDatabase;
-        return $objDatabase->selectSingleValue(
-            "SELECT COUNT(objectname) As Cnt FROM observations " 
-            . "WHERE visibility != 7 AND hasDrawing=1", 'Cnt', 0
-        );
+        if (strcmp($country, "") == 0) {
+            return $objDatabase->selectSingleValue(
+                "SELECT COUNT(objectname) As Cnt FROM observations " 
+                . "WHERE visibility != 7 AND hasDrawing=1", 'Cnt', 0
+            );
+        } else {
+            return $objDatabase->selectSingleValue(
+                "SELECT COUNT(objectname) As Cnt FROM observations " 
+                . "JOIN locations ON observations.locationid=locations.id " 
+                . "WHERE visibility != 7 AND hasDrawing=1 and locations.country=\"" 
+                . $country . "\"", 'Cnt', 0
+            );
+        }
     }
 
     /** 
@@ -1442,8 +1473,8 @@ Correct observations which have been imported will not be registered for a secon
             $sql .= " ORDER BY observationid DESC";
         }
         $sql = $sql . ";";
-        //echo $sql.'<p>'; //======================================= HANDY DEBUG LINE
-        //exit;
+        echo $sql.'<p>'; //======================================= HANDY DEBUG LINE
+        exit;
         $run = $objDatabase->selectRecordset($sql);
         if (!array_key_exists('countquery', $queries)) {
             $j = 0;
@@ -1481,23 +1512,36 @@ Correct observations which have been imported will not be registered for a secon
      * Returns the number of objects that are drawn by a given observer during 
      * the last year.
      * 
-     * @param int $id The id of the observer.
+     * @param int    $id      The id of the observer.
+     * @param string $country The country in which the drawings are made. 
+     *                        If not set, all countries are used.
      * 
      * @return int The number of objects that are drawn by a given observer
      *             during the last year.
      */    
-    public function getDrawingsLastYear($id)
+    public function getDrawingsLastYear($id, $country = "")
     {
         global $objDatabase;
         $t = getdate();
-        return $objDatabase->selectSingleValue(
-            "SELECT COUNT(*) AS Cnt FROM observations " 
-            . "WHERE observations.observerid LIKE \"" 
-            . $id . "\" AND observations.date > \"" 
-            . date('Ymd', strtotime('-1 year')) 
-            . "\" AND observations.visibility != 7 " 
-            . "AND hasDrawing=1 ", 'Cnt', 0
-        );
+        if (strcmp($country, "") == 0) {
+            return $objDatabase->selectSingleValue(
+                "SELECT COUNT(*) AS Cnt FROM observations " 
+                . "WHERE observations.observerid LIKE \"" 
+                . $id . "\" AND observations.date > \"" 
+                . date('Ymd', strtotime('-1 year')) 
+                . "\" AND hasDrawing=1 ", 'Cnt', 0
+            );
+        } else {
+            return $objDatabase->selectSingleValue(
+                "SELECT COUNT(objectname) As Cnt FROM observations JOIN locations " 
+                . "ON observations.locationid=locations.id " 
+                . "WHERE observations.date > \""
+                . date('Ymd', strtotime('-1 year')) 
+                . "\" AND hasDrawing=1 AND observations.visibility != 7 and " 
+                . "locations.country=\"" 
+                . $country . "\"", 'Cnt', 0
+            );
+        }
     }
 
     /** 
@@ -2214,23 +2258,27 @@ Correct observations which have been imported will not be registered for a secon
                 echo "<a  href=\"" . $baseURL 
                     . "index.php?indexAction=detail_observation&amp;observation=" 
                     . $value['observationid'] . "&amp;QobsKey=" . $obsKey 
-                    . "&amp;dalm=D\" title=\"" . _("Details of this observation") . "\">" 
+                    . "&amp;dalm=D\" title=\"" 
+                    . _("Details of this observation") . "\">" 
                     . "D" . ($hasDrawing ? "D" : "") 
                     . "</a>&nbsp;";
                 echo "<a  href=\"" . $baseURL 
                     . "index.php?indexAction=detail_observation&amp;observation=" 
                     . $value['observationid'] . "&amp;dalm=AO\" title=\"" 
-                    . _("Compare this observation with all observations of this object") . "\">" . "AO" . "</a>";
+                    . _("Compare this observation with all observations of this object") 
+                    . "\">" . "AO" . "</a>";
                 
                 if ($loggedUser && $LOid) {
                     echo "&nbsp;<a  href=\"" . $baseURL 
                       . "index.php?indexAction=detail_observation&amp;observation=" 
                       . $value['observationid'] . "&amp;dalm=MO\" title=\"" 
-                      . _("Compare this observation with all my observations of this object") . "\">" . "MO" . "</a>";
+                      . _("Compare this observation with all my observations of this object") 
+                      . "\">" . "MO" . "</a>";
                     echo "&nbsp;<a  href=\"" . $baseURL 
                       . "index.php?indexAction=detail_observation&amp;observation=" 
                       . $value ['observationid'] . "&amp;dalm=LO\" title=\"" 
-                      . _("Compare this observation with my last observation of this object") . "\">" . "LO" . "</a>";
+                      . _("Compare this observation with my last observation of this object") 
+                      . "\">" . "LO" . "</a>";
                 }
                 echo "</td>";
                 echo "</tr>";
@@ -2277,7 +2325,8 @@ Correct observations which have been imported will not be registered for a secon
                 echo "<a  href=\"" . $baseURL 
                     . "index.php?indexAction=detail_observation&amp;observation=" 
                     . $value['observationid'] . "&amp;QobsKey=" . $obsKey 
-                    . "&amp;dalm=D\" title=\"" . _("Details of this observation") . "\">" . "D" 
+                    . "&amp;dalm=D\" title=\"" 
+                    . _("Details of this observation") . "\">" . "D" 
                     . (($this->getDsObservationProperty(
                         $value['observationid'], 'hasDrawing'
                     )) ? "D" : "") 
@@ -2285,17 +2334,20 @@ Correct observations which have been imported will not be registered for a secon
                 echo "<a  href=\"" . $baseURL 
                     . "index.php?indexAction=detail_observation&amp;observation=" 
                     . $value['observationid'] . "&amp;dalm=AO\" title=\"" 
-                    . _("Compare this observation with all observations of this object") . "\">" . "AO" . "</a>";
+                    . _("Compare this observation with all observations of this object") 
+                    . "\">" . "AO" . "</a>";
                 if ($loggedUser && $LOid) {
                     echo "&nbsp;<a  href=\"" . $baseURL 
                         . "index.php?indexAction=" 
                         . "detail_observation&amp;observation=" 
                         . $value['observationid'] . "&amp;dalm=MO\" title=\"" 
-                        . _("Compare this observation with all my observations of this object") . "\">" . "MO" . "</a>";
+                        . _("Compare this observation with all my observations of this object") 
+                        . "\">" . "MO" . "</a>";
                     echo "&nbsp;<a  href=\"" . $baseURL 
                         . "index.php?indexAction=detail_observation" 
                         . "&amp;observation=" . $value['observationid'] 
-                        . "&amp;dalm=LO\" title=\"" . _("Compare this observation with my last observation of this object") 
+                        . "&amp;dalm=LO\" title=\"" 
+                        . _("Compare this observation with my last observation of this object") 
                         . "\">" . "LO" . "</a>";
                 }
                 echo "</td>";
@@ -3015,7 +3067,9 @@ Correct observations which have been imported will not be registered for a secon
 
         $addObs = $objUtil->checkSessionKey('addObs', 0);
         if (!($loggedUser)) {
-            throw new Exception(_("You need to be logged in to validate an observation."));
+            throw new Exception(
+                _("You need to be logged in to validate an observation.")
+            );
         } elseif ($addObs != $objUtil->checkPostKey('timestamp', - 1)) {
             $_GET ['indexAction'] = "default_action";
             $_GET ['dalm'] = 'D';

@@ -12,8 +12,7 @@ function overview_observations() {
 	$instruments = new Instruments ();
 	$observers = new Observers ();
 
-	$sort = "date"; // standard sort on date
-	$obs = $objCometObservation->getSortedObservations ( $sort );
+	$obs = $objCometObservation->getSortedObservations();
 	if (sizeof ( $obs ) > 0)
 		krsort ( $obs );
 

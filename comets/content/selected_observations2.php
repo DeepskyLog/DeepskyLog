@@ -118,15 +118,14 @@ function selected_observations() {
 				$maxdate = $maxdate + 1;
 			}
 		}
-		$sort = "date";
 		if (isset ( $catalogsearch )) {
 			if ($catalogsearch == "yes") {
-				$obs = $observations->getObservationFromQuery ( $query, $sort, 0 ); // LIKE
+				$obs = $observations->getObservationFromQuery ( $query, 0); // LIKE
 			} else {
-				$obs = $observations->getObservationFromQuery ( $query, $sort ); // EXACT MATCH
+				$obs = $observations->getObservationFromQuery ( $query); // EXACT MATCH
 			}
 		} else {
-			$obs = $observations->getObservationFromQuery ( $query, $sort ); // EXACT MATCH
+			$obs = $observations->getObservationFromQuery ( $query); // EXACT MATCH
 		}
 
 		// Dates can changes when we use local time!
