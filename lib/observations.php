@@ -1473,8 +1473,8 @@ Correct observations which have been imported will not be registered for a secon
             $sql .= " ORDER BY observationid DESC";
         }
         $sql = $sql . ";";
-        echo $sql.'<p>'; //======================================= HANDY DEBUG LINE
-        exit;
+        //echo $sql.'<p>'; //======================================= HANDY DEBUG LINE
+        //exit;
         $run = $objDatabase->selectRecordset($sql);
         if (!array_key_exists('countquery', $queries)) {
             $j = 0;
