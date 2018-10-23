@@ -4693,6 +4693,9 @@ class Utils
         case 'result_selected_observations':
             return 'deepsky/content/selected_observations.php';
             break;
+        case 'show_drawings':
+            return 'deepsky/content/showDrawings.php';
+            break;
         case 'result_selected_sessions':
             return 'deepsky/content/selected_sessions.php';
             break;

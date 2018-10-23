@@ -15,7 +15,7 @@ function menu_search() {
 
 	echo " <ul class=\"dropdown-menu\">";
 	if ($loggedUser) {
-		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=comets_result_query_observations&amp;user=" . urlencode ( $loggedUser ) . "\">" . _("My observations") . "</a></li>";
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=comets_result_query_observations&amp;user=" . urlencode($loggedUser) . "\">" . _("My observations") . "</a></li>";
 	}
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=comets_query_observations\" >" . _("Search observations") . "</a></li>";
 	echo "  <li class=\"disabled\">─────────────────</li>";

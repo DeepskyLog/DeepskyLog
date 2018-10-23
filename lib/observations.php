@@ -368,7 +368,7 @@ class Observations
                         _(
                             "Only the correct observations have been read.
 
-You first have to solve the problems mentionned above and then %sreimport%s the observations.
+You first have to solve the problems mentioned above and then %sreimport%s the observations.
 You may limit the reimport to the faulty observations, or you may again use all of them.
 Correct observations which have been imported will not be registered for a second time."
                         ), 
@@ -960,6 +960,23 @@ Correct observations which have been imported will not be registered for a secon
                 . $country . "\"", 'Cnt', 0
             );
         }
+    }
+
+    /** 
+     * Returns the drawings of the given observer.
+     * 
+     * @param string $userid The userid for who we want to get the drawings.
+     *
+     * @return array The drawings in DeepskyLog.
+     */    
+    public function getUserDrawings($userid="")
+    {
+        global $objDatabase;
+
+        return $objDatabase->selectRecordsetArray(
+            "SELECT * FROM observations " 
+            . "WHERE hasDrawing=1 and observerid=\"" . $userid . "\""
+        );
     }
 
     /** 
