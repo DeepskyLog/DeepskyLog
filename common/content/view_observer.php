@@ -56,7 +56,7 @@ function viewObserver()
         $user, "H400"
     );
     $userHIIobjects = $objObservation->getObservedCountFromCatalogOrList(
-        $user, "HII"
+        $user, "H400-II"
     );
     $userDSrank = $objObserver->getDsRank($user);
     if ($userDSrank === false) {
