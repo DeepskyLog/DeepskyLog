@@ -164,18 +164,18 @@ class Objects {
 	public function getCatalogs() // returns a list of all different catalogs
 {
 		global $objDatabase;
-		$ret = $objDatabase->selectSingleArray ( "SELECT DISTINCT objectnames.catalog FROM objectnames WHERE objectnames.catalog NOT IN (\"M\",\"NGC\",\"Caldwell\",\"H400\",\"HII\",\"IC\",\"\")", 'catalog' );
+		$ret = $objDatabase->selectSingleArray ( "SELECT DISTINCT objectnames.catalog FROM objectnames WHERE objectnames.catalog NOT IN (\"M\",\"NGC\",\"Caldwell\",\"H400\",\"H400-II\",\"IC\",\"\")", 'catalog' );
 		natcasesort ( $ret );
 		reset ( $ret );
-		array_unshift ( $ret, "M", "NGC", "Caldwell", "H400", "HII", "IC" );
+		array_unshift ( $ret, "M", "NGC", "Caldwell", "H400", "H400-II", "IC" );
 		return $ret;
 	}
 	public function getCatalogsAndLists() {
 		global $objDatabase, $loggedUser, $objList;
-		$ret = $objDatabase->selectSingleArray ( "SELECT DISTINCT objectnames.catalog FROM objectnames WHERE objectnames.catalog NOT IN (\"M\",\"NGC\",\"Caldwell\",\"H400\",\"HII\",\"IC\")", 'catalog' );
+		$ret = $objDatabase->selectSingleArray ( "SELECT DISTINCT objectnames.catalog FROM objectnames WHERE objectnames.catalog NOT IN (\"M\",\"NGC\",\"Caldwell\",\"H400\",\"H400-II\",\"IC\")", 'catalog' );
 		natcasesort ( $ret );
 		reset ( $ret );
-		array_unshift ( $ret, "M", "NGC", "Caldwell", "H400", "HII", "IC" );
+		array_unshift ( $ret, "M", "NGC", "Caldwell", "H400", "H400-II", "IC" );
 		if (array_key_exists ( 'deepskylog_id', $_SESSION ) && $loggedUser) {
 			$lsts = $objList->getLists ();
 			foreach ($lsts as $key => $value)
