@@ -35,7 +35,6 @@ function newObservation()
         . "lib/javascript/checkUtils.js\"></script>";
     echo '<script type="text/javascript">
             $(document).ready(function() {
-                $("#sqm").change();
                 $("#site").change(function() {
                     // We have the id of the location, we need to find the sqm now...
                     var id = ($(this).find("option:selected").attr("value"));
@@ -987,8 +986,8 @@ function newObservation()
                 bortle = $(this).find("option:selected").attr("value");
 
                 if (bortleChange == 1) {
-                    $("#lm").val(bortleToLm(bortle));
-                    $("#sqm").val(bortleToSqm(bortle));
+                    $("#lm").val("");
+                    $("#sqm").val("");
                 } else {
                     bortleChange = 1;
                 }
@@ -1002,9 +1001,9 @@ function newObservation()
                 $("#lm").val(lm);
             }
             sqm = lmToSqm(lm);
-            $("#sqm").val(sqm);
+            $("#sqm").val("");
             bortleChange = 0;
-            $("#bortle").val(sqmToBortle(sqm)).change();
+            $("#bortle").val("").change();
         });
 
         // Javascript to convert from sqm to limiting magnitude and bortle
@@ -1017,10 +1016,10 @@ function newObservation()
             }
 
             lm = sqmToLm(sqm);
-            $("#lm").val(lm);
+            $("#lm").val("");
 
             bortleChange = 0;
-            $("#bortle").val(sqmToBortle(sqm)).change();
+            $("#bortle").val("").change();
         });
 
         </script>';

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-23 16:11+0200\n"
+"POT-Creation-Date: 2018-10-26 11:47+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -60,7 +60,7 @@ msgid "Create list"
 msgstr "Créer une liste"
 
 #: comets/content/selected_observations.php:40
-#: comets/content/selected_observations.php:200 common/menu/head.php:102
+#: comets/content/selected_observations.php:200 common/menu/head.php:104
 #: deepsky/content/selected_observations.php:72
 #: deepsky/content/view_object.php:410
 #, php-format
@@ -76,7 +76,7 @@ msgstr "Aperçu de toutes les observations de %s"
 #: comets/content/setup_objects_query.php:21
 #: comets/content/new_observation.php:37
 #: deepsky/content/setup_observations_query.php:57
-#: deepsky/content/setup_objects_query.php:58 lib/observations.php:2037
+#: deepsky/content/setup_objects_query.php:58 lib/observations.php:2054
 #: lib/observations_new.php:179 lib/observations_new.php:192
 msgid "Object name"
 msgstr "Nom de l'objet"
@@ -92,7 +92,7 @@ msgstr "Nom de l'objet"
 #: common/content/overview_locations.php:48
 #: common/content/overview_lenses.php:26 common/content/overview_filters.php:26
 #: deepsky/content/setup_observations_query.php:269 lib/observers.php:153
-#: lib/printatlas.php:1492 lib/observations.php:2041 lib/observations.php:2707
+#: lib/printatlas.php:1492 lib/observations.php:2058 lib/observations.php:2724
 #: lib/observations_new.php:181 lib/observations_new.php:194
 msgid "Observer"
 msgstr "Observateur"
@@ -103,7 +103,7 @@ msgstr "Observateur"
 #: comets/content/selected_observations2.php:190
 #: comets/content/view_observation.php:49 comets/content/new_observation.php:48
 #: deepsky/content/newObservation.php:773 deepsky/menu/date.php:116
-#: lib/observations.php:2045 lib/observations.php:2841 lib/objects.php:1646
+#: lib/observations.php:2062 lib/observations.php:2858 lib/objects.php:1646
 #: lib/observations_new.php:185 lib/observations_new.php:198
 #: lib/messages.php:291
 msgid "Date"
@@ -125,8 +125,8 @@ msgstr "Magnitude"
 #: comets/content/overview_observations.php:39
 #: comets/content/selected_observations2.php:196
 #: comets/content/view_observation.php:75 comets/content/new_observation.php:77
-#: deepsky/content/newObservation.php:791 lib/observations.php:2043
-#: lib/observations.php:2737 lib/observations_new.php:40 lib/util.php:2189
+#: deepsky/content/newObservation.php:791 lib/observations.php:2060
+#: lib/observations.php:2754 lib/observations_new.php:40 lib/util.php:2189
 #: lib/util.php:3910
 msgid "Instrument"
 msgstr "Instrument"
@@ -164,9 +164,9 @@ msgstr "Queue"
 #: comets/content/view_observation.php:80 comets/content/new_observation.php:88
 #: common/content/view_observer.php:249 common/content/view_observer.php:368
 #: common/content/change_account.php:38 common/content/change_instrument.php:60
-#: lib/instruments.php:99 lib/instruments.php:372 lib/observations.php:2127
-#: lib/observations.php:2302 lib/observations.php:2313
-#: lib/observations.php:2550 lib/util.php:2185
+#: lib/instruments.php:99 lib/instruments.php:372 lib/observations.php:2144
+#: lib/observations.php:2319 lib/observations.php:2330
+#: lib/observations.php:2567 lib/util.php:2185
 msgid "Naked Eye"
 msgstr "Oeil nu"
 
@@ -191,8 +191,8 @@ msgstr "dessin"
 
 #: comets/content/execute_query_objects.php:30
 #: comets/content/execute_query_objects.php:73
-#: comets/content/execute_query_objects.php:79 common/menu/head.php:89
-#: common/menu/head.php:97 common/menu/head.php:183 common/menu/head.php:212
+#: comets/content/execute_query_objects.php:79 common/menu/head.php:91
+#: common/menu/head.php:99 common/menu/head.php:185 common/menu/head.php:214
 #: deepsky/content/tolist.php:31 deepsky/content/selected_objects.php:29
 #: deepsky/content/selected_objects.php:63
 msgid "Overview selected objects"
@@ -237,7 +237,7 @@ msgstr "Nom ICQ"
 #: deepsky/content/view_object.php:28 deepsky/content/view_object.php:34
 #: deepsky/content/view_object.php:61 deepsky/content/view_object.php:73
 #: deepsky/content/view_object.php:89 lib/printatlas.php:1505
-#: lib/observations.php:2097 lib/objects.php:1837 lib/util.php:2481
+#: lib/observations.php:2114 lib/objects.php:1837 lib/util.php:2481
 msgid "Seen"
 msgstr "Vu"
 
@@ -250,8 +250,8 @@ msgstr "Désolé, aucun objet trouvé!"
 msgid "You didn't specify any parameters to search on."
 msgstr "Vous n'avez pas spécifié les paramètres à rechercher."
 
-#: comets/content/top_objects.php:14 common/menu/head.php:93
-#: common/menu/head.php:189 deepsky/content/top_objects.php:36
+#: comets/content/top_objects.php:14 common/menu/head.php:95
+#: common/menu/head.php:191 deepsky/content/top_objects.php:36
 msgid "Most popular objects"
 msgstr "Objets les plus populaires"
 
@@ -277,7 +277,7 @@ msgstr "Nombre d'observations"
 #: comets/content/setup_observations_query.php:16
 #: comets/content/setup_observations_query.php:17
 #: comets/content/setup_observations_query.php:175 comets/menu/search.php:20
-#: common/menu/head.php:91 common/menu/head.php:191 deepsky/content/main.php:69
+#: common/menu/head.php:93 common/menu/head.php:193 deepsky/content/main.php:69
 #: deepsky/content/main.php:72 deepsky/content/setup_observations_query.php:49
 msgid "Search observations"
 msgstr "Recherche observations"
@@ -296,7 +296,7 @@ msgstr "Diamètre maximal de l'instrument"
 #: comets/content/view_observation.php:68 comets/content/new_observation.php:61
 #: common/content/overview_locations.php:40
 #: deepsky/content/setup_observations_query.php:394
-#: deepsky/content/newObservation.php:765 lib/observations.php:2843
+#: deepsky/content/newObservation.php:765 lib/observations.php:2860
 #: lib/sessions.php:318 lib/sessions.php:386 lib/locations.php:334
 #: lib/objects.php:1945 lib/observations_new.php:24 lib/util.php:2171
 #: lib/util.php:3914
@@ -354,12 +354,12 @@ msgstr "Longueur minimale de queue (minutes d’arc)"
 msgid "Maximum tail length (arcminutes)"
 msgstr "Longueur maximale de queue (minutes d’arc)"
 
-#: comets/content/overview_objects.php:20 common/menu/head.php:179
+#: comets/content/overview_objects.php:20 common/menu/head.php:181
 msgid "Overview all objects"
 msgstr "Aperçu de tous les objets"
 
-#: comets/content/top_observers.php:14 common/menu/head.php:95
-#: common/menu/head.php:187 deepsky/content/top_observers.php:16
+#: comets/content/top_observers.php:14 common/menu/head.php:97
+#: common/menu/head.php:189 deepsky/content/top_observers.php:16
 msgid "Most active observers"
 msgstr "Observateurs les plus actifs"
 
@@ -400,8 +400,8 @@ msgstr ""
 "Vous devez être connecté comme administrateur pour effectuer cette "
 "opération. Veuillez contacter les développeurs avec ce message."
 
-#: comets/content/new_object.php:15 common/menu/head.php:71
-#: common/menu/head.php:175 deepsky/content/new_object.php:63
+#: comets/content/new_object.php:15 common/menu/head.php:73
+#: common/menu/head.php:177 deepsky/content/new_object.php:63
 msgid "Add new object"
 msgstr "Ajouter un nouvel objet"
 
@@ -413,13 +413,13 @@ msgstr "Ajouter un nouvel objet"
 msgid "Add observation"
 msgstr "Ajouter une observation"
 
-#: comets/content/overview_observations.php:26 common/menu/head.php:163
-#: common/menu/head.php:181
+#: comets/content/overview_observations.php:26 common/menu/head.php:165
+#: common/menu/head.php:183
 msgid "Overview all observations"
 msgstr "Aperçu de toutes les observations"
 
-#: comets/content/selected_observations2.php:174 common/menu/head.php:104
-#: common/menu/head.php:185 common/menu/head.php:214
+#: comets/content/selected_observations2.php:174 common/menu/head.php:106
+#: common/menu/head.php:187 common/menu/head.php:216
 #: deepsky/content/selected_observations.php:74
 #: deepsky/content/view_object.php:412
 msgid "Overview selected observations"
@@ -454,18 +454,18 @@ msgstr "ou"
 msgid "View all observations"
 msgstr "Voir toutes les observations"
 
-#: comets/content/view_observation.php:35 common/menu/head.php:77
-#: common/menu/head.php:167 common/menu/head.php:173
+#: comets/content/view_observation.php:35 common/menu/head.php:79
+#: common/menu/head.php:169 common/menu/head.php:175
 msgid "Observation details"
 msgstr "Détails de l'observation"
 
 #: comets/content/view_observation.php:55 comets/content/new_observation.php:54
-#: deepsky/content/newObservation.php:782 lib/observations.php:2572
+#: deepsky/content/newObservation.php:782 lib/observations.php:2589
 msgid "Time (local time)"
 msgstr "Heure (heure locale)"
 
 #: comets/content/view_observation.php:58 comets/content/new_observation.php:52
-#: deepsky/content/newObservation.php:782 lib/observations.php:2575
+#: deepsky/content/newObservation.php:782 lib/observations.php:2592
 #: lib/observations_new.php:26
 msgid "Time (UT)"
 msgstr "Heure (TU)"
@@ -512,11 +512,11 @@ msgstr "Description"
 #: comets/content/view_observation.php:166
 #: comets/content/new_observation.php:24 comets/content/new_observation.php:225
 #: deepsky/content/newObservation.php:221
-#: deepsky/content/newObservation.php:959 lib/observations.php:3019
+#: deepsky/content/newObservation.php:959 lib/observations.php:3036
 msgid "Change observation"
 msgstr "Changement d'observation"
 
-#: comets/content/view_observation.php:167 lib/observations.php:3023
+#: comets/content/view_observation.php:167 lib/observations.php:3040
 msgid "Delete observation"
 msgstr "Supprimer l'observation"
 
@@ -533,7 +533,7 @@ msgid "%s about this observation"
 msgstr "%s concernant cette observation"
 
 #: comets/content/setup_objects_query.php:16 comets/menu/search.php:23
-#: common/menu/head.php:87 common/menu/head.php:193 deepsky/content/main.php:81
+#: common/menu/head.php:89 common/menu/head.php:195 deepsky/content/main.php:81
 #: deepsky/content/main.php:84 deepsky/content/setup_objects_query.php:47
 msgid "Search objects"
 msgstr "Rechercher des objets"
@@ -556,8 +556,8 @@ msgstr "Changer"
 msgid "Change comet"
 msgstr "Changez la comète"
 
-#: comets/content/view_object.php:49 common/menu/head.php:75
-#: common/menu/head.php:165 common/menu/head.php:177
+#: comets/content/view_object.php:49 common/menu/head.php:77
+#: common/menu/head.php:167 common/menu/head.php:179
 #: deepsky/content/selected_observations.php:41
 #: deepsky/content/selected_observations.php:139
 #: deepsky/content/view_observation.php:18 deepsky/content/view_object.php:22
@@ -572,7 +572,7 @@ msgid "All observations"
 msgstr "Toutes les observations"
 
 #: comets/content/view_object.php:76 comets/content/new_observation.php:23
-#: common/menu/head.php:73 common/menu/head.php:169
+#: common/menu/head.php:75 common/menu/head.php:171
 #: deepsky/content/view_observation.php:28
 #: deepsky/content/newObservation.php:1030
 msgid "New observation"
@@ -594,7 +594,7 @@ msgstr "Ajouter un nouveau site d'observation"
 
 #: comets/content/new_observation.php:91 common/content/new_instrument.php:56
 #: common/content/new_instrument.php:170 common/content/change_account.php:319
-#: common/content/view_instruments.php:17 common/menu/head.php:139
+#: common/content/view_instruments.php:17 common/menu/head.php:141
 #: deepsky/content/newObservation.php:791
 msgid "Add instrument"
 msgstr "Ajouter un instrument"
@@ -624,7 +624,7 @@ msgstr "Clé de référence de magnitude"
 #: deepsky/content/setup_objects_query.php:247
 #: deepsky/content/setup_objects_query.php:263
 #: deepsky/content/newObservation.php:565 lib/printatlas.php:2003
-#: lib/printatlas.php:2038 lib/observations.php:2603
+#: lib/printatlas.php:2038 lib/observations.php:2620
 msgid "arcminutes"
 msgstr "arcminutes"
 
@@ -656,11 +656,11 @@ msgstr "Vous devez être connecté pour exécuter ces opérations."
 msgid "Observation"
 msgstr "Observation"
 
-#: comets/menu/search.php:14 deepsky/menu/search.php:20
+#: comets/menu/search.php:14 deepsky/menu/search.php:38
 msgid "View"
 msgstr "Voir"
 
-#: comets/menu/search.php:18 deepsky/menu/search.php:23
+#: comets/menu/search.php:18 deepsky/menu/search.php:45
 msgid "My observations"
 msgstr "Mes observations"
 
@@ -669,22 +669,22 @@ msgid "All objects"
 msgstr "Tous les objets"
 
 #: comets/menu/search.php:25 common/menu/admin.php:19
-#: deepsky/menu/search.php:38
+#: deepsky/menu/search.php:83
 msgid "Observers"
 msgstr "Observateurs"
 
-#: comets/menu/search.php:26 deepsky/menu/search.php:39
+#: comets/menu/search.php:26 deepsky/menu/search.php:85
 msgid "Popular objects"
 msgstr "Objets populaires"
 
-#: comets/menu/search.php:27 common/menu/head.php:111
-#: deepsky/menu/search.php:40
+#: comets/menu/search.php:27 common/menu/head.php:113
+#: deepsky/menu/search.php:88
 msgid "Statistics"
 msgstr "Statistiques"
 
 #: comets/control/validate_change_object.php:18
 #: comets/control/validate_observation.php:17
-#: comets/control/validate_change_observation.php:17 lib/observations.php:3109
+#: comets/control/validate_change_observation.php:17 lib/observations.php:3126
 msgid "You did not fill in a required field!"
 msgstr "Vous n'avez pas rempli un champ obligatoire!"
 
@@ -697,7 +697,7 @@ msgid "There is already an object with this (alternative) name!"
 msgstr "Il y a déjà un objet avec ce nom (alternatif)!"
 
 #: comets/control/validate_observation.php:22
-#: comets/control/validate_change_observation.php:21 lib/observations.php:3126
+#: comets/control/validate_change_observation.php:21 lib/observations.php:3143
 msgid "Please, only upload drawings smaller than 2mb!"
 msgstr ""
 "S'il vous plaît, seulement télécharger des dessins plus petits que 2MB!"
@@ -811,7 +811,7 @@ msgstr ""
 msgid "You need to be logged in to change your locations or equipment."
 msgstr "Vous devez être connecté pour changer le location ou l’instrument."
 
-#: common/content/overview_eyepieces.php:16 common/menu/head.php:147
+#: common/content/overview_eyepieces.php:16 common/menu/head.php:149
 msgid "Eyepiece overview"
 msgstr "Aperçu oculaires"
 
@@ -838,7 +838,7 @@ msgstr "Champs apparent (°)"
 msgid "Delete"
 msgstr "Supprimez"
 
-#: common/content/overview_observers.php:20 common/menu/head.php:157
+#: common/content/overview_observers.php:20 common/menu/head.php:159
 msgid "Observers overview"
 msgstr "Aperçu des observateurs"
 
@@ -967,7 +967,7 @@ msgid "Add a new lens"
 msgstr "Ajouter une nouvelle lentille"
 
 #: common/content/new_lens.php:23 common/content/new_lens.php:46
-#: common/content/view_lenses.php:16 common/menu/head.php:141
+#: common/content/view_lenses.php:16 common/menu/head.php:143
 msgid "Add lens"
 msgstr "Ajouter une lentille"
 
@@ -1069,7 +1069,7 @@ msgstr "Message"
 msgid "You should be logged in to be able to send messages."
 msgstr "Vous devez vous connecter avant de pouvoir envoyer des messages."
 
-#: common/content/overview_locations.php:35 common/menu/head.php:155
+#: common/content/overview_locations.php:35 common/menu/head.php:157
 msgid "Locations overview"
 msgstr "Aperçu des endroits"
 
@@ -1098,7 +1098,7 @@ msgid "NELM"
 msgstr "NELM"
 
 #: common/content/overview_locations.php:47
-#: deepsky/content/newObservation.php:865 lib/observations.php:2856
+#: deepsky/content/newObservation.php:865 lib/observations.php:2873
 #: lib/locations.php:339 lib/observations_new.php:32
 msgid "SQM"
 msgstr "SQM"
@@ -1682,13 +1682,13 @@ msgstr ""
 "Vous vouliez changer une lentille, mais aucune n'est spécifiée. Veuillez "
 "contacter les développeurs avec ce message."
 
-#: common/content/change_lens.php:18 common/menu/head.php:129
+#: common/content/change_lens.php:18 common/menu/head.php:131
 msgid "Change lens"
 msgstr "Changer la lentille"
 
 #: common/content/register.php:25 common/content/register.php:26
 #: common/content/register.php:27 common/content/register.php:145
-#: common/menu/head.php:145 common/menu/headmenu.php:83
+#: common/menu/head.php:147 common/menu/headmenu.php:83
 #: common/menu/headmenu.php:142
 msgid "Register"
 msgstr "S'enregistrer"
@@ -1778,7 +1778,7 @@ msgid "Add new filter"
 msgstr "Ajouter un nouveau filtre"
 
 #: common/content/new_filter.php:23 common/content/new_filter.php:64
-#: common/content/view_filters.php:17 common/menu/head.php:137
+#: common/content/view_filters.php:17 common/menu/head.php:139
 msgid "Add filter"
 msgstr "Ajouter un filtre"
 
@@ -1815,7 +1815,7 @@ msgid "Observing sites of %s"
 msgstr "Endroits d’observation de %s"
 
 #: common/content/locations.php:39 common/content/new_location.php:60
-#: common/content/new_location.php:68 common/menu/head.php:203
+#: common/content/new_location.php:68 common/menu/head.php:205
 msgid "Add site"
 msgstr "Rajoutez un endroit"
 
@@ -1830,7 +1830,7 @@ msgid "Eyepieces of %s"
 msgstr "Oculaires de %s"
 
 #: common/content/view_eyepieces.php:17 common/content/new_eyepiece.php:26
-#: common/content/new_eyepiece.php:67 common/menu/head.php:135
+#: common/content/new_eyepiece.php:67 common/menu/head.php:137
 msgid "Add eyepiece"
 msgstr "Ajouter un oculaire"
 
@@ -2411,7 +2411,7 @@ msgstr "Cherchez votre endroit"
 msgid "Location name"
 msgstr "Nom du lieu"
 
-#: common/content/change_site.php:97 common/menu/head.php:133
+#: common/content/change_site.php:97 common/menu/head.php:135
 msgid "Change site"
 msgstr "Changez l’entroit"
 
@@ -2487,8 +2487,8 @@ msgstr "Activé"
 msgid "Not active"
 msgstr "Pas activé"
 
-#: common/content/view_message.php:56 lib/observations.php:2101
-#: lib/observations.php:2961
+#: common/content/view_message.php:56 lib/observations.php:2118
+#: lib/observations.php:2978
 msgid "by "
 msgstr "par "
 
@@ -2640,11 +2640,11 @@ msgstr ""
 "Vous vouliez changer un oculaire, mais aucun n'est spécifié. Veuillez "
 "contacter les développeurs avec ce message."
 
-#: common/content/change_eyepiece.php:23 common/menu/head.php:117
+#: common/content/change_eyepiece.php:23 common/menu/head.php:119
 msgid "Adapt eyepiece"
 msgstr "Adapter l'oculaire"
 
-#: common/content/view_instruments.php:13 common/menu/head.php:151
+#: common/content/view_instruments.php:13 common/menu/head.php:153
 msgid "Instruments of"
 msgstr "Instruments de"
 
@@ -2656,7 +2656,7 @@ msgstr ""
 "Vous vouliez regarder un filtre, mais aucun n'est spécifié. Veuillez "
 "contacter les développeurs avec ce message."
 
-#: common/content/change_filter.php:18 common/menu/head.php:121
+#: common/content/change_filter.php:18 common/menu/head.php:123
 msgid "Change filter"
 msgstr "Changer le filtre"
 
@@ -2789,7 +2789,7 @@ msgstr ""
 "Instrument introuvable dans change_instrument.php, s'il vous plaît contacter "
 "les développeurs avec ce message:"
 
-#: common/content/change_instrument.php:51 common/menu/head.php:125
+#: common/content/change_instrument.php:51 common/menu/head.php:127
 msgid "Change instrument"
 msgstr "Changer d'instrument"
 
@@ -2838,103 +2838,103 @@ msgstr "Signaler un problème"
 msgid "What's new in DeepskyLog"
 msgstr "Nouveautés de DeepskyLog"
 
-#: common/menu/head.php:67 deepsky/content/new_observationcsv.php:13
+#: common/menu/head.php:69 deepsky/content/new_observationcsv.php:13
 msgid "Import observations from a CSV file"
 msgstr "Importer des observations à partir d'un fichier CSV"
 
-#: common/menu/head.php:69 deepsky/content/newObservationXml.php:26
+#: common/menu/head.php:71 deepsky/content/newObservationXml.php:26
 msgid "Import observations from an XML file"
 msgstr "Importation d'observations à partir d'un fichier XML"
 
-#: common/menu/head.php:79 deepsky/content/selected_observations.php:52
+#: common/menu/head.php:81 deepsky/content/selected_observations.php:52
 #: deepsky/content/view_object.php:79
 msgid "Interactive Atlas"
 msgstr "Atlas interactif"
 
-#: common/menu/head.php:81 deepsky/content/new_listdatacsv.php:11
+#: common/menu/head.php:83 deepsky/content/new_listdatacsv.php:11
 msgid "Import objects from a CSV file to your list"
 msgstr "Importer des objets d'un fichier CSV vers votre liste"
 
-#: common/menu/head.php:85 deepsky/content/manage_objects_csv.php:15
+#: common/menu/head.php:87 deepsky/content/manage_objects_csv.php:15
 #: deepsky/content/view_object.php:506
 msgid "Manage objects from CSV file"
 msgstr "Gérer les objets à partir du fichier CSV"
 
-#: common/menu/head.php:100 deepsky/content/selected_observations.php:70
+#: common/menu/head.php:102 deepsky/content/selected_observations.php:70
 #: deepsky/content/view_object.php:408
 msgid "Overview of last year's observations"
 msgstr "Aperçu des observations de l'an dernier"
 
-#: common/menu/head.php:107 deepsky/content/details_observer_catalog.php:32
+#: common/menu/head.php:109 deepsky/content/details_observer_catalog.php:32
 msgid "Overview observed"
 msgstr "Aperçu observé"
 
-#: common/menu/head.php:107 deepsky/content/details_observer_catalog.php:32
+#: common/menu/head.php:109 deepsky/content/details_observer_catalog.php:32
 #: lib/accomplishments.php:478 lib/accomplishments.php:494
 msgid "objects"
 msgstr "objets"
 
-#: common/menu/head.php:109
+#: common/menu/head.php:111
 msgid "Details observer"
 msgstr "Détails observateur"
 
-#: common/menu/head.php:113 common/menu/headmenu.php:72
+#: common/menu/head.php:115 common/menu/headmenu.php:72
 msgid "Settings"
 msgstr "Paramètres"
 
-#: common/menu/head.php:115
+#: common/menu/head.php:117
 msgid "Details eyepiece"
 msgstr "Détails oculaire"
 
-#: common/menu/head.php:119
+#: common/menu/head.php:121
 msgid "Details filter"
 msgstr "Détails filtres"
 
-#: common/menu/head.php:123
+#: common/menu/head.php:125
 msgid "Details instrument"
 msgstr "Détails instrument"
 
-#: common/menu/head.php:127
+#: common/menu/head.php:129
 msgid "Details lens"
 msgstr "Détails lentilles"
 
-#: common/menu/head.php:131
+#: common/menu/head.php:133
 msgid "Details location"
 msgstr "Détails de l’endroit"
 
-#: common/menu/head.php:149
+#: common/menu/head.php:151
 msgid "Filters of"
 msgstr "Filtres de"
 
-#: common/menu/head.php:153
+#: common/menu/head.php:155
 msgid "Lenses of"
 msgstr "Lentilles de"
 
-#: common/menu/head.php:171
+#: common/menu/head.php:173
 msgid "Overview of all observations of "
 msgstr "Aperçu de toutes les observations de "
 
-#: common/menu/head.php:195 deepsky/menu/search.php:29
+#: common/menu/head.php:197 deepsky/menu/search.php:60
 msgid "My instruments"
 msgstr "Mes instruments"
 
-#: common/menu/head.php:197 deepsky/menu/search.php:31
+#: common/menu/head.php:199 deepsky/menu/search.php:66
 msgid "My eyepieces"
 msgstr "Mes oculaires"
 
-#: common/menu/head.php:199 deepsky/menu/search.php:32
+#: common/menu/head.php:201 deepsky/menu/search.php:69
 msgid "My filters"
 msgstr "Mes filtres"
 
-#: common/menu/head.php:201 deepsky/menu/search.php:33
+#: common/menu/head.php:203 deepsky/menu/search.php:72
 msgid "My lenses"
 msgstr "Mes lentilles"
 
-#: common/menu/head.php:205 deepsky/menu/search.php:30
+#: common/menu/head.php:207 deepsky/menu/search.php:63
 msgid "My locations"
 msgstr "Mes locations"
 
-#: common/menu/head.php:216 deepsky/content/newObservation.php:211
+#: common/menu/head.php:218 deepsky/content/newObservation.php:211
 #: deepsky/content/newObservation.php:1045 deepsky/menu/quickpick.php:32
 msgid "New Observation"
 msgstr "Nouvelle observation"
@@ -3021,7 +3021,7 @@ msgstr ""
 #: deepsky/content/new_object.php:202 deepsky/content/new_object.php:207
 #: deepsky/content/setup_objects_query.php:248
 #: deepsky/content/setup_objects_query.php:264
-#: deepsky/content/newObservation.php:568 lib/observations.php:2610
+#: deepsky/content/newObservation.php:568 lib/observations.php:2627
 msgid "arcseconds"
 msgstr "arcsecondes"
 
@@ -3057,15 +3057,15 @@ msgid "Nearby objects"
 msgstr "Les objets proches"
 
 #: deepsky/content/selected_observations.php:48
-#: deepsky/content/view_observation.php:31 lib/observations.php:2228
-#: lib/observations.php:2995 lib/objects.php:1872
+#: deepsky/content/view_observation.php:31 lib/observations.php:2245
+#: lib/observations.php:3012 lib/objects.php:1872
 #, php-format
 msgid "%s to remove from the list %s"
 msgstr "%s à supprimer de la liste %s"
 
 #: deepsky/content/selected_observations.php:50
-#: deepsky/content/view_observation.php:33 lib/observations.php:2237
-#: lib/observations.php:3006 lib/objects.php:1876
+#: deepsky/content/view_observation.php:33 lib/observations.php:2254
+#: lib/observations.php:3023 lib/objects.php:1876
 #, php-format
 msgid "%s to add to the list %s"
 msgstr "%s à ajouter à la liste %s"
@@ -3252,7 +3252,7 @@ msgstr ""
 "a> si vous rencontrez des problèmes ou des questions."
 
 #: deepsky/content/main.php:99 deepsky/content/main.php:102
-#: deepsky/menu/search.php:36
+#: deepsky/menu/search.php:80
 msgid "Latest observations"
 msgstr "Dernières observations"
 
@@ -3304,7 +3304,7 @@ msgstr "Page de l’atlas"
 
 #: deepsky/content/setup_observations_query.php:92
 #: deepsky/content/dsatlas.php:42 deepsky/content/new_object.php:160
-#: deepsky/content/setup_objects_query.php:88 lib/observations.php:2039
+#: deepsky/content/setup_objects_query.php:88 lib/observations.php:2056
 #: lib/objects.php:1508 lib/objects.php:1818 lib/objects.php:1884
 #: lib/objects.php:1984 lib/observations_new.php:180
 #: lib/observations_new.php:193 lib/util.php:2469
@@ -4360,23 +4360,23 @@ msgstr "Pas d’observation à afficher."
 msgid "The requested observation does not exist."
 msgstr "L’observation demandé n’existe pas."
 
-#: deepsky/content/view_observation.php:42 lib/observations.php:2262
-#: lib/observations.php:2329 lib/observations_new.php:135
+#: deepsky/content/view_observation.php:42 lib/observations.php:2279
+#: lib/observations.php:2346 lib/observations_new.php:135
 msgid "Details of this observation"
 msgstr "Détails de cette observation"
 
-#: deepsky/content/view_observation.php:44 lib/observations.php:2268
-#: lib/observations.php:2337
+#: deepsky/content/view_observation.php:44 lib/observations.php:2285
+#: lib/observations.php:2354
 msgid "Compare this observation with all observations of this object"
 msgstr "Comparez cette observation avec toutes les observations de cet objet"
 
-#: deepsky/content/view_observation.php:47 lib/observations.php:2275
-#: lib/observations.php:2344
+#: deepsky/content/view_observation.php:47 lib/observations.php:2292
+#: lib/observations.php:2361
 msgid "Compare this observation with all my observations of this object"
 msgstr "Comparez cette observation avec toutes mes observations de cet objet"
 
-#: deepsky/content/view_observation.php:49 lib/observations.php:2280
-#: lib/observations.php:2350
+#: deepsky/content/view_observation.php:49 lib/observations.php:2297
+#: lib/observations.php:2367
 msgid "Compare this observation with my last observation of this object"
 msgstr "Comparez cette observation avec ma dernière observation de cet objet"
 
@@ -4662,6 +4662,15 @@ msgstr "DESC-Éditer la Déscription"
 msgid "Show or remove extra info..."
 msgstr "Monter ou enlever des informations supplémentaires…"
 
+#: deepsky/content/showDrawings.php:35
+#, php-format
+msgid "Drawings of %s"
+msgstr "Dessins de %s"
+
+#: deepsky/content/showDrawings.php:42
+msgid "No drawings found"
+msgstr "Aucun dessin trouvé"
+
 #: deepsky/content/new_session.php:102
 msgid "Select one of the sessions added by other observers"
 msgstr "Selectionez une des sessions ajoutées par d’autres observateurs"
@@ -4678,31 +4687,31 @@ msgstr "Modifier les détails de l'observation "
 msgid "Enter observation details "
 msgstr "Entrez les détails de l'observation "
 
-#: deepsky/content/newObservation.php:575 lib/observations.php:2617
+#: deepsky/content/newObservation.php:575 lib/observations.php:2634
 msgid "Stellar"
 msgstr "Stellaire"
 
-#: deepsky/content/newObservation.php:580 lib/observations.php:2620
+#: deepsky/content/newObservation.php:580 lib/observations.php:2637
 msgid "Extended"
 msgstr "Étendu"
 
-#: deepsky/content/newObservation.php:583 lib/observations.php:2626
+#: deepsky/content/newObservation.php:583 lib/observations.php:2643
 msgid "Mottled"
 msgstr "Tachetée"
 
-#: deepsky/content/newObservation.php:617 lib/observations.php:2623
+#: deepsky/content/newObservation.php:617 lib/observations.php:2640
 msgid "Resolved"
 msgstr "Résolu"
 
-#: deepsky/content/newObservation.php:619 lib/observations.php:2668
+#: deepsky/content/newObservation.php:619 lib/observations.php:2685
 msgid "Unusual Shape"
 msgstr "Forme inhabituelle"
 
-#: deepsky/content/newObservation.php:621 lib/observations.php:2671
+#: deepsky/content/newObservation.php:621 lib/observations.php:2688
 msgid "Partly unresolved"
 msgstr "Partiellement non résolue"
 
-#: deepsky/content/newObservation.php:623 lib/observations.php:2674
+#: deepsky/content/newObservation.php:623 lib/observations.php:2691
 msgid "Color contrasts"
 msgstr "Contrastes de couleurs"
 
@@ -4714,17 +4723,17 @@ msgstr "https://github.com/DeepskyLog/DeepskyLog/wiki/Open-Cluster-types"
 msgid "More information"
 msgstr "Plus d'informations"
 
-#: deepsky/content/newObservation.php:628 lib/observations.php:2908
-#: lib/observations.php:2924 lib/observations.php:2937
+#: deepsky/content/newObservation.php:628 lib/observations.php:2925
+#: lib/observations.php:2941 lib/observations.php:2954
 #: lib/observations_new.php:73
 msgid "Cluster type"
 msgstr "Type de cluster"
 
-#: deepsky/content/newObservation.php:687 lib/observations.php:2677
+#: deepsky/content/newObservation.php:687 lib/observations.php:2694
 msgid "Equal Brightness"
 msgstr "Luminosité égale"
 
-#: deepsky/content/newObservation.php:689 lib/observations.php:2680
+#: deepsky/content/newObservation.php:689 lib/observations.php:2697
 msgid "in nice field"
 msgstr "dans un champ attractif"
 
@@ -4733,38 +4742,38 @@ msgid "component 1"
 msgstr "component 1"
 
 #: deepsky/content/newObservation.php:702
-#: deepsky/content/newObservation.php:737 lib/observations.php:2629
-#: lib/observations.php:2647
+#: deepsky/content/newObservation.php:737 lib/observations.php:2646
+#: lib/observations.php:2664
 msgid "white"
 msgstr "blanc"
 
 #: deepsky/content/newObservation.php:706
-#: deepsky/content/newObservation.php:741 lib/observations.php:2632
-#: lib/observations.php:2650
+#: deepsky/content/newObservation.php:741 lib/observations.php:2649
+#: lib/observations.php:2667
 msgid "red"
 msgstr "rouge"
 
 #: deepsky/content/newObservation.php:710
-#: deepsky/content/newObservation.php:745 lib/observations.php:2635
-#: lib/observations.php:2653
+#: deepsky/content/newObservation.php:745 lib/observations.php:2652
+#: lib/observations.php:2670
 msgid "orange"
 msgstr "orange"
 
 #: deepsky/content/newObservation.php:714
-#: deepsky/content/newObservation.php:749 lib/observations.php:2638
-#: lib/observations.php:2656
+#: deepsky/content/newObservation.php:749 lib/observations.php:2655
+#: lib/observations.php:2673
 msgid "yellow"
 msgstr "jaune"
 
 #: deepsky/content/newObservation.php:718
-#: deepsky/content/newObservation.php:753 lib/observations.php:2641
-#: lib/observations.php:2659
+#: deepsky/content/newObservation.php:753 lib/observations.php:2658
+#: lib/observations.php:2676
 msgid "green"
 msgstr "vert"
 
 #: deepsky/content/newObservation.php:722
-#: deepsky/content/newObservation.php:757 lib/observations.php:2644
-#: lib/observations.php:2662
+#: deepsky/content/newObservation.php:757 lib/observations.php:2661
+#: lib/observations.php:2679
 msgid "blue"
 msgstr "bleu"
 
@@ -4776,22 +4785,22 @@ msgstr "component 2"
 msgid "Language"
 msgstr "Langue"
 
-#: deepsky/content/newObservation.php:857 lib/observations.php:2861
+#: deepsky/content/newObservation.php:857 lib/observations.php:2878
 #: lib/observations_new.php:34 lib/util.php:3881
 msgid "Seeing"
 msgstr "Seeing"
 
-#: deepsky/content/newObservation.php:864 lib/observations.php:2855
+#: deepsky/content/newObservation.php:864 lib/observations.php:2872
 #: lib/observations_new.php:32 lib/util.php:3883
 msgid "Limiting magnitude"
 msgstr "Magnitude limite"
 
-#: deepsky/content/newObservation.php:875 lib/observations.php:2868
+#: deepsky/content/newObservation.php:875 lib/observations.php:2885
 #: lib/observations_new.php:63 lib/util.php:3889
 msgid "Eyepiece"
 msgstr "Oculaire"
 
-#: deepsky/content/newObservation.php:885 lib/observations.php:2888
+#: deepsky/content/newObservation.php:885 lib/observations.php:2905
 #: lib/observations_new.php:53 lib/util.php:3897
 msgid "Lens"
 msgstr "Lentille"
@@ -4800,7 +4809,7 @@ msgstr "Lentille"
 msgid "Add a new filter"
 msgstr "Ajouter un nouveau filtre"
 
-#: deepsky/content/newObservation.php:895 lib/observations.php:2879
+#: deepsky/content/newObservation.php:895 lib/observations.php:2896
 #: lib/observations_new.php:45 lib/util.php:3885
 msgid "Filter"
 msgstr "Filtre"
@@ -4810,15 +4819,15 @@ msgid "Magnification used"
 msgstr "Grossissement utilisé"
 
 #: deepsky/content/newObservation.php:918
-#: deepsky/content/newObservation.php:932 lib/observations.php:2901
-#: lib/observations.php:2917 lib/observations.php:2931
+#: deepsky/content/newObservation.php:932 lib/observations.php:2918
+#: lib/observations.php:2934 lib/observations.php:2948
 #: lib/observations_new.php:77 lib/util.php:3878
 msgid "Visibility"
 msgstr "Visibilité"
 
 #: deepsky/content/newObservation.php:925
-#: deepsky/content/newObservation.php:939 lib/observations.php:2906
-#: lib/observations.php:2922 lib/observations.php:2935
+#: deepsky/content/newObservation.php:939 lib/observations.php:2923
+#: lib/observations.php:2939 lib/observations.php:2952
 #: lib/observations_new.php:71
 msgid "Estimated diameter"
 msgstr "Diamètre estimé"
@@ -4962,19 +4971,19 @@ msgstr "Téléchargements"
 msgid "Forms"
 msgstr "Formulaires"
 
-#: deepsky/menu/search.php:24
+#: deepsky/menu/search.php:48
 msgid "My drawings"
 msgstr "Mes dessins"
 
-#: deepsky/menu/search.php:26
+#: deepsky/menu/search.php:53
 msgid "My observing lists"
 msgstr "Mes listes d'observation"
 
-#: deepsky/menu/search.php:27
+#: deepsky/menu/search.php:56
 msgid "My sessions"
 msgstr "Mes sessions"
 
-#: deepsky/menu/search.php:42
+#: deepsky/menu/search.php:91
 msgid "Catalogs"
 msgstr "Catalogues"
 
@@ -5645,64 +5654,64 @@ msgstr ""
 "Les observations correctes seront reconnues et ne seront pas réimportées une "
 "deuxième fois."
 
-#: lib/observations.php:2030
+#: lib/observations.php:2047
 msgid "Mark all as read."
 msgstr "Marquez tout comme lu."
 
-#: lib/observations.php:2052
+#: lib/observations.php:2069
 msgid "My LO instrument"
 msgstr "Mon instrument LO"
 
-#: lib/observations.php:2055
+#: lib/observations.php:2072
 msgid "My LO date"
 msgstr "Ma date LO"
 
-#: lib/observations.php:2085
+#: lib/observations.php:2102
 msgid "in"
 msgstr "dans"
 
-#: lib/observations.php:2089
+#: lib/observations.php:2106
 msgid "mag."
 msgstr "mag."
 
-#: lib/observations.php:2093
+#: lib/observations.php:2110
 msgid "surf. br."
 msgstr "clar. de surf."
 
-#: lib/observations.php:2095
+#: lib/observations.php:2112
 msgid "alt. names"
 msgstr "noms alt"
 
-#: lib/observations.php:2209
+#: lib/observations.php:2226
 msgid "Mark up to here as read."
 msgstr "Marquez les observations précédentes comme lu."
 
-#: lib/observations.php:2223 lib/observations.php:2244
-#: lib/observations.php:2982
+#: lib/observations.php:2240 lib/observations.php:2261
+#: lib/observations.php:2999
 msgid "Add the observation to the list "
 msgstr "Ajouter l'observation à la liste "
 
-#: lib/observations.php:2833 lib/moonpic.php:73
+#: lib/observations.php:2850 lib/moonpic.php:73
 msgid "under the horizon"
 msgstr "au-dessus de l’horizon"
 
-#: lib/observations.php:3053
+#: lib/observations.php:3070
 msgid "The observation has been removed"
 msgstr "L'observation a été supprimée"
 
-#: lib/observations.php:3071
+#: lib/observations.php:3088
 msgid "You need to be logged in to validate an observation."
 msgstr "Vous devez être connecté pour valider une observation."
 
-#: lib/observations.php:3134
+#: lib/observations.php:3151
 msgid "You filled in an invalid date!"
 msgstr "Vous avez rempli une date invalide!"
 
-#: lib/observations.php:3137
+#: lib/observations.php:3154
 msgid "You filled in a future date!"
 msgstr "Tu as rempli un futur rencard!"
 
-#: lib/observations.php:3144
+#: lib/observations.php:3161
 msgid "You filled in an invalid time!"
 msgstr "Vous avez rempli un temps invalide!"
 
@@ -6342,17 +6351,17 @@ msgid "end"
 msgstr "fin"
 
 #: lib/objects.php:899 lib/objects.php:910 lib/objects.php:921
-#: lib/util.php:5168
+#: lib/util.php:5171
 msgid "mid"
 msgstr "mi-"
 
 #: lib/objects.php:901 lib/objects.php:912 lib/objects.php:923
-#: lib/util.php:5166
+#: lib/util.php:5169
 msgid "begin"
 msgstr "début"
 
 #: lib/objects.php:903 lib/objects.php:914 lib/objects.php:925
-#: lib/util.php:5164
+#: lib/util.php:5167
 msgid "start"
 msgstr "premier"
 
@@ -6716,27 +6725,27 @@ msgstr "Lever lune: "
 msgid " in "
 msgstr " dans "
 
-#: lib/util.php:4978
+#: lib/util.php:4981
 #, php-format
 msgid "You have made %s drawings"
 msgstr "Vous avez fait des dessins %s"
 
-#: lib/util.php:4991
+#: lib/util.php:4994
 #, php-format
 msgid "Make %s drawings to receive this DeepskyLog star!"
 msgstr "Faites %s de dessins pour recevoir cette étoile DeepskyLog!"
 
-#: lib/util.php:5005
+#: lib/util.php:5008
 #, php-format
 msgid "You have made %s observations!"
 msgstr "Vous avez fait %s des observations!"
 
-#: lib/util.php:5018
+#: lib/util.php:5021
 #, php-format
 msgid "Make %s observations to receive this DeepskyLog star!"
 msgstr "Faire %s des observations pour recevoir cette étoile DeepskyLog!"
 
-#: lib/util.php:5037
+#: lib/util.php:5040
 msgid "Select columns"
 msgstr "Sélectionner des colonnes"
 
