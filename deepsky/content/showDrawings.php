@@ -54,21 +54,23 @@ function showDrawings()
             IntlDateFormatter::NONE
         );
 
-        // TODO: Add link to the observation or to the drawing?
-        // TODO: Add translations
-        print '<a href="#">
-                    <img class="lazyload" data-src="' . $baseURL . 'deepsky/drawings/' 
+        print '<a href="' . $baseURL . 'deepsky/drawings/' 
+            . $observations[$i]['id'] . '.jpg' 
+            . '" data-lightbox="image-1" data-title="">
+                <img class="lazyload" data-src="' . $baseURL . 'deepsky/drawings/' 
             . $observations[$i]['id'] 
             . '.jpg"' . ' alt="' . $i . '">
                </a>
                <div class="caption">
-                <h4>' . $observations[$i]['objectname'] . ' - ' 
+                <h4><a href="' . $baseURL . '/index.php?indexAction=detail_observation&amp;observation=' . $observations[$i]['id'] . '&amp;dalm=D">' . $observations[$i]['objectname'] . '</a> - ' 
             . $dateFormatter->format($datetime) . '</h4>' 
             . $objInstrument->getInstrumentPropertyFromId($observations[$i]['instrumentid'], 'name') 
             . ', ' . $objLocation->getLocationPropertyFromId($observations[$i]['locationid'], 'name') . '
                </div>
               </div>
             </div>';
+
+            http://localhost/index.php?indexAction=detail_observation&observation=132098&dalm=D
 
         if ($cnt == 4) {
             $cnt = 0;
