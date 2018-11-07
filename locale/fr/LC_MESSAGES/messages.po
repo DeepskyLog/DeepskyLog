@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 11:47+0200\n"
+"POT-Creation-Date: 2018-11-07 21:42+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -102,7 +102,7 @@ msgstr "Observateur"
 #: comets/content/overview_observations.php:37
 #: comets/content/selected_observations2.php:190
 #: comets/content/view_observation.php:49 comets/content/new_observation.php:48
-#: deepsky/content/newObservation.php:773 deepsky/menu/date.php:116
+#: deepsky/content/newObservation.php:759 deepsky/menu/date.php:116
 #: lib/observations.php:2062 lib/observations.php:2858 lib/objects.php:1646
 #: lib/observations_new.php:185 lib/observations_new.php:198
 #: lib/messages.php:291
@@ -125,7 +125,7 @@ msgstr "Magnitude"
 #: comets/content/overview_observations.php:39
 #: comets/content/selected_observations2.php:196
 #: comets/content/view_observation.php:75 comets/content/new_observation.php:77
-#: deepsky/content/newObservation.php:791 lib/observations.php:2060
+#: deepsky/content/newObservation.php:777 lib/observations.php:2060
 #: lib/observations.php:2754 lib/observations_new.php:40 lib/util.php:2189
 #: lib/util.php:3910
 msgid "Instrument"
@@ -211,7 +211,7 @@ msgstr "Aperçu des objets sélectionnés"
 #: deepsky/content/top_objects.php:70 deepsky/content/new_object.php:72
 #: deepsky/content/new_object.php:86 deepsky/content/new_object.php:95
 #: deepsky/content/change_session.php:137 deepsky/content/new_session.php:115
-#: deepsky/content/newObservation.php:1059 lib/observers.php:303
+#: deepsky/content/newObservation.php:1024 lib/observers.php:303
 #: lib/instruments.php:326 lib/filters.php:153 lib/lenses.php:58
 #: lib/eyepieces.php:64 lib/sessions.php:315 lib/sessions.php:383
 #: lib/objects.php:1454 lib/objects.php:1817 lib/objects.php:1982
@@ -296,7 +296,7 @@ msgstr "Diamètre maximal de l'instrument"
 #: comets/content/view_observation.php:68 comets/content/new_observation.php:61
 #: common/content/overview_locations.php:40
 #: deepsky/content/setup_observations_query.php:394
-#: deepsky/content/newObservation.php:765 lib/observations.php:2860
+#: deepsky/content/newObservation.php:751 lib/observations.php:2860
 #: lib/sessions.php:318 lib/sessions.php:386 lib/locations.php:334
 #: lib/objects.php:1945 lib/observations_new.php:24 lib/util.php:2171
 #: lib/util.php:3914
@@ -369,13 +369,13 @@ msgid "Observations last year"
 msgstr "Observations l'an dernier"
 
 #: comets/content/top_observers.php:23 common/content/view_observer.php:526
-#: common/content/view_observer.php:2242 common/content/statistics.php:316
+#: common/content/view_observer.php:2252 common/content/statistics.php:316
 #: lib/observers.php:170
 msgid "Different objects"
 msgstr "Objects différents"
 
 #: comets/content/top_observers.php:47 common/content/view_observer.php:440
-#: common/content/view_observer.php:755 common/content/view_observer.php:787
+#: common/content/view_observer.php:765 common/content/view_observer.php:797
 #: common/content/statistics.php:272 common/content/statistics.php:470
 #: common/content/statistics.php:502 lib/observers.php:179
 msgid "Total"
@@ -408,8 +408,8 @@ msgstr "Ajouter un nouvel objet"
 #: comets/content/new_object.php:16 comets/content/new_object.php:24
 #: comets/content/new_observation.php:24 comets/content/new_observation.php:225
 #: deepsky/content/main.php:125 deepsky/content/main.php:128
-#: deepsky/content/newObservation.php:229
-#: deepsky/content/newObservation.php:963
+#: deepsky/content/newObservation.php:228
+#: deepsky/content/newObservation.php:949
 msgid "Add observation"
 msgstr "Ajouter une observation"
 
@@ -460,12 +460,12 @@ msgid "Observation details"
 msgstr "Détails de l'observation"
 
 #: comets/content/view_observation.php:55 comets/content/new_observation.php:54
-#: deepsky/content/newObservation.php:782 lib/observations.php:2589
+#: deepsky/content/newObservation.php:768 lib/observations.php:2589
 msgid "Time (local time)"
 msgstr "Heure (heure locale)"
 
 #: comets/content/view_observation.php:58 comets/content/new_observation.php:52
-#: deepsky/content/newObservation.php:782 lib/observations.php:2592
+#: deepsky/content/newObservation.php:768 lib/observations.php:2592
 #: lib/observations_new.php:26
 msgid "Time (UT)"
 msgstr "Heure (TU)"
@@ -503,7 +503,7 @@ msgstr "Angle de position"
 
 #: comets/content/view_observation.php:144
 #: comets/content/new_observation.php:218
-#: deepsky/content/newObservation.php:799 lib/printatlas.php:1931
+#: deepsky/content/newObservation.php:785 lib/printatlas.php:1931
 #: lib/printatlas.php:1938 lib/objects.php:1564 lib/objects.php:1569
 #: lib/util.php:2291 lib/util.php:3921 lib/util.php:4083
 msgid "Description"
@@ -511,8 +511,8 @@ msgstr "Description"
 
 #: comets/content/view_observation.php:166
 #: comets/content/new_observation.php:24 comets/content/new_observation.php:225
-#: deepsky/content/newObservation.php:221
-#: deepsky/content/newObservation.php:959 lib/observations.php:3036
+#: deepsky/content/newObservation.php:220
+#: deepsky/content/newObservation.php:945 lib/observations.php:3036
 msgid "Change observation"
 msgstr "Changement d'observation"
 
@@ -563,7 +563,7 @@ msgstr "Changez la comète"
 #: deepsky/content/view_observation.php:18 deepsky/content/view_object.php:22
 #: deepsky/content/view_object.php:23 deepsky/content/view_object.php:27
 #: deepsky/content/view_object.php:28 deepsky/content/view_object.php:89
-#: deepsky/content/newObservation.php:976
+#: deepsky/content/newObservation.php:962
 msgid "Object details"
 msgstr "Les détails de l’objet"
 
@@ -574,7 +574,7 @@ msgstr "Toutes les observations"
 #: comets/content/view_object.php:76 comets/content/new_observation.php:23
 #: common/menu/head.php:75 common/menu/head.php:171
 #: deepsky/content/view_observation.php:28
-#: deepsky/content/newObservation.php:1030
+#: deepsky/content/newObservation.php:995
 msgid "New observation"
 msgstr "Nouvelle observation"
 
@@ -582,20 +582,20 @@ msgstr "Nouvelle observation"
 msgid "(day-month-year)"
 msgstr "(jour-mois-année)"
 
-#: comets/content/new_observation.php:56 deepsky/content/newObservation.php:784
+#: comets/content/new_observation.php:56 deepsky/content/newObservation.php:770
 msgid "(hours-minutes)"
 msgstr "(heures-minutes)"
 
 #: comets/content/new_observation.php:72 common/content/change_account.php:313
 #: deepsky/content/change_session.php:241 deepsky/content/new_session.php:188
-#: deepsky/content/newObservation.php:765
+#: deepsky/content/newObservation.php:751
 msgid "Add new observing site"
 msgstr "Ajouter un nouveau site d'observation"
 
 #: comets/content/new_observation.php:91 common/content/new_instrument.php:56
 #: common/content/new_instrument.php:170 common/content/change_account.php:319
 #: common/content/view_instruments.php:17 common/menu/head.php:141
-#: deepsky/content/newObservation.php:791
+#: deepsky/content/newObservation.php:777
 msgid "Add instrument"
 msgstr "Ajouter un instrument"
 
@@ -623,7 +623,7 @@ msgstr "Clé de référence de magnitude"
 #: deepsky/content/new_object.php:201 deepsky/content/new_object.php:206
 #: deepsky/content/setup_objects_query.php:247
 #: deepsky/content/setup_objects_query.php:263
-#: deepsky/content/newObservation.php:565 lib/printatlas.php:2003
+#: deepsky/content/newObservation.php:551 lib/printatlas.php:2003
 #: lib/printatlas.php:2038 lib/observations.php:2620
 msgid "arcminutes"
 msgstr "arcminutes"
@@ -642,7 +642,7 @@ msgstr "degrés"
 
 #: comets/content/new_observation.php:168
 #: comets/content/new_observation.php:209
-#: deepsky/content/newObservation.php:804
+#: deepsky/content/newObservation.php:790
 msgid "Drawing"
 msgstr "Dessin"
 
@@ -684,7 +684,7 @@ msgstr "Statistiques"
 
 #: comets/control/validate_change_object.php:18
 #: comets/control/validate_observation.php:17
-#: comets/control/validate_change_observation.php:17 lib/observations.php:3126
+#: comets/control/validate_change_observation.php:17 lib/observations.php:3127
 msgid "You did not fill in a required field!"
 msgstr "Vous n'avez pas rempli un champ obligatoire!"
 
@@ -697,7 +697,7 @@ msgid "There is already an object with this (alternative) name!"
 msgstr "Il y a déjà un objet avec ce nom (alternatif)!"
 
 #: comets/control/validate_observation.php:22
-#: comets/control/validate_change_observation.php:21 lib/observations.php:3143
+#: comets/control/validate_change_observation.php:21 lib/observations.php:3144
 msgid "Please, only upload drawings smaller than 2mb!"
 msgstr ""
 "S'il vous plaît, seulement télécharger des dessins plus petits que 2MB!"
@@ -962,7 +962,7 @@ msgstr "Kutter"
 msgid "Maksutov"
 msgstr "Maksutov"
 
-#: common/content/new_lens.php:13 deepsky/content/newObservation.php:884
+#: common/content/new_lens.php:13 deepsky/content/newObservation.php:870
 msgid "Add a new lens"
 msgstr "Ajouter une nouvelle lentille"
 
@@ -1098,7 +1098,7 @@ msgid "NELM"
 msgstr "NELM"
 
 #: common/content/overview_locations.php:47
-#: deepsky/content/newObservation.php:865 lib/observations.php:2873
+#: deepsky/content/newObservation.php:851 lib/observations.php:2873
 #: lib/locations.php:339 lib/observations_new.php:32
 msgid "SQM"
 msgstr "SQM"
@@ -1127,7 +1127,7 @@ msgstr "Observations par mois"
 msgid "Object types observed"
 msgstr "Type d’objets observé"
 
-#: common/content/view_observer.php:165 common/content/view_observer.php:1346
+#: common/content/view_observer.php:165 common/content/view_observer.php:1356
 #: common/content/statistics.php:262 common/content/statistics.php:1061
 msgid "Observations per country"
 msgstr "Observations par pays"
@@ -1189,12 +1189,12 @@ msgstr "Nombre de dessins"
 msgid "Drawings last year"
 msgstr "Dessins l'an dernier"
 
-#: common/content/view_observer.php:545 common/content/view_observer.php:1401
+#: common/content/view_observer.php:545 common/content/view_observer.php:1411
 #: lib/accomplishments.php:458
 msgid "Messier objects"
 msgstr "Objets Messier"
 
-#: common/content/view_observer.php:554 common/content/view_observer.php:1449
+#: common/content/view_observer.php:554 common/content/view_observer.php:1459
 #: lib/accomplishments.php:460
 msgid "Caldwell objects"
 msgstr "Objets Caldwell"
@@ -1207,295 +1207,303 @@ msgstr "Objets H400"
 msgid "H II objects"
 msgstr "Objets H II"
 
-#: common/content/view_observer.php:597 lib/sessions.php:208 lib/lists.php:64
+#: common/content/view_observer.php:596
+msgid "All observations of "
+msgstr "Toutes les observations de "
+
+#: common/content/view_observer.php:600
+msgid "All drawings of "
+msgstr "Tous les dessins de "
+
+#: common/content/view_observer.php:607 lib/sessions.php:208 lib/lists.php:64
 #: lib/lists.php:386 lib/lists.php:499
 msgid "Send message to "
 msgstr "Envoyer un message à "
 
-#: common/content/view_observer.php:720 common/content/statistics.php:437
+#: common/content/view_observer.php:730 common/content/statistics.php:437
 msgid "Number of observations per year"
 msgstr "Nombre d’observations par an"
 
-#: common/content/view_observer.php:726 common/content/view_observer.php:875
-#: common/content/view_observer.php:1246 common/content/view_observer.php:1351
+#: common/content/view_observer.php:736 common/content/view_observer.php:885
+#: common/content/view_observer.php:1256 common/content/view_observer.php:1361
 #: common/content/statistics.php:441 common/content/statistics.php:605
 #: common/content/statistics.php:991 common/content/statistics.php:1064
 msgid "Source: "
 msgstr "Source: "
 
-#: common/content/view_observer.php:744 common/content/view_observer.php:900
+#: common/content/view_observer.php:754 common/content/view_observer.php:910
 #: common/content/statistics.php:459 common/content/statistics.php:630
 #: deepsky/content/top_objects.php:49 deepsky/content/top_objects.php:55
 #: deepsky/content/top_objects.php:65 deepsky/content/top_objects.php:71
 msgid "Observations"
 msgstr "Observations"
 
-#: common/content/view_observer.php:761 common/content/view_observer.php:795
+#: common/content/view_observer.php:771 common/content/view_observer.php:805
 #: common/content/statistics.php:476 common/content/statistics.php:510
 #: common/content/statistics.php:672 lib/setup/vars.php:342
 msgid "Comets"
 msgstr "Comètes"
 
-#: common/content/view_observer.php:767 common/content/view_observer.php:791
+#: common/content/view_observer.php:777 common/content/view_observer.php:801
 #: common/content/statistics.php:482 common/content/statistics.php:506
 #: common/content/statistics.php:668 lib/setup/vars.php:341
 msgid "Deepsky"
 msgstr "Ciel profond"
 
-#: common/content/view_observer.php:869 common/content/statistics.php:601
+#: common/content/view_observer.php:879 common/content/statistics.php:601
 msgid "Number of observations per month"
 msgstr "Nombre d’observations par mois"
 
-#: common/content/view_observer.php:1241 common/content/statistics.php:988
+#: common/content/view_observer.php:1251 common/content/statistics.php:988
 msgid "Object types seen"
 msgstr "Nombre de type d’objet vu"
 
-#: common/content/view_observer.php:1406 common/content/view_observer.php:1428
-#: common/content/view_observer.php:1452 common/content/view_observer.php:1473
-#: common/content/view_observer.php:1497 common/content/view_observer.php:1533
-#: common/content/view_observer.php:1569 common/content/view_observer.php:1604
+#: common/content/view_observer.php:1416 common/content/view_observer.php:1438
+#: common/content/view_observer.php:1462 common/content/view_observer.php:1483
+#: common/content/view_observer.php:1507 common/content/view_observer.php:1543
+#: common/content/view_observer.php:1579 common/content/view_observer.php:1614
 msgid "Bronze"
 msgstr "Bronze"
 
-#: common/content/view_observer.php:1407
+#: common/content/view_observer.php:1417
 msgid "Bronze Messier certificat! You observed 25 Messier objects!"
 msgstr "Certificat bronze Messier! Vous avez observé 25 objets Messier!"
 
-#: common/content/view_observer.php:1408
+#: common/content/view_observer.php:1418
 msgid "Observe at least 25 Messier objects to get this certificat!"
 msgstr "Observez au moins 25 objets Messier pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1411 common/content/view_observer.php:1434
-#: common/content/view_observer.php:1457 common/content/view_observer.php:1479
-#: common/content/view_observer.php:1503 common/content/view_observer.php:1539
-#: common/content/view_observer.php:1574 common/content/view_observer.php:1610
+#: common/content/view_observer.php:1421 common/content/view_observer.php:1444
+#: common/content/view_observer.php:1467 common/content/view_observer.php:1489
+#: common/content/view_observer.php:1513 common/content/view_observer.php:1549
+#: common/content/view_observer.php:1584 common/content/view_observer.php:1620
 msgid "Silver"
 msgstr "Argent"
 
-#: common/content/view_observer.php:1412
+#: common/content/view_observer.php:1422
 msgid "Silver Messier certificat! You observed 50 Messier objects!"
 msgstr "Certificat d’argent Messier! Vous avez observé 50 objets Messier!"
 
-#: common/content/view_observer.php:1413
+#: common/content/view_observer.php:1423
 msgid "Observe at least 50 Messier objects to get this certificat!"
 msgstr "Observez au moins 50 objets Messier pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1416 common/content/view_observer.php:1440
-#: common/content/view_observer.php:1462 common/content/view_observer.php:1485
-#: common/content/view_observer.php:1509 common/content/view_observer.php:1545
-#: common/content/view_observer.php:1580 common/content/view_observer.php:1616
+#: common/content/view_observer.php:1426 common/content/view_observer.php:1450
+#: common/content/view_observer.php:1472 common/content/view_observer.php:1495
+#: common/content/view_observer.php:1519 common/content/view_observer.php:1555
+#: common/content/view_observer.php:1590 common/content/view_observer.php:1626
 msgid "Gold"
 msgstr "Or"
 
-#: common/content/view_observer.php:1417
+#: common/content/view_observer.php:1427
 msgid "Golden Messier certificat! You observed all 110 Messier objects!"
 msgstr ""
 "Certificat d'or Messier! Vous avez observé tous les objets 110 Messier!"
 
-#: common/content/view_observer.php:1418
+#: common/content/view_observer.php:1428
 msgid "Observe all 110 Messier objects to get this certificat!"
 msgstr "Observez tous les 110 objets Messier pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1425
+#: common/content/view_observer.php:1435
 msgid "Drawings of Messier objects"
 msgstr "Dessins d'objets Messier"
 
-#: common/content/view_observer.php:1430
+#: common/content/view_observer.php:1440
 msgid "Bronze Messier drawing-certificat! You drew 25 Messier objects!"
 msgstr ""
 "Certificat de dessin bronze Messier! Vous avez dessiné 25 objets Messier!"
 
-#: common/content/view_observer.php:1431
+#: common/content/view_observer.php:1441
 msgid "Draw at least 25 different Messier objects to get this certificat!"
 msgstr ""
 "Dessinez au moins 25 objets Messier différents pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1436
+#: common/content/view_observer.php:1446
 msgid "Silver Messier drawing-certificat! You drew 50 Messier objects!"
 msgstr ""
 "Certificat dessin d’argent Messier! Vous avez dessiné 50 Messier Objects!"
 
-#: common/content/view_observer.php:1437
+#: common/content/view_observer.php:1447
 msgid "Draw at least 50 Messier objects to get this certificat!"
 msgstr "Dessinez au moins 50 objets Messier pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1442
+#: common/content/view_observer.php:1452
 msgid "Golden Messier drawing-certificat! You drew all 110 Messier objects!"
 msgstr ""
 "Certificat dessin d’or Messier! Vous avez dessiné tous les 110 objets "
 "Messier!"
 
-#: common/content/view_observer.php:1443
+#: common/content/view_observer.php:1453
 msgid "Draw all 110 Messier objects to get this certificat!"
 msgstr "Dessinez tous les 110 objets Messier pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1453
+#: common/content/view_observer.php:1463
 msgid "Bronze Caldwell certificat! You observed 25 Caldwell objects!"
 msgstr "Certificat de bronze Caldwell! Vous avez observé 25 objets Caldwell!"
 
-#: common/content/view_observer.php:1454
+#: common/content/view_observer.php:1464
 msgid "Observe at least 25 Caldwell objects to get this certificat!"
 msgstr "Observez au moins 25 objets Caldwell pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1458
+#: common/content/view_observer.php:1468
 msgid "Silver Caldwell certificat! You observed 50 Caldwell objects!"
 msgstr "Certificat d'argent Caldwell! Vous avez observé 50 objets Caldwell!"
 
-#: common/content/view_observer.php:1459
+#: common/content/view_observer.php:1469
 msgid "Observe at least 50 Caldwell objects to get this certificat!"
 msgstr "Observez au moins 50 objets Caldwell pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1463
+#: common/content/view_observer.php:1473
 msgid "Golden Caldwell certificat! You observed all 110 Caldwell objects!"
 msgstr ""
 "Certificat d'or Caldwell! Vous avez observé tous les 110 objets Caldwell!"
 
-#: common/content/view_observer.php:1464
+#: common/content/view_observer.php:1474
 msgid "Observe all 110 Caldwell objects to get this certificat!"
 msgstr "Observez tous les 110 objets Caldwell pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1470
+#: common/content/view_observer.php:1480
 msgid "Drawings of Caldwell objects"
 msgstr "Dessins d'objets Caldwell"
 
-#: common/content/view_observer.php:1475
+#: common/content/view_observer.php:1485
 msgid "Bronze Caldwell drawing-certificat! You drew 25 Caldwell objects!"
 msgstr ""
 "Certificat dessin bronze Caldwell! Vous avez dessiné 25 objets Caldwell!"
 
-#: common/content/view_observer.php:1476
+#: common/content/view_observer.php:1486
 msgid "Draw at least 25 Caldwell objects to get this certificat!"
 msgstr "Dessinez au moins 25 objets Caldwell pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1481
+#: common/content/view_observer.php:1491
 msgid "Silver Caldwell drawing-certificat! You drew 50 Caldwell objects!"
 msgstr ""
 "Certificat dessin d’argent Caldwell! Vous avez dessiné 50 objets Caldwell!"
 
-#: common/content/view_observer.php:1482
+#: common/content/view_observer.php:1492
 msgid "Draw at least 50 Caldwell objects to get this certificat!"
 msgstr "Dessinez au moins 50 objets Caldwell pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1487
+#: common/content/view_observer.php:1497
 msgid "Golden Caldwell drawing-certificat! You drew all 110 Caldwell objects!"
 msgstr ""
 "Certificat dessin d’or Caldwell! Vous avez dessiné tous les 110 objets "
 "Caldwell!"
 
-#: common/content/view_observer.php:1488
+#: common/content/view_observer.php:1498
 msgid "Draw all 110 Caldwell objects to get this certificat!"
 msgstr "Dessinez tous les 110 objets Caldwell pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1494 lib/accomplishments.php:462
+#: common/content/view_observer.php:1504 lib/accomplishments.php:462
 msgid "Herschel 400 objects"
 msgstr "Herschel 400 objets"
 
-#: common/content/view_observer.php:1499
+#: common/content/view_observer.php:1509
 msgid "Bronze Herschel 400 certificat! You observed 25 Herschel 400 objects!"
 msgstr ""
 "Certificat bronze Herschel 400! Vous avez observé 25 objets Herschel 400!"
 
-#: common/content/view_observer.php:1500
+#: common/content/view_observer.php:1510
 msgid "Observe at least 25 Herschel 400 objects to get this certificat!"
 msgstr "Observez au moins 25 objets Herschel 400 pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1505
+#: common/content/view_observer.php:1515
 msgid "Silver Herschel 400 certificat! You observed 50 Herschel 400 objects!"
 msgstr ""
 "Certificat d’argent Herschel 400! Vous avez observé 50 objets Herschel 400!"
 
-#: common/content/view_observer.php:1506
+#: common/content/view_observer.php:1516
 msgid "Observe at least 50 Herschel 400 objects to get this certificat!"
 msgstr "Observez au moins 50 objets Herschel 400 pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1511
+#: common/content/view_observer.php:1521
 msgid "Golden Herschel 400 certificat! You observed 100 Herschel 400 objects!"
 msgstr ""
 "Certificat d’or Herschel 400! Vous avez observé 100 objets Herschel 400!"
 
-#: common/content/view_observer.php:1512
+#: common/content/view_observer.php:1522
 msgid "Observe at least 100 Herschel 400 objects to get this certificat!"
 msgstr "Observez au moins 100 objets Herschel 400 pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1515 common/content/view_observer.php:1551
-#: common/content/view_observer.php:1586 common/content/view_observer.php:1622
+#: common/content/view_observer.php:1525 common/content/view_observer.php:1561
+#: common/content/view_observer.php:1596 common/content/view_observer.php:1632
 msgid "Diamond"
 msgstr "Diamant"
 
-#: common/content/view_observer.php:1517
+#: common/content/view_observer.php:1527
 msgid "Diamond Herschel 400 certificat! You observed 200 Herschel 400 objects!"
 msgstr ""
 "Certificat diamant Herschel 400! Vous avez observé 200 objets Herschel 400!"
 
-#: common/content/view_observer.php:1518
+#: common/content/view_observer.php:1528
 msgid "Observe at least 200 Herschel 400 objects to get this certificat!"
 msgstr "Observez au moins 200 objets Herschel 400 pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1521 common/content/view_observer.php:1557
-#: common/content/view_observer.php:1592 common/content/view_observer.php:1628
+#: common/content/view_observer.php:1531 common/content/view_observer.php:1567
+#: common/content/view_observer.php:1602 common/content/view_observer.php:1638
 msgid "Platinum"
 msgstr "Platine"
 
-#: common/content/view_observer.php:1523
+#: common/content/view_observer.php:1533
 msgid ""
 "Platinum Herschel 400 certificat! You observed all 400 Herschel 400 objects!"
 msgstr ""
 "Certificat platine Herschel 400! Vous avez observé tous les objets 400 "
 "Herschel 400!"
 
-#: common/content/view_observer.php:1524
+#: common/content/view_observer.php:1534
 msgid "Observe all 400 Herschel 400 objects to get this certificat!"
 msgstr "Observez tous les 400 objets Herschel 400 pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1530
+#: common/content/view_observer.php:1540
 msgid "Drawings of Herschel 400 objects"
 msgstr "Dessins d'objets Herschel 400"
 
-#: common/content/view_observer.php:1535
+#: common/content/view_observer.php:1545
 msgid ""
 "Bronze Herschel 400 drawing-certificat! You drew 25 Herschel 400 objects!"
 msgstr ""
 "Certificat dessin bronze Herschel 400! Vous avez dessiné 25 objets Herschel "
 "400!"
 
-#: common/content/view_observer.php:1536
+#: common/content/view_observer.php:1546
 msgid "Draw at least 25 Herschel 400 objects to get this certificat!"
 msgstr "Dessinez au moins 25 objets Herschel 400 pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1541
+#: common/content/view_observer.php:1551
 msgid ""
 "Silver Herschel 400 drawing-certificat! You drew 50 Herschel 400 objects!"
 msgstr ""
 "Certificat dessin d’argent Herschel 400! Vous avez dessiné 50 Herschel 400 "
 "objets!"
 
-#: common/content/view_observer.php:1542
+#: common/content/view_observer.php:1552
 msgid "Draw at least 50 Herschel 400 objects to get this certificat!"
 msgstr "Dessinez au moins 50 objets Herschel 400 pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1547
+#: common/content/view_observer.php:1557
 msgid ""
 "Golden Herschel 400 drawing-certificat! You drew 100 Herschel 400 objects!"
 msgstr ""
 "Certificat dessin d’or Herschel 400! Vous avez dessiné 100 Herschel 400 "
 "objets!"
 
-#: common/content/view_observer.php:1548
+#: common/content/view_observer.php:1558
 msgid "Draw at least 100 Herschel 400 objects to get this certificat!"
 msgstr "Dessinez au moins 100 objets Herschel 400 pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1553
+#: common/content/view_observer.php:1563
 msgid ""
 "Diamond Herschel 400 drawing-certificat! You drew 200 Herschel 400 objects!"
 msgstr ""
 "Certificat dessin diamant Herschel 400! Vous avez dessiné 200 Herschel 400 "
 "objets!"
 
-#: common/content/view_observer.php:1554
+#: common/content/view_observer.php:1564
 msgid "Draw at least 200 Herschel 400 objects to get this certificat!"
 msgstr "Dessinez au moins 200 objets Herschel 400 pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1559
+#: common/content/view_observer.php:1569
 msgid ""
 "Platinum Herschel 400 drawing-certificat! You drew all 400 Herschel 400 "
 "objects!"
@@ -1503,106 +1511,106 @@ msgstr ""
 "Certificat dessin platine Herschel 400! Vous avez dessiné tous les 400 "
 "objets Herschel 400!"
 
-#: common/content/view_observer.php:1560
+#: common/content/view_observer.php:1570
 msgid "Draw all 400 Herschel 400 objects to get this certificat!"
 msgstr "Dessinez tous les 400 objets Herschel 400 pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1566 lib/accomplishments.php:464
+#: common/content/view_observer.php:1576 lib/accomplishments.php:464
 msgid "Herschel II objects"
 msgstr "Objets Herschel II"
 
-#: common/content/view_observer.php:1570
+#: common/content/view_observer.php:1580
 msgid "Bronze Herschel II certificat! You observed 25 Herschel II objects!"
 msgstr ""
 "Certificat en bronze Herschel II! Vous avez observé 25 objets Herschel II!"
 
-#: common/content/view_observer.php:1571
+#: common/content/view_observer.php:1581
 msgid "Observe at least 25 Herschel II objects to get this certificat!"
 msgstr "Observez au moins 25 objets Herschel II pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1576
+#: common/content/view_observer.php:1586
 msgid "Silver Herschel II certificat! You observed 50 Herschel II objects!"
 msgstr ""
 "Certificat d’argent Herschel II! Vous avez observé 50 objets Herschel II!"
 
-#: common/content/view_observer.php:1577
+#: common/content/view_observer.php:1587
 msgid "Observe at least 50 Herschel II objects to get this certificat!"
 msgstr "Observez au moins 50 objets Herschel II pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1582
+#: common/content/view_observer.php:1592
 msgid "Golden Herschel II certificat! You observed 100 Herschel II objects!"
 msgstr "Certificat d’or Herschel II! Vous avez observé 100 objets Herschel II!"
 
-#: common/content/view_observer.php:1583
+#: common/content/view_observer.php:1593
 msgid "Observe at least 100 Herschel II objects to get this certificat!"
 msgstr "Observez au moins 100 objets Herschel II pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1588
+#: common/content/view_observer.php:1598
 msgid "Diamond Herschel II certificat! You observed 200 Herschel II objects!"
 msgstr ""
 "Certificat diamant Herschel II! Vous avez observé 200 objets Herschel II!"
 
-#: common/content/view_observer.php:1589
+#: common/content/view_observer.php:1599
 msgid "Observe at least 200 Herschel II objects to get this certificat!"
 msgstr "Observez au moins 200 objets Herschel II pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1594
+#: common/content/view_observer.php:1604
 msgid ""
 "Platinum Herschel II certificat! You observed all 400 Herschel II objects!"
 msgstr ""
 "Certificat de platine Herschel II! Vous avez observé tous les 400 objets "
 "Herschel II!"
 
-#: common/content/view_observer.php:1595
+#: common/content/view_observer.php:1605
 msgid "Observe all 400 Herschel II objects to get this certificat!"
 msgstr "Observez tous les 400 objets Herschel II pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1601
+#: common/content/view_observer.php:1611
 msgid "Drawings of Herschel II objects"
 msgstr "Dessins d'objets Herschel II"
 
-#: common/content/view_observer.php:1606
+#: common/content/view_observer.php:1616
 msgid "Bronze Herschel II drawing-certificat! You drew 25 Herschel II objects!"
 msgstr ""
 "Certificat dessin bronze Herschel II! Vous avez dessiné 25 objets Herschel "
 "II!"
 
-#: common/content/view_observer.php:1607
+#: common/content/view_observer.php:1617
 msgid "Draw at least 25 Herschel II objects to get this certificat!"
 msgstr "Dessinez au moins 25 objets Herschel II pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1612
+#: common/content/view_observer.php:1622
 msgid "Silver Herschel II drawing-certificat! You drew 50 Herschel II objects!"
 msgstr ""
 "Certificat dessin d’argent Herschel II! Vous avez dessiné 50 Herschel II "
 "objets!"
 
-#: common/content/view_observer.php:1613
+#: common/content/view_observer.php:1623
 msgid "Draw at least 50 Herschel II objects to get this certificat!"
 msgstr "Dessinez au moins 50 objets Herschel II pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1618
+#: common/content/view_observer.php:1628
 msgid ""
 "Golden Herschel II drawing-certificat! You drew 100 Herschel II objects!"
 msgstr ""
 "Certificat dessin d’or Herschel II! Vous avez dessiné 100 Herschel II objets!"
 
-#: common/content/view_observer.php:1619
+#: common/content/view_observer.php:1629
 msgid "Draw at least 100 Herschel II objects to get this certificat!"
 msgstr "Dessinez au moins 100 objets Herschel II pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1624
+#: common/content/view_observer.php:1634
 msgid ""
 "Diamond Herschel II drawing-certificat! You drew 200 Herschel II objects!"
 msgstr ""
 "Certificat dessin diamant Herschel II! Vous avez dessiné 200 Herschel II "
 "objets!"
 
-#: common/content/view_observer.php:1625
+#: common/content/view_observer.php:1635
 msgid "Draw at least 200 Herschel II objects to get this certificat!"
 msgstr "Dessinez au moins 200 objets Herschel II pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1630
+#: common/content/view_observer.php:1640
 msgid ""
 "Platinum Herschel II drawing-certificat! You drew all 400 Herschel II "
 "objects!"
@@ -1610,67 +1618,67 @@ msgstr ""
 "Certificat dessin platine Herschel II! Vous avez dessiné tous les 400 objets "
 "Herschel II!"
 
-#: common/content/view_observer.php:1631
+#: common/content/view_observer.php:1641
 msgid "Draw all 400 Herschel II objects to get this certificat!"
 msgstr "Dessinez tous les 400 objets Herschel II pour obtenir ce certificat!"
 
-#: common/content/view_observer.php:1637
+#: common/content/view_observer.php:1647
 msgid "Total number of drawings"
 msgstr "Nombre total de dessins"
 
-#: common/content/view_observer.php:1684 lib/accomplishments.php:466
+#: common/content/view_observer.php:1694 lib/accomplishments.php:466
 msgid "Open clusters"
 msgstr "Amas ouverts"
 
-#: common/content/view_observer.php:1740
+#: common/content/view_observer.php:1750
 msgid "Drawings of open clusters"
 msgstr "Dessins d’amas ouverts"
 
-#: common/content/view_observer.php:1802 lib/accomplishments.php:468
+#: common/content/view_observer.php:1812 lib/accomplishments.php:468
 msgid "Globular clusters"
 msgstr "Amas globulaires"
 
-#: common/content/view_observer.php:1854
+#: common/content/view_observer.php:1864
 msgid "Drawings of globular clusters"
 msgstr "Dessins d’amas globulaires"
 
-#: common/content/view_observer.php:1911 lib/accomplishments.php:470
+#: common/content/view_observer.php:1921 lib/accomplishments.php:470
 msgid "Planetary Nebulae"
 msgstr "Nébuleuses planétaires"
 
-#: common/content/view_observer.php:1969
+#: common/content/view_observer.php:1979
 msgid "Drawings of planetary nebulae"
 msgstr "Dessins des nébuleuses planétaires"
 
-#: common/content/view_observer.php:2034 lib/accomplishments.php:472
+#: common/content/view_observer.php:2044 lib/accomplishments.php:472
 msgid "Galaxies"
 msgstr "Galaxies"
 
-#: common/content/view_observer.php:2080
+#: common/content/view_observer.php:2090
 msgid "Drawings of galaxies"
 msgstr "Dessins de galaxies"
 
-#: common/content/view_observer.php:2127 lib/accomplishments.php:474
+#: common/content/view_observer.php:2137 lib/accomplishments.php:474
 msgid "Nebulae"
 msgstr "Nébuleuses"
 
-#: common/content/view_observer.php:2183
+#: common/content/view_observer.php:2193
 msgid "Drawings of nebulae"
 msgstr "Dessins de nébuleuses"
 
-#: common/content/view_observer.php:2288
+#: common/content/view_observer.php:2298
 msgid "Drawings of different objects"
 msgstr "Dessins d'objets différents"
 
-#: common/content/view_observer.php:2335
+#: common/content/view_observer.php:2345
 msgid "Total comet observations"
 msgstr "Total observations de comètes"
 
-#: common/content/view_observer.php:2381
+#: common/content/view_observer.php:2391
 msgid "Different comets"
 msgstr "Différentes comètes"
 
-#: common/content/view_observer.php:2428
+#: common/content/view_observer.php:2438
 msgid "Drawings of comets"
 msgstr "Dessins de comètes"
 
@@ -2054,7 +2062,7 @@ msgstr "Télécharger"
 msgid "Select country"
 msgstr "Choisissez le pays"
 
-#: common/content/new_eyepiece.php:24 deepsky/content/newObservation.php:874
+#: common/content/new_eyepiece.php:24 deepsky/content/newObservation.php:860
 msgid "Add a new eyepiece"
 msgstr "Ajouter un nouvel oculaire"
 
@@ -2424,7 +2432,7 @@ msgid "Sky Quality Meter (SQM) value"
 msgstr "Valeur de Sky Quality Meter (SQM)"
 
 #: common/content/change_site.php:106 common/content/new_location.php:76
-#: deepsky/content/newObservation.php:865 lib/locations.php:340
+#: lib/locations.php:340
 msgid "Bortle Scale"
 msgstr "Échelle Bortle"
 
@@ -2433,47 +2441,38 @@ msgid "Use value from lightpollutionmap.info"
 msgstr "Utiliser la valeur de lightpollutionmap.info"
 
 #: common/content/change_site.php:136 common/content/new_location.php:103
-#: deepsky/content/newObservation.php:417
 msgid "Excellent dark-sky site"
 msgstr "Ciel noir excellent"
 
 #: common/content/change_site.php:137 common/content/new_location.php:104
-#: deepsky/content/newObservation.php:418
 msgid "Typical truly dark site"
 msgstr "Ciel noir typique"
 
 #: common/content/change_site.php:138 common/content/new_location.php:105
-#: deepsky/content/newObservation.php:419
 msgid "Rural sky"
 msgstr "Ciel rural"
 
 #: common/content/change_site.php:139 common/content/new_location.php:106
-#: deepsky/content/newObservation.php:420
 msgid "Rural/suburban transition"
 msgstr "Transition rural/périurbain"
 
 #: common/content/change_site.php:140 common/content/new_location.php:107
-#: deepsky/content/newObservation.php:421
 msgid "Suburban sky"
 msgstr "Ciel de banlieue"
 
 #: common/content/change_site.php:141 common/content/new_location.php:108
-#: deepsky/content/newObservation.php:422
 msgid "Bright suburban sky"
 msgstr "Ciel de banlieue éclairée"
 
 #: common/content/change_site.php:142 common/content/new_location.php:109
-#: deepsky/content/newObservation.php:423
 msgid "Suburban/urban transition"
 msgstr "Transition banlieue/ville"
 
 #: common/content/change_site.php:143 common/content/new_location.php:110
-#: deepsky/content/newObservation.php:424
 msgid "City sky"
 msgstr "Ciel urbain"
 
 #: common/content/change_site.php:144 common/content/new_location.php:111
-#: deepsky/content/newObservation.php:425
 msgid "Inner-city sky"
 msgstr "Ciel de centre-ville"
 
@@ -2934,8 +2933,8 @@ msgstr "Mes lentilles"
 msgid "My locations"
 msgstr "Mes locations"
 
-#: common/menu/head.php:218 deepsky/content/newObservation.php:211
-#: deepsky/content/newObservation.php:1045 deepsky/menu/quickpick.php:32
+#: common/menu/head.php:218 deepsky/content/newObservation.php:210
+#: deepsky/content/newObservation.php:1010 deepsky/menu/quickpick.php:32
 msgid "New Observation"
 msgstr "Nouvelle observation"
 
@@ -3021,7 +3020,7 @@ msgstr ""
 #: deepsky/content/new_object.php:202 deepsky/content/new_object.php:207
 #: deepsky/content/setup_objects_query.php:248
 #: deepsky/content/setup_objects_query.php:264
-#: deepsky/content/newObservation.php:568 lib/observations.php:2627
+#: deepsky/content/newObservation.php:554 lib/observations.php:2627
 msgid "arcseconds"
 msgstr "arcsecondes"
 
@@ -4679,176 +4678,176 @@ msgstr "Selectionez une des sessions ajoutées par d’autres observateurs"
 msgid "Add a new session"
 msgstr "Ajouter une nouvelle session"
 
-#: deepsky/content/newObservation.php:222
+#: deepsky/content/newObservation.php:221
 msgid "Change the observation details "
 msgstr "Modifier les détails de l'observation "
 
-#: deepsky/content/newObservation.php:230
+#: deepsky/content/newObservation.php:229
 msgid "Enter observation details "
 msgstr "Entrez les détails de l'observation "
 
-#: deepsky/content/newObservation.php:575 lib/observations.php:2634
+#: deepsky/content/newObservation.php:561 lib/observations.php:2634
 msgid "Stellar"
 msgstr "Stellaire"
 
-#: deepsky/content/newObservation.php:580 lib/observations.php:2637
+#: deepsky/content/newObservation.php:566 lib/observations.php:2637
 msgid "Extended"
 msgstr "Étendu"
 
-#: deepsky/content/newObservation.php:583 lib/observations.php:2643
+#: deepsky/content/newObservation.php:569 lib/observations.php:2643
 msgid "Mottled"
 msgstr "Tachetée"
 
-#: deepsky/content/newObservation.php:617 lib/observations.php:2640
+#: deepsky/content/newObservation.php:603 lib/observations.php:2640
 msgid "Resolved"
 msgstr "Résolu"
 
-#: deepsky/content/newObservation.php:619 lib/observations.php:2685
+#: deepsky/content/newObservation.php:605 lib/observations.php:2685
 msgid "Unusual Shape"
 msgstr "Forme inhabituelle"
 
-#: deepsky/content/newObservation.php:621 lib/observations.php:2688
+#: deepsky/content/newObservation.php:607 lib/observations.php:2688
 msgid "Partly unresolved"
 msgstr "Partiellement non résolue"
 
-#: deepsky/content/newObservation.php:623 lib/observations.php:2691
+#: deepsky/content/newObservation.php:609 lib/observations.php:2691
 msgid "Color contrasts"
 msgstr "Contrastes de couleurs"
 
-#: deepsky/content/newObservation.php:625
+#: deepsky/content/newObservation.php:611
 msgid "https://github.com/DeepskyLog/DeepskyLog/wiki/Open-Cluster-types"
 msgstr "https://github.com/DeepskyLog/DeepskyLog/wiki/Open-Cluster-types"
 
-#: deepsky/content/newObservation.php:627
+#: deepsky/content/newObservation.php:613
 msgid "More information"
 msgstr "Plus d'informations"
 
-#: deepsky/content/newObservation.php:628 lib/observations.php:2925
+#: deepsky/content/newObservation.php:614 lib/observations.php:2925
 #: lib/observations.php:2941 lib/observations.php:2954
 #: lib/observations_new.php:73
 msgid "Cluster type"
 msgstr "Type de cluster"
 
-#: deepsky/content/newObservation.php:687 lib/observations.php:2694
+#: deepsky/content/newObservation.php:673 lib/observations.php:2694
 msgid "Equal Brightness"
 msgstr "Luminosité égale"
 
-#: deepsky/content/newObservation.php:689 lib/observations.php:2697
+#: deepsky/content/newObservation.php:675 lib/observations.php:2697
 msgid "in nice field"
 msgstr "dans un champ attractif"
 
-#: deepsky/content/newObservation.php:691
+#: deepsky/content/newObservation.php:677
 msgid "component 1"
 msgstr "component 1"
 
-#: deepsky/content/newObservation.php:702
-#: deepsky/content/newObservation.php:737 lib/observations.php:2646
+#: deepsky/content/newObservation.php:688
+#: deepsky/content/newObservation.php:723 lib/observations.php:2646
 #: lib/observations.php:2664
 msgid "white"
 msgstr "blanc"
 
-#: deepsky/content/newObservation.php:706
-#: deepsky/content/newObservation.php:741 lib/observations.php:2649
+#: deepsky/content/newObservation.php:692
+#: deepsky/content/newObservation.php:727 lib/observations.php:2649
 #: lib/observations.php:2667
 msgid "red"
 msgstr "rouge"
 
-#: deepsky/content/newObservation.php:710
-#: deepsky/content/newObservation.php:745 lib/observations.php:2652
+#: deepsky/content/newObservation.php:696
+#: deepsky/content/newObservation.php:731 lib/observations.php:2652
 #: lib/observations.php:2670
 msgid "orange"
 msgstr "orange"
 
-#: deepsky/content/newObservation.php:714
-#: deepsky/content/newObservation.php:749 lib/observations.php:2655
+#: deepsky/content/newObservation.php:700
+#: deepsky/content/newObservation.php:735 lib/observations.php:2655
 #: lib/observations.php:2673
 msgid "yellow"
 msgstr "jaune"
 
-#: deepsky/content/newObservation.php:718
-#: deepsky/content/newObservation.php:753 lib/observations.php:2658
+#: deepsky/content/newObservation.php:704
+#: deepsky/content/newObservation.php:739 lib/observations.php:2658
 #: lib/observations.php:2676
 msgid "green"
 msgstr "vert"
 
-#: deepsky/content/newObservation.php:722
-#: deepsky/content/newObservation.php:757 lib/observations.php:2661
+#: deepsky/content/newObservation.php:708
+#: deepsky/content/newObservation.php:743 lib/observations.php:2661
 #: lib/observations.php:2679
 msgid "blue"
 msgstr "bleu"
 
-#: deepsky/content/newObservation.php:725
+#: deepsky/content/newObservation.php:711
 msgid "component 2"
 msgstr "component 2"
 
-#: deepsky/content/newObservation.php:850
+#: deepsky/content/newObservation.php:836
 msgid "Language"
 msgstr "Langue"
 
-#: deepsky/content/newObservation.php:857 lib/observations.php:2878
+#: deepsky/content/newObservation.php:843 lib/observations.php:2878
 #: lib/observations_new.php:34 lib/util.php:3881
 msgid "Seeing"
 msgstr "Seeing"
 
-#: deepsky/content/newObservation.php:864 lib/observations.php:2872
+#: deepsky/content/newObservation.php:850 lib/observations.php:2872
 #: lib/observations_new.php:32 lib/util.php:3883
 msgid "Limiting magnitude"
 msgstr "Magnitude limite"
 
-#: deepsky/content/newObservation.php:875 lib/observations.php:2885
+#: deepsky/content/newObservation.php:861 lib/observations.php:2885
 #: lib/observations_new.php:63 lib/util.php:3889
 msgid "Eyepiece"
 msgstr "Oculaire"
 
-#: deepsky/content/newObservation.php:885 lib/observations.php:2905
+#: deepsky/content/newObservation.php:871 lib/observations.php:2905
 #: lib/observations_new.php:53 lib/util.php:3897
 msgid "Lens"
 msgstr "Lentille"
 
-#: deepsky/content/newObservation.php:894
+#: deepsky/content/newObservation.php:880
 msgid "Add a new filter"
 msgstr "Ajouter un nouveau filtre"
 
-#: deepsky/content/newObservation.php:895 lib/observations.php:2896
+#: deepsky/content/newObservation.php:881 lib/observations.php:2896
 #: lib/observations_new.php:45 lib/util.php:3885
 msgid "Filter"
 msgstr "Filtre"
 
-#: deepsky/content/newObservation.php:903
+#: deepsky/content/newObservation.php:889
 msgid "Magnification used"
 msgstr "Grossissement utilisé"
 
-#: deepsky/content/newObservation.php:918
-#: deepsky/content/newObservation.php:932 lib/observations.php:2918
+#: deepsky/content/newObservation.php:904
+#: deepsky/content/newObservation.php:918 lib/observations.php:2918
 #: lib/observations.php:2934 lib/observations.php:2948
 #: lib/observations_new.php:77 lib/util.php:3878
 msgid "Visibility"
 msgstr "Visibilité"
 
-#: deepsky/content/newObservation.php:925
-#: deepsky/content/newObservation.php:939 lib/observations.php:2923
+#: deepsky/content/newObservation.php:911
+#: deepsky/content/newObservation.php:925 lib/observations.php:2923
 #: lib/observations.php:2939 lib/observations.php:2952
 #: lib/observations_new.php:71
 msgid "Estimated diameter"
 msgstr "Diamètre estimé"
 
-#: deepsky/content/newObservation.php:1032
+#: deepsky/content/newObservation.php:997
 msgid "Search the object in the database"
 msgstr "Rechercher l'objet dans la base de données"
 
-#: deepsky/content/newObservation.php:1034
+#: deepsky/content/newObservation.php:999
 msgid "import observations from a CSV file"
 msgstr "importer des observations à partir d'un fichier CSV"
 
-#: deepsky/content/newObservation.php:1035
+#: deepsky/content/newObservation.php:1000
 msgid " or "
 msgstr " ou "
 
-#: deepsky/content/newObservation.php:1037
+#: deepsky/content/newObservation.php:1002
 msgid "import observations from an <OAL> (XML) file"
 msgstr "importation d'observations à partir d'un fichier <OAL> (XML)"
 
-#: deepsky/content/newObservation.php:1056
+#: deepsky/content/newObservation.php:1021
 msgid "Search object"
 msgstr "Cherchez l’objet"
 
@@ -5703,15 +5702,15 @@ msgstr "L'observation a été supprimée"
 msgid "You need to be logged in to validate an observation."
 msgstr "Vous devez être connecté pour valider une observation."
 
-#: lib/observations.php:3151
+#: lib/observations.php:3152
 msgid "You filled in an invalid date!"
 msgstr "Vous avez rempli une date invalide!"
 
-#: lib/observations.php:3154
+#: lib/observations.php:3155
 msgid "You filled in a future date!"
 msgstr "Tu as rempli un futur rencard!"
 
-#: lib/observations.php:3161
+#: lib/observations.php:3162
 msgid "You filled in an invalid time!"
 msgstr "Vous avez rempli un temps invalide!"
 
