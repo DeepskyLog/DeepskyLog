@@ -588,9 +588,19 @@ function viewObserver()
 
     echo "</table>";
 
+    echo "<br />";
+    echo "<a class=\"btn btn-success\" href=\"" . $baseURL 
+        . "index.php?indexAction=result_selected_observations&amp;observer=" 
+        . $user . "\">";
+    echo "<span class=\"glyphicon glyphicon-eye-open\"></span> " 
+        . _('All observations of ') . $firstname . "</a>&nbsp;";
+    echo "<a class=\"btn btn-success\" href=\"" . $baseURL 
+        . "index.php?indexAction=show_drawings&amp;user=" . $user . "\">";
+    echo "<span class=\"glyphicon glyphicon-pencil\"></span> " 
+        . _('All drawings of ') . $firstname . "</a>&nbsp;";
+
     if ($loggedUser != "") {
         if ($user != $loggedUser) {
-            echo "<br />";
             echo "<a class=\"btn btn-primary\" href=\"" . $baseURL 
                 . "index.php?indexAction=new_message&amp;receiver=" . $user . "\">";
             echo "<span class=\"glyphicon glyphicon-envelope\"></span> " 
