@@ -62,7 +62,7 @@ function newObservation()
             });
             </script>';
 
-    // Function to convert between bortle, sqm and limiting magnitude
+    // Function to convert between sqm and limiting magnitude
     echo '<script src="' . $baseURL 
         . 'lib/javascript/sqm.js" type="text/javascript"></script>';
     
@@ -410,19 +410,6 @@ function newObservation()
             . "  name=\"sqm\" size=\"4\"  value=\"" 
             . ($theSQM ? sprintf("%2.1f", $theSQM) : '') 
             . "\" />";
-
-        $contentBortle =  '<select id="bortle" name="bortle">
-                <option></option>
-                <option value="1">1 - ' . _("Excellent dark-sky site") . '</option>
-                <option value="2">2 - ' . _("Typical truly dark site") . '</option>
-                <option value="3">3 - ' . _("Rural sky") . '</option>
-                <option value="4">4 - ' . _("Rural/suburban transition") . '</option>
-                <option value="5">5 - ' . _("Suburban sky") . '</option>
-                <option value="6">6 - ' . _("Bright suburban sky") . '</option>
-                <option value="7">7 - ' . _("Suburban/urban transition") . '</option>
-                <option value="8">8 - ' . _("City sky") . '</option>
-                <option value="9">9 - ' . _("Inner-city sky") . '</option>
-              </select>';
     
         // Seeing ============================================================
         $theSeeing = (($observationid) 
@@ -861,9 +848,9 @@ function newObservation()
 
         echo "<div class=\"form-group\">
                    <label>" . _("Limiting magnitude") . " / " 
-            . _("SQM") . " / " . _("Bortle Scale") . "</label>";
+            . _("SQM") . "</label>";
         echo "<div class=\"form-inline\">";
-        echo $contentLM . " / " . $contentSQM . " / " . $contentBortle;
+        echo $contentLM . " / " . $contentSQM;
         echo "</div>";
         echo "</div>";
 
@@ -979,21 +966,6 @@ function newObservation()
         $objObject->showObject($object);
 
         echo '<script type="text/javascript">
-        var bortleChange = 1;
-        // Javascript to convert from bortle to limiting magnitude and sqm
-        $(document).ready(function() {  
-            $("#bortle").change(function(){
-                bortle = $(this).find("option:selected").attr("value");
-
-                if (bortleChange == 1) {
-                    $("#lm").val("");
-                    $("#sqm").val("");
-                } else {
-                    bortleChange = 1;
-                }
-            });
-        });
-
         $("#lm").on("keyup change", function(event) {
             lm = event.target.value;
             if (lm < 0) {
@@ -1002,11 +974,9 @@ function newObservation()
             }
             sqm = lmToSqm(lm);
             $("#sqm").val("");
-            bortleChange = 0;
-            $("#bortle").val("").change();
         });
 
-        // Javascript to convert from sqm to limiting magnitude and bortle
+        // Javascript to convert from sqm to limiting magnitude
         $("#sqm").on("keyup change", function(event) {
             sqm = event.target.value;
 
@@ -1017,13 +987,9 @@ function newObservation()
 
             lm = sqmToLm(sqm);
             $("#lm").val("");
-
-            bortleChange = 0;
-            $("#bortle").val("").change();
         });
 
         </script>';
-    
     } else {
         // no object found or not pushed on search button yet
         echo "<h4>" . _("New observation") . "</h4>";
