@@ -47,6 +47,8 @@ function head() {
 	echo "<link href=\"" . $baseURL . "styles/deepskylog5030.css\" rel=\"stylesheet\" type=\"text/css\" />";
 	// Load the needed javascript file for bootstrap-fileinput
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/fileinput.min.js\"></script>";
+	// Load the needed javascript file for lazyload
+	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/lazyload.min.js\"></script>";
 	// Load the needed javascript file for bootstrap-strengtmeter
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/strength-meter.min.js\"></script>";
 	// Load the needed css file for bootstrap-fileinput

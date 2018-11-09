@@ -18,3 +18,4 @@
 | bootstrap-maxlength | 1.7.0 | 27/05/2016 | | <https://github.com/mimo84/bootstrap-maxlength/releases> |
 | phpjs | 2.86 | ? | CHECK if we still need this. Remove if possible. | <https://github.com/kvz/locutus> ? |
 | pdf-php | 0.12.43 | 20/04/2018 | | <https://github.com/rospdf/pdf-php/releases> |
+| lazyload | 2.0.2-beta.2 | 25/10/2018 | | https://github.com/tuupola/jquery_lazyload/tree/2.x |
