@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 21:04+0200\n"
+"POT-Creation-Date: 2018-11-07 21:42+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -59,59 +59,59 @@ msgid "Create list"
 msgstr "Skapa lista"
 
 #: comets/content/selected_observations.php:40
-#: comets/content/selected_observations.php:201 common/menu/head.php:102
-#: deepsky/content/selected_observations.php:74
+#: comets/content/selected_observations.php:200 common/menu/head.php:104
+#: deepsky/content/selected_observations.php:72
 #: deepsky/content/view_object.php:410
 #, php-format
 msgid "Overview of all observations of %s"
 msgstr "Översikt över alla observationer av %s"
 
 #: comets/content/selected_observations.php:47
-#: comets/content/selected_observations.php:213
+#: comets/content/selected_observations.php:212
 #: comets/content/setup_observations_query.php:21
-#: comets/content/overview_observations.php:36
-#: comets/content/selected_observations2.php:183
+#: comets/content/overview_observations.php:35
+#: comets/content/selected_observations2.php:182
 #: comets/content/view_observation.php:38
 #: comets/content/setup_objects_query.php:21
 #: comets/content/new_observation.php:37
 #: deepsky/content/setup_observations_query.php:57
-#: deepsky/content/setup_objects_query.php:58 lib/observations.php:1993
-#: lib/observations_new.php:177 lib/observations_new.php:190
+#: deepsky/content/setup_objects_query.php:58 lib/observations.php:2054
+#: lib/observations_new.php:179 lib/observations_new.php:192
 msgid "Object name"
 msgstr "Objektnamn"
 
 #: comets/content/selected_observations.php:48
 #: comets/content/setup_observations_query.php:32
 #: comets/content/top_observers.php:20
-#: comets/content/overview_observations.php:37
-#: comets/content/selected_observations2.php:187
+#: comets/content/overview_observations.php:36
+#: comets/content/selected_observations2.php:186
 #: comets/content/view_observation.php:42
 #: common/content/overview_eyepieces.php:24
 #: common/content/overview_instruments.php:29
 #: common/content/overview_locations.php:48
 #: common/content/overview_lenses.php:26 common/content/overview_filters.php:26
-#: deepsky/content/setup_observations_query.php:269 lib/observers.php:139
-#: lib/printatlas.php:1492 lib/observations.php:1997 lib/observations.php:2655
-#: lib/observations_new.php:179 lib/observations_new.php:192
+#: deepsky/content/setup_observations_query.php:269 lib/observers.php:153
+#: lib/printatlas.php:1492 lib/observations.php:2058 lib/observations.php:2724
+#: lib/observations_new.php:181 lib/observations_new.php:194
 msgid "Observer"
 msgstr "Observatör"
 
 #: comets/content/selected_observations.php:49
-#: comets/content/selected_observations.php:214
-#: comets/content/overview_observations.php:38
-#: comets/content/selected_observations2.php:191
+#: comets/content/selected_observations.php:213
+#: comets/content/overview_observations.php:37
+#: comets/content/selected_observations2.php:190
 #: comets/content/view_observation.php:49 comets/content/new_observation.php:48
-#: deepsky/content/newObservation.php:773 deepsky/menu/date.php:116
-#: lib/observations.php:2001 lib/observations.php:2789 lib/objects.php:1646
-#: lib/observations_new.php:183 lib/observations_new.php:196
+#: deepsky/content/newObservation.php:759 deepsky/menu/date.php:116
+#: lib/observations.php:2062 lib/observations.php:2858 lib/objects.php:1646
+#: lib/observations_new.php:185 lib/observations_new.php:198
 #: lib/messages.php:291
 msgid "Date"
 msgstr "Datum"
 
 #: comets/content/selected_observations.php:50
-#: comets/content/selected_observations.php:215
-#: comets/content/overview_observations.php:39
-#: comets/content/selected_observations2.php:194
+#: comets/content/selected_observations.php:214
+#: comets/content/overview_observations.php:38
+#: comets/content/selected_observations2.php:193
 #: comets/content/view_observation.php:103
 #: comets/content/new_observation.php:125 deepsky/content/new_object.php:186
 #: lib/objects.php:1515 lib/util.php:2231
@@ -119,62 +119,62 @@ msgid "Magnitude"
 msgstr "Magnitud"
 
 #: comets/content/selected_observations.php:51
-#: comets/content/selected_observations.php:216
+#: comets/content/selected_observations.php:215
 #: comets/content/setup_observations_query.php:47
-#: comets/content/overview_observations.php:40
-#: comets/content/selected_observations2.php:197
+#: comets/content/overview_observations.php:39
+#: comets/content/selected_observations2.php:196
 #: comets/content/view_observation.php:75 comets/content/new_observation.php:77
-#: deepsky/content/newObservation.php:791 lib/observations.php:1999
-#: lib/observations.php:2685 lib/observations_new.php:38 lib/util.php:2189
+#: deepsky/content/newObservation.php:777 lib/observations.php:2060
+#: lib/observations.php:2754 lib/observations_new.php:40 lib/util.php:2189
 #: lib/util.php:3910
 msgid "Instrument"
 msgstr "Instrument"
 
 #: comets/content/selected_observations.php:52
-#: comets/content/selected_observations.php:217
-#: comets/content/overview_observations.php:41
-#: comets/content/selected_observations2.php:200
+#: comets/content/selected_observations.php:216
+#: comets/content/overview_observations.php:40
+#: comets/content/selected_observations2.php:199
 #: comets/content/view_observation.php:122
 #: comets/content/new_observation.php:147 lib/util.php:2257
 msgid "Coma"
 msgstr "Koma"
 
 #: comets/content/selected_observations.php:53
-#: comets/content/selected_observations.php:218
-#: comets/content/overview_observations.php:42
-#: comets/content/selected_observations2.php:203
+#: comets/content/selected_observations.php:217
+#: comets/content/overview_observations.php:41
+#: comets/content/selected_observations2.php:202
 msgid "DC"
 msgstr "Dc"
 
 #: comets/content/selected_observations.php:54
-#: comets/content/selected_observations.php:219
-#: comets/content/overview_observations.php:43
-#: comets/content/selected_observations2.php:206
+#: comets/content/selected_observations.php:218
+#: comets/content/overview_observations.php:42
+#: comets/content/selected_observations2.php:205
 msgid "Tail"
 msgstr "Svans"
 
 #: comets/content/selected_observations.php:117
 #: comets/content/selected_observations.php:156
-#: comets/content/selected_observations.php:269
-#: comets/content/overview_observations.php:78
-#: comets/content/overview_observations.php:139
-#: comets/content/selected_observations2.php:226
-#: comets/content/selected_observations2.php:272
+#: comets/content/selected_observations.php:268
+#: comets/content/overview_observations.php:77
+#: comets/content/overview_observations.php:138
+#: comets/content/selected_observations2.php:225
+#: comets/content/selected_observations2.php:271
 #: comets/content/view_observation.php:80 comets/content/new_observation.php:88
-#: common/content/view_observer.php:216 common/content/view_observer.php:335
-#: common/content/change_account.php:38 common/content/change_instrument.php:55
-#: lib/instruments.php:21 lib/instruments.php:120 lib/observations.php:2083
-#: lib/observations.php:2254 lib/observations.php:2265
-#: lib/observations.php:2498 lib/util.php:2185
+#: common/content/view_observer.php:249 common/content/view_observer.php:368
+#: common/content/change_account.php:38 common/content/change_instrument.php:60
+#: lib/instruments.php:99 lib/instruments.php:372 lib/observations.php:2144
+#: lib/observations.php:2319 lib/observations.php:2330
+#: lib/observations.php:2567 lib/util.php:2185
 msgid "Naked Eye"
 msgstr "Blotta ögat"
 
 #: comets/content/selected_observations.php:179
-#: comets/content/selected_observations.php:337
-#: comets/content/selected_observations2.php:338
-#: deepsky/content/selected_observations.php:130
+#: comets/content/selected_observations.php:336
+#: comets/content/selected_observations2.php:337
+#: deepsky/content/selected_observations.php:128
 #: deepsky/content/view_object.php:466 lib/objects.php:1952
-#: lib/observations_new.php:203
+#: lib/observations_new.php:205
 msgid "pdf"
 msgstr "pdf"
 
@@ -182,16 +182,16 @@ msgstr "pdf"
 msgid "No observations available"
 msgstr "Inga observationer tillgängliga"
 
-#: comets/content/selected_observations.php:327
-#: comets/content/overview_observations.php:160
-#: comets/content/selected_observations2.php:323
+#: comets/content/selected_observations.php:326
+#: comets/content/overview_observations.php:159
+#: comets/content/selected_observations2.php:322
 msgid "drawing"
 msgstr "ritning"
 
 #: comets/content/execute_query_objects.php:30
 #: comets/content/execute_query_objects.php:73
-#: comets/content/execute_query_objects.php:79 common/menu/head.php:89
-#: common/menu/head.php:97 common/menu/head.php:183 common/menu/head.php:212
+#: comets/content/execute_query_objects.php:79 common/menu/head.php:91
+#: common/menu/head.php:99 common/menu/head.php:185 common/menu/head.php:214
 #: deepsky/content/tolist.php:31 deepsky/content/selected_objects.php:29
 #: deepsky/content/selected_objects.php:63
 msgid "Overview selected objects"
@@ -210,8 +210,8 @@ msgstr "Översikt markerade objekt"
 #: deepsky/content/top_objects.php:70 deepsky/content/new_object.php:72
 #: deepsky/content/new_object.php:86 deepsky/content/new_object.php:95
 #: deepsky/content/change_session.php:137 deepsky/content/new_session.php:115
-#: deepsky/content/newObservation.php:1059 lib/observers.php:289
-#: lib/instruments.php:98 lib/filters.php:153 lib/lenses.php:58
+#: deepsky/content/newObservation.php:1024 lib/observers.php:303
+#: lib/instruments.php:326 lib/filters.php:153 lib/lenses.php:58
 #: lib/eyepieces.php:64 lib/sessions.php:315 lib/sessions.php:383
 #: lib/objects.php:1454 lib/objects.php:1817 lib/objects.php:1982
 #: lib/lists.php:243 lib/util.php:2465 lib/util.php:3870 lib/util.php:3954
@@ -228,15 +228,15 @@ msgstr "ICQ-namn"
 
 #: comets/content/execute_query_objects.php:38
 #: comets/content/overview_objects.php:29
-#: deepsky/content/selected_observations.php:43
-#: deepsky/content/selected_observations.php:141
+#: deepsky/content/selected_observations.php:41
+#: deepsky/content/selected_observations.php:139
 #: deepsky/content/setup_observations_query.php:36
 #: deepsky/content/dsatlas.php:43 deepsky/content/setup_objects_query.php:25
 #: deepsky/content/view_object.php:18 deepsky/content/view_object.php:23
 #: deepsky/content/view_object.php:28 deepsky/content/view_object.php:34
 #: deepsky/content/view_object.php:61 deepsky/content/view_object.php:73
 #: deepsky/content/view_object.php:89 lib/printatlas.php:1505
-#: lib/observations.php:2053 lib/objects.php:1837 lib/util.php:2481
+#: lib/observations.php:2114 lib/objects.php:1837 lib/util.php:2481
 msgid "Seen"
 msgstr "Sett"
 
@@ -249,13 +249,13 @@ msgstr "Tyvärr, hittade inga objekt!"
 msgid "You didn't specify any parameters to search on."
 msgstr "Du har inte angett några parametrar att söka på."
 
-#: comets/content/top_objects.php:14 common/menu/head.php:93
-#: common/menu/head.php:189 deepsky/content/top_objects.php:36
+#: comets/content/top_objects.php:14 common/menu/head.php:95
+#: common/menu/head.php:191 deepsky/content/top_objects.php:36
 msgid "Most popular objects"
 msgstr "Mest populära objekt"
 
 #: comets/content/top_objects.php:19 comets/content/top_observers.php:19
-#: common/content/view_observer.php:470 lib/observers.php:138
+#: common/content/view_observer.php:581 lib/observers.php:152
 msgid "Rank"
 msgstr "Rank"
 
@@ -266,8 +266,8 @@ msgid "Object"
 msgstr "Objekt"
 
 #: comets/content/top_objects.php:21 comets/content/top_observers.php:21
-#: common/content/view_observer.php:414 common/content/statistics.php:126
-#: lib/observers.php:140 lib/instruments.php:105 lib/filters.php:159
+#: common/content/view_observer.php:448 common/content/statistics.php:280
+#: lib/observers.php:154 lib/instruments.php:335 lib/filters.php:159
 #: lib/lenses.php:61 lib/eyepieces.php:69 lib/locations.php:345
 #: lib/objects.php:640
 msgid "Number of observations"
@@ -276,7 +276,7 @@ msgstr "Antal observationer"
 #: comets/content/setup_observations_query.php:16
 #: comets/content/setup_observations_query.php:17
 #: comets/content/setup_observations_query.php:175 comets/menu/search.php:20
-#: common/menu/head.php:91 common/menu/head.php:191 deepsky/content/main.php:69
+#: common/menu/head.php:93 common/menu/head.php:193 deepsky/content/main.php:69
 #: deepsky/content/main.php:72 deepsky/content/setup_observations_query.php:49
 msgid "Search observations"
 msgstr "Sök iakttagelser"
@@ -295,9 +295,9 @@ msgstr "Maximal instrument diameter"
 #: comets/content/view_observation.php:68 comets/content/new_observation.php:61
 #: common/content/overview_locations.php:40
 #: deepsky/content/setup_observations_query.php:394
-#: deepsky/content/newObservation.php:765 lib/observations.php:2791
+#: deepsky/content/newObservation.php:751 lib/observations.php:2860
 #: lib/sessions.php:318 lib/sessions.php:386 lib/locations.php:334
-#: lib/objects.php:1945 lib/observations_new.php:22 lib/util.php:2171
+#: lib/objects.php:1945 lib/observations_new.php:24 lib/util.php:2171
 #: lib/util.php:3914
 msgid "Location"
 msgstr "Plats"
@@ -353,27 +353,30 @@ msgstr "Minsta svanslängd (bågminuter)"
 msgid "Maximum tail length (arcminutes)"
 msgstr "Maximal svanslängd (bågminuter)"
 
-#: comets/content/overview_objects.php:20 common/menu/head.php:179
+#: comets/content/overview_objects.php:20 common/menu/head.php:181
 msgid "Overview all objects"
 msgstr "Översikt alla objekt"
 
-#: comets/content/top_observers.php:14 common/menu/head.php:95
-#: common/menu/head.php:187 deepsky/content/top_observers.php:16
+#: comets/content/top_observers.php:14 common/menu/head.php:97
+#: common/menu/head.php:189 deepsky/content/top_observers.php:16
 msgid "Most active observers"
 msgstr "Mest aktiva observatörer"
 
-#: comets/content/top_observers.php:22 common/content/view_observer.php:422
-#: common/content/statistics.php:134 lib/observers.php:142
+#: comets/content/top_observers.php:22 common/content/view_observer.php:469
+#: common/content/statistics.php:289 lib/observers.php:156
 msgid "Observations last year"
 msgstr "Iakttagelser förra året"
 
-#: comets/content/top_observers.php:23 common/content/view_observer.php:430
-#: common/content/view_observer.php:2098 common/content/statistics.php:142
-#: lib/observers.php:156
+#: comets/content/top_observers.php:23 common/content/view_observer.php:526
+#: common/content/view_observer.php:2252 common/content/statistics.php:316
+#: lib/observers.php:170
 msgid "Different objects"
 msgstr "Olika objekt"
 
-#: comets/content/top_observers.php:47 lib/observers.php:165
+#: comets/content/top_observers.php:47 common/content/view_observer.php:440
+#: common/content/view_observer.php:765 common/content/view_observer.php:797
+#: common/content/statistics.php:272 common/content/statistics.php:470
+#: common/content/statistics.php:502 lib/observers.php:179
 msgid "Total"
 msgstr "Totalt"
 
@@ -388,80 +391,80 @@ msgstr "Totalt"
 #: common/menu/location.php:9 common/menu/instrument.php:8
 #: common/menu/admin.php:7 deepsky/content/manage_objects_csv.php:9
 #: deepsky/menu/change.php:9 deepsky/control/manage_csv_objects.php:9
-#: deepsky/control/admincheckobjects.php:7 lib/observers.php:433
-#: lib/observers.php:447
+#: deepsky/control/admincheckobjects.php:7 lib/observers.php:447
+#: lib/observers.php:461
 msgid ""
 "You need to be logged in as an administrator to execute these operations."
 msgstr ""
 "Du måste vara inloggad som administratör för att kunna utföra dessa åtgärder."
 
-#: comets/content/new_object.php:15 common/menu/head.php:71
-#: common/menu/head.php:175 deepsky/content/new_object.php:63
+#: comets/content/new_object.php:15 common/menu/head.php:73
+#: common/menu/head.php:177 deepsky/content/new_object.php:63
 msgid "Add new object"
 msgstr "Lägg till nytt objekt"
 
 #: comets/content/new_object.php:16 comets/content/new_object.php:24
 #: comets/content/new_observation.php:24 comets/content/new_observation.php:225
 #: deepsky/content/main.php:125 deepsky/content/main.php:128
-#: deepsky/content/newObservation.php:229
-#: deepsky/content/newObservation.php:963
+#: deepsky/content/newObservation.php:228
+#: deepsky/content/newObservation.php:949
 msgid "Add observation"
 msgstr "Lägg till observation"
 
-#: comets/content/overview_observations.php:27 common/menu/head.php:163
-#: common/menu/head.php:181
+#: comets/content/overview_observations.php:26 common/menu/head.php:165
+#: common/menu/head.php:183
 msgid "Overview all observations"
 msgstr "Översikt alla observationer"
 
-#: comets/content/selected_observations2.php:175 common/menu/head.php:104
-#: common/menu/head.php:185 common/menu/head.php:214
-#: deepsky/content/selected_observations.php:76
+#: comets/content/selected_observations2.php:174 common/menu/head.php:106
+#: common/menu/head.php:187 common/menu/head.php:216
+#: deepsky/content/selected_observations.php:74
 #: deepsky/content/view_object.php:412
 msgid "Overview selected observations"
 msgstr "Översikt valda observationer"
 
-#: comets/content/selected_observations2.php:339
+#: comets/content/selected_observations2.php:338
 msgid "ICQ"
 msgstr "ICQ"
 
-#: comets/content/selected_observations2.php:342
-#: deepsky/content/selected_observations.php:63
+#: comets/content/selected_observations2.php:341
+#: deepsky/content/selected_observations.php:61
 #: deepsky/content/view_object.php:399 lib/datatables_setup.php:13
 #: lib/datatables_setup.php:14
 msgid "Sorry, no observations found!"
 msgstr "Tyvärr, inga observationer hittades!"
 
-#: comets/content/selected_observations2.php:344
-#: comets/content/selected_observations2.php:348
+#: comets/content/selected_observations2.php:343
+#: comets/content/selected_observations2.php:347
 #: deepsky/content/selected_objects.php:65
 msgid "Perform another search"
 msgstr "Utföra en annan sökning"
 
-#: comets/content/selected_observations2.php:347
+#: comets/content/selected_observations2.php:346
 msgid "You didn't specify any queries to search on!"
 msgstr "Du har inte angett några frågor att söka på!"
 
-#: comets/content/selected_observations2.php:349
+#: comets/content/selected_observations2.php:348
 msgid "or"
 msgstr "eller"
 
-#: comets/content/selected_observations2.php:350
+#: comets/content/selected_observations2.php:349
 msgid "View all observations"
 msgstr "Visa alla observationer"
 
-#: comets/content/view_observation.php:35 common/menu/head.php:77
-#: common/menu/head.php:167 common/menu/head.php:173
+#: comets/content/view_observation.php:35 common/menu/head.php:79
+#: common/menu/head.php:169 common/menu/head.php:175
 msgid "Observation details"
 msgstr "Information om observationer"
 
 #: comets/content/view_observation.php:55 comets/content/new_observation.php:54
-#: deepsky/content/newObservation.php:782 lib/observations.php:2520
+#: deepsky/content/newObservation.php:768 lib/observations.php:2589
 msgid "Time (local time)"
 msgstr "Tid (lokal tid)"
 
 #: comets/content/view_observation.php:58 comets/content/new_observation.php:52
-#: deepsky/content/newObservation.php:782 lib/observations.php:2523
-#: lib/observations_new.php:24
+#: deepsky/content/newObservation.php:768 lib/observations.php:2592
+#: lib/observations_new.php:26
 msgid "Time (UT)"
 msgstr "Tid (UT)"
 
@@ -498,7 +501,7 @@ msgstr "Positions vinkel"
 
 #: comets/content/view_observation.php:144
 #: comets/content/new_observation.php:218
-#: deepsky/content/newObservation.php:799 lib/printatlas.php:1931
+#: deepsky/content/newObservation.php:785 lib/printatlas.php:1931
 #: lib/printatlas.php:1938 lib/objects.php:1564 lib/objects.php:1569
 #: lib/util.php:2291 lib/util.php:3921 lib/util.php:4083
 msgid "Description"
@@ -506,12 +509,12 @@ msgstr "Beskrivning"
 
 #: comets/content/view_observation.php:166
 #: comets/content/new_observation.php:24 comets/content/new_observation.php:225
-#: deepsky/content/newObservation.php:221
-#: deepsky/content/newObservation.php:959 lib/observations.php:2967
+#: deepsky/content/newObservation.php:220
+#: deepsky/content/newObservation.php:945 lib/observations.php:3036
 msgid "Change observation"
 msgstr "Ändra observation"
 
-#: comets/content/view_observation.php:167 lib/observations.php:2971
+#: comets/content/view_observation.php:167 lib/observations.php:3040
 msgid "Delete observation"
 msgstr "Ta bort observation"
 
@@ -528,7 +531,7 @@ msgid "%s about this observation"
 msgstr "%s om denna iakttagelse"
 
 #: comets/content/setup_objects_query.php:16 comets/menu/search.php:23
-#: common/menu/head.php:87 common/menu/head.php:193 deepsky/content/main.php:81
+#: common/menu/head.php:89 common/menu/head.php:195 deepsky/content/main.php:81
 #: deepsky/content/main.php:84 deepsky/content/setup_objects_query.php:47
 msgid "Search objects"
 msgstr "Sök objekt"
@@ -551,14 +554,14 @@ msgstr "Ändra"
 msgid "Change comet"
 msgstr "Ändra komet"
 
-#: comets/content/view_object.php:49 common/menu/head.php:75
-#: common/menu/head.php:165 common/menu/head.php:177
-#: deepsky/content/selected_observations.php:43
-#: deepsky/content/selected_observations.php:141
+#: comets/content/view_object.php:49 common/menu/head.php:77
+#: common/menu/head.php:167 common/menu/head.php:179
+#: deepsky/content/selected_observations.php:41
+#: deepsky/content/selected_observations.php:139
 #: deepsky/content/view_observation.php:18 deepsky/content/view_object.php:22
 #: deepsky/content/view_object.php:23 deepsky/content/view_object.php:27
 #: deepsky/content/view_object.php:28 deepsky/content/view_object.php:89
-#: deepsky/content/newObservation.php:976
+#: deepsky/content/newObservation.php:962
 msgid "Object details"
 msgstr "Objektdetaljer"
 
@@ -567,9 +570,9 @@ msgid "All observations"
 msgstr "Alla observationer"
 
 #: comets/content/view_object.php:76 comets/content/new_observation.php:23
-#: common/menu/head.php:73 common/menu/head.php:169
+#: common/menu/head.php:75 common/menu/head.php:171
 #: deepsky/content/view_observation.php:28
-#: deepsky/content/newObservation.php:1030
+#: deepsky/content/newObservation.php:995
 msgid "New observation"
 msgstr "Ny observation"
 
@@ -577,20 +580,20 @@ msgstr "Ny observation"
 msgid "(day-month-year)"
 msgstr "(dag-månad-år)"
 
-#: comets/content/new_observation.php:56 deepsky/content/newObservation.php:784
+#: comets/content/new_observation.php:56 deepsky/content/newObservation.php:770
 msgid "(hours-minutes)"
 msgstr "(timmar-minuter)"
 
 #: comets/content/new_observation.php:72 common/content/change_account.php:313
 #: deepsky/content/change_session.php:241 deepsky/content/new_session.php:188
-#: deepsky/content/newObservation.php:765
+#: deepsky/content/newObservation.php:751
 msgid "Add new observing site"
 msgstr "Lägg till ny observation webbplats"
 
 #: comets/content/new_observation.php:91 common/content/new_instrument.php:56
-#: common/content/new_instrument.php:158 common/content/change_account.php:319
-#: common/content/view_instruments.php:17 common/menu/head.php:139
-#: deepsky/content/newObservation.php:791
+#: common/content/new_instrument.php:170 common/content/change_account.php:319
+#: common/content/view_instruments.php:17 common/menu/head.php:141
+#: deepsky/content/newObservation.php:777
 msgid "Add instrument"
 msgstr "Lägg till instrument"
 
@@ -612,14 +615,14 @@ msgid "Magnitude reference key"
 msgstr "Referensnyckel för magnitud"
 
 #: comets/content/new_observation.php:149
-#: comets/content/new_observation.php:156 observations_json.php:167
+#: comets/content/new_observation.php:156 observations_json.php:177
 #: deepsky/content/setup_observations_query.php:233
 #: deepsky/content/setup_observations_query.php:259
 #: deepsky/content/new_object.php:201 deepsky/content/new_object.php:206
 #: deepsky/content/setup_objects_query.php:247
 #: deepsky/content/setup_objects_query.php:263
-#: deepsky/content/newObservation.php:565 lib/printatlas.php:2003
-#: lib/printatlas.php:2038 lib/observations.php:2551
+#: deepsky/content/newObservation.php:551 lib/printatlas.php:2003
+#: lib/printatlas.php:2038 lib/observations.php:2620
 msgid "arcminutes"
 msgstr "bågminuter"
 
@@ -637,7 +640,7 @@ msgstr "grader"
 
 #: comets/content/new_observation.php:168
 #: comets/content/new_observation.php:209
-#: deepsky/content/newObservation.php:804
+#: deepsky/content/newObservation.php:790
 msgid "Drawing"
 msgstr "Ritning"
 
@@ -651,11 +654,11 @@ msgstr "Du måste vara inloggad för att utföra dessa operationer."
 msgid "Observation"
 msgstr "Observation"
 
-#: comets/menu/search.php:14 deepsky/menu/search.php:20
+#: comets/menu/search.php:14 deepsky/menu/search.php:38
 msgid "View"
 msgstr "Visa"
 
-#: comets/menu/search.php:18 deepsky/menu/search.php:23
+#: comets/menu/search.php:18 deepsky/menu/search.php:45
 msgid "My observations"
 msgstr "Mina iakttagelser"
 
@@ -664,22 +667,22 @@ msgid "All objects"
 msgstr "Alla objekt"
 
 #: comets/menu/search.php:25 common/menu/admin.php:19
-#: deepsky/menu/search.php:37
+#: deepsky/menu/search.php:83
 msgid "Observers"
 msgstr "Observatörer"
 
-#: comets/menu/search.php:26 deepsky/menu/search.php:38
+#: comets/menu/search.php:26 deepsky/menu/search.php:85
 msgid "Popular objects"
 msgstr "Populära objekt"
 
-#: comets/menu/search.php:27 common/menu/head.php:111
-#: deepsky/menu/search.php:39
+#: comets/menu/search.php:27 common/menu/head.php:113
+#: deepsky/menu/search.php:88
 msgid "Statistics"
 msgstr "Statistik"
 
 #: comets/control/validate_change_object.php:18
 #: comets/control/validate_observation.php:17
-#: comets/control/validate_change_observation.php:17 lib/observations.php:3055
+#: comets/control/validate_change_observation.php:17 lib/observations.php:3127
 msgid "You did not fill in a required field!"
 msgstr "Du fyllde inte i ett obligatoriskt fält!"
 
@@ -692,80 +695,80 @@ msgid "There is already an object with this (alternative) name!"
 msgstr "Det finns redan ett objekt med detta (alternativa) namn!"
 
 #: comets/control/validate_observation.php:22
-#: comets/control/validate_change_observation.php:21 lib/observations.php:3072
+#: comets/control/validate_change_observation.php:21 lib/observations.php:3144
 msgid "Please, only upload drawings smaller than 2mb!"
 msgstr "Vänligen, bara ladda upp ritningar mindre än 2mb!"
 
-#: common/entryexit/instructions.php:463
+#: common/entryexit/instructions.php:464
 #: deepsky/content/setup_observations_query.php:19
 #: deepsky/content/setup_objects_query.php:12
 #, php-format
 msgid "No corresponding object found for %s"
 msgstr "Inget motsvarande objekt hittades för %s"
 
-#: common/entryexit/instructions.php:515
+#: common/entryexit/instructions.php:516
 msgid "List emptied: "
 msgstr "Lista tömd: "
 
-#: common/entryexit/instructions.php:523
+#: common/entryexit/instructions.php:524
 #, php-format
 msgid "The object %s is moved up in the list %s"
 msgstr "Objektet %s flyttas uppåt i listan %s"
 
-#: common/entryexit/instructions.php:535
+#: common/entryexit/instructions.php:536
 #, php-format
 msgid "The object %s is moved down in the list %s"
 msgstr "Objektet %s flyttas nedåt i listan %s"
 
-#: common/entryexit/instructions.php:557
+#: common/entryexit/instructions.php:558
 msgid "The objects have been removed from the list."
 msgstr "Objekten har tagits bort från listan."
 
-#: common/entryexit/instructions.php:565
+#: common/entryexit/instructions.php:566
 #, php-format
 msgid "Successfully deleted %s."
 msgstr "%s har tagits bort."
 
-#: common/entryexit/instructions.php:570 common/entryexit/instructions.php:620
+#: common/entryexit/instructions.php:571 common/entryexit/instructions.php:621
 #, php-format
 msgid "The list \"%s\" already exists."
 msgstr "Listan \"%s\" finns redan."
 
-#: common/entryexit/instructions.php:577
+#: common/entryexit/instructions.php:578
 #, php-format
 msgid "The list \"%s\" has been added."
 msgstr "Listan \"%s\" har lagts till."
 
-#: common/entryexit/instructions.php:627
+#: common/entryexit/instructions.php:628
 #, php-format
 msgid "The list is renamed in \"%s\"."
 msgstr "Listan har bytt namn till \" %s\"."
 
-#: common/entryexit/instructions.php:636 common/entryexit/instructions.php:642
+#: common/entryexit/instructions.php:637 common/entryexit/instructions.php:643
 msgid "List removed: "
 msgstr "Lista borttagen: "
 
-#: common/entryexit/instructions.php:663
+#: common/entryexit/instructions.php:664
 #, php-format
 msgid "The list \"%s\" is activated."
 msgstr "Listan \"%s\" är aktiverad."
 
-#: common/entryexit/instructions.php:672
+#: common/entryexit/instructions.php:673
 #, php-format
 msgid " The object %s is added to the list %s"
 msgstr " Objektet %s läggs till i listan %s"
 
-#: common/entryexit/instructions.php:678
+#: common/entryexit/instructions.php:679
 #, php-format
 msgid " The observation is added to the list %s"
 msgstr " Observationen läggs till i listan %s"
 
-#: common/entryexit/instructions.php:683
+#: common/entryexit/instructions.php:684
 #, php-format
 msgid " The object %s is removed from the list %s"
 msgstr " Objektet %s tas bort från listan %s"
 
-#: common/entryexit/instructions.php:694 common/entryexit/instructions.php:703
+#: common/entryexit/instructions.php:695 common/entryexit/instructions.php:704
 #, php-format
 msgid " The objects have been added to the list %s"
 msgstr " Objekten har lagts till i listan %s"
@@ -805,7 +808,7 @@ msgstr ""
 msgid "You need to be logged in to change your locations or equipment."
 msgstr "Du måste vara inloggad för att byta plats eller utrustning."
 
-#: common/content/overview_eyepieces.php:16 common/menu/head.php:147
+#: common/content/overview_eyepieces.php:16 common/menu/head.php:149
 msgid "Eyepiece overview"
 msgstr "Okular-översikt"
 
@@ -826,18 +829,18 @@ msgstr "Skenbar FOV (°)"
 #: common/content/overview_locations.php:115
 #: common/content/overview_lenses.php:45 common/content/reportslayout.php:44
 #: common/content/view_message.php:74 common/content/overview_filters.php:41
-#: deepsky/content/change_session.php:132 lib/instruments.php:104
+#: deepsky/content/change_session.php:132 lib/instruments.php:334
 #: lib/filters.php:158 lib/lenses.php:60 lib/eyepieces.php:68
 #: lib/locations.php:344
 msgid "Delete"
 msgstr "Radera"
 
-#: common/content/overview_observers.php:20 common/menu/head.php:157
+#: common/content/overview_observers.php:20 common/menu/head.php:159
 msgid "Observers overview"
 msgstr "Översikt över observatörer"
 
 #: common/content/overview_observers.php:25
-#: common/content/view_observer.php:177 common/content/view_observer.php:232
+#: common/content/view_observer.php:210 common/content/view_observer.php:265
 #: common/content/register.php:50 common/content/change_account.php:169
 msgid "Last Name"
 msgstr "Efternamn"
@@ -847,8 +850,8 @@ msgid "First Name"
 msgstr "Förnamn"
 
 #: common/content/overview_observers.php:29
-#: common/content/view_observer.php:360 common/content/view_observer.php:389
-#: common/content/view_observer.php:396
+#: common/content/view_observer.php:393 common/content/view_observer.php:422
+#: common/content/view_observer.php:429
 msgid "Role"
 msgstr "Roll"
 
@@ -857,22 +860,22 @@ msgid "Number of instruments"
 msgstr "Antal instrument"
 
 #: common/content/overview_observers.php:46
-#: common/content/view_observer.php:366 common/content/view_observer.php:397
+#: common/content/view_observer.php:399 common/content/view_observer.php:430
 msgid "Admin"
 msgstr "Admin"
 
 #: common/content/overview_observers.php:48
-#: common/content/view_observer.php:370
+#: common/content/view_observer.php:403
 msgid "User"
 msgstr "Användare"
 
 #: common/content/overview_observers.php:54
-#: common/content/view_observer.php:374
+#: common/content/view_observer.php:407
 msgid "Comet admin"
 msgstr "Komet admin"
 
 #: common/content/overview_observers.php:56
-#: common/content/view_observer.php:378 common/content/view_observer.php:390
+#: common/content/view_observer.php:411 common/content/view_observer.php:423
 msgid "Waitlist"
 msgstr "Väntelista"
 
@@ -884,84 +887,84 @@ msgstr "Bekräfta"
 msgid "Overview Instruments"
 msgstr "Översikts instrument"
 
-#: common/content/overview_instruments.php:25 lib/instruments.php:99
+#: common/content/overview_instruments.php:25 lib/instruments.php:327
 msgid "Diameter (mm)"
 msgstr "Diameter (mm)"
 
-#: common/content/overview_instruments.php:26 lib/instruments.php:100
+#: common/content/overview_instruments.php:26 lib/instruments.php:328
 msgid "F/D"
 msgstr "F/D"
 
 #: common/content/overview_instruments.php:27
-#: common/content/new_instrument.php:141
-#: common/content/change_instrument.php:123 lib/instruments.php:101
+#: common/content/new_instrument.php:153
+#: common/content/change_instrument.php:141 lib/instruments.php:329
 msgid "Fixed magnification"
 msgstr "Fast förstoring"
 
 #: common/content/overview_instruments.php:28
-#: common/content/new_instrument.php:105 common/content/new_filter.php:41
+#: common/content/new_instrument.php:107 common/content/new_filter.php:41
 #: common/content/change_filter.php:35 common/content/overview_filters.php:22
-#: common/content/change_instrument.php:88
+#: common/content/change_instrument.php:96
 #: deepsky/content/setup_observations_query.php:127
 #: deepsky/content/dsatlas.php:41 deepsky/content/new_object.php:178
-#: deepsky/content/setup_objects_query.php:123 lib/instruments.php:102
+#: deepsky/content/setup_objects_query.php:123 lib/instruments.php:330
 #: lib/filters.php:154 lib/objects.php:1510 lib/objects.php:1822
 #: lib/objects.php:1888 lib/objects.php:1996 lib/util.php:2468
 #: lib/util.php:3936
 msgid "Type"
 msgstr "Typ"
 
-#: common/content/overview_instruments.php:51 lib/instruments.php:27
-#: lib/instruments.php:44
+#: common/content/overview_instruments.php:51 lib/instruments.php:105
+#: lib/instruments.php:139
 msgid "Reflector"
 msgstr "Reflektor"
 
-#: common/content/overview_instruments.php:54 lib/instruments.php:25
-#: lib/instruments.php:51
+#: common/content/overview_instruments.php:54 lib/instruments.php:103
+#: lib/instruments.php:166
 msgid "Finderscope"
 msgstr "Sökaren"
 
-#: common/content/overview_instruments.php:57 lib/instruments.php:29
-#: lib/instruments.php:45
+#: common/content/overview_instruments.php:57 lib/instruments.php:107
+#: lib/instruments.php:143
 msgid "Refractor"
 msgstr "Refraktor"
 
-#: common/content/overview_instruments.php:60 lib/instruments.php:31
-#: lib/instruments.php:52
+#: common/content/overview_instruments.php:60 lib/instruments.php:109
+#: lib/instruments.php:170
 msgid "Other"
 msgstr "Övrigt"
 
-#: common/content/overview_instruments.php:63 lib/instruments.php:23
-#: lib/instruments.php:50
+#: common/content/overview_instruments.php:63 lib/instruments.php:101
+#: lib/instruments.php:162
 msgid "Binoculars"
 msgstr "Kikare"
 
-#: common/content/overview_instruments.php:66 lib/instruments.php:33
-#: lib/instruments.php:46
+#: common/content/overview_instruments.php:66 lib/instruments.php:111
+#: lib/instruments.php:147
 msgid "Cassegrain"
 msgstr "Cassegrain"
 
-#: common/content/overview_instruments.php:69 lib/instruments.php:35
-#: lib/instruments.php:47
+#: common/content/overview_instruments.php:69 lib/instruments.php:113
+#: lib/instruments.php:152
 msgid "Schmidt Cassegrain"
 msgstr "Schmidt Cassegrain"
 
-#: common/content/overview_instruments.php:72 lib/instruments.php:37
-#: lib/instruments.php:48
+#: common/content/overview_instruments.php:72 lib/instruments.php:115
+#: lib/instruments.php:156
 msgid "Kutter"
 msgstr "Kutter"
 
-#: common/content/overview_instruments.php:75 lib/instruments.php:39
-#: lib/instruments.php:49
+#: common/content/overview_instruments.php:75 lib/instruments.php:117
+#: lib/instruments.php:159
 msgid "Maksutov"
 msgstr "Maksutoven"
 
-#: common/content/new_lens.php:13 deepsky/content/newObservation.php:884
+#: common/content/new_lens.php:13 deepsky/content/newObservation.php:870
 msgid "Add a new lens"
 msgstr "Lägg till ett nytt lins"
 
 #: common/content/new_lens.php:23 common/content/new_lens.php:46
-#: common/content/view_lenses.php:16 common/menu/head.php:141
+#: common/content/view_lenses.php:16 common/menu/head.php:143
 msgid "Add lens"
 msgstr "Lägg till lins"
 
@@ -998,26 +1001,26 @@ msgstr "Välj ett befintligt instrument"
 msgid "or add instrument manually"
 msgstr "eller Lägg till instrument manuellt"
 
-#: common/content/new_instrument.php:74 common/content/change_instrument.php:60
+#: common/content/new_instrument.php:74 common/content/change_instrument.php:65
 msgid "Instrument name"
 msgstr "Instrumentets namn"
 
-#: common/content/new_instrument.php:87 common/content/change_instrument.php:80
+#: common/content/new_instrument.php:87 common/content/change_instrument.php:88
 #: lib/util.php:2472
 msgid "Diameter"
 msgstr "Diameter"
 
-#: common/content/new_instrument.php:112
-#: common/content/change_instrument.php:117
+#: common/content/new_instrument.php:114
+#: common/content/change_instrument.php:135
 msgid "Focal Length"
 msgstr "Brännvidd"
 
-#: common/content/new_instrument.php:127
-#: common/content/change_instrument.php:111
+#: common/content/new_instrument.php:139
+#: common/content/change_instrument.php:128
 msgid "or F/D"
 msgstr "eller F/D"
 
-#: common/content/new_instrument.php:153
+#: common/content/new_instrument.php:165
 msgid "Only for binoculars, finder scopes, ..."
 msgstr "Endast för kikare, Finder-scope,..."
 
@@ -1063,7 +1066,7 @@ msgstr "Meddelande"
 msgid "You should be logged in to be able to send messages."
 msgstr "Du bör vara inloggad för att kunna skicka meddelanden."
 
-#: common/content/overview_locations.php:35 common/menu/head.php:155
+#: common/content/overview_locations.php:35 common/menu/head.php:157
 msgid "Locations overview"
 msgstr "Översikt över platser"
 
@@ -1092,8 +1095,8 @@ msgid "NELM"
 msgstr "NELM"
 
 #: common/content/overview_locations.php:47
-#: deepsky/content/newObservation.php:865 lib/observations.php:2804
-#: lib/locations.php:339 lib/observations_new.php:30
+#: deepsky/content/newObservation.php:851 lib/observations.php:2873
+#: lib/locations.php:339 lib/observations_new.php:32
 msgid "SQM"
 msgstr "SQM"
 
@@ -1105,353 +1108,383 @@ msgstr ""
 "Du ville titta på en observatör, men ingen anges. Kontakta utvecklarna med "
 "det här meddelandet."
 
-#: common/content/view_observer.php:124 common/content/statistics.php:104
+#: common/content/view_observer.php:157 common/content/statistics.php:253
 msgid "Info"
 msgstr "Info"
 
-#: common/content/view_observer.php:126 common/content/statistics.php:105
+#: common/content/view_observer.php:159 common/content/statistics.php:255
 msgid "Observations per year"
 msgstr "Observationer per år"
 
-#: common/content/view_observer.php:128 common/content/statistics.php:106
+#: common/content/view_observer.php:161 common/content/statistics.php:257
 msgid "Observations per month"
 msgstr "Observationer per månad"
 
-#: common/content/view_observer.php:130 common/content/statistics.php:107
+#: common/content/view_observer.php:163 common/content/statistics.php:259
 msgid "Object types observed"
 msgstr "Observerade objekttyper"
 
-#: common/content/view_observer.php:132 common/content/view_observer.php:1202
-#: common/content/statistics.php:109 common/content/statistics.php:773
+#: common/content/view_observer.php:165 common/content/view_observer.php:1356
+#: common/content/statistics.php:262 common/content/statistics.php:1061
 msgid "Observations per country"
 msgstr "Observationer per land"
 
-#: common/content/view_observer.php:134
+#: common/content/view_observer.php:167
 msgid "DeepskyLog stars"
 msgstr "DeepskyLog stjärnor"
 
-#: common/content/view_observer.php:150 common/content/register.php:32
+#: common/content/view_observer.php:183 common/content/register.php:32
 #: common/content/change_account.php:145 common/menu/headmenu.php:136
 msgid "Username"
 msgstr "Användarnamn"
 
-#: common/content/view_observer.php:156 common/content/register.php:39
+#: common/content/view_observer.php:189 common/content/register.php:39
 #: common/content/change_account.php:156 common/menu/headmenu.php:170
 msgid "Email address"
 msgstr "E-postadress"
 
-#: common/content/view_observer.php:165 common/content/view_observer.php:226
+#: common/content/view_observer.php:198 common/content/view_observer.php:259
 #: common/content/register.php:45 common/content/change_account.php:163
 msgid "First name"
 msgstr "Förnamn"
 
-#: common/content/view_observer.php:173
+#: common/content/view_observer.php:206
 msgid "Change email / firstname / name"
 msgstr "Ändra e-post/förnamn/namn"
 
-#: common/content/view_observer.php:186 common/content/register.php:63
+#: common/content/view_observer.php:219 common/content/register.php:63
 #: common/menu/headmenu.php:137
 msgid "Password"
 msgstr "Lösenord"
 
-#: common/content/view_observer.php:198 common/content/view_observer.php:237
+#: common/content/view_observer.php:231 common/content/view_observer.php:270
 #: common/content/change_account.php:310
 msgid "Default observing site"
 msgstr "Standardplats för observation"
 
-#: common/content/view_observer.php:205 common/content/view_observer.php:286
-#: common/content/change_account.php:316 lib/instruments.php:103
+#: common/content/view_observer.php:238 common/content/view_observer.php:319
+#: common/content/change_account.php:316 lib/instruments.php:333
 msgid "Default instrument"
 msgstr "Standardinstrument"
 
-#: common/content/view_observer.php:341 common/content/register.php:119
+#: common/content/view_observer.php:374 common/content/register.php:119
 #: common/content/change_account.php:295
 msgid "Copyright notice"
 msgstr "Copyrightmeddelande"
 
-#: common/content/view_observer.php:383
+#: common/content/view_observer.php:416
 msgid "Change role"
 msgstr "Ändra roll"
 
-#: common/content/view_observer.php:438 common/content/view_observer.php:1257
+#: common/content/view_observer.php:488 common/content/statistics.php:298
+#: lib/observers.php:155 lib/objects.php:644
+msgid "Number of drawings"
+msgstr "Antal ritningar"
+
+#: common/content/view_observer.php:507 common/content/statistics.php:307
+#: lib/observers.php:157
+msgid "Drawings last year"
+msgstr "Ritningar förra året"
+
+#: common/content/view_observer.php:545 common/content/view_observer.php:1411
 #: lib/accomplishments.php:458
 msgid "Messier objects"
 msgstr "Messier-objekt"
 
-#: common/content/view_observer.php:446 common/content/view_observer.php:1305
+#: common/content/view_observer.php:554 common/content/view_observer.php:1459
 #: lib/accomplishments.php:460
 msgid "Caldwell objects"
 msgstr "Caldwell-objekt"
 
-#: common/content/view_observer.php:454
+#: common/content/view_observer.php:563
 msgid "H400 objects"
 msgstr "H400-objekt"
 
-#: common/content/view_observer.php:462
+#: common/content/view_observer.php:572
 msgid "H II objects"
 msgstr "H II-objekt"
 
-#: common/content/view_observer.php:485 lib/sessions.php:208 lib/lists.php:64
+#: common/content/view_observer.php:596
+msgid "All observations of "
+msgstr "Alla observationer av "
+
+#: common/content/view_observer.php:600
+msgid "All drawings of "
+msgstr "Alla ritningar av "
+
+#: common/content/view_observer.php:607 lib/sessions.php:208 lib/lists.php:64
 #: lib/lists.php:386 lib/lists.php:499
 msgid "Send message to "
 msgstr "Skicka meddelande till "
 
-#: common/content/view_observer.php:588 common/content/statistics.php:224
+#: common/content/view_observer.php:730 common/content/statistics.php:437
 msgid "Number of observations per year"
 msgstr "Antal observationer per år"
 
-#: common/content/view_observer.php:594 common/content/view_observer.php:731
-#: common/content/view_observer.php:1102 common/content/view_observer.php:1207
-#: common/content/statistics.php:228 common/content/statistics.php:354
-#: common/content/statistics.php:710 common/content/statistics.php:776
+#: common/content/view_observer.php:736 common/content/view_observer.php:885
+#: common/content/view_observer.php:1256 common/content/view_observer.php:1361
+#: common/content/statistics.php:441 common/content/statistics.php:605
+#: common/content/statistics.php:991 common/content/statistics.php:1064
 msgid "Source: "
 msgstr "Källkod: "
 
-#: common/content/view_observer.php:612 common/content/view_observer.php:756
-#: common/content/statistics.php:246 common/content/statistics.php:376
+#: common/content/view_observer.php:754 common/content/view_observer.php:910
+#: common/content/statistics.php:459 common/content/statistics.php:630
 #: deepsky/content/top_objects.php:49 deepsky/content/top_objects.php:55
 #: deepsky/content/top_objects.php:65 deepsky/content/top_objects.php:71
 msgid "Observations"
 msgstr "Observationer"
 
-#: common/content/view_observer.php:725 common/content/statistics.php:350
+#: common/content/view_observer.php:771 common/content/view_observer.php:805
+#: common/content/statistics.php:476 common/content/statistics.php:510
+#: common/content/statistics.php:672 lib/setup/vars.php:342
+msgid "Comets"
+msgstr "Kometer"
+
+#: common/content/view_observer.php:777 common/content/view_observer.php:801
+#: common/content/statistics.php:482 common/content/statistics.php:506
+#: common/content/statistics.php:668 lib/setup/vars.php:341
+msgid "Deepsky"
+msgstr "Deepsky"
+
+#: common/content/view_observer.php:879 common/content/statistics.php:601
 msgid "Number of observations per month"
 msgstr "Antal observationer per månad"
 
-#: common/content/view_observer.php:1097 common/content/statistics.php:707
+#: common/content/view_observer.php:1251 common/content/statistics.php:988
 msgid "Object types seen"
 msgstr "Objekttyper som visas"
 
-#: common/content/view_observer.php:1262 common/content/view_observer.php:1284
-#: common/content/view_observer.php:1308 common/content/view_observer.php:1329
-#: common/content/view_observer.php:1353 common/content/view_observer.php:1389
-#: common/content/view_observer.php:1425 common/content/view_observer.php:1460
+#: common/content/view_observer.php:1416 common/content/view_observer.php:1438
+#: common/content/view_observer.php:1462 common/content/view_observer.php:1483
+#: common/content/view_observer.php:1507 common/content/view_observer.php:1543
+#: common/content/view_observer.php:1579 common/content/view_observer.php:1614
 msgid "Bronze"
 msgstr "Brons"
 
-#: common/content/view_observer.php:1263
+#: common/content/view_observer.php:1417
 msgid "Bronze Messier certificat! You observed 25 Messier objects!"
 msgstr "Brons Messier Certificat! Du observerade 25 Messier-föremål!"
 
-#: common/content/view_observer.php:1264
+#: common/content/view_observer.php:1418
 msgid "Observe at least 25 Messier objects to get this certificat!"
 msgstr "Observera minst 25 Messier-föremål för att få denna Certificat!"
 
-#: common/content/view_observer.php:1267 common/content/view_observer.php:1290
-#: common/content/view_observer.php:1313 common/content/view_observer.php:1335
-#: common/content/view_observer.php:1359 common/content/view_observer.php:1395
-#: common/content/view_observer.php:1430 common/content/view_observer.php:1466
+#: common/content/view_observer.php:1421 common/content/view_observer.php:1444
+#: common/content/view_observer.php:1467 common/content/view_observer.php:1489
+#: common/content/view_observer.php:1513 common/content/view_observer.php:1549
+#: common/content/view_observer.php:1584 common/content/view_observer.php:1620
 msgid "Silver"
 msgstr "Silver"
 
-#: common/content/view_observer.php:1268
+#: common/content/view_observer.php:1422
 msgid "Silver Messier certificat! You observed 50 Messier objects!"
 msgstr "Silver Messier Certificat! Du observerade 50 Messier-objekt!"
 
-#: common/content/view_observer.php:1269
+#: common/content/view_observer.php:1423
 msgid "Observe at least 50 Messier objects to get this certificat!"
 msgstr "Observera minst 50 Messier-föremål för att få denna Certificat!"
 
-#: common/content/view_observer.php:1272 common/content/view_observer.php:1296
-#: common/content/view_observer.php:1318 common/content/view_observer.php:1341
-#: common/content/view_observer.php:1365 common/content/view_observer.php:1401
-#: common/content/view_observer.php:1436 common/content/view_observer.php:1472
+#: common/content/view_observer.php:1426 common/content/view_observer.php:1450
+#: common/content/view_observer.php:1472 common/content/view_observer.php:1495
+#: common/content/view_observer.php:1519 common/content/view_observer.php:1555
+#: common/content/view_observer.php:1590 common/content/view_observer.php:1626
 msgid "Gold"
 msgstr "Guld"
 
-#: common/content/view_observer.php:1273
+#: common/content/view_observer.php:1427
 msgid "Golden Messier certificat! You observed all 110 Messier objects!"
 msgstr "Gyllene Messier Certificat! Du observerade alla 110 Messier-föremål!"
 
-#: common/content/view_observer.php:1274
+#: common/content/view_observer.php:1428
 msgid "Observe all 110 Messier objects to get this certificat!"
 msgstr "Observera alla 110 Messier-objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1281
+#: common/content/view_observer.php:1435
 msgid "Drawings of Messier objects"
 msgstr "Ritningar av Messier-föremål"
 
-#: common/content/view_observer.php:1286
+#: common/content/view_observer.php:1440
 msgid "Bronze Messier drawing-certificat! You drew 25 Messier objects!"
 msgstr "Brons Messier Ritning-Certificat! Du ritade 25 Messier-föremål!"
 
-#: common/content/view_observer.php:1287
+#: common/content/view_observer.php:1441
 msgid "Draw at least 25 different Messier objects to get this certificat!"
 msgstr "Rita minst 25 olika Messier-objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1292
+#: common/content/view_observer.php:1446
 msgid "Silver Messier drawing-certificat! You drew 50 Messier objects!"
 msgstr "Silver Messier Ritning-Certificat! Du ritade 50 Messier-föremål!"
 
-#: common/content/view_observer.php:1293
+#: common/content/view_observer.php:1447
 msgid "Draw at least 50 Messier objects to get this certificat!"
 msgstr "Rita minst 50 Messier-objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1298
+#: common/content/view_observer.php:1452
 msgid "Golden Messier drawing-certificat! You drew all 110 Messier objects!"
 msgstr "Golden Messier Ritning-Certificat! Du ritade alla 110 Messier-föremål!"
 
-#: common/content/view_observer.php:1299
+#: common/content/view_observer.php:1453
 msgid "Draw all 110 Messier objects to get this certificat!"
 msgstr "Rita alla 110 Messier-objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1309
+#: common/content/view_observer.php:1463
 msgid "Bronze Caldwell certificat! You observed 25 Caldwell objects!"
 msgstr "Brons Caldwell Certificat! Du observerade 25 Caldwell objekt!"
 
-#: common/content/view_observer.php:1310
+#: common/content/view_observer.php:1464
 msgid "Observe at least 25 Caldwell objects to get this certificat!"
 msgstr "Observera minst 25 Caldwell objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1314
+#: common/content/view_observer.php:1468
 msgid "Silver Caldwell certificat! You observed 50 Caldwell objects!"
 msgstr "Silver Caldwell Certificat! Du observerade 50 Caldwell objekt!"
 
-#: common/content/view_observer.php:1315
+#: common/content/view_observer.php:1469
 msgid "Observe at least 50 Caldwell objects to get this certificat!"
 msgstr "Observera minst 50 Caldwell objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1319
+#: common/content/view_observer.php:1473
 msgid "Golden Caldwell certificat! You observed all 110 Caldwell objects!"
 msgstr "Gyllene Caldwell Certificat! Du observerade alla 110 Caldwell objekt!"
 
-#: common/content/view_observer.php:1320
+#: common/content/view_observer.php:1474
 msgid "Observe all 110 Caldwell objects to get this certificat!"
 msgstr "Observera alla 110 Caldwell objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1326
+#: common/content/view_observer.php:1480
 msgid "Drawings of Caldwell objects"
 msgstr "Ritningar av Caldwell-objekt"
 
-#: common/content/view_observer.php:1331
+#: common/content/view_observer.php:1485
 msgid "Bronze Caldwell drawing-certificat! You drew 25 Caldwell objects!"
 msgstr "Brons Caldwell Ritning-Certificat! Du ritade 25 Caldwell objekt!"
 
-#: common/content/view_observer.php:1332
+#: common/content/view_observer.php:1486
 msgid "Draw at least 25 Caldwell objects to get this certificat!"
 msgstr "Rita minst 25 Caldwell objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1337
+#: common/content/view_observer.php:1491
 msgid "Silver Caldwell drawing-certificat! You drew 50 Caldwell objects!"
 msgstr "Silver Caldwell Ritning-Certificat! Du ritade 50 Caldwell objekt!"
 
-#: common/content/view_observer.php:1338
+#: common/content/view_observer.php:1492
 msgid "Draw at least 50 Caldwell objects to get this certificat!"
 msgstr "Rita minst 50 Caldwell objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1343
+#: common/content/view_observer.php:1497
 msgid "Golden Caldwell drawing-certificat! You drew all 110 Caldwell objects!"
 msgstr ""
 "Golden Caldwell ritning-Certificat! Du ritade alla 110 Caldwell objekt!"
 
-#: common/content/view_observer.php:1344
+#: common/content/view_observer.php:1498
 msgid "Draw all 110 Caldwell objects to get this certificat!"
 msgstr "Rita alla 110 Caldwell objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1350 lib/accomplishments.php:462
+#: common/content/view_observer.php:1504 lib/accomplishments.php:462
 msgid "Herschel 400 objects"
 msgstr "Herschel 400 objekt"
 
-#: common/content/view_observer.php:1355
+#: common/content/view_observer.php:1509
 msgid "Bronze Herschel 400 certificat! You observed 25 Herschel 400 objects!"
 msgstr "Brons Herschel 400 Certificat! Du observerade 25 Herschel 400 objekt!"
 
-#: common/content/view_observer.php:1356
+#: common/content/view_observer.php:1510
 msgid "Observe at least 25 Herschel 400 objects to get this certificat!"
 msgstr "Observera minst 25 Herschel 400 objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1361
+#: common/content/view_observer.php:1515
 msgid "Silver Herschel 400 certificat! You observed 50 Herschel 400 objects!"
 msgstr "Silver Herschel 400 Certificat! Du observerade 50 Herschel 400 objekt!"
 
-#: common/content/view_observer.php:1362
+#: common/content/view_observer.php:1516
 msgid "Observe at least 50 Herschel 400 objects to get this certificat!"
 msgstr "Observera minst 50 Herschel 400 objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1367
+#: common/content/view_observer.php:1521
 msgid "Golden Herschel 400 certificat! You observed 100 Herschel 400 objects!"
 msgstr ""
 "Golden Herschel 400 Certificat! Du observerade 100 Herschel 400 objekt!"
 
-#: common/content/view_observer.php:1368
+#: common/content/view_observer.php:1522
 msgid "Observe at least 100 Herschel 400 objects to get this certificat!"
 msgstr "Observera minst 100 Herschel 400 objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1371 common/content/view_observer.php:1407
-#: common/content/view_observer.php:1442 common/content/view_observer.php:1478
+#: common/content/view_observer.php:1525 common/content/view_observer.php:1561
+#: common/content/view_observer.php:1596 common/content/view_observer.php:1632
 msgid "Diamond"
 msgstr "Diamant"
 
-#: common/content/view_observer.php:1373
+#: common/content/view_observer.php:1527
 msgid "Diamond Herschel 400 certificat! You observed 200 Herschel 400 objects!"
 msgstr ""
 "Diamond Herschel 400 Certificat! Du observerade 200 Herschel 400 objekt!"
 
-#: common/content/view_observer.php:1374
+#: common/content/view_observer.php:1528
 msgid "Observe at least 200 Herschel 400 objects to get this certificat!"
 msgstr "Observera minst 200 Herschel 400 objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1377 common/content/view_observer.php:1413
-#: common/content/view_observer.php:1448 common/content/view_observer.php:1484
+#: common/content/view_observer.php:1531 common/content/view_observer.php:1567
+#: common/content/view_observer.php:1602 common/content/view_observer.php:1638
 msgid "Platinum"
 msgstr "Platinum"
 
-#: common/content/view_observer.php:1379
+#: common/content/view_observer.php:1533
 msgid ""
 "Platinum Herschel 400 certificat! You observed all 400 Herschel 400 objects!"
 msgstr ""
 "Platinum Herschel 400 Certificat! Du observerade alla 400 Herschel 400 "
 "objekt!"
 
-#: common/content/view_observer.php:1380
+#: common/content/view_observer.php:1534
 msgid "Observe all 400 Herschel 400 objects to get this certificat!"
 msgstr "Observera alla 400 Herschel 400 objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1386
+#: common/content/view_observer.php:1540
 msgid "Drawings of Herschel 400 objects"
 msgstr "Ritningar av Herschel 400 objekt"
 
-#: common/content/view_observer.php:1391
+#: common/content/view_observer.php:1545
 msgid ""
 "Bronze Herschel 400 drawing-certificat! You drew 25 Herschel 400 objects!"
 msgstr ""
 "Brons Herschel 400 Ritning-Certificat! Du ritade 25 Herschel 400 objekt!"
 
-#: common/content/view_observer.php:1392
+#: common/content/view_observer.php:1546
 msgid "Draw at least 25 Herschel 400 objects to get this certificat!"
 msgstr "Rita minst 25 Herschel 400 objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1397
+#: common/content/view_observer.php:1551
 msgid ""
 "Silver Herschel 400 drawing-certificat! You drew 50 Herschel 400 objects!"
 msgstr ""
 "Silver Herschel 400 Ritning-Certificat! Du Drew 50 Herschel 400 objekt!"
 
-#: common/content/view_observer.php:1398
+#: common/content/view_observer.php:1552
 msgid "Draw at least 50 Herschel 400 objects to get this certificat!"
 msgstr "Rita minst 50 Herschel 400 objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1403
+#: common/content/view_observer.php:1557
 msgid ""
 "Golden Herschel 400 drawing-certificat! You drew 100 Herschel 400 objects!"
 msgstr ""
 "Golden Herschel 400 Ritning-Certificat! Du Drew 100 Herschel 400 objekt!"
 
-#: common/content/view_observer.php:1404
+#: common/content/view_observer.php:1558
 msgid "Draw at least 100 Herschel 400 objects to get this certificat!"
 msgstr "Rita minst 100 Herschel 400 objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1409
+#: common/content/view_observer.php:1563
 msgid ""
 "Diamond Herschel 400 drawing-certificat! You drew 200 Herschel 400 objects!"
 msgstr ""
 "Diamond Herschel 400 ritning-Certificat! Du Drew 200 Herschel 400 objekt!"
 
-#: common/content/view_observer.php:1410
+#: common/content/view_observer.php:1564
 msgid "Draw at least 200 Herschel 400 objects to get this certificat!"
 msgstr "Rita minst 200 Herschel 400 objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1415
+#: common/content/view_observer.php:1569
 msgid ""
 "Platinum Herschel 400 drawing-certificat! You drew all 400 Herschel 400 "
 "objects!"
@@ -1459,98 +1492,98 @@ msgstr ""
 "Platinum Herschel 400 Drawing-Certificat! Du ritade alla 400 Herschel 400 "
 "objekt!"
 
-#: common/content/view_observer.php:1416
+#: common/content/view_observer.php:1570
 msgid "Draw all 400 Herschel 400 objects to get this certificat!"
 msgstr "Rita alla 400 Herschel 400 objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1422 lib/accomplishments.php:464
+#: common/content/view_observer.php:1576 lib/accomplishments.php:464
 msgid "Herschel II objects"
 msgstr "Herschel II-objekt"
 
-#: common/content/view_observer.php:1426
+#: common/content/view_observer.php:1580
 msgid "Bronze Herschel II certificat! You observed 25 Herschel II objects!"
 msgstr "Brons Herschel II Certificat! Du observerade 25 Herschel II-objekt!"
 
-#: common/content/view_observer.php:1427
+#: common/content/view_observer.php:1581
 msgid "Observe at least 25 Herschel II objects to get this certificat!"
 msgstr "Observera minst 25 Herschel II-objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1432
+#: common/content/view_observer.php:1586
 msgid "Silver Herschel II certificat! You observed 50 Herschel II objects!"
 msgstr "Silver Herschel II Certificat! Du observerade 50 Herschel II-objekt!"
 
-#: common/content/view_observer.php:1433
+#: common/content/view_observer.php:1587
 msgid "Observe at least 50 Herschel II objects to get this certificat!"
 msgstr "Observera minst 50 Herschel II-objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1438
+#: common/content/view_observer.php:1592
 msgid "Golden Herschel II certificat! You observed 100 Herschel II objects!"
 msgstr "Golden Herschel II Certificat! Du observerade 100 Herschel II-objekt!"
 
-#: common/content/view_observer.php:1439
+#: common/content/view_observer.php:1593
 msgid "Observe at least 100 Herschel II objects to get this certificat!"
 msgstr "Observera minst 100 Herschel II-objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1444
+#: common/content/view_observer.php:1598
 msgid "Diamond Herschel II certificat! You observed 200 Herschel II objects!"
 msgstr "Diamond Herschel II Certificat! Du observerade 200 Herschel II-objekt!"
 
-#: common/content/view_observer.php:1445
+#: common/content/view_observer.php:1599
 msgid "Observe at least 200 Herschel II objects to get this certificat!"
 msgstr "Observera minst 200 Herschel II-objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1450
+#: common/content/view_observer.php:1604
 msgid ""
 "Platinum Herschel II certificat! You observed all 400 Herschel II objects!"
 msgstr ""
 "Platinum Herschel II Certificat! Du observerade alla 400 Herschel II-objekt!"
 
-#: common/content/view_observer.php:1451
+#: common/content/view_observer.php:1605
 msgid "Observe all 400 Herschel II objects to get this certificat!"
 msgstr "Observera alla 400 Herschel II-objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1457
+#: common/content/view_observer.php:1611
 msgid "Drawings of Herschel II objects"
 msgstr "Ritningar av Herschel II-objekt"
 
-#: common/content/view_observer.php:1462
+#: common/content/view_observer.php:1616
 msgid "Bronze Herschel II drawing-certificat! You drew 25 Herschel II objects!"
 msgstr "Brons Herschel II Ritning-Certificat! Du ritade 25 Herschel II-objekt!"
 
-#: common/content/view_observer.php:1463
+#: common/content/view_observer.php:1617
 msgid "Draw at least 25 Herschel II objects to get this certificat!"
 msgstr "Rita minst 25 Herschel II-objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1468
+#: common/content/view_observer.php:1622
 msgid "Silver Herschel II drawing-certificat! You drew 50 Herschel II objects!"
 msgstr ""
 "Silver Herschel II Ritning-Certificat! Du ritade 50 Herschel II-objekt!"
 
-#: common/content/view_observer.php:1469
+#: common/content/view_observer.php:1623
 msgid "Draw at least 50 Herschel II objects to get this certificat!"
 msgstr "Rita minst 50 Herschel II objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1474
+#: common/content/view_observer.php:1628
 msgid ""
 "Golden Herschel II drawing-certificat! You drew 100 Herschel II objects!"
 msgstr ""
 "Golden Herschel II ritning-Certificat! Du ritade 100 Herschel II-objekt!"
 
-#: common/content/view_observer.php:1475
+#: common/content/view_observer.php:1629
 msgid "Draw at least 100 Herschel II objects to get this certificat!"
 msgstr "Rita minst 100 Herschel II objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1480
+#: common/content/view_observer.php:1634
 msgid ""
 "Diamond Herschel II drawing-certificat! You drew 200 Herschel II objects!"
 msgstr ""
 "Diamond Herschel II Ritning-Certificat! Du ritade 200 Herschel II-objekt!"
 
-#: common/content/view_observer.php:1481
+#: common/content/view_observer.php:1635
 msgid "Draw at least 200 Herschel II objects to get this certificat!"
 msgstr "Rita minst 200 Herschel II objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1486
+#: common/content/view_observer.php:1640
 msgid ""
 "Platinum Herschel II drawing-certificat! You drew all 400 Herschel II "
 "objects!"
@@ -1558,67 +1591,67 @@ msgstr ""
 "Platinum Herschel II Ritning-Certificat! Du ritade alla 400 Herschel II-"
 "objekt!"
 
-#: common/content/view_observer.php:1487
+#: common/content/view_observer.php:1641
 msgid "Draw all 400 Herschel II objects to get this certificat!"
 msgstr "Rita alla 400 Herschel II objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1493
+#: common/content/view_observer.php:1647
 msgid "Total number of drawings"
 msgstr "Totalt antal ritningar"
 
-#: common/content/view_observer.php:1540 lib/accomplishments.php:466
+#: common/content/view_observer.php:1694 lib/accomplishments.php:466
 msgid "Open clusters"
 msgstr "Öppna kluster"
 
-#: common/content/view_observer.php:1596
+#: common/content/view_observer.php:1750
 msgid "Drawings of open clusters"
 msgstr "Ritningar av öppna kluster"
 
-#: common/content/view_observer.php:1658 lib/accomplishments.php:468
+#: common/content/view_observer.php:1812 lib/accomplishments.php:468
 msgid "Globular clusters"
 msgstr "Stjärnhopar"
 
-#: common/content/view_observer.php:1710
+#: common/content/view_observer.php:1864
 msgid "Drawings of globular clusters"
 msgstr "Ritningar av stjärnhopar"
 
-#: common/content/view_observer.php:1767 lib/accomplishments.php:470
+#: common/content/view_observer.php:1921 lib/accomplishments.php:470
 msgid "Planetary Nebulae"
 msgstr "Planetariska nebulosor"
 
-#: common/content/view_observer.php:1825
+#: common/content/view_observer.php:1979
 msgid "Drawings of planetary nebulae"
 msgstr "Ritningar av planetariska nebulosor"
 
-#: common/content/view_observer.php:1890 lib/accomplishments.php:472
+#: common/content/view_observer.php:2044 lib/accomplishments.php:472
 msgid "Galaxies"
 msgstr "Galaxer"
 
-#: common/content/view_observer.php:1936
+#: common/content/view_observer.php:2090
 msgid "Drawings of galaxies"
 msgstr "Ritningar av galaxer"
 
-#: common/content/view_observer.php:1983 lib/accomplishments.php:474
+#: common/content/view_observer.php:2137 lib/accomplishments.php:474
 msgid "Nebulae"
 msgstr "Nebulosor"
 
-#: common/content/view_observer.php:2039
+#: common/content/view_observer.php:2193
 msgid "Drawings of nebulae"
 msgstr "Ritningar av nebulosor"
 
-#: common/content/view_observer.php:2144
+#: common/content/view_observer.php:2298
 msgid "Drawings of different objects"
 msgstr "Ritningar av olika objekt"
 
-#: common/content/view_observer.php:2191
+#: common/content/view_observer.php:2345
 msgid "Total comet observations"
 msgstr "Totala observationer av kometer"
 
-#: common/content/view_observer.php:2237
+#: common/content/view_observer.php:2391
 msgid "Different comets"
 msgstr "Olika kometer"
 
-#: common/content/view_observer.php:2284
+#: common/content/view_observer.php:2438
 msgid "Drawings of comets"
 msgstr "Ritningar av kometer"
 
@@ -1630,13 +1663,13 @@ msgstr ""
 "Du ville ändra ett objektiv, men ingen anges. Kontakta utvecklarna med det "
 "här meddelandet."
 
-#: common/content/change_lens.php:18 common/menu/head.php:129
+#: common/content/change_lens.php:18 common/menu/head.php:131
 msgid "Change lens"
 msgstr "Byt lins"
 
 #: common/content/register.php:25 common/content/register.php:26
 #: common/content/register.php:27 common/content/register.php:145
-#: common/menu/head.php:145 common/menu/headmenu.php:83
+#: common/menu/head.php:147 common/menu/headmenu.php:83
 #: common/menu/headmenu.php:142
 msgid "Register"
 msgstr "Registrera"
@@ -1649,7 +1682,7 @@ msgstr "Detta är det namn du ska använda för att logga in"
 msgid "Your email address will remain confidential"
 msgstr "Din e-postadress kommer att förbli konfidentiell"
 
-#: common/content/register.php:55 lib/observers.php:290
+#: common/content/register.php:55 lib/observers.php:304
 msgid "Motivation"
 msgstr "Motivation"
 
@@ -1726,7 +1759,7 @@ msgid "Add new filter"
 msgstr "Lägg till nytt filter"
 
 #: common/content/new_filter.php:23 common/content/new_filter.php:64
-#: common/content/view_filters.php:17 common/menu/head.php:137
+#: common/content/view_filters.php:17 common/menu/head.php:139
 msgid "Add filter"
 msgstr "Lägg till filter"
 
@@ -1763,7 +1796,7 @@ msgid "Observing sites of %s"
 msgstr "Observera platser för %s"
 
 #: common/content/locations.php:39 common/content/new_location.php:60
-#: common/content/new_location.php:68 common/menu/head.php:203
+#: common/content/new_location.php:68 common/menu/head.php:205
 msgid "Add site"
 msgstr "Lägg till webbplats"
 
@@ -1778,7 +1811,7 @@ msgid "Eyepieces of %s"
 msgstr "Okular av %s"
 
 #: common/content/view_eyepieces.php:17 common/content/new_eyepiece.php:26
-#: common/content/new_eyepiece.php:67 common/menu/head.php:135
+#: common/content/new_eyepiece.php:67 common/menu/head.php:137
 msgid "Add eyepiece"
 msgstr "Tillsätt okularet"
 
@@ -1998,11 +2031,11 @@ msgstr ""
 msgid "Download"
 msgstr "Ladda ner"
 
-#: common/content/statistics.php:82
+#: common/content/statistics.php:229
 msgid "Select country"
 msgstr "Välj land"
 
-#: common/content/new_eyepiece.php:24 deepsky/content/newObservation.php:874
+#: common/content/new_eyepiece.php:24 deepsky/content/newObservation.php:860
 msgid "Add a new eyepiece"
 msgstr "Lägg till ett nytt okular"
 
@@ -2359,7 +2392,7 @@ msgstr "Sök plats"
 msgid "Location name"
 msgstr "Namn på plats"
 
-#: common/content/change_site.php:97 common/menu/head.php:133
+#: common/content/change_site.php:97 common/menu/head.php:135
 msgid "Change site"
 msgstr "Ändra plats"
 
@@ -2372,7 +2405,7 @@ msgid "Sky Quality Meter (SQM) value"
 msgstr "Sky Quality meter (SQM) värde"
 
 #: common/content/change_site.php:106 common/content/new_location.php:76
-#: deepsky/content/newObservation.php:865 lib/locations.php:340
+#: lib/locations.php:340
 msgid "Bortle Scale"
 msgstr "Bortle skala"
 
@@ -2381,52 +2414,43 @@ msgid "Use value from lightpollutionmap.info"
 msgstr "Använd värde från lightpollutionmap.info"
 
 #: common/content/change_site.php:136 common/content/new_location.php:103
-#: deepsky/content/newObservation.php:417
 msgid "Excellent dark-sky site"
 msgstr "Utmärkt Dark-Sky plats"
 
 #: common/content/change_site.php:137 common/content/new_location.php:104
-#: deepsky/content/newObservation.php:418
 msgid "Typical truly dark site"
 msgstr "Typisk riktigt mörk plats"
 
 #: common/content/change_site.php:138 common/content/new_location.php:105
-#: deepsky/content/newObservation.php:419
 msgid "Rural sky"
 msgstr "Landsbygdshimmel"
 
 #: common/content/change_site.php:139 common/content/new_location.php:106
-#: deepsky/content/newObservation.php:420
 msgid "Rural/suburban transition"
 msgstr "Övergång på landsbygden/förorter"
 
 #: common/content/change_site.php:140 common/content/new_location.php:107
-#: deepsky/content/newObservation.php:421
 msgid "Suburban sky"
 msgstr "Förorts himmel"
 
 #: common/content/change_site.php:141 common/content/new_location.php:108
-#: deepsky/content/newObservation.php:422
 msgid "Bright suburban sky"
 msgstr "Ljusa förorts himmel"
 
 #: common/content/change_site.php:142 common/content/new_location.php:109
-#: deepsky/content/newObservation.php:423
 msgid "Suburban/urban transition"
 msgstr "Förorts-/stads övergång"
 
 #: common/content/change_site.php:143 common/content/new_location.php:110
-#: deepsky/content/newObservation.php:424
 msgid "City sky"
 msgstr "Stadshimmel"
 
 #: common/content/change_site.php:144 common/content/new_location.php:111
-#: deepsky/content/newObservation.php:425
 msgid "Inner-city sky"
 msgstr "Innerstadshimmel"
 
 #: common/content/change_site.php:418 common/content/new_location.php:432
-#: lib/instruments.php:96 lib/filters.php:152 lib/lenses.php:57
+#: lib/instruments.php:324 lib/filters.php:152 lib/lenses.php:57
 #: lib/eyepieces.php:63 lib/locations.php:331
 msgid "Active"
 msgstr "Aktiv"
@@ -2435,8 +2459,8 @@ msgstr "Aktiv"
 msgid "Not active"
 msgstr "Ej aktiv"
 
-#: common/content/view_message.php:56 lib/observations.php:2057
-#: lib/observations.php:2909
+#: common/content/view_message.php:56 lib/observations.php:2118
+#: lib/observations.php:2978
 msgid "by "
 msgstr "av "
 
@@ -2587,11 +2611,11 @@ msgstr ""
 "Du ville ändra ett okular, men ingen anges. Kontakta utvecklarna med det här "
 "meddelandet."
 
-#: common/content/change_eyepiece.php:23 common/menu/head.php:117
+#: common/content/change_eyepiece.php:23 common/menu/head.php:119
 msgid "Adapt eyepiece"
 msgstr "Anpassa okularet"
 
-#: common/content/view_instruments.php:13 common/menu/head.php:151
+#: common/content/view_instruments.php:13 common/menu/head.php:153
 msgid "Instruments of"
 msgstr "Instrument för"
 
@@ -2603,7 +2627,7 @@ msgstr ""
 "Du ville titta på ett filter, men ingen anges. Kontakta utvecklarna med det "
 "här meddelandet."
 
-#: common/content/change_filter.php:18 common/menu/head.php:121
+#: common/content/change_filter.php:18 common/menu/head.php:123
 msgid "Change filter"
 msgstr "Ändra filter"
 
@@ -2727,7 +2751,7 @@ msgstr ""
 "Du ville ändra ett instrument, men ingen anges. Kontakta utvecklarna med det "
 "här meddelandet."
 
-#: common/content/change_instrument.php:19
+#: common/content/change_instrument.php:21
 msgid ""
 "Instrument not found in change_instrument.php, please contact the developers "
 "with this message:"
@@ -2735,7 +2759,7 @@ msgstr ""
 "Instrument som inte finns i change_instrument.php, kontakta utvecklarna med "
 "detta meddelande:"
 
-#: common/content/change_instrument.php:46 common/menu/head.php:125
+#: common/content/change_instrument.php:51 common/menu/head.php:127
 msgid "Change instrument"
 msgstr "Ändra instrument"
 
@@ -2784,104 +2808,104 @@ msgstr "Rapportera ett problem"
 msgid "What's new in DeepskyLog"
 msgstr "Vad är nytt i DeepskyLog"
 
-#: common/menu/head.php:67 deepsky/content/new_observationcsv.php:13
+#: common/menu/head.php:69 deepsky/content/new_observationcsv.php:13
 msgid "Import observations from a CSV file"
 msgstr "Importera observationer från en CSV-fil"
 
-#: common/menu/head.php:69 deepsky/content/newObservationXml.php:26
+#: common/menu/head.php:71 deepsky/content/newObservationXml.php:26
 msgid "Import observations from an XML file"
 msgstr "Importera observationer från en XML-fil"
 
-#: common/menu/head.php:79 deepsky/content/selected_observations.php:54
+#: common/menu/head.php:81 deepsky/content/selected_observations.php:52
 #: deepsky/content/view_object.php:79
 msgid "Interactive Atlas"
 msgstr "Interaktiv Atlas"
 
-#: common/menu/head.php:81 deepsky/content/new_listdatacsv.php:11
+#: common/menu/head.php:83 deepsky/content/new_listdatacsv.php:11
 msgid "Import objects from a CSV file to your list"
 msgstr "Importera objekt från en CSV-fil till din lista"
 
-#: common/menu/head.php:85 deepsky/content/manage_objects_csv.php:15
+#: common/menu/head.php:87 deepsky/content/manage_objects_csv.php:15
 #: deepsky/content/view_object.php:506
 msgid "Manage objects from CSV file"
 msgstr "Hantera objekt från CSV-fil"
 
-#: common/menu/head.php:100 deepsky/content/selected_observations.php:72
+#: common/menu/head.php:102 deepsky/content/selected_observations.php:70
 #: deepsky/content/view_object.php:408
 msgid "Overview of last year's observations"
 msgstr "Översikt över förra årets iakttagelser"
 
-#: common/menu/head.php:107 deepsky/content/details_observer_catalog.php:32
+#: common/menu/head.php:109 deepsky/content/details_observer_catalog.php:32
 msgid "Overview observed"
 msgstr "Översikt som observerats"
 
-#: common/menu/head.php:107 deepsky/content/details_observer_catalog.php:32
+#: common/menu/head.php:109 deepsky/content/details_observer_catalog.php:32
 #: lib/accomplishments.php:478 lib/accomplishments.php:494
 msgid "objects"
 msgstr "objekt"
 
-#: common/menu/head.php:109
+#: common/menu/head.php:111
 msgid "Details observer"
 msgstr "Detaljer observatör"
 
-#: common/menu/head.php:113 common/menu/headmenu.php:72
+#: common/menu/head.php:115 common/menu/headmenu.php:72
 msgid "Settings"
 msgstr "Inställningar"
 
-#: common/menu/head.php:115
+#: common/menu/head.php:117
 msgid "Details eyepiece"
 msgstr "Översikt okular"
 
-#: common/menu/head.php:119
+#: common/menu/head.php:121
 msgid "Details filter"
 msgstr "Översikt filter"
 
-#: common/menu/head.php:123
+#: common/menu/head.php:125
 msgid "Details instrument"
 msgstr "Detaljer instrument"
 
-#: common/menu/head.php:127
+#: common/menu/head.php:129
 msgid "Details lens"
 msgstr "Översikt linser"
 
-#: common/menu/head.php:131
+#: common/menu/head.php:133
 msgid "Details location"
 msgstr "Översikt plats"
 
-#: common/menu/head.php:149
+#: common/menu/head.php:151
 msgid "Filters of"
 msgstr "Filter av"
 
-#: common/menu/head.php:153
+#: common/menu/head.php:155
 msgid "Lenses of"
 msgstr "Linser av"
 
-#: common/menu/head.php:171
+#: common/menu/head.php:173
 msgid "Overview of all observations of "
 msgstr "Översikt över alla observationer av "
 
-#: common/menu/head.php:195 deepsky/menu/search.php:28
+#: common/menu/head.php:197 deepsky/menu/search.php:60
 msgid "My instruments"
 msgstr "Mina instrument"
 
-#: common/menu/head.php:197 deepsky/menu/search.php:30
+#: common/menu/head.php:199 deepsky/menu/search.php:66
 msgid "My eyepieces"
 msgstr "Mina okular"
 
-#: common/menu/head.php:199 deepsky/menu/search.php:31
+#: common/menu/head.php:201 deepsky/menu/search.php:69
 msgid "My filters"
 msgstr "Mina filter"
 
-#: common/menu/head.php:201 deepsky/menu/search.php:32
+#: common/menu/head.php:203 deepsky/menu/search.php:72
 msgid "My lenses"
 msgstr "Mina linser"
 
-#: common/menu/head.php:205 deepsky/menu/search.php:29
+#: common/menu/head.php:207 deepsky/menu/search.php:63
 msgid "My locations"
 msgstr "Mina platser"
 
-#: common/menu/head.php:216 deepsky/content/newObservation.php:211
-#: deepsky/content/newObservation.php:1045 deepsky/menu/quickpick.php:32
+#: common/menu/head.php:218 deepsky/content/newObservation.php:210
+#: deepsky/content/newObservation.php:1010 deepsky/menu/quickpick.php:32
 msgid "New Observation"
 msgstr "Ny observation"
 
@@ -2962,12 +2986,12 @@ msgstr ""
 "Om du inte begär detta, kan det vara antingen ett ärligt misstag eller någon "
 "försöker bryta sig in i ditt DeepskyLog konto."
 
-#: observations_json.php:169 deepsky/content/setup_observations_query.php:234
+#: observations_json.php:179 deepsky/content/setup_observations_query.php:234
 #: deepsky/content/setup_observations_query.php:260
 #: deepsky/content/new_object.php:202 deepsky/content/new_object.php:207
 #: deepsky/content/setup_objects_query.php:248
 #: deepsky/content/setup_objects_query.php:264
-#: deepsky/content/newObservation.php:568 lib/observations.php:2558
+#: deepsky/content/newObservation.php:554 lib/observations.php:2627
 msgid "arcseconds"
 msgstr "bågsekunder"
 
@@ -2987,119 +3011,119 @@ msgstr "Visa utan del-av objekt"
 msgid "Show with part-of objects"
 msgstr "Visa med del av objekt"
 
-#: deepsky/content/selected_observations.php:35
+#: deepsky/content/selected_observations.php:33
 msgid "Hide object details"
 msgstr "Dölj objektdetaljer"
 
-#: deepsky/content/selected_observations.php:38
+#: deepsky/content/selected_observations.php:36
 msgid "Show object details"
 msgstr "Visa objektdetaljer"
 
-#: deepsky/content/selected_observations.php:45
-#: deepsky/content/selected_observations.php:143
+#: deepsky/content/selected_observations.php:43
+#: deepsky/content/selected_observations.php:141
 #: deepsky/content/view_observation.php:24 deepsky/content/view_object.php:65
 #: deepsky/content/view_object.php:68
 msgid "Nearby objects"
 msgstr "Närliggande objekt"
 
-#: deepsky/content/selected_observations.php:50
-#: deepsky/content/view_observation.php:31 lib/observations.php:2184
-#: lib/observations.php:2943 lib/objects.php:1872
+#: deepsky/content/selected_observations.php:48
+#: deepsky/content/view_observation.php:31 lib/observations.php:2245
+#: lib/observations.php:3012 lib/objects.php:1872
 #, php-format
 msgid "%s to remove from the list %s"
 msgstr "%s tas bort från listan %s"
 
-#: deepsky/content/selected_observations.php:52
-#: deepsky/content/view_observation.php:33 lib/observations.php:2193
-#: lib/observations.php:2954 lib/objects.php:1876
+#: deepsky/content/selected_observations.php:50
+#: deepsky/content/view_observation.php:33 lib/observations.php:2254
+#: lib/observations.php:3023 lib/objects.php:1876
 #, php-format
 msgid "%s to add to the list %s"
 msgstr "%s som ska läggas till i listan %s"
 
-#: deepsky/content/selected_observations.php:63
+#: deepsky/content/selected_observations.php:61
 #: deepsky/content/view_object.php:399
 msgid "selected languages"
 msgstr "valda språk"
 
-#: deepsky/content/selected_observations.php:63
-#: deepsky/content/selected_observations.php:85
+#: deepsky/content/selected_observations.php:61
+#: deepsky/content/selected_observations.php:83
 #: deepsky/content/view_object.php:399 deepsky/content/view_object.php:422
 msgid "all languages"
 msgstr "alla språk"
 
-#: deepsky/content/selected_observations.php:65
+#: deepsky/content/selected_observations.php:63
 #: deepsky/content/view_object.php:401
 msgid "Look again, using all languages."
 msgstr "Titta igen, med alla språk."
 
-#: deepsky/content/selected_observations.php:66
+#: deepsky/content/selected_observations.php:64
 #: deepsky/content/view_object.php:402
 msgid "Set up a detailed search."
 msgstr "Ställ in en detaljerad sökning."
 
-#: deepsky/content/selected_observations.php:81
+#: deepsky/content/selected_observations.php:79
 #: deepsky/content/view_object.php:418
 msgid "selected languages only"
 msgstr "endast utvalda språk"
 
-#: deepsky/content/selected_observations.php:91
+#: deepsky/content/selected_observations.php:89
 #: deepsky/content/view_object.php:428
 msgid "Overview with the basic information on one line per observation"
 msgstr "Översikt med grundläggande information om en rad per observation"
 
-#: deepsky/content/selected_observations.php:91
+#: deepsky/content/selected_observations.php:89
 #: deepsky/content/view_object.php:428 deepsky/menu/list.php:16
 msgid "List"
 msgstr "Lista"
 
-#: deepsky/content/selected_observations.php:94
+#: deepsky/content/selected_observations.php:92
 #: deepsky/content/view_object.php:431
 msgid "Overview with an information line and a description per observation"
 msgstr "Översikt med en informationsrad och en beskrivning per observation"
 
-#: deepsky/content/selected_observations.php:94
+#: deepsky/content/selected_observations.php:92
 #: deepsky/content/view_object.php:431
 msgid "Compact"
 msgstr "Kompakt"
 
-#: deepsky/content/selected_observations.php:97
+#: deepsky/content/selected_observations.php:95
 #: deepsky/content/view_object.php:434
 msgid ""
 "Overview with an information line, a description and your last observation"
 msgstr ""
 "Översikt med en informationsrad, en beskrivning och din sista iakttagelse"
 
-#: deepsky/content/selected_observations.php:97
+#: deepsky/content/selected_observations.php:95
 #: deepsky/content/view_object.php:434
 msgid "Compare"
 msgstr "Jämför"
 
-#: deepsky/content/selected_observations.php:100
+#: deepsky/content/selected_observations.php:98
 #: deepsky/content/view_object.php:437
 msgid "Highlight own observations"
 msgstr "Belysa egna iakttagelser"
 
-#: deepsky/content/selected_observations.php:104
+#: deepsky/content/selected_observations.php:102
 #: deepsky/content/view_object.php:441
 msgid "Don't highlight own observations"
 msgstr "Markera inte egna observationer"
 
-#: deepsky/content/selected_observations.php:112
+#: deepsky/content/selected_observations.php:110
 #: deepsky/content/view_object.php:448
 msgid "Show all languages"
 msgstr "Visa alla språk"
 
-#: deepsky/content/selected_observations.php:114
+#: deepsky/content/selected_observations.php:112
 #: deepsky/content/view_object.php:450
 msgid "Only show the observations from my profile languages"
 msgstr "Visa endast iakttagelserna från mina profil språk"
 
-#: deepsky/content/selected_observations.php:116
+#: deepsky/content/selected_observations.php:114
 #: deepsky/content/view_object.php:452
 msgid "Only show observations in English"
 msgstr "Visa endast observationer på svenska"
 
-#: deepsky/content/selected_observations.php:124
+#: deepsky/content/selected_observations.php:122
 #: deepsky/content/view_observation.php:51 deepsky/content/view_object.php:460
 msgid ""
 "(*) All Observations(AO), My observations(MO), my Last observations(LO) of "
@@ -3108,33 +3132,33 @@ msgstr ""
 "(*) Alla observationer (Ao), mina observationer (Mo), mina sista "
 "observationer (LO) av detta objekt"
 
-#: deepsky/content/selected_observations.php:127
-#: deepsky/content/view_object.php:463 lib/observations_new.php:202
+#: deepsky/content/selected_observations.php:125
+#: deepsky/content/view_object.php:463 lib/observations_new.php:204
 msgid "Filter objects"
 msgstr "Filtrera objekt"
 
-#: deepsky/content/selected_observations.php:129
+#: deepsky/content/selected_observations.php:127
 #: deepsky/content/view_object.php:465
 msgid "Please enter a title"
 msgstr "Titel saknas"
 
-#: deepsky/content/selected_observations.php:129
+#: deepsky/content/selected_observations.php:127
 #: deepsky/content/view_object.php:465
 msgid "DeepskyLog observations"
 msgstr "DeepskyLog observationer"
 
-#: deepsky/content/selected_observations.php:133
+#: deepsky/content/selected_observations.php:131
 #: deepsky/content/view_object.php:469 lib/objects.php:1956
-#: lib/observations_new.php:204
+#: lib/observations_new.php:206
 msgid "CSV"
 msgstr "CSV"
 
-#: deepsky/content/selected_observations.php:134
-#: deepsky/content/view_object.php:470 lib/observations_new.php:205
+#: deepsky/content/selected_observations.php:132
+#: deepsky/content/view_object.php:470 lib/observations_new.php:207
 msgid "<OAL>"
 msgstr "<OAL>"
 
-#: deepsky/content/selected_observations.php:135 lib/objects.php:1962
+#: deepsky/content/selected_observations.php:133 lib/objects.php:1962
 msgid "skylist"
 msgstr "skylist"
 
@@ -3210,7 +3234,7 @@ msgstr ""
 "\\”images/SAAF_nylogo.jpg\\”></a>."
 
 #: deepsky/content/main.php:99 deepsky/content/main.php:102
-#: deepsky/menu/search.php:35
+#: deepsky/menu/search.php:80
 msgid "Latest observations"
 msgstr "Senaste iakttagelserna"
 
@@ -3262,10 +3286,10 @@ msgstr "Atlas sida"
 
 #: deepsky/content/setup_observations_query.php:92
 #: deepsky/content/dsatlas.php:42 deepsky/content/new_object.php:160
-#: deepsky/content/setup_objects_query.php:88 lib/observations.php:1995
+#: deepsky/content/setup_objects_query.php:88 lib/observations.php:2056
 #: lib/objects.php:1508 lib/objects.php:1818 lib/objects.php:1884
-#: lib/objects.php:1984 lib/observations_new.php:178
-#: lib/observations_new.php:191 lib/util.php:2469
+#: lib/objects.php:1984 lib/observations_new.php:180
+#: lib/observations_new.php:193 lib/util.php:2469
 msgid "Constellation"
 msgstr "Konstellation"
 
@@ -4300,23 +4324,23 @@ msgstr "Ingen observation att visa."
 msgid "The requested observation does not exist."
 msgstr "Den begärda iakttagelsen existerar inte."
 
-#: deepsky/content/view_observation.php:42 lib/observations.php:2217
-#: lib/observations.php:2280 lib/observations_new.php:133
+#: deepsky/content/view_observation.php:42 lib/observations.php:2279
+#: lib/observations.php:2346 lib/observations_new.php:135
 msgid "Details of this observation"
 msgstr "Närmare uppgifter om denna iakttagelse"
 
-#: deepsky/content/view_observation.php:44 lib/observations.php:2223
-#: lib/observations.php:2288
+#: deepsky/content/view_observation.php:44 lib/observations.php:2285
+#: lib/observations.php:2354
 msgid "Compare this observation with all observations of this object"
 msgstr "Jämför denna iakttagelse med alla observationer av detta objekt"
 
-#: deepsky/content/view_observation.php:47 lib/observations.php:2229
-#: lib/observations.php:2294
+#: deepsky/content/view_observation.php:47 lib/observations.php:2292
+#: lib/observations.php:2361
 msgid "Compare this observation with all my observations of this object"
 msgstr "Jämför denna iakttagelse med alla mina observationer av detta objekt"
 
-#: deepsky/content/view_observation.php:49 lib/observations.php:2233
-#: lib/observations.php:2298
+#: deepsky/content/view_observation.php:49 lib/observations.php:2297
+#: lib/observations.php:2367
 msgid "Compare this observation with my last observation of this object"
 msgstr "Jämför denna iakttagelse med min sista observation av detta objekt"
 
@@ -4601,6 +4625,15 @@ msgstr "DESC-Redigera Beskrivning"
 msgid "Show or remove extra info..."
 msgstr "Visa eller ta bort extra info..."
 
+#: deepsky/content/showDrawings.php:35
+#, php-format
+msgid "Drawings of %s"
+msgstr "Ritningar av %s"
+
+#: deepsky/content/showDrawings.php:42
+msgid "No drawings found"
+msgstr "Inga ritningar hittades"
+
 #: deepsky/content/new_session.php:102
 msgid "Select one of the sessions added by other observers"
 msgstr "Välj en av sessionerna som lagts till av andra observatörer"
@@ -4609,176 +4642,176 @@ msgstr "Välj en av sessionerna som lagts till av andra observatörer"
 msgid "Add a new session"
 msgstr "Lägga till en ny session"
 
-#: deepsky/content/newObservation.php:222
+#: deepsky/content/newObservation.php:221
 msgid "Change the observation details "
 msgstr "Ändra observations Detaljer "
 
-#: deepsky/content/newObservation.php:230
+#: deepsky/content/newObservation.php:229
 msgid "Enter observation details "
 msgstr "Ange observations Detaljer "
 
-#: deepsky/content/newObservation.php:575 lib/observations.php:2565
+#: deepsky/content/newObservation.php:561 lib/observations.php:2634
 msgid "Stellar"
 msgstr "Stellar"
 
-#: deepsky/content/newObservation.php:580 lib/observations.php:2568
+#: deepsky/content/newObservation.php:566 lib/observations.php:2637
 msgid "Extended"
 msgstr "Utökad"
 
-#: deepsky/content/newObservation.php:583 lib/observations.php:2574
+#: deepsky/content/newObservation.php:569 lib/observations.php:2643
 msgid "Mottled"
 msgstr "Fläckiga"
 
-#: deepsky/content/newObservation.php:617 lib/observations.php:2571
+#: deepsky/content/newObservation.php:603 lib/observations.php:2640
 msgid "Resolved"
 msgstr "Åtgärdad"
 
-#: deepsky/content/newObservation.php:619 lib/observations.php:2616
+#: deepsky/content/newObservation.php:605 lib/observations.php:2685
 msgid "Unusual Shape"
 msgstr "Ovanlig form"
 
-#: deepsky/content/newObservation.php:621 lib/observations.php:2619
+#: deepsky/content/newObservation.php:607 lib/observations.php:2688
 msgid "Partly unresolved"
 msgstr "Delvis olösta"
 
-#: deepsky/content/newObservation.php:623 lib/observations.php:2622
+#: deepsky/content/newObservation.php:609 lib/observations.php:2691
 msgid "Color contrasts"
 msgstr "Färgkontraster"
 
-#: deepsky/content/newObservation.php:625
+#: deepsky/content/newObservation.php:611
 msgid "https://github.com/DeepskyLog/DeepskyLog/wiki/Open-Cluster-types"
 msgstr "https://github.com/DeepskyLog/DeepskyLog/wiki/Open-Cluster-types"
 
-#: deepsky/content/newObservation.php:627
+#: deepsky/content/newObservation.php:613
 msgid "More information"
 msgstr "Mer information"
 
-#: deepsky/content/newObservation.php:628 lib/observations.php:2856
-#: lib/observations.php:2872 lib/observations.php:2885
-#: lib/observations_new.php:71
+#: deepsky/content/newObservation.php:614 lib/observations.php:2925
+#: lib/observations.php:2941 lib/observations.php:2954
+#: lib/observations_new.php:73
 msgid "Cluster type"
 msgstr "Klustertyp"
 
-#: deepsky/content/newObservation.php:687 lib/observations.php:2625
+#: deepsky/content/newObservation.php:673 lib/observations.php:2694
 msgid "Equal Brightness"
 msgstr "Lika ljusstyrka"
 
-#: deepsky/content/newObservation.php:689 lib/observations.php:2628
+#: deepsky/content/newObservation.php:675 lib/observations.php:2697
 msgid "in nice field"
 msgstr "i fina fält"
 
-#: deepsky/content/newObservation.php:691
+#: deepsky/content/newObservation.php:677
 msgid "component 1"
 msgstr "komponent 1"
 
-#: deepsky/content/newObservation.php:702
-#: deepsky/content/newObservation.php:737 lib/observations.php:2577
-#: lib/observations.php:2595
+#: deepsky/content/newObservation.php:688
+#: deepsky/content/newObservation.php:723 lib/observations.php:2646
+#: lib/observations.php:2664
 msgid "white"
 msgstr "vit"
 
-#: deepsky/content/newObservation.php:706
-#: deepsky/content/newObservation.php:741 lib/observations.php:2580
-#: lib/observations.php:2598
+#: deepsky/content/newObservation.php:692
+#: deepsky/content/newObservation.php:727 lib/observations.php:2649
+#: lib/observations.php:2667
 msgid "red"
 msgstr "röda"
 
-#: deepsky/content/newObservation.php:710
-#: deepsky/content/newObservation.php:745 lib/observations.php:2583
-#: lib/observations.php:2601
+#: deepsky/content/newObservation.php:696
+#: deepsky/content/newObservation.php:731 lib/observations.php:2652
+#: lib/observations.php:2670
 msgid "orange"
 msgstr "orange"
 
-#: deepsky/content/newObservation.php:714
-#: deepsky/content/newObservation.php:749 lib/observations.php:2586
-#: lib/observations.php:2604
+#: deepsky/content/newObservation.php:700
+#: deepsky/content/newObservation.php:735 lib/observations.php:2655
+#: lib/observations.php:2673
 msgid "yellow"
 msgstr "gul"
 
-#: deepsky/content/newObservation.php:718
-#: deepsky/content/newObservation.php:753 lib/observations.php:2589
-#: lib/observations.php:2607
+#: deepsky/content/newObservation.php:704
+#: deepsky/content/newObservation.php:739 lib/observations.php:2658
+#: lib/observations.php:2676
 msgid "green"
 msgstr "grön"
 
-#: deepsky/content/newObservation.php:722
-#: deepsky/content/newObservation.php:757 lib/observations.php:2592
-#: lib/observations.php:2610
+#: deepsky/content/newObservation.php:708
+#: deepsky/content/newObservation.php:743 lib/observations.php:2661
+#: lib/observations.php:2679
 msgid "blue"
 msgstr "blå"
 
-#: deepsky/content/newObservation.php:725
+#: deepsky/content/newObservation.php:711
 msgid "component 2"
 msgstr "komponent 2"
 
-#: deepsky/content/newObservation.php:850
+#: deepsky/content/newObservation.php:836
 msgid "Language"
 msgstr "Språk"
 
-#: deepsky/content/newObservation.php:857 lib/observations.php:2809
-#: lib/observations_new.php:32 lib/util.php:3881
+#: deepsky/content/newObservation.php:843 lib/observations.php:2878
+#: lib/observations_new.php:34 lib/util.php:3881
 msgid "Seeing"
 msgstr "Seeing"
 
-#: deepsky/content/newObservation.php:864 lib/observations.php:2803
-#: lib/observations_new.php:30 lib/util.php:3883
+#: deepsky/content/newObservation.php:850 lib/observations.php:2872
+#: lib/observations_new.php:32 lib/util.php:3883
 msgid "Limiting magnitude"
 msgstr "Begränsa magnitud"
 
-#: deepsky/content/newObservation.php:875 lib/observations.php:2816
-#: lib/observations_new.php:61 lib/util.php:3889
+#: deepsky/content/newObservation.php:861 lib/observations.php:2885
+#: lib/observations_new.php:63 lib/util.php:3889
 msgid "Eyepiece"
 msgstr "Okular"
 
-#: deepsky/content/newObservation.php:885 lib/observations.php:2836
-#: lib/observations_new.php:51 lib/util.php:3897
+#: deepsky/content/newObservation.php:871 lib/observations.php:2905
+#: lib/observations_new.php:53 lib/util.php:3897
 msgid "Lens"
 msgstr "Lins"
 
-#: deepsky/content/newObservation.php:894
+#: deepsky/content/newObservation.php:880
 msgid "Add a new filter"
 msgstr "Lägg till ett nytt filter"
 
-#: deepsky/content/newObservation.php:895 lib/observations.php:2827
-#: lib/observations_new.php:43 lib/util.php:3885
+#: deepsky/content/newObservation.php:881 lib/observations.php:2896
+#: lib/observations_new.php:45 lib/util.php:3885
 msgid "Filter"
 msgstr "Filter"
 
-#: deepsky/content/newObservation.php:903
+#: deepsky/content/newObservation.php:889
 msgid "Magnification used"
 msgstr "Förstoring som används"
 
-#: deepsky/content/newObservation.php:918
-#: deepsky/content/newObservation.php:932 lib/observations.php:2849
-#: lib/observations.php:2865 lib/observations.php:2879
-#: lib/observations_new.php:75 lib/util.php:3878
+#: deepsky/content/newObservation.php:904
+#: deepsky/content/newObservation.php:918 lib/observations.php:2918
+#: lib/observations.php:2934 lib/observations.php:2948
+#: lib/observations_new.php:77 lib/util.php:3878
 msgid "Visibility"
 msgstr "Synlighet"
 
-#: deepsky/content/newObservation.php:925
-#: deepsky/content/newObservation.php:939 lib/observations.php:2854
-#: lib/observations.php:2870 lib/observations.php:2883
-#: lib/observations_new.php:69
+#: deepsky/content/newObservation.php:911
+#: deepsky/content/newObservation.php:925 lib/observations.php:2923
+#: lib/observations.php:2939 lib/observations.php:2952
+#: lib/observations_new.php:71
 msgid "Estimated diameter"
 msgstr "Uppskattad diameter"
 
-#: deepsky/content/newObservation.php:1032
+#: deepsky/content/newObservation.php:997
 msgid "Search the object in the database"
 msgstr "Söka i objektet i databasen"
 
-#: deepsky/content/newObservation.php:1034
+#: deepsky/content/newObservation.php:999
 msgid "import observations from a CSV file"
 msgstr "importera observationer från en CSV-fil"
 
-#: deepsky/content/newObservation.php:1035
+#: deepsky/content/newObservation.php:1000
 msgid " or "
 msgstr " eller "
 
-#: deepsky/content/newObservation.php:1037
+#: deepsky/content/newObservation.php:1002
 msgid "import observations from an <OAL> (XML) file"
 msgstr "importera observationer från en <OAL> (XML-fil)"
 
-#: deepsky/content/newObservation.php:1056
+#: deepsky/content/newObservation.php:1021
 msgid "Search object"
 msgstr "Sök objekt"
 
@@ -4901,15 +4934,19 @@ msgstr "Nedladdningar"
 msgid "Forms"
 msgstr "Formulär"
 
-#: deepsky/menu/search.php:25
+#: deepsky/menu/search.php:48
+msgid "My drawings"
+msgstr "Mina ritningar"
+
+#: deepsky/menu/search.php:53
 msgid "My observing lists"
 msgstr "Mina observations listor"
 
-#: deepsky/menu/search.php:26
+#: deepsky/menu/search.php:56
 msgid "My sessions"
 msgstr "Mina sessioner"
 
-#: deepsky/menu/search.php:41
+#: deepsky/menu/search.php:91
 msgid "Catalogs"
 msgstr "Kataloger"
 
@@ -4998,75 +5035,67 @@ msgstr " tillagd under XML-import"
 msgid "by observer "
 msgstr "av observatör "
 
-#: deepsky/control/addXmlObservations.php:1705 lib/observations.php:450
+#: deepsky/control/addXmlObservations.php:1705 lib/observations.php:468
 #, php-format
 msgid "Observations added: %s"
 msgstr "Inkomna observationer: %s"
 
-#: deepsky/control/addXmlObservations.php:1706 lib/observations.php:453
+#: deepsky/control/addXmlObservations.php:1706 lib/observations.php:471
 #, php-format
 msgid "observations rejected with problems: %s"
 msgstr "observationer som avvisats med problem: %s"
 
-#: deepsky/control/addXmlObservations.php:1708 lib/observations.php:457
+#: deepsky/control/addXmlObservations.php:1708 lib/observations.php:475
 #, php-format
 msgid "observations dropped because already present: %s"
 msgstr "observationer har avbrutits eftersom det redan finns: %s"
 
-#: lib/observers.php:141 lib/objects.php:644
-msgid "Number of drawings"
-msgstr "Antal ritningar"
-
-#: lib/observers.php:143
-msgid "Drawings last year"
-msgstr "Ritningar förra året"
-
-#: lib/observers.php:237 lib/observers.php:308
+#: lib/observers.php:251 lib/observers.php:322
 msgid "Please, fill in all fields!"
 msgstr "Vänligen fyll i alla fält!"
 
-#: lib/observers.php:246
+#: lib/observers.php:260
 msgid "Password not confirmed!"
 msgstr "Lösenord inte bekräftat!"
 
-#: lib/observers.php:249
+#: lib/observers.php:263
 msgid "Your name and / or first name are not correct."
 msgstr "Ditt namn och/eller förnamn är inte korrekt."
 
-#: lib/observers.php:255
+#: lib/observers.php:269
 msgid "The field 'Motivation' is not filled in."
 msgstr "Fältet “Motivation\" är inte ifyllt."
 
-#: lib/observers.php:261
+#: lib/observers.php:275
 msgid "Wrong email address!"
 msgstr "Fel e-postadress!"
 
-#: lib/observers.php:269
+#: lib/observers.php:283
 msgid ""
 "There is already someone with this account name, please choose another one!"
 msgstr "Det finns redan någon med detta kontonamn, vänligen välj en annan!"
 
-#: lib/observers.php:286
+#: lib/observers.php:300
 msgid "Details deepskylog account"
 msgstr "Detaljer deepskylog konto"
 
-#: lib/observers.php:287
+#: lib/observers.php:301
 msgid "Account name"
 msgstr "Kontonamn"
 
-#: lib/observers.php:288
+#: lib/observers.php:302
 msgid "Email"
 msgstr "E-post"
 
-#: lib/observers.php:291
+#: lib/observers.php:305
 msgid "This email has automatically been sent by the DeepskyLog application"
 msgstr "Detta e-postmeddelande har automatiskt skickats av DeepskyLog ansökan"
 
-#: lib/observers.php:294 lib/observers.php:296
+#: lib/observers.php:308 lib/observers.php:310
 msgid "DeepskyLog - registration"
 msgstr "DeepskyLog - registrering"
 
-#: lib/observers.php:297
+#: lib/observers.php:311
 msgid ""
 "Your DeepskyLog account has been created. One of our developers will "
 "validate your account as soon as possible. You will receive an email "
@@ -5092,15 +5121,15 @@ msgstr ""
 "                Om ditt konto inte valideras inom 24 timmar, kan du skicka "
 "ett e-postmeddelande till developers at deepskylog.be för att vara säker."
 
-#: lib/observers.php:359
+#: lib/observers.php:373
 msgid "Your account has been successfully updated!"
 msgstr "Ditt konto har uppdaterats!"
 
-#: lib/observers.php:450
+#: lib/observers.php:464
 msgid "One of the administrators made you a new administrator."
 msgstr "En av administratörerna gjorde dig till en ny administratör."
 
-#: lib/observers.php:454
+#: lib/observers.php:468
 #, php-format
 msgid ""
 "Dear %s, <br /><br />Your application for a DeepskyLog account is approved."
@@ -5113,16 +5142,16 @@ msgstr ""
 "<br /> %s kan använda <a href=\"http://www.deepskylog.se/“>deepskylog</a>. "
 "Hälsningar, <br /> <br /> DeepskyLog team <br /> <br />"
 
-#: lib/observers.php:460 lib/observers.php:462
+#: lib/observers.php:474 lib/observers.php:476
 msgid "DeepskyLog - account application approved"
 msgstr "DeepskyLog - kontoansökan godkänd"
 
-#: lib/observers.php:471 lib/observers.php:475
+#: lib/observers.php:485 lib/observers.php:489
 #, php-format
 msgid "Welcome in DeepskyLog, %s!"
 msgstr "Välkommen i DeepskyLog, %s!"
 
-#: lib/observers.php:478
+#: lib/observers.php:492
 msgid ""
 "We hope you will have a lot of fun using DeepskyLog. You can already find "
 "some interesting links to get you started :"
@@ -5130,15 +5159,15 @@ msgstr ""
 "Vi hoppas att du kommer att ha mycket roligt med DeepskyLog. Du kan redan "
 "hitta några intressanta länkar för att komma igång:"
 
-#: lib/observers.php:481
+#: lib/observers.php:495
 msgid "Add an instrument"
 msgstr "Lägg till ett instrument"
 
-#: lib/observers.php:483
+#: lib/observers.php:497
 msgid "Add an observing site"
 msgstr "Lägga till en observations webbplats"
 
-#: lib/observers.php:484
+#: lib/observers.php:498
 msgid ""
 "After entering a typical limiting magnitude or a typical SQM-value, "
 "DeepskyLog will calculate visibility of all objects! Do not forget to select "
@@ -5148,27 +5177,27 @@ msgstr ""
 "DeepskyLog kommer att beräkna synlighet för alla objekt! Glöm inte att välja "
 "en standard observations plats!"
 
-#: lib/observers.php:487
+#: lib/observers.php:501
 msgid "Set your standard observing atlas and set a picture of yourself."
 msgstr "Ställ in din standard observation Atlas och ange en bild på dig själv."
 
-#: lib/observers.php:489
+#: lib/observers.php:503
 msgid "A lot of fun using DeepskyLog!"
 msgstr "Mycket roligt med DeepskyLog!"
 
-#: lib/observers.php:489
+#: lib/observers.php:503
 msgid "The DeepskyLog developers"
 msgstr "Den DeepskyLog utvecklare"
 
-#: lib/observers.php:493
+#: lib/observers.php:507
 msgid "The user has successfully been updated!"
 msgstr "Användaren har uppdaterats!"
 
-#: lib/observers.php:493
+#: lib/observers.php:507
 msgid "User updated."
 msgstr "Användaren uppdaterad."
 
-#: lib/observers.php:503 lib/observers.php:531
+#: lib/observers.php:517 lib/observers.php:545
 msgid ""
 "The new password and the confirmed password are not the same. Unable to "
 "change the password."
@@ -5176,17 +5205,17 @@ msgstr ""
 "Det nya lösenordet och det bekräftade lösenordet är inte samma. Det går inte "
 "att ändra lösenordet."
 
-#: lib/observers.php:507 lib/observers.php:535
+#: lib/observers.php:521 lib/observers.php:549
 msgid "The password is successfully changed."
 msgstr "Lösenordet har ändrats."
 
-#: lib/observers.php:518
+#: lib/observers.php:532
 msgid ""
 "The current password you entered is incorrect. Unable to change the password."
 msgstr ""
 "Det aktuella lösenordet är felaktigt. Det går inte att ändra lösenordet."
 
-#: lib/observers.php:557
+#: lib/observers.php:571
 #, php-format
 msgid ""
 "The username %s is not known by DeepskyLog. Impossible to request a new "
@@ -5195,7 +5224,7 @@ msgstr ""
 "Användarnamnet %s är inte känt av DeepskyLog. Omöjligt att begära ett "
 "nyttlösenord."
 
-#: lib/observers.php:568
+#: lib/observers.php:582
 #, php-format
 msgid ""
 "The mail address %s is not known by DeepskyLog. Impossible to request a new "
@@ -5204,7 +5233,7 @@ msgstr ""
 "E-postadressen %s är inte känd av DeepskyLog. Omöjligt att begära ett "
 "nyttlösenord."
 
-#: lib/observers.php:573
+#: lib/observers.php:587
 msgid ""
 "The given username and mail address are not known by DeepskyLog. Impossible "
 "to request a new password."
@@ -5212,11 +5241,11 @@ msgstr ""
 "Det angivna användarnamnet och e-postadressen är inte kända av DeepskyLog. "
 "Omöjligt att begära ett nyttlösenord."
 
-#: lib/observers.php:588
+#: lib/observers.php:602
 msgid "DeepskyLog Change Password Request"
 msgstr "DeepskyLog ändra lösenord begäran"
 
-#: lib/observers.php:591
+#: lib/observers.php:605
 #, php-format
 msgid ""
 "You have (or someone impersonating you has) requested to change your %s "
@@ -5227,7 +5256,7 @@ msgstr ""
 "för %s.\n"
 "                    <br /> för att slutföra ändringen, besök följande länk:"
 
-#: lib/observers.php:596
+#: lib/observers.php:610
 msgid ""
 "If you are not the person who made this request, or you wish to cancel this "
 "request, visit the following link:"
@@ -5235,7 +5264,7 @@ msgstr ""
 "Om du inte är den person som gjorde denna begäran, eller om du vill avbryta "
 "denna begäran, besök följande länk:"
 
-#: lib/observers.php:607
+#: lib/observers.php:621
 #, php-format
 msgid ""
 "If you do nothing, the request will lapse after 24 hours (on %s) or when you "
@@ -5244,11 +5273,11 @@ msgstr ""
 "Om du inte gör något kommer begäran att upphöra efter 24 timmar (på %s) "
 "eller när du loggar in utan problem."
 
-#: lib/observers.php:610
+#: lib/observers.php:624
 msgid "The DeepskyLog team"
 msgstr "DeepskyLog-teamet"
 
-#: lib/observers.php:617
+#: lib/observers.php:631
 #, php-format
 msgid ""
 "A token for changing the password of %s has been emailed to %s. Follow the "
@@ -5318,30 +5347,30 @@ msgstr "Objekt Rise-uppsättning"
 msgid "Images for %s"
 msgstr "Bilder för %s"
 
-#: lib/instruments.php:153 lib/filters.php:182 lib/lenses.php:82
+#: lib/instruments.php:427 lib/filters.php:182 lib/lenses.php:82
 #: lib/eyepieces.php:90 lib/sessions.php:389 lib/sessions.php:426
 #: lib/locations.php:494
 msgid "observations"
 msgstr "observationer"
 
-#: lib/instruments.php:155 lib/filters.php:184 lib/lenses.php:84
+#: lib/instruments.php:429 lib/filters.php:184 lib/lenses.php:84
 #: lib/eyepieces.php:92 lib/locations.php:496
 msgid "observation"
 msgstr "observation"
 
-#: lib/instruments.php:172
+#: lib/instruments.php:458
 msgid "The instrument is removed from your equipment list!"
 msgstr "Instrumentet tas bort från din utrustningslista!"
 
-#: lib/instruments.php:211
+#: lib/instruments.php:531
 msgid "The instrument is added to your equipment list!"
 msgstr "Instrumentet läggs till i din utrustningslista!"
 
-#: lib/instruments.php:225
+#: lib/instruments.php:555
 msgid "The instrument details have been changed in your equipment list!"
 msgstr "Instrument detaljerna har ändrats i din utrustningslista!"
 
-#: lib/instruments.php:228 lib/filters.php:219 lib/lenses.php:116
+#: lib/instruments.php:559 lib/filters.php:219 lib/lenses.php:116
 #: lib/eyepieces.php:126 lib/locations.php:629
 msgid "All required fields must be filled in!"
 msgstr "Alla obligatoriska fält måste fyllas i!"
@@ -5498,74 +5527,74 @@ msgstr "Föregående"
 msgid "The CSV file is not completely imported because: "
 msgstr "CSV-filen importeras inte helt eftersom: "
 
-#: lib/observations.php:214
+#: lib/observations.php:216
 msgid "The following date(s) are in the future"
 msgstr "Följande datum är i framtiden"
 
-#: lib/observations.php:223
+#: lib/observations.php:227
 msgid "The following objects are not available in DeepskyLog"
 msgstr "Följande objekt är inte tillgängliga i DeepskyLog"
 
-#: lib/observations.php:230
+#: lib/observations.php:235
 #, php-format
 msgid "And %s other objects missing."
 msgstr "Och %s andra objekt saknas."
 
-#: lib/observations.php:243
+#: lib/observations.php:249
 msgid "The following locations are not available in DeepskyLog"
 msgstr "Följande platser är inte tillgängliga i DeepskyLog"
 
-#: lib/observations.php:250
+#: lib/observations.php:257
 #, php-format
 msgid "%s other locations missing."
 msgstr "%s andra platser saknas."
 
-#: lib/observations.php:263
+#: lib/observations.php:271
 msgid "The following instruments are not available in DeepskyLog"
 msgstr "Följande instrument är inte tillgängliga i DeepskyLog"
 
-#: lib/observations.php:270
+#: lib/observations.php:279
 #, php-format
 msgid "%s other instruments missing."
 msgstr "%s andra instrument saknas."
 
-#: lib/observations.php:283
+#: lib/observations.php:293
 msgid "The following filters are not available in DeepskyLog"
 msgstr "Följande filter är inte tillgängliga i DeepskyLog"
 
-#: lib/observations.php:290
+#: lib/observations.php:301
 #, php-format
 msgid "%s other filters missing."
 msgstr "%s andra filter saknas."
 
-#: lib/observations.php:303
+#: lib/observations.php:315
 msgid "The following eyepieces are not available in DeepskyLog"
 msgstr "Följande okular är inte tillgängliga i DeepskyLog"
 
-#: lib/observations.php:310
+#: lib/observations.php:323
 #, php-format
 msgid "%s other eyepieces missing."
 msgstr "%s andra okular saknas."
 
-#: lib/observations.php:324
+#: lib/observations.php:338
 msgid "The following lenses are not available in DeepskyLog"
 msgstr "Följande linser är inte tillgängliga i DeepskyLog"
 
-#: lib/observations.php:331
+#: lib/observations.php:346
 #, php-format
 msgid "And %s other lenses missing."
 msgstr "Och %s andra linser saknas."
 
-#: lib/observations.php:348
+#: lib/observations.php:364
 msgid "The CSV observation import completed with problems."
 msgstr "CSV-observation importen slutfördes med problem."
 
-#: lib/observations.php:352
+#: lib/observations.php:369
 #, php-format
 msgid ""
 "Only the correct observations have been read.\n"
 "\n"
-"You first have to solve the problems mentionned above and then %sreimport%s "
+"You first have to solve the problems mentioned above and then %sreimport%s "
 "the observations.\n"
 "You may limit the reimport to the faulty observations, or you may again use "
 "all of them.\n"
@@ -5581,64 +5610,64 @@ msgstr ""
 "Korrekta observationer som har importerats kommer inte att registreras för "
 "andra gången."
 
-#: lib/observations.php:1986
+#: lib/observations.php:2047
 msgid "Mark all as read."
 msgstr "Markera alla som lästa."
 
-#: lib/observations.php:2008
+#: lib/observations.php:2069
 msgid "My LO instrument"
 msgstr "Mitt LO-instrument"
 
-#: lib/observations.php:2011
+#: lib/observations.php:2072
 msgid "My LO date"
 msgstr "Mitt LO-datum"
 
-#: lib/observations.php:2041
+#: lib/observations.php:2102
 msgid "in"
 msgstr "i"
 
-#: lib/observations.php:2045
+#: lib/observations.php:2106
 msgid "mag."
 msgstr "mag."
 
-#: lib/observations.php:2049
+#: lib/observations.php:2110
 msgid "surf. br."
 msgstr "yta ljusst."
 
-#: lib/observations.php:2051
+#: lib/observations.php:2112
 msgid "alt. names"
 msgstr "alt. namn"
 
-#: lib/observations.php:2165
+#: lib/observations.php:2226
 msgid "Mark up to here as read."
 msgstr "Markera upp till här som läst."
 
-#: lib/observations.php:2179 lib/observations.php:2200
-#: lib/observations.php:2930
+#: lib/observations.php:2240 lib/observations.php:2261
+#: lib/observations.php:2999
 msgid "Add the observation to the list "
 msgstr "Lägg till observation i listan "
 
-#: lib/observations.php:2781 lib/moonpic.php:73
+#: lib/observations.php:2850 lib/moonpic.php:73
 msgid "under the horizon"
 msgstr "under Horisont"
 
-#: lib/observations.php:3001
+#: lib/observations.php:3070
 msgid "The observation has been removed"
 msgstr "Observationen har tagits bort"
 
-#: lib/observations.php:3018
+#: lib/observations.php:3088
 msgid "You need to be logged in to validate an observation."
 msgstr "Du måste vara inloggad för att validera en observation."
 
-#: lib/observations.php:3080
+#: lib/observations.php:3152
 msgid "You filled in an invalid date!"
 msgstr "Du har fyllt i ett ogiltigt datum!"
 
-#: lib/observations.php:3083
+#: lib/observations.php:3155
 msgid "You filled in a future date!"
 msgstr "Du fyllt i ett framtida datum!"
 
-#: lib/observations.php:3090
+#: lib/observations.php:3162
 msgid "You filled in an invalid time!"
 msgstr "Du fyllt i en sjukling tid!"
 
@@ -6080,14 +6109,6 @@ msgstr "8 stjärnor"
 msgid "Rest"
 msgstr "Vila"
 
-#: lib/setup/vars.php:341
-msgid "Deepsky"
-msgstr "Deepsky"
-
-#: lib/setup/vars.php:342
-msgid "Comets"
-msgstr "Kometer"
-
 #: lib/introductionTour.php:10
 msgid "Add one or more instruments"
 msgstr "Lägga till ett eller flera instrument"
@@ -6276,17 +6297,17 @@ msgid "end"
 msgstr "slut"
 
 #: lib/objects.php:899 lib/objects.php:910 lib/objects.php:921
-#: lib/util.php:5168
+#: lib/util.php:5171
 msgid "mid"
 msgstr "mitten"
 
 #: lib/objects.php:901 lib/objects.php:912 lib/objects.php:923
-#: lib/util.php:5166
+#: lib/util.php:5169
 msgid "begin"
 msgstr "starta"
 
 #: lib/objects.php:903 lib/objects.php:914 lib/objects.php:925
-#: lib/util.php:5164
+#: lib/util.php:5167
 msgid "start"
 msgstr "börja"
 
@@ -6558,11 +6579,11 @@ msgstr ""
 msgid "The object has been moved to place %s."
 msgstr "Objektet har flyttats till plats %s."
 
-#: lib/observations_new.php:133
+#: lib/observations_new.php:135
 msgid "This observation contains an image"
 msgstr "Denna iakttagelse innehåller en bild"
 
-#: lib/observations_new.php:180 lib/observations_new.php:193
+#: lib/observations_new.php:182 lib/observations_new.php:195
 msgid "Instrument diameter"
 msgstr "Instrumentets diameter"
 
@@ -6642,27 +6663,27 @@ msgstr "Mån upp: "
 msgid " in "
 msgstr " i "
 
-#: lib/util.php:4978
+#: lib/util.php:4981
 #, php-format
 msgid "You have made %s drawings"
 msgstr "Du har gjort %s-ritningar"
 
-#: lib/util.php:4991
+#: lib/util.php:4994
 #, php-format
 msgid "Make %s drawings to receive this DeepskyLog star!"
 msgstr "Gör %s ritningar för att få denna DeepskyLog stjärna!"
 
-#: lib/util.php:5005
+#: lib/util.php:5008
 #, php-format
 msgid "You have made %s observations!"
 msgstr "Du har gjort %s observationer!"
 
-#: lib/util.php:5018
+#: lib/util.php:5021
 #, php-format
 msgid "Make %s observations to receive this DeepskyLog star!"
 msgstr "Gör %s observationer för att få denna DeepskyLog stjärna!"
 
-#: lib/util.php:5037
+#: lib/util.php:5040
 msgid "Select columns"
 msgstr "Välj kolumner"
 

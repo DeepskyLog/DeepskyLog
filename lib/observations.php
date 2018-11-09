@@ -368,7 +368,7 @@ class Observations
                         _(
                             "Only the correct observations have been read.
 
-You first have to solve the problems mentionned above and then %sreimport%s the observations.
+You first have to solve the problems mentioned above and then %sreimport%s the observations.
 You may limit the reimport to the faulty observations, or you may again use all of them.
 Correct observations which have been imported will not be registered for a second time."
                         ), 
@@ -960,6 +960,23 @@ Correct observations which have been imported will not be registered for a secon
                 . $country . "\"", 'Cnt', 0
             );
         }
+    }
+
+    /** 
+     * Returns the drawings of the given observer.
+     * 
+     * @param string $userid The userid for who we want to get the drawings.
+     *
+     * @return array The drawings in DeepskyLog.
+     */    
+    public function getUserDrawings($userid="")
+    {
+        global $objDatabase;
+
+        return $objDatabase->selectRecordsetArray(
+            "SELECT * FROM observations " 
+            . "WHERE hasDrawing=1 and observerid=\"" . $userid . "\""
+        );
     }
 
     /** 
@@ -3087,6 +3104,7 @@ Correct observations which have been imported will not be registered for a secon
                 ) {
                     $_POST['limit'] = $matches[1] . "." 
                         . (($matches[2]) ? $matches[2] : "0");
+                    $_POST['sqm'] = -1;
                 } else {
                     $_POST['limit'] = 0; // clear current magnitude limit
                 }
@@ -3100,11 +3118,11 @@ Correct observations which have been imported will not be registered for a secon
                     $_POST['sqm'] = $matches[1] . $matches[2] . "." 
                         . (($matches[3]) ? $matches[3] : "0");
                 } else {
-                    $_POST['sqm'] = - 1; // clear current magnitude limit
+                    $_POST['sqm'] = -1; // clear current magnitude limit
                 }
             } else {
                 $_POST['limit'] = 0;
-                $_POST['sqm'] = - 1;
+                $_POST['sqm'] = -1;
             }
             $entryMessage .= _("You did not fill in a required field!");
             $_GET['indexAction'] = 'add_observation';
@@ -3154,6 +3172,7 @@ Correct observations which have been imported will not be registered for a secon
                          // between 0 and 9
                         $_POST['limit'] = $matches[1] . "." 
                             . (($matches[2]) ? $matches[2] : "0");
+                        $_POST['sqm'] = -1;
                     } else { 
                         // clear current magnitude limit
                         $_POST['limit'] = "";
@@ -3215,7 +3234,22 @@ Correct observations which have been imported will not be registered for a secon
                 $_SESSION['addObs'] = '';
                 $_SESSION['Qobs'] = array();
                 $_SESSION['QobsParams'] = array();
-                if ($objUtil->checkPostKey('sqm')) {
+                if ($objUtil->checkPostKey('limit')) {
+                    if (preg_match(
+                        '/([0-9]{1})[.,]{0,1}([0-9]{0,1})/',
+                        $_POST['limit'], $matches
+                    )
+                    ) {
+                         // limiting magnitude like X.X or X,X with X a number
+                         // between 0 and 9
+                        $_POST['limit'] = $matches[1] . "." 
+                            . (($matches[2]) ? $matches[2] : "0");
+                        $_POST['sqm'] = -1;
+                    } else { 
+                        // clear current magnitude limit
+                        $_POST['limit'] = "";
+                    } 
+                } else if ($objUtil->checkPostKey('sqm')) {
                     if (preg_match(
                         '/([0-9]{1})([0-9]{0,1})[.,]{0,1}([0-9]{0,1})/', 
                         $_POST['sqm'], $matches
@@ -3224,10 +3258,11 @@ Correct observations which have been imported will not be registered for a secon
                         // sqm value
                         $_POST['sqm'] = $matches[1] . $matches[2] . "." 
                             . (($matches[3]) ? $matches[3] : "0");
+                        $_POST['limit'] = 0;
                     } else {
                         $_POST['sqm'] = ""; // clear current magnitude limit
                     }
-                }
+                }    
                 if ($objUtil->checkPostKey('largeDiam')) {
                     if (preg_match(
                         '/([0-9]+)[.,]{0,1}([0-9]{0,1})/', 
@@ -3269,6 +3304,12 @@ Correct observations which have been imported will not be registered for a secon
                     $objObservation->setDsObservationProperty(
                         $current_observation, 'SQM', 
                         preg_replace("/,/", ".", $objUtil->checkPostKey('sqm', -1))
+                    );
+                }
+                if ($_POST['limit']) {
+                    $objObservation->setDsObservationProperty(
+                        $current_observation, 'limmag', 
+                        preg_replace("/,/", ".", $objUtil->checkPostKey('limit', 0))
                     );
                 }
                 if ($_POST['smallDiam']) {
