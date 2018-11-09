@@ -67,7 +67,7 @@ function preludesB()
     global $objLanguage, $objLens, $objList, $objLocation, $objObject;
     global $objObjectOutlines, $objObservation, $objObserverQueries, $objObserver;
     global $objPresentations, $objPrintAtlas, $objReportLayout, $objStar;
-    global $objAccomplishments, $objUtil, $language;
+    global $objAccomplishments, $objUtil, $language, $locale;
 
     // This is needed to use the po files for the translations
     if ($language == "nl") {
