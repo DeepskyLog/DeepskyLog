@@ -53,12 +53,49 @@ function newObservation()
                       { 
                         // We now have the sqm from the selected location
                         // Convert to number...
-                        $("#sqm").val(Number(JSON.parse(jsonhttp.responseText))).change();
+                        sqmNumber = Number(JSON.parse(jsonhttp.responseText));
+                        if (sqmNumber < 0) {
+                            $("#sqm").val("").change();
+                        } else {
+                            $("#sqm").val(sqmNumber).change();
+                        }
                       }
                     };
                     jsonhttp.open("GET",url,true);
                     jsonhttp.send(null);
                 });
+
+
+                $("#site").change(function() {
+                    // We have the id of the location, we need to find the sqm now...
+                    var id = ($(this).find("option:selected").attr("value"));
+                    // Read from ajaxinterface.php -> getLocationNELM, using id
+                    var url="' . $baseURL 
+        . 'ajaxinterface.php?instruction=getLocationNELM&id=" + id;
+
+                    var jsonhttp;
+                    if(window.XMLHttpRequest)
+                      jsonhttp=new XMLHttpRequest();
+                    else if(window.activeXObject)
+                      jsonhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                    jsonhttp.onreadystatechange=function()
+                    { 
+                      if(jsonhttp.readyState==4)
+                      { 
+                        // We now have the sqm from the selected location
+                        // Convert to number...
+                        nelmNumber = Number(JSON.parse(jsonhttp.responseText));
+                        if (nelmNumber < 0) {
+                            $("#lm").val("").change();
+                        } else {
+                            $("#lm").val(nelmNumber).change();
+                        }
+                      }
+                    };
+                    jsonhttp.open("GET",url,true);
+                    jsonhttp.send(null);
+                });
+
             });
             </script>';
 
@@ -965,31 +1002,6 @@ function newObservation()
         echo $objPresentations->getDSSDeepskyLiveLinks2($object);
         $objObject->showObject($object);
 
-        echo '<script type="text/javascript">
-        $("#lm").on("keyup change", function(event) {
-            lm = event.target.value;
-            if (lm < 0) {
-                lm = 0.0;
-                $("#lm").val(lm);
-            }
-            sqm = lmToSqm(lm);
-            $("#sqm").val("");
-        });
-
-        // Javascript to convert from sqm to limiting magnitude
-        $("#sqm").on("keyup change", function(event) {
-            sqm = event.target.value;
-
-            if (sqm > 22.0) {
-                sqm = 22.0;
-                $("#sqm").val(22.0);
-            }
-
-            lm = sqmToLm(sqm);
-            $("#lm").val("");
-        });
-
-        </script>';
     } else {
         // no object found or not pushed on search button yet
         echo "<h4>" . _("New observation") . "</h4>";

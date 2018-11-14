@@ -62,6 +62,8 @@ function ajaxinterface() {
 		echo $theset;
     } elseif ($ajaxInstruction == "getLocationSqm") {
 		echo json_encode($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('id', 0), 'skyBackground', ''));
+    } elseif ($ajaxInstruction == "getLocationNELM") {
+		echo json_encode($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('id', 0), 'limitingMagnitude', ''));
     } 
 
 	elseif ($ajaxInstruction == "getReportLayout")
