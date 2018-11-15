@@ -16,7 +16,9 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 }
 
 define("VERSIONINFO", "2018.11.2");
-define("COPYRIGHTINFO", "©2004 - 2018, DeepskyLog developers");
+define("COPYRIGHTINFO", "©2004 - 2018");
+define("DSLINFO", "DeepskyLog");
+define("OBJECTINFO", "Database by Eye&amp;Telescope and Tycho2+ &amp; USNO-UCAC3");
 
 define("ATLASOVERVIEWZOOM", 17);
 define("ATLASLOOKUPZOOM", 18);

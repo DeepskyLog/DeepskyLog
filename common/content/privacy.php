@@ -4,7 +4,7 @@
  * 
  * PHP Version 7
  * 
- * @category Deepsky
+ * @category Common
  * @package  DeepskyLog
  * @author   DeepskyLog Developers <developers@deepskylog.be>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
