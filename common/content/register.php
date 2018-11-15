@@ -140,7 +140,12 @@ function register() {
 	for ($i = $j % 3;$i < 3;$i++) {
 		echo "<td></td>";
 	}
-	echo "</tr></table>";
+    echo "</tr></table>";
+    
+    echo sprintf(
+        _("Your personal information will be processed in accordance with the %sprivacy policy%s and shall be used only for user management and to keep you informed about our activities. "), 
+        "<a href='" . $baseURL . "/index.php?indexAction=privacy'>", "</a>"
+    ) . "<br /><br />";
 
 	echo "<input class=\"btn btn-success\" type=\"submit\" name=\"register\" value=\"" . _("Register") . "\" />";
 	echo "</div></div>";

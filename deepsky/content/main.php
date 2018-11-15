@@ -52,7 +52,7 @@ The database is open for consultation and already contains tens of thousands obs
         ) 
         . sprintf(
             _("Your personal data will be handled in accordance with our %sprivacy policy%s. "), 
-            "<a href='" . $baseURL . "/privacy.php'>", "</a>"
+            "<a href='" . $baseURL . "/index.php?indexAction=privacy'>", "</a>"
         )
         . _("This registration allows access to a variety of useful tools, including information on the objects observed and sketches made. You can consult and create observing lists with different deepsky objects and see suggestions for objects visible in your instruments and from your observation sites. 
 You can create your own file with maps and DSS images of the objects and have access to an interactive and detailed free star atlas."
