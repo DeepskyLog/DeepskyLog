@@ -42,10 +42,11 @@ echo "</div>";
 echo "<br />";
 
 if (!$loggedUser) {
-    echo _("<h2>Welcome to DeepskyLog!</h2>
+    echo _(
+        "<h2>Welcome to DeepskyLog!</h2>
 DeepskyLog is an extended, comprehensive and free database for deepsky objects and has been developed by the Deepsky section of the Astronomical Society of Belgium (<a href=\"http://www.vvs.be\">Vereniging Voor Sterrenkunde (VVS)</a>).
-The database is open for consultation and already contains tens of thousands observations and thousands of sketches and drawings made by amateur astronomers around the world.") 
-        . "<br /><br />" 
+The database is open for consultation and already contains tens of thousands observations and thousands of sketches and drawings made by amateur astronomers around the world."
+    ) . "<br /><br />" 
         . sprintf(
             _("To start recording your observations and share your observations with other observers, you are kindly requested to %sregister%s to DeepskyLog."),
             "<a href='" . $baseURL . "/index.php?indexAction=subscribe&title=Register'>", "</a>"
@@ -54,7 +55,8 @@ The database is open for consultation and already contains tens of thousands obs
             _("Your personal data will be handled in accordance with our %sprivacy policy%s. "), 
             "<a href='" . $baseURL . "/index.php?indexAction=privacy'>", "</a>"
         )
-        . _("This registration allows access to a variety of useful tools, including information on the objects observed and sketches made. You can consult and create observing lists with different deepsky objects and see suggestions for objects visible in your instruments and from your observation sites. 
+        . _(
+            "This registration allows access to a variety of useful tools, including information on the objects observed and sketches made. You can consult and create observing lists with different deepsky objects and see suggestions for objects visible in your instruments and from your observation sites. 
 You can create your own file with maps and DSS images of the objects and have access to an interactive and detailed free star atlas."
         ) . "<br /><br />"
         . sprintf(
