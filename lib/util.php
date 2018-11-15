@@ -4815,6 +4815,9 @@ class Utils
         case 'subscribe':
             return 'common/content/register.php';
             break;
+        case 'privacy':
+            return 'common/content/privacy.php';
+            break;
         case 'overview_eyepieces':
             if ($loggedUser) {
                 return 'common/content/overview_eyepieces.php';
