@@ -3593,7 +3593,7 @@ msgstr "Object waarneembaar met direct zicht"
 #: deepsky/content/setup_observations_query.php:529
 #: deepsky/content/setup_observations_query.php:558 lib/setup/vars.php:86
 msgid "Averted vision required to percept object"
-msgstr "Perifieer zicht nodig om object te zien"
+msgstr "Perifeer zicht nodig om object te zien"
 
 #: deepsky/content/setup_observations_query.php:530
 #: deepsky/content/setup_observations_query.php:559 lib/setup/vars.php:87
