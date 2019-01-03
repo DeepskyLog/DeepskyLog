@@ -32,7 +32,7 @@ function addXmlObservations()
     global $baseURL, $entryMessage, $objSession, $mailTo, $mailFrom;
     global $loggedUser, $objConstellation, $objObject, $objCatalog;
     global $objLocation, $objInstrument, $objFilter, $objEyepiece, $objLens;
-    global $objDatabase, $objObserver, $objObservation;
+    global $objDatabase, $objObserver, $objObservation, $developversion;
     
     if ($_FILES['xml']['tmp_name'] != "") {
         $xmlfile = $_FILES['xml']['tmp_name'];
