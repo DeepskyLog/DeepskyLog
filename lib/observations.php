@@ -3280,14 +3280,22 @@ Correct observations which have been imported will not be registered for a secon
                     }
                 }
 
-                if ($_POST['smallDiam'] > $_POST['largeDiam']) {
-                    $tmp = $_POST['largeDiam'];
-                    $_POST['largeDiam'] = $_POST['smallDiam'];
-                    $_POST['smallDiam'] = $tmp;
+                if ($objUtil->checkPostKey('smallDiam') 
+                    && $objUtil->checkPostKey('largeDiam')
+                ) {
+                    if ($_POST['smallDiam'] > $_POST['largeDiam']) {
+                        $tmp = $_POST['largeDiam'];
+                        $_POST['largeDiam'] = $_POST['smallDiam'];
+                        $_POST['smallDiam'] = $tmp;
+                    }
                 }
                 if ($objUtil->checkPostKey('size_units') == "min") {
-                    $_POST['smallDiam'] = $_POST['smallDiam'] * 60.0;
-                    $_POST['largeDiam'] = $_POST['largeDiam'] * 60.0;
+                    if ($objUtil->checkPostKey('smallDiam')) {
+                        $_POST['smallDiam'] = $_POST['smallDiam'] * 60.0;
+                    }
+                    if ($objUtil->checkPostKey('largeDiam')) {
+                        $_POST['largeDiam'] = $_POST['largeDiam'] * 60.0;
+                    }
                 }
                 if ($_POST['sqm']) {
                     $objObservation->setDsObservationProperty(

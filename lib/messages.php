@@ -183,9 +183,14 @@ class Messages {
 
 		// We check whether the observer wants to receive the DeepskyLog messages as email. If so, we send an email.
 		if ($objObserver->getObserverProperty ( $receiver, 'sendMail' )) {
-			$senderName = $objObserver->getFullName($sender);
-			$message = sprintf(_("DeepskyLog message from %s:"), $senderName) . "<br /><br />" . $message . "<br /><br />";
-			$this->sendEmail($subject, $message, $receiver);
+            if (strcmp($sender, "DeepskyLog")) {
+                $senderName = $objObserver->getFullName($sender);
+            } else {
+                $senderName = $sender;
+            }
+            $message = sprintf(_("DeepskyLog message from %s:"), $senderName) . "<br /><br />" . $message . "<br /><br />";
+            
+            $this->sendEmail($subject, $message, $receiver);
 		}
 
 		if ($receiver == "all") {
@@ -202,60 +207,69 @@ class Messages {
 	public function sendEmail($subject, $message, $userid, $cc = false) {
 		// Sends a html mail to the given userid. If $userid == "developers", then we send a mail to the DeepskyLog team.
 		// If $cc is true, we also send a CC to the developers.
-		global $mailFrom, $instDir, $objObserver;
+		global $mailFrom, $instDir, $objObserver, $developversion, $entryMessage;
 		global $mailHost, $mailSMTPAuth, $mailServerUsername, $mailServerPassword, $mailSMTPSecure, $mailPort;
 
-		require_once('PHPMailer/class.phpmailer.php');
+        if (isset($developversion) 
+        && ($developversion == 1)
+        ) {
+            $entryMessage .= "On the live server, " 
+                . "a mail would be sent with the"
+                . " subject: " . $subject 
+                . ".<br />";
+        } else {
+    		require_once('PHPMailer/class.phpmailer.php');
 
-		// Making the headers for the html mail
-		$headers = "From: " . $mailFrom . "\r\n";
-		$headers .= "Reply-To: ". $mailFrom . "\r\n";
-		$headers .= "MIME-Version: 1.0\r\n";
-		$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+	    	// Making the headers for the html mail
+		    $headers = "From: " . $mailFrom . "\r\n";
+		    $headers .= "Reply-To: ". $mailFrom . "\r\n";
+    		$headers .= "MIME-Version: 1.0\r\n";
+	    	$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-		// Add header and footer to mail.
-		$messageHeader = '<html><body>';
-		$messageHeader .= '<h1>' . $subject . '</h1>';
-		$messageFooter = '<a href=""><img src="cid:logo" style="width:80%;"></a>';
-		$messageFooter .= '</body></html>';
+		    // Add header and footer to mail.
+    		$messageHeader = '<html><body>';
+	    	$messageHeader .= '<h1>' . $subject . '</h1>';
+		    $messageFooter = '<a href=""><img src="cid:logo" style="width:80%;"></a>';
+    		$messageFooter .= '</body></html>';
 
-		$mail = new PHPMailer();
+	    	$mail = new PHPMailer();
 
-		$mail->IsSMTP();    			// set mailer to use SMTP
-		$mail->Host = $mailHost;
-		$mail->SMTPAuth = $mailSMTPAuth;
-		$mail->Username = $mailServerUsername;    // SMTP username
-		$mail->Password = $mailServerPassword;    // SMTP password
-		$mail->SMTPSecure = $mailSMTPSecure;
-		$mail->Port = $mailPort;    // SMTP Port
+		    $mail->IsSMTP();    			// set mailer to use SMTP
+    		$mail->Host = $mailHost;
+	    	$mail->SMTPAuth = $mailSMTPAuth;
+		    $mail->Username = $mailServerUsername;    // SMTP username
+    		$mail->Password = $mailServerPassword;    // SMTP password
+	    	$mail->SMTPSecure = $mailSMTPSecure;
+		    $mail->Port = $mailPort;    // SMTP Port
 
-		$mail->From = $mailFrom;    //From Address
-		$mail->FromName = "DeepskyLog Team";    //From Name
+		    $mail->From = $mailFrom;    //From Address
+		    $mail->FromName = "DeepskyLog Team";    //From Name
 
-		// We get the mailaddress and the full name from the userid
-		if (strcmp($userid, "developers") == 0) {
-			$fullName = "DeepskyLog Team";
-			$mailAddress = $mailFrom;
-		} else {
-			$fullName = $objObserver->getFullName($userid);
-			$mailAddress = $objObserver->getObserverProperty($userid, "email", '');
-		}
+    		// We get the mailaddress and the full name from the userid
+	    	if (strcmp($userid, "developers") == 0) {
+		    	$fullName = "DeepskyLog Team";
+			    $mailAddress = $mailFrom;
+		    } else {
+			    $fullName = $objObserver->getFullName($userid);
+			    $mailAddress = $objObserver->getObserverProperty($userid, "email", '');
+		    }
 
-		$mail->AddAddress($mailAddress, $fullName);    //To Address
-		$mail->AddReplyTo($mailFrom, "DeepskyLog Team"); //Reply-To Address
+    		$mail->AddAddress($mailAddress, $fullName);    //To Address
+	    	$mail->AddReplyTo($mailFrom, "DeepskyLog Team"); //Reply-To Address
 
-		if ($cc) {
-			$mail->AddCC( $mailFrom );
-		}
+    		if ($cc) {
+	    		$mail->AddCC( $mailFrom );
+		    }
 
-		$mail->WordWrap = 50;    // set word wrap to 50 characters
-		$mail->IsHTML(true);     // set email format to HTML
-		$mail->AddEmbeddedImage($instDir . '/images/logo.png', 'logo');
+		    $mail->WordWrap = 50;    // set word wrap to 50 characters
+		    $mail->IsHTML(true);     // set email format to HTML
+		    $mail->AddEmbeddedImage($instDir . '/images/logo.png', 'logo');
 
-		$mail->Subject = $subject;
-		$mail->Body    = $messageHeader . $message . $messageFooter;
+		    $mail->Subject = $subject;
+		    $mail->Body    = $messageHeader . $message . $messageFooter;
 
-		$mail->send();
+            $mail->send();
+        }
 	}
 	public function sendRealMessage($sender, $receiver, $subject, $message) {
 		global $objDatabase, $objObserver;

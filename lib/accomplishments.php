@@ -91,7 +91,7 @@ class Accomplishments
         } elseif ($catalog == "Herschel") {
             $catalog = "H400";
         } elseif ($catalog == "HerschelII") {
-            $catalog = "HII";
+            $catalog = "H400-II";
         }
         if ($drawings) {
             $total = $objObservation->getDrawingsCountFromCatalog($observer, $catalog);
@@ -115,7 +115,7 @@ class Accomplishments
     {
         if ($catalog == "M" || $catalog == "Caldwell") {
             return 3;
-        } elseif ($catalog == "H400" || $catalog == "HII") {
+        } elseif ($catalog == "H400" || $catalog == "HII" || $catalog == "H400-II") {
             return 5;
         }
         return 10;
@@ -409,6 +409,7 @@ class Accomplishments
         if ($drawing) {
             $catalog .= "Drawings";
         }
+
         for ($cnt=0;$cnt < sizeof($objectsObserved);$cnt++) {
             $sql = "UPDATE accomplishments SET " . $catalog . $accomplishmentType[$cnt] . " = " . $objectsObserved[$cnt] . " WHERE observer = \"". $observerId ."\";";
 
