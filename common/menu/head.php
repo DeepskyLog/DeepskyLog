@@ -34,17 +34,17 @@ function head() {
 	echo "<link href=\"styles/bootstrap.min.css\" rel=\"stylesheet\">";
 	echo "<link href=\"styles/bootstrap-tour.min.css\" rel=\"stylesheet\">";
 	// Load select2 javascript to be able to type in select boxes in html.
-	echo "<link href=\"styles/select2.min.css\" rel=\"stylesheet\">";
+	echo "<link href=\"styles/select2.min.css\" rel=\"stylesheet\" class=\"nightMode\">";
 	echo "<script src=\"" . $baseURL . "lib/javascript/select2.min.js\"></script>";
 	// Load the tablesorter
-	echo "<link rel=\"stylesheet\" href=\"styles/bootstrap-theme.min.css\">";
+	echo "<link rel=\"stylesheet\" href=\"styles/bootstrap-theme.min.css\" class=\"nightMode\">";
 	echo "<script src=\"lib/javascript/jquery.tablesorter.min.js\"></script>
         <script src=\"lib/javascript/jquery.tablesorter.widgets.min.js\"></script>
         <script src=\"lib/javascript/jquery.tablesorter.pager.min.js\"></script>
         <script src=\"lib/javascript/widget-columnSelector.js\"></script>
-        <script src=\"lib/javascript/widget-reorder.js\"></script>
-		<link href=\"styles/tablesorter.theme.bootstrap.css\" rel=\"stylesheet\">";
-	echo "<link href=\"" . $baseURL . "styles/deepskylog5030.css\" rel=\"stylesheet\" type=\"text/css\" />";
+        <script src=\"lib/javascript/widget-reorder.js\"></script>";
+	echo "<link href=\"styles/tablesorter.theme.bootstrap.css\" rel=\"stylesheet\" class=\"nightMode\">";
+	echo "<link href=\"styles/deepskylog5030.css\" rel=\"stylesheet\" type=\"text/css\" class=\"nightMode\">";
 	// Load the needed javascript file for bootstrap-fileinput
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/fileinput.min.js\"></script>";
 	// Load the needed javascript file for lazyload
@@ -53,13 +53,16 @@ function head() {
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/strength-meter.min.js\"></script>";
 	// Load the needed css file for bootstrap-fileinput
 	echo "<link rel=\"stylesheet\" href=\"styles/fileinput.min.css\" />";
-  // Load the needed css file for bootstrap-strengthmeter
+    // Load the needed css file for bootstrap-strengthmeter
 	echo "<link rel=\"stylesheet\" href=\"styles/strength-meter.min.css\" />";
 	// Load toastr
 	echo "<link rel=\"stylesheet\" href=\"styles/toastr.min.css\" />";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/toastr.min.js\"></script>";
-  // Load bootstrap-maxlength
+    // Load bootstrap-maxlength
 	echo '<script type="text/javascript" src="' . $baseURL . 'lib/javascript/bootstrap-maxlength.js"></script>';
+  
+    // Night Mode script
+	echo '<script type="text/javascript" src="' . $baseURL . 'lib/javascript/night-mode.js"></script>';
 
 	$TitleText = "";
 	$theDispatch = $objUtil->checkRequestKey ( 'indexAction' );
