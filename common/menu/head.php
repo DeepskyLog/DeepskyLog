@@ -64,6 +64,9 @@ function head() {
     // Night Mode script
 	echo '<script type="text/javascript" src="' . $baseURL . 'lib/javascript/night-mode.js"></script>';
 
+    // Fix responsive design on iphone
+    echo '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />';
+
 	$TitleText = "";
 	$theDispatch = $objUtil->checkRequestKey ( 'indexAction' );
 	$theObject = $objUtil->checkRequestKey ( 'object' );
