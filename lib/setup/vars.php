@@ -15,7 +15,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 }
 
-define("VERSIONINFO", "2019.2");
+define("VERSIONINFO", "2019.2.1");
 define("COPYRIGHTINFO", "©2004 - 2019");
 define("DSLINFO", "DeepskyLog");
 define("OBJECTINFO", "Database based on Eye&amp;Telescope and Tycho2+ &amp; USNO-UCAC3");
