@@ -85,7 +85,11 @@ function headmenu() {
 		echo "</span>";
 		echo "</ul>";
 	}
+	echo "<span class=\"pull-right\">";
+	echo "<button type=\"button\" class=\"btn btn-default navbar-btn glyphicon glyphicon-adjust\" id=\"nightMode\" style=\"margin-right:5px;border:0;\" alt=\"Night Mode\"></button>";
+	echo "</span>";
 	// Closing the menu
+
 	echo "	</div>
         </div>
 			</div>
