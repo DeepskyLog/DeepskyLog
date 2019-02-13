@@ -1063,7 +1063,7 @@ class Observers
                     $cookietime = time() + (365 * 24 * 60 * 60); // 1 year
                     setcookie(
                         "deepskylogsec", $newPassword . $login, 
-                        $cookietime, "/", "", true, true
+                        $cookietime, "/", "", false
                     );
 
                     $_GET['user'] = $loggedUser;
