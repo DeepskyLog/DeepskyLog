@@ -4968,7 +4968,7 @@ class Utils
         ) {
             $_SESSION['module'] = $module;
             $cookietime = time() + 365 * 24 * 60 * 60; // 1 year
-            setcookie("module", $module, $cookietime, "/", "", true, true);
+            setcookie("module", $module, $cookietime, "/", "", false);
         }
     }
 

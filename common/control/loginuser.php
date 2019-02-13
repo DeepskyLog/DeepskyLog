@@ -16,7 +16,7 @@ function login() {
 	$loginErrorText = "";
 	if ($objUtil->checkGetKey ( 'indexAction' ) == 'logout') {
 		$_SESSION ['deepskylog_id'] = '';
-		setcookie("deepskylogsec", "", time() - 3600, "/", "", true, true);
+		setcookie("deepskylogsec", "", time() - 3600, "/", "", false);
 		$loggedUser = "";
 		$_GET ['indexAction'] = 'default_action';
 	} elseif (array_key_exists ( 'deepskylogsec', $_COOKIE ) && $_COOKIE ['deepskylogsec']) {
@@ -64,7 +64,7 @@ function login() {
 					$_SESSION ['admin'] = "no"; // set session variable
 					$loggedUser = $_SESSION ['deepskylog_id'];
 					$cookietime = time () + (365 * 24 * 60 * 60); // 1 year
-					setcookie("deepskylogsec", $passwd . $login, $cookietime, "/", "", true, true);
+					setcookie("deepskylogsec", $passwd . $login, $cookietime, "/", "", false);
 				} else // administrator logs in
 {
 					session_regenerate_id ( true );
@@ -72,7 +72,7 @@ function login() {
 					$_SESSION ['admin'] = "yes";
 					$loggedUser = $login;
 					$cookietime = time () + (365 * 24 * 60 * 60); // 1 year
-					setcookie("deepskylogsec", $passwd . $login, $cookietime, "/", "", true, true);
+					setcookie("deepskylogsec", $passwd . $login, $cookietime, "/", "", false);
 				}
 				unset ( $_SESSION ['QobjParams'] );
 				$_GET ['indexAction'] = 'default_action';
@@ -113,7 +113,7 @@ function login() {
 		}
 	} else {
 		$_SESSION ['deepskylog_id'] = '';
-		setcookie("deepskylogsec", "", time () - 3600, "/", "", true, true);
+		setcookie("deepskylogsec", "", time () - 3600, "/", "", false);
 		$loggedUser = "";
 	}
 	if (((! array_key_exists ( 'module', $_SESSION )) || (! $_SESSION ['module'])) && isset ( $_COOKIE ['module'] )) {
@@ -146,7 +146,7 @@ function login() {
 	}
 	if ($loginErrorCode || $loginErrorText) {
 		$_SESSION ['deepskylog_id'] = '';
-		setcookie("deepskylogsec", "", time () - 3600, "/", "", true, true);
+		setcookie("deepskylogsec", "", time () - 3600, "/", "", false);
 	}
 	if ($loggedUser)
 		$loggedUserName = $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' );
