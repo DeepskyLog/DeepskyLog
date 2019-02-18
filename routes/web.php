@@ -11,13 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'PagesController@home');
 
-Route::get('/privacy', function () {
-    return view('privacy');
-});
+Route::get('/privacy', 'PagesController@privacy');
 
 Route::get('/lang/{locale?}', [
     'as'=>'lang',
