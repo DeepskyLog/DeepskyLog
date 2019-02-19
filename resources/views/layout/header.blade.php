@@ -1,43 +1,29 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">
-                <div class="hidden-sm">DeepskyLog</div>
-                <span class="glyphicon glyphicon-home visible-sm"></span>
-            </a>
-        </div>
-		<div class="collapse navbar-collapse main-nav" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-    		    <li><a class="tour7" href="/show_messages">
-                    <span class="glyphicon glyphicon-inbox"></span>&nbsp;
-                    <span class="badge">0</span></a>
+    <a class="navbar-brand" href="/">DeepskyLog</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Dropdown
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <a class="dropdown-item" href="#">Action</a>
+                          <a class="dropdown-item" href="#">Another action</a>
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
                 </li>
-		    </ul>
 
 
-	        <ul class="nav navbar-nav navbar-right">
-		        <li class="dropdown">
-	                <a class="tour5" href="" class="dropdown-toggle" data-toggle="dropdown">Wim
-                        <b class="caret"></b>
-                    </a>
-		    <ul class="dropdown-menu">
-		        <li><a href="detail_observer">_("Details")</a></li>
-		        <li><a href="change_account">_("Settings")</a></li>
-		        <li class="disabled">─────────────────</li>
-		        <li><a href="logout">_("Log out")</a></li>
-		    </ul>
-
-        	<span class="pull-right">
-    	        <button type="button" class="btn btn-default navbar-btn glyphicon glyphicon-adjust" id="nightMode" style="margin-right:5px;border:0;" alt="Night Mode"></button>
-	        </span>
-
-        </div>
+            @include('layout.header.view');
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
     </div>
 </nav>
-
