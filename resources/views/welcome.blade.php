@@ -1,8 +1,7 @@
 @extends("layout.master")
 
+@section('content')
 <h1>Test</h1>
-
-{{ _i('Translated string') }}
 
 {!! LaravelGettext::getSelector([
     'en' => 'English',
@@ -12,3 +11,5 @@
     'sv' => 'Svenska',
     'fr' => 'Français'
 ])->render(); !!}
+
+@endsection

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/">DeepskyLog</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -6,24 +6,25 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Dropdown
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <a class="dropdown-item" href="#">Action</a>
-                          <a class="dropdown-item" href="#">Another action</a>
-                          <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                </li>
-
-
             @include('layout.header.view');
+            @include('layout.header.search');
+            @include('layout.header.add');
+            @include('layout.header.admin');
+            @include('layout.header.downloads');
+            @include('layout.header.help');
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-    </div>
+
+        <ul class="navbar-nav">
+            <button class="btn btn btn-light fas fa-adjust" id="nightMode" style="margin-right:5px;border:0;" alt="Night Mode"></button>
+
+            @include('layout.header.user');
+            
+            <button class="btn" style="margin-right:5px;border:0;">
+                <a href="/message/view">
+                    <span style="color: #FFFFFF" class="fas fa-inbox"></span>&nbsp;
+                    <span class="badge badge-pill badge-secondary">4</span>
+                </a>
+            </button>                
+        </ul>
+</div>
 </nav>
