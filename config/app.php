@@ -56,6 +56,7 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
+    'dslversion' => '2020.1',
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
