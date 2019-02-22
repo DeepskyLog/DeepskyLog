@@ -8,11 +8,18 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+// Select2
+@import '~select2/dist/css/select2';
+@import '~select2-bootstrap4-theme/dist/select2-bootstrap4.css';
+
 // Fontawesome
-@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
 @import '~@fortawesome/fontawesome-free/scss/regular.scss';
 @import '~@fortawesome/fontawesome-free/scss/solid.scss';
 @import '~@fortawesome/fontawesome-free/scss/brands.scss';
+
+// jquery-ui
+@import '~jquery-ui/themes/base/all.css';
 
 .navbar-laravel {
   background-color: #fff;

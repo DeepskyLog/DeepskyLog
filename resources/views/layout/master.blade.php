@@ -16,12 +16,29 @@
 
     <body>
         @include('layout.header')
+        @include('layout.header2')
 
-        <div>
-            @yield('content')
+        <div class="container-fluid">
+            <div class="row">
+                @include('layout.sidebar')
+
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                    <br />
+                    @yield('content')
+                </main>
+            </div>
         </div>
 
+        <br />
         @include('layout.footer')
 
+        <script>
+            $(document).ready(function() {
+                $("select").select2();
+            });
+            $('select').select2({
+                theme: 'bootstrap4',
+            });
+        </script>
     </body>
 </html>

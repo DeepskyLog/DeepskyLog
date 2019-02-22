@@ -15,7 +15,4 @@ Route::get('/', 'PagesController@home');
 
 Route::get('/privacy', 'PagesController@privacy');
 
-Route::get('/lang/{locale?}', [
-    'as'=>'lang',
-    'uses'=>'HomeController@changeLang'
-]);
+Route::post('/lang', 'LanguageController@changeLang');

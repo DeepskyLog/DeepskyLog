@@ -28,12 +28,12 @@ return [
      * Supported locales: An array containing all allowed languages
      */
     'supported-locales' => [
-        'en',
-        'es',
-        'nl',
-        'fr',
-        'de',
-        'sv'
+        'en_US',
+        'es_ES',
+        'nl_NL',
+        'fr_FR',
+        'de_DE',
+        'sv_SE'
     ],
 
     /**
