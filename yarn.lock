@@ -3316,6 +3316,11 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
+lune@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/lune/-/lune-0.4.0.tgz#4ac3faaa6cd351236815212e8db7ecd8fb5e2306"
+  integrity sha1-SsP6qmzTUSNoFSEujbfs2PteIwY=
+
 make-dir@^1.0.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-1.3.0.tgz#79c1033b80515bd6d24ec9933e860ca75ee27f0c"
@@ -5103,6 +5108,11 @@ stylehacks@^4.0.0:
     postcss "^7.0.0"
     postcss-selector-parser "^3.0.0"
 
+suncalc2@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/suncalc2/-/suncalc2-1.8.1.tgz#1efe084f8944724104930a8be5049e2c569d886f"
+  integrity sha512-tNoAni1LqWzBzJRX3NRCsD50gVsuejH1jd9Y+XyKO3WkpPIU+QNyWF4Zf2JnUQKW2LKLWIBgVDQCrgsQwqs0tA==
+
 supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
@@ -5433,10 +5443,10 @@ vue-style-loader@^4.1.0:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
-vue-template-compiler@^2.6.6:
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.6.6.tgz#a807acbf3d51971d3721d75ecb1b927b517c1a02"
-  integrity sha512-OakxDGyrmMQViCjkakQFbDZlG0NibiOzpLauOfyCUVRQc9yPmTqpiz9nF0VeA+dFkXegetw0E5x65BFhhLXO0A==
+vue-template-compiler@^2.6.7:
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.6.7.tgz#7f6c14eacf3c912d28d33b029cde706d9756e00c"
+  integrity sha512-ZjxJLr6Lw2gj6aQGKwBWTxVNNd28/qggIdwvr5ushrUHUvqgbHD0xusOVP2yRxT4pX3wRIJ2LfxjgFT41dEtoQ==
   dependencies:
     de-indent "^1.0.2"
     he "^1.1.0"
