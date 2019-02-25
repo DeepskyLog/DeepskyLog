@@ -15,24 +15,33 @@
 	<table class="table table-sm">
 	    <tr>
             <td> {{ _i("Moon") }} </td>
-            <script>
-                // TODO: Add moon rise / set
-                // TODO: Next day for moonrise
-                // TODO: Timezones
-                // TODO: Moon phase picture
+            @php
+                // TODO: Use real location (timezone) and date.
+                // TODO: Move time zone / date code to AstroCalc library.
+                // Moon rise and set
+                use App\Libraries\AstroCalc;
 
-                year = 2019;
-                month = 2;
-                day = 25;
-                latitude = 50.8322;
-                longitude = 4.86463;
-                TZ = 60;
-                var moonRiseSet = new MoonRise(year,month,day,TZ,latitude,longitude);
-                //alert(moonRiseSet);
-            </script>
+                $objAstroCalc = new AstroCalc();
+                $jd = gregoriantojd(02, 25, 2019);
+                $latitude = 50.8322;
+                $longitude = 4.86463;
 
-            <td>12:01</td>
-            <td>22:24</td>
+                $dateTimeZone=new DateTimeZone("Europe/Brussels");
+	            $datestr=sprintf("02/25/2019");
+	            $dateTime = new DateTime($datestr, $dateTimeZone);
+	            // Returns timedifference in seconds
+	            $timedifference = $dateTimeZone->getOffset($dateTime);
+	            $timedifference = $timedifference / 3600.0;
+
+                //if (strncmp($timezone, "Etc/GMT", 7)==0) {
+                //    $timedifference = -$timedifference;
+                //}
+
+                $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude, $timedifference);
+            @endphp
+
+            <td>{{ $moon[0] }}</td>
+            <td>{{ $moon[2] }}</td>
 	    </tr>
 	    <tr>
             <td>{{ _i("Sun") }}</td>
@@ -96,12 +105,22 @@
 	</table>
 
     <p>
-        <img src="{{ asset('img/moon/m7.gif') }}" title="45%" height="100px" width="100px" alt="45%" />
+        @php
+            // TODO: Use correct date
+            $moon = new Solaris\MoonPhase();
+
+            $file = "img/moon/m" . round(($moon->getPhaseRatio()) * 40) . ".gif";
+            $illumination = round($moon->illumination() * 100) . "%";
+        @endphp
+        <img src="{{ asset($file) }}" title={{ $illumination }} height="100px" width="100px" alt={{ $illumination }} />
     </p>
 
     @php
         setlocale(LC_TIME, LaravelGettext::getLocale());
-        $date = DateTime::createFromFormat('j/n/Y', '3/1/2019');
+        // Next New moon
+        $next = gmdate( 'j/m/Y', $moon->getNextNewMoon() );
+
+        $date = DateTime::createFromFormat('j/n/Y', $next);
         $newMoonDate = strftime("%e %b", $date->getTimestamp());
     @endphp
     {{ _i("New moon") }}: {{ $newMoonDate }}

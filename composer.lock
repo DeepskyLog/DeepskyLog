@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9a50b58aed9e048c21667497cbda22fd",
+    "content-hash": "86c8ff9e244f8ae791361c0549294c32",
     "packages": [
         {
             "name": "belphemur/laravel-gettext",
@@ -703,6 +703,57 @@
             ],
             "description": "Highlight PHP code in terminal",
             "time": "2018-09-29T18:48:56+00:00"
+        },
+        {
+            "name": "janbarasek/php-moon-phase",
+            "version": "v2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/janbarasek/php-moon-phase.git",
+                "reference": "6ce1335a81ca8bcdebbff2d9632821cab49fa835"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/janbarasek/php-moon-phase/zipball/6ce1335a81ca8bcdebbff2d9632821cab49fa835",
+                "reference": "6ce1335a81ca8bcdebbff2d9632821cab49fa835",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Solaris": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Erik Scheepers",
+                    "email": "e.scheepers@linkorb.com",
+                    "role": "Packaging for composer"
+                },
+                {
+                    "name": "Samir Shah",
+                    "email": "samir@rayofsolaris.net"
+                },
+                {
+                    "name": "Jan Barášek",
+                    "email": "jan@barasek.com"
+                }
+            ],
+            "description": "A PHP class for calculating the phase of the Moon.",
+            "homepage": "http://www.github.com/janbarasek/php-moon-phase",
+            "keywords": [
+                "moon",
+                "phase",
+                "php"
+            ],
+            "time": "2018-10-30T10:15:40+00:00"
         },
         {
             "name": "laravel/framework",
