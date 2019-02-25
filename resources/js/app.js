@@ -15,7 +15,6 @@ import $ from 'jquery';
 window.$ = window.jQuery = $;
 
 import 'jquery-ui/ui/widgets/datepicker.js';
-import 'suncalc2/suncalc2.js';
 
 /**
  * The following block of code may be used to automatically register your

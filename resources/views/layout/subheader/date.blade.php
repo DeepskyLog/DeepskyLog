@@ -2,38 +2,55 @@
     {{ _i('Date') }}
 </span>
 &nbsp;&nbsp;
+<script type="text/javascript" src="{{ URL::asset('js/degrees.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('js/astro.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('js/moon.js') }}"></script>
 <script>
+    var eventDates = {};
+
     $( function() {
+        $("#datepicker").data("selectedDate","02/26/2019");
+
         $( "#datepicker" ).datepicker({
-            showOtherMonths: true,
-            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
             showButtonPanel: true,
-            beforeShow: function() {
-			      // Calculate the new moons for the selected month
-			      // We calculated the new moon from the first of the month and from the 15th of the month.
-	              $phases = array();
-	              $date = $_SESSION['globalYear'] . "-" . $_SESSION ['globalMonth'] . "-01";
-	              $phases = phasehunt(strtotime($date));
-			      $newmoon = date("m/d/Y", $phases[4]);
-			      echo "
-			      eventDates[ new Date( '" . $newmoon . "' )] = 1;";
+            onChangeMonthYear: function(year, month) {
+			    // Calculate all new moons for this month
+			    // We use a method in javascript for this...
+                var moon = new MoonQuarters(year, month, 1);
+                var date = jdtocd(moon[0]);
+                eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
 
-			      $phases = array();
-			      $date = $_SESSION['globalYear'] . "-" . $_SESSION ['globalMonth'] . "-15";
-			      $phases = phasehunt(strtotime($date));
-			      $newmoon = date("m/d/Y", $phases[4]);
+          		if (month - 1 < 1) {
+          		    var moon = new MoonQuarters(year - 1, 12, 1);
+          		} else {
+          		    var moon = new MoonQuarters(year, month - 1, 1);
+          		}
+                var date = jdtocd(moon[0]);
+          		eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
 
-			      echo "
-                  eventDates[ new Date( '" . $newmoon . "' )] = 1;
-			    },
-			    beforeShowDay: function(date) {
-                  var highlight = eventDates[date];
-                  if (highlight) {
-			        return [true, \"event\", \"" . _("New moon") . "\"];
-                  } else {
+           		if (month + 1 > 12) {
+           		    var moon = new MoonQuarters(year + 1, 1, 1);
+           		} else {
+           		    var moon = new MoonQuarters(year, month + 1, 1);
+           		}
+                var date = jdtocd(moon[0]);
+                eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
+			},
+            beforeShow: function (input, inst) {
+                var datePicked = new Date( $("#datepicker").data("selectedDate") );
+                // This makes sure that the date is set, and that the onChangeMonthYear method is called.
+                $(this).datepicker("setDate", new Date($("#datepicker").data("selectedDate")));
+			},
+			beforeShowDay: function(date) {
+                var highlight = eventDates[date];
+                if (highlight) {
+                    return [true, 'event', '{{ _i("New moon") }}'];
+                } else {
                     return [true, '', ''];
-                  }
-                },
+                }
+            },
 
             dateFormat: "dd/mm/yy",
             defaultDate: -7

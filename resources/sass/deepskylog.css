@@ -1,0 +1,509 @@
+.thumbnail-no-border {
+    border: 0 none;
+    box-shadow: none;
+}
+.event a {
+    background-color: #42B373 !important;
+    background-image :none !important;
+    color: #ffffff !important;
+}
+
+.accomplishmentRow {
+	clear:both;
+	height: 140px;
+}
+
+.accomplishmentText {
+ position: relative;
+  top: 25px;
+  font-size: 32px;
+  text-align: center;
+  color: red;
+  font-family: 'Yellowtail', cursive;
+}
+
+.star {
+  background-size: 100px;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100px;
+  width: 140px;
+  float: left;
+}
+
+#bronze {
+  background-image: url("images/star-bronze.png");
+}
+
+#silver {
+  background-image: url("images/star-silver.png");
+}
+
+#gold {
+  background-image: url("images/star-gold.png");
+}
+
+#diamond {
+  background-image: url("images/star-diamond.png");
+}
+
+#platinum {
+  background-image: url("images/star-platina.png");
+}
+
+#newbie {
+  background-image: url("images/star-silver.png");
+}
+
+#rookie {
+  background-image: url("images/star-silver.png");
+}
+
+#beginner {
+  background-image: url("images/star-silver.png");
+}
+
+#talented {
+  background-image: url("images/star-silver.png");
+}
+
+#skilled {
+  background-image: url("images/star-silver.png");
+}
+
+#intermediate {
+  background-image: url("images/star-silver.png");
+}
+
+#experienced {
+  background-image: url("images/star-silver.png");
+}
+
+#advanced {
+  background-image: url("images/star-silver.png");
+}
+
+#senior {
+  background-image: url("images/star-silver.png");
+}
+
+#expert {
+  background-image: url("images/star-silver.png");
+}
+
+.notAccomplished {
+  opacity: 0.2;
+}
+
+.form-signin{max-width:330px;margin:0 auto;padding:15px;}
+.form-signin .form-signin-heading,.form-signin .checkbox{margin-bottom:10px;}
+.form-signin .checkbox{font-weight:normal;}
+.form-signin .form-control{position:relative;font-size:16px;height:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:10px;}
+.form-signin .form-control:focus{z-index:2;}
+.form-signin input[type="text"]{margin-bottom:-1px;border-bottom-left-radius:0;border-bottom-right-radius:0;}
+.form-signin input[type="password"]{margin-bottom:10px;border-top-left-radius:0;border-top-right-radius:0;}
+.account-wall{margin-top:20px;background-color:#f7f7f7;-moz-box-shadow:0 2px 2px rgba(0,0,0,0.3);-webkit-box-shadow:0 2px 2px rgba(0,0,0,0.3);box-shadow:0 2px 2px rgba(0,0,0,0.3);padding:40px 0 20px;}
+.login-title{color:#555;font-size:18px;font-weight:400;display:block;}
+.need-help{margin-top:10px;}
+.new-account{display:block;margin-top:10px;}
+
+.move{
+  margin-top: 50px;
+  padding-top: 75px;
+  margin-bottom: 50px;
+  padding-bottom: 75px;
+}
+.divide-text{
+    color:#fff;
+    line-height: 20px;
+    font-size:20px;
+    padding: 15px 0;
+}
+
+.affix {
+  top: 50px;
+  width:100%;
+}
+
+.filler{
+  min-height: 2000px;
+}
+
+.navbar-form {
+    padding: 10px 0;
+}
+
+.navbar-collapse{
+   padding-left:0;
+}
+
+/*** custom css only popup ***/
+.columnSelectorWrapper {
+  position: relative;
+  margin: 10px 0;
+  display: inline-block;
+}
+.columnSelector, .hidden {
+  display: none;
+}
+.columnSelectorButton {
+  background: #99bfe6;
+  border: #888 1px solid;
+  color: #111;
+  border-radius: 5px;
+  padding: 5px;
+}
+#colSelect1:checked + label {
+  background: #5797d7;
+  border-color: #555;
+}
+#colSelect1:checked ~ #columnSelector {
+  display: block;
+}
+.columnSelector {
+  z-index:9999;
+  width: 120px;
+  position: absolute;
+  top: 30px;
+  padding: 10px;
+  background: #fff;
+  border: #99bfe6 1px solid;
+  border-radius: 5px;
+}
+.columnSelector label {
+  display: block;
+}
+.columnSelector label:nth-child(1) {
+  border-bottom: #99bfe6 solid 1px;
+  margin-bottom: 5px;
+}
+.columnSelector input {
+  margin-right: 5px;
+}
+.columnSelector .disabled {
+  color: #ddd;
+}
+/* pager wrapper, div */
+.tablesorter-pager {
+  padding: 5px;
+}
+/* pager wrapper, in thead/tfoot */
+td.tablesorter-pager {
+  background-color: #e6eeee;
+  margin: 0; /* needed for bootstrap .pager gets a 18px bottom margin */
+}
+/* pager navigation arrows */
+.tablesorter-pager img {
+  vertical-align: middle;
+  margin-right: 2px;
+  cursor: pointer;
+}
+
+/* pager output text */
+.tablesorter-pager .pagedisplay {
+  padding: 0 5px 0 5px;
+  width: 50px;
+  text-align: center;
+}
+
+/* pager element reset (needed for bootstrap) */
+.tablesorter-pager select {
+  margin: 0;
+  padding: 0;
+}
+
+/*** css used when "updateArrows" option is true ***/
+/* the pager itself gets a disabled class when the number of rows is less than the size */
+.tablesorter-pager.disabled {
+  display: none;
+}
+/* hide or fade out pager arrows when the first or last row is visible */
+.tablesorter-pager .disabled {
+  /* visibility: hidden */
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  cursor: default;
+}
+.typeDifficult {
+  background-color : #CC0000;
+  padding          : 2px;
+  color            : #000000;
+}
+.typeEasy {
+  background-color : #339900;
+  padding          : 2px;
+  color            : #000000;
+}
+.typeNotVisible {
+  background-color : #777777;
+  padding          : 2px;
+  color            : #000000;
+}
+.typeQuestionable {
+  background-color : #999999;
+  padding          : 2px;
+  color            : #000000;
+}
+
+.typeQuiteDifficult {
+  background-color : #FF6600;
+  padding          : 2px;
+  color            : #000000;
+}
+
+.typeVeryEasy {
+  background-color : #66FF00;
+  padding          : 2px;
+  color            : #000000;
+}
+.seenN {
+  background-color : #CC2222;
+  padding          : 2px;
+}
+.seenX {
+  background-color : #E5E500;
+  padding          : 2px;
+}
+.seenY {
+  background-color : #228822;
+  padding          : 2px;
+}
+.seenYD {
+  background-color : #228822;
+  padding          : 2px;
+  color: yellow;
+}
+.seenY > a:link, .seenY > a:visited, .seenYD > a:link, .seenYD > a:visited, .seenX > a:link, .seenX > a:visited, .seenN > a:link, .seenN > a:visited {
+    color: yellow;
+}
+.strikethrough {
+  text-decoration  : line-through;
+}
+.tablesorter-header.tablesorter-reorder-helper {
+  cursor: move;
+}
+.tablesorter-reorder-helper-bar {
+  width: 1px;
+  background: #000;
+}
+.textred {
+  color            : #FF0000;
+}
+.DSSImage {
+  width            : 495px;
+  height           : 495px;
+}
+.ephemeridesgreen {
+  background-color      : #008800;
+}
+.ephemeridesyellow {
+  background-color      : #DDDD00;
+}
+.type10 {
+  background-color : #F0F0F0;
+  color            : #000000;
+  border           : #FFFFFF thin solid;
+}
+.right{
+    padding:0;
+    float:right;
+    margin: 0 10px 0 0;
+}
+.centered {
+  text-align       : center;
+}
+.current {
+    background-color: #FFAAAA;
+}
+table.tablesorter tr.green td {
+    background-color: green;
+}
+table.tablesorter tr.copyright td {
+  font-size        : 80%;
+  background-color : #FFAAAA;
+}
+table.tablesorter tr.type1 td {
+  background-color : #F0F0F0;
+  padding          : 2px;
+  color            : #000000;
+}
+table.tablesorter tr.type2 td {
+  background-color : #E0E6EC;
+  padding          : 2px;
+  color            : #000000;
+}
+.atlasPageDiv {
+  position         : absolute;
+  top              : 0px;
+  left             : 0px;
+  height           : 100%;
+  width            : 100%;
+  margin           : 0%;
+  background-color : #000000;
+  border-style     : none;
+}
+.atlasPageDiv1 {
+  position         : absolute;
+  top              : 0px;
+  left             : 0px;
+  height           : 100%;
+  width            : 100%;
+  margin           : 0%;
+  color            : #FFFF00;
+  background-color : #555555;
+  border-style     : solid;
+  border-width     : 1px;
+  border-color     : #FFFFFF;
+  cursor           : none;
+  font-size        : 8pt;
+  padding          : 1px;
+}
+.atlasPageDiv2 {
+  position         : absolute;
+  top              : 0px;
+  left             : 0px;
+  height           : 100%;
+  width            : 100%;
+  margin           : 0%;
+  color            : #FFFF00;
+  background-color : #555555;
+  border-style     : none;
+  border-width     : 1px;
+  border-color     : #FFFF00;
+  cursor           : none;
+  font-family      : Lucida Console,sans-serif;
+  font-size        : 8pt;
+  padding          : 2px;
+  visibility       : hidden;
+  overflow         : auto;
+}
+.atlasPageDiv3 {
+  position         : absolute;
+  top              : 0px;
+  left             : 0px;
+  height           : 100%;
+  width            : 100%;
+  margin           : 0%;
+  color            : #FFFF00;
+  background-color : #555555;
+  border-style     : none;
+  border-width     : 1px;
+  border-color     : #FFFF00;
+  cursor           : none;
+  font-family      : Lucida Console,sans-serif;
+  font-size        : 8pt;
+  padding          : 2px;
+  visibility       : hidden;
+  overflow         : auto;
+}
+.abbrevTable {
+  border-style     : none;
+  border-width     : 1px;
+  border-color     : #FFFF00;
+}
+#div5 {
+  margin           : 0px;         border : 0px;
+  padding-left     : 0px;         padding-right : 2px;
+  padding-top       : 0px;        padding-bottom: 0px;
+  background-color : #FFFFFF;
+  overflow         : auto;
+}
+.observercatalogbackground {
+  background       : #FFFFFF;
+  color            : #000000;
+  padding          : 5px 5px 5px 5px;
+  text-align       : right;
+}
+.observercataloggreen {
+  background       : #33FF00;
+  color            : #000000;
+  padding          : 5px 5px 5px 5px;
+  text-align       : center;
+}
+.observercatalogred {
+  background       : #FF0000;
+  color            : #000000;
+  padding          : 5px 5px 5px 5px;
+  text-align       : center;
+}
+.observercatalogyellow {
+  background       : #FFFF00;
+  color            : #000000;
+  padding          : 5px 5px 5px 5px;
+  text-align       : center;
+}
+ #map {
+        height: 400px;
+        width: 600px;
+        border: 1px solid #333;
+        margin-top: 0.6em;
+}
+#datepicker{
+		text-align:center;
+}
+
+.img-responsive { width:100%; }
+
+@media (max-width: 1100px){ #listsSelectForm .form-group .form-control{
+		width: 100px
+		}
+}
+
+@media (max-width: 767px){ #listsSelectForm .form-group .form-control{
+		width: 100%
+		}
+}
+
+.tablesorter-pager {
+	font-size: 18px;
+}
+
+.sidebar-outer {
+    position: relative;
+}
+
+.second-navbar{
+  top:50px;
+  z-index: 2;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+td.details-control {
+    background: url('/styles/images/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.details td.details-control {
+    background: url('/styles/images/details_close.png') no-repeat center center;
+}
+
+.details tr{
+	border-bottom: #eeeeee 1px solid;
+}
+
+.moonpic {
+	float: right;
+	border-radius: 6px;
+}
+
+.borderless tbody tr td, .borderless tbody tr th, .borderless thead tr th {
+    border: none;
+}
