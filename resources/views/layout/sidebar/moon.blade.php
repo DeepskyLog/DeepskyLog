@@ -17,27 +17,12 @@
             <td> {{ _i("Moon") }} </td>
             @php
                 // TODO: Use real location (timezone) and date.
-                // TODO: Move time zone / date code to AstroCalc library.
                 // Moon rise and set
                 use App\Libraries\AstroCalc;
 
-                $objAstroCalc = new AstroCalc();
-                $jd = gregoriantojd(02, 25, 2019);
-                $latitude = 50.8322;
-                $longitude = 4.86463;
+                $objAstroCalc = new AstroCalc(2, 25, 2019, 50.8322, 4.86463, "Europe/Brussels");
 
-                $dateTimeZone=new DateTimeZone("Europe/Brussels");
-	            $datestr=sprintf("02/25/2019");
-	            $dateTime = new DateTime($datestr, $dateTimeZone);
-	            // Returns timedifference in seconds
-	            $timedifference = $dateTimeZone->getOffset($dateTime);
-	            $timedifference = $timedifference / 3600.0;
-
-                //if (strncmp($timezone, "Etc/GMT", 7)==0) {
-                //    $timedifference = -$timedifference;
-                //}
-
-                $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude, $timedifference);
+                $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime();
             @endphp
 
             <td>{{ $moon[0] }}</td>
