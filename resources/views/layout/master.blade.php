@@ -29,6 +29,8 @@
             </div>
         </div>
 
+        @include('layout.errors')
+
         <br />
         @include('layout.footer')
 
