@@ -17,7 +17,7 @@ class LanguageController extends Controller
     public function changeLang()
     {
         LaravelGettext::setLocale(request('language'));
-        return Redirect::to(URL::previous());
+        return back();
     }
 }
 ?>
