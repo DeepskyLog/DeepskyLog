@@ -9,8 +9,6 @@
     var eventDates = {};
 
     $( function() {
-        $("#datepicker").data("selectedDate","02/26/2019");
-
         $( "#datepicker" ).datepicker({
             changeMonth: true,
             changeYear: true,
@@ -39,9 +37,11 @@
                 eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
 			},
             beforeShow: function (input, inst) {
-                var datePicked = new Date( $("#datepicker").data("selectedDate") );
-                // This makes sure that the date is set, and that the onChangeMonthYear method is called.
-                $(this).datepicker("setDate", new Date($("#datepicker").data("selectedDate")));
+                var queryDate = "{{ Session::get('date') }}";
+                dateParts = queryDate.match(/(\d+)/g)
+                realDate = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+
+                $(this).datepicker('setDate', realDate);
 			},
 			beforeShowDay: function(date) {
                 var highlight = eventDates[date];
@@ -53,9 +53,28 @@
             },
 
             dateFormat: "dd/mm/yy",
-            defaultDate: -7
+            defaultDate: -7,
+            onSelect: function(dateText) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/setSession",
+                    data: { date: dateText }
+                });
+                location.href = window.location;
+	        }
         });
     } );
 </script>
 
-<input class="form-control" type="text" value="" id="datepicker" size="10" >
+@php
+    if (session('date')) {
+        $date = session('date');
+    } else {
+        // Current date
+        $datetime = new DateTime();
+        $date = $datetime->format('d/m/Y');
+        Session::put('date', $date);
+    }
+@endphp
+<input class="form-control" type="text" value="{{ $date }}" id="datepicker" size="10" >

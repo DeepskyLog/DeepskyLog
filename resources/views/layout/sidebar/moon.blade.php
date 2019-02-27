@@ -9,18 +9,25 @@
 	        {{ _i("Moon / Sun") }}
         </h4>
         <span style="font-weight:normal;">
-            {{ _i("on") }} 28/02&gt;&lt;01/03/2019
+            @php
+                $datestr = Session::get('date');
+                $date = DateTime::createFromFormat('d/m/Y', $datestr);
+                $nextdate = clone $date;
+                $nextdate = $nextdate->modify('+1 day');
+                $nextdatestr = $nextdate->format('d/m/Y');
+            @endphp
+            {{ _i("on") }} {{ $datestr }} &gt;&lt; {{ $nextdatestr }}
         </span>
 	</p>
 	<table class="table table-sm">
 	    <tr>
             <td> {{ _i("Moon") }} </td>
             @php
-                // TODO: Use real location (timezone) and date.
+                // TODO: Use real location (timezone).
                 // Moon rise and set
                 use App\Libraries\AstroCalc;
 
-                $objAstroCalc = new AstroCalc(2, 25, 2019, 50.8322, 4.86463, "Europe/Brussels");
+                $objAstroCalc = new AstroCalc($date, 50.8322, 4.86463, "Europe/Brussels");
 
                 $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime();
             @endphp
@@ -32,8 +39,8 @@
             <td>{{ _i("Sun") }}</td>
             @php
                 // TODO: Use time zones and real coordinates of the location
-                $sun_info_down = date_sun_info(strtotime("02/25/2019"), 50.8322, 4.86463);
-                $sun_info_up = date_sun_info(strtotime("02/26/2019"), 50.8322, 4.86463);
+                $sun_info_down = date_sun_info($date->getTimestamp(), 50.8322, 4.86463);
+                $sun_info_up = date_sun_info($nextdate->getTimestamp(), 50.8322, 4.86463);
 
                 function printDate($riseset) {
                     if ($riseset > 1) {
@@ -91,8 +98,7 @@
 
     <p>
         @php
-            // TODO: Use correct date
-            $moon = new Solaris\MoonPhase();
+            $moon = new Solaris\MoonPhase($date);
 
             $file = "img/moon/m" . round(($moon->getPhaseRatio()) * 40) . ".gif";
             $illumination = round($moon->illumination() * 100) . "%";

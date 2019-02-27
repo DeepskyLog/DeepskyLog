@@ -16,3 +16,5 @@ Route::get('/', 'PagesController@home');
 Route::get('/privacy', 'PagesController@privacy');
 
 Route::post('/lang', 'LanguageController@changeLang');
+
+Route::post('/setSession', 'SessionController@createSession');

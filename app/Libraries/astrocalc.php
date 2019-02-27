@@ -34,17 +34,19 @@ class AstroCalc
     /**
      * Constructor initialises the public astroCalc property
      *
-     * @param int    $month     The month to calculate the ephems.
-     * @param int    $day       The day to calculate the ephems.
-     * @param int    $year      The year to calculate the ephems.
-     * @param float  $latitude  The latitude of the location.
-     * @param float  $longitude The longitude of the location. East is positive,
-     *                          west is negative.
-     * @param string $timezone  The timezone of the location, e.g. "Europe/Brussels"
+     * @param DateTime $date      The date (as dd/mm/yyyy).
+     * @param float    $latitude  The latitude of the location.
+     * @param float    $longitude The longitude of the location. East is positive,
+     *                            west is negative.
+     * @param string   $timezone  The timezone of the location, e.g.
+     *                            "Europe/Brussels"
      */
     public function __construct(
-        $month, $day, $year, $latitude, $longitude, $timezone
+        DateTime $date, $latitude, $longitude, $timezone
     ) {
+        $day = $date->format("d");
+        $month = $date->format("m");
+        $year = $date->format("Y");
         $this->_jd = gregoriantojd($month, $day, $year);
 
         $dateTimeZone=new DateTimeZone($timezone);
@@ -545,7 +547,7 @@ class AstroCalc
 
                     $tocompare = rad2deg(
                         asin(
-                            sin(deg2rad($latitude)) * sin(deg2rad($dec2))
+                            sin(deg2rad($this->_latitude)) * sin(deg2rad($dec2))
                             + cos(deg2rad($this->_latitude)) * cos(deg2rad($dec2))
                             * cos(deg2rad($H))
                         )
