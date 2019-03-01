@@ -42,5 +42,8 @@
                 theme: 'bootstrap4',
             });
         </script>
+
+        <!-- App scripts -->
+        @stack('scripts')
     </body>
 </html>

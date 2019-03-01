@@ -18,3 +18,7 @@ Route::get('/privacy', 'PagesController@privacy');
 Route::post('/lang', 'LanguageController@changeLang');
 
 Route::post('/setSession', 'SessionController@createSession');
+
+Route::get('/lens/create/{len}', 'LensController@create');
+Route::resource('lens', 'LensController');
+
