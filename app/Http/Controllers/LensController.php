@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Lens;
+use App\Lenses;
 use Illuminate\Http\Request;
 
 class LensController extends Controller
@@ -20,13 +20,13 @@ class LensController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param Lens $len The lens to fill out in the fields
+     * @param Lenses $lense The lens to fill out in the fields
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Lens $len)
+    public function create(Lenses $lense)
     {
-        return view('layout.lenses.create', ['lens' => $len, 'update' => false]);
+        return view('layout.lenses.create', ['lens' => $lense, 'update' => false]);
     }
 
     /**
@@ -46,7 +46,7 @@ class LensController extends Controller
             ]
         );
 
-        Lens::create($validated);
+        Lenses::create($validated);
 
         // View the page with all lenses for the user
         return view('layout.lenses.view');
@@ -55,10 +55,11 @@ class LensController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Lens  $len The lens to show
+     * @param \App\Lenses $lense The lens to show
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show(Lens $len)
+    public function show(Lenses $lense)
     {
         //
     }
@@ -66,29 +67,29 @@ class LensController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Lens $len The lens to edit
+     * @param Lenses $lense The lens to edit
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit(Lens $len)
+    public function edit(Lenses $lense)
     {
-        return view('layout.lenses.create', ['lens' => $len, 'update' => true]);
+        return view('layout.lenses.create', ['lens' => $lense, 'update' => true]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request The request with all information
-     * @param Lens    $len     The id of the lens to adapt
+     * @param Lenses  $lense   The lens to adapt
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Lens $len)
+    public function update(Request $request, Lenses $lense)
     {
         if ($request->has('active')) {
-            $len->active();
+            $lense->active();
         } else {
-            $len->inactive();
+            $lense->inactive();
         }
 
         if ($request->has('factor')) {
@@ -100,8 +101,8 @@ class LensController extends Controller
                 ]
             );
 
-            $len->update(['factor' => $request->get('factor')]);
-            $len->update(['name' => $request->get('name')]);
+            $lense->update(['factor' => $request->get('factor')]);
+            $lense->update(['name' => $request->get('name')]);
         }
 
         return view('layout.lenses.view');
@@ -110,13 +111,13 @@ class LensController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Lens $len The lens to remove
+     * @param Lenses $lense The lens to remove
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Lens $len)
+    public function destroy(Lenses $lense)
     {
-        $len->delete();
+        $lense->delete();
 
         return view('layout.lenses.view');
     }

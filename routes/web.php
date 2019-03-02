@@ -19,6 +19,6 @@ Route::post('/lang', 'LanguageController@changeLang');
 
 Route::post('/setSession', 'SessionController@createSession');
 
-Route::get('/lens/create/{len}', 'LensController@create');
-Route::resource('lens', 'LensController');
+Route::get('/lens/create/{lense}', 'LensController@create');
+Route::resource('lenses', 'LensController');
 

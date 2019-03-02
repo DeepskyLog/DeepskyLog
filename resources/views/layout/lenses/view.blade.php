@@ -6,7 +6,7 @@
         {{ _i("Lenses of ") }}Name
     </h4>
 	<hr />
-    <a class="btn btn-success float-right" href="/lens/create">
+    <a class="btn btn-success float-right" href="/lenses/create">
         {{ _i("Add lens") }}
     </a>
     <br /><br />
@@ -27,16 +27,16 @@
         </thead>
         <tbody>
             <!-- TODO: Only show the lenses for the correct user -->
-            @foreach (\App\Lens::all() as $lens)
+            @foreach (\App\Lenses::all() as $lens)
                 <tr>
                     <td>
-                        <a href="/lens/{{  $lens->id }}/edit">
+                        <a href="/lenses/{{  $lens->id }}/edit">
                             {{ $lens->name }}
                         </a>
                     </td>
                     <td>{{ $lens->factor }}</td>
                     <td>
-                        <form method="POST" action="/lens/{{ $lens->id }}">
+                        <form method="POST" action="/lenses/{{ $lens->id }}">
                             @method('PATCH')
                             @csrf
                             <input type="checkbox" name="active" onChange="this.form.submit()" {{ $lens->active ? 'checked' : '' }}>
@@ -44,7 +44,7 @@
                     </td>
                     <td>
                         <!-- TODO: Only show if there are no observations with this lens -->
-                        <form method="POST" action="/lens/{{ $lens->id }}">
+                        <form method="POST" action="/lenses/{{ $lens->id }}">
                             @method('DELETE')
                             @csrf
                             <button type="button" class="btn btn-sm btn-link" onClick="this.form.submit()">
