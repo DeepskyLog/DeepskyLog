@@ -1,5 +1,9 @@
 @extends("layout.master")
 
+@section('title')
+    {{ _i("Lenses of ") }}Name
+@endsection
+
 @section('content')
 	<h4>
         <!-- TODO: Show real name -->
@@ -12,7 +16,6 @@
     <br /><br />
     <!-- TODO: Show administration overview page
          TODO: Show one lens (from other observer)
-         TODO: CSS of column visibility
     -->
 
     <table class="table table-sm table-striped table-hover" id="lenses_table">
@@ -22,7 +25,7 @@
                 <th>{{ _i("Factor") }}</th>
                 <th>{{ _i("Active") }}</th>
                 <th>{{ _i("Delete") }}</th>
-                <th>{{ _i("Number of observations") }}</th>
+                <th>{{ _i("Observations") }}</th>
             </tr>
         </thead>
         <tbody>

@@ -1,5 +1,13 @@
 @extends("layout.master")
 
+@section('title')
+    @if ($update)
+        {{ $lens->name }}
+    @else
+        {{ _i("Add a new lens") }}
+    @endif
+@endsection
+
 @section('content')
 
 <h4>

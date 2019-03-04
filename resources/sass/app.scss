@@ -21,13 +21,13 @@
 // jquery-ui
 @import '~jquery-ui/themes/base/all.css';
 
-// jquery datatables
-@import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
-@import '~datatables.net-buttons-bs4/css/buttons.bootstrap4.css';
-@import '~datatables.net-colreorder-bs4/css/colReorder.bootstrap4.min.css';
-
 // DeepskyLog
 @import './deepskylog.css';
+
+// jquery datatables
+@import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
+@import '~datatables.net-buttons-dt/css/buttons.dataTables.css';
+@import '~datatables.net-colreorder-bs4/css/colReorder.bootstrap4.min.css';
 
 .navbar-laravel {
   background-color: #fff;
