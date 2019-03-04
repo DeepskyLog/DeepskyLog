@@ -14,7 +14,7 @@
         <a class="dropdown-item" href="/location">{{ _i('My locations') }}</a>
         <a class="dropdown-item" href="/eyepiece">{{ _i('My eyepieces') }}</a>
         <a class="dropdown-item" href="/filter">{{ _i('My filters') }}</a>
-        <a class="dropdown-item" href="/lens">{{ _i('My lenses') }}</a>
+        <a class="dropdown-item" href="/lenses">{{ _i('My lenses') }}</a>
         <a class="dropdown-item disabled" href="#">───────────────────</a>
         <a class="dropdown-item" href="/observation/all">{{ _i('Latest observations') }}</a>
         <a class="dropdown-item disabled" href="#">───────────────────</a>

@@ -13,7 +13,8 @@
         "fideloper/proxy": "^4.0",
         "janbarasek/php-moon-phase": "^2.0",
         "laravel/framework": "5.8.*",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "yajra/laravel-datatables-oracle": "^9.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

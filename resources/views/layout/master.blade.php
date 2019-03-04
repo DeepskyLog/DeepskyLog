@@ -23,6 +23,8 @@
                 @include('layout.sidebar')
 
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                    @include('layout.errors')
+
                     <br />
                     @yield('content')
                 </main>
@@ -40,5 +42,8 @@
                 theme: 'bootstrap4',
             });
         </script>
+
+        <!-- App scripts -->
+        @stack('scripts')
     </body>
 </html>
