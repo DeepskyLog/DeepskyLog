@@ -590,12 +590,12 @@ function datatable(id, language) {
 		"za":{
 			"name":"Zhuang",
 		}
-	}
+	};
 
 	var getLanguageName = function(key) {
 		key = key.slice(0,2);
 		var lang = isoLangs[key];
 		return lang ? lang.name : undefined;
-	}
+	};
 	window.getLanguageName = getLanguageName;
 })();

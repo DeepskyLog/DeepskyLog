@@ -99,7 +99,8 @@ class LensController extends Controller
             $lens->update(['factor' => $request->get('factor')]);
             $lens->update(['name' => $request->get('name')]);
         } else {
-            // This is only reached when clicking the active checkbox in the lens overview.
+            // This is only reached when clicking the active checkbox in the
+            // lens overview.
             if ($request->has('active')) {
                 $lens->active();
             } else {
