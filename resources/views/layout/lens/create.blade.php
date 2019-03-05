@@ -19,10 +19,10 @@
 </h4>
 
 @if ($update)
-    <form role="form" action="/lenses/{{ $lens->id }}" method="POST">
+    <form role="form" action="/lens/{{ $lens->id }}" method="POST">
     @method('PATCH')
 @else
-    <form role="form" action="/lenses" method="POST">
+    <form role="form" action="/lens" method="POST">
 @endif
     @csrf
     <div>
@@ -35,7 +35,7 @@
             <div class="form">
                 <select class="form-control" onchange="location = this.options[this.selectedIndex].value;" name="catalog">
                     <option>&nbsp;</option>
-                    @foreach (\App\Lenses::all() as $lensloop)
+                    @foreach (\App\Lens::all() as $lensloop)
                         <option value="/lens/create/{{ $lensloop->id }}"
                         @if ($lens->id == $lensloop->id)
                             selected="selected"
