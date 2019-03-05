@@ -22,9 +22,9 @@ class LensController extends Controller
         // TODO: Test index
         // TODO: Test creating a new lens (only authenticated!)
         // TODO: ...
-        $lenses = Lenses::where(‘observer_id’, auth()->id())->get();
+        $lens = Lens::where(‘observer_id’, auth()->id())->get();
 
-        return view('layout.lenses.view', compact($lenses));
+        return view('layout.lens.view', compact($lens));
     }
 
     /**
@@ -58,7 +58,7 @@ class LensController extends Controller
 
         $validated['observer_id'] = auth()->id();
 
-        Lenses::create($validated);
+        Lens::create($validated);
 
         // View the page with all lenses for the user
         return view('layout.lens.view');
