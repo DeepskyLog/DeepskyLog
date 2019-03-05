@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Lenses;
+use App\Lens;
 use Illuminate\Http\Request;
 
 class LensController extends Controller
@@ -14,19 +14,19 @@ class LensController extends Controller
      */
     public function index()
     {
-        return view('layout.lenses.view');
+        return view('layout.lens.view');
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @param Lenses $lens The lens to fill out in the fields
+     * @param Lens $lens The lens to fill out in the fields
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Lenses $lens)
+    public function create(Lens $lens)
     {
-        return view('layout.lenses.create', ['lens' => $lens, 'update' => false]);
+        return view('layout.lens.create', ['lens' => $lens, 'update' => false]);
     }
 
     /**
@@ -46,20 +46,20 @@ class LensController extends Controller
             ]
         );
 
-        Lenses::create($validated);
+        Lens::create($validated);
 
         // View the page with all lenses for the user
-        return view('layout.lenses.view');
+        return view('layout.lens.view');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param \App\Lenses $lens The lens to show
+     * @param \App\Lens $lens The lens to show
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(Lenses $lens)
+    public function show(Lens $lens)
     {
         //
     }
@@ -67,31 +67,26 @@ class LensController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Lenses $lens The lens to edit
+     * @param Lens $lens The lens to edit
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit(Lenses $lens)
+    public function edit(Lens $lens)
     {
-        return view('layout.lenses.create', ['lens' => $lens, 'update' => true]);
+        return view('layout.lens.create', ['lens' => $lens, 'update' => true]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request The request with all information
-     * @param Lenses  $lens    The lens to adapt
+     * @param Lens    $lens    The lens to adapt
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Lenses $lens)
+    public function update(Request $request, Lens $lens)
     {
-        if ($request->has('active')) {
-            $lens->active();
-        } else {
-            $lens->inactive();
-        }
-
+        // If the factor is set, the name should also be set in the form.
         if ($request->has('factor')) {
             $validated = request()->validate(
                 [
@@ -103,22 +98,30 @@ class LensController extends Controller
 
             $lens->update(['factor' => $request->get('factor')]);
             $lens->update(['name' => $request->get('name')]);
+        } else {
+            // This is only reached when clicking the active checkbox in the
+            // lens overview.
+            if ($request->has('active')) {
+                $lens->active();
+            } else {
+                $lens->inactive();
+            }
         }
 
-        return view('layout.lenses.view');
+        return redirect('/lens');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Lenses $lens The lens to remove
+     * @param Lens $lens The lens to remove
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Lenses $lens)
+    public function destroy(Lens $lens)
     {
         $lens->delete();
 
-        return view('layout.lenses.view');
+        return view('layout.lens.view');
     }
 }

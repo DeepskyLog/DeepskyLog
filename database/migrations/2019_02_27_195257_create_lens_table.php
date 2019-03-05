@@ -13,7 +13,7 @@ class CreateLensTable extends Migration
      */
     public function up()
     {
-        Schema::create('lenses', function (Blueprint $table) {
+        Schema::create('lens', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 255);
             $table->float('factor', 11);
@@ -31,6 +31,6 @@ class CreateLensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lenses');
+        Schema::dropIfExists('lens');
     }
 }

@@ -11,8 +11,32 @@ function datatable(id, language) {
             stateSave: true,
             colReorder: true,
             buttons: [
-                'copy', 'csv', 'pdf', 'print', 'colvis'
-            ]
+                {
+                    extend: 'copy',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'csv',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                'colvis'
+            ],
         } );
     });
 }
@@ -566,12 +590,12 @@ function datatable(id, language) {
 		"za":{
 			"name":"Zhuang",
 		}
-	}
+	};
 
 	var getLanguageName = function(key) {
 		key = key.slice(0,2);
 		var lang = isoLangs[key];
 		return lang ? lang.name : undefined;
-	}
+	};
 	window.getLanguageName = getLanguageName;
 })();
