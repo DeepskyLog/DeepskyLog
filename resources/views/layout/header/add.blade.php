@@ -12,7 +12,7 @@
         <a class="dropdown-item" href="/location/create">{{ _i("Location") }}</a>
         <a class="dropdown-item" href="/eyepiece/create">{{ _i("Eyepiece") }}</a>
         <a class="dropdown-item" href="/filter/create">{{ _i("Filter") }}</a>
-        <a class="dropdown-item" href="/lenses/create">{{ _i("Lens") }}</a>
+        <a class="dropdown-item" href="/lens/create">{{ _i("Lens") }}</a>
         <a class="dropdown-item disabled" href="#">───────────────────</a>
         <a class="dropdown-item" href="/object/create">{{ _i("Object") }}</a>
     </div>

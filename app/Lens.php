@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Lenses extends Model
+class Lens extends Model
 {
     protected $fillable = [
         'observer_id', 'name', 'factor', 'active'

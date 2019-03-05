@@ -21,7 +21,7 @@ Route::post('/setSession', 'SessionController@createSession');
 
 Route::get('/lens/create/{lens}', 'LensController@create');
 
-Route::resource('lenses', 'LensController', ['parameters' => ['lenses' => 'lens']]);
+Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']]);
 
 
 Auth::routes();
