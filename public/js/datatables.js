@@ -11,8 +11,32 @@ function datatable(id, language) {
             stateSave: true,
             colReorder: true,
             buttons: [
-                'copy', 'csv', 'pdf', 'print', 'colvis'
-            ]
+                {
+                    extend: 'copy',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'csv',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                'colvis'
+            ],
         } );
     });
 }
