@@ -18,7 +18,7 @@ yum install nodejs
 # Configuration
 
 ```
-cd /srw/www/www.deepskylog.org/laravel/
+cd /srw/www/test.deepskylog.org/
 php72 /usr/local/bin/composer install
 npm install
 ```
@@ -55,7 +55,32 @@ php72 artisan migrate
 
 + Fix permissions
 ```
-chown -R apache:apache /srv/www/www.deepskylog.org/laravel
+chown -R apache:apache /srv/www/test.deepskylog.org
 ```
 
-+ DeepskyLog can be found at https://www.deepskylog.org/laravel/public/
++ Create /opt/rh/httpd24/root/etc/httpd/conf.d/test.deepskylog.org.conf
+
+```
+<VirtualHost IPv4_ADDRESS:80 [IPv6_ADDRESS]:80>
+    ...
+
+    <FilesMatch \.(php|argo|skylist|icq|xml|csv|pdf)$>
+      SetHandler "proxy:fcgi://127.0.0.1:9000"
+    </FilesMatch>
+
+    # DocumentRoot: The directory out of which you will serve your
+    # documents. By default, all requests are taken from this directory, but
+    # symbolic links and aliases may be used to point to other locations.
+    DocumentRoot /srv/www/test.deepskylog.org/public/
+
+    <Directory "/srv/www/test.deepskylog.org/public">
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+
+    ...
+</VirtualHost>
+```
+
++ DeepskyLog can be found at https://test.deepskylog.org/
