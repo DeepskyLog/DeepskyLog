@@ -73,7 +73,7 @@ class LensController extends Controller
      */
     public function show(Lens $lens)
     {
-        abort_unless(auth()->user()->owns($lens), 403);
+        $this->authorize('view', $lens);
 
         // TO WRITE
     }
@@ -87,6 +87,8 @@ class LensController extends Controller
      */
     public function edit(Lens $lens)
     {
+        $this->authorize('edit', $lens);
+
         return view('layout.lens.create', ['lens' => $lens, 'update' => true]);
     }
 

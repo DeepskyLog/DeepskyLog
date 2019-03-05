@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\User;
-use App\Lenses;
+use App\Lens;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class LensPolicy
@@ -11,17 +11,16 @@ class LensPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view the lenses.
+     * Determine whether the user can view the lens.
      *
      * @param  \App\User  $user
-     * @param  \App\Lenses  $lenses
+     * @param  \App\Lens  $lens
      * @return mixed
      */
-    public function view(User $user, Lenses $lenses)
+    public function view(User $user, Lens $lens)
     {
         // TODO: Write the policies
-        // TODO: Rename Lenses to Lens
-        return $lenses->observer_id == $user->id;
+        return $lens->observer_id == $user->id;
     }
 
     /**
@@ -39,10 +38,10 @@ class LensPolicy
      * Determine whether the user can update the lenses.
      *
      * @param  \App\User  $user
-     * @param  \App\Lenses  $lenses
+     * @param  \App\Lens  $lens
      * @return mixed
      */
-    public function update(User $user, Lenses $lenses)
+    public function update(User $user, Lens $lens)
     {
         //
     }
@@ -51,10 +50,10 @@ class LensPolicy
      * Determine whether the user can delete the lenses.
      *
      * @param  \App\User  $user
-     * @param  \App\Lenses  $lenses
+     * @param  \App\Lens  $lens
      * @return mixed
      */
-    public function delete(User $user, Lenses $lenses)
+    public function delete(User $user, Lens $lens)
     {
         //
     }
@@ -63,10 +62,10 @@ class LensPolicy
      * Determine whether the user can restore the lenses.
      *
      * @param  \App\User  $user
-     * @param  \App\Lenses  $lenses
+     * @param  \App\Lens  $lens
      * @return mixed
      */
-    public function restore(User $user, Lenses $lenses)
+    public function restore(User $user, Lens $lens)
     {
         //
     }
@@ -75,10 +74,10 @@ class LensPolicy
      * Determine whether the user can permanently delete the lenses.
      *
      * @param  \App\User  $user
-     * @param  \App\Lenses  $lenses
+     * @param  \App\Lens  $lens
      * @return mixed
      */
-    public function forceDelete(User $user, Lenses $lenses)
+    public function forceDelete(User $user, Lens $lens)
     {
         //
     }

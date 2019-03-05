@@ -13,7 +13,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Lenses' => 'App\Policies\LensPolicy',
+        'App\Lens' => 'App\Policies\LensPolicy',
     ];
 
     /**
@@ -21,10 +21,18 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(Gate $gate)
     {
         $this->registerPolicies();
 
-        //
+        $gate::before(
+            function ($user) {
+                // TODO: ADMINISTRATOR CAN DO EVERYTHING
+                return $user->isAdmin();
+
+                // Or
+                return $user->role() == 'admin';
+            }
+        );
     }
 }
