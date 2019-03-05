@@ -23,3 +23,7 @@ Route::get('/lens/create/{lens}', 'LensController@create');
 
 Route::resource('lenses', 'LensController', ['parameters' => ['lenses' => 'lens']]);
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

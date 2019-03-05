@@ -13,15 +13,19 @@ class CreateLensTable extends Migration
      */
     public function up()
     {
-        Schema::create('lenses', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name', 255);
-            $table->float('factor', 11);
-            $table->string('observer_id');
-            $table->boolean('active')->default(true);
+        Schema::create(
+            'lenses', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->string('name', 255);
+                $table->float('factor', 11);
+                $table->unsignedInteger('observer_id');
+                $table->boolean('active')->default(true);
 
-            $table->timestamps();
-        });
+                $table->timestamps();
+
+                $table->foreign('observer_id')->references('id')->on('users')->onDelete('cascade');
+            }
+        );
     }
 
     /**

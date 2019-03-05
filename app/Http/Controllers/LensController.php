@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class LensController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['index', 'create']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,12 @@ class LensController extends Controller
      */
     public function index()
     {
-        return view('layout.lenses.view');
+        // TODO: Test index
+        // TODO: Test creating a new lens (only authenticated!)
+        // TODO: ...
+        $lenses = Lenses::where(‘observer_id’, auth()->id())->get();
+
+        return view('layout.lenses.view', compact($lenses));
     }
 
     /**
@@ -46,6 +56,8 @@ class LensController extends Controller
             ]
         );
 
+        $validated['observer_id'] = auth()->id();
+
         Lenses::create($validated);
 
         // View the page with all lenses for the user
@@ -61,7 +73,9 @@ class LensController extends Controller
      */
     public function show(Lenses $lens)
     {
-        //
+        abort_unless(auth()->user()->owns($lens), 403);
+
+        // TO WRITE
     }
 
     /**

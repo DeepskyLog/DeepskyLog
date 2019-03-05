@@ -30,7 +30,7 @@
         </thead>
         <tbody>
             <!-- TODO: Only show the lenses for the correct user -->
-            @foreach (\App\Lenses::all() as $lens)
+            @foreach ($lenses as $lens)
                 <tr>
                     <td>
                         <a href="/lenses/{{  $lens->id }}/edit">
