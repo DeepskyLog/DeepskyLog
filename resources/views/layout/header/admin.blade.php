@@ -5,7 +5,7 @@
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         <a class="dropdown-item" href="/message/sendAll">{{ _i('Send message to all') }}</a>
         <a class="dropdown-item disabled" href="#">───────────────────</a>
-        <a class="dropdown-item" href="/observer/admin">{{ _i('Observers') }}</a>
+        <a class="dropdown-item" href="/users">{{ _i('Observers') }}</a>
         <a class="dropdown-item disabled" href="#">───────────────────</a>
         <a class="dropdown-item" href="/object/check">{{ _i("Check Objects") }}</a>
         <a class="dropdown-item disabled" href="#">───────────────────</a>

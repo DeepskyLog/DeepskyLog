@@ -16,6 +16,7 @@
     <br /><br />
     <!-- TODO: Show administration overview page
          TODO: Show one lens (from other observer)
+         TODO: Add translation for registrations
     -->
 
     <table class="table table-sm table-striped table-hover" id="lens_table">

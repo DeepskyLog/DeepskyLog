@@ -26,4 +26,4 @@ Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']]);
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('users', 'UserController')->except(['create', 'store']);

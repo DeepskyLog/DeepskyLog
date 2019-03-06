@@ -9,7 +9,9 @@
             @include('layout.header.view');
             @include('layout.header.search');
             @include('layout.header.add');
-            @include('layout.header.admin');
+            @hasrole('admin')
+                @include('layout.header.admin');
+            @endhasrole()
             @include('layout.header.downloads');
             @include('layout.header.help');
         </ul>
@@ -17,15 +19,18 @@
         <ul class="navbar-nav">
             <button class="btn btn-light fas fa-adjust" id="nightMode" style="margin-right:5px;border:0;" alt="Night Mode"></button>
 
-            @include('layout.header.register');
-            @include('layout.header.user');
+            @if (Auth::guest())
+                @include('layout.header.register');
+            @else
+                @include('layout.header.user');
 
-            <button class="btn" style="margin-right:5px;border:0;">
-                <a href="/message/view">
-                    <span style="color: #FFFFFF" class="fas fa-inbox"></span>&nbsp;
-                    <span class="badge badge-pill badge-secondary">4</span>
-                </a>
-            </button>
+                <button class="btn" style="margin-right:5px;border:0;">
+                    <a href="/message/view">
+                        <span style="color: #FFFFFF" class="fas fa-inbox"></span>&nbsp;
+                        <span class="badge badge-pill badge-secondary">4</span>
+                    </a>
+                </button>
+            @endif
         </ul>
 </div>
 </nav>
