@@ -12,6 +12,12 @@ class User extends Authenticatable
     use Notifiable;
     use HasRoles;
 
+    public function lenses()
+    {
+        return $this->hasMany(Lens::class, 'observer_id');
+
+    }
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = bcrypt($password);

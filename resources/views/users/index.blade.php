@@ -15,7 +15,11 @@
                 <th>Email</th>
                 <th>Date/Time Added</th>
                 <th>User Roles</th>
-                <th>Operations</th>
+                <th>Delete</th>
+                <th>Edit</th>
+                <th>Observations</th>
+                <th>Instruments</th>
+                <th>Lists</th>
             </tr>
         </thead>
 
@@ -26,16 +30,17 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->created_at->format('F d, Y h:ia') }}</td>
-                <td>{{  $user->roles()->pluck('name')->implode(' ') }}</td>{{-- Retrieve array of roles associated to a user and convert to string --}}
+                <td>{{  $user->roles()->pluck('name')->implode(', ') }}</td>{{-- Retrieve array of roles associated to a user and convert to string --}}
                 <td>
-                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a>
-
                 {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id] ]) !!}
                 {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
                 {!! Form::close() !!}
 
                 </td>
-            </tr>
+                <td>
+                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a>
+                    </td>
+                </tr>
             @endforeach
         </tbody>
 

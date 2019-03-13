@@ -25,11 +25,14 @@ class LensController extends Controller
         // TODO: Add flash_messages when lens is deleted or updated (see store)
 
         // AUTHENTICATION
-        // TODO: Install laravel telescope
         // TODO: Update admin page for the users, add extra information, move operations in two different colums, use icons for operations
-        // TODO: Register only by confirming the email address or other way to check user
         // TODO: Extend user page and table for the DeepskyLog information
-        $lens = Lens::where(‘observer_id’, auth()->id())->get();
+        // TODO: Use authentication on the pages and in the layout.
+        // TODO: Write script to convert old observers table of DeepskyLog to laravel
+        // TODO: Write script to convert old lenses table of DeepskyLog to laravel
+
+        $lens = auth()->user()->lenses();
+        //$lens = Lens::where(‘observer_id’, auth()->id())->get();
 
         return view('layout.lens.view', compact($lens));
     }

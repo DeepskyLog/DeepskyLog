@@ -1,5 +1,7 @@
 @extends('layout.master')
 
+{!! NoCaptcha::renderJs(LaravelGettext::getLocaleLanguage()) !!}
+
 @section('title')
     {{  _i("Register") }}
 @endsection
@@ -62,6 +64,10 @@
                             <div class="col-md-6">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
                             </div>
+                        </div>
+
+                        <div class="form-group row">
+                            {!! NoCaptcha::display() !!}
                         </div>
 
                         <div class="form-group row mb-0">
