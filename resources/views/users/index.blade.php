@@ -1,25 +1,26 @@
 @extends("layout.master")
 
-@section('title', 'Users')
+@section('title', _i('User Administration'))
 
 @section('content')
 
 <div class="col-lg-10 col-lg-offset-1">
-    <h3><i class="fa fa-users"></i> {{ _i('User Administration') }}
+    <h3>
+        <i class="fa fa-users"></i> {{ _i('User Administration') }}
     </h3>
     <hr>
     <table class="table table-sm table-striped table-hover" id="users_table">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Date/Time Added</th>
-                <th>User Roles</th>
-                <th>Delete</th>
-                <th>Edit</th>
-                <th>Observations</th>
-                <th>Instruments</th>
-                <th>Lists</th>
+                <th>{{ _i('Name') }}</th>
+                <th>{{ _i('Email') }}</th>
+                <th>{{ _i('Date/Time Added') }}</th>
+                <th>{{ _i('User Roles') }}</th>
+                <th>{{ _i('Delete') }}</th>
+                <th>{{ _i('Edit') }}</th>
+                <th>{{ _i('Observations') }}</th>
+                <th>{{ _i('Instruments') }}</th>
+                <th>{{ _i('Lists') }}</th>
             </tr>
         </thead>
 
@@ -33,14 +34,17 @@
                 <td>{{  $user->roles()->pluck('name')->implode(', ') }}</td>{{-- Retrieve array of roles associated to a user and convert to string --}}
                 <td>
                 {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id] ]) !!}
-                {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                {!! Form::submit(_i('Delete'), ['class' => 'btn-small']) !!}
                 {!! Form::close() !!}
 
                 </td>
                 <td>
-                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a>
-                    </td>
-                </tr>
+                    <a href="{{ route('users.edit', $user->id) }}" class="fas fa-user-edit pull-left" style="margin-right: 3px;"></a>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
             @endforeach
         </tbody>
 

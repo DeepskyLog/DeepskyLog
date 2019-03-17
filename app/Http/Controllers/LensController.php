@@ -25,8 +25,8 @@ class LensController extends Controller
         // TODO: Add flash_messages when lens is deleted or updated (see store)
 
         // AUTHENTICATION
-        // TODO: Update admin page for the users, add extra information, move operations in two different colums, use icons for operations
         // TODO: Extend user page and table for the DeepskyLog information
+        // TODO: Update admin page for the users, add extra information, move operations in two different colums, use icons for operations
         // TODO: Use authentication on the pages and in the layout.
         // TODO: Write script to convert old observers table of DeepskyLog to laravel
         // TODO: Write script to convert old lenses table of DeepskyLog to laravel

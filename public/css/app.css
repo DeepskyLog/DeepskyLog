@@ -2462,6 +2462,22 @@ tr.details td.details-control {
 .borderless tbody tr td, .borderless tbody tr th, .borderless thead tr th {
     border: none;
 }
+
+.useFontAwesomeFamily::-webkit-input-placeholder { /* Most modern browsers */
+    font-family: "Font Awesome 5 Regular" !important;
+}
+
+.useFontAwesomeFamily:-ms-input-placeholder { /* Most modern browsers */
+    font-family: "Font Awesome 5 Regular" !important;
+}
+
+.useFontAwesomeFamily::-ms-input-placeholder { /* Most modern browsers */
+    font-family: "Font Awesome 5 Regular" !important;
+}
+
+.useFontAwesomeFamily::placeholder { /* Most modern browsers */
+    font-family: "Font Awesome 5 Regular" !important;
+}
 table.dataTable {
   clear: both;
   margin-top: 6px !important;
