@@ -15,25 +15,26 @@
         "bootstrap": "^4.0.0",
         "cross-env": "^5.1",
         "jquery": "^3.2",
-        "laravel-mix": "^4.0.7",
+        "laravel-mix": "^4.0.15",
         "lodash": "^4.17.5",
         "popper.js": "^1.14.7",
         "resolve-url-loader": "^2.3.2",
-        "sass": "^1.17.2",
+        "sass": "^1.17.3",
         "sass-loader": "^7.1.0",
-        "vue": "^2.6.8",
-        "vue-template-compiler": "^2.6.8"
+        "vue": "^2.6.9",
+        "vue-template-compiler": "^2.6.9"
     },
     "dependencies": {
         "datatables.net": "^1.10.19",
         "datatables.net-bs4": "^1.10.19",
-        "datatables.net-buttons": "^1.5.4",
-        "datatables.net-buttons-dt": "^1.5.4",
+        "datatables.net-buttons": "^1.5.6",
+        "datatables.net-buttons-dt": "^1.5.6",
         "datatables.net-colreorder-bs4": "^1.5.1",
         "datatables.net-plugins": "^1.10.19",
         "jquery-ui": "^1.12.1",
         "jszip": "^3.2.0",
-        "pdfmake": "^0.1.53",
+        "password-strength-meter": "^1.2.2",
+        "pdfmake": "^0.1.54",
         "select2": "^4.0.6-rc.1",
         "select2-bootstrap4-theme": "^1.0.0"
     }

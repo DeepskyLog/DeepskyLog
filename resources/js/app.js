@@ -25,7 +25,9 @@ require( 'datatables.net-bs4' );
 require( 'datatables.net-buttons/js/buttons.colVis.js' );
 require( 'datatables.net-buttons/js/buttons.html5.js' );
 require( 'datatables.net-colreorder-bs4' );
-require( 'datatables.net-buttons/js/buttons.print.js' )
+require( 'datatables.net-buttons/js/buttons.print.js' );
+
+require( 'password-strength-meter/dist/password.min.js' );
 
 /**
  * The following block of code may be used to automatically register your
