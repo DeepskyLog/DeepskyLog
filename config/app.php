@@ -170,6 +170,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
         Monarobase\CountryList\CountryListServiceProvider::class,
+        PeterColes\Languages\LanguagesServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -217,6 +218,7 @@ return [
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
+        'Languages' => PeterColes\Languages\LanguagesFacade::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
         'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,

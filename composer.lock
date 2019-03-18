@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b390397be6d97c0f66e302614151957e",
+    "content-hash": "d3bc6f7500b69690978d299e4fce455b",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -1635,6 +1635,65 @@
                 "random"
             ],
             "time": "2018-07-02T15:55:56+00:00"
+        },
+        {
+            "name": "petercoles/multilingual-language-list",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/petercoles/Multilingual-Language-List.git",
+                "reference": "26304354d7892561966e63312884eaa089a3ac24"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/petercoles/Multilingual-Language-List/zipball/26304354d7892561966e63312884eaa089a3ac24",
+                "reference": "26304354d7892561966e63312884eaa089a3ac24",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9.4",
+                "phpunit/phpunit": "~5.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PeterColes\\Languages\\LanguagesServiceProvider"
+                    ],
+                    "aliases": {
+                        "Languages": "PeterColes\\Languages\\LanguagesFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PeterColes\\Languages\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Peter Coles",
+                    "email": "peterdcoles@gmail.com",
+                    "homepage": "http://petercoles.com"
+                }
+            ],
+            "description": "Lookup Objects for Language Names and Codes",
+            "homepage": "https://github.com/petercoles/multilingual-language-list",
+            "keywords": [
+                "language codes",
+                "language lists",
+                "language lookup",
+                "laravel"
+            ],
+            "time": "2018-01-02T16:25:28+00:00"
         },
         {
             "name": "phpoption/phpoption",

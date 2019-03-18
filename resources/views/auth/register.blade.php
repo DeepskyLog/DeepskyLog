@@ -80,7 +80,23 @@
                         </div>
 
                         <div class="form-group row">
-                            {!! NoCaptcha::display() !!}
+                            <label for="standard-language" class="col-md-4 col-form-label text-md-right">{{ _i('Standard language for observations') }}</label>
+
+                            <div class="col-md-6">
+                                <select class="form-control" id="standard-language">
+                                    <option value="">&nbsp;</option>
+                                    @foreach (Languages::lookup('major', LaravelGettext::getLocaleLanguage()) as $code=>$language)
+                                        <option value="{{ $code }}">{{ ucfirst($language) }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label text-md-right"></label>
+                            <div class="col-md-6">
+                                {!! NoCaptcha::display() !!}
+                            </div>
                         </div>
 
                         <div class="form-group row mb-0">
