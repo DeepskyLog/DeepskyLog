@@ -67,6 +67,19 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="country" class="col-md-4 col-form-label text-md-right">{{ _i('Country of residence') }}</label>
+
+                            <div class="col-md-6">
+                                <select class="form-control" id="country">
+                                    <option value="">&nbsp;</option>
+                                    @foreach (Countries::getList(LaravelGettext::getLocaleLanguage()) as $code=>$country)
+                                        <option value="{{ $code }}">{{ $country }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             {!! NoCaptcha::display() !!}
                         </div>
 
