@@ -1,7 +1,8 @@
-@if(Session::has('flash_message'))
+@if(flash()->message)
     <div class="container">
-        <div class="alert alert-success" role="alert">
-            <em> {!! session('flash_message') !!}</em>
+        <br />
+        <div class="{{ flash()->class }}">
+            {{ flash()->message }}
         </div>
     </div>
 @endif

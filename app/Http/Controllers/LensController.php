@@ -70,10 +70,10 @@ class LensController extends Controller
 
         Lens::create($validated);
 
+        flash()->success(_i('Lens "') . $request->name . _i('" created'));
+
         // View the page with all lenses for the user
-        return redirect('/lens')->with(
-            'flash_message', _i('Lens ') . $request()->name . ' created'
-        );
+        return redirect('/lens');
     }
 
     /**
