@@ -19,11 +19,10 @@ Route::post('/lang', 'LanguageController@changeLang');
 
 Route::post('/setSession', 'SessionController@createSession');
 
-Route::get('/lens/create/{lens}', 'LensController@create');
+Route::get('/lens/create/{lens}', 'LensController@create')->middleware('verified');
 
-Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']]);
+Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']])->middleware('verified');
 
-
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::resource('users', 'UserController')->except(['create', 'store']);

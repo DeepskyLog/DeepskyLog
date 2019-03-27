@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f6f12c0710bc24e927837e8adcc8f44",
+    "content-hash": "2a2d6ab3cf6445e3d7d8338140d10fb7",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -749,16 +749,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.8.7",
+            "version": "v5.8.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "f12c7baf9ceee80b131e06a01d3221d9a2488670"
+                "reference": "3f0a5744a866ae3ae0ca84f47080501714af01ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/f12c7baf9ceee80b131e06a01d3221d9a2488670",
-                "reference": "f12c7baf9ceee80b131e06a01d3221d9a2488670",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/3f0a5744a866ae3ae0ca84f47080501714af01ba",
+                "reference": "3f0a5744a866ae3ae0ca84f47080501714af01ba",
                 "shasum": ""
             },
             "require": {
@@ -892,7 +892,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2019-03-21T16:54:38+00:00"
+            "time": "2019-03-26T17:19:10+00:00"
         },
         {
             "name": "laravel/telescope",
@@ -3461,16 +3461,16 @@
         },
         {
             "name": "yajra/laravel-datatables-oracle",
-            "version": "v9.0.0",
+            "version": "v9.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables.git",
-                "reference": "bbc9943208e121d551fed74ad1084c4e42ccf094"
+                "reference": "0c5764bcb436b2ac4627246fc29970c69314be1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/bbc9943208e121d551fed74ad1084c4e42ccf094",
-                "reference": "bbc9943208e121d551fed74ad1084c4e42ccf094",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/0c5764bcb436b2ac4627246fc29970c69314be1e",
+                "reference": "0c5764bcb436b2ac4627246fc29970c69314be1e",
                 "shasum": ""
             },
             "require": {
@@ -3528,7 +3528,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-02-27T03:04:53+00:00"
+            "time": "2019-03-26T05:04:50+00:00"
         },
         {
             "name": "zerospam/laravel-gettext",
@@ -4623,16 +4623,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.7",
+            "version": "7.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "eb343b86753d26de07ecba7868fa983104361948"
+                "reference": "c29c0525cf4572c11efe1db49a8b8aee9dfac58a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/eb343b86753d26de07ecba7868fa983104361948",
-                "reference": "eb343b86753d26de07ecba7868fa983104361948",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c29c0525cf4572c11efe1db49a8b8aee9dfac58a",
+                "reference": "c29c0525cf4572c11efe1db49a8b8aee9dfac58a",
                 "shasum": ""
             },
             "require": {
@@ -4703,7 +4703,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-03-16T07:31:17+00:00"
+            "time": "2019-03-26T13:23:54+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

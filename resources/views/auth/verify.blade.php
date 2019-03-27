@@ -19,7 +19,12 @@
                     @endif
 
                     {{ _i('Before proceeding, please check your email for a verification link.') }}
-                    {{ _i('If you did not receive the email') }}, <a href="{{ route('verification.resend') }}">{{ _i('click here to request another') }}</a>.
+                    @php
+                        $route = route('verification.resend');
+                        $string = '<a href="' . $route . '">';
+                        echo sprintf(_i('If you did not receive the email, %sclick here to request another%s.'), $string, '</a>');
+                    @endphp
+
                 </div>
             </div>
         </div>

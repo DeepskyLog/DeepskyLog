@@ -1,13 +1,13 @@
 @extends("layout.master")
 
 @section('title')
-    {{ _i("Lenses of ") }}Name
+    {{ _i("Lenses of %s", "Name") }}
 @endsection
 
 @section('content')
 	<h4>
         <!-- TODO: Show real name -->
-        {{ _i("Lenses of ") }}Name
+        {{ _i("Lenses of %s", "Name") }}
     </h4>
 	<hr />
     <a class="btn btn-success float-right" href="/lens/create">

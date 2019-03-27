@@ -8,4 +8,4 @@
 
 <?php $__env->startSection('message', __('Whoops, something went wrong on our servers.')); ?>
 
-<?php echo $__env->make('errors::illustrated-layout', \Illuminate\Support\Arr::except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('errors::illustrated-layout', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>

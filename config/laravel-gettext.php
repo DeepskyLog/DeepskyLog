@@ -95,6 +95,7 @@ return [
         'Http',
         '../resources/views',
         'Console',
+        'Notifications',
     ],
 
     /**
