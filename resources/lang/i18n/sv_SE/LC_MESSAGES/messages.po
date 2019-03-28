@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-03-28 16:23+0100\n"
-"PO-Revision-Date: 2019-03-28 16:25+0100\n"
+"POT-Creation-Date: 2019-03-28 22:41+0100\n"
+"PO-Revision-Date: 2019-03-28 22:41+0100\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: sv_SE\n"
@@ -65,6 +65,36 @@ msgstr "Denna token för återställning av lösen ord är ogiltig."
 #: ../storage/framework/messages/969355e15cf4b4d4255e5599f4094f5fe82934ad.php.php:20
 msgid "We can't find a user with that e-mail address."
 msgstr "Vi kan inte hitta en användare med den e-postadressen."
+
+#: ../resources/views/auth/register.blade.php:181
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:183
+msgid "The password is too short"
+msgstr "Lösen ordet är för kort"
+
+#: ../resources/views/auth/register.blade.php:182
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:184
+msgid "Weak; try combining letters & numbers"
+msgstr "Svag; försök att kombinera bokstäver & tal"
+
+#: ../resources/views/auth/register.blade.php:183
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:185
+msgid "Medium; try using special characters"
+msgstr "Medel; försök att använda specialtecken"
+
+#: ../resources/views/auth/register.blade.php:184
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:186
+msgid "Strong password"
+msgstr "Starkt lösen ord"
+
+#: ../resources/views/auth/register.blade.php:185
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:187
+msgid "The password contains the username"
+msgstr "Lösen ordet innehåller användar namnet"
+
+#: ../resources/views/auth/register.blade.php:186
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:188
+msgid "Type your password"
+msgstr "Skriv ditt lösenord"
 
 #: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:76
 #: Http/Controllers/LensController.php:76
@@ -2283,9 +2313,6 @@ msgstr "Listor"
 #~ msgid "Change profile picture"
 #~ msgstr "Ändra profilbild"
 
-#~ msgid "Change password"
-#~ msgstr "Ändra lösenord"
-
 #~ msgid "Send emails"
 #~ msgstr "Skicka e-post"
 
@@ -2343,9 +2370,6 @@ msgstr "Listor"
 
 #~ msgid "Current password"
 #~ msgstr "Nuvarande lösenord"
-
-#~ msgid "New password"
-#~ msgstr "Nytt lösenord"
 
 #~ msgid ""
 #~ "Set your location on the map or by entering the name and pressing the %s "

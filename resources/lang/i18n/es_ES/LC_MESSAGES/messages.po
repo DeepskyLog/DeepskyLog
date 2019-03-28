@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-03-28 16:28+0100\n"
-"PO-Revision-Date: 2019-03-28 16:32+0100\n"
+"POT-Creation-Date: 2019-03-28 22:38+0100\n"
+"PO-Revision-Date: 2019-03-28 22:39+0100\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: es_ES\n"
@@ -71,6 +71,36 @@ msgstr "Este token de restablecimiento de contraseña no es válido."
 msgid "We can't find a user with that e-mail address."
 msgstr ""
 "No podemos encontrar un usuario con esa dirección de correo electrónico."
+
+#: ../resources/views/auth/register.blade.php:181
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:183
+msgid "The password is too short"
+msgstr "La contraseña es demasiado corta"
+
+#: ../resources/views/auth/register.blade.php:182
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:184
+msgid "Weak; try combining letters & numbers"
+msgstr "Débil; intenta combinar letras y números"
+
+#: ../resources/views/auth/register.blade.php:183
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:185
+msgid "Medium; try using special characters"
+msgstr "Medio; intenta usar caracteres especiales"
+
+#: ../resources/views/auth/register.blade.php:184
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:186
+msgid "Strong password"
+msgstr "Contraseña segura"
+
+#: ../resources/views/auth/register.blade.php:185
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:187
+msgid "The password contains the username"
+msgstr "La contraseña contiene el nombre de usuario"
+
+#: ../resources/views/auth/register.blade.php:186
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:188
+msgid "Type your password"
+msgstr "Escriba su contraseña"
 
 #: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:76
 #: Http/Controllers/LensController.php:76
@@ -2355,9 +2385,6 @@ msgstr "Listas"
 #~ msgid "Change profile picture"
 #~ msgstr "Cambiar imagen de perfil"
 
-#~ msgid "Change password"
-#~ msgstr "Cambiar contraseña"
-
 #~ msgid "Send emails"
 #~ msgstr "Enviar emails"
 
@@ -2415,9 +2442,6 @@ msgstr "Listas"
 
 #~ msgid "Current password"
 #~ msgstr "Contraseña actual"
-
-#~ msgid "New password"
-#~ msgstr "Nueva contraseña"
 
 #~ msgid ""
 #~ "Set your location on the map or by entering the name and pressing the %s "

@@ -178,6 +178,12 @@
 <script>
 
 $('#password').password({
+    shortPass: '<?php echo _i("The password is too short"); ?>',
+    badPass: '<?php echo _i("Weak; try combining letters & numbers"); ?>',
+    goodPass: '<?php echo _i("Medium; try using special characters"); ?>',
+    strongPass: '<?php echo _i("Strong password"); ?>',
+    containsUsername: '<?php echo _i("The password contains the username"); ?>',
+    enterPass: '<?php echo _i("Type your password"); ?>',
     showText: true, // shows the text tips
     animate: true, // whether or not to animate the progress bar on input blur/focus
     animateSpeed: 'fast', // the above animation speed

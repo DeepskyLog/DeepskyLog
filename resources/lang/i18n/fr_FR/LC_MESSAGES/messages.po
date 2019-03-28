@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-03-28 16:25+0100\n"
-"PO-Revision-Date: 2019-03-28 16:27+0100\n"
+"POT-Creation-Date: 2019-03-28 22:40+0100\n"
+"PO-Revision-Date: 2019-03-28 22:40+0100\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: fr_FR\n"
@@ -71,6 +71,36 @@ msgid "We can't find a user with that e-mail address."
 msgstr ""
 "Nous ne parvenons pas à trouver un utilisateur qui utilise cette adresse e-"
 "mail."
+
+#: ../resources/views/auth/register.blade.php:181
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:183
+msgid "The password is too short"
+msgstr "Le mot de passe est trop court"
+
+#: ../resources/views/auth/register.blade.php:182
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:184
+msgid "Weak; try combining letters & numbers"
+msgstr "Faible; essayez de combiner des lettres et des chiffres"
+
+#: ../resources/views/auth/register.blade.php:183
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:185
+msgid "Medium; try using special characters"
+msgstr "Moyen; essayez d'utiliser des caractères spéciaux"
+
+#: ../resources/views/auth/register.blade.php:184
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:186
+msgid "Strong password"
+msgstr "Mot de passe fort"
+
+#: ../resources/views/auth/register.blade.php:185
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:187
+msgid "The password contains the username"
+msgstr "Le mot de passe contient le nom d'utilisateur"
+
+#: ../resources/views/auth/register.blade.php:186
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:188
+msgid "Type your password"
+msgstr "Tapez votre mot de passe"
 
 #: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:76
 #: Http/Controllers/LensController.php:76
@@ -2329,9 +2359,6 @@ msgstr "Listes"
 #~ msgid "Change profile picture"
 #~ msgstr "Modifier l'image du profil"
 
-#~ msgid "Change password"
-#~ msgstr "Nouveau mot de passe"
-
 #~ msgid "Send emails"
 #~ msgstr "Envoyer des e-mails"
 
@@ -2390,9 +2417,6 @@ msgstr "Listes"
 
 #~ msgid "Current password"
 #~ msgstr "Mot de passe actuel"
-
-#~ msgid "New password"
-#~ msgstr "Mot de passe nouveau"
 
 #~ msgid ""
 #~ "Set your location on the map or by entering the name and pressing the %s "

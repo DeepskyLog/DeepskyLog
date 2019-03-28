@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-03-28 16:21+0100\n"
-"PO-Revision-Date: 2019-03-28 16:23+0100\n"
+"POT-Creation-Date: 2019-03-28 22:39+0100\n"
+"PO-Revision-Date: 2019-03-28 22:39+0100\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: de_DE\n"
@@ -68,6 +68,36 @@ msgstr "Dieses Passwort Reset Token ist ungültig."
 #: ../storage/framework/messages/969355e15cf4b4d4255e5599f4094f5fe82934ad.php.php:20
 msgid "We can't find a user with that e-mail address."
 msgstr "Wir können keinen Benutzer mit dieser E-Mail-Adresse finden."
+
+#: ../resources/views/auth/register.blade.php:181
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:183
+msgid "The password is too short"
+msgstr "Passwort zu kurz"
+
+#: ../resources/views/auth/register.blade.php:182
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:184
+msgid "Weak; try combining letters & numbers"
+msgstr "Schwacher; Versuchen Sie, Buchstaben und Zahlen zu kombinieren"
+
+#: ../resources/views/auth/register.blade.php:183
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:185
+msgid "Medium; try using special characters"
+msgstr "Medium; Versuchen Sie mit Sonderzeichen"
+
+#: ../resources/views/auth/register.blade.php:184
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:186
+msgid "Strong password"
+msgstr "Sicheres Passwort"
+
+#: ../resources/views/auth/register.blade.php:185
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:187
+msgid "The password contains the username"
+msgstr "Das Passwort enthält den Benutzernamen"
+
+#: ../resources/views/auth/register.blade.php:186
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:188
+msgid "Type your password"
+msgstr "Bitte geben Sie Ihr Passwort ein"
 
 #: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:76
 #: Http/Controllers/LensController.php:76
@@ -2380,9 +2410,6 @@ msgstr "Listen"
 #~ msgid "Change profile picture"
 #~ msgstr "Profilbild ändern"
 
-#~ msgid "Change password"
-#~ msgstr "Passwort ändern"
-
 #~ msgid "Send emails"
 #~ msgstr "E-Mail senden"
 
@@ -2442,9 +2469,6 @@ msgstr "Listen"
 
 #~ msgid "Current password"
 #~ msgstr "Heutiges Passwort"
-
-#~ msgid "New password"
-#~ msgstr "Neues Passwort"
 
 #~ msgid ""
 #~ "Set your location on the map or by entering the name and pressing the %s "
