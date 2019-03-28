@@ -96,6 +96,7 @@ return [
         '../resources/views',
         'Console',
         'Notifications',
+        '../resources/lang/en',
     ],
 
     /**

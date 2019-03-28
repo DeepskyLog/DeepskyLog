@@ -17,7 +17,7 @@
                         @csrf
 
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ _i('Name') }}</label>
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ _i('Full Name') }}</label>
 
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
@@ -80,15 +80,72 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="standard-language" class="col-md-4 col-form-label text-md-right">{{ _i('Standard language for observations') }}</label>
+                            <label for="observationlanguage" class="col-md-4 col-form-label text-md-right">{{ _i('Standard language for observations') }}</label>
 
                             <div class="col-md-6">
-                                <select class="form-control" id="standard-language">
+                                <select class="form-control" id="observationlanguage">
                                     <option value="">&nbsp;</option>
                                     @foreach (Languages::lookup('major', LaravelGettext::getLocaleLanguage()) as $code=>$language)
-                                        <option value="{{ $code }}">{{ ucfirst($language) }}</option>
+                                        <option value="{{ $code }}"@if ($code == LaravelGettext::getLocaleLanguage()) selected="selected"@endif>{{ ucfirst($language) }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="language" class="col-md-4 col-form-label text-md-right">{{ _i('Language for user interface') }}</label>
+
+                            <div class="col-md-6">
+                                <select class="form-control" id="language">
+                                    <option value="">&nbsp;</option>
+                                    @foreach(Config::get('laravel-gettext.supported-locales') as $locale)
+                                        @php
+                                            $localeText = ucwords(Locale::getDisplayLanguage($locale, LaravelGettext::getLocale()));
+                                        @endphp
+                                        <option value="{{ $locale }}"@if ($locale == LaravelGettext::getLocale()) selected="selected"@endif>{{ $localeText }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="cclicense" class="col-md-4 col-form-label text-md-right">{{ _i("License for drawings") }}</label>
+
+                            <div class="col-md-6">
+                                <select name="cclicense" id="cclicense" onchange="enableDisableCopyright();" class="form-control">
+                                    <option value="0" selected>Attribution CC BY</option>
+                                    <option value="1">Attribution-ShareAlike CC BY-SA</option>
+                                    <option value="2">Attribution-NoDerivs CC BY-ND</option>
+                                    <option value="3">Attribution-NonCommercial CC BY-NC</option>
+                                    <option value="4">Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>
+                                    <option value="5">Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>
+                                    <option value="6">{{ _i("No license (Not recommended!)") }}</option>
+                                    <option value="7">{{ _i("Enter your own copyright text") }}</option>
+                                </select>
+                                <span class="help-block">
+                                    @php
+                                        // TODO: Use the correct language for the chooser tool
+                                        echo _i('It is important to select the correct license for your drawings!
+                                            For help, see the %sCreative Commons license chooser%s.',
+                                            '<a href="http://creativecommons.org/choose/?lang=' . LaravelGettext::getLocale() . '">', '</a>');
+                                    @endphp
+                                </span>
+                                </div>
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label for="copyright" class="col-md-4 col-form-label text-md-right">{{ _i('Copyright notice') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="copyright" disabled type="text" class="form-control" maxlength="128" name="copyright">
+
+                                @if ($errors->has('name'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                         </div>
 
@@ -98,6 +155,9 @@
                                 {!! NoCaptcha::display() !!}
                             </div>
                         </div>
+
+                        @php echo _i("Your personal information will be processed in accordance with the %sprivacy policy%s and shall be used only for user management and to keep you informed about our activities.", "<a href='/privacy'>", "</a>") . "<br /><br />";
+                        @endphp
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
@@ -126,5 +186,14 @@ $('#password').password({
     minimumLength: 6 // minimum password length (below this threshold, the score is 0)
   });
 
+function enableDisableCopyright() {
+    var selectBox = document.getElementById("cclicense");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+    if (selectedValue == 7) {
+        document.getElementById("copyright").disabled=false;
+    } else {
+        document.getElementById("copyright").disabled=true;
+    }
+}
 </script>
 @endpush

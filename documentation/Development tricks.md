@@ -74,3 +74,6 @@ Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']])-
 ```
 
 ## Mails
+
+http://localhost:8000/maileclipse
+

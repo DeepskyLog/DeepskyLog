@@ -22,7 +22,6 @@ class DeepskyLogVerificationNotification extends VerifyEmail
             return call_user_func(static::$toMailCallback, $notifiable);
         }
 
-        $subject = _i('Verify Email Address');
         return (new MailMessage)
             ->subject(_i('Verify Email Address'))
             ->line(_i('Please click the button below to verify your email address.'))

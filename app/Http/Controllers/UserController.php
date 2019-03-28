@@ -98,10 +98,10 @@ class UserController extends Controller {
             //If no role is selected remove exisiting role associated to a user
             $user->roles()->detach();
         }
-        return redirect()->route('users.index')->with(
-            'flash_message',
-            _i('User successfully edited.')
-        );
+
+        flash()->success(_i('User %s successfully edited.', $user->name));
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -115,12 +115,11 @@ class UserController extends Controller {
     {
         //Find a user with a given id and delete
         $user = User::findOrFail($id);
+
+        flash()->warning(_i('User %s successfully deleted.', $user->name));
+
         $user->delete();
 
-        // TODO: Add the name of the deleted user!
-        return redirect()->route('users.index')->with(
-            'flash_message',
-            _i('User successfully deleted.')
-        );
+        return redirect()->route('users.index');
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\DeepskyLogVerificationNotification;
+use App\Notifications\DeepskyLogResetPassword;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -24,9 +25,16 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->attributes['password'] = bcrypt($password);
     }
 
+    // Override this function to use our own notification
     public function sendEmailVerificationNotification()
     {
         $this->notify(new DeepskyLogVerificationNotification);
+    }
+
+    // Override this function to use our own notification
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new DeepskyLogResetPassword($token));
     }
 
     /**

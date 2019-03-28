@@ -19,6 +19,7 @@
         "laravelcollective/html": "^5.8",
         "monarobase/country-list": "^2.1",
         "petercoles/multilingual-language-list": "^1.1",
+        "qoraiche/laravel-mail-editor": "^1.1",
         "spatie/laravel-flash": "^1.2",
         "spatie/laravel-permission": "^2.36",
         "yajra/laravel-datatables-oracle": "^9.0",

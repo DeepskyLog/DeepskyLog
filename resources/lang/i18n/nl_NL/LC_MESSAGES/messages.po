@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-03-27 21:32+0100\n"
-"PO-Revision-Date: 2019-03-27 21:34+0100\n"
+"POT-Creation-Date: 2019-03-28 16:27+0100\n"
+"PO-Revision-Date: 2019-03-28 16:28+0100\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: nl_NL\n"
@@ -16,7 +16,57 @@ msgstr ""
 "X-Poedit-SearchPath-0: Http\n"
 "X-Poedit-SearchPath-1: ../resources/views\n"
 "X-Poedit-SearchPath-2: Console\n"
-"X-Poedit-SearchPath-3: ../storage/framework/messages\n"
+"X-Poedit-SearchPath-3: Notifications\n"
+"X-Poedit-SearchPath-4: ../resources/lang/en\n"
+"X-Poedit-SearchPath-5: ../storage/framework/messages\n"
+
+#: ../resources/lang/en/auth.php:16
+#: ../storage/framework/messages/c8e545992c6c1b362a3b2a8915d5f59fe8a6084e.php.php:16
+msgid "These credentials do not match our records."
+msgstr "Deze referenties komen niet overeen met onze gegevens."
+
+#: ../resources/lang/en/auth.php:17
+#: ../storage/framework/messages/c8e545992c6c1b362a3b2a8915d5f59fe8a6084e.php.php:17
+msgid "Too many login attempts. Please try again in :seconds seconds."
+msgstr "Te veel aanmeldingspogingen. Probeer het opnieuw in :seconds seconden."
+
+#: ../resources/lang/en/pagination.php:16
+#: ../storage/framework/messages/dd67a014e36cb041ed5792d3fa456f797c64983c.php.php:16
+msgid "Previous"
+msgstr "Vorige"
+
+#: ../resources/lang/en/pagination.php:17
+#: ../storage/framework/messages/dd67a014e36cb041ed5792d3fa456f797c64983c.php.php:17
+msgid "Next"
+msgstr "Volgende"
+
+#: ../resources/lang/en/passwords.php:16
+#: ../storage/framework/messages/969355e15cf4b4d4255e5599f4094f5fe82934ad.php.php:16
+msgid "Passwords must be at least six characters and match the confirmation."
+msgstr ""
+"Wachtwoorden moeten ten minste zes tekens bevatten en overeenkomen met de "
+"bevestiging."
+
+#: ../resources/lang/en/passwords.php:17
+#: ../storage/framework/messages/969355e15cf4b4d4255e5599f4094f5fe82934ad.php.php:17
+msgid "Your password has been reset!"
+msgstr "Je wachtwoord is hersteld!"
+
+#: ../resources/lang/en/passwords.php:18
+#: ../storage/framework/messages/969355e15cf4b4d4255e5599f4094f5fe82934ad.php.php:18
+msgid "We have e-mailed your password reset link!"
+msgstr ""
+"We hebben een e-mail verstuurd met een herstel link voor uw wachtwoord!"
+
+#: ../resources/lang/en/passwords.php:19
+#: ../storage/framework/messages/969355e15cf4b4d4255e5599f4094f5fe82934ad.php.php:19
+msgid "This password reset token is invalid."
+msgstr "Dit token voor wachtwoord herstel is ongeldig."
+
+#: ../resources/lang/en/passwords.php:20
+#: ../storage/framework/messages/969355e15cf4b4d4255e5599f4094f5fe82934ad.php.php:20
+msgid "We can't find a user with that e-mail address."
+msgstr "We kunnen geen gebruiker vinden met dit e-mail adres."
 
 #: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:76
 #: Http/Controllers/LensController.php:76
@@ -35,8 +85,10 @@ msgstr "Lens \"%s\" verwijderd"
 #: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:58
 #: ../storage/framework/messages/72d874730f45f49523e5c39a7eeefaef085d66a1.php.php:2
 #: ../storage/framework/messages/72d874730f45f49523e5c39a7eeefaef085d66a1.php.php:11
+#: ../storage/framework/messages/da684ef420c21f0e37762cdf9246187637dfec6d.php.php:25
+#: Notifications/DeepskyLogResetPassword.php:25
 msgid "Reset Password"
-msgstr "Reset wachtwoord"
+msgstr "Herstel wachtwoord"
 
 #: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:20
 #: ../storage/framework/messages/72d874730f45f49523e5c39a7eeefaef085d66a1.php.php:25
@@ -84,17 +136,20 @@ msgstr ""
 "Als u de e-mail niet hebt ontvangen, %sklik dan hier om een andere aan te "
 "vragen%s."
 
-#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:25
-#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:27
-#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:30
+#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:26
+#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:29
+#: Notifications/DeepskyLogVerificationNotification.php:26
+#: Notifications/DeepskyLogVerificationNotification.php:29
 msgid "Verify Email Address"
 msgstr "Verifieer uw e-mailadres"
 
-#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:28
+#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:27
+#: Notifications/DeepskyLogVerificationNotification.php:27
 msgid "Please click the button below to verify your email address."
 msgstr "Klik op de onderstaande knop om uw e-mail adres te verifiëren."
 
-#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:33
+#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:32
+#: Notifications/DeepskyLogVerificationNotification.php:32
 msgid "If you did not create an account, no further action is required."
 msgstr "Als u geen account hebt aangemaakt, is er geen verdere actie vereist."
 
@@ -167,7 +222,7 @@ msgstr "Verander lens"
 
 #: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:32
 #: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:74
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:14
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:13
 msgid "Add lens"
 msgstr "Voeg lens toe"
 
@@ -181,8 +236,7 @@ msgstr "of voeg de gegevens manueel in"
 
 #: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:58
 #: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:14
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:20
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:26
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:24
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:14
 msgid "Name"
 msgstr "Naam"
@@ -192,7 +246,7 @@ msgid "e.g. Televue 2x Barlow"
 msgstr "b.v. Televue 2x Barlow"
 
 #: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:64
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:27
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:25
 msgid "Factor"
 msgstr "Factor"
 
@@ -256,15 +310,17 @@ msgstr "Oculairs"
 msgid "Filters"
 msgstr "Filters"
 
-#: ../storage/framework/messages/2b4421d7058c5dae82ff4ebb0b5d8ce7dbf53c94.php.php:103
-#: Http/Controllers/UserController.php:103
-msgid "User successfully edited."
-msgstr "Gebruiker met succes aangepast."
+#: ../storage/framework/messages/2b4421d7058c5dae82ff4ebb0b5d8ce7dbf53c94.php.php:102
+#: Http/Controllers/UserController.php:102
+#, php-format
+msgid "User %s successfully edited."
+msgstr "Gebruiker %s met succes aangepast."
 
-#: ../storage/framework/messages/2b4421d7058c5dae82ff4ebb0b5d8ce7dbf53c94.php.php:123
-#: Http/Controllers/UserController.php:123
-msgid "User successfully deleted."
-msgstr "Gebruiker met succes verwijderd."
+#: ../storage/framework/messages/2b4421d7058c5dae82ff4ebb0b5d8ce7dbf53c94.php.php:119
+#: Http/Controllers/UserController.php:119
+#, php-format
+msgid "User %s successfully deleted."
+msgstr "Gebruiker %s met succes verwijderd."
 
 #: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:4
 msgid "View"
@@ -338,7 +394,7 @@ msgstr "Inloggen"
 #: ../storage/framework/messages/5b9407624fad8338d5fa1c972f963aa62acbae82.php.php:3
 #: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:5
 #: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:13
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:106
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:166
 msgid "Register"
 msgstr "Registreren"
 
@@ -365,7 +421,7 @@ msgstr ""
 
 #: ../storage/framework/messages/72d874730f45f49523e5c39a7eeefaef085d66a1.php.php:41
 msgid "Send Password Reset Link"
-msgstr "Verstuur reset link voor het wachtwoord"
+msgstr "Verstuur herstel link voor het wachtwoord"
 
 #: ../storage/framework/messages/7383e5c26bec23b20c091cb6461f75081bed9132.php.php:3
 msgid "Help"
@@ -604,6 +660,10 @@ msgstr "Service niet beschikbaar"
 msgid "Sorry, we are doing some maintenance. Please check back soon."
 msgstr "Sorry, we doen wat onderhoud. Kom snel terug."
 
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:20
+msgid "Full Name"
+msgstr "Volledige naam"
+
 #: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:70
 msgid "Country of residence"
 msgstr "Land van verblijf"
@@ -611,6 +671,48 @@ msgstr "Land van verblijf"
 #: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:83
 msgid "Standard language for observations"
 msgstr "Standaardtaal voor waarnemingen"
+
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:96
+msgid "Language for user interface"
+msgstr "Taal voor gebruikersinterface"
+
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:112
+msgid "License for drawings"
+msgstr "Licentie voor tekeningen"
+
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:122
+msgid "No license (Not recommended!)"
+msgstr "Geen licentie (niet aanbevolen!)"
+
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:123
+msgid "Enter your own copyright text"
+msgstr "Voer je eigen copyright tekst in"
+
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:128
+#, php-format
+msgid ""
+"It is important to select the correct license for your drawings!\n"
+"                                            For help, see the %sCreative "
+"Commons license chooser%s."
+msgstr ""
+"Het is belangrijk om de juiste licentie voor uw tekeningen te selecteren!\n"
+"                                            Zie de %sCreative Commons-"
+"licentie kiezer%s voor meer informatie."
+
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:139
+msgid "Copyright notice"
+msgstr "Copyright melding"
+
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:160
+#, php-format
+msgid ""
+"Your personal information will be processed in accordance with the %sprivacy "
+"policy%s and shall be used only for user management and to keep you informed "
+"about our activities."
+msgstr ""
+"Uw persoonlijke gegevens worden verwerkt in overeenstemming met het "
+"%sprivacy beleid%s en zullen alleen worden gebruikt voor gebruikersbeheer en "
+"om u op de hoogte te houden van onze activiteiten."
 
 #: ../storage/framework/messages/d0cddd00017ce1607ddfba20b18ed6a3366d4740.php.php:50
 msgid "Remember Me"
@@ -624,32 +726,59 @@ msgstr "Wachtwoord vergeten?"
 msgid "Date"
 msgstr "Datum"
 
+#: ../storage/framework/messages/da684ef420c21f0e37762cdf9246187637dfec6d.php.php:23
+#: Notifications/DeepskyLogResetPassword.php:23
+msgid "Reset Password Notification"
+msgstr "Wachtwoord herstel melding"
+
+#: ../storage/framework/messages/da684ef420c21f0e37762cdf9246187637dfec6d.php.php:24
+#: Notifications/DeepskyLogResetPassword.php:24
+msgid ""
+"You are receiving this email because we received a password reset request "
+"for your account."
+msgstr ""
+"U ontvangt deze e-mail omdat we een wachtwoord herstel aanvraag voor uw "
+"account hebben ontvangen."
+
+#: ../storage/framework/messages/da684ef420c21f0e37762cdf9246187637dfec6d.php.php:26
+#: Notifications/DeepskyLogResetPassword.php:26
+#, php-format
+msgid "This password reset link will expire in %d minutes."
+msgstr "Deze wachtwoord herstel link zal vervallen in %d minuten."
+
+#: ../storage/framework/messages/da684ef420c21f0e37762cdf9246187637dfec6d.php.php:27
+#: Notifications/DeepskyLogResetPassword.php:27
+msgid "If you did not request a password reset, no further action is required."
+msgstr ""
+"Als u geen wachtwoord herstel hebt aangevraagd, is er geen verdere actie "
+"vereist."
+
 #: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:2
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:9
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:8
 #, php-format
 msgid "Lenses of %s"
 msgstr "Lenzen van %s"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:28
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:26
 msgid "Active"
 msgstr "Actief"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:29
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:27
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:18
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:37
 msgid "Delete"
 msgstr "Verwijder"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:30
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:28
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:20
 msgid "Observations"
 msgstr "Waarnemingen"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:65
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:63
 msgid "observations"
 msgstr "waarnemingen"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:68
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:66
 msgid "observation"
 msgstr "waarneming"
 
@@ -1040,9 +1169,6 @@ msgstr "Lijsten"
 #~ msgid "Last Name"
 #~ msgstr "Achternaam"
 
-#~ msgid "First Name"
-#~ msgstr "Voornaam"
-
 #~ msgid "Number of instruments"
 #~ msgstr "Aantal instrumenten"
 
@@ -1211,9 +1337,6 @@ msgstr "Lijsten"
 
 #~ msgid "Default instrument"
 #~ msgstr "Standaard instrument"
-
-#~ msgid "Copyright notice"
-#~ msgstr "Copyright melding"
 
 #~ msgid "Change role"
 #~ msgstr "Rol wijzigen"
@@ -1662,42 +1785,12 @@ msgstr "Lijsten"
 #~ msgid "The language for DeepskyLog"
 #~ msgstr "De taal voor DeepskyLog"
 
-#~ msgid "License for drawings"
-#~ msgstr "Licentie voor tekeningen"
-
-#~ msgid "No license (Not recommended!)"
-#~ msgstr "Geen licentie (niet aanbevolen!)"
-
-#~ msgid "Enter your own copyright text"
-#~ msgstr "Voer je eigen copyright tekst in"
-
-#~ msgid ""
-#~ "It is important to select the <strong>correct license for your drawings</"
-#~ "strong>! For help, see the <a href=\"http://creativecommons.org/choose/"
-#~ "\">Creative Commons license-choosing tool</a>."
-#~ msgstr ""
-#~ "Selecteer de <strong>correcte licentie voor uw tekeningen</strong>! Voor "
-#~ "meer informatie, gebruik de <a href=“http://creativecommons.org/"
-#~ "choose/“>Creative Commons licentie-selectie tool</a>."
-
 #~ msgid ""
 #~ "You can specify a copyright notice that will appear under your "
 #~ "observations and drawings."
 #~ msgstr ""
 #~ "U kan een copyright bericht ingeven dat onder uw waarnemingen en "
 #~ "tekeningen verschijnt."
-
-#~ msgid "Languages for observations"
-#~ msgstr "Talen voor waarnemingen"
-
-#~ msgid ""
-#~ "Your personal information will be processed in accordance with the "
-#~ "%sprivacy policy%s and shall be used only for user management and to keep "
-#~ "you informed about our activities. "
-#~ msgstr ""
-#~ "Uw persoonlijke gegevens worden verwerkt in overeenstemming met het "
-#~ "%sprivacy beleid%s en zullen alleen worden gebruikt voor gebruikersbeheer "
-#~ "en om u op de hoogte te houden van onze activiteiten. "
 
 #~ msgid "Add new filter"
 #~ msgstr "Nieuwe filter toevoegen"
@@ -4369,12 +4462,6 @@ msgstr "Lijsten"
 
 #~ msgid "Please wait a moment while loading data..."
 #~ msgstr "Wacht even tijdens het laden van gegevens..."
-
-#~ msgid "Next"
-#~ msgstr "Volgende"
-
-#~ msgid "Previous"
-#~ msgstr "Vorige"
 
 #~ msgid "The CSV file is not completely imported because: "
 #~ msgstr "Het CSV-bestand is niet volledig geïmporteerd omdat: "
