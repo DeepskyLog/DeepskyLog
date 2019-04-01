@@ -26,8 +26,7 @@ class LensController extends Controller
 
         // AUTHENTICATION
         // TODO: Register page
-        //      When logging in, set the correct language
-        //      Put the value of the cc license in the license field
+        //      When logging in, set the correct language, and remove the language menu
         // TODO: If the country of residence is not yet set, show a flash message to do so...
         // TODO: Extend user page and table for the DeepskyLog information
         // TODO: Update admin page for the users, add extra information, move operations in two different colums, use icons for operations

@@ -116,7 +116,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" name="license" id="license">
                             <label for="cclicense" class="col-md-4 col-form-label text-md-right">{{ _i("License for drawings") }}</label>
 
                             <div class="col-md-6">
@@ -179,6 +179,21 @@
 @push('scripts')
 <script>
 
+$(document).ready(function()  {
+    // Also put the correct copyright in the copyright field
+    e = document.getElementById("cclicense");
+
+    if (e.selectedIndex == 6) {
+        document.getElementById("copyright").disabled=true;
+        document.getElementById("copyright").value = '';
+    } else if (e.selectedIndex != 7) {
+        document.getElementById("copyright").disabled=true;
+        document.getElementById("copyright").value = e.options[e.selectedIndex].text;
+    } else {
+        document.getElementById("copyright").disabled=false;
+    }
+} );
+
 $('#password').password({
     shortPass: '<?php echo _i("The password is too short"); ?>',
     badPass: '<?php echo _i("Weak; try combining letters & numbers"); ?>',
@@ -199,13 +214,15 @@ function enableDisableCopyright() {
     var selectedValue = selectBox.options[selectBox.selectedIndex].value;
     if (selectedValue == 7) {
         document.getElementById("copyright").disabled=false;
-        document.getElementById("copyright").text = '';
+        document.getElementById("copyright").value = '';
+    } else if (selectedValue == 6) {
+        document.getElementById("copyright").disabled=true;
+        document.getElementById("copyright").value = '';
     } else {
         document.getElementById("copyright").disabled=true;
-        // TODO: Set the text of the CC license in this field
-        // TODO: Use the old values to enable or disable the field at pageload
-        //alert(document.getElementById("copyright").selectedValue);
-        document.getElementById("copyright").text = document.getElementById("cclicense").text;
+        // Use the old values to enable or disable the field at pageload
+        e = document.getElementById("cclicense");
+        document.getElementById("copyright").value = e.options[e.selectedIndex].text;
     }
 }
 </script>
