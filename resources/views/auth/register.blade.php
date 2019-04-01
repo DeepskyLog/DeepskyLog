@@ -70,10 +70,10 @@
                             <label for="country" class="col-md-4 col-form-label text-md-right">{{ _i('Country of residence') }}</label>
 
                             <div class="col-md-6">
-                                <select class="form-control" id="country">
+                                <select class="form-control" id="country" name="country">
                                     <option value="">&nbsp;</option>
                                     @foreach (Countries::getList(LaravelGettext::getLocaleLanguage()) as $code=>$country)
-                                        <option value="{{ $code }}">{{ $country }}</option>
+                                        <option @if ($code == old('country')) selected="selected"@endif value="{{ $code }}">{{ $country }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -83,10 +83,14 @@
                             <label for="observationlanguage" class="col-md-4 col-form-label text-md-right">{{ _i('Standard language for observations') }}</label>
 
                             <div class="col-md-6">
-                                <select class="form-control" id="observationlanguage">
+                                <select class="form-control" id="observationlanguage" name="observationlanguage">
                                     <option value="">&nbsp;</option>
                                     @foreach (Languages::lookup('major', LaravelGettext::getLocaleLanguage()) as $code=>$language)
-                                        <option value="{{ $code }}"@if ($code == LaravelGettext::getLocaleLanguage()) selected="selected"@endif>{{ ucfirst($language) }}</option>
+                                        @if (old('observationlanguage') != '')
+                                            <option value="{{ $code }}"@if ($code == old('observationlanguage')) selected="selected"@endif>{{ ucfirst($language) }}</option>
+                                        @else
+                                            <option value="{{ $code }}"@if ($code == LaravelGettext::getLocaleLanguage()) selected="selected"@endif>{{ ucfirst($language) }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -96,13 +100,17 @@
                             <label for="language" class="col-md-4 col-form-label text-md-right">{{ _i('Language for user interface') }}</label>
 
                             <div class="col-md-6">
-                                <select class="form-control" id="language">
+                                <select class="form-control" id="language" name="language">
                                     <option value="">&nbsp;</option>
                                     @foreach(Config::get('laravel-gettext.supported-locales') as $locale)
                                         @php
                                             $localeText = ucwords(Locale::getDisplayLanguage($locale, LaravelGettext::getLocale()));
                                         @endphp
-                                        <option value="{{ $locale }}"@if ($locale == LaravelGettext::getLocale()) selected="selected"@endif>{{ $localeText }}</option>
+                                        @if (old('observationlanguage') != '')
+                                            <option value="{{ $locale }}"@if ($locale == old('language')) selected="selected"@endif>{{ $localeText }}</option>
+                                        @else
+                                            <option value="{{ $locale }}"@if ($locale == LaravelGettext::getLocale()) selected="selected"@endif>{{ $localeText }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -113,18 +121,18 @@
 
                             <div class="col-md-6">
                                 <select name="cclicense" id="cclicense" onchange="enableDisableCopyright();" class="form-control">
-                                    <option value="0" selected>Attribution CC BY</option>
-                                    <option value="1">Attribution-ShareAlike CC BY-SA</option>
-                                    <option value="2">Attribution-NoDerivs CC BY-ND</option>
-                                    <option value="3">Attribution-NonCommercial CC BY-NC</option>
-                                    <option value="4">Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>
-                                    <option value="5">Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>
-                                    <option value="6">{{ _i("No license (Not recommended!)") }}</option>
-                                    <option value="7">{{ _i("Enter your own copyright text") }}</option>
+                                    <option value="0" @if (0 == old('cclicense')) selected="cclicense"@endif>Attribution CC BY</option>
+                                    <option value="1" @if (1 == old('cclicense')) selected="cclicense"@endif>Attribution-ShareAlike CC BY-SA</option>
+                                    <option value="2" @if (2 == old('cclicense')) selected="cclicense"@endif>Attribution-NoDerivs CC BY-ND</option>
+                                    <option value="3" @if (3 == old('cclicense')) selected="cclicense"@endif>Attribution-NonCommercial CC BY-NC</option>
+                                    <option value="4" @if (4 == old('cclicense')) selected="cclicense"@endif>Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>
+                                    <option value="5" @if (5 == old('cclicense')) selected="cclicense"@endif>Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>
+                                    <option value="6" @if (6 == old('cclicense')) selected="cclicense"@endif>{{ _i("No license (Not recommended!)") }}</option>
+                                    <option value="7" @if (7 == old('cclicense')) selected="cclicense"@endif>{{ _i("Enter your own copyright text") }}</option>
                                 </select>
                                 <span class="help-block">
                                     @php
-                                        // TODO: Use the correct language for the chooser tool
+                                        // Use the correct language for the chooser tool
                                         echo _i('It is important to select the correct license for your drawings!
                                             For help, see the %sCreative Commons license chooser%s.',
                                             '<a href="http://creativecommons.org/choose/?lang=' . LaravelGettext::getLocale() . '">', '</a>');
@@ -139,13 +147,7 @@
                             <label for="copyright" class="col-md-4 col-form-label text-md-right">{{ _i('Copyright notice') }}</label>
 
                             <div class="col-md-6">
-                                <input id="copyright" disabled type="text" class="form-control" maxlength="128" name="copyright">
-
-                                @if ($errors->has('name'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
+                                <input id="copyright" type="text" class="form-control" maxlength="128" name="copyright" value="{{ old('copyright') }}" >
                             </div>
                         </div>
 
@@ -160,7 +162,7 @@
                         @endphp
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-8 offset-md-5">
                                 <button type="submit" class="btn btn-primary">
                                     {{ _i('Register') }}
                                 </button>
@@ -197,8 +199,13 @@ function enableDisableCopyright() {
     var selectedValue = selectBox.options[selectBox.selectedIndex].value;
     if (selectedValue == 7) {
         document.getElementById("copyright").disabled=false;
+        document.getElementById("copyright").text = '';
     } else {
         document.getElementById("copyright").disabled=true;
+        // TODO: Set the text of the CC license in this field
+        // TODO: Use the old values to enable or disable the field at pageload
+        //alert(document.getElementById("copyright").selectedValue);
+        document.getElementById("copyright").text = document.getElementById("cclicense").text;
     }
 }
 </script>

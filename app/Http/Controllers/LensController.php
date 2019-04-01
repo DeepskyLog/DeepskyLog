@@ -25,7 +25,10 @@ class LensController extends Controller
         // TODO: Add flash_messages when lens is deleted or updated (see store)
 
         // AUTHENTICATION
-        // TODO: Log in with userid?
+        // TODO: Register page
+        //      When logging in, set the correct language
+        //      Put the value of the cc license in the license field
+        // TODO: If the country of residence is not yet set, show a flash message to do so...
         // TODO: Extend user page and table for the DeepskyLog information
         // TODO: Update admin page for the users, add extra information, move operations in two different colums, use icons for operations
         // TODO: Use authentication on the pages and in the layout.
@@ -33,9 +36,9 @@ class LensController extends Controller
         // TODO: Write script to convert old lenses table of DeepskyLog to laravel
         // TODO: Page to change observer settings
         // TODO: Page to view observer
+        // TODO: Clean up source code
 
         $lens = auth()->user()->lenses();
-        //$lens = Lens::where(‘observer_id’, auth()->id())->get();
 
         return view('layout.lens.view', compact($lens));
     }
@@ -65,7 +68,7 @@ class LensController extends Controller
             [
                 'observer_id' => 'required',
                 'name' => ['required', 'min:5'],
-                'factor' => 'required'
+                'factor' => 'required',
             ]
         );
 
@@ -123,7 +126,7 @@ class LensController extends Controller
                 [
                     'observer_id' => 'required',
                     'name' => ['required', 'min:5'],
-                    'factor' => 'required'
+                    'factor' => 'required',
                 ]
             );
 
