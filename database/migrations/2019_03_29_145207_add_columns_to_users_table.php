@@ -19,15 +19,15 @@ class AddColumnsToUsersTable extends Migration
             $table->integer('stdatlas')->default(0);
             $table->string('icqname')->nullable();
             $table->string('observationlanguage')->default('en');
-            $table->string('standardAtlasCode');
+            $table->string('standardAtlasCode')->default('');
             $table->float('fstOffset')->default(0.0);
             $table->string('copyright');
-            $table->string('overviewdsos');
-            $table->string('lookupdsos');
-            $table->string('detaildsos');
-            $table->string('overviewstars');
-            $table->string('lookupstars');
-            $table->string('detailstars');
+            $table->string('overviewdsos')->default('');
+            $table->string('lookupdsos')->default('');
+            $table->string('detaildsos')->default('');
+            $table->string('overviewstars')->default('');
+            $table->string('lookupstars')->default('');
+            $table->string('detailstars')->default('');
             $table->integer('atlaspagefont')->default(6);
             $table->integer('photosize1')->default(60);
             $table->integer('overviewFoV')->default(120);
@@ -71,7 +71,6 @@ class AddColumnsToUsersTable extends Migration
             $table->dropColumn('sendMail');
             $table->dropColumn('version');
             $table->dropColumn('showInches');
-
         });
     }
 }

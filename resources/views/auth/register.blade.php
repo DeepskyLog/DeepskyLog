@@ -138,10 +138,8 @@
                                             '<a href="http://creativecommons.org/choose/?lang=' . LaravelGettext::getLocale() . '">', '</a>');
                                     @endphp
                                 </span>
-                                </div>
+                            </div>
                         </div>
-
-
 
                         <div class="form-group row">
                             <label for="copyright" class="col-md-4 col-form-label text-md-right">{{ _i('Copyright notice') }}</label>
@@ -184,13 +182,13 @@ $(document).ready(function()  {
     e = document.getElementById("cclicense");
 
     if (e.selectedIndex == 6) {
-        document.getElementById("copyright").disabled=true;
+        document.getElementById("copyright").readOnly=true;
         document.getElementById("copyright").value = '';
     } else if (e.selectedIndex != 7) {
-        document.getElementById("copyright").disabled=true;
+        document.getElementById("copyright").readOnly=true;
         document.getElementById("copyright").value = e.options[e.selectedIndex].text;
     } else {
-        document.getElementById("copyright").disabled=false;
+        document.getElementById("copyright").readOnly=false;
     }
 } );
 
@@ -213,13 +211,13 @@ function enableDisableCopyright() {
     var selectBox = document.getElementById("cclicense");
     var selectedValue = selectBox.options[selectBox.selectedIndex].value;
     if (selectedValue == 7) {
-        document.getElementById("copyright").disabled=false;
+        document.getElementById("copyright").readOnly=false;
         document.getElementById("copyright").value = '';
     } else if (selectedValue == 6) {
-        document.getElementById("copyright").disabled=true;
+        document.getElementById("copyright").readOnly=true;
         document.getElementById("copyright").value = '';
     } else {
-        document.getElementById("copyright").disabled=true;
+        document.getElementById("copyright").readOnly=true;
         // Use the old values to enable or disable the field at pageload
         e = document.getElementById("cclicense");
         document.getElementById("copyright").value = e.options[e.selectedIndex].text;

@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\User;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
+
 class RegisterController extends Controller
 {
     /*
@@ -35,7 +35,6 @@ class RegisterController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -52,10 +51,15 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make(
-            $data, [
+            $data,
+            [
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password' => ['required', 'string', 'min:6', 'confirmed'],
+                'country' => ['required'],
+                'observationlanguage' => ['required'],
+                'language' => ['required'],
+                'copyright',
                 'g-recaptcha-response' => 'required|captcha'
             ]
         );
@@ -75,9 +79,13 @@ class RegisterController extends Controller
 
         $user = User::create(
             [
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $data['password'],
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'country' => $data['country'],
+                'observationlanguage' => $data['observationlanguage'],
+                'language' => $data['language'],
+                'copyright' => $data['copyright']
             ]
         );
         $user->assignRole($role_r); //Assigning role to user

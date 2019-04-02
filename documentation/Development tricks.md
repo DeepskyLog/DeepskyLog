@@ -60,7 +60,7 @@ Open Poedit and read in the language file to translate (in resources/lang/i18n/L
 ## Authentication
 
 
-In the Controller (in app/Http/Controllers/), make sure to add 'verified'. This makes sure the user has a verified email address.
+In the Controller (in app/Http/Controllers/), make sure to add 'verified'. This makes sure the user has a verified email address to view the requested page.
 ```
 $this->middleware(['auth', 'verified', 'clearance'])->except(['show']);
 ```
@@ -71,6 +71,12 @@ In routes/web.php:
 
 ```
 Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']])->middleware('verified');
+```
+
+To check if the user is a guest:
+
+```
+Auth::guest()
 ```
 
 ## Mails
