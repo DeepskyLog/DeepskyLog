@@ -50,7 +50,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/login';
 
     /**
      * Create a new controller instance.
@@ -126,6 +126,8 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
+
+        flash()->success(_i('User "%s" successfully registered. You can now log in.', $user->name));
 
         // $this->guard()->login($user);
 

@@ -106,7 +106,7 @@
                                         @php
                                             $localeText = ucwords(Locale::getDisplayLanguage($locale, LaravelGettext::getLocale()));
                                         @endphp
-                                        @if (old('observationlanguage') != '')
+                                        @if (old('language') != '')
                                             <option value="{{ $locale }}"@if ($locale == old('language')) selected="selected"@endif>{{ $localeText }}</option>
                                         @else
                                             <option value="{{ $locale }}"@if ($locale == LaravelGettext::getLocale()) selected="selected"@endif>{{ $localeText }}</option>

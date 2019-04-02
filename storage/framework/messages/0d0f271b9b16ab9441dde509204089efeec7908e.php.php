@@ -3,7 +3,9 @@
         <ul class="nav flex-column">
             <br />
             <!-- Language -->
-            <?php echo $__env->make('layout.sidebar.language', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+            <?php if(Auth::guest()): ?>
+                <?php echo $__env->make('layout.sidebar.language', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+            <?php endif; ?>
 
             <!-- Quickpick -->
             <?php echo $__env->make('layout.sidebar.quickpick', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>

@@ -44,17 +44,15 @@ class LensController extends Controller
     public function index()
     {
         // LENSES
+        // TODO: Delete lens does not work...
         // TODO: Test index
         // TODO: Test creating a new lens (only authenticated!)
         // TODO: Add flash_messages when lens is deleted or updated (see store)
 
         // AUTHENTICATION
-        // TODO: Register page
-        //      There is no standard user interface language set.
-        //      After logging in, nothing seems to happen
         // TODO: If the country of residence is not yet set,
         //         show a flash message to do so...
-        // TODO: Extend user page and table for the DeepskyLog information
+        // TODO: Write user settings page and table for the DeepskyLog information
         // TODO: Update admin page for the users, add extra information,
         //        move operations in two different colums, use icons for operations
         // TODO: Use authentication on the pages and in the layout.
@@ -102,7 +100,7 @@ class LensController extends Controller
 
         Lens::create($validated);
 
-        flash()->success(_i('Lens "%s" created'), $request->name);
+        flash()->success(_i('Lens "%s" created', $request->name));
 
         // View the page with all lenses for the user
         return redirect('/lens');
@@ -182,7 +180,7 @@ class LensController extends Controller
     {
         $lens->delete();
 
-        flash()->warning(_i('Lens "%s" deleted'), $lens->name);
+        flash()->warning(_i('Lens "%s" deleted', $lens->name));
 
         return view('layout.lens.view');
     }

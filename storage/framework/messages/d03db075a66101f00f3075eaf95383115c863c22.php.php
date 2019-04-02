@@ -70,10 +70,10 @@
                             <label for="country" class="col-md-4 col-form-label text-md-right"><?php echo e(_i('Country of residence')); ?></label>
 
                             <div class="col-md-6">
-                                <select class="form-control" id="country">
+                                <select class="form-control" id="country" name="country">
                                     <option value="">&nbsp;</option>
                                     <?php $__currentLoopData = Countries::getList(LaravelGettext::getLocaleLanguage()); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $code=>$country): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <option value="<?php echo e($code); ?>"><?php echo e($country); ?></option>
+                                        <option <?php if($code == old('country')): ?> selected="selected"<?php endif; ?> value="<?php echo e($code); ?>"><?php echo e($country); ?></option>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
@@ -83,10 +83,14 @@
                             <label for="observationlanguage" class="col-md-4 col-form-label text-md-right"><?php echo e(_i('Standard language for observations')); ?></label>
 
                             <div class="col-md-6">
-                                <select class="form-control" id="observationlanguage">
+                                <select class="form-control" id="observationlanguage" name="observationlanguage">
                                     <option value="">&nbsp;</option>
                                     <?php $__currentLoopData = Languages::lookup('major', LaravelGettext::getLocaleLanguage()); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $code=>$language): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <option value="<?php echo e($code); ?>"<?php if($code == LaravelGettext::getLocaleLanguage()): ?> selected="selected"<?php endif; ?>><?php echo e(ucfirst($language)); ?></option>
+                                        <?php if(old('observationlanguage') != ''): ?>
+                                            <option value="<?php echo e($code); ?>"<?php if($code == old('observationlanguage')): ?> selected="selected"<?php endif; ?>><?php echo e(ucfirst($language)); ?></option>
+                                        <?php else: ?>
+                                            <option value="<?php echo e($code); ?>"<?php if($code == LaravelGettext::getLocaleLanguage()): ?> selected="selected"<?php endif; ?>><?php echo e(ucfirst($language)); ?></option>
+                                        <?php endif; ?>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
@@ -96,56 +100,52 @@
                             <label for="language" class="col-md-4 col-form-label text-md-right"><?php echo e(_i('Language for user interface')); ?></label>
 
                             <div class="col-md-6">
-                                <select class="form-control" id="language">
+                                <select class="form-control" id="language" name="language">
                                     <option value="">&nbsp;</option>
                                     <?php $__currentLoopData = Config::get('laravel-gettext.supported-locales'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $locale): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <?php
                                             $localeText = ucwords(Locale::getDisplayLanguage($locale, LaravelGettext::getLocale()));
                                         ?>
-                                        <option value="<?php echo e($locale); ?>"<?php if($locale == LaravelGettext::getLocale()): ?> selected="selected"<?php endif; ?>><?php echo e($localeText); ?></option>
+                                        <?php if(old('language') != ''): ?>
+                                            <option value="<?php echo e($locale); ?>"<?php if($locale == old('language')): ?> selected="selected"<?php endif; ?>><?php echo e($localeText); ?></option>
+                                        <?php else: ?>
+                                            <option value="<?php echo e($locale); ?>"<?php if($locale == LaravelGettext::getLocale()): ?> selected="selected"<?php endif; ?>><?php echo e($localeText); ?></option>
+                                        <?php endif; ?>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" name="license" id="license">
                             <label for="cclicense" class="col-md-4 col-form-label text-md-right"><?php echo e(_i("License for drawings")); ?></label>
 
                             <div class="col-md-6">
                                 <select name="cclicense" id="cclicense" onchange="enableDisableCopyright();" class="form-control">
-                                    <option value="0" selected>Attribution CC BY</option>
-                                    <option value="1">Attribution-ShareAlike CC BY-SA</option>
-                                    <option value="2">Attribution-NoDerivs CC BY-ND</option>
-                                    <option value="3">Attribution-NonCommercial CC BY-NC</option>
-                                    <option value="4">Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>
-                                    <option value="5">Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>
-                                    <option value="6"><?php echo e(_i("No license (Not recommended!)")); ?></option>
-                                    <option value="7"><?php echo e(_i("Enter your own copyright text")); ?></option>
+                                    <option value="0" <?php if(0 == old('cclicense')): ?> selected="cclicense"<?php endif; ?>>Attribution CC BY</option>
+                                    <option value="1" <?php if(1 == old('cclicense')): ?> selected="cclicense"<?php endif; ?>>Attribution-ShareAlike CC BY-SA</option>
+                                    <option value="2" <?php if(2 == old('cclicense')): ?> selected="cclicense"<?php endif; ?>>Attribution-NoDerivs CC BY-ND</option>
+                                    <option value="3" <?php if(3 == old('cclicense')): ?> selected="cclicense"<?php endif; ?>>Attribution-NonCommercial CC BY-NC</option>
+                                    <option value="4" <?php if(4 == old('cclicense')): ?> selected="cclicense"<?php endif; ?>>Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>
+                                    <option value="5" <?php if(5 == old('cclicense')): ?> selected="cclicense"<?php endif; ?>>Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>
+                                    <option value="6" <?php if(6 == old('cclicense')): ?> selected="cclicense"<?php endif; ?>><?php echo e(_i("No license (Not recommended!)")); ?></option>
+                                    <option value="7" <?php if(7 == old('cclicense')): ?> selected="cclicense"<?php endif; ?>><?php echo e(_i("Enter your own copyright text")); ?></option>
                                 </select>
                                 <span class="help-block">
                                     <?php
-                                        // TODO: Use the correct language for the chooser tool
+                                        // Use the correct language for the chooser tool
                                         echo _i('It is important to select the correct license for your drawings!
                                             For help, see the %sCreative Commons license chooser%s.',
                                             '<a href="http://creativecommons.org/choose/?lang=' . LaravelGettext::getLocale() . '">', '</a>');
                                     ?>
                                 </span>
-                                </div>
+                            </div>
                         </div>
-
-
 
                         <div class="form-group row">
                             <label for="copyright" class="col-md-4 col-form-label text-md-right"><?php echo e(_i('Copyright notice')); ?></label>
 
                             <div class="col-md-6">
-                                <input id="copyright" disabled type="text" class="form-control" maxlength="128" name="copyright">
-
-                                <?php if($errors->has('name')): ?>
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong><?php echo e($errors->first('name')); ?></strong>
-                                    </span>
-                                <?php endif; ?>
+                                <input id="copyright" type="text" class="form-control" maxlength="128" name="copyright" value="<?php echo e(old('copyright')); ?>" >
                             </div>
                         </div>
 
@@ -161,7 +161,7 @@
                         ?>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-8 offset-md-5">
                                 <button type="submit" class="btn btn-primary">
                                     <?php echo e(_i('Register')); ?>
 
@@ -178,6 +178,21 @@
 
 <?php $__env->startPush('scripts'); ?>
 <script>
+
+$(document).ready(function()  {
+    // Also put the correct copyright in the copyright field
+    e = document.getElementById("cclicense");
+
+    if (e.selectedIndex == 6) {
+        document.getElementById("copyright").readOnly=true;
+        document.getElementById("copyright").value = '';
+    } else if (e.selectedIndex != 7) {
+        document.getElementById("copyright").readOnly=true;
+        document.getElementById("copyright").value = e.options[e.selectedIndex].text;
+    } else {
+        document.getElementById("copyright").readOnly=false;
+    }
+} );
 
 $('#password').password({
     shortPass: '<?php echo _i("The password is too short"); ?>',
@@ -198,9 +213,16 @@ function enableDisableCopyright() {
     var selectBox = document.getElementById("cclicense");
     var selectedValue = selectBox.options[selectBox.selectedIndex].value;
     if (selectedValue == 7) {
-        document.getElementById("copyright").disabled=false;
+        document.getElementById("copyright").readOnly=false;
+        document.getElementById("copyright").value = '';
+    } else if (selectedValue == 6) {
+        document.getElementById("copyright").readOnly=true;
+        document.getElementById("copyright").value = '';
     } else {
-        document.getElementById("copyright").disabled=true;
+        document.getElementById("copyright").readOnly=true;
+        // Use the old values to enable or disable the field at pageload
+        e = document.getElementById("cclicense");
+        document.getElementById("copyright").value = e.options[e.selectedIndex].text;
     }
 }
 </script>

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-03-28 22:40+0100\n"
-"PO-Revision-Date: 2019-03-28 22:40+0100\n"
+"POT-Creation-Date: 2019-04-02 23:51+0100\n"
+"PO-Revision-Date: 2019-04-02 23:51+0100\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: fr_FR\n"
@@ -72,44 +72,56 @@ msgstr ""
 "Nous ne parvenons pas à trouver un utilisateur qui utilise cette adresse e-"
 "mail."
 
-#: ../resources/views/auth/register.blade.php:181
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:183
+#: ../resources/views/auth/passwords/reset.blade.php:75
+#: ../resources/views/auth/register.blade.php:196
+#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:75
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:198
 msgid "The password is too short"
 msgstr "Le mot de passe est trop court"
 
-#: ../resources/views/auth/register.blade.php:182
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:184
+#: ../resources/views/auth/passwords/reset.blade.php:76
+#: ../resources/views/auth/register.blade.php:197
+#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:76
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:199
 msgid "Weak; try combining letters & numbers"
 msgstr "Faible; essayez de combiner des lettres et des chiffres"
 
-#: ../resources/views/auth/register.blade.php:183
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:185
+#: ../resources/views/auth/passwords/reset.blade.php:77
+#: ../resources/views/auth/register.blade.php:198
+#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:77
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:200
 msgid "Medium; try using special characters"
 msgstr "Moyen; essayez d'utiliser des caractères spéciaux"
 
-#: ../resources/views/auth/register.blade.php:184
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:186
+#: ../resources/views/auth/passwords/reset.blade.php:78
+#: ../resources/views/auth/register.blade.php:199
+#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:78
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:201
 msgid "Strong password"
 msgstr "Mot de passe fort"
 
-#: ../resources/views/auth/register.blade.php:185
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:187
+#: ../resources/views/auth/passwords/reset.blade.php:79
+#: ../resources/views/auth/register.blade.php:200
+#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:79
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:202
 msgid "The password contains the username"
 msgstr "Le mot de passe contient le nom d'utilisateur"
 
-#: ../resources/views/auth/register.blade.php:186
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:188
+#: ../resources/views/auth/passwords/reset.blade.php:80
+#: ../resources/views/auth/register.blade.php:201
+#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:80
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:203
 msgid "Type your password"
 msgstr "Tapez votre mot de passe"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:76
-#: Http/Controllers/LensController.php:76
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:104
+#: Http/Controllers/LensController.php:104
 #, php-format
 msgid "Lens \"%s\" created"
 msgstr "Lentille \"%s\" créé"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:156
-#: Http/Controllers/LensController.php:156
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:184
+#: Http/Controllers/LensController.php:184
 #, php-format
 msgid "Lens \"%s\" deleted"
 msgstr "Lentille \"%s\" supprimé"
@@ -573,6 +585,14 @@ msgstr "Interdit"
 msgid "Sorry, you are forbidden from accessing this page."
 msgstr "Désolé, il vous est interdit d'accéder cette page."
 
+#: ../storage/framework/messages/b8c604159dc3a32b1f359d987f43feb0cc369160.php.php:130
+#: Http/Controllers/Auth/RegisterController.php:130
+#, php-format
+msgid "User \"%s\" successfully registered. You can now log in."
+msgstr ""
+"L’utilisateur \"%s\" s’est enregistré avec succès. Vous pouvez maintenant "
+"vous connecter."
+
 #: ../storage/framework/messages/c49848c84540333a81a331ea965695038af80e56.php.php:8
 msgid "Details"
 msgstr "Détails"
@@ -709,23 +729,23 @@ msgstr "Pays de résidence"
 msgid "Standard language for observations"
 msgstr "Langue standard pour les observations"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:96
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:100
 msgid "Language for user interface"
 msgstr "Langue pour l'interface utilisateur"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:112
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:120
 msgid "License for drawings"
 msgstr "Licence pour les dessins"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:122
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:130
 msgid "No license (Not recommended!)"
 msgstr "Pas de licence (non recommandé!)"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:123
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:131
 msgid "Enter your own copyright text"
 msgstr "Entrez votre propre texte copyright"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:128
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:136
 #, php-format
 msgid ""
 "It is important to select the correct license for your drawings!\n"
@@ -736,7 +756,7 @@ msgstr ""
 "                                            Pour obtenir de l'aide, "
 "consultez le %ssélecteur de licence Creative Commons%s."
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:139
+#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:145
 msgid "Copyright notice"
 msgstr "Avis de Copyright"
 
