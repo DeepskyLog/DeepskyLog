@@ -1,4 +1,15 @@
 <?php
+/**
+ * User registration.
+ *
+ * PHP Version 7
+ *
+ * @category UserManagement
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
 
 namespace App\Http\Controllers\Auth;
 
@@ -10,6 +21,15 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
 
+/**
+ * User registration.
+ *
+ * @category UserManagement
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
 class RegisterController extends Controller
 {
     /*
@@ -34,7 +54,6 @@ class RegisterController extends Controller
 
     /**
      * Create a new controller instance.
-     *
      */
     public function __construct()
     {
@@ -54,7 +73,9 @@ class RegisterController extends Controller
             $data,
             [
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'email' => [
+                    'required', 'string', 'email', 'max:255', 'unique:users'
+                ],
                 'password' => ['required', 'string', 'min:6', 'confirmed'],
                 'country' => ['required'],
                 'observationlanguage' => ['required'],
@@ -93,6 +114,13 @@ class RegisterController extends Controller
         return $user;
     }
 
+    /**
+     * Validate the request, create the user and return to the correct page.
+     *
+     * @param Request $request The request with all information on the user
+     *
+     * @return redirect the page of the registered user
+     */
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();

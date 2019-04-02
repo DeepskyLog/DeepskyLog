@@ -1,4 +1,15 @@
 <?php
+/**
+ * User authentication.
+ *
+ * PHP Version 7
+ *
+ * @category UserManagement
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
 
 namespace App\Http\Controllers\Auth;
 
@@ -7,6 +18,15 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Xinax\LaravelGettext\Facades\LaravelGettext;
 
+/**
+ * Logs in the user, sets the correct language and redirects to the home page.
+ *
+ * @category UserManagement
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
 class LoginController extends Controller
 {
     /*
@@ -31,7 +51,6 @@ class LoginController extends Controller
 
     /**
      * Create a new controller instance.
-     *
      */
     public function __construct()
     {
@@ -40,6 +59,8 @@ class LoginController extends Controller
 
     /**
      * Set the language from the database.
+     *
+     * @return None
      */
     public function authenticated()
     {
