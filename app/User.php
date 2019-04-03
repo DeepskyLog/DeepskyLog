@@ -41,7 +41,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function lenses()
     {
-        return $this->hasMany(Lens::class, 'observer_id');
+        return $this->hasMany('App\Lens', 'observer_id');
     }
 
     /**

@@ -45,10 +45,9 @@ class LensController extends Controller
     {
         // LENSES
         // TODO: Delete lens does not work...
-        // TODO: Only show lenses that are from the logged in observer.
         // TODO: Test index
-        // TODO: Test creating a new lens (only authenticated!)
         // TODO: Add flash_messages when lens is deleted or updated (see store)
+        // TODO: Show all lenses (as administrator)
 
         // AUTHENTICATION
         // TODO: Write user settings page and table for the DeepskyLog information
@@ -61,9 +60,9 @@ class LensController extends Controller
         // TODO: Page to view observer
         // TODO: Clean up source code
 
-        $lens = auth()->user()->lenses();
+        $lenses = auth()->user()->lenses()->get();
 
-        return view('layout.lens.view', compact($lens));
+        return view('layout.lens.view')->with('lenses', $lenses);
     }
 
     /**
