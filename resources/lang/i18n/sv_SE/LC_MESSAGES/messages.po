@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-04-02 23:50+0100\n"
-"PO-Revision-Date: 2019-04-02 23:50+0100\n"
+"POT-Creation-Date: 2019-04-03 09:58+0100\n"
+"PO-Revision-Date: 2019-04-03 09:58+0100\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: sv_SE\n"
@@ -109,13 +109,13 @@ msgid "Type your password"
 msgstr "Skriv ditt lösenord"
 
 #: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:104
-#: Http/Controllers/LensController.php:104
+#: Http/Controllers/LensController.php:103
 #, php-format
 msgid "Lens \"%s\" created"
 msgstr "Objektivet \" %s\" har skapats"
 
 #: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:184
-#: Http/Controllers/LensController.php:184
+#: Http/Controllers/LensController.php:183
 #, php-format
 msgid "Lens \"%s\" deleted"
 msgstr "Objektivet %s har tagits bort"
@@ -579,7 +579,7 @@ msgid "Sorry, you are forbidden from accessing this page."
 msgstr "Tyvärr, du är förbjuden att komma åt denna sida."
 
 #: ../storage/framework/messages/b8c604159dc3a32b1f359d987f43feb0cc369160.php.php:130
-#: Http/Controllers/Auth/RegisterController.php:130
+#: Http/Controllers/Auth/RegisterController.php:131
 #, php-format
 msgid "User \"%s\" successfully registered. You can now log in."
 msgstr "Användaren \"%s\" har registrerats. Nu kan du logga in."
@@ -840,6 +840,13 @@ msgstr "Användarroller"
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:22
 msgid "Lists"
 msgstr "Listor"
+
+#: Http/Middleware/DeepskyLogChecks.php:46
+msgid ""
+"Your country of residence is not set. Please set it in the observer settings."
+msgstr ""
+"Ditt bosättnings land är inte inställt. Ställ in den i observatörs "
+"inställningarna."
 
 #~ msgid "Overview"
 #~ msgstr "Översikt"

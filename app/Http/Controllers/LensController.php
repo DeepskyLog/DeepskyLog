@@ -45,13 +45,12 @@ class LensController extends Controller
     {
         // LENSES
         // TODO: Delete lens does not work...
+        // TODO: Only show lenses that are from the logged in observer.
         // TODO: Test index
         // TODO: Test creating a new lens (only authenticated!)
         // TODO: Add flash_messages when lens is deleted or updated (see store)
 
         // AUTHENTICATION
-        // TODO: If the country of residence is not yet set,
-        //         show a flash message to do so...
         // TODO: Write user settings page and table for the DeepskyLog information
         // TODO: Update admin page for the users, add extra information,
         //        move operations in two different colums, use icons for operations

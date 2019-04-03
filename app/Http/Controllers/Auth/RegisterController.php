@@ -127,7 +127,9 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
 
-        flash()->success(_i('User "%s" successfully registered. You can now log in.', $user->name));
+        flash()->success(
+            _i('User "%s" successfully registered. You can now log in.', $user->name)
+        );
 
         // $this->guard()->login($user);
 
