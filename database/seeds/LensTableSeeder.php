@@ -1,8 +1,7 @@
 <?php
-
 /**
- * Seeder for the database.
- * Fills the database with random values.
+ * Seeder for the Lens table of the database.
+ * Fills the database with random lenses.
  *
  * PHP Version 7
  *
@@ -16,8 +15,8 @@
 use Illuminate\Database\Seeder;
 
 /**
- * Seeder for the database.
- * Fills the database with random values.
+ * Seeder for the Lens table of the database.
+ * Fills the database with random lenses.
  *
  * @category Database
  * @package  DeepskyLog
@@ -25,15 +24,15 @@ use Illuminate\Database\Seeder;
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class DatabaseSeeder extends Seeder
+class LensTableSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
-        $this->call([UsersTableSeeder::class, LensTableSeeder::class]);
+        factory(App\Lens::class, 150)->create();
     }
 }

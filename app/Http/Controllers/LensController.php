@@ -43,39 +43,6 @@ class LensController extends Controller
      */
     public function index()
     {
-        // SEEDER
-        // TODO: UserFactory: Take country out of a list with possibilities
-        // TODO: UserFactory: Take copyright out of a list with possibilities (in Faker?)
-        // TODO: Write LensFactory
-
-        // TESTS
-        // TODO: Why do the test don't use the UserFactory and fail because country is not set?
-        // TODO: Tests for a lens with a too short name, negative factor, ...
-        // TODO: Test lens when not logged in
-        // TODO: Test when the user is logged in, but not verified
-        // TODO: Check if DeepskyLog can send a mail to the user to verify.
-        // TODO: Extra tests for the user class.
-
-        // LENSES
-        // TODO: Fix edit lens
-        // TODO: Write view one lens
-        // TODO: Add flash_messages when lens is updated (see store)
-        // TODO: Show all lenses? (as administrator)
-        // TODO: Only show delete button if there are no observations
-        // TODO: Show the correct number of observations with a certain lens and make the correct link.
-
-        // AUTHENTICATION
-        // TODO: We need: guest, verified and admin -> Do we need spatie/laravel-permissions for that?
-        // TODO: Write user settings page and table for the DeepskyLog information
-        // TODO: Update admin page for the users, add extra information,
-        //        move operations in two different colums, use icons for operations
-        // TODO: Use authentication on the pages and in the layout.
-        // TODO: Write script to convert old observers table of DeepskyLog to laravel
-        // TODO: Write script to convert old lenses table of DeepskyLog to laravel
-        // TODO: Page to change observer settings
-        // TODO: Page to view observer
-        // TODO: Clean up source code
-
         $lenses = auth()->user()->lenses()->get();
 
         return view('layout.lens.view')->with('lenses', $lenses);

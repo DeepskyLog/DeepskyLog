@@ -85,4 +85,7 @@ Auth::guest()
 
 ## Mails
 
+-> Remove Maileclipse?
 http://localhost:8000/maileclipse
+
+## Tests
