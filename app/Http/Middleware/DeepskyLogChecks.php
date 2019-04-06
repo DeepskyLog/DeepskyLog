@@ -43,7 +43,7 @@ class DeepskyLogChecks
             if (Auth::user()->country == '') {
                 flash()->warning(
                     _i(
-                        'Your country of residence is not set. Please set it in the observer settings.',
+                        'Your country of residence is not set. Please set it in the observer settings.'
                     )
                 );
             }

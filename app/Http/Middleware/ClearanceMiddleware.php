@@ -25,31 +25,31 @@ class ClearanceMiddleware
 
         // TODO: ADAPT PERMISSIONS
         // If user is creating a post
-        if ($request->is('posts/create')) {
-            if (!Auth::user()->hasPermissionTo('Create Post')) {
-                abort('401');
-            } else {
-                return $next($request);
-            }
-        }
+        // if ($request->is('posts/create')) {
+        //     if (!Auth::user()->hasPermissionTo('Create Post')) {
+        //         abort('401');
+        //     } else {
+        //         return $next($request);
+        //     }
+        // }
 
-        // If user is editing a post
-        if ($request->is('posts/*/edit')) {
-            if (!Auth::user()->hasPermissionTo('Edit Post')) {
-                abort('401');
-            } else {
-                return $next($request);
-            }
-        }
+        // // If user is editing a post
+        // if ($request->is('posts/*/edit')) {
+        //     if (!Auth::user()->hasPermissionTo('Edit Post')) {
+        //         abort('401');
+        //     } else {
+        //         return $next($request);
+        //     }
+        // }
 
-        // If user is deleting a post
-        if ($request->isMethod('Delete')) {
-            if (!Auth::user()->hasPermissionTo('Delete Post')) {
-                abort('401');
-            }
-        } else {
-            return $next($request);
-        }
+        // // If user is deleting a post
+        // if ($request->isMethod('Delete')) {
+        //     if (!Auth::user()->hasPermissionTo('Delete Post')) {
+        //         abort('401');
+        //     }
+        // } else {
+        //     return $next($request);
+        // }
 
         return $next($request);
     }

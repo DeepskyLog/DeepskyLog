@@ -43,13 +43,28 @@ class LensController extends Controller
      */
     public function index()
     {
+        // SEEDER
+        // TODO: UserFactory: Take country out of a list with possibilities
+        // TODO: UserFactory: Take copyright out of a list with possibilities (in Faker?)
+        // TODO: Write LensFactory
+
+        // TESTS
+        // TODO: Why do the test don't use the UserFactory and fail because country is not set?
+        // TODO: Tests for a lens with a too short name, negative factor, ...
+        // TODO: Test lens when not logged in
+        // TODO: Test when the user is logged in, but not verified
+        // TODO: Check if DeepskyLog can send a mail to the user to verify.
+        // TODO: Extra tests for the user class.
+
         // LENSES
-        // TODO: Delete lens does not work...
-        // TODO: Test index
-        // TODO: Add flash_messages when lens is deleted or updated (see store)
+        // TODO: Export lenses should also have the correct name
+        // TODO: Fix edit lens
+        // TODO: Write view one lens
+        // TODO: Add flash_messages when lens is updated (see store)
         // TODO: Show all lenses (as administrator)
 
         // AUTHENTICATION
+        // TODO: We need: guest, verified and admin -> Do we need spatie/laravel-permissions for that?
         // TODO: Write user settings page and table for the DeepskyLog information
         // TODO: Update admin page for the users, add extra information,
         //        move operations in two different colums, use icons for operations
@@ -113,8 +128,7 @@ class LensController extends Controller
      */
     public function show(Lens $lens)
     {
-        $this->authorize('view', $lens);
-
+        return view();
         // TO WRITE
     }
 
@@ -127,6 +141,7 @@ class LensController extends Controller
      */
     public function edit(Lens $lens)
     {
+        // TO WRITE
         $this->authorize('edit', $lens);
 
         return view('layout.lens.create', ['lens' => $lens, 'update' => true]);
@@ -180,6 +195,6 @@ class LensController extends Controller
 
         flash()->warning(_i('Lens "%s" deleted', $lens->name));
 
-        return view('layout.lens.view');
+        return redirect('/lens');
     }
 }

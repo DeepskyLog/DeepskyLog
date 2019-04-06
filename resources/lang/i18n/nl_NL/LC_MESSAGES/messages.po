@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
 "POT-Creation-Date: 2019-04-03 09:57+0100\n"
-"PO-Revision-Date: 2019-04-03 09:58+0100\n"
+"PO-Revision-Date: 2019-04-06 16:21+0100\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: nl_NL\n"
@@ -169,7 +169,7 @@ msgstr "Er is een nieuwe verificatielink naar uw e-mail adres verzonden."
 
 #: ../storage/framework/messages/11b2f33947c3949e9560bb8d24e494806dbbdfb0.php.php:21
 msgid "Before proceeding, please check your email for a verification link."
-msgstr "Controleer uw e-mail voor een verificatielink voodat u verder gaat."
+msgstr "Controleer uw e-mail voor een verificatielink voordat u verder gaat."
 
 #: ../storage/framework/messages/11b2f33947c3949e9560bb8d24e494806dbbdfb0.php.php:26
 #, php-format

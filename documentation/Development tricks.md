@@ -1,5 +1,7 @@
 # Development tricks
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
 ## Flash messages
 
 ```php
@@ -58,6 +60,8 @@ in order to compile all blade views to plain php before update the translations 
 Open Poedit and read in the language file to translate (in resources/lang/i18n/LANGUAGE/messages.po). Click on the update catalogue button in POedit to bring in the latest strings to translate.
 
 ## Authentication
+
+DeepskyLog uses spatie/laravel-permissions for the authentication.
 
 In the Controller (in app/Http/Controllers/), make sure to add 'verified'. This makes sure the user has a verified email address to view the requested page.
 
