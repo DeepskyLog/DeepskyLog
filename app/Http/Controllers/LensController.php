@@ -57,11 +57,12 @@ class LensController extends Controller
         // TODO: Extra tests for the user class.
 
         // LENSES
-        // TODO: Export lenses should also have the correct name
         // TODO: Fix edit lens
         // TODO: Write view one lens
         // TODO: Add flash_messages when lens is updated (see store)
-        // TODO: Show all lenses (as administrator)
+        // TODO: Show all lenses? (as administrator)
+        // TODO: Only show delete button if there are no observations
+        // TODO: Show the correct number of observations with a certain lens and make the correct link.
 
         // AUTHENTICATION
         // TODO: We need: guest, verified and admin -> Do we need spatie/laravel-permissions for that?

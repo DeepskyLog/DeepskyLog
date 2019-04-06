@@ -1,7 +1,7 @@
 @extends("layout.master")
 
 @section('title')
-    {{ _i("Lenses of %s", "Name") }}
+    {{ _i("Lenses of %s", Auth::user()->name) }}
 @endsection
 
 @section('content')
@@ -13,10 +13,6 @@
         {{ _i("Add lens") }}
     </a>
     <br /><br />
-    <!-- TODO: Show administration overview page
-         TODO: Show one lens (from other observer)
-    -->
-
     <table class="table table-sm table-striped table-hover" id="lens_table">
         <thead>
             <tr>
@@ -28,7 +24,7 @@
             </tr>
         </thead>
         <tbody>
-            <!-- TODO: Only show the lenses for the correct user -->
+            <!-- Only show the lenses for the correct user -->
             @foreach ($lenses as $lens)
                 <tr>
                     <td>
@@ -57,11 +53,7 @@
                     <td>
                         <!-- TODO: Show the correct number of observations with this lens, and make the correct link -->
                         <a href="#">
-                        @if ($lens->id != 6)
-                            {{ $lens->id . " " . _i("observations") }}
-                        @else
-                            {{ $lens->id . " " . _i("observation") }}
-                        @endif
+                            {{ $lens->id . ' ' . _n('observation', 'observations', $lens->id) }}
                         </a>
                     </td>
                 </tr>
