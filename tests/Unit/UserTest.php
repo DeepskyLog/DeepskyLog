@@ -31,7 +31,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {
-    use RefreshDatabase;
+    //use RefreshDatabase;
 
     /**
      * Checks whether the user can have a lens.
@@ -42,17 +42,22 @@ class UserTest extends TestCase
      */
     public function aUserCanHaveALens()
     {
-        $user = factory(App\User::class)->create();
-        dd(count($user));
+        //$this->withoutExceptionHandling();
 
-        $user->lenses->create(
-            [
-                'name' => 'Test lens',
-                'factor' => 2.0
-            ]
-        );
+        $user = factory('App\User')->create();
+        $this->actingAs($user);
 
-        $this->assertEquals('Test lens', $user->lens->name);
-        $this->assertEquals(2.0, $user->lens->factor);
+        $this->assertTrue($this->isAuthenticated());
+
+        // Create a new lens
+        $lens = new \App\Lens;
+        $lens->name = 'Tested lens';
+        $lens->factor = 1.43;
+        $lens->observer_id = $user->id;
+
+        $lens->save();
+
+        $this->assertEquals('Tested lens', $user->lenses->first()->name);
+        $this->assertEquals(1.43, $user->lenses->first()->factor);
     }
 }

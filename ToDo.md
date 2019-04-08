@@ -2,10 +2,7 @@
 
 ## TESTS
 
-+ [ ] Why do the test don't use the UserFactory and fail because country is not set?
 + [ ] Tests for a lens with a too short name, negative factor, ...
-+ [ ] Test lens when not logged in
-+ [ ] Test when the user is logged in, but not verified
 + [ ] Check if DeepskyLog can send a mail to the user to verify.
 + [ ] Extra tests for the user class.
 

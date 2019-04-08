@@ -42,16 +42,20 @@ class LensTest extends TestCase
 
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this->actingAs(factory('App\User')->create());
+        $user = factory('App\User')->create();
+        $this->actingAs($user);
 
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
         $attributes = [
             'name' => 'Test lens',
-            'factor' => 2.0
+            'factor' => 2.0,
         ];
 
-        $this->post('/lens', $attributes);
+        $this->post('lens', $attributes);
+
+        // Also check if the user_id is correct
+        $attributes['observer_id'] = $user->id;
 
         // Then there should be a new lens in the database
         $this->assertDatabaseHas('lens', $attributes);
@@ -68,6 +72,8 @@ class LensTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
+        $this->assertGuest();
+
         // When they hit the endpoint in /lens to create a new lens while
         // passing the necessary data
         $attributes = [
@@ -75,9 +81,40 @@ class LensTest extends TestCase
             'factor' => 2.0
         ];
 
-        $this->post('/lens', $attributes)->assertRedirect('/');
+        $this->expectException(\Illuminate\Auth\AuthenticationException::class);
 
-        // Can work with changes in web.php:
-        // Route::middleware('auth')->post('lens', ...)
+        $this->post('/lens', $attributes);
+    }
+
+    /**
+     * Unverified users are not allowed to create a new lens.
+     *
+     * @test
+     *
+     * @return None
+     */
+    public function unverifiedUsersMayNotCreateALens()
+    {
+        //$this->withoutExceptionHandling();
+
+        // Given I am a user who is logged in and not verified
+        // Act as a new user created by the factory
+        $user = factory('App\User')->create();
+
+        $user->email_verified_at = null;
+
+        $this->actingAs($user);
+
+        // When they hit the endpoint in /lens to create a new lens while
+        // passing the necessary data
+        $attributes = [
+            'observer_id' => $user->id,
+            'name' => 'Test lens for unverified user',
+            'factor' => 2.5
+        ];
+
+        $this->post('/lens', $attributes);
+
+        $this->assertDatabaseMissing('lens', $attributes);
     }
 }

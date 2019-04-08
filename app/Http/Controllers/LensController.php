@@ -69,6 +69,8 @@ class LensController extends Controller
      */
     public function store(Request $request)
     {
+        $request['observer_id'] = auth()->id();
+
         $validated = request()->validate(
             [
                 'observer_id' => 'required',
@@ -76,8 +78,6 @@ class LensController extends Controller
                 'factor' => 'required',
             ]
         );
-
-        $validated['observer_id'] = auth()->id();
 
         Lens::create($validated);
 
