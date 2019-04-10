@@ -2,6 +2,20 @@
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
+<!-- code_chunk_output -->
+
+- [Development tricks](#development-tricks)
+  - [Flash messages](#flash-messages)
+  - [Internationalization](#internationalization)
+    - [Translate the strings](#translate-the-strings)
+  - [Authentication](#authentication)
+    - [Using policies](#using-policies)
+    - [Checking user permissions](#checking-user-permissions)
+  - [Mails](#mails)
+  - [Tests](#tests)
+
+<!-- /code_chunk_output -->
+
 ## Flash messages
 
 ```php
@@ -61,12 +75,10 @@ Open Poedit and read in the language file to translate (in resources/lang/i18n/L
 
 ## Authentication
 
-DeepskyLog uses spatie/laravel-permissions for the authentication.
-
 In the Controller (in app/Http/Controllers/), make sure to add 'verified'. This makes sure the user has a verified email address to view the requested page.
 
 ```php
-$this->middleware(['auth', 'verified', 'clearance'])->except(['show']);
+$this->middleware(['auth', 'verified'])->except(['show']);
 ```
 
 OR
@@ -77,11 +89,73 @@ In routes/web.php:
 Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']])->middleware('verified');
 ```
 
+### Using policies
+
+To make sure only the correct users can do things:
+
+```bash
+php artisan make:policy LensPolicy --model=Lens
+```
+
+Add in AuthServiceProvider:
+
+```php
+    protected $policies = [
+        'App\Lens' => 'App\Policies\LensPolicy'
+    ];
+```
+
+In LensController (eg edit method):
+
+```php
+        $this->authorize('update', $lens);
+```
+
+### Checking user permissions
+
 To check if the user is a guest:
+
+In PHP:
 
 ```php
 Auth::guest()
 ```
+
+In Blade:
+
+```blade
+@guest
+    // The user is not authenticated...
+@endguest
+```
+
+To check if the user is authenticated:
+
+In Blade:
+
+```blade
+@auth
+    // The user is authenticated...
+@endauth
+```
+
+To check if the user is administrator:
+
+In PHP:
+
+```php
+auth()->user()->isAdmin()
+```
+
+In Blade:
+
+```blade
+@admin
+    // The user is the administrator...
+@endadmin
+```
+
+The column 'type' in the user table should be set to 'admin' to gain admin privileges.
 
 ## Mails
 
@@ -89,3 +163,9 @@ Auth::guest()
 http://localhost:8000/maileclipse
 
 ## Tests
+
+The tests are located in the test directory. They can be executed using:
+
+```bash
+phpunit
+```

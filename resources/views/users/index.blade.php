@@ -15,9 +15,8 @@
                 <th>{{ _i('Name') }}</th>
                 <th>{{ _i('Email') }}</th>
                 <th>{{ _i('Date/Time Added') }}</th>
-                <th>{{ _i('User Roles') }}</th>
+                <th>{{ _i('User Role') }}</th>
                 <th>{{ _i('Delete') }}</th>
-                <th>{{ _i('Edit') }}</th>
                 <th>{{ _i('Observations') }}</th>
                 <th>{{ _i('Instruments') }}</th>
                 <th>{{ _i('Lists') }}</th>
@@ -28,18 +27,22 @@
             @foreach ($users as $user)
             <tr>
 
-                <td>{{ $user->name }}</td>
+                <td>
+                    <a href="{{ route('users.edit', $user->id) }}">
+                        {{ $user->name }}
+                    </a>
+                </td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->created_at->format('F d, Y h:ia') }}</td>
-                <td>{{  $user->roles()->pluck('name')->implode(', ') }}</td>{{-- Retrieve array of roles associated to a user and convert to string --}}
+                <td>{{ $user->type }}</td>
                 <td>
-                {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id] ]) !!}
-                {!! Form::submit(_i('Delete'), ['class' => 'btn-small']) !!}
-                {!! Form::close() !!}
-
-                </td>
-                <td>
-                    <a href="{{ route('users.edit', $user->id) }}" class="fas fa-user-edit pull-left" style="margin-right: 3px;"></a>
+                    <form method="POST" action="{{ route('users.destroy', $user->id) }}">
+                        @method('DELETE')
+                        @csrf
+                        <button type="button" class="btn btn-sm btn-link" onClick="this.form.submit()">
+                            <i class="far fa-trash-alt"></i>
+                        </button>
+                    </form>
                 </td>
                 <td></td>
                 <td></td>

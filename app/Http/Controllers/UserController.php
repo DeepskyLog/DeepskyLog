@@ -8,7 +8,6 @@ use App\User;
 use Auth;
 
 //Importing laravel-permission models
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 //Enables us to output flash messaging
@@ -58,11 +57,8 @@ class UserController extends Controller {
     {
         //Get user with specified id
         $user = User::findOrFail($id);
-        //Get all roles
-        $roles = Role::get();
-
-        //pass user and roles data to view
-        return view('users.edit', compact('user', 'roles'));
+        //pass user data to view
+        return view('users.edit', compact('user'));
     }
 
     /**
@@ -75,29 +71,23 @@ class UserController extends Controller {
      */
     public function update(Request $request, $id)
     {
-        //Get role specified by id
+        //Get user specified by id
         $user = User::findOrFail($id);
 
         //Validate name, email and password fields
         $this->validate(
             $request, [
                 'name'=>'required|max:120',
-                'email'=>'required|email|unique:users,email,'.$id
+                'email'=>'required|email|unique:users,email,'.$id,
+                'type'=>'required'
             ]
         );
         // Retrieve the name, email and password fields
-        $input = $request->only(['name', 'email', 'password']);
-        // Retreive all roles
-        $roles = $request['roles'];
-        $user->fill($input)->save();
+        $input = $request->only(['name', 'email', 'type']);
 
-        if (isset($roles)) {
-            //If one or more roles are selected associate user to roles
-            $user->roles()->sync($roles);
-        } else {
-            //If no role is selected remove exisiting role associated to a user
-            $user->roles()->detach();
-        }
+        $user->type = $request['type'];
+
+        $user->fill($input)->save();
 
         flash()->success(_i('User %s successfully edited.', $user->name));
 

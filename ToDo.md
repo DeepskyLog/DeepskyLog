@@ -8,7 +8,6 @@
 
 ## LENSES
 
-+ [ ] Sort on number of observations sorts alphabetically
 + [ ] Fix edit lens
 + [ ] Write view one lens
 + [ ] Add flash_messages when lens is updated (see store)
@@ -18,15 +17,20 @@
 
 ## AUTHENTICATION
 
-+ [ ] We only need: guest, verified and admin -> Do we need spatie/laravel-permissions for that?
 + [ ] Do we need maileclipse?
 + [ ] Write user settings page and table for the DeepskyLog information
-+ [ ] Update admin page for the users, add extra information, move operations in two different colums, use icons for operations
-+ [ ] Use authentication on the pages and in the layout.
++ [ ] Update admin page for the users, add extra information.
 + [ ] Write script to convert old observers table of DeepskyLog to laravel
 + [ ] Write script to convert old lenses table of DeepskyLog to laravel
 + [ ] Page to change observer settings
 + [ ] Page to view observer
 + [ ] Clean up source code
+
+## VUE
+
++ [ ] Use Vue datepicker: https://github.com/mariomka/vue-datetime?ref=madewithvuejs.com
++ [ ] Use Vue datatables: ?
+  + [ ] Sort on number of observations sorts alphabetically -> Vue component?
+
 
 ## SEEDER

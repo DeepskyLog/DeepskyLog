@@ -16,7 +16,6 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\DeepskyLogVerificationNotification;
 use App\Notifications\DeepskyLogResetPassword;
 
@@ -32,7 +31,19 @@ use App\Notifications\DeepskyLogResetPassword;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
-    use HasRoles;
+
+    const ADMIN_TYPE = 'admin';
+    const DEFAULT_TYPE = 'default';
+
+    /**
+     * Check if this user is an admin.
+     *
+     * @return bool True if the user is an admin.
+     */
+    public function isAdmin()
+    {
+        return $this->type === self::ADMIN_TYPE;
+    }
 
     /**
      * Users can have one or more lenses.

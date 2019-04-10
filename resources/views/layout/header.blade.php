@@ -8,10 +8,12 @@
         <ul class="navbar-nav mr-auto">
             @include('layout.header.view');
             @include('layout.header.search');
-            @include('layout.header.add');
-            @hasrole('admin')
+            @auth
+                @include('layout.header.add');
+            @endauth
+            @admin('')
                 @include('layout.header.admin');
-            @endhasrole()
+            @endadmin
             @include('layout.header.downloads');
             @include('layout.header.help');
         </ul>

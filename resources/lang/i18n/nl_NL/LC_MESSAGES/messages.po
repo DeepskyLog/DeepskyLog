@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-04-03 09:57+0100\n"
-"PO-Revision-Date: 2019-04-06 16:21+0100\n"
+"POT-Creation-Date: 2019-04-10 21:21+0200\n"
+"PO-Revision-Date: 2019-04-10 21:21+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: nl_NL\n"
@@ -111,13 +111,13 @@ msgid "Type your password"
 msgstr "Typ uw wachtwoord"
 
 #: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:104
-#: Http/Controllers/LensController.php:103
+#: Http/Controllers/LensController.php:84
 #, php-format
 msgid "Lens \"%s\" created"
 msgstr "Lens \"%s\" toegevoegd"
 
 #: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:184
-#: Http/Controllers/LensController.php:183
+#: Http/Controllers/LensController.php:165
 #, php-format
 msgid "Lens \"%s\" deleted"
 msgstr "Lens \"%s\" verwijderd"
@@ -353,13 +353,13 @@ msgid "Filters"
 msgstr "Filters"
 
 #: ../storage/framework/messages/2b4421d7058c5dae82ff4ebb0b5d8ce7dbf53c94.php.php:102
-#: Http/Controllers/UserController.php:102
+#: Http/Controllers/UserController.php:92
 #, php-format
 msgid "User %s successfully edited."
 msgstr "Gebruiker %s met succes aangepast."
 
 #: ../storage/framework/messages/2b4421d7058c5dae82ff4ebb0b5d8ce7dbf53c94.php.php:119
-#: Http/Controllers/UserController.php:119
+#: Http/Controllers/UserController.php:109
 #, php-format
 msgid "User %s successfully deleted."
 msgstr "Gebruiker %s met succes verwijderd."
@@ -581,7 +581,7 @@ msgid "Sorry, you are forbidden from accessing this page."
 msgstr "Sorry, het is verboden om deze pagina te bekijken."
 
 #: ../storage/framework/messages/b8c604159dc3a32b1f359d987f43feb0cc369160.php.php:130
-#: Http/Controllers/Auth/RegisterController.php:131
+#: Http/Controllers/Auth/RegisterController.php:128
 #, php-format
 msgid "User \"%s\" successfully registered. You can now log in."
 msgstr "Gebruiker “%s” is succesvol geregistreerd. U kunt nu inloggen."

@@ -25,4 +25,4 @@ Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']])-
 
 Auth::routes(['verify' => true]);
 
-Route::resource('users', 'UserController')->except(['create', 'store']);
+Route::resource('users', 'UserController')->middleware('isAdmin')->except(['create', 'store']);

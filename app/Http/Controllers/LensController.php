@@ -33,7 +33,7 @@ class LensController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified', 'clearance'])->except(['show']);
+        $this->middleware(['auth', 'verified'])->except(['show']);
     }
 
     /**
@@ -109,8 +109,7 @@ class LensController extends Controller
      */
     public function edit(Lens $lens)
     {
-        // TO WRITE
-        $this->authorize('edit', $lens);
+        $this->authorize('update', $lens);
 
         return view('layout.lens.create', ['lens' => $lens, 'update' => true]);
     }
@@ -159,6 +158,8 @@ class LensController extends Controller
      */
     public function destroy(Lens $lens)
     {
+        $this->authorize('update', $lens);
+
         $lens->delete();
 
         flash()->warning(_i('Lens "%s" deleted', $lens->name));

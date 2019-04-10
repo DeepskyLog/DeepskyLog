@@ -21,14 +21,19 @@
         {{ Form::email('email', null, array('class' => 'form-control')) }}
     </div>
 
-    <h5><b>{{ _i('Give Role') }}</b></h5>
-
-    <div class='form-group'>
-        @foreach ($roles as $role)
-            {{ Form::checkbox('roles[]',  $role->id, $user->roles ) }}
-            {{ Form::label($role->name, ucfirst($role->name)) }}<br>
-
-        @endforeach
+    <div class="form-group">
+        <label for="type">{{ _i("Role") }}</label>
+        <div class="form">
+            <select class="form-control" name="type">
+                @if ($user->type == "admin")
+                    <option>default</option>
+                    <option selected="selected">admin</option>
+                @else
+                    <option selected="selected">default</option>
+                    <option>admin</option>
+                @endif
+            </select>
+        </div>
     </div>
 
     {{ Form::submit(_i('Adapt'), array('class' => 'btn btn-primary')) }}

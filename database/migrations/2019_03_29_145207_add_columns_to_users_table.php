@@ -12,6 +12,7 @@ class AddColumnsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->string('type')->default('default');
             $table->string('country');
             $table->integer('stdlocation')->default(0);
             $table->integer('stdtelescope')->default(0);
