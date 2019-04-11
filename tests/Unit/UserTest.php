@@ -42,7 +42,7 @@ class UserTest extends TestCase
      */
     public function aUserCanHaveALens()
     {
-        //$this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         $user = factory('App\User')->create();
         $this->actingAs($user);
