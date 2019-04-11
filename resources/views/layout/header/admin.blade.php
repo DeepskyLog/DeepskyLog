@@ -13,6 +13,6 @@
         <a class="dropdown-item" href="/location/admin">{{ _i("Locations") }}</a>
         <a class="dropdown-item" href="/eyepiece/admin">{{ _i("Eyepieces") }}</a>
         <a class="dropdown-item" href="/filter/admin">{{ _i("Filters") }}</a>
-        <a class="dropdown-item" href="/lens/admin">{{ _i("Lens") }}</a>
+        <a class="dropdown-item" href="/lens/admin">{{ _i("Lenses") }}</a>
     </div>
 </li>

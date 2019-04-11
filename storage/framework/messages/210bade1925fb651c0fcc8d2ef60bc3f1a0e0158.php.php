@@ -68,9 +68,6 @@
             <span class="help-block"><?php echo e(_i("> 1.0 for Barlow lenses, < 1.0 for shapley lenses.")); ?></span>
         </div>
 
-        <!--TODO: Use the real observer_id -->
-        <input type="hidden" name="observer_id" value="3">
-
         <input type="submit" class="btn btn-success" name="add" value="<?php if($update): ?><?php echo e(_i("Change lens")); ?><?php else: ?><?php echo e(_i("Add lens")); ?><?php endif; ?>" />
     </div>
 </form>

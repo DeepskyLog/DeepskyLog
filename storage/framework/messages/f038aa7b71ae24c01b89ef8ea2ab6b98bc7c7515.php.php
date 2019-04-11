@@ -1,5 +1,5 @@
 <?php $__env->startSection('title'); ?>
-    <?php echo e(_i("Lenses of %s", "Name")); ?>
+    <?php echo e(_i("Lenses of %s", Auth::user()->name)); ?>
 
 <?php $__env->stopSection(); ?>
 
@@ -14,10 +14,6 @@
 
     </a>
     <br /><br />
-    <!-- TODO: Show administration overview page
-         TODO: Show one lens (from other observer)
-    -->
-
     <table class="table table-sm table-striped table-hover" id="lens_table">
         <thead>
             <tr>
@@ -29,8 +25,8 @@
             </tr>
         </thead>
         <tbody>
-            <!-- TODO: Only show the lenses for the correct user -->
-            <?php $__currentLoopData = \App\Lens::all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lens): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <!-- Only show the lenses for the correct user -->
+            <?php $__currentLoopData = $lenses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lens): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <tr>
                     <td>
                         <a href="/lens/<?php echo e($lens->id); ?>/edit">
@@ -59,13 +55,8 @@
                     <td>
                         <!-- TODO: Show the correct number of observations with this lens, and make the correct link -->
                         <a href="#">
-                        <?php if($lens->id != 6): ?>
-                            <?php echo e($lens->id . " " . _i("observations")); ?>
+                            <?php echo e($lens->id . ' ' . _n('observation', 'observations', $lens->id)); ?>
 
-                        <?php else: ?>
-                            <?php echo e($lens->id . " " . _i("observation")); ?>
-
-                        <?php endif; ?>
                         </a>
                     </td>
                 </tr>

@@ -14,7 +14,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
-use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -78,6 +77,7 @@ class RegisterController extends Controller
                 ],
                 'password' => ['required', 'string', 'min:6', 'confirmed'],
                 'country' => ['required'],
+                'type' => User::DEFAULT_TYPE,
                 'observationlanguage' => ['required'],
                 'language' => ['required'],
                 'copyright',
@@ -95,9 +95,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        // Set the observer role
-        $role_r = Role::where('name', '=', 'observer')->firstOrFail();
-
         $user = User::create(
             [
                 'name' => $data['name'],
@@ -106,10 +103,10 @@ class RegisterController extends Controller
                 'country' => $data['country'],
                 'observationlanguage' => $data['observationlanguage'],
                 'language' => $data['language'],
-                'copyright' => $data['copyright']
+                'copyright' => $data['copyright'],
+                'type' => User::DEFAULT_TYPE
             ]
         );
-        $user->assignRole($role_r); //Assigning role to user
 
         return $user;
     }
@@ -127,7 +124,9 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
 
-        flash()->success(_i('User "%s" successfully registered. You can now log in.', $user->name));
+        flash()->success(
+            _i('User "%s" successfully registered. You can now log in.', $user->name)
+        );
 
         // $this->guard()->login($user);
 

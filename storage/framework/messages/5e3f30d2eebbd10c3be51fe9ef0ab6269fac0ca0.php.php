@@ -8,10 +8,12 @@
         <ul class="navbar-nav mr-auto">
             <?php echo $__env->make('layout.header.view', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
             <?php echo $__env->make('layout.header.search', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
-            <?php echo $__env->make('layout.header.add', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
-            @hasrole('admin')
+            <?php if(auth()->guard()->check()): ?>
+                <?php echo $__env->make('layout.header.add', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
+            <?php endif; ?>
+            @admin('')
                 <?php echo $__env->make('layout.header.admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
-            @endhasrole()
+            @endadmin
             <?php echo $__env->make('layout.header.downloads', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
             <?php echo $__env->make('layout.header.help', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>;
         </ul>

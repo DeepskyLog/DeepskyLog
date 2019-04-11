@@ -6,8 +6,14 @@
 	<p>
         <br />
         <h4>
-	        <?php echo e(_i("Moon / Sun")); ?>
+            <?php if(auth()->guard()->check()): ?>
+                <?php echo e(_i("Moon / Sun")); ?>
 
+            <?php endif; ?>
+            <?php if(auth()->guard()->guest()): ?>
+                <?php echo e(_i("Moon")); ?>
+
+            <?php endif; ?>
         </h4>
         <span style="font-weight:normal;">
             <?php
@@ -20,12 +26,15 @@
             <?php echo e(_i("on")); ?> <?php echo e($datestr); ?> &gt;&lt; <?php echo e($nextdatestr); ?>
 
         </span>
-	</p>
+    </p>
+
 	<table class="table table-sm">
-	    <tr>
+        <tr>
             <td> <?php echo e(_i("Moon")); ?> </td>
             <?php
                 // TODO: Use real location (timezone).
+                // TODO: Remove the information on sun and moon if not logged in.
+                // TODO: Remove the information on sun and moon if logged in, but no standard location is given.
                 // Moon rise and set
                 use App\Libraries\AstroCalc;
 
@@ -36,7 +45,7 @@
 
             <td><?php echo e($moon[0]); ?></td>
             <td><?php echo e($moon[2]); ?></td>
-	    </tr>
+        </tr>
 	    <tr>
             <td><?php echo e(_i("Sun")); ?></td>
             <?php

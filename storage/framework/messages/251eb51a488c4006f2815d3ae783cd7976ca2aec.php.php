@@ -24,15 +24,19 @@
 
     </div>
 
-    <h5><b><?php echo e(_i('Give Role')); ?></b></h5>
-
-    <div class='form-group'>
-        <?php $__currentLoopData = $roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <?php echo e(Form::checkbox('roles[]',  $role->id, $user->roles )); ?>
-
-            <?php echo e(Form::label($role->name, ucfirst($role->name))); ?><br>
-
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    <div class="form-group">
+        <label for="type"><?php echo e(_i("Role")); ?></label>
+        <div class="form">
+            <select class="form-control" name="type">
+                <?php if($user->type == "admin"): ?>
+                    <option>default</option>
+                    <option selected="selected">admin</option>
+                <?php else: ?>
+                    <option selected="selected">default</option>
+                    <option>admin</option>
+                <?php endif; ?>
+            </select>
+        </div>
     </div>
 
     <?php echo e(Form::submit(_i('Adapt'), array('class' => 'btn btn-primary'))); ?>

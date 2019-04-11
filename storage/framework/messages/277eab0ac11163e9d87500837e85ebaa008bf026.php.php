@@ -14,6 +14,6 @@
         <a class="dropdown-item" href="/location/admin"><?php echo e(_i("Locations")); ?></a>
         <a class="dropdown-item" href="/eyepiece/admin"><?php echo e(_i("Eyepieces")); ?></a>
         <a class="dropdown-item" href="/filter/admin"><?php echo e(_i("Filters")); ?></a>
-        <a class="dropdown-item" href="/lens/admin"><?php echo e(_i("Lens")); ?></a>
+        <a class="dropdown-item" href="/lens/admin"><?php echo e(_i("Lenses")); ?></a>
     </div>
 </li>

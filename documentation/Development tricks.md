@@ -11,7 +11,6 @@
   - [Authentication](#authentication)
     - [Using policies](#using-policies)
     - [Checking user permissions](#checking-user-permissions)
-  - [Mails](#mails)
   - [Tests](#tests)
 
 <!-- /code_chunk_output -->
@@ -156,11 +155,6 @@ In Blade:
 ```
 
 The column 'type' in the user table should be set to 'admin' to gain admin privileges.
-
-## Mails
-
--> Remove Maileclipse?
-http://localhost:8000/maileclipse
 
 ## Tests
 

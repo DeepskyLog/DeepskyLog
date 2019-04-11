@@ -65,9 +65,6 @@
             <span class="help-block">{{ _i("> 1.0 for Barlow lenses, < 1.0 for shapley lenses.") }}</span>
         </div>
 
-        <!--TODO: Use the real observer_id -->
-        <input type="hidden" name="observer_id" value="3">
-
         <input type="submit" class="btn btn-success" name="add" value="@if ($update){{ _i("Change lens") }}@else{{ _i("Add lens") }}@endif" />
     </div>
 </form>

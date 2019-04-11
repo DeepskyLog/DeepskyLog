@@ -21,7 +21,9 @@ Route::post('/setSession', 'SessionController@createSession');
 
 Route::get('/lens/create/{lens}', 'LensController@create')->middleware('verified');
 
-Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']])->middleware('verified');
+Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']])->middleware('verified')->except('show');
+
+Route::get('/lens/{lens}', 'LensController@show');
 
 Auth::routes(['verify' => true]);
 

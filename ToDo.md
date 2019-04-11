@@ -2,17 +2,11 @@
 
 ## TESTS
 
-+ [ ] Tests for a lens with a too short name, negative factor, ...
-+ [ ] Check if DeepskyLog can send a mail to the user to verify.
-+ [ ] Extra tests for the user class.
-
 ## LENSES
 
-+ [ ] Fix edit lens
-+ [ ] Write view one lens
-+ [ ] Add flash_messages when lens is updated (see store)
 + [ ] Show all lenses? (as administrator)
 + [ ] Only show delete button if there are no observations
+  + [ ] Also update the tests for lens
 + [ ] Show the correct number of observations with a certain lens and make the correct link.
 
 ## AUTHENTICATION
@@ -24,7 +18,14 @@
 + [ ] Write script to convert old lenses table of DeepskyLog to laravel
 + [ ] Page to change observer settings
 + [ ] Page to view observer
++ [ ] Show one lens (show.blade.php)
+  + [ ] Add link to the page of the observer
 + [ ] Clean up source code
+
+## OBSERVATIONS
++ [ ] Show one lens (show.blade.php)
+  + [ ] Add number of observations with this lens
+
 
 ## VUE
 

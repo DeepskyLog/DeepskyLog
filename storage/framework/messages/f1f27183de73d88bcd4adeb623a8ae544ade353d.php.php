@@ -14,9 +14,8 @@
                 <th><?php echo e(_i('Name')); ?></th>
                 <th><?php echo e(_i('Email')); ?></th>
                 <th><?php echo e(_i('Date/Time Added')); ?></th>
-                <th><?php echo e(_i('User Roles')); ?></th>
+                <th><?php echo e(_i('User Role')); ?></th>
                 <th><?php echo e(_i('Delete')); ?></th>
-                <th><?php echo e(_i('Edit')); ?></th>
                 <th><?php echo e(_i('Observations')); ?></th>
                 <th><?php echo e(_i('Instruments')); ?></th>
                 <th><?php echo e(_i('Lists')); ?></th>
@@ -27,21 +26,23 @@
             <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <tr>
 
-                <td><?php echo e($user->name); ?></td>
+                <td>
+                    <a href="<?php echo e(route('users.edit', $user->id)); ?>">
+                        <?php echo e($user->name); ?>
+
+                    </a>
+                </td>
                 <td><?php echo e($user->email); ?></td>
                 <td><?php echo e($user->created_at->format('F d, Y h:ia')); ?></td>
-                <td><?php echo e($user->roles()->pluck('name')->implode(', ')); ?></td>
+                <td><?php echo e($user->type); ?></td>
                 <td>
-                <?php echo Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id] ]); ?>
-
-                <?php echo Form::submit(_i('Delete'), ['class' => 'btn-small']); ?>
-
-                <?php echo Form::close(); ?>
-
-
-                </td>
-                <td>
-                    <a href="<?php echo e(route('users.edit', $user->id)); ?>" class="fas fa-user-edit pull-left" style="margin-right: 3px;"></a>
+                    <form method="POST" action="<?php echo e(route('users.destroy', $user->id)); ?>">
+                        <?php echo method_field('DELETE'); ?>
+                        <?php echo csrf_field(); ?>
+                        <button type="button" class="btn btn-sm btn-link" onClick="this.form.submit()">
+                            <i class="far fa-trash-alt"></i>
+                        </button>
+                    </form>
                 </td>
                 <td></td>
                 <td></td>

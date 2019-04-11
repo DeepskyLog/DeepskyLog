@@ -74,8 +74,8 @@ class LensController extends Controller
         $validated = request()->validate(
             [
                 'observer_id' => 'required',
-                'name' => ['required', 'min:5'],
-                'factor' => 'required',
+                'name' => ['required', 'min:6'],
+                'factor' => ['required', 'numeric', 'min:0', 'max:10'],
             ]
         );
 
@@ -96,8 +96,7 @@ class LensController extends Controller
      */
     public function show(Lens $lens)
     {
-        return view();
-        // TO WRITE
+        return view('layout.lens.show', ['lens' => $lens]);
     }
 
     /**
@@ -124,27 +123,36 @@ class LensController extends Controller
      */
     public function update(Request $request, Lens $lens)
     {
+        $this->authorize('update', $lens);
+
+        $request['observer_id'] = $lens->observer_id;
+
         // If the factor is set, the name should also be set in the form.
         if ($request->has('factor')) {
             $validated = request()->validate(
                 [
                     'observer_id' => 'required',
-                    'name' => ['required', 'min:5'],
-                    'factor' => 'required',
-                ]
+                    'name' => ['required', 'min:6'],
+                    'factor' => ['required', 'numeric', 'min:0', 'max:10'],
+                    ]
             );
 
             $lens->update(['factor' => $request->get('factor')]);
             $lens->update(['name' => $request->get('name')]);
+
+            flash()->warning(_i('Lens "%s" updated', $lens->name));
         } else {
             // This is only reached when clicking the active checkbox in the
             // lens overview.
             if ($request->has('active')) {
                 $lens->active();
+                flash()->warning(_i('Lens "%s" is active', $lens->name));
             } else {
                 $lens->inactive();
+                flash()->warning(_i('Lens "%s" is not longer active', $lens->name));
             }
         }
+
 
         return redirect('/lens');
     }
@@ -162,7 +170,7 @@ class LensController extends Controller
 
         $lens->delete();
 
-        flash()->warning(_i('Lens "%s" deleted', $lens->name));
+        flash()->error(_i('Lens "%s" deleted', $lens->name));
 
         return redirect('/lens');
     }

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-04-10 21:21+0200\n"
-"PO-Revision-Date: 2019-04-10 21:21+0200\n"
+"POT-Creation-Date: 2019-04-11 16:43+0200\n"
+"PO-Revision-Date: 2019-04-11 16:43+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: fr_FR\n"
@@ -13,6 +13,7 @@ msgstr ""
 "X-Poedit-KeywordsList: _;__;_i;_s;gettext;_n:1,2;ngettext:1,2;dgettext:2\n"
 "X-Poedit-Basepath: ../../../../../app\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SearchPath-0: Http\n"
 "X-Poedit-SearchPath-1: ../resources/views\n"
 "X-Poedit-SearchPath-2: Console\n"
@@ -114,14 +115,32 @@ msgstr "Le mot de passe contient le nom d'utilisateur"
 msgid "Type your password"
 msgstr "Tapez votre mot de passe"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:104
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:84
 #: Http/Controllers/LensController.php:84
 #, php-format
 msgid "Lens \"%s\" created"
 msgstr "Lentille \"%s\" créé"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:184
-#: Http/Controllers/LensController.php:165
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:143
+#: Http/Controllers/LensController.php:143
+#, php-format
+msgid "Lens \"%s\" updated"
+msgstr "Objectif \"%s\" mis à jour"
+
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:149
+#: Http/Controllers/LensController.php:149
+#, php-format
+msgid "Lens \"%s\" is active"
+msgstr "L’objectif \"%s\" est actif"
+
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:152
+#: Http/Controllers/LensController.php:152
+#, php-format
+msgid "Lens \"%s\" is not longer active"
+msgstr "L’objectif \"%s\" n’est plus actif"
+
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:173
+#: Http/Controllers/LensController.php:173
 #, php-format
 msgid "Lens \"%s\" deleted"
 msgstr "Lentille \"%s\" supprimé"
@@ -250,7 +269,7 @@ msgid "Filter"
 msgstr "Filtre"
 
 #: ../storage/framework/messages/1ca27c88c2a3f8f7417a55b8062c66705b0f179e.php.php:16
-#: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:17
+#: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:15
 msgid "Lens"
 msgstr "Lentille"
 
@@ -264,12 +283,12 @@ msgid "Add a new lens"
 msgstr "Ajouter une nouvelle lentille"
 
 #: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:32
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:74
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:71
 msgid "Change lens"
 msgstr "Changer la lentille"
 
 #: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:32
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:74
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:71
 #: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:13
 msgid "Add lens"
 msgstr "Ajouter une lentille"
@@ -284,7 +303,7 @@ msgstr "ou spécifiez manuellement les détails de votre lentille"
 
 #: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:58
 #: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:14
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:24
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:20
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:14
 msgid "Name"
 msgstr "Nom"
@@ -294,7 +313,8 @@ msgid "e.g. Televue 2x Barlow"
 msgstr "ex. Televue 2x Barlow"
 
 #: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:64
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:25
+#: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:19
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:21
 msgid "Factor"
 msgstr "Facteur"
 
@@ -307,7 +327,6 @@ msgid "Edit User"
 msgstr "Modifier utilisateur"
 
 #: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:7
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:19
 msgid "Edit"
 msgstr "Modifier"
 
@@ -316,11 +335,11 @@ msgstr "Modifier"
 msgid "Email"
 msgstr "Email"
 
-#: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:27
-msgid "Give Role"
-msgstr "Donner un rôle"
+#: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:28
+msgid "Role"
+msgstr "Rôle"
 
-#: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:38
+#: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:42
 msgid "Adapt"
 msgstr "Adapter"
 
@@ -333,7 +352,7 @@ msgid "Send message to all"
 msgstr "Envoyer un message à tous"
 
 #: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:9
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:22
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:24
 msgid "Observers"
 msgstr "Observateurs"
 
@@ -342,7 +361,7 @@ msgid "Check Objects"
 msgstr "Vérifier les objets"
 
 #: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:13
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:21
+#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:20
 msgid "Instruments"
 msgstr "Instruments"
 
@@ -358,71 +377,83 @@ msgstr "Oculaires"
 msgid "Filters"
 msgstr "Filtres"
 
-#: ../storage/framework/messages/2b4421d7058c5dae82ff4ebb0b5d8ce7dbf53c94.php.php:102
+#: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:17
+msgid "Lenses"
+msgstr "Lentilles"
+
+#: ../storage/framework/messages/2b4421d7058c5dae82ff4ebb0b5d8ce7dbf53c94.php.php:92
 #: Http/Controllers/UserController.php:92
 #, php-format
 msgid "User %s successfully edited."
 msgstr "L'utilisateur %s édité avec succès."
 
-#: ../storage/framework/messages/2b4421d7058c5dae82ff4ebb0b5d8ce7dbf53c94.php.php:119
+#: ../storage/framework/messages/2b4421d7058c5dae82ff4ebb0b5d8ce7dbf53c94.php.php:109
 #: Http/Controllers/UserController.php:109
 #, php-format
 msgid "User %s successfully deleted."
 msgstr "L'utilisateur %s supprimé avec succès."
 
+#: ../storage/framework/messages/375bb6021bb9d943e84bcec6a5f9aa5f23a5f750.php.php:46
+#: Http/Middleware/DeepskyLogChecks.php:46
+msgid ""
+"Your country of residence is not set. Please set it in the observer settings."
+msgstr ""
+"Votre pays de résidence n’est pas établi. Veuillez le définir dans les "
+"paramètres d’observateur."
+
 #: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:4
 msgid "View"
 msgstr "Voir"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:8
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:9
 msgid "My observations"
 msgstr "Mes observations"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:9
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:10
 msgid "My drawings"
 msgstr "Mes dessins"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:11
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:12
 msgid "My observing lists"
 msgstr "Mes listes d'observation"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:12
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:13
 msgid "My sessions"
 msgstr "Mes sessions"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:14
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:15
 msgid "My instruments"
 msgstr "Mes instruments"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:15
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:16
 msgid "My locations"
 msgstr "Mes locations"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:16
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:17
 msgid "My eyepieces"
 msgstr "Mes oculaires"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:17
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:18
 msgid "My filters"
 msgstr "Mes filtres"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:18
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:19
 msgid "My lenses"
 msgstr "Mes lentilles"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:20
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:22
 msgid "Latest observations"
 msgstr "Dernières observations"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:23
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:25
 msgid "Popular objects"
 msgstr "Objets populaires"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:24
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:26
 msgid "Statistics"
 msgstr "Statistiques"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:26
+#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:28
 msgid "Catalogs"
 msgstr "Catalogues"
 
@@ -449,6 +480,18 @@ msgstr "S'enregistrer"
 #: ../storage/framework/messages/56a7e5818a4d94db340e45edf52b324fe244e34f.php.php:62
 msgid "Logout"
 msgstr "Se déconnecter"
+
+#: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:14
+msgid "Type"
+msgstr "Type"
+
+#: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:23
+msgid "Owner"
+msgstr "Propriétaire"
+
+#: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:27
+msgid "Number of observations"
+msgstr "Nombre d'observations"
 
 #: ../storage/framework/messages/5aa3f35b00a17016049add7978bdfede201e0cc0.php.php:2
 msgid "Page Not Found"
@@ -499,7 +542,8 @@ msgid "Comets"
 msgstr "Comètes"
 
 #: ../storage/framework/messages/79917c754a2689326efaf1479644e971a2372646.php.php:23
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:26
+#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:14
+#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:33
 msgid "Moon"
 msgstr "Lune"
 
@@ -520,27 +564,27 @@ msgstr "Les observations"
 msgid "New Observation"
 msgstr "Nouvelle observation"
 
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:9
+#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:10
 msgid "Moon / Sun"
 msgstr "Lune / Soleil"
 
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:20
+#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:26
 msgid "on"
 msgstr "le"
 
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:41
+#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:50
 msgid "Sun"
 msgstr "Soleil"
 
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:72
+#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:81
 msgid "Naut."
 msgstr "Naut."
 
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:86
+#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:95
 msgid "Astro."
 msgstr "Astro."
 
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:119
+#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:128
 #: ../storage/framework/messages/d6b539876c5e90eafbc92734821f85833857a3c8.php.php:50
 msgid "New moon"
 msgstr "Nouvelle lune"
@@ -585,7 +629,7 @@ msgstr "Interdit"
 msgid "Sorry, you are forbidden from accessing this page."
 msgstr "Désolé, il vous est interdit d'accéder cette page."
 
-#: ../storage/framework/messages/b8c604159dc3a32b1f359d987f43feb0cc369160.php.php:130
+#: ../storage/framework/messages/b8c604159dc3a32b1f359d987f43feb0cc369160.php.php:128
 #: Http/Controllers/Auth/RegisterController.php:128
 #, php-format
 msgid "User \"%s\" successfully registered. You can now log in."
@@ -816,28 +860,25 @@ msgstr ""
 msgid "Lenses of %s"
 msgstr "Lentilles de %s"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:26
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:22
 msgid "Active"
 msgstr "Activé"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:27
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:23
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:18
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:37
 msgid "Delete"
 msgstr "Supprimez"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:28
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:20
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:24
+#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:19
 msgid "Observations"
 msgstr "Observations"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:63
-msgid "observations"
-msgstr "observations"
-
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:66
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:58
 msgid "observation"
-msgstr "observation"
+msgid_plural "observations"
+msgstr[0] "observation"
+msgstr[1] "observation"
 
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:1
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:7
@@ -849,19 +890,15 @@ msgid "Date/Time Added"
 msgstr "Date/heure ajoutée"
 
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:17
-msgid "User Roles"
-msgstr "Rôles de l’utilisateur"
+msgid "User Role"
+msgstr "Rôle de l’utilisateur"
 
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:22
+#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:21
 msgid "Lists"
 msgstr "Listes"
 
-#: Http/Middleware/DeepskyLogChecks.php:46
-msgid ""
-"Your country of residence is not set. Please set it in the observer settings."
-msgstr ""
-"Votre pays de résidence n’est pas établi. Veuillez le définir dans les "
-"paramètres d’observateur."
+#~ msgid "observations"
+#~ msgstr "observations"
 
 #~ msgid "Overview"
 #~ msgstr "Aperçu"
@@ -934,9 +971,6 @@ msgstr ""
 
 #~ msgid "Rank"
 #~ msgstr "Classement"
-
-#~ msgid "Number of observations"
-#~ msgstr "Nombre d'observations"
 
 #~ msgid "Search observations"
 #~ msgstr "Recherche observations"
@@ -1179,9 +1213,6 @@ msgstr ""
 #~ msgid "List removed: "
 #~ msgstr "Liste supprimée: "
 
-#~ msgid "The list \"%s\" is activated."
-#~ msgstr "La liste \"%s\" est activée."
-
 #~ msgid " The object %s is added to the list %s"
 #~ msgstr " L'objet %s est ajouté à la liste %s"
 
@@ -1255,9 +1286,6 @@ msgstr ""
 
 #~ msgid "Fixed magnification"
 #~ msgstr "Grossissement fixe"
-
-#~ msgid "Type"
-#~ msgstr "Type"
 
 #~ msgid "Reflector"
 #~ msgstr "Réflecteur"
@@ -2658,9 +2686,6 @@ msgstr ""
 
 #~ msgid "Request new password"
 #~ msgstr "Changer mot de passe"
-
-#~ msgid "Lenses"
-#~ msgstr "Lentilles"
 
 #~ msgid "Tell us!"
 #~ msgstr "Dites-nous!"
