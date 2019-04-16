@@ -1,12 +1,13 @@
 /**
  *
  */
-function datatable(id, language) {
+function datatable(id, language, sorting = []) {
     $(document).ready( function () {
         $(id).DataTable( {
             language: {
                 "url": 'http://cdn.datatables.net/plug-ins/1.10.19/i18n/' + getLanguageName(language) + '.json'
             },
+            columnDefs: sorting,
             dom: 'lBfrtip',
             stateSave: true,
             colReorder: true,

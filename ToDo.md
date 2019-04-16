@@ -4,6 +4,8 @@
 
 ## LENSES
 
++ [ ] Use vue for making a lens active / not active
++ [ ] Use vue for deleting a lens
 + [ ] Show all lenses? (as administrator)
 + [ ] Only show delete button if there are no observations
   + [ ] Also update the tests for lens
@@ -30,8 +32,7 @@
 ## VUE
 
 + [ ] Use Vue datepicker: https://github.com/mariomka/vue-datetime?ref=madewithvuejs.com
-+ [ ] Use Vue datatables: ?
-  + [ ] Sort on number of observations sorts alphabetically -> Vue component?
+
 
 
 ## SEEDER

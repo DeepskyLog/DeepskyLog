@@ -26,6 +26,7 @@ require( 'datatables.net-buttons/js/buttons.colVis.js' );
 require( 'datatables.net-buttons/js/buttons.html5.js' );
 require( 'datatables.net-colreorder-bs4' );
 require( 'datatables.net-buttons/js/buttons.print.js' );
+require( 'datatables.net-plugins/sorting/natural.js');
 
 require( 'password-strength-meter/dist/password.min.js' );
 

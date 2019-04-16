@@ -67,7 +67,10 @@
 <script>
 $.getScript('{{ URL::asset('js/datatables.js') }}', function()
 {
-    datatable('#lens_table', '{{ LaravelGettext::getLocale() }}');
+    datatable('#lens_table', '{{ LaravelGettext::getLocale() }}', [
+       { type: 'natural', targets: 4 }
+     ]);
 });
+
 </script>
 @endpush

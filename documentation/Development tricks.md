@@ -12,6 +12,8 @@
     - [Using policies](#using-policies)
     - [Checking user permissions](#checking-user-permissions)
   - [Tests](#tests)
+  - [Select library](#select-library)
+    - [Vue in combination with select2](#vue-in-combination-with-select2)
 
 <!-- /code_chunk_output -->
 
@@ -162,4 +164,54 @@ The tests are located in the test directory. They can be executed using:
 
 ```bash
 phpunit
+```
+
+## Select library
+
+For the dropdown menus, we use select2. Nothing has to be done for enabling select2. 
+
+### Vue in combination with select2
+
+If you want to use vue in combination with select2, you should use select2
+
+```html
+<div id="lens">
+<select2 class="form-control" @input="selectLens" name="lens" v-model="selected">
+    @foreach (\App\Lens::all()->unique('name') as $lensloop)
+        <option v-bind:value="{{ $lensloop->id }}"
+        @if ($lens->id == $lensloop->id)
+            selected="selected"
+        @endif
+        >{{ $lensloop->name }}</option>
+    @endforeach
+</select2>
+</div>
+```
+
+and the following in javascript:
+
+```javascript
+@push('scripts')
+<script>
+    new Vue({
+        el: '#lens',
+        data: {
+            factor: '',
+            selected: '',
+            name: '',
+        },
+        methods:{
+            selectLens() {
+                // create a closure to access component in the callback below
+                var self = this
+                $.getJSON('/getLensJson/' + this.selected, function(data) {
+                    self.name = data.name;
+                    self.factor = Math.round(data.factor * 100) / 100;
+                });
+            }
+
+        }
+    })
+</script>
+@endpush
 ```
