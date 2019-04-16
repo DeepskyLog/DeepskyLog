@@ -48,6 +48,37 @@ require( 'password-strength-meter/dist/password.min.js' );
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const app = new Vue({
-    el: '#app'
-});
+import Vue from 'vue';
+
+// register globally
+Vue.component('select2', {
+    props: ['options', 'value'],
+    watch: {
+      value: function (value) {
+        // update value
+        $(this.$el)
+            .val(value)
+            .trigger('change')
+      },
+      options: function (options) {
+        // update options
+        $(this.$el).empty().select2({ data: options })
+      }
+    },
+    mounted: function () {
+      var vm = this
+      $(this.$el)
+        // init select2
+        .select2({ data: this.options, theme: 'bootstrap', width: '100%', allowClear: true })
+        .val(this.value)
+        .trigger('change')
+        // emit event on change.
+        .on('select2:select', function () {
+          vm.$emit('input', this.value)
+        })
+    },
+    destroyed: function () {
+      $(this.$el).off().select2('destroy')
+    },
+    template: '<select><slot></slot></select>'
+  })

@@ -25,6 +25,12 @@ Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']])-
 
 Route::get('/lens/{lens}', 'LensController@show');
 
+Route::get('/lensJson', 'LensController@indexJson');
+
+Route::get('/lensUniqueJson', 'LensController@uniqueIndexJson');
+
+Route::get('/getLensJson/{id}', 'LensController@getLensJson');
+
 Auth::routes(['verify' => true]);
 
 Route::resource('users', 'UserController')->middleware('isAdmin')->except(['create', 'store']);

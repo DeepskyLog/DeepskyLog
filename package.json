@@ -11,7 +11,6 @@
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free": "^5.8.1",
-        "axios": "^0.18",
         "bootstrap": "^4.0.0",
         "cross-env": "^5.1",
         "eslint": "^5.16.0",
@@ -28,6 +27,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "axios": "^0.18.0",
         "datatables.net": "^1.10.19",
         "datatables.net-bs4": "^1.10.19",
         "datatables.net-buttons": "^1.5.6",

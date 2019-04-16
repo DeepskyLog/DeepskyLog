@@ -15,6 +15,7 @@ namespace App\Http\Controllers;
 
 use App\Lens;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /**
  * Lens Controller.
@@ -46,6 +47,43 @@ class LensController extends Controller
         $lenses = auth()->user()->lenses()->get();
 
         return view('layout.lens.view')->with('lenses', $lenses);
+    }
+
+    /**
+     * Display a listing of the lenses in JSON format.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexJson()
+    {
+        return response(Lens::all()->jsonSerialize(), Response::HTTP_OK);
+    }
+
+    /**
+     * Display a listing of the lenses in JSON format. Only return the
+     * unique names.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function uniqueIndexJson()
+    {
+        $lenses = Lens::all()->unique('name')->values();
+
+        return response($lenses->jsonSerialize(), Response::HTTP_OK);
+    }
+
+    /**
+     * Display a listing of the resource in JSON format.
+     *
+     * @param int $id The id of the lens to return
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getLensJson(int $id)
+    {
+        $lens = Lens::findOrFail($id);
+
+        return response($lens->jsonSerialize(), Response::HTTP_OK);
     }
 
     /**
@@ -134,7 +172,7 @@ class LensController extends Controller
                     'observer_id' => 'required',
                     'name' => ['required', 'min:6'],
                     'factor' => ['required', 'numeric', 'min:0', 'max:10'],
-                    ]
+                ]
             );
 
             $lens->update(['factor' => $request->get('factor')]);
@@ -152,7 +190,6 @@ class LensController extends Controller
                 flash()->warning(_i('Lens "%s" is not longer active', $lens->name));
             }
         }
-
 
         return redirect('/lens');
     }
