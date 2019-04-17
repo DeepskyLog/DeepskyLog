@@ -1,12 +1,37 @@
 @extends("layout.master")
 
 @section('title')
-    {{ _i("Lenses of %s", Auth::user()->name) }}
+    @if ($user == 'user')
+        {{ _i("Lenses of %s", Auth::user()->name) }}
+    @else
+        {{ _i("All lenses") }}
+    @endif
 @endsection
 
 @section('content')
+
+<div id="lens">
+
+        <div v-if="flasherror" class="alert-danger">
+            {{  _i('Lens deleted: ') }} @{{ lensname }}
+        </div>
+        <div v-if="flash" class="alert-warning">
+            <div v-if="active">
+                {{  _i('Lens activated: ') }} @{{ lensname }}
+            </div>
+            <div v-else>
+                {{  _i('Lens deactivated: ') }} @{{ lensname }}
+            </div>
+        </div>
+    <br />
+
 	<h4>
-        {{ _i("Lenses of %s", Auth::user()->name) }}
+        @if ($user == 'user')
+            {{ _i("Lenses of %s", Auth::user()->name) }}
+        @else
+            {{ _i("All lenses") }}
+        @endif
+
     </h4>
 	<hr />
     <a class="btn btn-success float-right" href="/lens/create">
@@ -18,7 +43,9 @@
             <tr>
                 <th>{{ _i("Name") }}</th>
                 <th>{{ _i("Factor") }}</th>
-                <th>{{ _i("Active") }}</th>
+                @if ($user == 'user')
+                    <th>{{ _i("Active") }}</th>
+                @endif
                 <th>{{ _i("Delete") }}</th>
                 <th>{{ _i("Observations") }}</th>
             </tr>
@@ -33,22 +60,16 @@
                         </a>
                     </td>
                     <td>{{ $lens->factor }}</td>
+                    @if ($user == 'user')
                     <td>
-                        <form method="POST" action="/lens/{{ $lens->id }}">
-                            @method('PATCH')
-                            @csrf
-                            <input type="checkbox" name="active" onChange="this.form.submit()" {{ $lens->active ? 'checked' : '' }}>
-                        </form>
+                        <lensactivation :selected="{{  $lens->active }}" :id="{{ $lens->id }}">
+                        </lensactivation>
                     </td>
+                    @endif
                     <td>
                         <!-- TODO: Only show if there are no observations with this lens -->
-                        <form method="POST" action="/lens/{{ $lens->id }}">
-                            @method('DELETE')
-                            @csrf
-                            <button type="button" class="btn btn-sm btn-link" onClick="this.form.submit()">
-                                <i class="far fa-trash-alt"></i>
-                            </button>
-                        </form>
+                        <lensdeletion name="{{  $lens->name }}" deleteid="{{  $lens->id }}">
+                        </lensdeletion>
                     </td>
                     <td>
                         <!-- TODO: Show the correct number of observations with this lens, and make the correct link -->
@@ -60,17 +81,87 @@
             @endforeach
         </tbody>
     </table>
+    </div>
 
 @endsection
 
 @push('scripts')
 <script>
+// Set the correct language for the datatable
 $.getScript('{{ URL::asset('js/datatables.js') }}', function()
 {
     datatable('#lens_table', '{{ LaravelGettext::getLocale() }}', [
-       { type: 'natural', targets: 4 }
+        // Sort columns naturally
+       { type: 'natural' }
      ]);
 });
+
+// Remove the row from the datatable if the 'delete' icon is pressed.
+$(document).ready(function() {
+    $('#lens_table tbody').on( 'click', '#delete', function () {
+        var table = $('#lens_table').DataTable();
+
+        table.row( $(this).parents('tr') ).remove().draw();
+    } );
+});
+
+// Activate select box and methods
+Vue.component('lensactivation', {
+    template: `
+        <input type="checkbox" @change="activateLens" :checked="selected">
+    `,
+    props: {
+        id: { },
+        selected: { default: false },
+    },
+    methods:{
+        activateLens() {
+            // create a closure to access component in the callback below
+            var self = this
+
+            $.getJSON('/activateLensJson/' + this.id, function(data) {
+                self.$parent.flash = true;
+                self.$parent.lensname = data.name;
+                self.$parent.active = data.active;
+                self.$parent.flasherror = false;
+            });
+        }
+    }
+});
+
+Vue.component('lensdeletion', {
+    template: `
+        <button id="delete" type="button" class="btn btn-sm btn-link" @click="deleteLens">
+            <i class="far fa-trash-alt"></i>
+        </button>
+    `,
+    props: {
+        deleteid: { },
+        name: { },
+    },
+    methods:{
+        deleteLens() {
+            // create a closure to access component in the callback below
+            var self = this
+
+            self.$parent.flasherror = true;
+            self.$parent.flash = false;
+            self.$parent.lensname = this.name;
+
+            $.getJSON('/deleteLensJson/' + this.deleteid);
+        }
+    }
+});
+
+new Vue({
+    el: '#lens',
+    data: {
+        flash: false,
+        flasherror: false,
+        lensname: '',
+        active: ''
+    }
+})
 
 </script>
 @endpush

@@ -21,6 +21,8 @@ Route::post('/setSession', 'SessionController@createSession');
 
 Route::get('/lens/create/{lens}', 'LensController@create')->middleware('verified');
 
+Route::get('/lens/admin', 'LensController@indexAdmin');
+
 Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']])->middleware('verified')->except('show');
 
 Route::get('/lens/{lens}', 'LensController@show');
@@ -30,6 +32,10 @@ Route::get('/lensJson', 'LensController@indexJson');
 Route::get('/lensUniqueJson', 'LensController@uniqueIndexJson');
 
 Route::get('/getLensJson/{id}', 'LensController@getLensJson');
+
+Route::get('/activateLensJson/{id}', 'LensController@toggleActivateJson');
+
+Route::get('/deleteLensJson/{id}', 'LensController@deleteJson');
 
 Auth::routes(['verify' => true]);
 

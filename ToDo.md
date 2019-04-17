@@ -1,15 +1,14 @@
 # ToDos for DeepskyLog.laravel
 
-## TESTS
-
 ## LENSES
 
-+ [ ] Use vue for making a lens active / not active
-+ [ ] Use vue for deleting a lens
-+ [ ] Show all lenses? (as administrator)
-+ [ ] Only show delete button if there are no observations
-  + [ ] Also update the tests for lens
-+ [ ] Show the correct number of observations with a certain lens and make the correct link.
++ [ ] Use server side processing (json) to speed up 'Show all lenses'?
+
+## VUE
+
++ [ ] Use Vue datepicker: https://github.com/mariomka/vue-datetime?ref=madewithvuejs.com
+
+## TESTS
 
 ## AUTHENTICATION
 
@@ -25,14 +24,12 @@
 + [ ] Clean up source code
 
 ## OBSERVATIONS
-+ [ ] Show one lens (show.blade.php)
-  + [ ] Add number of observations with this lens
 
-
-## VUE
-
-+ [ ] Use Vue datepicker: https://github.com/mariomka/vue-datetime?ref=madewithvuejs.com
-
-
++ [ ] Lenses
+  + [ ] Show one lens (show.blade.php)
+    + [ ] Add number of observations with this lens
+  + [ ] Only show delete button if there are no observations
+    + [ ] Also update the tests for lens
+  + [ ] Show the correct number of observations with a certain lens and make the correct link.
 
 ## SEEDER

@@ -46,7 +46,36 @@ class LensController extends Controller
     {
         $lenses = auth()->user()->lenses()->get();
 
-        return view('layout.lens.view')->with('lenses', $lenses);
+        return $this->_indexView($lenses, "user");
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexAdmin()
+    {
+        if (auth()->user()->isAdmin()) {
+            $lenses = Lens::all();
+
+            return $this->_indexView($lenses, "admin");
+        } else {
+            abort(401);
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Array  $lenses An array with all lenses
+     * @param String $user   user for a normal user, admin for an admin
+     *
+     * @return \Illuminate\Http\Response
+     */
+    private function _indexView($lenses, $user)
+    {
+        return view('layout.lens.view')->with('lenses', $lenses)->with('user', $user);
     }
 
     /**
@@ -179,19 +208,45 @@ class LensController extends Controller
             $lens->update(['name' => $request->get('name')]);
 
             flash()->warning(_i('Lens "%s" updated', $lens->name));
-        } else {
-            // This is only reached when clicking the active checkbox in the
-            // lens overview.
-            if ($request->has('active')) {
-                $lens->active();
-                flash()->warning(_i('Lens "%s" is active', $lens->name));
-            } else {
-                $lens->inactive();
-                flash()->warning(_i('Lens "%s" is not longer active', $lens->name));
-            }
         }
 
         return redirect('/lens');
+    }
+
+    /**
+     * Toggle the active flag of the lens using Json.
+     *
+     * @param int $id The id of the lens.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function toggleActivateJson($id)
+    {
+        $lens = Lens::findOrFail($id);
+
+        $this->authorize('update', $lens);
+
+        if ($lens->active) {
+            $lens->inactive();
+        } else {
+            $lens->active();
+        }
+        return response($lens->jsonSerialize(), Response::HTTP_OK);
+    }
+
+    /**
+     * Delete the lens using Json.
+     *
+     * @param int $id The id of the lens.
+     */
+    public function deleteJson($id)
+    {
+        $lens = Lens::findOrFail($id);
+
+        $this->authorize('update', $lens);
+
+        $this->destroy($lens);
+
     }
 
     /**
@@ -206,8 +261,6 @@ class LensController extends Controller
         $this->authorize('update', $lens);
 
         $lens->delete();
-
-        flash()->error(_i('Lens "%s" deleted', $lens->name));
 
         return redirect('/lens');
     }

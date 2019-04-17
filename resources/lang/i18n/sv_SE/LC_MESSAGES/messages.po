@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-04-11 16:43+0200\n"
-"PO-Revision-Date: 2019-04-11 16:43+0200\n"
+"POT-Creation-Date: 2019-04-17 21:32+0200\n"
+"PO-Revision-Date: 2019-04-17 21:32+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: sv_SE\n"
@@ -109,35 +109,17 @@ msgstr "Lösen ordet innehåller användar namnet"
 msgid "Type your password"
 msgstr "Skriv ditt lösenord"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:84
-#: Http/Controllers/LensController.php:84
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:151
+#: Http/Controllers/LensController.php:151
 #, php-format
 msgid "Lens \"%s\" created"
 msgstr "Objektivet \" %s\" har skapats"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:143
-#: Http/Controllers/LensController.php:143
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:210
+#: Http/Controllers/LensController.php:210
 #, php-format
 msgid "Lens \"%s\" updated"
 msgstr "Objektivet “%s” uppdaterades"
-
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:149
-#: Http/Controllers/LensController.php:149
-#, php-format
-msgid "Lens \"%s\" is active"
-msgstr "Objektivet \"%s\" är aktivt"
-
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:152
-#: Http/Controllers/LensController.php:152
-#, php-format
-msgid "Lens \"%s\" is not longer active"
-msgstr "Objektivet \"%s\" är inte längre aktivt"
-
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:173
-#: Http/Controllers/LensController.php:173
-#, php-format
-msgid "Lens \"%s\" deleted"
-msgstr "Objektivet %s har tagits bort"
 
 #: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:2
 #: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:11
@@ -274,43 +256,43 @@ msgstr "Objekt"
 msgid "Add a new lens"
 msgstr "Lägg till ett nytt lins"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:32
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:71
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:34
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:73
 msgid "Change lens"
 msgstr "Byt lins"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:32
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:71
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:13
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:34
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:73
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:40
 msgid "Add lens"
 msgstr "Lägg till lins"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:36
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:38
 msgid "Select an existing lens"
 msgstr "Välj ett befintligt objektiv"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:51
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:53
 msgid "or specify your lens details manually"
 msgstr "eller ange dina lins Detaljer manuellt"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:58
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:60
 #: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:14
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:20
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:47
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:14
 msgid "Name"
 msgstr "Namn"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:60
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:62
 msgid "e.g. Televue 2x Barlow"
 msgstr "t. ex. Televue 2x"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:64
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:66
 #: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:19
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:21
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:48
 msgid "Factor"
 msgstr "Faktor"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:68
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:70
 msgid "> 1.0 for Barlow lenses, < 1.0 for shapley lenses."
 msgstr "> 1,0 för s-linser, < 1,0 för Shapley linser."
 
@@ -839,31 +821,48 @@ msgstr ""
 "Om du inte har begärt en lösen ords återställning krävs inga ytterligare "
 "åtgärder."
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:2
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:8
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:3
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:30
 #, php-format
 msgid "Lenses of %s"
 msgstr "Linser av %s"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:22
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:6
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:33
+msgid "All lenses"
+msgstr "Alla linser"
+
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:16
+msgid "Lens deleted: "
+msgstr "Linsen har raderats: "
+
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:20
+msgid "Lens activated: "
+msgstr "Lins aktive rad: "
+
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:23
+msgid "Lens deactivated: "
+msgstr "Linsen är inaktive rad: "
+
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:50
 msgid "Active"
 msgstr "Aktiv"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:23
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:52
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:18
 msgid "Delete"
 msgstr "Radera"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:24
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:53
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:19
 msgid "Observations"
 msgstr "Observationer"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:58
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:81
 msgid "observation"
 msgid_plural "observations"
 msgstr[0] "observation"
-msgstr[1] "observation"
+msgstr[1] "observationer"
 
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:1
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:7
@@ -881,6 +880,9 @@ msgstr "Användarroll"
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:21
 msgid "Lists"
 msgstr "Listor"
+
+#~ msgid "Lens \"%s\" is not longer active"
+#~ msgstr "Objektivet \"%s\" är inte längre aktivt"
 
 #~ msgid "observations"
 #~ msgstr "observationer"
@@ -1172,9 +1174,6 @@ msgstr "Listor"
 
 #~ msgid "No corresponding object found for %s"
 #~ msgstr "Inget motsvarande objekt hittades för %s"
-
-#~ msgid "List emptied: "
-#~ msgstr "Lista tömd: "
 
 #~ msgid "The object %s is moved up in the list %s"
 #~ msgstr "Objektet %s flyttas uppåt i listan %s"

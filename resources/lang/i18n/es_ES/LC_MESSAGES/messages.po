@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-04-11 16:44+0200\n"
-"PO-Revision-Date: 2019-04-11 16:44+0200\n"
+"POT-Creation-Date: 2019-04-17 21:33+0200\n"
+"PO-Revision-Date: 2019-04-17 21:33+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: es_ES\n"
@@ -115,35 +115,17 @@ msgstr "La contraseña contiene el nombre de usuario"
 msgid "Type your password"
 msgstr "Escriba su contraseña"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:84
-#: Http/Controllers/LensController.php:84
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:151
+#: Http/Controllers/LensController.php:151
 #, php-format
 msgid "Lens \"%s\" created"
 msgstr "Lente \"%s\" creada"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:143
-#: Http/Controllers/LensController.php:143
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:210
+#: Http/Controllers/LensController.php:210
 #, php-format
 msgid "Lens \"%s\" updated"
 msgstr "Lente \"%s\" actualizada"
-
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:149
-#: Http/Controllers/LensController.php:149
-#, php-format
-msgid "Lens \"%s\" is active"
-msgstr "La lente \"%s\" está activa"
-
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:152
-#: Http/Controllers/LensController.php:152
-#, php-format
-msgid "Lens \"%s\" is not longer active"
-msgstr "La lente \"%s\" ya no está activa"
-
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:173
-#: Http/Controllers/LensController.php:173
-#, php-format
-msgid "Lens \"%s\" deleted"
-msgstr "El objetivo \"%s\" eliminado"
 
 #: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:2
 #: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:11
@@ -286,43 +268,43 @@ msgstr "Objeto"
 msgid "Add a new lens"
 msgstr "Agregar un nuevo lente"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:32
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:71
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:34
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:73
 msgid "Change lens"
 msgstr "Cambiar lente"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:32
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:71
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:13
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:34
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:73
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:40
 msgid "Add lens"
 msgstr "Agregar lente"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:36
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:38
 msgid "Select an existing lens"
 msgstr "Seleccione un objetivo existente"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:51
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:53
 msgid "or specify your lens details manually"
 msgstr "o especifique los detalles de la lente manualmente"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:58
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:60
 #: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:14
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:20
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:47
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:14
 msgid "Name"
 msgstr "Nombre"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:60
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:62
 msgid "e.g. Televue 2x Barlow"
 msgstr "p.ej. Televue 2x Barlow"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:64
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:66
 #: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:19
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:21
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:48
 msgid "Factor"
 msgstr "Cartero"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:68
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:70
 msgid "> 1.0 for Barlow lenses, < 1.0 for shapley lenses."
 msgstr "> 1,0 para lentes Barlow, < 1,0 para lentes Shapley."
 
@@ -856,31 +838,48 @@ msgstr ""
 "Si no ha pedido un restablecimiento de contraseña, no es necesario realizar "
 "ninguna otra acción."
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:2
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:8
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:3
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:30
 #, php-format
 msgid "Lenses of %s"
 msgstr "Lentes de %s"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:22
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:6
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:33
+msgid "All lenses"
+msgstr "Todas las lentes"
+
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:16
+msgid "Lens deleted: "
+msgstr "Lente eliminada: "
+
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:20
+msgid "Lens activated: "
+msgstr "Lente activada: "
+
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:23
+msgid "Lens deactivated: "
+msgstr "Lente desactivada: "
+
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:50
 msgid "Active"
 msgstr "Activo"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:23
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:52
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:18
 msgid "Delete"
 msgstr "Borrar"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:24
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:53
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:19
 msgid "Observations"
 msgstr "Observaciones"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:58
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:81
 msgid "observation"
 msgid_plural "observations"
 msgstr[0] "observación"
-msgstr[1] "observación"
+msgstr[1] "observaciónes"
 
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:1
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:7
@@ -898,6 +897,9 @@ msgstr "Rol de Usuario"
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:21
 msgid "Lists"
 msgstr "Listas"
+
+#~ msgid "Lens \"%s\" is not longer active"
+#~ msgstr "La lente \"%s\" ya no está activa"
 
 #~ msgid "observations"
 #~ msgstr "observaciones"
@@ -1188,9 +1190,6 @@ msgstr "Listas"
 
 #~ msgid "No corresponding object found for %s"
 #~ msgstr "No se encontró ningún objeto correspondiente para %s"
-
-#~ msgid "List emptied: "
-#~ msgstr "Lista vaciada: "
 
 #~ msgid "The object %s is moved up in the list %s"
 #~ msgstr "El objeto %s se desplaza hacia arriba la lista %s"

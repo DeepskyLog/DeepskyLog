@@ -33,6 +33,6 @@ class LensTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Lens::class, 150)->create();
+        factory(App\Lens::class, 15000)->create();
     }
 }

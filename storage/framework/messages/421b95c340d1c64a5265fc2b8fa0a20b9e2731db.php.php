@@ -35,6 +35,9 @@
         <br />
         <?php echo $__env->make('layout.footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
+        <!-- App scripts -->
+        <?php echo $__env->yieldPushContent('scripts'); ?>
+
         <script>
             $(document).ready(function() {
                 $("select").select2();
@@ -43,8 +46,5 @@
                 theme: 'bootstrap4',
             });
         </script>
-
-        <!-- App scripts -->
-        <?php echo $__env->yieldPushContent('scripts'); ?>
     </body>
 </html>

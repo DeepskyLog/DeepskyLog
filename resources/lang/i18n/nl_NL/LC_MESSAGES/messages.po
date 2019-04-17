@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-04-11 16:42+0200\n"
-"PO-Revision-Date: 2019-04-11 16:43+0200\n"
+"POT-Creation-Date: 2019-04-17 21:32+0200\n"
+"PO-Revision-Date: 2019-04-17 21:32+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: nl_NL\n"
@@ -111,35 +111,17 @@ msgstr "Het wachtwoord bevat de gebruikersnaam"
 msgid "Type your password"
 msgstr "Typ uw wachtwoord"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:84
-#: Http/Controllers/LensController.php:84
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:151
+#: Http/Controllers/LensController.php:151
 #, php-format
 msgid "Lens \"%s\" created"
 msgstr "Lens \"%s\" toegevoegd"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:143
-#: Http/Controllers/LensController.php:143
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:210
+#: Http/Controllers/LensController.php:210
 #, php-format
 msgid "Lens \"%s\" updated"
 msgstr "Lens \"%s\" bijgewerkt"
-
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:149
-#: Http/Controllers/LensController.php:149
-#, php-format
-msgid "Lens \"%s\" is active"
-msgstr "Lens \"%s\" is actief"
-
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:152
-#: Http/Controllers/LensController.php:152
-#, php-format
-msgid "Lens \"%s\" is not longer active"
-msgstr "Lens \"%s\" is niet langer actief"
-
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:173
-#: Http/Controllers/LensController.php:173
-#, php-format
-msgid "Lens \"%s\" deleted"
-msgstr "Lens \"%s\" verwijderd"
 
 #: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:2
 #: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:11
@@ -276,43 +258,43 @@ msgstr "Object"
 msgid "Add a new lens"
 msgstr "Voeg een nieuwe lens toe"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:32
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:71
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:34
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:73
 msgid "Change lens"
 msgstr "Verander lens"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:32
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:71
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:13
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:34
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:73
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:40
 msgid "Add lens"
 msgstr "Voeg lens toe"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:36
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:38
 msgid "Select an existing lens"
 msgstr "Selecteer bestaande lens"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:51
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:53
 msgid "or specify your lens details manually"
 msgstr "of voeg de gegevens manueel in"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:58
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:60
 #: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:14
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:20
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:47
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:14
 msgid "Name"
 msgstr "Naam"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:60
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:62
 msgid "e.g. Televue 2x Barlow"
 msgstr "b.v. Televue 2x Barlow"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:64
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:66
 #: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:19
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:21
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:48
 msgid "Factor"
 msgstr "Factor"
 
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:68
+#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:70
 msgid "> 1.0 for Barlow lenses, < 1.0 for shapley lenses."
 msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 
@@ -845,31 +827,48 @@ msgstr ""
 "Als u geen wachtwoord herstel hebt aangevraagd, is er geen verdere actie "
 "vereist."
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:2
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:8
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:3
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:30
 #, php-format
 msgid "Lenses of %s"
 msgstr "Lenzen van %s"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:22
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:6
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:33
+msgid "All lenses"
+msgstr "Alle lenzen"
+
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:16
+msgid "Lens deleted: "
+msgstr "Lens verwijderd: "
+
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:20
+msgid "Lens activated: "
+msgstr "Lens geactiveerd: "
+
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:23
+msgid "Lens deactivated: "
+msgstr "Lens gedeactiveerd: "
+
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:50
 msgid "Active"
 msgstr "Actief"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:23
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:52
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:18
 msgid "Delete"
 msgstr "Verwijder"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:24
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:53
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:19
 msgid "Observations"
 msgstr "Waarnemingen"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:58
+#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:81
 msgid "observation"
 msgid_plural "observations"
 msgstr[0] "waarneming"
-msgstr[1] "waarneming"
+msgstr[1] "waarnemingen"
 
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:1
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:7
@@ -887,6 +886,9 @@ msgstr "Gebruikersrol"
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:21
 msgid "Lists"
 msgstr "Lijsten"
+
+#~ msgid "Lens \"%s\" is not longer active"
+#~ msgstr "Lens \"%s\" is niet langer actief"
 
 #~ msgid "observations"
 #~ msgstr "waarnemingen"
@@ -1183,9 +1185,6 @@ msgstr "Lijsten"
 
 #~ msgid "No corresponding object found for %s"
 #~ msgstr "Geen corresponderend object gevonden voor %s"
-
-#~ msgid "List emptied: "
-#~ msgstr "Lijst geleegd: "
 
 #~ msgid "The object %s is moved up in the list %s"
 #~ msgstr "Het object %s wordt naar voor geschoven in de lijst %s"
