@@ -46,7 +46,7 @@ class LensController extends Controller
     {
         $lenses = auth()->user()->lenses()->get();
 
-        return $this->_indexView($lenses, "user");
+        return $this->_indexView("user");
     }
 
     /**
@@ -57,9 +57,9 @@ class LensController extends Controller
     public function indexAdmin()
     {
         if (auth()->user()->isAdmin()) {
-            $lenses = Lens::all();
+            //$lenses = Lens::all();
 
-            return $this->_indexView($lenses, "admin");
+            return $this->_indexView("admin");
         } else {
             abort(401);
         }
@@ -73,9 +73,92 @@ class LensController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    private function _indexView($lenses, $user)
+    private function _indexView($user)
     {
-        return view('layout.lens.view')->with('lenses', $lenses)->with('user', $user);
+        return view('layout.lens.view')->with('user', $user);
+    }
+
+    /**
+     * Returns all lenses (in JSON format) for server side processing of the tables.
+     */
+    public function all(Request $request)
+    {
+        // TODO: observer should be changed to observations.
+        $columns = array(
+            0 => 'name',
+            1 => 'factor',
+            2 => 'active',
+            4 => 'observations',
+        );
+
+        $totalData = Lens::count();
+
+        $totalFiltered = $totalData;
+
+
+        // TODO: order by observations
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+
+        if (empty($request->input('search.value'))) {
+            $lenses = Lens::offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+        } else {
+            $search = $request->input('search.value');
+
+            // TODO: Search for observations
+            $lenses = Lens::where('name', 'LIKE', "%{$search}%")
+                ->orWhere('factor', 'LIKE', "%{$search}%")
+                ->orWhere('observations', 'LIKE', "%{$search}%")
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+
+            $totalFiltered = Lens::where('name', 'LIKE', "%{$search}%")
+                ->orWhere('factor', 'LIKE', "%{$search}%")
+                ->orWhere('observations', 'LIKE', "%{$search}%")
+                ->count();
+        }
+
+        $data = array();
+        if (!empty($lenses)) {
+            foreach ($lenses as $lens) {
+                //$show = route('posts.show',$post->id);
+                //$edit =  route('posts.edit',$post->id);
+
+                $nestedData['name'] = $lens->name;
+                $nestedData['factor'] = round($lens->factor, 2);
+                $nestedData['active'] = $lens->active;
+                $nestedData['delete'] = "Delete";
+
+                $observations = $lens->observations . ' '
+                    . _n('observation', 'observations', $lens->observations);
+
+                if ($lens->observations == 0) {
+                    $observations = _i("No observations");
+                }
+
+                $nestedData['observations'] = $observations;
+
+        //         //$nestedData['options'] = "&emsp;<a href='{$show}' title='SHOW' ><span class='glyphicon glyphicon-list'></span></a>
+        //         //                  &emsp;<a href='{$edit}' title='EDIT' ><span class='glyphicon glyphicon-edit'></span></a>";
+                $data[] = $nestedData;
+            }
+        }
+
+        $json_data = array(
+            "draw"            => intval($request->input('draw')),
+            "recordsTotal"    => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data"            => $data
+        );
+
+        echo json_encode($json_data);
     }
 
     /**

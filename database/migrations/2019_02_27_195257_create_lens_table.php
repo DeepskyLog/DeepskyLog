@@ -19,6 +19,7 @@ class CreateLensTable extends Migration
             $table->float('factor', 11);
             $table->unsignedInteger('observer_id');
             $table->boolean('active')->default(true);
+            $table->unsignedInteger('observations')->default(0);
 
             $table->timestamps();
 

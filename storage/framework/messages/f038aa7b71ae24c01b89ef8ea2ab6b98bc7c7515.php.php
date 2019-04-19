@@ -46,44 +46,16 @@
             <tr>
                 <th><?php echo e(_i("Name")); ?></th>
                 <th><?php echo e(_i("Factor")); ?></th>
-                <?php if($user == 'user'): ?>
-                    <th><?php echo e(_i("Active")); ?></th>
-                <?php endif; ?>
+                
+                <th><?php echo e(_i("Active")); ?></th>
+                
                 <th><?php echo e(_i("Delete")); ?></th>
                 <th><?php echo e(_i("Observations")); ?></th>
             </tr>
         </thead>
         <tbody>
             <!-- Only show the lenses for the correct user -->
-            <?php $__currentLoopData = $lenses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lens): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <tr>
-                    <td>
-                        <a href="/lens/<?php echo e($lens->id); ?>/edit">
-                            <?php echo e($lens->name); ?>
-
-                        </a>
-                    </td>
-                    <td><?php echo e($lens->factor); ?></td>
-                    <?php if($user == 'user'): ?>
-                    <td>
-                        <lensactivation :selected="<?php echo e($lens->active); ?>" :id="<?php echo e($lens->id); ?>">
-                        </lensactivation>
-                    </td>
-                    <?php endif; ?>
-                    <td>
-                        <!-- TODO: Only show if there are no observations with this lens -->
-                        <lensdeletion name="<?php echo e($lens->name); ?>" deleteid="<?php echo e($lens->id); ?>">
-                        </lensdeletion>
-                    </td>
-                    <td>
-                        <!-- TODO: Show the correct number of observations with this lens, and make the correct link -->
-                        <a href="#">
-                            <?php echo e($lens->id . ' ' . _n('observation', 'observations', $lens->id)); ?>
-
-                        </a>
-                    </td>
-                </tr>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            
         </tbody>
     </table>
     </div>
@@ -97,8 +69,22 @@ $.getScript('<?php echo e(URL::asset('js/datatables.js')); ?>', function()
 {
     datatable('#lens_table', '<?php echo e(LaravelGettext::getLocale()); ?>', [
         // Sort columns naturally
-       { type: 'natural' }
-     ]);
+        { type: 'natural', targets: '_all' }
+     ], true, true,
+     {
+         "url": "<?php echo e(url('lens/all')); ?>",
+         "dataType": "json",
+         "type": "POST",
+         "data": {_token: "<?php echo e(csrf_token()); ?>"}
+    },
+    [
+        { "data": "name" },
+        { "data": "factor" },
+        { "data": "active" },
+        { "data": "delete" },
+        { "data": "observations" },
+    ]
+);
 });
 
 // Remove the row from the datatable if the 'delete' icon is pressed.

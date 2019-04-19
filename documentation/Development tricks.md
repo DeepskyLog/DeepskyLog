@@ -14,6 +14,7 @@
   - [Tests](#tests)
   - [Select library](#select-library)
     - [Vue in combination with select2](#vue-in-combination-with-select2)
+  - [Datatables](#datatables)
 
 <!-- /code_chunk_output -->
 
@@ -215,3 +216,13 @@ and the following in javascript:
 </script>
 @endpush
 ```
+
+## Datatables
+
+DeepskyLog uses jquery datatables. To make a DataTable model, execute the following command:
+
+```bash
+php artisan datatables:make --model Lens
+```
+
+Adapt the app/DataTables/LensDatatable.php file.

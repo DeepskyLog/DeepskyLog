@@ -16,6 +16,7 @@ namespace App\Http\Controllers;
 use App\Lens;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\DataTables\LensDataTable;
 
 /**
  * Lens Controller.
@@ -42,24 +43,23 @@ class LensController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(LensDataTable $dataTable)
     {
-        $lenses = auth()->user()->lenses()->get();
-
-        return $this->_indexView($lenses, "user");
+        return $this->_indexView($dataTable, "user");
     }
+
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function indexAdmin()
+    public function indexAdmin(LensDataTable $dataTable)
     {
         if (auth()->user()->isAdmin()) {
-            $lenses = Lens::all();
+            //$lenses = Lens::all();
 
-            return $this->_indexView($lenses, "admin");
+            return $this->_indexView($dataTable, "admin");
         } else {
             abort(401);
         }
@@ -73,32 +73,9 @@ class LensController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    private function _indexView($lenses, $user)
+    private function _indexView($dataTable, $user)
     {
-        return view('layout.lens.view')->with('lenses', $lenses)->with('user', $user);
-    }
-
-    /**
-     * Display a listing of the lenses in JSON format.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function indexJson()
-    {
-        return response(Lens::all()->jsonSerialize(), Response::HTTP_OK);
-    }
-
-    /**
-     * Display a listing of the lenses in JSON format. Only return the
-     * unique names.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function uniqueIndexJson()
-    {
-        $lenses = Lens::all()->unique('name')->values();
-
-        return response($lenses->jsonSerialize(), Response::HTTP_OK);
+        return $dataTable->with('user', $user)->render('layout.lens.view');
     }
 
     /**
@@ -208,45 +185,19 @@ class LensController extends Controller
             $lens->update(['name' => $request->get('name')]);
 
             flash()->warning(_i('Lens "%s" updated', $lens->name));
+        } else {
+            // This is only reached when clicking the active checkbox in the
+            // lens overview.
+            if ($request->has('active')) {
+                $lens->active();
+                flash()->warning(_i('Lens "%s" is active', $lens->name));
+            } else {
+                $lens->inactive();
+                flash()->warning(_i('Lens "%s" is not longer active', $lens->name));
+            }
         }
 
         return redirect('/lens');
-    }
-
-    /**
-     * Toggle the active flag of the lens using Json.
-     *
-     * @param int $id The id of the lens.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function toggleActivateJson($id)
-    {
-        $lens = Lens::findOrFail($id);
-
-        $this->authorize('update', $lens);
-
-        if ($lens->active) {
-            $lens->inactive();
-        } else {
-            $lens->active();
-        }
-        return response($lens->jsonSerialize(), Response::HTTP_OK);
-    }
-
-    /**
-     * Delete the lens using Json.
-     *
-     * @param int $id The id of the lens.
-     */
-    public function deleteJson($id)
-    {
-        $lens = Lens::findOrFail($id);
-
-        $this->authorize('update', $lens);
-
-        $this->destroy($lens);
-
     }
 
     /**
@@ -260,8 +211,12 @@ class LensController extends Controller
     {
         $this->authorize('update', $lens);
 
-        $lens->delete();
+        if ($lens->observations > 0) {
+            flash()->error(_i('Lens "%s" has observations. Impossible to delete.', $lens->name));
+        } else {
+            $lens->delete();
 
-        return redirect('/lens');
-    }
+            flash()->error(_i('Lens "%s" deleted', $lens->name));
+        }
+        return redirect()->back();    }
 }

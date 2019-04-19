@@ -21,11 +21,15 @@
     </tr>
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td>{{  $lens->observer->name }}</td>
+        <td><a href="/observer/{{ $lens->observer_id }}">{{  $lens->observer->name }}</a></td>
     </tr>
     <tr>
         <td>{{ _i("Number of observations") }}</td>
-        <td>{{  $lens->id }}</td>
+        @if ($lens->observations > 0)
+            <td><a href="/observation/lens/{{ $lens->id }}">{{  $lens->observations }}</a></td>
+        @else
+            <td>{{  $lens->observations }}</td>
+        @endif
     </tr>
 
 </table>

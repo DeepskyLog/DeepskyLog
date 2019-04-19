@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-04-17 21:33+0200\n"
-"PO-Revision-Date: 2019-04-17 21:33+0200\n"
+"POT-Creation-Date: 2019-04-18 15:02+0200\n"
+"PO-Revision-Date: 2019-04-18 15:02+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: es_ES\n"
@@ -115,14 +115,26 @@ msgstr "La contraseña contiene el nombre de usuario"
 msgid "Type your password"
 msgstr "Escriba su contraseña"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:151
-#: Http/Controllers/LensController.php:151
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:140
+#: Http/Controllers/LensController.php:140
+msgid "observation"
+msgid_plural "observations"
+msgstr[0] "observación"
+msgstr[1] "observaciónes"
+
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:143
+#: Http/Controllers/LensController.php:143
+msgid "No observations"
+msgstr "No observaciones"
+
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:234
+#: Http/Controllers/LensController.php:234
 #, php-format
 msgid "Lens \"%s\" created"
 msgstr "Lente \"%s\" creada"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:210
-#: Http/Controllers/LensController.php:210
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:293
+#: Http/Controllers/LensController.php:293
 #, php-format
 msgid "Lens \"%s\" updated"
 msgstr "Lente \"%s\" actualizada"
@@ -875,12 +887,6 @@ msgstr "Borrar"
 msgid "Observations"
 msgstr "Observaciones"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:81
-msgid "observation"
-msgid_plural "observations"
-msgstr[0] "observación"
-msgstr[1] "observaciónes"
-
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:1
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:7
 msgid "User Administration"
@@ -900,9 +906,6 @@ msgstr "Listas"
 
 #~ msgid "Lens \"%s\" is not longer active"
 #~ msgstr "La lente \"%s\" ya no está activa"
-
-#~ msgid "observations"
-#~ msgstr "observaciones"
 
 #~ msgid "Overview"
 #~ msgstr "Resumen"

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-04-17 21:32+0200\n"
-"PO-Revision-Date: 2019-04-17 21:32+0200\n"
+"POT-Creation-Date: 2019-04-18 15:02+0200\n"
+"PO-Revision-Date: 2019-04-18 15:02+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: nl_NL\n"
@@ -111,14 +111,26 @@ msgstr "Het wachtwoord bevat de gebruikersnaam"
 msgid "Type your password"
 msgstr "Typ uw wachtwoord"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:151
-#: Http/Controllers/LensController.php:151
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:140
+#: Http/Controllers/LensController.php:140
+msgid "observation"
+msgid_plural "observations"
+msgstr[0] "waarneming"
+msgstr[1] "waarnemingen"
+
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:143
+#: Http/Controllers/LensController.php:143
+msgid "No observations"
+msgstr "Geen waarnemingen"
+
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:234
+#: Http/Controllers/LensController.php:234
 #, php-format
 msgid "Lens \"%s\" created"
 msgstr "Lens \"%s\" toegevoegd"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:210
-#: Http/Controllers/LensController.php:210
+#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:293
+#: Http/Controllers/LensController.php:293
 #, php-format
 msgid "Lens \"%s\" updated"
 msgstr "Lens \"%s\" bijgewerkt"
@@ -864,12 +876,6 @@ msgstr "Verwijder"
 msgid "Observations"
 msgstr "Waarnemingen"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:81
-msgid "observation"
-msgid_plural "observations"
-msgstr[0] "waarneming"
-msgstr[1] "waarnemingen"
-
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:1
 #: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:7
 msgid "User Administration"
@@ -889,9 +895,6 @@ msgstr "Lijsten"
 
 #~ msgid "Lens \"%s\" is not longer active"
 #~ msgstr "Lens \"%s\" is niet langer actief"
-
-#~ msgid "observations"
-#~ msgstr "waarnemingen"
 
 #, fuzzy
 #~| msgid "Lenses of"

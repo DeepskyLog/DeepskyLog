@@ -37,7 +37,8 @@
 
             <div class="form">
                 <select2 class="form-control" @input="selectLens" name="lens" v-model="selected">
-                    @foreach (\App\Lens::all()->unique('name') as $lensloop)
+                  {{--   @foreach (\App\Lens::All->unique('name') as $lensloop) --}}
+                    @foreach (\App\Lens::take(20)->get()->unique('name') as $lensloop)
                         <option v-bind:value="{{ $lensloop->id }}"
                         @if ($lens->id == $lensloop->id)
                             selected="selected"
@@ -94,6 +95,13 @@
                 });
             }
 
+        },
+        mounted: function() {
+            var self = this
+            this.$nextTick(function () {
+                self.name = '{{ $lens->name }}';
+                self.factor = {{ $lens->factor }};
+            });
         }
     })
 </script>

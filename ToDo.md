@@ -2,7 +2,8 @@
 
 ## LENSES
 
-+ [ ] Use server side processing (json) to speed up 'Show all lenses'?
++ [ ] Create a new lens does not work: select2 should use ajax
++ [ ] Use server side processing (json) on users table
 
 ## VUE
 
@@ -14,6 +15,7 @@
 
 + [ ] Do we need maileclipse?
 + [ ] Write user settings page and table for the DeepskyLog information
++ [ ] Write show observer
 + [ ] Update admin page for the users, add extra information.
 + [ ] Write script to convert old observers table of DeepskyLog to laravel
 + [ ] Write script to convert old lenses table of DeepskyLog to laravel
@@ -26,10 +28,11 @@
 ## OBSERVATIONS
 
 + [ ] Lenses
-  + [ ] Show one lens (show.blade.php)
-    + [ ] Add number of observations with this lens
   + [ ] Only show delete button if there are no observations
     + [ ] Also update the tests for lens
-  + [ ] Show the correct number of observations with a certain lens and make the correct link.
+  + [ ] Recalculate number of observations for each lens of the observer whenever (needed for datatables?):
+    + [ ] Add observation
+    + [ ] Update observation
+    + [ ] Delete observation 
 
 ## SEEDER

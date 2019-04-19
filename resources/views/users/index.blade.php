@@ -59,9 +59,5 @@
 
 @push('scripts')
 <script>
-$.getScript('{{ URL::asset('js/datatables.js') }}', function()
-{
-    datatable('#users_table', '{{ LaravelGettext::getLocale() }}');
-});
 </script>
 @endpush

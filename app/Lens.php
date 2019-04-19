@@ -68,7 +68,7 @@ class Lens extends Model
         return $this->belongsTo('App\User');
     }
 
-    // TODO: A lens belongs to an observation.
+    // TODO: A lens belongs to one or more observations.
     //    public function observation()
     //    {
     //        return $this->belongsTo(Observation::class);
