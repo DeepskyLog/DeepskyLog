@@ -2,7 +2,7 @@
 
 <?php $__env->startSection('content'); ?>
 <h1>
-<?php echo e(_s('DeepskyLog Privacy Policy')); ?>
+<?php echo e(_i('DeepskyLog Privacy Policy')); ?>
 
 </h1>
 <?php echo e(_i("The majority of information on this site can be accessed without providing any personal information.")); ?>
@@ -33,4 +33,4 @@
 ?>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layout.master', \Illuminate\Support\Arr::except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('layout.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>

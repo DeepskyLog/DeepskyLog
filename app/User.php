@@ -1,14 +1,93 @@
 <?php
+/**
+ * User eloquent model.
+ *
+ * PHP Version 7
+ *
+ * @category UserManagement
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
 
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Notifications\DeepskyLogVerificationNotification;
+use App\Notifications\DeepskyLogResetPassword;
 
-class User extends Authenticatable
+/**
+ * User eloquent model.
+ *
+ * @category UserManagement
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
+
+    const ADMIN_TYPE = 'admin';
+    const DEFAULT_TYPE = 'default';
+
+    /**
+     * Check if this user is an admin.
+     *
+     * @return bool True if the user is an admin.
+     */
+    public function isAdmin()
+    {
+        return $this->type === self::ADMIN_TYPE;
+    }
+
+    /**
+     * Users can have one or more lenses.
+     *
+     * @return HasMany The eloquent relationship
+     */
+    public function lenses()
+    {
+        return $this->hasMany('App\Lens', 'observer_id');
+    }
+
+    /**
+     * Sets the password attribute.
+     *
+     * @param mixed $password The password
+     *
+     * @return None
+     */
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = bcrypt($password);
+    }
+
+    /**
+     * Sends the email verification mail.
+     *
+     * @return None
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new DeepskyLogVerificationNotification);
+    }
+
+    /**
+     * Sends the password reset mail.
+     *
+     * @param mixed $token The token for the reset mail
+     *
+     * @return None
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new DeepskyLogResetPassword($token));
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +95,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'country', 'language',
+        'observationlanguage', 'copyright'
     ];
 
     /**

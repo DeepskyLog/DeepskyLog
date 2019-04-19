@@ -6,7 +6,12 @@
 	<p>
         <br />
         <h4>
-	        {{ _i("Moon / Sun") }}
+            @auth
+                {{ _i("Moon / Sun") }}
+            @endauth
+            @guest
+                {{ _i("Moon") }}
+            @endguest
         </h4>
         <span style="font-weight:normal;">
             @php
@@ -18,12 +23,15 @@
             @endphp
             {{ _i("on") }} {{ $datestr }} &gt;&lt; {{ $nextdatestr }}
         </span>
-	</p>
+    </p>
+
 	<table class="table table-sm">
-	    <tr>
+        <tr>
             <td> {{ _i("Moon") }} </td>
             @php
                 // TODO: Use real location (timezone).
+                // TODO: Remove the information on sun and moon if not logged in.
+                // TODO: Remove the information on sun and moon if logged in, but no standard location is given.
                 // Moon rise and set
                 use App\Libraries\AstroCalc;
 
@@ -34,7 +42,7 @@
 
             <td>{{ $moon[0] }}</td>
             <td>{{ $moon[2] }}</td>
-	    </tr>
+        </tr>
 	    <tr>
             <td>{{ _i("Sun") }}</td>
             @php

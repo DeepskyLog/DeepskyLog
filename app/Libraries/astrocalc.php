@@ -371,7 +371,7 @@ class AstroCalc
             strtotime($timestr), $this->_latitude, -$longitude
         );
         $astrobegin = date("H:i", $sun_info["astronomical_twilight_begin"]);
-        sscanf($astrobegin, "%d:%d", $hour, $minute);
+        list($hour, $minute) = sscanf($astrobegin, "%d:%d");
         $astrobegin = ($hour + $minute / 60.0);
 
         $astroend = date("H:i", $sun_info["astronomical_twilight_end"]);

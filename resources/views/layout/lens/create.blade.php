@@ -18,6 +18,8 @@
     @endif
 </h4>
 
+<div id="lens">
+
 @if ($update)
     <form role="form" action="/lens/{{ $lens->id }}" method="POST">
     @method('PATCH')
@@ -32,17 +34,18 @@
         @if (!$update)
         <div class="form-group">
             <label for="catalog">{{ _i("Select an existing lens") }}</label>
+
             <div class="form">
-                <select class="form-control" onchange="location = this.options[this.selectedIndex].value;" name="catalog">
-                    <option>&nbsp;</option>
-                    @foreach (\App\Lens::all() as $lensloop)
-                        <option value="/lens/create/{{ $lensloop->id }}"
+                <select2 class="form-control" @input="selectLens" name="lens" v-model="selected">
+                  {{--   @foreach (\App\Lens::All->unique('name') as $lensloop) --}}
+                    @foreach (\App\Lens::take(20)->get()->unique('name') as $lensloop)
+                        <option v-bind:value="{{ $lensloop->id }}"
                         @if ($lens->id == $lensloop->id)
                             selected="selected"
                         @endif
                         >{{ $lensloop->name }}</option>
                     @endforeach
-                </select>
+                </select2>
             </div>
         </div>
 
@@ -53,23 +56,53 @@
 
         <div class="form-group">
             <label for="name">{{ _i("Name") }}</label>
-            <input type="text" required class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30" value="@if ($lens->name){{ $lens->name }}@else{{ old('name') }}@endif" />
+            <input v-model="name" type="text" required class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30" value="@if ($lens->name){{ $lens->name }}@else{{ old('name') }}@endif" />
             <span class="help-block">{{ _i("e.g. Televue 2x Barlow") }}</span>
         </div>
 
         <div class="form-group">
             <label for="factor">{{ _i("Factor") }}</label>
             <div class="form-inline">
-                <input type="number" min="0.01" max="9.99" required step="0.01" class="form-control {{ $errors->has('factor') ? 'is-invalid' : '' }}" maxlength="5" name="factor" size="5" value="@if ($lens->factor > 0){{ $lens->factor }}@else{{ old('factor') }}@endif" />
+                <input v-model="factor" type="number" min="0.01" max="9.99" required step="0.01" class="form-control {{ $errors->has('factor') ? 'is-invalid' : '' }}" maxlength="5" name="factor" size="5" value="@if ($lens->factor > 0){{ $lens->factor }}@else{{ old('factor') }}@endif" />
             </div>
             <span class="help-block">{{ _i("> 1.0 for Barlow lenses, < 1.0 for shapley lenses.") }}</span>
         </div>
 
-        <!--TODO: Use the real observer_id -->
-        <input type="hidden" name="observer_id" value="3">
-
         <input type="submit" class="btn btn-success" name="add" value="@if ($update){{ _i("Change lens") }}@else{{ _i("Add lens") }}@endif" />
     </div>
 </form>
+</div>
+
 
 @endsection
+
+@push('scripts')
+<script>
+    new Vue({
+        el: '#lens',
+        data: {
+            factor: '',
+            selected: '',
+            name: '',
+        },
+        methods:{
+            selectLens() {
+                // create a closure to access component in the callback below
+                var self = this
+                $.getJSON('/getLensJson/' + this.selected, function(data) {
+                    self.name = data.name;
+                    self.factor = Math.round(data.factor * 100) / 100;
+                });
+            }
+
+        },
+        mounted: function() {
+            var self = this
+            this.$nextTick(function () {
+                self.name = '{{ $lens->name }}';
+                self.factor = {{ $lens->factor }};
+            });
+        }
+    })
+</script>
+@endpush

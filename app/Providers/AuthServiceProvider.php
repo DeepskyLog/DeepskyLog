@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -13,7 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+        'App\Lens' => 'App\Policies\LensPolicy',
     ];
 
     /**
@@ -21,10 +23,29 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(Gate $gate)
     {
         $this->registerPolicies();
 
-        //
+        Blade::if(
+            'admin', function ()
+            {
+                if (Auth::check()) {
+                    $condition = auth()->user()->isAdmin();
+                } else {
+                    $condition = false;
+                }
+                return $condition;
+            }
+        );
+
+        $gate::before(
+            function ($user) {
+                // ADMINISTRATOR CAN DO EVERYTHING
+                if ($user->isAdmin()) {
+                    return true;
+                }
+            }
+        );
     }
 }

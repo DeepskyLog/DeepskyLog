@@ -24,6 +24,7 @@
 
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
                     @include('layout.errors')
+                    @include('layout.flash')
 
                     <br />
                     @yield('content')
@@ -34,6 +35,9 @@
         <br />
         @include('layout.footer')
 
+        <!-- App scripts -->
+        @stack('scripts')
+
         <script>
             $(document).ready(function() {
                 $("select").select2();
@@ -42,8 +46,5 @@
                 theme: 'bootstrap4',
             });
         </script>
-
-        <!-- App scripts -->
-        @stack('scripts')
     </body>
 </html>

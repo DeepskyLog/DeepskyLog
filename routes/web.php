@@ -19,7 +19,16 @@ Route::post('/lang', 'LanguageController@changeLang');
 
 Route::post('/setSession', 'SessionController@createSession');
 
-Route::get('/lens/create/{lens}', 'LensController@create');
+Route::get('/lens/create/{lens}', 'LensController@create')->middleware('verified');
 
-Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']]);
+Route::get('/lens/admin', 'LensController@indexAdmin');
 
+Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']])->middleware('verified')->except('show');
+
+Route::get('/lens/{lens}', 'LensController@show');
+
+Route::get('/getLensJson/{id}', 'LensController@getLensJson');
+
+Auth::routes(['verify' => true]);
+
+Route::resource('users', 'UserController')->middleware('isAdmin')->except(['create', 'store']);
