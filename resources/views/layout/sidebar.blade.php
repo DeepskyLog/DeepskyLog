@@ -3,7 +3,9 @@
         <ul class="nav flex-column">
             <br />
             <!-- Language -->
-            @include('layout.sidebar.language')
+            @if (Auth::guest())
+                @include('layout.sidebar.language')
+            @endif
 
             <!-- Quickpick -->
             @include('layout.sidebar.quickpick')

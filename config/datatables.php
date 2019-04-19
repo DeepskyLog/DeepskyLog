@@ -70,7 +70,7 @@ return [
      * 'throw'          - Throws a \Yajra\DataTables\Exceptions\Exception. Use your custom error handler if needed.
      * 'custom message' - Any friendly message to be displayed to the user. You can also use translation key.
      */
-    'error' => env('DATATABLES_ERROR', null),
+    'error' => env('DATATABLES_ERROR', 'throw'),
 
     /*
      * Default columns definition of dataTable utility functions.

@@ -1,9 +1,29 @@
 <?php
+/**
+ * Language middleware.
+ *
+ * PHP Version 7
+ *
+ * @category Laravel
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
 
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
+/**
+ * Language middleware.
+ *
+ * @category Laravel
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
 class Kernel extends HttpKernel
 {
     /**
@@ -36,6 +56,8 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\Language::class,
+            \App\Http\Middleware\DeepskyLogChecks::class,
         ],
 
         'api' => [
@@ -61,6 +83,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'isAdmin' => \App\Http\Middleware\IsAdmin::class,
     ];
 
     /**

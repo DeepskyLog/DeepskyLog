@@ -7,7 +7,7 @@
 <?php if($level === 'error'): ?>
 # <?php echo app('translator')->getFromJson('Whoops!'); ?>
 <?php else: ?>
-# <?php echo app('translator')->getFromJson('Hello!'); ?>
+# <?php echo app('translator')->getFromJson(_i('Hello!')); ?>
 <?php endif; ?>
 <?php endif; ?>
 
@@ -48,21 +48,21 @@
 <?php echo e($salutation); ?>
 
 <?php else: ?>
-<?php echo app('translator')->getFromJson('Regards'); ?>,<br><?php echo e(config('app.name')); ?>
+<?php echo app('translator')->getFromJson(_i('Regards')); ?>,<br><?php echo e(config('app.name')); ?>
 
 <?php endif; ?>
 
 
 <?php if(isset($actionText)): ?>
-<?php $__env->startComponent('mail::subcopy'); ?>
+<?php $__env->slot('subcopy'); ?>
 <?php echo app('translator')->getFromJson(
-    "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
-    'into your web browser: [:actionURL](:actionURL)',
+    _i("If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below
+into your web browser: [:actionURL](:actionURL)"),
     [
         'actionText' => $actionText,
         'actionURL' => $actionUrl,
     ]
 ); ?>
-<?php echo $__env->renderComponent(); ?>
+<?php $__env->endSlot(); ?>
 <?php endif; ?>
 <?php echo $__env->renderComponent(); ?>
