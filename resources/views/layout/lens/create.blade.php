@@ -18,8 +18,6 @@
     @endif
 </h4>
 
-<div id="lens">
-
 @if ($update)
     <form role="form" action="/lens/{{ $lens->id }}" method="POST">
     @method('PATCH')
@@ -36,16 +34,8 @@
             <label for="catalog">{{ _i("Select an existing lens") }}</label>
 
             <div class="form">
-                <select2 class="form-control" @input="selectLens" name="lens" v-model="selected">
-                  {{--   @foreach (\App\Lens::All->unique('name') as $lensloop) --}}
-                    @foreach (\App\Lens::take(20)->get()->unique('name') as $lensloop)
-                        <option v-bind:value="{{ $lensloop->id }}"
-                        @if ($lens->id == $lensloop->id)
-                            selected="selected"
-                        @endif
-                        >{{ $lensloop->name }}</option>
-                    @endforeach
-                </select2>
+                <select id="lens" class="form-control">
+                </select>
             </div>
         </div>
 
@@ -54,16 +44,16 @@
 
         @endif
 
-        <div class="form-group">
+        <div class="form-group name">
             <label for="name">{{ _i("Name") }}</label>
-            <input v-model="name" type="text" required class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30" value="@if ($lens->name){{ $lens->name }}@else{{ old('name') }}@endif" />
+            <input type="text" required class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30" value="@if ($lens->name){{ $lens->name }}@else{{ old('name') }}@endif" />
             <span class="help-block">{{ _i("e.g. Televue 2x Barlow") }}</span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group factor">
             <label for="factor">{{ _i("Factor") }}</label>
             <div class="form-inline">
-                <input v-model="factor" type="number" min="0.01" max="9.99" required step="0.01" class="form-control {{ $errors->has('factor') ? 'is-invalid' : '' }}" maxlength="5" name="factor" size="5" value="@if ($lens->factor > 0){{ $lens->factor }}@else{{ old('factor') }}@endif" />
+                <input type="number" min="0.01" max="9.99" required step="0.01" class="form-control {{ $errors->has('factor') ? 'is-invalid' : '' }}" maxlength="5" name="factor" size="5" value="@if ($lens->factor > 0){{ $lens->factor }}@else{{ old('factor') }}@endif" />
             </div>
             <span class="help-block">{{ _i("> 1.0 for Barlow lenses, < 1.0 for shapley lenses.") }}</span>
         </div>
@@ -71,38 +61,45 @@
         <input type="submit" class="btn btn-success" name="add" value="@if ($update){{ _i("Change lens") }}@else{{ _i("Add lens") }}@endif" />
     </div>
 </form>
-</div>
 
 
 @endsection
 
 @push('scripts')
-<script>
-    new Vue({
-        el: '#lens',
-        data: {
-            factor: '',
-            selected: '',
-            name: '',
-        },
-        methods:{
-            selectLens() {
-                // create a closure to access component in the callback below
-                var self = this
-                $.getJSON('/getLensJson/' + this.selected, function(data) {
-                    self.name = data.name;
-                    self.factor = Math.round(data.factor * 100) / 100;
-                });
-            }
 
-        },
-        mounted: function() {
-            var self = this
-            this.$nextTick(function () {
-                self.name = '{{ $lens->name }}';
-                self.factor = {{ $lens->factor }};
-            });
-        }
-    })
+<script>
+    $(document).ready(function() {
+        $("select").select2({
+            ajax: {
+                // Do the autocompletion. Get all lenses with the requested characters.
+                url: '/lens/autocomplete',
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+                    return {
+                        results:  $.map(data, function (item) {
+                            return {
+                                text: item.name,
+                                id: item.id
+                            }
+                        })
+                    };
+                },
+            cache: true
+            }
+        });
+    });
+
+    $('#lens').on("select2:selecting", function(e) {
+        // Get the id of the selected lens
+        id = e.params.args.data.id;
+
+        var self = this
+        // Read the information of the lens
+        $.getJSON('/getLensJson/' + id, function(data) {
+            $('.name input').val(data.name);
+            $('.factor input').val(Math.round(data.factor * 100) / 100);
+        });
+    });
 </script>
 @endpush

@@ -17,6 +17,7 @@ use App\Lens;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\DataTables\LensDataTable;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Lens Controller.
@@ -45,9 +46,8 @@ class LensController extends Controller
      */
     public function index(LensDataTable $dataTable)
     {
-        return $this->_indexView($dataTable, "user");
+        return $this->_indexView($dataTable, 'user');
     }
-
 
     /**
      * Display a listing of the resource.
@@ -59,7 +59,7 @@ class LensController extends Controller
         if (auth()->user()->isAdmin()) {
             //$lenses = Lens::all();
 
-            return $this->_indexView($dataTable, "admin");
+            return $this->_indexView($dataTable, 'admin');
         } else {
             abort(401);
         }
@@ -218,5 +218,36 @@ class LensController extends Controller
 
             flash()->error(_i('Lens "%s" deleted', $lens->name));
         }
-        return redirect()->back();    }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Ajax request for select2.
+     *
+     * @param Request $request The request
+     *
+     * @return string the JSON response
+     */
+    public function dataAjax(Request $request)
+    {
+        $search = trim($request->q);
+
+        if (empty($search)) {
+            return \Response::json([]);
+        }
+
+        $data = [];
+
+        if ($request->has('q')) {
+            $data = DB::table('lens')
+                ->groupBy('name')
+                ->select('id', 'name')
+                ->where('name', 'LIKE', "%$search%")
+                ->limit(20)
+                ->get();
+        }
+
+        return response()->json($data);
+    }
 }

@@ -19,6 +19,8 @@ Route::post('/lang', 'LanguageController@changeLang');
 
 Route::post('/setSession', 'SessionController@createSession');
 
+Route::get('/lens/autocomplete', 'LensController@dataAjax');
+
 Route::get('/lens/create/{lens}', 'LensController@create')->middleware('verified');
 
 Route::get('/lens/admin', 'LensController@indexAdmin');

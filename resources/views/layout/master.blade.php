@@ -35,16 +35,15 @@
         <br />
         @include('layout.footer')
 
-        <!-- App scripts -->
-        @stack('scripts')
-
         <script>
             $(document).ready(function() {
-                $("select").select2();
+                $(".selection").select2();
             });
-            $('select').select2({
+            $('.selection').select2({
                 theme: 'bootstrap4',
             });
         </script>
+        <!-- App scripts -->
+        @stack('scripts')
     </body>
 </html>

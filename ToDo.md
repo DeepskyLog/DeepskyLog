@@ -2,12 +2,7 @@
 
 ## LENSES
 
-+ [ ] Create a new lens does not work: select2 should use ajax
 + [ ] Use server side processing (json) on users table
-
-## VUE
-
-+ [ ] Use Vue datepicker: https://github.com/mariomka/vue-datetime?ref=madewithvuejs.com
 
 ## TESTS
 

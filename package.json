@@ -38,7 +38,7 @@
         "jszip": "^3.2.1",
         "password-strength-meter": "^1.2.2",
         "pdfmake": "^0.1.54",
-        "select2": "^4.0.6-rc.1",
+        "select2": "^4.0.6",
         "select2-bootstrap4-theme": "^1.0.0"
     }
 }

@@ -3,7 +3,7 @@
         {{ _i('List') }}
     </span>&nbsp;&nbsp;&nbsp;&nbsp;
 
-    <select class="form-control" id="activateList" onchange="list=this.options[this.selectedIndex].value;">
+    <select class="form-control selection" id="activateList" onchange="list=this.options[this.selectedIndex].value;">
         <option value="/observingList/activate/none">No list</option>
         <optgroup label="Personal observing lists">
             <option selected value="/observingList/activate/list test">list test</option>

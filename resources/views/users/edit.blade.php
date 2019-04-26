@@ -24,7 +24,7 @@
     <div class="form-group">
         <label for="type">{{ _i("Role") }}</label>
         <div class="form">
-            <select class="form-control" name="type">
+            <select class="form-control selection" name="type">
                 @if ($user->type == "admin")
                     <option>default</option>
                     <option selected="selected">admin</option>
