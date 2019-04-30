@@ -26,7 +26,7 @@
     </a>
     <br /><br />
 
-    {!! $dataTable->table() !!}
+    {!! $dataTable->table(['class' => 'table table-sm table-striped table-hover']) !!}
 
 @endsection
 

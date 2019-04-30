@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\DB;
 class LensController extends Controller
 {
     /**
-     * Only make sure the lens pages can be seen if the user is authenticated
+     * Make sure the lens pages can be seen if the user is authenticated
      * and verified.
      */
     public function __construct()
@@ -41,6 +41,8 @@ class LensController extends Controller
 
     /**
      * Display a listing of the resource.
+     *
+     * @param LensDataTable $dataTable The lens datatable
      *
      * @return \Illuminate\Http\Response
      */
@@ -52,6 +54,8 @@ class LensController extends Controller
 
     /**
      * Display a listing of the resource.
+     *
+     * @param LensDataTable $dataTable The lens datatable
      *
      * @return \Illuminate\Http\Response
      */
@@ -69,8 +73,8 @@ class LensController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Array  $lenses An array with all lenses
-     * @param String $user   user for a normal user, admin for an admin
+     * @param LensDataTable $dataTable The lens datatable
+     * @param String        $user      user for a normal user, admin for an admin
      *
      * @return \Illuminate\Http\Response
      */

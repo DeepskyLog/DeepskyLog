@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * User Controller.
+ *
+ * PHP Version 7
+ *
+ * @category Authentication
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -13,8 +25,26 @@ use Spatie\Permission\Models\Permission;
 //Enables us to output flash messaging
 use Session;
 
-class UserController extends Controller {
+// For the datatables
+use App\DataTables\UserDataTable;
 
+/**
+ * User Controller.
+ *
+ * PHP Version 7
+ *
+ * @category Authentication
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
+class UserController extends Controller
+{
+    /**
+     * Make sure the user pages can be seen if the user is authenticated,
+     * administrator and verified.
+     */
     public function __construct()
     {
         // isAdmin middleware lets only users with a
@@ -25,13 +55,13 @@ class UserController extends Controller {
     /**
      * Display a listing of the resource.
      *
+     * @param LensDataTable $dataTable The user datatable
+     *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(UserDataTable $dataTable)
     {
-        //Get all users and pass it to the view
-        $users = User::all();
-        return view('users.index')->with('users', $users);
+        return $dataTable->render('users.index');
     }
 
     /**
@@ -47,7 +77,7 @@ class UserController extends Controller {
     }
 
     /**
-      * Show the form for editing the specified resource.
+     * Show the form for editing the specified resource.
      *
      * @param int $id The user id to edit.
      *

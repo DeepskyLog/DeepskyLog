@@ -9,6 +9,9 @@
         <i class="fa fa-users"></i> {{ _i('User Administration') }}
     </h3>
     <hr>
+
+    {!! $dataTable->table(['class' => 'table table-sm table-striped table-hover']) !!}
+{{--
     <table class="table table-sm table-striped table-hover" id="users_table">
         <thead>
             <tr>
@@ -52,12 +55,11 @@
         </tbody>
 
     </table>
-
+ --}}
 </div>
 
 @endsection
 
 @push('scripts')
-<script>
-</script>
+    {!! $dataTable->scripts() !!}
 @endpush

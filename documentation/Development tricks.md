@@ -179,3 +179,19 @@ php artisan datatables:make --model Lens
 ```
 
 Adapt the app/DataTables/LensDatatable.php file.
+
+To show the datatable:
+
+```php
+    {!! $dataTable->table(['class' => 'table table-sm table-striped table-hover']) !!}
+```
+
+and
+
+```php
+@push('scripts')
+
+{!! $dataTable->scripts() !!}
+
+@endpush
+```
