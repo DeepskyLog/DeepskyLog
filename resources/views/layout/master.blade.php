@@ -9,7 +9,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
         <link type="text/css" rel="stylesheet" href="{{ mix('css/app.css') }}">
-        <script type="text/javascript" src="{{ asset('/js/app.js') }}"></script>
 
     	<title>@yield('title', 'DeepskyLog')</title>
     </head>
@@ -34,6 +33,8 @@
 
         <br />
         @include('layout.footer')
+
+        <script type="text/javascript" src="{{ asset('/js/app.js') }}"></script>
 
         <script>
             $(document).ready(function() {

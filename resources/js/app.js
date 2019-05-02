@@ -30,18 +30,33 @@ require( 'datatables.net-plugins/sorting/natural.js');
 
 require( 'password-strength-meter/dist/password.min.js' );
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+// Filepond
+window.FilePondPluginImagePreview = require('filepond-plugin-image-preview');
+window.FilePondPluginFileValidateType = require('filepond-plugin-file-validate-type');
+window.FilePondPluginImageExifOrientation = require('filepond-plugin-image-exif-orientation');
+window.FilePondPluginImageCrop = require('filepond-plugin-image-crop');
+window.FilePondPluginImageResize = require('filepond-plugin-image-resize');
+window.FilePondPluginImageTransform = require('filepond-plugin-image-transform');
+window.FilePond = require('filepond/dist/filepond.min.js');
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+//import * as FilePond from 'filepond';
 
-//Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+//window.FilePond = require('filepond/dist/filepond.min.js');
+
+/*import * as FilePond from 'filepond';
+
+// Create a multi file upload component
+const pond = FilePond.create({
+    multiple: false,
+    name: 'filepond'
+});
+
+// Add it to the DOM
+document.body.appendChild(pond.element);
+
+*/
+//var FilePond = require('filepond/dist/filepond.min.js');
+//window.FilePondPluginImagePreview = require('filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js');
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

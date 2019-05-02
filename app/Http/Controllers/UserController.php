@@ -77,6 +77,23 @@ class UserController extends Controller
     }
 
     /**
+     * Display the settings page for the observer.
+     *
+     * @param int $id The user id to show.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function settings($id)
+    {
+        if (auth()->user()->id == $id) {
+            $user = auth()->user();
+            return view('users.settings', ['user' => $user]);
+        } else {
+            abort(401);
+        }
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param int $id The user id to edit.

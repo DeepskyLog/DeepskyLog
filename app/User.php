@@ -18,6 +18,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\DeepskyLogVerificationNotification;
 use App\Notifications\DeepskyLogResetPassword;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
 /**
  * User eloquent model.
@@ -28,9 +30,10 @@ use App\Notifications\DeepskyLogResetPassword;
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
     use Notifiable;
+    use HasMediaTrait;
 
     const ADMIN_TYPE = 'admin';
     const DEFAULT_TYPE = 'default';
