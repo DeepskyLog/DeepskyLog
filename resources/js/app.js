@@ -16,10 +16,6 @@ window.$ = window.jQuery = require( 'jquery' );
 
 import 'jquery-ui/ui/widgets/datepicker.js';
 
-require( 'jszip' );
-var pdfMake = require('pdfmake/build/pdfmake.js');
-var pdfFonts = require('pdfmake/build/vfs_fonts.js');
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 require( 'datatables.net' );
 require( 'datatables.net-bs4' );
 require( 'datatables.net-buttons/js/buttons.colVis.js' );
@@ -27,6 +23,15 @@ require( 'datatables.net-buttons/js/buttons.html5.js' );
 require( 'datatables.net-colreorder-bs4' );
 require( 'datatables.net-buttons/js/buttons.print.js' );
 require( 'datatables.net-plugins/sorting/natural.js');
+
+import jsZip from 'jszip';
+
+// This line was the one missing
+window.JSZip = jsZip;
+
+var pdfMake = require('pdfmake/build/pdfmake.js');
+var pdfFonts = require('pdfmake/build/vfs_fonts.js');
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 require( 'password-strength-meter/dist/password.min.js' );
 
@@ -38,25 +43,6 @@ window.FilePondPluginImageCrop = require('filepond-plugin-image-crop');
 window.FilePondPluginImageResize = require('filepond-plugin-image-resize');
 window.FilePondPluginImageTransform = require('filepond-plugin-image-transform');
 window.FilePond = require('filepond/dist/filepond.min.js');
-
-//import * as FilePond from 'filepond';
-
-//window.FilePond = require('filepond/dist/filepond.min.js');
-
-/*import * as FilePond from 'filepond';
-
-// Create a multi file upload component
-const pond = FilePond.create({
-    multiple: false,
-    name: 'filepond'
-});
-
-// Add it to the DOM
-document.body.appendChild(pond.element);
-
-*/
-//var FilePond = require('filepond/dist/filepond.min.js');
-//window.FilePondPluginImagePreview = require('filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js');
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

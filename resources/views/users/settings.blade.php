@@ -35,7 +35,7 @@
 
         <br />
         <label class="col-form-label"> {{ _i("Change profile picture") }}</label>
-        <input type="file" class="filepond">
+        <input type="file" id="filepond" class="filepond">
         Test Personal
     </div>
 
@@ -77,15 +77,26 @@
     FilePond.setOptions({
         acceptedFileTypes: ['image/*'],
         server: {
-            url: '/upload',
+            url: '/user/upload',
             process: {
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            },
+            revert: {
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 }
             }
+
         }
     });
     const inputElement = document.querySelector('input[type="file"]');
-    const pond = FilePond.create( inputElement );
+    const pond = FilePond.create( inputElement, { files: [
+        {
+            // the server file reference
+            source: '/user/getImage',
+        }
+    ] } );
 </script>
 @endpush

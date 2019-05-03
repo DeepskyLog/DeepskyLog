@@ -159,4 +159,52 @@ class UserController extends Controller
 
         return redirect()->route('users.index');
     }
+
+    /**
+     * Upload the image for the observer.
+     *
+     * @param Request $request The request from filePond
+     *
+     * @return None
+     */
+    public function upload(Request $request)
+    {
+        User::find(auth()->user()->id)
+            ->addMediaFromRequest('filepond')
+            ->usingFileName(auth()->user()->id . '.png')
+            ->toMediaCollection('observer');
+    }
+
+    /**
+     * Delete the image for the observer.
+     *
+     * @return None
+     */
+    public function delete()
+    {
+        User::find(auth()->user()->id)
+            ->getFirstMedia('observer')
+            ->delete();
+    }
+
+    /**
+     * Returns the image of the observer
+     *
+     * @return MediaObject The image of the observer.
+     */
+    public function getImage()
+    {
+        if (User::find(auth()->user()->id)->hasMedia('observer')) {
+            return User::find(auth()->user()->id)
+                ->getFirstMedia('observer');
+        } else {
+            User::find(auth()->user()->id)
+            ->addMediaFromUrl(asset('img/profile.png'))
+            ->usingFileName(auth()->user()->id . '.png')
+            ->toMediaCollection('observer');
+
+            return User::find(auth()->user()->id)
+                ->getFirstMedia('observer');
+        }
+    }
 }

@@ -93,6 +93,18 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
+     * Make sure to only have one picture for the observer.
+     *
+     * @return None
+     */
+    public function registerMediaCollections()
+    {
+        $this
+            ->addMediaCollection('observer')
+            ->singleFile();
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

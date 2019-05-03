@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "39a30b599fc322c61ad9220c015ded30",
+    "content-hash": "e5b128cf2bef183402865c635265a8c5",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -3550,69 +3550,6 @@
             "time": "2018-10-13T15:16:03+00:00"
         },
         {
-            "name": "qoraiche/laravel-mail-editor",
-            "version": "v1.1.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Qoraiche/laravel-mail-editor.git",
-                "reference": "7ea02fecbf6cc983f1647280de5637b47cf50d73"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Qoraiche/laravel-mail-editor/zipball/7ea02fecbf6cc983f1647280de5637b47cf50d73",
-                "reference": "7ea02fecbf6cc983f1647280de5637b47cf50d73",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "~5"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.1",
-                "orchestra/testbench": "~3.0",
-                "phpunit/phpunit": "~7.0",
-                "sempro/phpunit-pretty-print": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "qoraiche\\mailEclipse\\mailEclipseServiceProvider"
-                    ],
-                    "aliases": {
-                        "mailEclipse": "qoraiche\\mailEclipse\\Facades\\mailEclipse"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "qoraiche\\mailEclipse\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "yassine qoraiche",
-                    "email": "qoraicheofficiel@hotmail.com",
-                    "homepage": "https://github.com/qoraiche"
-                }
-            ],
-            "description": "Laravel Mailable Editor",
-            "homepage": "https://github.com/Qoraiche/laravel-mail-editor",
-            "keywords": [
-                "laravel",
-                "laravel-mail",
-                "laravel-mailable",
-                "mailEclipse",
-                "mailable",
-                "mailable-editor",
-                "markdown"
-            ],
-            "time": "2019-04-12T17:18:27+00:00"
-        },
-        {
             "name": "ralouphie/getallheaders",
             "version": "2.0.5",
             "source": {
@@ -4585,24 +4522,24 @@
         },
         {
             "name": "spatie/pdf-to-image",
-            "version": "1.2.2",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/pdf-to-image.git",
-                "reference": "9a5cb264a99e87e010c65d4ece03b51f821d55bd"
+                "reference": "f33afc92ff7bff272fa6a9ba1cc335e96c57eb26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/pdf-to-image/zipball/9a5cb264a99e87e010c65d4ece03b51f821d55bd",
-                "reference": "9a5cb264a99e87e010c65d4ece03b51f821d55bd",
+                "url": "https://api.github.com/repos/spatie/pdf-to-image/zipball/f33afc92ff7bff272fa6a9ba1cc335e96c57eb26",
+                "reference": "f33afc92ff7bff272fa6a9ba1cc335e96c57eb26",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.0"
+                "ext-imagick": "*",
+                "php": "^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.*",
-                "scrutinizer/ocular": "~1.1"
+                "phpunit/phpunit": "^6.2"
             },
             "type": "library",
             "autoload": {
@@ -4631,7 +4568,7 @@
                 "pdf-to-image",
                 "spatie"
             ],
-            "time": "2016-12-14T15:37:00+00:00"
+            "time": "2018-07-02T09:30:32+00:00"
         },
         {
             "name": "spatie/temporary-directory",

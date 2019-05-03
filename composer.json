@@ -23,10 +23,10 @@
         "petercoles/multilingual-language-list": "^1.1",
         "phpunit/php-code-coverage": "^7.0",
         "phpunit/phpunit": "^8.1",
-        "qoraiche/laravel-mail-editor": "^1.1",
         "sebastian/global-state": "^3.0",
         "spatie/laravel-flash": "^1.2",
         "spatie/laravel-medialibrary": "^7.0.0",
+        "spatie/pdf-to-image": "^1.8",
         "yajra/laravel-datatables": "^1.0",
         "yajra/laravel-datatables-oracle": "~9.0",
         "zerospam/laravel-gettext": "^7.1"

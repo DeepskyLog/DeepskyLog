@@ -10,6 +10,8 @@
 
         <link type="text/css" rel="stylesheet" href="{{ mix('css/app.css') }}">
 
+        <script type="text/javascript" src="{{ asset('/js/app.js') }}"></script>
+
     	<title>@yield('title', 'DeepskyLog')</title>
     </head>
 

@@ -35,4 +35,10 @@ Auth::routes(['verify' => true]);
 
 Route::get('/user/settings/{id}', 'UserController@settings');
 
+Route::post('/user/upload', 'UserController@upload');
+
+Route::delete('/user/upload', 'UserController@delete');
+
+Route::get('/user/getImage', 'UserController@getImage');
+
 Route::resource('users', 'UserController')->middleware('isAdmin')->except(['create', 'store']);
