@@ -12,6 +12,11 @@
     {{ Form::model($user, array('route' => array('users.update', $user->id), 'method' => 'PUT')) }}{{-- Form model binding to automatically populate our fields with user data --}}
 
     <div class="form-group">
+        {{ Form::label('username', _i('Username')) }}
+        {{ Form::text('username', null, ['class' => 'form-control', 'readonly' => 'true']) }}
+    </div>
+
+    <div class="form-group">
         {{ Form::label('name', _i('Name')) }}
         {{ Form::text('name', null, array('class' => 'form-control')) }}
     </div>

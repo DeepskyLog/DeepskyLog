@@ -40,6 +40,9 @@ class UserDataTable extends DataTable
         return datatables()
             ->eloquent($this->query())
             ->editColumn(
+                'username',
+                '<a href="/users/{{ $id }}/edit">{{ $username }}</a>'
+            )->editColumn(
                 'name',
                 '<a href="/users/{{ $id }}/edit">{{ $name }}</a>'
             )->editColumn(
@@ -76,7 +79,7 @@ class UserDataTable extends DataTable
                     return count($user->lenses);
                 }
             )->rawColumns(
-                ['name', 'email', 'delete']
+                ['username', 'name', 'email', 'delete']
             )->make(true);
     }
 
@@ -129,6 +132,10 @@ class UserDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            ['username' => 'username',
+                'title' => _i('Username'),
+                'data' => 'username'
+            ],
             ['name' => 'name',
                 'title' => _i('Name'),
                 'data' => 'name'

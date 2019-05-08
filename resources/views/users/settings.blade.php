@@ -6,10 +6,6 @@
 
 <h3>Settings for {{ $user->name }}</h3>
 
-<form role="form" action="/user/settings/{{ $user->id }}" method="POST">
-    @csrf
-    @method('PATCH')
-
     <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
         <li class="active nav-item">
             <a class="nav-link active" href="#info" data-toggle="tab">
@@ -39,9 +35,36 @@
 
             <br />
             <label class="col-form-label"> {{ _i("Change profile picture") }}</label>
-            <input type="file" name="fileToUpload" id="filepond" class="filepond">
-            Test Personal
+            <input type="file" id="filepond" class="filepond">
 
+            <form role="form" action="/user/settings/{{ $user->id }}" method="POST">
+                @csrf
+                @method('PATCH')
+
+                <div class="form-group username">
+                    <label for="name">{{ _i("Username") }}</label>
+                    <input readonly type="text" required class="form-control {{ $errors->has('username') ? 'is-invalid' : '' }}" maxlength="64" name="username" size="30" value="{{ $user->username }}"/>
+                </div>
+
+                <div class="form-group email">
+                    <label for="name">{{ _i("Email") }}</label>
+                    <input type="text" required class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" maxlength="64" name="email" size="30" value="{{ $user->email }}"/>
+                </div>
+
+                <div class="form-group name">
+                    <label for="name">{{ _i("Name") }}</label>
+                    <input type="text" required class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30" value="{{ $user->name }}" />
+                </div>
+
+                <div class="form-group form-check sendMail">
+                    <input type="checkbox" class="form-check-input {{ $errors->has('sendMail') ? 'is-invalid' : '' }}" name="sendMail" @if ($user->sendMail)
+                        checked
+                    @endif />
+                    <label class="form-check-label" for="name">{{ _i("Send emails") }}</label>
+                </div>
+
+                <input type="submit" class="btn btn-success" name="add" value="{{ _i("Update") }}" />
+            </form>
         </div>
 
         <!-- Observing tab -->
@@ -62,15 +85,12 @@
         </div>
     </div>
 
-    <input type="submit" class="btn btn-success" name="add" value="{{ _i("Update") }}" />
-</form>
-
 @endsection
 
 
 @push('scripts')
 <script>
-$(function(){
+/*$(function(){
 
     // First register any plugins
     $.fn.filepond.registerPlugin(FilePondPluginFileValidateType);
@@ -85,20 +105,28 @@ $(function(){
     });
 
     // Turn input element into a pond
-    $('.filepond').filepond();
-    
-    // Listen for addfile event
-    $('.filepond').on('FilePond:addfile', function(e) {
-        console.log('file added event', e);
-        // TODO: Set the file to the $_POST of $_FILES (request->...)
+    $('.filepond').filepond({
+        server:{
+            url: '/user/upload',
+            process: {
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            },
+            revert: {
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            }
+        }
     });
 
     // Manually add a file using the addfile method
-    $('.filepond').first().filepond('addFile', '/user/getImage');
+    //$('.filepond').first().filepond('addFile', '/user/getImage');
 });
+*/
 
-
-/*    FilePond.registerPlugin(
+    FilePond.registerPlugin(
         FilePondPluginFileValidateType,
         FilePondPluginImageExifOrientation,
         FilePondPluginImagePreview,
@@ -131,6 +159,5 @@ $(function(){
             source: '/user/getImage',
         }
     ] } );
-    */
 </script>
 @endpush

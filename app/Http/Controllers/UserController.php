@@ -15,13 +15,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\User;
 use Auth;
-
 //Importing laravel-permission models
 use Spatie\Permission\Models\Permission;
-
 //Enables us to output flash messaging
 use Session;
 
@@ -67,7 +64,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id The user id to show.
+     * @param int $id the user id to show
      *
      * @return \Illuminate\Http\Response
      */
@@ -79,7 +76,7 @@ class UserController extends Controller
     /**
      * Display the settings page for the observer.
      *
-     * @param int $id The user id to show.
+     * @param int $id the user id to show
      *
      * @return \Illuminate\Http\Response
      */
@@ -87,6 +84,7 @@ class UserController extends Controller
     {
         if (auth()->user()->id == $id) {
             $user = auth()->user();
+
             return view('users.settings', ['user' => $user]);
         } else {
             abort(401);
@@ -96,7 +94,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id The user id to edit.
+     * @param int $id the user id to edit
      *
      * @return \Illuminate\Http\Response
      */
@@ -123,14 +121,16 @@ class UserController extends Controller
 
         //Validate name, email and password fields
         $this->validate(
-            $request, [
-                'name'=>'required|max:120',
-                'email'=>'required|email|unique:users,email,'.$id,
-                'type'=>'required'
+            $request,
+            [
+                'email' => 'required|unique|min:2',
+                'name' => 'required|max:120',
+                'email' => 'required|email|unique:users,email,' . $id,
+                'type' => 'required'
             ]
         );
         // Retrieve the name, email and password fields
-        $input = $request->only(['name', 'email', 'type']);
+        $input = $request->only(['username', 'name', 'email', 'type']);
 
         $user->type = $request['type'];
 
@@ -144,7 +144,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id The user id of the user to delete.
+     * @param int $id the user id of the user to delete
      *
      * @return \Illuminate\Http\Response
      */
@@ -188,9 +188,9 @@ class UserController extends Controller
     }
 
     /**
-     * Returns the image of the observer
+     * Returns the image of the observer.
      *
-     * @return MediaObject The image of the observer.
+     * @return MediaObject the image of the observer
      */
     public function getImage()
     {
@@ -208,17 +208,36 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Patch the settings for the observer.
+     *
+     * @param Request $request The request object with all information.
+     *
+     * @return None
+     */
     public function patchSettings(Request $request, $id)
     {
-        dd($request->fileToUpload);
+        // The authenticated user
+        $user = auth()->user();
 
-        User::find(auth()->user()->id)
-        ->addMediaFromRequest('filepond')
-        ->usingFileName(auth()->user()->id . '.png')
-        ->toMediaCollection('observer');
+        // Update the email
+        if ($request->has('email')) {
+            $user->update(['email' => $request->get('email')]);
+        }
 
-        //Get user specified by id
-        $user = User::findOrFail($id);
+        // Update the name
+        if ($request->has('name')) {
+            $user->update(['name' => $request->get('name')]);
+        }
 
+        if ($request->has('username')) {
+            if ($request->has('sendMail')) {
+                $user->update(['sendMail' => 1]);
+            } else {
+                $user->update(['sendMail' => '0']);
+            }
+        }
+
+        return redirect('/user/settings/' . $id);
     }
 }
