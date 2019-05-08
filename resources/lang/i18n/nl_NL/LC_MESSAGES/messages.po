@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-04-18 15:02+0200\n"
-"PO-Revision-Date: 2019-04-18 15:02+0200\n"
+"POT-Creation-Date: 2019-05-08 10:14+0200\n"
+"PO-Revision-Date: 2019-05-08 10:15+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: nl_NL\n"
@@ -22,366 +22,96 @@ msgstr ""
 "X-Poedit-SearchPath-5: ../storage/framework/messages\n"
 
 #: ../resources/lang/en/auth.php:16
-#: ../storage/framework/messages/c8e545992c6c1b362a3b2a8915d5f59fe8a6084e.php.php:16
+#: ../storage/framework/messages/2af49298faa8cfdfc1fb4bfb6f6d54225109132e.php.php:16
 msgid "These credentials do not match our records."
 msgstr "Deze referenties komen niet overeen met onze gegevens."
 
 #: ../resources/lang/en/auth.php:17
-#: ../storage/framework/messages/c8e545992c6c1b362a3b2a8915d5f59fe8a6084e.php.php:17
+#: ../storage/framework/messages/2af49298faa8cfdfc1fb4bfb6f6d54225109132e.php.php:17
 msgid "Too many login attempts. Please try again in :seconds seconds."
 msgstr "Te veel aanmeldingspogingen. Probeer het opnieuw in :seconds seconden."
 
 #: ../resources/lang/en/pagination.php:16
-#: ../storage/framework/messages/dd67a014e36cb041ed5792d3fa456f797c64983c.php.php:16
+#: ../storage/framework/messages/5a178a6d12abbe3a38fa43bee3fd8aabe1ba05bc.php.php:16
 msgid "Previous"
 msgstr "Vorige"
 
 #: ../resources/lang/en/pagination.php:17
-#: ../storage/framework/messages/dd67a014e36cb041ed5792d3fa456f797c64983c.php.php:17
+#: ../storage/framework/messages/5a178a6d12abbe3a38fa43bee3fd8aabe1ba05bc.php.php:17
 msgid "Next"
 msgstr "Volgende"
 
 #: ../resources/lang/en/passwords.php:16
-#: ../storage/framework/messages/969355e15cf4b4d4255e5599f4094f5fe82934ad.php.php:16
+#: ../storage/framework/messages/7d42d6d7edfb5a81cf8a35b9000ddb579dbf3d29.php.php:16
 msgid "Passwords must be at least six characters and match the confirmation."
 msgstr ""
 "Wachtwoorden moeten ten minste zes tekens bevatten en overeenkomen met de "
 "bevestiging."
 
 #: ../resources/lang/en/passwords.php:17
-#: ../storage/framework/messages/969355e15cf4b4d4255e5599f4094f5fe82934ad.php.php:17
+#: ../storage/framework/messages/7d42d6d7edfb5a81cf8a35b9000ddb579dbf3d29.php.php:17
 msgid "Your password has been reset!"
 msgstr "Je wachtwoord is hersteld!"
 
 #: ../resources/lang/en/passwords.php:18
-#: ../storage/framework/messages/969355e15cf4b4d4255e5599f4094f5fe82934ad.php.php:18
+#: ../storage/framework/messages/7d42d6d7edfb5a81cf8a35b9000ddb579dbf3d29.php.php:18
 msgid "We have e-mailed your password reset link!"
 msgstr ""
 "We hebben een e-mail verstuurd met een herstel link voor uw wachtwoord!"
 
 #: ../resources/lang/en/passwords.php:19
-#: ../storage/framework/messages/969355e15cf4b4d4255e5599f4094f5fe82934ad.php.php:19
+#: ../storage/framework/messages/7d42d6d7edfb5a81cf8a35b9000ddb579dbf3d29.php.php:19
 msgid "This password reset token is invalid."
 msgstr "Dit token voor wachtwoord herstel is ongeldig."
 
 #: ../resources/lang/en/passwords.php:20
-#: ../storage/framework/messages/969355e15cf4b4d4255e5599f4094f5fe82934ad.php.php:20
+#: ../storage/framework/messages/7d42d6d7edfb5a81cf8a35b9000ddb579dbf3d29.php.php:20
 msgid "We can't find a user with that e-mail address."
 msgstr "We kunnen geen gebruiker vinden met dit e-mail adres."
 
 #: ../resources/views/auth/passwords/reset.blade.php:75
 #: ../resources/views/auth/register.blade.php:196
-#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:75
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:198
+#: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:75
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:198
 msgid "The password is too short"
 msgstr "Het wachtwoord is te kort"
 
 #: ../resources/views/auth/passwords/reset.blade.php:76
 #: ../resources/views/auth/register.blade.php:197
-#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:76
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:199
+#: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:76
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:199
 msgid "Weak; try combining letters & numbers"
 msgstr "Zwak; Probeer een combinatie van letters & nummers"
 
 #: ../resources/views/auth/passwords/reset.blade.php:77
 #: ../resources/views/auth/register.blade.php:198
-#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:77
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:200
+#: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:77
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:200
 msgid "Medium; try using special characters"
 msgstr "Medium; Probeer speciale tekens te gebruiken"
 
 #: ../resources/views/auth/passwords/reset.blade.php:78
 #: ../resources/views/auth/register.blade.php:199
-#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:78
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:201
+#: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:78
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:201
 msgid "Strong password"
 msgstr "Sterk wachtwoord"
 
 #: ../resources/views/auth/passwords/reset.blade.php:79
 #: ../resources/views/auth/register.blade.php:200
-#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:79
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:202
+#: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:79
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:202
 msgid "The password contains the username"
 msgstr "Het wachtwoord bevat de gebruikersnaam"
 
 #: ../resources/views/auth/passwords/reset.blade.php:80
 #: ../resources/views/auth/register.blade.php:201
-#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:80
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:203
+#: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:80
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:203
 msgid "Type your password"
 msgstr "Typ uw wachtwoord"
 
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:140
-#: Http/Controllers/LensController.php:140
-msgid "observation"
-msgid_plural "observations"
-msgstr[0] "waarneming"
-msgstr[1] "waarnemingen"
-
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:143
-#: Http/Controllers/LensController.php:143
-msgid "No observations"
-msgstr "Geen waarnemingen"
-
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:234
-#: Http/Controllers/LensController.php:234
-#, php-format
-msgid "Lens \"%s\" created"
-msgstr "Lens \"%s\" toegevoegd"
-
-#: ../storage/framework/messages/0296e3581f5421441e00c3c26eb3dee21b80bce4.php.php:293
-#: Http/Controllers/LensController.php:293
-#, php-format
-msgid "Lens \"%s\" updated"
-msgstr "Lens \"%s\" bijgewerkt"
-
-#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:2
-#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:11
-#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:58
-#: ../storage/framework/messages/72d874730f45f49523e5c39a7eeefaef085d66a1.php.php:2
-#: ../storage/framework/messages/72d874730f45f49523e5c39a7eeefaef085d66a1.php.php:11
-#: ../storage/framework/messages/da684ef420c21f0e37762cdf9246187637dfec6d.php.php:25
-#: Notifications/DeepskyLogResetPassword.php:25
-msgid "Reset Password"
-msgstr "Herstel wachtwoord"
-
-#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:20
-#: ../storage/framework/messages/72d874730f45f49523e5c39a7eeefaef085d66a1.php.php:25
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:34
-#: ../storage/framework/messages/d0cddd00017ce1607ddfba20b18ed6a3366d4740.php.php:17
-msgid "E-Mail Address"
-msgstr "E-mail adres"
-
-#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:34
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:48
-#: ../storage/framework/messages/d0cddd00017ce1607ddfba20b18ed6a3366d4740.php.php:31
-msgid "Password"
-msgstr "Wachtwoord"
-
-#: ../storage/framework/messages/09eaba1dd7a726e23de92c6b52ce4aa4b0a3181f.php.php:48
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:62
-msgid "Confirm Password"
-msgstr "Bevestig wachtwoord"
-
-#: ../storage/framework/messages/0d0a572368ca485c1b9569b2aa72fb609484b52a.php.php:12
-msgid "Database based on Eye&Telescope and Tycho2+ & USNO-UCAC3"
-msgstr "Database gebaseerd op Eye&telescoop en Tycho2 + & USNO-UCAC3"
-
-#: ../storage/framework/messages/0d0a572368ca485c1b9569b2aa72fb609484b52a.php.php:14
-msgid "Privacy Policy"
-msgstr "Privacybeleid"
-
-#: ../storage/framework/messages/11b2f33947c3949e9560bb8d24e494806dbbdfb0.php.php:2
-#: ../storage/framework/messages/11b2f33947c3949e9560bb8d24e494806dbbdfb0.php.php:11
-msgid "Verify Your Email Address"
-msgstr "Verifiëer uw e-mail adres"
-
-#: ../storage/framework/messages/11b2f33947c3949e9560bb8d24e494806dbbdfb0.php.php:16
-msgid "A fresh verification link has been sent to your email address."
-msgstr "Er is een nieuwe verificatielink naar uw e-mail adres verzonden."
-
-#: ../storage/framework/messages/11b2f33947c3949e9560bb8d24e494806dbbdfb0.php.php:21
-msgid "Before proceeding, please check your email for a verification link."
-msgstr "Controleer uw e-mail voor een verificatielink voordat u verder gaat."
-
-#: ../storage/framework/messages/11b2f33947c3949e9560bb8d24e494806dbbdfb0.php.php:26
-#, php-format
-msgid "If you did not receive the email, %sclick here to request another%s."
-msgstr ""
-"Als u de e-mail niet hebt ontvangen, %sklik dan hier om een andere aan te "
-"vragen%s."
-
-#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:26
-#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:29
-#: Notifications/DeepskyLogVerificationNotification.php:26
-#: Notifications/DeepskyLogVerificationNotification.php:29
-msgid "Verify Email Address"
-msgstr "Verifieer uw e-mailadres"
-
-#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:27
-#: Notifications/DeepskyLogVerificationNotification.php:27
-msgid "Please click the button below to verify your email address."
-msgstr "Klik op de onderstaande knop om uw e-mail adres te verifiëren."
-
-#: ../storage/framework/messages/1268c7f48115aa29bf72d93078d047070d1eda68.php.php:32
-#: Notifications/DeepskyLogVerificationNotification.php:32
-msgid "If you did not create an account, no further action is required."
-msgstr "Als u geen account hebt aangemaakt, is er geen verdere actie vereist."
-
-#: ../storage/framework/messages/15ece7769cd77584750703b6963cba28acdfdef0.php.php:3
-msgid "List"
-msgstr "Lijst"
-
-#: ../storage/framework/messages/15ece7769cd77584750703b6963cba28acdfdef0.php.php:18
-msgid "Manage list"
-msgstr "Beheer lijst"
-
-#: ../storage/framework/messages/195d1e896887b87bcd433d503396127103950932.php.php:2
-msgid "Too Many Requests"
-msgstr "Teveel verzoeken op onze pagina"
-
-#: ../storage/framework/messages/195d1e896887b87bcd433d503396127103950932.php.php:9
-msgid "Sorry, you are making too many requests to our servers."
-msgstr "Sorry, je maakt te veel verzoeken op onze servers."
-
-#: ../storage/framework/messages/1ca27c88c2a3f8f7417a55b8062c66705b0f179e.php.php:3
-msgid "Add"
-msgstr "Toevoegen"
-
-#: ../storage/framework/messages/1ca27c88c2a3f8f7417a55b8062c66705b0f179e.php.php:7
-msgid "Observation"
-msgstr "Waarneming"
-
-#: ../storage/framework/messages/1ca27c88c2a3f8f7417a55b8062c66705b0f179e.php.php:9
-msgid "Observing list"
-msgstr "Waarneemlijst"
-
-#: ../storage/framework/messages/1ca27c88c2a3f8f7417a55b8062c66705b0f179e.php.php:10
-msgid "Session"
-msgstr "Sessie"
-
-#: ../storage/framework/messages/1ca27c88c2a3f8f7417a55b8062c66705b0f179e.php.php:12
-msgid "Instrument"
-msgstr "Instrument"
-
-#: ../storage/framework/messages/1ca27c88c2a3f8f7417a55b8062c66705b0f179e.php.php:13
-msgid "Location"
-msgstr "Waarneemplaats"
-
-#: ../storage/framework/messages/1ca27c88c2a3f8f7417a55b8062c66705b0f179e.php.php:14
-msgid "Eyepiece"
-msgstr "Oculair"
-
-#: ../storage/framework/messages/1ca27c88c2a3f8f7417a55b8062c66705b0f179e.php.php:15
-msgid "Filter"
-msgstr "Filter"
-
-#: ../storage/framework/messages/1ca27c88c2a3f8f7417a55b8062c66705b0f179e.php.php:16
-#: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:15
-msgid "Lens"
-msgstr "Lens"
-
-#: ../storage/framework/messages/1ca27c88c2a3f8f7417a55b8062c66705b0f179e.php.php:18
-msgid "Object"
-msgstr "Object"
-
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:6
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:18
-msgid "Add a new lens"
-msgstr "Voeg een nieuwe lens toe"
-
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:34
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:73
-msgid "Change lens"
-msgstr "Verander lens"
-
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:34
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:73
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:40
-msgid "Add lens"
-msgstr "Voeg lens toe"
-
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:38
-msgid "Select an existing lens"
-msgstr "Selecteer bestaande lens"
-
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:53
-msgid "or specify your lens details manually"
-msgstr "of voeg de gegevens manueel in"
-
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:60
-#: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:14
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:47
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:14
-msgid "Name"
-msgstr "Naam"
-
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:62
-msgid "e.g. Televue 2x Barlow"
-msgstr "b.v. Televue 2x Barlow"
-
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:66
-#: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:19
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:48
-msgid "Factor"
-msgstr "Factor"
-
-#: ../storage/framework/messages/210bade1925fb651c0fcc8d2ef60bc3f1a0e0158.php.php:70
-msgid "> 1.0 for Barlow lenses, < 1.0 for shapley lenses."
-msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
-
-#: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:1
-msgid "Edit User"
-msgstr "Gebruiker aanpassen"
-
-#: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:7
-msgid "Edit"
-msgstr "Wijzig"
-
-#: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:21
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:15
-msgid "Email"
-msgstr "E-mail"
-
-#: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:28
-msgid "Role"
-msgstr "Rol"
-
-#: ../storage/framework/messages/251eb51a488c4006f2815d3ae783cd7976ca2aec.php.php:42
-msgid "Adapt"
-msgstr "Pas aan"
-
-#: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:3
-msgid "Administration"
-msgstr "Administratie"
-
-#: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:7
-msgid "Send message to all"
-msgstr "Stuur bericht naar iedereen"
-
-#: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:9
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:24
-msgid "Observers"
-msgstr "Waarnemers"
-
-#: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:11
-msgid "Check Objects"
-msgstr "Controleer objecten"
-
-#: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:13
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:20
-msgid "Instruments"
-msgstr "Instrumenten"
-
-#: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:14
-msgid "Locations"
-msgstr "Waarneemplaatsen"
-
-#: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:15
-msgid "Eyepieces"
-msgstr "Oculairs"
-
-#: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:16
-msgid "Filters"
-msgstr "Filters"
-
-#: ../storage/framework/messages/277eab0ac11163e9d87500837e85ebaa008bf026.php.php:17
-msgid "Lenses"
-msgstr "Lenzen"
-
-#: ../storage/framework/messages/2b4421d7058c5dae82ff4ebb0b5d8ce7dbf53c94.php.php:92
-#: Http/Controllers/UserController.php:92
-#, php-format
-msgid "User %s successfully edited."
-msgstr "Gebruiker %s met succes aangepast."
-
-#: ../storage/framework/messages/2b4421d7058c5dae82ff4ebb0b5d8ce7dbf53c94.php.php:109
-#: Http/Controllers/UserController.php:109
-#, php-format
-msgid "User %s successfully deleted."
-msgstr "Gebruiker %s met succes verwijderd."
-
-#: ../storage/framework/messages/375bb6021bb9d943e84bcec6a5f9aa5f23a5f750.php.php:46
+#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:46
 #: Http/Middleware/DeepskyLogChecks.php:46
 msgid ""
 "Your country of residence is not set. Please set it in the observer settings."
@@ -389,262 +119,327 @@ msgstr ""
 "Uw land van verblijf is niet ingesteld. Gelieve dit in te stellen in de "
 "waarnemer instellingen."
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:4
-msgid "View"
-msgstr "Bekijk"
+#: ../storage/framework/messages/0ebd9f17667c6014081bcbcda01c06af7b2aff3c.php.php:2
+msgid "Too Many Requests"
+msgstr "Teveel verzoeken op onze pagina"
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:9
-msgid "My observations"
-msgstr "Mijn waarnemingen"
+#: ../storage/framework/messages/0ebd9f17667c6014081bcbcda01c06af7b2aff3c.php.php:9
+msgid "Sorry, you are making too many requests to our servers."
+msgstr "Sorry, je maakt te veel verzoeken op onze servers."
 
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:10
-msgid "My drawings"
-msgstr "Mijn tekeningen"
-
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:12
-msgid "My observing lists"
-msgstr "Mijn waarneemlijsten"
-
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:13
-msgid "My sessions"
-msgstr "Mijn sessies"
-
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:15
-msgid "My instruments"
-msgstr "Mijn instrumenten"
-
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:16
-msgid "My locations"
-msgstr "Mijn locaties"
-
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:17
-msgid "My eyepieces"
-msgstr "Mijn oculairs"
-
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:18
-msgid "My filters"
-msgstr "Mijn filters"
-
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:19
-msgid "My lenses"
-msgstr "Mijn lenzen"
-
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:22
-msgid "Latest observations"
-msgstr "Laatste waarnemingen"
-
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:25
-msgid "Popular objects"
-msgstr "Populaire objecten"
-
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:26
-msgid "Statistics"
-msgstr "Statistieken"
-
-#: ../storage/framework/messages/42fed182a8aa645fd6c93ceef3cbfe0009370719.php.php:28
-msgid "Catalogs"
-msgstr "Catalogi"
-
-#: ../storage/framework/messages/56a7e5818a4d94db340e45edf52b324fe244e34f.php.php:30
-msgid "Toggle navigation"
-msgstr "Navigatie in- of uitklappen"
-
-#: ../storage/framework/messages/56a7e5818a4d94db340e45edf52b324fe244e34f.php.php:45
-#: ../storage/framework/messages/5b9407624fad8338d5fa1c972f963aa62acbae82.php.php:2
-#: ../storage/framework/messages/d0cddd00017ce1607ddfba20b18ed6a3366d4740.php.php:2
-#: ../storage/framework/messages/d0cddd00017ce1607ddfba20b18ed6a3366d4740.php.php:10
-#: ../storage/framework/messages/d0cddd00017ce1607ddfba20b18ed6a3366d4740.php.php:60
-msgid "Login"
-msgstr "Inloggen"
-
-#: ../storage/framework/messages/56a7e5818a4d94db340e45edf52b324fe244e34f.php.php:49
-#: ../storage/framework/messages/5b9407624fad8338d5fa1c972f963aa62acbae82.php.php:3
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:5
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:13
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:166
-msgid "Register"
-msgstr "Registreren"
-
-#: ../storage/framework/messages/56a7e5818a4d94db340e45edf52b324fe244e34f.php.php:62
-msgid "Logout"
-msgstr "Afmelden"
-
-#: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:14
-msgid "Type"
-msgstr "Type"
-
-#: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:23
-msgid "Owner"
-msgstr "Eigenaar"
-
-#: ../storage/framework/messages/5a10f65394c861a618bfab88d56fd1fe31b9f9de.php.php:27
-msgid "Number of observations"
-msgstr "Aantal waarnemingen"
-
-#: ../storage/framework/messages/5aa3f35b00a17016049add7978bdfede201e0cc0.php.php:2
-msgid "Page Not Found"
-msgstr "Pagina niet gevonden"
-
-#: ../storage/framework/messages/5aa3f35b00a17016049add7978bdfede201e0cc0.php.php:9
-msgid "Sorry, the page you are looking for could not be found."
-msgstr "Sorry, de pagina die u zoekt kon niet worden gevonden."
-
-#: ../storage/framework/messages/5be2148eb7942e64d3ae83b1905a6edee8932f34.php.php:2
-msgid "Page Expired"
-msgstr "Pagina is niet langer beschikbaar"
-
-#: ../storage/framework/messages/5be2148eb7942e64d3ae83b1905a6edee8932f34.php.php:9
-msgid "Sorry, your session has expired. Please refresh and try again."
-msgstr ""
-"Sorry, uw sessie is verlopen. Vernieuw de pagina en probeer het opnieuw."
-
-#: ../storage/framework/messages/72d874730f45f49523e5c39a7eeefaef085d66a1.php.php:41
-msgid "Send Password Reset Link"
-msgstr "Verstuur herstel link voor het wachtwoord"
-
-#: ../storage/framework/messages/7383e5c26bec23b20c091cb6461f75081bed9132.php.php:3
-msgid "Help"
-msgstr "Help"
-
-#: ../storage/framework/messages/7383e5c26bec23b20c091cb6461f75081bed9132.php.php:7
-msgid "Ask question"
-msgstr "Stel een vraag"
-
-#: ../storage/framework/messages/7383e5c26bec23b20c091cb6461f75081bed9132.php.php:8
-msgid "Report issue"
-msgstr "Rapporteer probleem"
-
-#: ../storage/framework/messages/7383e5c26bec23b20c091cb6461f75081bed9132.php.php:9
-msgid "What's new in DeepskyLog"
-msgstr "Nieuw in DeepskyLog"
-
-#: ../storage/framework/messages/79917c754a2689326efaf1479644e971a2372646.php.php:4
-msgid "Quick Search"
-msgstr "Snel zoeken"
-
-#: ../storage/framework/messages/79917c754a2689326efaf1479644e971a2372646.php.php:12
-msgid "Deepsky"
-msgstr "Deepsky"
-
-#: ../storage/framework/messages/79917c754a2689326efaf1479644e971a2372646.php.php:20
-msgid "Comets"
-msgstr "Kometen"
-
-#: ../storage/framework/messages/79917c754a2689326efaf1479644e971a2372646.php.php:23
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:14
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:33
-msgid "Moon"
-msgstr "Maan"
-
-#: ../storage/framework/messages/79917c754a2689326efaf1479644e971a2372646.php.php:26
-msgid "Planets"
-msgstr "Planeten"
-
-#: ../storage/framework/messages/79917c754a2689326efaf1479644e971a2372646.php.php:39
-msgid "Search Object"
-msgstr "Zoek object"
-
-#: ../storage/framework/messages/79917c754a2689326efaf1479644e971a2372646.php.php:42
-#: ../storage/framework/messages/cc6bf01ec55ac85c91bdec7f879706295bbdc707.php.php:9
-msgid "Search Observations"
-msgstr "Zoek waarnemingen"
-
-#: ../storage/framework/messages/79917c754a2689326efaf1479644e971a2372646.php.php:46
-msgid "New Observation"
-msgstr "Nieuwe waarneming"
-
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:10
-msgid "Moon / Sun"
-msgstr "Maan / Zon"
-
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:26
-msgid "on"
-msgstr "op"
-
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:50
-msgid "Sun"
-msgstr "Zon"
-
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:81
-msgid "Naut."
-msgstr "Naut."
-
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:95
-msgid "Astro."
-msgstr "Astro."
-
-#: ../storage/framework/messages/815817d6bad026bcf7b788f21c70c2aa3d39e6aa.php.php:128
-#: ../storage/framework/messages/d6b539876c5e90eafbc92734821f85833857a3c8.php.php:50
-msgid "New moon"
-msgstr "Nieuwe maan"
-
-#: ../storage/framework/messages/82f9ded46a71b5fc4285e81f715f7fefa44f2351.php.php:2
-msgid "Error"
-msgstr "Foutmelding"
-
-#: ../storage/framework/messages/82f9ded46a71b5fc4285e81f715f7fefa44f2351.php.php:9
-msgid "Whoops, something went wrong on our servers."
-msgstr "Oeps, er ging iets mis op onze servers."
-
-#: ../storage/framework/messages/87136148cee369858c3c6348168eb6f915c7d611.php.php:3
-msgid "Downloads"
-msgstr "Downloads"
-
-#: ../storage/framework/messages/87136148cee369858c3c6348168eb6f915c7d611.php.php:7
-msgid "Image Catalogs"
-msgstr "Beeldencatalogi"
-
-#: ../storage/framework/messages/87136148cee369858c3c6348168eb6f915c7d611.php.php:8
-msgid "Atlases"
-msgstr "Atlassen"
-
-#: ../storage/framework/messages/87136148cee369858c3c6348168eb6f915c7d611.php.php:9
-msgid "Forms"
-msgstr "Formulieren"
-
-#: ../storage/framework/messages/8fbfa27aca2fd49598b1d26f8b12e0b958d5e371.php.php:2
-msgid "Unauthorized"
-msgstr "Niet-geautoriseerd"
-
-#: ../storage/framework/messages/8fbfa27aca2fd49598b1d26f8b12e0b958d5e371.php.php:9
-msgid "Sorry, you are not authorized to access this page."
-msgstr "Sorry, u bent niet gemachtigd om deze pagina te openen."
-
-#: ../storage/framework/messages/ab3cefc4dfe6ed93cc10a47b7203feb6441aa62d.php.php:2
+#: ../storage/framework/messages/10150e68b84ffc8cddb21c7dbf7f8e1ea93b2eb6.php.php:2
 msgid "Forbidden"
 msgstr "Verboden"
 
-#: ../storage/framework/messages/ab3cefc4dfe6ed93cc10a47b7203feb6441aa62d.php.php:9
+#: ../storage/framework/messages/10150e68b84ffc8cddb21c7dbf7f8e1ea93b2eb6.php.php:9
 msgid "Sorry, you are forbidden from accessing this page."
 msgstr "Sorry, het is verboden om deze pagina te bekijken."
 
-#: ../storage/framework/messages/b8c604159dc3a32b1f359d987f43feb0cc369160.php.php:128
-#: Http/Controllers/Auth/RegisterController.php:128
-#, php-format
-msgid "User \"%s\" successfully registered. You can now log in."
-msgstr "Gebruiker “%s” is succesvol geregistreerd. U kunt nu inloggen."
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:10
+msgid "Moon / Sun"
+msgstr "Maan / Zon"
 
-#: ../storage/framework/messages/c49848c84540333a81a331ea965695038af80e56.php.php:8
-msgid "Details"
-msgstr "Details"
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:14
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:33
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:23
+msgid "Moon"
+msgstr "Maan"
 
-#: ../storage/framework/messages/c49848c84540333a81a331ea965695038af80e56.php.php:9
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:26
+msgid "on"
+msgstr "op"
+
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:50
+msgid "Sun"
+msgstr "Zon"
+
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:81
+msgid "Naut."
+msgstr "Naut."
+
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:95
+msgid "Astro."
+msgstr "Astro."
+
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:128
+#: ../storage/framework/messages/b108a57b45d115bcd3a63da456e940168c6e5686.php.php:50
+msgid "New moon"
+msgstr "Nieuwe maan"
+
+#: ../storage/framework/messages/155da04dde317bc1affd660789103f8ac413259e.php.php:3
+msgid "Downloads"
+msgstr "Downloads"
+
+#: ../storage/framework/messages/155da04dde317bc1affd660789103f8ac413259e.php.php:7
+msgid "Image Catalogs"
+msgstr "Beeldencatalogi"
+
+#: ../storage/framework/messages/155da04dde317bc1affd660789103f8ac413259e.php.php:8
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:26
+msgid "Atlases"
+msgstr "Atlassen"
+
+#: ../storage/framework/messages/155da04dde317bc1affd660789103f8ac413259e.php.php:9
+msgid "Forms"
+msgstr "Formulieren"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:1
+#: ../storage/framework/messages/757293d8d848bb8da17d462f159283f9bfa8bf39.php.php:9
 msgid "Settings"
 msgstr "Instellingen"
 
-#: ../storage/framework/messages/c49848c84540333a81a331ea965695038af80e56.php.php:14
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:14
+msgid "Personal"
+msgstr "Persoonlijk"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:20
+msgid "Observing"
+msgstr "Waarnemen"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:32
+msgid "Languages"
+msgstr "Talen"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:43
+msgid "Change profile picture"
+msgstr "Wijzig profiel foto"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:67
+msgid "Update"
+msgstr "Bijwerken"
+
+#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:23
+#: Notifications/DeepskyLogResetPassword.php:23
+msgid "Reset Password Notification"
+msgstr "Wachtwoord herstel melding"
+
+#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:24
+#: Notifications/DeepskyLogResetPassword.php:24
+msgid ""
+"You are receiving this email because we received a password reset request "
+"for your account."
+msgstr ""
+"U ontvangt deze e-mail omdat we een wachtwoord herstel aanvraag voor uw "
+"account hebben ontvangen."
+
+#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:25
+#: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:2
+#: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:11
+#: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:58
+#: ../storage/framework/messages/feae5554188380ee19a0489625b7b5e4318f9c78.php.php:2
+#: ../storage/framework/messages/feae5554188380ee19a0489625b7b5e4318f9c78.php.php:11
+#: Notifications/DeepskyLogResetPassword.php:25
+msgid "Reset Password"
+msgstr "Herstel wachtwoord"
+
+#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:26
+#: Notifications/DeepskyLogResetPassword.php:26
+#, php-format
+msgid "This password reset link will expire in %d minutes."
+msgstr "Deze wachtwoord herstel link zal vervallen in %d minuten."
+
+#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:27
+#: Notifications/DeepskyLogResetPassword.php:27
+msgid "If you did not request a password reset, no further action is required."
+msgstr ""
+"Als u geen wachtwoord herstel hebt aangevraagd, is er geen verdere actie "
+"vereist."
+
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:139
+#: Http/Controllers/UserController.php:139
+#, php-format
+msgid "User %s successfully edited."
+msgstr "Gebruiker %s met succes aangepast."
+
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:156
+#: Http/Controllers/UserController.php:156
+#, php-format
+msgid "User %s successfully deleted."
+msgstr "Gebruiker %s met succes verwijderd."
+
+#: ../storage/framework/messages/2d969ec1e8d255c1d9038cc399b295d324da0b34.php.php:2
+msgid "Page Not Found"
+msgstr "Pagina niet gevonden"
+
+#: ../storage/framework/messages/2d969ec1e8d255c1d9038cc399b295d324da0b34.php.php:9
+msgid "Sorry, the page you are looking for could not be found."
+msgstr "Sorry, de pagina die u zoekt kon niet worden gevonden."
+
+#: ../storage/framework/messages/340e78d81c17e9a0138af7e51ca9d32f7ace7585.php.php:1
+#: ../storage/framework/messages/340e78d81c17e9a0138af7e51ca9d32f7ace7585.php.php:7
+msgid "User Administration"
+msgstr "Gebruikersbeheer"
+
+#: ../storage/framework/messages/3696c34f28a61d317f5ed9e7643ea316a6282e62.php.php:30
+msgid "Toggle navigation"
+msgstr "Navigatie in- of uitklappen"
+
+#: ../storage/framework/messages/3696c34f28a61d317f5ed9e7643ea316a6282e62.php.php:45
+#: ../storage/framework/messages/3b03ee3524b65bf4cd65259aac5e0ae61a5c3894.php.php:2
+#: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:2
+#: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:10
+#: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:60
+msgid "Login"
+msgstr "Inloggen"
+
+#: ../storage/framework/messages/3696c34f28a61d317f5ed9e7643ea316a6282e62.php.php:49
+#: ../storage/framework/messages/3b03ee3524b65bf4cd65259aac5e0ae61a5c3894.php.php:3
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:5
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:13
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:166
+msgid "Register"
+msgstr "Registreren"
+
+#: ../storage/framework/messages/3696c34f28a61d317f5ed9e7643ea316a6282e62.php.php:62
+msgid "Logout"
+msgstr "Afmelden"
+
+#: ../storage/framework/messages/4040fe44e56e00e78d2b38c1c83a75853675c8d2.php.php:2
+msgid "Service Unavailable"
+msgstr "Service niet beschikbaar"
+
+#: ../storage/framework/messages/4040fe44e56e00e78d2b38c1c83a75853675c8d2.php.php:9
+msgid "Sorry, we are doing some maintenance. Please check back soon."
+msgstr "Sorry, we doen wat onderhoud. Kom snel terug."
+
+#: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:26
+#: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:29
+#: Notifications/DeepskyLogVerificationNotification.php:26
+#: Notifications/DeepskyLogVerificationNotification.php:29
+msgid "Verify Email Address"
+msgstr "Verifieer uw e-mailadres"
+
+#: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:27
+#: Notifications/DeepskyLogVerificationNotification.php:27
+msgid "Please click the button below to verify your email address."
+msgstr "Klik op de onderstaande knop om uw e-mail adres te verifiëren."
+
+#: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:32
+#: Notifications/DeepskyLogVerificationNotification.php:32
+msgid "If you did not create an account, no further action is required."
+msgstr "Als u geen account hebt aangemaakt, is er geen verdere actie vereist."
+
+#: ../storage/framework/messages/47bb9936bd9ce15d2d3df3f5242a1d8060a8f9f1.php.php:12
+msgid "Database based on Eye&Telescope and Tycho2+ & USNO-UCAC3"
+msgstr "Database gebaseerd op Eye&telescoop en Tycho2 + & USNO-UCAC3"
+
+#: ../storage/framework/messages/47bb9936bd9ce15d2d3df3f5242a1d8060a8f9f1.php.php:14
+msgid "Privacy Policy"
+msgstr "Privacybeleid"
+
+#: ../storage/framework/messages/587dec2718210440690641e4433ced8f643b0be0.php.php:3
+msgid "List"
+msgstr "Lijst"
+
+#: ../storage/framework/messages/587dec2718210440690641e4433ced8f643b0be0.php.php:18
+msgid "Manage list"
+msgstr "Beheer lijst"
+
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:133
+#: Http/Controllers/LensController.php:133
+#, php-format
+msgid "Lens \"%s\" created"
+msgstr "Lens \"%s\" toegevoegd"
+
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:192
+#: Http/Controllers/LensController.php:192
+#, php-format
+msgid "Lens \"%s\" updated"
+msgstr "Lens \"%s\" bijgewerkt"
+
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:198
+#: Http/Controllers/LensController.php:198
+#, php-format
+msgid "Lens \"%s\" is active"
+msgstr "Lens \"%s\" is actief"
+
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:201
+#: Http/Controllers/LensController.php:201
+#, php-format
+msgid "Lens \"%s\" is not longer active"
+msgstr "Lens \"%s\" is niet langer actief"
+
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:220
+#: Http/Controllers/LensController.php:220
+#, php-format
+msgid "Lens \"%s\" has observations. Impossible to delete."
+msgstr ""
+"Er zijn waarnemingen met lens \"%s\". Onmogelijk om de lens te verwijderen."
+
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:224
+#: Http/Controllers/LensController.php:224
+#, php-format
+msgid "Lens \"%s\" deleted"
+msgstr "Lens \"%s\" verwijderd"
+
+#: ../storage/framework/messages/6397ba5ce5097379e2a9d002db902c5cf1fb266c.php.php:3
+msgid "Help"
+msgstr "Help"
+
+#: ../storage/framework/messages/6397ba5ce5097379e2a9d002db902c5cf1fb266c.php.php:7
+msgid "Ask question"
+msgstr "Stel een vraag"
+
+#: ../storage/framework/messages/6397ba5ce5097379e2a9d002db902c5cf1fb266c.php.php:8
+msgid "Report issue"
+msgstr "Rapporteer probleem"
+
+#: ../storage/framework/messages/6397ba5ce5097379e2a9d002db902c5cf1fb266c.php.php:9
+msgid "What's new in DeepskyLog"
+msgstr "Nieuw in DeepskyLog"
+
+#: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:20
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:34
+#: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:17
+#: ../storage/framework/messages/feae5554188380ee19a0489625b7b5e4318f9c78.php.php:25
+msgid "E-Mail Address"
+msgstr "E-mail adres"
+
+#: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:34
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:48
+#: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:31
+msgid "Password"
+msgstr "Wachtwoord"
+
+#: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:48
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:62
+msgid "Confirm Password"
+msgstr "Bevestig wachtwoord"
+
+#: ../storage/framework/messages/757293d8d848bb8da17d462f159283f9bfa8bf39.php.php:8
+msgid "Details"
+msgstr "Details"
+
+#: ../storage/framework/messages/757293d8d848bb8da17d462f159283f9bfa8bf39.php.php:14
 msgid "Log out"
 msgstr "Uitloggen"
 
-#: ../storage/framework/messages/c6272a08a14a33d715208fbb8f113ed9d9a1b2ba.php.php:10
+#: ../storage/framework/messages/7b028598a90f883cee0a44fa4c7026fcdf3bf608.php.php:3
+#: ../storage/framework/messages/7b028598a90f883cee0a44fa4c7026fcdf3bf608.php.php:15
+msgid "All lenses"
+msgstr "Alle lenzen"
+
+#: ../storage/framework/messages/7b028598a90f883cee0a44fa4c7026fcdf3bf608.php.php:5
+#: ../storage/framework/messages/7b028598a90f883cee0a44fa4c7026fcdf3bf608.php.php:17
+#, php-format
+msgid "Lenses of %s"
+msgstr "Lenzen van %s"
+
+#: ../storage/framework/messages/7b028598a90f883cee0a44fa4c7026fcdf3bf608.php.php:23
+#: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:32
+#: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:64
+msgid "Add lens"
+msgstr "Voeg lens toe"
+
+#: ../storage/framework/messages/7f9d0c3d716746b3d833f54eeb6c5536a3c1c8f5.php.php:10
 msgid "Hello!"
 msgstr "Hallo!"
 
-#: ../storage/framework/messages/c6272a08a14a33d715208fbb8f113ed9d9a1b2ba.php.php:51
+#: ../storage/framework/messages/7f9d0c3d716746b3d833f54eeb6c5536a3c1c8f5.php.php:51
 msgid "Regards"
 msgstr "Groeten"
 
-#: ../storage/framework/messages/c6272a08a14a33d715208fbb8f113ed9d9a1b2ba.php.php:59
+#: ../storage/framework/messages/7f9d0c3d716746b3d833f54eeb6c5536a3c1c8f5.php.php:59
 msgid ""
 "If you’re having trouble clicking the \":actionText\" button, copy and paste "
 "the URL below\n"
@@ -654,11 +449,11 @@ msgstr ""
 "plak de onderstaande URL\n"
 "dan in jouw webbrowser: [:actionURL] (:actionURL)"
 
-#: ../storage/framework/messages/c93da747bfe31336f4241d7e3e435b0d304c617c.php.php:5
+#: ../storage/framework/messages/96202ff741b9f582f9545dcdddfc6ac74e1c477d.php.php:5
 msgid "DeepskyLog Privacy Policy"
 msgstr "DeepskyLog Privacybeleid"
 
-#: ../storage/framework/messages/c93da747bfe31336f4241d7e3e435b0d304c617c.php.php:8
+#: ../storage/framework/messages/96202ff741b9f582f9545dcdddfc6ac74e1c477d.php.php:8
 msgid ""
 "The majority of information on this site can be accessed without providing "
 "any personal information."
@@ -666,7 +461,7 @@ msgstr ""
 "Het merendeel van de informatie op deze site kan worden geraadpleegd zonder "
 "enige persoonlijke informatie in te geven."
 
-#: ../storage/framework/messages/c93da747bfe31336f4241d7e3e435b0d304c617c.php.php:10
+#: ../storage/framework/messages/96202ff741b9f582f9545dcdddfc6ac74e1c477d.php.php:10
 msgid ""
 "In case users want to record observations and get acces to a variety of "
 "useful tools, the user is asked to register and provide personal information "
@@ -677,7 +472,7 @@ msgstr ""
 "gebruiker gevraagd om te registreren en persoonlijke informatie met inbegrip "
 "van naam, voornaam en e-mail adres te verstrekken."
 
-#: ../storage/framework/messages/c93da747bfe31336f4241d7e3e435b0d304c617c.php.php:13
+#: ../storage/framework/messages/96202ff741b9f582f9545dcdddfc6ac74e1c477d.php.php:13
 msgid ""
 "This information will be used only for user management and to keep you "
 "informed about our activities."
@@ -685,7 +480,7 @@ msgstr ""
 "Deze informatie wordt uitsluitend gebruikt voor gebruikersbeheer en om u op "
 "de hoogte te houden van onze activiteiten."
 
-#: ../storage/framework/messages/c93da747bfe31336f4241d7e3e435b0d304c617c.php.php:16
+#: ../storage/framework/messages/96202ff741b9f582f9545dcdddfc6ac74e1c477d.php.php:16
 msgid ""
 "The user has the right at any time, at no cost and upon request, to prohibit "
 "the use of his information for the purpose of direct communication."
@@ -694,11 +489,11 @@ msgstr ""
 "gebruik van zijn informatie te verbieden ten behoeve van directe "
 "communicatie."
 
-#: ../storage/framework/messages/c93da747bfe31336f4241d7e3e435b0d304c617c.php.php:19
+#: ../storage/framework/messages/96202ff741b9f582f9545dcdddfc6ac74e1c477d.php.php:19
 msgid "Your personal information is never passed on to third parties."
 msgstr "Uw persoonlijke gegevens worden nooit doorgegeven aan derden."
 
-#: ../storage/framework/messages/c93da747bfe31336f4241d7e3e435b0d304c617c.php.php:23
+#: ../storage/framework/messages/96202ff741b9f582f9545dcdddfc6ac74e1c477d.php.php:23
 msgid ""
 "In case the registered user has not recorded any information in DeepskyLog "
 "within 24 months after registration, his account will be made obsolete and "
@@ -708,7 +503,7 @@ msgstr ""
 "in DeepskyLog binnen de 24 maanden na registratie, zullen zijn verouderde en "
 "persoonlijke informatie uit het gegevensbestand worden geschrapt."
 
-#: ../storage/framework/messages/c93da747bfe31336f4241d7e3e435b0d304c617c.php.php:30
+#: ../storage/framework/messages/96202ff741b9f582f9545dcdddfc6ac74e1c477d.php.php:30
 #, php-format
 msgid ""
 "In case of questions or concerns regarding your personal data, do not "
@@ -718,63 +513,101 @@ msgstr ""
 "gegevens, aarzel niet om contact met ons op te nemen via "
 "%sdevelopers@deepskylog.be%s."
 
-#: ../storage/framework/messages/cbb2d5a346ee16bc4bedbcf5b401635db2107589.php.php:464
-msgid "Oh no"
-msgstr "Oh nee"
+#: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:3
+msgid "Administration"
+msgstr "Administratie"
 
-#: ../storage/framework/messages/cbb2d5a346ee16bc4bedbcf5b401635db2107589.php.php:475
-msgid "Go Home"
-msgstr "Ga naar de startpagina"
+#: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:7
+msgid "Send message to all"
+msgstr "Stuur bericht naar iedereen"
 
-#: ../storage/framework/messages/cc6bf01ec55ac85c91bdec7f879706295bbdc707.php.php:4
+#: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:9
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:24
+msgid "Observers"
+msgstr "Waarnemers"
+
+#: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:11
+msgid "Check Objects"
+msgstr "Controleer objecten"
+
+#: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:13
+msgid "Instruments"
+msgstr "Instrumenten"
+
+#: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:14
+msgid "Locations"
+msgstr "Waarneemplaatsen"
+
+#: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:15
+msgid "Eyepieces"
+msgstr "Oculairs"
+
+#: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:16
+msgid "Filters"
+msgstr "Filters"
+
+#: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:17
+msgid "Lenses"
+msgstr "Lenzen"
+
+#: ../storage/framework/messages/9aec4ce00dbb85586231d607c3e32c2f2aed2d3c.php.php:2
+msgid "Error"
+msgstr "Foutmelding"
+
+#: ../storage/framework/messages/9aec4ce00dbb85586231d607c3e32c2f2aed2d3c.php.php:9
+msgid "Whoops, something went wrong on our servers."
+msgstr "Oeps, er ging iets mis op onze servers."
+
+#: ../storage/framework/messages/b108a57b45d115bcd3a63da456e940168c6e5686.php.php:2
+msgid "Date"
+msgstr "Datum"
+
+#: ../storage/framework/messages/b2859eea3d283a3b15b2af3c9834d3b4e4626347.php.php:4
 msgid "Search"
 msgstr "Zoeken"
 
-#: ../storage/framework/messages/cc6bf01ec55ac85c91bdec7f879706295bbdc707.php.php:8
+#: ../storage/framework/messages/b2859eea3d283a3b15b2af3c9834d3b4e4626347.php.php:8
 msgid "Search Objects"
 msgstr "Zoek objecten"
 
-#: ../storage/framework/messages/cc6bf01ec55ac85c91bdec7f879706295bbdc707.php.php:11
+#: ../storage/framework/messages/b2859eea3d283a3b15b2af3c9834d3b4e4626347.php.php:9
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:42
+msgid "Search Observations"
+msgstr "Zoek waarnemingen"
+
+#: ../storage/framework/messages/b2859eea3d283a3b15b2af3c9834d3b4e4626347.php.php:11
 msgid "All sessions"
 msgstr "Alle sessies"
 
-#: ../storage/framework/messages/ce8f503c8c2cd557b4efebf33e455c2e97fd8902.php.php:2
-msgid "Service Unavailable"
-msgstr "Service niet beschikbaar"
-
-#: ../storage/framework/messages/ce8f503c8c2cd557b4efebf33e455c2e97fd8902.php.php:9
-msgid "Sorry, we are doing some maintenance. Please check back soon."
-msgstr "Sorry, we doen wat onderhoud. Kom snel terug."
-
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:20
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:20
 msgid "Full Name"
 msgstr "Volledige naam"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:70
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:70
 msgid "Country of residence"
 msgstr "Land van verblijf"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:83
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:83
 msgid "Standard language for observations"
 msgstr "Standaardtaal voor waarnemingen"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:100
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:100
 msgid "Language for user interface"
 msgstr "Taal voor gebruikersinterface"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:120
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:120
 msgid "License for drawings"
 msgstr "Licentie voor tekeningen"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:130
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:130
 msgid "No license (Not recommended!)"
 msgstr "Geen licentie (niet aanbevolen!)"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:131
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:131
 msgid "Enter your own copyright text"
 msgstr "Voer je eigen copyright tekst in"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:136
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:136
 #, php-format
 msgid ""
 "It is important to select the correct license for your drawings!\n"
@@ -785,11 +618,11 @@ msgstr ""
 "                                            Zie de %sCreative Commons-"
 "licentie kiezer%s voor meer informatie."
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:145
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:145
 msgid "Copyright notice"
 msgstr "Copyright melding"
 
-#: ../storage/framework/messages/d03db075a66101f00f3075eaf95383115c863c22.php.php:160
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:160
 #, php-format
 msgid ""
 "Your personal information will be processed in accordance with the %sprivacy "
@@ -800,101 +633,292 @@ msgstr ""
 "%sprivacy beleid%s en zullen alleen worden gebruikt voor gebruikersbeheer en "
 "om u op de hoogte te houden van onze activiteiten."
 
-#: ../storage/framework/messages/d0cddd00017ce1607ddfba20b18ed6a3366d4740.php.php:50
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:4
+msgid "View"
+msgstr "Bekijk"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:9
+msgid "My observations"
+msgstr "Mijn waarnemingen"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:10
+msgid "My drawings"
+msgstr "Mijn tekeningen"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:12
+msgid "My observing lists"
+msgstr "Mijn waarneemlijsten"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:13
+msgid "My sessions"
+msgstr "Mijn sessies"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:15
+msgid "My instruments"
+msgstr "Mijn instrumenten"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:16
+msgid "My locations"
+msgstr "Mijn locaties"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:17
+msgid "My eyepieces"
+msgstr "Mijn oculairs"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:18
+msgid "My filters"
+msgstr "Mijn filters"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:19
+msgid "My lenses"
+msgstr "Mijn lenzen"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:22
+msgid "Latest observations"
+msgstr "Laatste waarnemingen"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:25
+msgid "Popular objects"
+msgstr "Populaire objecten"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:26
+msgid "Statistics"
+msgstr "Statistieken"
+
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:28
+msgid "Catalogs"
+msgstr "Catalogi"
+
+#: ../storage/framework/messages/c36ccd50664c526ac1570a8fd29fbf6ba34c0797.php.php:464
+msgid "Oh no"
+msgstr "Oh nee"
+
+#: ../storage/framework/messages/c36ccd50664c526ac1570a8fd29fbf6ba34c0797.php.php:475
+msgid "Go Home"
+msgstr "Ga naar de startpagina"
+
+#: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:1
+msgid "Edit User"
+msgstr "Gebruiker aanpassen"
+
+#: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:7
+msgid "Edit"
+msgstr "Wijzig"
+
+#: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:14
+#: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:51
+msgid "Name"
+msgstr "Naam"
+
+#: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:21
+msgid "Email"
+msgstr "E-mail"
+
+#: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:28
+msgid "Role"
+msgstr "Rol"
+
+#: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:42
+msgid "Adapt"
+msgstr "Pas aan"
+
+#: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:50
 msgid "Remember Me"
 msgstr "Onthoud mij"
 
-#: ../storage/framework/messages/d0cddd00017ce1607ddfba20b18ed6a3366d4740.php.php:66
+#: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:66
 msgid "Forgot Your Password?"
 msgstr "Wachtwoord vergeten?"
 
-#: ../storage/framework/messages/d6b539876c5e90eafbc92734821f85833857a3c8.php.php:2
-msgid "Date"
-msgstr "Datum"
+#: ../storage/framework/messages/ce86130e9603deefb28c2df7d4d8617962eb24c9.php.php:2
+msgid "Unauthorized"
+msgstr "Niet-geautoriseerd"
 
-#: ../storage/framework/messages/da684ef420c21f0e37762cdf9246187637dfec6d.php.php:23
-#: Notifications/DeepskyLogResetPassword.php:23
-msgid "Reset Password Notification"
-msgstr "Wachtwoord herstel melding"
+#: ../storage/framework/messages/ce86130e9603deefb28c2df7d4d8617962eb24c9.php.php:9
+msgid "Sorry, you are not authorized to access this page."
+msgstr "Sorry, u bent niet gemachtigd om deze pagina te openen."
 
-#: ../storage/framework/messages/da684ef420c21f0e37762cdf9246187637dfec6d.php.php:24
-#: Notifications/DeepskyLogResetPassword.php:24
-msgid ""
-"You are receiving this email because we received a password reset request "
-"for your account."
-msgstr ""
-"U ontvangt deze e-mail omdat we een wachtwoord herstel aanvraag voor uw "
-"account hebben ontvangen."
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:4
+msgid "Quick Search"
+msgstr "Snel zoeken"
 
-#: ../storage/framework/messages/da684ef420c21f0e37762cdf9246187637dfec6d.php.php:26
-#: Notifications/DeepskyLogResetPassword.php:26
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:12
+msgid "Deepsky"
+msgstr "Deepsky"
+
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:20
+msgid "Comets"
+msgstr "Kometen"
+
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:26
+msgid "Planets"
+msgstr "Planeten"
+
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:39
+msgid "Search Object"
+msgstr "Zoek object"
+
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:46
+msgid "New Observation"
+msgstr "Nieuwe waarneming"
+
+#: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:2
+#: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:11
+msgid "Verify Your Email Address"
+msgstr "Verifiëer uw e-mail adres"
+
+#: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:16
+msgid "A fresh verification link has been sent to your email address."
+msgstr "Er is een nieuwe verificatielink naar uw e-mail adres verzonden."
+
+#: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:21
+msgid "Before proceeding, please check your email for a verification link."
+msgstr "Controleer uw e-mail voor een verificatielink voordat u verder gaat."
+
+#: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:26
 #, php-format
-msgid "This password reset link will expire in %d minutes."
-msgstr "Deze wachtwoord herstel link zal vervallen in %d minuten."
-
-#: ../storage/framework/messages/da684ef420c21f0e37762cdf9246187637dfec6d.php.php:27
-#: Notifications/DeepskyLogResetPassword.php:27
-msgid "If you did not request a password reset, no further action is required."
+msgid "If you did not receive the email, %sclick here to request another%s."
 msgstr ""
-"Als u geen wachtwoord herstel hebt aangevraagd, is er geen verdere actie "
-"vereist."
+"Als u de e-mail niet hebt ontvangen, %sklik dan hier om een andere aan te "
+"vragen%s."
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:3
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:30
+#: ../storage/framework/messages/e15293aba835f713cf43d4879750b7715e853fe6.php.php:2
+msgid "Page Expired"
+msgstr "Pagina is niet langer beschikbaar"
+
+#: ../storage/framework/messages/e15293aba835f713cf43d4879750b7715e853fe6.php.php:9
+msgid "Sorry, your session has expired. Please refresh and try again."
+msgstr ""
+"Sorry, uw sessie is verlopen. Vernieuw de pagina en probeer het opnieuw."
+
+#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:14
+msgid "Type"
+msgstr "Type"
+
+#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:15
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:16
+msgid "Lens"
+msgstr "Lens"
+
+#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:19
+#: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:57
+msgid "Factor"
+msgstr "Factor"
+
+#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:23
+msgid "Owner"
+msgstr "Eigenaar"
+
+#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:27
+msgid "Number of observations"
+msgstr "Aantal waarnemingen"
+
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:3
+msgid "Add"
+msgstr "Toevoegen"
+
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:7
+msgid "Observation"
+msgstr "Waarneming"
+
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:9
+msgid "Observing list"
+msgstr "Waarneemlijst"
+
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:10
+msgid "Session"
+msgstr "Sessie"
+
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:12
+msgid "Instrument"
+msgstr "Instrument"
+
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:13
+msgid "Location"
+msgstr "Waarneemplaats"
+
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:14
+msgid "Eyepiece"
+msgstr "Oculair"
+
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:15
+msgid "Filter"
+msgstr "Filter"
+
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:18
+msgid "Object"
+msgstr "Object"
+
+#: ../storage/framework/messages/feae5554188380ee19a0489625b7b5e4318f9c78.php.php:41
+msgid "Send Password Reset Link"
+msgstr "Verstuur herstel link voor het wachtwoord"
+
+#: ../storage/framework/messages/fed48ef1bb39cd4f7e3c02c02475892b953cc5f2.php.php:128
+#: Http/Controllers/Auth/RegisterController.php:128
 #, php-format
-msgid "Lenses of %s"
-msgstr "Lenzen van %s"
+msgid "User \"%s\" successfully registered. You can now log in."
+msgstr "Gebruiker “%s” is succesvol geregistreerd. U kunt nu inloggen."
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:6
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:33
-msgid "All lenses"
-msgstr "Alle lenzen"
+#: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:6
+#: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:18
+msgid "Add a new lens"
+msgstr "Voeg een nieuwe lens toe"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:16
-msgid "Lens deleted: "
-msgstr "Lens verwijderd: "
+#: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:32
+#: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:64
+msgid "Change lens"
+msgstr "Verander lens"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:20
-msgid "Lens activated: "
-msgstr "Lens geactiveerd: "
+#: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:36
+msgid "Select an existing lens"
+msgstr "Selecteer bestaande lens"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:23
-msgid "Lens deactivated: "
-msgstr "Lens gedeactiveerd: "
+#: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:44
+msgid "or specify your lens details manually"
+msgstr "of voeg de gegevens manueel in"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:50
-msgid "Active"
-msgstr "Actief"
+#: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:53
+msgid "e.g. Televue 2x Barlow"
+msgstr "b.v. Televue 2x Barlow"
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:52
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:18
-msgid "Delete"
-msgstr "Verwijder"
+#: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:61
+msgid "> 1.0 for Barlow lenses, < 1.0 for shapley lenses."
+msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 
-#: ../storage/framework/messages/f038aa7b71ae24c01b89ef8ea2ab6b98bc7c7515.php.php:53
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:19
-msgid "Observations"
-msgstr "Waarnemingen"
+#~ msgid "observation"
+#~ msgid_plural "observations"
+#~ msgstr[0] "waarneming"
+#~ msgstr[1] "waarnemingen"
 
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:1
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:7
-msgid "User Administration"
-msgstr "Gebruikersbeheer"
+#~ msgid "No observations"
+#~ msgstr "Geen waarnemingen"
 
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:16
-msgid "Date/Time Added"
-msgstr "Datum/tijd toegevoegd"
+#~ msgid "Lens deleted: "
+#~ msgstr "Lens verwijderd: "
 
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:17
-msgid "User Role"
-msgstr "Gebruikersrol"
+#~ msgid "Lens activated: "
+#~ msgstr "Lens geactiveerd: "
 
-#: ../storage/framework/messages/f1f27183de73d88bcd4adeb623a8ae544ade353d.php.php:21
-msgid "Lists"
-msgstr "Lijsten"
+#~ msgid "Lens deactivated: "
+#~ msgstr "Lens gedeactiveerd: "
 
-#~ msgid "Lens \"%s\" is not longer active"
-#~ msgstr "Lens \"%s\" is niet langer actief"
+#~ msgid "Active"
+#~ msgstr "Actief"
+
+#~ msgid "Delete"
+#~ msgstr "Verwijder"
+
+#~ msgid "Observations"
+#~ msgstr "Waarnemingen"
+
+#~ msgid "Date/Time Added"
+#~ msgstr "Datum/tijd toegevoegd"
+
+#~ msgid "User Role"
+#~ msgstr "Gebruikersrol"
+
+#~ msgid "Lists"
+#~ msgstr "Lijsten"
 
 #, fuzzy
 #~| msgid "Lenses of"
@@ -2418,18 +2442,6 @@ msgstr "Lijsten"
 
 #~ msgid "Settings for %s"
 #~ msgstr "Instellingen voor %s"
-
-#~ msgid "Personal"
-#~ msgstr "Persoonlijk"
-
-#~ msgid "Observing"
-#~ msgstr "Waarnemen"
-
-#~ msgid "Languages"
-#~ msgstr "Talen"
-
-#~ msgid "Change profile picture"
-#~ msgstr "Wijzig profiel foto"
 
 #~ msgid "Send emails"
 #~ msgstr "Stuur emails"
@@ -4297,9 +4309,6 @@ msgstr "Lijsten"
 
 #~ msgid "The user has successfully been updated!"
 #~ msgstr "De gebruiker is succesvol bijgewerkt!"
-
-#~ msgid "User updated."
-#~ msgstr "Gebruiker bijgewerkt."
 
 #~ msgid ""
 #~ "The new password and the confirmed password are not the same. Unable to "

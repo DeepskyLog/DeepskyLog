@@ -42,3 +42,5 @@ Route::delete('/user/upload', 'UserController@delete');
 Route::get('/user/getImage', 'UserController@getImage');
 
 Route::resource('users', 'UserController')->middleware('isAdmin')->except(['create', 'store']);
+
+Route::patch('/user/settings/{id}', 'UserController@patchSettings');

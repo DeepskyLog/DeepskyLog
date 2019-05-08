@@ -207,4 +207,18 @@ class UserController extends Controller
                 ->getFirstMedia('observer');
         }
     }
+
+    public function patchSettings(Request $request, $id)
+    {
+        dd($request->fileToUpload);
+
+        User::find(auth()->user()->id)
+        ->addMediaFromRequest('filepond')
+        ->usingFileName(auth()->user()->id . '.png')
+        ->toMediaCollection('observer');
+
+        //Get user specified by id
+        $user = User::findOrFail($id);
+
+    }
 }

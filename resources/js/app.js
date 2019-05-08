@@ -43,6 +43,7 @@ window.FilePondPluginImageCrop = require('filepond-plugin-image-crop');
 window.FilePondPluginImageResize = require('filepond-plugin-image-resize');
 window.FilePondPluginImageTransform = require('filepond-plugin-image-transform');
 window.FilePond = require('filepond/dist/filepond.min.js');
+require("jquery-filepond/filepond.jquery.js");
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
