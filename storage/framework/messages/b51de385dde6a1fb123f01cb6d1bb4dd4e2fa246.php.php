@@ -17,6 +17,20 @@
                         <?php echo csrf_field(); ?>
 
                         <div class="form-group row">
+                            <label for="username" class="col-md-4 col-form-label text-md-right"><?php echo e(_i('Username')); ?></label>
+
+                            <div class="col-md-6">
+                                <input id="username" type="text" class="form-control<?php echo e($errors->has('username') ? ' is-invalid' : ''); ?>" name="username" value="<?php echo e(old('username')); ?>" required autofocus>
+
+                                <?php if($errors->has('username')): ?>
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong><?php echo e($errors->first('username')); ?></strong>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right"><?php echo e(_i('Full Name')); ?></label>
 
                             <div class="col-md-6">

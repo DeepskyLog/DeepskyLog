@@ -238,6 +238,16 @@ class UserController extends Controller
             }
         }
 
+        // Update the fstOffset
+        if ($request->has('fstOffset')) {
+            $user->update(['fstOffset' => $request->get('fstOffset')]);
+        }
+
+        // Update the copyright
+        if ($request->has('copyright')) {
+            $user->update(['copyright' => $request->get('copyright')]);
+        }
+
         return redirect('/user/settings/' . $id);
     }
 }

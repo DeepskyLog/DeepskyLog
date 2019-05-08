@@ -111,7 +111,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     protected $fillable = [
         'username', 'name', 'email', 'password', 'country', 'language',
-        'observationlanguage', 'copyright', 'sendMail'
+        'observationlanguage', 'copyright', 'sendMail', 'fstOffset'
     ];
 
     /**

@@ -11,6 +11,13 @@
 
 
     <div class="form-group">
+        <?php echo e(Form::label('username', _i('Username'))); ?>
+
+        <?php echo e(Form::text('username', null, ['class' => 'form-control', 'readonly' => 'true'])); ?>
+
+    </div>
+
+    <div class="form-group">
         <?php echo e(Form::label('name', _i('Name'))); ?>
 
         <?php echo e(Form::text('name', null, array('class' => 'form-control'))); ?>

@@ -63,6 +63,58 @@
                     <label class="form-check-label" for="name">{{ _i("Send emails") }}</label>
                 </div>
 
+                <div class="form-group fstOffset">
+                    <label for="fstOffset">{{ _i("fstOffset") }}</label>
+                    <input type="number" min="-5.0" max="5.0" step="0.1" class="form-control {{ $errors->has('fstOffset') ? 'is-invalid' : '' }}" maxlength="4" name="fstOffset" size="4" value="{{ $user->fstOffset }}" />
+                    <span class="help-block">{{ _i("Offset between measured SQM value and the faintest visible star.") }}</span>
+                </div>
+
+                @php
+                    if ("Attribution CC BY" == $user->copyright) {
+                        $copval = 0;
+                    } else if ("Attribution-ShareAlike CC BY-SA" == $user->copyright) {
+                        $copval = 1;
+                    } else if ("Attribution-NoDerivs CC BY-ND" == $user->copyright) {
+                        $copval = 2;
+                    } else if ("Attribution-NonCommercial CC BY-NC" == $user->copyright) {
+                        $copval = 3;
+                    } else if ("Attribution-NonCommercial-ShareAlike CC BY-NC-SA" == $user->copyright) {
+                        $copval = 4;
+                    } else if ("Attribution-NonCommercial-NoDerivs CC BY-NC-ND" == $user->copyright) {
+                        $copval = 5;
+                    } else if ("" == $user->copyright) {
+                        $copval = 6;
+                    } else {
+                        $copval = 7;
+                    }
+                @endphp
+                <div class="form-group license" name="license" id="license">
+                    <label for="cclicense">{{ _i("License for drawings") }}</label>
+                    <select name="cclicense selection" id="cclicense" onchange="enableDisableCopyright();" class="form-control">
+                        <option value="0" @if ($copval == 0) selected="cclicense"@endif>Attribution CC BY</option>
+                        <option value="1" @if ($copval == 1) selected="cclicense"@endif>Attribution-ShareAlike CC BY-SA</option>
+                        <option value="2" @if ($copval == 2) selected="cclicense"@endif>Attribution-NoDerivs CC BY-ND</option>
+                        <option value="3" @if ($copval == 3) selected="cclicense"@endif>Attribution-NonCommercial CC BY-NC</option>
+                        <option value="4" @if ($copval == 4) selected="cclicense"@endif>Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>
+                        <option value="5" @if ($copval == 5) selected="cclicense"@endif>Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>
+                        <option value="6" @if ($copval == 6) selected="cclicense"@endif>{{ _i("No license (Not recommended!)") }}</option>
+                        <option value="7" @if ($copval == 7) selected="cclicense"@endif>{{ _i("Enter your own copyright text") }}</option>
+                    </select>
+                    <span class="help-block">
+                        @php
+                            // Use the correct language for the chooser tool
+                            echo _i('It is important to select the correct license for your drawings!
+                                            For help, see the %sCreative Commons license chooser%s.',
+                                '<a href="http://creativecommons.org/choose/?lang=' . LaravelGettext::getLocale() . '">', '</a>');
+                        @endphp
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="copyright">{{ _i('Copyright notice') }}</label>
+                    <input id="copyright" type="text" class="form-control" maxlength="128" name="copyright" value="{{ $user->copyright }}" >
+                </div>
+
                 <input type="submit" class="btn btn-success" name="add" value="{{ _i("Update") }}" />
             </form>
         </div>
@@ -90,41 +142,52 @@
 
 @push('scripts')
 <script>
-/*$(function(){
+$(document).ready(function()  {
+    // Also put the correct copyright in the copyright field
+    e = document.getElementById("cclicense");
 
-    // First register any plugins
-    $.fn.filepond.registerPlugin(FilePondPluginFileValidateType);
-    $.fn.filepond.registerPlugin(FilePondPluginImageExifOrientation);
-    $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
-    $.fn.filepond.registerPlugin(FilePondPluginImageCrop);
-    $.fn.filepond.registerPlugin(FilePondPluginImageResize);
-    $.fn.filepond.registerPlugin(FilePondPluginImageTransform);
+    if (e.selectedIndex == 6) {
+        document.getElementById("copyright").readOnly=true;
+        document.getElementById("copyright").value = '';
+    } else if (e.selectedIndex != 7) {
+        document.getElementById("copyright").readOnly=true;
+        document.getElementById("copyright").value = e.options[e.selectedIndex].text;
+    } else {
+        document.getElementById("copyright").readOnly=false;
+    }
+} );
 
-    $.fn.filepond.setDefaults({
-        acceptedFileTypes: ['image/*']
-    });
+$('#password').password({
+    shortPass: '<?php echo _i("The password is too short"); ?>',
+    badPass: '<?php echo _i("Weak; try combining letters & numbers"); ?>',
+    goodPass: '<?php echo _i("Medium; try using special characters"); ?>',
+    strongPass: '<?php echo _i("Strong password"); ?>',
+    containsUsername: '<?php echo _i("The password contains the username"); ?>',
+    enterPass: '<?php echo _i("Type your password"); ?>',
+    showText: true, // shows the text tips
+    animate: true, // whether or not to animate the progress bar on input blur/focus
+    animateSpeed: 'fast', // the above animation speed
+    username: false, // select the username field (selector or jQuery instance) for better password checks
+    usernamePartialMatch: true, // whether to check for username partials
+    minimumLength: 6 // minimum password length (below this threshold, the score is 0)
+  });
 
-    // Turn input element into a pond
-    $('.filepond').filepond({
-        server:{
-            url: '/user/upload',
-            process: {
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            },
-            revert: {
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            }
-        }
-    });
-
-    // Manually add a file using the addfile method
-    //$('.filepond').first().filepond('addFile', '/user/getImage');
-});
-*/
+function enableDisableCopyright() {
+    var selectBox = document.getElementById("cclicense");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+    if (selectedValue == 7) {
+        document.getElementById("copyright").readOnly=false;
+        document.getElementById("copyright").value = '';
+    } else if (selectedValue == 6) {
+        document.getElementById("copyright").readOnly=true;
+        document.getElementById("copyright").value = '';
+    } else {
+        document.getElementById("copyright").readOnly=true;
+        // Use the old values to enable or disable the field at pageload
+        e = document.getElementById("cclicense");
+        document.getElementById("copyright").value = e.options[e.selectedIndex].text;
+    }
+}
 
     FilePond.registerPlugin(
         FilePondPluginFileValidateType,
