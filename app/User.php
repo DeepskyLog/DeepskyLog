@@ -111,7 +111,11 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     protected $fillable = [
         'username', 'name', 'email', 'password', 'country', 'language',
-        'observationlanguage', 'copyright', 'sendMail', 'fstOffset'
+        'observationlanguage', 'copyright', 'sendMail', 'fstOffset',
+        'standardAtlasCode', 'showInches', 'overviewFoV', 'lookupFoV',
+        'detailFoV', 'overviewdsos', 'lookupdsos',
+        'detaildsos', 'overviewstars', 'lookupstars',
+        'detailstars', 'photosize1', 'photosize2', 'atlaspagefont'
     ];
 
     /**

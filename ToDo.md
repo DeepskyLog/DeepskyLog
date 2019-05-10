@@ -5,12 +5,21 @@
 ## AUTHENTICATION
 
 + [ ] Write user settings page and table for the DeepskyLog information
+  + [ ] Finish tabs
 + [ ] Write show observer
 + [ ] Write script to convert old observers table of DeepskyLog to laravel
 + [ ] Write script to convert old lenses table of DeepskyLog to laravel
 + [ ] Show one lens (show.blade.php)
   + [ ] Add link to the page of the observer
 + [ ] Clean up source code
+
+## LOCATIONS
+
++ [ ] Add the selection of locations to the user settings (settings.blade.php)
+
+## INSTRUMENTS
+
++ [ ] Add the selection of instruments to the user settings (settings.blade.php)
 
 ## OBSERVATIONS
 

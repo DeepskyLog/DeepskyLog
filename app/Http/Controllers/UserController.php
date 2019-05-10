@@ -248,6 +248,104 @@ class UserController extends Controller
             $user->update(['copyright' => $request->get('copyright')]);
         }
 
+        // Update the copyright
+        if ($request->has('standardAtlasCode')) {
+            $user->update(
+                ['standardAtlasCode' => $request->get('standardAtlasCode')]
+            );
+        }
+
+        // Update the copyright
+        if ($request->has('showInches')) {
+            $user->update(
+                ['showInches' => $request->get('showInches')]
+            );
+        }
+
+        // Update the overviewFoV
+        if ($request->has('overviewFoV')) {
+            $user->update(
+                ['overviewFoV' => $request->get('overviewFoV')]
+            );
+        }
+
+        // Update the lookupFoV
+        if ($request->has('lookupFoV')) {
+            $user->update(
+                ['lookupFoV' => $request->get('lookupFoV')]
+            );
+        }
+
+        // Update the detailFoV
+        if ($request->has('detailFoV')) {
+            $user->update(
+                ['detailFoV' => $request->get('detailFoV')]
+            );
+        }
+
+        // Update the overviewdsos
+        if ($request->has('overviewdsos')) {
+            $user->update(
+                ['overviewdsos' => $request->get('overviewdsos')]
+            );
+        }
+
+        // Update the lookupdsos
+        if ($request->has('lookupdsos')) {
+            $user->update(
+                ['lookupdsos' => $request->get('lookupdsos')]
+            );
+        }
+
+        // Update the detaildsos
+        if ($request->has('detaildsos')) {
+            $user->update(
+                ['detaildsos' => $request->get('detaildsos')]
+            );
+        }
+
+        // Update the overviewstars
+        if ($request->has('overviewstars')) {
+            $user->update(
+                ['overviewstars' => $request->get('overviewstars')]
+            );
+        }
+
+        // Update the lookupstars
+        if ($request->has('lookupstars')) {
+            $user->update(
+                ['lookupstars' => $request->get('lookupstars')]
+            );
+        }
+
+        // Update the detailstars
+        if ($request->has('detailstars')) {
+            $user->update(
+                ['detailstars' => $request->get('detailstars')]
+            );
+        }
+
+        // Update the photosize1
+        if ($request->has('photosize1')) {
+            $user->update(
+                ['photosize1' => $request->get('photosize1')]
+            );
+        }
+
+        // Update the photosize2
+        if ($request->has('photosize2')) {
+            $user->update(
+                ['photosize2' => $request->get('photosize2')]
+            );
+        }
+
+        // Update the atlaspagefont
+        if ($request->has('atlaspagefont')) {
+            $user->update(
+                ['atlaspagefont' => $request->get('atlaspagefont')]
+            );
+        }
+
         return redirect('/user/settings/' . $id);
     }
 }

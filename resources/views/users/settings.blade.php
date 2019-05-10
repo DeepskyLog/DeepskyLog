@@ -90,16 +90,18 @@
                 @endphp
                 <div class="form-group license" name="license" id="license">
                     <label for="cclicense">{{ _i("License for drawings") }}</label>
-                    <select name="cclicense selection" id="cclicense" onchange="enableDisableCopyright();" class="form-control">
-                        <option value="0" @if ($copval == 0) selected="cclicense"@endif>Attribution CC BY</option>
-                        <option value="1" @if ($copval == 1) selected="cclicense"@endif>Attribution-ShareAlike CC BY-SA</option>
-                        <option value="2" @if ($copval == 2) selected="cclicense"@endif>Attribution-NoDerivs CC BY-ND</option>
-                        <option value="3" @if ($copval == 3) selected="cclicense"@endif>Attribution-NonCommercial CC BY-NC</option>
-                        <option value="4" @if ($copval == 4) selected="cclicense"@endif>Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>
-                        <option value="5" @if ($copval == 5) selected="cclicense"@endif>Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>
-                        <option value="6" @if ($copval == 6) selected="cclicense"@endif>{{ _i("No license (Not recommended!)") }}</option>
-                        <option value="7" @if ($copval == 7) selected="cclicense"@endif>{{ _i("Enter your own copyright text") }}</option>
-                    </select>
+                    <div class="form">
+                        <select name="cclicense" class="selection" style="width: 100%" id="cclicense" onchange="enableDisableCopyright();" class="form-control">
+                            <option value="0" @if ($copval == 0) selected="cclicense"@endif>Attribution CC BY</option>
+                            <option value="1" @if ($copval == 1) selected="cclicense"@endif>Attribution-ShareAlike CC BY-SA</option>
+                            <option value="2" @if ($copval == 2) selected="cclicense"@endif>Attribution-NoDerivs CC BY-ND</option>
+                            <option value="3" @if ($copval == 3) selected="cclicense"@endif>Attribution-NonCommercial CC BY-NC</option>
+                            <option value="4" @if ($copval == 4) selected="cclicense"@endif>Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>
+                            <option value="5" @if ($copval == 5) selected="cclicense"@endif>Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>
+                            <option value="6" @if ($copval == 6) selected="cclicense"@endif>{{ _i("No license (Not recommended!)") }}</option>
+                            <option value="7" @if ($copval == 7) selected="cclicense"@endif>{{ _i("Enter your own copyright text") }}</option>
+                        </select>
+                    </div>
                     <span class="help-block">
                         @php
                             // Use the correct language for the chooser tool
@@ -122,18 +124,157 @@
         <!-- Observing tab -->
         <div class="tab-pane" id="observingDetails">
             <br />
-            Test observing
+            <form role="form" action="/user/settings/{{ $user->id }}" method="POST">
+                @csrf
+                @method('PATCH')
+
+                <div class="form-group">
+                    <label for="stdlocation">{{ _i("Default observing site") }}</label>
+                    <div class="form">
+                        <select class="form-control selection" style="width: 100%" id="stdlocation" name="stdlocation">
+                            <option value="0">Add locations here</option>
+                            <option value="1">Add more locations here</option>
+                        </select>
+                    </div>
+                    <span class="help-block">
+                       <a href="/location/add">{{ _i("Add new observing site") }}</a>
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="stdinstrument">{{ _i("Default instrument") }}</label>
+                    <div class="form">
+                        <select class="form-control selection" style="width: 100%" id="stdinstrument" name="stdinstrument">
+                            <option value="0">Add instruments here</option>
+                            <option value="1">Add more instruments here</option>
+                        </select>
+                    </div>
+                    <span class="help-block">
+                        <a href="/instrument/add"> {{ _i("Add instrument") }}</a>
+                    </span>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="stdatlas">{{ _i("Default atlas") }}</label>
+                    <div class="form">
+                        <select class="form-control selection" style="width: 100%" id="standardAtlasCode" name="standardAtlasCode">
+                            @foreach(\App\Atlases::All() as $atlas)
+                                <option @if ($atlas->code == $user->standardAtlasCode) selected @endif value="{{ $atlas->code }}">{{ $atlas->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="showInches">{{ _i("Default units") }}</label>
+                    <div class="form">
+                        <select class="form-control selection" style="width: 100%" id="showInches" name="showInches">
+                            <option @if (0 == $user->showInches) selected @endif value="0">Metric (mm)</option>
+                            <option @if (1 == $user->showInches) selected @endif value="1">Imperial (inches)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="submit" class="btn btn-success" name="add" value="{{ _i("Update") }}" />
+            </form>
         </div>
 
         <!-- Atlasses tab -->
         <div class="tab-pane" id="atlases">
             <br />
-            Test atlases
+            <form role="form" action="/user/settings/{{ $user->id }}" method="POST">
+                @csrf
+                @method('PATCH')
+
+                {{ _i("Atlas standard object FoVs:") }}
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label>{{  _i("Overview") }}</label>
+                            <input type="number" min="1" max="3600" class="inputfield centered form-control" name="overviewFoV" value="{{ $user->overviewFoV }}"/>
+                        </div>
+                        <div class="col">
+                            <label>{{  _i("Lookup") }}</label>
+                            <input type="number" min="1" max="3600" class="inputfield centered form-control" name="lookupFoV" value="{{ $user->lookupFoV }}" />
+                        </div>
+                        <div class="col">
+                            <label>{{  _i("Detail") }}</label>
+                            <input type="number" min="1" max="3600" class="inputfield centered form-control" name="detailFoV" value="{{ $user->detailFoV }}" />
+                        </div>
+                    </div>
+                </div>
+
+                {{ _i("Atlas standard object magnitudes:") }}
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label>{{  _i("Overview") }}</label>
+                            <input type="number" min="1.0" max="20.0" step="0.1" class="inputfield centered form-control" name="overviewdsos" value="{{ $user->overviewdsos }}"/>
+                        </div>
+                        <div class="col">
+                            <label>{{  _i("Lookup") }}</label>
+                            <input type="number" min="1.0" max="20.0" step="0.1" class="inputfield centered form-control" name="lookupdsos" value="{{ $user->lookupdsos }}" />
+                        </div>
+                        <div class="col">
+                            <label>{{  _i("Detail") }}</label>
+                            <input type="number" min="1.0" max="20.0" step="0.1" class="inputfield centered form-control" name="detaildsos" value="{{ $user->detaildsos }}" />
+                        </div>
+                    </div>
+                </div>
+
+                {{ _i("Atlas standard star magnitudes:") }}
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label>{{  _i("Overview") }}</label>
+                            <input type="number" min="1.0" max="20.0" step="0.1" class="inputfield centered form-control" name="overviewstars" value="{{ $user->overviewstars }}"/>
+                        </div>
+                        <div class="col">
+                            <label>{{  _i("Lookup") }}</label>
+                            <input type="number" min="1.0" max="20.0" step="0.1" class="inputfield centered form-control" name="lookupstars" value="{{ $user->lookupstars }}" />
+                        </div>
+                        <div class="col">
+                            <label>{{  _i("Detail") }}</label>
+                            <input type="number" min="1.0" max="20.0" step="0.1" class="inputfield centered form-control" name="detailstars" value="{{ $user->detailstars }}" />
+                        </div>
+                    </div>
+                </div>
+
+                {{ _i("Standard size of photos:")  }}
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label>{{  _i("Photo 1") }}</label>
+                            <input type="number" min="1" max="3600" class="inputfield centered form-control" name="photosize1" value="{{ $user->photosize1 }}"/>
+                        </div>
+                        <div class="col">
+                            <label>{{  _i("Photo 2") }}</label>
+                            <input type="number" min="1" max="3600" class="inputfield centered form-control" name="photosize2" value="{{ $user->photosize2 }}" />
+                        </div>
+                    </div>
+                </div>
+
+                {{ _i("Font size printed atlas pages (6..9)") }} 
+                <div class="form-group">
+                    <div class="row">
+                        <input type="number" min="6" max="9" class="inputfield centered form-control" maxlength="1" name="atlaspagefont" size="5" value="{{ $user->atlaspagefont }}" />
+                    </div>
+                </div>
+
+                <input type="submit" class="btn btn-success" name="add" value="{{ _i("Update") }}" />
+            </form>
         </div>
 
         <div class="tab-pane" id="languages">
             <br />
-            Test languages
+            <form role="form" action="/user/settings/{{ $user->id }}" method="POST">
+                @csrf
+                @method('PATCH')
+
+
+                <input type="submit" class="btn btn-success" name="add" value="{{ _i("Update") }}" />
+            </form>
         </div>
     </div>
 
