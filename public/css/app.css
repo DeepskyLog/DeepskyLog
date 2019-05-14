@@ -1952,6 +1952,41 @@ a.ui-button:active,
  *
  * http://api.jqueryui.com/category/theming/
  */
+.cookie-consent {
+    font-size: 0.9em;
+    padding: 1em;
+    background: #fff2e0;
+    text-align: center;
+}
+
+.cookie-consent__message {
+    display: inline-block;
+    color: #d98e00;
+}
+
+.cookie-consent__message p {
+    margin: 0;
+}
+
+.cookie-consent__agree {
+    font-weight: bold;
+    margin: 0 1em;
+    padding: .5em 1em;
+    color: #fff2e0;
+    background-color: #d98e00;
+    border: 0;
+    border-radius: 3px;
+    box-shadow: 0 2px 5px rgba(217, 142, 0, 0.15);
+}
+
+.cookie-consent__agree:hover {
+    background-color: #734d00;
+}
+
+.cookie-consent__agree:active {
+    top: 1px;
+}
+
 .thumbnail-no-border {
     border: 0 none;
     box-shadow: none;
