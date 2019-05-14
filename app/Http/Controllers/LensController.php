@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\DataTables\LensDataTable;
 use Illuminate\Support\Facades\DB;
+use Coderello\Laraflash\Facades\Laraflash;
 
 /**
  * Lens Controller.
@@ -130,7 +131,7 @@ class LensController extends Controller
 
         Lens::create($validated);
 
-        flash()->success(_i('Lens "%s" created', $request->name));
+        laraflash(_i('Lens "%s" created', $request->name))->success();
 
         // View the page with all lenses for the user
         return redirect('/lens');
@@ -189,16 +190,16 @@ class LensController extends Controller
             $lens->update(['factor' => $request->get('factor')]);
             $lens->update(['name' => $request->get('name')]);
 
-            flash()->warning(_i('Lens "%s" updated', $lens->name));
+            laraflash(_i('Lens "%s" updated', $lens->name))->warning();
         } else {
             // This is only reached when clicking the active checkbox in the
             // lens overview.
             if ($request->has('active')) {
                 $lens->active();
-                flash()->warning(_i('Lens "%s" is active', $lens->name));
+                laraflash(_i('Lens "%s" is active', $lens->name))->warning();
             } else {
                 $lens->inactive();
-                flash()->warning(_i('Lens "%s" is not longer active', $lens->name));
+                laraflash(_i('Lens "%s" is not longer active', $lens->name))->warning();
             }
         }
 
@@ -217,11 +218,11 @@ class LensController extends Controller
         $this->authorize('update', $lens);
 
         if ($lens->observations > 0) {
-            flash()->error(_i('Lens "%s" has observations. Impossible to delete.', $lens->name));
+            laraflash(_i('Lens "%s" has observations. Impossible to delete.', $lens->name))->info();
         } else {
             $lens->delete();
 
-            flash()->error(_i('Lens "%s" deleted', $lens->name));
+            laraflash(_i('Lens "%s" deleted', $lens->name))->info();
         }
 
         return redirect()->back();

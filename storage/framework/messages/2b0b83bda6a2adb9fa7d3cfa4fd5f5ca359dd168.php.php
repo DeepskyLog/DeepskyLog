@@ -20,7 +20,7 @@ use Auth;
 //Importing laravel-permission models
 use Spatie\Permission\Models\Permission;
 //Enables us to output flash messaging
-use Session;
+use Coderello\Laraflash\Facades\Laraflash;
 
 // For the datatables
 use App\DataTables\UserDataTable;
@@ -136,7 +136,7 @@ class UserController extends Controller
 
         $user->fill($input)->save();
 
-        flash()->success(_i('User %s successfully edited.', $user->name));
+        laraflash(_i('User %s successfully edited.', $user->name))->success();
 
         return redirect()->route('users.index');
     }
@@ -153,7 +153,7 @@ class UserController extends Controller
         //Find a user with a given id and delete
         $user = User::findOrFail($id);
 
-        flash()->warning(_i('User %s successfully deleted.', $user->name));
+        laraflash(_i('User %s successfully deleted.', $user->name))->warning();
 
         $user->delete();
 
@@ -211,7 +211,8 @@ class UserController extends Controller
     /**
      * Patch the settings for the observer.
      *
-     * @param Request $request The request object with all information.
+     * @param Request $request The request object with all information
+     * @param int     $id      The id of the observer
      *
      * @return None
      */
@@ -246,6 +247,125 @@ class UserController extends Controller
         // Update the copyright
         if ($request->has('copyright')) {
             $user->update(['copyright' => $request->get('copyright')]);
+        }
+
+        // Update the copyright
+        if ($request->has('standardAtlasCode')) {
+            $user->update(
+                ['standardAtlasCode' => $request->get('standardAtlasCode')]
+            );
+        }
+
+        // Update the copyright
+        if ($request->has('showInches')) {
+            $user->update(
+                ['showInches' => $request->get('showInches')]
+            );
+        }
+
+        // Update the overviewFoV
+        if ($request->has('overviewFoV')) {
+            $user->update(
+                ['overviewFoV' => $request->get('overviewFoV')]
+            );
+        }
+
+        // Update the lookupFoV
+        if ($request->has('lookupFoV')) {
+            $user->update(
+                ['lookupFoV' => $request->get('lookupFoV')]
+            );
+        }
+
+        // Update the detailFoV
+        if ($request->has('detailFoV')) {
+            $user->update(
+                ['detailFoV' => $request->get('detailFoV')]
+            );
+        }
+
+        // Update the overviewdsos
+        if ($request->has('overviewdsos')) {
+            $user->update(
+                ['overviewdsos' => $request->get('overviewdsos')]
+            );
+        }
+
+        // Update the lookupdsos
+        if ($request->has('lookupdsos')) {
+            $user->update(
+                ['lookupdsos' => $request->get('lookupdsos')]
+            );
+        }
+
+        // Update the detaildsos
+        if ($request->has('detaildsos')) {
+            $user->update(
+                ['detaildsos' => $request->get('detaildsos')]
+            );
+        }
+
+        // Update the overviewstars
+        if ($request->has('overviewstars')) {
+            $user->update(
+                ['overviewstars' => $request->get('overviewstars')]
+            );
+        }
+
+        // Update the lookupstars
+        if ($request->has('lookupstars')) {
+            $user->update(
+                ['lookupstars' => $request->get('lookupstars')]
+            );
+        }
+
+        // Update the detailstars
+        if ($request->has('detailstars')) {
+            $user->update(
+                ['detailstars' => $request->get('detailstars')]
+            );
+        }
+
+        // Update the photosize1
+        if ($request->has('photosize1')) {
+            $user->update(
+                ['photosize1' => $request->get('photosize1')]
+            );
+        }
+
+        // Update the photosize2
+        if ($request->has('photosize2')) {
+            $user->update(
+                ['photosize2' => $request->get('photosize2')]
+            );
+        }
+
+        // Update the atlaspagefont
+        if ($request->has('atlaspagefont')) {
+            $user->update(
+                ['atlaspagefont' => $request->get('atlaspagefont')]
+            );
+        }
+
+        // Update the country of residence
+        if ($request->has('country')) {
+            $user->update(
+                ['country' => $request->get('country')]
+            );
+        }
+
+        // Update the language for the user interface
+        if ($request->has('language')) {
+            $user->update(
+                ['language' => $request->get('language')]
+            );
+        }
+
+        // Update the language for the observations
+        if ($request->has('observationlanguage')) {
+            $user->update(
+                ['observationlanguage' => $request->get('observationlanguage')]
+            );
         }
 
         return redirect('/user/settings/' . $id);

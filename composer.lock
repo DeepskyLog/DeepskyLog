@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a5e13078c2f0a21e89e9b0ad5bb9e52",
+    "content-hash": "37b19e22573392c345bce6c0e04138fd",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -125,6 +125,58 @@
                 "wkhtmltopdf"
             ],
             "time": "2019-02-26T20:00:55+00:00"
+        },
+        {
+            "name": "coderello/laraflash",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/coderello/laraflash.git",
+                "reference": "ba8f5f3cf0bc2b2be87abda65f41f32743ef9357"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/coderello/laraflash/zipball/ba8f5f3cf0bc2b2be87abda65f41f32743ef9357",
+                "reference": "ba8f5f3cf0bc2b2be87abda65f41f32743ef9357",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "laravel/framework": "5.5.*|5.6.*|5.7.*|5.8.*",
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "~3.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Coderello\\Laraflash\\Providers\\LaraflashServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Coderello\\Laraflash\\": "src/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Advanced flash messages for Laravel.",
+            "keywords": [
+                "advanced",
+                "flash",
+                "laraflash",
+                "laravel",
+                "messages"
+            ],
+            "time": "2019-03-05T20:51:11+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -3326,16 +3378,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.1.4",
+            "version": "8.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b534b017daaef2d7f60c6ee61e6aa2e13fdc6910"
+                "reference": "01392d4b5878aa617e8d9bc7a529e5febc8fe956"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b534b017daaef2d7f60c6ee61e6aa2e13fdc6910",
-                "reference": "b534b017daaef2d7f60c6ee61e6aa2e13fdc6910",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/01392d4b5878aa617e8d9bc7a529e5febc8fe956",
+                "reference": "01392d4b5878aa617e8d9bc7a529e5febc8fe956",
                 "shasum": ""
             },
             "require": {
@@ -3404,7 +3456,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-05-09T05:13:39+00:00"
+            "time": "2019-05-14T04:57:31+00:00"
         },
         {
             "name": "psr/container",
@@ -4411,16 +4463,16 @@
         },
         {
             "name": "spatie/image",
-            "version": "1.7.1",
+            "version": "1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/image.git",
-                "reference": "04fc75fc203d5aa944f3c667d5b55f2203c9d64f"
+                "reference": "61fa48fa4cb85eda4ef4f8f20b1c27edd9d38e85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/image/zipball/04fc75fc203d5aa944f3c667d5b55f2203c9d64f",
-                "reference": "04fc75fc203d5aa944f3c667d5b55f2203c9d64f",
+                "url": "https://api.github.com/repos/spatie/image/zipball/61fa48fa4cb85eda4ef4f8f20b1c27edd9d38e85",
+                "reference": "61fa48fa4cb85eda4ef4f8f20b1c27edd9d38e85",
                 "shasum": ""
             },
             "require": {
@@ -4460,7 +4512,7 @@
                 "image",
                 "spatie"
             ],
-            "time": "2019-04-17T06:45:22+00:00"
+            "time": "2019-05-13T11:38:22+00:00"
         },
         {
             "name": "spatie/image-optimizer",
@@ -4511,56 +4563,6 @@
                 "spatie"
             ],
             "time": "2019-02-15T12:11:38+00:00"
-        },
-        {
-            "name": "spatie/laravel-flash",
-            "version": "1.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/laravel-flash.git",
-                "reference": "11bae0af18ca8b4a185900af4762a3860bb8ab97"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-flash/zipball/11bae0af18ca8b4a185900af4762a3860bb8ab97",
-                "reference": "11bae0af18ca8b4a185900af4762a3860bb8ab97",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/session": "^5.5|^5.6|^5.7|^5.8",
-                "php": "^7.1"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^3.5|^3.6|^3.7|^3.8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\Flash\\": "src"
-                },
-                "files": [
-                    "src/helpers.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Freek Van der Herten",
-                    "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A lightweight package to flash messages",
-            "homepage": "https://github.com/spatie/laravel-flash",
-            "keywords": [
-                "laravel-flash",
-                "spatie"
-            ],
-            "time": "2019-03-15T18:25:43+00:00"
         },
         {
             "name": "spatie/laravel-medialibrary",

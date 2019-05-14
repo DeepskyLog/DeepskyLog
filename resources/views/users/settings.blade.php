@@ -56,6 +56,18 @@
                     <input type="text" required class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30" value="{{ $user->name }}" />
                 </div>
 
+                <div class="form-group" name="country" id="country">
+                    <label for="country">{{ _i('Country of residence') }}</label>
+                    <div class="form">
+                        <select class="selection" style="width: 100%" id="country" name="country">
+                            <option value="">&nbsp;</option>
+                            @foreach (Countries::getList(LaravelGettext::getLocaleLanguage()) as $code=>$country)
+                                <option @if ($code == $user->country) selected="selected"@endif value="{{ $code }}">{{ $country }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group form-check sendMail">
                     <input type="checkbox" class="form-check-input {{ $errors->has('sendMail') ? 'is-invalid' : '' }}" name="sendMail" @if ($user->sendMail)
                         checked
@@ -170,8 +182,8 @@
                     <label for="showInches">{{ _i("Default units") }}</label>
                     <div class="form">
                         <select class="form-control selection" style="width: 100%" id="showInches" name="showInches">
-                            <option @if (0 == $user->showInches) selected @endif value="0">Metric (mm)</option>
-                            <option @if (1 == $user->showInches) selected @endif value="1">Imperial (inches)</option>
+                            <option @if (0 == $user->showInches) selected @endif value="0">{{ _i("Metric (mm)") }}</option>
+                            <option @if (1 == $user->showInches) selected @endif value="1">{{ _i("Imperial (inches)") }}</option>
                         </select>
                     </div>
                 </div>
@@ -255,7 +267,7 @@
                     </div>
                 </div>
 
-                {{ _i("Font size printed atlas pages (6..9)") }} 
+                {{ _i("Font size printed atlas pages (6..9)") }}
                 <div class="form-group">
                     <div class="row">
                         <input type="number" min="6" max="9" class="inputfield centered form-control" maxlength="1" name="atlaspagefont" size="5" value="{{ $user->atlaspagefont }}" />
@@ -272,6 +284,32 @@
                 @csrf
                 @method('PATCH')
 
+                <div class="form-group">
+                    <label for="language">{{ _i('Language for user interface') }}</label>
+
+                    <div class="form">
+                        <select class="selection" style="width: 100%" id="language" name="language">
+                            @foreach(Config::get('laravel-gettext.supported-locales') as $locale)
+                                @php
+                                    $localeText = ucwords(Locale::getDisplayLanguage($locale, LaravelGettext::getLocale()));
+                                @endphp
+                                <option value="{{ $locale }}"@if ($locale == $user->language) selected="selected"@endif>{{ $localeText }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="observationlanguage">{{ _i('Standard language for observations') }}</label>
+
+                    <div class="form">
+                        <select class="selection" style="width: 100%" id="observationlanguage" name="observationlanguage">
+                            @foreach (Languages::lookup('major', LaravelGettext::getLocaleLanguage()) as $code=>$language)
+                                <option value="{{ $code }}"@if ($code == $user->observationlanguage) selected="selected"@endif>{{ ucfirst($language) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
 
                 <input type="submit" class="btn btn-success" name="add" value="{{ _i("Update") }}" />
             </form>

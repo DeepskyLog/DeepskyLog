@@ -58,6 +58,18 @@
                     <input type="text" required class="form-control <?php echo e($errors->has('name') ? 'is-invalid' : ''); ?>" maxlength="64" name="name" size="30" value="<?php echo e($user->name); ?>" />
                 </div>
 
+                <div class="form-group" name="country" id="country">
+                    <label for="country"><?php echo e(_i('Country of residence')); ?></label>
+                    <div class="form">
+                        <select class="selection" style="width: 100%" id="country" name="country">
+                            <option value="">&nbsp;</option>
+                            <?php $__currentLoopData = Countries::getList(LaravelGettext::getLocaleLanguage()); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $code=>$country): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option <?php if($code == $user->country): ?> selected="selected"<?php endif; ?> value="<?php echo e($code); ?>"><?php echo e($country); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group form-check sendMail">
                     <input type="checkbox" class="form-check-input <?php echo e($errors->has('sendMail') ? 'is-invalid' : ''); ?>" name="sendMail" <?php if($user->sendMail): ?>
                         checked
@@ -92,16 +104,18 @@
                 ?>
                 <div class="form-group license" name="license" id="license">
                     <label for="cclicense"><?php echo e(_i("License for drawings")); ?></label>
-                    <select name="cclicense selection" id="cclicense" onchange="enableDisableCopyright();" class="form-control">
-                        <option value="0" <?php if($copval == 0): ?> selected="cclicense"<?php endif; ?>>Attribution CC BY</option>
-                        <option value="1" <?php if($copval == 1): ?> selected="cclicense"<?php endif; ?>>Attribution-ShareAlike CC BY-SA</option>
-                        <option value="2" <?php if($copval == 2): ?> selected="cclicense"<?php endif; ?>>Attribution-NoDerivs CC BY-ND</option>
-                        <option value="3" <?php if($copval == 3): ?> selected="cclicense"<?php endif; ?>>Attribution-NonCommercial CC BY-NC</option>
-                        <option value="4" <?php if($copval == 4): ?> selected="cclicense"<?php endif; ?>>Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>
-                        <option value="5" <?php if($copval == 5): ?> selected="cclicense"<?php endif; ?>>Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>
-                        <option value="6" <?php if($copval == 6): ?> selected="cclicense"<?php endif; ?>><?php echo e(_i("No license (Not recommended!)")); ?></option>
-                        <option value="7" <?php if($copval == 7): ?> selected="cclicense"<?php endif; ?>><?php echo e(_i("Enter your own copyright text")); ?></option>
-                    </select>
+                    <div class="form">
+                        <select name="cclicense" class="selection" style="width: 100%" id="cclicense" onchange="enableDisableCopyright();" class="form-control">
+                            <option value="0" <?php if($copval == 0): ?> selected="cclicense"<?php endif; ?>>Attribution CC BY</option>
+                            <option value="1" <?php if($copval == 1): ?> selected="cclicense"<?php endif; ?>>Attribution-ShareAlike CC BY-SA</option>
+                            <option value="2" <?php if($copval == 2): ?> selected="cclicense"<?php endif; ?>>Attribution-NoDerivs CC BY-ND</option>
+                            <option value="3" <?php if($copval == 3): ?> selected="cclicense"<?php endif; ?>>Attribution-NonCommercial CC BY-NC</option>
+                            <option value="4" <?php if($copval == 4): ?> selected="cclicense"<?php endif; ?>>Attribution-NonCommercial-ShareAlike CC BY-NC-SA</option>
+                            <option value="5" <?php if($copval == 5): ?> selected="cclicense"<?php endif; ?>>Attribution-NonCommercial-NoDerivs CC BY-NC-ND</option>
+                            <option value="6" <?php if($copval == 6): ?> selected="cclicense"<?php endif; ?>><?php echo e(_i("No license (Not recommended!)")); ?></option>
+                            <option value="7" <?php if($copval == 7): ?> selected="cclicense"<?php endif; ?>><?php echo e(_i("Enter your own copyright text")); ?></option>
+                        </select>
+                    </div>
                     <span class="help-block">
                         <?php
                             // Use the correct language for the chooser tool
@@ -124,18 +138,188 @@
         <!-- Observing tab -->
         <div class="tab-pane" id="observingDetails">
             <br />
-            Test observing
+            <form role="form" action="/user/settings/<?php echo e($user->id); ?>" method="POST">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('PATCH'); ?>
+
+                <div class="form-group">
+                    <label for="stdlocation"><?php echo e(_i("Default observing site")); ?></label>
+                    <div class="form">
+                        <select class="form-control selection" style="width: 100%" id="stdlocation" name="stdlocation">
+                            <option value="0">Add locations here</option>
+                            <option value="1">Add more locations here</option>
+                        </select>
+                    </div>
+                    <span class="help-block">
+                       <a href="/location/add"><?php echo e(_i("Add new observing site")); ?></a>
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="stdinstrument"><?php echo e(_i("Default instrument")); ?></label>
+                    <div class="form">
+                        <select class="form-control selection" style="width: 100%" id="stdinstrument" name="stdinstrument">
+                            <option value="0">Add instruments here</option>
+                            <option value="1">Add more instruments here</option>
+                        </select>
+                    </div>
+                    <span class="help-block">
+                        <a href="/instrument/add"> <?php echo e(_i("Add instrument")); ?></a>
+                    </span>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="stdatlas"><?php echo e(_i("Default atlas")); ?></label>
+                    <div class="form">
+                        <select class="form-control selection" style="width: 100%" id="standardAtlasCode" name="standardAtlasCode">
+                            <?php $__currentLoopData = \App\Atlases::All(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $atlas): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option <?php if($atlas->code == $user->standardAtlasCode): ?> selected <?php endif; ?> value="<?php echo e($atlas->code); ?>"><?php echo e($atlas->name); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="showInches"><?php echo e(_i("Default units")); ?></label>
+                    <div class="form">
+                        <select class="form-control selection" style="width: 100%" id="showInches" name="showInches">
+                            <option <?php if(0 == $user->showInches): ?> selected <?php endif; ?> value="0"><?php echo e(_i("Metric (mm)")); ?></option>
+                            <option <?php if(1 == $user->showInches): ?> selected <?php endif; ?> value="1"><?php echo e(_i("Imperial (inches)")); ?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="submit" class="btn btn-success" name="add" value="<?php echo e(_i("Update")); ?>" />
+            </form>
         </div>
 
         <!-- Atlasses tab -->
         <div class="tab-pane" id="atlases">
             <br />
-            Test atlases
+            <form role="form" action="/user/settings/<?php echo e($user->id); ?>" method="POST">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('PATCH'); ?>
+
+                <?php echo e(_i("Atlas standard object FoVs:")); ?>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label><?php echo e(_i("Overview")); ?></label>
+                            <input type="number" min="1" max="3600" class="inputfield centered form-control" name="overviewFoV" value="<?php echo e($user->overviewFoV); ?>"/>
+                        </div>
+                        <div class="col">
+                            <label><?php echo e(_i("Lookup")); ?></label>
+                            <input type="number" min="1" max="3600" class="inputfield centered form-control" name="lookupFoV" value="<?php echo e($user->lookupFoV); ?>" />
+                        </div>
+                        <div class="col">
+                            <label><?php echo e(_i("Detail")); ?></label>
+                            <input type="number" min="1" max="3600" class="inputfield centered form-control" name="detailFoV" value="<?php echo e($user->detailFoV); ?>" />
+                        </div>
+                    </div>
+                </div>
+
+                <?php echo e(_i("Atlas standard object magnitudes:")); ?>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label><?php echo e(_i("Overview")); ?></label>
+                            <input type="number" min="1.0" max="20.0" step="0.1" class="inputfield centered form-control" name="overviewdsos" value="<?php echo e($user->overviewdsos); ?>"/>
+                        </div>
+                        <div class="col">
+                            <label><?php echo e(_i("Lookup")); ?></label>
+                            <input type="number" min="1.0" max="20.0" step="0.1" class="inputfield centered form-control" name="lookupdsos" value="<?php echo e($user->lookupdsos); ?>" />
+                        </div>
+                        <div class="col">
+                            <label><?php echo e(_i("Detail")); ?></label>
+                            <input type="number" min="1.0" max="20.0" step="0.1" class="inputfield centered form-control" name="detaildsos" value="<?php echo e($user->detaildsos); ?>" />
+                        </div>
+                    </div>
+                </div>
+
+                <?php echo e(_i("Atlas standard star magnitudes:")); ?>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label><?php echo e(_i("Overview")); ?></label>
+                            <input type="number" min="1.0" max="20.0" step="0.1" class="inputfield centered form-control" name="overviewstars" value="<?php echo e($user->overviewstars); ?>"/>
+                        </div>
+                        <div class="col">
+                            <label><?php echo e(_i("Lookup")); ?></label>
+                            <input type="number" min="1.0" max="20.0" step="0.1" class="inputfield centered form-control" name="lookupstars" value="<?php echo e($user->lookupstars); ?>" />
+                        </div>
+                        <div class="col">
+                            <label><?php echo e(_i("Detail")); ?></label>
+                            <input type="number" min="1.0" max="20.0" step="0.1" class="inputfield centered form-control" name="detailstars" value="<?php echo e($user->detailstars); ?>" />
+                        </div>
+                    </div>
+                </div>
+
+                <?php echo e(_i("Standard size of photos:")); ?>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label><?php echo e(_i("Photo 1")); ?></label>
+                            <input type="number" min="1" max="3600" class="inputfield centered form-control" name="photosize1" value="<?php echo e($user->photosize1); ?>"/>
+                        </div>
+                        <div class="col">
+                            <label><?php echo e(_i("Photo 2")); ?></label>
+                            <input type="number" min="1" max="3600" class="inputfield centered form-control" name="photosize2" value="<?php echo e($user->photosize2); ?>" />
+                        </div>
+                    </div>
+                </div>
+
+                <?php echo e(_i("Font size printed atlas pages (6..9)")); ?>
+
+                <div class="form-group">
+                    <div class="row">
+                        <input type="number" min="6" max="9" class="inputfield centered form-control" maxlength="1" name="atlaspagefont" size="5" value="<?php echo e($user->atlaspagefont); ?>" />
+                    </div>
+                </div>
+
+                <input type="submit" class="btn btn-success" name="add" value="<?php echo e(_i("Update")); ?>" />
+            </form>
         </div>
 
         <div class="tab-pane" id="languages">
             <br />
-            Test languages
+            <form role="form" action="/user/settings/<?php echo e($user->id); ?>" method="POST">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('PATCH'); ?>
+
+                <div class="form-group">
+                    <label for="language"><?php echo e(_i('Language for user interface')); ?></label>
+
+                    <div class="form">
+                        <select class="selection" style="width: 100%" id="language" name="language">
+                            <?php $__currentLoopData = Config::get('laravel-gettext.supported-locales'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $locale): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php
+                                    $localeText = ucwords(Locale::getDisplayLanguage($locale, LaravelGettext::getLocale()));
+                                ?>
+                                <option value="<?php echo e($locale); ?>"<?php if($locale == $user->language): ?> selected="selected"<?php endif; ?>><?php echo e($localeText); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="observationlanguage"><?php echo e(_i('Standard language for observations')); ?></label>
+
+                    <div class="form">
+                        <select class="selection" style="width: 100%" id="observationlanguage" name="observationlanguage">
+                            <?php $__currentLoopData = Languages::lookup('major', LaravelGettext::getLocaleLanguage()); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $code=>$language): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($code); ?>"<?php if($code == $user->observationlanguage): ?> selected="selected"<?php endif; ?>><?php echo e(ucfirst($language)); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="submit" class="btn btn-success" name="add" value="<?php echo e(_i("Update")); ?>" />
+            </form>
         </div>
     </div>
 

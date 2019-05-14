@@ -20,8 +20,7 @@ use Auth;
 //Importing laravel-permission models
 use Spatie\Permission\Models\Permission;
 //Enables us to output flash messaging
-use Session;
-
+use Coderello\Laraflash\Facades\Laraflash;
 // For the datatables
 use App\DataTables\UserDataTable;
 
@@ -52,7 +51,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param LensDataTable $dataTable The user datatable
+     * @param UserDataTable $dataTable The user datatable
      *
      * @return \Illuminate\Http\Response
      */
@@ -70,7 +69,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return redirect('users');
+        $user = User::findOrFail($id);
+
+        return view('users.view', ['user' => $user]);
     }
 
     /**
@@ -136,7 +137,7 @@ class UserController extends Controller
 
         $user->fill($input)->save();
 
-        flash()->success(_i('User %s successfully edited.', $user->name));
+        laraflash(_i('User %s successfully edited.', $user->name))->success();
 
         return redirect()->route('users.index');
     }
@@ -153,7 +154,7 @@ class UserController extends Controller
         //Find a user with a given id and delete
         $user = User::findOrFail($id);
 
-        flash()->warning(_i('User %s successfully deleted.', $user->name));
+        laraflash(_i('User %s successfully deleted.', $user->name))->warning();
 
         $user->delete();
 
@@ -211,7 +212,8 @@ class UserController extends Controller
     /**
      * Patch the settings for the observer.
      *
-     * @param Request $request The request object with all information.
+     * @param Request $request The request object with all information
+     * @param int     $id      The id of the observer
      *
      * @return None
      */
@@ -343,6 +345,27 @@ class UserController extends Controller
         if ($request->has('atlaspagefont')) {
             $user->update(
                 ['atlaspagefont' => $request->get('atlaspagefont')]
+            );
+        }
+
+        // Update the country of residence
+        if ($request->has('country')) {
+            $user->update(
+                ['country' => $request->get('country')]
+            );
+        }
+
+        // Update the language for the user interface
+        if ($request->has('language')) {
+            $user->update(
+                ['language' => $request->get('language')]
+            );
+        }
+
+        // Update the language for the observations
+        if ($request->has('observationlanguage')) {
+            $user->update(
+                ['observationlanguage' => $request->get('observationlanguage')]
             );
         }
 

@@ -51,6 +51,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
+            \Coderello\Laraflash\Middleware\HandleLaraflash::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Xinax\LaravelGettext\Middleware\GettextMiddleware::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,

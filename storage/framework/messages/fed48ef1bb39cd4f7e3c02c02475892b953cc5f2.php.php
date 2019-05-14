@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
+use Coderello\Laraflash\Facades\Laraflash;
 
 /**
  * User registration.
@@ -128,9 +129,9 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
 
-        flash()->success(
+        laraflash(
             _i('User "%s" successfully registered. You can now log in.', $user->name)
-        );
+        )->success();
 
         // $this->guard()->login($user);
 

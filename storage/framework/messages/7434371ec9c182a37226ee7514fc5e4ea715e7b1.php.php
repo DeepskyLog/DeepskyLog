@@ -1,9 +1,8 @@
-<?php if(flash()->message): ?>
-    <div class="container">
-        <br />
-        <div class="<?php echo e(flash()->class); ?>">
-            <?php echo e(flash()->message); ?>
 
-        </div>
+<?php if(sizeof(laraflash()->toArray()) > 0): ?>
+    <br />
+    <div class="container">
+        <?php echo laraflash()->render(); ?>
+
     </div>
 <?php endif; ?>

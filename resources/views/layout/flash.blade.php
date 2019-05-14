@@ -1,8 +1,7 @@
-@if(flash()->message)
+
+@if(sizeof(laraflash()->toArray()) > 0)
+    <br />
     <div class="container">
-        <br />
-        <div class="{{ flash()->class }}">
-            {{ flash()->message }}
-        </div>
+        {!! laraflash()->render() !!}
     </div>
 @endif

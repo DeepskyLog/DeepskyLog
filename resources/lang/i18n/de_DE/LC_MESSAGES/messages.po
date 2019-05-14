@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-05-08 15:51+0200\n"
-"PO-Revision-Date: 2019-05-08 15:51+0200\n"
+"POT-Creation-Date: 2019-05-14 11:20+0200\n"
+"PO-Revision-Date: 2019-05-14 11:21+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: de_DE\n"
@@ -71,8 +71,8 @@ msgstr "Wir können keinen Benutzer mit dieser E-Mail-Adresse finden."
 
 #: ../resources/views/auth/passwords/reset.blade.php:75
 #: ../resources/views/auth/register.blade.php:210
-#: ../resources/views/users/settings.blade.php:161
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:163
+#: ../resources/views/users/settings.blade.php:340
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:347
 #: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:75
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:212
 msgid "The password is too short"
@@ -80,8 +80,8 @@ msgstr "Passwort zu kurz"
 
 #: ../resources/views/auth/passwords/reset.blade.php:76
 #: ../resources/views/auth/register.blade.php:211
-#: ../resources/views/users/settings.blade.php:162
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:164
+#: ../resources/views/users/settings.blade.php:341
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:348
 #: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:76
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:213
 msgid "Weak; try combining letters & numbers"
@@ -89,8 +89,8 @@ msgstr "Schwacher; Versuchen Sie, Buchstaben und Zahlen zu kombinieren"
 
 #: ../resources/views/auth/passwords/reset.blade.php:77
 #: ../resources/views/auth/register.blade.php:212
-#: ../resources/views/users/settings.blade.php:163
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:165
+#: ../resources/views/users/settings.blade.php:342
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:349
 #: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:77
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:214
 msgid "Medium; try using special characters"
@@ -98,8 +98,8 @@ msgstr "Medium; Versuchen Sie mit Sonderzeichen"
 
 #: ../resources/views/auth/passwords/reset.blade.php:78
 #: ../resources/views/auth/register.blade.php:213
-#: ../resources/views/users/settings.blade.php:164
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:166
+#: ../resources/views/users/settings.blade.php:343
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:350
 #: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:78
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:215
 msgid "Strong password"
@@ -107,8 +107,8 @@ msgstr "Sicheres Passwort"
 
 #: ../resources/views/auth/passwords/reset.blade.php:79
 #: ../resources/views/auth/register.blade.php:214
-#: ../resources/views/users/settings.blade.php:165
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:167
+#: ../resources/views/users/settings.blade.php:344
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:351
 #: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:79
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:216
 msgid "The password contains the username"
@@ -116,8 +116,8 @@ msgstr "Das Passwort enthält den Benutzernamen"
 
 #: ../resources/views/auth/passwords/reset.blade.php:80
 #: ../resources/views/auth/register.blade.php:215
-#: ../resources/views/users/settings.blade.php:166
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:168
+#: ../resources/views/users/settings.blade.php:345
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:352
 #: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:80
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:217
 msgid "Type your password"
@@ -130,6 +130,18 @@ msgid ""
 msgstr ""
 "Ihr Wohnsitzland ist nicht festgelegt. Bitte setzen Sie es in den "
 "Beobachtereinstellungen ein."
+
+#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:53
+#: Http/Middleware/DeepskyLogChecks.php:53
+msgid "You did not specify a standard location. Please select one."
+msgstr ""
+"Sie haben keinen Standardstandort angegeben. Bitte wählen Sie einen aus."
+
+#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:60
+#: Http/Middleware/DeepskyLogChecks.php:60
+msgid "You did not specify a standard instrument. Please select one."
+msgstr ""
+"Sie haben kein Standardinstrument angegeben. Bitte wählen Sie einen aus."
 
 #: ../storage/framework/messages/0ebd9f17667c6014081bcbcda01c06af7b2aff3c.php.php:2
 msgid "Too Many Requests"
@@ -233,36 +245,41 @@ msgstr "E-Mail"
 msgid "Name"
 msgstr "Name"
 
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:65
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:62
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:84
+msgid "Country of residence"
+msgstr "Land des Wohnsitzes"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:77
 msgid "Send emails"
 msgstr "E-Mail senden"
 
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:69
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:81
 msgid "fstOffset"
 msgstr "fstOffset"
 
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:71
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:83
 msgid "Offset between measured SQM value and the faintest visible star."
 msgstr ""
 "Ausgleich zwischen einem gemessenen SQM Wert und dem schwächsten sichtbaren "
 "Stern."
 
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:94
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:106
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:134
 msgid "License for drawings"
 msgstr "Lizenz für Zeichnungen"
 
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:102
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:115
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:144
 msgid "No license (Not recommended!)"
 msgstr "Keine Lizenz (nicht empfohlen!)"
 
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:103
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:116
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:145
 msgid "Enter your own copyright text"
 msgstr "Geben Sie Ihren eigenen Copyright-Text"
 
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:108
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:122
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:150
 #, php-format
 msgid ""
@@ -273,14 +290,105 @@ msgstr ""
 "Es ist wichtig, die richtige Lizenz für Ihre Zeichnungen auszuwählen!\n"
 "Für Hilfe, sehen Sie die %sCreative Commons-Lizenzauswahl %s."
 
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:116
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:130
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:159
 msgid "Copyright notice"
 msgstr "Copyright-hinweis"
 
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:120
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:134
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:193
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:284
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:321
 msgid "Update"
 msgstr "Aktualisieren"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:146
+msgid "Default observing site"
+msgstr "Standard Beobachtungsort"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:154
+msgid "Add new observing site"
+msgstr "Neue Beobachtungsstelle hinzufügen"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:159
+msgid "Default instrument"
+msgstr "Standardinstrument"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:167
+msgid "Add instrument"
+msgstr "Instrument hinzufügen"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:173
+msgid "Default atlas"
+msgstr "Default Atlas"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:184
+msgid "Default units"
+msgstr "Standardeinheiten"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:187
+msgid "Metric (mm)"
+msgstr "Metrik (mm)"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:188
+msgid "Imperial (inches)"
+msgstr "Imperial (Zoll)"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:204
+msgid "Atlas standard object FoVs:"
+msgstr "Standard Fov im Atlas:"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:209
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:228
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:247
+msgid "Overview"
+msgstr "Übersicht"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:213
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:232
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:251
+msgid "Lookup"
+msgstr "Nachschlagen"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:217
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:236
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:255
+msgid "Detail"
+msgstr "Detail"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:223
+msgid "Atlas standard object magnitudes:"
+msgstr "Standard Objekt Helligkeit im Atlas:"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:242
+msgid "Atlas standard star magnitudes:"
+msgstr "Standard Sterne Helligkeit im Atlas:"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:261
+msgid "Standard size of photos:"
+msgstr "Foto Standardgröße:"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:266
+msgid "Photo 1"
+msgstr "Foto 1"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:270
+msgid "Photo 2"
+msgstr "Foto 2"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:276
+msgid "Font size printed atlas pages (6..9)"
+msgstr "Schriftgröße für Atlas Seitenzahlen (6..9)"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:295
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:114
+msgid "Language for user interface"
+msgstr "Sprache für Benutzeroberfläche"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:310
+#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:97
+msgid "Standard language for observations"
+msgstr "Standard Sprache für Beobachtungen"
 
 #: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:23
 #: Notifications/DeepskyLogResetPassword.php:23
@@ -414,38 +522,38 @@ msgstr "Liste"
 msgid "Manage list"
 msgstr "Liste verwalten"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:133
-#: Http/Controllers/LensController.php:133
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:134
+#: Http/Controllers/LensController.php:134
 #, php-format
 msgid "Lens \"%s\" created"
 msgstr "Lens \"%s\" erstellt"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:192
-#: Http/Controllers/LensController.php:192
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:193
+#: Http/Controllers/LensController.php:193
 #, php-format
 msgid "Lens \"%s\" updated"
 msgstr "Lens \"%s\" aktualisiert"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:198
-#: Http/Controllers/LensController.php:198
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:199
+#: Http/Controllers/LensController.php:199
 #, php-format
 msgid "Lens \"%s\" is active"
 msgstr "Lens \"%s\" ist aktiv"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:201
-#: Http/Controllers/LensController.php:201
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:202
+#: Http/Controllers/LensController.php:202
 #, php-format
 msgid "Lens \"%s\" is not longer active"
 msgstr "Lens \"%s\" ist nicht mehr aktiv"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:220
-#: Http/Controllers/LensController.php:220
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:221
+#: Http/Controllers/LensController.php:221
 #, php-format
 msgid "Lens \"%s\" has observations. Impossible to delete."
 msgstr "Lens \"%s\" hat Beobachtungen. Unmöglich zu löschen."
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:224
-#: Http/Controllers/LensController.php:224
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:225
+#: Http/Controllers/LensController.php:225
 #, php-format
 msgid "Lens \"%s\" deleted"
 msgstr "Lens \"%s\" gelöscht"
@@ -656,18 +764,6 @@ msgstr "Alle Sitzungen"
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:34
 msgid "Full Name"
 msgstr "Vollständiger Name"
-
-#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:84
-msgid "Country of residence"
-msgstr "Land des Wohnsitzes"
-
-#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:97
-msgid "Standard language for observations"
-msgstr "Standard Sprache für Beobachtungen"
-
-#: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:114
-msgid "Language for user interface"
-msgstr "Sprache für Benutzeroberfläche"
 
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:174
 #, php-format
@@ -908,8 +1004,8 @@ msgstr ""
 msgid "Send Password Reset Link"
 msgstr "Send den Passwort-Reset-Link"
 
-#: ../storage/framework/messages/fed48ef1bb39cd4f7e3c02c02475892b953cc5f2.php.php:132
-#: Http/Controllers/Auth/RegisterController.php:132
+#: ../storage/framework/messages/fed48ef1bb39cd4f7e3c02c02475892b953cc5f2.php.php:133
+#: Http/Controllers/Auth/RegisterController.php:133
 #, php-format
 msgid "User \"%s\" successfully registered. You can now log in."
 msgstr ""
@@ -976,15 +1072,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 #~ msgid "Lists"
 #~ msgstr "Listen"
 
-#~ msgid "Overview"
-#~ msgstr "Übersicht"
-
-#~ msgid "Lookup"
-#~ msgstr "Nachschlagen"
-
-#~ msgid "Detail"
-#~ msgstr "Detail"
-
 #~ msgid "Create a new observing list"
 #~ msgstr "Erstellen Sie eine neue Beobachtungsliste"
 
@@ -1038,9 +1125,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 
 #~ msgid "Sorry, no objects found!"
 #~ msgstr "Sorry, keine Objekte gefunden!"
-
-#~ msgid "You didn't specify any parameters to search on."
-#~ msgstr "Sie haben keine Parameter angegeben, auf denen Sie suchen sollten."
 
 #~ msgid "Most popular objects"
 #~ msgstr "Beliebtesten Objekte"
@@ -1210,12 +1294,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 #~ msgid "(hours-minutes)"
 #~ msgstr "(Stunden-Minuten)"
 
-#~ msgid "Add new observing site"
-#~ msgstr "Neue Beobachtungsstelle hinzufügen"
-
-#~ msgid "Add instrument"
-#~ msgstr "Instrument hinzufügen"
-
 #~ msgid "Magnification"
 #~ msgstr "Vergrößerung"
 
@@ -1350,9 +1428,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 
 #~ msgid "Overview Instruments"
 #~ msgstr "Beobachtungsgeräte"
-
-#~ msgid "Diameter (mm)"
-#~ msgstr "Durchmesser (mm)"
 
 #~ msgid "F/D"
 #~ msgstr "F/D"
@@ -1489,12 +1564,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 
 #~ msgid "Change email / firstname / name"
 #~ msgstr "E-Mail/Vorname/Name ändern"
-
-#~ msgid "Default observing site"
-#~ msgstr "Standard Beobachtungsort"
-
-#~ msgid "Default instrument"
-#~ msgstr "Standardinstrument"
 
 #~ msgid "Change role"
 #~ msgstr "Rolle ändern"
@@ -2539,32 +2608,14 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 #~ msgid "%s code for comet observations"
 #~ msgstr "%s Code für Kometen Beobachtungen"
 
-#~ msgid "Default atlas"
-#~ msgstr "Default Atlas"
-
 #~ msgid "Preferred unit for instrument diameter"
 #~ msgstr "Einheit für Instrumentendurchmesser"
-
-#~ msgid "Atlas standard object FoVs:"
-#~ msgstr "Standard Fov im Atlas:"
 
 #~ msgid "Overview / Lookup / Detail"
 #~ msgstr "Übersicht / Nachschlagen / Details"
 
-#~ msgid "Atlas standard object magnitudes:"
-#~ msgstr "Standard Objekt Helligkeit im Atlas:"
-
-#~ msgid "Atlas standard star magnitudes:"
-#~ msgstr "Standard Sterne Helligkeit im Atlas:"
-
-#~ msgid "Standard size of photos:"
-#~ msgstr "Foto Standardgröße:"
-
 #~ msgid "photo 1 / photo 2"
 #~ msgstr "Foto 1 / Foto 2"
-
-#~ msgid "Font size printed atlas pages (6..9)"
-#~ msgstr "Schriftgröße für Atlas Seitenzahlen (6..9)"
 
 #~ msgid "Define which languages you want to see in the descriptions"
 #~ msgstr ""

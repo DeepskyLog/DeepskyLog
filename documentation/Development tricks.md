@@ -20,19 +20,25 @@
 ## Flash messages
 
 ```php
-flash()->success('text');
+use Coderello\Laraflash\Facades\Laraflash;
+
+laraflash('text')->success();
 ```
 
 ![Image of flash success](flash_success.png)
 
 ```php
-flash()->warning('text');
+use Coderello\Laraflash\Facades\Laraflash;
+
+laraflash('text')->warning();
 ```
 
 ![Image of flash warning](flash_warning.png)
 
 ```php
-flash()->error('text');
+use Coderello\Laraflash\Facades\Laraflash;
+
+laraflash('text')->info();
 ```
 
 ## Internationalization

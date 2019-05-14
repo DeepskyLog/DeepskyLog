@@ -16,6 +16,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Coderello\Laraflash\Facades\Laraflash;
 
 /**
  * DeepskyLog middleware. Does some checks and adds a flash message if needed.
@@ -41,16 +42,24 @@ class DeepskyLogChecks
         if (!Auth::guest()) {
             // Check if the observer has set a country of residence.
             if (Auth::user()->country == '') {
-                flash()->warning(
-                    _i(
-                        'Your country of residence is not set. Please set it in the observer settings.'
-                    )
-                );
+                laraflash(
+                    _i('Your country of residence is not set. Please set it in the observer settings.'),
+                )->warning();
             }
 
-            // TODO: Check if a standard location is set
+            // Check if a standard location is set
+            if (Auth::user()->stdlocation == 0) {
+                laraflash(
+                    _i('You did not specify a standard location. Please select one.')
+                )->warning();
+            }
 
-            // TODO: Check if a standard instrument is set
+            // Check if a standard instrument is set
+            if (Auth::user()->stdtelescope == 0) {
+                laraflash(
+                    _i('You did not specify a standard instrument. Please select one.')
+                )->warning();
+            }
         }
 
         return $next($request);

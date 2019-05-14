@@ -4,8 +4,6 @@
 
 ## AUTHENTICATION
 
-+ [ ] Write user settings page and table for the DeepskyLog information
-  + [ ] Finish tabs
 + [ ] Write show observer
 + [ ] Write script to convert old observers table of DeepskyLog to laravel
 + [ ] Write script to convert old lenses table of DeepskyLog to laravel
