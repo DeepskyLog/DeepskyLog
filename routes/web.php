@@ -25,7 +25,9 @@ Route::get('/lens/create/{lens}', 'LensController@create')->middleware('verified
 
 Route::get('/lens/admin', 'LensController@indexAdmin');
 
-Route::resource('lens', 'LensController', ['parameters' => ['lens' => 'lens']])->middleware('verified')->except('show');
+Route::resource(
+    'lens', 'LensController', ['parameters' => ['lens' => 'lens']]
+)->middleware('verified')->except('show');
 
 Route::get('/lens/{lens}', 'LensController@show');
 
@@ -39,7 +41,11 @@ Route::post('/user/upload', 'UserController@upload');
 
 Route::delete('/user/upload', 'UserController@delete');
 
-Route::get('/user/getImage', 'UserController@getImage');
+Route::get('/user/getImage/{id}', 'UserController@getImage');
+
+Route::get(
+    '/user/getAuthenticatedUserImage/', 'UserController@getAuthenticatedUserImage'
+);
 
 Route::resource('users', 'UserController')->middleware('isAdmin')->except(['create', 'store']);
 

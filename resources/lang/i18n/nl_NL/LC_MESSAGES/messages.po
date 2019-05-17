@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-05-14 11:17+0200\n"
-"PO-Revision-Date: 2019-05-14 11:17+0200\n"
+"POT-Creation-Date: 2019-05-16 19:05+0200\n"
+"PO-Revision-Date: 2019-05-16 19:07+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: nl_NL\n"
@@ -122,21 +122,21 @@ msgstr "Het wachtwoord bevat de gebruikersnaam"
 msgid "Type your password"
 msgstr "Typ uw wachtwoord"
 
-#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:46
-#: Http/Middleware/DeepskyLogChecks.php:46
+#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:45
+#: Http/Middleware/DeepskyLogChecks.php:45
 msgid ""
 "Your country of residence is not set. Please set it in the observer settings."
 msgstr ""
 "Uw land van verblijf is niet ingesteld. Gelieve dit in te stellen in de "
 "waarnemer instellingen."
 
-#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:53
-#: Http/Middleware/DeepskyLogChecks.php:53
+#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:52
+#: Http/Middleware/DeepskyLogChecks.php:52
 msgid "You did not specify a standard location. Please select one."
 msgstr "U hebt geen standaard locatie opgegeven. Gelieve er één te kiezen."
 
-#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:60
-#: Http/Middleware/DeepskyLogChecks.php:60
+#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:59
+#: Http/Middleware/DeepskyLogChecks.php:59
 msgid "You did not specify a standard instrument. Please select one."
 msgstr "U hebt geen standaard instrument opgegeven. Gelieve er één te kiezen."
 
@@ -162,7 +162,11 @@ msgstr "Maan / Zon"
 
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:14
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:33
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:163
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:256
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:23
+#: Http/Controllers/UserController.php:163
+#: Http/Controllers/UserController.php:256
 msgid "Moon"
 msgstr "Maan"
 
@@ -171,6 +175,10 @@ msgid "on"
 msgstr "op"
 
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:50
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:159
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:252
+#: Http/Controllers/UserController.php:159
+#: Http/Controllers/UserController.php:252
 msgid "Sun"
 msgstr "Zon"
 
@@ -238,12 +246,14 @@ msgstr "E-mail"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:57
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:21
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:54
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:51
 msgid "Name"
 msgstr "Naam"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:62
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:84
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:117
 msgid "Country of residence"
 msgstr "Land van verblijf"
 
@@ -288,6 +298,7 @@ msgstr ""
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:130
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:159
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:128
 msgid "Copyright notice"
 msgstr "Copyright melding"
 
@@ -299,6 +310,7 @@ msgid "Update"
 msgstr "Bijwerken"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:146
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:60
 msgid "Default observing site"
 msgstr "Standaard waarneemplaats"
 
@@ -307,6 +319,7 @@ msgid "Add new observing site"
 msgstr "Voeg een nieuwe waarneemplaats toe"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:159
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:68
 msgid "Default instrument"
 msgstr "Standaard instrument"
 
@@ -386,13 +399,13 @@ msgstr "Taal voor gebruikersinterface"
 msgid "Standard language for observations"
 msgstr "Standaardtaal voor waarnemingen"
 
-#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:23
-#: Notifications/DeepskyLogResetPassword.php:23
+#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:19
+#: Notifications/DeepskyLogResetPassword.php:19
 msgid "Reset Password Notification"
 msgstr "Wachtwoord herstel melding"
 
-#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:24
-#: Notifications/DeepskyLogResetPassword.php:24
+#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:20
+#: Notifications/DeepskyLogResetPassword.php:20
 msgid ""
 "You are receiving this email because we received a password reset request "
 "for your account."
@@ -400,37 +413,98 @@ msgstr ""
 "U ontvangt deze e-mail omdat we een wachtwoord herstel aanvraag voor uw "
 "account hebben ontvangen."
 
-#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:25
+#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:21
 #: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:2
 #: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:11
 #: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:58
 #: ../storage/framework/messages/feae5554188380ee19a0489625b7b5e4318f9c78.php.php:2
 #: ../storage/framework/messages/feae5554188380ee19a0489625b7b5e4318f9c78.php.php:11
-#: Notifications/DeepskyLogResetPassword.php:25
+#: Notifications/DeepskyLogResetPassword.php:21
 msgid "Reset Password"
 msgstr "Herstel wachtwoord"
 
-#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:26
-#: Notifications/DeepskyLogResetPassword.php:26
+#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:22
+#: Notifications/DeepskyLogResetPassword.php:22
 #, php-format
 msgid "This password reset link will expire in %d minutes."
 msgstr "Deze wachtwoord herstel link zal vervallen in %d minuten."
 
-#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:27
-#: Notifications/DeepskyLogResetPassword.php:27
+#: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:23
+#: Notifications/DeepskyLogResetPassword.php:23
 msgid "If you did not request a password reset, no further action is required."
 msgstr ""
 "Als u geen wachtwoord herstel hebt aangevraagd, is er geen verdere actie "
 "vereist."
 
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:90
+#: Http/Controllers/UserController.php:90
+msgid "Number of observations per year: "
+msgstr "Aantal waarnemingen per jaar: "
+
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:102
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:196
+#: Http/Controllers/UserController.php:102
+#: Http/Controllers/UserController.php:196
+msgid "Source: "
+msgstr "Bron: "
+
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:128
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:225
+#: Http/Controllers/UserController.php:128
+#: Http/Controllers/UserController.php:225
+msgid "Observations"
+msgstr "Waarnemingen"
+
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:139
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:136
 #: Http/Controllers/UserController.php:139
+msgid "Total"
+msgstr "Totaal"
+
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:143
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:236
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:12
+#: Http/Controllers/UserController.php:143
+#: Http/Controllers/UserController.php:236
+msgid "Deepsky"
+msgstr "Deepsky"
+
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:147
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:240
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:20
+#: Http/Controllers/UserController.php:147
+#: Http/Controllers/UserController.php:240
+msgid "Comets"
+msgstr "Kometen"
+
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:151
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:244
+#: Http/Controllers/UserController.php:151
+#: Http/Controllers/UserController.php:244
+msgid "Double stars"
+msgstr "Dubbelsterren"
+
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:155
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:248
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:26
+#: Http/Controllers/UserController.php:155
+#: Http/Controllers/UserController.php:248
+msgid "Planets"
+msgstr "Planeten"
+
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:181
+#: Http/Controllers/UserController.php:181
+msgid "Number of observations per month: "
+msgstr "Aantal waarnemingen per maand: "
+
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:326
+#: Http/Controllers/UserController.php:326
 #, php-format
 msgid "User %s successfully edited."
 msgstr "Gebruiker %s met succes aangepast."
 
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:156
-#: Http/Controllers/UserController.php:156
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:343
+#: Http/Controllers/UserController.php:343
 #, php-format
 msgid "User %s successfully deleted."
 msgstr "Gebruiker %s met succes verwijderd."
@@ -480,20 +554,20 @@ msgstr "Service niet beschikbaar"
 msgid "Sorry, we are doing some maintenance. Please check back soon."
 msgstr "Sorry, we doen wat onderhoud. Kom snel terug."
 
+#: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:23
 #: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:26
-#: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:29
+#: Notifications/DeepskyLogVerificationNotification.php:23
 #: Notifications/DeepskyLogVerificationNotification.php:26
-#: Notifications/DeepskyLogVerificationNotification.php:29
 msgid "Verify Email Address"
 msgstr "Verifieer uw e-mailadres"
 
-#: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:27
-#: Notifications/DeepskyLogVerificationNotification.php:27
+#: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:24
+#: Notifications/DeepskyLogVerificationNotification.php:24
 msgid "Please click the button below to verify your email address."
 msgstr "Klik op de onderstaande knop om uw e-mail adres te verifiëren."
 
-#: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:32
-#: Notifications/DeepskyLogVerificationNotification.php:32
+#: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:29
+#: Notifications/DeepskyLogVerificationNotification.php:29
 msgid "If you did not create an account, no further action is required."
 msgstr "Als u geen account hebt aangemaakt, is er geen verdere actie vereist."
 
@@ -513,39 +587,39 @@ msgstr "Lijst"
 msgid "Manage list"
 msgstr "Beheer lijst"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:134
-#: Http/Controllers/LensController.php:134
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:133
+#: Http/Controllers/LensController.php:133
 #, php-format
 msgid "Lens \"%s\" created"
 msgstr "Lens \"%s\" toegevoegd"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:193
-#: Http/Controllers/LensController.php:193
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:192
+#: Http/Controllers/LensController.php:192
 #, php-format
 msgid "Lens \"%s\" updated"
 msgstr "Lens \"%s\" bijgewerkt"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:199
-#: Http/Controllers/LensController.php:199
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:198
+#: Http/Controllers/LensController.php:198
 #, php-format
 msgid "Lens \"%s\" is active"
 msgstr "Lens \"%s\" is actief"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:202
-#: Http/Controllers/LensController.php:202
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:201
+#: Http/Controllers/LensController.php:201
 #, php-format
 msgid "Lens \"%s\" is not longer active"
 msgstr "Lens \"%s\" is niet langer actief"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:221
-#: Http/Controllers/LensController.php:221
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:220
+#: Http/Controllers/LensController.php:220
 #, php-format
 msgid "Lens \"%s\" has observations. Impossible to delete."
 msgstr ""
 "Er zijn waarnemingen met lens \"%s\". Onmogelijk om de lens te verwijderen."
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:225
-#: Http/Controllers/LensController.php:225
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:224
+#: Http/Controllers/LensController.php:224
 #, php-format
 msgid "Lens \"%s\" deleted"
 msgstr "Lens \"%s\" verwijderd"
@@ -875,18 +949,6 @@ msgstr "Sorry, u bent niet gemachtigd om deze pagina te openen."
 msgid "Quick Search"
 msgstr "Snel zoeken"
 
-#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:12
-msgid "Deepsky"
-msgstr "Deepsky"
-
-#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:20
-msgid "Comets"
-msgstr "Kometen"
-
-#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:26
-msgid "Planets"
-msgstr "Planeten"
-
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:39
 msgid "Search Object"
 msgstr "Zoek object"
@@ -943,8 +1005,105 @@ msgid "Owner"
 msgstr "Eigenaar"
 
 #: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:27
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:143
 msgid "Number of observations"
 msgstr "Aantal waarnemingen"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:1
+msgid "Observer details"
+msgstr "Details waarnemer"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:13
+msgid "Info"
+msgstr "Info"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:19
+msgid "Observations per year"
+msgstr "Waarnemingen per jaar"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:25
+msgid "Observations per month"
+msgstr "Waarnemingen per maand"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:31
+msgid "Object types observed"
+msgstr "Object types waargenomen"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:37
+msgid "Observations per country"
+msgstr "Waarnemingen per land"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:43
+msgid "DeepskyLog stars"
+msgstr "DeepskyLog sterren"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:76
+msgid "Number of locations"
+msgstr "Aantal locaties"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:84
+msgid "Number of instruments"
+msgstr "Aantal instrumenten"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:92
+msgid "Number of eyepieces"
+msgstr "Aantal oculairs"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:100
+msgid "Number of filters"
+msgstr "Aantal filters"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:108
+msgid "Number of lenses"
+msgstr "Aantal lenzen"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:151
+msgid "Observations last year"
+msgstr "Waarnemingen vorig jaar"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:159
+msgid "Number of drawings"
+msgstr "Aantal tekeningen"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:167
+msgid "Drawings last year"
+msgstr "Tekeningen vorig jaar"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:175
+msgid "Different objects"
+msgstr "Verschillende objecten"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:183
+msgid "Messier objects"
+msgstr "Messier objecten"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:195
+msgid "Caldwell objects"
+msgstr "Caldwell objecten"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:207
+msgid "H400 objects"
+msgstr "H400 objecten"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:219
+msgid "H400-II objects"
+msgstr "H400-II objecten"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:231
+msgid "Rank"
+msgstr "Rang"
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:242
+msgid "All observations of "
+msgstr "Alle waarnemingen van "
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:247
+msgid "All drawings of "
+msgstr "Alle tekeningen van "
+
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:253
+msgid "Send message to "
+msgstr "Stuur bericht naar "
 
 #: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:3
 msgid "Add"
@@ -995,8 +1154,8 @@ msgstr ""
 msgid "Send Password Reset Link"
 msgstr "Verstuur herstel link voor het wachtwoord"
 
-#: ../storage/framework/messages/fed48ef1bb39cd4f7e3c02c02475892b953cc5f2.php.php:133
-#: Http/Controllers/Auth/RegisterController.php:133
+#: ../storage/framework/messages/fed48ef1bb39cd4f7e3c02c02475892b953cc5f2.php.php:130
+#: Http/Controllers/Auth/RegisterController.php:130
 #, php-format
 msgid "User \"%s\" successfully registered. You can now log in."
 msgstr "Gebruiker “%s” is succesvol geregistreerd. U kunt nu inloggen."
@@ -1074,9 +1233,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ msgid "Delete"
 #~ msgstr "Verwijder"
 
-#~ msgid "Observations"
-#~ msgstr "Waarnemingen"
-
 #~ msgid "Date/Time Added"
 #~ msgstr "Datum/tijd toegevoegd"
 
@@ -1148,9 +1304,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ msgid "Most popular objects"
 #~ msgstr "Populaire objecten"
 
-#~ msgid "Rank"
-#~ msgstr "Rang"
-
 #~ msgid "Search observations"
 #~ msgstr "Zoek waarnemingen"
 
@@ -1199,15 +1352,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ msgid "Most active observers"
 #~ msgstr "Meest actieve waarnemers"
 
-#~ msgid "Observations last year"
-#~ msgstr "Waarnemingen vorig jaar"
-
-#~ msgid "Different objects"
-#~ msgstr "Verschillende objecten"
-
-#~ msgid "Total"
-#~ msgstr "Totaal"
-
 #~ msgid ""
 #~ "You need to be logged in as an administrator to execute these operations."
 #~ msgstr ""
@@ -1243,9 +1387,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 
 #~ msgid "View all observations"
 #~ msgstr "Bekijk alle waarnemingen"
-
-#~ msgid "Observation details"
-#~ msgstr "Details waarneming"
 
 #~ msgid "Time (local time)"
 #~ msgstr "Tijd (lokale tijd)"
@@ -1429,9 +1570,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ msgid "Last Name"
 #~ msgstr "Achternaam"
 
-#~ msgid "Number of instruments"
-#~ msgstr "Aantal instrumenten"
-
 #~ msgid "Admin"
 #~ msgstr "Beheerder"
 
@@ -1559,24 +1697,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ "Je wilde een waarnemer bekijken, maar er is geen opgegeven. Neem contact "
 #~ "op met de ontwikkelaars met deze foutmelding."
 
-#~ msgid "Info"
-#~ msgstr "Info"
-
-#~ msgid "Observations per year"
-#~ msgstr "Waarnemingen per jaar"
-
-#~ msgid "Observations per month"
-#~ msgstr "Waarnemingen per maand"
-
-#~ msgid "Object types observed"
-#~ msgstr "Object types waargenomen"
-
-#~ msgid "Observations per country"
-#~ msgstr "Waarnemingen per land"
-
-#~ msgid "DeepskyLog stars"
-#~ msgstr "DeepskyLog sterren"
-
 #~ msgid "First name"
 #~ msgstr "Voornaam"
 
@@ -1586,41 +1706,8 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ msgid "Change role"
 #~ msgstr "Rol wijzigen"
 
-#~ msgid "Number of drawings"
-#~ msgstr "Aantal tekeningen"
-
-#~ msgid "Drawings last year"
-#~ msgstr "Tekeningen vorig jaar"
-
-#~ msgid "Messier objects"
-#~ msgstr "Messier objecten"
-
-#~ msgid "Caldwell objects"
-#~ msgstr "Caldwell objecten"
-
-#~ msgid "H400 objects"
-#~ msgstr "H400 objecten"
-
 #~ msgid "H II objects"
 #~ msgstr "H II objecten"
-
-#~ msgid "All observations of "
-#~ msgstr "Alle waarnemingen van "
-
-#~ msgid "All drawings of "
-#~ msgstr "Alle tekeningen van "
-
-#~ msgid "Send message to "
-#~ msgstr "Stuur bericht naar "
-
-#~ msgid "Number of observations per year"
-#~ msgstr "Aantal waarnemingen per jaar"
-
-#~ msgid "Source: "
-#~ msgstr "Bron: "
-
-#~ msgid "Number of observations per month"
-#~ msgstr "Aantal waarnemingen per maand"
 
 #~ msgid "Object types seen"
 #~ msgstr "Object types"
@@ -4971,9 +5058,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 
 #~ msgid "Cluster with nebulosity"
 #~ msgstr "Cluster met nevel"
-
-#~ msgid "Double Star"
-#~ msgstr "Dubbelster"
 
 #~ msgid "Dark nebula"
 #~ msgstr "Donkere nevel"

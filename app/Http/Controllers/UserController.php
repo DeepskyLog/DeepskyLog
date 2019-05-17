@@ -16,13 +16,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-use Auth;
-//Importing laravel-permission models
-use Spatie\Permission\Models\Permission;
-//Enables us to output flash messaging
-use Coderello\Laraflash\Facades\Laraflash;
-// For the datatables
 use App\DataTables\UserDataTable;
+use Carbon\Carbon;
 
 /**
  * User Controller.
@@ -71,7 +66,197 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return view('users.view', ['user' => $user]);
+        $obsPerYear = $this->chartObservationsPerYear($user);
+        $obsPerMonth = $this->chartObservationsPerMonth($user);
+
+        return view(
+            'users.view',
+            ['user' => $user, 'observationsPerYear' => $obsPerYear,
+            'observationsPerMonth' => $obsPerMonth]
+        );
+    }
+
+    /**
+     * Makes the chart with the observations per year.
+     *
+     * @param User $user The User object
+     *
+     * @return Chart The chart to display
+     */
+    protected function chartObservationsPerYear($user)
+    {
+        return \Chart::title(
+            [
+                'text' => _i('Number of observations per year: ') . $user->name,
+            ]
+        )->chart(
+            [
+                // pie , columnt etc
+                'type'     => 'line',
+                // render the chart into your div with id
+                'renderTo' => 'observationsPerYear',
+                'zoomType' => 'x',
+            ]
+        )->subtitle(
+            [
+                'text' => _i('Source: ') . 'https://www.deepskylog.org/',
+            ]
+        )->xaxis(
+            [
+            'categories' => [
+                '2009',
+                '2010',
+                '2011',
+                '2012',
+                '2013',
+                '2014',
+                '2015',
+                '2016',
+                '2017',
+                '2018',
+                '2019',
+            ],
+            'labels'     => [
+                'rotation'  => 0,
+                'align'     => 'top',
+                //'formatter' => 'startJs:function(){return this.value}:endJs',
+                // use 'startJs:yourjavasscripthere:endJs'
+            ],
+            ]
+        )->yaxis(
+            [
+                'title' => ['text' => _i('Observations')],
+            ]
+        )->legend(
+            [
+                'layout'        => 'vertikal',
+                'align'         => 'right',
+                'verticalAlign' => 'middle',
+            ]
+        )->series(
+            [
+                [
+                    'name'  => _i('Total'),
+                    'data'  => [124, 439, 525, 571, 696, 0, 100, 324, 129, 77, 12],
+                ],
+                [
+                    'name'  => _i('Deepsky'),
+                    'data'  => [120, 400, 423, 333, 500, 0, 77, 11, 12, 7, 4],
+                ],
+                [
+                    'name'  => _i('Comets'),
+                    'data'  => [23, 10, 23, 33, 50, 0, 7, 15, 66, 23, 1],
+                ],
+                [
+                    'name'  => _i('Double stars'),
+                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
+                ],
+                [
+                    'name'  => _i('Planets'),
+                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
+                ],
+                [
+                    'name'  => _i('Sun'),
+                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
+                ],
+                [
+                    'name'  => _i('Moon'),
+                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
+                ],
+            ]
+        )->display();
+    }
+
+    /**
+     * Makes the chart with the observations per month.
+     *
+     * @param User $user The User object
+     *
+     * @return Chart The chart to display
+     */
+    protected function chartObservationsPerMonth($user)
+    {
+        return \Chart::title(
+            [
+                'text' => _i('Number of observations per month: ') . $user->name,
+            ]
+        )->chart(
+            [
+                // pie , columnt etc
+                'type'     => 'column',
+                // render the chart into your div with id
+                'renderTo' => 'observationsPerMonth',
+            ]
+        )->plotOptions(
+            [
+                'column' => ['stacking' => 'normal'],
+            ]
+        )->subtitle(
+            [
+                'text' => _i('Source: ') . 'https://www.deepskylog.org/',
+            ]
+        )->xaxis(
+            [
+            // Add months of the year (short version)
+            'categories' => [
+                Carbon::parse("2018-01-20")->isoFormat('MMM'),
+                Carbon::parse("2018-02-20")->isoFormat('MMM'),
+                Carbon::parse("2018-03-20")->isoFormat('MMM'),
+                Carbon::parse("2018-04-20")->isoFormat('MMM'),
+                Carbon::parse("2018-05-20")->isoFormat('MMM'),
+                Carbon::parse("2018-06-20")->isoFormat('MMM'),
+                Carbon::parse("2018-07-20")->isoFormat('MMM'),
+                Carbon::parse("2018-08-20")->isoFormat('MMM'),
+                Carbon::parse("2018-09-20")->isoFormat('MMM'),
+                Carbon::parse("2018-10-20")->isoFormat('MMM'),
+                Carbon::parse("2018-11-20")->isoFormat('MMM'),
+                Carbon::parse("2018-12-20")->isoFormat('MMM'),
+            ],
+            'labels'     => [
+                'rotation'  => 0,
+                'align'     => 'center',
+                //'formatter' => 'startJs:function(){return this.value}:endJs',
+                // use 'startJs:yourjavasscripthere:endJs'
+            ],
+            ]
+        )->yaxis(
+            [
+                'title' => ['text' => _i('Observations')],
+            ]
+        )->legend(
+            [
+                'layout'        => 'vertikal',
+                'align'         => 'right',
+                'verticalAlign' => 'middle',
+            ]
+        )->series(
+            [
+                [
+                    'name'  => _i('Deepsky'),
+                    'data'  => [120, 400, 423, 333, 500, 0, 77, 11, 12, 7, 4, 6],
+                ],
+                [
+                    'name'  => _i('Comets'),
+                    'data'  => [23, 10, 23, 33, 50, 0, 7, 15, 66, 23, 1, 7],
+                ],
+                [
+                    'name'  => _i('Double stars'),
+                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 8],
+                ],
+                [
+                    'name'  => _i('Planets'),
+                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 9],
+                ],
+                [
+                    'name'  => _i('Sun'),
+                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 10],
+                ],
+                [
+                    'name'  => _i('Moon'),
+                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 11],
+                ],
+            ]
+        )->display();
     }
 
     /**
@@ -83,7 +268,7 @@ class UserController extends Controller
      */
     public function settings($id)
     {
-        if (auth()->user()->id == $id) {
+        if (auth()->user()->id === $id) {
             $user = auth()->user();
 
             return view('users.settings', ['user' => $user]);
@@ -127,7 +312,7 @@ class UserController extends Controller
                 'email' => 'required|unique|min:2',
                 'name' => 'required|max:120',
                 'email' => 'required|email|unique:users,email,' . $id,
-                'type' => 'required'
+                'type' => 'required',
             ]
         );
         // Retrieve the name, email and password fields
@@ -164,11 +349,9 @@ class UserController extends Controller
     /**
      * Upload the image for the observer.
      *
-     * @param Request $request The request from filePond
-     *
      * @return None
      */
-    public function upload(Request $request)
+    public function upload()
     {
         User::find(auth()->user()->id)
             ->addMediaFromRequest('filepond')
@@ -191,20 +374,44 @@ class UserController extends Controller
     /**
      * Returns the image of the observer.
      *
+     * @param int $id The id of the observer
+     *
      * @return MediaObject the image of the observer
      */
-    public function getImage()
+    public function getImage($id)
     {
-        if (User::find(auth()->user()->id)->hasMedia('observer')) {
-            return User::find(auth()->user()->id)
+        if (User::find($id)->hasMedia('observer')) {
+            return User::find($id)
                 ->getFirstMedia('observer');
         } else {
-            User::find(auth()->user()->id)
-            ->addMediaFromUrl(asset('img/profile.png'))
-            ->usingFileName(auth()->user()->id . '.png')
-            ->toMediaCollection('observer');
+            User::find($id)
+                ->addMediaFromUrl(asset('img/profile.png'))
+                ->usingFileName($id . '.png')
+                ->toMediaCollection('observer');
 
-            return User::find(auth()->user()->id)
+            return User::find($id)
+                ->getFirstMedia('observer');
+        }
+    }
+
+    /**
+     * Returns the image of the observer.
+     *
+     * @return MediaObject the image of the observer
+     */
+    public function getAuthenticatedUserImage()
+    {
+        $id = auth()->user()->id;
+        if (User::find($id)->hasMedia('observer')) {
+            return User::find($id)
+                ->getFirstMedia('observer');
+        } else {
+            User::find($id)
+                ->addMediaFromUrl(asset('img/profile.png'))
+                ->usingFileName($id . '.png')
+                ->toMediaCollection('observer');
+
+            return User::find($id)
                 ->getFirstMedia('observer');
         }
     }

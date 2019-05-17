@@ -41,12 +41,13 @@
         "filepond-plugin-image-preview": "^4.1.1",
         "filepond-plugin-image-resize": "^2.0.4",
         "filepond-plugin-image-transform": "^3.2.4",
+        "highcharts": "^7.1.1",
         "jquery-filepond": "^1.0.0",
         "jquery-ui": "^1.12.1",
         "jszip": "^3.2.1",
         "password-strength-meter": "^1.2.2",
         "pdfmake": "^0.1.56",
-        "select2": "^4.0.7-rc.0",
+        "select2": "^4.0.7",
         "select2-bootstrap4-theme": "^1.0.0"
     }
 }

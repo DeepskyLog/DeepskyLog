@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     	<meta name="revisit-after" content="1 day" />
 	    <meta name="author" content="DeepskyLog - VVS" />
 	    <meta name="keywords" content="VVS, Vereniging Voor Sterrenkunde, astronomie, sterrenkunde, astronomy, Deepsky, deep-sky, waarnemingen, observations, kometen, comets, planeten, planets, moon, maan" />
@@ -26,7 +27,6 @@
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
                     <?php echo $__env->make('layout.errors', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                     <?php echo $__env->make('layout.flash', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-
                     <br />
                     <?php echo $__env->yieldContent('content'); ?>
                 </main>
@@ -46,5 +46,7 @@
         </script>
         <!-- App scripts -->
         <?php echo $__env->yieldPushContent('scripts'); ?>
+
+        <?php echo $__env->make('cookieConsent::index', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     </body>
 </html>

@@ -14,7 +14,7 @@
 
 namespace App\DataTables;
 
-use \App\User;
+use App\User;
 use Yajra\DataTables\Services\DataTable;
 
 /**
@@ -134,47 +134,47 @@ class UserDataTable extends DataTable
         return [
             ['username' => 'username',
                 'title' => _i('Username'),
-                'data' => 'username'
+                'data' => 'username',
             ],
             ['name' => 'name',
                 'title' => _i('Name'),
-                'data' => 'name'
+                'data' => 'name',
             ],
             ['name' => 'email',
                 'title' => _i('Email'),
-                'data' => 'email'
+                'data' => 'email',
             ],
             ['name' => 'created_at',
                 'title' => _i('Date/Time Added'),
-                'data' => 'created_at'
+                'data' => 'created_at',
             ],
             ['name' => 'type',
                 'title' => _i('User Role'),
-                'data' => 'type'
+                'data' => 'type',
             ],
             ['name' => 'delete',
                 'title' => _i('Delete'),
                 'data' => 'delete',
                 'orderable' => false,
-                'searchable' => false
+                'searchable' => false,
             ],
             ['name' => 'observations',
                 'title' => _i('Observations'),
                 'data' => 'observations',
                 'orderable' => false,
-                'searchable' => false
+                'searchable' => false,
             ],
             ['name' => 'instruments',
                 'title' => _i('Instruments'),
                 'data' => 'instruments',
                 'orderable' => false,
-                'searchable' => false
+                'searchable' => false,
             ],
             ['name' => 'lists',
                 'title' => _i('Lists'),
                 'data' => 'lists',
                 'orderable' => false,
-                'searchable' => false
+                'searchable' => false,
             ],
         ];
     }

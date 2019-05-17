@@ -18,7 +18,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\DataTables\LensDataTable;
 use Illuminate\Support\Facades\DB;
-use Coderello\Laraflash\Facades\Laraflash;
 
 /**
  * Lens Controller.
@@ -179,7 +178,7 @@ class LensController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('factor')) {
-            $validated = request()->validate(
+            request()->validate(
                 [
                     'observer_id' => 'required',
                     'name' => ['required', 'min:6'],
@@ -239,7 +238,7 @@ class LensController extends Controller
     {
         $search = trim($request->q);
 
-        if (empty($search)) {
+        if ($search === '') {
             return \Response::json([]);
         }
 

@@ -5,7 +5,7 @@
 
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-        <a class="dropdown-item" href="/user/statistics/<?php echo e(Auth::user()->id); ?>"><?php echo e(_i('Details')); ?></a>
+        <a class="dropdown-item" href="/users/<?php echo e(Auth::user()->id); ?>"><?php echo e(_i('Details')); ?></a>
         <a class="dropdown-item" href="/user/settings/<?php echo e(Auth::user()->id); ?>"><?php echo e(_i('Settings')); ?></a>
         <a class="dropdown-item disabled" href="#">───────────────────</a>
         <a class="dropdown-item" href="<?php echo e(route('logout')); ?>"

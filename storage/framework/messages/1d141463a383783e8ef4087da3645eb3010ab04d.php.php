@@ -405,7 +405,7 @@ function enableDisableCopyright() {
     const pond = FilePond.create( inputElement, { files: [
         {
             // the server file reference
-            source: '/user/getImage',
+            source: '/user/getAuthenticatedUserImage',
         }
     ] } );
 </script>

@@ -114,7 +114,7 @@ class LoginController extends Controller
 
         $messages = [
             "{$this->username()}.exists" =>
-            _i('The account you are trying to login is not registered or it has been disabled.')
+            _i('The account you are trying to login is not registered or it has been disabled.'),
         ];
 
         $this->validate(

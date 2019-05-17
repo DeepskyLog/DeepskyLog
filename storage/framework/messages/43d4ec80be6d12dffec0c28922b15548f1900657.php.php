@@ -2,9 +2,6 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Auth\Notifications\VerifyEmail;
 
@@ -22,7 +19,7 @@ class DeepskyLogVerificationNotification extends VerifyEmail
             return call_user_func(static::$toMailCallback, $notifiable);
         }
 
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject(_i('Verify Email Address'))
             ->line(_i('Please click the button below to verify your email address.'))
             ->action(

@@ -2,12 +2,8 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Support\Facades\Lang;
 
 class DeepskyLogResetPassword extends ResetPassword
 {
@@ -19,7 +15,7 @@ class DeepskyLogResetPassword extends ResetPassword
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject(_i('Reset Password Notification'))
             ->line(_i('You are receiving this email because we received a password reset request for your account.'))
             ->action(_i('Reset Password'), url(config('app.url').route('password.reset', ['token' => $this->token], false)))

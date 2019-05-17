@@ -21,7 +21,7 @@
     </tr>
     <tr>
         <td><?php echo e(_i("Owner")); ?></td>
-        <td><a href="/observer/<?php echo e($lens->observer_id); ?>"><?php echo e($lens->observer->name); ?></a></td>
+        <td><a href="/users/<?php echo e($lens->observer_id); ?>"><?php echo e($lens->observer->name); ?></a></td>
     </tr>
     <tr>
         <td><?php echo e(_i("Number of observations")); ?></td>

@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
-use Coderello\Laraflash\Facades\Laraflash;
 
 /**
  * User registration.
@@ -73,11 +72,11 @@ class RegisterController extends Controller
             $data,
             [
                 'username' => [
-                    'required', 'string', 'max:255', 'min:2', 'unique:users'
+                    'required', 'string', 'max:255', 'min:2', 'unique:users',
                 ],
                 'name' => ['required', 'string', 'max:255', 'min:5'],
                 'email' => [
-                    'required', 'string', 'email', 'max:255', 'unique:users'
+                    'required', 'string', 'email', 'max:255', 'unique:users',
                 ],
                 'password' => ['required', 'string', 'min:6', 'confirmed'],
                 'country' => ['required'],
@@ -85,7 +84,7 @@ class RegisterController extends Controller
                 'observationlanguage' => ['required'],
                 'language' => ['required'],
                 'copyright',
-                'g-recaptcha-response' => 'required|captcha'
+                'g-recaptcha-response' => 'required|captcha',
             ]
         );
     }
@@ -99,7 +98,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $user = User::create(
+        return User::create(
             [
                 'username' => $data['username'],
                 'name' => $data['name'],
@@ -109,11 +108,9 @@ class RegisterController extends Controller
                 'observationlanguage' => $data['observationlanguage'],
                 'language' => $data['language'],
                 'copyright' => $data['copyright'],
-                'type' => User::DEFAULT_TYPE
+                'type' => User::DEFAULT_TYPE,
             ]
         );
-
-        return $user;
     }
 
     /**
@@ -133,9 +130,10 @@ class RegisterController extends Controller
             _i('User "%s" successfully registered. You can now log in.', $user->name)
         )->success();
 
-        // $this->guard()->login($user);
-
-        return $this->registered($request, $user)
-                    ?: redirect($this->redirectPath());
+        if ($this->registered($request, $user)) {
+            return $this->registered($request, $user);
+        } else {
+            return redirect($this->redirectPath());
+        }
     }
 }
