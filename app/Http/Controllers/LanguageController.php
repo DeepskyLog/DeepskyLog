@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Controller;
 use Xinax\LaravelGettext\Facades\LaravelGettext;
 
 class LanguageController extends Controller

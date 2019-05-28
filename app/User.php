@@ -99,6 +99,19 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
+     * Sets the password attribute. This method should only be used
+     * to copy the old md5 passwords to the new database.
+     *
+     * @param mixed $password The md5 encrypted password
+     *
+     * @return None
+     */
+    public function setMd5Password($password)
+    {
+        $this->attributes['password'] = $password;
+    }
+
+    /**
      * Sends the email verification mail.
      *
      * @return None

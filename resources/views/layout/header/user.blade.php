@@ -5,7 +5,7 @@
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         <a class="dropdown-item" href="/users/{{ Auth::user()->id }}">{{ _i('Details') }}</a>
-        <a class="dropdown-item" href="/user/settings/{{ Auth::user()->id }}">{{ _i('Settings') }}</a>
+        <a class="dropdown-item" href="/users/{{ Auth::user()->id }}/settings">{{ _i('Settings') }}</a>
         <a class="dropdown-item disabled" href="#">───────────────────</a>
         <a class="dropdown-item" href="{{ route('logout') }}"
             onclick="event.preventDefault();

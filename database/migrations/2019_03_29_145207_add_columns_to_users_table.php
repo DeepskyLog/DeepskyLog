@@ -18,7 +18,6 @@ class AddColumnsToUsersTable extends Migration
             $table->integer('stdlocation')->default(0);
             $table->integer('stdtelescope')->default(0);
             $table->string('language')->default('en_US');
-            $table->integer('stdatlas')->default(0);
             $table->string('icqname')->nullable();
             $table->string('observationlanguage')->default('en');
             $table->string('standardAtlasCode')->default('urano');

@@ -40,7 +40,7 @@ class UserController extends Controller
     {
         // isAdmin middleware lets only users with a
         // specific permission to access these resources
-        $this->middleware(['auth', 'verified', 'isAdmin']);
+        $this->middleware(['auth', 'verified']);
     }
 
     /**
@@ -72,7 +72,7 @@ class UserController extends Controller
         return view(
             'users.view',
             ['user' => $user, 'observationsPerYear' => $obsPerYear,
-            'observationsPerMonth' => $obsPerMonth]
+                'observationsPerMonth' => $obsPerMonth]
         );
     }
 
@@ -92,7 +92,7 @@ class UserController extends Controller
         )->chart(
             [
                 // pie , columnt etc
-                'type'     => 'line',
+                'type' => 'line',
                 // render the chart into your div with id
                 'renderTo' => 'observationsPerYear',
                 'zoomType' => 'x',
@@ -103,25 +103,25 @@ class UserController extends Controller
             ]
         )->xaxis(
             [
-            'categories' => [
-                '2009',
-                '2010',
-                '2011',
-                '2012',
-                '2013',
-                '2014',
-                '2015',
-                '2016',
-                '2017',
-                '2018',
-                '2019',
-            ],
-            'labels'     => [
-                'rotation'  => 0,
-                'align'     => 'top',
-                //'formatter' => 'startJs:function(){return this.value}:endJs',
-                // use 'startJs:yourjavasscripthere:endJs'
-            ],
+                'categories' => [
+                    '2009',
+                    '2010',
+                    '2011',
+                    '2012',
+                    '2013',
+                    '2014',
+                    '2015',
+                    '2016',
+                    '2017',
+                    '2018',
+                    '2019',
+                ],
+                'labels' => [
+                    'rotation' => 0,
+                    'align' => 'top',
+                    //'formatter' => 'startJs:function(){return this.value}:endJs',
+                    // use 'startJs:yourjavasscripthere:endJs'
+                ],
             ]
         )->yaxis(
             [
@@ -129,39 +129,39 @@ class UserController extends Controller
             ]
         )->legend(
             [
-                'layout'        => 'vertikal',
-                'align'         => 'right',
+                'layout' => 'vertikal',
+                'align' => 'right',
                 'verticalAlign' => 'middle',
             ]
         )->series(
             [
                 [
-                    'name'  => _i('Total'),
-                    'data'  => [124, 439, 525, 571, 696, 0, 100, 324, 129, 77, 12],
+                    'name' => _i('Total'),
+                    'data' => [124, 439, 525, 571, 696, 0, 100, 324, 129, 77, 12],
                 ],
                 [
-                    'name'  => _i('Deepsky'),
-                    'data'  => [120, 400, 423, 333, 500, 0, 77, 11, 12, 7, 4],
+                    'name' => _i('Deepsky'),
+                    'data' => [120, 400, 423, 333, 500, 0, 77, 11, 12, 7, 4],
                 ],
                 [
-                    'name'  => _i('Comets'),
-                    'data'  => [23, 10, 23, 33, 50, 0, 7, 15, 66, 23, 1],
+                    'name' => _i('Comets'),
+                    'data' => [23, 10, 23, 33, 50, 0, 7, 15, 66, 23, 1],
                 ],
                 [
-                    'name'  => _i('Double stars'),
-                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
+                    'name' => _i('Double stars'),
+                    'data' => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
                 ],
                 [
-                    'name'  => _i('Planets'),
-                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
+                    'name' => _i('Planets'),
+                    'data' => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
                 ],
                 [
-                    'name'  => _i('Sun'),
-                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
+                    'name' => _i('Sun'),
+                    'data' => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
                 ],
                 [
-                    'name'  => _i('Moon'),
-                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
+                    'name' => _i('Moon'),
+                    'data' => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
                 ],
             ]
         )->display();
@@ -183,7 +183,7 @@ class UserController extends Controller
         )->chart(
             [
                 // pie , columnt etc
-                'type'     => 'column',
+                'type' => 'column',
                 // render the chart into your div with id
                 'renderTo' => 'observationsPerMonth',
             ]
@@ -197,27 +197,27 @@ class UserController extends Controller
             ]
         )->xaxis(
             [
-            // Add months of the year (short version)
-            'categories' => [
-                Carbon::parse("2018-01-20")->isoFormat('MMM'),
-                Carbon::parse("2018-02-20")->isoFormat('MMM'),
-                Carbon::parse("2018-03-20")->isoFormat('MMM'),
-                Carbon::parse("2018-04-20")->isoFormat('MMM'),
-                Carbon::parse("2018-05-20")->isoFormat('MMM'),
-                Carbon::parse("2018-06-20")->isoFormat('MMM'),
-                Carbon::parse("2018-07-20")->isoFormat('MMM'),
-                Carbon::parse("2018-08-20")->isoFormat('MMM'),
-                Carbon::parse("2018-09-20")->isoFormat('MMM'),
-                Carbon::parse("2018-10-20")->isoFormat('MMM'),
-                Carbon::parse("2018-11-20")->isoFormat('MMM'),
-                Carbon::parse("2018-12-20")->isoFormat('MMM'),
-            ],
-            'labels'     => [
-                'rotation'  => 0,
-                'align'     => 'center',
-                //'formatter' => 'startJs:function(){return this.value}:endJs',
-                // use 'startJs:yourjavasscripthere:endJs'
-            ],
+                // Add months of the year (short version)
+                'categories' => [
+                    Carbon::parse('2018-01-20')->isoFormat('MMM'),
+                    Carbon::parse('2018-02-20')->isoFormat('MMM'),
+                    Carbon::parse('2018-03-20')->isoFormat('MMM'),
+                    Carbon::parse('2018-04-20')->isoFormat('MMM'),
+                    Carbon::parse('2018-05-20')->isoFormat('MMM'),
+                    Carbon::parse('2018-06-20')->isoFormat('MMM'),
+                    Carbon::parse('2018-07-20')->isoFormat('MMM'),
+                    Carbon::parse('2018-08-20')->isoFormat('MMM'),
+                    Carbon::parse('2018-09-20')->isoFormat('MMM'),
+                    Carbon::parse('2018-10-20')->isoFormat('MMM'),
+                    Carbon::parse('2018-11-20')->isoFormat('MMM'),
+                    Carbon::parse('2018-12-20')->isoFormat('MMM'),
+                ],
+                'labels' => [
+                    'rotation' => 0,
+                    'align' => 'center',
+                    //'formatter' => 'startJs:function(){return this.value}:endJs',
+                    // use 'startJs:yourjavasscripthere:endJs'
+                ],
             ]
         )->yaxis(
             [
@@ -225,35 +225,35 @@ class UserController extends Controller
             ]
         )->legend(
             [
-                'layout'        => 'vertikal',
-                'align'         => 'right',
+                'layout' => 'vertikal',
+                'align' => 'right',
                 'verticalAlign' => 'middle',
             ]
         )->series(
             [
                 [
-                    'name'  => _i('Deepsky'),
-                    'data'  => [120, 400, 423, 333, 500, 0, 77, 11, 12, 7, 4, 6],
+                    'name' => _i('Deepsky'),
+                    'data' => [120, 400, 423, 333, 500, 0, 77, 11, 12, 7, 4, 6],
                 ],
                 [
-                    'name'  => _i('Comets'),
-                    'data'  => [23, 10, 23, 33, 50, 0, 7, 15, 66, 23, 1, 7],
+                    'name' => _i('Comets'),
+                    'data' => [23, 10, 23, 33, 50, 0, 7, 15, 66, 23, 1, 7],
                 ],
                 [
-                    'name'  => _i('Double stars'),
-                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 8],
+                    'name' => _i('Double stars'),
+                    'data' => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 8],
                 ],
                 [
-                    'name'  => _i('Planets'),
-                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 9],
+                    'name' => _i('Planets'),
+                    'data' => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 9],
                 ],
                 [
-                    'name'  => _i('Sun'),
-                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 10],
+                    'name' => _i('Sun'),
+                    'data' => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 10],
                 ],
                 [
-                    'name'  => _i('Moon'),
-                    'data'  => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 11],
+                    'name' => _i('Moon'),
+                    'data' => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 11],
                 ],
             ]
         )->display();
@@ -268,7 +268,7 @@ class UserController extends Controller
      */
     public function settings($id)
     {
-        if (auth()->user()->id === $id) {
+        if (auth()->user()->id == $id) {
             $user = auth()->user();
 
             return view('users.settings', ['user' => $user]);
@@ -576,6 +576,6 @@ class UserController extends Controller
             );
         }
 
-        return redirect('/user/settings/' . $id);
+        return redirect('/users/' . $id . '/settings');
     }
 }

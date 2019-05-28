@@ -2,13 +2,10 @@
 
 ## TESTS
 
-## AUTHENTICATION
-
-+ [ ] Write script to convert old observers table of DeepskyLog to laravel
-+ [ ] Write script to convert old lenses table of DeepskyLog to laravel
-+ [ ] Clean up source code: php artisan insights
-
 ## MESSAGING SYSTEM
+
++ [ ] Select good library for the messaging system.
++ [ ] Convert old messages to the new messaging system
 
 ## FILTERS
 
@@ -30,7 +27,12 @@
 + [ ] Add number of instruments to users/view.blade.php
 + [ ] Add the selection of instruments to the user settings (settings.blade.php)
 + [ ] Add the standard instrument to the user details (users/view.blade.php)
-+ [ ] Add the insturments to subheader/instrument.blade.php
++ [ ] Add the instruments to subheader/instrument.blade.php
+
+## OBJECTS
+
++ [ ] Add new types for the objects
++ [ ] Insert all old objects in the new database
 
 ## OBSERVATIONS
 
@@ -40,11 +42,23 @@
   + [ ] Recalculate number of observations for each lens of the observer whenever (needed for datatables?):
     + [ ] Add observation
     + [ ] Update observation
-    + [ ] Delete observation 
+    + [ ] Delete observation
 + [ ] Users
   + [ ] Only show delete button if there are no observations
   + [ ] Show number of observations, instruments and lists in users/view.blade.php
   + [ ] Create the charts in users/view.blade.php
   + [ ] Add the deepskylog star page in users/view.blade.php
 
-## SEEDER
+## SEEDERS
+
++ [ ] Observations
+  + [ ] Add number of observations to the lenses.
+
+## INSTALLATION
+
++ After making an empty database and doing a migration to create the tables:
+  + Make a link from observers to /observer_pics
+  + Set the correct database entries in .env: DB_DATABASE_OLD, DB_USERNAME_OLD, and
+DB_PASSWORD_OLD
+  + Run the seeders: php artisan db:seed
+  + Remove the link to /observer_pics

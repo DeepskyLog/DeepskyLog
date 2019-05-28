@@ -37,7 +37,7 @@
             <label class="col-form-label"> {{ _i("Change profile picture") }}</label>
             <input type="file" id="filepond" class="filepond">
 
-            <form role="form" action="/user/settings/{{ $user->id }}" method="POST">
+            <form role="form" action="/users/{{ $user->id }}/settings" method="POST">
                 @csrf
                 @method('PATCH')
 
@@ -77,7 +77,7 @@
 
                 <div class="form-group fstOffset">
                     <label for="fstOffset">{{ _i("fstOffset") }}</label>
-                    <input type="number" min="-5.0" max="5.0" step="0.1" class="form-control {{ $errors->has('fstOffset') ? 'is-invalid' : '' }}" maxlength="4" name="fstOffset" size="4" value="{{ $user->fstOffset }}" />
+                    <input type="number" min="-5.0" max="5.0" step="0.01" class="form-control {{ $errors->has('fstOffset') ? 'is-invalid' : '' }}" maxlength="4" name="fstOffset" size="4" value="{{ $user->fstOffset }}" />
                     <span class="help-block">{{ _i("Offset between measured SQM value and the faintest visible star.") }}</span>
                 </div>
 
@@ -136,7 +136,7 @@
         <!-- Observing tab -->
         <div class="tab-pane" id="observingDetails">
             <br />
-            <form role="form" action="/user/settings/{{ $user->id }}" method="POST">
+            <form role="form" action="/users/{{ $user->id }}/settings" method="POST">
                 @csrf
                 @method('PATCH')
 
@@ -195,7 +195,7 @@
         <!-- Atlasses tab -->
         <div class="tab-pane" id="atlases">
             <br />
-            <form role="form" action="/user/settings/{{ $user->id }}" method="POST">
+            <form role="form" action="/users/{{ $user->id }}/settings" method="POST">
                 @csrf
                 @method('PATCH')
 
@@ -280,7 +280,7 @@
 
         <div class="tab-pane" id="languages">
             <br />
-            <form role="form" action="/user/settings/{{ $user->id }}" method="POST">
+            <form role="form" action="/users/{{ $user->id }}/settings" method="POST">
                 @csrf
                 @method('PATCH')
 
@@ -380,7 +380,7 @@ function enableDisableCopyright() {
     FilePond.setOptions({
         acceptedFileTypes: ['image/*'],
         server: {
-            url: '/user/upload',
+            url: '/users/upload',
             process: {
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -398,7 +398,7 @@ function enableDisableCopyright() {
     const pond = FilePond.create( inputElement, { files: [
         {
             // the server file reference
-            source: '/user/getAuthenticatedUserImage',
+            source: '/users/getAuthenticatedUserImage',
         }
     ] } );
 </script>

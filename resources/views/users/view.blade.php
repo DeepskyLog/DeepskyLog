@@ -5,7 +5,7 @@
 @section('content')
 
 <h3>{{ $user->name }}</h3>
-<img width="100" style="border-radius: 20%" src="/user/getImage/{{ $user->id }}">
+<img width="100" style="border-radius: 20%" src="/users/{{ $user->id }}/getImage">
 
 <hr>
 
