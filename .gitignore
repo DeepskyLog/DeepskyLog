@@ -12,3 +12,4 @@ yarn-error.log
 .env.testing
 scanner_config.php
 /observer_pics
+messages/
