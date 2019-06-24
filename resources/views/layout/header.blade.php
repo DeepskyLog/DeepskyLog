@@ -27,9 +27,10 @@
                 @include('layout.header.user');
 
                 <button class="btn" style="margin-right:5px;border:0;">
-                    <a href="/message/view">
+                    <a href="/messages">
+                        <?php $count = Auth::user()->newThreadsCount(); ?>
                         <span style="color: #FFFFFF" class="fas fa-inbox"></span>&nbsp;
-                        <span class="badge badge-pill badge-secondary">4</span>
+                        <span class="badge badge-pill badge-secondary">{{  $count }}</span>
                     </a>
                 </button>
             @endif

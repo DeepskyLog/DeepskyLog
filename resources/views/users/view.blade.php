@@ -241,7 +241,7 @@
         </a>
 
         @if ($user->id != Auth::user()->id)
-            <a class="btn btn-primary" href="/observations/drawings/user/{{ $user->id }}">
+            <a class="btn btn-primary" href="/messages/create/{{ $user->id }}">
                 <i class="fas fa-envelope-open"></i>&nbsp;{{ _i("Send message to ") . $user->name }}
             </a>
         @endif

@@ -4,16 +4,16 @@
 
 <!-- code_chunk_output -->
 
-- [Development tricks](#development-tricks)
-  - [Flash messages](#flash-messages)
-  - [Internationalization](#internationalization)
-    - [Translate the strings](#translate-the-strings)
-  - [Authentication](#authentication)
-    - [Using policies](#using-policies)
-    - [Checking user permissions](#checking-user-permissions)
-  - [Tests](#tests)
-  - [Select library](#select-library)
-  - [Datatables](#datatables)
+- [Development tricks](#Development-tricks)
+  - [Flash messages](#Flash-messages)
+  - [Internationalization](#Internationalization)
+    - [Translate the strings](#Translate-the-strings)
+  - [Authentication](#Authentication)
+    - [Using policies](#Using-policies)
+    - [Checking user permissions](#Checking-user-permissions)
+  - [Tests](#Tests)
+  - [Select library](#Select-library)
+  - [Datatables](#Datatables)
 
 <!-- /code_chunk_output -->
 
@@ -76,7 +76,7 @@ Poedit doesn't "understand" blade syntax. When using blade views you must run
 php artisan gettext:update
 ```
 
-in order to compile all blade views to plain php before update the translations in Poedit.
+in order to compile all blade views to plain php before updating the translations in Poedit.
 
 Open Poedit and read in the language file to translate (in resources/lang/i18n/LANGUAGE/messages.po). Click on the update catalogue button in POedit to bring in the latest strings to translate.
 

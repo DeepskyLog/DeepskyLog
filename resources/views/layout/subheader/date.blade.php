@@ -38,10 +38,12 @@
 			},
             beforeShow: function (input, inst) {
                 var queryDate = "{{ Session::get('date') }}";
-                dateParts = queryDate.match(/(\d+)/g)
-                realDate = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+                if (queryDate != "") {
+                    dateParts = queryDate.match(/(\d+)/g)
+                    realDate = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
 
-                $(this).datepicker('setDate', realDate);
+                    $(this).datepicker('setDate', realDate);
+                }
 			},
 			beforeShowDay: function(date) {
                 var highlight = eventDates[date];
@@ -55,25 +57,25 @@
             dateFormat: "dd/mm/yy",
             defaultDate: -7,
             onSelect: function(dateText) {
-
-                $.ajax({
-                    type: 'POST',
-                    url: "/setSession",
-                    data: { date: dateText }
-                });
-                location.href = window.location;
+                var url = '/setSession';
+                var form = $('<form action="' + url + '" method="post">' +
+                    '<input type="text" name="date" value="' + dateText + '" />' +
+                    '</form>');
+                    $('body').append(form);
+                form.submit();
 	        }
         });
     } );
 </script>
 
 @php
-    if (session('date')) {
+    // Current date
+    $datetime = new DateTime();
+    $date = $datetime->format('d/m/Y');
+
+    if (Session::has('date')) {
         $date = session('date');
     } else {
-        // Current date
-        $datetime = new DateTime();
-        $date = $datetime->format('d/m/Y');
         Session::put('date', $date);
     }
 @endphp

@@ -81,6 +81,13 @@ class UsersTableSeeder extends Seeder
                 'Y-m-d H:i:s', mktime($hour, $minute, 0, $month, $day, $year)
             );
 
+            $name = html_entity_decode($accountSingle->firstname)
+                        . ' ' . html_entity_decode($accountSingle->name);
+
+            if ($accountSingle->id === admin) {
+                $name = "Administrator";
+            }
+
             if ($accountSingle->id !== 'vvs04478Admin'
                 && $accountSingle->id !== 'evdjadmin'
                 && $accountSingle->id !== 'TomC_developer'
@@ -91,8 +98,7 @@ class UsersTableSeeder extends Seeder
                 $user = User::create(
                     [
                     'username' => $accountSingle->id,
-                    'name' => html_entity_decode($accountSingle->firstname)
-                        . ' ' . html_entity_decode($accountSingle->name),
+                    'name' => $name,
                     'email' => $accountSingle->email,
                     'email_verified_at' => $date,
                     'type' => $type,

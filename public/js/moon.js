@@ -7,7 +7,7 @@
 // The calculations are approximate but should be good enough for general use,
 // I accept no responsibility for errors in astronomy or coding.
 
-// WARNING moonrise code changed on 6 May 2003 to correct a systematic error 
+// WARNING moonrise code changed on 6 May 2003 to correct a systematic error
 // these are now local times NOT UTC as the original code did.
 
 // Meeus first edition table 45.A Longitude and distance of the moon
@@ -194,7 +194,7 @@ function MoonRise(year,month,day,TZ,latitude,longitude) {
     riseset=new Array(-2,-2);
   } else {
     riseset=new Array(-1,-1);
-  }  
+  }
   hours=24;
   rad=MoonPos(year,month,day,hours-TZ);
   altaz=radtoaa(rad[0],rad[1],year,month,day,hours-TZ,latitude,longitude);
@@ -267,7 +267,7 @@ function MoonPhase(year,month,day,hours) {
   // Moons mean elongation Meeus first edition
   // var D=297.8502042+445267.1115168*T-0.0016300*T2+T3/545868.0-T4/113065000.0;
   // Moons mean elongation Meeus second edition
-  var D=297.8501921+445267.1114034*T-0.0018819*T2+T3/545868.0-T4/113065000.0; 
+  var D=297.8501921+445267.1114034*T-0.0018819*T2+T3/545868.0-T4/113065000.0;
   // Moons mean anomaly M' Meeus first edition
   // var MP=134.9634114+477198.8676313*T+0.0089970*T2+T3/69699.0-T4/14712000.0;
   // Moons mean anomaly M' Meeus second edition
@@ -281,13 +281,13 @@ function MoonPhase(year,month,day,hours) {
 }
 
 function MoonQuarters(year,month,day) {
-  // returns an array of Julian Ephemeris Days (JDE) for 
+  // returns an array of Julian Ephemeris Days (JDE) for
   // new moon, first quarter, full moon and last quarter
   // Meeus first edition chapter 47 with only the most larger additional corrections
   // Meeus code calculate Terrestrial Dynamic Time
   // TDT = UTC + (number of leap seconds) + 32.184
   // At the end of June 2012 the 25th leap second was added
-  // 
+  //
   var quarters = new Array();
   // k is an integer for new moon incremented by 0.25 for first quarter 0.5 for new etc.
   var k=Math.floor((year+((month-1)+day/30)/12-2000)*12.3685);
@@ -323,67 +323,46 @@ function MoonQuarters(year,month,day) {
 
   quarters[0]=JDE+0.000325*sind(A[1])+0.000165*sind(A[2])+0.000164*sind(A[3])+0.000126*sind(A[4])
                  +0.000110*sind(A[5])+0.000062*sind(A[6])+0.000060*sind(A[7]);
-  
+
    // The following code needs tidying up with a loop and conditionals for each quarter
-  // First Quarter k=k+0.25
-  JDE=JDE0+29.530588853*0.25;
-  M=rev(M+29.10535669*0.25);
-  MP=rev(MP+385.81693528*0.25);
-  F=rev(F+390.67050274*0.25);
-  Omega=rev(Omega-1.56375580*0.25);
-  A[1]=rev(A[1]+ 0.107408*0.25); A[2]=rev(A[2]+ 0.016321*0.25); A[3]=rev(A[3]+26.651886*0.25);
-  A[4]=rev(A[4]+36.412478*0.25); A[5]=rev(A[5]+18.206239*0.25); A[6]=rev(A[6]+53.303771*0.25);
-  A[7]=rev(A[7]+ 2.453732*0.25);
+  for (var k=1; k<=3; k++) {
+    JDE=JDE0+29.530588853 *0.25 * k;
 
-  JDE=JDE-0.62801*sind(MP)      +0.17172*E*sind(M)        -0.01183*E*sind(MP+M)    +0.00862*sind(2*MP)
-         +0.00804*sind(2*F)     +0.00454*E*sind(MP-M)     +0.00204*E*E*sind(2*M)  -0.00180*sind(MP-2*F)
-         -0.00070*sind(MP+2*F)  -0.00040*sind(3*MP)       -0.00034*E*sind(2*MP-M) +0.00032*E*sind(M+2*F)
-         +0.00032*E*sind(M-2*F) -0.00028*E*E*sind(MP+2*M) +0.00027*E*sind(2*MP+M) -0.00017*sind(Omega);
-  // Next term is w add for first quarter & subtract for second
-  JDE=JDE+ (0.00306 - 0.00038*E*cosd(M) + 0.00026*cosd(MP) - 0.00002*cosd(MP-M) + 0.00002*cosd(MP+M) + 0.00002*cosd(2*F));
+    M=rev(M+29.10535669*0.25);
+    MP=rev(MP+385.81693528*0.25);
+    F=rev(F+390.67050274*0.25);
+    Omega=rev(Omega-1.56375580*0.25);
+    A[1]=rev(A[1]+ 0.107408*0.25);
+    A[2]=rev(A[2]+ 0.016321*0.25);
+    A[3]=rev(A[3]+26.651886*0.25);
+    A[4]=rev(A[4]+36.412478*0.25);
+    A[5]=rev(A[5]+18.206239*0.25);
+    A[6]=rev(A[6]+53.303771*0.25);
+    A[7]=rev(A[7]+ 2.453732*0.25);
 
-  quarters[1]=JDE+0.000325*sind(A[1])+0.000165*sind(A[2])+0.000164*sind(A[3])+0.000126*sind(A[4])
+    if (k === 2) {
+        JDE=JDE-0.40614*sind(MP)      +0.17302*E*sind(M)      +0.01614*sind(2*MP)    +0.01043*sind(2*F)
+               +0.00734*E*sind(MP-M)  -0.00515*E*sind(MP+M)   +0.00209*E*E*sind(2*M) -0.00111*sind(MP-2*F)
+               -0.00057*sind(MP+2*F)  +0.00056*E*sind(2*MP+M) -0.00042*sind(3*MP)    +0.00042*E*sind(M+2*F)
+               +0.00038*E*sind(M-2*F) -0.00024*E*sind(2*MP-M) -0.00017*sind(Omega)   -0.00007*sind(MP+2*M);
+    } else {
+        JDE=JDE-0.62801*sind(MP)      +0.17172*E*sind(M)        -0.01183*E*sind(MP+M)    +0.00862*sind(2*MP)
+               +0.00804*sind(2*F)     +0.00454*E*sind(MP-M)     +0.00204*E*E*sind(2*M)  -0.00180*sind(MP-2*F)
+               -0.00070*sind(MP+2*F)  -0.00040*sind(3*MP)       -0.00034*E*sind(2*MP-M) +0.00032*E*sind(M+2*F)
+               +0.00032*E*sind(M-2*F) -0.00028*E*E*sind(MP+2*M) +0.00027*E*sind(2*MP+M) -0.00017*sind(Omega);
+
+        if (k === 1) {
+            JDE=JDE + (0.00306 - 0.00038*E*cosd(M) + 0.00026*cosd(MP) - 0.00002*cosd(MP-M) + 0.00002*cosd(MP+M) + 0.00002*cosd(2*F));
+        } else {
+            JDE=JDE - (0.00306 - 0.00038*E*cosd(M) + 0.00026*cosd(MP) - 0.00002*cosd(MP-M) + 0.00002*cosd(MP+M) + 0.00002*cosd(2*F));
+
+        }
+    }
+
+    quarters[k]=JDE+0.000325*sind(A[1])+0.000165*sind(A[2])+0.000164*sind(A[3])+0.000126*sind(A[4])
                  +0.000110*sind(A[5])+0.000062*sind(A[6])+0.000060*sind(A[7]);
 
-  // Full moon k=k+0.5 
-  JDE=JDE0+29.530588853*0.5;
-  // Already added 0.25 for first quarter
-  M=rev(M+29.10535669*0.25);
-  MP=rev(MP+385.81693528*0.25);
-  F=rev(F+390.67050274*0.25);
-  Omega=rev(Omega-1.56375580*0.25);
-  A[1]=rev(A[1]+ 0.107408*0.25); A[2]=rev(A[2]+ 0.016321*0.25); A[3]=rev(A[3]+26.651886*0.25);
-  A[4]=rev(A[4]+36.412478*0.25); A[5]=rev(A[5]+18.206239*0.25); A[6]=rev(A[6]+53.303771*0.25);
-  A[7]=rev(A[7]+ 2.453732*0.25);
-
-  JDE=JDE-0.40614*sind(MP)      +0.17302*E*sind(M)      +0.01614*sind(2*MP)    +0.01043*sind(2*F)
-         +0.00734*E*sind(MP-M)  -0.00515*E*sind(MP+M)   +0.00209*E*E*sind(2*M) -0.00111*sind(MP-2*F)
-         -0.00057*sind(MP+2*F)  +0.00056*E*sind(2*MP+M) -0.00042*sind(3*MP)    +0.00042*E*sind(M+2*F)
-         +0.00038*E*sind(M-2*F) -0.00024*E*sind(2*MP-M) -0.00017*sind(Omega)   -0.00007*sind(MP+2*M);
-
-  quarters[2]=JDE+0.000325*sind(A[1])+0.000165*sind(A[2])+0.000164*sind(A[3])+0.000126*sind(A[4])
-                 +0.000110*sind(A[5])+0.000062*sind(A[6])+0.000060*sind(A[7]);
-
-  // Last Quarter k=k+0.75
-  JDE=JDE0+29.530588853*0.75;
-  // Already added 0.5 for full moon
-  M=rev(M+29.10535669*0.25);
-  MP=rev(MP+385.81693528*0.25);
-  F=rev(F+390.67050274*0.25);
-  Omega=rev(Omega-1.56375580*0.25);
-  A[1]=rev(A[1]+ 0.107408*0.25); A[2]=rev(A[2]+ 0.016321*0.25); A[3]=rev(A[3]+26.651886*0.25);
-  A[4]=rev(A[4]+36.412478*0.25); A[5]=rev(A[5]+18.206239*0.25); A[6]=rev(A[6]+53.303771*0.25);
-  A[7]=rev(A[7]+ 2.453732*0.25);
-
-  JDE=JDE-0.62801*sind(MP)      +0.17172*E*sind(M)        -0.01183*E*sind(MP+M)    +0.00862*sind(2*MP)
-         +0.00804*sind(2*F)     +0.00454*E*sind(MP-M)     +0.00204*E*E*sind(2*M)  -0.00180*sind(MP-2*F)
-         -0.00070*sind(MP+2*F)  -0.00040*sind(3*MP)       -0.00034*E*sind(2*MP-M) +0.00032*E*sind(M+2*F)
-         +0.00032*E*sind(M-2*F) -0.00028*E*E*sind(MP+2*M) +0.00027*E*sind(2*MP+M) -0.00017*sind(Omega);
-  // Next term is w add for first quarter & subtract for second
-  JDE=JDE - (0.00306 - 0.00038*E*cosd(M) + 0.00026*cosd(MP) - 0.00002*cosd(MP-M) + 0.00002*cosd(MP+M) + 0.00002*cosd(2*F));
-
-  quarters[3]=JDE+0.000325*sind(A[1])+0.000165*sind(A[2])+0.000164*sind(A[3])+0.000126*sind(A[4])
-                 +0.000110*sind(A[5])+0.000062*sind(A[6])+0.000060*sind(A[7]);
+  }
 
   return quarters;
 }

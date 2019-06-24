@@ -20,6 +20,7 @@ use App\Notifications\DeepskyLogVerificationNotification;
 use App\Notifications\DeepskyLogResetPassword;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Cmgmyr\Messenger\Traits\Messagable;
 
 /**
  * User eloquent model.
@@ -34,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
     use Notifiable;
     use HasMediaTrait;
+    use Messagable;
 
     public const ADMIN_TYPE = 'admin';
     public const DEFAULT_TYPE = 'default';

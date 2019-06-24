@@ -32,20 +32,18 @@ class LensTableSeeder extends Seeder
     /**
      * Run the database seeds.
      *
-     * @return void
+     * @return None
      */
     public function run()
     {
-//        factory(App\Lens::class, 15000)->create();
         $lensData = LensOld::all();
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
         DB::table('lens')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         foreach ($lensData as $lens) {
-            $observer = User::where('username', $lens->observer)->pluck("id");
+            $observer = User::where('username', $lens->observer)->pluck('id');
             if (sizeof($observer) > 0) {
-
                 if ($lens->timestamp == '') {
                     $date = date('Y-m-d H:i:s');
                 } else {

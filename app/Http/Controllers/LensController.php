@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\DB;
 class LensController extends Controller
 {
     /**
-     * Make sure the lens pages can be seen if the user is authenticated
+     * Make sure the lens pages can only be seen if the user is authenticated
      * and verified.
      */
     public function __construct()

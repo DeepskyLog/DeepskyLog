@@ -391,7 +391,6 @@ function enableDisableCopyright() {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 }
             }
-
         }
     });
     const inputElement = document.querySelector('input[type="file"]');

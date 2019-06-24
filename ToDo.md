@@ -2,9 +2,13 @@
 
 ## TESTS
 
+## Moon / sun
+
++ [ ] Timezones with javascript: https://moment.github.io/luxon/
++ [ ] Timezones with php: Carbon: https://carbon.nesbot.com/docs/#api-timezone
+
 ## MESSAGING SYSTEM
 
-+ [ ] Select good library for the messaging system.
 + [ ] Convert old messages to the new messaging system
 + [ ] CODE CLIMATE: https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication
 
@@ -35,8 +39,16 @@
 + [ ] Add new types for the objects
 + [ ] Insert all old objects in the new database
 
+## OBSERVATION LISTS
+
++ [ ] Add planets, sun, ...
++ [ ] Rethink the observation lists
++ [ ] Only receive messages if you opt in for this
+
 ## OBSERVATIONS
 
++ [ ] https://github.com/VanOns/laraberg for editor
++ [ ] https://jamesmills.co.uk/2019/02/28/laravel-timezone/ for timezones / date
 + [ ] Lenses
   + [ ] Only show delete button if there are no observations
     + [ ] Also update the tests for lens
