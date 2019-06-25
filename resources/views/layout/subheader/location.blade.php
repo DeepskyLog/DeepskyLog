@@ -1,6 +1,6 @@
 <li class="nav-item">
     <span class="navbar-text">
-        <select class="form-control" id="activateLocation" onchange="location=this.options[this.selectedIndex].value;">
+        <select class="form-control selection" id="activateLocation" onchange="location=this.options[this.selectedIndex].value;">
             <optgroup label="Belgium">
                 <option value="/location/activate/Roosbeek">Roosbeek</option>
                 <option value="/location/activate/Bambrugge">Bambrugge</option>

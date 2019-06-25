@@ -16,10 +16,6 @@ window.$ = window.jQuery = require( 'jquery' );
 
 import 'jquery-ui/ui/widgets/datepicker.js';
 
-require( 'jszip' );
-var pdfMake = require('pdfmake/build/pdfmake.js');
-var pdfFonts = require('pdfmake/build/vfs_fonts.js');
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 require( 'datatables.net' );
 require( 'datatables.net-bs4' );
 require( 'datatables.net-buttons/js/buttons.colVis.js' );
@@ -28,20 +24,26 @@ require( 'datatables.net-colreorder-bs4' );
 require( 'datatables.net-buttons/js/buttons.print.js' );
 require( 'datatables.net-plugins/sorting/natural.js');
 
+import jsZip from 'jszip';
+
+// This line was the one missing
+window.JSZip = jsZip;
+
+var pdfMake = require('pdfmake/build/pdfmake.js');
+var pdfFonts = require('pdfmake/build/vfs_fonts.js');
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 require( 'password-strength-meter/dist/password.min.js' );
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
-
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
-//Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Filepond
+window.FilePondPluginImagePreview = require('filepond-plugin-image-preview');
+window.FilePondPluginFileValidateType = require('filepond-plugin-file-validate-type');
+window.FilePondPluginImageExifOrientation = require('filepond-plugin-image-exif-orientation');
+window.FilePondPluginImageCrop = require('filepond-plugin-image-crop');
+window.FilePondPluginImageResize = require('filepond-plugin-image-resize');
+window.FilePondPluginImageTransform = require('filepond-plugin-image-transform');
+window.FilePond = require('filepond/dist/filepond.min.js');
+require("jquery-filepond/filepond.jquery.js");
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -17,6 +17,20 @@
                         @csrf
 
                         <div class="form-group row">
+                            <label for="username" class="col-md-4 col-form-label text-md-right">{{ _i('Username') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="username" type="text" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username" value="{{ old('username') }}" required autofocus>
+
+                                @if ($errors->has('username'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('username') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ _i('Full Name') }}</label>
 
                             <div class="col-md-6">
@@ -70,7 +84,7 @@
                             <label for="country" class="col-md-4 col-form-label text-md-right">{{ _i('Country of residence') }}</label>
 
                             <div class="col-md-6">
-                                <select class="form-control" id="country" name="country">
+                                <select class="form-control selection" id="country" name="country">
                                     <option value="">&nbsp;</option>
                                     @foreach (Countries::getList(LaravelGettext::getLocaleLanguage()) as $code=>$country)
                                         <option @if ($code == old('country')) selected="selected"@endif value="{{ $code }}">{{ $country }}</option>
@@ -83,7 +97,7 @@
                             <label for="observationlanguage" class="col-md-4 col-form-label text-md-right">{{ _i('Standard language for observations') }}</label>
 
                             <div class="col-md-6">
-                                <select class="form-control" id="observationlanguage" name="observationlanguage">
+                                <select class="form-control selection" id="observationlanguage" name="observationlanguage">
                                     <option value="">&nbsp;</option>
                                     @foreach (Languages::lookup('major', LaravelGettext::getLocaleLanguage()) as $code=>$language)
                                         @if (old('observationlanguage') != '')
@@ -100,7 +114,7 @@
                             <label for="language" class="col-md-4 col-form-label text-md-right">{{ _i('Language for user interface') }}</label>
 
                             <div class="col-md-6">
-                                <select class="form-control" id="language" name="language">
+                                <select class="form-control selection" id="language" name="language">
                                     <option value="">&nbsp;</option>
                                     @foreach(Config::get('laravel-gettext.supported-locales') as $locale)
                                         @php
@@ -120,7 +134,7 @@
                             <label for="cclicense" class="col-md-4 col-form-label text-md-right">{{ _i("License for drawings") }}</label>
 
                             <div class="col-md-6">
-                                <select name="cclicense" id="cclicense" onchange="enableDisableCopyright();" class="form-control">
+                                <select name="cclicense selection" id="cclicense" onchange="enableDisableCopyright();" class="form-control">
                                     <option value="0" @if (0 == old('cclicense')) selected="cclicense"@endif>Attribution CC BY</option>
                                     <option value="1" @if (1 == old('cclicense')) selected="cclicense"@endif>Attribution-ShareAlike CC BY-SA</option>
                                     <option value="2" @if (2 == old('cclicense')) selected="cclicense"@endif>Attribution-NoDerivs CC BY-ND</option>

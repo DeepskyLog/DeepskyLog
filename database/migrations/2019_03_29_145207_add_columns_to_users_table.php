@@ -12,23 +12,23 @@ class AddColumnsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->string('username')->after('id');
             $table->string('type')->default('default');
             $table->string('country');
             $table->integer('stdlocation')->default(0);
             $table->integer('stdtelescope')->default(0);
             $table->string('language')->default('en_US');
-            $table->integer('stdatlas')->default(0);
             $table->string('icqname')->nullable();
             $table->string('observationlanguage')->default('en');
-            $table->string('standardAtlasCode')->default('');
+            $table->string('standardAtlasCode')->default('urano');
             $table->float('fstOffset')->default(0.0);
             $table->string('copyright');
-            $table->string('overviewdsos')->default('');
-            $table->string('lookupdsos')->default('');
-            $table->string('detaildsos')->default('');
-            $table->string('overviewstars')->default('');
-            $table->string('lookupstars')->default('');
-            $table->string('detailstars')->default('');
+            $table->string('overviewdsos')->default(10);
+            $table->string('lookupdsos')->default(12);
+            $table->string('detaildsos')->default(15);
+            $table->string('overviewstars')->default(10);
+            $table->string('lookupstars')->default(12);
+            $table->string('detailstars')->default(15);
             $table->integer('atlaspagefont')->default(6);
             $table->integer('photosize1')->default(60);
             $table->integer('overviewFoV')->default(120);

@@ -23,10 +23,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \Spatie\Flash\Flash::levels([
-            'success' => 'alert-success',
-            'warning' => 'alert-warning',
-            'error' => 'alert-danger',
-        ]);
     }
 }

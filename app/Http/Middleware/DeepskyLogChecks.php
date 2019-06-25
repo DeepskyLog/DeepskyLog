@@ -38,19 +38,27 @@ class DeepskyLogChecks
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::guest()) {
+        if (! Auth::guest()) {
             // Check if the observer has set a country of residence.
-            if (Auth::user()->country == '') {
-                flash()->warning(
-                    _i(
-                        'Your country of residence is not set. Please set it in the observer settings.'
-                    )
-                );
+            if (Auth::user()->country === '') {
+                laraflash(
+                    _i('Your country of residence is not set. Please set it in the observer settings.'),
+                )->warning();
             }
 
-            // TODO: Check if a standard location is set
+            // Check if a standard location is set
+            if (Auth::user()->stdlocation === 0) {
+                laraflash(
+                    _i('You did not specify a standard location. Please select one.')
+                )->warning();
+            }
 
-            // TODO: Check if a standard instrument is set
+            // Check if a standard instrument is set
+            if (Auth::user()->stdtelescope === 0) {
+                laraflash(
+                    _i('You did not specify a standard instrument. Please select one.')
+                )->warning();
+            }
         }
 
         return $next($request);

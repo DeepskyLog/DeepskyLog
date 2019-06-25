@@ -21,7 +21,7 @@
     </tr>
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td><a href="/observer/{{ $lens->observer_id }}">{{  $lens->observer->name }}</a></td>
+        <td><a href="/users/{{ $lens->observer_id }}">{{  $lens->observer->name }}</a></td>
     </tr>
     <tr>
         <td>{{ _i("Number of observations") }}</td>

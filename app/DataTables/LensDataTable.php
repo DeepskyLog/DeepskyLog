@@ -1,14 +1,39 @@
 <?php
 
+/**
+ * Lens DataTable.
+ *
+ * PHP Version 7
+ *
+ * @category Lenses
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
+
 namespace App\DataTables;
 
 use Yajra\DataTables\Services\DataTable;
-use \App\Lens;
+use App\Lens;
 
+/**
+ * Lens DataTable.
+ *
+ * PHP Version 7
+ *
+ * @category Lenses
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
 class LensDataTable extends DataTable
 {
     /**
      * Make the correct ajax call.
+     *
+     * @return datatables The Correct ajax call.
      */
     public function ajax()
     {
@@ -51,7 +76,7 @@ class LensDataTable extends DataTable
      */
     public function query()
     {
-        if ($this->user == 'admin') {
+        if ($this->user === 'admin') {
             $lenses = Lens::select();
         } else {
             $lenses = auth()->user()->lenses();
@@ -67,14 +92,14 @@ class LensDataTable extends DataTable
      */
     public function html()
     {
-        if ($this->user == 'admin') {
+        if ($this->user === 'admin') {
             return $this->builder()
                 ->columns($this->getColumns())->minifiedAjax()
                 ->addColumn(
                     ['data' => 'observername', 'title' => _i('Name'),
                     'name' => 'observername',
                     'orderable' => false,
-                    'searchable' => false
+                    'searchable' => false,
                     ]
                 )->parameters($this->getMyParameters());
         } else {
@@ -92,7 +117,10 @@ class LensDataTable extends DataTable
     protected function getMyParameters()
     {
         $language = array("url"=>"http://cdn.datatables.net/plug-ins/1.10.19/i18n/"
-            . \PeterColes\Languages\LanguagesFacade::lookup([\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()], 'en')->first()
+            . \PeterColes\Languages\LanguagesFacade::lookup(
+                [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
+                'en'
+            )->first()
             . ".json");
         $mypars = $this->getBuilderParameters();
         $mypars["language"] = $language;
@@ -106,7 +134,7 @@ class LensDataTable extends DataTable
      */
     protected function getColumns()
     {
-        if ($this->user == 'admin') {
+        if ($this->user === 'admin') {
             return [
                 ['name' => 'name',
                     'title' => _i('Name'),
@@ -115,44 +143,44 @@ class LensDataTable extends DataTable
                 ['name' => 'factor',
                     'title' => _i('Factor'),
                     'data' => 'factor',
-                    'width' => '10%'
+                    'width' => '10%',
                 ],
                 ['name' => 'observations',
                     'title' => _i('Observations'),
                     'data' => 'observations',
-                    'width' => '10%'
+                    'width' => '10%',
                 ],
                 ['name' => 'delete',
                     'title' => _i('Delete'),
                     'data' => 'delete',
                     'orderable' => false,
                     'searchable' => false,
-                    'width' => '10%'
+                    'width' => '10%',
                 ],
             ];
         } else {
             return [
                 ['name' => 'name',
                     'title' => _i('Name'),
-                    'data' => 'name'
+                    'data' => 'name',
                 ],
                 ['name' => 'factor',
                     'title' => _i('Factor'),
-                    'data' => 'factor'
+                    'data' => 'factor',
                 ],
                 ['name' => 'observations',
                     'title' => _i('Observations'),
-                    'data' => 'observations'
+                    'data' => 'observations',
                 ],
                 ['name' => 'active',
                     'title' => _i('Active'),
-                    'data' => 'active'
+                    'data' => 'active',
                 ],
                 ['name' => 'delete',
                     'title' => _i('Delete'),
                     'data' => 'delete',
                     'orderable' => false,
-                    'searchable' => false
+                    'searchable' => false,
                 ],
             ];
         }

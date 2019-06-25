@@ -17,6 +17,7 @@ use App\Lens;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\DataTables\LensDataTable;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Lens Controller.
@@ -30,7 +31,7 @@ use App\DataTables\LensDataTable;
 class LensController extends Controller
 {
     /**
-     * Only make sure the lens pages can be seen if the user is authenticated
+     * Make sure the lens pages can only be seen if the user is authenticated
      * and verified.
      */
     public function __construct()
@@ -41,16 +42,20 @@ class LensController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param LensDataTable $dataTable The lens datatable
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(LensDataTable $dataTable)
     {
-        return $this->_indexView($dataTable, "user");
+        return $this->_indexView($dataTable, 'user');
     }
 
 
     /**
      * Display a listing of the resource.
+     *
+     * @param LensDataTable $dataTable The lens datatable
      *
      * @return \Illuminate\Http\Response
      */
@@ -59,7 +64,7 @@ class LensController extends Controller
         if (auth()->user()->isAdmin()) {
             //$lenses = Lens::all();
 
-            return $this->_indexView($dataTable, "admin");
+            return $this->_indexView($dataTable, 'admin');
         } else {
             abort(401);
         }
@@ -68,8 +73,8 @@ class LensController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Array  $lenses An array with all lenses
-     * @param String $user   user for a normal user, admin for an admin
+     * @param LensDataTable $dataTable The lens datatable
+     * @param String        $user      user for a normal user, admin for an admin
      *
      * @return \Illuminate\Http\Response
      */
@@ -125,7 +130,7 @@ class LensController extends Controller
 
         Lens::create($validated);
 
-        flash()->success(_i('Lens "%s" created', $request->name));
+        laraflash(_i('Lens "%s" created', $request->name))->success();
 
         // View the page with all lenses for the user
         return redirect('/lens');
@@ -173,7 +178,7 @@ class LensController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('factor')) {
-            $validated = request()->validate(
+            request()->validate(
                 [
                     'observer_id' => 'required',
                     'name' => ['required', 'min:6'],
@@ -184,16 +189,16 @@ class LensController extends Controller
             $lens->update(['factor' => $request->get('factor')]);
             $lens->update(['name' => $request->get('name')]);
 
-            flash()->warning(_i('Lens "%s" updated', $lens->name));
+            laraflash(_i('Lens "%s" updated', $lens->name))->warning();
         } else {
             // This is only reached when clicking the active checkbox in the
             // lens overview.
             if ($request->has('active')) {
                 $lens->active();
-                flash()->warning(_i('Lens "%s" is active', $lens->name));
+                laraflash(_i('Lens "%s" is active', $lens->name))->warning();
             } else {
                 $lens->inactive();
-                flash()->warning(_i('Lens "%s" is not longer active', $lens->name));
+                laraflash(_i('Lens "%s" is not longer active', $lens->name))->warning();
             }
         }
 
@@ -212,11 +217,42 @@ class LensController extends Controller
         $this->authorize('update', $lens);
 
         if ($lens->observations > 0) {
-            flash()->error(_i('Lens "%s" has observations. Impossible to delete.', $lens->name));
+            laraflash(_i('Lens "%s" has observations. Impossible to delete.', $lens->name))->info();
         } else {
             $lens->delete();
 
-            flash()->error(_i('Lens "%s" deleted', $lens->name));
+            laraflash(_i('Lens "%s" deleted', $lens->name))->info();
         }
-        return redirect()->back();    }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Ajax request for select2.
+     *
+     * @param Request $request The request
+     *
+     * @return string the JSON response
+     */
+    public function dataAjax(Request $request)
+    {
+        $search = trim($request->q);
+
+        if ($search === '') {
+            return \Response::json([]);
+        }
+
+        $data = [];
+
+        if ($request->has('q')) {
+            $data = DB::table('lens')
+                ->groupBy('name')
+                ->select('id', 'name')
+                ->where('name', 'LIKE', "%$search%")
+                ->limit(20)
+                ->get();
+        }
+
+        return response()->json($data);
+    }
 }

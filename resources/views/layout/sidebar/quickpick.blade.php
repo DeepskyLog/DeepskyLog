@@ -7,7 +7,7 @@
         <input type="hidden" name="titleobjectaction" value="search" />
         <input type="hidden" name="source"      value="quickpick" />
         <input type="hidden" name="myLanguages" value="true" />
-        <select class="form-control" id="quickpickobject">
+        <select class="form-control selection" id="quickpickobject">
             <optgroup label="{{ _i("Deepsky") }}">
                 <option value="M 1">M 1</option>
                 <option value="M 2">M 2</option>

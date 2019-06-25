@@ -34,6 +34,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([UsersTableSeeder::class, LensTableSeeder::class]);
+        $this->call(
+            [UsersTableSeeder::class, LensTableSeeder::class,
+            MessagesTableSeeder::class]
+        );
     }
 }

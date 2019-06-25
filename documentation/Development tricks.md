@@ -4,36 +4,41 @@
 
 <!-- code_chunk_output -->
 
-- [Development tricks](#development-tricks)
-  - [Flash messages](#flash-messages)
-  - [Internationalization](#internationalization)
-    - [Translate the strings](#translate-the-strings)
-  - [Authentication](#authentication)
-    - [Using policies](#using-policies)
-    - [Checking user permissions](#checking-user-permissions)
-  - [Tests](#tests)
-  - [Select library](#select-library)
-    - [Vue in combination with select2](#vue-in-combination-with-select2)
-  - [Datatables](#datatables)
+- [Development tricks](#Development-tricks)
+  - [Flash messages](#Flash-messages)
+  - [Internationalization](#Internationalization)
+    - [Translate the strings](#Translate-the-strings)
+  - [Authentication](#Authentication)
+    - [Using policies](#Using-policies)
+    - [Checking user permissions](#Checking-user-permissions)
+  - [Tests](#Tests)
+  - [Select library](#Select-library)
+  - [Datatables](#Datatables)
 
 <!-- /code_chunk_output -->
 
 ## Flash messages
 
 ```php
-flash()->success('text');
+use Coderello\Laraflash\Facades\Laraflash;
+
+laraflash('text')->success();
 ```
 
 ![Image of flash success](flash_success.png)
 
 ```php
-flash()->warning('text');
+use Coderello\Laraflash\Facades\Laraflash;
+
+laraflash('text')->warning();
 ```
 
 ![Image of flash warning](flash_warning.png)
 
 ```php
-flash()->error('text');
+use Coderello\Laraflash\Facades\Laraflash;
+
+laraflash('text')->info();
 ```
 
 ## Internationalization
@@ -71,7 +76,7 @@ Poedit doesn't "understand" blade syntax. When using blade views you must run
 php artisan gettext:update
 ```
 
-in order to compile all blade views to plain php before update the translations in Poedit.
+in order to compile all blade views to plain php before updating the translations in Poedit.
 
 Open Poedit and read in the language file to translate (in resources/lang/i18n/LANGUAGE/messages.po). Click on the update catalogue button in POedit to bring in the latest strings to translate.
 
@@ -169,53 +174,7 @@ phpunit
 
 ## Select library
 
-For the dropdown menus, we use select2. Nothing has to be done for enabling select2. 
-
-### Vue in combination with select2
-
-If you want to use vue in combination with select2, you should use select2
-
-```html
-<div id="lens">
-<select2 class="form-control" @input="selectLens" name="lens" v-model="selected">
-    @foreach (\App\Lens::all()->unique('name') as $lensloop)
-        <option v-bind:value="{{ $lensloop->id }}"
-        @if ($lens->id == $lensloop->id)
-            selected="selected"
-        @endif
-        >{{ $lensloop->name }}</option>
-    @endforeach
-</select2>
-</div>
-```
-
-and the following in javascript:
-
-```javascript
-@push('scripts')
-<script>
-    new Vue({
-        el: '#lens',
-        data: {
-            factor: '',
-            selected: '',
-            name: '',
-        },
-        methods:{
-            selectLens() {
-                // create a closure to access component in the callback below
-                var self = this
-                $.getJSON('/getLensJson/' + this.selected, function(data) {
-                    self.name = data.name;
-                    self.factor = Math.round(data.factor * 100) / 100;
-                });
-            }
-
-        }
-    })
-</script>
-@endpush
-```
+For the dropdown menus, we use select2. Nothing has to be done for enabling select2.
 
 ## Datatables
 
@@ -226,3 +185,19 @@ php artisan datatables:make --model Lens
 ```
 
 Adapt the app/DataTables/LensDatatable.php file.
+
+To show the datatable:
+
+```php
+    {!! $dataTable->table(['class' => 'table table-sm table-striped table-hover']) !!}
+```
+
+and
+
+```php
+@push('scripts')
+
+{!! $dataTable->scripts() !!}
+
+@endpush
+```

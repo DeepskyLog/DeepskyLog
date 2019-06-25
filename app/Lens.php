@@ -27,20 +27,18 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Lens extends Model
 {
-    protected $fillable = [
-        'observer_id', 'name', 'factor', 'active'
-    ];
+    protected $fillable = ['observer_id', 'name', 'factor', 'active'];
 
     /**
      * Activate the lens.
      *
-     * @param boolean $active true to activate the lens, false to deactivate
+     * @param bool $active true to activate the lens, false to deactivate
      *
      * @return None
      */
     public function active($active = true)
     {
-        if ($active == false) {
+        if ($active === false) {
             $this->update(['active' => 0]);
         } else {
             $this->update(compact('active'));
