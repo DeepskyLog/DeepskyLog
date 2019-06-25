@@ -1,7 +1,7 @@
 <?php
 /**
  * Seeder for the Users table of the database.
- * Fills the database with random users.
+ * Fills the database with the users of the old database.
  *
  * PHP Version 7
  *
@@ -18,7 +18,7 @@ use App\User;
 
 /**
  * Seeder for the Users table of the database.
- * Fills the database with random users.
+ * Fills the database with the users from the old database.
  *
  * @category Database
  * @package  DeepskyLog

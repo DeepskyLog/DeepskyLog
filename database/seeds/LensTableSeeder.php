@@ -1,7 +1,7 @@
 <?php
 /**
  * Seeder for the Lens table of the database.
- * Fills the database with random lenses.
+ * Fills the database with the lenses from the old database.
  *
  * PHP Version 7
  *
@@ -19,7 +19,7 @@ use App\User;
 
 /**
  * Seeder for the Lens table of the database.
- * Fills the database with random lenses.
+ * Fills the database with the lenses from the old database.
  *
  * @category Database
  * @package  DeepskyLog
