@@ -4,9 +4,9 @@
 
 @section('content')
     @if (gettype($users) != 'string')
-        <h1>Create a new message</h1>
+        <h1>{{ _i("Create a new message") }}</h1>
     @else
-        <h1>Create a new message for all users</h1>
+        <h1>{{ _i("Create a new message for all users") }}</h1>
     @endif
 
     <form action="{{ route('messages.store') }}" method="post">

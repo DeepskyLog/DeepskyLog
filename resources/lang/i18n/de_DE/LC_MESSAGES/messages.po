@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-05-16 19:09+0200\n"
-"PO-Revision-Date: 2019-05-16 19:10+0200\n"
+"POT-Creation-Date: 2019-06-25 14:19+0000\n"
+"PO-Revision-Date: 2019-06-25 14:19+0000\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-KeywordsList: _;__;_i;_s;gettext;_n:1,2;ngettext:1,2;dgettext:2\n"
 "X-Poedit-Basepath: ../../../../../app\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Poedit-SearchPath-2: Console\n"
 "X-Poedit-SearchPath-3: Notifications\n"
 "X-Poedit-SearchPath-4: ../resources/lang/en\n"
-"X-Poedit-SearchPath-5: ../storage/framework/messages\n"
+"X-Poedit-SearchPath-5: ../storage/framework/messages/\n"
 
 #: ../resources/lang/en/auth.php:16
 #: ../storage/framework/messages/2af49298faa8cfdfc1fb4bfb6f6d54225109132e.php.php:16
@@ -166,10 +166,10 @@ msgstr "Mond / Sonne"
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:14
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:33
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:163
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:256
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:255
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:23
 #: Http/Controllers/UserController.php:163
-#: Http/Controllers/UserController.php:256
+#: Http/Controllers/UserController.php:255
 msgid "Moon"
 msgstr "Mond"
 
@@ -179,9 +179,9 @@ msgstr "am"
 
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:50
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:159
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:252
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:251
 #: Http/Controllers/UserController.php:159
-#: Http/Controllers/UserController.php:252
+#: Http/Controllers/UserController.php:251
 msgid "Sun"
 msgstr "Sonne"
 
@@ -194,7 +194,7 @@ msgid "Astro."
 msgstr "Astro."
 
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:128
-#: ../storage/framework/messages/b108a57b45d115bcd3a63da456e940168c6e5686.php.php:50
+#: ../storage/framework/messages/b108a57b45d115bcd3a63da456e940168c6e5686.php.php:52
 msgid "New moon"
 msgstr "Nächster Neumond"
 
@@ -403,6 +403,37 @@ msgstr "Sprache für Benutzeroberfläche"
 msgid "Standard language for observations"
 msgstr "Standard Sprache für Beobachtungen"
 
+#: ../storage/framework/messages/22e5886a007096055bcaa8cdb094d0bfc632ed43.php.php:1
+msgid "New message"
+msgstr "Neue Nachricht"
+
+#: ../storage/framework/messages/22e5886a007096055bcaa8cdb094d0bfc632ed43.php.php:5
+msgid "Create a new message"
+msgstr "Neue Nachricht erstellen"
+
+#: ../storage/framework/messages/22e5886a007096055bcaa8cdb094d0bfc632ed43.php.php:7
+msgid "Create a new message for all users"
+msgstr "Neue Nachricht erstellen für alle Benutzer"
+
+#: ../storage/framework/messages/22e5886a007096055bcaa8cdb094d0bfc632ed43.php.php:16
+#: ../storage/framework/messages/7f8e7e9bc58f558e9f5bfb95a6085e916fd4b40e.php.php:4
+msgid "Subject"
+msgstr "Betreff"
+
+#: ../storage/framework/messages/22e5886a007096055bcaa8cdb094d0bfc632ed43.php.php:23
+#: ../storage/framework/messages/8540cb46cb3c565ea97dc0477153cc9f617c7262.php.php:1
+msgid "Message"
+msgstr "Nachricht"
+
+#: ../storage/framework/messages/22e5886a007096055bcaa8cdb094d0bfc632ed43.php.php:28
+msgid "Participants in the conversation"
+msgstr "Teilnehmer am Gespräch"
+
+#: ../storage/framework/messages/22e5886a007096055bcaa8cdb094d0bfc632ed43.php.php:45
+#: ../storage/framework/messages/b5636631ea3a004b7ce541551f07aecfa272d939.php.php:27
+msgid "Submit"
+msgstr "Senden"
+
 #: ../storage/framework/messages/240b4138d68d521c68377e239b07fd1dd0e5b03e.php.php:19
 #: Notifications/DeepskyLogResetPassword.php:19
 msgid "Reset Password Notification"
@@ -453,9 +484,9 @@ msgid "Source: "
 msgstr "Quelle: "
 
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:128
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:225
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:224
 #: Http/Controllers/UserController.php:128
-#: Http/Controllers/UserController.php:225
+#: Http/Controllers/UserController.php:224
 msgid "Observations"
 msgstr "Beobachtungen"
 
@@ -466,33 +497,33 @@ msgid "Total"
 msgstr "Gesamt"
 
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:143
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:236
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:235
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:12
 #: Http/Controllers/UserController.php:143
-#: Http/Controllers/UserController.php:236
+#: Http/Controllers/UserController.php:235
 msgid "Deepsky"
 msgstr "Deepsky"
 
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:147
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:240
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:239
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:20
 #: Http/Controllers/UserController.php:147
-#: Http/Controllers/UserController.php:240
+#: Http/Controllers/UserController.php:239
 msgid "Comets"
 msgstr "Kometen"
 
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:151
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:244
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:243
 #: Http/Controllers/UserController.php:151
-#: Http/Controllers/UserController.php:244
+#: Http/Controllers/UserController.php:243
 msgid "Double stars"
 msgstr "Doppel-Sterne"
 
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:155
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:248
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:247
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:26
 #: Http/Controllers/UserController.php:155
-#: Http/Controllers/UserController.php:248
+#: Http/Controllers/UserController.php:247
 msgid "Planets"
 msgstr "Planeten"
 
@@ -501,14 +532,14 @@ msgstr "Planeten"
 msgid "Number of observations per month: "
 msgstr "Anzahl der Beobachtungen pro Monat: "
 
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:326
-#: Http/Controllers/UserController.php:326
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:325
+#: Http/Controllers/UserController.php:325
 #, php-format
 msgid "User %s successfully edited."
 msgstr "Benutzer %s erfolgreich bearbeitet."
 
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:343
-#: Http/Controllers/UserController.php:343
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:342
+#: Http/Controllers/UserController.php:342
 #, php-format
 msgid "User %s successfully deleted."
 msgstr "Benutzer %s erfolgreich gelöscht."
@@ -648,6 +679,38 @@ msgstr "Melde Probleme"
 msgid "What's new in DeepskyLog"
 msgstr "Was gibt es Neues in DeepskyLog"
 
+#: ../storage/framework/messages/6839b2857890e71f067bc331f845f79fdee13f34.php.php:1
+msgid "Messages"
+msgstr "Nachrichten"
+
+#: ../storage/framework/messages/6839b2857890e71f067bc331f845f79fdee13f34.php.php:9
+msgid "New messages"
+msgstr "Neue Nachrichten"
+
+#: ../storage/framework/messages/6839b2857890e71f067bc331f845f79fdee13f34.php.php:15
+msgid "Old messages"
+msgstr "Alte Nachrichten"
+
+#: ../storage/framework/messages/6839b2857890e71f067bc331f845f79fdee13f34.php.php:46
+msgid "Start new conversation"
+msgstr "Neue Unterhaltung starten"
+
+#: ../storage/framework/messages/6d44b686891cd941f2ca89f5c3eb926d2a58cb96.php.php:3
+msgid "You received the following DeepskyLog message from "
+msgstr "Sie haben die folgende DeepskyLog-Nachricht von "
+
+#: ../storage/framework/messages/6d44b686891cd941f2ca89f5c3eb926d2a58cb96.php.php:16
+msgid "The conversation is between "
+msgstr "Das Gespräch ist zwischen "
+
+#: ../storage/framework/messages/6d44b686891cd941f2ca89f5c3eb926d2a58cb96.php.php:20
+msgid "Answer message in DeepskyLog"
+msgstr "Antwort Nachricht in DeepskyLog"
+
+#: ../storage/framework/messages/6d44b686891cd941f2ca89f5c3eb926d2a58cb96.php.php:25
+msgid "Clear nights"
+msgstr "Klare Nächte"
+
 #: ../storage/framework/messages/73c0892ea3e117be323c00d8abf7be3dbe77b736.php.php:20
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:48
 #: ../storage/framework/messages/feae5554188380ee19a0489625b7b5e4318f9c78.php.php:25
@@ -690,6 +753,22 @@ msgstr "Linsen von %s"
 msgid "Add lens"
 msgstr "Objektiv hinzufügen"
 
+#: ../storage/framework/messages/7f8e7e9bc58f558e9f5bfb95a6085e916fd4b40e.php.php:8
+msgid "Unread messages"
+msgstr "Ungelesene Nachrichten"
+
+#: ../storage/framework/messages/7f8e7e9bc58f558e9f5bfb95a6085e916fd4b40e.php.php:12
+msgid "Message started by"
+msgstr "Nachricht gestartet von"
+
+#: ../storage/framework/messages/7f8e7e9bc58f558e9f5bfb95a6085e916fd4b40e.php.php:16
+msgid "Latest message by"
+msgstr "Neueste Nachricht von"
+
+#: ../storage/framework/messages/7f8e7e9bc58f558e9f5bfb95a6085e916fd4b40e.php.php:20
+msgid "Latest update"
+msgstr "Neueste Aktualisierung"
+
 #: ../storage/framework/messages/7f9d0c3d716746b3d833f54eeb6c5536a3c1c8f5.php.php:10
 msgid "Hello!"
 msgstr "Hallo!"
@@ -707,6 +786,10 @@ msgstr ""
 "Wenn Sie Probleme haben, auf den Knopfe \":ActionText\" zu klicken, kopieren "
 "und fügen Sie die URL unten in Ihren Web-Browser ein: [:actionURL] (:"
 "actionURL)"
+
+#: ../storage/framework/messages/8540cb46cb3c565ea97dc0477153cc9f617c7262.php.php:7
+msgid "Conversation between"
+msgstr "Gespräch zwischen"
 
 #: ../storage/framework/messages/96202ff741b9f582f9545dcdddfc6ac74e1c477d.php.php:5
 msgid "DeepskyLog Privacy Policy"
@@ -818,6 +901,10 @@ msgstr "Whoops, etwas ist auf unseren Servern schief gelaufen."
 msgid "Date"
 msgstr "Datum"
 
+#: ../storage/framework/messages/b23ab96ba3ceb027dffe21dce10f3cd6d9471fd7.php.php:7
+msgid "Posted"
+msgstr "Gepostet"
+
 #: ../storage/framework/messages/b2859eea3d283a3b15b2af3c9834d3b4e4626347.php.php:4
 msgid "Search"
 msgstr "Suche"
@@ -849,6 +936,14 @@ msgstr ""
 "Ihre persönlichen Daten werden in Übereinstimmung mit den "
 "%sDatenschutzerklärung%s verarbeitet und nur für die Benutzerverwaltung und "
 "zur Information über unsere Aktivitäten verwendet."
+
+#: ../storage/framework/messages/b5636631ea3a004b7ce541551f07aecfa272d939.php.php:1
+msgid "Add a new message"
+msgstr "Neue Nachricht hinzufügen"
+
+#: ../storage/framework/messages/b5636631ea3a004b7ce541551f07aecfa272d939.php.php:14
+msgid "Add extra participants to this message"
+msgstr "Fügen Sie dieser Nachricht zusätzliche Teilnehmer hinzu"
 
 #: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:4
 msgid "View"
@@ -985,6 +1080,10 @@ msgstr ""
 "Wenn Sie die E-Mail nicht erhalten haben, %sklicken Sie hier, um ein weitere "
 "E-Mail anzufordern%s."
 
+#: ../storage/framework/messages/e07b93c36b790f747ffe9fb83a87773cfcc0fd4f.php.php:1
+msgid "Sorry, no threads."
+msgstr "Es tut uns leid, keine Threads."
+
 #: ../storage/framework/messages/e15293aba835f713cf43d4879750b7715e853fe6.php.php:2
 msgid "Page Expired"
 msgstr "Seite abgelaufen"
@@ -1114,6 +1213,18 @@ msgstr "Alle Zeichnungen von "
 msgid "Send message to "
 msgstr "Sende Benachrichtigung an "
 
+#: ../storage/framework/messages/faaebdec877ab71868711a93e75c1d1b60ee024b.php.php:80
+#: ../storage/framework/messages/faaebdec877ab71868711a93e75c1d1b60ee024b.php.php:263
+#: Http/Controllers/MessagesController.php:80
+#: Http/Controllers/MessagesController.php:263
+msgid "The requested thread was not found."
+msgstr "Der angeforderte Thread wurde nicht gefunden."
+
+#: ../storage/framework/messages/faaebdec877ab71868711a93e75c1d1b60ee024b.php.php:90
+#: Http/Controllers/MessagesController.php:90
+msgid "Not authorized to see this message."
+msgstr "Diese Meldung kann nicht angezeigt werden."
+
 #: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:3
 msgid "Add"
 msgstr "Neue"
@@ -1227,9 +1338,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 
 #~ msgid "Lists"
 #~ msgstr "Listen"
-
-#~ msgid "Create a new observing list"
-#~ msgstr "Erstellen Sie eine neue Beobachtungsliste"
 
 #~ msgid "Name for the new observing list"
 #~ msgstr "Name für die neue Beobachtungsliste"
@@ -1624,12 +1732,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 #~ msgid "Only for binoculars, finder scopes, ..."
 #~ msgstr "Nur für Ferngläser, Finder-Scopes,..."
 
-#~ msgid "New message"
-#~ msgstr "Neue Nachricht"
-
-#~ msgid "Send message"
-#~ msgstr "Nachricht senden"
-
 #~ msgid "All DeepskyLog users"
 #~ msgstr "Alle DeepskyLog Benutzer"
 
@@ -1641,12 +1743,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 
 #~ msgid "Send as real mail"
 #~ msgstr "Senden als echte Mail"
-
-#~ msgid "Subject"
-#~ msgstr "Betreff"
-
-#~ msgid "Message"
-#~ msgstr "Nachricht"
 
 #~ msgid "You should be logged in to be able to send messages."
 #~ msgstr "Sie müssen angemeldet sein um Nachrichten zu versenden."
@@ -2511,9 +2607,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 #~ msgid "Object type"
 #~ msgstr "Objekttyp"
 
-#~ msgid "Constellation abbreviation"
-#~ msgstr "Sternbild Abkürzung"
-
 #~ msgid "Constellation name"
 #~ msgstr "Sternbildname"
 
@@ -2673,9 +2766,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 
 #~ msgid "Reply"
 #~ msgstr "Antworten"
-
-#~ msgid "You have no permission to see this message."
-#~ msgstr "Sie haben keine Berechtigung um diese Nachricht zu öffnen."
 
 #~ msgid "Settings for %s"
 #~ msgstr "Einstellungen für %s"
@@ -3127,9 +3217,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 
 #~ msgid "Only objects that have been seen by me"
 #~ msgstr "Nur Objekte, die von mir gesehen wurden"
-
-#~ msgid "Clear Fields"
-#~ msgstr "Klare Felder"
 
 #~ msgid "Select catalog"
 #~ msgstr "Katalog Auswahl"
@@ -3954,9 +4041,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 
 #~ msgid "No observation to display."
 #~ msgstr "Keine Beobachtung zum anzeigen."
-
-#~ msgid "The requested observation does not exist."
-#~ msgstr "Die angeforderte Beobachtung existiert nicht."
 
 #~ msgid "Details of this observation"
 #~ msgstr "Einzelheiten dieser Beobachtung"
@@ -4892,9 +4976,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 #~ msgid "under the horizon"
 #~ msgstr "unter dem Horizont"
 
-#~ msgid "The observation has been removed"
-#~ msgstr "Die Beobachtung wurde entfernt"
-
 #~ msgid "You need to be logged in to validate an observation."
 #~ msgstr "Sie müssen angemeldet sein, um eine Beobachtung zu validieren."
 
@@ -5351,9 +5432,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 #~ msgid "Number of own observations"
 #~ msgstr "Anzahl der eigenen Beobachtungen"
 
-#~ msgid "Last own observation"
-#~ msgstr "Letzte eigene Beobachtung"
-
 #~ msgid "Number of own drawings"
 #~ msgstr "Anzahl der eigenen Zeichnungen"
 
@@ -5656,9 +5734,6 @@ msgstr "> 1,0 für Barlow-Objektive, < 1,0 für Shapley-Objektive."
 
 #~ msgid "Select columns"
 #~ msgstr "Spalten auswählen"
-
-#~ msgid "DeepskyLog message from %s:"
-#~ msgstr "DeepskyLog Nachricht von %s:"
 
 #~ msgid ""
 #~ "<h2>Welcome to DeepskyLog!</h2>\n"
