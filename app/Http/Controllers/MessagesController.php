@@ -77,7 +77,7 @@ class MessagesController extends Controller
             $thread = Thread::findOrFail($id);
         } catch (ModelNotFoundException $e) {
             laraflash(
-                _i('The requested thread was not found.'),
+                _i('The requested thread was not found.')
             )->danger();
 
             return redirect()->route('messages');
@@ -260,7 +260,7 @@ class MessagesController extends Controller
             $thread = Thread::findOrFail($id);
         } catch (ModelNotFoundException $e) {
             laraflash(
-                _i('The requested thread was not found.'),
+                _i('The requested thread was not found.')
             )->danger();
 
             return redirect()->route('messages');

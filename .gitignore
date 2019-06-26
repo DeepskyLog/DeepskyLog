@@ -13,3 +13,5 @@ yarn-error.log
 scanner_config.php
 /observer_pics
 messages/
+.env.homestead
+.env.mac
