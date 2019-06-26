@@ -84,7 +84,7 @@ class UsersTableSeeder extends Seeder
             $name = html_entity_decode($accountSingle->firstname)
                         . ' ' . html_entity_decode($accountSingle->name);
 
-            if ($accountSingle->id === admin) {
+            if ($accountSingle->id === 'admin') {
                 $name = "Administrator";
             }
 
