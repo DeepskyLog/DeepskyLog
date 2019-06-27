@@ -4,7 +4,7 @@
 
 ## Moon / sun
 
-+ [ ] Timezones with javascript: https://moment.github.io/luxon/
++ [ ] Timezones with javascript: https://moment.github.io/ luxon/
 + [ ] Timezones with php: Carbon: https://carbon.nesbot.com/docs/#api-timezone
 
 ## MESSAGING SYSTEM
@@ -13,7 +13,9 @@
 
 ## FILTERS
 
-+ [ ] Add number of filters to users/view.blade.php
++ [ ] Remove color, schott, wratten, ... if the correct type is not selected in create.blade.php
++ [ ] TESTS ARE NOT WORKING ANYMORE!
++ [ ] Translations (also for database entries)
 
 ## EYEPIECES
 
