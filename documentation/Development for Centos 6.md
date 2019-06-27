@@ -1,13 +1,13 @@
 # DeepskyLog development for Centos 6
 
-## Install php 7.2
+## Install php 7.3
 
 ```
 yum install epel-release
 rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
-yum --enablerepo=remi,remi-php72 install php72 php72-php-mbstring php72-php-intl php72-php-pdo php72-php-json php72-php-pear php72-php-gd php72-php-common php72-php-mysqlnd php72-php-process php72-php-opcache php72-php-cli php72-php-zip php72-php-fpm npm php72-php-bcmath php72-php-pecl-imagick
-chkconfig php72-php-fpm on
-service php72-php-fpm start
+yum --enablerepo=remi,remi-php73 install php73 php73-php-mbstring php73-php-intl php73-php-pdo php73-php-json php73-php-pear php73-php-gd php73-php-common php73-php-mysqlnd php73-php-process php73-php-opcache php73-php-cli php73-php-zip php73-php-fpm npm php73-php-bcmath php73-php-pecl-imagick
+chkconfig php73-php-fpm on
+service php73-php-fpm start
 wget https://getcomposer.org/composer.phar
 chmod +x composer.phar
 mv composer.phar /usr/local/bin/composer
@@ -19,7 +19,7 @@ yum install nodejs
 
 ```
 cd /srw/www/test.deepskylog.org/
-php72 /usr/local/bin/composer install
+php73 /usr/local/bin/composer install
 npm install
 ```
 
@@ -46,11 +46,11 @@ DB_PASSWORD=<PASSWORD>
 ```
 + Create a new application key
 ```
-php72 artisan key:generate
+php73 artisan key:generate
 ```
 + Initialize the database:
 ```
-php72 artisan migrate
+php73 artisan migrate
 ```
 
 + Fix permissions

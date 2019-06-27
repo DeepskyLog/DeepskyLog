@@ -51,7 +51,6 @@ class LensController extends Controller
         return $this->_indexView($dataTable, 'user');
     }
 
-
     /**
      * Display a listing of the resource.
      *
