@@ -95,7 +95,7 @@
             <tr>
                 <td> {{ _i("Number of filters") }} </td>
                 <td>
-                    2
+                    {{ count($user->filters) }}
                 </td>
             </tr>
 

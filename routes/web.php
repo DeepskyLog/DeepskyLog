@@ -36,6 +36,26 @@ Route::get('/lens/{lens}', 'LensController@show')->name('lens.show');
 
 Route::get('/getLensJson/{id}', 'LensController@getLensJson');
 
+Route::get('/filter/autocomplete', 'FilterController@dataAjax')
+    ->name('filter.dataAjax');
+
+Route::get('/filter/create/{filter}', 'FilterController@create')
+    ->middleware('verified')
+    ->name('filter.create');
+
+Route::get('/filter/admin', 'FilterController@indexAdmin')
+    ->name('filter.indexAdmin');
+
+Route::resource(
+    'filter',
+    'FilterController',
+    ['parameters' => ['filter' => 'filter']]
+)->middleware('verified')->except('show');
+
+Route::get('/filter/{filter}', 'FilterController@show')->name('filter.show');
+
+Route::get('/getFilterJson/{id}', 'FilterController@getFilterJson');
+
 Auth::routes(['verify' => true]);
 
 Route::post('/users/upload', 'UserController@upload')->name('users.upload');

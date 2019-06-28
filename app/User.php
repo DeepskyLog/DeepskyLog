@@ -61,6 +61,16 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
+     * Users can have one or more filters.
+     *
+     * @return HasMany The eloquent relationship
+     */
+    public function filters()
+    {
+        return $this->hasMany('App\Filter', 'observer_id');
+    }
+
+    /**
      * Returns the copyright information (including the image and the link).
      *
      * @return string The copyright information

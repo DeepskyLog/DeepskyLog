@@ -24,7 +24,6 @@ class CreateLensTable extends Migration
             $table->timestamps();
 
             $table->foreign('observer_id')->references('id')->on('users')->onDelete('cascade');
-
         });
     }
 
