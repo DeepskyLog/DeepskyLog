@@ -18,9 +18,9 @@ class CreateFiltersTable extends Migration
                 $table->bigIncrements('id');
                 $table->string('name', 255);
                 $table->unsignedInteger('type');
-                $table->unsignedInteger('color');
-                $table->unsignedInteger('wratten');
-                $table->unsignedInteger('schott');
+                $table->unsignedInteger('color')->nullable();
+                $table->unsignedInteger('wratten')->nullable();
+                $table->unsignedInteger('schott')->nullable();
                 $table->unsignedInteger('observer_id');
                 $table->boolean('active')->default(true);
                 $table->unsignedInteger('observations')->default(0);

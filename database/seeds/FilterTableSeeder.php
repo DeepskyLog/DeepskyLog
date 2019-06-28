@@ -55,19 +55,29 @@ class FilterTableSeeder extends Seeder
                     );
                 }
 
-                Filter::create(
+                $newFilter = Filter::create(
                     [
                         'id' => $filter->id,
                         'name' => html_entity_decode($filter->name),
                         'type' => $filter->type,
-                        'color' => $filter->color,
-                        'wratten' => $filter->wratten,
-                        'schott' => $filter->schott,
                         'observer_id' => $observer[0],
                         'active' => $filter->filteractive,
                         'created_at' => $date
                     ]
                 );
+
+                if ($filter->wratten != 0) {
+                    $newFilter->wratten = $filter->wratten;
+                }
+
+                if ($filter->color != 0) {
+                    $newFilter->color = $filter->color;
+                }
+
+                if ($filter->schott != 0) {
+                    $newFilter->schott = $filter->schott;
+                }
+
             }
         }
     }

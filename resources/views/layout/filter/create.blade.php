@@ -62,11 +62,11 @@
             </div>
         </div>
 
-        <div class="form-group color">
+        <div class="form-group colorDiv">
             <label for="type">{{ _i("Color") }}</label>
 
             <div class="form">
-                <select id="color" name="color" class="form-control">
+                <select id="color" name="color" class="form-control" width="100">
                     <option value="0"> </option>
                     @foreach (\App\FilterColor::all() as $color)
                         <option value="{{ $color->id }}" @if ($filter->color == $color->id || old('color') == $color->id) selected="selected" @endif>{{ _i($color->color) }}</option>
@@ -101,7 +101,35 @@
 
 <script>
     $(document).ready(function() {
-        $("select").select2();
+        $("#type").change(function() {
+            if($(this).val() == "0" || $(this).val() == "6") {
+                $("div.wratten").show();
+                $("div.schott").show();
+                $("div.colorDiv").show();
+                // Set width to 100%
+                $("select").select2({ width: '100%' });
+            } else {
+                $("div.wratten").hide();
+                $("div.schott").hide();
+                $("div.colorDiv").hide();
+            }
+        });
+
+        $("div.wratten").show();
+        $("div.schott").show();
+        $("div.colorDiv").show();
+
+        if($("#type").val() == "0" || $("#type").val() == "6") {
+            $("div.wratten").show();
+            $("div.schott").show();
+            $("div.colorDiv").show();
+        } else {
+            $("div.wratten").hide();
+            $("div.schott").hide();
+            $("div.colorDiv").hide();
+        }
+
+        $("select").select2({ width: '100%' });
         $("#filter").select2({
             ajax: {
                 // Do the autocompletion. Get all filters with the requested characters.

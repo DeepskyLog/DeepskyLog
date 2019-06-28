@@ -58,7 +58,7 @@ class FilterTest extends TestCase
         $attributes['observer_id'] = $user->id;
 
         // Then there should be a new filter in the database
-        $this->assertDatabaseHas('filter', $attributes);
+        $this->assertDatabaseHas('filters', $attributes);
     }
 
     /**
@@ -109,7 +109,7 @@ class FilterTest extends TestCase
         // while passing the necessary data
         $attributes = [
             'name' => 'My new filter',
-            'factor' => 3,
+            'type' => 3,
         ];
 
         $this->post('filter', $attributes);
@@ -118,7 +118,7 @@ class FilterTest extends TestCase
         $attributes['observer_id'] = $user->id;
 
         // Then there should be a new filter in the database
-        $this->assertDatabaseHas('filter', $attributes);
+        $this->assertDatabaseHas('filters', $attributes);
 
         $filter = \App\Filter::firstOrFail();
 
@@ -132,7 +132,7 @@ class FilterTest extends TestCase
         $this->put('/filter/' . $filter->id, $newAttributes);
 
         // Then there should be an updated filter in the database
-        $this->assertDatabaseHas('filter', $newAttributes);
+        $this->assertDatabaseHas('filters', $newAttributes);
     }
 
     /**
@@ -164,7 +164,7 @@ class FilterTest extends TestCase
         $attributes['observer_id'] = $user->id;
 
         // Then there should be a new filter in the database
-        $this->assertDatabaseHas('filter', $attributes);
+        $this->assertDatabaseHas('filters', $attributes);
 
         $filter = \App\Filter::firstOrFail();
 
@@ -212,7 +212,7 @@ class FilterTest extends TestCase
         $attributes['observer_id'] = $user->id;
 
         // Then there should be a new filter in the database
-        $this->assertDatabaseHas('filter', $attributes);
+        $this->assertDatabaseHas('filters', $attributes);
 
         $filter = \App\Filter::firstOrFail();
 
@@ -230,7 +230,7 @@ class FilterTest extends TestCase
         $this->put('/filter/' . $filter->id, $newAttributes);
 
          // Then there should be an updated filter in the database
-         $this->assertDatabaseHas('filter', $newAttributes);
+         $this->assertDatabaseHas('filters', $newAttributes);
 
     }
 
@@ -264,14 +264,14 @@ class FilterTest extends TestCase
         $attributes['observer_id'] = $user->id;
 
         // Then there should be a new filter in the database
-        $this->assertDatabaseHas('filter', $attributes);
+        $this->assertDatabaseHas('filters', $attributes);
 
         $filter = \App\Filter::firstOrFail();
 
         $this->delete('/filter/' . $filter->id);
 
         // Then there shouldn't be a filter in the database anymore
-        $this->assertDatabaseMissing('filter', $attributes);
+        $this->assertDatabaseMissing('filters', $attributes);
     }
 
     /**
@@ -303,7 +303,7 @@ class FilterTest extends TestCase
         $attributes['observer_id'] = $user->id;
 
         // Then there should be a new filter in the database
-        $this->assertDatabaseHas('filter', $attributes);
+        $this->assertDatabaseHas('filters', $attributes);
 
         $filter = \App\Filter::firstOrFail();
 
@@ -336,7 +336,7 @@ class FilterTest extends TestCase
         // while passing the necessary data
         $attributes = [
             'name' => 'My new filter',
-            'factor' => 2.0,
+            'type' => 2,
         ];
 
         $this->post('filter', $attributes);
@@ -345,7 +345,7 @@ class FilterTest extends TestCase
         $attributes['observer_id'] = $user->id;
 
         // Then there should be a new filter in the database
-        $this->assertDatabaseHas('filter', $attributes);
+        $this->assertDatabaseHas('filters', $attributes);
 
         $filter = \App\Filter::firstOrFail();
 
@@ -357,7 +357,7 @@ class FilterTest extends TestCase
         $this->delete('/filter/' . $filter->id);
 
          // Then there should not be a filter in the database anymore
-         $this->assertDatabaseMissing('filter', $attributes);
+         $this->assertDatabaseMissing('filters', $attributes);
 
     }
 
@@ -415,6 +415,6 @@ class FilterTest extends TestCase
 
         $this->post('/filter', $attributes);
 
-        $this->assertDatabaseMissing('filter', $attributes);
+        $this->assertDatabaseMissing('filters', $attributes);
     }
 }

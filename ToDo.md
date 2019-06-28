@@ -4,18 +4,12 @@
 
 ## Moon / sun
 
-+ [ ] Timezones with javascript: https://moment.github.io/ luxon/
++ [ ] Timezones with javascript: https://moment.github.io/luxon/
 + [ ] Timezones with php: Carbon: https://carbon.nesbot.com/docs/#api-timezone
 
 ## MESSAGING SYSTEM
 
 + [ ] CODE CLIMATE: https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication
-
-## FILTERS
-
-+ [ ] Remove color, schott, wratten, ... if the correct type is not selected in create.blade.php
-+ [ ] TESTS ARE NOT WORKING ANYMORE!
-+ [ ] Translations (also for database entries)
 
 ## EYEPIECES
 
