@@ -19,7 +19,6 @@ use Cmgmyr\Messenger\Models\Message;
 use Cmgmyr\Messenger\Models\Participant;
 use Cmgmyr\Messenger\Models\Thread;
 
-
 /**
  * Seeder for the messages table of the database.
  * Fills the database with the messages of the old database.

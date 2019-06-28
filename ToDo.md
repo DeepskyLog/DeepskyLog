@@ -11,10 +11,6 @@
 
 + [ ] CODE CLIMATE: https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication
 
-## FILTERS
-
-+ [ ] Add number of filters to users/view.blade.php
-
 ## EYEPIECES
 
 + [ ] Add number of eyepieces to users/view.blade.php
