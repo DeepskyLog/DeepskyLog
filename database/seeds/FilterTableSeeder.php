@@ -68,16 +68,18 @@ class FilterTableSeeder extends Seeder
 
                 if ($filter->wratten != 0) {
                     $newFilter->wratten = $filter->wratten;
+                    $newFilter->save();
                 }
 
                 if ($filter->color != 0) {
                     $newFilter->color = $filter->color;
+                    $newFilter->save();
                 }
 
                 if ($filter->schott != 0) {
                     $newFilter->schott = $filter->schott;
+                    $newFilter->save();
                 }
-
             }
         }
     }
