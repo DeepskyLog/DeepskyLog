@@ -14,6 +14,10 @@
 
 ## EYEPIECES
 
++ [ ] create / edit
+  + [ ] Authorization
++ [ ] Test admin
++ [ ] Natural sort on name of eyepiece
 + [ ] Add number of eyepieces to users/view.blade.php
 
 ## LOCATIONS
