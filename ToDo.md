@@ -10,6 +10,7 @@
 ## MESSAGING SYSTEM
 
 + [ ] WhatsApp or Facebook messenger?
++ [ ] Links in Laraflash?
 + [ ] CODE CLIMATE: https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication
 
 ## EYEPIECES

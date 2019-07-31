@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFilterTypeTable extends Migration
+class CreateInstrumentTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,73 +14,80 @@ class CreateFilterTypeTable extends Migration
     public function up()
     {
         Schema::create(
-            'filter_types', function (Blueprint $table) {
+            'instrument_types', function (Blueprint $table) {
                 $table->integer('id');
                 $table->string('type');
             }
         );
 
-        // Insert the filter types
-        DB::table('filter_types')->insert(
+        // Insert the instrument types
+        DB::table('instrument_types')->insert(
             array(
                 'id' => 0,
-                'type' => "Other filter"
+                'type' => "Naked Eye"
             )
         );
 
-        DB::table('filter_types')->insert(
+        DB::table('instrument_types')->insert(
             array(
                 'id' => 1,
-                'type' => "Broadband filter"
+                'type' => "Binoculars"
             )
         );
 
-        DB::table('filter_types')->insert(
+        DB::table('instrument_types')->insert(
             array(
                 'id' => 2,
-                'type' => "Narrowband filter"
+                'type' => "Refractor"
             )
         );
 
-        DB::table('filter_types')->insert(
+        DB::table('instrument_types')->insert(
             array(
                 'id' => 3,
-                'type' => "O-III filter"
+                'type' => "Reflector"
             )
         );
 
-        DB::table('filter_types')->insert(
+        DB::table('instrument_types')->insert(
             array(
                 'id' => 4,
-                'type' => "H beta filter"
+                'type' => "Finderscope"
             )
         );
 
-        DB::table('filter_types')->insert(
+        DB::table('instrument_types')->insert(
             array(
                 'id' => 5,
-                'type' => "H alpha filter"
+                'type' => "Other"
             )
         );
 
-        DB::table('filter_types')->insert(
+        DB::table('instrument_types')->insert(
             array(
                 'id' => 6,
-                'type' => "Color filter"
+                'type' => "Cassegrain"
             )
         );
 
-        DB::table('filter_types')->insert(
+        DB::table('instrument_types')->insert(
             array(
                 'id' => 7,
-                'type' => "Neutral filter"
+                'type' => "Kutter"
             )
         );
 
-        DB::table('filter_types')->insert(
+        DB::table('instrument_types')->insert(
             array(
                 'id' => 8,
-                'type' => "Corrective filter"
+                'type' => "Maksutov"
+            )
+        );
+
+        DB::table('instrument_types')->insert(
+            array(
+                'id' => 9,
+                'type' => "Schmidt Cassegrain"
             )
         );
     }
@@ -92,6 +99,6 @@ class CreateFilterTypeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('filter_types');
+        Schema::dropIfExists('instrument_types');
     }
 }

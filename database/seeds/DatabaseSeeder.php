@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
         $this->call(
             [UsersTableSeeder::class, LensTableSeeder::class,
                 FilterTableSeeder::class, EyepieceTableSeeder::class,
-                MessagesTableSeeder::class]
+                MessagesTableSeeder::class, InstrumentTableSeeder::class]
         );
     }
 }

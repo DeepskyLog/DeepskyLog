@@ -1,41 +1,41 @@
 <?php
 
 /**
- * Filter eloquent model.
+ * Instrument eloquent model.
  *
  * PHP Version 7
  *
- * @category Filters
+ * @category Instruments
  * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Filter eloquent model.
+ * Instrument eloquent model.
  *
- * @category Filters
+ * @category Instrument
  * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class Filter extends Model
+class Instrument extends Model
 {
     protected $fillable = [
-        'observer_id', 'name', 'type', 'color', 'wratten', 'schott', 'active'
+        'observer_id', 'name', 'type', 'fd', 'fixedMagnification', 'active'
     ];
 
     /**
-     * Activate the filter.
+     * Activate the instrument.
      *
-     * @param bool $active true to activate the filter, false to deactivate
+     * @param bool $active true to activate the instrument, false to deactivate
      *
      * @return None
      */
@@ -49,7 +49,7 @@ class Filter extends Model
     }
 
     /**
-     * Deactivate the filter.
+     * Deactivate the instrument.
      *
      * @return None
      */
@@ -61,39 +61,28 @@ class Filter extends Model
     /**
      * Adds the link to the observer.
      *
-     * @return BelongsTo the observer this lens belongs to
+     * @return BelongsTo the observer this instrument belongs to
      */
     public function observer()
     {
-        // Also method on user: filters()
+        // Also method on user: instruments()
         return $this->belongsTo('App\User');
     }
 
     /**
-     * Returns the name of the filter type.
+     * Returns the name of the instrument type.
      *
-     * @return String The name of the filter type.
+     * @return String The name of the instrument type.
      */
     public function typeName()
     {
-        return DB::table('filter_types')
+        return DB::table('instrument_types')
             ->where('id', $this->type)->value('type');
     }
 
-    /**
-     * Returns the name of the filter color.
-     *
-     * @return String The name of the filter color.
-     */
-    public function colorName()
-    {
-        return DB::table('filter_colors')
-            ->where('id', $this->color)->value('color');
-    }
-
-    // TODO: A filter belongs to one or more observations.
+    // TODO: An instrument belongs to one or more observations.
     //    public function observation()
     //    {
-    //        return $this->belongsTo(Observation::class);
+    //        return $this->belongsTo('App\Observation');
     //    }
 }

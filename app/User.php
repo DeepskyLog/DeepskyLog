@@ -81,6 +81,16 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
+     * Users can have one or more instruments.
+     *
+     * @return HasMany The eloquent relationship
+     */
+    public function instruments()
+    {
+        return $this->hasMany('App\Instrument', 'observer_id');
+    }
+
+    /**
      * Returns the copyright information (including the image and the link).
      *
      * @return string The copyright information
