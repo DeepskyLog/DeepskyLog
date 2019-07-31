@@ -71,7 +71,13 @@
             <tr>
                 <td> {{ _i("Number of locations") }} </td>
                 <td>
+                    @if ($user->id === Auth::user()->id)
+                        <a href="/location">
+                    @endif
                     17
+                    @if ($user->id === Auth::user()->id)
+                        </a>
+                    @endif
                 </td>
             </tr>
 
@@ -79,7 +85,13 @@
             <tr>
                 <td> {{ _i("Number of instruments") }} </td>
                 <td>
+                    @if ($user->id === Auth::user()->id)
+                        <a href="/instrument">
+                    @endif
                     7
+                    @if ($user->id === Auth::user()->id)
+                        </a>
+                    @endif
                 </td>
             </tr>
 
@@ -87,7 +99,13 @@
             <tr>
                 <td> {{ _i("Number of eyepieces") }} </td>
                 <td>
+                    @if ($user->id === Auth::user()->id)
+                        <a href="/eyepiece">
+                    @endif
                     {{ count($user->eyepieces) }}
+                    @if ($user->id === Auth::user()->id)
+                        </a>
+                    @endif
                 </td>
             </tr>
 
@@ -95,7 +113,13 @@
             <tr>
                 <td> {{ _i("Number of filters") }} </td>
                 <td>
+                    @if ($user->id === Auth::user()->id)
+                        <a href="/filter">
+                    @endif
                     {{ count($user->filters) }}
+                    @if ($user->id === Auth::user()->id)
+                        </a>
+                    @endif
                 </td>
             </tr>
 
@@ -103,7 +127,13 @@
             <tr>
                 <td> {{ _i("Number of lenses") }} </td>
                 <td>
+                    @if ($user->id === Auth::user()->id)
+                        <a href="/lens">
+                    @endif
                     {{ count($user->lenses) }}
+                    @if ($user->id === Auth::user()->id)
+                        </a>
+                    @endif
                 </td>
             </tr>
 

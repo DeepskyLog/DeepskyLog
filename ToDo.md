@@ -61,13 +61,13 @@
 + [ ] Users
   + [ ] Only show delete button if there are no observations
   + [ ] Show number of observations, instruments and lists in users/view.blade.php
-  + [ ] Create the charts in users/view.blade.php
+  + [ ] Create the charts in users/view.blade.php, check if there is a better laravel integration with other charting libraries (in stead of HighCharts).
   + [ ] Add the deepskylog star page in users/view.blade.php
 
 ## SEEDERS
 
 + [ ] Observations
-  + [ ] Add number of observations to the lenses.
+  + [ ] Add number of observations to the lenses and to the other instrument related things.
 
 ## INSTALLATION
 
