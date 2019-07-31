@@ -124,9 +124,9 @@ class EyepieceController extends Controller
             [
                 'observer_id' => 'required',
                 'name' => ['required', 'min:6'],
-                'type' => ['required'],
-                'color' => [], 'wratten' => ['max:5'],
-                'schott' => []
+                'focalLength' => ['required'],
+                'apparentFOV' => ['required'],
+                'maxFocalLength' => []
             ]
         );
 

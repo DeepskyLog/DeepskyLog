@@ -15,17 +15,11 @@
 ## EYEPIECES
 
 + [ ] create / edit
-  + [ ] Authorization
+  + [ ] Remove maximum focal length if not a zoom eyepiece
 + [ ] Test admin
 + [ ] Natural sort on name of eyepiece
-+ [ ] Add number of eyepieces to users/view.blade.php
-
-## LOCATIONS
-
-+ [ ] Add number of locations to users/view.blade.php
-+ [ ] Add the selection of locations to the user settings (users/settings.blade.php)
-+ [ ] Add the standard location to the user details (users/view.blade.php)
-+ [ ] Add the locations to subheader/location.blade.php
++ [ ] Default sort on focal length of eyepiece
++ [ ] Translations
 
 ## INSTRUMENTS
 
@@ -33,6 +27,13 @@
 + [ ] Add the selection of instruments to the user settings (settings.blade.php)
 + [ ] Add the standard instrument to the user details (users/view.blade.php)
 + [ ] Add the instruments to subheader/instrument.blade.php
+
+## LOCATIONS
+
++ [ ] Add number of locations to users/view.blade.php
++ [ ] Add the selection of locations to the user settings (users/settings.blade.php)
++ [ ] Add the standard location to the user details (users/view.blade.php)
++ [ ] Add the locations to subheader/location.blade.php
 
 ## OBJECTS
 

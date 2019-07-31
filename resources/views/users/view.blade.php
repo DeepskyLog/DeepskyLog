@@ -87,7 +87,7 @@
             <tr>
                 <td> {{ _i("Number of eyepieces") }} </td>
                 <td>
-                    5
+                    {{ count($user->eyepieces) }}
                 </td>
             </tr>
 
