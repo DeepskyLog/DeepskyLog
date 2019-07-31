@@ -16,6 +16,7 @@
 
 + [ ] create / edit
   + [ ] Remove maximum focal length if not a zoom eyepiece
+  + [ ] Check for invalid input in html5.
 + [ ] Test admin
 + [ ] Natural sort on name of eyepiece
 + [ ] Default sort on focal length of eyepiece

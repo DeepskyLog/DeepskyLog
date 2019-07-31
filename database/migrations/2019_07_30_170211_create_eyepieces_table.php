@@ -17,9 +17,9 @@ class CreateEyepiecesTable extends Migration
             function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->string('name', 255);
-                $table->unsignedInteger('focalLength');
+                $table->float('focalLength');
                 $table->unsignedInteger('apparentFOV');
-                $table->unsignedInteger('maxFocalLength')->nullable();
+                $table->float('maxFocalLength')->nullable();
                 $table->unsignedInteger('observer_id');
                 $table->boolean('active')->default(true);
                 $table->unsignedInteger('observations')->default(0);
