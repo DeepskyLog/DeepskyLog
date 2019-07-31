@@ -9,22 +9,18 @@
 
 ## MESSAGING SYSTEM
 
++ [ ] WhatsApp or Facebook messenger?
 + [ ] CODE CLIMATE: https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication
-
-## FILTERS
-
-+ [ ] Add number of filters to users/view.blade.php
 
 ## EYEPIECES
 
-+ [ ] Add number of eyepieces to users/view.blade.php
-
-## LOCATIONS
-
-+ [ ] Add number of locations to users/view.blade.php
-+ [ ] Add the selection of locations to the user settings (users/settings.blade.php)
-+ [ ] Add the standard location to the user details (users/view.blade.php)
-+ [ ] Add the locations to subheader/location.blade.php
++ [ ] create / edit
+  + [ ] Remove maximum focal length if not a zoom eyepiece
+  + [ ] Check for invalid input in html5.
++ [ ] Test admin
++ [ ] Natural sort on name of eyepiece
++ [ ] Default sort on focal length of eyepiece
++ [ ] Translations
 
 ## INSTRUMENTS
 
@@ -32,6 +28,13 @@
 + [ ] Add the selection of instruments to the user settings (settings.blade.php)
 + [ ] Add the standard instrument to the user details (users/view.blade.php)
 + [ ] Add the instruments to subheader/instrument.blade.php
+
+## LOCATIONS
+
++ [ ] Add number of locations to users/view.blade.php
++ [ ] Add the selection of locations to the user settings (users/settings.blade.php)
++ [ ] Add the standard location to the user details (users/view.blade.php)
++ [ ] Add the locations to subheader/location.blade.php
 
 ## OBJECTS
 
@@ -58,13 +61,13 @@
 + [ ] Users
   + [ ] Only show delete button if there are no observations
   + [ ] Show number of observations, instruments and lists in users/view.blade.php
-  + [ ] Create the charts in users/view.blade.php
+  + [ ] Create the charts in users/view.blade.php, check if there is a better laravel integration with other charting libraries (in stead of HighCharts).
   + [ ] Add the deepskylog star page in users/view.blade.php
 
 ## SEEDERS
 
 + [ ] Observations
-  + [ ] Add number of observations to the lenses.
+  + [ ] Add number of observations to the lenses and to the other instrument related things.
 
 ## INSTALLATION
 
