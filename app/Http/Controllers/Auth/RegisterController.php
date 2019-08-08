@@ -126,9 +126,10 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
 
-        laraflash(
-            _i('User "%s" successfully registered. You can now log in.', $user->name)
-        )->success();
+        $request->session()->flash(
+            str_random(4),
+            ['type' => 'success', 'message'=> _i('User "%s" successfully registered. You can now log in.', $user->name)]
+        );
 
         if ($this->registered($request, $user)) {
             return $this->registered($request, $user);

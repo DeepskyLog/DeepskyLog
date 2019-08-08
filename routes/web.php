@@ -76,6 +76,27 @@ Route::get('/eyepiece/{eyepiece}', 'EyepieceController@show')->name('eyepiece.sh
 
 Route::get('/getEyepieceJson/{id}', 'EyepieceController@getEyepieceJson');
 
+Route::get('/instrument/autocomplete', 'InstrumentController@dataAjax')
+    ->name('instrument.dataAjax');
+
+Route::get('/instrument/create/{instrument}', 'InstrumentController@create')
+    ->middleware('verified')
+    ->name('instrument.create');
+
+Route::get('/instrument/admin', 'InstrumentController@indexAdmin')
+    ->name('instrument.indexAdmin');
+
+Route::resource(
+    'instrument',
+    'InstrumentController',
+    ['parameters' => ['instrument' => 'instrument']]
+)->middleware('verified')->except('show');
+
+Route::get('/instrument/{instrument}', 'InstrumentController@show')
+    ->name('instrument.show');
+
+Route::get('/getInstrumentJson/{id}', 'InstrumentController@getInstrumentJson');
+
 Auth::routes(['verify' => true]);
 
 Route::post('/users/upload', 'UserController@upload')->name('users.upload');

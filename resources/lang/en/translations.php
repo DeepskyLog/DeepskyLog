@@ -41,4 +41,14 @@ return [
     _i('Double Stars'),
     _i('Sun'),
     _i('Moon'),
+    _i('Naked Eye'),
+    _i('Binoculars'),
+    _i('Refractor'),
+    _i('Reflector'),
+    _i('Finderscope'),
+    _i('Other'),
+    _i('Cassegrain'),
+    _i('Kutter'),
+    _i('Maksutov'),
+    _i('Schmidt Cassegrain')
 ];

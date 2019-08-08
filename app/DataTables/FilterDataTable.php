@@ -232,6 +232,6 @@ class FilterDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Lens_' . date('YmdHis');
+        return 'Filter_' . date('YmdHis');
     }
 }

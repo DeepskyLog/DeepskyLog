@@ -42,7 +42,11 @@ class DeepskyLogChecks
             // Check if the observer has set a country of residence.
             if (Auth::user()->country === '') {
                 laraflash(
-                    _i('Your country of residence is not set. Please set it in the observer settings.')
+                    _i(
+                        'Your country of residence is not set. Please set it in the '
+                        . '<a href="users/'
+                        . Auth::user()->id . '/settings">observer settings</a>.'
+                    )
                 )->warning();
             }
 

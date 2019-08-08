@@ -10,22 +10,28 @@
 ## MESSAGING SYSTEM
 
 + [ ] WhatsApp or Facebook messenger?
-+ [ ] Links in Laraflash?
 + [ ] CODE CLIMATE: https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication
 
 ## EYEPIECES
 
++ [ ] If type = Naked eye, use the translation for Naked Eye in stead of the name of the 'naked eye' eypiece
++ [ ] EyepieceController -> store, update: checks
 + [ ] create / edit
   + [ ] Remove maximum focal length if not a zoom eyepiece
   + [ ] Check for invalid input in html5.
-+ [ ] Test admin
++ [ ] Test admin: All columns?
 + [ ] Natural sort on name of eyepiece
 + [ ] Default sort on focal length of eyepiece
 + [ ] Translations
 
 ## INSTRUMENTS
 
-+ [ ] Add number of instruments to users/view.blade.php
++ [ ] Create: Type does not work when selecting an existing instrument.InstrumentController -> store, update: checks
++ [ ] InstrumentDatatable:
+  + [ ] Standard sort on diameter
+  + [ ] Show focal length?
+  + [ ] Show diameter in inches if user settings ask for it (also in show and create). 
++ [ ] Test admin: All columns?
 + [ ] Add the selection of instruments to the user settings (settings.blade.php)
 + [ ] Add the standard instrument to the user details (users/view.blade.php)
 + [ ] Add the instruments to subheader/instrument.blade.php
@@ -39,6 +45,7 @@
 
 ## OBJECTS
 
++ [ ] Difficult queries: https://laravel-news.com/laravel-query-builder
 + [ ] Add new types for the objects
 + [ ] Insert all old objects in the new database
 

@@ -88,7 +88,7 @@
                     @if ($user->id === Auth::user()->id)
                         <a href="/instrument">
                     @endif
-                    7
+                    {{ count($user->instruments) }}
                     @if ($user->id === Auth::user()->id)
                         </a>
                     @endif
