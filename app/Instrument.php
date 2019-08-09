@@ -29,7 +29,8 @@ use Illuminate\Support\Facades\DB;
 class Instrument extends Model
 {
     protected $fillable = [
-        'observer_id', 'name', 'type', 'fd', 'fixedMagnification', 'active'
+        'observer_id', 'name', 'diameter', 'type',
+        'fd', 'fixedMagnification', 'active'
     ];
 
     /**

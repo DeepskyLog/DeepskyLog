@@ -45,26 +45,37 @@
 
         <div class="form-group name">
             <label for="name">{{ _i("Name") }}</label>
-            <input type="text" required class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30" value="@if ($eyepiece->name){{ $eyepiece->name }}@else{{ old('name') }}@endif" />
-            <span class="help-block">{{ _i("e.g. Televue 31mm Nagler") }}</span>
+            <input type="text" required placeholder="Televue 31mm Nagler" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30" value="@if ($eyepiece->name){{ $eyepiece->name }}@else{{ old('name') }}@endif" />
         </div>
 
         <div class="form-group focalLength">
             <label for="name">{{ _i("Focal length") }}</label>
-            <input type="text" required class="form-control {{ $errors->has('focalLength') ? 'is-invalid' : '' }}" maxlength="5" name="focalLength" size="30" value="@if ($eyepiece->focalLength){{ $eyepiece->focalLength }}@else{{ old('focalLength') }}@endif" />
-            <span class="help-block">{{ _i("e.g. 31mm") }}</span>
+            <div class="input-group mb-3">
+                <input type="number" placeholder="31" required max="99" min="1" class="form-control {{ $errors->has('focalLength') ? 'is-invalid' : '' }}" maxlength="5" name="focalLength" size="30" value="@if ($eyepiece->focalLength){{ $eyepiece->focalLength }}@else{{ old('focalLength') }}@endif" />
+                <div class="input-group-append">
+                    <span class="input-group-text">mm</span>
+                </div>
+            </div>
         </div>
 
         <div class="form-group apparentFOV">
             <label for="name">{{ _i("Apparent Field of View") }}</label>
-            <input type="text" required class="form-control {{ $errors->has('apparentFOV') ? 'is-invalid' : '' }}" maxlength="5" name="apparentFOV" size="30" value="@if ($eyepiece->apparentFOV){{ $eyepiece->apparentFOV }}@else{{ old('apparentFOV') }}@endif" />
-            <span class="help-block">{{ _i("e.g. 82") }}&deg;</span>
+            <div class="input-group mb-3">
+                <input type="number" placeholder="82" required max="150" min="20" class="form-control {{ $errors->has('apparentFOV') ? 'is-invalid' : '' }}" maxlength="5" name="apparentFOV" size="30" value="@if ($eyepiece->apparentFOV){{ $eyepiece->apparentFOV }}@else{{ old('apparentFOV') }}@endif" />
+                <div class="input-group-append">
+                    <span class="input-group-text">&deg;</span>
+                </div>
+            </div>
         </div>
 
         <div class="form-group maxFocalLength">
             <label for="name">{{ _i("Maximum Focal length") }}</label>
-            <input type="text" class="form-control {{ $errors->has('maxFocalLength') ? 'is-invalid' : '' }}" maxlength="5" name="maxFocalLength" size="30" value="@if ($eyepiece->maxFocalLength){{ $eyepiece->maxFocalLength }}@else{{ old('maxFocalLength') }}@endif" />
-            <span class="help-block">{{ _i("e.g. 31mm") }}</span>
+            <div class="input-group mb-3">
+                <input type="number" placeholder="31 - {{ _i("Only for zoom eyepieces") }}" max="99" min="1" class="form-control {{ $errors->has('maxFocalLength') ? 'is-invalid' : '' }}" maxlength="5" name="maxFocalLength" size="30" value="@if ($eyepiece->maxFocalLength){{ $eyepiece->maxFocalLength }}@else{{ old('maxFocalLength') }}@endif" />
+                <div class="input-group-append">
+                    <span class="input-group-text" id="name-addon">mm</span>
+                </div>
+            </div>
         </div>
 
         <input type="submit" class="btn btn-success" name="add" value="@if ($update){{ _i("Change eyepiece") }}@else{{ _i("Add eyepiece") }}@endif" />

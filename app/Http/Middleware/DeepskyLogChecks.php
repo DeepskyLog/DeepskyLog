@@ -43,9 +43,9 @@ class DeepskyLogChecks
             if (Auth::user()->country === '') {
                 laraflash(
                     _i(
-                        'Your country of residence is not set. Please set it in the '
-                        . '<a href="users/'
-                        . Auth::user()->id . '/settings">observer settings</a>.'
+                        'Your country of residence is not set. Please set it in the %sobserver settings%s',
+                        '<a href="users/'. Auth::user()->id . '/settings">',
+                        '</a>.'
                     )
                 )->warning();
             }

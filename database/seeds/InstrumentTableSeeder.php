@@ -62,14 +62,26 @@ class InstrumentTableSeeder extends Seeder
                     $type = 5;
                 }
 
+                $fm = $instrument->fixedMagnification;
+
+                if ($instrument->fixedMagnification === 0) {
+                    $fm = null;
+                }
+
+                $fd = $instrument->fd;
+
+                if ($instrument->fd === 0.0) {
+                    $fd = null;
+                }
+
                 $newInstrument = Instrument::create(
                     [
                         'id' => $instrument->id,
                         'name' => html_entity_decode($instrument->name),
                         'diameter' => $instrument->diameter,
-                        'fd' => $instrument->fd,
+                        'fd' => $fd,
                         'type' => $instrument->type,
-                        'fixedMagnification' => $instrument->fixedMagnification,
+                        'fixedMagnification' => $fm,
                         'observer_id' => $observer[0],
                         'active' => $instrument->instrumentactive,
                         'created_at' => $date

@@ -46,7 +46,6 @@
         <div class="form-group name">
             <label for="name">{{ _i("Name") }}</label>
             <input type="text" required class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30" value="@if ($instrument->name){{ $instrument->name }}@else{{ old('name') }}@endif" />
-            <span class="help-block">{{ _i("e.g. Televue 2x Barlow") }}</span>
         </div>
 
         <div class="form-group type">
@@ -64,23 +63,41 @@
 
         <div class="form-group diameter">
             <label for="diameter">{{ _i("Diameter") }}</label>
-            <div class="form-inline">
-                <input type="string" class="form-control {{ $errors->has('diameter') ? 'is-invalid' : '' }}" maxlength="5" name="diameter" size="5" value="@if ($instrument->diameter > 0){{ $instrument->diameter }}@else{{ old('diameter') }}@endif" />
+
+            <div class="input-group mb-3">
+                <input type="number" required class="form-control {{ $errors->has('diameter') ? 'is-invalid' : '' }}" maxlength="5" name="diameter" size="5" value="@if ($instrument->diameter > 0){{ Auth::user()->showInches ? $instrument->diameter / 25.4 : $instrument->diameter }}@else{{ old('diameter') }}@endif" />
+                <div class="input-group-append">
+                    <span class="input-group-text" id="name-addon">{{ Auth::user()->showInches ? _i('inch') : _i('mm') }}</span>
+                </div>
             </div>
         </div>
 
         <div class="form-group fd">
             <label for="fd">{{ _i("F/D") }}</label>
-            <div class="form-inline">
-                <input type="string" class="form-control {{ $errors->has('fd') ? 'is-invalid' : '' }}" maxlength="5" name="fd" size="5" value="@if ($instrument->fd > 0){{ $instrument->fd }}@else{{ old('fd') }}@endif" />
+            <div class="input-group mb-3">
+                <input type="number" min="0.1" step="0.01" class="form-control {{ $errors->has('fd') ? 'is-invalid' : '' }}" maxlength="4" name="fd" size="5" value="@if ($instrument->fd > 0){{ $instrument->fd }}@else{{ old('fd') }}@endif" />
+            </div>
+        </div>
+        <div class="form-group focalLength">
+            {{ _i(' or ') }}
+            <label for="focalLength">{{ _i("Focal Length") }}</label>
+                <div class="input-group mb-3">
+                    <input type="number" min="0.1" step="0.01" class="form-control {{ $errors->has('focalLength') ? 'is-invalid' : '' }}" maxlength="4" name="focalLength" size="5" value="@if ($instrument->fd > 0){{ Auth::user()->showInches ? $instrument->fd * $instrument->diameter / 25.4 : $instrument->fd * $instrument->diameter }}@else{{ old('focalLength') }}@endif" />
+
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="name-addon">{{ Auth::user()->showInches ? _i('inch') : _i('mm') }}</span>
+                    </div>
             </div>
         </div>
 
         <div class="form-group fixedMagnification">
             <label for="fixedMagnification">{{ _i("Fixed Magnification") }}</label>
-            <div class="form-inline">
+            <div class="input-group mb-3">
                 <input type="string" class="form-control {{ $errors->has('fixedMagnification') ? 'is-invalid' : '' }}" maxlength="5" name="fixedMagnification" size="5" value="@if ($instrument->fixedMagnification > 0){{ $instrument->fixedMagnification }}@else{{ old('fixedMagnification') }}@endif" />
-            </div>
+                <div class="input-group-append">
+                    <span class="input-group-text" id="name-addon">x</span>
+                </div>
+        </div>
         </div>
 
         <input type="submit" class="btn btn-success" name="add" value="@if ($update){{ _i("Change instrument") }}@else{{ _i("Add instrument") }}@endif" />
@@ -115,6 +132,30 @@
         });
     });
 
+    $('.fd').on('input', function() {
+        // If diameter is not set, don't do anything.
+        if ($('.diameter input').val() != '') {
+            $fl = parseFloat($('.fd input').val() * $('.diameter input').val()).toFixed(2);
+            $('.focalLength input').val($fl);
+        }
+    });
+
+    $('.focalLength').on('input', function() {
+        // If diameter is not set, don't do anything.
+        if ($('.diameter input').val() != '') {
+            $fd = parseFloat($('.focalLength input').val() / $('.diameter input').val()).toFixed(2);
+            $('.fd input').val($fd);
+        }
+    });
+
+    $('.diameter').on('input', function() {
+        // If fd is not set, don't do anything.
+        if ($('.fd input').val() != '') {
+            $focalLength = parseFloat($('.fd input').val() * $('.diameter input').val()).toFixed(2);
+            $('.focalLength input').val($focalLength);
+        }
+    });
+
     $('#instrument').on("select2:selecting", function(e) {
         // Get the id of the selected instrument
         id = e.params.args.data.id;
@@ -123,8 +164,14 @@
         // Read the information of the instrument
         $.getJSON('/getInstrumentJson/' + id, function(data) {
             $('.name input').val(data.name);
-            $('.type input').val(data.type);
-            $('.diameter input').val(data.diameter);
+            $('.type select').val(data.type);
+            if ({{ Auth::user()->showInches }}) {
+                $('.diameter input').val((data.diameter / 25.4).toFixed(1));
+                $('.focalLength input').val((data.fd * data.diameter / 25.4).toFixed(1));
+            } else {
+                $('.diameter input').val(data.diameter);
+                $('.focalLength input').val((data.fd * data.diameter).toFixed(2));
+            }
             $('.fd input').val(data.fd);
             $('.fixedMagnification input').val(data.fixedMagnification);
         });

@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\DataTables\InstrumentDataTable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Instrument Controller.
@@ -118,21 +119,25 @@ class InstrumentController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->session()->has('_flash.new'));
-        dd($request->session()->all());
         $request['observer_id'] = auth()->id();
 
         $validated = request()->validate(
             [
                 'observer_id' => 'required',
-                'name' => ['required', 'min:6'],
-                'type' => ['required'],
-                'diameter' => ['required'], 'fd' => [],
-                'fixedMagnification' => []
+                'name' => 'required|min:6',
+                'type' => 'required',
+                'diameter' => 'required|numeric|gt:0',
+                'fd' => 'gte:1',
+                'fixedMagnification' => 'gte:0'
             ]
         );
 
-        Instrument::create($validated);
+
+        $instrument = Instrument::create($validated);
+
+        if (Auth::user()->showInches) {
+            $instrument->update(['diameter' => $request->get('diameter') * 25.4]);
+        }
 
         laraflash(_i('Instrument "%s" created', $request->name))->success();
 
@@ -188,16 +193,25 @@ class InstrumentController extends Controller
             request()->validate(
                 [
                     'observer_id' => 'required',
-                    'name' => ['required', 'min:6'],
-                    'type' => ['required'],
-                    'diameter' => ['required'], 'fd' => [],
-                    'fixedMagnification' => []
+                    'name' => 'required|min:6',
+                    'type' => 'required',
+                    'diameter' => 'required|numeric|gt:0',
+                    'fd' => 'gte:1',
+                    'fixedMagnification' => 'gte:0'
                 ]
             );
 
+
             $instrument->update(['type' => $request->get('type')]);
             $instrument->update(['name' => $request->get('name')]);
-            $instrument->update(['diameter' => $request->get('diameter')]);
+
+            if (Auth::user()->showInches) {
+                $instrument->update(
+                    ['diameter' => $request->get('diameter') * 25.4]
+                );
+            } else {
+                $instrument->update(['diameter' => $request->get('diameter')]);
+            }
             $instrument->update(['fd' => $request->get('fd')]);
             $instrument->update(
                 ['fixedMagnification' => $request->get('fixedMagnification')]

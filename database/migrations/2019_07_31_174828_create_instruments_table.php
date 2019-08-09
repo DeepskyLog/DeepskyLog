@@ -20,7 +20,7 @@ class CreateInstrumentsTable extends Migration
                 $table->float('diameter');
                 $table->unsignedInteger('type');
                 $table->float('fd')->nullable();
-                $table->unsignedInteger('fixedMagnification');
+                $table->unsignedInteger('fixedMagnification')->nullable();
                 $table->unsignedInteger('observer_id');
                 $table->boolean('active')->default(true);
                 $table->unsignedInteger('observations')->default(0);

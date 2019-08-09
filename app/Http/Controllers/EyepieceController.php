@@ -123,10 +123,10 @@ class EyepieceController extends Controller
         $validated = request()->validate(
             [
                 'observer_id' => 'required',
-                'name' => ['required', 'min:6'],
-                'focalLength' => ['required'],
-                'apparentFOV' => ['required'],
-                'maxFocalLength' => []
+                'name' => 'required|min:6',
+                'focalLength' => 'required|numeric|gte:1|lte:99',
+                'apparentFOV' => 'required|numeric|gte:20|lte:150',
+                'maxFocalLength' => 'numeric|gte:1|lte:99',
             ]
         );
 
@@ -182,14 +182,14 @@ class EyepieceController extends Controller
         $request['observer_id'] = $eyepiece->observer_id;
 
         // If the factor is set, the name should also be set in the form.
-        if ($request->has('type')) {
+        if ($request->has('focalLength')) {
             request()->validate(
                 [
                     'observer_id' => 'required',
-                    'name' => ['required', 'min:6'],
-                    'focalLength' => ['required', 'min:1', 'max:99'],
-                    'apparentFOV' => ['required', 'min:20', 'max:150'],
-                    'maxFocalLength'
+                    'name' => 'required|min:6',
+                    'focalLength' => 'required|numeric|gte:1|lte:99',
+                    'apparentFOV' => 'required|numeric|gte:20|lte:150',
+                    'maxFocalLength' => 'numeric|gte:1|lte:99',
                 ]
             );
 

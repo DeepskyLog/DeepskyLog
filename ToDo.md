@@ -7,30 +7,16 @@
 + [ ] Timezones with javascript: https://moment.github.io/luxon/
 + [ ] Timezones with php: Carbon: https://carbon.nesbot.com/docs/#api-timezone
 
-## MESSAGING SYSTEM
+## CODE QUALITY
 
-+ [ ] WhatsApp or Facebook messenger?
 + [ ] CODE CLIMATE: https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication
-
-## EYEPIECES
-
-+ [ ] If type = Naked eye, use the translation for Naked Eye in stead of the name of the 'naked eye' eypiece
-+ [ ] EyepieceController -> store, update: checks
-+ [ ] create / edit
-  + [ ] Remove maximum focal length if not a zoom eyepiece
-  + [ ] Check for invalid input in html5.
-+ [ ] Test admin: All columns?
-+ [ ] Natural sort on name of eyepiece
-+ [ ] Default sort on focal length of eyepiece
-+ [ ] Translations
 
 ## INSTRUMENTS
 
-+ [ ] Create: Type does not work when selecting an existing instrument.InstrumentController -> store, update: checks
++ [ ] InstrumentController -> store, update: checks
 + [ ] InstrumentDatatable:
-  + [ ] Standard sort on diameter
-  + [ ] Show focal length?
-  + [ ] Show diameter in inches if user settings ask for it (also in show and create). 
+  + [ ] Show diameter in inches if user settings asks for it.
+  + [ ] Sort on focal length and diameter (in inches)
 + [ ] Test admin: All columns?
 + [ ] Add the selection of instruments to the user settings (settings.blade.php)
 + [ ] Add the standard instrument to the user details (users/view.blade.php)
@@ -71,6 +57,7 @@
   + [ ] Show number of observations, instruments and lists in users/view.blade.php
   + [ ] Create the charts in users/view.blade.php, check if there is a better laravel integration with other charting libraries (in stead of HighCharts).
   + [ ] Add the deepskylog star page in users/view.blade.php
+  + [ ] Likes? Comments?
 
 ## SEEDERS
 

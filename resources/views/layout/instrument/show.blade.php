@@ -22,23 +22,28 @@
 
     <tr>
         <td>{{ _i("Diameter") }}</td>
-        <td>{{ $instrument->diameter }}</td>
+        <td>{{ Auth::user()->showInches ? (number_format($instrument->diameter / 25.4, 2, '.', ',')) . ' ' . _i('inch') : $instrument->diameter . ' ' . _i('mm')}}</td>
     </tr>
 
-    <tr>
-        <td>{{ _i("F/D") }}</td>
-        <td>{{ $instrument->fd }}</td>
-    </tr>
 
-    <tr>
-        <td>{{ _i("Focal Length") }}</td>
-        <td>{{ $instrument->fd * $instrument->diameter }}</td>
-    </tr>
+    @if ($instrument->fd)
+        <tr>
+            <td>{{ _i("F/D") }}</td>
+            <td>{{ $instrument->fd }}</td>
+        </tr>
 
-    <tr>
-        <td>{{ _i("Fixed Magnification") }}</td>
-        <td>{{ $instrument->fixedMagnification }}</td>
-    </tr>
+        <tr>
+            <td>{{ _i("Focal Length") }}</td>
+            <td>{{ Auth::user()->showInches ? $instrument->fd * $instrument->diameter / 25.4 . ' ' . _i('inch') : $instrument->fd * $instrument->diameter . ' ' . _i('mm')}}</td>
+        </tr>
+    @endif
+
+    @if ($instrument->fixedMagnification)
+        <tr>
+            <td>{{ _i("Fixed Magnification") }}</td>
+            <td>{{ $instrument->fixedMagnification }}</td>
+        </tr>
+    @endif
 
     <tr>
         <td>{{ _i("Owner") }}</td>

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-06-28 10:56+0200\n"
-"PO-Revision-Date: 2019-06-28 10:56+0200\n"
+"POT-Creation-Date: 2019-08-09 14:55+0200\n"
+"PO-Revision-Date: 2019-08-09 14:56+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: nl_NL\n"
@@ -245,6 +245,56 @@ msgstr "Zon"
 msgid "Moon"
 msgstr "Maan"
 
+#: ../resources/lang/en/translations.php:44
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:44
+msgid "Naked Eye"
+msgstr "Blote oog"
+
+#: ../resources/lang/en/translations.php:45
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:45
+msgid "Binoculars"
+msgstr "Verrekijker"
+
+#: ../resources/lang/en/translations.php:46
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:46
+msgid "Refractor"
+msgstr "Refractor"
+
+#: ../resources/lang/en/translations.php:47
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:47
+msgid "Reflector"
+msgstr "Reflector"
+
+#: ../resources/lang/en/translations.php:48
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:48
+msgid "Finderscope"
+msgstr "Zoeker"
+
+#: ../resources/lang/en/translations.php:49
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:49
+msgid "Other"
+msgstr "Ander"
+
+#: ../resources/lang/en/translations.php:50
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:50
+msgid "Cassegrain"
+msgstr "Cassegrain"
+
+#: ../resources/lang/en/translations.php:51
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:51
+msgid "Kutter"
+msgstr "Kutter"
+
+#: ../resources/lang/en/translations.php:52
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:52
+msgid "Maksutov"
+msgstr "Maksutov"
+
+#: ../resources/lang/en/translations.php:53
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:53
+msgid "Schmidt Cassegrain"
+msgstr "Schmidt Cassegrain"
+
 #: ../resources/views/auth/passwords/reset.blade.php:75
 #: ../resources/views/auth/register.blade.php:210
 #: ../resources/views/users/settings.blade.php:340
@@ -299,23 +349,105 @@ msgstr "Het wachtwoord bevat de gebruikersnaam"
 msgid "Type your password"
 msgstr "Typ uw wachtwoord"
 
-#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:45
-#: Http/Middleware/DeepskyLogChecks.php:45
+#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:46
+#: Http/Middleware/DeepskyLogChecks.php:46
+#, php-format
 msgid ""
-"Your country of residence is not set. Please set it in the observer settings."
+"Your country of residence is not set. Please set it in the %sobserver "
+"settings%s"
 msgstr ""
 "Uw land van verblijf is niet ingesteld. Gelieve dit in te stellen in de "
-"waarnemer instellingen."
+"%swaarnemer instellingen%s"
 
-#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:52
-#: Http/Middleware/DeepskyLogChecks.php:52
+#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:56
+#: Http/Middleware/DeepskyLogChecks.php:56
 msgid "You did not specify a standard location. Please select one."
 msgstr "U hebt geen standaard locatie opgegeven. Gelieve er één te kiezen."
 
-#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:59
-#: Http/Middleware/DeepskyLogChecks.php:59
+#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:63
+#: Http/Middleware/DeepskyLogChecks.php:63
 msgid "You did not specify a standard instrument. Please select one."
 msgstr "U hebt geen standaard instrument opgegeven. Gelieve er één te kiezen."
+
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:135
+#: Http/Controllers/EyepieceController.php:135
+#, php-format
+msgid "Eyepiece \"%s\" created"
+msgstr "Oculair \"%s\" aangemaakt"
+
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:201
+#: Http/Controllers/EyepieceController.php:201
+#, php-format
+msgid "Eyepiece \"%s\" updated"
+msgstr "Oculair \"%s\" bijgewerkt"
+
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:207
+#: Http/Controllers/EyepieceController.php:207
+#, php-format
+msgid "Eyepiece \"%s\" is active"
+msgstr "Oculair \"%s\" is actief"
+
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:211
+#: Http/Controllers/EyepieceController.php:211
+#, php-format
+msgid "Eyepiece \"%s\" is not longer active"
+msgstr "Oculair \"%s\" is niet langer actief"
+
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:233
+#: Http/Controllers/EyepieceController.php:233
+#, php-format
+msgid "Eyepiece \"%s\" has observations. Impossible to delete."
+msgstr ""
+"Er zijn waarnemingen met oculair \"%s\". Onmogelijk om het oculair te "
+"verwijderen."
+
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:240
+#: Http/Controllers/EyepieceController.php:240
+#, php-format
+msgid "Eyepiece \"%s\" deleted"
+msgstr "Oculair \"%s\" verwijderd"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:14
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:14
+#: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:14
+#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:14
+msgid "Type"
+msgstr "Type"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:15
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:14
+msgid "Eyepiece"
+msgstr "Oculair"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:19
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:88
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:34
+msgid "Focal Length"
+msgstr "Brandpuntsafstand"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:24
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:65
+msgid "Apparent Field of View"
+msgstr "Schijnbaar gezichtsveld"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:30
+msgid "Maximum Focal Length"
+msgstr "Maximale brandpuntsafstand"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:36
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:44
+#: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:47
+#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:23
+msgid "Owner"
+msgstr "Eigenaar"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:40
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:48
+#: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:51
+#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:27
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:176
+msgid "Number of observations"
+msgstr "Aantal waarnemingen"
 
 #: ../storage/framework/messages/0df489c1c437e3c7dd75009d2dddf707bf3b68bc.php.php:6
 #: ../storage/framework/messages/0df489c1c437e3c7dd75009d2dddf707bf3b68bc.php.php:18
@@ -342,14 +474,17 @@ msgid "or specify your filter details manually"
 msgstr "of voeg de gegevens manueel in"
 
 #: ../storage/framework/messages/0df489c1c437e3c7dd75009d2dddf707bf3b68bc.php.php:50
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:50
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:57
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:21
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:50
 #: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:54
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:51
 msgid "Name"
 msgstr "Naam"
 
 #: ../storage/framework/messages/0df489c1c437e3c7dd75009d2dddf707bf3b68bc.php.php:52
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:52
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:53
 msgid "e.g. Televue 2x Barlow"
 msgstr "b.v. Televue 2x Barlow"
@@ -427,6 +562,54 @@ msgstr "Atlassen"
 msgid "Forms"
 msgstr "Formulieren"
 
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:6
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:18
+msgid "Add a new instrument"
+msgstr "Voeg een nieuw instrument toe"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:32
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:108
+msgid "Change instrument"
+msgstr "Instrument wijzigen"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:32
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:108
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:167
+#: ../storage/framework/messages/b56c2fd0694269a0ca8951a1a48c317cc006eac2.php.php:23
+msgid "Add instrument"
+msgstr "Instrument toevoegen"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:36
+msgid "Select an existing instrument"
+msgstr "Selecteer een bestaand instrument"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:44
+msgid "or specify your instrument details manually"
+msgstr "of voeg de gegevens manueel in"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:56
+msgid "Instrument type"
+msgstr "Type instrument"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:69
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:24
+msgid "Diameter"
+msgstr "Diameter"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:80
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:29
+msgid "F/D"
+msgstr "F/D"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:86
+msgid " or "
+msgstr " of "
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:99
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:39
+msgid "Fixed Magnification"
+msgstr "Vaste vergroting"
+
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:1
 #: ../storage/framework/messages/757293d8d848bb8da17d462f159283f9bfa8bf39.php.php:9
 msgid "Settings"
@@ -461,7 +644,7 @@ msgstr "E-mail"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:62
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:84
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:118
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:150
 msgid "Country of residence"
 msgstr "Land van verblijf"
 
@@ -506,7 +689,7 @@ msgstr ""
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:130
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:159
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:129
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:161
 msgid "Copyright notice"
 msgstr "Copyright melding"
 
@@ -530,10 +713,6 @@ msgstr "Voeg een nieuwe waarneemplaats toe"
 #: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:68
 msgid "Default instrument"
 msgstr "Standaard instrument"
-
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:167
-msgid "Add instrument"
-msgstr "Instrument toevoegen"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:173
 msgid "Default atlas"
@@ -695,7 +874,7 @@ msgid "Observations"
 msgstr "Waarnemingen"
 
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:139
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:137
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:169
 #: Http/Controllers/UserController.php:139
 msgid "Total"
 msgstr "Totaal"
@@ -732,6 +911,15 @@ msgstr "Pagina niet gevonden"
 msgid "Sorry, the page you are looking for could not be found."
 msgstr "Sorry, de pagina die u zoekt kon niet worden gevonden."
 
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:15
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:12
+msgid "Instrument"
+msgstr "Instrument"
+
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:19
+msgid "Instrument Type"
+msgstr "Type instrument"
+
 #: ../storage/framework/messages/340e78d81c17e9a0138af7e51ca9d32f7ace7585.php.php:1
 #: ../storage/framework/messages/340e78d81c17e9a0138af7e51ca9d32f7ace7585.php.php:7
 msgid "User Administration"
@@ -760,6 +948,23 @@ msgstr "Registreren"
 #: ../storage/framework/messages/3696c34f28a61d317f5ed9e7643ea316a6282e62.php.php:62
 msgid "Logout"
 msgstr "Afmelden"
+
+#: ../storage/framework/messages/3d2a9fc957ae18187dd91b7ba8ab270895e81525.php.php:3
+#: ../storage/framework/messages/3d2a9fc957ae18187dd91b7ba8ab270895e81525.php.php:15
+msgid "All eyepieces"
+msgstr "Alle oculairs"
+
+#: ../storage/framework/messages/3d2a9fc957ae18187dd91b7ba8ab270895e81525.php.php:5
+#: ../storage/framework/messages/3d2a9fc957ae18187dd91b7ba8ab270895e81525.php.php:17
+#, php-format
+msgid "Eyepieces of %s"
+msgstr "Oculairs van %s"
+
+#: ../storage/framework/messages/3d2a9fc957ae18187dd91b7ba8ab270895e81525.php.php:23
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:32
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:84
+msgid "Add eyepiece"
+msgstr "Voeg oculair toe"
 
 #: ../storage/framework/messages/4040fe44e56e00e78d2b38c1c83a75853675c8d2.php.php:2
 msgid "Service Unavailable"
@@ -794,11 +999,6 @@ msgstr "Database gebaseerd op Eye&telescoop en Tycho2 + & USNO-UCAC3"
 msgid "Privacy Policy"
 msgstr "Privacybeleid"
 
-#: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:14
-#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:14
-msgid "Type"
-msgstr "Type"
-
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:15
 #: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:15
 msgid "Filter"
@@ -807,17 +1007,6 @@ msgstr "Filter"
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:19
 msgid "Filter Type"
 msgstr "Filter type"
-
-#: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:47
-#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:23
-msgid "Owner"
-msgstr "Eigenaar"
-
-#: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:51
-#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:27
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:144
-msgid "Number of observations"
-msgstr "Aantal waarnemingen"
 
 #: ../storage/framework/messages/587dec2718210440690641e4433ced8f643b0be0.php.php:3
 msgid "List"
@@ -1187,6 +1376,17 @@ msgstr "Een nieuw bericht toevoegen"
 msgid "Add extra participants to this message"
 msgstr "Extra deelnemers aan dit gesprek toevoegen"
 
+#: ../storage/framework/messages/b56c2fd0694269a0ca8951a1a48c317cc006eac2.php.php:3
+#: ../storage/framework/messages/b56c2fd0694269a0ca8951a1a48c317cc006eac2.php.php:15
+msgid "All instruments"
+msgstr "Alle instrumenten"
+
+#: ../storage/framework/messages/b56c2fd0694269a0ca8951a1a48c317cc006eac2.php.php:5
+#: ../storage/framework/messages/b56c2fd0694269a0ca8951a1a48c317cc006eac2.php.php:17
+#, php-format
+msgid "Instruments of %s"
+msgstr "Instrumenten van %s"
+
 #: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:4
 msgid "View"
 msgstr "Bekijk"
@@ -1278,6 +1478,74 @@ msgstr "Onthoud mij"
 #: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:66
 msgid "Forgot Your Password?"
 msgstr "Wachtwoord vergeten?"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:6
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:18
+msgid "Add a new eyepiece"
+msgstr "Voeg een nieuw oculair toe"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:32
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:84
+msgid "Change eyepiece"
+msgstr "Verander oculair"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:36
+msgid "Select an existing eyepiece"
+msgstr "Selecteer bestaand oculair"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:44
+msgid "or specify your eyepiece details manually"
+msgstr "of voeg de gegevens manueel in"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:55
+msgid "Focal length"
+msgstr "Brandpuntsafstand"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:75
+msgid "Maximum Focal length"
+msgstr "Maximale brandpuntsafstand"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:77
+msgid "Only for zoom eyepieces"
+msgstr "Alleen bij zoom-oculairs"
+
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:138
+#: Http/Controllers/InstrumentController.php:138
+#, php-format
+msgid "Instrument \"%s\" created"
+msgstr "Instrument \"%s\" toegevoegd"
+
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:208
+#: Http/Controllers/InstrumentController.php:208
+#, php-format
+msgid "Instrument \"%s\" updated"
+msgstr "Instrument \"%s\" bijgewerkt"
+
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:215
+#: Http/Controllers/InstrumentController.php:215
+#, php-format
+msgid "Instrument \"%s\" is active"
+msgstr "Instrument \"%s\" is actief"
+
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:220
+#: Http/Controllers/InstrumentController.php:220
+#, php-format
+msgid "Instrument \"%s\" is not longer active"
+msgstr "Instrument \"%s\" is niet langer actief"
+
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:242
+#: Http/Controllers/InstrumentController.php:242
+#, php-format
+msgid "Instrument \"%s\" has observations. Impossible to delete."
+msgstr ""
+"Er zijn waarnemingen met instrument \"%s\". Onmogelijk om het instrument te "
+"verwijderen."
+
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:249
+#: Http/Controllers/InstrumentController.php:249
+#, php-format
+msgid "Instrument \"%s\" deleted"
+msgstr "Instrument \"%s\" verwijderd"
 
 #: ../storage/framework/messages/ce86130e9603deefb28c2df7d4d8617962eb24c9.php.php:2
 msgid "Unauthorized"
@@ -1385,67 +1653,67 @@ msgstr "DeepskyLog sterren"
 msgid "Number of locations"
 msgstr "Aantal locaties"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:84
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:90
 msgid "Number of instruments"
 msgstr "Aantal instrumenten"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:92
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:105
 msgid "Number of eyepieces"
 msgstr "Aantal oculairs"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:100
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:120
 msgid "Number of filters"
 msgstr "Aantal filters"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:109
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:135
 msgid "Number of lenses"
 msgstr "Aantal lenzen"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:152
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:184
 msgid "Observations last year"
 msgstr "Waarnemingen vorig jaar"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:160
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:192
 msgid "Number of drawings"
 msgstr "Aantal tekeningen"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:168
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:200
 msgid "Drawings last year"
 msgstr "Tekeningen vorig jaar"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:176
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:208
 msgid "Different objects"
 msgstr "Verschillende objecten"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:184
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:216
 msgid "Messier objects"
 msgstr "Messier objecten"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:196
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:228
 msgid "Caldwell objects"
 msgstr "Caldwell objecten"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:208
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:240
 msgid "H400 objects"
 msgstr "H400 objecten"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:220
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:252
 msgid "H400-II objects"
 msgstr "H400-II objecten"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:232
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:264
 msgid "Rank"
 msgstr "Rang"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:243
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:275
 msgid "All observations of "
 msgstr "Alle waarnemingen van "
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:248
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:280
 msgid "All drawings of "
 msgstr "Alle tekeningen van "
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:254
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:286
 msgid "Send message to "
 msgstr "Stuur bericht naar "
 
@@ -1477,17 +1745,9 @@ msgstr "Waarneemlijst"
 msgid "Session"
 msgstr "Sessie"
 
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:12
-msgid "Instrument"
-msgstr "Instrument"
-
 #: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:13
 msgid "Location"
 msgstr "Waarneemplaats"
-
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:14
-msgid "Eyepiece"
-msgstr "Oculair"
 
 #: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:18
 msgid "Object"
@@ -1506,8 +1766,8 @@ msgstr ""
 msgid "Send Password Reset Link"
 msgstr "Verstuur herstel link voor het wachtwoord"
 
-#: ../storage/framework/messages/fed48ef1bb39cd4f7e3c02c02475892b953cc5f2.php.php:130
-#: Http/Controllers/Auth/RegisterController.php:130
+#: ../storage/framework/messages/fed48ef1bb39cd4f7e3c02c02475892b953cc5f2.php.php:131
+#: Http/Controllers/Auth/RegisterController.php:131
 #, php-format
 msgid "User \"%s\" successfully registered. You can now log in."
 msgstr "Gebruiker “%s” is succesvol geregistreerd. U kunt nu inloggen."
@@ -1533,6 +1793,14 @@ msgstr "of voeg de gegevens manueel in"
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:61
 msgid "> 1.0 for Barlow lenses, < 1.0 for shapley lenses."
 msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
+
+#, fuzzy
+#~| msgid "(e.g. Televue 31mm Nagler)"
+#~ msgid "Televue 31mm Nagler"
+#~ msgstr "(bijv. Televue 31mm Nagler)"
+
+#~ msgid "31"
+#~ msgstr "31"
 
 #, fuzzy
 #~| msgid ""
@@ -1624,9 +1892,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 
 #~ msgid "Tail"
 #~ msgstr "Staart"
-
-#~ msgid "Naked Eye"
-#~ msgstr "Blote oog"
 
 #~ msgid "pdf"
 #~ msgstr "pdf"
@@ -1930,56 +2195,8 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ msgid "Overview Instruments"
 #~ msgstr "Overzicht instrumenten"
 
-#~ msgid "F/D"
-#~ msgstr "F/D"
-
-#~ msgid "Fixed magnification"
-#~ msgstr "Vaste vergroting"
-
-#~ msgid "Reflector"
-#~ msgstr "Reflector"
-
-#~ msgid "Finderscope"
-#~ msgstr "Zoeker"
-
-#~ msgid "Refractor"
-#~ msgstr "Refractor"
-
-#~ msgid "Other"
-#~ msgstr "Ander"
-
-#~ msgid "Binoculars"
-#~ msgstr "Verrekijker"
-
-#~ msgid "Cassegrain"
-#~ msgstr "Cassegrain"
-
-#~ msgid "Schmidt Cassegrain"
-#~ msgstr "Schmidt Cassegrain"
-
-#~ msgid "Kutter"
-#~ msgstr "Kutter"
-
-#~ msgid "Maksutov"
-#~ msgstr "Maksutov"
-
-#~ msgid "Add new instrument"
-#~ msgstr "Nieuw instrument toevoegen"
-
-#~ msgid "Select an existing instrument"
-#~ msgstr "Selecteer een bestaand instrument"
-
 #~ msgid "or add instrument manually"
 #~ msgstr "of voeg instrument handmatig toe"
-
-#~ msgid "Instrument name"
-#~ msgstr "Naam van het instrument"
-
-#~ msgid "Diameter"
-#~ msgstr "Diameter"
-
-#~ msgid "Focal Length"
-#~ msgstr "Brandpuntsafstand"
 
 #~ msgid "or F/D"
 #~ msgstr "of F/D"
@@ -2469,12 +2686,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ msgid "Add site"
 #~ msgstr "Voeg locatie toe"
 
-#~ msgid "Eyepieces of %s"
-#~ msgstr "Oculairs van %s"
-
-#~ msgid "Add eyepiece"
-#~ msgstr "Voeg oculair toe"
-
 #~ msgid "Lookup atlas page for M 45"
 #~ msgstr "Lookup atlas pagina voor M 45"
 
@@ -2657,29 +2868,11 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ msgid "Select country"
 #~ msgstr "Kies land"
 
-#~ msgid "Add a new eyepiece"
-#~ msgstr "Voeg een nieuw oculair toe"
-
-#~ msgid "Select an existing eyepiece"
-#~ msgstr "Selecteer bestaand oculair"
-
-#~ msgid "or specify your eyepiece details manually"
-#~ msgstr "of voeg de gegevens manueel in"
-
-#~ msgid "(e.g. Televue 31mm Nagler)"
-#~ msgstr "(bijv. Televue 31mm Nagler)"
-
 #~ msgid "Focal length (mm)"
 #~ msgstr "Brandpuntsafstand (mm)"
 
 #~ msgid "e.g. 31"
 #~ msgstr "bijv. 31"
-
-#~ msgid "Maximum focal length (in mm)"
-#~ msgstr "Maximale brandpuntsafstand (in mm)"
-
-#~ msgid "only needed for zoom eyepieces"
-#~ msgstr "alleen nodig voor zoom oculairs"
 
 #~ msgid "Apparent FOV (in °)"
 #~ msgstr "Schijnbaar FOV (in °)"
@@ -3026,9 +3219,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ msgid "Adapt eyepiece"
 #~ msgstr "Wijzig oculair"
 
-#~ msgid "Instruments of"
-#~ msgstr "Instrumenten van"
-
 #~ msgid ""
 #~ "You wanted to watch a filter, but none is specified. Please contact the "
 #~ "developers with this message."
@@ -3137,9 +3327,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ msgstr ""
 #~ "Instrument niet gevonden in change_instrument.php, neem contact op met de "
 #~ "ontwikkelaars met dit bericht:"
-
-#~ msgid "Change instrument"
-#~ msgstr "Instrument wijzigen"
 
 #~ msgid "View messages"
 #~ msgstr "Bekijk berichten"
@@ -4525,9 +4712,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ msgid "import observations from a CSV file"
 #~ msgstr "importeer waarnemingen uit een CSV-bestand"
 
-#~ msgid " or "
-#~ msgstr " of "
-
 #~ msgid "import observations from an <OAL> (XML) file"
 #~ msgstr "importeer waarnemingen uit een <OAL>-bestand (XML)"
 
@@ -5883,11 +6067,6 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 #~ "wachtwoord. <br /> <br /> %s Geniet van <a href=\"http://www.deepskylog."
 #~ "be/“>deepskylog</a>. Groeten, <br /> <br /> het DeepskyLog team <br /> "
 #~ "<br />"
-
-#, fuzzy
-#~| msgid "Focal length (mm)"
-#~ msgid "Focal length"
-#~ msgstr "Brandpuntsafstand (mm)"
 
 #~ msgid "Focal length (in mm)"
 #~ msgstr "Brandpuntsafstand (in mm)"

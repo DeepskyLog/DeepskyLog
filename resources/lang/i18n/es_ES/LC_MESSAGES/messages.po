@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-06-28 10:57+0200\n"
-"PO-Revision-Date: 2019-06-28 10:57+0200\n"
+"POT-Creation-Date: 2019-08-09 15:03+0200\n"
+"PO-Revision-Date: 2019-08-09 15:06+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: es_ES\n"
@@ -249,6 +249,56 @@ msgstr "Dom"
 msgid "Moon"
 msgstr "Luna"
 
+#: ../resources/lang/en/translations.php:44
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:44
+msgid "Naked Eye"
+msgstr "Ojo desnudo"
+
+#: ../resources/lang/en/translations.php:45
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:45
+msgid "Binoculars"
+msgstr "Binoculares"
+
+#: ../resources/lang/en/translations.php:46
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:46
+msgid "Refractor"
+msgstr "Refractor"
+
+#: ../resources/lang/en/translations.php:47
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:47
+msgid "Reflector"
+msgstr "Reflector"
+
+#: ../resources/lang/en/translations.php:48
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:48
+msgid "Finderscope"
+msgstr "Buscador"
+
+#: ../resources/lang/en/translations.php:49
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:49
+msgid "Other"
+msgstr "Otro"
+
+#: ../resources/lang/en/translations.php:50
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:50
+msgid "Cassegrain"
+msgstr "Cassegrain"
+
+#: ../resources/lang/en/translations.php:51
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:51
+msgid "Kutter"
+msgstr "Kutter"
+
+#: ../resources/lang/en/translations.php:52
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:52
+msgid "Maksutov"
+msgstr "Maksutov"
+
+#: ../resources/lang/en/translations.php:53
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:53
+msgid "Schmidt Cassegrain"
+msgstr "Schmidt Cassegrain"
+
 #: ../resources/views/auth/passwords/reset.blade.php:75
 #: ../resources/views/auth/register.blade.php:210
 #: ../resources/views/users/settings.blade.php:340
@@ -303,23 +353,103 @@ msgstr "La contraseña contiene el nombre de usuario"
 msgid "Type your password"
 msgstr "Escriba su contraseña"
 
-#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:45
-#: Http/Middleware/DeepskyLogChecks.php:45
+#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:46
+#: Http/Middleware/DeepskyLogChecks.php:46
+#, php-format
 msgid ""
-"Your country of residence is not set. Please set it in the observer settings."
+"Your country of residence is not set. Please set it in the %sobserver "
+"settings%s"
 msgstr ""
 "Su país de residencia no está establecido. Por favor, estableclo en la "
-"configuración del observador."
+"%sconfiguración del observador%s"
 
-#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:52
-#: Http/Middleware/DeepskyLogChecks.php:52
+#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:56
+#: Http/Middleware/DeepskyLogChecks.php:56
 msgid "You did not specify a standard location. Please select one."
 msgstr "No ha especificado una ubicación estándar. Por favor seleccione una."
 
-#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:59
-#: Http/Middleware/DeepskyLogChecks.php:59
+#: ../storage/framework/messages/063b33709a92d3459350d29215fbd1d56efb6c45.php.php:63
+#: Http/Middleware/DeepskyLogChecks.php:63
 msgid "You did not specify a standard instrument. Please select one."
 msgstr "No ha especificado un instrumento estándar. Por favor seleccione una."
+
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:135
+#: Http/Controllers/EyepieceController.php:135
+#, php-format
+msgid "Eyepiece \"%s\" created"
+msgstr "Ocular \"%s\" creado"
+
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:201
+#: Http/Controllers/EyepieceController.php:201
+#, php-format
+msgid "Eyepiece \"%s\" updated"
+msgstr "Ocular \"%s\" actualizado"
+
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:207
+#: Http/Controllers/EyepieceController.php:207
+#, php-format
+msgid "Eyepiece \"%s\" is active"
+msgstr "El ocular \"%s\" está activo"
+
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:211
+#: Http/Controllers/EyepieceController.php:211
+#, php-format
+msgid "Eyepiece \"%s\" is not longer active"
+msgstr "El ocular \"%s\" ya no está activo"
+
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:233
+#: Http/Controllers/EyepieceController.php:233
+#, php-format
+msgid "Eyepiece \"%s\" has observations. Impossible to delete."
+msgstr "El ocular \"%s\" tiene observaciones. Imposible de eliminar."
+
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:240
+#: Http/Controllers/EyepieceController.php:240
+#, php-format
+msgid "Eyepiece \"%s\" deleted"
+msgstr "Ocular \"%s\" eliminado"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:14
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:14
+#: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:14
+#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:14
+msgid "Type"
+msgstr "Tipo"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:15
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:14
+msgid "Eyepiece"
+msgstr "Ocular"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:19
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:88
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:34
+msgid "Focal Length"
+msgstr "Longitud focal"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:24
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:65
+msgid "Apparent Field of View"
+msgstr "Campo de visión aparente"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:30
+msgid "Maximum Focal Length"
+msgstr "Longitud focal máxima"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:36
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:44
+#: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:47
+#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:23
+msgid "Owner"
+msgstr "Propietario"
+
+#: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:40
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:48
+#: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:51
+#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:27
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:176
+msgid "Number of observations"
+msgstr "Número de observaciones"
 
 #: ../storage/framework/messages/0df489c1c437e3c7dd75009d2dddf707bf3b68bc.php.php:6
 #: ../storage/framework/messages/0df489c1c437e3c7dd75009d2dddf707bf3b68bc.php.php:18
@@ -346,14 +476,17 @@ msgid "or specify your filter details manually"
 msgstr "o especifique los detalles del filtro manualmente"
 
 #: ../storage/framework/messages/0df489c1c437e3c7dd75009d2dddf707bf3b68bc.php.php:50
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:50
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:57
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:21
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:50
 #: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:54
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:51
 msgid "Name"
 msgstr "Nombre"
 
 #: ../storage/framework/messages/0df489c1c437e3c7dd75009d2dddf707bf3b68bc.php.php:52
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:52
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:53
 msgid "e.g. Televue 2x Barlow"
 msgstr "p.ej. Televue 2x Barlow"
@@ -432,6 +565,54 @@ msgstr "Atlas"
 msgid "Forms"
 msgstr "Formularios"
 
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:6
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:18
+msgid "Add a new instrument"
+msgstr "Añadir un nuevo instrumento"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:32
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:108
+msgid "Change instrument"
+msgstr "Cambiar instrumento"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:32
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:108
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:167
+#: ../storage/framework/messages/b56c2fd0694269a0ca8951a1a48c317cc006eac2.php.php:23
+msgid "Add instrument"
+msgstr "Agregar instrumento"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:36
+msgid "Select an existing instrument"
+msgstr "Seleccione un instrumento existente"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:44
+msgid "or specify your instrument details manually"
+msgstr "o especifique los detalles de su instrumento manualmente"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:56
+msgid "Instrument type"
+msgstr "Tipo de instrumento"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:69
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:24
+msgid "Diameter"
+msgstr "Diámetro"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:80
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:29
+msgid "F/D"
+msgstr "F/D"
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:86
+msgid " or "
+msgstr " o "
+
+#: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:99
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:39
+msgid "Fixed Magnification"
+msgstr "Ampliación fija"
+
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:1
 #: ../storage/framework/messages/757293d8d848bb8da17d462f159283f9bfa8bf39.php.php:9
 msgid "Settings"
@@ -466,7 +647,7 @@ msgstr "Correo electrónico"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:62
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:84
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:118
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:150
 msgid "Country of residence"
 msgstr "País de residencia"
 
@@ -511,7 +692,7 @@ msgstr ""
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:130
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:159
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:129
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:161
 msgid "Copyright notice"
 msgstr "Aviso de copyright"
 
@@ -535,10 +716,6 @@ msgstr "Agregar nuevo sitio de observación"
 #: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:68
 msgid "Default instrument"
 msgstr "Instrumento predeterminado"
-
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:167
-msgid "Add instrument"
-msgstr "Agregar instrumento"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:173
 msgid "Default atlas"
@@ -700,7 +877,7 @@ msgid "Observations"
 msgstr "Observaciones"
 
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:139
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:137
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:169
 #: Http/Controllers/UserController.php:139
 msgid "Total"
 msgstr "Total"
@@ -737,6 +914,15 @@ msgstr "Página no encontrada"
 msgid "Sorry, the page you are looking for could not be found."
 msgstr "Lo sentimos, no se encontró la página que está buscando."
 
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:15
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:12
+msgid "Instrument"
+msgstr "Instrumento"
+
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:19
+msgid "Instrument Type"
+msgstr "Tipo de instrumento"
+
 #: ../storage/framework/messages/340e78d81c17e9a0138af7e51ca9d32f7ace7585.php.php:1
 #: ../storage/framework/messages/340e78d81c17e9a0138af7e51ca9d32f7ace7585.php.php:7
 msgid "User Administration"
@@ -765,6 +951,23 @@ msgstr "Registrarse"
 #: ../storage/framework/messages/3696c34f28a61d317f5ed9e7643ea316a6282e62.php.php:62
 msgid "Logout"
 msgstr "Cerrar sesión"
+
+#: ../storage/framework/messages/3d2a9fc957ae18187dd91b7ba8ab270895e81525.php.php:3
+#: ../storage/framework/messages/3d2a9fc957ae18187dd91b7ba8ab270895e81525.php.php:15
+msgid "All eyepieces"
+msgstr "Todos los oculares"
+
+#: ../storage/framework/messages/3d2a9fc957ae18187dd91b7ba8ab270895e81525.php.php:5
+#: ../storage/framework/messages/3d2a9fc957ae18187dd91b7ba8ab270895e81525.php.php:17
+#, php-format
+msgid "Eyepieces of %s"
+msgstr "Oculares de %s"
+
+#: ../storage/framework/messages/3d2a9fc957ae18187dd91b7ba8ab270895e81525.php.php:23
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:32
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:84
+msgid "Add eyepiece"
+msgstr "Agregar ocular"
 
 #: ../storage/framework/messages/4040fe44e56e00e78d2b38c1c83a75853675c8d2.php.php:2
 msgid "Service Unavailable"
@@ -803,11 +1006,6 @@ msgstr "Base de datos basada en Eye&Telescope y Tycho2+ y USNO-UCAC3"
 msgid "Privacy Policy"
 msgstr "Política de privacidad"
 
-#: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:14
-#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:14
-msgid "Type"
-msgstr "Tipo"
-
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:15
 #: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:15
 msgid "Filter"
@@ -816,17 +1014,6 @@ msgstr "Filtro"
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:19
 msgid "Filter Type"
 msgstr "Typo de filtro"
-
-#: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:47
-#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:23
-msgid "Owner"
-msgstr "Propietario"
-
-#: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:51
-#: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:27
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:144
-msgid "Number of observations"
-msgstr "Número de observaciones"
 
 #: ../storage/framework/messages/587dec2718210440690641e4433ced8f643b0be0.php.php:3
 msgid "List"
@@ -1191,6 +1378,17 @@ msgstr "Añadir un nuevo mensaje"
 msgid "Add extra participants to this message"
 msgstr "Agregue participantes adicionales a este mensaje"
 
+#: ../storage/framework/messages/b56c2fd0694269a0ca8951a1a48c317cc006eac2.php.php:3
+#: ../storage/framework/messages/b56c2fd0694269a0ca8951a1a48c317cc006eac2.php.php:15
+msgid "All instruments"
+msgstr "Todos los instrumentos"
+
+#: ../storage/framework/messages/b56c2fd0694269a0ca8951a1a48c317cc006eac2.php.php:5
+#: ../storage/framework/messages/b56c2fd0694269a0ca8951a1a48c317cc006eac2.php.php:17
+#, php-format
+msgid "Instruments of %s"
+msgstr "Instrumentos de %s"
+
 #: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:4
 msgid "View"
 msgstr "Ver"
@@ -1282,6 +1480,72 @@ msgstr "Recuérdame"
 #: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:66
 msgid "Forgot Your Password?"
 msgstr "¿Olvidaste tu contraseña?"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:6
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:18
+msgid "Add a new eyepiece"
+msgstr "Agregar un nuevo ocular"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:32
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:84
+msgid "Change eyepiece"
+msgstr "Cambiar ocular"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:36
+msgid "Select an existing eyepiece"
+msgstr "Seleccione un ocular existente"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:44
+msgid "or specify your eyepiece details manually"
+msgstr "o especifique los detalles del ocular manualmente"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:55
+msgid "Focal length"
+msgstr "Distancia focal"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:75
+msgid "Maximum Focal length"
+msgstr "Distancia focal máxima"
+
+#: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:77
+msgid "Only for zoom eyepieces"
+msgstr "Sólo para los oculares con zoom"
+
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:138
+#: Http/Controllers/InstrumentController.php:138
+#, php-format
+msgid "Instrument \"%s\" created"
+msgstr "Instrumento \"%s\" creado"
+
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:208
+#: Http/Controllers/InstrumentController.php:208
+#, php-format
+msgid "Instrument \"%s\" updated"
+msgstr "Instrumento \"%s\" actualizado"
+
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:215
+#: Http/Controllers/InstrumentController.php:215
+#, php-format
+msgid "Instrument \"%s\" is active"
+msgstr "El instrumento \"%s\" está activo"
+
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:220
+#: Http/Controllers/InstrumentController.php:220
+#, php-format
+msgid "Instrument \"%s\" is not longer active"
+msgstr "El instrumento \"%s\" ya no está activo"
+
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:242
+#: Http/Controllers/InstrumentController.php:242
+#, php-format
+msgid "Instrument \"%s\" has observations. Impossible to delete."
+msgstr "El instrumento \"%s\" tiene observaciones. Imposible de eliminar."
+
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:249
+#: Http/Controllers/InstrumentController.php:249
+#, php-format
+msgid "Instrument \"%s\" deleted"
+msgstr "Instrumento \"%s\" eliminado"
 
 #: ../storage/framework/messages/ce86130e9603deefb28c2df7d4d8617962eb24c9.php.php:2
 msgid "Unauthorized"
@@ -1393,67 +1657,67 @@ msgstr "Estrellas DeepskyLog"
 msgid "Number of locations"
 msgstr "Número de ubicaciones"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:84
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:90
 msgid "Number of instruments"
 msgstr "Número de instrumentos"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:92
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:105
 msgid "Number of eyepieces"
 msgstr "Número de oculares"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:100
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:120
 msgid "Number of filters"
 msgstr "Número de filtros"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:109
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:135
 msgid "Number of lenses"
 msgstr "Número de lentes"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:152
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:184
 msgid "Observations last year"
 msgstr "Observaciones del año pasado"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:160
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:192
 msgid "Number of drawings"
 msgstr "Número de dibujos"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:168
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:200
 msgid "Drawings last year"
 msgstr "Dibujos del año pasado"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:176
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:208
 msgid "Different objects"
 msgstr "Diferentes objetos"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:184
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:216
 msgid "Messier objects"
 msgstr "Objetos Messier"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:196
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:228
 msgid "Caldwell objects"
 msgstr "Objetos de Caldwell"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:208
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:240
 msgid "H400 objects"
 msgstr "Objetos H400"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:220
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:252
 msgid "H400-II objects"
 msgstr "H400-II objetos"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:232
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:264
 msgid "Rank"
 msgstr "Rango"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:243
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:275
 msgid "All observations of "
 msgstr "Todas las observaciones de "
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:248
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:280
 msgid "All drawings of "
 msgstr "Todos los dibujos de "
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:254
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:286
 msgid "Send message to "
 msgstr "Enviar mensaje a "
 
@@ -1485,17 +1749,9 @@ msgstr "Lista de observación"
 msgid "Session"
 msgstr "Sesión"
 
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:12
-msgid "Instrument"
-msgstr "Instrumento"
-
 #: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:13
 msgid "Location"
 msgstr "Ubicación"
-
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:14
-msgid "Eyepiece"
-msgstr "Ocular"
 
 #: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:18
 msgid "Object"
@@ -1514,8 +1770,8 @@ msgstr ""
 msgid "Send Password Reset Link"
 msgstr "Enviar enlace de restablecimiento de contraseña"
 
-#: ../storage/framework/messages/fed48ef1bb39cd4f7e3c02c02475892b953cc5f2.php.php:130
-#: Http/Controllers/Auth/RegisterController.php:130
+#: ../storage/framework/messages/fed48ef1bb39cd4f7e3c02c02475892b953cc5f2.php.php:131
+#: Http/Controllers/Auth/RegisterController.php:131
 #, php-format
 msgid "User \"%s\" successfully registered. You can now log in."
 msgstr "Usuario \"%s\" registrado correctamente. Ahora puede iniciar sesión."
@@ -1603,9 +1859,6 @@ msgstr "> 1,0 para lentes Barlow, < 1,0 para lentes Shapley."
 
 #~ msgid "Tail"
 #~ msgstr "Cola"
-
-#~ msgid "Naked Eye"
-#~ msgstr "Ojo desnudo"
 
 #~ msgid "pdf"
 #~ msgstr "pdf"
@@ -1908,56 +2161,8 @@ msgstr "> 1,0 para lentes Barlow, < 1,0 para lentes Shapley."
 #~ msgid "Overview Instruments"
 #~ msgstr "Visión general de los instrumentos"
 
-#~ msgid "F/D"
-#~ msgstr "F/D"
-
-#~ msgid "Fixed magnification"
-#~ msgstr "Ampliación fija"
-
-#~ msgid "Reflector"
-#~ msgstr "Reflector"
-
-#~ msgid "Finderscope"
-#~ msgstr "Buscador"
-
-#~ msgid "Refractor"
-#~ msgstr "Refractor"
-
-#~ msgid "Other"
-#~ msgstr "Otro"
-
-#~ msgid "Binoculars"
-#~ msgstr "Binoculares"
-
-#~ msgid "Cassegrain"
-#~ msgstr "Cassegrain"
-
-#~ msgid "Schmidt Cassegrain"
-#~ msgstr "Schmidt Cassegrain"
-
-#~ msgid "Kutter"
-#~ msgstr "Kutter"
-
-#~ msgid "Maksutov"
-#~ msgstr "Maksutov"
-
-#~ msgid "Add new instrument"
-#~ msgstr "Agregar nuevo instrumento"
-
-#~ msgid "Select an existing instrument"
-#~ msgstr "Seleccione un instrumento existente"
-
 #~ msgid "or add instrument manually"
 #~ msgstr "o agregue el instrumento manualmente"
-
-#~ msgid "Instrument name"
-#~ msgstr "Nombre del instrumento"
-
-#~ msgid "Diameter"
-#~ msgstr "Diámetro"
-
-#~ msgid "Focal Length"
-#~ msgstr "Longitud focal"
 
 #~ msgid "or F/D"
 #~ msgstr "o F/D"
@@ -2454,12 +2659,6 @@ msgstr "> 1,0 para lentes Barlow, < 1,0 para lentes Shapley."
 #~ msgid "Add site"
 #~ msgstr "Agregar sitio"
 
-#~ msgid "Eyepieces of %s"
-#~ msgstr "Oculares de %s"
-
-#~ msgid "Add eyepiece"
-#~ msgstr "Agregar ocular"
-
 #~ msgid "Lookup atlas page for M 45"
 #~ msgstr "Búsqueda de la página Atlas para M 45"
 
@@ -2639,15 +2838,6 @@ msgstr "> 1,0 para lentes Barlow, < 1,0 para lentes Shapley."
 #~ msgid "Select country"
 #~ msgstr "Selecciona país"
 
-#~ msgid "Add a new eyepiece"
-#~ msgstr "Agregar un nuevo ocular"
-
-#~ msgid "Select an existing eyepiece"
-#~ msgstr "Seleccione un ocular existente"
-
-#~ msgid "or specify your eyepiece details manually"
-#~ msgstr "o especifique los detalles del ocular manualmente"
-
 #~ msgid "(e.g. Televue 31mm Nagler)"
 #~ msgstr "(p.ej. Televue 31mm Nagler)"
 
@@ -2656,12 +2846,6 @@ msgstr "> 1,0 para lentes Barlow, < 1,0 para lentes Shapley."
 
 #~ msgid "e.g. 31"
 #~ msgstr "p.ej. 31"
-
-#~ msgid "Maximum focal length (in mm)"
-#~ msgstr "Longitud focal máxima (en el milímetro)"
-
-#~ msgid "only needed for zoom eyepieces"
-#~ msgstr "sólo se necesita para los oculares de zoom"
 
 #~ msgid "Apparent FOV (in °)"
 #~ msgstr "FOV aparente (en °)"
@@ -3009,9 +3193,6 @@ msgstr "> 1,0 para lentes Barlow, < 1,0 para lentes Shapley."
 #~ msgid "Adapt eyepiece"
 #~ msgstr "Adapte el ocular"
 
-#~ msgid "Instruments of"
-#~ msgstr "Instrumentos de"
-
 #~ msgid ""
 #~ "You wanted to watch a filter, but none is specified. Please contact the "
 #~ "developers with this message."
@@ -3123,9 +3304,6 @@ msgstr "> 1,0 para lentes Barlow, < 1,0 para lentes Shapley."
 #~ msgstr ""
 #~ "Instrumento no encontrado en change_instrument.php, póngase en contacto "
 #~ "con los desarrolladores con este mensaje:"
-
-#~ msgid "Change instrument"
-#~ msgstr "Cambiar instrumento"
 
 #~ msgid "View messages"
 #~ msgstr "Ver mensajes"
@@ -4529,9 +4707,6 @@ msgstr "> 1,0 para lentes Barlow, < 1,0 para lentes Shapley."
 
 #~ msgid "import observations from a CSV file"
 #~ msgstr "importar observaciones desde un archivo CSV"
-
-#~ msgid " or "
-#~ msgstr " o "
 
 #~ msgid "import observations from an <OAL> (XML) file"
 #~ msgstr "importar observaciones desde un archivo <OAL> (XML)"

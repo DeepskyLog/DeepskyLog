@@ -33,14 +33,15 @@ class EyepieceDataTable extends DataTable
     /**
      * Make the correct ajax call.
      *
-     * @return datatables The Correct ajax call.
+     * @return datatables the Correct ajax call
      */
     public function ajax()
     {
         return datatables()
             ->eloquent($this->query())
             ->addColumn(
-                'observername', function ($eyepiece) {
+                'observername',
+                function ($eyepiece) {
                     return '<a href="/observer/' . $eyepiece->observer_id . '">' . $eyepiece->observer->name . '</a>';
                 }
             )->editColumn(
@@ -50,14 +51,34 @@ class EyepieceDataTable extends DataTable
                 'observations',
                 '<a href="/observations/eyepiece/{{ $id }}">{{ $observations }}</a>'
             )->editColumn(
+                'focalLength',
+                function ($eyepiece) {
+                    return $eyepiece->focalLength . ' mm';
+                }
+            )->editColumn(
+                'apparentFOV',
+                function ($eyepiece) {
+                    return $eyepiece->apparentFOV . ' º';
+                }
+            )->editColumn(
+                'maxFocalLength',
+                function ($eyepiece) {
+                    if ($eyepiece->maxFocalLength) {
+                        return $eyepiece->maxFocalLength . ' mm';
+                    } else {
+                        return '';
+                    }
+                }
+            )->editColumn(
                 'active',
                 '<form method="POST" action="/eyepiece/{{ $id }}">
-                    @method("PATCH")
-                    @csrf
-                    <input type="checkbox" name="active" onChange="this.form.submit()" {{ $active ? "checked" : "" }}>
-                 </form>'
+                @method("PATCH")
+                @csrf
+                <input type="checkbox" name="active" onChange="this.form.submit()" {{ $active ? "checked" : "" }}>
+             </form>'
             )->addColumn(
-                'delete', '<form method="POST" action="/eyepiece/{{ $id }}">
+                'delete',
+                '<form method="POST" action="/eyepiece/{{ $id }}">
                             @method("DELETE")
                             @csrf
                             <button type="button" class="btn btn-sm btn-link" onClick="this.form.submit()">
@@ -97,15 +118,29 @@ class EyepieceDataTable extends DataTable
                 ->columns($this->getColumns())->minifiedAjax()
                 ->addColumn(
                     ['data' => 'observername', 'title' => _i('Name'),
-                    'name' => 'observername',
-                    'orderable' => false,
-                    'searchable' => false,
+                        'name' => 'observername',
+                        'orderable' => false,
+                        'searchable' => false,
                     ]
-                )->parameters($this->getMyParameters());
+                )->parameters($this->getMyParameters())->parameters(
+                    [
+                        'order' => [
+                            1,
+                            'desc'
+                        ]
+                    ]
+                );
         } else {
             return $this->builder()
                 ->columns($this->getColumns())->minifiedAjax()
-                ->parameters($this->getMyParameters());
+                ->parameters($this->getMyParameters())->parameters(
+                    [
+                        'order' => [
+                            1,
+                            'desc'
+                        ]
+                    ]
+                );
         }
     }
 
@@ -116,14 +151,15 @@ class EyepieceDataTable extends DataTable
      */
     protected function getMyParameters()
     {
-        $language = array("url"=>"http://cdn.datatables.net/plug-ins/1.10.19/i18n/"
+        $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.19/i18n/'
             . \PeterColes\Languages\LanguagesFacade::lookup(
                 [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first()
-            . ".json");
+            . '.json'];
         $mypars = $this->getBuilderParameters();
-        $mypars["language"] = $language;
+        $mypars['language'] = $language;
+
         return $mypars;
     }
 
@@ -145,7 +181,7 @@ class EyepieceDataTable extends DataTable
                     'data' => 'focalLength',
                     'width' => '10%',
                 ],
-                ['name' => 'fov',
+                ['name' => 'apparentFOV',
                     'title' => _i('Apparent Field of View'),
                     'data' => 'apparentFOV',
                     'width' => '10%',
@@ -179,7 +215,7 @@ class EyepieceDataTable extends DataTable
                     'data' => 'focalLength',
                     'width' => '10%',
                 ],
-                ['name' => 'fov',
+                ['name' => 'apparentFOV',
                     'title' => _i('Apparent Field of View'),
                     'data' => 'apparentFOV',
                     'width' => '10%',

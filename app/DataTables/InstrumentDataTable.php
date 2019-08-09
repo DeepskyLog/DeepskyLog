@@ -62,6 +62,14 @@ class InstrumentDataTable extends DataTable
                     <input type="checkbox" name="active" onChange="this.form.submit()" {{ $active ? "checked" : "" }}>
                  </form>'
             )->addColumn(
+                'focalLength', function($instrument) {
+                    if ($instrument->fd) {
+                        return $instrument->diameter * $instrument->fd;
+                    } else {
+                        return null;
+                    }
+                }
+            )->addColumn(
                 'delete', '<form method="POST" action="/instrument/{{ $id }}">
                             @method("DELETE")
                             @csrf
@@ -160,6 +168,11 @@ class InstrumentDataTable extends DataTable
                     'data' => 'fd',
                     'width' => '10%',
                 ],
+                ['name' => 'focalLength',
+                    'title' => _i('Focal Length'),
+                    'data' => 'focalLength',
+                    'width' => '10%',
+                ],
                 ['name' => 'fixedMagnification',
                     'title' => _i('Fixed Magnification'),
                     'data' => 'fixedMagnification',
@@ -197,6 +210,11 @@ class InstrumentDataTable extends DataTable
                 ['name' => 'fd',
                     'title' => _i('F/D'),
                     'data' => 'fd',
+                    'width' => '10%',
+                ],
+                ['name' => 'focalLength',
+                    'title' => _i('Focal Length'),
+                    'data' => 'focalLength',
                     'width' => '10%',
                 ],
                 ['name' => 'fixedMagnification',
