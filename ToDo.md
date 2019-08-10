@@ -15,8 +15,7 @@
 
 + [ ] InstrumentController -> store, update: checks
 + [ ] InstrumentDatatable:
-  + [ ] Show diameter in inches if user settings asks for it.
-  + [ ] Sort on focal length and diameter (in inches)
+  + [ ] Sort on focal length, active (also check the other datatables)
 + [ ] Test admin: All columns?
 + [ ] Add the selection of instruments to the user settings (settings.blade.php)
 + [ ] Add the standard instrument to the user details (users/view.blade.php)

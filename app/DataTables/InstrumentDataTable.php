@@ -16,6 +16,8 @@ namespace App\DataTables;
 
 use Yajra\DataTables\Services\DataTable;
 use App\Instrument;
+use Illuminate\Support\Facades\Auth;
+
 
 /**
  * Instrument DataTable.
@@ -52,9 +54,17 @@ class InstrumentDataTable extends DataTable
                     return $instrument->typeName();
                 }
             )->editColumn(
+                'diameter', function ($instrument) {
+                    if (Auth::user()->showInches) {
+                        return round($instrument->diameter / 25.4, 2) . ' ' . _i('inch');
+                    } else {
+                        return $instrument->diameter . ' ' . _i('mm');
+                    }
+                }
+            )->editColumn(
                 'observations',
                 '<a href="/observations/instrument/{{ $id }}">{{ $observations }}</a>'
-            )->editColumn(
+            )->addColumn(
                 'active',
                 '<form method="POST" action="/instrument/{{ $id }}">
                     @method("PATCH")
@@ -64,7 +74,11 @@ class InstrumentDataTable extends DataTable
             )->addColumn(
                 'focalLength', function($instrument) {
                     if ($instrument->fd) {
-                        return $instrument->diameter * $instrument->fd;
+                        if (Auth::user()->showInches) {
+                            return round($instrument->diameter * $instrument->fd / 25.4, 2) . ' ' . _i('inch');
+                        } else {
+                            return $instrument->diameter * $instrument->fd . ' ' . _i('mm');
+                        }
                     } else {
                         return null;
                     }
@@ -226,6 +240,10 @@ class InstrumentDataTable extends DataTable
                     'title' => _i('Observations'),
                     'data' => 'observations',
                     'width' => '10%',
+                ],
+                ['name' => 'active',
+                    'title' => _i('Active'),
+                    'data' => 'active',
                 ],
                 ['name' => 'delete',
                     'title' => _i('Delete'),
