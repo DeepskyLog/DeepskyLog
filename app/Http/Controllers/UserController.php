@@ -457,14 +457,21 @@ class UserController extends Controller
             $user->update(['copyright' => $request->get('copyright')]);
         }
 
-        // Update the copyright
+        // Update the standard atlinstrumentas
+        if ($request->has('stdinstrument')) {
+            $user->update(
+                ['stdtelescope' => $request->get('stdinstrument')]
+            );
+        }
+
+        // Update the standard atlas
         if ($request->has('standardAtlasCode')) {
             $user->update(
                 ['standardAtlasCode' => $request->get('standardAtlasCode')]
             );
         }
 
-        // Update the copyright
+        // Update imperial / metric
         if ($request->has('showInches')) {
             $user->update(
                 ['showInches' => $request->get('showInches')]

@@ -187,8 +187,9 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         'observationlanguage', 'copyright', 'sendMail', 'fstOffset',
         'standardAtlasCode', 'showInches', 'overviewFoV', 'lookupFoV',
         'detailFoV', 'overviewdsos', 'lookupdsos',
-        'detaildsos', 'overviewstars', 'lookupstars',
+        'detaildsos', 'overviewstars', 'lookupstars', 'stdtelescope',
         'detailstars', 'photosize1', 'photosize2', 'atlaspagefont',
+        'stdlocation'
     ];
 
     /**

@@ -65,7 +65,7 @@
             <label for="diameter">{{ _i("Diameter") }}</label>
 
             <div class="input-group mb-3">
-                <input type="number" required class="form-control {{ $errors->has('diameter') ? 'is-invalid' : '' }}" maxlength="5" name="diameter" size="5" value="@if ($instrument->diameter > 0){{ Auth::user()->showInches ? $instrument->diameter / 25.4 : $instrument->diameter }}@else{{ old('diameter') }}@endif" />
+                <input type="number" step='0.01' required class="form-control {{ $errors->has('diameter') ? 'is-invalid' : '' }}" maxlength="5" name="diameter" size="5" value="@if ($instrument->diameter > 0){{ Auth::user()->showInches ? $instrument->diameter / 25.4 : $instrument->diameter }}@else{{ old('diameter') }}@endif" />
                 <div class="input-group-append">
                     <span class="input-group-text" id="name-addon">{{ Auth::user()->showInches ? _i('inch') : _i('mm') }}</span>
                 </div>

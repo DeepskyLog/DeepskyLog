@@ -18,7 +18,6 @@ use Yajra\DataTables\Services\DataTable;
 use App\Instrument;
 use Illuminate\Support\Facades\Auth;
 
-
 /**
  * Instrument DataTable.
  *
@@ -35,14 +34,15 @@ class InstrumentDataTable extends DataTable
     /**
      * Make the correct ajax call.
      *
-     * @return datatables The Correct ajax call.
+     * @return datatables the Correct ajax call
      */
     public function ajax()
     {
         return datatables()
             ->eloquent($this->query())
             ->addColumn(
-                'observername', function ($instrument) {
+                'observername',
+                function ($instrument) {
                     return '<a href="/observer/' . $instrument->observer_id . '">'
                         . $instrument->observer->name . '</a>';
                 }
@@ -50,11 +50,13 @@ class InstrumentDataTable extends DataTable
                 'name',
                 '<a href="/instrument/{{ $id }}/edit">{{ $name }}</a>'
             )->editColumn(
-                'type', function ($instrument) {
+                'type',
+                function ($instrument) {
                     return $instrument->typeName();
                 }
             )->editColumn(
-                'diameter', function ($instrument) {
+                'diameter',
+                function ($instrument) {
                     if (Auth::user()->showInches) {
                         return round($instrument->diameter / 25.4, 2) . ' ' . _i('inch');
                     } else {
@@ -72,7 +74,8 @@ class InstrumentDataTable extends DataTable
                     <input type="checkbox" name="active" onChange="this.form.submit()" {{ $active ? "checked" : "" }}>
                  </form>'
             )->addColumn(
-                'focalLength', function($instrument) {
+                'focalLength',
+                function ($instrument) {
                     if ($instrument->fd) {
                         if (Auth::user()->showInches) {
                             return round($instrument->diameter * $instrument->fd / 25.4, 2) . ' ' . _i('inch');
@@ -84,7 +87,21 @@ class InstrumentDataTable extends DataTable
                     }
                 }
             )->addColumn(
-                'delete', '<form method="POST" action="/instrument/{{ $id }}">
+                'standard',
+                function ($instrument) {
+                    if ($instrument->id == Auth::user()->stdtelescope) {
+                        return '<input type="radio" name="stdtelescope" value="'
+                            . $instrument->id
+                            . '" checked="checked" onclick="submit();" />';
+                    } else {
+                        return '<input type="radio" name="stdtelescope" value="'
+                            . $instrument->id
+                            . '" onclick="submit();" />';
+                    }
+                }
+            )->addColumn(
+                'delete',
+                '<form method="POST" action="/instrument/{{ $id }}">
                             @method("DELETE")
                             @csrf
                             <button type="button" class="btn btn-sm btn-link" onClick="this.form.submit()">
@@ -92,7 +109,8 @@ class InstrumentDataTable extends DataTable
                         </button>
                         </form>'
             )->rawColumns(
-                ['name', 'observations', 'active', 'delete', 'observername']
+                ['name', 'observations', 'active', 'delete',
+                'observername', 'standard']
             )->make(true);
     }
 
@@ -124,9 +142,9 @@ class InstrumentDataTable extends DataTable
                 ->columns($this->getColumns())->minifiedAjax()
                 ->addColumn(
                     ['data' => 'observername', 'title' => _i('Name'),
-                    'name' => 'observername',
-                    'orderable' => false,
-                    'searchable' => false,
+                        'name' => 'observername',
+                        'orderable' => false,
+                        'searchable' => false,
                     ]
                 )->parameters($this->getMyParameters());
         } else {
@@ -143,14 +161,15 @@ class InstrumentDataTable extends DataTable
      */
     protected function getMyParameters()
     {
-        $language = array("url"=>"http://cdn.datatables.net/plug-ins/1.10.19/i18n/"
+        $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.19/i18n/'
             . \PeterColes\Languages\LanguagesFacade::lookup(
                 [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first()
-            . ".json");
+            . '.json'];
         $mypars = $this->getBuilderParameters();
-        $mypars["language"] = $language;
+        $mypars['language'] = $language;
+
         return $mypars;
     }
 
@@ -244,6 +263,10 @@ class InstrumentDataTable extends DataTable
                 ['name' => 'active',
                     'title' => _i('Active'),
                     'data' => 'active',
+                ],
+                ['name' => 'standard',
+                    'title' => _i('Default Instrument'),
+                    'data' => 'standard',
                 ],
                 ['name' => 'delete',
                     'title' => _i('Delete'),

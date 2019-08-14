@@ -5,7 +5,6 @@
 @section('content')
 
 <h3>Settings for {{ $user->name }}</h3>
-
     <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
         <li class="active nav-item">
             <a class="nav-link active" href="#info" data-toggle="tab">
@@ -149,7 +148,7 @@
                         </select>
                     </div>
                     <span class="help-block">
-                       <a href="/location/add">{{ _i("Add new observing site") }}</a>
+                       <a href="/location/create">{{ _i("Add new observing site") }}</a>
                     </span>
                 </div>
 
@@ -157,12 +156,15 @@
                     <label for="stdinstrument">{{ _i("Default instrument") }}</label>
                     <div class="form">
                         <select class="form-control selection" style="width: 100%" id="stdinstrument" name="stdinstrument">
-                            <option value="0">Add instruments here</option>
-                            <option value="1">Add more instruments here</option>
+                            @foreach (\App\Instrument::where(
+                                    ['observer_id' => Auth::user()->id]
+                                )->where(['active' => 1])->pluck('id', 'name') as $name=>$id)
+                                <option @if ($id == $user->stdtelescope) selected="selected"@endif value="{{ $id }}">{{ $name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <span class="help-block">
-                        <a href="/instrument/add"> {{ _i("Add instrument") }}</a>
+                        <a href="/instrument/create"> {{ _i("Add instrument") }}</a>
                     </span>
                 </div>
 

@@ -5,8 +5,8 @@
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         @auth
-            <a class="dropdown-item" href="/observation">{{ _i('My observations') }}</a>
-            <a class="dropdown-item" href="/drawings">{{ _i('My drawings') }}</a>
+            <a class="dropdown-item" href="/observation/{{ Auth::id() }}">{{ _i('My observations') }}</a>
+            <a class="dropdown-item" href="/drawings/{{ Auth::id() }}">{{ _i('My drawings') }}</a>
             <a class="dropdown-item disabled" href="#">───────────────────</a>
             <a class="dropdown-item" href="/observingList">{{ _i('My observing lists') }}</a>
             <a class="dropdown-item" href="/session">{{ _i('My sessions') }}</a>
@@ -19,6 +19,7 @@
             <a class="dropdown-item disabled" href="#">───────────────────</a>
         @endauth
         <a class="dropdown-item" href="/observation/all">{{ _i('Latest observations') }}</a>
+        <a class="dropdown-item" href="/drawings/all">{{ _i('Latest drawings') }}</a>
         <a class="dropdown-item disabled" href="#">───────────────────</a>
         <a class="dropdown-item" href="/observer/rank">{{ _i('Observers') }}</a>
         <a class="dropdown-item" href="/objects/rank">{{ _i('Popular objects') }}</a>

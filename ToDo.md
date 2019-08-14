@@ -13,13 +13,13 @@
 
 ## INSTRUMENTS
 
-+ [ ] InstrumentController -> store, update: checks
-+ [ ] InstrumentDatatable:
-  + [ ] Sort on focal length, active (also check the other datatables)
-+ [ ] Test admin: All columns?
-+ [ ] Add the selection of instruments to the user settings (settings.blade.php)
++ [ ] Add the selection of instruments to the user settings (settings.blade.php) -> Sort by type
++ [ ] Add the default instrument selection: What to do with the datatables as a service and the checkbox??
 + [ ] Add the standard instrument to the user details (users/view.blade.php)
 + [ ] Add the instruments to subheader/instrument.blade.php
++ [ ] What happens if delete instrument (or deactivate) and that instrument is selected as standard instrument?
++ [ ] InstrumentDatatable:
+  + [ ] Sort on focal length, active (also check the other datatables) -> https://github.com/yajra/laravel-datatables/issues/2149
 
 ## LOCATIONS
 
@@ -39,6 +39,8 @@
 + [ ] Add planets, sun, ...
 + [ ] Rethink the observation lists
 + [ ] Only receive messages if you opt in for this
++ [ ] Likes / dislikes / ... : https://github.com/cybercog/laravel-love
++ [ ] Sort on highest number of likes, add extra likes when someone subscribes to the observation list. Add dislikes if someone describes from the observation list.
 
 ## OBSERVATIONS
 
@@ -56,7 +58,9 @@
   + [ ] Show number of observations, instruments and lists in users/view.blade.php
   + [ ] Create the charts in users/view.blade.php, check if there is a better laravel integration with other charting libraries (in stead of HighCharts).
   + [ ] Add the deepskylog star page in users/view.blade.php
-  + [ ] Likes? Comments?
+  + [ ] Likes? Comments? https://github.com/cybercog/laravel-love
+  + [ ] Sort on highest number of likes
+
 
 ## SEEDERS
 
