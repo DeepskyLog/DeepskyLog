@@ -156,11 +156,7 @@
                     <label for="stdinstrument">{{ _i("Default instrument") }}</label>
                     <div class="form">
                         <select class="form-control selection" style="width: 100%" id="stdinstrument" name="stdinstrument">
-                            @foreach (\App\Instrument::where(
-                                    ['observer_id' => Auth::user()->id]
-                                )->where(['active' => 1])->pluck('id', 'name') as $name=>$id)
-                                <option @if ($id == $user->stdtelescope) selected="selected"@endif value="{{ $id }}">{{ $name }}</option>
-                            @endforeach
+                            {!! App\Instrument::getInstrumentOptions() !!}
                         </select>
                     </div>
                     <span class="help-block">

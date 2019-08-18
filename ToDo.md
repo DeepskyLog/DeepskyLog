@@ -13,13 +13,9 @@
 
 ## INSTRUMENTS
 
-+ [ ] Add the selection of instruments to the user settings (settings.blade.php) -> Sort by type
 + [ ] Add the default instrument selection: What to do with the datatables as a service and the checkbox??
-+ [ ] Add the standard instrument to the user details (users/view.blade.php)
-+ [ ] Add the instruments to subheader/instrument.blade.php
++ [ ] Select the default instrument from subheader/instrument.blade.php
 + [ ] What happens if delete instrument (or deactivate) and that instrument is selected as standard instrument?
-+ [ ] InstrumentDatatable:
-  + [ ] Sort on focal length, active (also check the other datatables) -> https://github.com/yajra/laravel-datatables/issues/2149
 
 ## LOCATIONS
 

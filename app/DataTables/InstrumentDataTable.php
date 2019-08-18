@@ -17,6 +17,7 @@ namespace App\DataTables;
 use Yajra\DataTables\Services\DataTable;
 use App\Instrument;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Instrument DataTable.
@@ -38,8 +39,22 @@ class InstrumentDataTable extends DataTable
      */
     public function ajax()
     {
+        $query = $this->query();
+
+        $query->when(
+            Auth::user()->showInches, function ($query) {
+                return $query->select()->addSelect(
+                    DB::raw('round(diameter * fd / 25.4, 2) as focalLength')
+                );
+            }, function ($query) {
+                return $query->select()->addSelect(
+                    DB::raw('round(diameter * fd)  as focalLength')
+                );
+            }
+        );
+
         return datatables()
-            ->eloquent($this->query())
+            ->eloquent($query)
             ->addColumn(
                 'observername',
                 function ($instrument) {
@@ -66,26 +81,13 @@ class InstrumentDataTable extends DataTable
             )->editColumn(
                 'observations',
                 '<a href="/observations/instrument/{{ $id }}">{{ $observations }}</a>'
-            )->addColumn(
+            )->editColumn(
                 'active',
                 '<form method="POST" action="/instrument/{{ $id }}">
                     @method("PATCH")
                     @csrf
                     <input type="checkbox" name="active" onChange="this.form.submit()" {{ $active ? "checked" : "" }}>
                  </form>'
-            )->addColumn(
-                'focalLength',
-                function ($instrument) {
-                    if ($instrument->fd) {
-                        if (Auth::user()->showInches) {
-                            return round($instrument->diameter * $instrument->fd / 25.4, 2) . ' ' . _i('inch');
-                        } else {
-                            return $instrument->diameter * $instrument->fd . ' ' . _i('mm');
-                        }
-                    } else {
-                        return null;
-                    }
-                }
             )->addColumn(
                 'standard',
                 function ($instrument) {
@@ -267,6 +269,8 @@ class InstrumentDataTable extends DataTable
                 ['name' => 'standard',
                     'title' => _i('Default Instrument'),
                     'data' => 'standard',
+                    'orderable' => false,
+                    'searchable' => false,
                 ],
                 ['name' => 'delete',
                     'title' => _i('Delete'),

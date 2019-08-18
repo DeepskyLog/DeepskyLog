@@ -63,7 +63,9 @@
             <tr>
                 <td> {{ _i("Default instrument") }} </td>
                 <td>
-                    <a href="/instrument/4">Instrument name</a>
+                    <a href="/instrument/{{ Auth::user()->stdtelescope }}">
+                        {{ \App\Instrument::where(['id' => Auth::user()->stdtelescope])->first()->name }}
+                    </a>
                 </td>
             </tr>
 

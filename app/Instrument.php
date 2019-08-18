@@ -16,6 +16,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Instrument eloquent model.
@@ -79,6 +80,37 @@ class Instrument extends Model
     {
         return DB::table('instrument_types')
             ->where('id', $this->type)->value('type');
+    }
+
+    /**
+     * Return all instruments, sorted by type for use in a selection.
+     *
+     * @return None The method print the optgroup and option tags.
+     */
+    public static function getInstrumentOptions()
+    {
+        // Loop over the instrument types and make separate groups.
+        $types = DB::table('instrument_types')->get();
+
+        foreach ($types as $typeid=>$type) {
+            $instruments = \App\Instrument::where(
+                ['observer_id' => Auth::user()->id]
+            )->where(['type' => $typeid])->where(['active' => 1])->pluck('id', 'name');
+
+            if (count($instruments) > 0) {
+                echo '<optgroup label="' . _i($type->type) . '">';
+
+                foreach ($instruments as $name => $id) {
+                    if ($id == Auth::user()->stdtelescope) {
+                        echo '<option selected="selected" value="' . $id . '}}">'
+                           . $name . '</option>';
+                    } else {
+                        echo '<option value="' . $id . '}}">' . $name . '</option>';
+                    }
+                }
+                echo '</optgroup>';
+            }
+        }
     }
 
     // TODO: An instrument belongs to one or more observations.
