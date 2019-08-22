@@ -132,7 +132,7 @@ class EyepieceController extends Controller
 
         Eyepiece::create($validated);
 
-        laraflash(_i('Eyepiece "%s" created', $request->name))->success();
+        laraflash(_i('Eyepiece %s created', $request->name))->success();
 
         // View the page with all eyepieces for the user
         return redirect('/eyepiece');
@@ -198,17 +198,17 @@ class EyepieceController extends Controller
             $eyepiece->update(['apparentFOV' => $request->get('apparentFOV')]);
             $eyepiece->update(['maxFocalLength' => $request->get('maxFocalLength')]);
 
-            laraflash(_i('Eyepiece "%s" updated', $eyepiece->name))->warning();
+            laraflash(_i('Eyepiece %s updated', $eyepiece->name))->warning();
         } else {
             // This is only reached when clicking the active checkbox in the
             // eyepiece overview.
             if ($request->has('active')) {
                 $eyepiece->active();
-                laraflash(_i('Eyepiece "%s" is active', $eyepiece->name))->warning();
+                laraflash(_i('Eyepiece %s is active', $eyepiece->name))->warning();
             } else {
                 $eyepiece->inactive();
                 laraflash(
-                    _i('Eyepiece "%s" is not longer active', $eyepiece->name)
+                    _i('Eyepiece %s is not longer active', $eyepiece->name)
                 )->warning();
             }
         }
@@ -230,14 +230,14 @@ class EyepieceController extends Controller
         if ($eyepiece->observations > 0) {
             laraflash(
                 _i(
-                    'Eyepiece "%s" has observations. Impossible to delete.',
+                    'Eyepiece %s has observations. Impossible to delete.',
                     $eyepiece->name
                 )
             )->info();
         } else {
             $eyepiece->delete();
 
-            laraflash(_i('Eyepiece "%s" deleted', $eyepiece->name))->info();
+            laraflash(_i('Eyepiece %s deleted', $eyepiece->name))->info();
         }
 
         return redirect()->back();

@@ -457,7 +457,7 @@ class UserController extends Controller
             $user->update(['copyright' => $request->get('copyright')]);
         }
 
-        // Update the standard atlinstrumentas
+        // Update the standard instrument
         if ($request->has('stdinstrument')) {
             $user->update(
                 ['stdtelescope' => $request->get('stdinstrument')]
@@ -583,6 +583,6 @@ class UserController extends Controller
             );
         }
 
-        return redirect('/users/' . $id . '/settings');
+        return redirect()->back();
     }
 }

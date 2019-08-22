@@ -41,6 +41,12 @@ use Coderello\Laraflash\Facades\Laraflash;
 laraflash('text')->info();
 ```
 
+```php
+use Coderello\Laraflash\Facades\Laraflash;
+
+laraflash('text')->danger();
+```
+
 ## Internationalization
 
 All strings in DeepskyLog should be translated. This means that all strings should have the following notation (blade syntax):

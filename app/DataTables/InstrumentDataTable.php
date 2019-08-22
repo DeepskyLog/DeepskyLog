@@ -42,11 +42,13 @@ class InstrumentDataTable extends DataTable
         $query = $this->query();
 
         $query->when(
-            Auth::user()->showInches, function ($query) {
+            Auth::user()->showInches,
+            function ($query) {
                 return $query->select()->addSelect(
                     DB::raw('round(diameter * fd / 25.4, 2) as focalLength')
                 );
-            }, function ($query) {
+            },
+            function ($query) {
                 return $query->select()->addSelect(
                     DB::raw('round(diameter * fd)  as focalLength')
                 );
@@ -79,6 +81,17 @@ class InstrumentDataTable extends DataTable
                     }
                 }
             )->editColumn(
+                'focalLength',
+                function ($instrument) {
+                    if ($instrument->focalLength) {
+                        if (Auth::user()->showInches) {
+                            return $instrument->focalLength . ' ' . _i('inch');
+                        } else {
+                            return $instrument->focalLength . ' ' . _i('mm');
+                        }
+                    }
+                }
+            )->editColumn(
                 'observations',
                 '<a href="/observations/instrument/{{ $id }}">{{ $observations }}</a>'
             )->editColumn(
@@ -92,11 +105,11 @@ class InstrumentDataTable extends DataTable
                 'standard',
                 function ($instrument) {
                     if ($instrument->id == Auth::user()->stdtelescope) {
-                        return '<input type="radio" name="stdtelescope" value="'
+                        return '<input type="radio" name="stdinstrument" value="'
                             . $instrument->id
                             . '" checked="checked" onclick="submit();" />';
                     } else {
-                        return '<input type="radio" name="stdtelescope" value="'
+                        return '<input type="radio" name="stdinstrument" value="'
                             . $instrument->id
                             . '" onclick="submit();" />';
                     }
@@ -112,7 +125,7 @@ class InstrumentDataTable extends DataTable
                         </form>'
             )->rawColumns(
                 ['name', 'observations', 'active', 'delete',
-                'observername', 'standard']
+                    'observername', 'standard']
             )->make(true);
     }
 

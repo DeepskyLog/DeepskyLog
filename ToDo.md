@@ -11,12 +11,6 @@
 
 + [ ] CODE CLIMATE: https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication
 
-## INSTRUMENTS
-
-+ [ ] Add the default instrument selection: What to do with the datatables as a service and the checkbox??
-+ [ ] Select the default instrument from subheader/instrument.blade.php
-+ [ ] What happens if delete instrument (or deactivate) and that instrument is selected as standard instrument?
-
 ## LOCATIONS
 
 + [ ] Add number of locations to users/view.blade.php
@@ -30,6 +24,15 @@
 + [ ] Add new types for the objects
 + [ ] Insert all old objects in the new database
 
+## HOME PAGE
+
++ [ ] Add icon to search objects
++ [ ] Add icon to create observing list
++ [ ] Add icon to add new observation
++ [ ] Add icon to search observations
++ [ ] Add icon to show latest observations
++ [ ] Add icon to download the atlases
+
 ## OBSERVATION LISTS
 
 + [ ] Add planets, sun, ...
@@ -37,11 +40,13 @@
 + [ ] Only receive messages if you opt in for this
 + [ ] Likes / dislikes / ... : https://github.com/cybercog/laravel-love
 + [ ] Sort on highest number of likes, add extra likes when someone subscribes to the observation list. Add dislikes if someone describes from the observation list.
++ [ ] Share observation list on twitter / facebook
 
 ## OBSERVATIONS
 
 + [ ] https://github.com/VanOns/laraberg for editor
 + [ ] https://jamesmills.co.uk/2019/02/28/laravel-timezone/ for timezones / date
++ [ ] Share observation using twitter / facebook / instagram
 + [ ] Lenses
   + [ ] Only show delete button if there are no observations
     + [ ] Also update the tests for lens

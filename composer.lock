@@ -1834,16 +1834,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.8.32",
+            "version": "v5.8.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "ee16d719516dfd77ed6c9538000bca49ded284e2"
+                "reference": "58b81842cbdcfbbd8302790ac0f98119ea1c56e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/ee16d719516dfd77ed6c9538000bca49ded284e2",
-                "reference": "ee16d719516dfd77ed6c9538000bca49ded284e2",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/58b81842cbdcfbbd8302790ac0f98119ea1c56e5",
+                "reference": "58b81842cbdcfbbd8302790ac0f98119ea1c56e5",
                 "shasum": ""
             },
             "require": {
@@ -1977,7 +1977,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2019-08-13T14:11:52+00:00"
+            "time": "2019-08-20T15:45:17+00:00"
         },
         {
             "name": "laravel/telescope",
@@ -3019,16 +3019,16 @@
         },
         {
             "name": "myclabs/php-enum",
-            "version": "1.7.1",
+            "version": "1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/php-enum.git",
-                "reference": "f46847626b8739de22e4ebc6b56010f317d4448d"
+                "reference": "45f01adf6922df6082bcda36619deb466e826acf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/f46847626b8739de22e4ebc6b56010f317d4448d",
-                "reference": "f46847626b8739de22e4ebc6b56010f317d4448d",
+                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/45f01adf6922df6082bcda36619deb466e826acf",
+                "reference": "45f01adf6922df6082bcda36619deb466e826acf",
                 "shasum": ""
             },
             "require": {
@@ -3060,20 +3060,20 @@
             "keywords": [
                 "enum"
             ],
-            "time": "2019-05-05T10:12:03+00:00"
+            "time": "2019-08-19T13:53:00+00:00"
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.22.3",
+            "version": "2.23.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "738fbd8d80b2c5e158fda76c29c2de432fcc6f7e"
+                "reference": "767617a047e5b8b8b3b0b6023a2650847ed7df02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/738fbd8d80b2c5e158fda76c29c2de432fcc6f7e",
-                "reference": "738fbd8d80b2c5e158fda76c29c2de432fcc6f7e",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/767617a047e5b8b8b3b0b6023a2650847ed7df02",
+                "reference": "767617a047e5b8b8b3b0b6023a2650847ed7df02",
                 "shasum": ""
             },
             "require": {
@@ -3120,14 +3120,14 @@
                     "homepage": "http://github.com/kylekatarnls"
                 }
             ],
-            "description": "A simple API extension for DateTime.",
+            "description": "A API extension for DateTime that supports 281 different languages.",
             "homepage": "http://carbon.nesbot.com",
             "keywords": [
                 "date",
                 "datetime",
                 "time"
             ],
-            "time": "2019-08-07T12:36:44+00:00"
+            "time": "2019-08-17T13:57:34+00:00"
         },
         {
             "name": "nette/finder",
@@ -3446,16 +3446,16 @@
         },
         {
             "name": "nunomaduro/phpinsights",
-            "version": "v1.8.0",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/phpinsights.git",
-                "reference": "dcd3ca897109dacdd8b6a22695a3b84a19abd834"
+                "reference": "7453929847df79aeaacddc2753186aa6b16cbdb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/phpinsights/zipball/dcd3ca897109dacdd8b6a22695a3b84a19abd834",
-                "reference": "dcd3ca897109dacdd8b6a22695a3b84a19abd834",
+                "url": "https://api.github.com/repos/nunomaduro/phpinsights/zipball/7453929847df79aeaacddc2753186aa6b16cbdb4",
+                "reference": "7453929847df79aeaacddc2753186aa6b16cbdb4",
                 "shasum": ""
             },
             "require": {
@@ -3520,7 +3520,7 @@
                 "quality",
                 "source"
             ],
-            "time": "2019-08-14T18:41:52+00:00"
+            "time": "2019-08-20T14:41:42+00:00"
         },
         {
             "name": "object-calisthenics/phpcs-calisthenics-rules",
@@ -4217,16 +4217,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "1.8.2",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "0c1346a1956347590b7db09533966307d20cb7cc"
+                "reference": "8dea03eaf60a349b6097e4bcad11f894668280df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/0c1346a1956347590b7db09533966307d20cb7cc",
-                "reference": "0c1346a1956347590b7db09533966307d20cb7cc",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/8dea03eaf60a349b6097e4bcad11f894668280df",
+                "reference": "8dea03eaf60a349b6097e4bcad11f894668280df",
                 "shasum": ""
             },
             "require": {
@@ -4245,17 +4245,16 @@
                 "ext-zlib": "*",
                 "markbaker/complex": "^1.4",
                 "markbaker/matrix": "^1.1",
-                "php": "^5.6|^7.0",
+                "php": "^7.1",
                 "psr/simple-cache": "^1.0"
             },
             "require-dev": {
-                "doctrine/instantiator": "^1.0.0",
                 "dompdf/dompdf": "^0.8.0",
                 "friendsofphp/php-cs-fixer": "@stable",
                 "jpgraph/jpgraph": "^4.0",
                 "mpdf/mpdf": "^7.0.0",
                 "phpcompatibility/php-compatibility": "^8.0",
-                "phpunit/phpunit": "^5.7",
+                "phpunit/phpunit": "^7.5",
                 "squizlabs/php_codesniffer": "^3.3",
                 "tecnickcom/tcpdf": "^6.2"
             },
@@ -4277,12 +4276,6 @@
             ],
             "authors": [
                 {
-                    "name": "Erik Tilt"
-                },
-                {
-                    "name": "Adrien Crivelli"
-                },
-                {
                     "name": "Maarten Balliauw",
                     "homepage": "https://blog.maartenballiauw.be"
                 },
@@ -4293,6 +4286,12 @@
                 {
                     "name": "Franck Lefevre",
                     "homepage": "https://rootslabs.net"
+                },
+                {
+                    "name": "Erik Tilt"
+                },
+                {
+                    "name": "Adrien Crivelli"
                 }
             ],
             "description": "PHPSpreadsheet - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
@@ -4307,7 +4306,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2019-07-08T21:21:25+00:00"
+            "time": "2019-08-17T22:24:35+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -6292,16 +6291,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "7.9.0",
+            "version": "7.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "7e5b22f7c6ed39631d82377b94b9bc09e159fc92"
+                "reference": "cb069c4916c1777fdc9292bbaabe9c5fd8b0d243"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/7e5b22f7c6ed39631d82377b94b9bc09e159fc92",
-                "reference": "7e5b22f7c6ed39631d82377b94b9bc09e159fc92",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/cb069c4916c1777fdc9292bbaabe9c5fd8b0d243",
+                "reference": "cb069c4916c1777fdc9292bbaabe9c5fd8b0d243",
                 "shasum": ""
             },
             "require": {
@@ -6373,7 +6372,7 @@
                 "media",
                 "spatie"
             ],
-            "time": "2019-08-07T07:13:55+00:00"
+            "time": "2019-08-21T16:14:50+00:00"
         },
         {
             "name": "spatie/pdf-to-image",
@@ -9281,16 +9280,16 @@
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v4.5.2",
+            "version": "v4.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "b651768eaa8ddb0f59ebd0e10faaae2ec9a45181"
+                "reference": "1e08c27249f05b02047ffe056515a08663edf2ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/b651768eaa8ddb0f59ebd0e10faaae2ec9a45181",
-                "reference": "b651768eaa8ddb0f59ebd0e10faaae2ec9a45181",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/1e08c27249f05b02047ffe056515a08663edf2ca",
+                "reference": "1e08c27249f05b02047ffe056515a08663edf2ca",
                 "shasum": ""
             },
             "require": {
@@ -9337,7 +9336,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-08-13T01:58:46+00:00"
+            "time": "2019-08-17T06:18:23+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",

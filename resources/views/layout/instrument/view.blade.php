@@ -26,7 +26,13 @@
     </a>
     <br /><br />
 
-    {!! $dataTable->table(['class' => 'table table-sm table-striped table-hover']) !!}
+    <form role="form" action="/users/{{ Auth::id() }}/settings" method="POST">
+        @csrf
+        @method('PATCH')
+
+        {!! $dataTable->table(['class' => 'table table-sm table-striped table-hover']) !!}
+
+    </form>
 
 @endsection
 

@@ -131,7 +131,7 @@ class FilterController extends Controller
 
         Filter::create($validated);
 
-        laraflash(_i('Filter "%s" created', $request->name))->success();
+        laraflash(_i('Filter %s created', $request->name))->success();
 
         // View the page with all filters for the user
         return redirect('/filter');
@@ -194,17 +194,17 @@ class FilterController extends Controller
             $filter->update(['wratten' => $request->get('wratten')]);
             $filter->update(['schott' => $request->get('schott')]);
 
-            laraflash(_i('Filter "%s" updated', $filter->name))->warning();
+            laraflash(_i('Filter %s updated', $filter->name))->warning();
         } else {
             // This is only reached when clicking the active checkbox in the
             // filter overview.
             if ($request->has('active')) {
                 $filter->active();
-                laraflash(_i('Filter "%s" is active', $filter->name))->warning();
+                laraflash(_i('Filter %s is active', $filter->name))->warning();
             } else {
                 $filter->inactive();
                 laraflash(
-                    _i('Filter "%s" is not longer active', $filter->name)
+                    _i('Filter %s is not longer active', $filter->name)
                 )->warning();
             }
         }
@@ -225,12 +225,12 @@ class FilterController extends Controller
 
         if ($filter->observations > 0) {
             laraflash(
-                _i('Filter "%s" has observations. Impossible to delete.', $filter->name)
+                _i('Filter %s has observations. Impossible to delete.', $filter->name)
             )->info();
         } else {
             $filter->delete();
 
-            laraflash(_i('Filter "%s" deleted', $filter->name))->info();
+            laraflash(_i('Filter %s deleted', $filter->name))->info();
         }
 
         return redirect()->back();

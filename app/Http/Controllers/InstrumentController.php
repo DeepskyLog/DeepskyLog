@@ -132,14 +132,13 @@ class InstrumentController extends Controller
             ]
         );
 
-
         $instrument = Instrument::create($validated);
 
         if (Auth::user()->showInches) {
             $instrument->update(['diameter' => $request->get('diameter') * 25.4]);
         }
 
-        laraflash(_i('Instrument "%s" created', $request->name))->success();
+        laraflash(_i('Instrument %s created', $request->name))->success();
 
         // View the page with all instruments for the user
         return redirect('/instrument');
@@ -201,7 +200,6 @@ class InstrumentController extends Controller
                 ]
             );
 
-
             $instrument->update(['type' => $request->get('type')]);
             $instrument->update(['name' => $request->get('name')]);
 
@@ -217,20 +215,29 @@ class InstrumentController extends Controller
                 ['fixedMagnification' => $request->get('fixedMagnification')]
             );
 
-            laraflash(_i('Instrument "%s" updated', $instrument->name))->warning();
+            laraflash(_i('Instrument %s updated', $instrument->name))->warning();
         } else {
             // This is only reached when clicking the active checkbox in the
             // instrument overview.
             if ($request->has('active')) {
                 $instrument->active();
                 laraflash(
-                    _i('Instrument "%s" is active', $instrument->name)
+                    _i('Instrument %s is active', $instrument->name)
                 )->warning();
             } else {
-                $instrument->inactive();
-                laraflash(
-                    _i('Instrument "%s" is not longer active', $instrument->name)
-                )->warning();
+                if ($instrument->id == Auth::user()->stdtelescope) {
+                    laraflash(
+                        _i(
+                            'Impossible to deactive the default instrument %s',
+                            $instrument->name
+                        )
+                    )->danger();
+                } else {
+                    $instrument->inactive();
+                    laraflash(
+                        _i('Instrument %s is not longer active', $instrument->name)
+                    )->warning();
+                }
             }
         }
 
@@ -251,14 +258,21 @@ class InstrumentController extends Controller
         if ($instrument->observations > 0) {
             laraflash(
                 _i(
-                    'Instrument "%s" has observations. Impossible to delete.',
+                    'Instrument %s has observations. Impossible to delete.',
                     $instrument->name
                 )
             )->info();
+        } else if ($instrument->id == Auth::user()->stdtelescope) {
+            laraflash(
+                _i(
+                    'Impossible to delete the default instrument %s',
+                    $instrument->name
+                )
+            )->danger();
         } else {
             $instrument->delete();
 
-            laraflash(_i('Instrument "%s" deleted', $instrument->name))->info();
+            laraflash(_i('Instrument %s deleted', $instrument->name))->info();
         }
 
         return redirect()->back();
