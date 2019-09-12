@@ -55,7 +55,11 @@
             <tr>
                 <td> {{ _i("Default observing site") }} </td>
                 <td>
-                    <a href="/location/3">Location name</a>
+                    @if ($user->stdlocation !== 0)
+                        <a href="/location/{{ $user->stdlocation }}">
+                            {{ \App\Location::where(['id' => $user->stdlocation])->first()->name }}
+                        </a>
+                    @endif
                 </td>
             </tr>
 
@@ -63,9 +67,11 @@
             <tr>
                 <td> {{ _i("Default instrument") }} </td>
                 <td>
-                    <a href="/instrument/{{ Auth::user()->stdtelescope }}">
-                        {{ \App\Instrument::where(['id' => Auth::user()->stdtelescope])->first()->name }}
-                    </a>
+                    @if ($user->stdtelescope !== 0)
+                        <a href="/instrument/{{ Auth::user()->stdtelescope }}">
+                            {{ \App\Instrument::where(['id' => $user->stdtelescope])->first()->name }}
+                        </a>
+                    @endif
                 </td>
             </tr>
 
@@ -76,7 +82,7 @@
                     @if ($user->id === Auth::user()->id)
                         <a href="/location">
                     @endif
-                    17
+                    {{ count($user->locations) }}
                     @if ($user->id === Auth::user()->id)
                         </a>
                     @endif

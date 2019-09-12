@@ -4,7 +4,7 @@
             @csrf
             @method('PATCH')
 
-            <select class="form-control selection" name="stdinstrument" id="defaultInstrument"> {{-- onchange="instrument=this.options[this.selectedIndex].value;"> --}}
+            <select class="form-control selection" name="stdinstrument" id="defaultInstrument">
                 {!! App\Instrument::getInstrumentOptions() !!}
             </select>
         </form>

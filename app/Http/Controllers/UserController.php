@@ -464,6 +464,13 @@ class UserController extends Controller
             );
         }
 
+        // Update the standard instrument
+        if ($request->has('stdlocation')) {
+            $user->update(
+                ['stdlocation' => $request->get('stdlocation')]
+            );
+        }
+
         // Update the standard atlas
         if ($request->has('standardAtlasCode')) {
             $user->update(

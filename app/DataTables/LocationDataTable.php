@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Instrument DataTable.
+ * Location DataTable.
  *
  * PHP Version 7
  *
- * @category Instruments
+ * @category Locations
  * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
@@ -15,22 +15,21 @@
 namespace App\DataTables;
 
 use Yajra\DataTables\Services\DataTable;
-use App\Instrument;
+use App\Location;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 /**
- * Instrument DataTable.
+ * Location DataTable.
  *
  * PHP Version 7
  *
- * @category Instruments
+ * @category Locations
  * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class InstrumentDataTable extends DataTable
+class LocationDataTable extends DataTable
 {
     /**
      * Make the correct ajax call.
@@ -40,97 +39,83 @@ class InstrumentDataTable extends DataTable
     public function ajax()
     {
         if ($this->user === 'admin') {
-            $model = Instrument::with('user')->select('instruments.*');
+            $model = Location::with('user')->select('locations.*');
         } else {
-            $model = Instrument::where(
+            $model = Location::where(
                 'user_id', auth()->user()->id
-            )->with('user')->select('instruments.*');
+            )->with('user')->select('locations.*');
         }
-
-        $model->when(
-            Auth::user()->showInches,
-            function ($model) {
-                return $model->select()->addSelect(
-                    DB::raw('round(diameter * fd / 25.4, 2) as focalLength')
-                );
-            },
-            function ($model) {
-                return $model->select()->addSelect(
-                    DB::raw('round(diameter * fd)  as focalLength')
-                );
-            }
-        );
 
         return datatables()
             ->eloquent($model)
-            ->editColumn(
+            ->addColumn(
+                'weather',
+                function ($location) {
+                    return '<a href="http://clearoutside.com/forecast/'
+                        . round($location->latitude, 2) . '/'
+                        . round($location->longitude, 2) . '">
+                        <img src="http://clearoutside.com/forecast_image_small/'
+                        . round($location->latitude, 2) . '/'
+                        . round($location->longitude, 2) . '/forecast.png" />
+                        </a>';
+                }
+            )->editColumn(
                 'name',
-                function ($instrument) {
+                function ($location) {
                     if ($this->user === 'admin') {
-                        return $instrument->name;
+                        return $location->name;
                     } else {
-                        return '<a href="/instrument/' .
-                            $instrument->id . '/edit">' .
-                            $instrument->name . '</a>';
-                    }
-                }
-            )->editColumn(
-                'type',
-                function ($instrument) {
-                    return $instrument->typeName();
-                }
-            )->editColumn(
-                'diameter',
-                function ($instrument) {
-                    if (Auth::user()->showInches) {
-                        return round($instrument->diameter / 25.4, 2) . ' ' . _i('inch');
-                    } else {
-                        return $instrument->diameter . ' ' . _i('mm');
-                    }
-                }
-            )->editColumn(
-                'focalLength',
-                function ($instrument) {
-                    if ($instrument->focalLength) {
-                        if (Auth::user()->showInches) {
-                            return $instrument->focalLength . ' ' . _i('inch');
-                        } else {
-                            return $instrument->focalLength . ' ' . _i('mm');
-                        }
+                        return '<a href="/location/' . $location->id . '/edit">' .
+                            $location->name . '</a>';
                     }
                 }
             )->editColumn(
                 'observations',
-                '<a href="/observations/instrument/{{ $id }}">{{ $observations }}</a>'
+                '<a href="/observations/location/{{ $id }}">{{ $observations }}</a>'
+            )->editColumn(
+                'elevation',
+                '{{ $elevation }} m'
+            )->editColumn(
+                'country',
+                '{{ Countries::getOne($country, LaravelGettext::getLocaleLanguage()) }}'
+            )->editColumn(
+                'limitingMagnitude',
+                function ($location) {
+                    if ($location->limitingMagnitude != null) {
+                        return $location->limitingMagnitude - Auth::user()->fstOffset;
+                    } else {
+                        return '';
+                    }
+                }
+            )->editColumn(
+                'user.name',
+                function ($location) {
+                    return '<a href="/users/' . $location->user->id . '">'
+                        . $location->user->name . '</a>';
+                }
             )->editColumn(
                 'active',
-                '<form method="POST" action="/instrument/{{ $id }}">
+                '<form method="POST" action="/location/{{ $id }}">
                     @method("PATCH")
                     @csrf
                     <input type="checkbox" name="active" onChange="this.form.submit()" {{ $active ? "checked" : "" }}>
                  </form>'
-            )->editColumn(
-                'user.name',
-                function ($instrument) {
-                    return '<a href="/users/' . $instrument->user->id . '">'
-                        . $instrument->user->name . '</a>';
-                }
             )->addColumn(
                 'standard',
-                function ($instrument) {
-                    if ($instrument->id == Auth::user()->stdtelescope) {
-                        return '<input type="radio" name="stdinstrument" value="'
-                            . $instrument->id
+                function ($location) {
+                    if ($location->id == Auth::user()->stdlocation) {
+                        return '<input type="radio" name="stdlocation" value="'
+                            . $location->id
                             . '" checked="checked" onclick="submit();" />';
                     } else {
-                        return '<input type="radio" name="stdinstrument" value="'
-                            . $instrument->id
+                        return '<input type="radio" name="stdlocation" value="'
+                            . $location->id
                             . '" onclick="submit();" />';
                     }
                 }
             )->addColumn(
                 'delete',
-                '<form method="POST" action="/instrument/{{ $id }}">
+                '<form method="POST" action="/location/{{ $id }}">
                             @method("DELETE")
                             @csrf
                             <button type="button" class="btn btn-sm btn-link" onClick="this.form.submit()">
@@ -139,7 +124,7 @@ class InstrumentDataTable extends DataTable
                         </form>'
             )->rawColumns(
                 ['name', 'observations', 'active', 'delete',
-                    'user.name', 'standard']
+                    'user.name', 'standard', 'weather']
             )->make(true);
     }
 
@@ -187,33 +172,33 @@ class InstrumentDataTable extends DataTable
                     'title' => _i('Name'),
                     'data' => 'name',
                 ],
-                ['name' => 'type',
-                    'title' => _i('Type'),
-                    'data' => 'type',
+                ['name' => 'country',
+                    'title' => _i('Country'),
+                    'data' => 'country',
                     'width' => '10%',
                     'searchable' => false,
                 ],
-                ['name' => 'diameter',
-                    'title' => _i('Diameter'),
-                    'data' => 'diameter',
+                ['name' => 'elevation',
+                    'title' => _i('Elevation'),
+                    'data' => 'elevation',
                     'width' => '10%',
                     'searchable' => false,
                 ],
-                ['name' => 'fd',
-                    'title' => _i('F/D'),
-                    'data' => 'fd',
+                ['name' => 'limitingMagnitude',
+                    'title' => _i('NELM'),
+                    'data' => 'limitingMagnitude',
                     'width' => '10%',
                     'searchable' => false,
                 ],
-                ['name' => 'focalLength',
-                    'title' => _i('Focal Length'),
-                    'data' => 'focalLength',
-                    'searchable' => false,
+                ['name' => 'skyBackground',
+                    'title' => _i('SQM'),
+                    'data' => 'skyBackground',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
-                ['name' => 'fixedMagnification',
-                    'title' => _i('Fixed Magnification'),
-                    'data' => 'fixedMagnification',
+                ['name' => 'bortle',
+                    'title' => _i('Bortle'),
+                    'data' => 'bortle',
                     'width' => '10%',
                     'searchable' => false,
                 ],
@@ -243,33 +228,39 @@ class InstrumentDataTable extends DataTable
                     'title' => _i('Name'),
                     'data' => 'name',
                 ],
-                ['name' => 'type',
-                    'title' => _i('Type'),
-                    'data' => 'type',
+                ['name' => 'weather',
+                    'title' => _i('Weather forecast'),
+                    'data' => 'weather',
+                    'orderable' => false,
+                    'searchable' => false,
+                ],
+                ['name' => 'country',
+                    'title' => _i('Country'),
+                    'data' => 'country',
                     'width' => '10%',
                     'searchable' => false,
                 ],
-                ['name' => 'diameter',
-                    'title' => _i('Diameter'),
-                    'data' => 'diameter',
+                ['name' => 'elevation',
+                    'title' => _i('Elevation'),
+                    'data' => 'elevation',
                     'width' => '10%',
                     'searchable' => false,
                 ],
-                ['name' => 'fd',
-                    'title' => _i('F/D'),
-                    'data' => 'fd',
+                ['name' => 'limitingMagnitude',
+                    'title' => _i('NELM'),
+                    'data' => 'limitingMagnitude',
                     'width' => '10%',
                     'searchable' => false,
                 ],
-                ['name' => 'focalLength',
-                    'title' => _i('Focal Length'),
-                    'data' => 'focalLength',
+                ['name' => 'skyBackground',
+                    'title' => _i('SQM'),
+                    'data' => 'skyBackground',
                     'width' => '10%',
                     'searchable' => false,
                 ],
-                ['name' => 'fixedMagnification',
-                    'title' => _i('Fixed Magnification'),
-                    'data' => 'fixedMagnification',
+                ['name' => 'bortle',
+                    'title' => _i('Bortle'),
+                    'data' => 'bortle',
                     'width' => '10%',
                     'searchable' => false,
                 ],
@@ -284,7 +275,7 @@ class InstrumentDataTable extends DataTable
                     'data' => 'active',
                 ],
                 ['name' => 'standard',
-                    'title' => _i('Default Instrument'),
+                    'title' => _i('Default Location'),
                     'data' => 'standard',
                     'orderable' => false,
                     'searchable' => false,
@@ -307,6 +298,6 @@ class InstrumentDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Instrument_' . date('YmdHis');
+        return 'Location_' . date('YmdHis');
     }
 }

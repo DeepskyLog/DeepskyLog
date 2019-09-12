@@ -97,6 +97,27 @@ Route::get('/instrument/{instrument}', 'InstrumentController@show')
 
 Route::get('/getInstrumentJson/{id}', 'InstrumentController@getInstrumentJson');
 
+Route::get('/location/autocomplete', 'LocationController@dataAjax')
+    ->name('location.dataAjax');
+
+Route::get('/location/create/{location}', 'LocationController@create')
+    ->middleware('verified')
+    ->name('location.create');
+
+Route::get('/location/admin', 'LocationController@indexAdmin')
+    ->name('location.indexAdmin');
+
+Route::resource(
+    'location',
+    'LocationController',
+    ['parameters' => ['location' => 'location']]
+)->middleware('verified')->except('show');
+
+Route::get('/location/{location}', 'LocationController@show')
+    ->name('location.show');
+
+Route::get('/getLocationJson/{id}', 'LocationController@getLocationJson');
+
 Auth::routes(['verify' => true]);
 
 Route::post('/users/upload', 'UserController@upload')->name('users.upload');

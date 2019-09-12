@@ -143,8 +143,7 @@
                     <label for="stdlocation">{{ _i("Default observing site") }}</label>
                     <div class="form">
                         <select class="form-control selection" style="width: 100%" id="stdlocation" name="stdlocation">
-                            <option value="0">Add locations here</option>
-                            <option value="1">Add more locations here</option>
+                            {!! App\Location::getLocationOptions() !!}
                         </select>
                     </div>
                     <span class="help-block">

@@ -82,7 +82,7 @@ class InstrumentTableSeeder extends Seeder
                         'fd' => $fd,
                         'type' => $instrument->type,
                         'fixedMagnification' => $fm,
-                        'observer_id' => $observer[0],
+                        'user_id' => $observer[0],
                         'active' => $instrument->instrumentactive,
                         'created_at' => $date
                     ]

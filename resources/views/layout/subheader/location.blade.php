@@ -1,14 +1,13 @@
 <li class="nav-item">
     <span class="navbar-text">
-        <select class="form-control selection" id="activateLocation" onchange="location=this.options[this.selectedIndex].value;">
-            <optgroup label="Belgium">
-                <option value="/location/activate/Roosbeek">Roosbeek</option>
-                <option value="/location/activate/Bambrugge">Bambrugge</option>
-            </optgroup>
-            <optgroup label="France">
-                <option value="/location/activate/Le Castellard-Mélan">Le Castellard-Mélan</option>
-            </optgroup>
-        </select>
+        <form role="form" action="/users/{{ Auth::id() }}/settings" method="POST">
+            @csrf
+            @method('PATCH')
+
+            <select class="form-control selection" name="stdlocation" id="defaultLocation">
+                {!! App\Location::getLocationOptions() !!}
+            </select>
+        </form>
     </span>
 </li>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

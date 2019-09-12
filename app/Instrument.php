@@ -65,7 +65,7 @@ class Instrument extends Model
      *
      * @return BelongsTo the observer this instrument belongs to
      */
-    public function observer()
+    public function user()
     {
         // Also method on user: instruments()
         return $this->belongsTo('App\User');
@@ -91,16 +91,18 @@ class Instrument extends Model
     {
         // Loop over the instrument types and make separate groups.
         $types = DB::table('instrument_types')->get();
+        $count = 0;
 
         foreach ($types as $typeid=>$type) {
             $instruments = \App\Instrument::where(
-                ['observer_id' => Auth::user()->id]
+                ['user_id' => Auth::user()->id]
             )->where(['type' => $typeid])->where(['active' => 1])->pluck('id', 'name');
 
             if (count($instruments) > 0) {
                 echo '<optgroup label="' . _i($type->type) . '">';
 
                 foreach ($instruments as $name => $id) {
+                    $count++;
                     if ($id == Auth::user()->stdtelescope) {
                         echo '<option selected="selected" value="' . $id . '}}">'
                            . $name . '</option>';
@@ -110,6 +112,10 @@ class Instrument extends Model
                 }
                 echo '</optgroup>';
             }
+        }
+
+        if ($count === 0) {
+            echo '<option>' . _i('Add an instrument') . '</option>';
         }
     }
 

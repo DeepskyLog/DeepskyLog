@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateInstrumentsTable extends Migration
+class CreateLocationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,18 @@ class CreateInstrumentsTable extends Migration
     public function up()
     {
         Schema::create(
-            'instruments',
+            'locations',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->string('name', 255);
-                $table->float('diameter');
-                $table->unsignedInteger('type');
-                $table->float('fd')->nullable();
-                $table->unsignedInteger('fixedMagnification')->nullable();
+                $table->float('longitude', 8, 5);
+                $table->float('latitude', 8, 5);
+                $table->integer('elevation');
+                $table->string('country');
+                $table->string('timezone');
+                $table->float('limitingMagnitude')->nullable();
+                $table->float('skyBackground')->nullable();
+                $table->unsignedSmallInteger('bortle')->nullable();
                 $table->unsignedInteger('user_id');
                 $table->boolean('active')->default(true);
                 $table->unsignedInteger('observations')->default(0);
@@ -39,6 +43,6 @@ class CreateInstrumentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('instruments');
+        Schema::dropIfExists('locations');
     }
 }
