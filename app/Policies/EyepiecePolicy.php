@@ -20,6 +20,6 @@ class EyepiecePolicy
      */
     public function update(User $user, Eyepiece $eyepiece)
     {
-        return $user->id === $eyepiece->observer_id;
+        return $user->id === $eyepiece->user_id;
     }
 }

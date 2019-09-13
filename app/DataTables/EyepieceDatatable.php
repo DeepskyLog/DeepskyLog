@@ -37,14 +37,18 @@ class EyepieceDataTable extends DataTable
      */
     public function ajax()
     {
+        if ($this->user === 'admin') {
+            $model = Eyepiece::with('user')->select('eyepieces.*');
+        } else {
+            $model = Eyepiece::where(
+                'user_id', auth()->user()->id
+            )->with('user')->select('eyepieces.*');
+        }
+
+
         return datatables()
-            ->eloquent($this->query())
-            ->addColumn(
-                'observername',
-                function ($eyepiece) {
-                    return '<a href="/observer/' . $eyepiece->observer_id . '">' . $eyepiece->observer->name . '</a>';
-                }
-            )->editColumn(
+            ->eloquent($model)
+            ->editColumn(
                 'name',
                 '<a href="/eyepiece/{{ $id }}/edit">{{ $name }}</a>'
             )->editColumn(
@@ -70,6 +74,12 @@ class EyepieceDataTable extends DataTable
                     }
                 }
             )->editColumn(
+                'user.name',
+                function ($eyepiece) {
+                    return '<a href="/users/' . $eyepiece->user->id . '">'
+                        . $eyepiece->user->name . '</a>';
+                }
+            )->editColumn(
                 'active',
                 '<form method="POST" action="/eyepiece/{{ $id }}">
                 @method("PATCH")
@@ -86,24 +96,8 @@ class EyepieceDataTable extends DataTable
                         </button>
                         </form>'
             )->rawColumns(
-                ['name', 'observations', 'active', 'delete', 'observername']
+                ['name', 'observations', 'active', 'delete', 'user.name']
             )->make(true);
-    }
-
-    /**
-     * Get query source of dataTable.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function query()
-    {
-        if ($this->user === 'admin') {
-            $eyepieces = Eyepiece::select();
-        } else {
-            $eyepieces = auth()->user()->eyepieces();
-        }
-
-        return $this->applyScopes($eyepieces);
     }
 
     /**
@@ -113,35 +107,9 @@ class EyepieceDataTable extends DataTable
      */
     public function html()
     {
-        if ($this->user === 'admin') {
-            return $this->builder()
-                ->columns($this->getColumns())->minifiedAjax()
-                ->addColumn(
-                    ['data' => 'observername', 'title' => _i('Name'),
-                        'name' => 'observername',
-                        'orderable' => false,
-                        'searchable' => false,
-                    ]
-                )->parameters($this->getMyParameters())->parameters(
-                    [
-                        'order' => [
-                            1,
-                            'desc'
-                        ]
-                    ]
-                );
-        } else {
-            return $this->builder()
-                ->columns($this->getColumns())->minifiedAjax()
-                ->parameters($this->getMyParameters())->parameters(
-                    [
-                        'order' => [
-                            1,
-                            'desc'
-                        ]
-                    ]
-                );
-        }
+        return $this->builder()
+            ->columns($this->getColumns())->minifiedAjax()
+            ->parameters($this->getMyParameters());
     }
 
     /**
@@ -180,21 +148,25 @@ class EyepieceDataTable extends DataTable
                     'title' => _i('Focal Length'),
                     'data' => 'focalLength',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
                 ['name' => 'apparentFOV',
                     'title' => _i('Apparent Field of View'),
                     'data' => 'apparentFOV',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
                 ['name' => 'maxFocalLength',
                     'title' => _i('Maximum Focal Length'),
                     'data' => 'maxFocalLength',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
                 ['name' => 'observations',
                     'title' => _i('Observations'),
                     'data' => 'observations',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
                 ['name' => 'delete',
                     'title' => _i('Delete'),
@@ -202,6 +174,12 @@ class EyepieceDataTable extends DataTable
                     'orderable' => false,
                     'searchable' => false,
                     'width' => '10%',
+                ],
+                ['name' => 'user.name',
+                    'title' => _i('Observer'),
+                    'data' => 'user.name',
+                    'orderable' => true,
+                    'searchable' => true,
                 ],
             ];
         } else {
@@ -214,20 +192,24 @@ class EyepieceDataTable extends DataTable
                     'title' => _i('Focal Length'),
                     'data' => 'focalLength',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
                 ['name' => 'apparentFOV',
                     'title' => _i('Apparent Field of View'),
                     'data' => 'apparentFOV',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
                 ['name' => 'maxFocalLength',
                     'title' => _i('Maximum Focal Length'),
                     'data' => 'maxFocalLength',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
                 ['name' => 'observations',
                     'title' => _i('Observations'),
                     'data' => 'observations',
+                    'searchable' => false,
                 ],
                 ['name' => 'active',
                     'title' => _i('Active'),

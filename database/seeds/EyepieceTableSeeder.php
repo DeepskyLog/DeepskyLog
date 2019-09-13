@@ -61,7 +61,7 @@ class EyepieceTableSeeder extends Seeder
                         'name' => html_entity_decode($eyepiece->name),
                         'focalLength' => $eyepiece->focalLength,
                         'apparentFOV' => $eyepiece->apparentFOV,
-                        'observer_id' => $observer[0],
+                        'user_id' => $observer[0],
                         'active' => $eyepiece->eyepieceactive,
                         'created_at' => $date
                     ]

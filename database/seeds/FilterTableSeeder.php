@@ -60,7 +60,7 @@ class FilterTableSeeder extends Seeder
                         'id' => $filter->id,
                         'name' => html_entity_decode($filter->name),
                         'type' => $filter->type,
-                        'observer_id' => $observer[0],
+                        'user_id' => $observer[0],
                         'active' => $filter->filteractive,
                         'created_at' => $date
                     ]

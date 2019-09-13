@@ -11,12 +11,9 @@
 
 + [ ] CODE CLIMATE: <https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication>
 
-## TODO TODO TODO
-
-+ [ ] Make all datatables sortable on the user name! See LocationDatatable on how to do this.
-
 ## LOCATIONS
 
++ [ ] Add $fillable to App/Location.php
 + [ ] Write the page to add / adapt a location -> put lm, sqm and bortle in database
 + [ ] Write the page to view one location (also use google maps here!)
 + [ ] Add google maps when adding / viewing a location

@@ -55,7 +55,7 @@ class LensTest extends TestCase
         $this->post('lens', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new lens in the database
         $this->assertDatabaseHas('lens', $attributes);
@@ -171,7 +171,7 @@ class LensTest extends TestCase
         $this->post('lens', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new lens in the database
         $this->assertDatabaseHas('lens', $attributes);
@@ -180,7 +180,7 @@ class LensTest extends TestCase
 
         // Adapt the name and the factor
         $newAttributes = [
-            'observer_id' => $user->id,
+            'user_id' => $user->id,
             'name' => 'My updated lens',
             'factor' => 2.5,
         ];
@@ -217,7 +217,7 @@ class LensTest extends TestCase
         $this->post('lens', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new lens in the database
         $this->assertDatabaseHas('lens', $attributes);
@@ -229,7 +229,7 @@ class LensTest extends TestCase
 
         // Adapt the name and the factor
         $newAttributes = [
-            'observer_id' => $newUser->id,
+            'user_id' => $newUser->id,
             'name' => 'My updated lens',
             'factor' => 2.5,
         ];
@@ -265,7 +265,7 @@ class LensTest extends TestCase
         $this->post('lens', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new lens in the database
         $this->assertDatabaseHas('lens', $attributes);
@@ -317,7 +317,7 @@ class LensTest extends TestCase
         $this->post('lens', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new lens in the database
         $this->assertDatabaseHas('lens', $attributes);
@@ -356,7 +356,7 @@ class LensTest extends TestCase
         $this->post('lens', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new lens in the database
         $this->assertDatabaseHas('lens', $attributes);
@@ -398,7 +398,7 @@ class LensTest extends TestCase
         $this->post('lens', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new lens in the database
         $this->assertDatabaseHas('lens', $attributes);
@@ -464,7 +464,7 @@ class LensTest extends TestCase
         // When they hit the endpoint in /lens to create a new lens while
         // passing the necessary data
         $attributes = [
-            'observer_id' => $user->id,
+            'user_id' => $user->id,
             'name' => 'Test lens for unverified user',
             'factor' => 2.5
         ];

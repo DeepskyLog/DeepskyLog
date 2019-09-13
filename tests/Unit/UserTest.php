@@ -53,7 +53,7 @@ class UserTest extends TestCase
         $lens = new \App\Lens;
         $lens->name = 'Tested lens';
         $lens->factor = 1.43;
-        $lens->observer_id = $user->id;
+        $lens->user_id = $user->id;
 
         $lens->save();
 

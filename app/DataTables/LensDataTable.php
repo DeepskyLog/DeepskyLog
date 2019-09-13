@@ -37,18 +37,28 @@ class LensDataTable extends DataTable
      */
     public function ajax()
     {
+        if ($this->user === 'admin') {
+            $model = Lens::with('user')->select('lens.*');
+        } else {
+            $model = Lens::where(
+                'user_id', auth()->user()->id
+            )->with('user')->select('lens.*');
+        }
+
         return datatables()
-            ->eloquent($this->query())
-            ->addColumn(
-                'observername', function ($lens) {
-                    return '<a href="/observer/' . $lens->observer_id . '">' . $lens->observer->name . '</a>';
-                }
-            )->editColumn(
+            ->eloquent($model)
+            ->editColumn(
                 'name',
                 '<a href="/lens/{{ $id }}/edit">{{ $name }}</a>'
             )->editColumn(
                 'observations',
                 '<a href="/observations/lens/{{ $id }}">{{ $observations }}</a>'
+            )->editColumn(
+                'user.name',
+                function ($lens) {
+                    return '<a href="/users/' . $lens->user->id . '">'
+                        . $lens->user->name . '</a>';
+                }
             )->editColumn(
                 'active',
                 '<form method="POST" action="/lens/{{ $id }}">
@@ -65,24 +75,8 @@ class LensDataTable extends DataTable
                         </button>
                         </form>'
             )->rawColumns(
-                ['name', 'observations', 'active', 'delete', 'observername']
+                ['name', 'observations', 'active', 'delete', 'user.name']
             )->make(true);
-    }
-
-    /**
-     * Get query source of dataTable.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function query()
-    {
-        if ($this->user === 'admin') {
-            $lenses = Lens::select();
-        } else {
-            $lenses = auth()->user()->lenses();
-        }
-
-        return $this->applyScopes($lenses);
     }
 
     /**
@@ -92,21 +86,9 @@ class LensDataTable extends DataTable
      */
     public function html()
     {
-        if ($this->user === 'admin') {
-            return $this->builder()
-                ->columns($this->getColumns())->minifiedAjax()
-                ->addColumn(
-                    ['data' => 'observername', 'title' => _i('Name'),
-                    'name' => 'observername',
-                    'orderable' => false,
-                    'searchable' => false,
-                    ]
-                )->parameters($this->getMyParameters());
-        } else {
-            return $this->builder()
-                ->columns($this->getColumns())->minifiedAjax()
-                ->parameters($this->getMyParameters());
-        }
+        return $this->builder()
+            ->columns($this->getColumns())->minifiedAjax()
+            ->parameters($this->getMyParameters());
     }
 
     /**
@@ -144,11 +126,13 @@ class LensDataTable extends DataTable
                     'title' => _i('Factor'),
                     'data' => 'factor',
                     'width' => '10%',
+                    'searchable' => true,
                 ],
                 ['name' => 'observations',
                     'title' => _i('Observations'),
                     'data' => 'observations',
                     'width' => '10%',
+                    'searchable' => true,
                 ],
                 ['name' => 'delete',
                     'title' => _i('Delete'),
@@ -156,6 +140,12 @@ class LensDataTable extends DataTable
                     'orderable' => false,
                     'searchable' => false,
                     'width' => '10%',
+                ],
+                ['name' => 'user.name',
+                    'title' => _i('Observer'),
+                    'data' => 'user.name',
+                    'orderable' => true,
+                    'searchable' => true,
                 ],
             ];
         } else {
@@ -167,14 +157,17 @@ class LensDataTable extends DataTable
                 ['name' => 'factor',
                     'title' => _i('Factor'),
                     'data' => 'factor',
+                    'searchable' => true,
                 ],
                 ['name' => 'observations',
                     'title' => _i('Observations'),
                     'data' => 'observations',
+                    'searchable' => true,
                 ],
                 ['name' => 'active',
                     'title' => _i('Active'),
                     'data' => 'active',
+                    'searchable' => true,
                 ],
                 ['name' => 'delete',
                     'title' => _i('Delete'),

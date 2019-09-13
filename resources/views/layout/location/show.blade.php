@@ -47,7 +47,7 @@
 
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td><a href="/users/{{ $instrument->observer_id }}">{{  $instrument->observer->name }}</a></td>
+        <td><a href="/users/{{ $instrument->user_id }}">{{  $instrument->user->name }}</a></td>
     </tr>
     <tr>
         <td>{{ _i("Number of observations") }}</td>
@@ -61,7 +61,7 @@
 </table>
 
 @auth
-    @if (Auth::user()->id === $instrument->observer_id || Auth::user()->isAdmin())
+    @if (Auth::user()->id === $instrument->user_id || Auth::user()->isAdmin())
     <a href="/instrument/{{ $instrument->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">
             Edit {{  $instrument->name }}

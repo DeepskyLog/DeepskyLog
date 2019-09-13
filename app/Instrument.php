@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Auth;
 class Instrument extends Model
 {
     protected $fillable = [
-        'observer_id', 'name', 'diameter', 'type',
+        'user_id', 'name', 'diameter', 'type',
         'fd', 'fixedMagnification', 'active'
     ];
 

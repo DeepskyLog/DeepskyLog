@@ -119,11 +119,11 @@ class InstrumentController extends Controller
      */
     public function store(Request $request)
     {
-        $request['observer_id'] = auth()->id();
+        $request['user_id'] = auth()->id();
 
         $validated = request()->validate(
             [
-                'observer_id' => 'required',
+                'user_id' => 'required',
                 'name' => 'required|min:6',
                 'type' => 'required',
                 'diameter' => 'required|numeric|gt:0',
@@ -185,13 +185,13 @@ class InstrumentController extends Controller
     {
         $this->authorize('update', $instrument);
 
-        $request['observer_id'] = $instrument->observer_id;
+        $request['user_id'] = $instrument->user_id;
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('type')) {
             request()->validate(
                 [
-                    'observer_id' => 'required',
+                    'user_id' => 'required',
                     'name' => 'required|min:6',
                     'type' => 'required',
                     'diameter' => 'required|numeric|gt:0',

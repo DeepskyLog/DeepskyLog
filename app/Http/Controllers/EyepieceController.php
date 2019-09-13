@@ -118,11 +118,11 @@ class EyepieceController extends Controller
      */
     public function store(Request $request)
     {
-        $request['observer_id'] = auth()->id();
+        $request['user_id'] = auth()->id();
 
         $validated = request()->validate(
             [
-                'observer_id' => 'required',
+                'user_id' => 'required',
                 'name' => 'required|min:6',
                 'focalLength' => 'required|numeric|gte:1|lte:99',
                 'apparentFOV' => 'required|numeric|gte:20|lte:150',
@@ -179,13 +179,13 @@ class EyepieceController extends Controller
     {
         $this->authorize('update', $eyepiece);
 
-        $request['observer_id'] = $eyepiece->observer_id;
+        $request['user_id'] = $eyepiece->user_id;
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('focalLength')) {
             request()->validate(
                 [
-                    'observer_id' => 'required',
+                    'user_id' => 'required',
                     'name' => 'required|min:6',
                     'focalLength' => 'required|numeric|gte:1|lte:99',
                     'apparentFOV' => 'required|numeric|gte:20|lte:150',

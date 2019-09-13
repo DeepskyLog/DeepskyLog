@@ -20,6 +20,6 @@ class InstrumentPolicy
      */
     public function update(User $user, Instrument $instrument)
     {
-        return $user->id === $instrument->observer_id;
+        return $user->id === $instrument->user_id;
     }
 }

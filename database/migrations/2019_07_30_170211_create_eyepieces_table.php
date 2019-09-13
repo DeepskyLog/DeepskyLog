@@ -20,13 +20,13 @@ class CreateEyepiecesTable extends Migration
                 $table->float('focalLength');
                 $table->unsignedInteger('apparentFOV');
                 $table->float('maxFocalLength')->nullable();
-                $table->unsignedInteger('observer_id');
+                $table->unsignedInteger('user_id');
                 $table->boolean('active')->default(true);
                 $table->unsignedInteger('observations')->default(0);
 
                 $table->timestamps();
 
-                $table->foreign('observer_id')->references('id')->on('users')
+                $table->foreign('user_id')->references('id')->on('users')
                     ->onDelete('cascade');
             }
         );

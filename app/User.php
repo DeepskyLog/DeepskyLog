@@ -57,7 +57,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function lenses()
     {
-        return $this->hasMany('App\Lens', 'observer_id');
+        return $this->hasMany('App\Lens', 'user_id');
     }
 
     /**
@@ -67,7 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function filters()
     {
-        return $this->hasMany('App\Filter', 'observer_id');
+        return $this->hasMany('App\Filter', 'user_id');
     }
 
     /**
@@ -77,7 +77,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function eyepieces()
     {
-        return $this->hasMany('App\Eyepiece', 'observer_id');
+        return $this->hasMany('App\Eyepiece', 'user_id');
     }
 
     /**

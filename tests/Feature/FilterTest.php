@@ -55,7 +55,7 @@ class FilterTest extends TestCase
         $this->post('filter', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new filter in the database
         $this->assertDatabaseHas('filters', $attributes);
@@ -115,7 +115,7 @@ class FilterTest extends TestCase
         $this->post('filter', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new filter in the database
         $this->assertDatabaseHas('filters', $attributes);
@@ -124,7 +124,7 @@ class FilterTest extends TestCase
 
         // Adapt the name and the factor
         $newAttributes = [
-            'observer_id' => $user->id,
+            'user_id' => $user->id,
             'name' => 'My updated filter',
             'type' => 2,
         ];
@@ -161,7 +161,7 @@ class FilterTest extends TestCase
         $this->post('filter', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new filter in the database
         $this->assertDatabaseHas('filters', $attributes);
@@ -173,7 +173,7 @@ class FilterTest extends TestCase
 
         // Adapt the name and the factor
         $newAttributes = [
-            'observer_id' => $newUser->id,
+            'user_id' => $newUser->id,
             'name' => 'My updated filter',
             'type' => 6,
         ];
@@ -209,7 +209,7 @@ class FilterTest extends TestCase
         $this->post('filter', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new filter in the database
         $this->assertDatabaseHas('filters', $attributes);
@@ -261,7 +261,7 @@ class FilterTest extends TestCase
         $this->post('filter', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new filter in the database
         $this->assertDatabaseHas('filters', $attributes);
@@ -300,7 +300,7 @@ class FilterTest extends TestCase
         $this->post('filter', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new filter in the database
         $this->assertDatabaseHas('filters', $attributes);
@@ -342,7 +342,7 @@ class FilterTest extends TestCase
         $this->post('filter', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['observer_id'] = $user->id;
+        $attributes['user_id'] = $user->id;
 
         // Then there should be a new filter in the database
         $this->assertDatabaseHas('filters', $attributes);
@@ -408,7 +408,7 @@ class FilterTest extends TestCase
         // When they hit the endpoint in /filter to create a new filter while
         // passing the necessary data
         $attributes = [
-            'observer_id' => $user->id,
+            'user_id' => $user->id,
             'name' => 'Test filter for unverified user',
             'type' => 2
         ];

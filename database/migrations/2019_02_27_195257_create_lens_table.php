@@ -17,13 +17,14 @@ class CreateLensTable extends Migration
             $table->bigIncrements('id');
             $table->string('name', 255);
             $table->float('factor', 11);
-            $table->unsignedInteger('observer_id');
+            $table->unsignedInteger('user_id');
             $table->boolean('active')->default(true);
             $table->unsignedInteger('observations')->default(0);
 
             $table->timestamps();
 
-            $table->foreign('observer_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')
+                ->on('users')->onDelete('cascade');
         });
     }
 

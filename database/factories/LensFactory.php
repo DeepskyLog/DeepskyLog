@@ -1,6 +1,6 @@
 <?php
 /**
- * Lens Factory. Creates a lens with an observer_id between 1 and 50.
+ * Lens Factory. Creates a lens with an user_id between 1 and 50.
  *
  * PHP Version 7
  *
@@ -18,7 +18,7 @@ $factory->define(
         return [
             'name' => $faker->sentence(3, true),
             'factor' => $faker->randomFloat(2, 0.1, 5.0),
-            'observer_id' => $faker->numberBetween(1, 50)
+            'user_id' => $faker->numberBetween(1, 50)
         ];
     }
 );

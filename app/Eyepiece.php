@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Model;
 class Eyepiece extends Model
 {
     protected $fillable = [
-        'observer_id', 'name', 'focalLength', 'apparentFOV',
+        'user_id', 'name', 'focalLength', 'apparentFOV',
         'maxFocalLength', 'active'
     ];
 
@@ -63,7 +63,7 @@ class Eyepiece extends Model
      *
      * @return BelongsTo the observer this lens belongs to
      */
-    public function observer()
+    public function user()
     {
         // Also method on user: eyepieces()
         return $this->belongsTo('App\User');

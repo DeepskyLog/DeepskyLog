@@ -20,22 +20,22 @@
         <td>{{ _i($filter->typeName()) }}</td>
     </tr>
 
-    @if ($filter->type === 0 || $filter->type ===6) 
-        @if ($filter->color !== 0) 
+    @if ($filter->type === 0 || $filter->type ===6)
+        @if ($filter->color !== 0)
         <tr>
             <td>{{ _i("Color") }}</td>
             <td>{{ _i($filter->colorName()) }}</td>
         </tr>
         @endif
 
-        @if ($filter->wratten !== 0) 
+        @if ($filter->wratten !== 0)
         <tr>
             <td>{{ _i("Wratten number") }}</td>
             <td>{{ $filter->wratten }}</td>
         </tr>
         @endif
 
-        @if ($filter->schott !== 0) 
+        @if ($filter->schott !== 0)
         <tr>
             <td>{{ _i("Schott number") }}</td>
             <td>{{ $filter->schott }}</td>
@@ -45,7 +45,7 @@
 
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td><a href="/users/{{ $filter->observer_id }}">{{  $filter->observer->name }}</a></td>
+        <td><a href="/users/{{ $filter->user_id }}">{{  $filter->user->name }}</a></td>
     </tr>
     <tr>
         <td>{{ _i("Number of observations") }}</td>
@@ -59,7 +59,7 @@
 </table>
 
 @auth
-    @if (Auth::user()->id === $filter->observer_id || Auth::user()->isAdmin())
+    @if (Auth::user()->id === $filter->user_id || Auth::user()->isAdmin())
     <a href="/filter/{{ $filter->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">
             Edit {{  $filter->name }}
