@@ -4,16 +4,16 @@
 
 <!-- code_chunk_output -->
 
-- [Development tricks](#Development-tricks)
-  - [Flash messages](#Flash-messages)
-  - [Internationalization](#Internationalization)
-    - [Translate the strings](#Translate-the-strings)
-  - [Authentication](#Authentication)
-    - [Using policies](#Using-policies)
-    - [Checking user permissions](#Checking-user-permissions)
-  - [Tests](#Tests)
-  - [Select library](#Select-library)
-  - [Datatables](#Datatables)
+- [Development tricks](#development-tricks)
+  - [Flash messages](#flash-messages)
+  - [Internationalization](#internationalization)
+    - [Translate the strings](#translate-the-strings)
+  - [Authentication](#authentication)
+    - [Using policies](#using-policies)
+    - [Checking user permissions](#checking-user-permissions)
+  - [Tests](#tests)
+  - [Select library](#select-library)
+  - [Datatables](#datatables)
 
 <!-- /code_chunk_output -->
 
@@ -39,6 +39,12 @@ laraflash('text')->warning();
 use Coderello\Laraflash\Facades\Laraflash;
 
 laraflash('text')->info();
+```
+
+```php
+use Coderello\Laraflash\Facades\Laraflash;
+
+laraflash('text')->danger();
 ```
 
 ## Internationalization

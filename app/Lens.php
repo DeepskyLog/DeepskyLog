@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Lens extends Model
 {
-    protected $fillable = ['observer_id', 'name', 'factor', 'active'];
+    protected $fillable = ['user_id', 'name', 'factor', 'active'];
 
     /**
      * Activate the lens.
@@ -60,7 +60,7 @@ class Lens extends Model
      *
      * @return BelongsTo the observer this lens belongs to
      */
-    public function observer()
+    public function user()
     {
         // Also method on user: lenses()
         return $this->belongsTo('App\User');

@@ -20,7 +20,7 @@ class CreateFilterTypeTable extends Migration
             }
         );
 
-        // Insert the observation types
+        // Insert the filter types
         DB::table('filter_types')->insert(
             array(
                 'id' => 0,

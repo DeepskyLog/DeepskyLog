@@ -117,11 +117,11 @@ class LensController extends Controller
      */
     public function store(Request $request)
     {
-        $request['observer_id'] = auth()->id();
+        $request['user_id'] = auth()->id();
 
         $validated = request()->validate(
             [
-                'observer_id' => 'required',
+                'user_id' => 'required',
                 'name' => ['required', 'min:6'],
                 'factor' => ['required', 'numeric', 'min:0', 'max:10'],
             ]
@@ -129,7 +129,7 @@ class LensController extends Controller
 
         Lens::create($validated);
 
-        laraflash(_i('Lens "%s" created', $request->name))->success();
+        laraflash(_i('Lens %s created', $request->name))->success();
 
         // View the page with all lenses for the user
         return redirect('/lens');
@@ -173,13 +173,13 @@ class LensController extends Controller
     {
         $this->authorize('update', $lens);
 
-        $request['observer_id'] = $lens->observer_id;
+        $request['user_id'] = $lens->user_id;
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('factor')) {
             request()->validate(
                 [
-                    'observer_id' => 'required',
+                    'user_id' => 'required',
                     'name' => ['required', 'min:6'],
                     'factor' => ['required', 'numeric', 'min:0', 'max:10'],
                 ]
@@ -188,16 +188,16 @@ class LensController extends Controller
             $lens->update(['factor' => $request->get('factor')]);
             $lens->update(['name' => $request->get('name')]);
 
-            laraflash(_i('Lens "%s" updated', $lens->name))->warning();
+            laraflash(_i('Lens %s updated', $lens->name))->warning();
         } else {
             // This is only reached when clicking the active checkbox in the
             // lens overview.
             if ($request->has('active')) {
                 $lens->active();
-                laraflash(_i('Lens "%s" is active', $lens->name))->warning();
+                laraflash(_i('Lens %s is active', $lens->name))->warning();
             } else {
                 $lens->inactive();
-                laraflash(_i('Lens "%s" is not longer active', $lens->name))->warning();
+                laraflash(_i('Lens %s is not longer active', $lens->name))->warning();
             }
         }
 
@@ -216,11 +216,11 @@ class LensController extends Controller
         $this->authorize('update', $lens);
 
         if ($lens->observations > 0) {
-            laraflash(_i('Lens "%s" has observations. Impossible to delete.', $lens->name))->info();
+            laraflash(_i('Lens %s has observations. Impossible to delete.', $lens->name))->info();
         } else {
             $lens->delete();
 
-            laraflash(_i('Lens "%s" deleted', $lens->name))->info();
+            laraflash(_i('Lens %s deleted', $lens->name))->info();
         }
 
         return redirect()->back();

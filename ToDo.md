@@ -4,46 +4,47 @@
 
 ## Moon / sun
 
-+ [ ] Timezones with javascript: https://moment.github.io/luxon/
-+ [ ] Timezones with php: Carbon: https://carbon.nesbot.com/docs/#api-timezone
++ [ ] Timezones with javascript: <https://moment.github.io/luxon/>
++ [ ] Timezones with php: Carbon: <https://carbon.nesbot.com/docs/#api-timezone>
 
-## MESSAGING SYSTEM
+## CODE QUALITY
 
-+ [ ] CODE CLIMATE: https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication
-
-## EYEPIECES
-
-+ [ ] Add number of eyepieces to users/view.blade.php
-
-## LOCATIONS
-
-+ [ ] Add number of locations to users/view.blade.php
-+ [ ] Add the selection of locations to the user settings (users/settings.blade.php)
-+ [ ] Add the standard location to the user details (users/view.blade.php)
-+ [ ] Add the locations to subheader/location.blade.php
-
-## INSTRUMENTS
-
-+ [ ] Add number of instruments to users/view.blade.php
-+ [ ] Add the selection of instruments to the user settings (settings.blade.php)
-+ [ ] Add the standard instrument to the user details (users/view.blade.php)
-+ [ ] Add the instruments to subheader/instrument.blade.php
++ [ ] CODE CLIMATE: <https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication>
 
 ## OBJECTS
 
++ [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
 + [ ] Add new types for the objects
 + [ ] Insert all old objects in the new database
++ [ ] Menu items:
+  + [ ] Quick pick object
+  + [ ] Search for objects
+  + [ ] Add object
+  + [ ] ...
+
+## HOME PAGE
+
++ [ ] Add icon to search objects
++ [ ] Add icon to create observing list
++ [ ] Add icon to add new observation
++ [ ] Add icon to search observations
++ [ ] Add icon to show latest observations
++ [ ] Add icon to download the atlases
 
 ## OBSERVATION LISTS
 
 + [ ] Add planets, sun, ...
 + [ ] Rethink the observation lists
 + [ ] Only receive messages if you opt in for this
++ [ ] Likes / dislikes / ... : <https://github.com/cybercog/laravel-love>
++ [ ] Sort on highest number of likes, add extra likes when someone subscribes to the observation list. Add dislikes if someone describes from the observation list.
++ [ ] Share observation list on twitter / facebook
 
 ## OBSERVATIONS
 
-+ [ ] https://github.com/VanOns/laraberg for editor
-+ [ ] https://jamesmills.co.uk/2019/02/28/laravel-timezone/ for timezones / date
++ [ ] <https://github.com/VanOns/laraberg> for editor
++ [ ] <https://jamesmills.co.uk/2019/02/28/laravel-timezone/> for timezones / date
++ [ ] Share observation using twitter / facebook / instagram
 + [ ] Lenses
   + [ ] Only show delete button if there are no observations
     + [ ] Also update the tests for lens
@@ -54,13 +55,15 @@
 + [ ] Users
   + [ ] Only show delete button if there are no observations
   + [ ] Show number of observations, instruments and lists in users/view.blade.php
-  + [ ] Create the charts in users/view.blade.php
+  + [ ] Create the charts in users/view.blade.php, check if there is a better laravel integration with other charting libraries (in stead of HighCharts).
   + [ ] Add the deepskylog star page in users/view.blade.php
+  + [ ] Likes? Comments? <https://github.com/cybercog/laravel-love>
+  + [ ] Sort on highest number of likes
 
 ## SEEDERS
 
 + [ ] Observations
-  + [ ] Add number of observations to the lenses.
+  + [ ] Add number of observations to the lenses and to the other instrument related things.
 
 ## INSTALLATION
 
@@ -70,3 +73,4 @@
 DB_PASSWORD_OLD
   + Run the seeders: php artisan db:seed
   + Remove the link to /observer_pics
+  + Don't allow the use of google api from everywhere: <https://console.developers.google.com/apis/credentials/key/211?project=deepskylog-1528998866034>

@@ -42,7 +42,11 @@ class DeepskyLogChecks
             // Check if the observer has set a country of residence.
             if (Auth::user()->country === '') {
                 laraflash(
-                    _i('Your country of residence is not set. Please set it in the observer settings.')
+                    _i(
+                        'Your country of residence is not set. Please set it in the %sobserver settings%s',
+                        '<a href="users/'. Auth::user()->id . '/settings">',
+                        '</a>.'
+                    )
                 )->warning();
             }
 
@@ -53,11 +57,21 @@ class DeepskyLogChecks
                 )->warning();
             }
 
-            // Check if a standard instrument is set
-            if (Auth::user()->stdtelescope === 0) {
+            // Check if there are any instruments
+            if (count(Auth::user()->instruments) === 0) {
                 laraflash(
-                    _i('You did not specify a standard instrument. Please select one.')
+                    _i(
+                        'DeepskyLog will be able to calculate the visibility of objects when you %sadd some instruments%s.',
+                        '<a href="/instrument/create">', '</a>'
+                    )
                 )->warning();
+            } else {
+                // Check if a standard instrument is set
+                if (Auth::user()->stdtelescope === 0) {
+                    laraflash(
+                        _i('You did not specify a standard instrument. Please select one.')
+                    )->warning();
+                }
             }
         }
 

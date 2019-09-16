@@ -21,13 +21,13 @@ class CreateFiltersTable extends Migration
                 $table->unsignedInteger('color')->nullable();
                 $table->unsignedInteger('wratten')->nullable();
                 $table->unsignedInteger('schott')->nullable();
-                $table->unsignedInteger('observer_id');
+                $table->unsignedInteger('user_id');
                 $table->boolean('active')->default(true);
                 $table->unsignedInteger('observations')->default(0);
 
                 $table->timestamps();
 
-                $table->foreign('observer_id')->references('id')->on('users')
+                $table->foreign('user_id')->references('id')->on('users')
                     ->onDelete('cascade');
             }
         );

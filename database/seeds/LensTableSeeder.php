@@ -60,7 +60,7 @@ class LensTableSeeder extends Seeder
                         'id' => $lens->id,
                         'name' => html_entity_decode($lens->name),
                         'factor' => $lens->factor,
-                        'observer_id' => $observer[0],
+                        'user_id' => $observer[0],
                         'active' => $lens->lensactive,
                         'created_at' => $date
                     ]

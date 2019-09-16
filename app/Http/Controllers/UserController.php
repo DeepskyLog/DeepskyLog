@@ -457,14 +457,28 @@ class UserController extends Controller
             $user->update(['copyright' => $request->get('copyright')]);
         }
 
-        // Update the copyright
+        // Update the standard instrument
+        if ($request->has('stdinstrument')) {
+            $user->update(
+                ['stdtelescope' => $request->get('stdinstrument')]
+            );
+        }
+
+        // Update the standard instrument
+        if ($request->has('stdlocation')) {
+            $user->update(
+                ['stdlocation' => $request->get('stdlocation')]
+            );
+        }
+
+        // Update the standard atlas
         if ($request->has('standardAtlasCode')) {
             $user->update(
                 ['standardAtlasCode' => $request->get('standardAtlasCode')]
             );
         }
 
-        // Update the copyright
+        // Update imperial / metric
         if ($request->has('showInches')) {
             $user->update(
                 ['showInches' => $request->get('showInches')]
@@ -576,6 +590,6 @@ class UserController extends Controller
             );
         }
 
-        return redirect('/users/' . $id . '/settings');
+        return redirect()->back();
     }
 }

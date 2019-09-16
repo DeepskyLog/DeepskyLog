@@ -43,6 +43,14 @@
             $('.selection').select2({
                 theme: 'bootstrap4',
             });
+
+            $('#defaultInstrument').change(function() {
+                this.form.submit();
+            });
+
+            $('#defaultLocation').change(function() {
+                this.form.submit();
+            });
         </script>
         <!-- App scripts -->
         @stack('scripts')

@@ -1,7 +1,9 @@
 
 @if(sizeof(laraflash()->toArray()) > 0)
-    <br />
-    <div class="container">
-        {!! laraflash()->render() !!}
-    </div>
+    @foreach (laraflash()->toArray() as $flash)
+        <p class="alert alert-{{ $flash['type'] }}">
+        {!! $flash['content'] !!}
+        </p>
+    @endforeach
 @endif
+

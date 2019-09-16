@@ -107,7 +107,7 @@
                 $("div.schott").show();
                 $("div.colorDiv").show();
                 // Set width to 100%
-                $("select").select2({ width: '100%' });
+                //$("select").select2({ width: '100%' });
             } else {
                 $("div.wratten").hide();
                 $("div.schott").hide();
@@ -129,7 +129,7 @@
             $("div.colorDiv").hide();
         }
 
-        $("select").select2({ width: '100%' });
+        //$("select").select2({ width: '100%' });
         $("#filter").select2({
             ajax: {
                 // Do the autocompletion. Get all filters with the requested characters.

@@ -37,14 +37,17 @@ class FilterDataTable extends DataTable
      */
     public function ajax()
     {
+        if ($this->user === 'admin') {
+            $model = Filter::with('user')->select('filters.*');
+        } else {
+            $model = Filter::where(
+                'user_id', auth()->user()->id
+            )->with('user')->select('filters.*');
+        }
+
         return datatables()
-            ->eloquent($this->query())
-            ->addColumn(
-                'observername', function ($filter) {
-                    return '<a href="/observer/' . $filter->observer_id . '">'
-                        . $filter->observer->name . '</a>';
-                }
-            )->editColumn(
+            ->eloquent($model)
+            ->editColumn(
                 'name',
                 '<a href="/filter/{{ $id }}/edit">{{ $name }}</a>'
             )->editColumn(
@@ -59,6 +62,12 @@ class FilterDataTable extends DataTable
                 'observations',
                 '<a href="/observations/filter/{{ $id }}">{{ $observations }}</a>'
             )->editColumn(
+                'user.name',
+                function ($filter) {
+                    return '<a href="/users/' . $filter->user->id . '">'
+                        . $filter->user->name . '</a>';
+                }
+                )->editColumn(
                 'active',
                 '<form method="POST" action="/filter/{{ $id }}">
                     @method("PATCH")
@@ -74,24 +83,8 @@ class FilterDataTable extends DataTable
                         </button>
                         </form>'
             )->rawColumns(
-                ['name', 'observations', 'active', 'delete', 'observername']
+                ['name', 'observations', 'active', 'delete', 'user.name']
             )->make(true);
-    }
-
-    /**
-     * Get query source of dataTable.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function query()
-    {
-        if ($this->user === 'admin') {
-            $filters = Filter::select();
-        } else {
-            $filters = auth()->user()->filters();
-        }
-
-        return $this->applyScopes($filters);
     }
 
     /**
@@ -101,21 +94,9 @@ class FilterDataTable extends DataTable
      */
     public function html()
     {
-        if ($this->user === 'admin') {
-            return $this->builder()
-                ->columns($this->getColumns())->minifiedAjax()
-                ->addColumn(
-                    ['data' => 'observername', 'title' => _i('Name'),
-                    'name' => 'observername',
-                    'orderable' => false,
-                    'searchable' => false,
-                    ]
-                )->parameters($this->getMyParameters());
-        } else {
-            return $this->builder()
-                ->columns($this->getColumns())->minifiedAjax()
-                ->parameters($this->getMyParameters());
-        }
+        return $this->builder()
+            ->columns($this->getColumns())->minifiedAjax()
+            ->parameters($this->getMyParameters());
     }
 
     /**
@@ -163,16 +144,19 @@ class FilterDataTable extends DataTable
                     'title' => _i('Wratten'),
                     'data' => 'wratten',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
                 ['name' => 'schott',
                     'title' => _i('Schott'),
                     'data' => 'schott',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
                 ['name' => 'observations',
                     'title' => _i('Observations'),
                     'data' => 'observations',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
                 ['name' => 'delete',
                     'title' => _i('Delete'),
@@ -180,6 +164,12 @@ class FilterDataTable extends DataTable
                     'orderable' => false,
                     'searchable' => false,
                     'width' => '10%',
+                ],
+                ['name' => 'user.name',
+                    'title' => _i('Observer'),
+                    'data' => 'user.name',
+                    'orderable' => true,
+                    'searchable' => true,
                 ],
             ];
         } else {
@@ -201,19 +191,23 @@ class FilterDataTable extends DataTable
                     'title' => _i('Wratten'),
                     'data' => 'wratten',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
                 ['name' => 'schott',
                     'title' => _i('Schott'),
                     'data' => 'schott',
                     'width' => '10%',
+                    'searchable' => false,
                 ],
                 ['name' => 'observations',
                     'title' => _i('Observations'),
                     'data' => 'observations',
+                    'searchable' => false,
                 ],
                 ['name' => 'active',
                     'title' => _i('Active'),
                     'data' => 'active',
+                    'searchable' => false,
                 ],
                 ['name' => 'delete',
                     'title' => _i('Delete'),
@@ -232,6 +226,6 @@ class FilterDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Lens_' . date('YmdHis');
+        return 'Filter_' . date('YmdHis');
     }
 }

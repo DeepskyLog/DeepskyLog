@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\DB;
 class Filter extends Model
 {
     protected $fillable = [
-        'observer_id', 'name', 'type', 'color', 'wratten', 'schott', 'active'
+        'user_id', 'name', 'type', 'color', 'wratten', 'schott', 'active'
     ];
 
     /**
@@ -63,18 +63,28 @@ class Filter extends Model
      *
      * @return BelongsTo the observer this lens belongs to
      */
-    public function observer()
+    public function user()
     {
         // Also method on user: filters()
         return $this->belongsTo('App\User');
     }
 
+    /**
+     * Returns the name of the filter type.
+     *
+     * @return String The name of the filter type.
+     */
     public function typeName()
     {
         return DB::table('filter_types')
             ->where('id', $this->type)->value('type');
     }
 
+    /**
+     * Returns the name of the filter color.
+     *
+     * @return String The name of the filter color.
+     */
     public function colorName()
     {
         return DB::table('filter_colors')

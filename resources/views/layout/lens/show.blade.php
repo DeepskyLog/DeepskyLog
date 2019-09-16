@@ -21,7 +21,7 @@
     </tr>
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td><a href="/users/{{ $lens->observer_id }}">{{  $lens->observer->name }}</a></td>
+        <td><a href="/users/{{ $lens->user_id }}">{{  $lens->user->name }}</a></td>
     </tr>
     <tr>
         <td>{{ _i("Number of observations") }}</td>
@@ -35,10 +35,10 @@
 </table>
 
 @auth
-    @if (Auth::user()->id === $lens->observer_id || Auth::user()->isAdmin())
+    @if (Auth::user()->id === $lens->user_id || Auth::user()->isAdmin())
     <a href="/lens/{{  $lens->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">
-            Edit {{  $lens->name }}
+            {{ _i('Edit') }} {{  $lens->name }}
         </button>
     </a>
     @endif

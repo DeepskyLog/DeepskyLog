@@ -56,6 +56,70 @@ Route::get('/filter/{filter}', 'FilterController@show')->name('filter.show');
 
 Route::get('/getFilterJson/{id}', 'FilterController@getFilterJson');
 
+Route::get('/eyepiece/autocomplete', 'EyepieceController@dataAjax')
+    ->name('eyepiece.dataAjax');
+
+Route::get('/eyepiece/create/{eyepiece}', 'EyepieceController@create')
+    ->middleware('verified')
+    ->name('eyepiece.create');
+
+Route::get('/eyepiece/admin', 'EyepieceController@indexAdmin')
+    ->name('eyepiece.indexAdmin');
+
+Route::resource(
+    'eyepiece',
+    'EyepieceController',
+    ['parameters' => ['eyepiece' => 'eyepiece']]
+)->middleware('verified')->except('show');
+
+Route::get('/eyepiece/{eyepiece}', 'EyepieceController@show')->name('eyepiece.show');
+
+Route::get('/getEyepieceJson/{id}', 'EyepieceController@getEyepieceJson');
+
+Route::get('/instrument/autocomplete', 'InstrumentController@dataAjax')
+    ->name('instrument.dataAjax');
+
+Route::get('/instrument/create/{instrument}', 'InstrumentController@create')
+    ->middleware('verified')
+    ->name('instrument.create');
+
+Route::get('/instrument/admin', 'InstrumentController@indexAdmin')
+    ->name('instrument.indexAdmin');
+
+Route::resource(
+    'instrument',
+    'InstrumentController',
+    ['parameters' => ['instrument' => 'instrument']]
+)->middleware('verified')->except('show');
+
+Route::get('/instrument/{instrument}', 'InstrumentController@show')
+    ->name('instrument.show');
+
+Route::get('/getInstrumentJson/{id}', 'InstrumentController@getInstrumentJson');
+
+Route::get('/location/autocomplete', 'LocationController@dataAjax')
+    ->name('location.dataAjax');
+
+Route::get('/location/create/{location}', 'LocationController@create')
+    ->middleware('verified')
+    ->name('location.create');
+
+Route::get('/location/admin', 'LocationController@indexAdmin')
+    ->name('location.indexAdmin');
+
+Route::get('/location/lightpollutionmap', 'LocationController@lightpollutionmap');
+
+Route::resource(
+    'location',
+    'LocationController',
+    ['parameters' => ['location' => 'location']]
+)->middleware('verified')->except('show');
+
+Route::get('/location/{location}', 'LocationController@show')
+    ->name('location.show');
+
+Route::get('/getLocationJson/{id}', 'LocationController@getLocationJson');
+
 Auth::routes(['verify' => true]);
 
 Route::post('/users/upload', 'UserController@upload')->name('users.upload');
