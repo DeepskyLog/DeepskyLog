@@ -27,6 +27,13 @@ use Illuminate\Support\Facades\Auth;
  */
 class Location extends Model
 {
+    protected $fillable = [
+        'user_id', 'name', 'active',
+        'longitude', 'latitude', 'country',
+        'elevation', 'timezone', 'limitingMagnitude',
+        'skyBackground', 'bortle'
+    ];
+
     /**
      * Adds the link to the observer.
      *
@@ -36,6 +43,32 @@ class Location extends Model
     {
         // Also method on user: locations()
         return $this->belongsTo('App\User');
+    }
+
+    /**
+     * Activate the location.
+     *
+     * @param bool $active true to activate the location, false to deactivate
+     *
+     * @return None
+     */
+    public function active($active = true)
+    {
+        if ($active === false) {
+            $this->update(['active' => 0]);
+        } else {
+            $this->update(compact('active'));
+        }
+    }
+
+    /**
+     * Deactivate the location.
+     *
+     * @return None
+     */
+    public function inactive()
+    {
+        $this->active(false);
     }
 
     /**

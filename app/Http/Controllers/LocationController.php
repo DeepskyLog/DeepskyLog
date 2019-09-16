@@ -124,19 +124,29 @@ class LocationController extends Controller
         $validated = request()->validate(
             [
                 'user_id' => 'required',
-                'name' => 'required|min:6',
-                'type' => 'required',
-                'diameter' => 'required|numeric|gt:0',
-                'fd' => 'gte:1',
-                'fixedMagnification' => 'gte:0'
+                'name' => 'required|min:4',
+                'latitude' => 'required', 'longitude' => 'required',
+                'country' => 'required',
+                'elevation' => 'required', 'timezone' => 'required'
             ]
         );
 
         $location = Location::create($validated);
 
-        if (Auth::user()->showInches) {
-            $location->update(['diameter' => $request->get('diameter') * 25.4]);
+        if ($request->get('timezone') == "undefined") {
+            $location->update(
+                ['timezone' =>
+                    'UTC']
+            );
         }
+        if ($request->get('lm')) {
+            $location->update(
+                ['limitingMagnitude' =>
+                    $request->get('lm') + Auth::user()->fstOffset]
+            );
+        }
+        $location->update(['skyBackground' => $request->get('sb')]);
+        $location->update(['bortle' => $request->get('bortle')]);
 
         laraflash(_i('Location %s created', $request->name))->success();
 
@@ -174,6 +184,23 @@ class LocationController extends Controller
     }
 
     /**
+     * Get the value from lightpollutionmap.info
+     *
+     * @param Request $request The request with the longitude and latitude
+     *
+     * @return The value from lightpollutionmap.info
+     */
+    public function lightpollutionmap(Request $request)
+    {
+        return file_get_contents(
+            "https://www.lightpollutionmap.info/QueryRaster/" .
+             "?ql=wa_2015&qt=point&qd=" . $request->longitude
+            . "," . $request->latitude . "&key="
+            . env('LIGHTPOLLUTION_KEY')
+        );
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param Request  $request  The request with all information
@@ -184,36 +211,42 @@ class LocationController extends Controller
     public function update(Request $request, Location $location)
     {
         $this->authorize('update', $location);
-
         $request['user_id'] = $location->user_id;
 
         // If the factor is set, the name should also be set in the form.
-        if ($request->has('type')) {
+        if ($request->has('latitude')) {
             request()->validate(
                 [
                     'user_id' => 'required',
-                    'name' => 'required|min:6',
-                    'type' => 'required',
-                    'diameter' => 'required|numeric|gt:0',
-                    'fd' => 'gte:1',
-                    'fixedMagnification' => 'gte:0'
+                    'name' => 'required|min:4',
+                    'latitude' => 'required', 'longitude' => 'required',
+                    'country' => 'required',
+                    'elevation' => 'required', 'timezone' => 'required'
                 ]
             );
 
-            $location->update(['type' => $request->get('type')]);
             $location->update(['name' => $request->get('name')]);
+            $location->update(['latitude' => $request->get('latitude')]);
+            $location->update(['longitude' => $request->get('longitude')]);
+            $location->update(['country' => $request->get('country')]);
+            $location->update(['elevation' => $request->get('elevation')]);
 
-            if (Auth::user()->showInches) {
+            if ($request->get('timezone') == "undefined") {
                 $location->update(
-                    ['diameter' => $request->get('diameter') * 25.4]
+                    ['timezone' =>
+                        'UTC']
                 );
             } else {
-                $location->update(['diameter' => $request->get('diameter')]);
+                $location->update(['timezone' => $request->get('timezone')]);
             }
-            $location->update(['fd' => $request->get('fd')]);
-            $location->update(
-                ['fixedMagnification' => $request->get('fixedMagnification')]
-            );
+            if ($request->get('lm')) {
+                $location->update(
+                    ['limitingMagnitude' =>
+                        $request->get('lm') + Auth::user()->fstOffset]
+                );
+            }
+            $location->update(['skyBackground' => $request->get('sb')]);
+            $location->update(['bortle' => $request->get('bortle')]);
 
             laraflash(_i('Location %s updated', $location->name))->warning();
         } else {
@@ -225,10 +258,10 @@ class LocationController extends Controller
                     _i('Location %s is active', $location->name)
                 )->warning();
             } else {
-                if ($location->id == Auth::user()->stdtelescope) {
+                if ($location->id == Auth::user()->stdlocation) {
                     laraflash(
                         _i(
-                            'Impossible to deactive the default location %s',
+                            'Impossible to deactivate the default location %s',
                             $location->name
                         )
                     )->danger();

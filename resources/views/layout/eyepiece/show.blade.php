@@ -51,7 +51,7 @@
     @if (Auth::user()->id === $eyepiece->user_id || Auth::user()->isAdmin())
     <a href="/eyepiece/{{ $eyepiece->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">
-            Edit {{  $eyepiece->name }}
+            {{ _i('Edit') }} {{  $eyepiece->name }}
         </button>
     </a>
     @endif

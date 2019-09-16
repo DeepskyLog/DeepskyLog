@@ -108,9 +108,15 @@ class LocationDataTable extends DataTable
                             . $location->id
                             . '" checked="checked" onclick="submit();" />';
                     } else {
-                        return '<input type="radio" name="stdlocation" value="'
+                        if ($location->active) {
+                            return '<input type="radio" name="stdlocation" value="'
                             . $location->id
                             . '" onclick="submit();" />';
+                        } else {
+                            return '<input type="radio" name="stdlocation" value="'
+                            . $location->id
+                            . '" disabled />';
+                        }
                     }
                 }
             )->addColumn(

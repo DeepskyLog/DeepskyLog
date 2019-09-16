@@ -38,7 +38,7 @@
     @if (Auth::user()->id === $lens->user_id || Auth::user()->isAdmin())
     <a href="/lens/{{  $lens->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">
-            Edit {{  $lens->name }}
+            {{ _i('Edit') }} {{  $lens->name }}
         </button>
     </a>
     @endif

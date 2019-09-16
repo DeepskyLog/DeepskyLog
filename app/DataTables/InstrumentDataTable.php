@@ -123,9 +123,15 @@ class InstrumentDataTable extends DataTable
                             . $instrument->id
                             . '" checked="checked" onclick="submit();" />';
                     } else {
-                        return '<input type="radio" name="stdinstrument" value="'
+                        if ($instrument->active) {
+                            return '<input type="radio" name="stdinstrument" value="'
                             . $instrument->id
                             . '" onclick="submit();" />';
+                        } else {
+                            return '<input type="radio" name="stdinstrument" value="'
+                            . $instrument->id
+                            . '" disabled />';
+                        }
                     }
                 }
             )->addColumn(

@@ -11,23 +11,16 @@
 
 + [ ] CODE CLIMATE: <https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication>
 
-## LOCATIONS
-
-+ [ ] Add $fillable to App/Location.php
-+ [ ] Write the page to add / adapt a location -> put lm, sqm and bortle in database
-+ [ ] Write the page to view one location (also use google maps here!)
-+ [ ] Add google maps when adding / viewing a location
-+ [ ] Add automatic sqm
-
-## All instrumentation
-
-+ [ ] Try to add the observername to the database
-
 ## OBJECTS
 
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
 + [ ] Add new types for the objects
 + [ ] Insert all old objects in the new database
++ [ ] Menu items:
+  + [ ] Quick pick object
+  + [ ] Search for objects
+  + [ ] Add object
+  + [ ] ...
 
 ## HOME PAGE
 
@@ -80,3 +73,4 @@
 DB_PASSWORD_OLD
   + Run the seeders: php artisan db:seed
   + Remove the link to /observer_pics
+  + Don't allow the use of google api from everywhere: <https://console.developers.google.com/apis/credentials/key/211?project=deepskylog-1528998866034>

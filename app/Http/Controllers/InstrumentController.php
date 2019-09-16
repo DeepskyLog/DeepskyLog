@@ -228,7 +228,7 @@ class InstrumentController extends Controller
                 if ($instrument->id == Auth::user()->stdtelescope) {
                     laraflash(
                         _i(
-                            'Impossible to deactive the default instrument %s',
+                            'Impossible to deactivate the default instrument %s',
                             $instrument->name
                         )
                     )->danger();

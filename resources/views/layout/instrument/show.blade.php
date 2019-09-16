@@ -64,7 +64,7 @@
     @if (Auth::user()->id === $instrument->user_id || Auth::user()->isAdmin())
     <a href="/instrument/{{ $instrument->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">
-            Edit {{  $instrument->name }}
+            {{ _i('Edit') }} {{  $instrument->name }}
         </button>
     </a>
     @endif

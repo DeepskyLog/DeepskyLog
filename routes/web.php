@@ -107,6 +107,8 @@ Route::get('/location/create/{location}', 'LocationController@create')
 Route::get('/location/admin', 'LocationController@indexAdmin')
     ->name('location.indexAdmin');
 
+Route::get('/location/lightpollutionmap', 'LocationController@lightpollutionmap');
+
 Route::resource(
     'location',
     'LocationController',

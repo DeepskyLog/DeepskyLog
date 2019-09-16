@@ -62,7 +62,7 @@
     @if (Auth::user()->id === $filter->user_id || Auth::user()->isAdmin())
     <a href="/filter/{{ $filter->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">
-            Edit {{  $filter->name }}
+            {{ _i('Edit') }} {{  $filter->name }}
         </button>
     </a>
     @endif
