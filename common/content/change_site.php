@@ -209,30 +209,22 @@ function changeSite()
                 event.preventDefault(); 
 
                 // Get the value from the lightpollution.info site
-                // We use yql. This will work cross-domain and will return json.
-                url = "https://www.lightpollutionmap.info/" 
-                    + "QueryRaster/?ql=wa_2015&qt=point&qd=" 
-                    + $("#longitude").val() + "," 
-                    + $("#latitude").val() + "&key=6hDh3zLAIhFXdpaX";
-                var yql = "https://query.yahooapis.com/v1/public/yql?q=" 
-                    + encodeURIComponent(
-                        "select * from htmlstring where url=\"" + url 
-                        + "\" and xpath=\"//body\""
-                    ) + "&format=json"
-                + "&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";  
+                url = "/lightpollutionmap.php?longitude=" +
+                + $("#longitude").val() + "&latitude="
+                + $("#latitude").val();
 
-                $.getJSON(yql,function(data){
-                    data = data.query.results.result;
-                    // Remove the html tags and convert to a number
-                    lpNumber = Number(data.replace(/<\/?[^>]+(>|$)/g, ""));
-                    // We need to add 0.132025599479675, which is the natural sky
-                    // brightness.
-                    lpNumber += 0.132025599479675;
-                    sqm = Math.log10(lpNumber / 108000000) / -0.4;
+            $.getJSON(url,function(data) {
+                // Remove the html tags and convert to a number
+                lpNumber = Number(data);
+                // We need to add 0.132025599479675, which is the natural sky
+                // brightness.
+                lpNumber += 0.132025599479675;
+                sqm = Math.log10(lpNumber / 108000000) / -0.4;
 
-                    // Set the sqm in the field and update the field
-                    $("#sqm").val(Math.round(sqm * 100) / 100).change();
-                });
+                // Set the sqm in the field and update the field
+                $("#sqm").val(Math.round(sqm * 100) / 100).change();
+
+            });
             });
         });
         </script>';
