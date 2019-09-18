@@ -43,7 +43,8 @@ class InstrumentDataTable extends DataTable
             $model = Instrument::with('user')->select('instruments.*');
         } else {
             $model = Instrument::where(
-                'user_id', auth()->user()->id
+                'user_id',
+                auth()->user()->id
             )->with('user')->select('instruments.*');
         }
 
@@ -66,13 +67,9 @@ class InstrumentDataTable extends DataTable
             ->editColumn(
                 'name',
                 function ($instrument) {
-                    if ($this->user === 'admin') {
-                        return $instrument->name;
-                    } else {
-                        return '<a href="/instrument/' .
-                            $instrument->id . '/edit">' .
-                            $instrument->name . '</a>';
-                    }
+                    return '<a href="/instrument/' .
+                        $instrument->id . '">' .
+                        $instrument->name . '</a>';
                 }
             )->editColumn(
                 'type',

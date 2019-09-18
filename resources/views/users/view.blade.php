@@ -68,7 +68,7 @@
                 <td> {{ _i("Default instrument") }} </td>
                 <td>
                     @if ($user->stdtelescope !== 0)
-                        <a href="/instrument/{{ Auth::user()->stdtelescope }}">
+                        <a href="/instrument/{{ $user->stdtelescope }}">
                             {{ \App\Instrument::where(['id' => $user->stdtelescope])->first()->name }}
                         </a>
                     @endif
