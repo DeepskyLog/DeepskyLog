@@ -175,6 +175,7 @@
             theme: "fas",
             allowedFileTypes: ['image'],    // allow only images
             'showUpload': false,
+            maxFileSize: 10000,
             @if ($filter->id != null && App\Filter::find($filter->id)->getFirstMedia('filter') != null)
             initialPreview: [
                 '<img class="file-preview-image kv-preview-data" src="/filter/{{ $filter->id }}/getImage">'

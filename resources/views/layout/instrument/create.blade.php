@@ -186,6 +186,7 @@
             theme: "fas",
             allowedFileTypes: ['image'],    // allow only images
             'showUpload': false,
+            maxFileSize: 10000,
             @if ($instrument->id != null && App\Instrument::find($instrument->id)->getFirstMedia('instrument') != null)
             initialPreview: [
                 '<img class="file-preview-image kv-preview-data" src="/instrument/{{ $instrument->id }}/getImage">'
