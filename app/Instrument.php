@@ -1,22 +1,24 @@
 <?php
 
-/**
- * Instrument eloquent model.
- *
- * PHP Version 7
- *
- * @category Instruments
- * @package  DeepskyLog
- * @author   Wim De Meester <deepskywim@gmail.com>
- * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
- */
+ /**
+  * Instrument eloquent model.
+  *
+  * PHP Version 7
+  *
+  * @category Instruments
+  * @package  DeepskyLog
+  * @author   Wim De Meester <deepskywim@gmail.com>
+  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+  * @link     http://www.deepskylog.org
+  */
 
  namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
 /**
  * Instrument eloquent model.
@@ -27,8 +29,10 @@ use Illuminate\Support\Facades\Auth;
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class Instrument extends Model
+class Instrument extends Model implements HasMedia
 {
+    use HasMediaTrait;
+
     protected $fillable = [
         'user_id', 'name', 'diameter', 'type',
         'fd', 'fixedMagnification', 'active'
@@ -74,7 +78,7 @@ class Instrument extends Model
     /**
      * Returns the name of the instrument type.
      *
-     * @return String The name of the instrument type.
+     * @return String the name of the instrument type
      */
     public function typeName()
     {
@@ -85,7 +89,7 @@ class Instrument extends Model
     /**
      * Return all instruments, sorted by type for use in a selection.
      *
-     * @return None The method print the optgroup and option tags.
+     * @return None the method print the optgroup and option tags
      */
     public static function getInstrumentOptions()
     {
@@ -93,7 +97,7 @@ class Instrument extends Model
         $types = DB::table('instrument_types')->get();
         $count = 0;
 
-        foreach ($types as $typeid=>$type) {
+        foreach ($types as $typeid => $type) {
             $instruments = \App\Instrument::where(
                 ['user_id' => Auth::user()->id]
             )->where(['type' => $typeid])->where(['active' => 1])->pluck('id', 'name');

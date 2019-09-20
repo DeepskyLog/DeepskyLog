@@ -15,6 +15,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
 /**
  * Lens eloquent model.
@@ -25,8 +27,10 @@ use Illuminate\Database\Eloquent\Model;
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class Lens extends Model
+class Lens extends Model implements HasMedia
 {
+    use HasMediaTrait;
+
     protected $fillable = ['user_id', 'name', 'factor', 'active'];
 
     /**

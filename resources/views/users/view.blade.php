@@ -4,9 +4,12 @@
 
 @section('content')
 
-<h3>{{ $user->name }}</h3>
-<img width="100" style="border-radius: 20%" src="/users/{{ $user->id }}/getImage">
-
+<table>
+    <tr>
+        <td><h3>{{ $user->name }}</h3></td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="100" style="border-radius: 20%" src="/users/{{ $user->id }}/getImage"></td>
+    </tr>
+</table>
 <hr>
 
 <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">

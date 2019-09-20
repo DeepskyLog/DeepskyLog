@@ -148,6 +148,14 @@ class LocationController extends Controller
         $location->update(['skyBackground' => $request->get('sb')]);
         $location->update(['bortle' => $request->get('bortle')]);
 
+        if ($request->picture != null) {
+            // Add the picture
+            Location::find($location->id)
+                ->addMedia($request->picture->path())
+                ->usingFileName($location->id . '.png')
+                ->toMediaCollection('location');
+        }
+
         laraflash(_i('Location %s created', $request->name))->success();
 
         // View the page with all locations for the user
@@ -248,6 +256,21 @@ class LocationController extends Controller
             $location->update(['skyBackground' => $request->get('sb')]);
             $location->update(['bortle' => $request->get('bortle')]);
 
+            if ($request->picture != null) {
+                if (Location::find($location->id)->getFirstMedia('location') != null
+                ) {
+                    // First remove the current image
+                    Location::find($location->id)
+                    ->getFirstMedia('location')
+                    ->delete();
+                }
+                // Update the picture
+                Location::find($location->id)
+                    ->addMedia($request->picture->path())
+                    ->usingFileName($location->id . '.png')
+                    ->toMediaCollection('location');
+            }
+
             laraflash(_i('Location %s updated', $location->name))->warning();
         } else {
             // This is only reached when clicking the active checkbox in the
@@ -278,6 +301,45 @@ class LocationController extends Controller
     }
 
     /**
+     * Returns the image of the location.
+     *
+     * @param int $id The id of the location
+     *
+     * @return MediaObject the image of the location
+     */
+    public function getImage($id)
+    {
+        if (Location::find($id)->hasMedia('location')) {
+            return Location::find($id)
+                ->getFirstMedia('location');
+        } else {
+            Location::find($id)
+                ->addMediaFromUrl(asset('images/location.png'))
+                ->usingFileName($id . '.png')
+                ->toMediaCollection('location');
+
+            return Location::find($id)
+                ->getFirstMedia('location');
+        }
+    }
+
+    /**
+     * Remove the image of the location
+     *
+     * @param integer $id The id of the location
+     *
+     * @return None
+     */
+    public function deleteImage($id)
+    {
+        Location::find($id)
+            ->getFirstMedia('location')
+            ->delete();
+
+        return '{}';
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param Location $location The location to remove
@@ -303,6 +365,11 @@ class LocationController extends Controller
                 )
             )->danger();
         } else {
+            if (Location::find($location->id)->hasMedia('location')) {
+                Location::find($location->id)
+                    ->getFirstMedia('location')
+                    ->delete();
+            }
             $location->delete();
 
             laraflash(_i('Location %s deleted', $location->name))->info();

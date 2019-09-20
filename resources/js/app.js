@@ -35,15 +35,10 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 require( 'password-strength-meter/dist/password.min.js' );
 
-// Filepond
-window.FilePondPluginImagePreview = require('filepond-plugin-image-preview');
-window.FilePondPluginFileValidateType = require('filepond-plugin-file-validate-type');
-window.FilePondPluginImageExifOrientation = require('filepond-plugin-image-exif-orientation');
-window.FilePondPluginImageCrop = require('filepond-plugin-image-crop');
-window.FilePondPluginImageResize = require('filepond-plugin-image-resize');
-window.FilePondPluginImageTransform = require('filepond-plugin-image-transform');
-window.FilePond = require('filepond/dist/filepond.min.js');
-require("jquery-filepond/filepond.jquery.js");
+// bootstrap-fileinput
+require( 'popper.js/dist/umd/popper.min.js' );
+require( 'bootstrap-fileinput/js/fileinput.min.js');
+require( 'bootstrap-fileinput/themes/fas/theme.min.js');
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -19,10 +19,10 @@
 </h4>
 
 @if ($update)
-    <form role="form" action="/filter/{{ $filter->id }}" method="POST">
+    <form role="form" action="/filter/{{ $filter->id }}" method="POST" enctype="multipart/form-data">
     @method('PATCH')
 @else
-    <form role="form" action="/filter" method="POST">
+    <form role="form" action="/filter" method="POST" enctype="multipart/form-data">
 @endif
     @csrf
     <div>
@@ -89,6 +89,12 @@
                 <input type="string" class="form-control {{ $errors->has('schott') ? 'is-invalid' : '' }}" maxlength="5" name="schott" size="5" value="@if ($filter->schott > 0){{ $filter->schott }}@else{{ old('schott') }}@endif" />
             </div>
         </div>
+
+        {!! _i('Upload a picture of your filter.') !!}
+
+        <input id="picture" name="picture" type="file">
+
+        <br />
 
         <input type="submit" class="btn btn-success" name="add" value="@if ($update){{ _i("Change filter") }}@else{{ _i("Add filter") }}@endif" />
     </div>
@@ -163,5 +169,22 @@
             $('.schott input').val(data.schott);
         });
     });
+
+    $("#picture").fileinput(
+        {
+            theme: "fas",
+            allowedFileTypes: ['image'],    // allow only images
+            'showUpload': false,
+            @if ($filter->id != null && App\Filter::find($filter->id)->getFirstMedia('filter') != null)
+            initialPreview: [
+                '<img class="file-preview-image kv-preview-data" src="/filter/{{ $filter->id }}/getImage">'
+            ],
+            initialPreviewConfig: [
+                {caption: "{{ App\Filter::find($filter->id)->getFirstMedia('filter')->file_name }}", size: {{ App\Filter::find($filter->id)->getFirstMedia('filter')->size }}, url: "/filter/{{ $filter->id }}/deleteImage", key: 1},
+            ],
+            @endif
+        }
+    );
+
 </script>
 @endpush

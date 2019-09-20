@@ -347,31 +347,6 @@ class UserController extends Controller
     }
 
     /**
-     * Upload the image for the observer.
-     *
-     * @return None
-     */
-    public function upload()
-    {
-        User::find(auth()->user()->id)
-            ->addMediaFromRequest('filepond')
-            ->usingFileName(auth()->user()->id . '.png')
-            ->toMediaCollection('observer');
-    }
-
-    /**
-     * Delete the image for the observer.
-     *
-     * @return None
-     */
-    public function delete()
-    {
-        User::find(auth()->user()->id)
-            ->getFirstMedia('observer')
-            ->delete();
-    }
-
-    /**
      * Returns the image of the observer.
      *
      * @param int $id The id of the observer
@@ -392,6 +367,22 @@ class UserController extends Controller
             return User::find($id)
                 ->getFirstMedia('observer');
         }
+    }
+
+    /**
+     * Remove the image of the observer
+     *
+     * @param integer $id The id of the observer
+     *
+     * @return None
+     */
+    public function deleteImage($id)
+    {
+        User::find($id)
+            ->getFirstMedia('observer')
+            ->delete();
+
+        return '{}';
     }
 
     /**
@@ -588,6 +579,23 @@ class UserController extends Controller
             $user->update(
                 ['observationlanguage' => $request->get('observationlanguage')]
             );
+        }
+
+        // Update the image
+        if ($request->picture != null) {
+            if (User::find($user->id)->getFirstMedia('observer') != null
+            ) {
+                // First remove the current image
+                User::find($user->id)
+                ->getFirstMedia('observer')
+                ->delete();
+            }
+
+            // Update the picture
+            User::find($user->id)
+                ->addMedia($request->picture->path())
+                ->usingFileName($user->id . '.png')
+                ->toMediaCollection('observer');
         }
 
         return redirect()->back();

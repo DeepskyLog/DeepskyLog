@@ -38,10 +38,10 @@
             <br />
 
             @if ($update)
-                <form role="form" action="/location/{{ $location->id }}" method="POST">
+                <form role="form" action="/location/{{ $location->id }}" method="POST" enctype="multipart/form-data">
                 @method('PATCH')
             @else
-                <form role="form" action="/location" method="POST">
+                <form role="form" action="/location" method="POST" enctype="multipart/form-data">
             @endif
             @csrf
 
@@ -80,7 +80,7 @@
             <tr>
                 <td>
                     <div class="form-inline">
-                        <input type="number" min="0" max="8.0" step="0.1" class="form-control" maxlength="5" id="lm" name="lm" size="5" value="@if ($location->limitingMagnitude){{ $location->limitingMagnitude - Auth::user()->fstOffset }}@else{{ old('lm') }}@endif"/>
+                        <input type="number" min="0" max="8.0" step="0.01" class="form-control" maxlength="5" id="lm" name="lm" size="5" value="@if ($location->limitingMagnitude){{ $location->limitingMagnitude - Auth::user()->fstOffset }}@else{{ old('lm') }}@endif"/>
                     </div>
                 </td>
 
@@ -109,7 +109,16 @@
                 <td>
                 </td>
             </table>
+            <li>
+                {!! _i('Upload a picture of your location.') !!}
+            </li>
+
+            <input id="picture" name="picture" type="file">
+
         </ol>
+
+
+        <br />
 
         <input type="submit" class="btn btn-success" name="add" value="@if ($update){{ _i("Change location") }}@else{{ _i("Add location") }}@endif" />
 
@@ -118,11 +127,28 @@
     <br />
     </div>
 </form>
-
-
 @endsection
 
 @push('scripts')
+
+<script>
+        $("#picture").fileinput(
+            {
+                theme: "fas",
+                allowedFileTypes: ['image'],    // allow only images
+                'showUpload': false,
+                @if ($location->id != null && App\Location::find($location->id)->getFirstMedia('location') != null)
+                initialPreview: [
+                    '<img class="file-preview-image kv-preview-data" src="/location/{{ $location->id }}/getImage">'
+                ],
+                initialPreviewConfig: [
+                    {caption: "{{ App\Location::find($location->id)->getFirstMedia('location')->file_name }}", size: {{ App\Location::find($location->id)->getFirstMedia('location')->size }}, url: "/location/{{ $location->id }}/deleteImage", key: 1},
+                ],
+                @endif
+            }
+        );
+
+    </script>
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ env("GOOGLEMAPS_KEY") }}&v=3.exp&language=en&libraries=places">
 
