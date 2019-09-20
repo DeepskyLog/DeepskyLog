@@ -19,10 +19,10 @@
 </h4>
 
 @if ($update)
-    <form role="form" action="/instrument/{{ $instrument->id }}" method="POST">
+    <form role="form" action="/instrument/{{ $instrument->id }}" method="POST" enctype="multipart/form-data">
     @method('PATCH')
 @else
-    <form role="form" action="/instrument" method="POST">
+    <form role="form" action="/instrument" method="POST" enctype="multipart/form-data">
 @endif
     @csrf
     <div>
@@ -97,13 +97,17 @@
                 <div class="input-group-append">
                     <span class="input-group-text" id="name-addon">x</span>
                 </div>
-        </div>
+            </div>
         </div>
 
+        {!! _i('Upload a picture of your instrument.') !!}
+
+        <input id="picture" name="picture" type="file">
+
+        <br />
         <input type="submit" class="btn btn-success" name="add" value="@if ($update){{ _i("Change instrument") }}@else{{ _i("Add instrument") }}@endif" />
     </div>
 </form>
-
 
 @endsection
 
@@ -176,5 +180,21 @@
             $('.fixedMagnification input').val(data.fixedMagnification);
         });
     });
+
+    $("#picture").fileinput(
+        {
+            theme: "fas",
+            allowedFileTypes: ['image'],    // allow only images
+            'showUpload': false,
+            @if ($instrument->id != null && App\Instrument::find($instrument->id)->getFirstMedia('instrument') != null)
+            initialPreview: [
+                '<img class="file-preview-image kv-preview-data" src="/instrument/{{ $instrument->id }}/getImage">'
+            ],
+            initialPreviewConfig: [
+                {caption: "{{ App\Instrument::find($instrument->id)->getFirstMedia('instrument')->file_name }}", size: {{ App\Instrument::find($instrument->id)->getFirstMedia('instrument')->size }}, url: "/instrument/{{ $instrument->id }}/deleteImage", key: 1},
+            ],
+            @endif
+        }
+    );
 </script>
 @endpush

@@ -129,7 +129,15 @@ class FilterController extends Controller
             ]
         );
 
-        Filter::create($validated);
+        $filter = Filter::create($validated);
+
+        if ($request->picture != null) {
+            // Add the picture
+            Filter::find($filter->id)
+                ->addMedia($request->picture->path())
+                ->usingFileName($filter->id . '.png')
+                ->toMediaCollection('filter');
+        }
 
         laraflash(_i('Filter %s created', $request->name))->success();
 
@@ -194,6 +202,22 @@ class FilterController extends Controller
             $filter->update(['wratten' => $request->get('wratten')]);
             $filter->update(['schott' => $request->get('schott')]);
 
+            if ($request->picture != null) {
+                if (Filter::find($filter->id)->getFirstMedia('filter') != null
+                ) {
+                    // First remove the current image
+                    Filter::find($filter->id)
+                    ->getFirstMedia('filter')
+                    ->delete();
+                }
+
+                // Update the picture
+                Filter::find($filter->id)
+                    ->addMedia($request->picture->path())
+                    ->usingFileName($filter->id . '.png')
+                    ->toMediaCollection('filter');
+            }
+
             laraflash(_i('Filter %s updated', $filter->name))->warning();
         } else {
             // This is only reached when clicking the active checkbox in the
@@ -213,6 +237,45 @@ class FilterController extends Controller
     }
 
     /**
+     * Returns the image of the filter.
+     *
+     * @param int $id The id of the filter
+     *
+     * @return MediaObject the image of the filter
+     */
+    public function getImage($id)
+    {
+        if (Filter::find($id)->hasMedia('filter')) {
+            return Filter::find($id)
+                ->getFirstMedia('filter');
+        } else {
+            Filter::find($id)
+                ->addMediaFromUrl(asset('images/filter.jpg'))
+                ->usingFileName($id . '.png')
+                ->toMediaCollection('filter');
+
+            return Filter::find($id)
+                ->getFirstMedia('filter');
+        }
+    }
+
+    /**
+     * Remove the image of the filter
+     *
+     * @param integer $id The id of the filter
+     *
+     * @return None
+     */
+    public function deleteImage($id)
+    {
+        Filter::find($id)
+            ->getFirstMedia('filter')
+            ->delete();
+
+        return '{}';
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param Filter $filter The filter to remove
@@ -228,6 +291,12 @@ class FilterController extends Controller
                 _i('Filter %s has observations. Impossible to delete.', $filter->name)
             )->info();
         } else {
+            if (Filter::find($filter->id)->hasMedia('filter')) {
+                Filter::find($filter->id)
+                    ->getFirstMedia('filter')
+                    ->delete();
+            }
+
             $filter->delete();
 
             laraflash(_i('Filter %s deleted', $filter->name))->info();

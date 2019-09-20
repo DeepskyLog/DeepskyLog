@@ -49,7 +49,7 @@ class FilterDataTable extends DataTable
             ->eloquent($model)
             ->editColumn(
                 'name',
-                '<a href="/filter/{{ $id }}/edit">{{ $name }}</a>'
+                '<a href="/filter/{{ $id }}">{{ $name }}</a>'
             )->editColumn(
                 'type', function ($filter) {
                     return $filter->typeName();

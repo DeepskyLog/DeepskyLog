@@ -19,10 +19,10 @@
 </h4>
 
 @if ($update)
-    <form role="form" action="/eyepiece/{{ $eyepiece->id }}" method="POST">
+    <form role="form" action="/eyepiece/{{ $eyepiece->id }}" method="POST" enctype="multipart/form-data">
     @method('PATCH')
 @else
-    <form role="form" action="/eyepiece" method="POST">
+    <form role="form" action="/eyepiece" method="POST" enctype="multipart/form-data">
 @endif
     @csrf
     <div>
@@ -78,6 +78,12 @@
             </div>
         </div>
 
+        {!! _i('Upload a picture of your eyepiece.') !!}
+
+        <input id="picture" name="picture" type="file">
+
+        <br />
+
         <input type="submit" class="btn btn-success" name="add" value="@if ($update){{ _i("Change eyepiece") }}@else{{ _i("Add eyepiece") }}@endif" />
     </div>
 </form>
@@ -123,5 +129,22 @@
             $('.maxFocalLength input').val(data.maxFocalLength);
         });
     });
+
+    $("#picture").fileinput(
+        {
+            theme: "fas",
+            allowedFileTypes: ['image'],    // allow only images
+            'showUpload': false,
+            @if ($eyepiece->id != null && App\Eyepiece::find($eyepiece->id)->getFirstMedia('eyepiece') != null)
+            initialPreview: [
+                '<img class="file-preview-image kv-preview-data" src="/eyepiece/{{ $eyepiece->id }}/getImage">'
+            ],
+            initialPreviewConfig: [
+                {caption: "{{ App\Eyepiece::find($eyepiece->id)->getFirstMedia('eyepiece')->file_name }}", size: {{ App\Eyepiece::find($eyepiece->id)->getFirstMedia('eyepiece')->size }}, url: "/eyepiece/{{ $eyepiece->id }}/deleteImage", key: 1},
+            ],
+            @endif
+        }
+    );
+
 </script>
 @endpush

@@ -138,6 +138,14 @@ class InstrumentController extends Controller
             $instrument->update(['diameter' => $request->get('diameter') * 25.4]);
         }
 
+        if ($request->picture != null) {
+            // Add the picture
+            Instrument::find($instrument->id)
+                ->addMedia($request->picture->path())
+                ->usingFileName($instrument->id . '.png')
+                ->toMediaCollection('instrument');
+        }
+
         laraflash(_i('Instrument %s created', $request->name))->success();
 
         // View the page with all instruments for the user
@@ -215,6 +223,22 @@ class InstrumentController extends Controller
                 ['fixedMagnification' => $request->get('fixedMagnification')]
             );
 
+            if ($request->picture != null) {
+                if (Instrument::find($instrument->id)->getFirstMedia('instrument') != null
+                ) {
+                    // First remove the current image
+                    Instrument::find($instrument->id)
+                    ->getFirstMedia('instrument')
+                    ->delete();
+                }
+
+                // Update the picture
+                Instrument::find($instrument->id)
+                    ->addMedia($request->picture->path())
+                    ->usingFileName($instrument->id . '.png')
+                    ->toMediaCollection('instrument');
+            }
+
             laraflash(_i('Instrument %s updated', $instrument->name))->warning();
         } else {
             // This is only reached when clicking the active checkbox in the
@@ -245,6 +269,45 @@ class InstrumentController extends Controller
     }
 
     /**
+     * Returns the image of the instrument.
+     *
+     * @param int $id The id of the instrument
+     *
+     * @return MediaObject the image of the instrument
+     */
+    public function getImage($id)
+    {
+        if (Instrument::find($id)->hasMedia('instrument')) {
+            return Instrument::find($id)
+                ->getFirstMedia('instrument');
+        } else {
+            Instrument::find($id)
+                ->addMediaFromUrl(asset('images/telescopeCartoon.png'))
+                ->usingFileName($id . '.png')
+                ->toMediaCollection('instrument');
+
+            return Instrument::find($id)
+                ->getFirstMedia('instrument');
+        }
+    }
+
+    /**
+     * Remove the image of the instrument
+     *
+     * @param integer $id The id of the instrument
+     *
+     * @return None
+     */
+    public function deleteImage($id)
+    {
+        Instrument::find($id)
+            ->getFirstMedia('instrument')
+            ->delete();
+
+        return '{}';
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param Instrument $instrument The instrument to remove
@@ -262,7 +325,7 @@ class InstrumentController extends Controller
                     $instrument->name
                 )
             )->info();
-        } else if ($instrument->id == Auth::user()->stdtelescope) {
+        } elseif ($instrument->id == Auth::user()->stdtelescope) {
             laraflash(
                 _i(
                     'Impossible to delete the default instrument %s',
@@ -270,6 +333,11 @@ class InstrumentController extends Controller
                 )
             )->danger();
         } else {
+            if (Instrument::find($instrument->id)->hasMedia('instrument')) {
+                Instrument::find($instrument->id)
+                    ->getFirstMedia('instrument')
+                    ->delete();
+            }
             $instrument->delete();
 
             laraflash(_i('Instrument %s deleted', $instrument->name))->info();

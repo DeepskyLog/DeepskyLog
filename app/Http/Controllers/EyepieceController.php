@@ -126,11 +126,18 @@ class EyepieceController extends Controller
                 'name' => 'required|min:6',
                 'focalLength' => 'required|numeric|gte:1|lte:99',
                 'apparentFOV' => 'required|numeric|gte:20|lte:150',
-                'maxFocalLength' => 'numeric|gte:1|lte:99',
             ]
         );
 
-        Eyepiece::create($validated);
+        $eyepiece = Eyepiece::create($validated);
+
+        if ($request->picture != null) {
+            // Add the picture
+            Eyepiece::find($eyepiece->id)
+                ->addMedia($request->picture->path())
+                ->usingFileName($eyepiece->id . '.png')
+                ->toMediaCollection('eyepiece');
+        }
 
         laraflash(_i('Eyepiece %s created', $request->name))->success();
 
@@ -189,7 +196,6 @@ class EyepieceController extends Controller
                     'name' => 'required|min:6',
                     'focalLength' => 'required|numeric|gte:1|lte:99',
                     'apparentFOV' => 'required|numeric|gte:20|lte:150',
-                    'maxFocalLength' => 'numeric|gte:1|lte:99',
                 ]
             );
 
@@ -197,6 +203,22 @@ class EyepieceController extends Controller
             $eyepiece->update(['name' => $request->get('name')]);
             $eyepiece->update(['apparentFOV' => $request->get('apparentFOV')]);
             $eyepiece->update(['maxFocalLength' => $request->get('maxFocalLength')]);
+
+            if ($request->picture != null) {
+                if (Eyepiece::find($eyepiece->id)->getFirstMedia('eyepiece') != null
+                ) {
+                    // First remove the current image
+                    Eyepiece::find($eyepiece->id)
+                    ->getFirstMedia('eyepiece')
+                    ->delete();
+                }
+
+                // Update the picture
+                Eyepiece::find($eyepiece->id)
+                    ->addMedia($request->picture->path())
+                    ->usingFileName($eyepiece->id . '.png')
+                    ->toMediaCollection('eyepiece');
+            }
 
             laraflash(_i('Eyepiece %s updated', $eyepiece->name))->warning();
         } else {
@@ -214,6 +236,45 @@ class EyepieceController extends Controller
         }
 
         return redirect('/eyepiece');
+    }
+
+    /**
+     * Returns the image of the eyepiece.
+     *
+     * @param int $id The id of the eyepiece
+     *
+     * @return MediaObject the image of the eyepiece
+     */
+    public function getImage($id)
+    {
+        if (Eyepiece::find($id)->hasMedia('eyepiece')) {
+            return Eyepiece::find($id)
+                ->getFirstMedia('eyepiece');
+        } else {
+            Eyepiece::find($id)
+                ->addMediaFromUrl(asset('images/eyepiece.jpg'))
+                ->usingFileName($id . '.png')
+                ->toMediaCollection('eyepiece');
+
+            return Eyepiece::find($id)
+                ->getFirstMedia('eyepiece');
+        }
+    }
+
+    /**
+     * Remove the image of the eyepiece
+     *
+     * @param integer $id The id of the eyepiece
+     *
+     * @return None
+     */
+    public function deleteImage($id)
+    {
+        Eyepiece::find($id)
+            ->getFirstMedia('eyepiece')
+            ->delete();
+
+        return '{}';
     }
 
     /**
@@ -235,6 +296,11 @@ class EyepieceController extends Controller
                 )
             )->info();
         } else {
+            if (Eyepiece::find($eyepiece->id)->hasMedia('eyepiece')) {
+                Eyepiece::find($eyepiece->id)
+                    ->getFirstMedia('eyepiece')
+                    ->delete();
+            }
             $eyepiece->delete();
 
             laraflash(_i('Eyepiece %s deleted', $eyepiece->name))->info();

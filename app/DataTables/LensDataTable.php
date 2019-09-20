@@ -49,7 +49,7 @@ class LensDataTable extends DataTable
             ->eloquent($model)
             ->editColumn(
                 'name',
-                '<a href="/lens/{{ $id }}/edit">{{ $name }}</a>'
+                '<a href="/lens/{{ $id }}">{{ $name }}</a>'
             )->editColumn(
                 'observations',
                 '<a href="/observations/lens/{{ $id }}">{{ $observations }}</a>'

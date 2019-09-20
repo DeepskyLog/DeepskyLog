@@ -127,7 +127,15 @@ class LensController extends Controller
             ]
         );
 
-        Lens::create($validated);
+        $lens = Lens::create($validated);
+
+        if ($request->picture != null) {
+            // Add the picture
+            Lens::find($lens->id)
+                ->addMedia($request->picture->path())
+                ->usingFileName($lens->id . '.png')
+                ->toMediaCollection('lens');
+        }
 
         laraflash(_i('Lens %s created', $request->name))->success();
 
@@ -188,6 +196,22 @@ class LensController extends Controller
             $lens->update(['factor' => $request->get('factor')]);
             $lens->update(['name' => $request->get('name')]);
 
+            if ($request->picture != null) {
+                if (Lens::find($lens->id)->getFirstMedia('lens') != null
+                ) {
+                    // First remove the current image
+                    Lens::find($lens->id)
+                    ->getFirstMedia('lens')
+                    ->delete();
+                }
+
+                // Update the picture
+                Lens::find($lens->id)
+                    ->addMedia($request->picture->path())
+                    ->usingFileName($lens->id . '.png')
+                    ->toMediaCollection('lens');
+            }
+
             laraflash(_i('Lens %s updated', $lens->name))->warning();
         } else {
             // This is only reached when clicking the active checkbox in the
@@ -205,6 +229,45 @@ class LensController extends Controller
     }
 
     /**
+     * Returns the image of the lens.
+     *
+     * @param int $id The id of the lens
+     *
+     * @return MediaObject the image of the lens
+     */
+    public function getImage($id)
+    {
+        if (Lens::find($id)->hasMedia('lens')) {
+            return Lens::find($id)
+                ->getFirstMedia('lens');
+        } else {
+            Lens::find($id)
+                ->addMediaFromUrl(asset('images/lens.jpg'))
+                ->usingFileName($id . '.png')
+                ->toMediaCollection('lens');
+
+            return Lens::find($id)
+                ->getFirstMedia('lens');
+        }
+    }
+
+    /**
+     * Remove the image of the lens
+     *
+     * @param integer $id The id of the lens
+     *
+     * @return None
+     */
+    public function deleteImage($id)
+    {
+        Lens::find($id)
+            ->getFirstMedia('lens')
+            ->delete();
+
+        return '{}';
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param Lens $lens The lens to remove
@@ -218,6 +281,11 @@ class LensController extends Controller
         if ($lens->observations > 0) {
             laraflash(_i('Lens %s has observations. Impossible to delete.', $lens->name))->info();
         } else {
+            if (Lens::find($lens->id)->hasMedia('lens')) {
+                Lens::find($lens->id)
+                    ->getFirstMedia('lens')
+                    ->delete();
+            }
             $lens->delete();
 
             laraflash(_i('Lens %s deleted', $lens->name))->info();

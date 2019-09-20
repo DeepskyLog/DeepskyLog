@@ -5,11 +5,11 @@
 @endsection
 
 @section('content')
-<h4>
-    {{ $instrument->name }}
-</h4>
-
 <table class="table table-sm">
+    <tr>
+        <th><h4>{{ $instrument->name }}</h4></th>
+        <th><img width="100" style="border-radius: 20%" src="/instrument/{{ $instrument->id }}/getImage"></th>
+    </tr>
     <tr>
         <td>{{ _i("Type") }}</td>
         <td>{{ _i("Instrument") }}</td>
@@ -28,13 +28,8 @@
 
     @if ($instrument->fd)
         <tr>
-            <td>{{ _i("F/D") }}</td>
-            <td>{{ $instrument->fd }}</td>
-        </tr>
-
-        <tr>
             <td>{{ _i("Focal Length") }}</td>
-            <td>{{ Auth::user()->showInches ? $instrument->fd * $instrument->diameter / 25.4 . ' ' . _i('inch') : $instrument->fd * $instrument->diameter . ' ' . _i('mm')}}</td>
+            <td>{{ Auth::user()->showInches ? $instrument->fd * $instrument->diameter / 25.4 . ' ' . _i('inch') : $instrument->fd * $instrument->diameter . ' ' . _i('mm')}} (F/{{ $instrument->fd }})</td>
         </tr>
     @endif
 
@@ -58,6 +53,37 @@
         @endif
     </tr>
 
+    <tr>
+        <td>{{ _i("First light") }}</td>
+        <td>ENTER FIRST LIGHT OR REMOVE IF NOT YET USED</td>
+    </tr>
+
+    <tr>
+            <td>{{ _i("Last used on") }}</td>
+            <td>ENTER LAST USED OR REMOVE IF NOT YET USED</td>
+    </tr>
+
+    @if ($instrument->user_id == Auth::user()->id)
+        <tr>
+            <td>{{ _i("Used eyepieces") }}</td>
+            <td>TODO</td>
+        </tr>
+
+        <tr>
+            <td>{{ _i("Used filters") }}</td>
+            <td>TODO</td>
+        </tr>
+
+        <tr>
+            <td>{{ _i("Used lenses") }}</td>
+            <td>TODO</td>
+        </tr>
+
+        <tr>
+            <td>{{ _i("Observed in the following locations") }}</td>
+            <td>ADD GOOGLE MAPS PAGE</td>
+        </tr>
+    @endif
 </table>
 
 @auth

@@ -36,6 +36,12 @@ Route::get('/lens/{lens}', 'LensController@show')->name('lens.show');
 
 Route::get('/getLensJson/{id}', 'LensController@getLensJson');
 
+Route::get('/lens/{lens}/getImage', 'LensController@getImage')
+    ->name('lens.getImage');
+
+Route::post('/lens/{lens}/deleteImage', 'LensController@deleteImage')
+    ->name('lens.deleteImage');
+
 Route::get('/filter/autocomplete', 'FilterController@dataAjax')
     ->name('filter.dataAjax');
 
@@ -56,6 +62,12 @@ Route::get('/filter/{filter}', 'FilterController@show')->name('filter.show');
 
 Route::get('/getFilterJson/{id}', 'FilterController@getFilterJson');
 
+Route::get('/filter/{filter}/getImage', 'FilterController@getImage')
+    ->name('filter.getImage');
+
+Route::post('/filter/{filter}/deleteImage', 'FilterController@deleteImage')
+    ->name('filter.deleteImage');
+
 Route::get('/eyepiece/autocomplete', 'EyepieceController@dataAjax')
     ->name('eyepiece.dataAjax');
 
@@ -75,6 +87,12 @@ Route::resource(
 Route::get('/eyepiece/{eyepiece}', 'EyepieceController@show')->name('eyepiece.show');
 
 Route::get('/getEyepieceJson/{id}', 'EyepieceController@getEyepieceJson');
+
+Route::get('/eyepiece/{eyepiece}/getImage', 'EyepieceController@getImage')
+    ->name('eyepiece.getImage');
+
+Route::post('/eyepiece/{eyepiece}/deleteImage', 'EyepieceController@deleteImage')
+    ->name('eyepiece.deleteImage');
 
 Route::get('/instrument/autocomplete', 'InstrumentController@dataAjax')
     ->name('instrument.dataAjax');
@@ -97,6 +115,12 @@ Route::get('/instrument/{instrument}', 'InstrumentController@show')
 
 Route::get('/getInstrumentJson/{id}', 'InstrumentController@getInstrumentJson');
 
+Route::get('/instrument/{instrument}/getImage', 'InstrumentController@getImage')
+    ->name('instrument.getImage');
+
+Route::post('/instrument/{instrument}/deleteImage', 'InstrumentController@deleteImage')
+    ->name('instrument.deleteImage');
+
 Route::get('/location/autocomplete', 'LocationController@dataAjax')
     ->name('location.dataAjax');
 
@@ -108,6 +132,12 @@ Route::get('/location/admin', 'LocationController@indexAdmin')
     ->name('location.indexAdmin');
 
 Route::get('/location/lightpollutionmap', 'LocationController@lightpollutionmap');
+
+Route::get('/location/{location}/getImage', 'LocationController@getImage')
+    ->name('location.getImage');
+
+Route::post('/location/{location}/deleteImage', 'LocationController@deleteImage')
+    ->name('location.deleteImage');
 
 Route::resource(
     'location',
@@ -122,12 +152,11 @@ Route::get('/getLocationJson/{id}', 'LocationController@getLocationJson');
 
 Auth::routes(['verify' => true]);
 
-Route::post('/users/upload', 'UserController@upload')->name('users.upload');
-
-Route::delete('/users/upload', 'UserController@delete')->name('users.delete');
-
 Route::get('/users/{user}/getImage', 'UserController@getImage')
     ->name('users.getImage');
+
+Route::post('/users/{user}/deleteImage', 'UserController@deleteImage')
+    ->name('users.deleteImage');
 
 Route::get(
     '/users/getAuthenticatedUserImage/',

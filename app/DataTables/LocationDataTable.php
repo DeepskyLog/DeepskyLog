@@ -42,7 +42,8 @@ class LocationDataTable extends DataTable
             $model = Location::with('user')->select('locations.*');
         } else {
             $model = Location::where(
-                'user_id', auth()->user()->id
+                'user_id',
+                auth()->user()->id
             )->with('user')->select('locations.*');
         }
 
@@ -62,12 +63,8 @@ class LocationDataTable extends DataTable
             )->editColumn(
                 'name',
                 function ($location) {
-                    if ($this->user === 'admin') {
-                        return $location->name;
-                    } else {
-                        return '<a href="/location/' . $location->id . '/edit">' .
-                            $location->name . '</a>';
-                    }
+                    return '<a href="/location/' . $location->id . '">' .
+                        $location->name . '</a>';
                 }
             )->editColumn(
                 'observations',

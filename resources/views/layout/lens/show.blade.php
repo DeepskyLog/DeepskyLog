@@ -5,11 +5,11 @@
 @endsection
 
 @section('content')
-<h4>
-    {{ $lens->name }}
-</h4>
-
 <table class="table table-sm">
+    <tr>
+        <th><h4>{{ $lens->name }}</h4></th>
+        <th><img width="100" style="border-radius: 20%" src="/lens/{{ $lens->id }}/getImage"></th>
+    </tr>
     <tr>
         <td>{{ _i("Type") }}</td>
         <td>{{ _i("Lens") }}</td>

@@ -50,7 +50,7 @@ class EyepieceDataTable extends DataTable
             ->eloquent($model)
             ->editColumn(
                 'name',
-                '<a href="/eyepiece/{{ $id }}/edit">{{ $name }}</a>'
+                '<a href="/eyepiece/{{ $id }}">{{ $name }}</a>'
             )->editColumn(
                 'observations',
                 '<a href="/observations/eyepiece/{{ $id }}">{{ $observations }}</a>'

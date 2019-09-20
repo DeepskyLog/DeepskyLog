@@ -15,6 +15,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
 /**
  * Location eloquent model.
@@ -25,8 +27,10 @@ use Illuminate\Support\Facades\Auth;
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class Location extends Model
+class Location extends Model implements HasMedia
 {
+    use HasMediaTrait;
+
     protected $fillable = [
         'user_id', 'name', 'active',
         'longitude', 'latitude', 'country',

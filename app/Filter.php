@@ -16,6 +16,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
 /**
  * Filter eloquent model.
@@ -26,8 +28,10 @@ use Illuminate\Support\Facades\DB;
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class Filter extends Model
+class Filter extends Model implements HasMedia
 {
+    use HasMediaTrait;
+
     protected $fillable = [
         'user_id', 'name', 'type', 'color', 'wratten', 'schott', 'active'
     ];

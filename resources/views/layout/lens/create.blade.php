@@ -19,10 +19,10 @@
 </h4>
 
 @if ($update)
-    <form role="form" action="/lens/{{ $lens->id }}" method="POST">
+    <form role="form" action="/lens/{{ $lens->id }}" method="POST" enctype="multipart/form-data">
     @method('PATCH')
 @else
-    <form role="form" action="/lens" method="POST">
+    <form role="form" action="/lens" method="POST" enctype="multipart/form-data">
 @endif
     @csrf
     <div>
@@ -57,6 +57,12 @@
             </div>
             <span class="help-block">{{ _i("> 1.0 for Barlow lenses, < 1.0 for shapley lenses.") }}</span>
         </div>
+
+        {!! _i('Upload a picture of your lens.') !!}
+
+        <input id="picture" name="picture" type="file">
+
+        <br />
 
         <input type="submit" class="btn btn-success" name="add" value="@if ($update){{ _i("Change lens") }}@else{{ _i("Add lens") }}@endif" />
     </div>
@@ -101,5 +107,21 @@
             $('.factor input').val(Math.round(data.factor * 100) / 100);
         });
     });
+
+    $("#picture").fileinput(
+        {
+            theme: "fas",
+            allowedFileTypes: ['image'],    // allow only images
+            'showUpload': false,
+            @if ($lens->id != null && App\Lens::find($lens->id)->getFirstMedia('lens') != null)
+            initialPreview: [
+                '<img class="file-preview-image kv-preview-data" src="/lens/{{ $lens->id }}/getImage">'
+            ],
+            initialPreviewConfig: [
+                {caption: "{{ App\Lens::find($lens->id)->getFirstMedia('lens')->file_name }}", size: {{ App\Lens::find($lens->id)->getFirstMedia('lens')->size }}, url: "/lens/{{ $lens->id }}/deleteImage", key: 1},
+            ],
+            @endif
+        }
+    );
 </script>
 @endpush

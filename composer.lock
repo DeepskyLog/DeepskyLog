@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "49a7f5aa5f9161e56349c78ca701c126",
+    "content-hash": "74d7c5669e4917effc9d847014cb9f6f",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -68,28 +68,28 @@
         },
         {
             "name": "cmgmyr/messenger",
-            "version": "2.18",
+            "version": "2.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cmgmyr/laravel-messenger.git",
-                "reference": "7272f507cf94a8db36ae78f926847807a488a039"
+                "reference": "3bdffe231308eaa2dfcf00d91200c9417e02fe83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cmgmyr/laravel-messenger/zipball/7272f507cf94a8db36ae78f926847807a488a039",
-                "reference": "7272f507cf94a8db36ae78f926847807a488a039",
+                "url": "https://api.github.com/repos/cmgmyr/laravel-messenger/zipball/3bdffe231308eaa2dfcf00d91200c9417e02fe83",
+                "reference": "3bdffe231308eaa2dfcf00d91200c9417e02fe83",
                 "shasum": ""
             },
             "require": {
-                "illuminate/config": ">=5.5 <6.0",
-                "illuminate/database": ">=5.5 <6.0",
-                "illuminate/support": ">=5.5 <6.0",
+                "illuminate/config": "^5.5|^6.0",
+                "illuminate/database": "^5.5|^6.0",
+                "illuminate/support": "^5.5|^6.0",
                 "php": "^7.1.3"
             },
             "require-dev": {
                 "adamwathan/faktory": "0.3.*",
                 "friendsofphp/php-cs-fixer": "^2.5",
-                "orchestra/testbench": "~3.0",
+                "orchestra/testbench": "^3.0|^4.0",
                 "phpunit/phpunit": "^7.0"
             },
             "type": "library",
@@ -124,25 +124,26 @@
                 "messaging",
                 "user messaging"
             ],
-            "time": "2019-06-13T20:38:21+00:00"
+            "time": "2019-09-16T12:32:06+00:00"
         },
         {
             "name": "coderello/laraflash",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/coderello/laraflash.git",
-                "reference": "ba8f5f3cf0bc2b2be87abda65f41f32743ef9357"
+                "reference": "02e31d230f1a1ca838253ba4631aeb1bf0ea074e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/coderello/laraflash/zipball/ba8f5f3cf0bc2b2be87abda65f41f32743ef9357",
-                "reference": "ba8f5f3cf0bc2b2be87abda65f41f32743ef9357",
+                "url": "https://api.github.com/repos/coderello/laraflash/zipball/02e31d230f1a1ca838253ba4631aeb1bf0ea074e",
+                "reference": "02e31d230f1a1ca838253ba4631aeb1bf0ea074e",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "laravel/framework": "5.5.*|5.6.*|5.7.*|5.8.*",
+                "laravel/framework": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0",
+                "laravelium/sitemap": "^3.1",
                 "php": "^7.2"
             },
             "require-dev": {
@@ -176,7 +177,7 @@
                 "laravel",
                 "messages"
             ],
-            "time": "2019-03-05T20:51:11+00:00"
+            "time": "2019-09-17T06:29:19+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -2049,6 +2050,68 @@
             "time": "2019-09-05T12:32:25+00:00"
         },
         {
+            "name": "laravelium/sitemap",
+            "version": "v3.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.com/Laravelium/Sitemap.git",
+                "reference": "260c4a6473c542f77250d4cd8cb822f3453f2b49"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v4/projects/Laravelium%2FSitemap/repository/archive.zip?sha=260c4a6473c542f77250d4cd8cb822f3453f2b49",
+                "reference": "260c4a6473c542f77250d4cd8cb822f3453f2b49",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "~5.8",
+                "php": ">=7.1.3"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench-core": "3.8.*",
+                "phpunit/phpunit": "^7.5 || ^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravelium\\Sitemap\\SitemapServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Laravelium\\Sitemap": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roumen Damianoff",
+                    "email": "roumen@damianoff.com",
+                    "homepage": "https://damianoff.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravelium Sitemap package for Laravel.",
+            "homepage": "https://laravelium.com",
+            "keywords": [
+                "Sitemap",
+                "generator",
+                "google-news",
+                "html",
+                "laravel",
+                "laravelium",
+                "php",
+                "xml"
+            ],
+            "time": "2019-02-27T11:50:28+00:00"
+        },
+        {
             "name": "league/container",
             "version": "3.3.0",
             "source": {
@@ -3603,25 +3666,25 @@
         },
         {
             "name": "petercoles/multilingual-language-list",
-            "version": "1.1.4",
+            "version": "1.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/petercoles/Multilingual-Language-List.git",
-                "reference": "26304354d7892561966e63312884eaa089a3ac24"
+                "reference": "a9ad7d6ddd552f184fa8cf2f26e3784440f7922e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/petercoles/Multilingual-Language-List/zipball/26304354d7892561966e63312884eaa089a3ac24",
-                "reference": "26304354d7892561966e63312884eaa089a3ac24",
+                "url": "https://api.github.com/repos/petercoles/Multilingual-Language-List/zipball/a9ad7d6ddd552f184fa8cf2f26e3784440f7922e",
+                "reference": "a9ad7d6ddd552f184fa8cf2f26e3784440f7922e",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "~5",
-                "php": ">=5.6.0"
+                "illuminate/support": "~5|~6",
+                "php": "^7.2"
             },
             "require-dev": {
-                "mockery/mockery": "^0.9.4",
-                "phpunit/phpunit": "~5.3"
+                "mockery/mockery": "^1",
+                "phpunit/phpunit": "^8"
             },
             "type": "library",
             "extra": {
@@ -3647,7 +3710,7 @@
                 {
                     "name": "Peter Coles",
                     "email": "peterdcoles@gmail.com",
-                    "homepage": "http://petercoles.com"
+                    "homepage": "https://petercoles.com"
                 }
             ],
             "description": "Lookup Objects for Language Names and Codes",
@@ -3658,7 +3721,7 @@
                 "language lookup",
                 "laravel"
             ],
-            "time": "2018-01-02T16:25:28+00:00"
+            "time": "2019-09-16T15:22:51+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -4344,16 +4407,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "7.0.7",
+            "version": "7.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "7743bbcfff2a907e9ee4a25be13d0f8ec5e73800"
+                "reference": "aa0d179a13284c7420fc281fc32750e6cc7c9e2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/7743bbcfff2a907e9ee4a25be13d0f8ec5e73800",
-                "reference": "7743bbcfff2a907e9ee4a25be13d0f8ec5e73800",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/aa0d179a13284c7420fc281fc32750e6cc7c9e2f",
+                "reference": "aa0d179a13284c7420fc281fc32750e6cc7c9e2f",
                 "shasum": ""
             },
             "require": {
@@ -4362,7 +4425,7 @@
                 "php": "^7.2",
                 "phpunit/php-file-iterator": "^2.0.2",
                 "phpunit/php-text-template": "^1.2.1",
-                "phpunit/php-token-stream": "^3.1.0",
+                "phpunit/php-token-stream": "^3.1.1",
                 "sebastian/code-unit-reverse-lookup": "^1.0.1",
                 "sebastian/environment": "^4.2.2",
                 "sebastian/version": "^2.0.1",
@@ -4392,8 +4455,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "role": "lead",
-                    "email": "sebastian@phpunit.de"
+                    "email": "sebastian@phpunit.de",
+                    "role": "lead"
                 }
             ],
             "description": "Library that provides collection, processing, and rendering functionality for PHP code coverage information.",
@@ -4403,7 +4466,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-07-25T05:31:54+00:00"
+            "time": "2019-09-17T06:24:36+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -4547,16 +4610,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "e899757bb3df5ff6e95089132f32cd59aac2220a"
+                "reference": "995192df77f63a59e47f025390d2d1fdf8f425ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/e899757bb3df5ff6e95089132f32cd59aac2220a",
-                "reference": "e899757bb3df5ff6e95089132f32cd59aac2220a",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/995192df77f63a59e47f025390d2d1fdf8f425ff",
+                "reference": "995192df77f63a59e47f025390d2d1fdf8f425ff",
                 "shasum": ""
             },
             "require": {
@@ -4592,7 +4655,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2019-07-25T05:29:42+00:00"
+            "time": "2019-09-17T06:23:10+00:00"
         },
         {
             "name": "phpunit/phpunit",
@@ -8493,16 +8556,16 @@
         },
         {
             "name": "symplify/coding-standard",
-            "version": "v6.0.5",
+            "version": "v6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Symplify/CodingStandard.git",
-                "reference": "d16273e5e71960f49e448300fbe44d6f5292aeee"
+                "reference": "d692701e2c74edd8c0cc7c35f47b8421b8b4885c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Symplify/CodingStandard/zipball/d16273e5e71960f49e448300fbe44d6f5292aeee",
-                "reference": "d16273e5e71960f49e448300fbe44d6f5292aeee",
+                "url": "https://api.github.com/repos/Symplify/CodingStandard/zipball/d692701e2c74edd8c0cc7c35f47b8421b8b4885c",
+                "reference": "d692701e2c74edd8c0cc7c35f47b8421b8b4885c",
                 "shasum": ""
             },
             "require": {
@@ -8512,13 +8575,13 @@
                 "php": "^7.1",
                 "phpstan/phpdoc-parser": "^0.3.4",
                 "squizlabs/php_codesniffer": "^3.4",
-                "symplify/package-builder": "^6.0.5"
+                "symplify/package-builder": "^6.1"
             },
             "require-dev": {
-                "nette/application": "^2.4|^3.0",
+                "nette/application": "^3.0",
                 "phpunit/phpunit": "^7.5|^8.0",
-                "symplify/easy-coding-standard-tester": "^6.0.5",
-                "symplify/package-builder": "^6.0.5"
+                "symplify/easy-coding-standard-tester": "^6.1",
+                "symplify/package-builder": "^6.1"
             },
             "type": "library",
             "extra": {
@@ -8537,20 +8600,20 @@
                 "MIT"
             ],
             "description": "Set of Symplify rules for PHP_CodeSniffer and PHP CS Fixer.",
-            "time": "2019-07-26T14:48:44+00:00"
+            "time": "2019-09-18T08:01:34+00:00"
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "v6.0.5",
+            "version": "v6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Symplify/EasyCodingStandard.git",
-                "reference": "5893608bde2bf5bd5f48d977481582e3d2f90daa"
+                "reference": "94b8cf03af132d007d8a33c8dad5655cff6a74e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Symplify/EasyCodingStandard/zipball/5893608bde2bf5bd5f48d977481582e3d2f90daa",
-                "reference": "5893608bde2bf5bd5f48d977481582e3d2f90daa",
+                "url": "https://api.github.com/repos/Symplify/EasyCodingStandard/zipball/94b8cf03af132d007d8a33c8dad5655cff6a74e8",
+                "reference": "94b8cf03af132d007d8a33c8dad5655cff6a74e8",
                 "shasum": ""
             },
             "require": {
@@ -8564,19 +8627,19 @@
                 "psr/simple-cache": "^1.0",
                 "slevomat/coding-standard": "^5.0.1",
                 "squizlabs/php_codesniffer": "^3.4",
-                "symfony/cache": "^3.4|^4.2",
-                "symfony/config": "^3.4|^4.2",
-                "symfony/console": "^3.4|^4.2",
+                "symfony/cache": "^3.4|^4.3",
+                "symfony/config": "^3.4|^4.3",
+                "symfony/console": "^3.4|^4.3",
                 "symfony/dependency-injection": "^3.4.10|^4.2",
-                "symfony/finder": "^3.4|^4.2",
-                "symfony/http-kernel": "^3.4|^4.2",
-                "symfony/yaml": "^3.4|^4.2",
-                "symplify/coding-standard": "^6.0.5",
-                "symplify/package-builder": "^6.0.5"
+                "symfony/finder": "^3.4|^4.3",
+                "symfony/http-kernel": "^3.4|^4.3",
+                "symfony/yaml": "^3.4|^4.3",
+                "symplify/coding-standard": "^6.1",
+                "symplify/package-builder": "^6.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "^7.5|^8.0",
-                "symplify/easy-coding-standard-tester": "^6.0.5"
+                "symplify/easy-coding-standard-tester": "^6.1"
             },
             "bin": [
                 "bin/ecs"
@@ -8601,33 +8664,33 @@
                 "MIT"
             ],
             "description": "Use Coding Standard with 0-knowledge of PHP-CS-Fixer and PHP_CodeSniffer.",
-            "time": "2019-07-26T14:48:44+00:00"
+            "time": "2019-09-14T22:46:23+00:00"
         },
         {
             "name": "symplify/package-builder",
-            "version": "v6.0.5",
+            "version": "v6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Symplify/PackageBuilder.git",
-                "reference": "f531e03f87c89b26605f1cc1022160e398108ba1"
+                "reference": "fbdfe363a27070cfdfbc47d5f59e711ed08bb060"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Symplify/PackageBuilder/zipball/f531e03f87c89b26605f1cc1022160e398108ba1",
-                "reference": "f531e03f87c89b26605f1cc1022160e398108ba1",
+                "url": "https://api.github.com/repos/Symplify/PackageBuilder/zipball/fbdfe363a27070cfdfbc47d5f59e711ed08bb060",
+                "reference": "fbdfe363a27070cfdfbc47d5f59e711ed08bb060",
                 "shasum": ""
             },
             "require": {
                 "nette/finder": "^2.4",
                 "nette/utils": "^2.5|^3.0",
                 "php": "^7.1",
-                "symfony/config": "^3.4|^4.2",
-                "symfony/console": "^3.4|^4.2",
-                "symfony/debug": "^3.4|^4.2",
+                "symfony/config": "^3.4|^4.3",
+                "symfony/console": "^3.4|^4.3",
+                "symfony/debug": "^3.4|^4.3",
                 "symfony/dependency-injection": "^3.4.10|^4.2",
-                "symfony/finder": "^3.4|^4.2",
-                "symfony/http-kernel": "^3.4|^4.2",
-                "symfony/yaml": "^3.4|^4.2"
+                "symfony/finder": "^3.4|^4.3",
+                "symfony/http-kernel": "^3.4|^4.3",
+                "symfony/yaml": "^3.4|^4.3"
             },
             "require-dev": {
                 "phpunit/phpunit": "^7.5|^8.0"
@@ -8648,7 +8711,7 @@
                 "MIT"
             ],
             "description": "Dependency Injection, Console and Kernel toolkit for Symplify packages.",
-            "time": "2019-07-22T21:06:43+00:00"
+            "time": "2019-09-17T20:48:03+00:00"
         },
         {
             "name": "theseer/fdomdocument",
@@ -9038,16 +9101,16 @@
         },
         {
             "name": "yajra/laravel-datatables-editor",
-            "version": "v1.14.1",
+            "version": "v1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-editor.git",
-                "reference": "bcf5c2c1156950f94d70738812d5ab2c13e55fd3"
+                "reference": "8cbb7e3b88397c3bbbf153bbccc90cded596116e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-editor/zipball/bcf5c2c1156950f94d70738812d5ab2c13e55fd3",
-                "reference": "bcf5c2c1156950f94d70738812d5ab2c13e55fd3",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-editor/zipball/8cbb7e3b88397c3bbbf153bbccc90cded596116e",
+                "reference": "8cbb7e3b88397c3bbbf153bbccc90cded596116e",
                 "shasum": ""
             },
             "require": {
@@ -9096,7 +9159,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-09-14T02:59:39+00:00"
+            "time": "2019-09-20T06:20:07+00:00"
         },
         {
             "name": "yajra/laravel-datatables-fractal",
@@ -9158,16 +9221,16 @@
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v4.14.0",
+            "version": "v4.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "4c8ea734a264b1ba459a54e51bc546f6719e0295"
+                "reference": "78d2ff38f087751de8d446424a2d36a142707c52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/4c8ea734a264b1ba459a54e51bc546f6719e0295",
-                "reference": "4c8ea734a264b1ba459a54e51bc546f6719e0295",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/78d2ff38f087751de8d446424a2d36a142707c52",
+                "reference": "78d2ff38f087751de8d446424a2d36a142707c52",
                 "shasum": ""
             },
             "require": {
@@ -9214,7 +9277,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-09-16T05:29:20+00:00"
+            "time": "2019-09-20T08:31:59+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",
@@ -9786,7 +9849,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.1.3"
+        "php": "^7.2"
     },
     "platform-dev": []
 }
