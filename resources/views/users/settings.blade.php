@@ -370,6 +370,7 @@ $("#picture").fileinput(
             theme: "fas",
             allowedFileTypes: ['image'],    // allow only images
             'showUpload': false,
+            maxFileSize: 10000,
             @if ($user->id != null && App\User::find($user->id)->getFirstMedia('observer') != null)
             initialPreview: [
                 '<img class="file-preview-image kv-preview-data" src="/users/{{ $user->id }}/getImage">'

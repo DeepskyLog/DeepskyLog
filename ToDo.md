@@ -116,6 +116,7 @@ php73 artisan db:seed
 
 + Remove the link to /observer_pics
 + Don't allow the use of google api from everywhere (already done): <https://console.developers.google.com/apis/credentials/key/211?project=deepskylog-1528998866034>
++ Make sure to put `post_max_size = 10M` and `upload_max_filesize = 10M` in /etc/opt/remi/php73/php.ini
 
 Require:
         "coderello/laraflash": "^2.0",

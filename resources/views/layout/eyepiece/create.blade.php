@@ -135,6 +135,7 @@
             theme: "fas",
             allowedFileTypes: ['image'],    // allow only images
             'showUpload': false,
+            maxFileSize: 10000,
             @if ($eyepiece->id != null && App\Eyepiece::find($eyepiece->id)->getFirstMedia('eyepiece') != null)
             initialPreview: [
                 '<img class="file-preview-image kv-preview-data" src="/eyepiece/{{ $eyepiece->id }}/getImage">'

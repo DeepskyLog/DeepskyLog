@@ -132,21 +132,22 @@
 @push('scripts')
 
 <script>
-        $("#picture").fileinput(
-            {
-                theme: "fas",
-                allowedFileTypes: ['image'],    // allow only images
-                'showUpload': false,
-                @if ($location->id != null && App\Location::find($location->id)->getFirstMedia('location') != null)
-                initialPreview: [
-                    '<img class="file-preview-image kv-preview-data" src="/location/{{ $location->id }}/getImage">'
-                ],
-                initialPreviewConfig: [
-                    {caption: "{{ App\Location::find($location->id)->getFirstMedia('location')->file_name }}", size: {{ App\Location::find($location->id)->getFirstMedia('location')->size }}, url: "/location/{{ $location->id }}/deleteImage", key: 1},
-                ],
-                @endif
-            }
-        );
+    $("#picture").fileinput(
+        {
+            theme: "fas",
+            allowedFileTypes: ['image'],    // allow only images
+            'showUpload': false,
+            maxFileSize: 10000,
+            @if ($location->id != null && App\Location::find($location->id)->getFirstMedia('location') != null)
+            initialPreview: [
+                '<img class="file-preview-image kv-preview-data" src="/location/{{ $location->id }}/getImage">'
+            ],
+            initialPreviewConfig: [
+                {caption: "{{ App\Location::find($location->id)->getFirstMedia('location')->file_name }}", size: {{ App\Location::find($location->id)->getFirstMedia('location')->size }}, url: "/location/{{ $location->id }}/deleteImage", key: 1},
+            ],
+            @endif
+        }
+    );
 
     </script>
 
