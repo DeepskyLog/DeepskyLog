@@ -14,7 +14,7 @@ class CreateObservationTypesTable extends Migration
     public function up()
     {
         Schema::create('observation_types', function (Blueprint $table) {
-            $table->string('type');
+            $table->string('type')->primary();
             $table->string('name');
         });
 

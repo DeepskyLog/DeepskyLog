@@ -11,17 +11,21 @@
 
 + [ ] CODE CLIMATE: <https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication>
 
-## Instruments
+## OBJECTS - Targets
 
-+ [ ] Add a picture of the instrument
-  + [ ] Difficult, because instrument is not yet created when the picture is already uploaded...
-
-## Locations
-
-+ [ ] Add a picture of the location, also for lenses, eyepieces and filters
-
-## OBJECTS
-
++ [ ] Database
+  + [x] Create target_types
+  + [ ] Create constellations
+  + [ ] Create atlases
+  + [ ] Translations
+  + [ ] Create targets
+    + [ ] Add craters
+    + [ ] Add planets
+    + [ ] Add sun
+    + [ ] Add Comets
+    + [ ] Add deepsky-objects
+    + [ ] Remove the old objects migrations
+    + [ ] Think about alternative names
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
 + [ ] Add new types for the objects
   + [ ] Add planets

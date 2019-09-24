@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-09-20 15:21+0200\n"
-"PO-Revision-Date: 2019-09-20 15:22+0200\n"
+"POT-Creation-Date: 2019-09-24 14:36+0200\n"
+"PO-Revision-Date: 2019-09-24 14:36+0200\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: de_DE\n"
@@ -221,80 +221,233 @@ msgstr "Planeten"
 
 #: ../resources/lang/en/translations.php:41
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:41
+#, fuzzy
+#| msgid "Comets"
+msgid "Comet"
+msgstr "Kometen"
+
+#: ../resources/lang/en/translations.php:42
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:42
+#, fuzzy
+#| msgid "Planets"
+msgid "Planet"
+msgstr "Planeten"
+
+#: ../resources/lang/en/translations.php:43
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:43
 msgid "Double Stars"
 msgstr "Doppelsterne"
 
-#: ../resources/lang/en/translations.php:42
+#: ../resources/lang/en/translations.php:44
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:50
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:159
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:251
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:42
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:44
 #: Http/Controllers/UserController.php:159
 #: Http/Controllers/UserController.php:251
 msgid "Sun"
 msgstr "Sonne"
 
-#: ../resources/lang/en/translations.php:43
+#: ../resources/lang/en/translations.php:45
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:14
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:33
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:163
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:255
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:43
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:45
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:23
 #: Http/Controllers/UserController.php:163
 #: Http/Controllers/UserController.php:255
 msgid "Moon"
 msgstr "Mond"
 
-#: ../resources/lang/en/translations.php:44
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:44
+#: ../resources/lang/en/translations.php:46
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:46
 msgid "Naked Eye"
 msgstr "Bloßem Auge"
 
-#: ../resources/lang/en/translations.php:45
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:45
+#: ../resources/lang/en/translations.php:47
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:47
 msgid "Binoculars"
 msgstr "Fernglas"
 
-#: ../resources/lang/en/translations.php:46
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:46
+#: ../resources/lang/en/translations.php:48
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:48
 msgid "Refractor"
 msgstr "Refraktor"
 
-#: ../resources/lang/en/translations.php:47
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:47
+#: ../resources/lang/en/translations.php:49
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:49
 msgid "Reflector"
 msgstr "Reflektor"
 
-#: ../resources/lang/en/translations.php:48
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:48
+#: ../resources/lang/en/translations.php:50
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:50
 msgid "Finderscope"
 msgstr "Sucher"
 
-#: ../resources/lang/en/translations.php:49
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:49
+#: ../resources/lang/en/translations.php:51
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:51
 msgid "Other"
 msgstr "Andere"
 
-#: ../resources/lang/en/translations.php:50
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:50
+#: ../resources/lang/en/translations.php:52
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:52
 msgid "Cassegrain"
 msgstr "Cassegrain"
 
-#: ../resources/lang/en/translations.php:51
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:51
+#: ../resources/lang/en/translations.php:53
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:53
 msgid "Kutter"
 msgstr "Kutter"
 
-#: ../resources/lang/en/translations.php:52
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:52
+#: ../resources/lang/en/translations.php:54
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:54
 msgid "Maksutov"
 msgstr "Maksutov"
 
-#: ../resources/lang/en/translations.php:53
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:53
+#: ../resources/lang/en/translations.php:55
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:55
 msgid "Schmidt Cassegrain"
 msgstr "Schmidt Cassegrain"
+
+#: ../resources/lang/en/translations.php:56
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:56
+msgid "Asterism"
+msgstr "Asterismus"
+
+#: ../resources/lang/en/translations.php:57
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:57
+msgid "Bright nebula"
+msgstr "Hellen Nebel"
+
+#: ../resources/lang/en/translations.php:58
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:58
+msgid "Cluster with nebulosity"
+msgstr "Cluster mit Nebulosität"
+
+#: ../resources/lang/en/translations.php:59
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:59
+#, fuzzy
+#| msgid "Double Stars"
+msgid "Double Star"
+msgstr "Doppelsterne"
+
+#: ../resources/lang/en/translations.php:60
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:60
+msgid "Dark nebula"
+msgstr "Dunkler Nebel"
+
+#: ../resources/lang/en/translations.php:61
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:61
+msgid "Emission nebula"
+msgstr "Emissionsnebel"
+
+#: ../resources/lang/en/translations.php:62
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:62
+msgid "Emission and Reflection nebula"
+msgstr "Emission und Reflexionsnebel"
+
+#: ../resources/lang/en/translations.php:63
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:63
+msgid "Emission nebula around a star"
+msgstr "Emissionsnebel um einen Stern"
+
+#: ../resources/lang/en/translations.php:64
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:64
+msgid "Galaxy cluster"
+msgstr "Galaxienhaufen"
+
+#: ../resources/lang/en/translations.php:65
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:65
+msgid "Galaxy"
+msgstr "Galaxy"
+
+#: ../resources/lang/en/translations.php:66
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:66
+msgid "Globular cluster"
+msgstr "Kugelsternhaufen"
+
+#: ../resources/lang/en/translations.php:67
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:67
+msgid "Diffuse nebula"
+msgstr "Diffuser Nebel"
+
+#: ../resources/lang/en/translations.php:68
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:68
+msgid "H-II"
+msgstr "H-II"
+
+#: ../resources/lang/en/translations.php:69
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:69
+msgid "Nonexistent"
+msgstr "Nicht vorhanden"
+
+#: ../resources/lang/en/translations.php:70
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:70
+msgid "Open cluster"
+msgstr "Offener Cluster"
+
+#: ../resources/lang/en/translations.php:71
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:71
+msgid "Planetary nebula"
+msgstr "Planetarischen Nebel"
+
+#: ../resources/lang/en/translations.php:72
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:72
+msgid "Reflection nebula"
+msgstr "Reflexionsnebel"
+
+#: ../resources/lang/en/translations.php:73
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:73
+msgid "Reflection nebula and H-II"
+msgstr "Reflexionsnebel und H-II"
+
+#: ../resources/lang/en/translations.php:74
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:74
+msgid "Supernova"
+msgstr "Supernova"
+
+#: ../resources/lang/en/translations.php:75
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:75
+msgid "Supernova remnant"
+msgstr "Supernova Rest"
+
+#: ../resources/lang/en/translations.php:76
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:76
+msgid "Nebula around star"
+msgstr "Nebel um Stern"
+
+#: ../resources/lang/en/translations.php:77
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:77
+msgid "Quasar"
+msgstr "Quasar"
+
+#: ../resources/lang/en/translations.php:78
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:78
+msgid "Wolf Rayet nebula"
+msgstr "Wolf Rayet Nebel"
+
+#: ../resources/lang/en/translations.php:79
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:79
+msgid "Rest"
+msgstr "Rest"
+
+#: ../resources/lang/en/translations.php:80
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:80
+msgid "Mountain"
+msgstr ""
+
+#: ../resources/lang/en/translations.php:81
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:81
+#, fuzzy
+#| msgid "Set"
+msgid "Sea"
+msgstr "Untergang"
+
+#: ../resources/lang/en/translations.php:82
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:82
+msgid "Crater"
+msgstr ""
 
 #: ../resources/views/auth/passwords/reset.blade.php:75
 #: ../resources/views/auth/register.blade.php:210
@@ -1619,7 +1772,7 @@ msgstr "Instrument %s ist aktiv"
 #: Http/Controllers/InstrumentController.php:255
 #, php-format
 msgid "Impossible to deactivate the default instrument %s"
-msgstr "Das Standardinstrument %s kann nicht deaktiviert werden."
+msgstr "Das Standardinstrument %s kann nicht deaktiviert werden"
 
 #: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:262
 #: Http/Controllers/InstrumentController.php:262
@@ -1676,7 +1829,7 @@ msgstr "Standort %s ist aktiv"
 #: Http/Controllers/LocationController.php:287
 #, php-format
 msgid "Impossible to deactivate the default location %s"
-msgstr "Es ist nicht möglich, den Standardstandort %s zu deaktivieren."
+msgstr "Es ist nicht möglich, den Standardstandort %s zu deaktivieren"
 
 #: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:294
 #: Http/Controllers/LocationController.php:294
@@ -2002,15 +2155,15 @@ msgstr "Gebrauchswert von lightpollutionmap.info"
 msgid "Upload a picture of your location."
 msgstr "Laden Sie ein Bild Ihres Standorts hoch."
 
-#: ../storage/framework/messages/f1e0daf0905fb7c5337c268f7c7b70b73518889c.php.php:384
+#: ../storage/framework/messages/f1e0daf0905fb7c5337c268f7c7b70b73518889c.php.php:385
 msgid "Limiting magnitude"
 msgstr "Schwächster Stern"
 
-#: ../storage/framework/messages/f1e0daf0905fb7c5337c268f7c7b70b73518889c.php.php:395
+#: ../storage/framework/messages/f1e0daf0905fb7c5337c268f7c7b70b73518889c.php.php:396
 msgid "Active"
 msgstr "Aktif"
 
-#: ../storage/framework/messages/f1e0daf0905fb7c5337c268f7c7b70b73518889c.php.php:397
+#: ../storage/framework/messages/f1e0daf0905fb7c5337c268f7c7b70b73518889c.php.php:398
 msgid "Not active"
 msgstr "Nicht aktiv"
 
@@ -5329,9 +5482,6 @@ msgstr "Laden Sie ein Bild Ihres Objektivs hoch."
 #~ msgid " in LOCAL TIME !"
 #~ msgstr " in LOKALER ZEIT !"
 
-#~ msgid "Set"
-#~ msgstr "Untergang"
-
 #~ msgid "Rise"
 #~ msgstr "Aufgang"
 
@@ -5694,36 +5844,6 @@ msgstr "Laden Sie ein Bild Ihres Objektivs hoch."
 #~ msgid "Dec"
 #~ msgstr "Dez"
 
-#~ msgid "Asterism"
-#~ msgstr "Asterismus"
-
-#~ msgid "Bright nebula"
-#~ msgstr "Hellen Nebel"
-
-#~ msgid "Cluster with nebulosity"
-#~ msgstr "Cluster mit Nebulosität"
-
-#~ msgid "Dark nebula"
-#~ msgstr "Dunkler Nebel"
-
-#~ msgid "Emission nebula"
-#~ msgstr "Emissionsnebel"
-
-#~ msgid "Emission and Reflection nebula"
-#~ msgstr "Emission und Reflexionsnebel"
-
-#~ msgid "Emission nebula around a star"
-#~ msgstr "Emissionsnebel um einen Stern"
-
-#~ msgid "Galaxy cluster"
-#~ msgstr "Galaxienhaufen"
-
-#~ msgid "Galaxy"
-#~ msgstr "Galaxy"
-
-#~ msgid "Globular cluster"
-#~ msgstr "Kugelsternhaufen"
-
 #~ msgid "Diffuse nebula in galaxy"
 #~ msgstr "Diffuser Nebel in Galaxy"
 
@@ -5733,35 +5853,14 @@ msgstr "Laden Sie ein Bild Ihres Objektivs hoch."
 #~ msgid "Cluster with nebulosity in galaxy"
 #~ msgstr "Cluster mit Nebulosität in der Galaxie"
 
-#~ msgid "H-II"
-#~ msgstr "H-II"
-
 #~ msgid "Cluster with nebulosity in LMC"
 #~ msgstr "Cluster mit Nebulosität in LMC"
-
-#~ msgid "Diffuse nebula in LMC"
-#~ msgstr "Diffuser Nebel in LMC"
 
 #~ msgid "Globular cluster in LMC"
 #~ msgstr "Kugelsternhaufen in LMC"
 
 #~ msgid "Open cluster in LMC"
 #~ msgstr "Offener Cluster in LMC"
-
-#~ msgid "Nonexistent"
-#~ msgstr "Nicht vorhanden"
-
-#~ msgid "Open cluster"
-#~ msgstr "Offener Cluster"
-
-#~ msgid "Planetary nebula"
-#~ msgstr "Planetarischen Nebel"
-
-#~ msgid "Reflection nebula"
-#~ msgstr "Reflexionsnebel"
-
-#~ msgid "Reflection nebula and H-II"
-#~ msgstr "Reflexionsnebel und H-II"
 
 #~ msgid "Cluster with nebulosity in SMC"
 #~ msgstr "Cluster mit Nebulosität in SMC"
@@ -5775,21 +5874,6 @@ msgstr "Laden Sie ein Bild Ihres Objektivs hoch."
 #~ msgid "Open cluster in SMC"
 #~ msgstr "Offener Cluster in SMC"
 
-#~ msgid "Supernova"
-#~ msgstr "Supernova"
-
-#~ msgid "Supernova remnant"
-#~ msgstr "Supernova Rest"
-
-#~ msgid "Nebula around star"
-#~ msgstr "Nebel um Stern"
-
-#~ msgid "Quasar"
-#~ msgstr "Quasar"
-
-#~ msgid "Wolf Rayet nebula"
-#~ msgstr "Wolf Rayet Nebel"
-
 #~ msgid "Star"
 #~ msgstr "Stern"
 
@@ -5801,9 +5885,6 @@ msgstr "Laden Sie ein Bild Ihres Objektivs hoch."
 
 #~ msgid "8 stars"
 #~ msgstr "8 Sterne"
-
-#~ msgid "Rest"
-#~ msgstr "Rest"
 
 #~ msgid "Add one or more instruments"
 #~ msgstr "Ein oder mehrere Instrumente hinzufügen"

@@ -4,17 +4,16 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateObjectsTable extends Migration
+class CreateTargetsTable extends Migration
 {
     /**
      * Run the migrations.
      *
-     * @return void
      */
     public function up()
     {
-        Schema::create('objects', function (Blueprint $table) {
-            $table->string('name', 255)->primary();
+        Schema::create('targets', function (Blueprint $table) {
+            $table->string('name')->primary();
             $table->string('icqname', 11)->nullable();
             $table->string('type', 8)->nullable();
             $table->string('con', 5)->nullable();
@@ -49,16 +48,18 @@ class CreateObjectsTable extends Migration
             $table->smallInteger('Interstellarum')->unsigned()->nullable();
 
             $table->timestamps();
+
+            $table->foreign('type')
+                ->references('id')->on('target_types');
         });
     }
 
     /**
      * Reverse the migrations.
      *
-     * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('objects');
+        Schema::dropIfExists('targets');
     }
 }
