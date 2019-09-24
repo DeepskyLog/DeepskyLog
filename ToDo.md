@@ -16,16 +16,24 @@
 + [ ] Database
   + [x] Create target_types
   + [ ] Create constellations
+    + [ ] Tests constellations with tinker
   + [ ] Create atlases
   + [ ] Translations
   + [ ] Create targets
-    + [ ] Add craters
-    + [ ] Add planets
-    + [ ] Add sun
+    + [ ] Add moon
+      + [ ] Seas
+      + [ ] Mountains
+      + [ ] Craters
+    + [x] Add planets
+    + [x] Add sun
+      + [ ] Test to get the observation type from the object name: 
+  `App\Target::where('name', 'Venus')->first()->type()->first()->observation_type()->first()->name`
+  `App\TargetType::where('id', 'PLANET')->first()->targets()->get()`
     + [ ] Add Comets
     + [ ] Add deepsky-objects
     + [ ] Remove the old objects migrations
     + [ ] Think about alternative names
+    + [ ] Think how to search on localized names for sun and planets.
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
 + [ ] Add new types for the objects
   + [ ] Add planets
