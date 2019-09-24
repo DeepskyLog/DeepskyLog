@@ -6229,16 +6229,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "7.12.1",
+            "version": "7.12.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "8c4adaeb16985a108da4e0dab186bc7561bbbf8f"
+                "reference": "43fbf653dbb2abee55529ecc494fe0f9549252d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/8c4adaeb16985a108da4e0dab186bc7561bbbf8f",
-                "reference": "8c4adaeb16985a108da4e0dab186bc7561bbbf8f",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/43fbf653dbb2abee55529ecc494fe0f9549252d9",
+                "reference": "43fbf653dbb2abee55529ecc494fe0f9549252d9",
                 "shasum": ""
             },
             "require": {
@@ -6309,7 +6309,7 @@
                 "media",
                 "spatie"
             ],
-            "time": "2019-09-12T22:01:47+00:00"
+            "time": "2019-09-24T07:11:53+00:00"
         },
         {
             "name": "spatie/pdf-to-image",
@@ -9101,16 +9101,16 @@
         },
         {
             "name": "yajra/laravel-datatables-editor",
-            "version": "v1.16.0",
+            "version": "v1.17.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-editor.git",
-                "reference": "8cbb7e3b88397c3bbbf153bbccc90cded596116e"
+                "reference": "2e09ebe5d422d07d6a766ffa426ac64c3fba70ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-editor/zipball/8cbb7e3b88397c3bbbf153bbccc90cded596116e",
-                "reference": "8cbb7e3b88397c3bbbf153bbccc90cded596116e",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-editor/zipball/2e09ebe5d422d07d6a766ffa426ac64c3fba70ee",
+                "reference": "2e09ebe5d422d07d6a766ffa426ac64c3fba70ee",
                 "shasum": ""
             },
             "require": {
@@ -9159,7 +9159,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-09-20T06:20:07+00:00"
+            "time": "2019-09-21T05:49:51+00:00"
         },
         {
             "name": "yajra/laravel-datatables-fractal",
@@ -9221,16 +9221,16 @@
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v4.16.0",
+            "version": "v4.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "78d2ff38f087751de8d446424a2d36a142707c52"
+                "reference": "af9c29640c979a60ac71dc2a9571e50589f83a19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/78d2ff38f087751de8d446424a2d36a142707c52",
-                "reference": "78d2ff38f087751de8d446424a2d36a142707c52",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/af9c29640c979a60ac71dc2a9571e50589f83a19",
+                "reference": "af9c29640c979a60ac71dc2a9571e50589f83a19",
                 "shasum": ""
             },
             "require": {
@@ -9277,7 +9277,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-09-20T08:31:59+00:00"
+            "time": "2019-09-23T04:08:35+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",

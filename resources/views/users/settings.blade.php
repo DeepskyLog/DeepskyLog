@@ -366,20 +366,20 @@ function enableDisableCopyright() {
 }
 
 $("#picture").fileinput(
-        {
-            theme: "fas",
-            allowedFileTypes: ['image'],    // allow only images
-            'showUpload': false,
-            maxFileSize: 10000,
-            @if ($user->id != null && App\User::find($user->id)->getFirstMedia('observer') != null)
-            initialPreview: [
-                '<img class="file-preview-image kv-preview-data" src="/users/{{ $user->id }}/getImage">'
-            ],
-            initialPreviewConfig: [
-                {caption: "{{ App\User::find($user->id)->getFirstMedia('observer')->file_name }}", size: {{ App\User::find($user->id)->getFirstMedia('observer')->size }}, url: "/users/{{ $user->id }}/deleteImage", key: 1},
-            ],
-            @endif
-        }
-    );
+    {
+        theme: "fas",
+        allowedFileTypes: ['image'],    // allow only images
+        'showUpload': false,
+        maxFileSize: 10000,
+        @if ($user->id != null && App\User::find($user->id)->getFirstMedia('observer') != null)
+        initialPreview: [
+            '<img class="file-preview-image kv-preview-data" src="/users/{{ $user->id }}/getImage">'
+        ],
+        initialPreviewConfig: [
+            {caption: "{{ App\User::find($user->id)->getFirstMedia('observer')->file_name }}", size: {{ App\User::find($user->id)->getFirstMedia('observer')->size }}, url: "/users/{{ $user->id }}/deleteImage", key: 1},
+        ],
+        @endif
+    }
+);
 </script>
 @endpush
