@@ -20,12 +20,7 @@
   + [ ] Create atlases
   + [ ] Translations
   + [ ] Create targets
-    + [ ] Add moon
-      + [x] Seas
-      + [x] Mountains
-      + [ ] Valleys -> Also add to the target_types
-      + [ ] Other features -> Also add to the target_types
-      + [x] Craters
+    + [x] Add moon
     + [ ] Adapt Details page -> show correct number of objects
     + [x] Add planets
     + [x] Add sun

@@ -262,6 +262,22 @@ class CreateTargetTypesTable extends Migration
                 'observation_type' => 'moon'
             ]
         );
+
+        DB::table('target_types')->insert(
+            [
+                'id' => 'VALLEY',
+                'type' => 'Valley',
+                'observation_type' => 'moon'
+            ]
+        );
+
+        DB::table('target_types')->insert(
+            [
+                'id' => 'OTHER',
+                'type' => 'Other feature',
+                'observation_type' => 'moon'
+            ]
+        );
     }
 
     /**

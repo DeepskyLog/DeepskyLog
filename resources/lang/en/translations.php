@@ -87,6 +87,8 @@ return [
     _i('Mountain'),
     _i('Sea'),
     _i('Crater'),
+    _i('Valley'),
+    _i('Other feature'),
     _i('Andromeda'),
     _i('Antlia'),
     _i('Apus'),
