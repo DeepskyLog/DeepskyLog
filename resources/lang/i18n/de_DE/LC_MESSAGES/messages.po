@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-09-24 14:36+0200\n"
-"PO-Revision-Date: 2019-09-24 14:36+0200\n"
+"POT-Creation-Date: 2019-09-25 07:33-0400\n"
+"PO-Revision-Date: 2019-09-25 08:47-0400\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: de_DE\n"
@@ -221,17 +221,13 @@ msgstr "Planeten"
 
 #: ../resources/lang/en/translations.php:41
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:41
-#, fuzzy
-#| msgid "Comets"
 msgid "Comet"
-msgstr "Kometen"
+msgstr "Komet"
 
 #: ../resources/lang/en/translations.php:42
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:42
-#, fuzzy
-#| msgid "Planets"
 msgid "Planet"
-msgstr "Planeten"
+msgstr "Planet"
 
 #: ../resources/lang/en/translations.php:43
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:43
@@ -262,192 +258,670 @@ msgstr "Mond"
 
 #: ../resources/lang/en/translations.php:46
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:46
-msgid "Naked Eye"
-msgstr "Bloßem Auge"
+msgid "Mercury"
+msgstr "Merkur"
 
 #: ../resources/lang/en/translations.php:47
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:47
-msgid "Binoculars"
-msgstr "Fernglas"
+msgid "Venus"
+msgstr "Venus"
 
 #: ../resources/lang/en/translations.php:48
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:48
-msgid "Refractor"
-msgstr "Refraktor"
+msgid "Mars"
+msgstr "Mars"
 
 #: ../resources/lang/en/translations.php:49
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:49
-msgid "Reflector"
-msgstr "Reflektor"
+msgid "Jupiter"
+msgstr "Jupiter"
 
 #: ../resources/lang/en/translations.php:50
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:50
-msgid "Finderscope"
-msgstr "Sucher"
+msgid "Saturn"
+msgstr "Saturn"
 
 #: ../resources/lang/en/translations.php:51
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:51
-msgid "Other"
-msgstr "Andere"
+msgid "Uranus"
+msgstr "Uranus"
 
 #: ../resources/lang/en/translations.php:52
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:52
-msgid "Cassegrain"
-msgstr "Cassegrain"
+msgid "Neptune"
+msgstr "Neptun"
 
 #: ../resources/lang/en/translations.php:53
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:53
-msgid "Kutter"
-msgstr "Kutter"
+msgid "Naked Eye"
+msgstr "Bloßem Auge"
 
 #: ../resources/lang/en/translations.php:54
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:54
-msgid "Maksutov"
-msgstr "Maksutov"
+msgid "Binoculars"
+msgstr "Fernglas"
 
 #: ../resources/lang/en/translations.php:55
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:55
-msgid "Schmidt Cassegrain"
-msgstr "Schmidt Cassegrain"
+msgid "Refractor"
+msgstr "Refraktor"
 
 #: ../resources/lang/en/translations.php:56
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:56
-msgid "Asterism"
-msgstr "Asterismus"
+msgid "Reflector"
+msgstr "Reflektor"
 
 #: ../resources/lang/en/translations.php:57
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:57
-msgid "Bright nebula"
-msgstr "Hellen Nebel"
+msgid "Finderscope"
+msgstr "Sucher"
 
 #: ../resources/lang/en/translations.php:58
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:58
-msgid "Cluster with nebulosity"
-msgstr "Cluster mit Nebulosität"
+msgid "Other"
+msgstr "Andere"
 
 #: ../resources/lang/en/translations.php:59
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:59
-#, fuzzy
-#| msgid "Double Stars"
-msgid "Double Star"
-msgstr "Doppelsterne"
+msgid "Cassegrain"
+msgstr "Cassegrain"
 
 #: ../resources/lang/en/translations.php:60
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:60
-msgid "Dark nebula"
-msgstr "Dunkler Nebel"
+msgid "Kutter"
+msgstr "Kutter"
 
 #: ../resources/lang/en/translations.php:61
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:61
-msgid "Emission nebula"
-msgstr "Emissionsnebel"
+msgid "Maksutov"
+msgstr "Maksutov"
 
 #: ../resources/lang/en/translations.php:62
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:62
-msgid "Emission and Reflection nebula"
-msgstr "Emission und Reflexionsnebel"
+msgid "Schmidt Cassegrain"
+msgstr "Schmidt Cassegrain"
 
 #: ../resources/lang/en/translations.php:63
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:63
-msgid "Emission nebula around a star"
-msgstr "Emissionsnebel um einen Stern"
+msgid "Asterism"
+msgstr "Asterismus"
 
 #: ../resources/lang/en/translations.php:64
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:64
-msgid "Galaxy cluster"
-msgstr "Galaxienhaufen"
+msgid "Bright nebula"
+msgstr "Hellen Nebel"
 
 #: ../resources/lang/en/translations.php:65
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:65
-msgid "Galaxy"
-msgstr "Galaxy"
+msgid "Cluster with nebulosity"
+msgstr "Cluster mit Nebulosität"
 
 #: ../resources/lang/en/translations.php:66
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:66
-msgid "Globular cluster"
-msgstr "Kugelsternhaufen"
+msgid "Double Star"
+msgstr "Doppelstern"
 
 #: ../resources/lang/en/translations.php:67
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:67
-msgid "Diffuse nebula"
-msgstr "Diffuser Nebel"
+msgid "Dark nebula"
+msgstr "Dunkler Nebel"
 
 #: ../resources/lang/en/translations.php:68
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:68
-msgid "H-II"
-msgstr "H-II"
+msgid "Emission nebula"
+msgstr "Emissionsnebel"
 
 #: ../resources/lang/en/translations.php:69
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:69
-msgid "Nonexistent"
-msgstr "Nicht vorhanden"
+msgid "Emission and Reflection nebula"
+msgstr "Emission und Reflexionsnebel"
 
 #: ../resources/lang/en/translations.php:70
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:70
-msgid "Open cluster"
-msgstr "Offener Cluster"
+msgid "Emission nebula around a star"
+msgstr "Emissionsnebel um einen Stern"
 
 #: ../resources/lang/en/translations.php:71
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:71
-msgid "Planetary nebula"
-msgstr "Planetarischen Nebel"
+msgid "Galaxy cluster"
+msgstr "Galaxienhaufen"
 
 #: ../resources/lang/en/translations.php:72
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:72
-msgid "Reflection nebula"
-msgstr "Reflexionsnebel"
+msgid "Galaxy"
+msgstr "Galaxy"
 
 #: ../resources/lang/en/translations.php:73
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:73
-msgid "Reflection nebula and H-II"
-msgstr "Reflexionsnebel und H-II"
+msgid "Globular cluster"
+msgstr "Kugelsternhaufen"
 
 #: ../resources/lang/en/translations.php:74
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:74
-msgid "Supernova"
-msgstr "Supernova"
+msgid "Diffuse nebula"
+msgstr "Diffuser Nebel"
 
 #: ../resources/lang/en/translations.php:75
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:75
-msgid "Supernova remnant"
-msgstr "Supernova Rest"
+msgid "H-II"
+msgstr "H-II"
 
 #: ../resources/lang/en/translations.php:76
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:76
-msgid "Nebula around star"
-msgstr "Nebel um Stern"
+msgid "Nonexistent"
+msgstr "Nicht vorhanden"
 
 #: ../resources/lang/en/translations.php:77
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:77
-msgid "Quasar"
-msgstr "Quasar"
+msgid "Open cluster"
+msgstr "Offener Cluster"
 
 #: ../resources/lang/en/translations.php:78
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:78
-msgid "Wolf Rayet nebula"
-msgstr "Wolf Rayet Nebel"
+msgid "Planetary nebula"
+msgstr "Planetarischen Nebel"
 
 #: ../resources/lang/en/translations.php:79
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:79
-msgid "Rest"
-msgstr "Rest"
+msgid "Reflection nebula"
+msgstr "Reflexionsnebel"
 
 #: ../resources/lang/en/translations.php:80
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:80
-msgid "Mountain"
-msgstr ""
+msgid "Reflection nebula and H-II"
+msgstr "Reflexionsnebel und H-II"
 
 #: ../resources/lang/en/translations.php:81
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:81
-#, fuzzy
-#| msgid "Set"
-msgid "Sea"
-msgstr "Untergang"
+msgid "Supernova"
+msgstr "Supernova"
 
 #: ../resources/lang/en/translations.php:82
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:82
+msgid "Supernova remnant"
+msgstr "Supernova Rest"
+
+#: ../resources/lang/en/translations.php:83
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:83
+msgid "Nebula around star"
+msgstr "Nebel um Stern"
+
+#: ../resources/lang/en/translations.php:84
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:84
+msgid "Quasar"
+msgstr "Quasar"
+
+#: ../resources/lang/en/translations.php:85
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:85
+msgid "Wolf Rayet nebula"
+msgstr "Wolf Rayet Nebel"
+
+#: ../resources/lang/en/translations.php:86
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:86
+msgid "Rest"
+msgstr "Rest"
+
+#: ../resources/lang/en/translations.php:87
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:87
+msgid "Mountain"
+msgstr "Berg"
+
+#: ../resources/lang/en/translations.php:88
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:88
+msgid "Sea"
+msgstr "Meer"
+
+#: ../resources/lang/en/translations.php:89
+#: ../resources/lang/en/translations.php:120
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:89
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:120
 msgid "Crater"
-msgstr ""
+msgstr "Krater"
+
+#: ../resources/lang/en/translations.php:90
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:90
+msgid "Valley"
+msgstr "Tal"
+
+#: ../resources/lang/en/translations.php:91
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:91
+msgid "Other feature"
+msgstr "Sonstige Eigenschaft"
+
+#: ../resources/lang/en/translations.php:92
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:92
+msgid "Andromeda"
+msgstr "Andromeda"
+
+#: ../resources/lang/en/translations.php:93
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:93
+msgid "Antlia"
+msgstr "Antlia"
+
+#: ../resources/lang/en/translations.php:94
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:94
+msgid "Apus"
+msgstr "Apus"
+
+#: ../resources/lang/en/translations.php:95
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:95
+msgid "Aquarius"
+msgstr "Aquarius"
+
+#: ../resources/lang/en/translations.php:96
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:96
+msgid "Aquila"
+msgstr "Aquila"
+
+#: ../resources/lang/en/translations.php:97
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:97
+msgid "Ara"
+msgstr "Ara"
+
+#: ../resources/lang/en/translations.php:98
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:98
+msgid "Aries"
+msgstr "Aries"
+
+#: ../resources/lang/en/translations.php:99
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:99
+msgid "Auriga"
+msgstr "Auriga"
+
+#: ../resources/lang/en/translations.php:100
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:100
+msgid "Bootes"
+msgstr "Bootes"
+
+#: ../resources/lang/en/translations.php:101
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:101
+msgid "Caelum"
+msgstr "Caelum"
+
+#: ../resources/lang/en/translations.php:102
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:102
+msgid "Camelopardalis"
+msgstr "Camelopardalis"
+
+#: ../resources/lang/en/translations.php:103
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:103
+msgid "Cancer"
+msgstr "Cancer"
+
+#: ../resources/lang/en/translations.php:104
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:104
+msgid "Canes Venatici"
+msgstr "Canes Venatici"
+
+#: ../resources/lang/en/translations.php:105
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:105
+msgid "Canis Major"
+msgstr "Canis Major"
+
+#: ../resources/lang/en/translations.php:106
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:106
+msgid "Canis Minor"
+msgstr "Canis Minor"
+
+#: ../resources/lang/en/translations.php:107
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:107
+msgid "Capricornus"
+msgstr "Capricornus"
+
+#: ../resources/lang/en/translations.php:108
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:108
+msgid "Carina"
+msgstr "Carina"
+
+#: ../resources/lang/en/translations.php:109
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:109
+msgid "Cassiopeia"
+msgstr "Cassiopeia"
+
+#: ../resources/lang/en/translations.php:110
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:110
+msgid "Centaurus"
+msgstr "Centaurus"
+
+#: ../resources/lang/en/translations.php:111
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:111
+msgid "Cepheus"
+msgstr "Cepheus"
+
+#: ../resources/lang/en/translations.php:112
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:112
+msgid "Cetus"
+msgstr "Cetus"
+
+#: ../resources/lang/en/translations.php:113
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:113
+msgid "Chamaeleon"
+msgstr "Chamaeleon"
+
+#: ../resources/lang/en/translations.php:114
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:114
+msgid "Circinus"
+msgstr "Circinus"
+
+#: ../resources/lang/en/translations.php:115
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:115
+msgid "Columba"
+msgstr "Columba"
+
+#: ../resources/lang/en/translations.php:116
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:116
+msgid "Coma Berenices"
+msgstr "Coma Berenices"
+
+#: ../resources/lang/en/translations.php:117
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:117
+msgid "Corona Australis"
+msgstr "Corona Australis"
+
+#: ../resources/lang/en/translations.php:118
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:118
+msgid "Corona Borealis"
+msgstr "Corona Borealis"
+
+#: ../resources/lang/en/translations.php:119
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:119
+msgid "Corvus"
+msgstr "Corvus"
+
+#: ../resources/lang/en/translations.php:121
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:121
+msgid "Crux"
+msgstr "Crux"
+
+#: ../resources/lang/en/translations.php:122
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:122
+msgid "Cygnus"
+msgstr "Cygnus"
+
+#: ../resources/lang/en/translations.php:123
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:123
+msgid "Delphinus"
+msgstr "Delphinus"
+
+#: ../resources/lang/en/translations.php:124
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:124
+msgid "Dorado"
+msgstr "Dorado"
+
+#: ../resources/lang/en/translations.php:125
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:125
+msgid "Draco"
+msgstr "Draco"
+
+#: ../resources/lang/en/translations.php:126
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:126
+msgid "Equuleus"
+msgstr "Equuleus"
+
+#: ../resources/lang/en/translations.php:127
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:127
+msgid "Eridanus"
+msgstr "Eridanus"
+
+#: ../resources/lang/en/translations.php:128
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:128
+msgid "Fornax"
+msgstr "Fornax"
+
+#: ../resources/lang/en/translations.php:129
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:129
+msgid "Gemini"
+msgstr "Gemini"
+
+#: ../resources/lang/en/translations.php:130
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:130
+msgid "Grus"
+msgstr "Grus"
+
+#: ../resources/lang/en/translations.php:131
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:131
+msgid "Hercules"
+msgstr "Hercules"
+
+#: ../resources/lang/en/translations.php:132
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:132
+msgid "Horologium"
+msgstr "Horologium"
+
+#: ../resources/lang/en/translations.php:133
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:133
+msgid "Hydra"
+msgstr "Hydra"
+
+#: ../resources/lang/en/translations.php:134
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:134
+msgid "Hydrus"
+msgstr "Hydrus"
+
+#: ../resources/lang/en/translations.php:135
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:135
+msgid "Indus"
+msgstr "Indus"
+
+#: ../resources/lang/en/translations.php:136
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:136
+msgid "Lacerta"
+msgstr "Lacerta"
+
+#: ../resources/lang/en/translations.php:137
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:137
+msgid "Leo"
+msgstr "Leo"
+
+#: ../resources/lang/en/translations.php:138
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:138
+msgid "Leo Minor"
+msgstr "Leo Minor"
+
+#: ../resources/lang/en/translations.php:139
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:139
+msgid "Lepus"
+msgstr "Lepus"
+
+#: ../resources/lang/en/translations.php:140
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:140
+msgid "Libra"
+msgstr "Libra"
+
+#: ../resources/lang/en/translations.php:141
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:141
+msgid "Lupus"
+msgstr "Lupus"
+
+#: ../resources/lang/en/translations.php:142
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:142
+msgid "Lynx"
+msgstr "Lynx"
+
+#: ../resources/lang/en/translations.php:143
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:143
+msgid "Lyra"
+msgstr "Lyra"
+
+#: ../resources/lang/en/translations.php:144
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:144
+msgid "Mensa"
+msgstr "Mensa"
+
+#: ../resources/lang/en/translations.php:145
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:145
+msgid "Microscopium"
+msgstr "Microscopium"
+
+#: ../resources/lang/en/translations.php:146
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:146
+msgid "Monoceros"
+msgstr "Monoceros"
+
+#: ../resources/lang/en/translations.php:147
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:147
+msgid "Musca"
+msgstr "Musca"
+
+#: ../resources/lang/en/translations.php:148
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:148
+msgid "Norma"
+msgstr "Norma"
+
+#: ../resources/lang/en/translations.php:149
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:149
+msgid "Octans"
+msgstr "Octans"
+
+#: ../resources/lang/en/translations.php:150
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:150
+msgid "Ophiuchus"
+msgstr "Ophiuchus"
+
+#: ../resources/lang/en/translations.php:151
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:151
+msgid "Orion"
+msgstr "Orion"
+
+#: ../resources/lang/en/translations.php:152
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:152
+msgid "Pavo"
+msgstr "Pavo"
+
+#: ../resources/lang/en/translations.php:153
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:153
+msgid "Pegasus"
+msgstr "Pegasus"
+
+#: ../resources/lang/en/translations.php:154
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:154
+msgid "Perseus"
+msgstr "Perseus"
+
+#: ../resources/lang/en/translations.php:155
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:155
+msgid "Phoenix"
+msgstr "Phoenix"
+
+#: ../resources/lang/en/translations.php:156
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:156
+msgid "Pictor"
+msgstr "Pictor"
+
+#: ../resources/lang/en/translations.php:157
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:157
+msgid "Pisces"
+msgstr "Pisces"
+
+#: ../resources/lang/en/translations.php:158
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:158
+msgid "Pisces Austrinus"
+msgstr "Pisces Austrinus"
+
+#: ../resources/lang/en/translations.php:159
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:159
+msgid "Puppis"
+msgstr "Puppis"
+
+#: ../resources/lang/en/translations.php:160
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:160
+msgid "Pyxis"
+msgstr "Pyxis"
+
+#: ../resources/lang/en/translations.php:161
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:161
+msgid "Reticulum"
+msgstr "Reticulum"
+
+#: ../resources/lang/en/translations.php:162
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:162
+msgid "Sagitta"
+msgstr "Sagitta"
+
+#: ../resources/lang/en/translations.php:163
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:163
+msgid "Sagittarius"
+msgstr "Sagittarius"
+
+#: ../resources/lang/en/translations.php:164
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:164
+msgid "Scorpius"
+msgstr "Scorpius"
+
+#: ../resources/lang/en/translations.php:165
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:165
+msgid "Sculptor"
+msgstr "Sculptor"
+
+#: ../resources/lang/en/translations.php:166
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:166
+msgid "Scutum"
+msgstr "Scutum"
+
+#: ../resources/lang/en/translations.php:167
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:167
+msgid "Serpens"
+msgstr "Serpens"
+
+#: ../resources/lang/en/translations.php:168
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:168
+msgid "Sextans"
+msgstr "Sextans"
+
+#: ../resources/lang/en/translations.php:169
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:169
+msgid "Taurus"
+msgstr "Taurus"
+
+#: ../resources/lang/en/translations.php:170
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:170
+msgid "Telescopium"
+msgstr "Telescopium"
+
+#: ../resources/lang/en/translations.php:171
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:171
+msgid "Triangulum Australe"
+msgstr "Triangulum Australe"
+
+#: ../resources/lang/en/translations.php:172
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:172
+msgid "Triangulum"
+msgstr "Triangulum"
+
+#: ../resources/lang/en/translations.php:173
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:173
+msgid "Tucana"
+msgstr "Tucana"
+
+#: ../resources/lang/en/translations.php:174
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:174
+msgid "Ursa Major"
+msgstr "Ursa Major"
+
+#: ../resources/lang/en/translations.php:175
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:175
+msgid "Ursa Minor"
+msgstr "Ursa Minor"
+
+#: ../resources/lang/en/translations.php:176
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:176
+msgid "Vela"
+msgstr "Vela"
+
+#: ../resources/lang/en/translations.php:177
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:177
+msgid "Virgo"
+msgstr "Virgo"
+
+#: ../resources/lang/en/translations.php:178
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:178
+msgid "Volans"
+msgstr "Volans"
+
+#: ../resources/lang/en/translations.php:179
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:179
+msgid "Vulpecula"
+msgstr "Vulpecula"
 
 #: ../resources/views/auth/passwords/reset.blade.php:75
 #: ../resources/views/auth/register.blade.php:210
@@ -2423,9 +2897,6 @@ msgstr "Laden Sie ein Bild Ihres Objektivs hoch."
 
 #~ msgid "Weaker than"
 #~ msgstr "Schwächer als"
-
-#~ msgid "Uncertain"
-#~ msgstr "Unsicher"
 
 #~ msgid "Degree of condensation"
 #~ msgstr "Grad der Kondensation"
@@ -4597,9 +5068,6 @@ msgstr "Laden Sie ein Bild Ihres Objektivs hoch."
 #~ msgid "Comments on your observing session."
 #~ msgstr "Kommentar zur Sitzung."
 
-#~ msgid "Picture"
-#~ msgstr "Bild"
-
 #~ msgid ""
 #~ "A picture showing the location of the session, a weather satellite "
 #~ "picture, ..."
@@ -5819,9 +6287,6 @@ msgstr "Laden Sie ein Bild Ihres Objektivs hoch."
 
 #~ msgid "Mar"
 #~ msgstr "Mär"
-
-#~ msgid "Apr"
-#~ msgstr "Apr"
 
 #~ msgid "Jun"
 #~ msgstr "Jun"
