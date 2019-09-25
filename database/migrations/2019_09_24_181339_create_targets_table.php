@@ -5756,6 +5756,299 @@ class CreateTargetsTable extends Migration
                     'type' => 'CRATER'
                 ]
             );
+
+            // Add mountains on the moon
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Agnes",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Ampère",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons André",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Ardeshir",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Argaeus",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Blanc",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Bradley",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Delisle",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Dieter",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Dilip",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Esam",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Ganau",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Gruithuisen Delta",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Gruithuisen Gamma",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Hadley",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Hadley Delta",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Hansteen",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Herodotus",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Huygens",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons La Hire",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Maraldi",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Moro",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Penck",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Pico",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Piton",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Rümker",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Usov",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Vinogradov",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Vitruvius",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mons Wolff",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Agricola",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Alpes",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Apenninus",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Archimedes",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Carpatus",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Caucasus",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Cordillera",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Haemus",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Harbinger",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Jura",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Pyrenaeus",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Recti",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Riphaeus",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Rook",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Secchi",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Spitzbergen",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Taurus",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Montes Teneriffe",
+                    'type' => 'MOUNTAIN'
+                ]
+            );
+
+
     }
 
     /**

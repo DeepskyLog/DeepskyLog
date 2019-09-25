@@ -22,9 +22,11 @@
   + [ ] Create targets
     + [ ] Add moon
       + [ ] Seas
-      + [ ] Mountains
+      + [x] Mountains
       + [ ] Valleys -> Also add to the target_types
+      + [ ] Other features -> Also add to the target_types
       + [x] Craters
+    + [ ] Adapt Details page -> show correct number of objects
     + [x] Add planets
     + [x] Add sun
       + [ ] Test to get the observation type from the object name: 
