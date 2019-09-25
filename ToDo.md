@@ -21,7 +21,7 @@
   + [ ] Translations
   + [ ] Create targets
     + [ ] Add moon
-      + [ ] Seas
+      + [x] Seas
       + [x] Mountains
       + [ ] Valleys -> Also add to the target_types
       + [ ] Other features -> Also add to the target_types

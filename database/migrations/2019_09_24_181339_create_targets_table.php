@@ -6048,6 +6048,349 @@ class CreateTargetsTable extends Migration
                 ]
             );
 
+            // Add the seas
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Anguis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Australe",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Cognitum",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Crisium",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Fecunditatis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Frigoris",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Humboldtianum",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Humorum",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Imbrium",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Ingenii",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Insularum",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Marginis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Moscoviense",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Nectaris",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Nubium",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Orientale",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Serenitatis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Smythii",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Spumans",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Tranquillitatis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Undarum",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Mare Vaporum",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Oceanus Procellarum",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Aestatis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Autumni",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Bonitatis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Doloris",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Excellentiae",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Felicitatis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Gaudii",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Hiemalis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Lenitatis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Luxuriae",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Mortis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Oblivionis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Odii",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Perseverantiae",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Solitudinis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Somniorum",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Spei",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Temporis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Timoris",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Lacus Veris",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Palus Epidemiarum",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Palus Putredinis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Palus Somni",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Sinus Aestuum",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Sinus Amoris",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Sinus Asperitatis",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Sinus Concordiae",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Sinus Fidei",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Sinus Honoris",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Sinus Iridum",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Sinus Lunicus",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Sinus Medii",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Sinus Roris",
+                    'type' => 'SEA'
+                ]
+            );
+            DB::table('targets')->insert(
+                [
+                    'name' => "Sinus Successus",
+                    'type' => 'SEA'
+                ]
+            );
 
     }
 
