@@ -21,7 +21,6 @@
   + [ ] Translations
   + [ ] Create targets
     + [x] Add moon
-    + [ ] Adapt Details page -> show correct number of objects
     + [x] Add planets
     + [x] Add sun
       + [ ] Test to get the observation type from the object name: 

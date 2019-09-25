@@ -208,9 +208,12 @@
 
             <tr>
                 <td> {{ _i("Different objects") }} </td>
-                <td>240 / 12000 (2.0%)</td>
+                <td>240 / {{ \App\Target::all()->count() }} ({{ number_format(240.0 / \App\Target::all()->count() * 100, 2)}}%)</td>
                 @foreach (\App\observationTypes::all() as $type)
-                    <td>40 / 2000 (2.0%)</td>
+                    <td>40 / {{ App\TargetType::where('observation_type', $type->type)->first()->targets()->get()->count() }}
+                        @if (App\TargetType::where('observation_type', $type->type)->first()->targets()->get()->count() != 0)
+                        ({{ number_format(40 / App\TargetType::where('observation_type', $type->type)->first()->targets()->get()->count() * 100, 2) }}%)</td>
+                        @endif
                 @endforeach
             </tr>
 
