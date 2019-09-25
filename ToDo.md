@@ -15,7 +15,7 @@
 
 + [ ] Database
   + [x] Create target_types
-  + [ ] Create constellations
+  + [x] Create constellations
     + [ ] Tests constellations with tinker
   + [ ] Create atlases
   + [ ] Translations
@@ -23,7 +23,8 @@
     + [ ] Add moon
       + [ ] Seas
       + [ ] Mountains
-      + [ ] Craters
+      + [ ] Valleys -> Also add to the target_types
+      + [x] Craters
     + [x] Add planets
     + [x] Add sun
       + [ ] Test to get the observation type from the object name: 
@@ -36,7 +37,6 @@
     + [ ] Think how to search on localized names for sun and planets.
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
 + [ ] Add new types for the objects
-  + [ ] Add planets
   + [ ] Check OAL how to import and which information to store for the planets / sun / moon
   + [ ] Add Moon (list of craters / seas)
   + [ ] Add Sun
