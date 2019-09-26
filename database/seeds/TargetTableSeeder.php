@@ -129,9 +129,8 @@ class TargetTableSeeder extends Seeder
 
             Target::create(
                 [
-                    'name' => $comet->name,
+                    'name' => html_entity_decode($comet->name),
                     'type' => 'COMET',
-                    'icqname' => $comet->icqname,
                     'created_at' => $date
                 ]
             );

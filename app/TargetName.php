@@ -1,7 +1,7 @@
 <?php
 
  /**
-  * Target eloquent model.
+  * Target name eloquent model.
   *
   * PHP Version 7
   *
@@ -17,7 +17,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
  /**
-  * Target eloquent model.
+  * Target name eloquent model.
   *
   * @category Targets
   * @package  DeepskyLog
@@ -25,27 +25,21 @@ use Illuminate\Database\Eloquent\Model;
   * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
   * @link     http://www.deepskylog.org
   */
-class Target extends Model
+class TargetName extends Model
 {
-    protected $fillable = ['name', 'type'];
+    protected $fillable = ['objectname', 'catalog', 'catindex', 'altname'];
+
+    protected $primaryKey = 'altname';
+
+    public $incrementing = false;
 
     /**
-     * Targets have exactly one target type.
+     * TargetNamess have exactly one Target.
      *
      * @return HasOne The eloquent relationship
      */
-    public function type()
+    public function target()
     {
-        return $this->hasOne('App\TargetType', 'id', 'type');
-    }
-
-    /**
-     * Targets have exactly one or none constellations.
-     *
-     * @return HasOne The eloquent relationship
-     */
-    public function constellation()
-    {
-        return $this->hasOne('App\Constellations', 'id', 'con');
+        return $this->hasOne('App\Target', 'name', 'objectname');
     }
 }

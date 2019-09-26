@@ -21,13 +21,8 @@
     + [x] Add sun
     + [x] Add Comets
     + [x] Add deepsky-objects
-    + [ ] Remove the old objects migrations
-    + [ ] Think about alternative names
-    + [ ] Think how to search on localized names for sun and planets.
-      + [ ] Alternative names in objectnames?
+    + [x] Target names
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
-+ [ ] Add new types for the objects
-  + [ ] Check OAL how to import and which information to store for the planets / sun / moon
 + [ ] Comets
   + [ ] Let normal users add new comets
   + [ ] Download comets automatically from the internet
@@ -40,6 +35,10 @@
   + [ ] Make it possible to search for objects using extra parameters (like seen by observer, ...)
   + [ ] Objects seen with my 22cm, but not with my 45cm telescope?
   + [ ] Objects seen from a bad location, but not yet seen from a good location?
++ [ ] Atlas / interactive atlases
+  + [ ] Poll to see if we still need these options
+  + [ ] Remove the old objects migrations for objectoutlines
+
 
 ## HOME PAGE
 

@@ -14,7 +14,6 @@ class CreateTargetsTable extends Migration
     {
         Schema::create('targets', function (Blueprint $table) {
             $table->string('name')->primary();
-            $table->string('icqname', 11)->nullable();
             $table->string('type', 8);
             $table->string('con', 5)->nullable();
             $table->float('ra')->unsigned()->nullable();
@@ -57,7 +56,7 @@ class CreateTargetsTable extends Migration
         });
 
         // Insert the Sun
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sun',
                 'type' => 'SUN'
@@ -65,5692 +64,5694 @@ class CreateTargetsTable extends Migration
         );
 
         // Insert the planets
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mercury',
                 'type' => 'PLANET'
             ]
         );
 
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Venus',
                 'type' => 'PLANET'
             ]
         );
 
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mars',
                 'type' => 'PLANET'
             ]
         );
 
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Jupiter',
                 'type' => 'PLANET'
             ]
         );
 
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Saturn',
                 'type' => 'PLANET'
             ]
         );
 
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Uranus',
                 'type' => 'PLANET'
             ]
         );
 
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Neptune',
                 'type' => 'PLANET'
             ]
         );
 
+        // Insert the moon
+        \App\Target::create(
+            [
+                'name' => 'Moon',
+                'type' => 'OTHER'
+            ]
+        );
+
         // Insert the craters
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Abbot',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Abel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Abenezra',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Abetti',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Abulfeda',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Acosta',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Adams',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Agatharchides',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Agrippa',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Airy',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Akis',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Al-Bakri',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Al-Biruni',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Al-Marrakushi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Alan',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Albategnius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Aldrin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Alexander',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Alfraganus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Alhazen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Aliacensis',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Almanon',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Aloha',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Alpetragius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Alphonsus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ameghino',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ammonius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Amontons',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Amundsen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Anaxagoras',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Anaximander',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Anaximenes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Anděl',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Andersson',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ango',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Angström',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ann',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Annegrit',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ansgarius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Anville',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Apianus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Apollonius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Arago',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Aratus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Archimedes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Archytas',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Argelander',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ariadaeus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Aristarchus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Aristillus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Aristoteles',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Armstrong',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Arnold',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Arrhenius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Artemis',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Artsimovich',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Aryabhata',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Arzachel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Asada',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Asclepi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Aston',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Atlas',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Atwood',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Autolycus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Auwers',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Auzout',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Avery',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Azophi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Baade',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Babbage',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Back',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Baco',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Baillaud',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bailly',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Baily',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Balboa',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ball',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Balmer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Banachiewicz',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bancroft',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Banting',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Barkla',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Barnard',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Barocius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Barrow',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bartels',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bartels A',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bayer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Beals',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Beaumont',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Beer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Behaim',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Beketov',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Béla',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => "Bel'kovich",
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bellot',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bernoulli',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Berosus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Berzelius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bessarion',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bessel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bettinus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bianchini',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Biela',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bilharz',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Billy',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Biot',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Birmingham',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Birt',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Black',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Blagg',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Blancanus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Blanchinus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bliss',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bobillier',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bode',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Boethius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Boguslawsky',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bohnenberger',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bohr',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Boltzmann',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bombelli',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bonpland',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Boole',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Borda',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Borel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Boris',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Born',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Boscovich',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Boss',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bouguer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Boussingault',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bowen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Brackett',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Brayley',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Breislak',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Brenner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Brewster',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Brianchon',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Briggs',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Brisbane',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Brown',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bruce',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Brunner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Buch',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bullialdus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bunsen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Burckhardt',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Bürg',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Burnham',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Büsching',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Byrd',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Byrgius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'C. Herschel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'C. Mayer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cabeus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cajal',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Calippus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cameron',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Campanus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cannon',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Capella',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Capuanus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cardanus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Carlini',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Carlos',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Carmichael',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Carpenter',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Carrel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Carrillo',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Carrington',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cartan',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Casatus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cassini',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catalán',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catharina',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cauchy',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cavalerius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cavendish',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Caventou',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cayley',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Celsius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Censorinus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cepheus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Chacornac',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Challis',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Chang-Ngo',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Chevallier',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ching-Te',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Chladni',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cichus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Clairaut',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Clausius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Clavius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cleomedes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cleostratus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Clerke',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Collins',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Colombo',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Condon',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Condorcet',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Conon',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cook',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Copernicus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Couder',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Courtney',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cremona',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Crile',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Crozier',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Crüger',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ctesibius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Curie',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Curtis',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Curtius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cusanus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cuvier',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cyrillus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Cysatus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => "d'Arrest",
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'da Vinci',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dag',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Daguerre',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dale',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dalton',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Daly',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Damoiseau',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Daniell',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Darney',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Darwin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Daubrée',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Davy',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dawes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'de Gasparis',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'de Gerlache',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'de la Rue',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'de Moraes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'de Morgan',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'de Sitter',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'de Vico',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Debes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dechen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Delambre',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Delaunay',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Delia',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Delisle',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Delmotte',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Deluc',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dembowski',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Democritus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Demonax',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Desargues',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Descartes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Deseilligny',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Deslandres',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Diana',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dionysius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Diophantus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dollond',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Donati',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Donna',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Donner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Doppelmayer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dove',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Draper',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Drebbel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Drude',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dubyago',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dunthorne',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Eckert',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Eddington',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Edison',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Edith',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Egede',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Eichstadt',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Eimmart',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Einstein',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Elger',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Elmer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Encke',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Endymion',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Epigenes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Epimenides',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Eratosthenes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Erlanger',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Esclangon',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Euclides',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Euctemon',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Eudoxus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Euler',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fabbroni',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fabricius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fabry',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fahrenheit',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Faraday',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Faustini',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fauth',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Faye',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fedorov',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Felix',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fermat',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fernelius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Feuillée',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Finsch',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Firmicus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Flammarion',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Flamsteed',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Florensky',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Florey',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Focas',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fontana',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fontenelle',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Foucault',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fourier',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fra Mauro',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fracastorius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Franck',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Franklin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Franz',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fraunhofer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Fredholm',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Freud',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Furnerius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'G. Bond',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Galen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Galilaei',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Galle',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Galvani',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gambart',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gardner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gärtner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gassendi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gaston',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gaudibert',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gauricus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gauss',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gay-Lussac',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Geber',
                 'type' => 'CRATER'
             ]
         );
 
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Geissler',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Geminus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gemma Frisius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gerard',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gernsback',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gibbs',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gilbert',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gill',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ginzel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gioja',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Giordano Bruno',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Glaisher',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Glushko',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Goclenius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Goddard',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Godin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Goldschmidt',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Golgi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Goodacre',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gore',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gould',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Grace',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Graff',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Greaves',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Grimaldi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Grignard',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Grove',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gruemberger',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gruithuisen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Guericke',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gum',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gutenberg',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Guthnick',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Gyldén',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hagecius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hahn',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Haidinger',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hainzel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Haldane',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hale',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hall',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Halley',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hamilton',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hanno',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hansen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hansteen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Harding',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hargreaves',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Harlan',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Harold',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Harpalus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hartwig',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hase',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hausen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Haworth',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hayn',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hecataeus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hédervári',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hedin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Heinrich',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Heinsius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Heis',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Helicon',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hell',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Helmert',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Helmholtz',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Henry',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Henry Frères',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Henyey',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Heraclitus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hercules',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Herigonius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hermann',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hermite',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Herodotus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Herschel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hertz',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hesiodus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hevelius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hill',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hind',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hippalus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hinshelwood',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hipparchus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hirayama',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hohmann',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Holden',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hommel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hooke',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hornsby',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Horrebow',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Horrocks',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hortensius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Houtermans',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hubble',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Huggins',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Humason',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Humboldt',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hume',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Huxley',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hyginus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Hypatia',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ian',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ibn Bajja',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ibn Battuta',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ibn Yunus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ibn-Rushd',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => "Idel'son",
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ideler',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ina',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Inghirami',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Isabel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Isidorus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Isis',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ivan',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'J. Herschel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Jacobi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Jansen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Jansky',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Janssen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Jeans',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Jehan',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Jenkins',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Jenner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Jerik',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Joliot',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Jomo',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'José',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Joy',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Julienne',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Julius Caesar',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kaiser',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kane',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kant',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kao',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kapteyn',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Karima',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kästner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kathleen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Keldysh',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kepler',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kies',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kiess',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kinau',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kirch',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kircher',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kirchhoff',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Klaproth',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Klein',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Knox-Shaw',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'König',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kopff',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kozyrev',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Krafft',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kramarov',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Krasnov',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kreiken',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Krieger',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Krogh',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Krusenstern',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kugler',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kuiper',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kundt',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Kunowsky',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'la Caille',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'la Condamine',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'la Pérouse',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacchini',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacroix',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lade',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lagalla',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lagrange',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lalande',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lallemand',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lamarck',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lambert',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lamé',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lamèch',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lamont',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Landsteiner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Langley',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Langrenus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lansberg',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lassell',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Laue',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lauritsen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lavoisier',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lawrence',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'le Gentil',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'le Monnier',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'le Verrier',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Leakey',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lebesgue',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lee',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Legendre',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lehmann',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lepaute',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Letronne',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lexell',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Licetus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lichtenberg',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lick',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Liebig',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lilius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Linda',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lindbergh',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lindenau',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lindsay',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Linné',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Liouville',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lippershey',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Littrow',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lockyer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Loewy',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lohrmann',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lohse',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Longomontanus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lorentz',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Louise',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Louville',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lubbock',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lubiniezky',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lucian',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Luther',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lyapunov',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lyell',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lyot',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Maclaurin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Maclear',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'MacMillan',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Macrobius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mädler',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Maestlin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Magelhaens',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Magelhaens A',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Maginus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Main',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mairan',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Malapert',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Malinkin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mallet',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Manilius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Manners',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Manuel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Manzinus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Maraldi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Marco Polo',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Marinus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Marius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Markov',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Marth',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mary',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Maskelyne',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mason',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Maunder',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Maupertuis',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Maurolycus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Maury',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mavis',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'McAdie',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'McClure',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'McDonald',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'McLaughlin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mee',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mees',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Menelaus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Menzel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mercator',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
-            [
-                'name' => 'Mercurius',
-                'type' => 'CRATER'
-            ]
-        );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mersenius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Messala',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Messier',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Metius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Meton',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Michael',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Milichius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Miller',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mitchell',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Moigno',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Moltke',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Monge',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Monira',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montanari',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Moretus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Morley',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Moseley',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mösting',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mouchez',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Müller',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Murchison',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mutus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nansen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Naonobu',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nasireddin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nasmyth',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Natasha',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Naumann',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Neander',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nearch',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Neison',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Neper',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Neumayer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Newcomb',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Newton',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nicholson',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nicolai',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nicollet',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nielsen',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nobile',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nobili',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nöggerath',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nonius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Norman',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Nunn',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Oenopides',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Oersted',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Oken',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Olbers',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Opelt',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Oppolzer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Orontius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Osama',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Osiris',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Osman',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Palisa',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Palitzsch',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pallas',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Palmieri',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Parrot',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Parry',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pascal',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Patricia',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Peary',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Peek',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Peirce',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Peirescius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pentland',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Petavius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Petermann',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Peters',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Petit',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Petrov',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pettit',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Phillips',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Philolaus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Phocylides',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Piazzi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Piazzi Smyth',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Picard',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Piccolomini',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pickering',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pictet',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pierazzo',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pilâtre',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pingré',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pitatus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pitiscus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Plana',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Plato',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Playfair',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Plinius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Plutarch',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Poczobutt',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Poisson',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Polybius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pomortsev',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Poncelet',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pons',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pontanus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pontécoulant',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Popov',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Porter',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Posidonius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Powell',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Prinz',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Priscilla',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Proclus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Proctor',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Protagoras',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ptolemaeus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Puiseux',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pupin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Purbach',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Purkyně',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pythagoras',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Pytheas',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rabbi Levi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Raman',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ramsden',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rankine',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ravi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rayleigh',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Réaumur',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Regiomontanus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Regnault',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Reichenbach',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Reimarus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Reiner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Reinhold',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Repsold',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Respighi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rhaeticus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rheita',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rhysling',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Riccioli',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Riccius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Riemann',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ritchey',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ritter',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ritz',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Robert',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Robinson',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rocca',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rocco',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Römer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rosa',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rosenberger',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ross',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rosse',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rost',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rothmann',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Runge',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Russell',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ruth',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rutherfurd',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sabatier',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sabine',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sacrobosco',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Samir',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sampson',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Santbech',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Santos-Dumont',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sarabhai',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sasserides',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Saunder',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Saussure',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Scheele',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Scheiner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Schiaparelli',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Schickard',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Schiller',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Schlüter',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Schmidt',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Schomberger',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Schönfeld',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Schorr',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Schröter',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Schubert',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Schumacher',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Schwabe',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Scoresby',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Scott',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Secchi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Seeliger',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Segner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Seleucus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Seneca',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Shaler',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Shapley',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sharp',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sheepshanks',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Shoemaker',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Short',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Shuckburgh',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Shuleykin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Silberschlag',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Simpelius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sinas',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sirsalis',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sklodowska',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Slocum',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Smithson',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Smoluchowski',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Snellius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Somerville',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sömmering',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Soraya',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sosigenes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'South',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Spallanzani',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Spörer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Spurr',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Stadius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Stadius A',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Steinheil',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Stella',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Stevinus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Stewart',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Stiborius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Stöfler',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Stokes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Strabo',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Street',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Struve',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Suess',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sulpicius Gallus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sundman',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Susan',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Swasey',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Swift',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sylvester',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'T. Mayer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Tacchini',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Tacitus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Tacquet',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Taizo',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Talbot',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Tannerus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Taruntius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Taylor',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Tebbutt',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Tempel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Thales',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Theaetetus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Thebit',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Theiler',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Theon Junior',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Theon Senior',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Theophilus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Theophrastus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Timaeus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Timocharis',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Tisserand',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Tolansky',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Torricelli',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Toscanelli',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Townley',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Tralles',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Triesnecker',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Trouvelot',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Tucker',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Turner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Tycho',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ukert',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Ulugh Beigh',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Urey',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Väisälä',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'van Albada',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Van Biesbroeck',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Van Vleck',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vasco da Gama',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vashakidze',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vega',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vendelinus',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vera',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Verne',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Very',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vieta',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Virchow',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vitello',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vitruvius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vlacq',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vogel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Volta',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'von Behring',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'von Braun',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Voskresenskiy',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'W. Bond',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wallace',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wallach',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Walter',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Walther',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wargentin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Warner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Watt',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Watts',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Webb',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Weierstrass',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Weigel',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Weinek',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Weiss',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Werner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wexler',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Whewell',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wichmann',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Widmannstätten',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wildt',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wilhelm',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wilkins',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wilson',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Winthrop',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wöhler',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wolf',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wollaston',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wright',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wrottesley',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wurzelbauer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Wyld',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Xenophanes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Yakovkin',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => "Yangel'",
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Yerkes',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Yoshi',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Young',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Zach',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Zagut',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Zähringer',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Zasyadko',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Zeno',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Zinner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Zöllner',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Zucchius',
                 'type' => 'CRATER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Zupus',
                 'type' => 'CRATER'
@@ -5758,290 +5759,290 @@ class CreateTargetsTable extends Migration
         );
 
         // Add mountains on the moon
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Agnes',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Ampère',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons André',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Ardeshir',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Argaeus',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Blanc',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Bradley',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Delisle',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Dieter',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Dilip',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Esam',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Ganau',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Gruithuisen Delta',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Gruithuisen Gamma',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Hadley',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Hadley Delta',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Hansteen',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Herodotus',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Huygens',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons La Hire',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Maraldi',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Moro',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Penck',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Pico',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Piton',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Rümker',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Usov',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Vinogradov',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Vitruvius',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mons Wolff',
                 'type' => 'MOUNTAIN'
             ]
         );
 
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Agricola',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Alpes',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Apenninus',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Archimedes',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Carpatus',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Caucasus',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Cordillera',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Haemus',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Harbinger',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Jura',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Pyrenaeus',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Recti',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Riphaeus',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Rook',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Secchi',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Spitzbergen',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Taurus',
                 'type' => 'MOUNTAIN'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Montes Teneriffe',
                 'type' => 'MOUNTAIN'
@@ -6049,343 +6050,343 @@ class CreateTargetsTable extends Migration
         );
 
         // Add the seas
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Anguis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Australe',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Cognitum',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Crisium',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Fecunditatis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Frigoris',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Humboldtianum',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Humorum',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Imbrium',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Ingenii',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Insularum',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Marginis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Moscoviense',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Nectaris',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Nubium',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Orientale',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Serenitatis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Smythii',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Spumans',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Tranquillitatis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Undarum',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Mare Vaporum',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Oceanus Procellarum',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Aestatis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Autumni',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Bonitatis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Doloris',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Excellentiae',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Felicitatis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Gaudii',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Hiemalis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Lenitatis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Luxuriae',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Mortis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Oblivionis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Odii',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Perseverantiae',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Solitudinis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Somniorum',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Spei',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Temporis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Timoris',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Lacus Veris',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Palus Epidemiarum',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Palus Putredinis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Palus Somni',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sinus Aestuum',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sinus Amoris',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sinus Asperitatis',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sinus Concordiae',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sinus Fidei',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sinus Honoris',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sinus Iridum',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sinus Lunicus',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sinus Medii',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sinus Roris',
                 'type' => 'SEA'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Sinus Successus',
                 'type' => 'SEA'
@@ -6393,73 +6394,73 @@ class CreateTargetsTable extends Migration
         );
 
         // Add the valleys of the moon
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vallis Alpes',
                 'type' => 'VALLEY'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vallis Baade',
                 'type' => 'VALLEY'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vallis Bohr',
                 'type' => 'VALLEY'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vallis Bouvard',
                 'type' => 'VALLEY'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vallis Capella',
                 'type' => 'VALLEY'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vallis Inghirami',
                 'type' => 'VALLEY'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vallis Palitzsch',
                 'type' => 'VALLEY'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vallis Planck',
                 'type' => 'VALLEY'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vallis Rheita',
                 'type' => 'VALLEY'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vallis Schrödinger',
                 'type' => 'VALLEY'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vallis Schröteri',
                 'type' => 'VALLEY'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Vallis Snellius',
                 'type' => 'VALLEY'
@@ -6467,1041 +6468,1041 @@ class CreateTargetsTable extends Migration
         );
 
         // Add the other features on the moon
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Reiner Gamma',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catena Abulfeda',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catena Brigitte',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catena Davy',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catena Humboldt',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catena Krafft',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catena Littrow',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catena Pierre',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catena Sylvester',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catena Taruntius',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catena Timocharis',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Catena Yuri',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Aldrovandi',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Andrusov',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Argand',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Barlow',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Burnet',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Cato',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Dana',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Ewing',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Geikie',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Harker',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Lister',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Mawson',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Rubey',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Smirnov',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Sorby',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Stille',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Tetyaev',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsa Whiston',
                 'type' => 'OTHER'
             ]
         );
 
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Arduino',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Azara',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Bucher',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Buckland',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Cayeux',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Cloos',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Cushman',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Gast',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Grabau',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Guettard',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Heim',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Higazy',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Nicol',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Niggli',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Oppel',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Owen',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Scilla',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Termier',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Thera',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Von Cotta',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Dorsum Zirkel',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Promontorium Agarum',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Promontorium Agassiz',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Promontorium Archerusia',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Promontorium Deville',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Promontorium Fresnel',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Promontorium Heraclides',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Promontorium Kelvin',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Promontorium Laplace',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Promontorium Taenarium',
                 'type' => 'OTHER'
             ]
         );
 
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Agatharchides',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Agricola',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Archytas',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Ariadaeus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Billy',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Birt',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Bradley',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Brayley',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Calippus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Cardanus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Carmen',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Cauchy',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Cleomedes',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Cleopatra',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Conon',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Dawes',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Delisle',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Diophantus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Draper',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Euler',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Flammarion',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Furnerius',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima G. Bond',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Galilaei',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Gärtner',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Gay-Lussac',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Hadley',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Hansteen',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Hesiodus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Hyginus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Jansen',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Krieger',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Mairan',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Marcello',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Marius',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Messier',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Milichius',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Oppolzer',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Réaumur',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Reiko',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Rudolf',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Schröter',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Sharp',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Sheepshanks',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Siegfried',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Suess',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Sung-Mei',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima T. Mayer',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Vladimir',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Wan-Yu',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => "Rima Yangel'",
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rima Zahia',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Alphonsus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Apollonius',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Archimedes',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Aristarchus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Arzachel',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Atlas',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Bode',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Boscovich',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Chacornac',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Daniell',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Darwin',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Doppelmayer',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Focas',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Fresnel',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae de Gasparis',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Gassendi',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Gerard',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Goclenius',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Grimaldi',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Hypatia',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Janssen',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Kopff',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Liebig',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Littrow',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Maclear',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Maestlin',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Maupertuis',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Menelaus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Mersenius',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Opelt',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Palmieri',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Parry',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Petavius',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Pettit',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Pitatus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Plato',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Plinius',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Posidonius',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Prinz',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Ramsden',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Repsold',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Riccioli',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Ritter',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Römer',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Secchi',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Sirsalis',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Sosigenes',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Sulpicius Gallus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Taruntius',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Theaetetus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Triesnecker',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Vasco da Gama',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rimae Zupus',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rupes Altai',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rupes Boris',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rupes Cauchy',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rupes Kelvin',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rupes Liebig',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rupes Mercator',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rupes Recta',
                 'type' => 'OTHER'
             ]
         );
-        DB::table('targets')->insert(
+        \App\Target::create(
             [
                 'name' => 'Rupes Toscanelli',
                 'type' => 'OTHER'
