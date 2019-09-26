@@ -27,6 +27,10 @@ use Illuminate\Database\Eloquent\Model;
   */
 class TargetType extends Model
 {
+    protected $primaryKey = 'id';
+
+    public $incrementing = false;
+
     /**
      * Adds the link to the targets.
      *
@@ -34,7 +38,7 @@ class TargetType extends Model
      */
     public function targets()
     {
-        return $this->belongsTo('App\Target', 'type', 'type');
+        return $this->belongsTo('App\Target', 'id', 'type');
     }
 
     /**
@@ -42,7 +46,7 @@ class TargetType extends Model
      *
      * @return HasOne The eloquent relationship
      */
-    public function observation_type()
+    public function observationType()
     {
         return $this->hasOne('App\observationTypes', 'type', 'observation_type');
     }

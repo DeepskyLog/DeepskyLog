@@ -16,7 +16,6 @@ class CreateTargetTypesTable extends Migration
             $table->string('id')->primary();
             $table->string('type');
             $table->string('observation_type');
-            $table->timestamps();
 
             $table->foreign('observation_type')
                 ->references('type')->on('observation_types');

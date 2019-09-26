@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
             [UsersTableSeeder::class, LensTableSeeder::class,
                 FilterTableSeeder::class, EyepieceTableSeeder::class,
                 MessagesTableSeeder::class, InstrumentTableSeeder::class,
-                LocationTableSeeder::class]
+                LocationTableSeeder::class, TargetTableSeeder::class]
         );
     }
 }
