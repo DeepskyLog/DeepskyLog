@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateObjectpartofTable extends Migration
+class CreateTargetpartofTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,7 @@ class CreateObjectpartofTable extends Migration
      */
     public function up()
     {
-        Schema::create('objectpartof', function (Blueprint $table) {
-            $table->engine = 'MyISAM';
+        Schema::create('target_partof', function (Blueprint $table) {
             $table->string('objectname', 128);
             $table->string('partofname', 128);
             $table->index('objectname', 'Index_object');
@@ -30,6 +29,6 @@ class CreateObjectpartofTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('objectpartof');
+        Schema::dropIfExists('target_partof');
     }
 }
