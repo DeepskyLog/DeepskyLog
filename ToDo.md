@@ -13,9 +13,8 @@
 
 ## OBJECTS - Targets
 
-+ [ ] Database
-  + [ ] Create atlases
-  + [ ] Create targets
++ [x] Database
+  + [x] Create targets
     + [x] Add moon
     + [x] Add planets
     + [x] Add sun
@@ -23,9 +22,12 @@
     + [x] Add deepsky-objects
     + [x] Target names
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
-+ [ ] Comets
-  + [ ] Let normal users add new comets
-  + [ ] Download comets automatically from the internet
++ [ ] Viewing catalogs page
++ [ ] Adding objects
+  + [ ] Comets
+    + [ ] Let normal users add new comets
+    + [ ] Download comets automatically from the internet
+  + [ ] Deepsky
 + [ ] Menu items:
   + [ ] Quick pick object
   + [ ] Search for objects
