@@ -42,4 +42,16 @@ class TargetName extends Model
     {
         return $this->hasOne('App\Target', 'name', 'objectname');
     }
+
+    /**
+     * Get catalogs from the TargetName
+     *
+     * @return The list with the different catalogs
+     */
+    static public function getCatalogs()
+    {
+        return TargetName::where('catalog', '!=', '')
+            ->select('catalog')->distinct()->get();
+    }
+
 }

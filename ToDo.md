@@ -22,7 +22,9 @@
     + [x] Add deepsky-objects
     + [x] Target names
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
-+ [ ] Viewing catalogs page
++ [x] Viewing catalogs page
++ [ ] Details for one object
++ [ ] Check permissions on the page
 + [ ] Adding objects
   + [ ] Comets
     + [ ] Let normal users add new comets
@@ -40,7 +42,6 @@
 + [ ] Atlas / interactive atlases
   + [ ] Poll to see if we still need these options
   + [ ] Remove the old objects migrations for objectoutlines
-
 
 ## HOME PAGE
 

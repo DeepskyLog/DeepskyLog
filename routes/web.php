@@ -19,6 +19,7 @@ Route::post('/lang', 'LanguageController@changeLang');
 
 Route::post('/setSession', 'SessionController@createSession');
 
+// Lenses
 Route::get('/lens/autocomplete', 'LensController@dataAjax')->name('lens.dataAjax');
 
 Route::get('/lens/create/{lens}', 'LensController@create')->middleware('verified')
@@ -42,6 +43,7 @@ Route::get('/lens/{lens}/getImage', 'LensController@getImage')
 Route::post('/lens/{lens}/deleteImage', 'LensController@deleteImage')
     ->name('lens.deleteImage');
 
+// Filters
 Route::get('/filter/autocomplete', 'FilterController@dataAjax')
     ->name('filter.dataAjax');
 
@@ -68,6 +70,7 @@ Route::get('/filter/{filter}/getImage', 'FilterController@getImage')
 Route::post('/filter/{filter}/deleteImage', 'FilterController@deleteImage')
     ->name('filter.deleteImage');
 
+// Eyepieces
 Route::get('/eyepiece/autocomplete', 'EyepieceController@dataAjax')
     ->name('eyepiece.dataAjax');
 
@@ -94,6 +97,7 @@ Route::get('/eyepiece/{eyepiece}/getImage', 'EyepieceController@getImage')
 Route::post('/eyepiece/{eyepiece}/deleteImage', 'EyepieceController@deleteImage')
     ->name('eyepiece.deleteImage');
 
+// Instruments
 Route::get('/instrument/autocomplete', 'InstrumentController@dataAjax')
     ->name('instrument.dataAjax');
 
@@ -121,6 +125,7 @@ Route::get('/instrument/{instrument}/getImage', 'InstrumentController@getImage')
 Route::post('/instrument/{instrument}/deleteImage', 'InstrumentController@deleteImage')
     ->name('instrument.deleteImage');
 
+// Locations
 Route::get('/location/autocomplete', 'LocationController@dataAjax')
     ->name('location.dataAjax');
 
@@ -150,6 +155,7 @@ Route::get('/location/{location}', 'LocationController@show')
 
 Route::get('/getLocationJson/{id}', 'LocationController@getLocationJson');
 
+// Users
 Auth::routes(['verify' => true]);
 
 Route::get('/users/{user}/getImage', 'UserController@getImage')
@@ -177,6 +183,7 @@ Route::patch('/users/{user}/settings', 'UserController@patchSettings')
 Route::get('/users/{user}/settings', 'UserController@settings')
     ->name('users.settings');
 
+// Messages
 Route::group(['prefix' => 'messages'], function () {
     Route::get('/', ['as' => 'messages', 'uses' => 'MessagesController@index']);
     Route::get('create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
@@ -186,3 +193,11 @@ Route::group(['prefix' => 'messages'], function () {
     Route::put('{id}', ['as' => 'messages.update', 'uses' => 'MessagesController@update']);
     Route::get('/create/{id}', 'MessagesController@createId')->name('messages.createId');
 });
+
+// Targets
+Route::get('/catalogs', 'TargetController@catalogs')
+    ->name('catalogs');
+
+Route::get('/getCatalogData/{catalog}', 'TargetController@getCatalogData');
+Route::get('/getConstellationInfo/{catalog}', 'TargetController@getConstellationInfo');
+Route::get('/getTypeInfo/{catalog}', 'TargetController@getTypeInfo');

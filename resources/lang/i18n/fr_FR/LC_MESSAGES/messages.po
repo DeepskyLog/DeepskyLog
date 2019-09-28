@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-09-25 07:26-0400\n"
-"PO-Revision-Date: 2019-09-25 07:33-0400\n"
+"POT-Creation-Date: 2019-09-28 08:18-0400\n"
+"PO-Revision-Date: 2019-09-28 08:18-0400\n"
 "Last-Translator: James Translator <james@translations.colm>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: fr_FR\n"
@@ -1057,7 +1057,7 @@ msgid "Type"
 msgstr "Type"
 
 #: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:15
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:14
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:9
 msgid "Eyepiece"
 msgstr "Oculaire"
 
@@ -1205,19 +1205,6 @@ msgstr "Nouvelle lune"
 msgid "Downloads"
 msgstr "Téléchargements"
 
-#: ../storage/framework/messages/155da04dde317bc1affd660789103f8ac413259e.php.php:7
-msgid "Image Catalogs"
-msgstr "Catalogues d’images"
-
-#: ../storage/framework/messages/155da04dde317bc1affd660789103f8ac413259e.php.php:8
-#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:21
-msgid "Atlases"
-msgstr "Atlas"
-
-#: ../storage/framework/messages/155da04dde317bc1affd660789103f8ac413259e.php.php:9
-msgid "Forms"
-msgstr "Formulaires"
-
 #: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:6
 #: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:18
 msgid "Add a new instrument"
@@ -1295,6 +1282,10 @@ msgstr "Personnel"
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:15
 msgid "Observing"
 msgstr "Observer"
+
+#: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:21
+msgid "Atlases"
+msgstr "Atlas"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:27
 msgid "Languages"
@@ -1587,7 +1578,7 @@ msgid "Sorry, the page you are looking for could not be found."
 msgstr "Désolé, la page que vous recherchez n'a pas pu être trouvée."
 
 #: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:14
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:12
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:7
 msgid "Instrument"
 msgstr "Instrument"
 
@@ -1701,7 +1692,7 @@ msgid "Privacy Policy"
 msgstr "Politique de confidentialité"
 
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:14
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:15
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:10
 msgid "Filter"
 msgstr "Filtre"
 
@@ -1768,6 +1759,29 @@ msgstr "Signaler un problème"
 #: ../storage/framework/messages/6397ba5ce5097379e2a9d002db902c5cf1fb266c.php.php:9
 msgid "What's new in DeepskyLog"
 msgstr "Nouveautés de DeepskyLog"
+
+#: ../storage/framework/messages/6548b0410c3d68f52583d95c59754dc0a71f4d2a.php.php:2
+#: ../storage/framework/messages/6548b0410c3d68f52583d95c59754dc0a71f4d2a.php.php:8
+msgid "Object catalogs"
+msgstr "Catalogues d'objets"
+
+#: ../storage/framework/messages/6548b0410c3d68f52583d95c59754dc0a71f4d2a.php.php:21
+msgid "Select a list to view its details"
+msgstr "Sélectionnez une liste pour afficher ses détails"
+
+#: ../storage/framework/messages/6548b0410c3d68f52583d95c59754dc0a71f4d2a.php.php:32
+msgid "Getting data for "
+msgstr "Obtenir des données pour "
+
+#: ../storage/framework/messages/6548b0410c3d68f52583d95c59754dc0a71f4d2a.php.php:39
+msgid "Catalog pages are not supported on non-xmlhttp machines"
+msgstr ""
+"Les pages de catalogue ne sont pas prises en charge sur les machines non-"
+"xmlhttp"
+
+#: ../storage/framework/messages/6548b0410c3d68f52583d95c59754dc0a71f4d2a.php.php:58
+msgid "Number of objects"
+msgstr "Nombre d'objets"
 
 #: ../storage/framework/messages/6839b2857890e71f067bc331f845f79fdee13f34.php.php:1
 msgid "Messages"
@@ -1972,7 +1986,6 @@ msgid "Send message to all"
 msgstr "Envoyer un message à tous"
 
 #: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:9
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:25
 msgid "Observers"
 msgstr "Observateurs"
 
@@ -2060,15 +2073,6 @@ msgstr "Recherche"
 msgid "Search Objects"
 msgstr "Rechercher des objets"
 
-#: ../storage/framework/messages/b2859eea3d283a3b15b2af3c9834d3b4e4626347.php.php:9
-#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:42
-msgid "Search Observations"
-msgstr "Les observations"
-
-#: ../storage/framework/messages/b2859eea3d283a3b15b2af3c9834d3b4e4626347.php.php:11
-msgid "All sessions"
-msgstr "Toutes les sessions"
-
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:34
 msgid "Full Name"
 msgstr "Nom complet"
@@ -2108,58 +2112,26 @@ msgid "View"
 msgstr "Voir"
 
 #: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:9
-msgid "My observations"
-msgstr "Mes observations"
-
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:10
-msgid "My drawings"
-msgstr "Mes dessins"
-
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:12
-msgid "My observing lists"
-msgstr "Mes listes d'observation"
-
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:13
-msgid "My sessions"
-msgstr "Mes sessions"
-
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:15
 msgid "My instruments"
 msgstr "Mes instruments"
 
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:16
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:10
 msgid "My locations"
 msgstr "Mes locations"
 
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:17
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:11
 msgid "My eyepieces"
 msgstr "Mes oculaires"
 
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:18
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:12
 msgid "My filters"
 msgstr "Mes filtres"
 
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:19
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:13
 msgid "My lenses"
 msgstr "Mes lentilles"
 
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:22
-msgid "Latest observations"
-msgstr "Dernières observations"
-
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:23
-msgid "Latest drawings"
-msgstr "Derniers dessins"
-
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:26
-msgid "Popular objects"
-msgstr "Objets populaires"
-
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:27
-msgid "Statistics"
-msgstr "Statistiques"
-
-#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:29
+#: ../storage/framework/messages/c17db572634aaf5f940c99bca78e4c7bf6f5ba28.php.php:16
 msgid "Catalogs"
 msgstr "Catalogues"
 
@@ -2352,10 +2324,6 @@ msgstr "Recherche rapide"
 msgid "Search Object"
 msgstr "Cherchez l’objet"
 
-#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:46
-msgid "New Observation"
-msgstr "Nouvelle observation"
-
 #: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:2
 #: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:11
 msgid "Verify Your Email Address"
@@ -2390,7 +2358,7 @@ msgid "Sorry, your session has expired. Please refresh and try again."
 msgstr "Désolé, votre session a expiré. Veuillez actualiser et réessayer."
 
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:15
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:13
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:8
 msgid "Location"
 msgstr "Endroit"
 
@@ -2464,7 +2432,7 @@ msgid "Weather predictions"
 msgstr "Prévisions météorologiques"
 
 #: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:14
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:16
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:11
 msgid "Lens"
 msgstr "Lentille"
 
@@ -2537,35 +2505,35 @@ msgstr "Dessins l'an dernier"
 msgid "Different objects"
 msgstr "Objects différents"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:230
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:232
 msgid "Messier objects"
 msgstr "Objets Messier"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:242
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:244
 msgid "Caldwell objects"
 msgstr "Objets Caldwell"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:254
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:256
 msgid "H400 objects"
 msgstr "Objets H400"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:266
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:268
 msgid "H400-II objects"
 msgstr "Objets H400-II"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:278
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:280
 msgid "Rank"
 msgstr "Classement"
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:289
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:291
 msgid "All observations of "
 msgstr "Toutes les observations de "
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:294
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:296
 msgid "All drawings of "
 msgstr "Tous les dessins de "
 
-#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:300
+#: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:302
 msgid "Send message to "
 msgstr "Envoyer un message à "
 
@@ -2658,19 +2626,7 @@ msgstr "Non autorisé à voir ce message."
 msgid "Add"
 msgstr "Ajoutez"
 
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:7
-msgid "Observation"
-msgstr "Observation"
-
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:9
-msgid "Observing list"
-msgstr "Liste d'observation"
-
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:10
-msgid "Session"
-msgstr "Session"
-
-#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:18
+#: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:13
 msgid "Object"
 msgstr "Objet"
 
@@ -2720,6 +2676,54 @@ msgstr "> 1,0 pour les lentilles Barlow, < 1,0 pour les lentilles Shapley."
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:64
 msgid "Upload a picture of your lens."
 msgstr "Téléchargez une photo de votre lentille."
+
+#~ msgid "Image Catalogs"
+#~ msgstr "Catalogues d’images"
+
+#~ msgid "Forms"
+#~ msgstr "Formulaires"
+
+#~ msgid "Search Observations"
+#~ msgstr "Les observations"
+
+#~ msgid "All sessions"
+#~ msgstr "Toutes les sessions"
+
+#~ msgid "My observations"
+#~ msgstr "Mes observations"
+
+#~ msgid "My drawings"
+#~ msgstr "Mes dessins"
+
+#~ msgid "My observing lists"
+#~ msgstr "Mes listes d'observation"
+
+#~ msgid "My sessions"
+#~ msgstr "Mes sessions"
+
+#~ msgid "Latest observations"
+#~ msgstr "Dernières observations"
+
+#~ msgid "Latest drawings"
+#~ msgstr "Derniers dessins"
+
+#~ msgid "Popular objects"
+#~ msgstr "Objets populaires"
+
+#~ msgid "Statistics"
+#~ msgstr "Statistiques"
+
+#~ msgid "New Observation"
+#~ msgstr "Nouvelle observation"
+
+#~ msgid "Observation"
+#~ msgstr "Observation"
+
+#~ msgid "Observing list"
+#~ msgstr "Liste d'observation"
+
+#~ msgid "Session"
+#~ msgstr "Session"
 
 #~ msgid "observation"
 #~ msgid_plural "observations"
@@ -3967,9 +3971,6 @@ msgstr "Téléchargez une photo de votre lentille."
 #~ msgid "Reply"
 #~ msgstr "Réponse"
 
-#~ msgid "Settings for %s"
-#~ msgstr "Paramètres pour %s"
-
 #~ msgid "Send messages as email."
 #~ msgstr "Envoyer des messages comme email."
 
@@ -4311,9 +4312,6 @@ msgstr "Téléchargez une photo de votre lentille."
 #~ msgid "skylist"
 #~ msgstr "skylist"
 
-#~ msgid "Click on a list to view its details"
-#~ msgstr "Cliquez une catalogue pour voir ses détails"
-
 #~ msgid "What's new in DeepskyLog since version "
 #~ msgstr "Nouveautés de DeepskyLog depuis la version "
 
@@ -4390,9 +4388,6 @@ msgstr "Téléchargez une photo de votre lentille."
 
 #~ msgid "Only objects that have been seen by me"
 #~ msgstr "Seuls les objets qui ont été vus par moi"
-
-#~ msgid "Select catalog"
-#~ msgstr "Sélectionnez catalogue"
 
 #~ msgid "Enter number in catalog"
 #~ msgstr "Numéro dans le catalogue"

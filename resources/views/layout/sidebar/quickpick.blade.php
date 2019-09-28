@@ -37,12 +37,12 @@
         <div class="form group">
             <input class="btn btn-outline-secondary btn-block btn-sm" type="submit" name="searchObjectQuickPickQuickPick" value=" {{ _i("Search Object") }}" />
         </div>
-        <div class="form group">
+{{--        <div class="form group">
             <input class="btn btn-outline-secondary btn-block btn-sm" type="submit" name="searchObservationsQuickPick" value=" {{ _i("Search Observations") }}" />
         </div>
 
         <div class="form group">
             <input class="btn btn-outline-secondary btn-block btn-sm" type="submit" name="newObservationQuickPick" value=" {{ _i("New Observation") }}" />
         </div>
-    </form>
+--}}    </form>
 </li>
