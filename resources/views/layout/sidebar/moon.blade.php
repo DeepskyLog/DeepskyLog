@@ -25,17 +25,20 @@
         </span>
     </p>
 
+    {{-- Only show the information on sun and moon if logged in, but no standard location is given. --}}
+    @auth
+    @if (Auth::user()->stdlocation != 0)
 	<table class="table table-sm">
         <tr>
             <td> {{ _i("Moon") }} </td>
             @php
-                // TODO: Use real location (timezone).
-                // TODO: Remove the information on sun and moon if not logged in.
-                // TODO: Remove the information on sun and moon if logged in, but no standard location is given.
                 // Moon rise and set
-                use App\Libraries\AstroCalc;
+                $location = App\Location::where('id', Auth::user()->stdlocation)->first();
 
-                $objAstroCalc = new AstroCalc($date, 50.8322, 4.86463, "Europe/Brussels");
+                $objAstroCalc = new \App\Libraries\AstroCalc(
+                    $date, $location->latitude, $location->longitude,
+                    $location->timezone
+                );
 
                 $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime();
             @endphp
@@ -46,13 +49,17 @@
 	    <tr>
             <td>{{ _i("Sun") }}</td>
             @php
-                // TODO: Use time zones and real coordinates of the location
-                $sun_info_down = date_sun_info($date->getTimestamp(), 50.8322, 4.86463);
-                $sun_info_up = date_sun_info($nextdate->getTimestamp(), 50.8322, 4.86463);
+                // Use time zones and real coordinates of the location
+                $location = \App\Location::where('id', Auth::user()->stdlocation)->first();
+
+                print $location->timezone;
+                $sun_info_down = date_sun_info($date->getTimestamp(), $location->latitude, $location->longitude);
+                $sun_info_up = date_sun_info($nextdate->getTimestamp(), $location->latitude, $location->longitude);
 
                 function printDate($riseset) {
                     if ($riseset > 1) {
-                        $tz = new DateTimeZone('Europe/Brussels');
+                        $location = \App\Location::where('id', Auth::user()->stdlocation)->first();
+                        $tz = new DateTimeZone($location->timezone);
 
                         $date = new DateTime("@" . $riseset);
                         $date->setTimezone($tz);
@@ -102,7 +109,9 @@
 
             </td>
 	    </tr>
-	</table>
+    </table>
+    @endif
+    @endauth
 
     <p>
         @php

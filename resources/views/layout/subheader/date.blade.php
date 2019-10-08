@@ -8,8 +8,8 @@
 <script>
     var eventDates = {};
 
-    $( function() {
-        $( "#datepicker" ).datepicker({
+    $(function() {
+        $("#datepicker").datepicker({
             changeMonth: true,
             changeYear: true,
             showButtonPanel: true,
@@ -34,7 +34,7 @@
            		    var moon = new MoonQuarters(year, month + 1, 1);
            		}
                 var date = jdtocd(moon[0]);
-                eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
+                eventDates[new Date(date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
 			},
             beforeShow: function (input, inst) {
                 var queryDate = "{{ Session::get('date') }}";
@@ -70,7 +70,7 @@
 
 @php
     // Current date
-    $datetime = new DateTime();
+    $datetime = new \Carbon\Carbon();
     $date = $datetime->format('d/m/Y');
 
     if (Session::has('date')) {

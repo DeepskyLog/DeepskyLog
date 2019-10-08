@@ -27,38 +27,40 @@ use DateTime;
  */
 class AstroCalc
 {
-    protected $jd;
+    public $jd;
     protected $timedifference;
     protected $longitude;
     protected $latitude;
 
     /**
-     * Constructor initialises the public astroCalc property
+     * Constructor initialises the public astroCalc property.
      *
-     * @param DateTime $date      The date (as dd/mm/yyyy).
-     * @param float    $latitude  The latitude of the location.
+     * @param DateTime $date      the date (as dd/mm/yyyy)
+     * @param float    $latitude  the latitude of the location
      * @param float    $longitude The longitude of the location. East is positive,
      *                            west is negative.
      * @param string   $timezone  The timezone of the location, e.g.
      *                            "Europe/Brussels"
      */
     public function __construct(
-        DateTime $date, $latitude, $longitude, $timezone
+        DateTime $date,
+        $latitude,
+        $longitude,
+        $timezone
     ) {
-        $day = $date->format("d");
-        $month = $date->format("m");
-        $year = $date->format("Y");
+        $day = $date->format('d');
+        $month = $date->format('m');
+        $year = $date->format('Y');
         $this->jd = gregoriantojd($month, $day, $year);
-
-        $dateTimeZone=new DateTimeZone($timezone);
-        $datestr=sprintf("%02d/%02d/%d", $month, $day, $year);
+        $dateTimeZone = new DateTimeZone($timezone);
+        $datestr = sprintf('%02d/%02d/%d', $month, $day, $year);
         $dateTime = new DateTime($datestr, $dateTimeZone);
 
         // Returns timedifference in seconds
         $timedifference = $dateTimeZone->getOffset($dateTime);
         $timedifference /= 3600.0;
 
-        if (strncmp($timezone, "Etc/GMT", 7)===0) {
+        if (strncmp($timezone, 'Etc/GMT', 7) === 0) {
             $timedifference = -$timedifference;
         }
 
@@ -80,32 +82,46 @@ class AstroCalc
      * @param float $dec The declination of the object
      * @param float $jd  The julian date for the ephemerids
      *
-     * @return Array [0] is the rising time, [1] the transit time and [2] the setting
-     *               time.
+     * @return array [0] is the rising time, [1] the transit time and [2] the setting
+     *               time
      */
-    public  function calculateRiseTransitSettingTime($ra, $dec, $jd)
+    public function calculateRiseTransitSettingTime($ra, $dec, $jd)
     {
         return $this->_calculateRiseTransitSettingTimeCommon(
-            $jd, $ra, $ra, $ra, $dec, $dec, $dec, -99.99
+            $jd,
+            $ra,
+            $ra,
+            $ra,
+            $dec,
+            $dec,
+            $dec,
+            -99.99
         );
     }
 
     /**
-     * This function does the calculations for the rise and setting of moon and stars
+     * This function does the calculations for the rise and setting of moon and stars.
      *
      * @param float $jd              The julian date
-     * @param float $ra1             The right ascension of the object yesterday.
-     * @param float $ra2             The right ascension of the object today.
-     * @param float $ra3             The right ascension of the object tomorrow.
-     * @param float $dec1            The declination of the object yesterday.
-     * @param float $dec2            The declination of the object today.
-     * @param float $dec3            The declination of the object tomorrow.
-     * @param float $moonHorParallax The horizontal parallax of the moon.
+     * @param float $ra1             the right ascension of the object yesterday
+     * @param float $ra2             the right ascension of the object today
+     * @param float $ra3             the right ascension of the object tomorrow
+     * @param float $dec1            the declination of the object yesterday
+     * @param float $dec2            the declination of the object today
+     * @param float $dec3            the declination of the object tomorrow
+     * @param float $moonHorParallax the horizontal parallax of the moon
      *
      * @return Array Rise time, transit time, setting time and transit altitude
      */
     private function _calculateRiseTransitSettingTimeCommon(
-        $jd, $ra1, $ra2, $ra3, $dec1, $dec2, $dec3, $moonHorParallax
+        $jd,
+        $ra1,
+        $ra2,
+        $ra3,
+        $dec1,
+        $dec2,
+        $dec3,
+        $moonHorParallax
     ) {
         // Step 1 : Calculate the apparent siderial time at Greenwich at 0h UT.
         $jd = floor($jd) - 0.5;
@@ -116,7 +132,7 @@ class AstroCalc
             - $T * $T * $T / 38710000.0;
 
         if ($theta0 < 0.0) {
-            $a = - floor($theta0 / 360.0) + 1;
+            $a = -floor($theta0 / 360.0) + 1;
             $theta0 += $a * 360.0;
         }
         if ($theta0 > 360.0) {
@@ -168,8 +184,8 @@ class AstroCalc
         $m0 -= floor($m0);
 
         if (is_nan($Hcap0)) {
-            $m1=99;
-            $m2=99;
+            $m1 = 99;
+            $m2 = 99;
         } else {
             $m1 = $m0 - $Hcap0 / 360.0;
             $m1 -= floor($m1);
@@ -192,11 +208,11 @@ class AstroCalc
         $c = $b - $a;
         $alphaInterpol = $ra2 + $n / 2.0 * ($a + $b + $n * $c);
         $H = $theta - $longitude - $alphaInterpol;
-        $deltaM = - $H / 360.0;
+        $deltaM = -$H / 360.0;
 
         $m0 = ($deltaM + $m0) * 24.0;
 
-        if (! is_nan($Hcap0)) {
+        if (!is_nan($Hcap0)) {
             // 3.2 : rise time
             $theta = $theta0 * 15.0 + 360.985647 * $m1;
             $theta /= 360.0;
@@ -231,7 +247,7 @@ class AstroCalc
             $m1 = ($deltaM + $m1) * 24.0;
 
             // 3.3 : set time
-            $theta *= 15.0 + 360.985647 * $m2;
+            $theta = $theta0 * 15.0 + 360.985647 * $m2;
             $theta /= 360.0;
             $theta -= floor($theta);
             $theta *= 360.0;
@@ -262,10 +278,10 @@ class AstroCalc
 
             $m2 = ($deltaM + $m2) * 24.0;
         }
-        $ris_tra_set = array($m1, $m0, $m2);
+        $ris_tra_set = [$m1, $m0, $m2];
 
         if ($ris_tra_set[0] > 48 || $ris_tra_set[0] < -24) {
-            $ris_tra_set[0] = "-";
+            $ris_tra_set[0] = '-';
         } else {
             $ris_tra_set[0] += $this->timedifference;
             if ($ris_tra_set[0] < 0) {
@@ -282,19 +298,19 @@ class AstroCalc
                 $toAdd = 0;
             }
             if ($minutes < 10) {
-                $minutes = "0" . $minutes;
+                $minutes = '0' . $minutes;
             }
             if (floor($ris_tra_set[0]) + $toAdd < 10) {
-                $ris_tra_set[0] = "0" . (floor($ris_tra_set[0]) + $toAdd)
-                    . ":" . $minutes;
+                $ris_tra_set[0] = '0' . (floor($ris_tra_set[0]) + $toAdd)
+                    . ':' . $minutes;
             } else {
-                $ris_tra_set[0] = floor($ris_tra_set[0]) + $toAdd . ":" . $minutes;
+                $ris_tra_set[0] = floor($ris_tra_set[0]) + $toAdd . ':' . $minutes;
             }
         }
 
         $transit = $ris_tra_set[1];
         if ($ris_tra_set[1] > 48 || $ris_tra_set[1] < -24) {
-            $ris_tra_set[1] = "-";
+            $ris_tra_set[1] = '-';
         } else {
             $ris_tra_set[1] += $this->timedifference;
             if ($ris_tra_set[1] < 0) {
@@ -311,18 +327,18 @@ class AstroCalc
                 $toAdd = 0;
             }
             if ($minutes < 10) {
-                $minutes = "0" . $minutes;
+                $minutes = '0' . $minutes;
             }
             if (floor($ris_tra_set[1]) + $toAdd < 10) {
-                $ris_tra_set[1] = "0" . (floor($ris_tra_set[1]) + $toAdd)
-                    . ":" . $minutes;
+                $ris_tra_set[1] = '0' . (floor($ris_tra_set[1]) + $toAdd)
+                    . ':' . $minutes;
             } else {
-                $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ":" . $minutes;
+                $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ':' . $minutes;
             }
         }
 
         if ($ris_tra_set[2] > 48 || $ris_tra_set[2] < -24) {
-            $ris_tra_set[2] = "-";
+            $ris_tra_set[2] = '-';
         } else {
             $ris_tra_set[2] += $this->timedifference;
             if ($ris_tra_set[2] < 0) {
@@ -339,52 +355,54 @@ class AstroCalc
                 $toAdd = 0;
             }
             if ($minutes < 10) {
-                $minutes = "0" . $minutes;
+                $minutes = '0' . $minutes;
             }
             if (floor($ris_tra_set[2]) + $toAdd < 10) {
-                $ris_tra_set[2] = "0" . (floor($ris_tra_set[2]) + $toAdd)
-                    . ":" . $minutes;
+                $ris_tra_set[2] = '0' . (floor($ris_tra_set[2]) + $toAdd)
+                    . ':' . $minutes;
             } else {
-                $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ":" . $minutes;
+                $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ':' . $minutes;
             }
         }
         $ris_tra_set[4] = 0;
         $ra2 /= 15;
 
-        date_default_timezone_set("UTC");
-        $temptime=jdtogregorian($jd+1);
-        $temppos=strpos($temptime, "/");
-        $tempmonth=substr($temptime, 0, $temppos);
-        $temptime=substr($temptime, $temppos+1);
-        $temppos=strpos($temptime, "/");
-        $tempday=substr($temptime, 0, $temppos);
-        $tempyear=substr($temptime, $temppos+1);
+        date_default_timezone_set('UTC');
+        $temptime = jdtogregorian($jd + 1);
+        $temppos = strpos($temptime, '/');
+        $tempmonth = substr($temptime, 0, $temppos);
+        $temptime = substr($temptime, $temppos + 1);
+        $temppos = strpos($temptime, '/');
+        $tempday = substr($temptime, 0, $temppos);
+        $tempyear = substr($temptime, $temppos + 1);
 
-        $timestr = $tempyear . "-" . $tempmonth . "-" . $tempday;
+        $timestr = $tempyear . '-' . $tempmonth . '-' . $tempday;
 
         $sun_info = date_sun_info(
-            strtotime($timestr), $this->latitude, -$longitude
+            strtotime($timestr),
+            $this->latitude,
+            -$longitude
         );
-        $astrobegin = date("H:i", $sun_info["astronomical_twilight_begin"]);
-        sscanf($astrobegin, "%d:%d", $hour, $minute);
+        $astrobegin = date('H:i', $sun_info['astronomical_twilight_begin']);
+        sscanf($astrobegin, '%d:%d', $hour, $minute);
         $astrobegin = ($hour + $minute / 60.0);
 
-        $astroend = date("H:i", $sun_info["astronomical_twilight_end"]);
-        sscanf($astroend, "%d:%d", $hour, $minute);
+        $astroend = date('H:i', $sun_info['astronomical_twilight_end']);
+        sscanf($astroend, '%d:%d', $hour, $minute);
         $astroend = ($hour + $minute / 60.0);
 
-        $nautbegin = date("H:i", $sun_info["nautical_twilight_begin"]);
-        sscanf($nautbegin, "%d:%d", $hour, $minute);
+        $nautbegin = date('H:i', $sun_info['nautical_twilight_begin']);
+        sscanf($nautbegin, '%d:%d', $hour, $minute);
         $nautbegin = ($hour + $minute / 60.0);
 
-        $nautend = date("H:i", $sun_info["nautical_twilight_end"]);
-        sscanf($nautend, "%d:%d", $hour, $minute);
+        $nautend = date('H:i', $sun_info['nautical_twilight_end']);
+        sscanf($nautend, '%d:%d', $hour, $minute);
         $nautend = ($hour + $minute / 60.0);
 
         if ($transit > 0) {
-            $transit %= 24.0 + ($transit - floor($transit));
+            $transit = $transit % 24.0 + ($transit - floor($transit));
         } else {
-            $toAdd = floor(-$transit / 24.0) + 1;
+            $toAdd = floor(-$transit / 24.0) + 1.0;
             $transit += 24.0 * $toAdd;
         }
         if ($astroend > 0 && $astrobegin > 0) {
@@ -399,14 +417,14 @@ class AstroCalc
                 // Check the rise time for $astroend and for $astrobegin
                 $theta0w = $theta0 + ($astrobegin * 1.00273790935);
                 if ($theta0w > 0) {
-                    $theta0w %= 24.0 + ($theta0w - floor($theta0w));
+                    $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w));
                 } else {
                     $toAdd = floor(-$theta0w / 24.0) + 1;
                     $theta0w += 24.0 * $toAdd;
                 }
                 $H = ($theta0w - $longitude / 15 - $ra2) * 15.0;
                 if ($H > 0) {
-                    $H %= 360.0 + ($H - floor($H));
+                    $H = $H % 360.0 + ($H - floor($H));
                 } else {
                     $toAdd = floor(-$H / 360.0) + 1;
                     $H += 360.0 * $toAdd;
@@ -425,14 +443,14 @@ class AstroCalc
 
             $theta0 += ($transit * 1.00273790935);
             if ($theta0 > 0) {
-                $theta0 %= 24.0 + ($theta0 - floor($theta0));
+                $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0));
             } else {
                 $toAdd = floor(-$theta0 / 24.0) + 1;
                 $theta0 += 24.0 * $toAdd;
             }
             $H = ($theta0 - $longitude / 15 - $ra2) * 15.0;
             if ($H > 0) {
-                $H %= 360.0 + ($H - floor($H));
+                $H = $H % 360.0 + ($H - floor($H));
             } else {
                 $toAdd = floor(-$H / 360.0) + 1;
                 $H += 360.0 * $toAdd;
@@ -464,24 +482,24 @@ class AstroCalc
                 $toAdd = 0;
             }
             if ($minutes < 10) {
-                $minutes = "0" . $minutes;
+                $minutes = '0' . $minutes;
             }
             if ($ris_tra_set[3] < 0) {
-                $ris_tra_set[3] = "-";
+                $ris_tra_set[3] = '-';
             } else {
                 if (floor($ris_tra_set[3]) + $toAdd < 10) {
-                    $ris_tra_set[3] = "0" . (floor($ris_tra_set[3]) + $toAdd)
-                        . "&deg;" . $minutes . "'";
+                    $ris_tra_set[3] = '0' . (floor($ris_tra_set[3]) + $toAdd)
+                        . '&deg;' . $minutes . "'";
                 } else {
-                    $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;"
+                    $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . '&deg;'
                         . $minutes . "'";
                 }
             }
 
             if ($ris_tra_set[4] > 24
-                || $ris_tra_set[4] < 0 || $ris_tra_set[3] === "-"
+                || $ris_tra_set[4] < 0 || $ris_tra_set[3] === '-'
             ) {
-                $ris_tra_set[4] = "-";
+                $ris_tra_set[4] = '-';
             } else {
                 $ris_tra_set[4] += $this->timedifference;
                 if ($ris_tra_set[4] < 0) {
@@ -498,23 +516,23 @@ class AstroCalc
                     $toAdd = 0;
                 }
                 if ($minutes < 10) {
-                    $minutes = "0" . $minutes;
+                    $minutes = '0' . $minutes;
                 }
                 if (floor($ris_tra_set[4]) + $toAdd < 10) {
-                    $ris_tra_set[4] = "0" . (floor($ris_tra_set[4]) + $toAdd)
-                        . ":" . $minutes;
+                    $ris_tra_set[4] = '0' . (floor($ris_tra_set[4]) + $toAdd)
+                        . ':' . $minutes;
                 } else {
                     $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd
-                        . ":" . $minutes;
+                        . ':' . $minutes;
                 }
             }
         } else {
-            $ris_tra_set[3] = "-";
-            $ris_tra_set[4] = "-";
+            $ris_tra_set[3] = '-';
+            $ris_tra_set[4] = '-';
         }
 
         // if no astro twilight, or no best astro time for object
-        if (! (($astroend > 0 && $astrobegin > 0))) {
+        if (!(($astroend > 0 && $astrobegin > 0))) {
             if ($nautend > 0 && $nautbegin > 0) {
                 $tocompare = -999;
                 if ($nautbegin > 12) {
@@ -527,14 +545,14 @@ class AstroCalc
                     // Check the rise time for $nautend and for $nautbegin
                     $theta0w = $theta0 + ($nautbegin * 1.00273790935);
                     if ($theta0w > 0) {
-                        $theta0w %= 24.0 + ($theta0w - floor($theta0w));
+                        $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w));
                     } else {
                         $toAdd = floor(-$theta0w / 24.0) + 1;
-                        $theta0w += 24.0 * $toAdd;
+                        $theta0w = $theta0w + 24.0 * $toAdd;
                     }
                     $H = ($theta0w - $longitude / 15 - $ra2) * 15.0;
                     if ($H > 0) {
-                        $H %= 360.0 + ($H - floor($H));
+                        $H = $H % 360.0 + ($H - floor($H));
                     } else {
                         $toAdd = floor(-$H / 360.0) + 1;
                         $H += 360.0 * $toAdd;
@@ -553,14 +571,14 @@ class AstroCalc
 
                 $theta0 += ($transit * 1.00273790935);
                 if ($theta0 > 0) {
-                    $theta0 %= 24.0 + ($theta0 - floor($theta0));
+                    $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0));
                 } else {
                     $toAdd = floor(-$theta0 / 24.0) + 1;
                     $theta0 += 24.0 * $toAdd;
                 }
                 $H = ($theta0 - $longitude / 15 - $ra2) * 15.0;
                 if ($H > 0) {
-                    $H %= 360.0 + ($H - floor($H));
+                    $H = $H % 360.0 + ($H - floor($H));
                 } else {
                     $toAdd = floor(-$H / 360.0) + 1;
                     $H += 360.0 * $toAdd;
@@ -593,24 +611,24 @@ class AstroCalc
                     $toAdd = 0;
                 }
                 if ($minutes < 10) {
-                    $minutes = "0" . $minutes;
+                    $minutes = '0' . $minutes;
                 }
                 if ($ris_tra_set[3] < 0) {
-                    $ris_tra_set[3] = "-";
+                    $ris_tra_set[3] = '-';
                 } else {
                     if (floor($ris_tra_set[3]) + $toAdd < 10) {
-                        $ris_tra_set[3] = "0" . (floor($ris_tra_set[3]) + $toAdd)
-                            . "&deg;" . $minutes . "'";
+                        $ris_tra_set[3] = '0' . (floor($ris_tra_set[3]) + $toAdd)
+                            . '&deg;' . $minutes . "'";
                     } else {
-                        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;"
+                        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . '&deg;'
                             . $minutes . "'";
                     }
                 }
 
                 if ($ris_tra_set[4] > 24
-                    || $ris_tra_set[4] < 0 || $ris_tra_set[3] === "-"
+                    || $ris_tra_set[4] < 0 || $ris_tra_set[3] === '-'
                 ) {
-                    $ris_tra_set[4] = "-";
+                    $ris_tra_set[4] = '-';
                 } else {
                     $ris_tra_set[4] += $this->timedifference;
                     if ($ris_tra_set[4] < 0) {
@@ -629,24 +647,25 @@ class AstroCalc
                         $toAdd = 0;
                     }
                     if ($minutes < 10) {
-                        $minutes = "0" . $minutes;
+                        $minutes = '0' . $minutes;
                     }
                     if (floor($ris_tra_set[4]) + $toAdd < 10.0) {
-                        $ris_tra_set[4] = "0" . (floor($ris_tra_set[4]) + $toAdd)
-                            . ":" . $minutes;
+                        $ris_tra_set[4] = '0' . (floor($ris_tra_set[4]) + $toAdd)
+                            . ':' . $minutes;
                     } else {
                         $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd
-                            . ":" . $minutes;
+                            . ':' . $minutes;
                     }
                 }
             } else {
-                $ris_tra_set[3] = "-";
-                $ris_tra_set[4] = "-";
+                $ris_tra_set[3] = '-';
+                $ris_tra_set[4] = '-';
             }
-            if ($ris_tra_set[3]!=="-") {
-                $ris_tra_set[3]="(".$ris_tra_set[3].")";
+            if ($ris_tra_set[3] !== '-') {
+                $ris_tra_set[3] = '(' . $ris_tra_set[3] . ')';
             }
         }
+
         return $ris_tra_set;
     }
 
@@ -663,18 +682,30 @@ class AstroCalc
         $jd = floor($this->jd) - 0.5;
 
         $radec1 = $this->_calculateMoonCoordinates(
-            $jd - 1, $this->longitude, $this->latitude
+            $jd - 1,
+            $this->longitude,
+            $this->latitude
         );
         $radec2 = $this->_calculateMoonCoordinates(
-            $jd, $this->longitude, $this->latitude
+            $jd,
+            $this->longitude,
+            $this->latitude
         );
         $radec3 = $this->_calculateMoonCoordinates(
-            $jd + 1, $this->longitude, $this->latitude
+            $jd + 1,
+            $this->longitude,
+            $this->latitude
         );
+
         return $this->_calculateRiseTransitSettingTimeCommon(
             $jd,
-            $radec1[0], $radec2[0], $radec3[0],
-            $radec1[1], $radec2[1], $radec3[1], $this->timedifference
+            $radec1[0],
+            $radec2[0],
+            $radec3[0],
+            $radec1[1],
+            $radec2[1],
+            $radec3[1],
+            $this->timedifference
         );
     }
 
@@ -683,7 +714,7 @@ class AstroCalc
      *
      * @param float $jd The julian day
      *
-     * @return Array The ra and dec of the moon.
+     * @return Array the ra and dec of the moon
      */
     private function _calculateMoonCoordinates($jd)
     {
@@ -722,7 +753,7 @@ class AstroCalc
         $A1 = 119.75 + 131.849 * $T;
         $A1 -= floor($A1 / 360.0) * 360.0;
 
-        $A2 =  53.09 + 479264.290 * $T;
+        $A2 = 53.09 + 479264.290 * $T;
         $A2 -= floor($A2 / 360.0) * 360.0;
 
         $A3 = 313.45 + 481266.484 * $T;
@@ -731,187 +762,187 @@ class AstroCalc
         $E = 1 - 0.002516 * $T - 0.0000074 * pow($T, 2);
 
         $L = 6288774.0 * sin(deg2rad($M_accent))
-            +1274027.0 * sin(deg2rad(2 * $D - $M_accent))
-            +658314.0 * sin(deg2rad(2 * $D))
-            +213618.0 * sin(deg2rad(2 * $M_accent))
-            -185116.0 * sin(deg2rad($M)) * $E
-            -114332.0 * sin(deg2rad(2 * $F))
-            +58793.0 * sin(deg2rad(2 * $D - 2 * $M_accent))
-            +57066.0 * sin(deg2rad(2 * $D - $M - $M_accent)) * $E
-            +53322.0 * sin(deg2rad(2 * $D + $M_accent))
-            +45758.0 * sin(deg2rad(2 * $D - $M)) * $E
-            -40923.0 * sin(deg2rad($M - $M_accent)) * $E
-            -34720.0 * sin(deg2rad($D))
-            -30383 * sin(deg2rad($M + $M_accent)) * $E
-            +15327 * sin(deg2rad(2 * $D - 2 * $F))
-            -12528 * sin(deg2rad($M_accent + 2 * $F))
-            +10980 * sin(deg2rad($M_accent - 2 * $F))
-            +10675 * sin(deg2rad(4 * $D - $M_accent))
-            +10034 * sin(deg2rad(3 * $M_accent))
-            +8548 * sin(deg2rad(4 * $D - 2 * $M_accent))
-            -7888 * sin(deg2rad(2 * $D + $M - $M_accent)) * $E
-            -6766 * sin(deg2rad(2 * $D + $M)) * $E
-            -5163 * sin(deg2rad($D - $M_accent))
-            +4987 * sin(deg2rad($D + $M)) * $E
-            +4036 * sin(deg2rad(2 * $D - $M + $M_accent)) * $E
-            +3994 * sin(deg2rad(2 * $D + 2 * $M_accent))
-            +3861 * sin(deg2rad(4 * $D))
-            +3665 * sin(deg2rad(2 * $D - 3 * $M_accent))
-            -2689 * sin(deg2rad($M - 2 * $M_accent)) * $E
-            -2602 * sin(deg2rad(2 * $D - $M_accent + 2 * $F))
-            +2390 * sin(deg2rad(2 * $D - $M - 2 * $M_accent)) * $E
-            -2348 * sin(deg2rad($D + $M_accent))
-            +2236 * sin(deg2rad(2 * $D - 2 * $M)) * pow($E, 2)
-            -2120 * sin(deg2rad($M + 2 * $M_accent)) * $E
-            -2069 * sin(deg2rad(2 * $M)) * pow($E, 2)
-            +2048 * sin(deg2rad(2 * $D - 2 * $M - $M_accent)) * pow($E, 2)
-            -1773 * sin(deg2rad(2 * $D + $M_accent - 2 * $F))
-            -1595 * sin(deg2rad(2 * $D + 2 * $F))
-            +1215 * sin(deg2rad(4 * $D - $M - $M_accent)) * $E
-            -1110 * sin(deg2rad(2 * $M_accent + 2 * $F))
-            -892 * sin(deg2rad(3 * $D - $M_accent))
-            -810 * sin(deg2rad(2 * $D + $M + $M_accent)) * $E
-            +759 * sin(deg2rad(4 * $D - $M - 2 * $M_accent)) * $E
-            -713 * sin(deg2rad(2 * $M - $M_accent)) * pow($E, 2)
-            -700 * sin(deg2rad(2 * $D + 2 * $M - $M_accent)) * pow($E, 2)
-            +691 * sin(deg2rad(2 * $D + $M - 2 * $M_accent)) * $E
-            +596 * sin(deg2rad(2 * $D - $M - 2 * $F)) * $E
-            +549 * sin(deg2rad(4 * $D + $M_accent))
-            +537 * sin(deg2rad(4 * $M_accent))
-            +520 * sin(deg2rad(4 * $D - $M)) * $E
-            -487 * sin(deg2rad($D - 2 * $M_accent))
-            -399 * sin(deg2rad(2 * $D + $M - 2 * $F)) * $E
-            -381 * sin(deg2rad(2 * $M_accent - 2 * $F))
-            +351 * sin(deg2rad($D + $M + $M_accent)) * $E
-            -340 * sin(deg2rad(3 * $D - 2 * $M_accent))
-            +330 * sin(deg2rad(4 * $D - 3 * $M_accent))
-            +327 * sin(deg2rad(2 * $D - $M + 2 * $M_accent)) * $E
-            -323 * sin(deg2rad(2 * $M + $M_accent)) * pow($E, 2)
-            +299 * sin(deg2rad($D + $M - $M_accent)) * $E
-            +294 * sin(deg2rad(2 * $D + 3 * $M_accent));
+            + 1274027.0 * sin(deg2rad(2 * $D - $M_accent))
+            + 658314.0 * sin(deg2rad(2 * $D))
+            + 213618.0 * sin(deg2rad(2 * $M_accent))
+            - 185116.0 * sin(deg2rad($M)) * $E
+            - 114332.0 * sin(deg2rad(2 * $F))
+            + 58793.0 * sin(deg2rad(2 * $D - 2 * $M_accent))
+            + 57066.0 * sin(deg2rad(2 * $D - $M - $M_accent)) * $E
+            + 53322.0 * sin(deg2rad(2 * $D + $M_accent))
+            + 45758.0 * sin(deg2rad(2 * $D - $M)) * $E
+            - 40923.0 * sin(deg2rad($M - $M_accent)) * $E
+            - 34720.0 * sin(deg2rad($D))
+            - 30383 * sin(deg2rad($M + $M_accent)) * $E
+            + 15327 * sin(deg2rad(2 * $D - 2 * $F))
+            - 12528 * sin(deg2rad($M_accent + 2 * $F))
+            + 10980 * sin(deg2rad($M_accent - 2 * $F))
+            + 10675 * sin(deg2rad(4 * $D - $M_accent))
+            + 10034 * sin(deg2rad(3 * $M_accent))
+            + 8548 * sin(deg2rad(4 * $D - 2 * $M_accent))
+            - 7888 * sin(deg2rad(2 * $D + $M - $M_accent)) * $E
+            - 6766 * sin(deg2rad(2 * $D + $M)) * $E
+            - 5163 * sin(deg2rad($D - $M_accent))
+            + 4987 * sin(deg2rad($D + $M)) * $E
+            + 4036 * sin(deg2rad(2 * $D - $M + $M_accent)) * $E
+            + 3994 * sin(deg2rad(2 * $D + 2 * $M_accent))
+            + 3861 * sin(deg2rad(4 * $D))
+            + 3665 * sin(deg2rad(2 * $D - 3 * $M_accent))
+            - 2689 * sin(deg2rad($M - 2 * $M_accent)) * $E
+            - 2602 * sin(deg2rad(2 * $D - $M_accent + 2 * $F))
+            + 2390 * sin(deg2rad(2 * $D - $M - 2 * $M_accent)) * $E
+            - 2348 * sin(deg2rad($D + $M_accent))
+            + 2236 * sin(deg2rad(2 * $D - 2 * $M)) * pow($E, 2)
+            - 2120 * sin(deg2rad($M + 2 * $M_accent)) * $E
+            - 2069 * sin(deg2rad(2 * $M)) * pow($E, 2)
+            + 2048 * sin(deg2rad(2 * $D - 2 * $M - $M_accent)) * pow($E, 2)
+            - 1773 * sin(deg2rad(2 * $D + $M_accent - 2 * $F))
+            - 1595 * sin(deg2rad(2 * $D + 2 * $F))
+            + 1215 * sin(deg2rad(4 * $D - $M - $M_accent)) * $E
+            - 1110 * sin(deg2rad(2 * $M_accent + 2 * $F))
+            - 892 * sin(deg2rad(3 * $D - $M_accent))
+            - 810 * sin(deg2rad(2 * $D + $M + $M_accent)) * $E
+            + 759 * sin(deg2rad(4 * $D - $M - 2 * $M_accent)) * $E
+            - 713 * sin(deg2rad(2 * $M - $M_accent)) * pow($E, 2)
+            - 700 * sin(deg2rad(2 * $D + 2 * $M - $M_accent)) * pow($E, 2)
+            + 691 * sin(deg2rad(2 * $D + $M - 2 * $M_accent)) * $E
+            + 596 * sin(deg2rad(2 * $D - $M - 2 * $F)) * $E
+            + 549 * sin(deg2rad(4 * $D + $M_accent))
+            + 537 * sin(deg2rad(4 * $M_accent))
+            + 520 * sin(deg2rad(4 * $D - $M)) * $E
+            - 487 * sin(deg2rad($D - 2 * $M_accent))
+            - 399 * sin(deg2rad(2 * $D + $M - 2 * $F)) * $E
+            - 381 * sin(deg2rad(2 * $M_accent - 2 * $F))
+            + 351 * sin(deg2rad($D + $M + $M_accent)) * $E
+            - 340 * sin(deg2rad(3 * $D - 2 * $M_accent))
+            + 330 * sin(deg2rad(4 * $D - 3 * $M_accent))
+            + 327 * sin(deg2rad(2 * $D - $M + 2 * $M_accent)) * $E
+            - 323 * sin(deg2rad(2 * $M + $M_accent)) * pow($E, 2)
+            + 299 * sin(deg2rad($D + $M - $M_accent)) * $E
+            + 294 * sin(deg2rad(2 * $D + 3 * $M_accent));
 
         $L += 3958 * sin(deg2rad($A1))
                 + 1962 * sin(deg2rad($L_accent - $F))
-                +  318 * sin(deg2rad($A2));
+                + 318 * sin(deg2rad($A2));
 
         $eclLongitude = $L_accent + $L / 1000000.0;
 
         $B = 5128122.0 * sin(deg2rad($F))
-             +280602.0 * sin(deg2rad($M_accent + $F))
-             +277693.0 * sin(deg2rad($M_accent - $F))
-             +173237.0 * sin(deg2rad(2 * $D - $F))
-             +55413.0 * sin(deg2rad(2 * $D - $M_accent + $F))
-             +46271.0 * sin(deg2rad(2 * $D - $M_accent - $F))
-             +32573 * sin(deg2rad(2 * $D + $F))
-             +17198 * sin(deg2rad(2 * $M_accent + $F))
-             +9266 * sin(deg2rad(2 * $D + $M_accent - $F))
-             +8822 * sin(deg2rad(2 * $M_accent - $F))
-             +8216 * sin(deg2rad(2 * $D - $M - $F)) * $E
-             +4324 * sin(deg2rad(2 * $D - 2 * $M_accent - $F))
-             +4200 * sin(deg2rad(2 * $D + $M_accent + $F))
-             -3359 * sin(deg2rad(2 * $D + $M - $F)) * $E
-             +2463 * sin(deg2rad(2 * $D - $M - $M_accent + $F)) * $E
-             +2211 * sin(deg2rad(2 * $D - $M + $F)) * $E
-             +2065 * sin(deg2rad(2 * $D - $M - $M_accent - $F)) * $E
-             -1870 * sin(deg2rad($M - $M_accent - $F)) * $E
-             +1828 * sin(deg2rad(4 * $D - $M_accent - $F))
-             -1794 * sin(deg2rad($M + $F)) * $E
-             -1749 * sin(deg2rad(3 * $F))
-             -1565 * sin(deg2rad($M - $M_accent + $F)) * $E
-             -1491 * sin(deg2rad($D + $F))
-             -1475 * sin(deg2rad($M + $M_accent + $F)) * $E
-             -1410 * sin(deg2rad($M + $M_accent - $F)) * $E
-             -1344 * sin(deg2rad($M - $F)) * $E
-             -1335 * sin(deg2rad($D - $F))
-             +1107 * sin(deg2rad(3 * $M_accent + $F))
-             +1021 * sin(deg2rad(4 * $D - $F))
-             +833 * sin(deg2rad(4 * $D - $M_accent + $F))
-             +777 * sin(deg2rad($M_accent - 3 * $F))
-             +671 * sin(deg2rad(4 * $D - 2 * $M_accent + $F))
-             +607 * sin(deg2rad(2 * $D - 3 * $F))
-             +596 * sin(deg2rad(2 * $D + 2 * $M_accent - $F))
-             +491 * sin(deg2rad(2 * $D - $M + $M_accent - $F)) * $E
-             -451 * sin(deg2rad(2 * $D - 2 * $M_accent + $F))
-             +439 * sin(deg2rad(3 * $M_accent - $F))
-             +422 * sin(deg2rad(2 * $D + 2 * $M_accent + $F))
-             +421 * sin(deg2rad(2 * $D - 3 * $M_accent - $F))
-             -366 * sin(deg2rad(2 * $D + $M - $M_accent + $F)) * $E
-             -351 * sin(deg2rad(2 * $D + $M + $F)) * $E
-             +331 * sin(deg2rad(4 * $D + $F))
-             +315 * sin(deg2rad(2 * $D - $M + $M_accent + $F)) * $E
-             +302 * sin(deg2rad(2 * $D - 2 * $M - $F)) * pow($E, 2)
-             -283 * sin(deg2rad($M_accent + 3 * $F))
-             -229 * sin(deg2rad(2 * $D + $M + $M_accent - $F)) * $E
-             +223 * sin(deg2rad($D + $M - $F)) * $E
-             +223 * sin(deg2rad($D + $M + $F)) * $E
-             -220 * sin(deg2rad($M - 2 * $M_accent - $F)) * $E
-             -220 * sin(deg2rad(2 * $D + $M - $M_accent - $F)) * $E
-             -185 * sin(deg2rad($D + $M_accent + $F))
-             +181 * sin(deg2rad(2 * $D - $M - 2 * $M_accent - $F)) * $E
-             -177 * sin(deg2rad($M + 2 * $M_accent + $F)) * $E
-             +176 * sin(deg2rad(4 * $D - 2 * $M_accent - $F))
-             +166 * sin(deg2rad(4 * $D - $M - $M_accent - $F)) * $E
-             -164 * sin(deg2rad($D + $M_accent - $F))
-             +132 * sin(deg2rad(4 * $D + $M_accent - $F))
-             -119 * sin(deg2rad($D - $M_accent - $F))
-             +115 * sin(deg2rad(4 * $D - $M - $F)) * $E
-             +107 * sin(deg2rad(2 * $D - 2 * $M + $F)) * pow($E, 2);
+             + 280602.0 * sin(deg2rad($M_accent + $F))
+             + 277693.0 * sin(deg2rad($M_accent - $F))
+             + 173237.0 * sin(deg2rad(2 * $D - $F))
+             + 55413.0 * sin(deg2rad(2 * $D - $M_accent + $F))
+             + 46271.0 * sin(deg2rad(2 * $D - $M_accent - $F))
+             + 32573 * sin(deg2rad(2 * $D + $F))
+             + 17198 * sin(deg2rad(2 * $M_accent + $F))
+             + 9266 * sin(deg2rad(2 * $D + $M_accent - $F))
+             + 8822 * sin(deg2rad(2 * $M_accent - $F))
+             + 8216 * sin(deg2rad(2 * $D - $M - $F)) * $E
+             + 4324 * sin(deg2rad(2 * $D - 2 * $M_accent - $F))
+             + 4200 * sin(deg2rad(2 * $D + $M_accent + $F))
+             - 3359 * sin(deg2rad(2 * $D + $M - $F)) * $E
+             + 2463 * sin(deg2rad(2 * $D - $M - $M_accent + $F)) * $E
+             + 2211 * sin(deg2rad(2 * $D - $M + $F)) * $E
+             + 2065 * sin(deg2rad(2 * $D - $M - $M_accent - $F)) * $E
+             - 1870 * sin(deg2rad($M - $M_accent - $F)) * $E
+             + 1828 * sin(deg2rad(4 * $D - $M_accent - $F))
+             - 1794 * sin(deg2rad($M + $F)) * $E
+             - 1749 * sin(deg2rad(3 * $F))
+             - 1565 * sin(deg2rad($M - $M_accent + $F)) * $E
+             - 1491 * sin(deg2rad($D + $F))
+             - 1475 * sin(deg2rad($M + $M_accent + $F)) * $E
+             - 1410 * sin(deg2rad($M + $M_accent - $F)) * $E
+             - 1344 * sin(deg2rad($M - $F)) * $E
+             - 1335 * sin(deg2rad($D - $F))
+             + 1107 * sin(deg2rad(3 * $M_accent + $F))
+             + 1021 * sin(deg2rad(4 * $D - $F))
+             + 833 * sin(deg2rad(4 * $D - $M_accent + $F))
+             + 777 * sin(deg2rad($M_accent - 3 * $F))
+             + 671 * sin(deg2rad(4 * $D - 2 * $M_accent + $F))
+             + 607 * sin(deg2rad(2 * $D - 3 * $F))
+             + 596 * sin(deg2rad(2 * $D + 2 * $M_accent - $F))
+             + 491 * sin(deg2rad(2 * $D - $M + $M_accent - $F)) * $E
+             - 451 * sin(deg2rad(2 * $D - 2 * $M_accent + $F))
+             + 439 * sin(deg2rad(3 * $M_accent - $F))
+             + 422 * sin(deg2rad(2 * $D + 2 * $M_accent + $F))
+             + 421 * sin(deg2rad(2 * $D - 3 * $M_accent - $F))
+             - 366 * sin(deg2rad(2 * $D + $M - $M_accent + $F)) * $E
+             - 351 * sin(deg2rad(2 * $D + $M + $F)) * $E
+             + 331 * sin(deg2rad(4 * $D + $F))
+             + 315 * sin(deg2rad(2 * $D - $M + $M_accent + $F)) * $E
+             + 302 * sin(deg2rad(2 * $D - 2 * $M - $F)) * pow($E, 2)
+             - 283 * sin(deg2rad($M_accent + 3 * $F))
+             - 229 * sin(deg2rad(2 * $D + $M + $M_accent - $F)) * $E
+             + 223 * sin(deg2rad($D + $M - $F)) * $E
+             + 223 * sin(deg2rad($D + $M + $F)) * $E
+             - 220 * sin(deg2rad($M - 2 * $M_accent - $F)) * $E
+             - 220 * sin(deg2rad(2 * $D + $M - $M_accent - $F)) * $E
+             - 185 * sin(deg2rad($D + $M_accent + $F))
+             + 181 * sin(deg2rad(2 * $D - $M - 2 * $M_accent - $F)) * $E
+             - 177 * sin(deg2rad($M + 2 * $M_accent + $F)) * $E
+             + 176 * sin(deg2rad(4 * $D - 2 * $M_accent - $F))
+             + 166 * sin(deg2rad(4 * $D - $M - $M_accent - $F)) * $E
+             - 164 * sin(deg2rad($D + $M_accent - $F))
+             + 132 * sin(deg2rad(4 * $D + $M_accent - $F))
+             - 119 * sin(deg2rad($D - $M_accent - $F))
+             + 115 * sin(deg2rad(4 * $D - $M - $F)) * $E
+             + 107 * sin(deg2rad(2 * $D - 2 * $M + $F)) * pow($E, 2);
 
         $B -= 2235 * sin(deg2rad($L_accent))
-                +  382 * sin(deg2rad($A3))
-                +  175 * sin(deg2rad($A1 - $F))
-                +  175 * sin(deg2rad($A1 + $F))
-                +  127 * sin(deg2rad($L_accent - $M_accent))
-                -  115 * sin(deg2rad($L_accent + $M_accent));
+                + 382 * sin(deg2rad($A3))
+                + 175 * sin(deg2rad($A1 - $F))
+                + 175 * sin(deg2rad($A1 + $F))
+                + 127 * sin(deg2rad($L_accent - $M_accent))
+                - 115 * sin(deg2rad($L_accent + $M_accent));
 
         $eclLatitude = $B / 1000000.0;
 
         $R = -20905355.0 * cos(deg2rad($M_accent))
              - 3699111.0 * cos(deg2rad(2 * $D - $M_accent))
              - 2955968.0 * cos(deg2rad(2 * $D))
-             -  569925.0 * cos(deg2rad(2 * $M_accent))
-             +   48888.0 * cos(deg2rad($M)) * $E
-             -    3149.0 * cos(deg2rad(2 * $F))
-             +  246158.0 * cos(deg2rad(2 * $D - 2 * $M_accent))
-             -  152138.0 * cos(deg2rad(2 * $D - $M - $M_accent)) * $E
-             -  170733.0 * cos(deg2rad(2 * $D + $M_accent))
-             -  204586.0 * cos(deg2rad(2 * $D - $M)) * $E
-             -  129620.0 * cos(deg2rad($M - $M_accent)) * $E
-             +  108743.0 * cos(deg2rad($D))
-             +  104755.0 * cos(deg2rad($M + $M_accent)) * $E
-             +   10321.0 * cos(deg2rad(2 * $D - 2 * $F))
-             +   79661.0 * cos(deg2rad($M_accent - 2 * $F))
-             -   34782.0 * cos(deg2rad(4 * $D - $M_accent))
-             -   23210.0 * cos(deg2rad(3 * $M_accent))
-             -   21636.0 * cos(deg2rad(4 * $D - 2 * $M_accent))
-             +   24208.0 * cos(deg2rad(2 * $D + $M - $M_accent)) * $E
-             +   30824.0 * cos(deg2rad(2 * $D + $M)) * $E
-             -    8379.0 * cos(deg2rad($D - $M_accent))
-             -   16675.0 * cos(deg2rad($D + $M)) * $E
-             -   12831.0 * cos(deg2rad(2 * $D - $M + $M_accent)) * $E
-             -   10445.0 * cos(deg2rad(2 * $D + 2 * $M_accent))
-             -   11650.0 * cos(deg2rad(4 * $D))
-             +   14403.0 * cos(deg2rad(2 * $D - 3 * $M_accent))
-             -    7003.0 * cos(deg2rad($M - 2 * $M_accent)) * $E
-             +   10056.0 * cos(deg2rad(2 * $D - $M - 2 * $M_accent)) * $E
-             +    6322.0 * cos(deg2rad($D + $M_accent))
-             -    9884.0 * cos(deg2rad(2 * $D - 2 * $M)) * pow($E, 2)
-             +    5751.0 * cos(deg2rad($M + 2 * $M_accent)) * $E
-             -    4950.0 * cos(deg2rad(2 * $D - 2 * $M - $M_accent)) * pow($E, 2)
-             +    4130.0 * cos(deg2rad(2 * $D + $M_accent - 2 * $F))
-             -    3958.0 * cos(deg2rad(4 * $D - $M - $M_accent)) * $E
-             +    3258.0 * cos(deg2rad(3 * $D - $M_accent))
-             +    2616.0 * cos(deg2rad(2 * $D + $M + $M_accent)) * $E
-             -    1897.0 * cos(deg2rad(4 * $D - $M - 2 * $M_accent)) * $E
-             -    2117.0 * cos(deg2rad(2 * $M - $M_accent)) * pow($E, 2)
-             +    2354.0 * cos(deg2rad(2 * $D + 2 * $M - $M_accent)) * pow($E, 2)
-             -    1423.0 * cos(deg2rad(4 * $D + $M_accent))
-             -    1117.0 * cos(deg2rad(4 * $M_accent))
-             -    1571.0 * cos(deg2rad(4 * $D - $M)) * $E
-             -    1739.0 * cos(deg2rad($D - 2 * $M_accent))
-             -    4421.0 * cos(deg2rad(2 * $M_accent - 2 * $F))
-             +    1165.0 * cos(deg2rad(2 * $M + $M_accent)) * pow($E, 2)
-             +    8752.0 * cos(deg2rad(2 * $D - $M_accent - 2 * $F));
+             - 569925.0 * cos(deg2rad(2 * $M_accent))
+             + 48888.0 * cos(deg2rad($M)) * $E
+             - 3149.0 * cos(deg2rad(2 * $F))
+             + 246158.0 * cos(deg2rad(2 * $D - 2 * $M_accent))
+             - 152138.0 * cos(deg2rad(2 * $D - $M - $M_accent)) * $E
+             - 170733.0 * cos(deg2rad(2 * $D + $M_accent))
+             - 204586.0 * cos(deg2rad(2 * $D - $M)) * $E
+             - 129620.0 * cos(deg2rad($M - $M_accent)) * $E
+             + 108743.0 * cos(deg2rad($D))
+             + 104755.0 * cos(deg2rad($M + $M_accent)) * $E
+             + 10321.0 * cos(deg2rad(2 * $D - 2 * $F))
+             + 79661.0 * cos(deg2rad($M_accent - 2 * $F))
+             - 34782.0 * cos(deg2rad(4 * $D - $M_accent))
+             - 23210.0 * cos(deg2rad(3 * $M_accent))
+             - 21636.0 * cos(deg2rad(4 * $D - 2 * $M_accent))
+             + 24208.0 * cos(deg2rad(2 * $D + $M - $M_accent)) * $E
+             + 30824.0 * cos(deg2rad(2 * $D + $M)) * $E
+             - 8379.0 * cos(deg2rad($D - $M_accent))
+             - 16675.0 * cos(deg2rad($D + $M)) * $E
+             - 12831.0 * cos(deg2rad(2 * $D - $M + $M_accent)) * $E
+             - 10445.0 * cos(deg2rad(2 * $D + 2 * $M_accent))
+             - 11650.0 * cos(deg2rad(4 * $D))
+             + 14403.0 * cos(deg2rad(2 * $D - 3 * $M_accent))
+             - 7003.0 * cos(deg2rad($M - 2 * $M_accent)) * $E
+             + 10056.0 * cos(deg2rad(2 * $D - $M - 2 * $M_accent)) * $E
+             + 6322.0 * cos(deg2rad($D + $M_accent))
+             - 9884.0 * cos(deg2rad(2 * $D - 2 * $M)) * pow($E, 2)
+             + 5751.0 * cos(deg2rad($M + 2 * $M_accent)) * $E
+             - 4950.0 * cos(deg2rad(2 * $D - 2 * $M - $M_accent)) * pow($E, 2)
+             + 4130.0 * cos(deg2rad(2 * $D + $M_accent - 2 * $F))
+             - 3958.0 * cos(deg2rad(4 * $D - $M - $M_accent)) * $E
+             + 3258.0 * cos(deg2rad(3 * $D - $M_accent))
+             + 2616.0 * cos(deg2rad(2 * $D + $M + $M_accent)) * $E
+             - 1897.0 * cos(deg2rad(4 * $D - $M - 2 * $M_accent)) * $E
+             - 2117.0 * cos(deg2rad(2 * $M - $M_accent)) * pow($E, 2)
+             + 2354.0 * cos(deg2rad(2 * $D + 2 * $M - $M_accent)) * pow($E, 2)
+             - 1423.0 * cos(deg2rad(4 * $D + $M_accent))
+             - 1117.0 * cos(deg2rad(4 * $M_accent))
+             - 1571.0 * cos(deg2rad(4 * $D - $M)) * $E
+             - 1739.0 * cos(deg2rad($D - 2 * $M_accent))
+             - 4421.0 * cos(deg2rad(2 * $M_accent - 2 * $F))
+             + 1165.0 * cos(deg2rad(2 * $M + $M_accent)) * pow($E, 2)
+             + 8752.0 * cos(deg2rad(2 * $D - $M_accent - 2 * $F));
 
         $moonR = 385000.56 + $R / 1000.0;
 
@@ -921,17 +952,18 @@ class AstroCalc
 
         $eclLongitude += $nutat[0] / 3600.0;
 
-        $ecl = array($eclLongitude, $eclLatitude);
+        $ecl = [$eclLongitude, $eclLatitude];
 
         // Now we transform from ecliptical to equatorial coordinates
         $equa = $this->_convertFromEclipticalToEquatorialCoordinates(
-            $ecl, $nutat[3]
+            $ecl,
+            $nutat[3]
         );
 
         $moonRa = $equa[0] / 15;
         $moonDecl = $equa[1];
 
-        return array($moonRa, $moonDecl, $pi);
+        return [$moonRa, $moonDecl, $pi];
     }
 
     /**
@@ -939,8 +971,8 @@ class AstroCalc
      *
      * @param float $jd The julian day
      *
-     * @return Array The nutation in longitude, the nutation in obliquity,
-     *              the mean obliquity and the true obliquity.
+     * @return Array the nutation in longitude, the nutation in obliquity,
+     *               the mean obliquity and the true obliquity
      */
     private function _calculateNutation($jd)
     {
@@ -975,110 +1007,110 @@ class AstroCalc
 
         // This is a very accurate calculation of the nutation in longitude
         $nutLongitude = (-171996.0 - 174.2 * $T) * sin(deg2rad($omega))
-            +(-13187 - 1.6 * $T) * sin(deg2rad(-2 * $D + 2 * $F + 2 * $omega))
-            +(-2274 - 0.2 * $T) * sin(deg2rad(2 * $F + 2 * $omega))
-            +(2062 + 0.2 * $T) * sin(deg2rad(2 * $omega))
-            +(1426 - 3.4 * $T) * sin(deg2rad($M))
-            +(712 + 0.1 * $T) * sin(deg2rad($M_accent))
-            +(-517 + 1.2 * $T) * sin(deg2rad(-2 * $D + $M + 2 * $F + 2 * $omega))
-            +(-386 - 0.4 * $T) * sin(deg2rad(2 * $F + $omega))
-            +(-301) * sin(deg2rad($M_accent + 2 * $F + 2 * $omega))
-            +(217 - 0.5 * $T) * sin(deg2rad(-2 * $D - $M + 2 * $F + 2 * $omega))
-            +(-158) * sin(deg2rad(-2 * $D + $M_accent))
-            +(129 + 0.1 * $T) * sin(deg2rad(-2 * $D + 2 * $F + $omega))
-            +(123) * sin(deg2rad(-$M_accent + 2 * $F + 2 * $omega))
-            +(63) * sin(deg2rad(2 * $D))
-            +(63 + 0.1 * $T) * sin(deg2rad($M_accent + $omega))
-            +(-59) * sin(deg2rad(2 * $D - $M_accent + 2 * $F + 2 * $omega))
-            +(-58 - 0.1 * $T) * sin(deg2rad(-$M_accent + $omega))
-            +(-51) * sin(deg2rad($M_accent + 2 * $F + $omega))
-            +(48) * sin(deg2rad(-2 * $D + 2 * $M_accent))
-            +(46) * sin(deg2rad(-2 * $M_accent + 2 * $F + $omega))
-            +(-38) * sin(deg2rad(2 * $D + 2 * $F + 2 * $omega))
-            +(-31) * sin(deg2rad(2 * $M_accent + 2 * $F + 2 * $omega))
-            +(29) * sin(deg2rad(2 * $M_accent))
-            +(29) * sin(deg2rad(-2 * $D + $M_accent + 2 * $F + 2 * $omega))
-            +(26) * sin(deg2rad(2 * $F))
-            +(-22) * sin(deg2rad(-2 * $D + 2 * $F))
-            +(21) * sin(deg2rad(-$M_accent + 2 * $F + $omega))
-            +(17 - 0.1 * $T) * sin(deg2rad(2 * $M))
-            +(16) * sin(deg2rad(2 * $D - $M_accent + $omega))
-            +(-16 + 0.1 * $T) * sin(deg2rad(-2 * $D + 2 * $M + 2 * $F + 2 * $omega))
-            +(-15) * sin(deg2rad($M + $omega))
-            +(-13) * sin(deg2rad(-2 * $D + $M_accent + $omega))
-            +(-12) * sin(deg2rad(-$M + $omega))
-            +(11) * sin(deg2rad(2 * $M_accent - 2 * $F))
-            +(-10) * sin(deg2rad(2 * $D - $M_accent + 2 * $F + $omega))
-            +(-8) * sin(deg2rad(2 * $D + $M_accent + 2 * $F + 2 * $omega))
-            +(7) * sin(deg2rad($M + 2 * $F + 2 * $omega))
-            +(-7) * sin(deg2rad(-2 * $D + $M + $M_accent))
-            +(-7) * sin(deg2rad(-$M + 2 * $F + 2 * $omega))
-            +(-7) * sin(deg2rad(2 * $D + 2 * $F + $omega))
-            +(6) * sin(deg2rad(2 * $D + $M_accent))
-            +(6) * sin(deg2rad(- 2 * $D + 2 * $M_accent + 2 * $F + 2 * $omega))
-            +(6) * sin(deg2rad(- 2 * $D + $M_accent + 2 * $F + $omega))
-            +(-6) * sin(deg2rad(2 * $D - 2 * $M_accent + $omega))
-            +(-6) * sin(deg2rad(2 * $D + $omega))
-            +(5) * sin(deg2rad(-$M + $M_accent))
-            +(-5) * sin(deg2rad(-2 * $D - $M + 2 * $F + $omega))
-            +(-5) * sin(deg2rad(-2 * $D + $omega))
-            +(-5) * sin(deg2rad(2 * $M_accent + 2 * $F + $omega))
-            +(4) * sin(deg2rad(-2 * $D + 2 * $M_accent + $omega))
-            +(4) * sin(deg2rad(-2 * $D + $M + 2 * $F + $omega))
-            +(4) * sin(deg2rad($M_accent - 2 * $F))
-            +(-4) * sin(deg2rad(- $D + $M_accent))
-            +(-4) * sin(deg2rad(- 2 * $D + $M))
-            +(-4) * sin(deg2rad($D))
-            +(3) * sin(deg2rad($M_accent + 2 * $F))
-            +(-3) * sin(deg2rad(-2 * $M_accent + 2 * $F + 2 * $omega))
-            +(-3) * sin(deg2rad(-$D - $M + $M_accent))
-            +(-3) * sin(deg2rad($M + $M_accent))
-            +(-3) * sin(deg2rad(-$M + $M_accent + 2 * $F + 2 * $omega))
-            +(-3) * sin(deg2rad(2 * $D - $M - $M_accent + 2 * $F + 2 * $omega))
-            +(-3) * sin(deg2rad(3 * $M_accent + 2 * $F + 2 * $omega))
-            +(-3) * sin(deg2rad(2 * $D - $M + 2 * $F + 2 * $omega));
+            + (-13187 - 1.6 * $T) * sin(deg2rad(-2 * $D + 2 * $F + 2 * $omega))
+            + (-2274 - 0.2 * $T) * sin(deg2rad(2 * $F + 2 * $omega))
+            + (2062 + 0.2 * $T) * sin(deg2rad(2 * $omega))
+            + (1426 - 3.4 * $T) * sin(deg2rad($M))
+            + (712 + 0.1 * $T) * sin(deg2rad($M_accent))
+            + (-517 + 1.2 * $T) * sin(deg2rad(-2 * $D + $M + 2 * $F + 2 * $omega))
+            + (-386 - 0.4 * $T) * sin(deg2rad(2 * $F + $omega))
+            + (-301) * sin(deg2rad($M_accent + 2 * $F + 2 * $omega))
+            + (217 - 0.5 * $T) * sin(deg2rad(-2 * $D - $M + 2 * $F + 2 * $omega))
+            + (-158) * sin(deg2rad(-2 * $D + $M_accent))
+            + (129 + 0.1 * $T) * sin(deg2rad(-2 * $D + 2 * $F + $omega))
+            + (123) * sin(deg2rad(-$M_accent + 2 * $F + 2 * $omega))
+            + (63) * sin(deg2rad(2 * $D))
+            + (63 + 0.1 * $T) * sin(deg2rad($M_accent + $omega))
+            + (-59) * sin(deg2rad(2 * $D - $M_accent + 2 * $F + 2 * $omega))
+            + (-58 - 0.1 * $T) * sin(deg2rad(-$M_accent + $omega))
+            + (-51) * sin(deg2rad($M_accent + 2 * $F + $omega))
+            + (48) * sin(deg2rad(-2 * $D + 2 * $M_accent))
+            + (46) * sin(deg2rad(-2 * $M_accent + 2 * $F + $omega))
+            + (-38) * sin(deg2rad(2 * $D + 2 * $F + 2 * $omega))
+            + (-31) * sin(deg2rad(2 * $M_accent + 2 * $F + 2 * $omega))
+            + (29) * sin(deg2rad(2 * $M_accent))
+            + (29) * sin(deg2rad(-2 * $D + $M_accent + 2 * $F + 2 * $omega))
+            + (26) * sin(deg2rad(2 * $F))
+            + (-22) * sin(deg2rad(-2 * $D + 2 * $F))
+            + (21) * sin(deg2rad(-$M_accent + 2 * $F + $omega))
+            + (17 - 0.1 * $T) * sin(deg2rad(2 * $M))
+            + (16) * sin(deg2rad(2 * $D - $M_accent + $omega))
+            + (-16 + 0.1 * $T) * sin(deg2rad(-2 * $D + 2 * $M + 2 * $F + 2 * $omega))
+            + (-15) * sin(deg2rad($M + $omega))
+            + (-13) * sin(deg2rad(-2 * $D + $M_accent + $omega))
+            + (-12) * sin(deg2rad(-$M + $omega))
+            + (11) * sin(deg2rad(2 * $M_accent - 2 * $F))
+            + (-10) * sin(deg2rad(2 * $D - $M_accent + 2 * $F + $omega))
+            + (-8) * sin(deg2rad(2 * $D + $M_accent + 2 * $F + 2 * $omega))
+            + (7) * sin(deg2rad($M + 2 * $F + 2 * $omega))
+            + (-7) * sin(deg2rad(-2 * $D + $M + $M_accent))
+            + (-7) * sin(deg2rad(-$M + 2 * $F + 2 * $omega))
+            + (-7) * sin(deg2rad(2 * $D + 2 * $F + $omega))
+            + (6) * sin(deg2rad(2 * $D + $M_accent))
+            + (6) * sin(deg2rad(-2 * $D + 2 * $M_accent + 2 * $F + 2 * $omega))
+            + (6) * sin(deg2rad(-2 * $D + $M_accent + 2 * $F + $omega))
+            + (-6) * sin(deg2rad(2 * $D - 2 * $M_accent + $omega))
+            + (-6) * sin(deg2rad(2 * $D + $omega))
+            + (5) * sin(deg2rad(-$M + $M_accent))
+            + (-5) * sin(deg2rad(-2 * $D - $M + 2 * $F + $omega))
+            + (-5) * sin(deg2rad(-2 * $D + $omega))
+            + (-5) * sin(deg2rad(2 * $M_accent + 2 * $F + $omega))
+            + (4) * sin(deg2rad(-2 * $D + 2 * $M_accent + $omega))
+            + (4) * sin(deg2rad(-2 * $D + $M + 2 * $F + $omega))
+            + (4) * sin(deg2rad($M_accent - 2 * $F))
+            + (-4) * sin(deg2rad(-$D + $M_accent))
+            + (-4) * sin(deg2rad(-2 * $D + $M))
+            + (-4) * sin(deg2rad($D))
+            + (3) * sin(deg2rad($M_accent + 2 * $F))
+            + (-3) * sin(deg2rad(-2 * $M_accent + 2 * $F + 2 * $omega))
+            + (-3) * sin(deg2rad(-$D - $M + $M_accent))
+            + (-3) * sin(deg2rad($M + $M_accent))
+            + (-3) * sin(deg2rad(-$M + $M_accent + 2 * $F + 2 * $omega))
+            + (-3) * sin(deg2rad(2 * $D - $M - $M_accent + 2 * $F + 2 * $omega))
+            + (-3) * sin(deg2rad(3 * $M_accent + 2 * $F + 2 * $omega))
+            + (-3) * sin(deg2rad(2 * $D - $M + 2 * $F + 2 * $omega));
 
         $nutLongitude /= 10000.0;
 
         // This is a very accurate calculation of the nutation in longitude
         $nutObliquity = (92025.0 + 8.9 * $T) * cos(deg2rad($omega))
-                +(5736 - 3.1 * $T) * cos(deg2rad(-2 * $D + 2 * $F + 2 * $omega))
-                +(977 - 0.5 * $T) * cos(deg2rad(2 * $F + 2 * $omega))
-                +(-895 + 0.5 * $T) * cos(deg2rad(2 * $omega))
-                +(54 - 0.1 * $T) * cos(deg2rad($M))
-                +(-7) * cos(deg2rad($M_accent))
-                +(224 - 0.6 * $T) * cos(deg2rad(-2 * $D + $M + 2 * $F + 2 * $omega))
-                +(200) * cos(deg2rad(2 * $F + $omega))
-                +(129 - 0.1 * $T) * cos(deg2rad($M_accent + 2 * $F + 2 * $omega))
-                +(-95 + 0.3 * $T) * cos(deg2rad(-2 * $D - $M + 2 * $F + 2 * $omega))
-                +(-70) * cos(deg2rad(-2 * $D + 2 * $F + $omega))
-                +(-53) * cos(deg2rad(-$M_accent + 2 * $F + 2 * $omega))
-                +(-33) * cos(deg2rad($M_accent + $omega))
-                +(26) * cos(deg2rad(2 * $D - $M_accent + 2 * $F + 2 * $omega))
-                +(32) * cos(deg2rad(-$M_accent + $omega))
-                +(27) * cos(deg2rad($M_accent + 2 * $F + $omega))
-                +(-24) * cos(deg2rad(-2 * $M_accent + 2 * $F + $omega))
-                +(16) * cos(deg2rad(2 * $D + 2 * $F + 2 * $omega))
-                +(13) * cos(deg2rad(2 * $M_accent + 2 * $F + 2 * $omega))
-                +(-12) * cos(deg2rad(-2 * $D + $M_accent + 2 * $F + 2 * $omega))
-                +(-10) * cos(deg2rad(-$M_accent + 2 * $F + $omega))
-                +(-8) * cos(deg2rad(2 * $D - $M_accent + $omega))
-                +(7) * cos(deg2rad(-2 * $D + 2 * $M + 2 * $F + 2 * $omega))
-                +(9) * cos(deg2rad($M + $omega))
-                +(7) * cos(deg2rad(-2 * $D + $M_accent + $omega))
-                +(6) * cos(deg2rad(-$M + $omega))
-                +(5) * cos(deg2rad(2 * $D - $M_accent + 2 * $F + $omega))
-                +(3) * cos(deg2rad(2 * $D + $M_accent + 2 * $F + 2 * $omega))
-                +(-3) * cos(deg2rad($M + 2 * $F + 2 * $omega))
-                +(3) * cos(deg2rad(-$M + 2 * $F + 2 * $omega))
-                +(3) * cos(deg2rad(2 * $D + 2 * $F + $omega))
-                +(-3) * cos(deg2rad(- 2 * $D + 2 * $M_accent + 2 * $F + 2 * $omega))
-                +(-3) * cos(deg2rad(- 2 * $D + $M_accent + 2 * $F + $omega))
-                +(3) * cos(deg2rad(2 * $D - 2 * $M_accent + $omega))
-                +(3) * cos(deg2rad(2 * $D + $omega))
-                +(3) * cos(deg2rad(-2 * $D - $M + 2 * $F + $omega))
-                +(3) * cos(deg2rad(-2 * $D + $omega))
-                +(3) * cos(deg2rad(2 * $M_accent + 2 * $F + $omega));
+                + (5736 - 3.1 * $T) * cos(deg2rad(-2 * $D + 2 * $F + 2 * $omega))
+                + (977 - 0.5 * $T) * cos(deg2rad(2 * $F + 2 * $omega))
+                + (-895 + 0.5 * $T) * cos(deg2rad(2 * $omega))
+                + (54 - 0.1 * $T) * cos(deg2rad($M))
+                + (-7) * cos(deg2rad($M_accent))
+                + (224 - 0.6 * $T) * cos(deg2rad(-2 * $D + $M + 2 * $F + 2 * $omega))
+                + (200) * cos(deg2rad(2 * $F + $omega))
+                + (129 - 0.1 * $T) * cos(deg2rad($M_accent + 2 * $F + 2 * $omega))
+                + (-95 + 0.3 * $T) * cos(deg2rad(-2 * $D - $M + 2 * $F + 2 * $omega))
+                + (-70) * cos(deg2rad(-2 * $D + 2 * $F + $omega))
+                + (-53) * cos(deg2rad(-$M_accent + 2 * $F + 2 * $omega))
+                + (-33) * cos(deg2rad($M_accent + $omega))
+                + (26) * cos(deg2rad(2 * $D - $M_accent + 2 * $F + 2 * $omega))
+                + (32) * cos(deg2rad(-$M_accent + $omega))
+                + (27) * cos(deg2rad($M_accent + 2 * $F + $omega))
+                + (-24) * cos(deg2rad(-2 * $M_accent + 2 * $F + $omega))
+                + (16) * cos(deg2rad(2 * $D + 2 * $F + 2 * $omega))
+                + (13) * cos(deg2rad(2 * $M_accent + 2 * $F + 2 * $omega))
+                + (-12) * cos(deg2rad(-2 * $D + $M_accent + 2 * $F + 2 * $omega))
+                + (-10) * cos(deg2rad(-$M_accent + 2 * $F + $omega))
+                + (-8) * cos(deg2rad(2 * $D - $M_accent + $omega))
+                + (7) * cos(deg2rad(-2 * $D + 2 * $M + 2 * $F + 2 * $omega))
+                + (9) * cos(deg2rad($M + $omega))
+                + (7) * cos(deg2rad(-2 * $D + $M_accent + $omega))
+                + (6) * cos(deg2rad(-$M + $omega))
+                + (5) * cos(deg2rad(2 * $D - $M_accent + 2 * $F + $omega))
+                + (3) * cos(deg2rad(2 * $D + $M_accent + 2 * $F + 2 * $omega))
+                + (-3) * cos(deg2rad($M + 2 * $F + 2 * $omega))
+                + (3) * cos(deg2rad(-$M + 2 * $F + 2 * $omega))
+                + (3) * cos(deg2rad(2 * $D + 2 * $F + $omega))
+                + (-3) * cos(deg2rad(-2 * $D + 2 * $M_accent + 2 * $F + 2 * $omega))
+                + (-3) * cos(deg2rad(-2 * $D + $M_accent + 2 * $F + $omega))
+                + (3) * cos(deg2rad(2 * $D - 2 * $M_accent + $omega))
+                + (3) * cos(deg2rad(2 * $D + $omega))
+                + (3) * cos(deg2rad(-2 * $D - $M + 2 * $F + $omega))
+                + (3) * cos(deg2rad(-2 * $D + $omega))
+                + (3) * cos(deg2rad(2 * $M_accent + 2 * $F + $omega));
 
         $nutObliquity /= 10000.0;
 
@@ -1099,13 +1131,13 @@ class AstroCalc
 
         $trueObliquity = $meanObliquity + $nutObliquity / 3600.0;
 
-        return array(
+        return [
             $nutLongitude, $nutObliquity, $meanObliquity, $trueObliquity
-        );
+        ];
     }
 
     /**
-     * Converts from ecliptical coordinates to equatorial coordinates
+     * Converts from ecliptical coordinates to equatorial coordinates.
      *
      * @param array $coords       The ecliptical coordinates
      * @param float $nutObliquity The nutation in Obliquity
@@ -1113,13 +1145,15 @@ class AstroCalc
      * @return array The equatorial coordinates
      */
     private function _convertFromEclipticalToEquatorialCoordinates(
-        $coords, $nutObliquity
+        $coords,
+        $nutObliquity
     ) {
         $ra = rad2deg(
             atan2(
                 sin(deg2rad($coords[0])) *
                 cos(deg2rad($nutObliquity)) - tan(deg2rad($coords[1])) *
-                sin(deg2rad($nutObliquity)), cos(deg2rad($coords[0]))
+                sin(deg2rad($nutObliquity)),
+                cos(deg2rad($coords[0]))
             )
         );
 
@@ -1135,7 +1169,6 @@ class AstroCalc
             $ra += 360.0;
         }
 
-        return array($ra, $decl);
+        return [$ra, $decl];
     }
 }
-?>
