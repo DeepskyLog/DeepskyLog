@@ -60,14 +60,24 @@ class TargetController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified target.
      *
-     * @param  \App\Target  $target
-     * @return \Illuminate\Http\Response
+     * @param String $targetname The name of the target to show
+     *
+     * @return \Illuminate\Http\Response The reponse
      */
-    public function show(Target $target)
+    public function show(String $targetname)
     {
-        //
+        $targetname = \App\TargetName::where('altname', $targetname)
+            ->first();
+
+        if ($targetname != null) {
+            $target = $targetname->target()->get()[0];
+
+            return view('layout.target.show', ['target' => $target]);
+        } else {
+            abort(403, _i('The requested target does not exist.'));
+        }
     }
 
     /**
@@ -113,7 +123,7 @@ class TargetController extends Controller
     public function catalogs()
     {
         return view(
-            'layout.targets.catalogs'
+            'layout.target.catalogs'
         );
     }
 

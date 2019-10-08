@@ -11,19 +11,17 @@
 
 + [ ] CODE CLIMATE: <https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication>
 
-## OBJECTS - Targets
+## Targets
 
 + [x] Database
-  + [x] Create targets
-    + [x] Add moon
-    + [x] Add planets
-    + [x] Add sun
-    + [x] Add Comets
-    + [x] Add deepsky-objects
-    + [x] Target names
-+ [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
 + [x] Viewing catalogs page
 + [ ] Details for one object
+  + [x] Add contrast information
+  + [x] Add rising, setting, transit
+  + [ ] Add ephemerides
+  + [ ] Add objects near by
++ [ ] Quickpick
++ [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
 + [ ] Check permissions on the page
 + [ ] Adding objects
   + [ ] Comets
@@ -42,6 +40,7 @@
 + [ ] Atlas / interactive atlases
   + [ ] Poll to see if we still need these options
   + [ ] Remove the old objects migrations for objectoutlines
++ [ ] OpenAstronomyLog for importing and exporting targets?
 
 ## HOME PAGE
 
@@ -57,6 +56,9 @@
 + [ ] Add planets, sun, ...
 + [ ] Rethink the observation lists
 + [ ] Only receive messages if you opt in for this
++ [ ] In target/show.blade.php
+  + [ ] Make it possible to change / view the description of the target
+  + [ ] Add the private / public lists the object belongs to
 + [ ] Likes / dislikes / ... for public lists: <https://github.com/cybercog/laravel-love>
 + [ ] Sort on highest number of likes, add extra likes when someone subscribes to the observation list. Add dislikes if someone describes from the observation list.
 + [ ] Share observation list on twitter / facebook
@@ -86,6 +88,8 @@
   + [ ] Add the last date of the last use
   + [ ] Add the used eyepieces, filters and lenses
   + [ ] Add google maps with the locations where the telescope was used.
++ [ ] Targets
+  + [ ] show.blade.php: Add information if the object was already seen
 + [ ] In graph of users, also show number of observations of planets, sun, moon, double stars, ...
 + [ ] Likes? Comments? <https://github.com/cybercog/laravel-love>
 + [ ] Sort on highest number of likes
@@ -117,7 +121,3 @@ php73 artisan db:seed
 + Remove the link to /observer_pics
 + Don't allow the use of google api from everywhere (also test if the timezone is set correctly then): <https://console.developers.google.com/apis/credentials/key/211?project=deepskylog-1528998866034>
 + Make sure to put `post_max_size = 10M` and `upload_max_filesize = 10M` in /etc/opt/remi/php73/php.ini
-
-Require:
-        "coderello/laraflash": "^2.0",
-        "zerospam/laravel-gettext": "^7.1"

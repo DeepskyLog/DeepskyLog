@@ -74,6 +74,15 @@ class TargetTableSeeder extends Seeder
                 $type = 'DS';
             }
 
+            $mag = $oldObject->mag;
+            if ($mag > 80) {
+                $mag = null;
+            }
+            $subr = $oldObject->subr;
+            if ($subr > 80) {
+                $subr = null;
+            }
+
             Target::create(
                 [
                     'name' => $oldObject->name,
@@ -81,8 +90,8 @@ class TargetTableSeeder extends Seeder
                     'con' => $oldObject->con,
                     'ra' => $oldObject->ra,
                     'decl' => $oldObject->decl,
-                    'mag' => $oldObject->mag,
-                    'subr' => $oldObject->subr,
+                    'mag' => $mag,
+                    'subr' => $subr,
                     'diam1' => $oldObject->diam1,
                     'diam2' => $oldObject->diam2,
                     'pa' => $oldObject->pa,

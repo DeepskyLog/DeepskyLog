@@ -201,3 +201,4 @@ Route::get('/catalogs', 'TargetController@catalogs')
 Route::get('/getCatalogData/{catalog}', 'TargetController@getCatalogData');
 Route::get('/getConstellationInfo/{catalog}', 'TargetController@getConstellationInfo');
 Route::get('/getTypeInfo/{catalog}', 'TargetController@getTypeInfo');
+Route::get('/target/{name}', 'TargetController@show');

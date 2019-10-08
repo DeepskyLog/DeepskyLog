@@ -16,14 +16,14 @@ class CreateTargetsTable extends Migration
             $table->string('name')->primary();
             $table->string('type', 8);
             $table->string('con', 5)->nullable();
-            $table->float('ra')->unsigned()->nullable();
-            $table->float('decl')->nullable();
+            $table->float('ra', 10, 5)->unsigned()->nullable();
+            $table->float('decl', 10, 5)->nullable();
             $table->float('mag')->nullable();
             $table->float('subr')->nullable();
             $table->float('diam1')->unsigned()->nullable();
             $table->float('diam2')->unsigned()->nullable();
             $table->smallInteger('pa')->unsigned()->nullable();
-            $table->float('SBObj')->nullable();
+            $table->float('SBObj', 10, 5)->nullable();
             $table->string('datasource', 50)->nullable();
             $table->string('description', 1024)->nullable();
 
