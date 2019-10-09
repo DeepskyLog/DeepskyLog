@@ -18,8 +18,9 @@
 + [ ] Details for one object
   + [x] Add contrast information
   + [x] Add rising, setting, transit
-  + [ ] Add ephemerides
+  + [x] Add ephemerides
   + [ ] Add objects near by
+  + [ ] Add administrator functions
 + [ ] Quickpick
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
 + [ ] Check permissions on the page

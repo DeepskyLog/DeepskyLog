@@ -543,3 +543,15 @@ tr.details td.details-control {
 .borderless tbody tr td, .borderless tbody tr th, .borderless thead tr th {
     border: none;
 }
+
+.type10 {
+    background-color : #F0F0F0;
+    color            : #000000;
+    border           : #FFFFFF thin solid;
+}
+
+.right{
+    padding:0;
+    float:right;
+    margin: 0 10px 0 0;
+}

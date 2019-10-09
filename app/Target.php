@@ -15,6 +15,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Target eloquent model.
@@ -231,5 +232,214 @@ class Target extends Model
 
         return ($ra_hours . ' ' . $ra_minutes . ' ' . $ra_seconds . ' '
             . $sign . $decl_degrees . ' ' . $decl_minutes . ' ' . $decl_seconds);
+    }
+
+    /**
+     * Returns the ephemerids for a whole year.
+     * The ephemerids are calculated the first and the fifteenth of the month.
+     *
+     * @return Array the ephemerides for a whole year
+     */
+    public function getYearEphemerides()
+    {
+        $cnt = 0;
+        for ($i = 1; $i < 13; $i++) {
+            for ($j = 1; $j < 16; $j = $j + 14) {
+                $datestr = sprintf('%02d', $j) . '/' . sprintf('%02d', $i) . '/'
+                    . \Carbon\Carbon::now()->format('Y');
+
+                $date = \Carbon\Carbon::createFromFormat('d/m/Y', $datestr);
+                $ephemerides[$cnt]['date'] = $date;
+
+                $location = \App\Location::where(
+                    'id', Auth::user()->stdlocation
+                )->first();
+                $astroCalc = new \App\Libraries\AstroCalc(
+                    $date,
+                    $location->latitude,
+                    $location->longitude,
+                    $location->timezone
+                );
+
+                $ris_tra_set = $astroCalc->calculateRiseTransitSettingTime(
+                    $this->ra,
+                    $this->decl,
+                    $astroCalc->jd
+                );
+                $nightephemerides = date_sun_info(
+                    $date->getTimestamp(),
+                    $location->latitude,
+                    $location->longitude
+                );
+                $ephemerides[$cnt]['max_alt'] = $ris_tra_set[3];
+                $ephemerides[$cnt]['transit'] = $ris_tra_set[1];
+                $ephemerides[$cnt]['rise'] = $ris_tra_set[0];
+                $ephemerides[$cnt]['set'] = $ris_tra_set[2];
+
+                $ephemerides[$cnt]['astronomical_twilight_end'] = is_bool(
+                    $nightephemerides["astronomical_twilight_end"]
+                ) ? null :
+                    $date->copy()
+                    ->setTimeFromTimeString(
+                        date("H:i", $nightephemerides["astronomical_twilight_end"])
+                    )->setTimezone($location->timezone);
+
+                $ephemerides[$cnt]['astronomical_twilight_begin'] = is_bool(
+                    $nightephemerides["astronomical_twilight_begin"]
+                ) ? null :
+                $date->copy()
+                    ->setTimeFromTimeString(
+                        date("H:i", $nightephemerides["astronomical_twilight_begin"])
+                    )->setTimezone($location->timezone);
+
+                $ephemerides[$cnt]['nautical_twilight_end'] = is_bool(
+                    $nightephemerides["nautical_twilight_end"]
+                ) ? null :$date->copy()
+                    ->setTimeFromTimeString(
+                        date("H:i", $nightephemerides["nautical_twilight_end"])
+                    )->setTimezone($location->timezone);
+
+                $ephemerides[$cnt]['nautical_twilight_begin'] = is_bool(
+                    $nightephemerides["nautical_twilight_begin"]
+                ) ? null :$date->copy()
+                    ->setTimeFromTimeString(
+                        date("H:i", $nightephemerides["nautical_twilight_begin"])
+                    )->setTimezone($location->timezone);
+
+
+                if ($ephemerides[$cnt]['astronomical_twilight_end'] > $ephemerides[$cnt]['astronomical_twilight_begin']) {
+                    $ephemerides[$cnt]['astronomical_twilight_begin']->addDay();
+                }
+                if ($ephemerides[$cnt]['nautical_twilight_end'] > $ephemerides[$cnt]['nautical_twilight_begin']) {
+                    $ephemerides[$cnt]['nautical_twilight_begin']->addDay();
+                }
+                $ephemerides[$cnt]['count'] = ($j == 1) ? '' : $i;
+
+                $cnt++;
+            }
+        }
+
+        // Setting the classes for the different colors
+        $cnt = 0;
+        foreach ($ephemerides as $ephem) {
+            // Green if the max_alt does not change. This means that the
+            // altitude is maximal
+            if (($ephem['max_alt'] != '-'
+                && $ephemerides[($cnt + 1) % 24]['max_alt'] != '-')
+                && (($ephem['max_alt'] == $ephemerides[($cnt + 1) % 24]['max_alt'])
+                || ($ephem['max_alt'] == $ephemerides[($cnt + 23) % 24]['max_alt']))
+            ) {
+                $ephemerides[$cnt]['max_alt_color'] = "ephemeridesgreen";
+            } else {
+                $ephemerides[$cnt]['max_alt_color'] = "";
+            }
+
+            // Green if the transit is during astronomical twilight
+            // Yellow if the transit is during astronomical twilight
+            $time = $ephem['date']->setTimeZone($location->timezone)->copy()
+                ->setTimeFromTimeString($ephem['transit']);
+            if ($time->format('H') < 12) {
+                $time->addDay();
+            }
+
+            if ($ephem['max_alt'] != '-') {
+                if ($ephem['astronomical_twilight_end'] != null
+                    && $time->between(
+                        $ephem['astronomical_twilight_begin'],
+                        $ephem['astronomical_twilight_end']
+                    )
+                ) {
+                    $ephemerides[$cnt]['transit_color'] = 'ephemeridesgreen';
+                } elseif ($ephem['nautical_twilight_end'] != null
+                    && $time->between(
+                        $ephem['nautical_twilight_begin'],
+                        $ephem['nautical_twilight_end']
+                    )
+                ) {
+                    $ephemerides[$cnt]['transit_color'] = 'ephemeridesyellow';
+                } else {
+                    $ephemerides[$cnt]['transit_color'] = '';
+                }
+            } else {
+                $ephemerides[$cnt]['transit_color'] = '';
+            }
+
+
+
+            $ephemerides[$cnt]['rise_color'] = "";
+
+            if ($ephem['max_alt'] == '-') {
+                $ephemerides[$cnt]['rise_color'] = '';
+            } else {
+                if ($ephem['rise'] == '-') {
+                    if ($ephem['astronomical_twilight_end'] != null) {
+                        $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
+                    } elseif ($ephem['nautical_twilight_end'] != null) {
+                        $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
+                    }
+                }
+                if ($ephem['astronomical_twilight_end'] != null
+                    && $this->_checkNightHourMinutePeriodOverlap(
+                        $ephem['rise'],
+                        $ephem['set'],
+                        $ephem['astronomical_twilight_end'],
+                        $ephem['astronomical_twilight_begin']
+                    )
+                ) {
+                    $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
+                } elseif ($ephem['nautical_twilight_end'] != null
+                    && $this->_checkNightHourMinutePeriodOverlap(
+                        $ephem['rise'],
+                        $ephem['set'],
+                        $ephem['nautical_twilight_end'],
+                        $ephem['nautical_twilight_begin']
+                    )
+                ) {
+                    $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
+                }
+            }
+
+            $cnt++;
+        }
+        return $ephemerides;
+    }
+
+     /**
+      * Checks if there is an overlap between the two given time periods
+      *
+      * @param string $firststart  The start of the first time interval.
+      * @param string $firstend    The end of the first time interval.
+      * @param Carbon $secondstart The start of the second time interval.
+      * @param Carbon $secondend   The end of the second time interval.
+      *
+      * @return bool True if the two time intervals overlap.
+      */
+    private function _checkNightHourMinutePeriodOverlap(
+        $firststart, $firstend, $secondstart, $secondend
+    ) {
+        $firststartvalue = str_replace(':', '', $firststart);
+        $firstendvalue = str_replace(':', '', $firstend);
+        $secondstartvalue = $secondstart->format("Hi");
+        $secondendvalue = $secondend->format("Hi");
+        if ($secondstartvalue < $secondendvalue) {
+            return ((($firststartvalue > $secondstartvalue)
+                && ($firststartvalue < $secondendvalue))
+                || (($firstendvalue > $secondstartvalue)
+                && ($firstendvalue < $secondendvalue))
+                || (($firststartvalue < $secondend)
+                && ($firstendvalue > $secondendvalue))
+                || (($firststartvalue < $secondstartvalue)
+                && ($firststartvalue > $firstendvalue))
+                | (($firstendvalue > $secondendvalue)
+                && ($firststartvalue > $firstendvalue)));
+        } else {
+            return ($firststartvalue > $secondstartvalue)
+                || ($firststartvalue < $secondendvalue)
+                || ($firstendvalue > $secondstartvalue)
+                || ($firstendvalue < $secondendvalue)
+                || (($firststartvalue < $secondstartvalue)
+                && ($firstendvalue > $secondendvalue)
+                && ($firststartvalue > $firstendvalue));
+        }
     }
 }

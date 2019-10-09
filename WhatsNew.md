@@ -11,4 +11,4 @@
 
 ## Technology
 
-+ Uses laravel 6.0
++ Uses laravel 6.2
