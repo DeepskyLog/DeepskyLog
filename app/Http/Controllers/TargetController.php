@@ -16,6 +16,7 @@ namespace App\Http\Controllers;
 use App\Target;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\DataTables\TargetDataTable;
 
 /**
  * Target Controller.
@@ -66,7 +67,7 @@ class TargetController extends Controller
      *
      * @return \Illuminate\Http\Response The reponse
      */
-    public function show(String $targetname)
+    public function show(String $targetname, TargetDataTable $dataTable)
     {
         $targetname = \App\TargetName::where('altname', $targetname)
             ->first();
@@ -74,7 +75,7 @@ class TargetController extends Controller
         if ($targetname != null) {
             $target = $targetname->target()->get()[0];
 
-            return view('layout.target.show', ['target' => $target]);
+            return $dataTable->with('target', $target)->render('layout.target.show')->with('target', $target);
         } else {
             abort(403, _i('The requested target does not exist.'));
         }
@@ -83,7 +84,7 @@ class TargetController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Target  $target
+     * @param  \App\Target               $target
      * @return \Illuminate\Http\Response
      */
     public function edit(Target $target)
@@ -95,7 +96,7 @@ class TargetController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Target  $target
+     * @param  \App\Target               $target
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Target $target)
@@ -106,7 +107,7 @@ class TargetController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Target  $target
+     * @param \App\Target $target
      *
      * @return \Illuminate\Http\Response
      */
@@ -116,7 +117,7 @@ class TargetController extends Controller
     }
 
     /**
-     * Shows the catalogs page
+     * Shows the catalogs page.
      *
      * @return View The catalogs view
      */
@@ -128,7 +129,7 @@ class TargetController extends Controller
     }
 
     /**
-     * Returns the data from one catalog in JSON format
+     * Returns the data from one catalog in JSON format.
      *
      * @param String $catalogname The name of the catalog
      *
@@ -142,13 +143,14 @@ class TargetController extends Controller
                     target_names.objectname, target_names.altname
                     FROM targets JOIN target_names
                     ON targets.name = target_names.objectname WHERE catalog="'
-                    . $catalogname .'" ORDER BY objectname'
+                    . $catalogname . '" ORDER BY objectname'
             )
         );
 
         // Natural sort the array, so that the targets are sorted by name.
         usort(
-            $targets, function ($a, $b) {
+            $targets,
+            function ($a, $b) {
                 return strnatcmp($a->altname, $b->altname);
             }
         );
@@ -157,15 +159,15 @@ class TargetController extends Controller
     }
 
     /**
-     * Returns the constellation data from one catalog in JSON format
+     * Returns the constellation data from one catalog in JSON format.
      *
      * @param String $catalogname The name of the catalog
      *
      * @return String The JSON with all constellation information on the objects
      */
-    static public function getConstellationInfo($catalogname)
+    public static function getConstellationInfo($catalogname)
     {
-        $cons =  DB::select(
+        $cons = DB::select(
             DB::raw(
                 'SELECT constellations.name as con,
                     count((targets.con)) as count FROM targets
@@ -178,17 +180,18 @@ class TargetController extends Controller
         foreach ($cons as $con) {
             $con->con = _i($con->con);
         }
+
         return $cons;
     }
 
     /**
-     * Returns the type data from one catalog in JSON format
+     * Returns the type data from one catalog in JSON format.
      *
      * @param String $catalogname The name of the catalog
      *
      * @return String The JSON with all type information of the objects
      */
-    static public function getTypeInfo($catalogname)
+    public static function getTypeInfo($catalogname)
     {
         $types = DB::select(
             DB::raw(
@@ -204,6 +207,7 @@ class TargetController extends Controller
         foreach ($types as $type) {
             $type->type = _i($type->type);
         }
+
         return $types;
     }
 }

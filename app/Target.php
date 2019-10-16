@@ -252,7 +252,8 @@ class Target extends Model
                 $ephemerides[$cnt]['date'] = $date;
 
                 $location = \App\Location::where(
-                    'id', Auth::user()->stdlocation
+                    'id',
+                    Auth::user()->stdlocation
                 )->first();
                 $astroCalc = new \App\Libraries\AstroCalc(
                     $date,
@@ -277,35 +278,34 @@ class Target extends Model
                 $ephemerides[$cnt]['set'] = $ris_tra_set[2];
 
                 $ephemerides[$cnt]['astronomical_twilight_end'] = is_bool(
-                    $nightephemerides["astronomical_twilight_end"]
+                    $nightephemerides['astronomical_twilight_end']
                 ) ? null :
                     $date->copy()
                     ->setTimeFromTimeString(
-                        date("H:i", $nightephemerides["astronomical_twilight_end"])
+                        date('H:i', $nightephemerides['astronomical_twilight_end'])
                     )->setTimezone($location->timezone);
 
                 $ephemerides[$cnt]['astronomical_twilight_begin'] = is_bool(
-                    $nightephemerides["astronomical_twilight_begin"]
+                    $nightephemerides['astronomical_twilight_begin']
                 ) ? null :
                 $date->copy()
                     ->setTimeFromTimeString(
-                        date("H:i", $nightephemerides["astronomical_twilight_begin"])
+                        date('H:i', $nightephemerides['astronomical_twilight_begin'])
                     )->setTimezone($location->timezone);
 
                 $ephemerides[$cnt]['nautical_twilight_end'] = is_bool(
-                    $nightephemerides["nautical_twilight_end"]
-                ) ? null :$date->copy()
+                    $nightephemerides['nautical_twilight_end']
+                ) ? null : $date->copy()
                     ->setTimeFromTimeString(
-                        date("H:i", $nightephemerides["nautical_twilight_end"])
+                        date('H:i', $nightephemerides['nautical_twilight_end'])
                     )->setTimezone($location->timezone);
 
                 $ephemerides[$cnt]['nautical_twilight_begin'] = is_bool(
-                    $nightephemerides["nautical_twilight_begin"]
-                ) ? null :$date->copy()
+                    $nightephemerides['nautical_twilight_begin']
+                ) ? null : $date->copy()
                     ->setTimeFromTimeString(
-                        date("H:i", $nightephemerides["nautical_twilight_begin"])
+                        date('H:i', $nightephemerides['nautical_twilight_begin'])
                     )->setTimezone($location->timezone);
-
 
                 if ($ephemerides[$cnt]['astronomical_twilight_end'] > $ephemerides[$cnt]['astronomical_twilight_begin']) {
                     $ephemerides[$cnt]['astronomical_twilight_begin']->addDay();
@@ -329,9 +329,9 @@ class Target extends Model
                 && (($ephem['max_alt'] == $ephemerides[($cnt + 1) % 24]['max_alt'])
                 || ($ephem['max_alt'] == $ephemerides[($cnt + 23) % 24]['max_alt']))
             ) {
-                $ephemerides[$cnt]['max_alt_color'] = "ephemeridesgreen";
+                $ephemerides[$cnt]['max_alt_color'] = 'ephemeridesgreen';
             } else {
-                $ephemerides[$cnt]['max_alt_color'] = "";
+                $ephemerides[$cnt]['max_alt_color'] = '';
             }
 
             // Green if the transit is during astronomical twilight
@@ -364,9 +364,7 @@ class Target extends Model
                 $ephemerides[$cnt]['transit_color'] = '';
             }
 
-
-
-            $ephemerides[$cnt]['rise_color'] = "";
+            $ephemerides[$cnt]['rise_color'] = '';
 
             if ($ephem['max_alt'] == '-') {
                 $ephemerides[$cnt]['rise_color'] = '';
@@ -401,26 +399,30 @@ class Target extends Model
 
             $cnt++;
         }
+
         return $ephemerides;
     }
 
-     /**
-      * Checks if there is an overlap between the two given time periods
-      *
-      * @param string $firststart  The start of the first time interval.
-      * @param string $firstend    The end of the first time interval.
-      * @param Carbon $secondstart The start of the second time interval.
-      * @param Carbon $secondend   The end of the second time interval.
-      *
-      * @return bool True if the two time intervals overlap.
-      */
+    /**
+     * Checks if there is an overlap between the two given time periods.
+     *
+     * @param string $firststart  the start of the first time interval
+     * @param string $firstend    the end of the first time interval
+     * @param Carbon $secondstart the start of the second time interval
+     * @param Carbon $secondend   the end of the second time interval
+     *
+     * @return bool true if the two time intervals overlap
+     */
     private function _checkNightHourMinutePeriodOverlap(
-        $firststart, $firstend, $secondstart, $secondend
+        $firststart,
+        $firstend,
+        $secondstart,
+        $secondend
     ) {
         $firststartvalue = str_replace(':', '', $firststart);
         $firstendvalue = str_replace(':', '', $firstend);
-        $secondstartvalue = $secondstart->format("Hi");
-        $secondendvalue = $secondend->format("Hi");
+        $secondstartvalue = $secondstart->format('Hi');
+        $secondendvalue = $secondend->format('Hi');
         if ($secondstartvalue < $secondendvalue) {
             return ((($firststartvalue > $secondstartvalue)
                 && ($firststartvalue < $secondendvalue))
@@ -441,5 +443,22 @@ class Target extends Model
                 && ($firstendvalue > $secondendvalue)
                 && ($firststartvalue > $firstendvalue));
         }
+    }
+
+    /**
+     * Get a list with the nearby objects.
+     *
+     * @param integer $dist The distance in arcminutes
+     *
+     * @return Collection The list with the nearby objects
+     */
+    public function getNearbyObjects($dist)
+    {
+        $dra = 0.0011 * $dist / cos($this->decl / 180.0 * 3.1415926535);
+        return \App\Target::where('ra', '>', $this->ra - $dra)
+            ->where('ra', '<', $this->ra + $dra)
+            ->where('decl', '>', $this->decl - $dist / 60.0)
+            ->where('decl', '<', $this->decl + $dist / 60.0)
+            ->get();
     }
 }

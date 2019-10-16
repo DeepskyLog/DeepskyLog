@@ -90,7 +90,8 @@
   + [ ] Add the used eyepieces, filters and lenses
   + [ ] Add google maps with the locations where the telescope was used.
 + [ ] Targets
-  + [ ] show.blade.php: Add information if the object was already seen
+  + [ ] sub/detail.blade.php: Add information if the object was already seen
+  + [ ] Make the buttons work to add a new observation
 + [ ] In graph of users, also show number of observations of planets, sun, moon, double stars, ...
 + [ ] Likes? Comments? <https://github.com/cybercog/laravel-love>
 + [ ] Sort on highest number of likes

@@ -6,7 +6,7 @@
 
 @section('content')
 <h4>
-    {{ _i($target->name) }}{{-- - {{ _i("Seen") }}: TODO: Add Seen information --}}
+    {{ _i($target->name) }}
 </h4>
 
 @include('layout.target.sub.detail')
@@ -16,6 +16,10 @@
         @include('layout.target.sub.ephemerides')
     @endif
 @endauth
+
+@if ($target->ra != null)
+    @include('layout.target.sub.nearby')
+@endif
 
 @endsection
 

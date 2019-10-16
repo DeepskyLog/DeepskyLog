@@ -1,3 +1,35 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <table class="table-sm table-striped table-bordered">
+                <tr>
+                    <td>{{ _i("Total number of observations") }}</td>
+                    <td>TODO</td>
+                </tr>
+                <tr>
+                    <td>{{ _i("Total number of drawings") }}</td>
+                    <td>TODO</td>
+                </tr>
+                <tr>
+                    <td>{{ _i("Number of own observations") }}</td>
+                    <td>TODO</td>
+                </tr>
+                <tr>
+                    <td>{{ _i("Number of own drawings") }}</td>
+                    <td>TODO</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-sm">
+            <br />
+            <a class="btn btn-success" href="/observation/{{ $target->name }}" role="button">{{ _i("Add new observation of %s", $target->name) }}</a>
+        </div>
+    </div>
+</div>
+
+<br />
+
+<br /><br />
 <table class="table table-sm table-striped table-hover">
     <tr>
         <td colspan="3">{{ _i("Name") }}</td>
