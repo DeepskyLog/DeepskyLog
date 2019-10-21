@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-09-28 08:17-0400\n"
-"PO-Revision-Date: 2019-09-28 08:20-0400\n"
-"Last-Translator: James Translator <james@translations.colm>\n"
+"POT-Creation-Date: 2019-10-21 21:11+0200\n"
+"PO-Revision-Date: 2019-10-21 21:12+0200\n"
+"Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: James Translator <james@translations.colm>\n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.2.4\n"
 "X-Poedit-KeywordsList: _;__;_i;_s;gettext;_n:1,2;ngettext:1,2;dgettext:2\n"
 "X-Poedit-Basepath: ../../../../../app\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -234,7 +234,7 @@ msgid "Double Stars"
 msgstr "Dubbelsterren"
 
 #: ../resources/lang/en/translations.php:44
-#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:50
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:53
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:159
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:251
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:44
@@ -245,7 +245,7 @@ msgstr "Zon"
 
 #: ../resources/lang/en/translations.php:45
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:14
-#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:33
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:36
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:163
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:255
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:45
@@ -1045,6 +1045,7 @@ msgid "Eyepiece %s deleted"
 msgstr "Oculair %s verwijderd"
 
 #: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:14
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:37
 #: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:13
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:13
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:14
@@ -1123,6 +1124,7 @@ msgid "or specify your filter details manually"
 msgstr "of voeg de gegevens manueel in"
 
 #: ../storage/framework/messages/0df489c1c437e3c7dd75009d2dddf707bf3b68bc.php.php:50
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:35
 #: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:50
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:56
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:21
@@ -1176,6 +1178,13 @@ msgstr "Verboden"
 msgid "Sorry, you are forbidden from accessing this page."
 msgstr "Sorry, het is verboden om deze pagina te bekijken."
 
+#: ../storage/framework/messages/11f6ebc4e81a7590340020b242c158f72f6688de.php.php:80
+#: ../storage/framework/messages/11f6ebc4e81a7590340020b242c158f72f6688de.php.php:83
+#: Http/Controllers/TargetController.php:80
+#: Http/Controllers/TargetController.php:83
+msgid "The requested target does not exist."
+msgstr "Het gezochte object bestaat niet."
+
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:10
 msgid "Moon / Sun"
 msgstr "Maan / Zon"
@@ -1184,18 +1193,159 @@ msgstr "Maan / Zon"
 msgid "on"
 msgstr "op"
 
-#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:81
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:88
 msgid "Naut."
 msgstr "Naut."
 
-#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:95
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:102
 msgid "Astro."
 msgstr "Astro."
 
-#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:128
+#: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:137
 #: ../storage/framework/messages/b108a57b45d115bcd3a63da456e940168c6e5686.php.php:52
 msgid "New moon"
 msgstr "Nieuwe maan"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:6
+msgid "Total number of observations"
+msgstr "Totaal aantal waarnemingen"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:10
+msgid "Total number of drawings"
+msgstr "Totaal aantal tekeningen"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:14
+msgid "Number of own observations"
+msgstr "Aantal eigen waarnemingen"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:18
+msgid "Number of own drawings"
+msgstr "Aantal eigen tekeningen"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:25
+#, php-format
+msgid "Add new observation of %s"
+msgstr "Nieuwe observatie van %s toevoegen"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:44
+msgid "Right Ascension"
+msgstr "Rechte klimming"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:46
+msgid "Declination"
+msgstr "Declinatie"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:51
+msgid "Constellation"
+msgstr "Sterrenbeeld"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:58
+msgid " page"
+msgstr " pagina"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:65
+msgid "Magnitude"
+msgstr "Magnitude"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:73
+msgid "Surface brightness"
+msgstr "Oppervlaktehelderheid"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:84
+msgid "Size"
+msgstr "Grootte"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:86
+msgid "Position angle"
+msgstr "Positie hoek"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:102
+msgid "Contrast reserve"
+msgstr "Contrast reserve"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:108
+msgid "Optimum detection magnification"
+msgstr "Optimale detectie vergroting"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:119
+msgid "Alternative name"
+msgstr "Alternatieve naam"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:126
+msgid "(Contains)/Part of"
+msgstr "(bevat)/Deel van"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:133
+msgid "Description"
+msgstr "Beschrijving"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:133
+msgid "NGC/IC, Dreyer codes"
+msgstr "NGC/IC, Dreyer codes"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:140
+msgid "In my lists"
+msgstr "In mijn lijsten"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:162
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:170
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:177
+#, php-format
+msgid "%s does not rise above horizon"
+msgstr "%s komt niet boven de horizon"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:164
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:172
+#, php-format
+msgid "%s is circumpolar"
+msgstr "%s is circumpolair"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:166
+#, php-format
+msgid "%s rises at %s on %s in %s"
+msgstr "%s komt op om %s op %s in %s"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:168
+#, php-format
+msgid "%s transits at %s on %s in %s"
+msgstr "%s heeft een doorgang om %s op %s in %s"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:174
+#, php-format
+msgid "%s sets at %s on %s in %s"
+msgstr "%s gaat onder om %s op %s in %s"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:179
+#, php-format
+msgid "%s reaches an altitude of %s in %s"
+msgstr "%s  bereikt een hoogte van %s in %s"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:184
+#: ../storage/framework/messages/b108a57b45d115bcd3a63da456e940168c6e5686.php.php:2
+msgid "Date"
+msgstr "Datum"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:186
+msgid "Rise"
+msgstr "Op"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:190
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:32
+msgid "Transit"
+msgstr "Doorgang"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:194
+msgid "Set"
+msgstr "Onder"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:198
+msgid "Best Time"
+msgstr "Beste tijd"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:200
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:24
+msgid "Max Alt"
+msgstr "Max hoogte"
 
 #: ../storage/framework/messages/155da04dde317bc1affd660789103f8ac413259e.php.php:3
 msgid "Downloads"
@@ -1265,6 +1415,10 @@ msgstr "Vaste vergroting"
 #: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:107
 msgid "Upload a picture of your instrument."
 msgstr "Upload een foto van uw instrument."
+
+#: ../storage/framework/messages/1cc00b9ab247d2664990bd2a3c7eb7c9d7b382a2.php.php:6
+msgid "Object details"
+msgstr "Object details"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:1
 #: ../storage/framework/messages/757293d8d848bb8da17d462f159283f9bfa8bf39.php.php:9
@@ -1753,26 +1907,26 @@ msgstr "Rapporteer probleem"
 msgid "What's new in DeepskyLog"
 msgstr "Nieuw in DeepskyLog"
 
-#: ../storage/framework/messages/6548b0410c3d68f52583d95c59754dc0a71f4d2a.php.php:2
-#: ../storage/framework/messages/6548b0410c3d68f52583d95c59754dc0a71f4d2a.php.php:8
-msgid "Object catalogs"
-msgstr "Object catalogi"
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:4
+#, php-format
+msgid "Ephemerides for %s in %s"
+msgstr "Efemeriden voor %s in %s"
 
-#: ../storage/framework/messages/6548b0410c3d68f52583d95c59754dc0a71f4d2a.php.php:21
-msgid "Select a list to view its details"
-msgstr "Selecteer een lijst om de details ervan weer te geven"
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:16
+msgid "Month"
+msgstr "Maand"
 
-#: ../storage/framework/messages/6548b0410c3d68f52583d95c59754dc0a71f4d2a.php.php:32
-msgid "Getting data for "
-msgstr "Gegevens ophalen voor "
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:40
+msgid "Astronomical night"
+msgstr "Astronomische nacht"
 
-#: ../storage/framework/messages/6548b0410c3d68f52583d95c59754dc0a71f4d2a.php.php:39
-msgid "Catalog pages are not supported on non-xmlhttp machines"
-msgstr "Cataloguspagina's worden niet ondersteund op niet-XMLHTTP-machines"
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:54
+msgid "Nautical night"
+msgstr "Nautische nacht"
 
-#: ../storage/framework/messages/6548b0410c3d68f52583d95c59754dc0a71f4d2a.php.php:58
-msgid "Number of objects"
-msgstr "Aantal objecten"
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:68
+msgid "Object rise<br />-<br />set"
+msgstr "Object opgang<br />-<br />ondergang"
 
 #: ../storage/framework/messages/6839b2857890e71f067bc331f845f79fdee13f34.php.php:1
 msgid "Messages"
@@ -2048,9 +2202,26 @@ msgstr ""
 msgid "Filter %s deleted"
 msgstr "Filter %s verwijderd"
 
-#: ../storage/framework/messages/b108a57b45d115bcd3a63da456e940168c6e5686.php.php:2
-msgid "Date"
-msgstr "Datum"
+#: ../storage/framework/messages/b0a23e85b51e5ecaf83b2bb84da02d9fa29d723a.php.php:12
+#: ../storage/framework/messages/b0a23e85b51e5ecaf83b2bb84da02d9fa29d723a.php.php:14
+msgid " and "
+msgstr " en "
+
+#: ../storage/framework/messages/b0a23e85b51e5ecaf83b2bb84da02d9fa29d723a.php.php:12
+msgid " nearby objects"
+msgstr " nabijgelegen objecten"
+
+#: ../storage/framework/messages/b0a23e85b51e5ecaf83b2bb84da02d9fa29d723a.php.php:14
+msgid " nearby object"
+msgstr " nabijgelegen object"
+
+#: ../storage/framework/messages/b0a23e85b51e5ecaf83b2bb84da02d9fa29d723a.php.php:15
+msgid " - there are no other objects within the specified distance"
+msgstr " - Er zijn geen andere objecten binnen de opgegeven afstand"
+
+#: ../storage/framework/messages/b0a23e85b51e5ecaf83b2bb84da02d9fa29d723a.php.php:21
+msgid "up to about "
+msgstr "tot ongeveer "
 
 #: ../storage/framework/messages/b23ab96ba3ceb027dffe21dce10f3cd6d9471fd7.php.php:7
 msgid "Posted"
@@ -2668,6 +2839,27 @@ msgstr "> 1,0 voor Barlow lenzen, < 1,0 voor Shapley lenzen."
 msgid "Upload a picture of your lens."
 msgstr "Upload een foto van uw lens."
 
+#: ../storage/framework/messages/ffe41040ace25b5d5daefd3081234631709edd5a.php.php:2
+#: ../storage/framework/messages/ffe41040ace25b5d5daefd3081234631709edd5a.php.php:8
+msgid "Object catalogs"
+msgstr "Object catalogi"
+
+#: ../storage/framework/messages/ffe41040ace25b5d5daefd3081234631709edd5a.php.php:21
+msgid "Select a list to view its details"
+msgstr "Selecteer een lijst om de details ervan weer te geven"
+
+#: ../storage/framework/messages/ffe41040ace25b5d5daefd3081234631709edd5a.php.php:32
+msgid "Getting data for "
+msgstr "Gegevens ophalen voor "
+
+#: ../storage/framework/messages/ffe41040ace25b5d5daefd3081234631709edd5a.php.php:39
+msgid "Catalog pages are not supported on non-xmlhttp machines"
+msgstr "Cataloguspagina's worden niet ondersteund op niet-XMLHTTP-machines"
+
+#: ../storage/framework/messages/ffe41040ace25b5d5daefd3081234631709edd5a.php.php:58
+msgid "Number of objects"
+msgstr "Aantal objecten"
+
 #~ msgid "Image Catalogs"
 #~ msgstr "Beeldencatalogi"
 
@@ -2799,9 +2991,6 @@ msgstr "Upload een foto van uw lens."
 
 #~ msgid "Observer"
 #~ msgstr "Waarnemer"
-
-#~ msgid "Magnitude"
-#~ msgstr "Magnitude"
 
 #~ msgid "Coma"
 #~ msgstr "Coma"
@@ -2941,9 +3130,6 @@ msgstr "Upload een foto van uw lens."
 #~ msgid "Position Angle"
 #~ msgstr "Positie hoek"
 
-#~ msgid "Description"
-#~ msgstr "Beschrijving"
-
 #~ msgid "Delete observation"
 #~ msgstr "Verwijder waarneming"
 
@@ -2961,9 +3147,6 @@ msgstr "Upload een foto van uw lens."
 
 #~ msgid "Change comet"
 #~ msgstr "Verander komeet"
-
-#~ msgid "Object details"
-#~ msgstr "Object details"
 
 #~ msgid "All observations"
 #~ msgstr "Alle waarnemingen"
@@ -3491,9 +3674,6 @@ msgstr "Upload een foto van uw lens."
 #~ msgid "Draw all 400 Herschel II objects to get this certificat!"
 #~ msgstr "Teken alle 400 Herschel II objecten om dit certificaat te krijgen!"
 
-#~ msgid "Total number of drawings"
-#~ msgstr "Totaal aantal tekeningen"
-
 #~ msgid "Open clusters"
 #~ msgstr "Open sterrenhopen"
 
@@ -3918,9 +4098,6 @@ msgstr "Upload een foto van uw lens."
 #~ msgid "Right ascension"
 #~ msgstr "Rechte klimming"
 
-#~ msgid "Declination"
-#~ msgstr "Declinatie"
-
 #~ msgid "Object size and position angle"
 #~ msgstr "Objectgrootte en positiehoek"
 
@@ -4134,9 +4311,6 @@ msgstr "Upload een foto van uw lens."
 
 #~ msgid "Please select a layout for the index page."
 #~ msgstr "Gelieve een layout voor de index te kiezen."
-
-#~ msgid "Size"
-#~ msgstr "Grootte"
 
 #~ msgid "FoVs: shown field of views"
 #~ msgstr "FoVs: Afgebeelde beeldvelden"
@@ -4429,9 +4603,6 @@ msgstr "Upload een foto van uw lens."
 
 #~ msgid "Atlas Page"
 #~ msgstr "Atlas pagina"
-
-#~ msgid "Constellation"
-#~ msgstr "Sterrenbeeld"
 
 #~ msgid "Minimum declination"
 #~ msgstr "Minimale declinatie"
@@ -4885,12 +5056,6 @@ msgstr "Upload een foto van uw lens."
 #~ msgid "RA"
 #~ msgstr "RA"
 
-#~ msgid "Surface brightness"
-#~ msgstr "Oppervlaktehelderheid"
-
-#~ msgid "Position angle"
-#~ msgstr "Positie hoek"
-
 #~ msgid "Possible candidates"
 #~ msgstr "Mogelijke kandidaten"
 
@@ -5270,9 +5435,6 @@ msgstr "Upload een foto van uw lens."
 #~ msgid " to "
 #~ msgstr " tot "
 
-#~ msgid "Minimum contrast reserve"
-#~ msgstr "Minimale contrast reserve"
-
 #~ msgid "Maximum contrast reserve"
 #~ msgstr "Maximale contrast reserve"
 
@@ -5299,9 +5461,6 @@ msgstr "Upload een foto van uw lens."
 
 #~ msgid "Object ephemerides"
 #~ msgstr "Object efemeriden"
-
-#~ msgid "Ephemerides for %s in %s"
-#~ msgstr "Efemeriden voor %s in %s"
 
 #~ msgid "Only nearby objects"
 #~ msgstr "Enkel nabije objecten"
@@ -5345,41 +5504,8 @@ msgstr "Upload een foto van uw lens."
 #~ msgid "Hide the nearby objects"
 #~ msgstr "Verberg de nabije objecten"
 
-#~ msgid " and "
-#~ msgstr " en "
-
-#~ msgid "nearby objects"
-#~ msgstr "nabije objecten"
-
-#~ msgid "nearby object"
-#~ msgstr "nabijgelegen object"
-
-#~ msgid " - there are no other objects within the specified distance"
-#~ msgstr " - Er zijn geen andere objecten binnen de opgegeven afstand"
-
-#~ msgid "up to about "
-#~ msgstr "tot ongeveer "
-
 #~ msgid "Hide the ephemerides"
 #~ msgstr "Verberg de efemeriden"
-
-#~ msgid "Month"
-#~ msgstr "Maand"
-
-#~ msgid "Max Alt"
-#~ msgstr "Max hoogte"
-
-#~ msgid "Transit"
-#~ msgstr "Doorgang"
-
-#~ msgid "Astronomical night"
-#~ msgstr "Astronomische nacht"
-
-#~ msgid "Nautical night"
-#~ msgstr "Nautische nacht"
-
-#~ msgid "Object rise<br />-<br />set"
-#~ msgstr "Object opgang<br />-<br />ondergang"
 
 #~ msgid "DSS image"
 #~ msgstr "DSS beeld"
@@ -5893,14 +6019,8 @@ msgstr "Upload een foto van uw lens."
 #~ msgid "No index entries"
 #~ msgstr "Geen index elementen"
 
-#~ msgid "Optimum detection magnification"
-#~ msgstr "Optimale detectie vergroting"
-
 #~ msgid " in LOCAL TIME !"
 #~ msgstr " in LOKALE TIJD !"
-
-#~ msgid "Rise"
-#~ msgstr "Op"
 
 #~ msgid "Astronomical twilight"
 #~ msgstr "Astronomische schemering"
@@ -6404,30 +6524,6 @@ msgstr "Upload een foto van uw lens."
 #~ msgid "Object already observed by me"
 #~ msgstr "Object dat al door mij is waargenomen"
 
-#~ msgid "%s does not rise above horizon"
-#~ msgstr "%s komt niet boven de horizon"
-
-#~ msgid "%s is circumpolar"
-#~ msgstr "%s is circumpolair"
-
-#~ msgid "%s rises at %s on %s in %s"
-#~ msgstr "%s komt op om %s op %s in %s"
-
-#~ msgid "%s transits at %s on %s in %s"
-#~ msgstr "%s heeft een doorgang om %s op %s in %s"
-
-#~ msgid "%s sets at %s on %s in %s"
-#~ msgstr "%s gaat onder om %s op %s in %s"
-
-#~ msgid "%s reaches an altitude of %s in %s"
-#~ msgstr "%s  bereikt een hoogte van %s in %s"
-
-#~ msgid "Number of own observations"
-#~ msgstr "Aantal eigen waarnemingen"
-
-#~ msgid "Number of own drawings"
-#~ msgstr "Aantal eigen tekeningen"
-
 #~ msgid "Object already observed and sketched by me"
 #~ msgstr "Object al waargenomen en geschetst door mij"
 
@@ -6475,32 +6571,14 @@ msgstr "Upload een foto van uw lens."
 #~ msgid "Create new empty catalog"
 #~ msgstr "Maak een nieuwe lege cataloog"
 
-#~ msgid " page"
-#~ msgstr " pagina"
-
-#~ msgid "Alternative name"
-#~ msgstr "Alternatieve naam"
-
-#~ msgid "(Contains)/Part of"
-#~ msgstr "(bevat)/Deel van"
-
 #~ msgid "List description"
 #~ msgstr "Lijst omschrijving"
 
 #~ msgid "https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions"
 #~ msgstr "https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-beschrijvingen"
 
-#~ msgid "NGC/IC, Dreyer codes"
-#~ msgstr "NGC/IC, Dreyer codes"
-
-#~ msgid "In my lists"
-#~ msgstr "In mijn lijsten"
-
 #~ msgid "In public lists"
 #~ msgstr "In publieke lijsten"
-
-#~ msgid "Best Time"
-#~ msgstr "Beste tijd"
 
 #~ msgid "Add all results of the page to list %s"
 #~ msgstr "Alle resultaten van de pagina toevoegen aan lijst %s"
@@ -6672,9 +6750,6 @@ msgstr "Upload een foto van uw lens."
 
 #~ msgid "Observed by %s on %s"
 #~ msgstr "Waargenomen door %s op %s"
-
-#~ msgid "Right Ascension"
-#~ msgstr "Rechte klimming"
 
 #~ msgid "Mag."
 #~ msgstr "Mag."
