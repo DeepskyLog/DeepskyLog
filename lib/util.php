@@ -2033,7 +2033,7 @@ class Utils
             $objectId = $this->getSkyListObjectId($value['objecttype']);
             echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
 
-            $objectNames = $this->getObjectNames($obs);
+            $objectNames = $this->getObjectNames($obs, $objectId);
             foreach ($objectNames as $key=>$objectName) {
                 echo "   CatalogNumber=" . $objectName . "\n";
             }
