@@ -458,7 +458,16 @@ class Target extends Model
         return \App\Target::where('ra', '>', $this->ra - $dra)
             ->where('ra', '<', $this->ra + $dra)
             ->where('decl', '>', $this->decl - $dist / 60.0)
-            ->where('decl', '<', $this->decl + $dist / 60.0)
-            ->get();
+            ->where('decl', '<', $this->decl + $dist / 60.0);
+    }
+
+    /**
+     * Returns the constellation of this target.
+     *
+     * @return String The constellation this target belongs to.
+     */
+    public function getConstellation()
+    {
+        return \App\Constellations::where('id', $this->con)->first()->name;
     }
 }

@@ -515,42 +515,42 @@ class Contrast extends Model
                 }
                 if ($this->_logContrastDiff < -0.2) {
                     $this->popup = sprintf(
-                        _('%s is not visible from %s with your %s'),
+                        _i('%s is not visible from %s with your %s'),
                         $showname,
                         $location,
                         $telescope
                     );
                 } elseif ($this->_logContrastDiff < 0.1) {
                     $this->popup = sprintf(
-                        _('Visibility of %s is questionable from %s with your %s'),
+                        _i('Visibility of %s is questionable from %s with your %s'),
                         $showname,
                         $location,
                         $telescope
                     );
                 } elseif ($this->_logContrastDiff < 0.35) {
                     $this->popup = sprintf(
-                        _('%s is difficult to see from %s with your %s'),
+                        _i('%s is difficult to see from %s with your %s'),
                         $showname,
                         $location,
                         $telescope
                     );
                 } elseif ($this->_logContrastDiff < 0.5) {
                     $this->popup = sprintf(
-                        _('%s is quite difficult to see from %s with your %s'),
+                        _i('%s is quite difficult to see from %s with your %s'),
                         $showname,
                         $location,
                         $telescope
                     );
                 } elseif ($this->_logContrastDiff < 1.0) {
                     $this->popup = sprintf(
-                        _('%s is easy to see from %s with your %s'),
+                        _i('%s is easy to see from %s with your %s'),
                         $showname,
                         $location,
                         $telescope
                     );
                 } else {
                     $this->popup = sprintf(
-                        _('%s is very easy to see from %s with your %s'),
+                        _i('%s is very easy to see from %s with your %s'),
                         $showname,
                         $location,
                         $telescope

@@ -50,31 +50,37 @@ class FilterDataTable extends DataTable
             ->editColumn(
                 'name',
                 '<a href="/filter/{{ $id }}">{{ $name }}</a>'
-            )->editColumn(
+            )
+            ->editColumn(
                 'type', function ($filter) {
                     return $filter->typeName();
                 }
-            )->editColumn(
+            )
+            ->editColumn(
                 'color', function ($filter) {
                     return $filter->colorName();
                 }
-            )->editColumn(
+            )
+            ->editColumn(
                 'observations',
                 '<a href="/observations/filter/{{ $id }}">{{ $observations }}</a>'
-            )->editColumn(
+            )
+            ->editColumn(
                 'user.name',
                 function ($filter) {
                     return '<a href="/users/' . $filter->user->id . '">'
                         . $filter->user->name . '</a>';
                 }
-                )->editColumn(
+            )
+            ->editColumn(
                 'active',
                 '<form method="POST" action="/filter/{{ $id }}">
                     @method("PATCH")
                     @csrf
                     <input type="checkbox" name="active" onChange="this.form.submit()" {{ $active ? "checked" : "" }}>
                  </form>'
-            )->addColumn(
+            )
+            ->addColumn(
                 'delete', '<form method="POST" action="/filter/{{ $id }}">
                             @method("DELETE")
                             @csrf
@@ -82,7 +88,8 @@ class FilterDataTable extends DataTable
                             <i class="far fa-trash-alt"></i>
                         </button>
                         </form>'
-            )->rawColumns(
+            )
+            ->rawColumns(
                 ['name', 'observations', 'active', 'delete', 'user.name']
             )->make(true);
     }
@@ -108,10 +115,9 @@ class FilterDataTable extends DataTable
     {
         $language = array("url"=>"http://cdn.datatables.net/plug-ins/1.10.19/i18n/"
             . \PeterColes\Languages\LanguagesFacade::lookup(
-                [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
-                'en'
-            )->first()
-            . ".json");
+            [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
+            'en'
+        )->first() . ".json");
         $mypars = $this->getBuilderParameters();
         $mypars["language"] = $language;
         return $mypars;

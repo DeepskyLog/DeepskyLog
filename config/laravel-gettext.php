@@ -93,6 +93,7 @@ return [
      */
     'source-paths' => [
         'Http',
+        '.',
         '../resources/views',
         'Console',
         'Notifications',

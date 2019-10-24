@@ -88,6 +88,12 @@ class UsersTableSeeder extends Seeder
                 $name = "Administrator";
             }
 
+            if ($accountSingle->standardAtlasCode == '') {
+                $atlas = 'sky';
+            } else {
+                $atlas = $accountSingle->standardAtlasCode;
+            }
+
             if ($accountSingle->id !== 'vvs04478Admin'
                 && $accountSingle->id !== 'evdjadmin'
                 && $accountSingle->id !== 'TomC_developer'
@@ -107,7 +113,7 @@ class UsersTableSeeder extends Seeder
                     'language' => $language,
                     'icqname' => $accountSingle->icqname,
                     'observationlanguage' => $accountSingle->observationlanguage,
-                    'standardAtlasCode' => $accountSingle->standardAtlasCode,
+                    'standardAtlasCode' => $atlas,
                     'fstOffset' => $accountSingle->fstOffset,
                     'copyright' => $accountSingle->copyright,
                     'overviewdsos' => $accountSingle->overviewdsos,

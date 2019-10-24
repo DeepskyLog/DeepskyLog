@@ -5,7 +5,7 @@
     if (isset($_GET['zoom'])) {
         $zoom = $_GET['zoom'];
     }
-    $targets = $target->getNearbyObjects($zoom);
+    $targets = $target->getNearbyObjects($zoom)->get();
 @endphp
     {{ count($targets) > 2
         ? _i(' and ') . (count($targets) - 1) . _i(' nearby objects')

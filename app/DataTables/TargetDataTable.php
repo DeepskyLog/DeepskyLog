@@ -37,57 +37,69 @@ class TargetDataTable extends DataTable
      */
     public function ajax()
     {
-        if ($this->user === 'admin') {
-            $model = Target::with('user')->select('targets.*');
-        } else {
-            $model = Target::where(
-                'user_id',
-                auth()->user()->id
-            )->with('user')->select('targets.*');
-        }
+        $model = $this->query();
 
         return datatables()
             ->eloquent($model)
             ->editColumn(
                 'name',
-                '<a href="/target/{{ $id }}">{{ $name }}</a>'
-            )->editColumn(
-                'type',
                 function ($target) {
-                    return $target->typeName();
+                    return '<a href="/target/' . $target->name . '">'
+                        . $target->name . '</a>';
                 }
-            )->editColumn(
-                'color',
+            )
+            ->editColumn(
+                'constellation',
                 function ($target) {
-                    return $target->colorName();
+                    return $target->constellation()->first()['name'];
                 }
-            )->editColumn(
-                'observations',
-                '<a href="/observations/target/{{ $id }}">{{ $observations }}</a>'
-            )->editColumn(
-                'user.name',
+            )
+            ->editColumn(
+                'realType',
                 function ($target) {
-                    return '<a href="/users/' . $target->user->id . '">'
-                        . $target->user->name . '</a>';
+                    return _i($target->type()->first()['type']);
                 }
-            )->editColumn(
-                'active',
-                '<form method="POST" action="/target/{{ $id }}">
-                    @method("PATCH")
-                    @csrf
-                    <input type="checkbox" name="active" onChange="this.form.submit()" {{ $active ? "checked" : "" }}>
-                 </form>'
-            )->addColumn(
-                'delete',
-                '<form method="POST" action="/target/{{ $id }}">
-                            @method("DELETE")
-                            @csrf
-                            <button type="button" class="btn btn-sm btn-link" onClick="this.form.submit()">
-                            <i class="far fa-trash-alt"></i>
-                        </button>
-                        </form>'
-            )->rawColumns(
-                ['name', 'observations', 'active', 'delete', 'user.name']
+            )
+            ->editColumn(
+                'size',
+                function ($target) {
+                    if ($target->pa != 999) {
+                        return $target->size() . '/' . $target->pa . '°';
+                    } else {
+                        return $target->size();
+                    }
+                }
+            )
+            ->editColumn(
+                'ra',
+                function ($target) {
+                    return $target->ra();
+                }
+            )
+            ->editColumn(
+                'decl',
+                function ($target) {
+                    return $target->declination();
+                }
+            )
+            ->editColumn(
+                'atlas',
+                function ($target) {
+                    return $target->atlasPage(auth()->user()->standardAtlasCode);
+                }
+            )
+            ->editColumn(
+                'contrast',
+                function ($target) {
+                    $contrast = new \App\Contrast($target);
+
+                    return '<span class="' . $contrast->contype
+                        . '" data-toggle="tooltip" data-placement="bottom" title="'
+                        . $contrast->popup . '">' . $contrast->contrast . '</span>';
+                }
+            )
+            ->rawColumns(
+                ['name', 'contrast']
             )->make(true);
     }
 
@@ -104,6 +116,24 @@ class TargetDataTable extends DataTable
     }
 
     /**
+     * Get query source of dataTable.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function query()
+    {
+        $zoom = 30;
+        if (isset($_GET['zoom'])) {
+            $zoom = $_GET['zoom'];
+        }
+        $target = $this->target;
+
+        $targets = $target->getNearbyObjects($zoom)->select();
+
+        return $this->applyScopes($targets);
+    }
+
+    /**
      * Returns the parameters and also add the correct translation to the datatables.
      *
      * @return array The parameters
@@ -111,10 +141,10 @@ class TargetDataTable extends DataTable
     protected function getMyParameters()
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.19/i18n/'
-            . \PeterColes\Languages\LanguagesFacade::lookup(
-                [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
-                'en'
-            )->first()
+        . \PeterColes\Languages\LanguagesFacade::lookup(
+            [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
+            'en'
+        )->first()
             . '.json'];
         $mypars = $this->getBuilderParameters();
         $mypars['language'] = $language;
@@ -134,11 +164,11 @@ class TargetDataTable extends DataTable
                 'title' => _i('Name'),
                 'data' => 'name',
             ],
-            ['name' => 'Constellation',
+            ['name' => 'con',
                 'title' => _i('Constellation'),
                 'data' => 'constellation',
             ],
-            ['name' => 'Const.',
+            ['name' => 'con',
                 'title' => _i('Const.'),
                 'data' => 'con',
                 'width' => '10%',
@@ -149,7 +179,7 @@ class TargetDataTable extends DataTable
                 'width' => '10%',
                 'searchable' => false,
             ],
-            ['name' => 'SB',
+            ['name' => 'subr',
                 'title' => _i('SB'),
                 'data' => 'subr',
                 'width' => '10%',
@@ -158,9 +188,8 @@ class TargetDataTable extends DataTable
             ['name' => 'Type',
                 'title' => _i('Type'),
                 'data' => 'realType',
-                'searchable' => false,
             ],
-            ['name' => 'Typ',
+            ['name' => 'Type',
                 'title' => _i('Typ'),
                 'data' => 'type',
                 'searchable' => false,
@@ -174,28 +203,28 @@ class TargetDataTable extends DataTable
             ['name' => 'RA',
                 'title' => _i('RA'),
                 'data' => 'ra',
-                'orderable' => false,
                 'searchable' => false,
             ],
             ['name' => 'Decl',
                 'title' => _i('Decl'),
                 'data' => 'decl',
-                'orderable' => false,
                 'searchable' => false,
             ],
-            ['name' => 'Atlas',
-                'title' => _i('atlas'),
+            ['name' => auth()->user()->standardAtlasCode,
+                'title' => _i(
+                    \App\Atlases::where(
+                        'code', auth()->user()->standardAtlasCode
+                    )->first()->name
+                ),
                 'data' => 'atlas',
-                'orderable' => false,
                 'searchable' => false,
             ],
-            ['name' => 'ContrastReserve',
+            ['name' => 'contrast',
                 'title' => _i('Contrast Reserve'),
                 'data' => 'contrast',
-                'orderable' => false,
                 'searchable' => false,
             ],
-            ['name' => 'Best',
+/*            ['name' => 'Best',
                 'title' => _i('Best'),
                 'data' => 'best',
                 'orderable' => false,
@@ -267,6 +296,7 @@ class TargetDataTable extends DataTable
                 'orderable' => false,
                 'searchable' => false,
             ],
+*/
         ];
     }
 

@@ -51,20 +51,24 @@ class EyepieceDataTable extends DataTable
             ->editColumn(
                 'name',
                 '<a href="/eyepiece/{{ $id }}">{{ $name }}</a>'
-            )->editColumn(
+            )
+            ->editColumn(
                 'observations',
                 '<a href="/observations/eyepiece/{{ $id }}">{{ $observations }}</a>'
-            )->editColumn(
+            )
+            ->editColumn(
                 'focalLength',
                 function ($eyepiece) {
                     return $eyepiece->focalLength . ' mm';
                 }
-            )->editColumn(
+            )
+            ->editColumn(
                 'apparentFOV',
                 function ($eyepiece) {
                     return $eyepiece->apparentFOV . ' º';
                 }
-            )->editColumn(
+            )
+            ->editColumn(
                 'maxFocalLength',
                 function ($eyepiece) {
                     if ($eyepiece->maxFocalLength) {
@@ -73,20 +77,23 @@ class EyepieceDataTable extends DataTable
                         return '';
                     }
                 }
-            )->editColumn(
+            )
+            ->editColumn(
                 'user.name',
                 function ($eyepiece) {
                     return '<a href="/users/' . $eyepiece->user->id . '">'
                         . $eyepiece->user->name . '</a>';
                 }
-            )->editColumn(
+            )
+            ->editColumn(
                 'active',
                 '<form method="POST" action="/eyepiece/{{ $id }}">
                 @method("PATCH")
                 @csrf
                 <input type="checkbox" name="active" onChange="this.form.submit()" {{ $active ? "checked" : "" }}>
              </form>'
-            )->addColumn(
+            )
+            ->addColumn(
                 'delete',
                 '<form method="POST" action="/eyepiece/{{ $id }}">
                             @method("DELETE")
@@ -95,7 +102,8 @@ class EyepieceDataTable extends DataTable
                             <i class="far fa-trash-alt"></i>
                         </button>
                         </form>'
-            )->rawColumns(
+            )
+            ->rawColumns(
                 ['name', 'observations', 'active', 'delete', 'user.name']
             )->make(true);
     }
