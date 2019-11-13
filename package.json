@@ -21,7 +21,7 @@
         "lodash": "^4.17.15",
         "popper.js": "^1.16.0",
         "resolve-url-loader": "^2.3.2",
-        "sass": "^1.23.1",
+        "sass": "^1.23.3",
         "sass-loader": "^7.3.1",
         "vue": "^2.6.10",
         "vue-template-compiler": "^2.6.10"
@@ -35,13 +35,13 @@
         "datatables.net-buttons-dt": "^1.6.1",
         "datatables.net-colreorder-bs4": "^1.5.2",
         "datatables.net-plugins": "^1.10.19",
-        "highcharts": "^7.2.0",
+        "highcharts": "^7.2.1",
         "jquery-ui": "^1.12.1",
         "jszip": "^3.2.2",
         "password-strength-meter": "^1.2.2",
-        "pdfmake": "^0.1.60",
+        "pdfmake": "^0.1.62",
         "popper": "^1.0.1",
-        "select2": "^4.0.11",
+        "select2": "^4.0.12",
         "select2-bootstrap4-theme": "^1.0.0"
     }
 }
