@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2019-10-24 16:06+0200\n"
-"PO-Revision-Date: 2019-10-24 16:09+0200\n"
+"POT-Creation-Date: 2019-11-13 20:12+0100\n"
+"PO-Revision-Date: 2019-11-13 20:13+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
-"Language-Team: James Translator <james@translations.colm>\n"
+"Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14,11 +14,12 @@ msgstr ""
 "X-Poedit-Basepath: ../../../../../app\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: Http\n"
-"X-Poedit-SearchPath-1: ../resources/views\n"
-"X-Poedit-SearchPath-2: Console\n"
-"X-Poedit-SearchPath-3: Notifications\n"
-"X-Poedit-SearchPath-4: ../resources/lang/en\n"
-"X-Poedit-SearchPath-5: ../storage/framework/messages\n"
+"X-Poedit-SearchPath-1: .\n"
+"X-Poedit-SearchPath-2: ../resources/views\n"
+"X-Poedit-SearchPath-3: Console\n"
+"X-Poedit-SearchPath-4: Notifications\n"
+"X-Poedit-SearchPath-5: ../resources/lang/en\n"
+"X-Poedit-SearchPath-6: ../storage/framework/messages\n"
 
 #: ../resources/lang/en/auth.php:16
 #: ../storage/framework/messages/2af49298faa8cfdfc1fb4bfb6f6d54225109132e.php.php:16
@@ -1054,11 +1055,14 @@ msgstr "Oculaire %s supprimé"
 #: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:140
 #: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:188
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:13
-#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:189
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:191
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:194
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:250
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:14
 #: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:13
+#: DataTables/FilterDataTable.php:140 DataTables/FilterDataTable.php:188
+#: DataTables/InstrumentDataTable.php:194
+#: DataTables/InstrumentDataTable.php:250 DataTables/TargetDataTable.php:191
 msgid "Type"
 msgstr "Type"
 
@@ -1074,6 +1078,9 @@ msgstr "Oculaire"
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:268
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:156
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:200
+#: DataTables/EyepieceDatatable.php:156 DataTables/EyepieceDatatable.php:200
+#: DataTables/InstrumentDataTable.php:212
+#: DataTables/InstrumentDataTable.php:268
 msgid "Focal Length"
 msgstr "Longueur focale"
 
@@ -1081,12 +1088,14 @@ msgstr "Longueur focale"
 #: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:65
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:162
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:206
+#: DataTables/EyepieceDatatable.php:162 DataTables/EyepieceDatatable.php:206
 msgid "Apparent Field of View"
 msgstr "Champ de vue apparent"
 
 #: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:30
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:168
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:212
+#: DataTables/EyepieceDatatable.php:168 DataTables/EyepieceDatatable.php:212
 msgid "Maximum Focal Length"
 msgstr "Longueur focale maximale"
 
@@ -1150,7 +1159,7 @@ msgstr "ou spécifiez manuellement vos détails de filtre"
 #: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:184
 #: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:122
 #: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:154
-#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:164
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:166
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:190
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:246
 #: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:140
@@ -1160,6 +1169,13 @@ msgstr "ou spécifiez manuellement vos détails de filtre"
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:196
 #: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:57
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:51
+#: DataTables/EyepieceDatatable.php:152 DataTables/EyepieceDatatable.php:196
+#: DataTables/FilterDataTable.php:136 DataTables/FilterDataTable.php:184
+#: DataTables/InstrumentDataTable.php:190
+#: DataTables/InstrumentDataTable.php:246 DataTables/LensDataTable.php:122
+#: DataTables/LensDataTable.php:154 DataTables/LocationDataTable.php:175
+#: DataTables/LocationDataTable.php:231 DataTables/TargetDataTable.php:166
+#: DataTables/UserDataTable.php:140
 msgid "Name"
 msgstr "Nom"
 
@@ -1176,6 +1192,7 @@ msgstr "Type de filtre"
 #: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:145
 #: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:192
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:25
+#: DataTables/FilterDataTable.php:145 DataTables/FilterDataTable.php:192
 msgid "Color"
 msgstr "Couleur"
 
@@ -1267,7 +1284,8 @@ msgid "Declination"
 msgstr "Déclination"
 
 #: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:51
-#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:168
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:170
+#: DataTables/TargetDataTable.php:170
 msgid "Constellation"
 msgstr "Constellation"
 
@@ -1284,7 +1302,8 @@ msgid "Surface brightness"
 msgstr "Luminosité de surface"
 
 #: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:84
-#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:198
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:200
+#: DataTables/TargetDataTable.php:200
 msgid "Size"
 msgstr "Taille"
 
@@ -1292,90 +1311,90 @@ msgstr "Taille"
 msgid "Position angle"
 msgstr "Angle de position"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:102
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:98
 msgid "Contrast reserve"
 msgstr "Réserve de contraste"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:108
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:104
 msgid "Optimum detection magnification"
 msgstr "Grossissement de détection optimal"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:119
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:115
 msgid "Alternative name"
 msgstr "Nom alternatif"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:126
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:122
 msgid "(Contains)/Part of"
 msgstr "(Contient)/part de"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:133
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:129
 msgid "Description"
 msgstr "Description"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:133
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:129
 msgid "NGC/IC, Dreyer codes"
 msgstr "NGC/IC, codes Dreyer"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:140
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:136
 msgid "In my lists"
 msgstr "Dans mes listes"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:162
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:170
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:177
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:159
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:167
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:174
 #, php-format
 msgid "%s does not rise above horizon"
 msgstr "%s ne monte pas au-dessus de l’horizon"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:164
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:172
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:161
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:169
 #, php-format
 msgid "%s is circumpolar"
 msgstr "%s est circumpolair"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:166
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:163
 #, php-format
 msgid "%s rises at %s on %s in %s"
 msgstr "%s monte à %s le %s à %s"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:168
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:165
 #, php-format
 msgid "%s transits at %s on %s in %s"
 msgstr "%s passe à %s le %s à %s"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:174
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:171
 #, php-format
 msgid "%s sets at %s on %s in %s"
 msgstr "%s déscend à %s le %s à %s"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:179
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:176
 #, php-format
 msgid "%s reaches an altitude of %s in %s"
 msgstr "%s atteint une altitude de %s à %s"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:184
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:181
 #: ../storage/framework/messages/b108a57b45d115bcd3a63da456e940168c6e5686.php.php:2
 msgid "Date"
 msgstr "Date"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:186
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:183
 msgid "Rise"
 msgstr "Montant"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:190
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:187
 #: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:32
 msgid "Transit"
 msgstr "Passage"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:194
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:191
 msgid "Set"
 msgstr "Coucher"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:198
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:195
 msgid "Best Time"
 msgstr "Meilleur"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:200
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:197
 #: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:24
 msgid "Max Alt"
 msgstr "Alt max"
@@ -1417,6 +1436,8 @@ msgstr "Type d'instrument"
 #: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:23
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:200
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:256
+#: DataTables/InstrumentDataTable.php:200
+#: DataTables/InstrumentDataTable.php:256
 msgid "Diameter"
 msgstr "Diamètre"
 
@@ -1426,6 +1447,7 @@ msgstr "Diamètre"
 #: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:31
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:83
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:93
+#: DataTables/InstrumentDataTable.php:83 DataTables/InstrumentDataTable.php:93
 msgid "inch"
 msgstr "pouce"
 
@@ -1435,12 +1457,15 @@ msgstr "pouce"
 #: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:31
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:85
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:95
+#: DataTables/InstrumentDataTable.php:85 DataTables/InstrumentDataTable.php:95
 msgid "mm"
 msgstr "mm"
 
 #: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:79
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:206
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:262
+#: DataTables/InstrumentDataTable.php:206
+#: DataTables/InstrumentDataTable.php:262
 msgid "F/D"
 msgstr "F/D"
 
@@ -1452,6 +1477,8 @@ msgstr " ou "
 #: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:37
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:218
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:274
+#: DataTables/InstrumentDataTable.php:218
+#: DataTables/InstrumentDataTable.php:274
 msgid "Fixed Magnification"
 msgstr "Magnification fixe"
 
@@ -1492,12 +1519,14 @@ msgstr "Modifier l'image du profil"
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:20
 #: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:136
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:14
+#: DataTables/UserDataTable.php:136
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:51
 #: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:144
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:28
+#: DataTables/UserDataTable.php:144
 msgid "Email"
 msgstr "Email"
 
@@ -1650,30 +1679,35 @@ msgstr "Langue standard pour les observations"
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:179
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:241
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:23
+#: DataTables/LocationDataTable.php:179 DataTables/LocationDataTable.php:241
 msgid "Country"
 msgstr "Pays"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:185
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:247
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:27
+#: DataTables/LocationDataTable.php:185 DataTables/LocationDataTable.php:247
 msgid "Elevation"
 msgstr "Élévation"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:191
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:253
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:38
+#: DataTables/LocationDataTable.php:191 DataTables/LocationDataTable.php:253
 msgid "NELM"
 msgstr "NELM"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:197
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:259
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:32
+#: DataTables/LocationDataTable.php:197 DataTables/LocationDataTable.php:259
 msgid "SQM"
 msgstr "SQM"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:203
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:265
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:44
+#: DataTables/LocationDataTable.php:203 DataTables/LocationDataTable.php:265
 msgid "Bortle"
 msgstr "Échelle Bortle"
 
@@ -1690,6 +1724,12 @@ msgstr "Échelle Bortle"
 #: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:162
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:174
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:218
+#: DataTables/EyepieceDatatable.php:174 DataTables/EyepieceDatatable.php:218
+#: DataTables/FilterDataTable.php:162 DataTables/FilterDataTable.php:209
+#: DataTables/InstrumentDataTable.php:224
+#: DataTables/InstrumentDataTable.php:280 DataTables/LensDataTable.php:132
+#: DataTables/LensDataTable.php:163 DataTables/LocationDataTable.php:209
+#: DataTables/LocationDataTable.php:271 DataTables/UserDataTable.php:162
 #: Http/Controllers/UserController.php:128
 #: Http/Controllers/UserController.php:224
 msgid "Observations"
@@ -1706,6 +1746,12 @@ msgstr "Observations"
 #: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:156
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:180
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:227
+#: DataTables/EyepieceDatatable.php:180 DataTables/EyepieceDatatable.php:227
+#: DataTables/FilterDataTable.php:168 DataTables/FilterDataTable.php:219
+#: DataTables/InstrumentDataTable.php:230
+#: DataTables/InstrumentDataTable.php:296 DataTables/LensDataTable.php:138
+#: DataTables/LensDataTable.php:173 DataTables/LocationDataTable.php:215
+#: DataTables/LocationDataTable.php:287 DataTables/UserDataTable.php:156
 msgid "Delete"
 msgstr "Supprimez"
 
@@ -1714,10 +1760,14 @@ msgstr "Supprimez"
 #: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:145
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:237
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:187
+#: DataTables/EyepieceDatatable.php:187 DataTables/FilterDataTable.php:175
+#: DataTables/InstrumentDataTable.php:237 DataTables/LensDataTable.php:145
+#: DataTables/LocationDataTable.php:222
 msgid "Observer"
 msgstr "Observateur"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:235
+#: DataTables/LocationDataTable.php:235
 msgid "Weather forecast"
 msgstr "Prévisions météo"
 
@@ -1727,10 +1777,14 @@ msgstr "Prévisions météo"
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:286
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:223
 #: ../storage/framework/messages/f1e0daf0905fb7c5337c268f7c7b70b73518889c.php.php:396
+#: DataTables/EyepieceDatatable.php:223 DataTables/FilterDataTable.php:214
+#: DataTables/InstrumentDataTable.php:286 DataTables/LensDataTable.php:168
+#: DataTables/LocationDataTable.php:277
 msgid "Active"
 msgstr "Activé"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:281
+#: DataTables/LocationDataTable.php:281
 msgid "Default Location"
 msgstr "Emplacement par Défaut"
 
@@ -1891,6 +1945,7 @@ msgid "User Administration"
 msgstr "Administration des utilisateurs"
 
 #: ../storage/framework/messages/34e95834ea64cdb7379d571e69dd28ecdc44135f.php.php:120
+#: Location.php:120
 msgid "Add a location"
 msgstr "Ajouter un emplacement"
 
@@ -1937,11 +1992,13 @@ msgstr "Ajouter un oculaire"
 
 #: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:150
 #: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:197
+#: DataTables/FilterDataTable.php:150 DataTables/FilterDataTable.php:197
 msgid "Wratten"
 msgstr "Wratten"
 
 #: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:156
 #: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:203
+#: DataTables/FilterDataTable.php:156 DataTables/FilterDataTable.php:203
 msgid "Schott"
 msgstr "Schott"
 
@@ -1993,6 +2050,7 @@ msgstr "Type de filtre"
 #: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:158
 #: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:18
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:57
+#: DataTables/LensDataTable.php:126 DataTables/LensDataTable.php:158
 msgid "Factor"
 msgstr "Facteur"
 
@@ -2040,33 +2098,50 @@ msgstr "La lentille %s a des observations. Impossible à supprimer."
 msgid "Lens %s deleted"
 msgstr "Lentille %s supprimé"
 
-#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:172
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:174
+#: DataTables/TargetDataTable.php:174
 msgid "Const."
 msgstr "Const."
 
-#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:177
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:179
+#: DataTables/TargetDataTable.php:179
 msgid "Mag"
 msgstr "Mag"
 
-#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:183
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:185
+#: DataTables/TargetDataTable.php:185
 msgid "SB"
 msgstr "SB"
 
-#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:193
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:195
+#: DataTables/TargetDataTable.php:195
 msgid "Typ"
 msgstr "Typ"
 
-#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:204
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:206
+#: DataTables/TargetDataTable.php:206
 msgid "RA"
 msgstr "AD"
 
-#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:209
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:211
+#: DataTables/TargetDataTable.php:211
 msgid "Decl"
 msgstr "Décl"
 
-#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:223
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:226
+#: DataTables/TargetDataTable.php:226
 msgid "Contrast Reserve"
 msgstr "Réserve de contraste"
+
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:231
+#: DataTables/TargetDataTable.php:231
+msgid "Preferred Magnification"
+msgstr "Agrandissement préféré"
+
+#: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:235
+#: DataTables/TargetDataTable.php:235
+msgid "Best"
+msgstr "Meilleur"
 
 #: ../storage/framework/messages/6397ba5ce5097379e2a9d002db902c5cf1fb266c.php.php:3
 msgid "Help"
@@ -2196,13 +2271,15 @@ msgstr "Lentilles de %s"
 msgid "Add lens"
 msgstr "Ajouter une lentille"
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:176
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:183
+#: Contrast.php:183
 msgid "Contrast reserve can only be calculated when you are logged in..."
 msgstr ""
 "La réserve de contraste ne peut être calculée que lorsque vous êtes "
 "connecté..."
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:179
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:186
+#: Contrast.php:186
 msgid ""
 "Contrast reserve can only be calculated when you have set a standard "
 "location..."
@@ -2210,7 +2287,8 @@ msgstr ""
 "La réserve de contraste ne peut être calculée que lorsque vous avez défini "
 "une location standard…"
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:181
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:188
+#: Contrast.php:188
 msgid ""
 "Contrast reserve can only be calculated when you have set a standard "
 "instrument..."
@@ -2218,15 +2296,17 @@ msgstr ""
 "La réserve de contraste ne peut être calculée que lorsque vous avez défini "
 "un instrument standard..."
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:251
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:258
+#: Contrast.php:258
 msgid ""
-"Contrast reserve can only be calculate when the standard instrument has a "
+"Contrast reserve can only be calculated when the standard instrument has a "
 "fixed magnification or when there are eyepieces defined..."
 msgstr ""
 "La réserve de contraste ne peut être calculée que lorsque l'instrument "
 "standard a un grossissement fixe ou lorsqu'il y a des oculaires définis..."
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:258
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:265
+#: Contrast.php:265
 msgid ""
 "Contrast reserve can only be calculated when you have set a typical limiting "
 "magnitude or sky background for your standard location..."
@@ -2235,46 +2315,54 @@ msgstr ""
 "magnitude de limitation typique ou un fond de ciel pour votre emplacement "
 "standard..."
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:505
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:510
+#: Contrast.php:510
 msgid ""
 "Contrast reserve can only be calculated when the object has a known magnitude"
 msgstr ""
 "La réserve de contraste ne peut être calculée que lorsque l'objet a une "
 "magnitude connue"
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:510
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:515
+#: Contrast.php:515
 msgid ""
 "Contrast reserve can only be calculated when the object has a known diameter"
 msgstr ""
 "La réserve de contraste ne peut être calculée que lorsque l'objet a un "
 "diamètre connu"
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:518
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:524
+#: Contrast.php:524
 #, php-format
 msgid "%s is not visible from %s with your %s"
 msgstr "%s n'est pas visible de %s avec votre %s"
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:525
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:531
+#: Contrast.php:531
 #, php-format
 msgid "Visibility of %s is questionable from %s with your %s"
 msgstr "La visibilité de %s est douteuse à partir de %s avec votre %s"
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:532
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:538
+#: Contrast.php:538
 #, php-format
 msgid "%s is difficult to see from %s with your %s"
 msgstr "%s est difficile à voir de %s avec votre %s"
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:539
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:545
+#: Contrast.php:545
 #, php-format
 msgid "%s is quite difficult to see from %s with your %s"
 msgstr "%s est assez difficile à voir de %s avec votre %s"
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:546
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:552
+#: Contrast.php:552
 #, php-format
 msgid "%s is easy to see from %s with your %s"
 msgstr "%s est facile à voir de %s avec votre %s"
 
-#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:553
+#: ../storage/framework/messages/7d830928f0c67ee7cd7c5b3737ec1366fc877c79.php.php:559
+#: Contrast.php:559
 #, php-format
 msgid "%s is very easy to see from %s with your %s"
 msgstr "%s est très facile à voir de %s avec votre %s"
@@ -2400,6 +2488,7 @@ msgstr "Vérifier les objets"
 
 #: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:13
 #: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:168
+#: DataTables/UserDataTable.php:168
 msgid "Instruments"
 msgstr "Instruments"
 
@@ -2464,10 +2553,12 @@ msgid "Filter %s deleted"
 msgstr "Filtre %s supprimé"
 
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:290
+#: DataTables/InstrumentDataTable.php:290
 msgid "Default Instrument"
 msgstr "Instrument par défaut"
 
 #: ../storage/framework/messages/aff5890d6eb58acb3e41f85240024e3205c9cbf9.php.php:122
+#: Instrument.php:122
 msgid "Add an instrument"
 msgstr "Rajouter un instrument"
 
@@ -2539,14 +2630,17 @@ msgid "Instruments of %s"
 msgstr "Instruments de %s"
 
 #: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:148
+#: DataTables/UserDataTable.php:148
 msgid "Date/Time Added"
 msgstr "Date/heure ajoutée"
 
 #: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:152
+#: DataTables/UserDataTable.php:152
 msgid "User Role"
 msgstr "Rôle de l’utilisateur"
 
 #: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:174
+#: DataTables/UserDataTable.php:174
 msgid "Lists"
 msgstr "Listes"
 
@@ -6745,9 +6839,6 @@ msgstr "Nombre d'objets"
 
 #~ msgid "The list"
 #~ msgstr "La liste"
-
-#~ msgid "Best"
-#~ msgstr "Meilleur"
 
 #~ msgid "Highest Alt."
 #~ msgstr "Alt. Supérieure"
