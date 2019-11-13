@@ -91,21 +91,17 @@
 
         @auth
         @if (Auth::user()->stdlocation != 0 && Auth::user()->stdtelescope != 0)
-        @php
-            $contrast = new \App\Contrast($target)
-        @endphp
-
         <tr>
             <td colspan="3">{{ _i("Contrast reserve") }}</td>
             <td colspan="3">
-                <span class="{{ $contrast->contype }}" data-toggle="tooltip" data-placement="bottom" title="{{ $contrast->popup }}">{{ $contrast->contrast }}</span>
+                <span class="{{ $target->contrast_type }}" data-toggle="tooltip" data-placement="bottom" title="{{ $target->contrast_popup }}">{{ $target->contrast }}</span>
             </td>
             <td colspan="3">
                 <span class="float-right">
                     {{ _i("Optimum detection magnification") }}
                 </span>
             </td>
-            <td colspan="3">{{ $contrast->prefMag }}</td>
+            <td colspan="3">{{ $target->prefMag }}</td>
         </tr>
         @endif
         @endauth
@@ -151,61 +147,26 @@
     @if (Auth::user()->stdlocation != 0 && Auth::user()->stdtelescope != 0)
         @if ($target->type()->first()->observationType()->first()['type'] == 'ds' ||
             $target->type()->first()->observationType()->first()['type'] == 'double')
-
-@php
-$datestr = Session::get('date');
-$date = DateTime::createFromFormat('d/m/Y', $datestr);
-
-$location = \App\Location::where('id', Auth::user()->stdlocation)->first();
-$objAstroCalc = new \App\Libraries\AstroCalc(
-    $date, $location->latitude, $location->longitude,
-    $location->timezone
-);
-
-$ristraset = $objAstroCalc->calculateRiseTransitSettingTime($target->ra, $target->decl, $objAstroCalc->jd);
-
-if ($ristraset[0] == "-" && strncmp($ristraset[3], "-", 1 ) == 0) {
-	$popup1 = sprintf(_i('%s does not rise above horizon'), $target->name);
-} else if ($ristraset[0] == "-") {
-	$popup1 = sprintf(_i('%s is circumpolar'), $target->name);
-} else {
-	$popup1 = sprintf(_i('%s rises at %s on %s in %s'), $target->name, $ristraset[0], $datestr, $location->name);
-}
-$popup2 = sprintf(_i('%s transits at %s on %s in %s'), $target->name, $ristraset[1], $datestr, $location->name);
-if ($ristraset[2] == "-" && strncmp($ristraset[3], "-", 1 ) == 0) {
-	$popup3 = sprintf(_i('%s does not rise above horizon'), $target->name);
-} else if ($ristraset[2] == "-") {
-				$popup3 = sprintf(_i('%s is circumpolar'), $target->name);
-} else {
-	$popup3 = sprintf(_i('%s sets at %s on %s in %s'), $target->name, $ristraset[2], $datestr, $location->name);
-}
-if ($ristraset[3] == "-") {
-	$popup4 = sprintf(_i('%s does not rise above horizon'), $target->name);
-} else {
-	$popup4 = sprintf(_('%s reaches an altitude of %s in %s'), $target->name, $ristraset[3], $location->name);
-}
-
-@endphp
             <tr>
                 <td>{{ _i('Date') }}</td>
                 <td>@php echo session('date') @endphp</td>
                 <td>{{ _i("Rise") }}</td>
                 <td>
-                    <span data-toggle="tooltip" data-placement="bottom" title="{{ $popup1 }}">{{ $ristraset[0] }}</span>
+                    <span data-toggle="tooltip" data-placement="bottom" title="{{ $target->rise_popup }}">{{ $target->rise }}</span>
                 </td>
                 <td>{{ _i("Transit") }}</td>
                 <td>
-                    <span data-toggle="tooltip" data-placement="bottom" title="{{ $popup2 }}">{{ $ristraset[1] }}</span>
+                    <span data-toggle="tooltip" data-placement="bottom" title="{{ $target->transit_popup }}">{{ $target->transit }}</span>
                 </td>
                 <td>{{ _i("Set") }}</td>
                 <td>
-                    <span data-toggle="tooltip" data-placement="bottom" title="{{ $popup3 }}">{{ $ristraset[2] }}</span>
+                    <span data-toggle="tooltip" data-placement="bottom" title="{{ $target->set_popup }}">{{ $target->set }}</span>
                 </td>
                 <td>{{ _i('Best Time') }}</td>
-                <td>{{ $ristraset[4] }}</td>
+                <td>{{ $target->BestTime }}</td>
                 <td>{{ _i("Max Alt") }}</td>
                 <td>
-                    <span data-toggle="tooltip" data-placement="bottom" title="{!! $popup4 !!}">{!! $ristraset[3] !!}</span>
+                    <span data-toggle="tooltip" data-placement="bottom" title="{!! $target->maxAlt_popup !!}">{!! $target->maxAlt !!}</span>
                 </td>
             </tr>
 

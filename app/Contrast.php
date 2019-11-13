@@ -16,6 +16,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Contrast class.
@@ -32,6 +33,7 @@ class Contrast extends Model
     public $contype = '';
     public $popup = '';
     public $prefMag = '';
+    public $prefMagEasy = '';
     private $_LTC;
     private $_LTCSize = 24;
     private $_angleSize = 7;
@@ -62,7 +64,6 @@ class Contrast extends Model
         $this->_target = $target;
 
         $this->_calculateContrast();
-
         $this->_calcContrastAndVisibility();
     }
 
@@ -248,7 +249,7 @@ class Contrast extends Model
                     $this->_fov[] = '';
                 }
                 if (count($this->_magnifications) == 0) {
-                    $this->popup = _i('Contrast reserve can only be calculate when the standard instrument has a fixed magnification or when there are eyepieces defined...');
+                    $this->popup = _i('Contrast reserve can only be calculated when the standard instrument has a fixed magnification or when there are eyepieces defined...');
                 } else {
                     $location = \App\Location::where('id', Auth::user()->stdlocation)->get()[0];
 
@@ -298,7 +299,6 @@ class Contrast extends Model
             $maxObjArcmin = $temp;
         }
         $maxLog = 37;
-        $maxX = 1000;
 
         // Log Object contrast
         $logObjContrast = -0.4 * ($target->SBObj - $this->_initBB);
@@ -485,9 +485,8 @@ class Contrast extends Model
     {
         $this->contrast = '-';
         $this->prefMag = '-';
+        $this->prefMagEasy = '-';
 
-        $popupT = '';
-        $magni = $this->_magnitude;
         $showname = $this->_target->name;
         $telescope = \App\Instrument::where(
             'id',
@@ -508,6 +507,7 @@ class Contrast extends Model
             $diam1 = $this->_target->diam1 / 60.0;
             if ($diam1 == 0) {
                 $this->popup = _i('Contrast reserve can only be calculated when the object has a known diameter');
+                $this->contrast = '-';
             } else {
                 $diam2 = $this->_target->diam2 / 60.0;
                 if ($diam2 == 0) {
@@ -556,7 +556,14 @@ class Contrast extends Model
                         $telescope
                     );
                 }
-                $this->contrast = $this->_logContrastDiff;
+                $this->contrast = sprintf('%.2f', $this->_logContrastDiff);
+                $this->prefMagEasy = sprintf('%d', $this->_x) . 'x';
+                if ($this->_xName == '') {
+                    $this->prefMag = sprintf('%d', $this->_x) . 'x';
+                } else {
+                    $this->prefMag = sprintf('%d', $this->_x) . 'x'
+                        . ' - ' . $this->_xName;
+                }
             }
         }
         if ($this->contrast == '-') {
@@ -573,13 +580,6 @@ class Contrast extends Model
             $this->contype = 'typeEasy';
         } else {
             $this->contype = 'typeVeryEasy';
-        }
-        $this->contrast = sprintf('%.2f', $this->_logContrastDiff);
-        if ($this->_xName == '') {
-            $this->prefMag = sprintf('%d', $this->_x) . 'x';
-        } else {
-            $this->prefMag = sprintf('%d', $this->_x) . 'x'
-                . ' - ' . $this->_xName;
         }
     }
 }

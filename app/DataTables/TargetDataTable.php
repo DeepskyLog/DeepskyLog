@@ -16,6 +16,7 @@ namespace App\DataTables;
 
 use Yajra\DataTables\Services\DataTable;
 use App\Target;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Target DataTable.
@@ -91,15 +92,41 @@ class TargetDataTable extends DataTable
             ->editColumn(
                 'contrast',
                 function ($target) {
-                    $contrast = new \App\Contrast($target);
-
-                    return '<span class="' . $contrast->contype
+                    return '<span class="' . $target->contrast_type
                         . '" data-toggle="tooltip" data-placement="bottom" title="'
-                        . $contrast->popup . '">' . $contrast->contrast . '</span>';
+                        . $target->contrast_popup . '">' . $target->contrast . '</span>';
+                }
+            )
+            ->editColumn(
+                'rise',
+                function ($target) {
+                    return '<span data-toggle="tooltip" data-placement="bottom" title="'
+                        . $target->rise_popup . '">' . $target->rise . '</span>';
+                }
+            )
+            ->editColumn(
+                'transit',
+                function ($target) {
+                    return '<span data-toggle="tooltip" data-placement="bottom" title="'
+                        . $target->transit_popup . '">' . $target->transit . '</span>';
+                }
+            )
+            ->editColumn(
+                'set',
+                function ($target) {
+                    return '<span data-toggle="tooltip" data-placement="bottom" title="'
+                        . $target->set_popup . '">' . $target->set . '</span>';
+                }
+            )
+            ->editColumn(
+                'maxAlt',
+                function ($target) {
+                    return '<span data-toggle="tooltip" data-placement="bottom" title="'
+                        . $target->maxAlt_popup . '">' . $target->maxAlt . '</span>';
                 }
             )
             ->rawColumns(
-                ['name', 'contrast']
+                ['name', 'contrast', 'rise', 'transit', 'set', 'maxAlt']
             )->make(true);
     }
 
@@ -129,7 +156,8 @@ class TargetDataTable extends DataTable
         $target = $this->target;
 
         $targets = $target->getNearbyObjects($zoom)->select();
-
+        //$targets = $target->getNearbyObjects($zoom)->select()->get();
+        //return $targets;
         return $this->applyScopes($targets);
     }
 
@@ -213,7 +241,8 @@ class TargetDataTable extends DataTable
             ['name' => auth()->user()->standardAtlasCode,
                 'title' => _i(
                     \App\Atlases::where(
-                        'code', auth()->user()->standardAtlasCode
+                        'code',
+                        auth()->user()->standardAtlasCode
                     )->first()->name
                 ),
                 'data' => 'atlas',
@@ -224,43 +253,37 @@ class TargetDataTable extends DataTable
                 'data' => 'contrast',
                 'searchable' => false,
             ],
-/*            ['name' => 'Best',
-                'title' => _i('Best'),
-                'data' => 'best',
-                'orderable' => false,
+            ['name' => 'prefMagEasy',
+                'title' => _i('Preferred Magnification'),
+                'data' => 'prefMagEasy',
                 'searchable' => false,
             ],
             ['name' => 'Rise',
                 'title' => _i('Rise'),
                 'data' => 'rise',
-                'orderable' => false,
                 'searchable' => false,
             ],
             ['name' => 'Transit',
                 'title' => _i('Transit'),
                 'data' => 'transit',
-                'orderable' => false,
                 'searchable' => false,
             ],
             ['name' => 'Set',
                 'title' => _i('Set'),
                 'data' => 'set',
-                'orderable' => false,
                 'searchable' => false,
             ],
             ['name' => 'BestTime',
                 'title' => _i('Best Time'),
                 'data' => 'bestTime',
-                'orderable' => false,
                 'searchable' => false,
             ],
             ['name' => 'MaxAlt',
                 'title' => _i('Max Alt'),
                 'data' => 'maxAlt',
-                'orderable' => false,
                 'searchable' => false,
             ],
-            ['name' => 'Seen',
+/*            ['name' => 'Seen',
                 'title' => _i('Seen'),
                 'data' => 'seen',
                 'orderable' => false,

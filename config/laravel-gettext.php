@@ -83,7 +83,7 @@ return [
     /**
      * Translator contact data (used on .po headers too)
      */
-    'translator' => 'James Translator <james@translations.colm>',
+    'translator' => 'Wim De Meester <deepskywim@gmail.com>',
 
     /**
      * Paths where Poedit will search recursively for strings to translate.

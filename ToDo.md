@@ -13,14 +13,13 @@
 
 ## Targets
 
-+ [x] Database
-+ [x] Viewing catalogs page
 + [ ] Details for one object
   + [x] Add contrast information
   + [x] Add rising, setting, transit
   + [x] Add ephemerides
   + [ ] Add objects near by
-  + [ ] Add administrator functions
+    + [ ] DataTable -> add information on highest from , around, ...
+  + [ ] Add administrator functions to adapt objects
 + [ ] Quickpick
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
 + [ ] Check permissions on the page

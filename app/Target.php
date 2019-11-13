@@ -16,6 +16,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use DateTime;
 
 /**
  * Target eloquent model.
@@ -28,7 +30,303 @@ use Illuminate\Support\Facades\Auth;
  */
 class Target extends Model
 {
+    private $_contrast;
+
+    private $_ristraset;
+
+    private $_popup;
+
     protected $fillable = ['name', 'type'];
+
+    protected $appends = ['rise', 'contrast', 'contrast_type', 'contrast_popup',
+        'prefMag', 'prefMagEasy', 'rise_popup', 'transit', 'transit_popup',
+        'set', 'set_popup', 'bestTime', 'maxAlt', 'maxAlt_popup'];
+
+    /**
+     * Returns the contrast of the target
+     *
+     * @return String The contrast of the target
+     */
+    public function getContrastAttribute()
+    {
+        if (!isset($this->_contrast)) {
+            $this->_contrast = new \App\Contrast($this);
+        }
+
+        return $this->_contrast->contrast;
+    }
+
+    /**
+     * Returns the contrast type of the target, for showing
+     * the correct background color.
+     *
+     * @return String The contrast type of the target
+     */
+    public function getContrastTypeAttribute()
+    {
+        if (!isset($this->_contrast)) {
+            $this->_contrast = new \App\Contrast($this);
+        }
+
+        return $this->_contrast->contype;
+    }
+
+    /**
+     * Returns the text for the popup with the contrast of the target
+     *
+     * @return String The popup with the contrast of the target
+     */
+    public function getContrastPopupAttribute()
+    {
+        if (!isset($this->_contrast)) {
+            $this->_contrast = new \App\Contrast($this);
+        }
+
+        return $this->_contrast->popup;
+    }
+
+    /**
+     * Returns the preferred magnitude of the target, with
+     * the information on the eyepiece / lens to use.
+     *
+     * @return String The preferred magnitude of the target
+     */
+    public function getPrefMagAttribute()
+    {
+        if (!isset($this->_contrast)) {
+            $this->_contrast = new \App\Contrast($this);
+        }
+
+        return $this->_contrast->prefMag;
+    }
+
+    /**
+     * Returns the preferred magnitude of the target.
+     *
+     * @return String The preferred magnitude of the target
+     */
+    public function getPrefMagEasyAttribute()
+    {
+        if (!isset($this->_contrast)) {
+            $this->_contrast = new \App\Contrast($this);
+        }
+
+        return $this->_contrast->prefMagEasy;
+    }
+
+    /**
+     * Returns the rise time of the target
+     *
+     * @return String The rise time of the target
+     */
+    public function getRiseAttribute()
+    {
+        if (!isset($this->_ristraset)) {
+            $this->getRiseSetTransit();
+        }
+
+        return $this->_ristraset[0];
+    }
+
+    /**
+     * Returns the popup for the rise time of the target
+     *
+     * @return String The popup for the rise time of the target
+     */
+    public function getRisePopupAttribute()
+    {
+        if (!isset($this->_ristraset)) {
+            $this->getRiseSetTransit();
+        }
+
+        return $this->_popup[0];
+    }
+
+    /**
+     * Returns the transit time of the target
+     *
+     * @return String The transit time of the target
+     */
+    public function getTransitAttribute()
+    {
+        if (!isset($this->_ristraset)) {
+            $this->getRiseSetTransit();
+        }
+
+        return $this->_ristraset[1];
+    }
+
+    /**
+     * Returns the popup for the transit time of the target
+     *
+     * @return String The popup for the transit time of the target
+     */
+    public function getTransitPopupAttribute()
+    {
+        if (!isset($this->_ristraset)) {
+            $this->getRiseSetTransit();
+        }
+
+        return $this->_popup[1];
+    }
+
+    /**
+     * Returns the set time of the target
+     *
+     * @return String The set time of the target
+     */
+    public function getSetAttribute()
+    {
+        if (!isset($this->_ristraset)) {
+            $this->getRiseSetTransit();
+        }
+
+        return $this->_ristraset[2];
+    }
+
+    /**
+     * Returns the popup for the set time of the target
+     *
+     * @return String The popup for the set time of the target
+     */
+    public function getSetPopupAttribute()
+    {
+        if (!isset($this->_ristraset)) {
+            $this->getRiseSetTransit();
+        }
+
+        return $this->_popup[2];
+    }
+
+    /**
+     * Returns the best time of the target
+     *
+     * @return String The best time of the target
+     */
+    public function getBestTimeAttribute()
+    {
+        if (!isset($this->_ristraset)) {
+            $this->getRiseSetTransit();
+        }
+
+        return $this->_ristraset[4];
+    }
+
+    /**
+     * Returns the maximum altitude of the target
+     *
+     * @return String The maximum altitude of the target
+     */
+    public function getMaxAltAttribute()
+    {
+        if (!isset($this->_ristraset)) {
+            $this->getRiseSetTransit();
+        }
+
+        return $this->_ristraset[3];
+    }
+
+    /**
+     * Returns the popup for the maximum altitude of the target
+     *
+     * @return String The popup for the maximum altitude of the target
+     */
+    public function getMaxAltPopupAttribute()
+    {
+        if (!isset($this->_ristraset)) {
+            $this->getRiseSetTransit();
+        }
+
+        return $this->_popup[3];
+    }
+
+    /**
+     * Returns the information on the rise, transit, and set times of the target.
+     *
+     * @return None
+     */
+    public function getRiseSetTransit()
+    {
+        if (Auth::user()->stdlocation != 0 && Auth::user()->stdtelescope != 0) {
+            if ($this->type()->first()->observationType()->first()['type'] == 'ds'
+                || $this->type()->first()->observationType()->first()['type'] == 'double'
+            ) {
+                $datestr = Session::get('date');
+                $date = DateTime::createFromFormat('d/m/Y', $datestr);
+
+                $location = \App\Location::where(
+                    'id',
+                    Auth::user()->stdlocation
+                )->first();
+                $objAstroCalc = new \App\Libraries\AstroCalc(
+                    $date,
+                    $location->latitude,
+                    $location->longitude,
+                    $location->timezone
+                );
+
+                $ristraset = $objAstroCalc->calculateRiseTransitSettingTime(
+                    $this->ra,
+                    $this->decl,
+                    $objAstroCalc->jd
+                );
+
+                if ($ristraset[0] == '-' && strncmp($ristraset[3], '-', 1) == 0) {
+                    $popup[0] = sprintf(_i('%s does not rise above horizon'), $this->name);
+                } elseif ($ristraset[0] == '-') {
+                    $popup[0] = sprintf(_i('%s is circumpolar'), $this->name);
+                } else {
+                    $popup[0] = sprintf(
+                        _i('%s rises at %s on %s in %s'),
+                        $this->name,
+                        $ristraset[0],
+                        $datestr,
+                        $location->name
+                    );
+                }
+                $popup[1] = sprintf(
+                    _i('%s transits at %s on %s in %s'),
+                    $this->name,
+                    $ristraset[1],
+                    $datestr,
+                    $location->name
+                );
+                if ($ristraset[2] == '-' && strncmp($ristraset[3], '-', 1) == 0) {
+                    $popup[2] = sprintf(
+                        _i('%s does not rise above horizon'),
+                        $this->name
+                    );
+                } elseif ($ristraset[2] == '-') {
+                    $popup[2] = sprintf(_i('%s is circumpolar'), $this->name);
+                } else {
+                    $popup[2] = sprintf(
+                        _i('%s sets at %s on %s in %s'),
+                        $this->name,
+                        $ristraset[2],
+                        $datestr,
+                        $location->name
+                    );
+                }
+                if ($ristraset[3] == '-') {
+                    $popup[3] = sprintf(
+                        _i('%s does not rise above horizon'),
+                        $this->name
+                    );
+                } else {
+                    $popup[3] = sprintf(
+                        _i('%s reaches an altitude of %s in %s on %s'),
+                        $this->name,
+                        $ristraset[3],
+                        $location->name,
+                        $datestr
+                    );
+                }
+
+                $this->_ristraset = $ristraset;
+                $this->_popup = $popup;
+            }
+        }
+    }
 
     /**
      * Targets have exactly one target type.
@@ -455,6 +753,7 @@ class Target extends Model
     public function getNearbyObjects($dist)
     {
         $dra = 0.0011 * $dist / cos($this->decl / 180.0 * 3.1415926535);
+
         return \App\Target::where('ra', '>', $this->ra - $dra)
             ->where('ra', '<', $this->ra + $dra)
             ->where('decl', '>', $this->decl - $dist / 60.0)
@@ -464,7 +763,7 @@ class Target extends Model
     /**
      * Returns the constellation of this target.
      *
-     * @return String The constellation this target belongs to.
+     * @return String the constellation this target belongs to
      */
     public function getConstellation()
     {
