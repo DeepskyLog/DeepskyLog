@@ -169,7 +169,14 @@
                     <span data-toggle="tooltip" data-placement="bottom" title="{!! $target->maxAlt_popup !!}">{!! $target->maxAlt !!}</span>
                 </td>
             </tr>
-
+            <tr>
+                <td>{{ _i('Highest From') }}</td>
+                <td colspan="3">{{ $target->highest_from }}</td>
+                <td>{{ _i('Highest Around') }}</td>
+                <td colspan="3">{{ $target->highest_around }}</td>
+                <td>{{ _i('Highest To') }}</td>
+                <td colspan="3">{{ $target->highest_to }}</td>
+            </tr>
         @endif
     @endif
     @endauth

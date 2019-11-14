@@ -40,8 +40,8 @@ class TargetDataTable extends DataTable
     {
         $model = $this->query();
 
-        return datatables()
-            ->eloquent($model)
+        $toReturn = datatables()
+            ->collection($model)
             ->editColumn(
                 'name',
                 function ($target) {
@@ -82,8 +82,10 @@ class TargetDataTable extends DataTable
                 function ($target) {
                     return $target->declination();
                 }
-            )
-            ->editColumn(
+            );
+
+        if (!auth()->guest()) {
+            $toReturn->editColumn(
                 'atlas',
                 function ($target) {
                     return $target->atlasPage(auth()->user()->standardAtlasCode);
@@ -126,8 +128,13 @@ class TargetDataTable extends DataTable
                 }
             )
             ->rawColumns(
-                ['name', 'contrast', 'rise', 'transit', 'set', 'maxAlt']
-            )->make(true);
+                ['name', 'contrast', 'rise', 'transit', 'set', 'maxAlt',
+                'highest_alt']
+            );
+        } else {
+            $toReturn->rawColumns(['name']);
+        }
+        return $toReturn->make(true);
     }
 
     /**
@@ -155,10 +162,11 @@ class TargetDataTable extends DataTable
         }
         $target = $this->target;
 
-        $targets = $target->getNearbyObjects($zoom)->select();
-        //$targets = $target->getNearbyObjects($zoom)->select()->get();
-        //return $targets;
-        return $this->applyScopes($targets);
+        // We return a Collection to be able to sort on the added attributes
+        // This is a lot slower than using the builder, but with the builder,
+        // it is impossible to sort on e.g. contrast.
+        $targets = $target->getNearbyObjects($zoom)->select()->get();
+        return $targets;
     }
 
     /**
@@ -187,103 +195,104 @@ class TargetDataTable extends DataTable
      */
     protected function getColumns()
     {
-        return [
-            ['name' => 'name',
-                'title' => _i('Name'),
-                'data' => 'name',
-            ],
-            ['name' => 'con',
-                'title' => _i('Constellation'),
-                'data' => 'constellation',
-            ],
-            ['name' => 'con',
-                'title' => _i('Const.'),
-                'data' => 'con',
-                'width' => '10%',
-            ],
-            ['name' => 'Mag',
-                'title' => _i('Mag'),
-                'data' => 'mag',
-                'width' => '10%',
-                'searchable' => false,
-            ],
-            ['name' => 'subr',
-                'title' => _i('SB'),
-                'data' => 'subr',
-                'width' => '10%',
-                'searchable' => false,
-            ],
-            ['name' => 'Type',
-                'title' => _i('Type'),
-                'data' => 'realType',
-            ],
-            ['name' => 'Type',
-                'title' => _i('Typ'),
-                'data' => 'type',
-                'searchable' => false,
-            ],
-            ['name' => 'Size',
-                'title' => _i('Size'),
-                'data' => 'size',
-                'orderable' => false,
-                'searchable' => false,
-            ],
-            ['name' => 'RA',
-                'title' => _i('RA'),
-                'data' => 'ra',
-                'searchable' => false,
-            ],
-            ['name' => 'Decl',
-                'title' => _i('Decl'),
-                'data' => 'decl',
-                'searchable' => false,
-            ],
-            ['name' => auth()->user()->standardAtlasCode,
-                'title' => _i(
-                    \App\Atlases::where(
-                        'code',
-                        auth()->user()->standardAtlasCode
-                    )->first()->name
-                ),
-                'data' => 'atlas',
-                'searchable' => false,
-            ],
-            ['name' => 'contrast',
-                'title' => _i('Contrast Reserve'),
-                'data' => 'contrast',
-                'searchable' => false,
-            ],
-            ['name' => 'prefMagEasy',
-                'title' => _i('Preferred Magnification'),
-                'data' => 'prefMagEasy',
-                'searchable' => false,
-            ],
-            ['name' => 'Rise',
-                'title' => _i('Rise'),
-                'data' => 'rise',
-                'searchable' => false,
-            ],
-            ['name' => 'Transit',
-                'title' => _i('Transit'),
-                'data' => 'transit',
-                'searchable' => false,
-            ],
-            ['name' => 'Set',
-                'title' => _i('Set'),
-                'data' => 'set',
-                'searchable' => false,
-            ],
-            ['name' => 'BestTime',
-                'title' => _i('Best Time'),
-                'data' => 'bestTime',
-                'searchable' => false,
-            ],
-            ['name' => 'MaxAlt',
-                'title' => _i('Max Alt'),
-                'data' => 'maxAlt',
-                'searchable' => false,
-            ],
-/*            ['name' => 'Seen',
+        if (!auth()->guest()) {
+            return [
+                ['name' => 'name',
+                    'title' => _i('Name'),
+                    'data' => 'name',
+                ],
+                ['name' => 'con',
+                    'title' => _i('Constellation'),
+                    'data' => 'constellation',
+                ],
+                ['name' => 'con',
+                    'title' => _i('Const.'),
+                    'data' => 'con',
+                    'width' => '10%',
+                ],
+                ['name' => 'Mag',
+                    'title' => _i('Mag'),
+                    'data' => 'mag',
+                    'width' => '10%',
+                    'searchable' => false,
+                ],
+                ['name' => 'subr',
+                    'title' => _i('SB'),
+                    'data' => 'subr',
+                    'width' => '10%',
+                    'searchable' => false,
+                ],
+                ['name' => 'Type',
+                    'title' => _i('Type'),
+                    'data' => 'realType',
+                ],
+                ['name' => 'Type',
+                    'title' => _i('Typ'),
+                    'data' => 'type',
+                    'searchable' => false,
+                ],
+                ['name' => 'Size',
+                    'title' => _i('Size'),
+                    'data' => 'size',
+                    'orderable' => false,
+                    'searchable' => false,
+                ],
+                ['name' => 'RA',
+                    'title' => _i('RA'),
+                    'data' => 'ra',
+                    'searchable' => false,
+                ],
+                ['name' => 'Decl',
+                    'title' => _i('Decl'),
+                    'data' => 'decl',
+                    'searchable' => false,
+                ],
+                ['name' => auth()->user()->standardAtlasCode,
+                    'title' => _i(
+                        \App\Atlases::where(
+                            'code',
+                            auth()->user()->standardAtlasCode
+                        )->first()->name
+                    ),
+                    'data' => 'atlas',
+                    'searchable' => false,
+                ],
+                ['name' => 'contrast',
+                    'title' => _i('Contrast Reserve'),
+                    'data' => 'contrast',
+                    'searchable' => false,
+                ],
+                ['name' => 'prefMagEasy',
+                    'title' => _i('Preferred Magnification'),
+                    'data' => 'prefMagEasy',
+                    'searchable' => false,
+                ],
+                ['name' => 'Rise',
+                    'title' => _i('Rise'),
+                    'data' => 'rise',
+                    'searchable' => false,
+                ],
+                ['name' => 'Transit',
+                    'title' => _i('Transit'),
+                    'data' => 'transit',
+                    'searchable' => false,
+                ],
+                ['name' => 'Set',
+                    'title' => _i('Set'),
+                    'data' => 'set',
+                    'searchable' => false,
+                ],
+                ['name' => 'BestTime',
+                    'title' => _i('Best Time'),
+                    'data' => 'bestTime',
+                    'searchable' => false,
+                ],
+                ['name' => 'MaxAlt',
+                    'title' => _i('Max Alt'),
+                    'data' => 'maxAlt',
+                    'searchable' => false,
+                ],
+                /*            ['name' => 'Seen',
                 'title' => _i('Seen'),
                 'data' => 'seen',
                 'orderable' => false,
@@ -295,32 +304,81 @@ class TargetDataTable extends DataTable
                 'orderable' => false,
                 'searchable' => false,
             ],
-            ['name' => 'HighestAlt',
-                'title' => _i('Highest Alt.'),
-                'data' => 'highestAlt',
-                'orderable' => false,
-                'searchable' => false,
-            ],
-            ['name' => 'HighestFrom',
-                'title' => _i('Highest from'),
-                'data' => 'highestFrom',
-                'orderable' => false,
-                'searchable' => false,
-            ],
-            ['name' => 'HighestTo',
-                'title' => _i('Highest to'),
-                'data' => 'highestTo',
-                'orderable' => false,
-                'searchable' => false,
-            ],
-            ['name' => 'HighestAround',
-                'title' => _i('Highest around'),
-                'data' => 'highestAround',
-                'orderable' => false,
-                'searchable' => false,
-            ],
-*/
-        ];
+*/            ['name' => 'HighestAlt',
+                    'title' => _i('Highest Alt.'),
+                    'data' => 'highest_alt',
+                    'searchable' => false,
+                ],
+                ['name' => 'HighestFrom',
+                    'title' => _i('Highest from'),
+                    'data' => 'highest_from',
+                    'searchable' => false,
+                ],
+                ['name' => 'HighestTo',
+                    'title' => _i('Highest to'),
+                    'data' => 'highest_to',
+                    'searchable' => false,
+                ],
+                ['name' => 'HighestAround',
+                    'title' => _i('Highest around'),
+                    'data' => 'highest_around',
+                    'searchable' => false,
+                ],
+            ];
+        } else {
+            return [
+                ['name' => 'name',
+                    'title' => _i('Name'),
+                    'data' => 'name',
+                ],
+                ['name' => 'con',
+                    'title' => _i('Constellation'),
+                    'data' => 'constellation',
+                ],
+                ['name' => 'con',
+                    'title' => _i('Const.'),
+                    'data' => 'con',
+                    'width' => '10%',
+                ],
+                ['name' => 'Mag',
+                    'title' => _i('Mag'),
+                    'data' => 'mag',
+                    'width' => '10%',
+                    'searchable' => false,
+                ],
+                ['name' => 'subr',
+                    'title' => _i('SB'),
+                    'data' => 'subr',
+                    'width' => '10%',
+                    'searchable' => false,
+                ],
+                ['name' => 'Type',
+                    'title' => _i('Type'),
+                    'data' => 'realType',
+                ],
+                ['name' => 'Type',
+                    'title' => _i('Typ'),
+                    'data' => 'type',
+                    'searchable' => false,
+                ],
+                ['name' => 'Size',
+                    'title' => _i('Size'),
+                    'data' => 'size',
+                    'orderable' => false,
+                    'searchable' => false,
+                ],
+                ['name' => 'RA',
+                    'title' => _i('RA'),
+                    'data' => 'ra',
+                    'searchable' => false,
+                ],
+                ['name' => 'Decl',
+                    'title' => _i('Decl'),
+                    'data' => 'decl',
+                    'searchable' => false,
+                ]
+            ];
+        }
     }
 
     /**

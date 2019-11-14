@@ -36,11 +36,16 @@ class Target extends Model
 
     private $_popup;
 
+    private $_ephemerides;
+
+    private $_highestFromToAround;
+
     protected $fillable = ['name', 'type'];
 
     protected $appends = ['rise', 'contrast', 'contrast_type', 'contrast_popup',
         'prefMag', 'prefMagEasy', 'rise_popup', 'transit', 'transit_popup',
-        'set', 'set_popup', 'bestTime', 'maxAlt', 'maxAlt_popup'];
+        'set', 'set_popup', 'bestTime', 'maxAlt', 'maxAlt_popup',
+        'highest_from', 'highest_around', 'highest_to', 'highest_alt'];
 
     /**
      * Returns the contrast of the target
@@ -49,11 +54,13 @@ class Target extends Model
      */
     public function getContrastAttribute()
     {
-        if (!isset($this->_contrast)) {
-            $this->_contrast = new \App\Contrast($this);
-        }
+        if (!auth()->guest()) {
+            if (!isset($this->_contrast)) {
+                $this->_contrast = new \App\Contrast($this);
+            }
 
-        return $this->_contrast->contrast;
+            return $this->_contrast->contrast;
+        }
     }
 
     /**
@@ -64,11 +71,13 @@ class Target extends Model
      */
     public function getContrastTypeAttribute()
     {
-        if (!isset($this->_contrast)) {
-            $this->_contrast = new \App\Contrast($this);
-        }
+        if (!auth()->guest()) {
+            if (!isset($this->_contrast)) {
+                $this->_contrast = new \App\Contrast($this);
+            }
 
-        return $this->_contrast->contype;
+            return $this->_contrast->contype;
+        }
     }
 
     /**
@@ -78,11 +87,13 @@ class Target extends Model
      */
     public function getContrastPopupAttribute()
     {
-        if (!isset($this->_contrast)) {
-            $this->_contrast = new \App\Contrast($this);
-        }
+        if (!auth()->guest()) {
+            if (!isset($this->_contrast)) {
+                $this->_contrast = new \App\Contrast($this);
+            }
 
-        return $this->_contrast->popup;
+            return $this->_contrast->popup;
+        }
     }
 
     /**
@@ -93,11 +104,13 @@ class Target extends Model
      */
     public function getPrefMagAttribute()
     {
-        if (!isset($this->_contrast)) {
-            $this->_contrast = new \App\Contrast($this);
-        }
+        if (!auth()->guest()) {
+            if (!isset($this->_contrast)) {
+                $this->_contrast = new \App\Contrast($this);
+            }
 
-        return $this->_contrast->prefMag;
+            return $this->_contrast->prefMag;
+        }
     }
 
     /**
@@ -107,11 +120,13 @@ class Target extends Model
      */
     public function getPrefMagEasyAttribute()
     {
-        if (!isset($this->_contrast)) {
-            $this->_contrast = new \App\Contrast($this);
-        }
+        if (!auth()->guest()) {
+            if (!isset($this->_contrast)) {
+                $this->_contrast = new \App\Contrast($this);
+            }
 
-        return $this->_contrast->prefMagEasy;
+            return $this->_contrast->prefMagEasy;
+        }
     }
 
     /**
@@ -241,89 +256,149 @@ class Target extends Model
     }
 
     /**
+     * Returns the highest altitude of the target
+     *
+     * @return String The highest altitude of the target
+     */
+    public function getHighestAltAttribute()
+    {
+        if (!isset($this->_ristraset)) {
+            $this->getRiseSetTransit();
+        }
+
+        return $this->_highestFromToAround[3];
+    }
+
+    /**
+     * Returns the month from which the highest altitude is reached
+     *
+     * @return String Returns the month from which the highest altitude is reached
+     */
+    public function getHighestFromAttribute()
+    {
+        if (!isset($this->_ephemerides)) {
+            $this->getYearEphemerides();
+        }
+
+        return $this->_highestFromToAround[0];
+    }
+
+    /**
+     * Returns the month around which the highest altitude is reached
+     *
+     * @return String Returns the month around which the highest altitude is reached
+     */
+    public function getHighestAroundAttribute()
+    {
+        if (!isset($this->_ephemerides)) {
+            $this->getYearEphemerides();
+        }
+
+        return $this->_highestFromToAround[1];
+    }
+
+    /**
+     * Returns the month to which the highest altitude is reached
+     *
+     * @return String Returns the month to which the highest altitude is reached
+     */
+    public function getHighestToAttribute()
+    {
+        if (!isset($this->_ephemerides)) {
+            $this->getYearEphemerides();
+        }
+
+        return $this->_highestFromToAround[2];
+    }
+
+    /**
      * Returns the information on the rise, transit, and set times of the target.
      *
      * @return None
      */
     public function getRiseSetTransit()
     {
-        if (Auth::user()->stdlocation != 0 && Auth::user()->stdtelescope != 0) {
-            if ($this->type()->first()->observationType()->first()['type'] == 'ds'
-                || $this->type()->first()->observationType()->first()['type'] == 'double'
-            ) {
-                $datestr = Session::get('date');
-                $date = DateTime::createFromFormat('d/m/Y', $datestr);
+        if (!Auth::guest()) {
+            if (Auth::user()->stdlocation != 0 && Auth::user()->stdtelescope != 0) {
+                if ($this->type()->first()->observationType()->first()['type'] == 'ds'
+                    || $this->type()->first()->observationType()->first()['type'] == 'double'
+                ) {
+                    $datestr = Session::get('date');
+                    $date = DateTime::createFromFormat('d/m/Y', $datestr);
 
-                $location = \App\Location::where(
-                    'id',
-                    Auth::user()->stdlocation
-                )->first();
-                $objAstroCalc = new \App\Libraries\AstroCalc(
-                    $date,
-                    $location->latitude,
-                    $location->longitude,
-                    $location->timezone
-                );
+                    $location = \App\Location::where(
+                        'id',
+                        Auth::user()->stdlocation
+                    )->first();
+                    $objAstroCalc = new \App\Libraries\AstroCalc(
+                        $date,
+                        $location->latitude,
+                        $location->longitude,
+                        $location->timezone
+                    );
 
-                $ristraset = $objAstroCalc->calculateRiseTransitSettingTime(
-                    $this->ra,
-                    $this->decl,
-                    $objAstroCalc->jd
-                );
+                    $ristraset = $objAstroCalc->calculateRiseTransitSettingTime(
+                        $this->ra,
+                        $this->decl,
+                        $objAstroCalc->jd
+                    );
 
-                if ($ristraset[0] == '-' && strncmp($ristraset[3], '-', 1) == 0) {
-                    $popup[0] = sprintf(_i('%s does not rise above horizon'), $this->name);
-                } elseif ($ristraset[0] == '-') {
-                    $popup[0] = sprintf(_i('%s is circumpolar'), $this->name);
-                } else {
-                    $popup[0] = sprintf(
-                        _i('%s rises at %s on %s in %s'),
+                    if ($ristraset[0] == '-' && strncmp($ristraset[3], '-', 1) == 0) {
+                        $popup[0] = sprintf(_i('%s does not rise above horizon'), $this->name);
+                    } elseif ($ristraset[0] == '-') {
+                        $popup[0] = sprintf(_i('%s is circumpolar'), $this->name);
+                    } else {
+                        $popup[0] = sprintf(
+                            _i('%s rises at %s on %s in %s'),
+                            $this->name,
+                            $ristraset[0],
+                            $datestr,
+                            $location->name
+                        );
+                    }
+                    $popup[1] = sprintf(
+                        _i('%s transits at %s on %s in %s'),
                         $this->name,
-                        $ristraset[0],
+                        $ristraset[1],
                         $datestr,
                         $location->name
                     );
-                }
-                $popup[1] = sprintf(
-                    _i('%s transits at %s on %s in %s'),
-                    $this->name,
-                    $ristraset[1],
-                    $datestr,
-                    $location->name
-                );
-                if ($ristraset[2] == '-' && strncmp($ristraset[3], '-', 1) == 0) {
-                    $popup[2] = sprintf(
-                        _i('%s does not rise above horizon'),
-                        $this->name
-                    );
-                } elseif ($ristraset[2] == '-') {
-                    $popup[2] = sprintf(_i('%s is circumpolar'), $this->name);
-                } else {
-                    $popup[2] = sprintf(
-                        _i('%s sets at %s on %s in %s'),
-                        $this->name,
-                        $ristraset[2],
-                        $datestr,
-                        $location->name
-                    );
-                }
-                if ($ristraset[3] == '-') {
-                    $popup[3] = sprintf(
-                        _i('%s does not rise above horizon'),
-                        $this->name
-                    );
-                } else {
-                    $popup[3] = sprintf(
-                        _i('%s reaches an altitude of %s in %s on %s'),
-                        $this->name,
-                        $ristraset[3],
-                        $location->name,
-                        $datestr
-                    );
-                }
+                    if ($ristraset[2] == '-' && strncmp($ristraset[3], '-', 1) == 0) {
+                        $popup[2] = sprintf(
+                            _i('%s does not rise above horizon'),
+                            $this->name
+                        );
+                    } elseif ($ristraset[2] == '-') {
+                        $popup[2] = sprintf(_i('%s is circumpolar'), $this->name);
+                    } else {
+                        $popup[2] = sprintf(
+                            _i('%s sets at %s on %s in %s'),
+                            $this->name,
+                            $ristraset[2],
+                            $datestr,
+                            $location->name
+                        );
+                    }
+                    if ($ristraset[3] == '-') {
+                        $popup[3] = sprintf(
+                            _i('%s does not rise above horizon in %s on %s'),
+                            $this->name,
+                            $location->name,
+                            $datestr
+                        );
+                    } else {
+                        $popup[3] = sprintf(
+                            _i('%s reaches an altitude of %s in %s on %s'),
+                            $this->name,
+                            $ristraset[3],
+                            $location->name,
+                            $datestr
+                        );
+                    }
 
-                $this->_ristraset = $ristraset;
-                $this->_popup = $popup;
+                    $this->_ristraset = $ristraset;
+                    $this->_popup = $popup;
+                }
             }
         }
     }
@@ -540,165 +615,223 @@ class Target extends Model
      */
     public function getYearEphemerides()
     {
-        $cnt = 0;
-        for ($i = 1; $i < 13; $i++) {
-            for ($j = 1; $j < 16; $j = $j + 14) {
-                $datestr = sprintf('%02d', $j) . '/' . sprintf('%02d', $i) . '/'
+        if (auth()->guest()) {
+            return $this->_ephemerides;
+        }
+        if (isset($this->_ephemerides)) {
+            return $this->_ephemerides;
+        } else {
+            $cnt = 0;
+            for ($i = 1; $i < 13; $i++) {
+                for ($j = 1; $j < 16; $j = $j + 14) {
+                    $datestr = sprintf('%02d', $j) . '/' . sprintf('%02d', $i) . '/'
                     . \Carbon\Carbon::now()->format('Y');
 
-                $date = \Carbon\Carbon::createFromFormat('d/m/Y', $datestr);
-                $ephemerides[$cnt]['date'] = $date;
+                    $date = \Carbon\Carbon::createFromFormat('d/m/Y', $datestr);
+                    $ephemerides[$cnt]['date'] = $date;
 
-                $location = \App\Location::where(
-                    'id',
-                    Auth::user()->stdlocation
-                )->first();
-                $astroCalc = new \App\Libraries\AstroCalc(
-                    $date,
-                    $location->latitude,
-                    $location->longitude,
-                    $location->timezone
-                );
+                    $location = \App\Location::where(
+                        'id',
+                        Auth::user()->stdlocation
+                    )->first();
+                    $astroCalc = new \App\Libraries\AstroCalc(
+                        $date,
+                        $location->latitude,
+                        $location->longitude,
+                        $location->timezone
+                    );
 
-                $ris_tra_set = $astroCalc->calculateRiseTransitSettingTime(
-                    $this->ra,
-                    $this->decl,
-                    $astroCalc->jd
-                );
-                $nightephemerides = date_sun_info(
-                    $date->getTimestamp(),
-                    $location->latitude,
-                    $location->longitude
-                );
-                $ephemerides[$cnt]['max_alt'] = $ris_tra_set[3];
-                $ephemerides[$cnt]['transit'] = $ris_tra_set[1];
-                $ephemerides[$cnt]['rise'] = $ris_tra_set[0];
-                $ephemerides[$cnt]['set'] = $ris_tra_set[2];
+                    $ris_tra_set = $astroCalc->calculateRiseTransitSettingTime(
+                        $this->ra,
+                        $this->decl,
+                        $astroCalc->jd
+                    );
+                    $nightephemerides = date_sun_info(
+                        $date->getTimestamp(),
+                        $location->latitude,
+                        $location->longitude
+                    );
+                    $ephemerides[$cnt]['max_alt'] = $ris_tra_set[3];
+                    $ephemerides[$cnt]['transit'] = $ris_tra_set[1];
+                    $ephemerides[$cnt]['rise'] = $ris_tra_set[0];
+                    $ephemerides[$cnt]['set'] = $ris_tra_set[2];
 
-                $ephemerides[$cnt]['astronomical_twilight_end'] = is_bool(
-                    $nightephemerides['astronomical_twilight_end']
-                ) ? null :
+                    $ephemerides[$cnt]['astronomical_twilight_end'] = is_bool(
+                        $nightephemerides['astronomical_twilight_end']
+                    ) ? null :
+                        $date->copy()
+                        ->setTimeFromTimeString(
+                            date('H:i', $nightephemerides['astronomical_twilight_end'])
+                        )->setTimezone($location->timezone);
+
+                    $ephemerides[$cnt]['astronomical_twilight_begin'] = is_bool(
+                        $nightephemerides['astronomical_twilight_begin']
+                    ) ? null :
                     $date->copy()
-                    ->setTimeFromTimeString(
-                        date('H:i', $nightephemerides['astronomical_twilight_end'])
-                    )->setTimezone($location->timezone);
+                        ->setTimeFromTimeString(
+                            date('H:i', $nightephemerides['astronomical_twilight_begin'])
+                        )->setTimezone($location->timezone);
 
-                $ephemerides[$cnt]['astronomical_twilight_begin'] = is_bool(
-                    $nightephemerides['astronomical_twilight_begin']
-                ) ? null :
-                $date->copy()
-                    ->setTimeFromTimeString(
-                        date('H:i', $nightephemerides['astronomical_twilight_begin'])
-                    )->setTimezone($location->timezone);
+                    $ephemerides[$cnt]['nautical_twilight_end'] = is_bool(
+                        $nightephemerides['nautical_twilight_end']
+                    ) ? null : $date->copy()
+                        ->setTimeFromTimeString(
+                            date('H:i', $nightephemerides['nautical_twilight_end'])
+                        )->setTimezone($location->timezone);
 
-                $ephemerides[$cnt]['nautical_twilight_end'] = is_bool(
-                    $nightephemerides['nautical_twilight_end']
-                ) ? null : $date->copy()
-                    ->setTimeFromTimeString(
-                        date('H:i', $nightephemerides['nautical_twilight_end'])
-                    )->setTimezone($location->timezone);
+                    $ephemerides[$cnt]['nautical_twilight_begin'] = is_bool(
+                        $nightephemerides['nautical_twilight_begin']
+                    ) ? null : $date->copy()
+                        ->setTimeFromTimeString(
+                            date('H:i', $nightephemerides['nautical_twilight_begin'])
+                        )->setTimezone($location->timezone);
 
-                $ephemerides[$cnt]['nautical_twilight_begin'] = is_bool(
-                    $nightephemerides['nautical_twilight_begin']
-                ) ? null : $date->copy()
-                    ->setTimeFromTimeString(
-                        date('H:i', $nightephemerides['nautical_twilight_begin'])
-                    )->setTimezone($location->timezone);
+                    if ($ephemerides[$cnt]['astronomical_twilight_end'] > $ephemerides[$cnt]['astronomical_twilight_begin']) {
+                        $ephemerides[$cnt]['astronomical_twilight_begin']->addDay();
+                    }
+                    if ($ephemerides[$cnt]['nautical_twilight_end'] > $ephemerides[$cnt]['nautical_twilight_begin']) {
+                        $ephemerides[$cnt]['nautical_twilight_begin']->addDay();
+                    }
+                    $ephemerides[$cnt]['count'] = ($j == 1) ? '' : $i;
 
-                if ($ephemerides[$cnt]['astronomical_twilight_end'] > $ephemerides[$cnt]['astronomical_twilight_begin']) {
-                    $ephemerides[$cnt]['astronomical_twilight_begin']->addDay();
+                    $cnt++;
                 }
-                if ($ephemerides[$cnt]['nautical_twilight_end'] > $ephemerides[$cnt]['nautical_twilight_begin']) {
-                    $ephemerides[$cnt]['nautical_twilight_begin']->addDay();
+            }
+
+            // Setting the classes for the different colors
+            $cnt = 0;
+            foreach ($ephemerides as $ephem) {
+                // Green if the max_alt does not change. This means that the
+                // altitude is maximal
+                if (($ephem['max_alt'] != '-'
+                    && $ephemerides[($cnt + 1) % 24]['max_alt'] != '-')
+                    && (($ephem['max_alt'] == $ephemerides[($cnt + 1) % 24]['max_alt'])
+                    || ($ephem['max_alt'] == $ephemerides[($cnt + 23) % 24]['max_alt']))
+                ) {
+                    $ephemerides[$cnt]['max_alt_color'] = 'ephemeridesgreen';
+                } else {
+                    $ephemerides[$cnt]['max_alt_color'] = '';
                 }
-                $ephemerides[$cnt]['count'] = ($j == 1) ? '' : $i;
 
-                $cnt++;
-            }
-        }
+                // Green if the transit is during astronomical twilight
+                // Yellow if the transit is during astronomical twilight
+                $time = $ephem['date']->setTimeZone($location->timezone)->copy()
+                    ->setTimeFromTimeString($ephem['transit']);
+                if ($time->format('H') < 12) {
+                    $time->addDay();
+                }
 
-        // Setting the classes for the different colors
-        $cnt = 0;
-        foreach ($ephemerides as $ephem) {
-            // Green if the max_alt does not change. This means that the
-            // altitude is maximal
-            if (($ephem['max_alt'] != '-'
-                && $ephemerides[($cnt + 1) % 24]['max_alt'] != '-')
-                && (($ephem['max_alt'] == $ephemerides[($cnt + 1) % 24]['max_alt'])
-                || ($ephem['max_alt'] == $ephemerides[($cnt + 23) % 24]['max_alt']))
-            ) {
-                $ephemerides[$cnt]['max_alt_color'] = 'ephemeridesgreen';
-            } else {
-                $ephemerides[$cnt]['max_alt_color'] = '';
-            }
-
-            // Green if the transit is during astronomical twilight
-            // Yellow if the transit is during astronomical twilight
-            $time = $ephem['date']->setTimeZone($location->timezone)->copy()
-                ->setTimeFromTimeString($ephem['transit']);
-            if ($time->format('H') < 12) {
-                $time->addDay();
-            }
-
-            if ($ephem['max_alt'] != '-') {
-                if ($ephem['astronomical_twilight_end'] != null
-                    && $time->between(
-                        $ephem['astronomical_twilight_begin'],
-                        $ephem['astronomical_twilight_end']
-                    )
-                ) {
-                    $ephemerides[$cnt]['transit_color'] = 'ephemeridesgreen';
-                } elseif ($ephem['nautical_twilight_end'] != null
-                    && $time->between(
-                        $ephem['nautical_twilight_begin'],
-                        $ephem['nautical_twilight_end']
-                    )
-                ) {
-                    $ephemerides[$cnt]['transit_color'] = 'ephemeridesyellow';
+                if ($ephem['max_alt'] != '-') {
+                    if ($ephem['astronomical_twilight_end'] != null
+                        && $time->between(
+                            $ephem['astronomical_twilight_begin'],
+                            $ephem['astronomical_twilight_end']
+                        )
+                    ) {
+                        $ephemerides[$cnt]['transit_color'] = 'ephemeridesgreen';
+                    } elseif ($ephem['nautical_twilight_end'] != null
+                        && $time->between(
+                            $ephem['nautical_twilight_begin'],
+                            $ephem['nautical_twilight_end']
+                        )
+                    ) {
+                        $ephemerides[$cnt]['transit_color'] = 'ephemeridesyellow';
+                    } else {
+                        $ephemerides[$cnt]['transit_color'] = '';
+                    }
                 } else {
                     $ephemerides[$cnt]['transit_color'] = '';
                 }
-            } else {
-                $ephemerides[$cnt]['transit_color'] = '';
-            }
 
-            $ephemerides[$cnt]['rise_color'] = '';
-
-            if ($ephem['max_alt'] == '-') {
                 $ephemerides[$cnt]['rise_color'] = '';
-            } else {
-                if ($ephem['rise'] == '-') {
-                    if ($ephem['astronomical_twilight_end'] != null) {
+
+                if ($ephem['max_alt'] == '-') {
+                    $ephemerides[$cnt]['rise_color'] = '';
+                } else {
+                    if ($ephem['rise'] == '-') {
+                        if ($ephem['astronomical_twilight_end'] != null) {
+                            $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
+                        } elseif ($ephem['nautical_twilight_end'] != null) {
+                            $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
+                        }
+                    }
+                    if ($ephem['astronomical_twilight_end'] != null
+                        && $this->_checkNightHourMinutePeriodOverlap(
+                            $ephem['rise'],
+                            $ephem['set'],
+                            $ephem['astronomical_twilight_end'],
+                            $ephem['astronomical_twilight_begin']
+                        )
+                    ) {
                         $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
-                    } elseif ($ephem['nautical_twilight_end'] != null) {
+                    } elseif ($ephem['nautical_twilight_end'] != null
+                        && $this->_checkNightHourMinutePeriodOverlap(
+                            $ephem['rise'],
+                            $ephem['set'],
+                            $ephem['nautical_twilight_end'],
+                            $ephem['nautical_twilight_begin']
+                        )
+                    ) {
                         $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
                     }
                 }
-                if ($ephem['astronomical_twilight_end'] != null
-                    && $this->_checkNightHourMinutePeriodOverlap(
-                        $ephem['rise'],
-                        $ephem['set'],
-                        $ephem['astronomical_twilight_end'],
-                        $ephem['astronomical_twilight_begin']
-                    )
-                ) {
-                    $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
-                } elseif ($ephem['nautical_twilight_end'] != null
-                    && $this->_checkNightHourMinutePeriodOverlap(
-                        $ephem['rise'],
-                        $ephem['set'],
-                        $ephem['nautical_twilight_end'],
-                        $ephem['nautical_twilight_begin']
-                    )
-                ) {
-                    $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
-                }
+
+                $cnt++;
             }
 
-            $cnt++;
-        }
+            $this->_ephemerides = $ephemerides;
 
-        return $ephemerides;
+            $collection = collect($ephemerides);
+            $max_alt = $collection->max('max_alt');
+
+            $filter = $collection->filter(
+                function ($value) use ($max_alt) {
+                    if ($value['max_alt'] == $max_alt) {
+                        return true;
+                    }
+                }
+            );
+
+            $months = $filter->keys();
+
+            if ($months->min() == 0 && $months->max() == 23) {
+                $missing = collect(range(0, 23))->diff($months);
+
+                for ($i = 0; $i < $missing->min(); $i++) {
+                    $months[$i] += 24;
+                }
+            }
+            $around = ($months->min()
+                + ($months->max() - $months->min()) / 2) % 24 + 1;
+            $from = $months->min() % 24 + 1;
+            $to = $months->max() % 24 + 1;
+
+            $this->_highestFromToAround[0] = $this->_convertToMonth($from);
+            $this->_highestFromToAround[1] = $this->_convertToMonth($around);
+            $this->_highestFromToAround[2] = $this->_convertToMonth($to);
+            $this->_highestFromToAround[3] = $max_alt;
+
+            return $ephemerides;
+        }
+    }
+
+    /**
+     * Converts a number from 1 to 24 to the name of the month.
+     *
+     * @param int $number The number of the half-month
+     *
+     * @return String The name of the month
+     */
+    private function _convertToMonth($number)
+    {
+        return ($number % 2 ? _i('mid') : _i('begin'))
+                . ' '
+                . date(
+                    "M", mktime(
+                        0, 0, 0,
+                        $number / 2, 1
+                    )
+                );
     }
 
     /**
