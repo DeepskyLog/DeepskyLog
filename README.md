@@ -1,48 +1,36 @@
+[![Logo](public/img/logo2.png)](https://www.deepskylog.org/)
+
 # DeepskyLog
 
-DeepskyLog is a web application to prepare, log and compare visual astronomical observations (Deep-Sky, comets, planets, moon, ...).
+> Log and compare your visual astronomical observations
 
-Observers can use the website at [https://www.deepskylog.org](https://www.deepskylog.org/)
+* Visit [DeepskyLog](https://www.deepskylog.org) and start using a web application to prepare, log, and compare visual astronomical observations.
+* You can find more than 140,000 observations and 16,000 sketches in DeepskyLog. There are visual observations of
+  * Deep-sky objects
+  * Comets
+  * Planets
+  * Moon
+  * Sun
+* Photographic observations are unfortunately not allowed in DeepskyLog. A very good website to log your photographic observations is [Astrobin](https://www.astrobin.com/welcome/).
+* Be part of the community and start sharing your observations and sketches today!
+* DeepskyLog is free to use and will always be free to use. If you want to sponsor DeepskyLog, we will use it to upgrade our servers to improve the speed and the disk space. Sponsoring can be done by clicking the **Sponsor** button on top of the [GitHub page](https://github.com/DeepskyLog/DeepskyLog).
+* If you like DeepskyLog, give it a star. It means a lot to the people maintaining it.
 
-## Help DeepskyLog
+## Want to contribute?
 
-DeepskyLog is free and will always be free. If you want to donate money to DeepskyLog, we will use it to upgrade our servers to improve the speed and the disk space.
+* DeepskyLog is always looking for amateur astronomers to help improving DeepskyLog. You don't need to be a programmer to help us! We are also looking for Deep-sky database maintainers, translators, testers, bug triaging, documentation writers, ... As it is unfortunately not always clear to observe, amateur astronomers can still do astronomy by helping out the DeepskyLog team! Be part of the DeepskyLog community today!
+* If you want to help us improve, take a minute to read the [Contribution Guidelines](/CONTRIBUTING.md) first.
+* If you find a problem with the behavior, database or translation of DeepskyLog, please [open an issue](https://github.com/DeepskyLog/DeepskyLog/issues/new/choose).
 
-DeepskyLog is written in php and uses the laravel framework.
+## Credits & Sponsors
 
-We ask everyone to use the official [DeepskyLog](https://www.deepskylog.org/) website. So please, don't set up your own DeepskyLog site. One of the major advantages of DeepskyLog is that we have one large database with more than 130,000 observations and more than 15,000 drawings. We don't want to have databases all over the internet.
+* This repository is maintained by the [DeepskyLog organization on GitHub](https://github.com/DeepskyLog).
+* Logos, names and trademarks are not to be used without the explicit consent of the maintainers or owners of the DeepskyLog organization.
+* Our website is running on a web server sponsored by [VVS - Vereniging voor Sterrenkunde](http://www.vvs.be/), the amateur astronomy assocation in Belgium.
 
-At this moment, DeepskyLog can be accessed using the following sites:
+## The DeepskyLog team
 
-| URL | Standard Language |
-| --- | ----------------- |
-| [https://www.deepskylog.org](https://www.deepskylog.org/) | English |
-| [https://www.deepskylog.be](https://www.deepskylog.be/) | Dutch |
-| [https://www.deepskylog.nl](https://www.deepskylog.nl/) | Dutch |
-| [https://www.deepskylog.fr](https://www.deepskylog.fr/) | French |
-| [https://www.deepskylog.de](https://www.deepskylog.de/) | German |
-| [https://www.deepskylog.se](https://www.deepskylog.se/) | English |
-
-If you want to add your own localised version of the DeepskyLog database, please contact us.
-
-## Localisation / translation
-
-At this moment, [DeepskyLog](https://www.deepskylog.org/) is translated in the following languages:
-
-| Language | % complete |
-| -------- | ---------- |
-| English  | 100% |
-| Dutch    | 100% |
-| French   | 100% |
-| German   | 100% |
-| Spanish  | 100% |
-| Swedish  | 100% |
-
-If you spot a mistake in one of the translations, please let us know or change the problem yourself by adapting the messages.po file in [GitHub](https://github.com/DeepskyLog/DeepskyLog.laravel/tree/master/resources/lang/i18n/). You can easily edit the po files using an editor, for example [POEdit](https://poedit.net/).
-
-If you are interested in adding a new language to [DeepskyLog](https://www.deepskylog.org), please contact us, then we can help to get you started.
-
-## Responsibilities
+The first version of DeepskyLog was developed in 2004 by [Wim De Meester](https://github.com/WimDeMeester) and [Jan Vanautgaerden](https://github.com/orgs/DeepskyLog/people/janvanautgaerden). Over the years, a lot of developers helped in making DeepskyLog what it is today. 
 
 The responsibilities in the DeepskyLog team are:
 
@@ -52,4 +40,3 @@ The responsibilities in the DeepskyLog team are:
 | Development | [WimDeMeester](https://github.com/WimDeMeester) |
 | Issues, Deepsky database | [TomCorstjens](https://github.com/TomCorstjens)
 | Documentation | [SkyNomad](https://github.com/SkyNomad) |
-

@@ -1,8 +1,15 @@
 # ToDos for DeepskyLog.laravel
 
-## TESTS
+## Write tests!!!
 
-## Moon / sun
+## GitHub
+
++ Add DeepskyLog.laravel to DeepskyLog as laravel branch
++ Bug triaging
+  + Add 'good first issue' label
++ Test defined GitHub actions
+
+## Interesting websites
 
 + [ ] Timezones with javascript: <https://moment.github.io/luxon/>
 + [ ] Timezones with php: Carbon: <https://carbon.nesbot.com/docs/#api-timezone>
@@ -62,10 +69,12 @@
 + [ ] Likes / dislikes / ... for public lists: <https://github.com/cybercog/laravel-love>
 + [ ] Sort on highest number of likes, add extra likes when someone subscribes to the observation list. Add dislikes if someone describes from the observation list.
 + [ ] Share observation list on twitter / facebook
++ [ ] Search for object that don't belong to a certain type.
 
 ## OBSERVATIONS
 
-+ [ ] <https://github.com/VanOns/laraberg> for editor
++ [ ] <https://github.com/Te7a-Houdini/laravel-trix> for editor
+  + [ ] Also use for observation lists
 + [ ] <https://jamesmills.co.uk/2019/02/28/laravel-timezone/> for timezones / date
 + [ ] Share observation using twitter / facebook / instagram
 + [ ] Lenses / Filters / Eyepieces / Instruments / Locations
