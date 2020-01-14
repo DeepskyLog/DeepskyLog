@@ -16,7 +16,6 @@ namespace App\DataTables;
 
 use Yajra\DataTables\Services\DataTable;
 use App\Target;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Target DataTable.
@@ -91,21 +90,23 @@ class TargetDataTable extends DataTable
                     return $target->atlasPage(auth()->user()->standardAtlasCode);
                 }
             )
-            ->editColumn(
+/*            ->editColumn(
                 'contrast',
                 function ($target) {
-                    return '<span class="' . $target->contrast_type
-                        . '" data-toggle="tooltip" data-placement="bottom" title="'
-                        . $target->contrast_popup . '">' . $target->contrast . '</span>';
+                    return floatval($target->contrast);
+//                    return '<span class="' . $target->contrast_type
+//                        . '" data-toggle="tooltip" data-placement="bottom" title="'
+//                        . $target->contrast_popup . '">' . $target->contrast
+//                        . '</span>';
                 }
             )
-            ->editColumn(
-                'rise',
-                function ($target) {
-                    return '<span data-toggle="tooltip" data-placement="bottom" title="'
+*/            ->editColumn(
+    'rise',
+    function ($target) {
+        return '<span data-toggle="tooltip" data-placement="bottom" title="'
                         . $target->rise_popup . '">' . $target->rise . '</span>';
-                }
-            )
+    }
+)
             ->editColumn(
                 'transit',
                 function ($target) {
@@ -129,11 +130,12 @@ class TargetDataTable extends DataTable
             )
             ->rawColumns(
                 ['name', 'contrast', 'rise', 'transit', 'set', 'maxAlt',
-                'highest_alt']
+                    'highest_alt']
             );
         } else {
             $toReturn->rawColumns(['name']);
         }
+
         return $toReturn->make(true);
     }
 
@@ -166,6 +168,7 @@ class TargetDataTable extends DataTable
         // This is a lot slower than using the builder, but with the builder,
         // it is impossible to sort on e.g. contrast.
         $targets = $target->getNearbyObjects($zoom)->select()->get();
+
         return $targets;
     }
 
@@ -210,7 +213,7 @@ class TargetDataTable extends DataTable
                     'data' => 'con',
                     'width' => '10%',
                 ],
-                ['name' => 'Mag',
+                ['name' => 'mag',
                     'title' => _i('Mag'),
                     'data' => 'mag',
                     'width' => '10%',
@@ -222,11 +225,11 @@ class TargetDataTable extends DataTable
                     'width' => '10%',
                     'searchable' => false,
                 ],
-                ['name' => 'Type',
+                ['name' => 'type',
                     'title' => _i('Type'),
                     'data' => 'realType',
                 ],
-                ['name' => 'Type',
+                ['name' => 'type',
                     'title' => _i('Typ'),
                     'data' => 'type',
                     'searchable' => false,
@@ -237,12 +240,12 @@ class TargetDataTable extends DataTable
                     'orderable' => false,
                     'searchable' => false,
                 ],
-                ['name' => 'RA',
+                ['name' => 'ra',
                     'title' => _i('RA'),
                     'data' => 'ra',
                     'searchable' => false,
                 ],
-                ['name' => 'Decl',
+                ['name' => 'decl',
                     'title' => _i('Decl'),
                     'data' => 'decl',
                     'searchable' => false,
@@ -267,12 +270,12 @@ class TargetDataTable extends DataTable
                     'data' => 'prefMagEasy',
                     'searchable' => false,
                 ],
-                ['name' => 'Rise',
+                ['name' => 'rise',
                     'title' => _i('Rise'),
                     'data' => 'rise',
                     'searchable' => false,
                 ],
-                ['name' => 'Transit',
+                ['name' => 'transit',
                     'title' => _i('Transit'),
                     'data' => 'transit',
                     'searchable' => false,

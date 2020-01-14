@@ -16,7 +16,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 /**
  * Contrast class.
@@ -50,6 +49,8 @@ class Contrast extends Model
     private $_x;
     private $_xName;
     private $_logContrastDiff;
+    private $_location;
+    private $_telescope;
     public $contrast;
 
     /**
@@ -59,6 +60,16 @@ class Contrast extends Model
      */
     public function __construct(Target $target)
     {
+        $this->_telescope = \App\Instrument::where(
+            'id',
+            Auth::user()->stdtelescope
+        )->get()->first();
+
+        $this->_location = \App\Location::where(
+            'id',
+            Auth::user()->stdlocation
+        )->get()->first();
+
         $this->_prepareObjectsContrast();
 
         $this->_target = $target;
@@ -182,10 +193,7 @@ class Contrast extends Model
                 $this->popup = _i('Contrast reserve can only be calculated when you have set a standard instrument...');
             } else {
                 // Check for eyepieces or a fixed magnification
-                $instrument = \App\Instrument::where(
-                    'id',
-                    Auth::user()->stdtelescope
-                )->get()->first();
+                $instrument = $this->_telescope;
 
                 if ($instrument->fd == null
                     && $instrument->fixedMagnification == null
@@ -251,7 +259,7 @@ class Contrast extends Model
                 if (count($this->_magnifications) == 0) {
                     $this->popup = _i('Contrast reserve can only be calculated when the standard instrument has a fixed magnification or when there are eyepieces defined...');
                 } else {
-                    $location = \App\Location::where('id', Auth::user()->stdlocation)->get()[0];
+                    $location = $this->_location;
 
                     if (($location->limitingMagnitude < -900)
                         && ($location->skyBackground < -900)
@@ -488,20 +496,13 @@ class Contrast extends Model
         $this->prefMagEasy = '-';
 
         $showname = $this->_target->name;
-        $telescope = \App\Instrument::where(
-            'id',
-            Auth::user()->stdtelescope
-        )->get()->first()->name;
-        $location = \App\Location::where(
-            'id',
-            Auth::user()->stdlocation
-        )->get()->first()->name;
 
         if (Auth::guest()) {
             return;
         }
         if ($this->_target->mag == null) {
             $this->popup = _i('Contrast reserve can only be calculated when the object has a known magnitude');
+
             return;
         } else {
             $diam1 = $this->_target->diam1 / 60.0;
@@ -517,43 +518,43 @@ class Contrast extends Model
                     $this->popup = sprintf(
                         _i('%s is not visible from %s with your %s'),
                         $showname,
-                        $location,
-                        $telescope
+                        $this->_location->name,
+                        $this->_telescope->name
                     );
                 } elseif ($this->_logContrastDiff < 0.1) {
                     $this->popup = sprintf(
                         _i('Visibility of %s is questionable from %s with your %s'),
                         $showname,
-                        $location,
-                        $telescope
+                        $this->_location->name,
+                        $this->_telescope->name
                     );
                 } elseif ($this->_logContrastDiff < 0.35) {
                     $this->popup = sprintf(
                         _i('%s is difficult to see from %s with your %s'),
                         $showname,
-                        $location,
-                        $telescope
+                        $this->_location->name,
+                        $this->_telescope->name
                     );
                 } elseif ($this->_logContrastDiff < 0.5) {
                     $this->popup = sprintf(
                         _i('%s is quite difficult to see from %s with your %s'),
                         $showname,
-                        $location,
-                        $telescope
+                        $this->_location->name,
+                        $this->_telescope->name
                     );
                 } elseif ($this->_logContrastDiff < 1.0) {
                     $this->popup = sprintf(
                         _i('%s is easy to see from %s with your %s'),
                         $showname,
-                        $location,
-                        $telescope
+                        $this->_location->name,
+                        $this->_telescope->name
                     );
                 } else {
                     $this->popup = sprintf(
                         _i('%s is very easy to see from %s with your %s'),
                         $showname,
-                        $location,
-                        $telescope
+                        $this->_location->name,
+                        $this->_telescope->name
                     );
                 }
                 $this->contrast = sprintf('%.2f', $this->_logContrastDiff);

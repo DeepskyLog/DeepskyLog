@@ -38,6 +38,8 @@ class Target extends Model
 
     private $_ephemerides;
 
+    private $_location;
+
     private $_highestFromToAround;
 
     protected $fillable = ['name', 'type'];
@@ -48,7 +50,7 @@ class Target extends Model
         'highest_from', 'highest_around', 'highest_to', 'highest_alt'];
 
     /**
-     * Returns the contrast of the target
+     * Returns the contrast of the target.
      *
      * @return String The contrast of the target
      */
@@ -81,7 +83,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the text for the popup with the contrast of the target
+     * Returns the text for the popup with the contrast of the target.
      *
      * @return String The popup with the contrast of the target
      */
@@ -130,7 +132,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the rise time of the target
+     * Returns the rise time of the target.
      *
      * @return String The rise time of the target
      */
@@ -144,7 +146,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the popup for the rise time of the target
+     * Returns the popup for the rise time of the target.
      *
      * @return String The popup for the rise time of the target
      */
@@ -158,7 +160,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the transit time of the target
+     * Returns the transit time of the target.
      *
      * @return String The transit time of the target
      */
@@ -172,7 +174,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the popup for the transit time of the target
+     * Returns the popup for the transit time of the target.
      *
      * @return String The popup for the transit time of the target
      */
@@ -186,7 +188,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the set time of the target
+     * Returns the set time of the target.
      *
      * @return String The set time of the target
      */
@@ -200,7 +202,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the popup for the set time of the target
+     * Returns the popup for the set time of the target.
      *
      * @return String The popup for the set time of the target
      */
@@ -214,7 +216,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the best time of the target
+     * Returns the best time of the target.
      *
      * @return String The best time of the target
      */
@@ -228,7 +230,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the maximum altitude of the target
+     * Returns the maximum altitude of the target.
      *
      * @return String The maximum altitude of the target
      */
@@ -242,7 +244,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the popup for the maximum altitude of the target
+     * Returns the popup for the maximum altitude of the target.
      *
      * @return String The popup for the maximum altitude of the target
      */
@@ -256,7 +258,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the highest altitude of the target
+     * Returns the highest altitude of the target.
      *
      * @return String The highest altitude of the target
      */
@@ -270,7 +272,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the month from which the highest altitude is reached
+     * Returns the month from which the highest altitude is reached.
      *
      * @return String Returns the month from which the highest altitude is reached
      */
@@ -284,7 +286,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the month around which the highest altitude is reached
+     * Returns the month around which the highest altitude is reached.
      *
      * @return String Returns the month around which the highest altitude is reached
      */
@@ -298,7 +300,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the month to which the highest altitude is reached
+     * Returns the month to which the highest altitude is reached.
      *
      * @return String Returns the month to which the highest altitude is reached
      */
@@ -326,10 +328,13 @@ class Target extends Model
                     $datestr = Session::get('date');
                     $date = DateTime::createFromFormat('d/m/Y', $datestr);
 
-                    $location = \App\Location::where(
-                        'id',
-                        Auth::user()->stdlocation
-                    )->first();
+                    if ($this->_location == null) {
+                        $this->_location = \App\Location::where(
+                            'id',
+                            Auth::user()->stdlocation
+                        )->first();
+                    }
+                    $location = $this->_location;
                     $objAstroCalc = new \App\Libraries\AstroCalc(
                         $date,
                         $location->latitude,
@@ -621,6 +626,13 @@ class Target extends Model
         if (isset($this->_ephemerides)) {
             return $this->_ephemerides;
         } else {
+            if ($this->_location == null) {
+                $this->_location = \App\Location::where(
+                    'id',
+                    Auth::user()->stdlocation
+                )->first();
+            }
+            $location = $this->_location;
             $cnt = 0;
             for ($i = 1; $i < 13; $i++) {
                 for ($j = 1; $j < 16; $j = $j + 14) {
@@ -630,10 +642,6 @@ class Target extends Model
                     $date = \Carbon\Carbon::createFromFormat('d/m/Y', $datestr);
                     $ephemerides[$cnt]['date'] = $date;
 
-                    $location = \App\Location::where(
-                        'id',
-                        Auth::user()->stdlocation
-                    )->first();
                     $astroCalc = new \App\Libraries\AstroCalc(
                         $date,
                         $location->latitude,
@@ -827,9 +835,13 @@ class Target extends Model
         return ($number % 2 ? _i('mid') : _i('begin'))
                 . ' '
                 . date(
-                    "M", mktime(
-                        0, 0, 0,
-                        $number / 2, 1
+                    'M',
+                    mktime(
+                        0,
+                        0,
+                        0,
+                        $number / 2,
+                        1
                     )
                 );
     }

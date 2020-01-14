@@ -50,6 +50,16 @@ class TargetName extends Model
      */
     public static function getCatalogs()
     {
+        /*
+        // First get the deepsky catalogs
+        $catalogs = TargetName::where('catalog', '!=', '')
+            ->select('catalog')->distinct()->get();
+
+        // We add the comets, planets, Moon, Moon craters, ..., Sun, ...
+        $catalogs->push('{"catalog":"Solar System"}');
+        dd($catalogs);
+
+        return $catalogs;*/
         return TargetName::where('catalog', '!=', '')
             ->select('catalog')->distinct()->get();
     }
@@ -86,6 +96,7 @@ class TargetName extends Model
                     . $targetname->altname;
             }
         }
+
         return $alternativeNames;
     }
 }
