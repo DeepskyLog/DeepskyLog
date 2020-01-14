@@ -56,9 +56,8 @@
                 $sun_info_down = date_sun_info($date->getTimestamp(), $location->latitude, $location->longitude);
                 $sun_info_up = date_sun_info($nextdate->getTimestamp(), $location->latitude, $location->longitude);
 
-                function printDate($riseset) {
+                function printDate($riseset, $location) {
                     if ($riseset > 1) {
-                        $location = \App\Location::where('id', Auth::user()->stdlocation)->first();
                         $tz = new DateTimeZone($location->timezone);
 
                         $date = new DateTime("@" . $riseset);
@@ -72,12 +71,12 @@
 
             <td>
                 @php
-                    printDate($sun_info_down["sunset"]);
+                    printDate($sun_info_down["sunset"], $location);
                 @endphp
             </td>
             <td>
                 @php
-                    printDate($sun_info_up["sunrise"]);
+                    printDate($sun_info_up["sunrise"], $location);
                 @endphp
             </td>
 	    </tr>
@@ -85,12 +84,12 @@
             <td>{{ _i("Naut.") }}</td>
             <td>
                 @php
-                    printDate($sun_info_down["nautical_twilight_end"]);
+                    printDate($sun_info_down["nautical_twilight_end"], $location);
                 @endphp
             </td>
             <td>
                 @php
-                    printDate($sun_info_up["nautical_twilight_begin"]);
+                    printDate($sun_info_up["nautical_twilight_begin"], $location);
                 @endphp
 
             </td>
@@ -99,12 +98,12 @@
             <td>{{ _i("Astro.") }}</td>
             <td>
                 @php
-                    printDate($sun_info_down["astronomical_twilight_end"]);
+                    printDate($sun_info_down["astronomical_twilight_end"], $location);
                 @endphp
             </td>
             <td>
                 @php
-                    printDate($sun_info_up["astronomical_twilight_begin"]);
+                    printDate($sun_info_up["astronomical_twilight_begin"], $location);
                 @endphp
 
             </td>
