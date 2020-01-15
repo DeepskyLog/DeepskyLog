@@ -1,10 +1,16 @@
-name: PHP CS Inspections
-on: [push]
+name: Run PHPCS on pull requests
+
+on: pull_request
 
 jobs:
-  phpunit:
-    name: PhpCS
+  phpcs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: rtCamp/rtCamp/action-phpcs-inspection@master
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+    - uses: docker://rtcamp/action-phpcs-code-review:v2.0.0
+      env:
+        GH_BOT_TOKEN: ${{ 2f7d912a6a51a17bd1031550e26a1f414a89f7c5 }}
+      with:
+        args: "WordPress,WordPress-Core,WordPress-Docs"
