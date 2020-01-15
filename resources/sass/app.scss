@@ -1,0 +1,41 @@
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+// Select2
+@import '~select2/dist/css/select2';
+@import '~select2-bootstrap4-theme/dist/select2-bootstrap4.css';
+
+// Fontawesome
+@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '~@fortawesome/fontawesome-free/scss/regular.scss';
+@import '~@fortawesome/fontawesome-free/scss/solid.scss';
+@import '~@fortawesome/fontawesome-free/scss/brands.scss';
+
+// jquery-ui
+@import '~jquery-ui/themes/base/all.css';
+
+// DeepskyLog
+@import './deepskylog.css';
+
+// jquery datatables
+@import '~datatables.net-bs4/css/dataTables.bootstrap4.css';
+@import '~datatables.net-buttons-dt/css/buttons.dataTables.css';
+@import '~datatables.net-colreorder-bs4/css/colReorder.bootstrap4.min.css';
+
+// password strenght calculator
+@import '~password-strength-meter/dist/password.min.css';
+
+// bootstrap-fileinput
+@import '~bootstrap-fileinput/css/fileinput.min.css';
+
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
