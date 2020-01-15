@@ -1,4 +1,4 @@
-# ToDos for DeepskyLog.laravel
+# ToDos for DeepskyLog
 
 ## Write tests!!!
 
