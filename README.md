@@ -18,8 +18,9 @@
 
 ## Want to contribute?
 
+* Read our [Code of Conduct](CODE_OF_CONDUCT.md).
 * DeepskyLog is always looking for amateur astronomers to help improving DeepskyLog. You don't need to be a programmer to help us! We are also looking for Deep-sky database maintainers, translators, testers, bug triaging, documentation writers, ... As it is unfortunately not always clear to observe, amateur astronomers can still do astronomy by helping out the DeepskyLog team! Be part of the DeepskyLog community today!
-* If you want to help us improve, take a minute to read the [Contribution Guidelines](/CONTRIBUTING.md) first.
+* If you want to help us improve, take a minute to read the [Contribution Guidelines](CONTRIBUTING.md) first.
 * If you find a problem with the behavior, database or translation of DeepskyLog, please [open an issue](https://github.com/DeepskyLog/DeepskyLog/issues/new/choose).
 
 ## Credits & Sponsors

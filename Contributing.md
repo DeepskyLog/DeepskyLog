@@ -13,6 +13,7 @@ Here's what you can do to help:
 + Be part of the Social team! We have accounts on [twitter](https://twitter.com/deepskylog), [facebook](https://www.facebook.com/deepskylog) and [instagram](https://www.instagram.com/deepskylog.be/).
 + Help writing the documentation in our [wiki](https://github.com/DeepskyLog/DeepskyLog/wiki/Manual).
 + Whenever you have questions on how to help, do not hesitate to contact us. We can set up one-to-one sessions to get you started.
++ Please always be polite and helpfull. We are developing and maintaining DeepskyLog in our free time. See our [code of conduct](CODE_OF_CONDUCT.md).
 
 ## Code submission and pull request guidelines
 
