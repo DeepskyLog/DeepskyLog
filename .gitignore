@@ -2,3 +2,8 @@
 .metadata/
 docs/
 .vscode/launch.json
+.env*
+bootstrap/
+vendor/
+storage/
+node_modules/
