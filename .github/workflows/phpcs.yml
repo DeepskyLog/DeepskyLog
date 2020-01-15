@@ -11,6 +11,6 @@ jobs:
         ref: ${{ github.event.pull_request.head.sha }}
     - uses: docker://rtcamp/action-phpcs-code-review:v2.0.0
       env:
-        GH_BOT_TOKEN: ${{ 2f7d912a6a51a17bd1031550e26a1f414a89f7c5 }}
+        GH_BOT_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
       with:
         args: "WordPress,WordPress-Core,WordPress-Docs"
