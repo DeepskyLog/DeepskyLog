@@ -2,6 +2,8 @@
 
 DeepskyLog is a web application to prepare, log and compare Deep-Sky and comet observations.
 
+All development is done in the [laravel branch](https://github.com/DeepskyLog/DeepskyLog/tree/laravel).
+
 Observers can use the website at [https://www.deepskylog.org](https://www.deepskylog.org/)
 
 ## Help DeepskyLog
