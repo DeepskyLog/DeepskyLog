@@ -15,6 +15,10 @@ Here's what you can do to help:
 + Whenever you have questions on how to help, do not hesitate to contact us. We can set up one-to-one sessions to get you started.
 + Please always be polite and helpfull. We are developing and maintaining DeepskyLog in our free time. See our [code of conduct](CODE_OF_CONDUCT.md).
 
+## Setting up a development environment
+
++ See the [documentation on how to set up the development environment](documentation/Development.md)
+
 ## Code submission and pull request guidelines
 
 + Your code will be checked for clean code using [php codesniffer](https://github.com/squizlabs/PHP_CodeSniffer).

@@ -31,7 +31,7 @@
 
 ## The DeepskyLog team
 
-The first version of DeepskyLog was developed in 2004 by [Wim De Meester](https://github.com/WimDeMeester) and [Jan Vanautgaerden](https://github.com/orgs/DeepskyLog/people/janvanautgaerden). Over the years, a lot of developers helped in making DeepskyLog what it is today. 
+The first version of DeepskyLog was developed in 2004 by [Wim De Meester](https://github.com/WimDeMeester) and [Jan Vanautgaerden](https://github.com/orgs/DeepskyLog/people/janvanautgaerden). Over the years, a lot of developers helped in making DeepskyLog what it is today.
 
 The responsibilities in the DeepskyLog team are:
 
