@@ -86,4 +86,4 @@ php artisan migrate
 php artisan db:seed
 ```
 
-+ DeepskyLog can be found at http://localhost:8000/
++ DeepskyLog can be found at http://deepskylog.test/
