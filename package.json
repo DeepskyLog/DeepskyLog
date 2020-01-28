@@ -43,7 +43,7 @@
         "password-strength-meter": "^1.2.2",
         "pdfmake": "^0.1.63",
         "popper": "^1.0.1",
-        "select2": "^4.0.12",
+        "select2": "^4.0.13",
         "select2-bootstrap4-theme": "^1.0.0"
     }
 }

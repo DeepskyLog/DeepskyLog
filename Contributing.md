@@ -51,4 +51,4 @@ If you spot a mistake in one of the translations, please let us know or change t
 
 If you are interested in adding a new language to [DeepskyLog](https://www.deepskylog.org), please contact us, then we can help to get you started.
 
-We don't have any Swedish and Spanish speakers in the DeepskyLog team, so most of the translation is done using google translate and bing. We really could use a native speaker to make the translation better!
+We don't have any native Swedish and Spanish speakers in the DeepskyLog team, so most of the translation is done using google translate and bing. We really could use a native speaker to make the translation better!
