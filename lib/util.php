@@ -4623,6 +4623,11 @@ class Utils
                 return 'deepsky/content/newObservationXml.php';
             }
             break;
+        case 'add_xml_invalid':
+            if ($loggedUser) {
+                return 'deepsky/content/newObservationXmlInvalid.php';
+            }
+            break;
         case 'add_object':
             if ($loggedUser) {
                 return 'deepsky/content/new_object.php';
