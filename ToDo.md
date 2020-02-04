@@ -33,6 +33,8 @@
   + [ ] Comets
     + [ ] Let normal users add new comets
     + [ ] Download comets automatically from the internet
+  + [ ] Asteroids
+  + [ ] Satellites
   + [ ] Deepsky
 + [ ] Menu items:
   + [ ] Quick pick object
