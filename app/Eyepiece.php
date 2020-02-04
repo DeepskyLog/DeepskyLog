@@ -33,7 +33,7 @@ class Eyepiece extends Model implements HasMedia
 
     protected $fillable = [
         'user_id', 'name', 'focalLength', 'apparentFOV',
-        'maxFocalLength', 'active'
+        'maxFocalLength', 'active', 'brand', 'type'
     ];
 
     /**
@@ -70,7 +70,12 @@ class Eyepiece extends Model implements HasMedia
     public function genericname()
     {
         if ($this->brand != '') {
-            return $this->focalLength . ' mm ' . $this->brand . ' ' . $this->type;
+            if ($this->maxFocalLength != '') {
+                return $this->focalLength . '-' . $this->maxFocalLength . 'mm '
+                    . $this->brand . ' ' . $this->type;
+            } else {
+                return $this->focalLength . 'mm ' . $this->brand . ' ' . $this->type;
+            }
         } else {
             return $this->name;
         }

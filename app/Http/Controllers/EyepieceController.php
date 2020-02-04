@@ -124,6 +124,8 @@ class EyepieceController extends Controller
             [
                 'user_id' => 'required',
                 'name' => 'required|min:6',
+                'brand' => 'required',
+                'type' => 'required',
                 'focalLength' => 'required|numeric|gte:1|lte:99',
                 'apparentFOV' => 'required|numeric|gte:20|lte:150',
             ]
@@ -194,6 +196,8 @@ class EyepieceController extends Controller
                 [
                     'user_id' => 'required',
                     'name' => 'required|min:6',
+                    'brand' => 'required',
+                    'type' => 'required',
                     'focalLength' => 'required|numeric|gte:1|lte:99',
                     'apparentFOV' => 'required|numeric|gte:20|lte:150',
                 ]
@@ -201,6 +205,8 @@ class EyepieceController extends Controller
 
             $eyepiece->update(['focalLength' => $request->get('focalLength')]);
             $eyepiece->update(['name' => $request->get('name')]);
+            $eyepiece->update(['brand' => $request->get('brand')]);
+            $eyepiece->update(['type' => $request->get('type')]);
             $eyepiece->update(['apparentFOV' => $request->get('apparentFOV')]);
             $eyepiece->update(['maxFocalLength' => $request->get('maxFocalLength')]);
 

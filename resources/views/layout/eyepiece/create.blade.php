@@ -48,6 +48,11 @@
             <input type="text" required placeholder="Televue 31mm Nagler" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30" value="@if ($eyepiece->name){{ $eyepiece->name }}@else{{ old('name') }}@endif" />
         </div>
 
+        <div class="form-group genericname">
+            <label for="name">{{ _i("Generic Name") }}</label>
+            <input type="text" class="form-control" readonly maxlength="64" name="genericname" size="30" />
+        </div>
+
         <div class="form-group focalLength">
             <label for="name">{{ _i("Focal length") }}</label>
             <div class="input-group mb-3">
@@ -76,6 +81,16 @@
                     <span class="input-group-text" id="name-addon">mm</span>
                 </div>
             </div>
+        </div>
+
+        <div class="form-group brand">
+            <label for="brand">{{ _i("Brand") }}</label>
+            <input type="text" required placeholder="Televue" class="form-control {{ $errors->has('brand') ? 'is-invalid' : '' }}" maxlength="64" name="brand" size="30" value="@if ($eyepiece->brand){{ $eyepiece->brand }}@else{{ old('brand') }}@endif" />
+        </div>
+
+        <div class="form-group type">
+            <label for="type">{{ _i("Type") }}</label>
+            <input type="text" required placeholder="Nagler" class="form-control {{ $errors->has('type') ? 'is-invalid' : '' }}" maxlength="64" name="type" size="30" value="@if ($eyepiece->type){{ $eyepiece->type }}@else{{ old('type') }}@endif" />
         </div>
 
         {!! _i('Upload a picture of your eyepiece.') !!}
@@ -147,5 +162,21 @@
         }
     );
 
+    $('.brand, .type, .focalLength, .maxFocalLength').on('input', function() {
+        updateGenericName();
+    });
+
+    $(document).ready(function() {
+        updateGenericName();
+    });
+
+    function updateGenericName() {
+        if ($('.maxFocalLength input').val() != '') {
+            $genericname = $('.focalLength input').val() + "-" + $('.maxFocalLength input').val() +  "mm " + $('.brand input').val() + " " + $('.type input').val();
+        } else {
+            $genericname = $('.focalLength input').val() + "mm " + $('.brand input').val() + " " + $('.type input').val();
+        }
+        $(".genericname input").val($genericname);
+    }
 </script>
 @endpush
