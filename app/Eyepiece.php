@@ -63,6 +63,20 @@ class Eyepiece extends Model implements HasMedia
     }
 
     /**
+     * Returns the generic name of the eyepiece
+     *
+     * @return String The generic name of the eyepiece.
+     */
+    public function genericname()
+    {
+        if ($this->brand != '') {
+            return $this->focalLength . ' mm ' . $this->brand . ' ' . $this->type;
+        } else {
+            return $this->name;
+        }
+    }
+
+    /**
      * Adds the link to the observer.
      *
      * @return BelongsTo the observer this lens belongs to
