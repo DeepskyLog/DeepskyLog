@@ -83,9 +83,20 @@
             </div>
         </div>
 
-        <div class="form-group brand">
-            <label for="brand">{{ _i("Brand") }}</label>
-            <input type="text" required placeholder="Televue" class="form-control {{ $errors->has('brand') ? 'is-invalid' : '' }}" maxlength="64" name="brand" size="30" value="@if ($eyepiece->brand){{ $eyepiece->brand }}@else{{ old('brand') }}@endif" />
+        <div class="form-group brandInput">
+            <label for="brandInput">{{ _i("Brand") }}</label>
+            <select class="form-control brandSelect" name="brand" id="brand">
+                @php
+                    if ($eyepiece->brand) {
+                        $selected = $eyepiece->brand;
+                    } else {
+                        old('type');
+                    }
+                @endphp
+                @foreach (\App\EyepieceBrand::all()->pluck('brand')->sort() as $brand)
+                    <option value="{{ $brand }}" {{ ($selected == $brand ? "selected":"") }}>{{ $brand }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="form-group type">
@@ -109,6 +120,13 @@
 @push('scripts')
 
 <script>
+
+    $(document).ready(function() {
+        $(".brandSelect").select2({
+            tags: true
+        });
+    });
+
     $(document).ready(function() {
         $("#eyepiece").select2({
             ajax: {
@@ -162,7 +180,11 @@
         }
     );
 
-    $('.brand, .type, .focalLength, .maxFocalLength').on('input', function() {
+    $('.type, .focalLength, .maxFocalLength').on('input', function() {
+        updateGenericName();
+    });
+
+    $('.brandSelect').on('input', function() {
         updateGenericName();
     });
 
@@ -172,9 +194,9 @@
 
     function updateGenericName() {
         if ($('.maxFocalLength input').val() != '') {
-            $genericname = $('.focalLength input').val() + "-" + $('.maxFocalLength input').val() +  "mm " + $('.brand input').val() + " " + $('.type input').val();
+            $genericname = $('.focalLength input').val() + "-" + $('.maxFocalLength input').val() +  "mm " + $('.brandInput option:selected').text() + " " + $('.type input').val();
         } else {
-            $genericname = $('.focalLength input').val() + "mm " + $('.brand input').val() + " " + $('.type input').val();
+            $genericname = $('.focalLength input').val() + "mm " + $('.brandInput :selected').text() + " " + $('.type input').val();
         }
         $(".genericname input").val($genericname);
     }

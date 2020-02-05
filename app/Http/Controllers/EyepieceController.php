@@ -203,6 +203,19 @@ class EyepieceController extends Controller
                 ]
             );
 
+            // Check if brand is already in the database.
+            if (\App\EyepieceBrand::where(
+                'brand', $request->get('brand')
+            )->get()->isEmpty()
+            ) {
+                // Add the new brand to the database
+                \App\EyepieceBrand::create(
+                    [
+                        'brand' => $request->get('brand'),
+                    ]
+                );
+            }
+
             $eyepiece->update(['focalLength' => $request->get('focalLength')]);
             $eyepiece->update(['name' => $request->get('name')]);
             $eyepiece->update(['brand' => $request->get('brand')]);
