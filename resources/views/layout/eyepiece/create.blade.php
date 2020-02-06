@@ -48,6 +48,11 @@
             <input type="text" required placeholder="Televue 31mm Nagler" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30" value="@if ($eyepiece->name){{ $eyepiece->name }}@else{{ old('name') }}@endif" />
         </div>
 
+        <div class="form-group genericname">
+            <label for="name">{{ _i("Generic Name") }}</label>
+            <input type="text" class="form-control" readonly maxlength="64" name="genericname" size="30" />
+        </div>
+
         <div class="form-group focalLength">
             <label for="name">{{ _i("Focal length") }}</label>
             <div class="input-group mb-3">
@@ -78,6 +83,39 @@
             </div>
         </div>
 
+        <div class="form-group brandInput">
+            <label for="brandInput">{{ _i("Brand") }}</label>
+            <select class="form-control brandSelect" name="brand" id="brand">
+                @php
+                    if ($eyepiece->brand) {
+                        $selected = $eyepiece->brand;
+                    } else {
+                        $selected = old('brand');
+                    }
+                @endphp
+                <option value=""></option>
+                @foreach (\App\EyepieceBrand::all()->pluck('brand')->sort() as $brand)
+                    <option value="{{ $brand }}" {{ ($selected == $brand ? "selected":"") }}>{{ $brand }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="form-group typeInput">
+            <label for="typeInput">{{ _i("Type") }}</label>
+            <select class="form-control typeSelect" name="type" id="type">
+                @php
+                    if ($eyepiece->type) {
+                        $selected = $eyepiece->type;
+                    } else {
+                        old('type');
+                    }
+                @endphp
+                @foreach (\App\EyepieceType::where('brand', $eyepiece->brand)->pluck('type')->sort() as $type)
+                    <option value="{{ $type }}" {{ ($selected == $type ? "selected":"") }}>{{ $type }}</option>
+                @endforeach
+            </select>
+        </div>
+
         {!! _i('Upload a picture of your eyepiece.') !!}
 
         <input id="picture" name="picture" type="file">
@@ -94,6 +132,18 @@
 @push('scripts')
 
 <script>
+    $(document).ready(function() {
+        $(".brandSelect").select2({
+            tags: true
+        });
+    });
+
+    $(document).ready(function() {
+        $(".typeSelect").select2({
+            tags: true
+        });
+    });
+
     $(document).ready(function() {
         $("#eyepiece").select2({
             ajax: {
@@ -147,5 +197,55 @@
         }
     );
 
+    $('.focalLength, .maxFocalLength').on('input', function() {
+        updateGenericName();
+    });
+
+    $('.brandSelect').on('input', function() {
+        updateTypes($('.brandInput option:selected').text());
+        updateGenericName();
+    });
+
+    $('.typeSelect').on('input', function() {
+        updateGenericName();
+    });
+
+    $(document).ready(function() {
+        updateGenericName();
+    });
+
+    function updateGenericName() {
+        if (!$('.typeInput :selected').val()) {
+            $type = '';
+        } else {
+            $type = $('.typeInput :selected').val();
+        }
+
+        if ($('.maxFocalLength input').val() != '') {
+            $genericname = $('.focalLength input').val() + "-" + $('.maxFocalLength input').val()
+                +  "mm " + $('.brandInput option:selected').text() + " " + $type;
+        } else {
+            $genericname = $('.focalLength input').val() + "mm " + $('.brandInput :selected').text()
+                + " " + $type;
+        }
+        $(".genericname input").val($genericname);
+    }
+
+    function updateTypes(brand) {
+        // Remove all options of select2
+        $('.typeSelect').empty();
+
+        // Read all correct options for the new brand using JSON
+        $.getJSON('/getEyepieceTypeJson/' + brand, function(data) {
+            var newOption = new Option('', '', false, false);
+            $('.typeSelect').append(newOption).trigger('change');
+            for (i in data) {
+                // Add the new options to select2
+                var newOption = new Option(data[i], data[i], false, false);
+                $('.typeSelect').append(newOption).trigger('change');
+            }
+        });
+
+    }
 </script>
 @endpush

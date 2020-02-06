@@ -91,6 +91,8 @@ Route::get('/eyepiece/{eyepiece}', 'EyepieceController@show')->name('eyepiece.sh
 
 Route::get('/getEyepieceJson/{id}', 'EyepieceController@getEyepieceJson');
 
+Route::get('/getEyepieceTypeJson/{brand}', 'EyepieceController@getEyepieceTypeJson');
+
 Route::get('/eyepiece/{eyepiece}/getImage', 'EyepieceController@getImage')
     ->name('eyepiece.getImage');
 

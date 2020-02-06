@@ -57,12 +57,35 @@ class DeepskyLogChecks
                 )->warning();
             }
 
+            // Check if there are eyepieces without a brand or a type
+            $eyepieces = Auth::user()->eyepieces;
+            $eyepieceToCheck = '';
+            $eyepieceId = 0;
+
+            foreach ($eyepieces as $eyepiece) {
+                if ($eyepiece->brand == '' || $eyepiece->type == '') {
+                    $eyepieceToCheck = $eyepiece->name;
+                    $eyepieceId = $eyepiece->id;
+                }
+            }
+            if ($eyepieceToCheck != '') {
+                laraflash(
+                    _i(
+                        'At least one of your eyepieces (%s) does not have a brand or a type.
+                        Please add the needed information in the %seyepiece page%s',
+                        '<a href="/eyepiece/' . $eyepieceId . '">'
+                        . $eyepieceToCheck . '</a>',
+                        '<a href="/eyepiece/">', '</a>.'
+                    )
+                )->warning();
+            }
+
             // Check if there are any instruments
             if (count(Auth::user()->instruments) === 0) {
                 laraflash(
                     _i(
-                        'DeepskyLog will be able to calculate the visibility of objects when you %sadd some instruments%s.',
-                        '<a href="/instrument/create">', '</a>'
+                        'DeepskyLog will be able to calculate the visibility of objects when you %sadd some instruments%s',
+                        '<a href="/instrument/create">', '</a>.'
                     )
                 )->warning();
             } else {

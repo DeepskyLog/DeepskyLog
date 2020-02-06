@@ -17,6 +17,11 @@
     </tr>
 
     <tr>
+        <td>{{ _i("Generic name") }}</td>
+        <td>{{ $eyepiece->genericname() }}</td>
+    </tr>
+
+    <tr>
         <td>{{ _i("Focal Length") }}</td>
         <td>{{ $eyepiece->focalLength }} mm</td>
     </tr>
@@ -32,6 +37,16 @@
             <td>{{ $eyepiece->maxFocalLength }} mm</td>
         </tr>
     @endif
+
+    <tr>
+        <td>{{ _i("Brand") }}</td>
+        <td>{{  $eyepiece->brand }}</td>
+    </tr>
+
+    <tr>
+        <td>{{ _i("Type") }}</td>
+        <td>{{  $eyepiece->type }}</td>
+    </tr>
 
     <tr>
         <td>{{ _i("Owner") }}</td>
