@@ -16,6 +16,10 @@
 
 + [ ] CODE CLIMATE: <https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication>
 
+## Authentication
+
++ [ ] Issue-421: Check possibility to log in using openID
+
 ## Targets
 
 + [ ] In the catalogs page, search for comets, planets, ...
