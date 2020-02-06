@@ -90,18 +90,30 @@
                     if ($eyepiece->brand) {
                         $selected = $eyepiece->brand;
                     } else {
-                        old('type');
+                        $selected = old('brand');
                     }
                 @endphp
+                <option value=""></option>
                 @foreach (\App\EyepieceBrand::all()->pluck('brand')->sort() as $brand)
                     <option value="{{ $brand }}" {{ ($selected == $brand ? "selected":"") }}>{{ $brand }}</option>
                 @endforeach
             </select>
         </div>
 
-        <div class="form-group type">
-            <label for="type">{{ _i("Type") }}</label>
-            <input type="text" required placeholder="Nagler" class="form-control {{ $errors->has('type') ? 'is-invalid' : '' }}" maxlength="64" name="type" size="30" value="@if ($eyepiece->type){{ $eyepiece->type }}@else{{ old('type') }}@endif" />
+        <div class="form-group typeInput">
+            <label for="typeInput">{{ _i("Type") }}</label>
+            <select class="form-control typeSelect" name="type" id="type">
+                @php
+                    if ($eyepiece->type) {
+                        $selected = $eyepiece->type;
+                    } else {
+                        old('type');
+                    }
+                @endphp
+                @foreach (\App\EyepieceType::where('brand', $eyepiece->brand)->pluck('type')->sort() as $type)
+                    <option value="{{ $type }}" {{ ($selected == $type ? "selected":"") }}>{{ $type }}</option>
+                @endforeach
+            </select>
         </div>
 
         {!! _i('Upload a picture of your eyepiece.') !!}
@@ -120,9 +132,14 @@
 @push('scripts')
 
 <script>
-
     $(document).ready(function() {
         $(".brandSelect").select2({
+            tags: true
+        });
+    });
+
+    $(document).ready(function() {
+        $(".typeSelect").select2({
             tags: true
         });
     });
@@ -180,11 +197,16 @@
         }
     );
 
-    $('.type, .focalLength, .maxFocalLength').on('input', function() {
+    $('.focalLength, .maxFocalLength').on('input', function() {
         updateGenericName();
     });
 
     $('.brandSelect').on('input', function() {
+        updateTypes($('.brandInput option:selected').text());
+        updateGenericName();
+    });
+
+    $('.typeSelect').on('input', function() {
         updateGenericName();
     });
 
@@ -193,12 +215,37 @@
     });
 
     function updateGenericName() {
-        if ($('.maxFocalLength input').val() != '') {
-            $genericname = $('.focalLength input').val() + "-" + $('.maxFocalLength input').val() +  "mm " + $('.brandInput option:selected').text() + " " + $('.type input').val();
+        if (!$('.typeInput :selected').val()) {
+            $type = '';
         } else {
-            $genericname = $('.focalLength input').val() + "mm " + $('.brandInput :selected').text() + " " + $('.type input').val();
+            $type = $('.typeInput :selected').val();
+        }
+
+        if ($('.maxFocalLength input').val() != '') {
+            $genericname = $('.focalLength input').val() + "-" + $('.maxFocalLength input').val()
+                +  "mm " + $('.brandInput option:selected').text() + " " + $type;
+        } else {
+            $genericname = $('.focalLength input').val() + "mm " + $('.brandInput :selected').text()
+                + " " + $type;
         }
         $(".genericname input").val($genericname);
+    }
+
+    function updateTypes(brand) {
+        // Remove all options of select2
+        $('.typeSelect').empty();
+
+        // Read all correct options for the new brand using JSON
+        $.getJSON('/getEyepieceTypeJson/' + brand, function(data) {
+            var newOption = new Option('', '', false, false);
+            $('.typeSelect').append(newOption).trigger('change');
+            for (i in data) {
+                // Add the new options to select2
+                var newOption = new Option(data[i], data[i], false, false);
+                $('.typeSelect').append(newOption).trigger('change');
+            }
+        });
+
     }
 </script>
 @endpush

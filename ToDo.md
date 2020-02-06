@@ -16,13 +16,6 @@
 
 + [ ] CODE CLIMATE: <https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication>
 
-## Eyepieces
-
-+ [ ] Bug 398: eyepieces: uniform description
-  + [ ] Add select2 to select one of the existing types or add a new one.
-    + [ ] Different list of types for different brands
-  + [ ] Rewrite the generic name generation in the create / update page for eyepiece types.
-
 ## Targets
 
 + [ ] In the catalogs page, search for comets, planets, ...

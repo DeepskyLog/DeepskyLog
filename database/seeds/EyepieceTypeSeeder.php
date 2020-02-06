@@ -37,6 +37,12 @@ class EyepieceTypeSeeder extends Seeder
         EyepieceType::create(
             [
                 'brand' => 'Televue',
+                'type' => 'Radian'
+            ]
+        );
+        EyepieceType::create(
+            [
+                'brand' => 'Televue',
                 'type' => 'Apollo'
             ]
         );
