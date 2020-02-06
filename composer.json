@@ -17,6 +17,7 @@
         "guzzlehttp/guzzle": "^6.3",
         "janbarasek/php-moon-phase": "^2.0",
         "laravel/framework": "^6.0",
+        "laravel/socialite": "^4.3",
         "laravel/telescope": "^2.0",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^6.0",
