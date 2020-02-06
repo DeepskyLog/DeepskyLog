@@ -38,10 +38,8 @@
 
         <script>
             $(document).ready(function() {
-                $(".selection").select2();
-            });
-            $('.selection').select2({
-                theme: 'bootstrap4',
+                $(".selection").select2({
+                });
             });
 
             $('#defaultInstrument').change(function() {

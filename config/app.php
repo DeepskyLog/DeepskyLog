@@ -55,7 +55,7 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
-    'dslversion' => '2019.laravel',
+    'dslversion' => '2020.laravel',
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

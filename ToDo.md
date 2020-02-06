@@ -4,9 +4,7 @@
 
 ## GitHub
 
-+ Add DeepskyLog.laravel to DeepskyLog as laravel branch
 + Bug triaging
-  + Add 'good first issue' label
 + Test defined GitHub actions
 
 ## Interesting websites
@@ -20,6 +18,7 @@
 
 ## Targets
 
++ [ ] In the catalogs page, search for comets, planets, ...
 + [ ] Details for one object
   + [x] Add contrast information
   + [x] Add rising, setting, transit
@@ -34,6 +33,8 @@
   + [ ] Comets
     + [ ] Let normal users add new comets
     + [ ] Download comets automatically from the internet
+  + [ ] Asteroids
+  + [ ] Satellites
   + [ ] Deepsky
 + [ ] Menu items:
   + [ ] Quick pick object
