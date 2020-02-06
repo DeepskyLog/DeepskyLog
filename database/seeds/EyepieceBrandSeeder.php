@@ -11,6 +11,10 @@ class EyepieceBrandSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        DB::table('eyepiece_brands')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
         EyepieceBrand::create(
             [
                 'brand' => 'Televue',
@@ -36,10 +40,15 @@ class EyepieceBrandSeeder extends Seeder
                 'brand' => 'Pentax',
             ]
         );
-//        EyepieceBrand::create(
-//            [
-//                'name' => 'Celestron',
-//            ]
-//        );
+        EyepieceBrand::create(
+            [
+                'brand' => 'Celestron',
+            ]
+        );
+        EyepieceBrand::create(
+            [
+                'brand' => 'Vixen',
+            ]
+        );
     }
 }

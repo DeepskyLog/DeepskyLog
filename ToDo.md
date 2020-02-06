@@ -19,7 +19,6 @@
 ## Eyepieces
 
 + [ ] Bug 398: eyepieces: uniform description
-  + [ ] Create database for eyepiecetypes
   + [ ] Add select2 to select one of the existing types or add a new one.
     + [ ] Different list of types for different brands
   + [ ] Rewrite the generic name generation in the create / update page for eyepiece types.
