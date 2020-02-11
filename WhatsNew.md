@@ -9,6 +9,7 @@
 + Add country of origin to the settings. This makes it possible to search for all observations done by inhabitants of a country (even if they did a lot of observations in another country)
 + Using local time everywhere in DeepskyLog
 + Registering doesn't need a manual intervention anymore. The newly registered user receives a mail to activate the registration.
++ Logging in and registering can be done using the observers facebook, github, google or twitter account.
 
 ## Technology
 

@@ -49,7 +49,7 @@
         </div>
 
         <div class="form-group genericname">
-            <label for="name">{{ _i("Generic Name") }}</label>
+            <label for="name">{{ _i("Generic name") }}</label>
             <input type="text" class="form-control" readonly maxlength="64" name="genericname" size="30" />
         </div>
 
