@@ -204,3 +204,6 @@ Route::get('/getCatalogData/{catalog}', 'TargetController@getCatalogData');
 Route::get('/getConstellationInfo/{catalog}', 'TargetController@getConstellationInfo');
 Route::get('/getTypeInfo/{catalog}', 'TargetController@getTypeInfo');
 Route::get('/target/{name}', 'TargetController@show');
+
+// Social log in
+Route::get('/redirect/{service}', 'SocialAuthController@redirect');
