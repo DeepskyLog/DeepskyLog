@@ -121,16 +121,7 @@ class InstrumentController extends Controller
     {
         $request['user_id'] = auth()->id();
 
-        $validated = request()->validate(
-            [
-                'user_id' => 'required',
-                'name' => 'required|min:6',
-                'type' => 'required',
-                'diameter' => 'required|numeric|gt:0',
-                'fd' => 'gte:1',
-                'fixedMagnification' => 'gte:0'
-            ]
-        );
+        $validated = $this->validateInput($request);
 
         $instrument = Instrument::create($validated);
 
@@ -150,6 +141,27 @@ class InstrumentController extends Controller
 
         // View the page with all instruments for the user
         return redirect('/instrument');
+    }
+
+    /**
+     * Validate the values of the form.
+     *
+     * @param \Illuminate\Http\Request $request The request with all information
+     *
+     * @return \Illuminate\Http\Request The validated request
+     */
+    public function validateInput(Request $request)
+    {
+        return $request->validate(
+            [
+                'user_id' => 'required',
+                'name' => 'required|min:6',
+                'type' => 'required',
+                'diameter' => 'required|numeric|gt:0',
+                'fd' => 'gte:1|required_without_all:fixedMagnification',
+                'fixedMagnification' => 'gte:0|required_without_all:fd'
+            ]
+        );
     }
 
     /**
@@ -197,16 +209,7 @@ class InstrumentController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('type')) {
-            request()->validate(
-                [
-                    'user_id' => 'required',
-                    'name' => 'required|min:6',
-                    'type' => 'required',
-                    'diameter' => 'required|numeric|gt:0',
-                    'fd' => 'gte:1',
-                    'fixedMagnification' => 'gte:0'
-                ]
-            );
+            $this->validateInput($request);
 
             $instrument->update(['type' => $request->get('type')]);
             $instrument->update(['name' => $request->get('name')]);
