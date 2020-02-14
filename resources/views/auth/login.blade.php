@@ -54,6 +54,18 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <div class="col-md-6 offset-md-4">
+                                {{ _i('or log in using') }}
+                            </div>
+                            <div class="col-md-8 offset-md-2">
+                                <a class="btn btn-light" href="redirect/google"><i class="fab fa-google"></i>&nbsp;Google</a>
+                                <a class="btn btn-light" href="redirect/twitter"><i class="fab fa-twitter"></i>&nbsp;Twitter</a>
+                                <a class="btn btn-light" href="redirect/GitHub"><i class="fab fa-github"></i>&nbsp;GitHub</a>
+                                <a class="btn btn-light" href="redirect/facebook"><i class="fab fa-facebook"></i>&nbsp;Facebook</a>
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

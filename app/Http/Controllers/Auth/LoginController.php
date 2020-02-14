@@ -18,6 +18,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Xinax\LaravelGettext\Facades\LaravelGettext;
 use Illuminate\Http\Request;
+use Socialite;
 
 /**
  * Logs in the user, sets the correct language and redirects to the home page.
@@ -97,7 +98,8 @@ class LoginController extends Controller
         $email = $this->username();
 
         return filter_var(
-            $request->get($email), FILTER_VALIDATE_EMAIL
+            $request->get($email),
+            FILTER_VALIDATE_EMAIL
         ) ? $email : 'username';
     }
 
@@ -106,15 +108,13 @@ class LoginController extends Controller
      *
      * @param Request $request The request
      *
-     * @return void
      */
     protected function validateLogin(Request $request)
     {
         $field = $this->field($request);
 
         $messages = [
-            "{$this->username()}.exists" =>
-            _i('The account you are trying to login is not registered or it has been disabled.'),
+            "{$this->username()}.exists" => _i('The account you are trying to login is not registered or it has been disabled.'),
         ];
 
         $this->validate(
@@ -122,13 +122,14 @@ class LoginController extends Controller
             [
                 $this->username() => "required|exists:users,{$field}",
                 'password' => 'required',
-            ], $messages
+            ],
+            $messages
         );
     }
 
     /**
      * Overwrite default login method to help migrate viewers to using
-     * bcrypt encrypted passwords
+     * bcrypt encrypted passwords.
      *
      * @param Request $request The request
      *
@@ -153,8 +154,9 @@ class LoginController extends Controller
         $email = $this->username();
 
         $input = filter_var(
-            $request->get($email), FILTER_VALIDATE_EMAIL
-        ) ? $email : "username";
+            $request->get($email),
+            FILTER_VALIDATE_EMAIL
+        ) ? $email : 'username';
 
         if ($input == 'username') {
             $user = \App\User::where('username', $request->input('email'))->first();
@@ -182,5 +184,13 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);
+    }
+
+    public function handleProviderCallback($service)
+    {
+        $user = Socialite::with($service)->user();
+
+        print $user->name;
+        dd($user->name);
     }
 }
