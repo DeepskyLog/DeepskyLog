@@ -158,8 +158,8 @@ class InstrumentController extends Controller
                 'name' => 'required|min:6',
                 'type' => 'required',
                 'diameter' => 'required|numeric|gt:0',
-                'fd' => 'gte:1|required_without_all:fixedMagnification',
-                'fixedMagnification' => 'gte:0|required_without_all:fd'
+                'fd' => 'gte:1|required_without:fixedMagnification',
+                'fixedMagnification' => 'gte:0|required_without:fd'
             ]
         );
     }
