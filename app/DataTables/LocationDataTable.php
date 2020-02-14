@@ -150,7 +150,7 @@ class LocationDataTable extends DataTable
      */
     protected function getMyParameters()
     {
-        $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.19/i18n/'
+        $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
             . \PeterColes\Languages\LanguagesFacade::lookup(
                 [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'

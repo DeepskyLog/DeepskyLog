@@ -33,7 +33,7 @@ class FilterDataTable extends DataTable
     /**
      * Make the correct ajax call.
      *
-     * @return datatables The Correct ajax call.
+     * @return datatables the Correct ajax call
      */
     public function ajax()
     {
@@ -41,7 +41,8 @@ class FilterDataTable extends DataTable
             $model = Filter::with('user')->select('filters.*');
         } else {
             $model = Filter::where(
-                'user_id', auth()->user()->id
+                'user_id',
+                auth()->user()->id
             )->with('user')->select('filters.*');
         }
 
@@ -52,12 +53,14 @@ class FilterDataTable extends DataTable
                 '<a href="/filter/{{ $id }}">{{ $name }}</a>'
             )
             ->editColumn(
-                'type', function ($filter) {
+                'type',
+                function ($filter) {
                     return $filter->typeName();
                 }
             )
             ->editColumn(
-                'color', function ($filter) {
+                'color',
+                function ($filter) {
                     return $filter->colorName();
                 }
             )
@@ -81,7 +84,8 @@ class FilterDataTable extends DataTable
                  </form>'
             )
             ->addColumn(
-                'delete', '<form method="POST" action="/filter/{{ $id }}">
+                'delete',
+                '<form method="POST" action="/filter/{{ $id }}">
                             @method("DELETE")
                             @csrf
                             <button type="button" class="btn btn-sm btn-link" onClick="this.form.submit()">
@@ -113,13 +117,14 @@ class FilterDataTable extends DataTable
      */
     protected function getMyParameters()
     {
-        $language = array("url"=>"http://cdn.datatables.net/plug-ins/1.10.19/i18n/"
+        $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
             . \PeterColes\Languages\LanguagesFacade::lookup(
-            [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
-            'en'
-        )->first() . ".json");
+                [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
+                'en'
+            )->first() . '.json'];
         $mypars = $this->getBuilderParameters();
-        $mypars["language"] = $language;
+        $mypars['language'] = $language;
+
         return $mypars;
     }
 

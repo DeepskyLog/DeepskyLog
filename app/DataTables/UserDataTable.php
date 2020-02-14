@@ -33,7 +33,7 @@ class UserDataTable extends DataTable
     /**
      * Make the correct ajax call.
      *
-     * @return datatables The Correct ajax call.
+     * @return datatables the Correct ajax call
      */
     public function ajax()
     {
@@ -49,11 +49,13 @@ class UserDataTable extends DataTable
                 'email',
                 '<a href="mailto:{{ $email }}">{{ $email }}</a>'
             )->editColumn(
-                'created_at', function ($user) {
+                'created_at',
+                function ($user) {
                     return date('F d, Y H:i', strtotime($user->created_at));
                 }
             )->addColumn(
-                'delete', '<form method="POST" action="/users/{{ $id }}">
+                'delete',
+                '<form method="POST" action="/users/{{ $id }}">
                             @method("DELETE")
                             @csrf
                             <button type="button" class="btn btn-sm btn-link" onClick="this.form.submit()">
@@ -63,19 +65,22 @@ class UserDataTable extends DataTable
             )->addColumn(
                 // TODO: Add the correct number of observations
                 // TODO: Make sortable
-                'observations', function ($user) {
+                'observations',
+                function ($user) {
                     return count($user->lenses);
                 }
             )->addColumn(
                 // TODO: Add the correct number of instruments
                 // TODO: Make sortable
-                'instruments', function ($user) {
+                'instruments',
+                function ($user) {
                     return count($user->lenses);
                 }
             )->addColumn(
                 // TODO: Add the correct number of lists
                 // TODO: Make sortable
-                'lists', function ($user) {
+                'lists',
+                function ($user) {
                     return count($user->lenses);
                 }
             )->rawColumns(
@@ -91,6 +96,7 @@ class UserDataTable extends DataTable
     public function query()
     {
         $users = User::select();
+
         return $this->applyScopes($users);
     }
 
@@ -113,14 +119,15 @@ class UserDataTable extends DataTable
      */
     protected function getMyParameters()
     {
-        $language = array("url"=>"http://cdn.datatables.net/plug-ins/1.10.19/i18n/"
+        $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
             . \PeterColes\Languages\LanguagesFacade::lookup(
                 [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first()
-            . ".json");
+            . '.json'];
         $mypars = $this->getBuilderParameters();
-        $mypars["language"] = $language;
+        $mypars['language'] = $language;
+
         return $mypars;
     }
 
