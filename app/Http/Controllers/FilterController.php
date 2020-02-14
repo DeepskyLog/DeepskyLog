@@ -119,15 +119,7 @@ class FilterController extends Controller
     {
         $request['user_id'] = auth()->id();
 
-        $validated = request()->validate(
-            [
-                'user_id' => 'required',
-                'name' => ['required', 'min:6'],
-                'type' => ['required'],
-                'color' => [], 'wratten' => ['max:5'],
-                'schott' => []
-            ]
-        );
+        $validated = $this->validateInput($request);
 
         $filter = Filter::create($validated);
 
@@ -143,6 +135,27 @@ class FilterController extends Controller
 
         // View the page with all filters for the user
         return redirect('/filter');
+    }
+
+
+    /**
+     * Validate the values of the form.
+     *
+     * @param \Illuminate\Http\Request $request The request with all information
+     *
+     * @return \Illuminate\Http\Request The validated request
+     */
+    public function validateInput(Request $request)
+    {
+        return $request->validate(
+            [
+                'user_id' => 'required',
+                'name' => ['required', 'min:6'],
+                'type' => ['required'],
+                'color' => [], 'wratten' => ['max:5'],
+                'schott' => []
+            ]
+        );
     }
 
     /**
@@ -187,14 +200,7 @@ class FilterController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('type')) {
-            request()->validate(
-                [
-                    'user_id' => 'required',
-                    'name' => ['required', 'min:6'],
-                    'type' => ['required'],
-                    'color', 'wratten', 'schott'
-                ]
-            );
+            $this->validateInput($request);
 
             $filter->update(['type' => $request->get('type')]);
             $filter->update(['name' => $request->get('name')]);

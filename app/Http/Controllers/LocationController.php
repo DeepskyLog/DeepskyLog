@@ -121,15 +121,7 @@ class LocationController extends Controller
     {
         $request['user_id'] = auth()->id();
 
-        $validated = request()->validate(
-            [
-                'user_id' => 'required',
-                'name' => 'required|min:4',
-                'latitude' => 'required', 'longitude' => 'required',
-                'country' => 'required',
-                'elevation' => 'required', 'timezone' => 'required'
-            ]
-        );
+        $validated = $this->validateInput($request);
 
         $location = Location::create($validated);
 
@@ -160,6 +152,26 @@ class LocationController extends Controller
 
         // View the page with all locations for the user
         return redirect('/location');
+    }
+
+    /**
+     * Validate the values of the form.
+     *
+     * @param \Illuminate\Http\Request $request The request with all information
+     *
+     * @return \Illuminate\Http\Request The validated request
+     */
+    public function validateInput(Request $request)
+    {
+        return $request->validate(
+            [
+                'user_id' => 'required',
+                'name' => 'required|min:4',
+                'latitude' => 'required', 'longitude' => 'required',
+                'country' => 'required',
+                'elevation' => 'required', 'timezone' => 'required'
+            ]
+        );
     }
 
     /**
@@ -223,15 +235,7 @@ class LocationController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('latitude')) {
-            request()->validate(
-                [
-                    'user_id' => 'required',
-                    'name' => 'required|min:4',
-                    'latitude' => 'required', 'longitude' => 'required',
-                    'country' => 'required',
-                    'elevation' => 'required', 'timezone' => 'required'
-                ]
-            );
+            $this->validateInput($request);
 
             $location->update(['name' => $request->get('name')]);
             $location->update(['latitude' => $request->get('latitude')]);

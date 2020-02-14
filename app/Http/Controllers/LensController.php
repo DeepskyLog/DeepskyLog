@@ -119,13 +119,7 @@ class LensController extends Controller
     {
         $request['user_id'] = auth()->id();
 
-        $validated = request()->validate(
-            [
-                'user_id' => 'required',
-                'name' => ['required', 'min:6'],
-                'factor' => ['required', 'numeric', 'min:0', 'max:10'],
-            ]
-        );
+        $validated = $this->validateInput($request);
 
         $lens = Lens::create($validated);
 
@@ -141,6 +135,24 @@ class LensController extends Controller
 
         // View the page with all lenses for the user
         return redirect('/lens');
+    }
+
+    /**
+     * Validate the values of the form.
+     *
+     * @param \Illuminate\Http\Request $request The request with all information
+     *
+     * @return \Illuminate\Http\Request The validated request
+     */
+    public function validateInput(Request $request)
+    {
+        return $request->validate(
+            [
+                'user_id' => 'required',
+                'name' => ['required', 'min:6'],
+                'factor' => ['required', 'numeric', 'min:0', 'max:10'],
+            ]
+        );
     }
 
     /**
@@ -185,13 +197,7 @@ class LensController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('factor')) {
-            request()->validate(
-                [
-                    'user_id' => 'required',
-                    'name' => ['required', 'min:6'],
-                    'factor' => ['required', 'numeric', 'min:0', 'max:10'],
-                ]
-            );
+            $this->validateInput($request);
 
             $lens->update(['factor' => $request->get('factor')]);
             $lens->update(['name' => $request->get('name')]);

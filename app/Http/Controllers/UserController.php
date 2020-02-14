@@ -293,6 +293,25 @@ class UserController extends Controller
     }
 
     /**
+     * Validate the values of the form.
+     *
+     * @param \Illuminate\Http\Request $request The request with all information
+     *
+     * @return \Illuminate\Http\Request The validated request
+     */
+    public function validateInput(Request $request)
+    {
+        return $request->validate(
+            [
+                'email' => 'required|unique|min:2',
+                'name' => 'required|max:120',
+                'email' => 'required|email|unique:users,email,' . $id,
+                'type' => 'required',
+            ]
+        );
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request The request
@@ -306,15 +325,8 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         //Validate name, email and password fields
-        $this->validate(
-            $request,
-            [
-                'email' => 'required|unique|min:2',
-                'name' => 'required|max:120',
-                'email' => 'required|email|unique:users,email,' . $id,
-                'type' => 'required',
-            ]
-        );
+        $this->validateInput($request);
+
         // Retrieve the name, email and password fields
         $input = $request->only(['username', 'name', 'email', 'type']);
 
