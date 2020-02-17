@@ -5977,16 +5977,16 @@
         },
         {
             "name": "seld/phar-utils",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/phar-utils.git",
-                "reference": "84715761c35808076b00908a20317a3a8a67d17e"
+                "reference": "8800503d56b9867d43d9c303b9cbcc26016e82f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/phar-utils/zipball/84715761c35808076b00908a20317a3a8a67d17e",
-                "reference": "84715761c35808076b00908a20317a3a8a67d17e",
+                "url": "https://api.github.com/repos/Seldaek/phar-utils/zipball/8800503d56b9867d43d9c303b9cbcc26016e82f0",
+                "reference": "8800503d56b9867d43d9c303b9cbcc26016e82f0",
                 "shasum": ""
             },
             "require": {
@@ -6015,9 +6015,9 @@
             ],
             "description": "PHAR file format utilities, for when PHP phars you up",
             "keywords": [
-                "phra"
+                "phar"
             ],
-            "time": "2020-01-13T10:41:09+00:00"
+            "time": "2020-02-14T15:25:33+00:00"
         },
         {
             "name": "sensiolabs/security-checker",
@@ -8993,16 +8993,16 @@
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v4.20.1",
+            "version": "v4.20.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "691427b9d554f5e3467217eaa64483de60de4bec"
+                "reference": "357fb7ac5ad9bcd063e9072d73cb76beeee4b65a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/691427b9d554f5e3467217eaa64483de60de4bec",
-                "reference": "691427b9d554f5e3467217eaa64483de60de4bec",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/357fb7ac5ad9bcd063e9072d73cb76beeee4b65a",
+                "reference": "357fb7ac5ad9bcd063e9072d73cb76beeee4b65a",
                 "shasum": ""
             },
             "require": {
@@ -9049,7 +9049,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-11-11T15:03:06+00:00"
+            "time": "2020-02-17T13:16:26+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",
