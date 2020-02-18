@@ -19,7 +19,7 @@
         </ul>
 
         <ul class="navbar-nav">
-            <button class="btn btn-light fas fa-adjust" id="nightMode" style="margin-right:5px;border:0;" alt="Night Mode"></button>
+            <button class="btn btn-light fas fa-adjust" id="darkSwitch" style="margin-right:5px;border:0;" alt="Night Mode"></button>
 
             @if (Auth::guest())
                 @include('layout.header.register');

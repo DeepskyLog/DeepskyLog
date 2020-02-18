@@ -50,6 +50,9 @@
                 this.form.submit();
             });
         </script>
+
+        <script src="{{ asset('/js/dark-mode-switch.js') }}"></script>
+
         <!-- App scripts -->
         @stack('scripts')
 
