@@ -51,7 +51,17 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
-     * Users can have one or more lenses.
+     * Users can have one lens.
+     *
+     * @return HasOne The eloquent relationship
+     */
+    public function lens()
+    {
+        return $this->hasOne('App\Lens', 'user_id');
+    }
+
+    /**
+     * Users can have more lenses.
      *
      * @return HasMany The eloquent relationship
      */
@@ -61,7 +71,17 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
-     * Users can have one or more filters.
+     * Users can have one filter.
+     *
+     * @return HasOne The eloquent relationship
+     */
+    public function filter()
+    {
+        return $this->hasOne('App\Filter', 'user_id');
+    }
+
+    /**
+     * Users can have more filters.
      *
      * @return HasMany The eloquent relationship
      */
@@ -71,7 +91,17 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
-     * Users can have one or more eyepieces.
+     * Users can have one eyepiece.
+     *
+     * @return HasOne The eloquent relationship
+     */
+    public function eyepiece()
+    {
+        return $this->hasOne('App\Eyepiece', 'user_id');
+    }
+
+    /**
+     * Users can have more eyepieces.
      *
      * @return HasMany The eloquent relationship
      */
@@ -81,7 +111,17 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
-     * Users can have one or more instruments.
+     * Users can have one instrument.
+     *
+     * @return HasOne The eloquent relationship
+     */
+    public function instrument()
+    {
+        return $this->hasOne('App\Instrument', 'user_id');
+    }
+
+    /**
+     * Users can have more instruments.
      *
      * @return HasMany The eloquent relationship
      */
@@ -91,7 +131,17 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
-     * Users can have one or more locations.
+     * Users can have one location.
+     *
+     * @return HasOne The eloquent relationship
+     */
+    public function location()
+    {
+        return $this->hasOne('App\Location', 'user_id');
+    }
+
+    /**
+     * Users can have more locations.
      *
      * @return HasMany The eloquent relationship
      */
