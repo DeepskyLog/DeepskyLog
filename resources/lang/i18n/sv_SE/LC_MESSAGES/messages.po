@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2020-02-10 14:24+0100\n"
-"PO-Revision-Date: 2020-02-10 14:24+0100\n"
+"POT-Creation-Date: 2020-02-27 16:18+0100\n"
+"PO-Revision-Date: 2020-02-27 16:19+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: sv_SE\n"
@@ -1016,38 +1016,38 @@ msgstr ""
 msgid "You did not specify a standard instrument. Please select one."
 msgstr "Du angav inte ett standard instrument. Vänligen välj en."
 
-#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:186
-#: Http/Controllers/EyepieceController.php:186
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:177
+#: Http/Controllers/EyepieceController.php:177
 #, php-format
 msgid "Eyepiece %s created"
 msgstr "Okular %s skapad"
 
-#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:298
-#: Http/Controllers/EyepieceController.php:298
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:301
+#: Http/Controllers/EyepieceController.php:301
 #, php-format
 msgid "Eyepiece %s updated"
 msgstr "Okular %s uppdaterad"
 
-#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:304
-#: Http/Controllers/EyepieceController.php:304
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:307
+#: Http/Controllers/EyepieceController.php:307
 #, php-format
 msgid "Eyepiece %s is active"
 msgstr "Okularet %s är aktivt"
 
-#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:308
-#: Http/Controllers/EyepieceController.php:308
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:311
+#: Http/Controllers/EyepieceController.php:311
 #, php-format
 msgid "Eyepiece %s is not longer active"
 msgstr "Okular %s är inte längre aktiv"
 
-#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:369
-#: Http/Controllers/EyepieceController.php:369
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:372
+#: Http/Controllers/EyepieceController.php:372
 #, php-format
 msgid "Eyepiece %s has observations. Impossible to delete."
 msgstr "Okularet %s har observationer. Omöjligt att ta bort."
 
-#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:381
-#: Http/Controllers/EyepieceController.php:381
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:384
+#: Http/Controllers/EyepieceController.php:384
 #, php-format
 msgid "Eyepiece %s deleted"
 msgstr "Okularet %s borttaget"
@@ -1056,8 +1056,8 @@ msgstr "Okularet %s borttaget"
 #: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:46
 #: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:37
 #: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:13
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:140
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:188
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:145
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:193
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:13
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:229
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:359
@@ -1069,7 +1069,7 @@ msgstr "Okularet %s borttaget"
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:14
 #: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:13
 #: DataTables/EyepieceDatatable.php:174 DataTables/EyepieceDatatable.php:230
-#: DataTables/FilterDataTable.php:140 DataTables/FilterDataTable.php:188
+#: DataTables/FilterDataTable.php:145 DataTables/FilterDataTable.php:193
 #: DataTables/InstrumentDataTable.php:194
 #: DataTables/InstrumentDataTable.php:250 DataTables/TargetDataTable.php:229
 #: DataTables/TargetDataTable.php:359
@@ -1178,15 +1178,15 @@ msgstr "eller ange filterinformationen manuellt"
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:56
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:175
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:231
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:136
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:184
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:122
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:154
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:141
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:189
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:125
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:157
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:204
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:334
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:190
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:246
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:140
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:147
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:21
 #: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:50
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:152
@@ -1194,12 +1194,12 @@ msgstr "eller ange filterinformationen manuellt"
 #: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:57
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:51
 #: DataTables/EyepieceDatatable.php:152 DataTables/EyepieceDatatable.php:208
-#: DataTables/FilterDataTable.php:136 DataTables/FilterDataTable.php:184
+#: DataTables/FilterDataTable.php:141 DataTables/FilterDataTable.php:189
 #: DataTables/InstrumentDataTable.php:190
-#: DataTables/InstrumentDataTable.php:246 DataTables/LensDataTable.php:122
-#: DataTables/LensDataTable.php:154 DataTables/LocationDataTable.php:175
+#: DataTables/InstrumentDataTable.php:246 DataTables/LensDataTable.php:125
+#: DataTables/LensDataTable.php:157 DataTables/LocationDataTable.php:175
 #: DataTables/LocationDataTable.php:231 DataTables/TargetDataTable.php:204
-#: DataTables/TargetDataTable.php:334 DataTables/UserDataTable.php:140
+#: DataTables/TargetDataTable.php:334 DataTables/UserDataTable.php:147
 msgid "Name"
 msgstr "Namn"
 
@@ -1213,10 +1213,10 @@ msgid "Filter type"
 msgstr "Typ av filter"
 
 #: ../storage/framework/messages/0df489c1c437e3c7dd75009d2dddf707bf3b68bc.php.php:69
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:145
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:192
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:150
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:197
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:25
-#: DataTables/FilterDataTable.php:145 DataTables/FilterDataTable.php:192
+#: DataTables/FilterDataTable.php:150 DataTables/FilterDataTable.php:197
 msgid "Color"
 msgstr "Färg"
 
@@ -1378,7 +1378,7 @@ msgstr "Stiga"
 
 #: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:151
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:279
-#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:32
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:38
 #: DataTables/TargetDataTable.php:279
 msgid "Transit"
 msgstr "Överföring"
@@ -1532,16 +1532,16 @@ msgstr "Ändra profilbild"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:46
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:20
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:136
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:143
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:14
-#: DataTables/UserDataTable.php:136
+#: DataTables/UserDataTable.php:143
 msgid "Username"
 msgstr "Användarnamn"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:51
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:144
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:151
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:28
-#: DataTables/UserDataTable.php:144
+#: DataTables/UserDataTable.php:151
 msgid "Email"
 msgstr "E-post"
 
@@ -1729,21 +1729,21 @@ msgstr "Bortle"
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:271
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:128
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:224
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:162
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:209
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:132
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:163
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:167
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:214
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:135
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:166
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:224
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:280
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:162
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:169
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:186
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:242
 #: DataTables/EyepieceDatatable.php:186 DataTables/EyepieceDatatable.php:242
-#: DataTables/FilterDataTable.php:162 DataTables/FilterDataTable.php:209
+#: DataTables/FilterDataTable.php:167 DataTables/FilterDataTable.php:214
 #: DataTables/InstrumentDataTable.php:224
-#: DataTables/InstrumentDataTable.php:280 DataTables/LensDataTable.php:132
-#: DataTables/LensDataTable.php:163 DataTables/LocationDataTable.php:209
-#: DataTables/LocationDataTable.php:271 DataTables/UserDataTable.php:162
+#: DataTables/InstrumentDataTable.php:280 DataTables/LensDataTable.php:135
+#: DataTables/LensDataTable.php:166 DataTables/LocationDataTable.php:209
+#: DataTables/LocationDataTable.php:271 DataTables/UserDataTable.php:169
 #: Http/Controllers/UserController.php:128
 #: Http/Controllers/UserController.php:224
 msgid "Observations"
@@ -1751,31 +1751,31 @@ msgstr "Observationer"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:215
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:287
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:168
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:219
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:138
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:173
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:173
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:224
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:141
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:176
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:230
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:296
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:156
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:163
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:192
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:251
 #: DataTables/EyepieceDatatable.php:192 DataTables/EyepieceDatatable.php:251
-#: DataTables/FilterDataTable.php:168 DataTables/FilterDataTable.php:219
+#: DataTables/FilterDataTable.php:173 DataTables/FilterDataTable.php:224
 #: DataTables/InstrumentDataTable.php:230
-#: DataTables/InstrumentDataTable.php:296 DataTables/LensDataTable.php:138
-#: DataTables/LensDataTable.php:173 DataTables/LocationDataTable.php:215
-#: DataTables/LocationDataTable.php:287 DataTables/UserDataTable.php:156
+#: DataTables/InstrumentDataTable.php:296 DataTables/LensDataTable.php:141
+#: DataTables/LensDataTable.php:176 DataTables/LocationDataTable.php:215
+#: DataTables/LocationDataTable.php:287 DataTables/UserDataTable.php:163
 msgid "Delete"
 msgstr "Radera"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:222
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:175
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:145
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:180
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:148
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:237
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:199
-#: DataTables/EyepieceDatatable.php:199 DataTables/FilterDataTable.php:175
-#: DataTables/InstrumentDataTable.php:237 DataTables/LensDataTable.php:145
+#: DataTables/EyepieceDatatable.php:199 DataTables/FilterDataTable.php:180
+#: DataTables/InstrumentDataTable.php:237 DataTables/LensDataTable.php:148
 #: DataTables/LocationDataTable.php:222
 msgid "Observer"
 msgstr "Observatör"
@@ -1786,13 +1786,13 @@ msgid "Weather forecast"
 msgstr "Väderprognos"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:277
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:214
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:168
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:219
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:171
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:286
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:247
 #: ../storage/framework/messages/f1e0daf0905fb7c5337c268f7c7b70b73518889c.php.php:396
-#: DataTables/EyepieceDatatable.php:247 DataTables/FilterDataTable.php:214
-#: DataTables/InstrumentDataTable.php:286 DataTables/LensDataTable.php:168
+#: DataTables/EyepieceDatatable.php:247 DataTables/FilterDataTable.php:219
+#: DataTables/InstrumentDataTable.php:286 DataTables/LensDataTable.php:171
 #: DataTables/LocationDataTable.php:277
 msgid "Active"
 msgstr "Aktiv"
@@ -1900,14 +1900,14 @@ msgstr "Dubbel stjärnor"
 msgid "Number of observations per month: "
 msgstr "Antal observationer per månad: "
 
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:325
-#: Http/Controllers/UserController.php:325
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:337
+#: Http/Controllers/UserController.php:337
 #, php-format
 msgid "User %s successfully edited."
 msgstr "Användaren %s har redigerat."
 
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:342
-#: Http/Controllers/UserController.php:342
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:354
+#: Http/Controllers/UserController.php:354
 #, php-format
 msgid "User %s successfully deleted."
 msgstr "Användaren %s har tagits bort."
@@ -2004,15 +2004,15 @@ msgstr "Okular av %s"
 msgid "Add eyepiece"
 msgstr "Tillsätt okularet"
 
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:150
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:197
-#: DataTables/FilterDataTable.php:150 DataTables/FilterDataTable.php:197
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:155
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:202
+#: DataTables/FilterDataTable.php:155 DataTables/FilterDataTable.php:202
 msgid "Wratten"
 msgstr "Wratten"
 
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:156
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:203
-#: DataTables/FilterDataTable.php:156 DataTables/FilterDataTable.php:203
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:161
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:208
+#: DataTables/FilterDataTable.php:161 DataTables/FilterDataTable.php:208
 msgid "Schott"
 msgstr "Schott"
 
@@ -2058,11 +2058,11 @@ msgstr "Filter"
 msgid "Filter Type"
 msgstr "Typ av filter"
 
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:126
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:158
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:129
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:161
 #: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:18
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:57
-#: DataTables/LensDataTable.php:126 DataTables/LensDataTable.php:158
+#: DataTables/LensDataTable.php:129 DataTables/LensDataTable.php:161
 msgid "Factor"
 msgstr "Faktor"
 
@@ -2074,38 +2074,38 @@ msgstr "Lista"
 msgid "Manage list"
 msgstr "Hantera lista"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:140
-#: Http/Controllers/LensController.php:140
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:134
+#: Http/Controllers/LensController.php:134
 #, php-format
 msgid "Lens %s created"
 msgstr "Objektivet %s har skapats"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:215
-#: Http/Controllers/LensController.php:215
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:221
+#: Http/Controllers/LensController.php:221
 #, php-format
 msgid "Lens %s updated"
 msgstr "Objektivet %s uppdaterat"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:221
-#: Http/Controllers/LensController.php:221
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:227
+#: Http/Controllers/LensController.php:227
 #, php-format
 msgid "Lens %s is active"
 msgstr "Objektivet %s är aktivt"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:224
-#: Http/Controllers/LensController.php:224
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:230
+#: Http/Controllers/LensController.php:230
 #, php-format
 msgid "Lens %s is not longer active"
 msgstr "Objektivet %s är inte längre aktivt"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:282
-#: Http/Controllers/LensController.php:282
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:288
+#: Http/Controllers/LensController.php:288
 #, php-format
 msgid "Lens %s has observations. Impossible to delete."
 msgstr "Objektivet %s har observationer. Omöjligt att ta bort."
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:291
-#: Http/Controllers/LensController.php:291
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:297
+#: Http/Controllers/LensController.php:297
 #, php-format
 msgid "Lens %s deleted"
 msgstr "Objektivet %s borttaget"
@@ -2201,15 +2201,15 @@ msgstr "Efemerider för %s i %s"
 msgid "Month"
 msgstr "Månad"
 
-#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:40
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:51
 msgid "Astronomical night"
 msgstr "Astronomisk natt"
 
-#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:54
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:65
 msgid "Nautical night"
 msgstr "Nautisk natt"
 
-#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:68
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:79
 msgid "Object rise<br />-<br />set"
 msgstr "Objekt ökning <br/>-<br/> set"
 
@@ -2331,13 +2331,45 @@ msgstr "%s stiger inte över horisonten i %s på %s"
 msgid "%s reaches an altitude of %s in %s on %s"
 msgstr "%s når en höjd av %s i %s på %s"
 
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:835
-#: Target.php:835
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:721
+#: Target.php:721
+#, php-format
+msgid "%s reaches its highest altitude of the year"
+msgstr "%s når sin högsta höjd på året"
+
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:744
+#: Target.php:744
+#, php-format
+msgid "%s reaches its highest altitude during the astronomical night"
+msgstr "%s når sin högsta höjd under den astronomiska natten"
+
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:752
+#: Target.php:752
+#, php-format
+msgid "%s reaches its highest altitude during the nautical twilight"
+msgstr "%s når sin högsta höjd under nautiska skymningen"
+
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:770
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:785
+#: Target.php:770 Target.php:785
+#, php-format
+msgid "%s is visible during the night"
+msgstr "%s är synlig under natten"
+
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:773
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:796
+#: Target.php:773 Target.php:796
+#, php-format
+msgid "%s is visible during the nautical twilight"
+msgstr "%s syns under nautiska skymningen"
+
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:848
+#: Target.php:848
 msgid "mid"
 msgstr "mitten"
 
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:835
-#: Target.php:835
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:848
+#: Target.php:848
 msgid "begin"
 msgstr "starta"
 
@@ -2563,8 +2595,8 @@ msgid "Check Objects"
 msgstr "Kontrollera objekt"
 
 #: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:13
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:168
-#: DataTables/UserDataTable.php:168
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:175
+#: DataTables/UserDataTable.php:175
 msgid "Instruments"
 msgstr "Instrument"
 
@@ -2592,38 +2624,38 @@ msgstr "Error"
 msgid "Whoops, something went wrong on our servers."
 msgstr "Hoppsan, något gick fel på våra servrar."
 
-#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:142
-#: Http/Controllers/FilterController.php:142
+#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:134
+#: Http/Controllers/FilterController.php:134
 #, php-format
 msgid "Filter %s created"
 msgstr "Filtret %s har skapats"
 
-#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:221
-#: Http/Controllers/FilterController.php:221
+#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:227
+#: Http/Controllers/FilterController.php:227
 #, php-format
 msgid "Filter %s updated"
 msgstr "Filtret %s har uppdaterats"
 
-#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:227
-#: Http/Controllers/FilterController.php:227
+#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:233
+#: Http/Controllers/FilterController.php:233
 #, php-format
 msgid "Filter %s is active"
 msgstr "Filtret %s är aktivt"
 
-#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:231
-#: Http/Controllers/FilterController.php:231
+#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:237
+#: Http/Controllers/FilterController.php:237
 #, php-format
 msgid "Filter %s is not longer active"
 msgstr "Filtret %s är inte längre aktivt"
 
-#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:291
-#: Http/Controllers/FilterController.php:291
+#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:297
+#: Http/Controllers/FilterController.php:297
 #, php-format
 msgid "Filter %s has observations. Impossible to delete."
 msgstr "Filtret %s har observationer. Omöjligt att ta bort."
 
-#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:302
-#: Http/Controllers/FilterController.php:302
+#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:308
+#: Http/Controllers/FilterController.php:308
 #, php-format
 msgid "Filter %s deleted"
 msgstr "Filtret %s har tagits bort"
@@ -2705,18 +2737,18 @@ msgstr "Alla instrument"
 msgid "Instruments of %s"
 msgstr "Instrument av %s"
 
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:148
-#: DataTables/UserDataTable.php:148
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:155
+#: DataTables/UserDataTable.php:155
 msgid "Date/Time Added"
 msgstr "Datum/tid tillagd"
 
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:152
-#: DataTables/UserDataTable.php:152
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:159
+#: DataTables/UserDataTable.php:159
 msgid "User Role"
 msgstr "Användarroll"
 
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:174
-#: DataTables/UserDataTable.php:174
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:181
+#: DataTables/UserDataTable.php:181
 msgid "Lists"
 msgstr "Listor"
 
@@ -2818,50 +2850,50 @@ msgstr "Endast för zoomokular"
 msgid "Upload a picture of your eyepiece."
 msgstr "Ladda upp en bild av din okularet."
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:149
-#: Http/Controllers/InstrumentController.php:149
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:140
+#: Http/Controllers/InstrumentController.php:140
 #, php-format
 msgid "Instrument %s created"
 msgstr "Instrumentet %s har skapats"
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:242
-#: Http/Controllers/InstrumentController.php:242
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:245
+#: Http/Controllers/InstrumentController.php:245
 #, php-format
 msgid "Instrument %s updated"
 msgstr "Instrumentet %s uppdaterat"
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:249
-#: Http/Controllers/InstrumentController.php:249
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:252
+#: Http/Controllers/InstrumentController.php:252
 #, php-format
 msgid "Instrument %s is active"
 msgstr "Instrumentet %s är aktivt"
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:255
-#: Http/Controllers/InstrumentController.php:255
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:258
+#: Http/Controllers/InstrumentController.php:258
 #, php-format
 msgid "Impossible to deactivate the default instrument %s"
 msgstr "Det går inte att inaktivera standard instrumentet %s"
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:262
-#: Http/Controllers/InstrumentController.php:262
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:265
+#: Http/Controllers/InstrumentController.php:265
 #, php-format
 msgid "Instrument %s is not longer active"
 msgstr "Instrumentet %s är inte längre aktivt"
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:324
-#: Http/Controllers/InstrumentController.php:324
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:327
+#: Http/Controllers/InstrumentController.php:327
 #, php-format
 msgid "Instrument %s has observations. Impossible to delete."
 msgstr "Instrumentet %s har observationer. Omöjligt att ta bort."
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:331
-#: Http/Controllers/InstrumentController.php:331
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:334
+#: Http/Controllers/InstrumentController.php:334
 #, php-format
 msgid "Impossible to delete the default instrument %s"
 msgstr "Det går inte att ta bort standard instrumentet %s"
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:343
-#: Http/Controllers/InstrumentController.php:343
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:346
+#: Http/Controllers/InstrumentController.php:346
 #, php-format
 msgid "Instrument %s deleted"
 msgstr "Instrumentet %s borttaget"
@@ -2874,50 +2906,50 @@ msgstr "Obehörig"
 msgid "Sorry, you are not authorized to access this page."
 msgstr "Tyvärr, du har inte behörighet att komma åt den här sidan."
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:159
-#: Http/Controllers/LocationController.php:159
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:151
+#: Http/Controllers/LocationController.php:151
 #, php-format
 msgid "Location %s created"
 msgstr "Plats %s har skapats"
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:274
-#: Http/Controllers/LocationController.php:274
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:278
+#: Http/Controllers/LocationController.php:278
 #, php-format
 msgid "Location %s updated"
 msgstr "Plats %s har uppdaterats"
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:281
-#: Http/Controllers/LocationController.php:281
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:285
+#: Http/Controllers/LocationController.php:285
 #, php-format
 msgid "Location %s is active"
 msgstr "Platsen %s är aktiv"
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:287
-#: Http/Controllers/LocationController.php:287
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:291
+#: Http/Controllers/LocationController.php:291
 #, php-format
 msgid "Impossible to deactivate the default location %s"
 msgstr "Det går inte att inaktivera standardplatsen %s"
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:294
-#: Http/Controllers/LocationController.php:294
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:298
+#: Http/Controllers/LocationController.php:298
 #, php-format
 msgid "Location %s is not longer active"
 msgstr "Platsen %s är inte längre aktiv"
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:356
-#: Http/Controllers/LocationController.php:356
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:360
+#: Http/Controllers/LocationController.php:360
 #, php-format
 msgid "Location %s has observations. Impossible to delete."
 msgstr "Platsen %s har observationer. Omöjligt att ta bort."
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:363
-#: Http/Controllers/LocationController.php:363
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:367
+#: Http/Controllers/LocationController.php:367
 #, php-format
 msgid "Impossible to delete the default location %s"
 msgstr "Det går inte att ta bort standardplatsen %s"
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:375
-#: Http/Controllers/LocationController.php:375
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:379
+#: Http/Controllers/LocationController.php:379
 #, php-format
 msgid "Location %s deleted"
 msgstr "Plats %s borttagen"
@@ -4494,9 +4526,6 @@ msgstr "Antal objekt"
 
 #~ msgid "Maximal altitude explanation"
 #~ msgstr "Maximal höjd förklaring"
-
-#~ msgid "Highest altitude during the year"
-#~ msgstr "Högsta höjd under året"
 
 #~ msgid "Highest from the month"
 #~ msgstr "Högsta från och med månaden"
