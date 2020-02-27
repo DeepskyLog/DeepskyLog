@@ -717,12 +717,15 @@ class Target extends Model
                     || ($ephem['max_alt'] == $ephemerides[($cnt + 23) % 24]['max_alt']))
                 ) {
                     $ephemerides[$cnt]['max_alt_color'] = 'ephemeridesgreen';
+                    $ephemerides[$cnt]['max_alt_popup']
+                        = _i("%s reaches its highest altitude of the year", $this->name);
                 } else {
                     $ephemerides[$cnt]['max_alt_color'] = '';
+                    $ephemerides[$cnt]['max_alt_popup'] = '';
                 }
 
                 // Green if the transit is during astronomical twilight
-                // Yellow if the transit is during astronomical twilight
+                // Yellow if the transit is during nautical twilight
                 $time = $ephem['date']->setTimeZone($location->timezone)->copy()
                     ->setTimeFromTimeString($ephem['transit']);
                 if ($time->format('H') < 12) {
@@ -736,7 +739,9 @@ class Target extends Model
                             $ephem['astronomical_twilight_end']
                         )
                     ) {
+                        // TODO: Also add a popup explaining the color code: Issue 416
                         $ephemerides[$cnt]['transit_color'] = 'ephemeridesgreen';
+                        $ephemerides[$cnt]['transit_popup'] = _i("%s reaches its highest altitude during the astronomical night", $this->name);
                     } elseif ($ephem['nautical_twilight_end'] != null
                         && $time->between(
                             $ephem['nautical_twilight_begin'],
@@ -744,22 +749,28 @@ class Target extends Model
                         )
                     ) {
                         $ephemerides[$cnt]['transit_color'] = 'ephemeridesyellow';
+                        $ephemerides[$cnt]['transit_popup'] = _i("%s reaches its highest altitude during the nautical twilight", $this->name);
                     } else {
                         $ephemerides[$cnt]['transit_color'] = '';
+                        $ephemerides[$cnt]['transit_popup'] = '';
                     }
                 } else {
                     $ephemerides[$cnt]['transit_color'] = '';
+                    $ephemerides[$cnt]['transit_popup'] = '';
                 }
 
                 $ephemerides[$cnt]['rise_color'] = '';
+                $ephemerides[$cnt]['rise_popup'] = '';
 
                 if ($ephem['max_alt'] == '-') {
                     $ephemerides[$cnt]['rise_color'] = '';
                 } else {
                     if ($ephem['rise'] == '-') {
                         if ($ephem['astronomical_twilight_end'] != null) {
+                            $ephemerides[$cnt]['rise_popup'] = _i("%s is visible during the night", $this->name);
                             $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
                         } elseif ($ephem['nautical_twilight_end'] != null) {
+                            $ephemerides[$cnt]['rise_popup'] = _i("%s is visible during the nautical twilight", $this->name);
                             $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
                         }
                     }
@@ -771,6 +782,7 @@ class Target extends Model
                             $ephem['astronomical_twilight_begin']
                         )
                     ) {
+                        $ephemerides[$cnt]['rise_popup'] = _i("%s is visible during the night", $this->name);
                         $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
                     } elseif ($ephem['nautical_twilight_end'] != null
                         && $this->_checkNightHourMinutePeriodOverlap(
@@ -781,6 +793,7 @@ class Target extends Model
                         )
                     ) {
                         $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
+                        $ephemerides[$cnt]['rise_popup'] = _i("%s is visible during the nautical twilight", $this->name);
                     }
                 }
 
