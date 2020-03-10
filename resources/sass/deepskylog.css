@@ -1063,3 +1063,120 @@ tr.details td.details-control {
     background-color: #340000;
     border-color: #454d55;
 }
+
+[data-theme="night"] .form-control {
+    background-color: #990000;
+    border: 1px solid #8e0000;
+    color: #220000;
+}
+
+[data-theme="night"] button.dt-button {
+    background-color: #990000;
+    background-image: linear-gradient(to bottom, red 0%, #990000 100%);
+    border: 1px solid #8e0000;
+    color: #220000;
+}
+
+[data-theme="night"] .page-link:hover {
+    background-color: #b30000 !important;
+    border-color: #ff0000 !important;
+    color: #000000 !important;
+}
+
+[data-theme="night"] .page-link {
+    background-color: #8e0000 !important;
+    border-color: #ff0000 !important;
+    color: #0f0000 !important;
+}
+
+[data-theme="night"] .page-item.active .page-link {
+    background-color: #550000 !important;
+    border-color: #ff0000 !important;
+    color: #ff0000 !important;
+}
+
+[data-theme="night"] .border-bottom {
+    border-bottom: 1px solid #ff0000 !important;
+}
+
+[data-theme="night"] .border-top {
+    border-top: 1px solid #ff0000 !important;
+}
+
+[data-theme="night"] .input-group-text {
+    background-color: #990000;
+    border-color: #990000;
+    color: #ff0000;
+}
+
+[data-theme="night"] .file-drop-zone-title {
+    color: #a00;
+}
+
+[data-theme="night"] .file-preview {
+    border: 1px solid #a00;
+}
+
+[data-theme="night"] .btn-primary:hover {
+    color: #f00;
+    background-color: #220000;
+    border-color: #ff0000;
+}
+
+[data-theme="night"] .btn-primary {
+    color: #f00;
+    background-color: #880000;
+    border-color: #ff0000;
+}
+
+[data-theme="night"] .btn-secondary:hover {
+    color: #f00;
+    background-color: #220000;
+    border-color: #ff0000;
+}
+
+[data-theme="night"] .btn-secondary {
+    color: #f00;
+    background-color: #660000;
+    border-color: #ff0000;
+}
+
+[data-theme="night"] select {
+    background-color: #990000;
+    border: 1px solid #800000;
+}
+
+[data-theme="night"] .form-control:focus, [data-theme="night"] .form-control:active {
+    color: #ff0000;
+    background-color: #990000;
+    border-color: #800000;
+}
+
+[data-theme="night"] input.form-control {
+    color: #ff0000;
+    background-color: #990000;
+    border-color: #800000;
+}
+
+[data-theme="night"] ::placeholder {
+    color: red !important;
+}
+
+[data-theme="night"] .nav-tabs .nav-link.active {
+    color: #ff0000;
+    background-color: #990000;
+    border-color: #ff0000 #ff0000 #ff0000;
+}
+
+[data-theme="night"] .nav-tabs {
+    border-bottom: 1px solid #ff0000;
+}
+
+[data-theme="night"] .nav-tabs .nav-link:hover, [data-theme="night"] .nav-tabs .nav-link:focus {
+    border-color: #ff0000 #ff0000 #ff0000;
+}
+
+[data-theme="night"] .card-body {
+    background-color: #990000;
+    border-color: #ff0000;
+}
