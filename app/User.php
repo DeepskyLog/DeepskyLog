@@ -18,9 +18,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\DeepskyLogVerificationNotification;
 use App\Notifications\DeepskyLogResetPassword;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Cmgmyr\Messenger\Traits\Messagable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * User eloquent model.
@@ -34,7 +34,7 @@ use Cmgmyr\Messenger\Traits\Messagable;
 class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
     use Notifiable;
-    use HasMediaTrait;
+    use InteractsWithMedia;
     use Messagable;
 
     public const ADMIN_TYPE = 'admin';
@@ -230,7 +230,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      *
      * @return None
      */
-    public function registerMediaCollections()
+    public function registerMediaCollections(): void
     {
         $this
             ->addMediaCollection('observer')

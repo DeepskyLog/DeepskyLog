@@ -15,8 +15,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * Lens eloquent model.
@@ -29,7 +29,7 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
  */
 class Lens extends Model implements HasMedia
 {
-    use HasMediaTrait;
+    use InteractsWithMedia;
 
     protected $fillable = ['user_id', 'name', 'factor', 'active'];
 
