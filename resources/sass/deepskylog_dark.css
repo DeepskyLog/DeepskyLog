@@ -596,7 +596,7 @@
     border-color: #ffffff #ffffff #ffffff;
 }
 
-[data-theme="dark"] .card-body {
+[data-theme="dark"] .card-body, [data-theme="dark"] .card-header {
     background-color: #999999;
     border-color: #ffffff;
 }
@@ -626,4 +626,9 @@
     border: 1px solid #dad55e;
     background: #fffa90;
     color: #777620;
+}
+
+[data-theme="dark"] div.dataTables_wrapper div.dataTables_processing {
+    background-color:gray;
+    color: white;
 }

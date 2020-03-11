@@ -3121,7 +3121,7 @@ tr.details td.details-control {
     border-color: #ff0000 #ff0000 #ff0000;
 }
 
-[data-theme="night"] .card-body {
+[data-theme="night"] .card-body, [data-theme="night"] .card-header {
     background-color: #990000;
     border-color: #ff0000;
 }
@@ -3151,6 +3151,11 @@ tr.details td.details-control {
     border: 1px solid #dad55e;
     background: #fffa90;
     color: #777620;
+}
+
+[data-theme="night"] div.dataTables_wrapper div.dataTables_processing {
+    background-color: #990000;
+    color: #ff0000;
 }
 
 [data-theme="dark"] {
@@ -3763,7 +3768,7 @@ tr.details td.details-control {
     border-color: #ffffff #ffffff #ffffff;
 }
 
-[data-theme="dark"] .card-body {
+[data-theme="dark"] .card-body, [data-theme="dark"] .card-header {
     background-color: #999999;
     border-color: #ffffff;
 }
@@ -3793,6 +3798,11 @@ tr.details td.details-control {
     border: 1px solid #dad55e;
     background: #fffa90;
     color: #777620;
+}
+
+[data-theme="dark"] div.dataTables_wrapper div.dataTables_processing {
+    background-color:gray;
+    color: white;
 }
 table.dataTable {
   clear: both;
