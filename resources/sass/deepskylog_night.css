@@ -632,3 +632,7 @@
     background-color: #990000;
     color: #ff0000;
 }
+
+[data-theme="night"] a {
+    color: #550000;
+}

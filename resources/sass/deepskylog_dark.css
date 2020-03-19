@@ -632,3 +632,7 @@
     background-color:gray;
     color: white;
 }
+
+[data-theme="dark"] a {
+    color: #555555;
+}
