@@ -636,3 +636,33 @@
 [data-theme="night"] a {
     color: #550000;
 }
+
+[data-theme="night"] .btn-link {
+    color: #550000;
+    text-decoration: underline;
+}
+
+[data-theme="night"] .btn-link:hover {
+    color: #770000;
+    text-decoration: underline;
+}
+
+[data-theme="night"] .fa-facebook:before {
+    color: #222222;
+}
+
+[data-theme="night"] .fa-github:before {
+    color: #222222;
+}
+
+[data-theme="night"] .fa-twitter:before {
+    color: #220000;
+}
+
+[data-theme="night"] .fa-youtube:before {
+    color: #220000;
+}
+
+[data-theme="night"] .fa-instagram:before {
+    color: #220000;
+}
