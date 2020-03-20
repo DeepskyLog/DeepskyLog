@@ -633,18 +633,16 @@
     color: #ff0000;
 }
 
-[data-theme="night"] a {
+[data-theme="night"] a.btn.btn-link {
     color: #550000;
 }
 
 [data-theme="night"] .btn-link {
     color: #550000;
-    text-decoration: underline;
 }
 
 [data-theme="night"] .btn-link:hover {
     color: #770000;
-    text-decoration: underline;
 }
 
 [data-theme="night"] .fa-facebook:before {
@@ -665,4 +663,8 @@
 
 [data-theme="night"] .fa-instagram:before {
     color: #220000;
+}
+
+[data-theme="night"] .fa-trash-alt:before {
+    color: #ff0000;
 }
