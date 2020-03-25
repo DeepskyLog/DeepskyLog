@@ -1,0 +1,51 @@
+<?php
+/**
+ * Filter Factory. Creates a filter with an user_id between 1 and 50.
+ *
+ * PHP Version 7
+ *
+ * @category Lenses
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
+
+use Faker\Generator as Faker;
+
+$factory->define(
+    App\Filter::class, function (Faker $faker) {
+        $type = $faker->numberBetween(0, 8);
+
+        if ($type == 6) {
+            $ran = $faker->numberBetween(1, 3);
+            if ($ran == 1) {
+                $color = $faker->numberBetween(1, 15);
+                $wratten = null;
+                $schott = null;
+            } else if ($ran == 2) {
+                $wratten = $faker->numberBetween(1, 50);
+                $color = null;
+                $schott = null;
+            } else {
+                $schott =  $faker->numberBetween(1, 90);
+                $color = null;
+                $wratten = null;
+            }
+        } else {
+            $color = null;
+            $wratten = null;
+            $schott = null;
+        }
+
+        return [
+            'name' => $faker->sentence(3, true),
+            'type' => $type,
+            'color' => $color,
+            'wratten' => $wratten,
+            'schott' => $schott,
+            'user_id' => $faker->numberBetween(1, 50),
+            'active' => $faker->numberBetween(0, 1)
+        ];
+    }
+);

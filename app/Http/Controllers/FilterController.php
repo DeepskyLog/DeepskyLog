@@ -274,6 +274,8 @@ class FilterController extends Controller
      */
     public function deleteImage($id)
     {
+        $this->authorize('update', Filter::find($id));
+
         Filter::find($id)
             ->getFirstMedia('filter')
             ->delete();
