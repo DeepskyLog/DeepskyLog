@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2020-02-27 16:20+0100\n"
-"PO-Revision-Date: 2020-02-27 16:20+0100\n"
+"POT-Creation-Date: 2020-03-20 20:24+0100\n"
+"PO-Revision-Date: 2020-03-20 20:24+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: fr_FR\n"
@@ -2253,7 +2253,7 @@ msgstr "La conversation se situe entre "
 msgid "Answer message in DeepskyLog"
 msgstr "Répondez au message à DeepskyLog"
 
-#: ../storage/framework/messages/6d44b686891cd941f2ca89f5c3eb926d2a58cb96.php.php:25
+#: ../storage/framework/messages/6d44b686891cd941f2ca89f5c3eb926d2a58cb96.php.php:29
 msgid "Clear nights"
 msgstr "Nuits claires"
 
@@ -2518,11 +2518,11 @@ msgstr "Dernière mise à jour"
 msgid "Hello!"
 msgstr "Bonjour!"
 
-#: ../storage/framework/messages/7f9d0c3d716746b3d833f54eeb6c5536a3c1c8f5.php.php:51
+#: ../storage/framework/messages/7f9d0c3d716746b3d833f54eeb6c5536a3c1c8f5.php.php:55
 msgid "Regards"
 msgstr "Cordialement"
 
-#: ../storage/framework/messages/7f9d0c3d716746b3d833f54eeb6c5536a3c1c8f5.php.php:59
+#: ../storage/framework/messages/7f9d0c3d716746b3d833f54eeb6c5536a3c1c8f5.php.php:63
 msgid ""
 "If you’re having trouble clicking the \":actionText\" button, copy and paste "
 "the URL below\n"
@@ -3005,17 +3005,19 @@ msgstr "Vérifiez votre adresse E-mail"
 msgid "A fresh verification link has been sent to your email address."
 msgstr "Un nouveau lien de vérification a été envoyé à votre adresse e-mail."
 
-#: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:21
+#: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:18
+msgid "If you did not receive the email"
+msgstr "Si vous n'avez pas reçu l'e-mail"
+
+#: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:22
 msgid "Before proceeding, please check your email for a verification link."
 msgstr ""
 "Avant de continuer, veuillez consulter votre e-mail pour obtenir un lien de "
 "vérification."
 
 #: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:26
-#, php-format
-msgid "If you did not receive the email, %sclick here to request another%s."
-msgstr ""
-"Si vous n'avez pas reçu l'e-mail, %scliquez ici pour demander un autre %s."
+msgid "click here to request another"
+msgstr "cliquez ici pour demander un autre"
 
 #: ../storage/framework/messages/e07b93c36b790f747ffe9fb83a87773cfcc0fd4f.php.php:1
 msgid "Sorry, no threads."
@@ -3273,8 +3275,8 @@ msgstr "Ajoutez"
 msgid "Object"
 msgstr "Objet"
 
-#: ../storage/framework/messages/fda6be050a67c030956937d8aad0da0d6699c8f6.php.php:117
-#: Http/Controllers/Auth/LoginController.php:117
+#: ../storage/framework/messages/fda6be050a67c030956937d8aad0da0d6699c8f6.php.php:118
+#: Http/Controllers/Auth/LoginController.php:118
 msgid ""
 "The account you are trying to login is not registered or it has been "
 "disabled."
