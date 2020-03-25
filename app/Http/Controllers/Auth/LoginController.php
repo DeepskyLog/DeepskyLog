@@ -49,7 +49,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -108,6 +108,7 @@ class LoginController extends Controller
      *
      * @param Request $request The request
      *
+     * @return None
      */
     protected function validateLogin(Request $request)
     {

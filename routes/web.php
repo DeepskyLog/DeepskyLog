@@ -12,6 +12,7 @@
 */
 
 Route::get('/', 'PagesController@home');
+Route::get('/home', 'PagesController@home');
 
 Route::get('/privacy', 'PagesController@privacy');
 
@@ -206,6 +207,6 @@ Route::get('/getTypeInfo/{catalog}', 'TargetController@getTypeInfo');
 Route::get('/target/{name}', 'TargetController@show');
 
 // Social log in
-Route::get('/redirect/{service}', 'SocialAuthController@redirect');
+//Route::get('/redirect/{service}', 'SocialAuthController@redirect');
 //Route::get('/callback/{service}', 'SocialAuthController@callback');
-Route::get('/callback/{service}', 'Auth\LoginController@handleProviderCallback');
+//Route::get('/callback/{service}', 'Auth\LoginController@handleProviderCallback');
