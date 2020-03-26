@@ -266,6 +266,8 @@ class LensController extends Controller
      */
     public function deleteImage($id)
     {
+        $this->authorize('update', Lens::find($id));
+
         Lens::find($id)
             ->getFirstMedia('lens')
             ->delete();

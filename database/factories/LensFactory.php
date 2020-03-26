@@ -14,11 +14,13 @@
 use Faker\Generator as Faker;
 
 $factory->define(
-    App\Lens::class, function (Faker $faker) {
+    App\Lens::class,
+    function (Faker $faker) {
         return [
             'name' => $faker->sentence(3, true),
             'factor' => $faker->randomFloat(2, 0.1, 5.0),
-            'user_id' => $faker->numberBetween(1, 50)
+            'user_id' => $faker->numberBetween(1, 50),
+            'active' => $faker->numberBetween(0, 1)
         ];
     }
 );

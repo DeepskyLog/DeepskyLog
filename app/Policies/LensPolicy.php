@@ -19,6 +19,6 @@ class LensPolicy
      */
     public function update(User $user, Lens $lens)
     {
-        return $user->id === $lens->user_id;
+        return $user->id == $lens->user_id;
     }
 }

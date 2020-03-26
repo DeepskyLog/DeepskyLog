@@ -202,7 +202,7 @@ class FilterTest extends TestCase
             'wratten' => $filter->wratten,
             'schott' => $filter->schott,
         ];
-        // TODO: Why does this fail in sqlite?
+
         $this->put('filter/' . $filter->id, $newAttributes);
 
         // Then there should be an updated filter in the database
