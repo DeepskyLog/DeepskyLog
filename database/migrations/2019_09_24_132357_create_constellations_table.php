@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateConstellationsTable extends Migration
+class CreateConstellationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -645,6 +645,6 @@ class CreateConstellationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Constellations');
+        Schema::dropIfExists('constellations');
     }
 }

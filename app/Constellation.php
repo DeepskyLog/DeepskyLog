@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Constellations extends Model
+class Constellation extends Model
 {
     /**
      * Adds the link to the targets.

@@ -14,8 +14,8 @@ class UpdateEyepiece extends Migration
     {
         Schema::table('eyepieces', function (Blueprint $table) {
             // Create new columns for the brand and the type of eyepiece
-            $table->string('brand')->after('name');
-            $table->string('type')->after('focalLength');
+            $table->string('brand')->after('name')->default('');
+            $table->string('type')->after('focalLength')->default('');
         });
 
 
