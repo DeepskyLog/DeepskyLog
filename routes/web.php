@@ -11,10 +11,10 @@
 |
 */
 
-Route::get('/', 'PagesController@home');
-Route::get('/home', 'PagesController@home');
+Route::get('/', 'PageController@home');
+Route::get('/home', 'PageController@home');
 
-Route::get('/privacy', 'PagesController@privacy');
+Route::get('/privacy', 'PageController@privacy');
 
 Route::post('/lang', 'LanguageController@changeLang');
 
