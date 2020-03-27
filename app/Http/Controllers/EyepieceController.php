@@ -197,6 +197,7 @@ class EyepieceController extends Controller
                 'type' => 'required',
                 'focalLength' => 'required|numeric|gte:1|lte:99',
                 'apparentFOV' => 'required|numeric|gte:20|lte:150',
+                'maxFocalLength' => 'gte:1|lte:99'
             ]
         );
     }
@@ -348,6 +349,8 @@ class EyepieceController extends Controller
      */
     public function deleteImage($id)
     {
+        $this->authorize('update', Eyepiece::find($id));
+
         Eyepiece::find($id)
             ->getFirstMedia('eyepiece')
             ->delete();

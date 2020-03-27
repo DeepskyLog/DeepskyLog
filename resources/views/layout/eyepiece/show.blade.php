@@ -18,7 +18,7 @@
 
     <tr>
         <td>{{ _i("Generic name") }}</td>
-        <td>{{ $eyepiece->genericname() }}</td>
+        <td>{{ $eyepiece->genericname }}</td>
     </tr>
 
     <tr>
@@ -64,7 +64,7 @@
 </table>
 
 @auth
-    @if (Auth::user()->id === $eyepiece->user_id || Auth::user()->isAdmin())
+    @if (Auth::user()->id == $eyepiece->user_id || Auth::user()->isAdmin())
     <a href="/eyepiece/{{ $eyepiece->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">
             {{ _i('Edit') }} {{  $eyepiece->name }}

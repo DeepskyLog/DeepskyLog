@@ -38,6 +38,7 @@ class FilterTest extends TestCase
     /**
      * Set up the user.
      *
+     * @return void
      */
     public function setUp(): void
     {

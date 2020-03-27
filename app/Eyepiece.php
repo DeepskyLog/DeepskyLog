@@ -67,7 +67,7 @@ class Eyepiece extends Model implements HasMedia
      *
      * @return String the generic name of the eyepiece
      */
-    public function genericname()
+    public function getGenericnameAttribute()
     {
         if ($this->brand != '') {
             if ($this->maxFocalLength != '') {
