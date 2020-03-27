@@ -49,6 +49,10 @@ class Target extends Model
         'set', 'set_popup', 'bestTime', 'maxAlt', 'maxAlt_popup',
         'highest_from', 'highest_around', 'highest_to', 'highest_alt'];
 
+    protected $primaryKey = 'name';
+
+    public $incrementing = false;
+
     /**
      * Returns the contrast of the target.
      *

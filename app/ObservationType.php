@@ -7,6 +7,12 @@ use Illuminate\Support\Collection;
 
 class ObservationType extends Model
 {
+    protected $primaryKey = 'type';
+
+    public $incrementing = false;
+
+    public $timestamps = false;
+
     /**
      * Adds the link to the target types.
      *

@@ -8,4 +8,5 @@ class EyepieceType extends Model
 {
     protected $fillable = ['brand', 'type'];
 
+    public $incrementing = false;
 }

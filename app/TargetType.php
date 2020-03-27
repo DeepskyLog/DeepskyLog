@@ -31,6 +31,8 @@ class TargetType extends Model
 
     public $incrementing = false;
 
+    public $timestamps = false;
+
     /**
      * Adds the link to the targets.
      *

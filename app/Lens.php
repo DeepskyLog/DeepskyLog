@@ -33,6 +33,8 @@ class Lens extends Model implements HasMedia
 
     protected $fillable = ['user_id', 'name', 'factor', 'active'];
 
+    protected $table = 'lens';
+
     /**
      * Activate the lens.
      *

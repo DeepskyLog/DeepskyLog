@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Constellation extends Model
 {
+    public $incrementing = false;
+
     /**
      * Adds the link to the targets.
      *
