@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Mail;
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class MessagesController extends Controller
+class MessageController extends Controller
 {
     /**
      * Make sure the message pages can only be seen if the user is authenticated

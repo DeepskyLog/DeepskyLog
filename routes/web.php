@@ -188,13 +188,13 @@ Route::get('/users/{user}/settings', 'UserController@settings')
 
 // Messages
 Route::group(['prefix' => 'messages'], function () {
-    Route::get('/', ['as' => 'messages', 'uses' => 'MessagesController@index']);
-    Route::get('create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
-    Route::get('createAll', 'MessagesController@createAll')->name('messages.createAll');
-    Route::post('/', ['as' => 'messages.store', 'uses' => 'MessagesController@store']);
-    Route::get('{id}', ['as' => 'messages.show', 'uses' => 'MessagesController@show']);
-    Route::put('{id}', ['as' => 'messages.update', 'uses' => 'MessagesController@update']);
-    Route::get('/create/{id}', 'MessagesController@createId')->name('messages.createId');
+    Route::get('/', ['as' => 'messages', 'uses' => 'MessageController@index']);
+    Route::get('create', ['as' => 'messages.create', 'uses' => 'MessageController@create']);
+    Route::get('createAll', 'MessageController@createAll')->name('messages.createAll');
+    Route::post('/', ['as' => 'messages.store', 'uses' => 'MessageController@store']);
+    Route::get('{id}', ['as' => 'messages.show', 'uses' => 'MessageController@show']);
+    Route::put('{id}', ['as' => 'messages.update', 'uses' => 'MessageController@update']);
+    Route::get('/create/{id}', 'MessageController@createId')->name('messages.createId');
 });
 
 // Targets
