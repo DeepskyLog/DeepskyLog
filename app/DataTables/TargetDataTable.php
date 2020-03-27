@@ -252,7 +252,7 @@ class TargetDataTable extends DataTable
                 ],
                 ['name' => auth()->user()->standardAtlasCode,
                     'title' => _i(
-                        \App\Atlases::where(
+                        \App\Atlas::where(
                             'code',
                             auth()->user()->standardAtlasCode
                         )->first()->name

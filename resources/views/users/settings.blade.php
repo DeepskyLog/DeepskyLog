@@ -168,7 +168,7 @@
                     <label for="stdatlas">{{ _i("Default atlas") }}</label>
                     <div class="form">
                         <select class="form-control selection" style="width: 100%" id="standardAtlasCode" name="standardAtlasCode">
-                            @foreach(\App\Atlases::All() as $atlas)
+                            @foreach(\App\Atlas::All() as $atlas)
                                 <option @if ($atlas->code == $user->standardAtlasCode) selected @endif value="{{ $atlas->code }}">{{ $atlas->name }}</option>
                             @endforeach
                         </select>

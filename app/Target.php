@@ -425,7 +425,7 @@ class Target extends Model
      */
     public function constellation()
     {
-        return $this->hasOne('App\Constellations', 'id', 'con');
+        return $this->hasOne('App\Constellation', 'id', 'con');
     }
 
     /**
@@ -925,6 +925,6 @@ class Target extends Model
      */
     public function getConstellation()
     {
-        return \App\Constellations::where('id', $this->con)->first()->name;
+        return \App\Constellation::where('id', $this->con)->first()->name;
     }
 }
