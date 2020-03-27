@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class observationTypes extends Model
+class ObservationType extends Model
 {
     /**
      * Adds the link to the target types.

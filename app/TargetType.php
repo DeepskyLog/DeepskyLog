@@ -48,6 +48,6 @@ class TargetType extends Model
      */
     public function observationType()
     {
-        return $this->hasOne('App\observationTypes', 'type', 'observation_type');
+        return $this->hasOne('App\ObservationType', 'type', 'observation_type');
     }
 }
