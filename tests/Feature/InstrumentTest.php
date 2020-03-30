@@ -1582,11 +1582,4 @@ class InstrumentTest extends TestCase
         $response->assertSee('First light');
         $response->assertSee('Last used on');
     }
-
-    // TODO: Check detail page -> as guest -> No imperial / metric, only used eyepieces, ... if owner of the telescope.
-    // TODO: tests for messages
-    // TODO: tests for calculating moon, sun
-    // TODO: tests for changing date
-
-
 }
