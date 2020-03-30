@@ -177,7 +177,7 @@ $factory->define(
             'type' => $type,
             'apparentFOV' => $faker->numberBetween(15, 130),
             'maxFocalLength' => $maxFocalLength,
-            'user_id' => $faker->numberBetween(1, 50),
+            'user_id' => \App\User::inRandomOrder()->first()->id,
             'active' => $faker->numberBetween(0, 1)
         ];
     }

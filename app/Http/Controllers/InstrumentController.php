@@ -303,6 +303,8 @@ class InstrumentController extends Controller
      */
     public function deleteImage($id)
     {
+        $this->authorize('update', Instrument::find($id));
+
         Instrument::find($id)
             ->getFirstMedia('instrument')
             ->delete();

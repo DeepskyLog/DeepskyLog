@@ -22,15 +22,25 @@
 
     <tr>
         <td>{{ _i("Diameter") }}</td>
+        @auth
         <td>{{ Auth::user()->showInches ? (number_format($instrument->diameter / 25.4, 2, '.', ',')) . ' ' . _i('inch') : $instrument->diameter . ' ' . _i('mm')}}</td>
+        @endauth
+        @guest
+        <td>{{ $instrument->diameter . ' ' . _i('mm')}}</td>
+        @endguest
     </tr>
 
 
     @if ($instrument->fd)
         <tr>
             <td>{{ _i("Focal Length") }}</td>
-            <td>{{ Auth::user()->showInches ? $instrument->fd * $instrument->diameter / 25.4 . ' ' . _i('inch') : $instrument->fd * $instrument->diameter . ' ' . _i('mm')}} (F/{{ $instrument->fd }})</td>
-        </tr>
+            @auth
+            <td>{{ Auth::user()->showInches ? (number_format($instrument->fd * $instrument->diameter / 25.4, 2, '.' ,',')) . ' ' . _i('inch') : $instrument->fd * $instrument->diameter . ' ' . _i('mm')}} (F/{{ $instrument->fd }})</td>
+            @endauth
+            @guest
+            <td>{{ $instrument->fd * $instrument->diameter . ' ' . _i('mm')}}</td>
+            @endguest
+            </tr>
     @endif
 
     @if ($instrument->fixedMagnification)
@@ -63,6 +73,7 @@
             <td>ENTER LAST USED OR REMOVE IF NOT YET USED</td>
     </tr>
 
+    @auth
     @if ($instrument->user_id == Auth::user()->id)
         <tr>
             <td>{{ _i("Used eyepieces") }}</td>
@@ -84,10 +95,11 @@
             <td>ADD GOOGLE MAPS PAGE</td>
         </tr>
     @endif
+    @endauth
 </table>
 
 @auth
-    @if (Auth::user()->id === $instrument->user_id || Auth::user()->isAdmin())
+    @if (Auth::user()->id == $instrument->user_id || Auth::user()->isAdmin())
     <a href="/instrument/{{ $instrument->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">
             {{ _i('Edit') }} {{  $instrument->name }}

@@ -44,7 +44,7 @@ $factory->define(
             'color' => $color,
             'wratten' => $wratten,
             'schott' => $schott,
-            'user_id' => $faker->numberBetween(1, 50),
+            'user_id' => \App\User::inRandomOrder()->first()->id,
             'active' => $faker->numberBetween(0, 1)
         ];
     }
