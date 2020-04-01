@@ -1,6 +1,6 @@
 <?php
 /**
- * Lens Factory. Creates a lens with an user_id between 1 and 50.
+ * Lens Factory. Creates a lens.
  *
  * PHP Version 7
  *

@@ -40,7 +40,6 @@ class UsersTableSeeder extends Seeder
         $accountData = ObserversOld::all();
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
         DB::table('users')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         foreach ($accountData as $accountSingle) {
             if ($accountSingle->role == 0) {

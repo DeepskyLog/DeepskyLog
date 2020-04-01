@@ -1,6 +1,6 @@
 <?php
 /**
- * Instrument Factory. Creates an instrument with an user_id between 1 and 50.
+ * Instrument Factory. Creates an instrument.
  *
  * PHP Version 7
  *

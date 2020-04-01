@@ -1,10 +1,10 @@
 <?php
 /**
- * Eyepiece Factory. Creates an eyepiece with an user_id between 1 and 50.
+ * Eyepiece Factory. Creates an eyepiece.
  *
  * PHP Version 7
  *
- * @category Lenses
+ * @category Eyepieces
  * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>

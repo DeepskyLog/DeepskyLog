@@ -1,10 +1,10 @@
 <?php
 /**
- * Filter Factory. Creates a filter with an user_id between 1 and 50.
+ * Filter Factory. Creates a filter.
  *
  * PHP Version 7
  *
- * @category Lenses
+ * @category Filter
  * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>

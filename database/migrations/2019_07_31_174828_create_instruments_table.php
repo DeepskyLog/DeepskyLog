@@ -15,7 +15,7 @@ class CreateInstrumentsTable extends Migration
         Schema::create(
             'instruments',
             function (Blueprint $table) {
-                $table->bigIncrements('id');
+                $table->increments('id');
                 $table->string('name', 255);
                 $table->float('diameter');
                 $table->unsignedInteger('type');
