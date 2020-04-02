@@ -48,6 +48,20 @@
         <td>{{  $eyepiece->type }}</td>
     </tr>
 
+    @auth
+    @if ($eyepiece->user_id == Auth::user()->id)
+        <tr>
+            <td>{{ _i("First observation") }}</td>
+            <td>ENTER FIRST OBSERVATION OR REMOVE IF NOT YET USED</td>
+        </tr>
+
+        <tr>
+            <td>{{ _i("Last observation") }}</td>
+            <td>ENTER LAST OBSERVATION OR REMOVE IF NOT YET USED</td>
+        </tr>
+    @endif
+    @endauth
+
     <tr>
         <td>{{ _i("Owner") }}</td>
         <td><a href="/users/{{ $eyepiece->user_id }}">{{  $eyepiece->user->name }}</a></td>

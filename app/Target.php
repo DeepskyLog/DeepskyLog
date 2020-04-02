@@ -44,6 +44,7 @@ class Target extends Model
 
     protected $fillable = ['name', 'type'];
 
+    // These are the fields that are created dynamically, using the get...Attribute methods.
     protected $appends = ['rise', 'contrast', 'contrast_type', 'contrast_popup',
         'prefMag', 'prefMagEasy', 'rise_popup', 'transit', 'transit_popup',
         'set', 'set_popup', 'bestTime', 'maxAlt', 'maxAlt_popup',
