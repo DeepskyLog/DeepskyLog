@@ -34,6 +34,7 @@
 
 [data-theme="dark"] .btn-light {
     background-color: #717171;
+    color: #ffffff;
 }
 
 [data-theme="dark"] .fa-inbox:before {
@@ -472,6 +473,10 @@
 
 [data-theme="dark"] a {
     color: #ffffff;
+}
+
+[data-theme="dark"] .alert-warning a {
+    color: #999999;
 }
 
 [data-theme="dark"] a:hover, a:focus {
