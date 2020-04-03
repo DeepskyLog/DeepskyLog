@@ -37,7 +37,7 @@ class LocationController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified'])->except(['show']);
+        $this->middleware(['auth', 'verified'])->except(['show', 'getImage']);
     }
 
     /**
@@ -336,6 +336,8 @@ class LocationController extends Controller
      */
     public function deleteImage($id)
     {
+        $this->authorize('update', Location::find($id));
+
         Location::find($id)
             ->getFirstMedia('location')
             ->delete();

@@ -40,7 +40,7 @@ class UserController extends Controller
     {
         // isAdmin middleware lets only users with a
         // specific permission to access these resources
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth', 'verified'])->except(['getImage']);
     }
 
     /**
@@ -85,6 +85,8 @@ class UserController extends Controller
      */
     protected function chartObservationsPerYear($user)
     {
+        // TODO: Use https://charts.erik.cat/ here for charts!
+        // TODO: https://dev.to/arielmejiadev/use-laravel-charts-in-laravel-5bbm
         return \Chart::title(
             [
                 'text' => _i('Number of observations per year: ') . $user->name,
