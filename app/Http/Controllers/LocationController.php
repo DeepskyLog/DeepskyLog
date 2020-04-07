@@ -142,8 +142,7 @@ class LocationController extends Controller
 
         if ($request->picture != null) {
             // Add the picture
-            Location::find($location->id)
-                ->addMedia($request->picture->path())
+            $location->addMedia($request->picture->path())
                 ->usingFileName($location->id . '.png')
                 ->toMediaCollection('location');
         }
@@ -166,10 +165,15 @@ class LocationController extends Controller
         return $request->validate(
             [
                 'user_id' => 'required',
-                'name' => 'required|min:4',
-                'latitude' => 'required', 'longitude' => 'required',
+                'name' => 'required|min:6',
+                'latitude' => 'required|numeric|lte:90|gte:-90',
+                'longitude' => 'required|numeric|lte:180|gte:-180',
                 'country' => 'required',
-                'elevation' => 'required', 'timezone' => 'required'
+                'elevation' => 'required|numeric|lte:8888|gte:-200',
+                'timezone' => 'required|timezone',
+                'lm' => 'numeric|lte:8.0|gte:-1.0',
+                'sqm' => 'numeric|lte:22.0|gte:10.0',
+                'bortle' => 'numeric|lte:9|gte:1',
             ]
         );
     }
@@ -261,16 +265,14 @@ class LocationController extends Controller
             $location->update(['bortle' => $request->get('bortle')]);
 
             if ($request->picture != null) {
-                if (Location::find($location->id)->getFirstMedia('location') != null
+                if ($location->getFirstMedia('location') != null
                 ) {
                     // First remove the current image
-                    Location::find($location->id)
-                    ->getFirstMedia('location')
-                    ->delete();
+                    $location->getFirstMedia('location')
+                        ->delete();
                 }
                 // Update the picture
-                Location::find($location->id)
-                    ->addMedia($request->picture->path())
+                $location->addMedia($request->picture->path())
                     ->usingFileName($location->id . '.png')
                     ->toMediaCollection('location');
             }
@@ -315,7 +317,7 @@ class LocationController extends Controller
     {
         if (Location::find($id)->hasMedia('location')) {
             return Location::find($id)
-                ->getFirstMedia('location');
+                ->getFirstMedia('location')->getUrl('thumb');
         } else {
             Location::find($id)
                 ->addMediaFromUrl(asset('images/location.png'))
@@ -323,7 +325,7 @@ class LocationController extends Controller
                 ->toMediaCollection('location');
 
             return Location::find($id)
-                ->getFirstMedia('location');
+                ->getFirstMedia('location')->conversion('thumb');
         }
     }
 

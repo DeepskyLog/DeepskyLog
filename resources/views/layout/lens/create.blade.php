@@ -58,7 +58,7 @@
             <span class="help-block">{{ _i("> 1.0 for Barlow lenses, < 1.0 for shapley lenses.") }}</span>
         </div>
 
-        {!! _i('Upload a picture of your lens.') !!}
+        {!! _i('Upload a picture of your lens.') . ' (max 10 Mb)' !!}
 
         <input id="picture" name="picture" type="file">
 

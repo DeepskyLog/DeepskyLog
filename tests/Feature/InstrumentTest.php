@@ -81,7 +81,7 @@ class InstrumentTest extends TestCase
         $response->assertStatus(200);
         // Check if we see the correct page
         $response->assertSee(
-            'Instruments of ' . html_entity_decode($this->_user->name)
+            'Instruments of ' . $this->_user->name
         );
     }
 

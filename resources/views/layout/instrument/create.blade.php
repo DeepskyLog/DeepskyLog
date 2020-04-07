@@ -100,7 +100,7 @@
             </div>
         </div>
 
-        {!! _i('Upload a picture of your instrument.') !!}
+        {!! _i('Upload a picture of your instrument.') . ' (max 10 Mb)' !!}
 
         <input id="picture" name="picture" type="file">
 

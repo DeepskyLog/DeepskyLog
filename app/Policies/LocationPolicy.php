@@ -20,6 +20,6 @@ class LocationPolicy
      */
     public function update(User $user, Location $location)
     {
-        return $user->id === $location->user_id;
+        return $user->id == $location->user_id;
     }
 }

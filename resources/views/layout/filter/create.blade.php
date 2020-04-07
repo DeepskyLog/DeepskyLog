@@ -90,7 +90,7 @@
             </div>
         </div>
 
-        {!! _i('Upload a picture of your filter.') !!}
+        {!! _i('Upload a picture of your filter.') . ' (max 10 Mb)' !!}
 
         <input id="picture" name="picture" type="file">
 

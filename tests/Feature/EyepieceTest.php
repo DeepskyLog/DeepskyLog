@@ -81,7 +81,7 @@ class EyepieceTest extends TestCase
         $response->assertStatus(200);
         // Check if we see the correct page
         $response->assertSee(
-            'Eyepieces of ' . html_entity_decode($this->_user->name)
+            'Eyepieces of ' . $this->_user->name
         );
     }
 

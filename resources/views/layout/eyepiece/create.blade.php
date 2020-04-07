@@ -116,7 +116,7 @@
             </select>
         </div>
 
-        {!! _i('Upload a picture of your eyepiece.') !!}
+        {!! _i('Upload a picture of your eyepiece.') . ' (max 10 Mb)' !!}
 
         <input id="picture" name="picture" type="file">
 

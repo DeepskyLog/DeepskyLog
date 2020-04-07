@@ -239,7 +239,7 @@ class LoginTest extends TestCase
 
         $response->assertRedirect('/login');
         $response->assertSessionHasErrors('email');
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             sprintf(
                 '/^%s$/',
                 str_replace('\:seconds', '\d+', preg_quote(__('auth.throttle'), '/'))

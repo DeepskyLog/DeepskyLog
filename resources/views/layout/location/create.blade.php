@@ -110,7 +110,7 @@
                 </td>
             </table>
             <li>
-                {!! _i('Upload a picture of your location.') !!}
+                {!! _i('Upload a picture of your location.') . ' (max 10 Mb)' !!}
             </li>
 
             <input id="picture" name="picture" type="file">
@@ -143,7 +143,7 @@
                 '<img class="file-preview-image kv-preview-data" src="/location/{{ $location->id }}/getImage">'
             ],
             initialPreviewConfig: [
-                {caption: "{{ App\Location::find($location->id)->getFirstMedia('location')->file_name }}", size: {{ App\Location::find($location->id)->getFirstMedia('location')->size }}, url: "/location/{{ $location->id }}/deleteImage", key: 1},
+                {caption: "{{ $location->getFirstMedia('location')->file_name }}", size: {{ $location->getFirstMedia('location')->size }}, url: "/location/{{ $location->id }}/deleteImage", key: 1},
             ],
             @endif
         }
