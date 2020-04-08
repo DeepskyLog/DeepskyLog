@@ -173,7 +173,12 @@ class InstrumentController extends Controller
      */
     public function show(Instrument $instrument)
     {
-        return view('layout.instrument.show', ['instrument' => $instrument]);
+        $media = $this->getImage($instrument);
+
+        return view(
+            'layout.instrument.show',
+            ['instrument' => $instrument, 'media' => $media]
+        );
     }
 
     /**
@@ -274,24 +279,18 @@ class InstrumentController extends Controller
     /**
      * Returns the image of the instrument.
      *
-     * @param int $id The id of the instrument
+     * @param Instrument $instrument The instrument
      *
      * @return MediaObject the image of the instrument
      */
-    public function getImage($id)
+    public function getImage(Instrument $instrument)
     {
-        if (Instrument::find($id)->hasMedia('instrument')) {
-            return Instrument::find($id)
-                ->getFirstMedia('instrument');
-        } else {
-            Instrument::find($id)
-                ->addMediaFromUrl(asset('images/telescopeCartoon.png'))
-                ->usingFileName($id . '.png')
+        if (!$instrument->hasMedia('instrument')) {
+            $instrument->addMediaFromUrl(asset('images/telescopeCartoon.png'))
+                ->usingFileName($instrument->id . '.png')
                 ->toMediaCollection('instrument');
-
-            return Instrument::find($id)
-                ->getFirstMedia('instrument');
         }
+        return $instrument->getFirstMedia('instrument');
     }
 
     /**

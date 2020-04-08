@@ -69,10 +69,12 @@ class UserController extends Controller
         $obsPerYear = $this->chartObservationsPerYear($user);
         $obsPerMonth = $this->chartObservationsPerMonth($user);
 
+        $media = $this->getImage($user);
+
         return view(
             'users.view',
             ['user' => $user, 'observationsPerYear' => $obsPerYear,
-                'observationsPerMonth' => $obsPerMonth]
+                'observationsPerMonth' => $obsPerMonth, 'media' => $media]
         );
     }
 
@@ -363,24 +365,18 @@ class UserController extends Controller
     /**
      * Returns the image of the observer.
      *
-     * @param int $id The id of the observer
+     * @param User $user The observer
      *
      * @return MediaObject the image of the observer
      */
-    public function getImage($id)
+    public function getImage($user)
     {
-        if (User::find($id)->hasMedia('observer')) {
-            return User::find($id)
-                ->getFirstMedia('observer');
-        } else {
-            User::find($id)
-                ->addMediaFromUrl(asset('img/profile.png'))
-                ->usingFileName($id . '.png')
+        if (!$user->hasMedia('observer')) {
+            $user->addMediaFromUrl(asset('images/profile.png'))
+                ->usingFileName($user->id . '.png')
                 ->toMediaCollection('observer');
-
-            return User::find($id)
-                ->getFirstMedia('observer');
         }
+        return $user->getFirstMedia('observer');
     }
 
     /**

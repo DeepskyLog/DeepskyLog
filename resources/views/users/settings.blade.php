@@ -34,7 +34,7 @@
 
             <form role="form" action="/users/{{ $user->id }}/settings" method="POST" enctype="multipart/form-data">
                 <br />
-                <label class="col-form-label"> {{ _i("Change profile picture") }}</label>
+                <label class="col-form-label"> {{ _i("Change profile picture") . ' (max 10 Mb)' }}</label>
                 <input id="picture" name="picture" type="file">
 
                 @csrf

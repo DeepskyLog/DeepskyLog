@@ -187,7 +187,10 @@ class LocationController extends Controller
      */
     public function show(Location $location)
     {
-        return view('layout.location.show', ['location' => $location]);
+        $media = $this->getImage($location);
+        return view(
+            'layout.location.show', ['location' => $location, 'media' => $media]
+        );
     }
 
     /**
@@ -309,24 +312,18 @@ class LocationController extends Controller
     /**
      * Returns the image of the location.
      *
-     * @param int $id The id of the location
+     * @param Location $location The location
      *
      * @return MediaObject the image of the location
      */
-    public function getImage($id)
+    public function getImage(Location $location)
     {
-        if (Location::find($id)->hasMedia('location')) {
-            return Location::find($id)
-                ->getFirstMedia('location')->getUrl('thumb');
-        } else {
-            Location::find($id)
-                ->addMediaFromUrl(asset('images/location.png'))
-                ->usingFileName($id . '.png')
+        if (!$location->hasMedia('location')) {
+            $location->addMediaFromUrl(asset('images/location.png'))
+                ->usingFileName($location->id . '.png')
                 ->toMediaCollection('location');
-
-            return Location::find($id)
-                ->getFirstMedia('location')->conversion('thumb');
         }
+        return $location->getFirstMedia('location');
     }
 
     /**

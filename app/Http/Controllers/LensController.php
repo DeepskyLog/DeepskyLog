@@ -164,7 +164,9 @@ class LensController extends Controller
      */
     public function show(Lens $lens)
     {
-        return view('layout.lens.show', ['lens' => $lens]);
+        $media = $this->getImage($lens);
+
+        return view('layout.lens.show', ['lens' => $lens, 'media' => $media]);
     }
 
     /**
@@ -237,24 +239,18 @@ class LensController extends Controller
     /**
      * Returns the image of the lens.
      *
-     * @param int $id The id of the lens
+     * @param Lens $lens The lens
      *
      * @return MediaObject the image of the lens
      */
-    public function getImage($id)
+    public function getImage(Lens $lens)
     {
-        if (Lens::find($id)->hasMedia('lens')) {
-            return Lens::find($id)
-                ->getFirstMedia('lens');
-        } else {
-            Lens::find($id)
-                ->addMediaFromUrl(asset('images/lens.jpg'))
-                ->usingFileName($id . '.png')
+        if (!$lens->hasMedia('lens')) {
+            $lens->addMediaFromUrl(asset('images/lens.jpg'))
+                ->usingFileName($lens->id . '.png')
                 ->toMediaCollection('lens');
-
-            return Lens::find($id)
-                ->getFirstMedia('lens');
         }
+        return $lens->getFirstMedia('lens');
     }
 
     /**

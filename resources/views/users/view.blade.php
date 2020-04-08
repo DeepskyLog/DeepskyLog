@@ -7,7 +7,12 @@
 <table>
     <tr>
         <td><h3>{{ $user->name }}</h3></td>
-        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="100" style="border-radius: 20%" src="/users/{{ $user->id }}/getImage"></td>
+        <td>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            @if ($media)
+            <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $user->name }}">
+            @endif
+        </td>
     </tr>
 </table>
 <hr>

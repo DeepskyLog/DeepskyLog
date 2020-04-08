@@ -8,7 +8,11 @@
 <table class="table table-sm">
     <tr>
         <th><h4>{{ $instrument->name }}</h4></th>
-        <th><img width="100" style="border-radius: 20%" src="/instrument/{{ $instrument->id }}/getImage"></th>
+        <th>
+            @if ($media)
+            <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $instrument->name }}">
+            @endif
+        </th>
     </tr>
     <tr>
         <td>{{ _i("Type") }}</td>

@@ -211,7 +211,10 @@ class EyepieceController extends Controller
      */
     public function show(Eyepiece $eyepiece)
     {
-        return view('layout.eyepiece.show', ['eyepiece' => $eyepiece]);
+        $media = $this->getImage($eyepiece);
+        return view(
+            'layout.eyepiece.show', ['eyepiece' => $eyepiece, 'media' => $media]
+        );
     }
 
     /**
@@ -320,24 +323,18 @@ class EyepieceController extends Controller
     /**
      * Returns the image of the eyepiece.
      *
-     * @param int $id The id of the eyepiece
+     * @param Eyepiece $eyepiece The eyepiece
      *
      * @return MediaObject the image of the eyepiece
      */
-    public function getImage($id)
+    public function getImage(Eyepiece $eyepiece)
     {
-        if (Eyepiece::find($id)->hasMedia('eyepiece')) {
-            return Eyepiece::find($id)
-                ->getFirstMedia('eyepiece');
-        } else {
-            Eyepiece::find($id)
-                ->addMediaFromUrl(asset('images/eyepiece.jpg'))
-                ->usingFileName($id . '.png')
+        if (!$eyepiece->hasMedia('eyepiece')) {
+            $eyepiece->addMediaFromUrl(asset('images/eyepiece.jpg'))
+                ->usingFileName($eyepiece->id . '.png')
                 ->toMediaCollection('eyepiece');
-
-            return Eyepiece::find($id)
-                ->getFirstMedia('eyepiece');
         }
+        return $eyepiece->getFirstMedia('eyepiece');
     }
 
     /**
