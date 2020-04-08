@@ -15,7 +15,7 @@ class CreateFilterTypeTable extends Migration
     {
         Schema::create(
             'filter_types', function (Blueprint $table) {
-                $table->integer('id');
+                $table->integer('id')->primary();
                 $table->string('type');
             }
         );

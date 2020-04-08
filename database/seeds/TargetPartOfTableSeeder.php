@@ -14,6 +14,7 @@
 
 use Illuminate\Database\Seeder;
 use App\ObjectPartofOld;
+use App\TargetName;
 use App\TargetPartOf;
 
 /**
@@ -49,13 +50,15 @@ class TargetPartOfTableSeeder extends Seeder
                 );
             }
 
-            TargetPartOf::firstOrCreate(
-                [
-                    'objectname' => $oldObject->objectname,
-                    'partofname' => $oldObject->partofname,
-                    'created_at' => $date
-                ]
-            );
+            if (TargetName::where('objectname', '=', $oldObject->objectname)->count()) {
+                TargetPartOf::firstOrCreate(
+                    [
+                        'objectname' => $oldObject->objectname,
+                        'partofname' => $oldObject->partofname,
+                        'created_at' => $date
+                    ]
+                );
+            }
         }
     }
 }

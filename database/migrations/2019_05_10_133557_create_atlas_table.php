@@ -15,7 +15,7 @@ class CreateAtlasTable extends Migration
     {
         Schema::create(
             'atlases', function (Blueprint $table) {
-                $table->string('code');
+                $table->string('code')->primary();
                 $table->string('name');
             }
         );

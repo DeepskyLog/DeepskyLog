@@ -41,6 +41,7 @@ class AddColumnsToUsersTable extends Migration
 
             $table->foreign('stdlocation')->references('id')->on('locations');
             $table->foreign('stdtelescope')->references('id')->on('instruments');
+            $table->foreign('standardAtlasCode')->references('code')->on('atlases');
         });
     }
 

@@ -12,10 +12,12 @@ class CreateEyepieceBrandsTable extends Migration
      */
     public function up()
     {
-        Schema::create('eyepiece_brands', function (Blueprint $table) {
-            $table->string('brand', 128);
-            $table->timestamps();
-        });
+        Schema::create(
+            'eyepiece_brands', function (Blueprint $table) {
+                $table->string('brand', 128)->primary();
+                $table->timestamps();
+            }
+        );
     }
 
     /**

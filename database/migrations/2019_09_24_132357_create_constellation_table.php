@@ -13,10 +13,12 @@ class CreateConstellationTable extends Migration
      */
     public function up()
     {
-        Schema::create('constellations', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('name');
-        });
+        Schema::create(
+            'constellations', function (Blueprint $table) {
+                $table->string('id')->primary();
+                $table->string('name');
+            }
+        );
 
         // Insert the constellations
         DB::table('constellations')->insert(

@@ -21,6 +21,9 @@ class CreateTargetpartofTable extends Migration
                 $table->index('partofname', 'Index_partof');
                 $table->timestamps();
                 $table->unique(['objectname', 'partofname']);
+
+                $table->foreign('objectname')->references('objectname')
+                    ->on('target_names');
             }
         );
     }
