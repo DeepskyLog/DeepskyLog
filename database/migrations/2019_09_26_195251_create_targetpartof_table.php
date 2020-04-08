@@ -13,13 +13,16 @@ class CreateTargetpartofTable extends Migration
      */
     public function up()
     {
-        Schema::create('target_partof', function (Blueprint $table) {
-            $table->string('objectname', 128);
-            $table->string('partofname', 128);
-            $table->index('objectname', 'Index_object');
-            $table->index('partofname', 'Index_partof');
-            $table->timestamps();
-        });
+        Schema::create(
+            'target_partof', function (Blueprint $table) {
+                $table->string('objectname', 128);
+                $table->string('partofname', 128);
+                $table->index('objectname', 'Index_object');
+                $table->index('partofname', 'Index_partof');
+                $table->timestamps();
+                $table->unique(['objectname', 'partofname']);
+            }
+        );
     }
 
     /**

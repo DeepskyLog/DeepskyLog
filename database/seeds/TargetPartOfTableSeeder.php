@@ -42,14 +42,14 @@ class TargetPartOfTableSeeder extends Seeder
                 $date = date('Y-m-d H:i:s');
             } else {
                 list($year, $month, $day, $hour, $minute, $second)
-                       = sscanf($oldObject->timestamp, '%4d%2d%2d%2d%2d%d');
+                    = sscanf($oldObject->timestamp, '%4d%2d%2d%2d%2d%d');
                 $date = date(
                     'Y-m-d H:i:s',
                     mktime($hour, $minute, $second, $month, $day, $year)
                 );
             }
 
-            TargetPartOf::create(
+            TargetPartOf::firstOrCreate(
                 [
                     'objectname' => $oldObject->objectname,
                     'partofname' => $oldObject->partofname,
