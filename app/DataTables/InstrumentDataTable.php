@@ -98,7 +98,7 @@ class InstrumentDataTable extends DataTable
                 }
             )->editColumn(
                 'observations',
-                '<a href="/observations/instrument/{{ $id }}">{{ $observations }}</a>'
+                '<a href="/observations/instrument/{{ $id }}">TODO</a>'
             )->editColumn(
                 'active',
                 '<form method="POST" action="/instrument/{{ $id }}">

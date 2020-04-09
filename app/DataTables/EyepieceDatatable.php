@@ -54,7 +54,7 @@ class EyepieceDataTable extends DataTable
             )
             ->editColumn(
                 'observations',
-                '<a href="/observations/eyepiece/{{ $id }}">{{ $observations }}</a>'
+                '<a href="/observations/eyepiece/{{ $id }}">TODO</a>'
             )
             ->editColumn(
                 'focalLength',

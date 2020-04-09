@@ -67,14 +67,19 @@ class UserDataTable extends DataTable
                 // TODO: Make sortable
                 'observations',
                 function ($user) {
-                    return count($user->lenses);
+                    return 'TODO';
                 }
             )->addColumn(
-                // TODO: Add the correct number of instruments
                 // TODO: Make sortable
                 'instruments',
                 function ($user) {
-                    return count($user->lenses);
+                    return count($user->instruments);
+                }
+            )->addColumn(
+                // TODO: Make sortable
+                'locations',
+                function ($user) {
+                    return count($user->locations);
                 }
             )->addColumn(
                 // TODO: Add the correct number of lists
@@ -174,6 +179,12 @@ class UserDataTable extends DataTable
             ['name' => 'instruments',
                 'title' => _i('Instruments'),
                 'data' => 'instruments',
+                'orderable' => false,
+                'searchable' => false,
+            ],
+            ['name' => 'locations',
+                'title' => _i('Locations'),
+                'data' => 'locations',
                 'orderable' => false,
                 'searchable' => false,
             ],

@@ -66,7 +66,7 @@ class FilterDataTable extends DataTable
             )
             ->editColumn(
                 'observations',
-                '<a href="/observations/filter/{{ $id }}">{{ $observations }}</a>'
+                '<a href="/observations/filter/{{ $id }}">TODO</a>'
             )
             ->editColumn(
                 'user.name',

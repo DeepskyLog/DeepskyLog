@@ -68,7 +68,7 @@ class LocationDataTable extends DataTable
                 }
             )->editColumn(
                 'observations',
-                '<a href="/observations/location/{{ $id }}">{{ $observations }}</a>'
+                '<a href="/observations/location/{{ $id }}">TODO</a>'
             )->editColumn(
                 'elevation',
                 '{{ $elevation }} m'
