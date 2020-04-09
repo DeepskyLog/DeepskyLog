@@ -22,7 +22,6 @@ class CreateEyepiecesTable extends Migration
                 $table->float('maxFocalLength')->nullable();
                 $table->unsignedInteger('user_id');
                 $table->boolean('active')->default(true);
-                $table->unsignedInteger('observations')->default(0);
 
                 $table->timestamps();
 

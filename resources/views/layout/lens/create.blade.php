@@ -114,7 +114,7 @@
             allowedFileTypes: ['image'],    // allow only images
             'showUpload': false,
             maxFileSize: 10000,
-            @if ($lens->id != null && App\Lens::find($lens->id)->getFirstMedia('lens') != null)
+            @if ($lens->id != null && $lens->getFirstMedia('lens') != null)
             initialPreview: [
                 '<img class="file-preview-image kv-preview-data" src="/lens/{{ $lens->id }}/getImage">'
             ],

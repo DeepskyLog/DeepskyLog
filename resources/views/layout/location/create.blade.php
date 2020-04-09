@@ -138,7 +138,7 @@
             allowedFileTypes: ['image'],    // allow only images
             'showUpload': false,
             maxFileSize: 10000,
-            @if ($location->id != null && App\Location::find($location->id)->getFirstMedia('location') != null)
+            @if ($location->id != null && $location->getFirstMedia('location') != null)
             initialPreview: [
                 '<img class="file-preview-image kv-preview-data" src="/location/{{ $location->id }}/getImage">'
             ],

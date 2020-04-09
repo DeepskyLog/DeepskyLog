@@ -27,7 +27,6 @@ class CreateLocationsTable extends Migration
                 $table->unsignedSmallInteger('bortle')->nullable();
                 $table->unsignedInteger('user_id');
                 $table->boolean('active')->default(true);
-                $table->unsignedInteger('observations')->default(0);
 
                 $table->timestamps();
 
