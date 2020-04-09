@@ -174,7 +174,7 @@
             <tr>
                 <th></th>
                 <th> {{ _i("Total") }} </th>
-                @foreach (\App\ObservationType::all() as $type)
+                @foreach ($observationTypes as $type)
                     <th>{{ _i($type->name) }}</th>
                 @endforeach
             </tr>
@@ -182,7 +182,7 @@
             <tr>
                 <td> {{ _i("Number of observations") }} </td>
                 <td>36 / 6000 (0.06%)</td>
-                @foreach (\App\ObservationType::all() as $type)
+                @foreach ($observationTypes as $type)
                     <td>6 / 1000 (0.06%)</td>
                 @endforeach
             </tr>
@@ -190,7 +190,7 @@
             <tr>
                 <td> {{ _i("Observations last year") }} </td>
                 <td>30 / 300 (10.0%)</td>
-                @foreach (\App\ObservationType::all() as $type)
+                @foreach ($observationTypes as $type)
                     <td>5 / 50 (10.0%)</td>
                 @endforeach
             </tr>
@@ -198,7 +198,7 @@
             <tr>
                 <td> {{ _i("Number of drawings") }} </td>
                 <td>24 / 1200 (0.5%)</td>
-                @foreach (\App\ObservationType::all() as $type)
+                @foreach ($observationTypes as $type)
                     <td>4 / 2000 (0.5%)</td>
                 @endforeach
             </tr>
@@ -206,7 +206,7 @@
             <tr>
                 <td> {{ _i("Drawings last year") }} </td>
                 <td>6 / 60 (1.0%)</td>
-                @foreach (\App\ObservationType::all() as $type)
+                @foreach ($observationTypes as $type)
                     <td>1 / 10 (1.0%)</td>
                 @endforeach
             </tr>
@@ -214,16 +214,16 @@
             <tr>
                 <td> {{ _i("Different objects") }} </td>
                 <td>240 / {{ \App\Target::count() }} ({{ number_format(240.0 / \App\Target::count() * 100, 2)}}%)</td>
-                @foreach (\App\ObservationType::all() as $type)
-                    <td>40 / {{ App\ObservationType::targetCount($type->type) }}
-                        ({{ number_format(40 / App\ObservationType::targetCount($type->type) * 100, 2) }}%)</td>
+                @foreach ($observationTypes as $type)
+                    <td>40 / {{ $numberOfObjects[$type->type] }}
+                        ({{ number_format(40 / $numberOfObjects[$type->type] * 100, 2) }}%)</td>
                 @endforeach
             </tr>
 
             <tr>
                 <td> {{ _i("Messier objects") }} </td>
                 <td></td>
-                @foreach (\App\ObservationType::all() as $type)
+                @foreach ($observationTypes as $type)
                     @if ($type->type == "ds")
                         <td>110 / 110 (100%)</td>
                     @else
@@ -235,7 +235,7 @@
             <tr>
                 <td> {{ _i("Caldwell objects") }} </td>
                 <td></td>
-                @foreach (\App\ObservationType::all() as $type)
+                @foreach ($observationTypes as $type)
                     @if ($type->type == "ds")
                         <td>11 / 110 (10%)</td>
                     @else
@@ -247,7 +247,7 @@
             <tr>
                 <td> {{ _i("H400 objects") }} </td>
                 <td></td>
-                @foreach (\App\ObservationType::all() as $type)
+                @foreach ($observationTypes as $type)
                     @if ($type->type == "ds")
                         <td>48 / 400 (1.2%)</td>
                     @else
@@ -259,7 +259,7 @@
             <tr>
                 <td> {{ _i("H400-II objects") }} </td>
                 <td></td>
-                @foreach (\App\ObservationType::all() as $type)
+                @foreach ($observationTypes as $type)
                     @if ($type->type == "ds")
                         <td>24 / 400 (0.6%)</td>
                     @else
@@ -271,7 +271,7 @@
             <tr>
                 <td> {{ _i("Rank") }} </td>
                 <td> 17 / 255</td>
-                @foreach (\App\ObservationType::all() as $type)
+                @foreach ($observationTypes as $type)
                     <td>12 / 123</td>
                 @endforeach
             </tr>

@@ -32,7 +32,10 @@ class ObservationType extends Model
     {
         $col = collect();
 
-        foreach (\App\TargetType::where('observation_type', $observation_type)->get() as $type) {
+        $observationTypes = \App\TargetType::with('App\Target')->where(
+            'observation_type', $observation_type
+        )->get();
+        foreach ($observationTypes as $type) {
             $col = $col->toBase()->merge($type->targets()->get());
         }
         return $col;
@@ -47,7 +50,9 @@ class ObservationType extends Model
     {
         $count = 0;
 
-        foreach (\App\TargetType::where('observation_type', $observation_type)->get() as $type) {
+        $types = \App\TargetType::where('observation_type', $observation_type)
+            ->get();
+        foreach ($types as $type) {
             $count += $type->targets()->count();
         }
         return $count;

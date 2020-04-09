@@ -71,10 +71,21 @@ class UserController extends Controller
 
         $media = $this->getImage($user);
 
+        $observationTypes =\App\ObservationType::all();
+
+        foreach ($observationTypes as $type) {
+            $numberOfObjects[$type->type]
+                = \App\ObservationType::targetCount($type->type);
+        }
+
         return view(
             'users.view',
-            ['user' => $user, 'observationsPerYear' => $obsPerYear,
-                'observationsPerMonth' => $obsPerMonth, 'media' => $media]
+            [
+                'user' => $user, 'observationsPerYear' => $obsPerYear,
+                'observationsPerMonth' => $obsPerMonth, 'media' => $media,
+                'observationTypes' => $observationTypes,
+                'numberOfObjects' => $numberOfObjects
+            ]
         );
     }
 
