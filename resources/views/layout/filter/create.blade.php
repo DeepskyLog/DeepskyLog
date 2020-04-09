@@ -176,12 +176,12 @@
             allowedFileTypes: ['image'],    // allow only images
             'showUpload': false,
             maxFileSize: 10000,
-            @if ($filter->id != null && App\Filter::find($filter->id)->getFirstMedia('filter') != null)
+            @if ($filter->id != null && $filter->getFirstMedia('filter') != null)
             initialPreview: [
                 '<img class="file-preview-image kv-preview-data" src="/filter/{{ $filter->id }}/getImage">'
             ],
             initialPreviewConfig: [
-                {caption: "{{ App\Filter::find($filter->id)->getFirstMedia('filter')->file_name }}", size: {{ App\Filter::find($filter->id)->getFirstMedia('filter')->size }}, url: "/filter/{{ $filter->id }}/deleteImage", key: 1},
+                {caption: "{{ $filter->getFirstMedia('filter')->file_name }}", size: {{ $filter->getFirstMedia('filter')->size }}, url: "/filter/{{ $filter->id }}/deleteImage", key: 1},
             ],
             @endif
         }

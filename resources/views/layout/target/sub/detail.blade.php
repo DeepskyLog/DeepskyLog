@@ -53,7 +53,7 @@
             @auth
             <td colspan="3"><span class="float-right">
                 @if ($target->ra != null)
-                {{ App\Atlases::where('code', Auth::user()->standardAtlasCode)->first()['name'] }}
+                {{ App\Atlas::where('code', Auth::user()->standardAtlasCode)->first()['name'] }}
                 {{ _i(" page") }}</span></td>
                 @endif
             <td colspan="3">{{ $target->atlaspage(Auth::user()->standardAtlasCode) }}</td>

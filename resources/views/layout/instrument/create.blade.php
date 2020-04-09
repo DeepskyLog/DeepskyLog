@@ -187,12 +187,12 @@
             allowedFileTypes: ['image'],    // allow only images
             'showUpload': false,
             maxFileSize: 10000,
-            @if ($instrument->id != null && App\Instrument::find($instrument->id)->getFirstMedia('instrument') != null)
+            @if ($instrument->id != null && $instrument->getFirstMedia('instrument') != null)
             initialPreview: [
                 '<img class="file-preview-image kv-preview-data" src="/instrument/{{ $instrument->id }}/getImage">'
             ],
             initialPreviewConfig: [
-                {caption: "{{ App\Instrument::find($instrument->id)->getFirstMedia('instrument')->file_name }}", size: {{ App\Instrument::find($instrument->id)->getFirstMedia('instrument')->size }}, url: "/instrument/{{ $instrument->id }}/deleteImage", key: 1},
+                {caption: "{{ $instrument->getFirstMedia('instrument')->file_name }}", size: {{ $instrument->getFirstMedia('instrument')->size }}, url: "/instrument/{{ $instrument->id }}/deleteImage", key: 1},
             ],
             @endif
         }

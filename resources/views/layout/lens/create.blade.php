@@ -119,7 +119,7 @@
                 '<img class="file-preview-image kv-preview-data" src="/lens/{{ $lens->id }}/getImage">'
             ],
             initialPreviewConfig: [
-                {caption: "{{ App\Lens::find($lens->id)->getFirstMedia('lens')->file_name }}", size: {{ App\Lens::find($lens->id)->getFirstMedia('lens')->size }}, url: "/lens/{{ $lens->id }}/deleteImage", key: 1},
+                {caption: "{{ $lens->getFirstMedia('lens')->file_name }}", size: {{ $lens->getFirstMedia('lens')->size }}, url: "/lens/{{ $lens->id }}/deleteImage", key: 1},
             ],
             @endif
         }
