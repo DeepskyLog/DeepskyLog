@@ -52,12 +52,14 @@ class MessageController extends Controller
     public function index()
     {
         // All threads that user is participating in
-        $allThreads = Thread::forUser(Auth::id())->latest('updated_at')->get();
+        $allThreads = Thread::forUser(Auth::id())
+            ->with(['participants', 'messages'])
+            ->latest('updated_at')->get();
 
         // All threads that user is participating in, with new messages
         $newThreads = Thread::forUserWithNewMessages(
             Auth::id()
-        )->latest('updated_at')->get();
+        )->with(['participants', 'messages'])->latest('updated_at')->get();
 
         $oldThreads = $allThreads->diff($newThreads);
 
@@ -154,7 +156,7 @@ class MessageController extends Controller
         $input = Input::all();
 
         if (count($input['recipients']) == 1) {
-            if ($input['recipients'][0] == "All") {
+            if ($input['recipients'][0] == 'All') {
                 $users = User::where('id', '!=', Auth::id())->get();
                 foreach ($users as $user) {
                     $thread = Thread::create(
@@ -196,6 +198,7 @@ class MessageController extends Controller
                         );
                     }
                 }
+
                 return redirect()->route('messages');
             }
         }
