@@ -76,7 +76,8 @@ class TargetController extends Controller
             $target = $targetname->target()->get()[0];
             if ($target != null) {
                 return $dataTable->with('target', $target)->render(
-                    'layout.target.show', compact('target', $target)
+                    'layout.target.show',
+                    compact('target', $target)
                 );
             } else {
                 abort(403, _i('The requested target does not exist.'));

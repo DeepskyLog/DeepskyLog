@@ -406,7 +406,7 @@ class Contrast extends Model
                 }
                 if ($intSB >= $this->_LTC[$this->_LTCSize - 1][0]) {
                     $logThreshContrast = $interpB
-                        + ($SB - $this->_LTC[$_this->LTCSize - 1][0])
+                        + ($SB - $this->_LTC[$this->_LTCSize - 1][0])
                         * ($interpB - $interpA);
                 } else {
                     $logThreshContrast = $interpA + ($SB - $intSB)
