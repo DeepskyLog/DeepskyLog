@@ -69,7 +69,7 @@ class UserController extends Controller
         $obsPerYear = $this->chartObservationsPerYear($user);
         $obsPerMonth = $this->chartObservationsPerMonth($user);
 
-        $media = $this->getImage($user->id);
+        $media = $this->getImage($id);
 
         $observationTypes = \App\ObservationType::all();
 
