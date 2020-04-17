@@ -13,8 +13,10 @@
 
 namespace App\Libraries;
 
-use DateTimeZone;
 use DateTime;
+use DateTimeZone;
+use Carbon\Carbon;
+use deepskylog\AstronomyLibrary\Time;
 
 /**
  * Procedures for calculating astronomical timing etc.
@@ -51,7 +53,7 @@ class AstroCalc
         $day = $date->format('d');
         $month = $date->format('m');
         $year = $date->format('Y');
-        $this->jd = gregoriantojd($month, $day, $year);
+        $this->jd = Time::getJd(Carbon::instance($date));
         $dateTimeZone = new DateTimeZone($timezone);
         $datestr = sprintf('%02d/%02d/%d', $month, $day, $year);
         $dateTime = new DateTime($datestr, $dateTimeZone);
