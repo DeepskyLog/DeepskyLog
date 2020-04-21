@@ -155,8 +155,6 @@
 
 </script>
 
-<script type="text/javascript" src="{{ URL::asset('js/sqm.js') }}"></script>
-
 <script type="text/javascript">
     var geocoder;
     var map;
@@ -435,11 +433,14 @@
             lm = 0.0;
             $("#lm").val(lm);
         }
-        sqm = lmToSqm(lm, {{ Auth::user()->fstOffset }});
-        $("#sqm").val(sqm);
+        $.getJSON('/nelmToSqm/' + lm, function(data) {
+            $('#sqm').val(Math.round(Number(data.sqm) * 100) / 100);
+        });
 
         bortleChange = 0;
-        $("#bortle").val(sqmToBortle(sqm)).change();
+        $.getJSON('/nelmToBortle/' + lm, function(data) {
+            $('#bortle').val(Number(data.bortle));
+        });
     });
 
     // Javascript to convert from sqm to limiting magnitude and bortle
@@ -451,11 +452,14 @@
             $("#sqm").val(22.0);
         }
 
-        lm = sqmToLm(sqm, {{ Auth::user()->fstOffset }});
-        $("#lm").val(lm);
+        $.getJSON('/sqmToNelm/' + sqm, function(data) {
+            $('#lm').val(Math.round(Number(data.nelm) * 10) / 10);
+        });
 
         bortleChange = 0;
-        $("#bortle").val(sqmToBortle(sqm)).change();
+        $.getJSON('/sqmToBortle/' + sqm, function(data) {
+            $('#bortle').val(Number(data.bortle));
+        });
     });
 
     // Javascript to convert from bortle to limiting magnitude and sqm
@@ -464,8 +468,12 @@
             bortle = $(this).find("option:selected").attr("value");
 
             if (bortleChange == 1) {
-                $("#lm").val(bortleToLm(bortle, {{ Auth::user()->fstOffset }}));
-                $("#sqm").val(bortleToSqm(bortle));
+                $.getJSON('/bortleToNelm/' + bortle, function(data) {
+                    $('#lm').val(Number(data.nelm));
+                });
+                $.getJSON('/bortleToSqm/' + bortle, function(data) {
+                    $('#sqm').val(Number(data.sqm));
+                });
             } else {
                 bortleChange = 1;
             }

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -187,22 +189,54 @@ Route::get('/users/{user}/settings', 'UserController@settings')
     ->name('users.settings');
 
 // Messages
-Route::group(['prefix' => 'messages'], function () {
-    Route::get('/', ['as' => 'messages', 'uses' => 'MessageController@index']);
-    Route::get('create', ['as' => 'messages.create', 'uses' => 'MessageController@create']);
-    Route::get('createAll', 'MessageController@createAll')->name('messages.createAll');
-    Route::post('/', ['as' => 'messages.store', 'uses' => 'MessageController@store']);
-    Route::get('{id}', ['as' => 'messages.show', 'uses' => 'MessageController@show']);
-    Route::put('{id}', ['as' => 'messages.update', 'uses' => 'MessageController@update']);
-    Route::get('/create/{id}', 'MessageController@createId')->name('messages.createId');
-});
+Route::group(
+    ['prefix' => 'messages'],
+    function () {
+        Route::get('/', ['as' => 'messages', 'uses' => 'MessageController@index']);
+        Route::get(
+            'create',
+            ['as' => 'messages.create', 'uses' => 'MessageController@create']
+        );
+        Route::get(
+            'createAll',
+            'MessageController@createAll'
+        )->name('messages.createAll');
+        Route::post(
+            '/',
+            ['as' => 'messages.store', 'uses' => 'MessageController@store']
+        );
+        Route::get(
+            '{id}',
+            ['as' => 'messages.show', 'uses' => 'MessageController@show']
+        );
+        Route::put(
+            '{id}',
+            ['as' => 'messages.update', 'uses' => 'MessageController@update']
+        );
+        Route::get(
+            '/create/{id}',
+            'MessageController@createId'
+        )->name('messages.createId');
+    }
+);
+
+// Converting nelm, sqm and bortle
+Route::get('/nelmToSqm/{nelm}', 'MagnitudeController@nelmToSqmJson');
+Route::get('/nelmToBortle/{nelm}', 'MagnitudeController@nelmToBortleJson');
+Route::get('/sqmToNelm/{sqm}', 'MagnitudeController@sqmToNelmJson');
+Route::get('/sqmToBortle/{sqm}', 'MagnitudeController@sqmToBortleJson');
+Route::get('/bortleToNelm/{bortle}', 'MagnitudeController@bortleToNelmJson');
+Route::get('/bortleToSqm/{bortle}', 'MagnitudeController@bortleToSqmJson');
 
 // Targets
 Route::get('/catalogs', 'TargetController@catalogs')
     ->name('catalogs');
 
 Route::get('/getCatalogData/{catalog}', 'TargetController@getCatalogData');
-Route::get('/getConstellationInfo/{catalog}', 'TargetController@getConstellationInfo');
+Route::get(
+    '/getConstellationInfo/{catalog}',
+    'TargetController@getConstellationInfo'
+);
 Route::get('/getTypeInfo/{catalog}', 'TargetController@getTypeInfo');
 Route::get('/target/{name}', 'TargetController@show');
 
