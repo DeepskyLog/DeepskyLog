@@ -49,7 +49,7 @@
 
 @php
     $url = "http://cdn.datatables.net/plug-ins/1.10.19/i18n/" . \PeterColes\Languages\LanguagesFacade::lookup(
-        [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
+        [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
         'en'
     )->first()
     . ".json"

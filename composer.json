@@ -12,20 +12,19 @@
         "anhskohbo/no-captcha": "^3.0",
         "cmgmyr/messenger": "^2.17",
         "coderello/laraflash": "^3.0",
+        "deepskylog/laravel-astronomy-library": "^1.0",
         "dompdf/dompdf": "^0.8.3",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
         "janbarasek/php-moon-phase": "^2.0",
-        "laravel/framework": "^6.0",
+        "laravel/framework": "^7.0",
         "laravel/socialite": "^4.3",
-        "laravel/telescope": "^3.0",
         "laravel/tinker": "^2.0",
+        "laravel/ui": "^2.0",
         "laravelcollective/html": "^6.0",
         "monarobase/country-list": "^3.0",
         "muhamadrezaar/highcharts": "^2.0",
         "petercoles/multilingual-language-list": "^1.1",
-        "phpunit/php-code-coverage": "^8.0",
-        "phpunit/phpunit": "^9.0",
         "sebastian/global-state": "^4.0",
         "socialiteproviders/facebook": "^1.0",
         "socialiteproviders/github": "dev-master",
@@ -36,13 +35,22 @@
         "spatie/pdf-to-image": "^2.0",
         "yajra/laravel-datatables": "^1.0",
         "yajra/laravel-datatables-oracle": "~9.0",
-        "zerospam/laravel-gettext": "^7.2"
+        "deepskylog/laravel-gettext": "7.x"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.2",
+        "beyondcode/laravel-query-detector": "^1.2",
         "filp/whoops": "^2.0",
         "fzaninotto/faker": "^1.4",
-        "mockery/mockery": "^1.0"
+        "laravel/telescope": "^3.2",
+        "mockery/mockery": "^1.0",
+        "phpunit/php-code-coverage": "^8.0",
+        "phpunit/phpunit": "^9.0"
     },
+    "repositories": [{
+        "type": "path",
+        "url": "/home/vagrant/code3/"
+    }],
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
