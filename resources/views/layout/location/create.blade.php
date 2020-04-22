@@ -17,35 +17,35 @@
         {{ _i("Add a new location") }}
     @endif
 </h4>
+<div>
+    <hr />
+    <br />
+    <form>
+        <ol>
+            <li>
+                {!! _i('Set your location on the map or by entering the name and pressing the %s button.',
+                    '<strong>"' . _i('Search location') . '"</strong>') !!}
+            </li>
+            <div class="form-inline">
+                <input type="text" class="form-control" id="address" onkeypress="searchKeyPress(event);" placeholder="La Silla, Chile" autofocus></input>
+                &nbsp;
+                <input type="button" class="btn btn-primary" id="btnSearch" value="{{ _i('Search location') }}" onclick="codeAddress();" ></input>
+            </div>
+        </ol>
+    </form>
+    <div id="map"></div>
+
+    <br />
+
+    @if ($update)
+        <form role="form" action="/location/{{ $location->id }}" method="POST" enctype="multipart/form-data">
+        @method('PATCH')
+    @else
+        <form role="form" action="/location" method="POST" enctype="multipart/form-data">
+    @endif
+    @csrf
+    <input type="submit" class="btn btn-success float-right" name="add" value="@if ($update){{ _i("Change location") }}@else{{ _i("Add location") }}@endif">
     <div>
-        <hr />
-        <input type="submit" class="btn btn-success float-right" name="add" value="@if ($update){{ _i("Change location") }}@else{{ _i("Add location") }}@endif">
-        <br />
-        <form>
-            <ol>
-                <li>
-                    {!! _i('Set your location on the map or by entering the name and pressing the %s button.',
-                        '<strong>"' . _i('Search location') . '"</strong>') !!}
-                </li>
-                <div class="form-inline">
-                    <input type="text" class="form-control" id="address" onkeypress="searchKeyPress(event);" placeholder="La Silla, Chile" autofocus></input>
-                    &nbsp;
-                    <input type="button" class="btn btn-primary" id="btnSearch" value="{{ _i('Search location') }}" onclick="codeAddress();" ></input>
-                </div>
-            </form>
-            <div id="map"></div>
-
-            <br />
-
-            @if ($update)
-                <form role="form" action="/location/{{ $location->id }}" method="POST" enctype="multipart/form-data">
-                @method('PATCH')
-            @else
-                <form role="form" action="/location" method="POST" enctype="multipart/form-data">
-            @endif
-            @csrf
-
-            <div>
         <input type="hidden" name="latitude" id="latitude" />
         <input type="hidden" name="longitude" id="longitude" />
         <input type="hidden" name="country" id="country" />
@@ -108,15 +108,13 @@
                 </td>
                 <td>
                 </td>
-            </table>
-            <li>
-                {!! _i('Upload a picture of your location.') . ' (max 10 Mb)' !!}
-            </li>
+            </tr>
+        </table>
+        <li>
+            {!! _i('Upload a picture of your location.') . ' (max 10 Mb)' !!}
+        </li>
 
-            <input id="picture" name="picture" type="file">
-
-        </ol>
-
+        <input id="picture" name="picture" type="file">
 
         <br />
 
@@ -125,8 +123,7 @@
     </form>
     <br />
     <br />
-    </div>
-</form>
+</div>
 @endsection
 
 @push('scripts')
