@@ -1,8 +1,8 @@
 
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        @if ($media = Auth::user()->getMedia('observer'))
-            <img height="24px" style="border-radius: 20%" src="{{ $media->first()->getUrl('thumb') }}">
+        @if (count(Auth::user()->getMedia('observer')) > 0)
+            <img height="24px" style="border-radius: 20%" src="{{ Auth::user()->getMedia('observer')->first()->getUrl('thumb') }}">
         @endif
         {{ Auth::user()->name }}
     </a>

@@ -6,7 +6,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use \Xinax\LaravelGettext\Facades\LaravelGettext;
 
 class LoginTest extends TestCase
 {
@@ -15,7 +14,6 @@ class LoginTest extends TestCase
     /**
      * Can the user see the login form?
      *
-     * @return void
      */
     public function testUserCanViewALoginForm()
     {
@@ -27,9 +25,8 @@ class LoginTest extends TestCase
     }
 
     /**
-     * The login form should not be accessible when logged in
+     * The login form should not be accessible when logged in.
      *
-     * @return void
      */
     public function testUserCannotViewALoginFormWhenAuthenticated()
     {
@@ -41,9 +38,8 @@ class LoginTest extends TestCase
     }
 
     /**
-     * Check for validation errors
+     * Check for validation errors.
      *
-     * @return void
      */
     public function testLoginDisplaysValidationErrors()
     {
@@ -55,9 +51,8 @@ class LoginTest extends TestCase
     }
 
     /**
-     * Try to log in with the correct credentials
+     * Try to log in with the correct credentials.
      *
-     * @return void
      */
     public function testUserCanLoginWithCorrectCredentials()
     {
@@ -71,7 +66,8 @@ class LoginTest extends TestCase
 
         // Post to login
         $response = $this->post(
-            '/login', [
+            '/login',
+            [
                 'email' => 'deepskylogUser',
                 'password' => 'password123',
             ]
@@ -86,9 +82,8 @@ class LoginTest extends TestCase
     }
 
     /**
-     * Try to log in using the incorrect credentials
+     * Try to log in using the incorrect credentials.
      *
-     * @return void
      */
     public function testUserCannotLoginWithIncorrectPassword()
     {
@@ -99,7 +94,8 @@ class LoginTest extends TestCase
         );
 
         $response = $this->from('/login')->post(
-            '/login', [
+            '/login',
+            [
                 'email' => $user->email,
                 'password' => 'invalid-password',
             ]
@@ -113,9 +109,8 @@ class LoginTest extends TestCase
     }
 
     /**
-     * Test the Remember me functionality and check if the cookie does exist
+     * Test the Remember me functionality and check if the cookie does exist.
      *
-     * @return void
      */
     public function testRememberMeFunctionality()
     {
@@ -127,7 +122,8 @@ class LoginTest extends TestCase
         );
 
         $response = $this->post(
-            '/login', [
+            '/login',
+            [
                 'email' => $user->email,
                 'password' => $password,
                 'remember' => 'on',
@@ -138,9 +134,10 @@ class LoginTest extends TestCase
 
         // cookie assertion
         $response->assertCookie(
-            Auth::guard()->getRecallerName(), vsprintf(
+            Auth::guard()->getRecallerName(),
+            vsprintf(
                 '%s|%s|%s',
-                [$user->id, $user->getRememberToken(), $user->password,]
+                [$user->id, $user->getRememberToken(), $user->password, ]
             )
         );
 
@@ -150,12 +147,12 @@ class LoginTest extends TestCase
     /**
      * Check that the user cannot log in with an email that does not exist.
      *
-     * @return void
      */
     public function testUserCannotLoginWithEmailThatDoesNotExist()
     {
         $response = $this->from('/login')->post(
-            '/login', [
+            '/login',
+            [
                 'email' => 'nobody@example.com',
                 'password' => 'invalid-password',
             ]
@@ -171,12 +168,12 @@ class LoginTest extends TestCase
     /**
      * Check that the user cannot log in with a username that does not exist.
      *
-     * @return void
      */
     public function testUserCannotLoginWithUsernameThatDoesNotExist()
     {
         $response = $this->from('/login')->post(
-            '/login', [
+            '/login',
+            [
                 'email' => 'testUser',
                 'password' => 'invalid-password',
             ]
@@ -190,9 +187,8 @@ class LoginTest extends TestCase
     }
 
     /**
-     * Test if the user can log out succesfully
+     * Test if the user can log out succesfully.
      *
-     * @return void
      */
     public function testUserCanLogout()
     {
@@ -205,9 +201,8 @@ class LoginTest extends TestCase
     }
 
     /**
-     * Test that an not authenticated user can not log out
+     * Test that an not authenticated user can not log out.
      *
-     * @return void
      */
     public function testUserCannotLogoutWhenNotAuthenticated()
     {
@@ -220,17 +215,17 @@ class LoginTest extends TestCase
     /**
      * Check that the user cannot make more than five login attempts in one minute.
      *
-     * @return void
      */
     public function testUserCannotMakeMoreThanFiveAttemptsInOneMinute()
     {
         $user = factory(User::class)->create(
-            ['password' => 'i-love-laravel',]
+            ['password' => 'i-love-laravel', ]
         );
 
         foreach (range(0, 5) as $_) {
             $response = $this->from('/login')->post(
-                '/login', [
+                '/login',
+                [
                     'email' => $user->email,
                     'password' => 'invalid-password',
                 ]

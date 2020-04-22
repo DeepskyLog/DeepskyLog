@@ -119,7 +119,7 @@ class FilterDataTable extends DataTable
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
             . \PeterColes\Languages\LanguagesFacade::lookup(
-                [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
+                [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first() . '.json'];
         $mypars = $this->getBuilderParameters();

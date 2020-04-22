@@ -14,7 +14,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Xinax\LaravelGettext\Facades\LaravelGettext;
+use deepskylog\LaravelGettext\Facades\LaravelGettext;
 use Illuminate\Support\Facades\Auth;
 
 /**

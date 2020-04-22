@@ -38,7 +38,6 @@ class EyepieceTest extends TestCase
     /**
      * Set up the user.
      *
-     * @return void
      */
     public function setUp(): void
     {
@@ -112,7 +111,8 @@ class EyepieceTest extends TestCase
         $this->assertEquals($this->_user->eyepieces->first()->id, $eyepiece->id);
         $this->assertEquals($this->_user->eyepieces->first()->name, $eyepiece->name);
         $this->assertEquals(
-            $this->_user->eyepieces->first()->brand, $eyepiece->brand
+            $this->_user->eyepieces->first()->brand,
+            $eyepiece->brand
         );
         $this->assertEquals(
             $this->_user->eyepieces->first()->focalLength,
@@ -128,10 +128,12 @@ class EyepieceTest extends TestCase
             $eyepiece->maxFocalLength
         );
         $this->assertEquals(
-            $this->_user->eyepieces->first()->active, $eyepiece->active
+            $this->_user->eyepieces->first()->active,
+            $eyepiece->active
         );
         $this->assertEquals(
-            $this->_user->eyepieces->first()->user_id, $eyepiece->user_id
+            $this->_user->eyepieces->first()->user_id,
+            $eyepiece->user_id
         );
     }
 
@@ -188,7 +190,8 @@ class EyepieceTest extends TestCase
 
         $this->assertDatabaseHas('eyepiece_brands', ['brand' => 'New Brand']);
         $this->assertDatabaseHas(
-            'eyepiece_types', ['brand' => 'New Brand', 'type' => 'Ethos2']
+            'eyepiece_types',
+            ['brand' => 'New Brand', 'type' => 'Ethos2']
         );
     }
 
@@ -714,7 +717,8 @@ class EyepieceTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id, $attributes
+            '/eyepiece/' . $eyepiece->id,
+            $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['focalLength']);
@@ -732,7 +736,8 @@ class EyepieceTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id, $attributes
+            '/eyepiece/' . $eyepiece->id,
+            $attributes
         );
 
         $response->assertStatus(302);
@@ -749,7 +754,8 @@ class EyepieceTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id, $attributes
+            '/eyepiece/' . $eyepiece->id,
+            $attributes
         );
 
         $response->assertStatus(302);
@@ -768,11 +774,11 @@ class EyepieceTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id, $attributes
+            '/eyepiece/' . $eyepiece->id,
+            $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['type']);
-
 
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
@@ -787,11 +793,11 @@ class EyepieceTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id, $attributes
+            '/eyepiece/' . $eyepiece->id,
+            $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['apparentFOV']);
-
 
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
@@ -806,7 +812,8 @@ class EyepieceTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id, $attributes
+            '/eyepiece/' . $eyepiece->id,
+            $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['apparentFOV']);
@@ -824,7 +831,8 @@ class EyepieceTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id, $attributes
+            '/eyepiece/' . $eyepiece->id,
+            $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['apparentFOV']);
@@ -842,7 +850,8 @@ class EyepieceTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id, $attributes
+            '/eyepiece/' . $eyepiece->id,
+            $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['maxFocalLength']);
@@ -860,7 +869,8 @@ class EyepieceTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id, $attributes
+            '/eyepiece/' . $eyepiece->id,
+            $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['maxFocalLength']);
@@ -878,7 +888,8 @@ class EyepieceTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id, $attributes
+            '/eyepiece/' . $eyepiece->id,
+            $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['maxFocalLength']);
@@ -918,7 +929,7 @@ class EyepieceTest extends TestCase
         // Adapt the name and the factor
         $newAttributes = [
             'user_id' => $eyepiece->user_id,
-            'name' => "Updated eyepiece",
+            'name' => 'Updated eyepiece',
             'brand' => 'Televue',
             'focalLength' => 31,
             'type' => 'Nagler',
@@ -977,7 +988,7 @@ class EyepieceTest extends TestCase
         // Adapt the name and the factor
         $newAttributes = [
             'user_id' => $newUser->id,
-            'name' => "Updated eyepiece",
+            'name' => 'Updated eyepiece',
             'brand' => 'Televue',
             'focalLength' => 31,
             'type' => 'Nagler',
@@ -1035,7 +1046,7 @@ class EyepieceTest extends TestCase
 
         // Adapt the name and the factor
         $newAttributes = [
-            'name' => "Updated eyepiece",
+            'name' => 'Updated eyepiece',
             'brand' => 'Televue',
             'focalLength' => 31,
             'type' => 'Nagler',
@@ -1171,7 +1182,8 @@ class EyepieceTest extends TestCase
 
         // Then there should be a new eyepiece in the database
         $this->assertDatabaseHas(
-            'eyepieces', $attributes
+            'eyepieces',
+            $attributes
         );
 
         $newUser = factory('App\User')->create(['type' => 'admin']);
@@ -1365,7 +1377,6 @@ class EyepieceTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testShowEyepieceDetailWithChangeButton()
     {
@@ -1390,7 +1401,6 @@ class EyepieceTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testShowEyepieceDetailWithoutChangeButton()
     {
@@ -1415,7 +1425,6 @@ class EyepieceTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testAdminAlwaysSeesChangeButton()
     {
@@ -1440,7 +1449,6 @@ class EyepieceTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testGuestNeverSeesChangeButton()
     {
@@ -1464,7 +1472,6 @@ class EyepieceTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testOnlyAdminCanSeeOverviewOfAllEyepieces()
     {
@@ -1495,7 +1502,6 @@ class EyepieceTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testJsonInformationForEyepiece()
     {
@@ -1526,7 +1532,6 @@ class EyepieceTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testGetEyepieceImage()
     {
@@ -1569,7 +1574,6 @@ class EyepieceTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testDeleteEyepieceImage()
     {
@@ -1630,7 +1634,6 @@ class EyepieceTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testAutocompleteForEyepiece()
     {
