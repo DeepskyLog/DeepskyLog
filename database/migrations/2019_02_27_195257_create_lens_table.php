@@ -9,7 +9,6 @@ class CreateLensTable extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
      */
     public function up()
     {
@@ -19,7 +18,6 @@ class CreateLensTable extends Migration
             $table->float('factor', 11);
             $table->unsignedInteger('user_id');
             $table->boolean('active')->default(true);
-            $table->unsignedInteger('observations')->default(0);
 
             $table->timestamps();
 
@@ -31,7 +29,6 @@ class CreateLensTable extends Migration
     /**
      * Reverse the migrations.
      *
-     * @return void
      */
     public function down()
     {

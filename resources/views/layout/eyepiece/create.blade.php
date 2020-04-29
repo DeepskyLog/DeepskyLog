@@ -116,7 +116,7 @@
             </select>
         </div>
 
-        {!! _i('Upload a picture of your eyepiece.') !!}
+        {!! _i('Upload a picture of your eyepiece.') . ' (max 10 Mb)' !!}
 
         <input id="picture" name="picture" type="file">
 
@@ -186,12 +186,12 @@
             allowedFileTypes: ['image'],    // allow only images
             'showUpload': false,
             maxFileSize: 10000,
-            @if ($eyepiece->id != null && App\Eyepiece::find($eyepiece->id)->getFirstMedia('eyepiece') != null)
+            @if ($eyepiece->id != null && $eyepiece->getFirstMedia('eyepiece') != null)
             initialPreview: [
                 '<img class="file-preview-image kv-preview-data" src="/eyepiece/{{ $eyepiece->id }}/getImage">'
             ],
             initialPreviewConfig: [
-                {caption: "{{ App\Eyepiece::find($eyepiece->id)->getFirstMedia('eyepiece')->file_name }}", size: {{ App\Eyepiece::find($eyepiece->id)->getFirstMedia('eyepiece')->size }}, url: "/eyepiece/{{ $eyepiece->id }}/deleteImage", key: 1},
+                {caption: "{{ $eyepiece->getFirstMedia('eyepiece')->file_name }}", size: {{ $eyepiece->getFirstMedia('eyepiece')->size }}, url: "/eyepiece/{{ $eyepiece->id }}/deleteImage", key: 1},
             ],
             @endif
         }

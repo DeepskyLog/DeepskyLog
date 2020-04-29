@@ -15,8 +15,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * Location eloquent model.
@@ -29,7 +30,7 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
  */
 class Location extends Model implements HasMedia
 {
-    use HasMediaTrait;
+    use InteractsWithMedia;
 
     protected $fillable = [
         'user_id', 'name', 'active',
@@ -173,5 +174,18 @@ class Location extends Model implements HasMedia
     public static function getSqmFromLimitingMagnitude($lm)
     {
         return ((21.58 - 5 * log10(pow(10, (1.586 - $lm / 5.0)) - 1.0)));
+    }
+
+    /**
+     * Also store a thumbnail of the image.
+     *
+     * @param $media the media
+     *
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(100)
+            ->height(100);
     }
 }

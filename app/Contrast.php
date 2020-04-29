@@ -406,7 +406,7 @@ class Contrast extends Model
                 }
                 if ($intSB >= $this->_LTC[$this->_LTCSize - 1][0]) {
                     $logThreshContrast = $interpB
-                        + ($SB - $this->_LTC[$_this->LTCSize - 1][0])
+                        + ($SB - $this->_LTC[$this->_LTCSize - 1][0])
                         * ($interpB - $interpA);
                 } else {
                     $logThreshContrast = $interpA + ($SB - $intSB)
@@ -433,60 +433,6 @@ class Contrast extends Model
         }
         $this->_x = $bestX;
         $this->_logContrastDiff = $bestLogContrastDiff;
-    }
-
-    /**
-     * This function calculates the limiting magnitude if the sqm value is given.
-     *
-     * @param float $initBB the sqm value
-     *
-     * @return float the limiting magnitude
-     */
-    public function calculateLimitingMagnitudeFromSkyBackground($initBB)
-    {
-        return (7.97 - 5 * log10(1 + pow(10, 4.316 - $initBB / 5.0)));
-    }
-
-    /**
-     * This function calculates the sqm if the limiting magnitude is given.
-     *
-     * @param float $limMag the limiting magnitude
-     *
-     * @return float the sqm value
-     */
-    public function calculateSkyBackgroundFromLimitingMagnitude($limMag)
-    {
-        return ((21.58 - 5 * log10(pow(10, (1.586 - $limMag / 5.0)) - 1.0)));
-    }
-
-    /**
-     * This function calculates the bortle scale if the sqm value is given.
-     *
-     * @param float $sqm the sqm value
-     *
-     * @return integer the bortle scale
-     */
-    public function calculateBortleFromSQM($sqm)
-    {
-        if ($sqm <= 17.5) {
-            return 9;
-        } elseif ($sqm <= 18.0) {
-            return 8;
-        } elseif ($sqm <= 18.5) {
-            return 7;
-        } elseif ($sqm <= 19.1) {
-            return 6;
-        } elseif ($sqm <= 20.4) {
-            return 5;
-        } elseif ($sqm <= 21.3) {
-            return 4;
-        } elseif ($sqm <= 21.5) {
-            return 3;
-        } elseif ($sqm <= 21.7) {
-            return 2;
-        } else {
-            return 1;
-        }
     }
 
     private function _calcContrastAndVisibility()

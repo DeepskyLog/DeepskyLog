@@ -128,8 +128,15 @@ php73 artisan db:seed
 
 + Remove the link to /observer_pics
 
++ Execute the laravel scheduled jobs (for updating delta t) by adding the following line to crontab:
+
+```bash
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
 + Don't allow the use of google api from everywhere (also test if the timezone is set correctly then): <https://console.developers.google.com/apis/credentials/key/211?project=deepskylog-1528998866034>
 + Make sure to put `post_max_size = 10M` and `upload_max_filesize = 10M` in /etc/opt/remi/php73/php.ini
++ For homestead, add `client_max_body_size 100M;` to /etc/nginx/nginx.conf
 
 + Make sure that all callback URLs for logging in using facebook, google, github and twitter are set correctly:
   + https://github.com/organizations/DeepskyLog/settings/applications/1218114

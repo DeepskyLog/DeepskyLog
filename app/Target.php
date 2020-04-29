@@ -44,10 +44,18 @@ class Target extends Model
 
     protected $fillable = ['name', 'type'];
 
+    // These are the fields that are created dynamically, using the get...Attribute methods.
     protected $appends = ['rise', 'contrast', 'contrast_type', 'contrast_popup',
         'prefMag', 'prefMagEasy', 'rise_popup', 'transit', 'transit_popup',
         'set', 'set_popup', 'bestTime', 'maxAlt', 'maxAlt_popup',
         'highest_from', 'highest_around', 'highest_to', 'highest_alt'];
+
+    protected $primaryKey = 'name';
+
+    private $_observationType = null;
+    private $_targetType = null;
+
+    public $incrementing = false;
 
     /**
      * Returns the contrast of the target.
@@ -322,9 +330,7 @@ class Target extends Model
     {
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation != 0 && Auth::user()->stdtelescope != 0) {
-                if ($this->type()->first()->observationType()->first()['type'] == 'ds'
-                    || $this->type()->first()->observationType()->first()['type'] == 'double'
-                ) {
+                if ($this->isNonSolarSystem()) {
                     $datestr = Session::get('date');
                     $date = DateTime::createFromFormat('d/m/Y', $datestr);
 
@@ -425,7 +431,7 @@ class Target extends Model
      */
     public function constellation()
     {
-        return $this->hasOne('App\Constellations', 'id', 'con');
+        return $this->hasOne('App\Constellation', 'id', 'con');
     }
 
     /**
@@ -470,6 +476,47 @@ class Target extends Model
         return $sign . sprintf('%02d', $decl_degrees) . '°'
             . sprintf('%02d', $decl_minutes) . "'"
             . sprintf('%02d', $decl_seconds) . '"';
+    }
+
+    /**
+     * Sets the observation types for the target.
+     */
+    private function _setObservationType()
+    {
+        $this->_targetType = $this->type()->first();
+        $this->_observationType = $this->_targetType
+            ->observationType()->first();
+    }
+
+    /**
+     * Return the observation type and the target type for showing in the
+     * detail page.
+     *
+     * @return String The Observation Type / Target Type
+     */
+    public function getObservationTypeAttribute()
+    {
+        if ($this->_observationType == null) {
+            $this->_setObservationType();
+        }
+
+        return _i($this->_observationType['name'])
+            . ' / ' . _i($this->_targetType['type']);
+    }
+
+    /**
+     *  Check if the target is deepsky or a double star.
+     *
+     * @return bool true if the targer is deepsky or double star
+     */
+    public function isNonSolarSystem()
+    {
+        if ($this->_observationType == null) {
+            $this->_setObservationType();
+        }
+
+        return $this->_observationType['type'] == 'ds'
+            || $this->_observationType['type'] == 'double';
     }
 
     /**
@@ -717,12 +764,15 @@ class Target extends Model
                     || ($ephem['max_alt'] == $ephemerides[($cnt + 23) % 24]['max_alt']))
                 ) {
                     $ephemerides[$cnt]['max_alt_color'] = 'ephemeridesgreen';
+                    $ephemerides[$cnt]['max_alt_popup']
+                        = _i('%s reaches its highest altitude of the year', $this->name);
                 } else {
                     $ephemerides[$cnt]['max_alt_color'] = '';
+                    $ephemerides[$cnt]['max_alt_popup'] = '';
                 }
 
                 // Green if the transit is during astronomical twilight
-                // Yellow if the transit is during astronomical twilight
+                // Yellow if the transit is during nautical twilight
                 $time = $ephem['date']->setTimeZone($location->timezone)->copy()
                     ->setTimeFromTimeString($ephem['transit']);
                 if ($time->format('H') < 12) {
@@ -736,7 +786,9 @@ class Target extends Model
                             $ephem['astronomical_twilight_end']
                         )
                     ) {
+                        // TODO: Also add a popup explaining the color code: Issue 416
                         $ephemerides[$cnt]['transit_color'] = 'ephemeridesgreen';
+                        $ephemerides[$cnt]['transit_popup'] = _i('%s reaches its highest altitude during the astronomical night', $this->name);
                     } elseif ($ephem['nautical_twilight_end'] != null
                         && $time->between(
                             $ephem['nautical_twilight_begin'],
@@ -744,22 +796,28 @@ class Target extends Model
                         )
                     ) {
                         $ephemerides[$cnt]['transit_color'] = 'ephemeridesyellow';
+                        $ephemerides[$cnt]['transit_popup'] = _i('%s reaches its highest altitude during the nautical twilight', $this->name);
                     } else {
                         $ephemerides[$cnt]['transit_color'] = '';
+                        $ephemerides[$cnt]['transit_popup'] = '';
                     }
                 } else {
                     $ephemerides[$cnt]['transit_color'] = '';
+                    $ephemerides[$cnt]['transit_popup'] = '';
                 }
 
                 $ephemerides[$cnt]['rise_color'] = '';
+                $ephemerides[$cnt]['rise_popup'] = '';
 
                 if ($ephem['max_alt'] == '-') {
                     $ephemerides[$cnt]['rise_color'] = '';
                 } else {
                     if ($ephem['rise'] == '-') {
                         if ($ephem['astronomical_twilight_end'] != null) {
+                            $ephemerides[$cnt]['rise_popup'] = _i('%s is visible during the night', $this->name);
                             $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
                         } elseif ($ephem['nautical_twilight_end'] != null) {
+                            $ephemerides[$cnt]['rise_popup'] = _i('%s is visible during the nautical twilight', $this->name);
                             $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
                         }
                     }
@@ -771,6 +829,7 @@ class Target extends Model
                             $ephem['astronomical_twilight_begin']
                         )
                     ) {
+                        $ephemerides[$cnt]['rise_popup'] = _i('%s is visible during the night', $this->name);
                         $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
                     } elseif ($ephem['nautical_twilight_end'] != null
                         && $this->_checkNightHourMinutePeriodOverlap(
@@ -781,6 +840,7 @@ class Target extends Model
                         )
                     ) {
                         $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
+                        $ephemerides[$cnt]['rise_popup'] = _i('%s is visible during the nautical twilight', $this->name);
                     }
                 }
 
@@ -912,6 +972,6 @@ class Target extends Model
      */
     public function getConstellation()
     {
-        return \App\Constellations::where('id', $this->con)->first()->name;
+        return \App\Constellation::where('id', $this->con)->first()->name;
     }
 }

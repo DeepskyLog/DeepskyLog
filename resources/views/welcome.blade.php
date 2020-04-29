@@ -1,7 +1,7 @@
 @extends("layout.master")
 
 @section('content')
-<h1>Test</h1>
+<h1>DeepskyLog</h1>
 
 <a class="twitter-timeline"
     href="https://twitter.com/DeepskyLog?ref_src=twsrc%5Etfw"

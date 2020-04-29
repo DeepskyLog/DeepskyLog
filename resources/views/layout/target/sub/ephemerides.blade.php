@@ -23,7 +23,12 @@
         <td class="centered">{{ _i("Max Alt") }}</td>
 
         @foreach ($ephemerides as $ephem)
-            <td class="centered {{ $ephem['max_alt_color'] }}">{!! $ephem['max_alt'] !!}</td>
+            <td class="centered {{ $ephem['max_alt_color'] }}">
+                <span class="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ $ephem['max_alt_popup']}}">
+                    {!! $ephem['max_alt'] !!}
+                </span>
+            </td>
+
         @endforeach
     </tr>
 
@@ -31,7 +36,11 @@
         <td class="centered">{{ _i("Transit") }}</td>
 
         @foreach ($ephemerides as $ephem)
-            <td class="centered {{ $ephem['transit_color'] }}">{{ $ephem['transit'] }}</td>
+            <td class="centered {{ $ephem['transit_color'] }}">
+                <span class="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ $ephem['transit_popup']}}">
+                    {{ $ephem['transit'] }}
+                </span>
+            </td>
         @endforeach
     </tr>
 
@@ -64,9 +73,11 @@
 
         @foreach ($ephemerides as $ephem)
             <td class="centered {{ $ephem['rise_color'] }}">
-                {{ $ephem['rise'] != '-' ? $ephem['rise'] : '' }}
-                <br />-<br />
-                {{ $ephem['set'] != '-' ? $ephem['set'] : '' }}
+                <span class="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ $ephem['rise_popup']}}">
+                    {{ $ephem['rise'] != '-' ? $ephem['rise'] : '' }}
+                    <br />-<br />
+                    {{ $ephem['set'] != '-' ? $ephem['set'] : '' }}
+                </span>
             </td>
         @endforeach
     </tr>

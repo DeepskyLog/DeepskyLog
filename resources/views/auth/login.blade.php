@@ -54,7 +54,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+{{--                          <div class="form-group row">
                             <div class="col-md-6 offset-md-4">
                                 {{ _i('or log in using') }}
                             </div>
@@ -65,7 +65,7 @@
                                 <a class="btn btn-light" href="redirect/facebook"><i class="fab fa-facebook"></i>&nbsp;Facebook</a>
                             </div>
                         </div>
-
+--}}
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

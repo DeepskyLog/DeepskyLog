@@ -1,0 +1,39 @@
+name: Laravel
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    name: Tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.github', '.env');"
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache/files
+          key: dependencies-composer-${{ hashFiles('composer.json') }}
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          coverage: none
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-suggest
+      - name: Install NPM dependencies
+        run: npm install
+      - name: Compile assets
+        run: npm run production
+      - name: Create Database
+        run: mkdir -p database ; touch database/database.sqlite
+      - name: Execute tests (Unit and Feature tests) via PHPUnit
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+        run: vendor/bin/phpunit --verbose

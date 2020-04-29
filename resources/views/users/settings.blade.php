@@ -34,7 +34,7 @@
 
             <form role="form" action="/users/{{ $user->id }}/settings" method="POST" enctype="multipart/form-data">
                 <br />
-                <label class="col-form-label"> {{ _i("Change profile picture") }}</label>
+                <label class="col-form-label"> {{ _i("Change profile picture") . ' (max 10 Mb)' }}</label>
                 <input id="picture" name="picture" type="file">
 
                 @csrf
@@ -168,7 +168,7 @@
                     <label for="stdatlas">{{ _i("Default atlas") }}</label>
                     <div class="form">
                         <select class="form-control selection" style="width: 100%" id="standardAtlasCode" name="standardAtlasCode">
-                            @foreach(\App\Atlases::All() as $atlas)
+                            @foreach(\App\Atlas::All() as $atlas)
                                 <option @if ($atlas->code == $user->standardAtlasCode) selected @endif value="{{ $atlas->code }}">{{ $atlas->name }}</option>
                             @endforeach
                         </select>
@@ -371,12 +371,12 @@ $("#picture").fileinput(
         allowedFileTypes: ['image'],    // allow only images
         'showUpload': false,
         maxFileSize: 10000,
-        @if ($user->id != null && App\User::find($user->id)->getFirstMedia('observer') != null)
+        @if ($user->id != null && $user->getFirstMedia('observer') != null)
         initialPreview: [
             '<img class="file-preview-image kv-preview-data" src="/users/{{ $user->id }}/getImage">'
         ],
         initialPreviewConfig: [
-            {caption: "{{ App\User::find($user->id)->getFirstMedia('observer')->file_name }}", size: {{ App\User::find($user->id)->getFirstMedia('observer')->size }}, url: "/users/{{ $user->id }}/deleteImage", key: 1},
+            {caption: "{{ $user->getFirstMedia('observer')->file_name }}", size: {{ $user->getFirstMedia('observer')->size }}, url: "/users/{{ $user->id }}/deleteImage", key: 1},
         ],
         @endif
     }

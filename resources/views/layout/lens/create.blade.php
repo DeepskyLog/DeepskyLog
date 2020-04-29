@@ -58,7 +58,7 @@
             <span class="help-block">{{ _i("> 1.0 for Barlow lenses, < 1.0 for shapley lenses.") }}</span>
         </div>
 
-        {!! _i('Upload a picture of your lens.') !!}
+        {!! _i('Upload a picture of your lens.') . ' (max 10 Mb)' !!}
 
         <input id="picture" name="picture" type="file">
 
@@ -114,12 +114,12 @@
             allowedFileTypes: ['image'],    // allow only images
             'showUpload': false,
             maxFileSize: 10000,
-            @if ($lens->id != null && App\Lens::find($lens->id)->getFirstMedia('lens') != null)
+            @if ($lens->id != null && $lens->getFirstMedia('lens') != null)
             initialPreview: [
                 '<img class="file-preview-image kv-preview-data" src="/lens/{{ $lens->id }}/getImage">'
             ],
             initialPreviewConfig: [
-                {caption: "{{ App\Lens::find($lens->id)->getFirstMedia('lens')->file_name }}", size: {{ App\Lens::find($lens->id)->getFirstMedia('lens')->size }}, url: "/lens/{{ $lens->id }}/deleteImage", key: 1},
+                {caption: "{{ $lens->getFirstMedia('lens')->file_name }}", size: {{ $lens->getFirstMedia('lens')->size }}, url: "/lens/{{ $lens->id }}/deleteImage", key: 1},
             ],
             @endif
         }

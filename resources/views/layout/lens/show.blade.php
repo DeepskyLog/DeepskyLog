@@ -8,7 +8,11 @@
 <table class="table table-sm">
     <tr>
         <th><h4>{{ $lens->name }}</h4></th>
-        <th><img width="100" style="border-radius: 20%" src="/lens/{{ $lens->id }}/getImage"></th>
+        <th>
+            @if ($media)
+            <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $lens->name }}">
+            @endif
+        </th>
     </tr>
     <tr>
         <td>{{ _i("Type") }}</td>
@@ -19,6 +23,19 @@
         <td>{{ _i("Factor") }}</td>
         <td>{{  $lens->factor }}</td>
     </tr>
+    @auth
+    @if ($lens->user_id == Auth::user()->id)
+        <tr>
+            <td>{{ _i("First observation") }}</td>
+            <td>ENTER FIRST OBSERVATION OR REMOVE IF NOT YET USED</td>
+        </tr>
+
+        <tr>
+            <td>{{ _i("Last observation") }}</td>
+            <td>ENTER LAST OBSERVATION OR REMOVE IF NOT YET USED</td>
+        </tr>
+    @endif
+    @endauth
     <tr>
         <td>{{ _i("Owner") }}</td>
         <td><a href="/users/{{ $lens->user_id }}">{{  $lens->user->name }}</a></td>
@@ -35,7 +52,7 @@
 </table>
 
 @auth
-    @if (Auth::user()->id === $lens->user_id || Auth::user()->isAdmin())
+    @if (Auth::user()->id == $lens->user_id || Auth::user()->isAdmin())
     <a href="/lens/{{  $lens->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">
             {{ _i('Edit') }} {{  $lens->name }}

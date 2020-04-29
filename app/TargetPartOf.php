@@ -29,6 +29,8 @@ class TargetPartOf extends Model
 {
     protected $table = 'target_partof';
 
+    public $incrementing = false;
+
     /**
      * Check if the object is part of another object.
      *

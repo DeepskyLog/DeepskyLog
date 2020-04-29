@@ -16,8 +16,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * Filter eloquent model.
@@ -30,7 +31,7 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
  */
 class Filter extends Model implements HasMedia
 {
-    use HasMediaTrait;
+    use InteractsWithMedia;
 
     protected $fillable = [
         'user_id', 'name', 'type', 'color', 'wratten', 'schott', 'active'
@@ -76,7 +77,7 @@ class Filter extends Model implements HasMedia
     /**
      * Returns the name of the filter type.
      *
-     * @return String The name of the filter type.
+     * @return String the name of the filter type
      */
     public function typeName()
     {
@@ -87,7 +88,7 @@ class Filter extends Model implements HasMedia
     /**
      * Returns the name of the filter color.
      *
-     * @return String The name of the filter color.
+     * @return String the name of the filter color
      */
     public function colorName()
     {
@@ -100,4 +101,18 @@ class Filter extends Model implements HasMedia
     //    {
     //        return $this->belongsTo(Observation::class);
     //    }
+
+    /**
+     * Also store a thumbnail of the image.
+     *
+     * @param $media the media
+     *
+     * @return void
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(100)
+            ->height(100);
+    }
 }

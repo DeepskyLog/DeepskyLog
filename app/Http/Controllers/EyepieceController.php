@@ -36,7 +36,7 @@ class EyepieceController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified'])->except(['show']);
+        $this->middleware(['auth', 'verified'])->except(['show', 'getImage']);
     }
 
     /**
@@ -197,6 +197,7 @@ class EyepieceController extends Controller
                 'type' => 'required',
                 'focalLength' => 'required|numeric|gte:1|lte:99',
                 'apparentFOV' => 'required|numeric|gte:20|lte:150',
+                'maxFocalLength' => 'gte:1|lte:99'
             ]
         );
     }
@@ -210,7 +211,10 @@ class EyepieceController extends Controller
      */
     public function show(Eyepiece $eyepiece)
     {
-        return view('layout.eyepiece.show', ['eyepiece' => $eyepiece]);
+        $media = $this->getImage($eyepiece);
+        return view(
+            'layout.eyepiece.show', ['eyepiece' => $eyepiece, 'media' => $media]
+        );
     }
 
     /**
@@ -319,24 +323,18 @@ class EyepieceController extends Controller
     /**
      * Returns the image of the eyepiece.
      *
-     * @param int $id The id of the eyepiece
+     * @param Eyepiece $eyepiece The eyepiece
      *
      * @return MediaObject the image of the eyepiece
      */
-    public function getImage($id)
+    public function getImage(Eyepiece $eyepiece)
     {
-        if (Eyepiece::find($id)->hasMedia('eyepiece')) {
-            return Eyepiece::find($id)
-                ->getFirstMedia('eyepiece');
-        } else {
-            Eyepiece::find($id)
-                ->addMediaFromUrl(asset('images/eyepiece.jpg'))
-                ->usingFileName($id . '.png')
+        if (!$eyepiece->hasMedia('eyepiece')) {
+            $eyepiece->addMediaFromUrl(asset('images/eyepiece.jpg'))
+                ->usingFileName($eyepiece->id . '.png')
                 ->toMediaCollection('eyepiece');
-
-            return Eyepiece::find($id)
-                ->getFirstMedia('eyepiece');
         }
+        return $eyepiece->getFirstMedia('eyepiece');
     }
 
     /**
@@ -348,6 +346,8 @@ class EyepieceController extends Controller
      */
     public function deleteImage($id)
     {
+        $this->authorize('update', Eyepiece::find($id));
+
         Eyepiece::find($id)
             ->getFirstMedia('eyepiece')
             ->delete();

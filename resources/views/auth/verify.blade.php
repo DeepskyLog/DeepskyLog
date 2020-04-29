@@ -15,16 +15,15 @@
                     @if (session('resent'))
                         <div class="alert alert-success" role="alert">
                             {{ _i('A fresh verification link has been sent to your email address.') }}
+                            {{ _i('If you did not receive the email') }},
                         </div>
                     @endif
 
                     {{ _i('Before proceeding, please check your email for a verification link.') }}
-                    @php
-                        $route = route('verification.resend');
-                        $string = '<a href="' . $route . '">';
-                        echo sprintf(_i('If you did not receive the email, %sclick here to request another%s.'), $string, '</a>');
-                    @endphp
-
+                    <form class="d-inline" method="POST" action="{{ route('verification.resend') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-link p-0 m-0 align-baseline">{{ _i('click here to request another') }}</button>.
+                    </form>
                 </div>
             </div>
         </div>

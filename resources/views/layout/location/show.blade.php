@@ -8,7 +8,11 @@
 <table class="table table-sm">
     <tr>
         <th><h4>{{ $location->name }}</h4></th>
-        <th><img width="100" style="border-radius: 20%" src="/location/{{ $location->id }}/getImage"></th>
+        <th>
+            @if ($media)
+            <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $location->name }}">
+            @endif
+        </th>
     </tr>
 
     <tr>
@@ -56,6 +60,39 @@
         </td>
     </tr>
     @endif
+
+    @auth
+    @if ($location->user_id == Auth::user()->id)
+        <tr>
+            <td>{{ _i("First observation") }}</td>
+            <td>ENTER FIRST OBSERVATION OR REMOVE IF NOT YET USED</td>
+        </tr>
+
+        <tr>
+            <td>{{ _i("Last observation") }}</td>
+            <td>ENTER LAST OBSERVATION OR REMOVE IF NOT YET USED</td>
+        </tr>
+        <tr>
+            <td>{{ _i("Used instruments") }}</td>
+            <td>TODO</td>
+        </tr>
+        <tr>
+            <td>{{ _i("Used eyepieces") }}</td>
+            <td>TODO</td>
+        </tr>
+
+        <tr>
+            <td>{{ _i("Used filters") }}</td>
+            <td>TODO</td>
+        </tr>
+
+        <tr>
+            <td>{{ _i("Used lenses") }}</td>
+            <td>TODO</td>
+        </tr>
+    @endif
+    @endauth
+
     <tr>
         <td>{{ _i("Number of observations") }}</td>
         @if ($location->observations > 0)
@@ -77,7 +114,7 @@
 
 <div id="map"></div>
 @auth
-    @if (Auth::user()->id === $location->user_id || Auth::user()->isAdmin())
+    @if (Auth::user()->id == $location->user_id || Auth::user()->isAdmin())
     <br />
     <a href="/location/{{ $location->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">

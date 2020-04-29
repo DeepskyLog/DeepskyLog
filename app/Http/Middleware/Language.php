@@ -14,7 +14,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Xinax\LaravelGettext\Facades\LaravelGettext;
+use deepskylog\LaravelGettext\Facades\LaravelGettext;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -38,7 +38,7 @@ class Language
      */
     public function handle($request, Closure $next)
     {
-        if (! Auth::guest()) {
+        if (!Auth::guest()) {
             LaravelGettext::setLocale(Auth::user()->language);
         }
 

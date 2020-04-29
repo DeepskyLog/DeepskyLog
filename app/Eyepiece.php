@@ -15,8 +15,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * Eyepiece eloquent model.
@@ -29,7 +30,7 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
  */
 class Eyepiece extends Model implements HasMedia
 {
-    use HasMediaTrait;
+    use InteractsWithMedia;
 
     protected $fillable = [
         'user_id', 'name', 'focalLength', 'apparentFOV',
@@ -63,11 +64,11 @@ class Eyepiece extends Model implements HasMedia
     }
 
     /**
-     * Returns the generic name of the eyepiece
+     * Returns the generic name of the eyepiece.
      *
-     * @return String The generic name of the eyepiece.
+     * @return String the generic name of the eyepiece
      */
-    public function genericname()
+    public function getGenericnameAttribute()
     {
         if ($this->brand != '') {
             if ($this->maxFocalLength != '') {
@@ -97,4 +98,17 @@ class Eyepiece extends Model implements HasMedia
     //    {
     //        return $this->belongsTo(Observation::class);
     //    }
+
+    /**
+     * Also store a thumbnail of the image.
+     *
+     * @param $media the media
+     *
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(100)
+            ->height(100);
+    }
 }

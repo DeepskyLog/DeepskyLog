@@ -13,8 +13,10 @@
 
 namespace App\Libraries;
 
-use DateTimeZone;
 use DateTime;
+use DateTimeZone;
+use Carbon\Carbon;
+use deepskylog\AstronomyLibrary\Time;
 
 /**
  * Procedures for calculating astronomical timing etc.
@@ -51,7 +53,7 @@ class AstroCalc
         $day = $date->format('d');
         $month = $date->format('m');
         $year = $date->format('Y');
-        $this->jd = gregoriantojd($month, $day, $year);
+        $this->jd = Time::getJd(Carbon::instance($date));
         $dateTimeZone = new DateTimeZone($timezone);
         $datestr = sprintf('%02d/%02d/%d', $month, $day, $year);
         $dateTime = new DateTime($datestr, $dateTimeZone);
@@ -141,7 +143,7 @@ class AstroCalc
         }
         $theta0 /= 15.0;
 
-        $nutat = $this->_calculateNutation($jd);
+        $nutat = Time::nutation($jd);
 
         $theta0 += (($nutat[0] *
             cos(deg2rad($nutat[3])) / 15.0) / 3600.0);
@@ -200,8 +202,9 @@ class AstroCalc
         $theta -= floor($theta);
         $theta *= 360.0;
 
-        // deltaT is 70 for 2017
-        $n = $m0 + 70 / 86400;
+        // Use delta t from laravel-astronomy-library.
+        // We use delta t for the given date.
+        $n = $m0 + Time::deltaT(Time::fromJd($jd)) / 86400;
 
         $a = $ra2 - $ra1;
         $b = $ra3 - $ra2;
@@ -948,7 +951,7 @@ class AstroCalc
 
         $pi = rad2deg(asin(6378.14 / $moonR));
 
-        $nutat = $this->_calculateNutation($jd);
+        $nutat = Time::nutation($jd);
 
         $eclLongitude += $nutat[0] / 3600.0;
 
@@ -964,176 +967,6 @@ class AstroCalc
         $moonDecl = $equa[1];
 
         return [$moonRa, $moonDecl, $pi];
-    }
-
-    /**
-     * Calculate the nutation for a given day.
-     *
-     * @param float $jd The julian day
-     *
-     * @return Array the nutation in longitude, the nutation in obliquity,
-     *               the mean obliquity and the true obliquity
-     */
-    private function _calculateNutation($jd)
-    {
-        $T = ($jd - 2451545.0) / 36525.0;
-
-        /* D stands for mean elongation of the moon from the sun. */
-        $D = 297.85036 + 445267.111480 * $T - 0.0019142 * pow($T, 2) + pow($T, 3)
-            / 189474.0;
-        $D -= floor($D / 360.0) * 360;
-
-        /* M stands for mean anomaly of the sun */
-        $M = 357.52772 + 35999.050340 * $T - 0.0001603 * pow($T, 2) - pow($T, 3) /
-            300000.0;
-        $M -= floor($M / 360.0) * 360;
-
-        /* M_accent stands for mean anomaly of the moon */
-        $M_accent = 134.96298 + 477198.867398 * $T + 0.0086972 * pow($T, 2) +
-            pow($T, 3) / 56250.0;
-        $M_accent -= floor($M_accent / 360.0) * 360;
-
-        /* F stands for the moon's argument of latitude */
-        $F = 93.27191 + 483202.017538 * $T - 0.0036825 * pow($T, 2) + pow($T, 3) /
-            327270.0;
-        $F -= floor($F / 360.0) * 360;
-
-        /* Omega stands for the longitude of the ascending node of the moon's
-            mean orbit on the ecliptic, measured from the mean equinox of the date
-        */
-        $omega = 125.04452 - 1934.136261 * $T + 0.0020708 * pow($T, 2)
-            + pow($T, 3) / 450000.0;
-        $omega -= floor($omega / 360.0) * 360;
-
-        // This is a very accurate calculation of the nutation in longitude
-        $nutLongitude = (-171996.0 - 174.2 * $T) * sin(deg2rad($omega))
-            + (-13187 - 1.6 * $T) * sin(deg2rad(-2 * $D + 2 * $F + 2 * $omega))
-            + (-2274 - 0.2 * $T) * sin(deg2rad(2 * $F + 2 * $omega))
-            + (2062 + 0.2 * $T) * sin(deg2rad(2 * $omega))
-            + (1426 - 3.4 * $T) * sin(deg2rad($M))
-            + (712 + 0.1 * $T) * sin(deg2rad($M_accent))
-            + (-517 + 1.2 * $T) * sin(deg2rad(-2 * $D + $M + 2 * $F + 2 * $omega))
-            + (-386 - 0.4 * $T) * sin(deg2rad(2 * $F + $omega))
-            + (-301) * sin(deg2rad($M_accent + 2 * $F + 2 * $omega))
-            + (217 - 0.5 * $T) * sin(deg2rad(-2 * $D - $M + 2 * $F + 2 * $omega))
-            + (-158) * sin(deg2rad(-2 * $D + $M_accent))
-            + (129 + 0.1 * $T) * sin(deg2rad(-2 * $D + 2 * $F + $omega))
-            + (123) * sin(deg2rad(-$M_accent + 2 * $F + 2 * $omega))
-            + (63) * sin(deg2rad(2 * $D))
-            + (63 + 0.1 * $T) * sin(deg2rad($M_accent + $omega))
-            + (-59) * sin(deg2rad(2 * $D - $M_accent + 2 * $F + 2 * $omega))
-            + (-58 - 0.1 * $T) * sin(deg2rad(-$M_accent + $omega))
-            + (-51) * sin(deg2rad($M_accent + 2 * $F + $omega))
-            + (48) * sin(deg2rad(-2 * $D + 2 * $M_accent))
-            + (46) * sin(deg2rad(-2 * $M_accent + 2 * $F + $omega))
-            + (-38) * sin(deg2rad(2 * $D + 2 * $F + 2 * $omega))
-            + (-31) * sin(deg2rad(2 * $M_accent + 2 * $F + 2 * $omega))
-            + (29) * sin(deg2rad(2 * $M_accent))
-            + (29) * sin(deg2rad(-2 * $D + $M_accent + 2 * $F + 2 * $omega))
-            + (26) * sin(deg2rad(2 * $F))
-            + (-22) * sin(deg2rad(-2 * $D + 2 * $F))
-            + (21) * sin(deg2rad(-$M_accent + 2 * $F + $omega))
-            + (17 - 0.1 * $T) * sin(deg2rad(2 * $M))
-            + (16) * sin(deg2rad(2 * $D - $M_accent + $omega))
-            + (-16 + 0.1 * $T) * sin(deg2rad(-2 * $D + 2 * $M + 2 * $F + 2 * $omega))
-            + (-15) * sin(deg2rad($M + $omega))
-            + (-13) * sin(deg2rad(-2 * $D + $M_accent + $omega))
-            + (-12) * sin(deg2rad(-$M + $omega))
-            + (11) * sin(deg2rad(2 * $M_accent - 2 * $F))
-            + (-10) * sin(deg2rad(2 * $D - $M_accent + 2 * $F + $omega))
-            + (-8) * sin(deg2rad(2 * $D + $M_accent + 2 * $F + 2 * $omega))
-            + (7) * sin(deg2rad($M + 2 * $F + 2 * $omega))
-            + (-7) * sin(deg2rad(-2 * $D + $M + $M_accent))
-            + (-7) * sin(deg2rad(-$M + 2 * $F + 2 * $omega))
-            + (-7) * sin(deg2rad(2 * $D + 2 * $F + $omega))
-            + (6) * sin(deg2rad(2 * $D + $M_accent))
-            + (6) * sin(deg2rad(-2 * $D + 2 * $M_accent + 2 * $F + 2 * $omega))
-            + (6) * sin(deg2rad(-2 * $D + $M_accent + 2 * $F + $omega))
-            + (-6) * sin(deg2rad(2 * $D - 2 * $M_accent + $omega))
-            + (-6) * sin(deg2rad(2 * $D + $omega))
-            + (5) * sin(deg2rad(-$M + $M_accent))
-            + (-5) * sin(deg2rad(-2 * $D - $M + 2 * $F + $omega))
-            + (-5) * sin(deg2rad(-2 * $D + $omega))
-            + (-5) * sin(deg2rad(2 * $M_accent + 2 * $F + $omega))
-            + (4) * sin(deg2rad(-2 * $D + 2 * $M_accent + $omega))
-            + (4) * sin(deg2rad(-2 * $D + $M + 2 * $F + $omega))
-            + (4) * sin(deg2rad($M_accent - 2 * $F))
-            + (-4) * sin(deg2rad(-$D + $M_accent))
-            + (-4) * sin(deg2rad(-2 * $D + $M))
-            + (-4) * sin(deg2rad($D))
-            + (3) * sin(deg2rad($M_accent + 2 * $F))
-            + (-3) * sin(deg2rad(-2 * $M_accent + 2 * $F + 2 * $omega))
-            + (-3) * sin(deg2rad(-$D - $M + $M_accent))
-            + (-3) * sin(deg2rad($M + $M_accent))
-            + (-3) * sin(deg2rad(-$M + $M_accent + 2 * $F + 2 * $omega))
-            + (-3) * sin(deg2rad(2 * $D - $M - $M_accent + 2 * $F + 2 * $omega))
-            + (-3) * sin(deg2rad(3 * $M_accent + 2 * $F + 2 * $omega))
-            + (-3) * sin(deg2rad(2 * $D - $M + 2 * $F + 2 * $omega));
-
-        $nutLongitude /= 10000.0;
-
-        // This is a very accurate calculation of the nutation in longitude
-        $nutObliquity = (92025.0 + 8.9 * $T) * cos(deg2rad($omega))
-                + (5736 - 3.1 * $T) * cos(deg2rad(-2 * $D + 2 * $F + 2 * $omega))
-                + (977 - 0.5 * $T) * cos(deg2rad(2 * $F + 2 * $omega))
-                + (-895 + 0.5 * $T) * cos(deg2rad(2 * $omega))
-                + (54 - 0.1 * $T) * cos(deg2rad($M))
-                + (-7) * cos(deg2rad($M_accent))
-                + (224 - 0.6 * $T) * cos(deg2rad(-2 * $D + $M + 2 * $F + 2 * $omega))
-                + (200) * cos(deg2rad(2 * $F + $omega))
-                + (129 - 0.1 * $T) * cos(deg2rad($M_accent + 2 * $F + 2 * $omega))
-                + (-95 + 0.3 * $T) * cos(deg2rad(-2 * $D - $M + 2 * $F + 2 * $omega))
-                + (-70) * cos(deg2rad(-2 * $D + 2 * $F + $omega))
-                + (-53) * cos(deg2rad(-$M_accent + 2 * $F + 2 * $omega))
-                + (-33) * cos(deg2rad($M_accent + $omega))
-                + (26) * cos(deg2rad(2 * $D - $M_accent + 2 * $F + 2 * $omega))
-                + (32) * cos(deg2rad(-$M_accent + $omega))
-                + (27) * cos(deg2rad($M_accent + 2 * $F + $omega))
-                + (-24) * cos(deg2rad(-2 * $M_accent + 2 * $F + $omega))
-                + (16) * cos(deg2rad(2 * $D + 2 * $F + 2 * $omega))
-                + (13) * cos(deg2rad(2 * $M_accent + 2 * $F + 2 * $omega))
-                + (-12) * cos(deg2rad(-2 * $D + $M_accent + 2 * $F + 2 * $omega))
-                + (-10) * cos(deg2rad(-$M_accent + 2 * $F + $omega))
-                + (-8) * cos(deg2rad(2 * $D - $M_accent + $omega))
-                + (7) * cos(deg2rad(-2 * $D + 2 * $M + 2 * $F + 2 * $omega))
-                + (9) * cos(deg2rad($M + $omega))
-                + (7) * cos(deg2rad(-2 * $D + $M_accent + $omega))
-                + (6) * cos(deg2rad(-$M + $omega))
-                + (5) * cos(deg2rad(2 * $D - $M_accent + 2 * $F + $omega))
-                + (3) * cos(deg2rad(2 * $D + $M_accent + 2 * $F + 2 * $omega))
-                + (-3) * cos(deg2rad($M + 2 * $F + 2 * $omega))
-                + (3) * cos(deg2rad(-$M + 2 * $F + 2 * $omega))
-                + (3) * cos(deg2rad(2 * $D + 2 * $F + $omega))
-                + (-3) * cos(deg2rad(-2 * $D + 2 * $M_accent + 2 * $F + 2 * $omega))
-                + (-3) * cos(deg2rad(-2 * $D + $M_accent + 2 * $F + $omega))
-                + (3) * cos(deg2rad(2 * $D - 2 * $M_accent + $omega))
-                + (3) * cos(deg2rad(2 * $D + $omega))
-                + (3) * cos(deg2rad(-2 * $D - $M + 2 * $F + $omega))
-                + (3) * cos(deg2rad(-2 * $D + $omega))
-                + (3) * cos(deg2rad(2 * $M_accent + 2 * $F + $omega));
-
-        $nutObliquity /= 10000.0;
-
-        $U = $T / 100.0;
-        /* For the obliquity, we have an accuracy of 0.01 arcseconds after
-           1000 years. (A.D. 1000 - 3000). The accuracy is still a few seconds of
-           arc 10000 years after or before 2000 A.D. */
-        $meanObliquity = (84381.448 - 4680.93 * $U
-                            - 1.55 * pow($U, 2)
-                            + 1999.25 * pow($U, 3)
-                            - 51.38 * pow($U, 4)
-                            - 249.67 * pow($U, 5)
-                            - 39.05 * pow($U, 6)
-                            + 7.12 * pow($U, 7)
-                            + 27.87 * pow($U, 8)
-                            + 5.79 * pow($U, 9)
-                            + 2.45 * pow($U, 10)) / 3600.0;
-
-        $trueObliquity = $meanObliquity + $nutObliquity / 3600.0;
-
-        return [
-            $nutLongitude, $nutObliquity, $meanObliquity, $trueObliquity
-        ];
     }
 
     /**

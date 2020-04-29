@@ -1,5 +1,5 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">DeepskyLog</a>
+    <a class="navbar-brand" href="/home">DeepskyLog</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -19,7 +19,7 @@
         </ul>
 
         <ul class="navbar-nav">
-            <button class="btn btn-light fas fa-adjust" id="nightMode" style="margin-right:5px;border:0;" alt="Night Mode"></button>
+            <button class="btn btn-light fas fa-adjust" id="darkSwitch" style="margin-right:5px;border:0;" alt="Night Mode"></button>
 
             @if (Auth::guest())
                 @include('layout.header.register');

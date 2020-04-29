@@ -16,7 +16,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
-use Xinax\LaravelGettext\Facades\LaravelGettext;
+use deepskylog\LaravelGettext\Facades\LaravelGettext;
 use Illuminate\Http\Request;
 use Socialite;
 
@@ -49,7 +49,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -108,6 +108,7 @@ class LoginController extends Controller
      *
      * @param Request $request The request
      *
+     * @return None
      */
     protected function validateLogin(Request $request)
     {

@@ -35,11 +35,10 @@
         <td colspan="3">{{ _i("Name") }}</td>
         <td colspan="3">{{ _i($target->name) }}</td>
         <td colspan="3"><span class="float-right">{{ _i('Type') }}</span></td>
-        <td colspan="3">{{ _i($target->type()->first()->observationType()->first()['name']) }} / {{ _i($target->type()->first()['type']) }}</td>
+        <td colspan="3">{{ $target->observationType }}</td>
     </tr>
 
-    @if ($target->type()->first()->observationType()->first()['type'] == 'ds' ||
-        $target->type()->first()->observationType()->first()['type'] == 'double')
+    @if ($target->isNonSolarSystem())
         <tr>
             <td colspan="3">{{ _i('Right Ascension') }}</td>
             <td colspan="3">{{ $target->ra() }}</td>
@@ -53,8 +52,8 @@
             @auth
             <td colspan="3"><span class="float-right">
                 @if ($target->ra != null)
-                {{ App\Atlases::where('code', Auth::user()->standardAtlasCode)->first()['name'] }}
-                {{ _i(" page") }}</span></td>
+                    {{ App\Atlas::where('code', Auth::user()->standardAtlasCode)->first()['name'] }}
+                    {{ _i(" page") }}</span></td>
                 @endif
             <td colspan="3">{{ $target->atlaspage(Auth::user()->standardAtlasCode) }}</td>
             @endauth
@@ -79,9 +78,9 @@
 
         <tr>
             <td colspan="3">{{ _i("Size") }}</td>
-		    <td colspan="3">{{ $target->size() }}</td>
-		    <td colspan="3"><span class="float-right">{{ _i("Position angle") }}</span></td>
-		    <td colspan="3">@if ($target->pa > 900)
+            <td colspan="3">{{ $target->size() }}</td>
+            <td colspan="3"><span class="float-right">{{ _i("Position angle") }}</span></td>
+            <td colspan="3">@if ($target->pa > 900)
                     -
                 @else
                 {{ $target->pa }}&deg;
@@ -108,78 +107,77 @@
 
         @if (\App\TargetName::hasAlternativeNames($target->name))
         <tr>
-			<td colspan="3">{{ _i("Alternative name") }}</td>
-		    <td colspan="9">{{ \App\TargetName::getAlternativeNames($target->name) }}</td>
+            <td colspan="3">{{ _i("Alternative name") }}</td>
+            <td colspan="9">{{ \App\TargetName::getAlternativeNames($target->name) }}</td>
         </tr>
         @endif
 
         @if (\App\TargetPartOf::isPartOf($target->name) || \App\TargetPartOf::contains($target->name))
-			<tr>
-			<td colspan="3"> {{ _i("(Contains)/Part of") }}</td>
-			<td colspan="9">{!! \App\TargetPartOf::partOfContains($target->name) !!}</td>
-			</tr>
+            <tr>
+            <td colspan="3"> {{ _i("(Contains)/Part of") }}</td>
+            <td colspan="9">{!! \App\TargetPartOf::partOfContains($target->name) !!}</td>
+            </tr>
         @endif
 
         {{-- TODO: Make it possible to show description added to the list and to change it
-            if ($listname && ($objList->checkObjectInMyActiveList ( $object ))) {
-			echo "<tr>";
-			echo "<td colspan=\"3\">" . _("List description") . ' (' . "<a href=\"" . _("https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions") . "\" rel=\"external\">" . _("NGC/IC, Dreyer codes") . "</a>)" . "</td>";
-			if ($myList) {
-				echo "<td colspan=\"9\">" . "<textarea maxlength=\"1024\" name=\"description\" class=\"form-control\" onchange=\"submit()\">" . $objList->getListObjectDescription ( $object ) . "</textarea>" . "</td>";
-			} else {
-				echo "<td colspan=\"9\">" . $objList->getListObjectDescription ( $object ) . "</td>";
-			}
-			echo "</tr>";
-		} else { --}}
-		<tr>
-			<td colspan="3">{{ _i("Description") }} (<a href="https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions" rel="_blank">{{ _i("NGC/IC, Dreyer codes") }}</a>)</td>
-			<td colspan="9">{{ $target->description }}</td>
-		</tr>
-
+        if ($listname && ($objList->checkObjectInMyActiveList ( $object ))) {
+            echo "<tr>";
+            echo "<td colspan=\"3\">" . _("List description") . ' (' . "<a href=\"" . _("https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions") . "\" rel=\"external\">" . _("NGC/IC, Dreyer codes") . "</a>)" . "</td>";
+            if ($myList) {
+                echo "<td colspan=\"9\">" . "<textarea maxlength=\"1024\" name=\"description\" class=\"form-control\" onchange=\"submit()\">" . $objList->getListObjectDescription ( $object ) . "</textarea>" . "</td>";
+            } else {
+                echo "<td colspan=\"9\">" . $objList->getListObjectDescription ( $object ) . "</td>";
+            }
+            echo "</tr>";
+        } else { --}}
+        <tr>
+            <td colspan="3">{{ _i("Description") }} (<a href="https://github.com/DeepskyLog/DeepskyLog/wiki/Dreyer-Descriptions" rel="_blank">{{ _i("NGC/IC, Dreyer codes") }}</a>)</td>
+            <td colspan="9">{{ $target->description }}</td>
+        </tr>
     @endif
-	{{-- TODO Check if this object appears in a list, only show the following table line if this is the case. --}}
-	<tr>
-		<td colspan="3">{{ _i('In my lists') }}</td>
-		<td colspan="9">TODO</td>
-	</tr>
+
+    {{-- TODO Check if this object appears in a list, only show the following table line if this is the case. --}}
+    <tr>
+        <td colspan="3">{{ _i('In my lists') }}</td>
+        <td colspan="9">TODO</td>
+    </tr>
 
     @auth
-    @if (Auth::user()->stdlocation != 0 && Auth::user()->stdtelescope != 0)
-        @if ($target->type()->first()->observationType()->first()['type'] == 'ds' ||
-            $target->type()->first()->observationType()->first()['type'] == 'double')
-            <tr>
-                <td>{{ _i('Date') }}</td>
-                <td>@php echo session('date') @endphp</td>
-                <td>{{ _i("Rise") }}</td>
-                <td>
-                    <span data-toggle="tooltip" data-placement="bottom" title="{{ $target->rise_popup }}">{{ $target->rise }}</span>
-                </td>
-                <td>{{ _i("Transit") }}</td>
-                <td>
-                    <span data-toggle="tooltip" data-placement="bottom" title="{{ $target->transit_popup }}">{{ $target->transit }}</span>
-                </td>
-                <td>{{ _i("Set") }}</td>
-                <td>
-                    <span data-toggle="tooltip" data-placement="bottom" title="{{ $target->set_popup }}">{{ $target->set }}</span>
-                </td>
-                <td>{{ _i('Best Time') }}</td>
-                <td>{{ $target->BestTime }}</td>
-                <td>{{ _i("Max Alt") }}</td>
-                <td>
-                    <span data-toggle="tooltip" data-placement="bottom" title="{!! $target->maxAlt_popup !!}">{!! $target->maxAlt !!}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>{{ _i('Highest From') }}</td>
-                <td colspan="3">{{ $target->highest_from }}</td>
-                <td>{{ _i('Highest Around') }}</td>
-                <td colspan="3">{{ $target->highest_around }}</td>
-                <td>{{ _i('Highest To') }}</td>
-                <td colspan="3">{{ $target->highest_to }}</td>
-            </tr>
+        @if ($target->isNonSolarSystem())
+        <tr>
+            <td>{{ _i('Date') }}</td>
+            <td>@php echo session('date') @endphp</td>
+            <td>{{ _i("Rise") }}</td>
+            <td>
+                <span data-toggle="tooltip" data-placement="bottom" title="{{ $target->rise_popup }}">{{ $target->rise }}</span>
+            </td>
+            <td>{{ _i("Transit") }}</td>
+            <td>
+                <span data-toggle="tooltip" data-placement="bottom" title="{{ $target->transit_popup }}">{{ $target->transit }}</span>
+            </td>
+            <td>{{ _i("Set") }}</td>
+            <td>
+                <span data-toggle="tooltip" data-placement="bottom" title="{{ $target->set_popup }}">{{ $target->set }}</span>
+            </td>
+            <td>{{ _i('Best Time') }}</td>
+            <td>{{ $target->BestTime }}</td>
+            <td>{{ _i("Max Alt") }}</td>
+            <td>
+                <span data-toggle="tooltip" data-placement="bottom" title="{!! $target->maxAlt_popup !!}">{!! $target->maxAlt !!}</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>{{ _i('Highest From') }}</td>
+            <td colspan="3">{{ $target->highest_from }}</td>
+            <td>{{ _i('Highest Around') }}</td>
+            <td colspan="3">{{ $target->highest_around }}</td>
+            <td>{{ _i('Highest To') }}</td>
+            <td colspan="3">{{ $target->highest_to }}</td>
+        </tr>
         @endif
-    @endif
     @endauth
+
     @if ($target->ra != null && $target->decl != null)
     <tr>
         <td colspan="3">Aladin</td>

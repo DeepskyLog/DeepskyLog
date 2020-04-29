@@ -36,7 +36,7 @@ class FilterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified'])->except(['show']);
+        $this->middleware(['auth', 'verified'])->except(['show', 'getImage']);
     }
 
     /**
@@ -167,7 +167,11 @@ class FilterController extends Controller
      */
     public function show(Filter $filter)
     {
-        return view('layout.filter.show', ['filter' => $filter]);
+        $media = $this->getImage($filter);
+
+        return view(
+            'layout.filter.show', ['filter' => $filter, 'media' => $media]
+        );
     }
 
     /**
@@ -245,24 +249,18 @@ class FilterController extends Controller
     /**
      * Returns the image of the filter.
      *
-     * @param int $id The id of the filter
+     * @param Filter $filter The filter
      *
      * @return MediaObject the image of the filter
      */
-    public function getImage($id)
+    public function getImage(Filter $filter)
     {
-        if (Filter::find($id)->hasMedia('filter')) {
-            return Filter::find($id)
-                ->getFirstMedia('filter');
-        } else {
-            Filter::find($id)
-                ->addMediaFromUrl(asset('images/filter.jpg'))
-                ->usingFileName($id . '.png')
+        if (!$filter->hasMedia('filter')) {
+            $filter->addMediaFromUrl(asset('images/filter.jpg'))
+                ->usingFileName($filter->id . '.png')
                 ->toMediaCollection('filter');
-
-            return Filter::find($id)
-                ->getFirstMedia('filter');
         }
+        return $filter->getFirstMedia('filter');
     }
 
     /**
@@ -274,6 +272,8 @@ class FilterController extends Controller
      */
     public function deleteImage($id)
     {
+        $this->authorize('update', Filter::find($id));
+
         Filter::find($id)
             ->getFirstMedia('filter')
             ->delete();

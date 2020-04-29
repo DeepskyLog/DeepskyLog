@@ -98,7 +98,7 @@ class InstrumentDataTable extends DataTable
                 }
             )->editColumn(
                 'observations',
-                '<a href="/observations/instrument/{{ $id }}">{{ $observations }}</a>'
+                '<a href="/observations/instrument/{{ $id }}">TODO</a>'
             )->editColumn(
                 'active',
                 '<form method="POST" action="/instrument/{{ $id }}">
@@ -167,7 +167,7 @@ class InstrumentDataTable extends DataTable
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
             . \PeterColes\Languages\LanguagesFacade::lookup(
-                [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
+                [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first()
             . '.json'];

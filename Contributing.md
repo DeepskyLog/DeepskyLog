@@ -12,6 +12,7 @@ Here's what you can do to help:
 + Help translating DeepskyLog in your own language (see below for guidelines).
 + Be part of the Social team! We have accounts on [twitter](https://twitter.com/deepskylog), [facebook](https://www.facebook.com/deepskylog) and [instagram](https://www.instagram.com/deepskylog.be/).
 + Help writing the documentation in our [wiki](https://github.com/DeepskyLog/DeepskyLog/wiki/Manual).
++ DeepskyLog also has a side-project to perform astronomical calculations. If you are interested in the more mathematical part of DeepskyLog, you can help with the development of [laravel-astronomylibrary](https://github.com/DeepskyLog/laravel-astronomy-library/blob/master/readme.md).
 + Whenever you have questions on how to help, do not hesitate to contact us. We can set up one-to-one sessions to get you started.
 + Please always be polite and helpfull. We are developing and maintaining DeepskyLog in our free time. See our [code of conduct](CODE_OF_CONDUCT.md).
 

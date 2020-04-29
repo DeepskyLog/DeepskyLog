@@ -53,7 +53,7 @@ class LensDataTable extends DataTable
                 '<a href="/lens/{{ $id }}">{{ $name }}</a>'
             )->editColumn(
                 'observations',
-                '<a href="/observations/lens/{{ $id }}">{{ $observations }}</a>'
+                '<a href="/observations/lens/{{ $id }}">TODO</a>'
             )->editColumn(
                 'user.name',
                 function ($lens) {
@@ -102,7 +102,7 @@ class LensDataTable extends DataTable
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
             . \PeterColes\Languages\LanguagesFacade::lookup(
-                [\Xinax\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
+                [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first()
             . '.json'];

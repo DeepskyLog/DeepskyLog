@@ -17,35 +17,35 @@
         {{ _i("Add a new location") }}
     @endif
 </h4>
+<div>
+    <hr />
+    <br />
+    <form>
+        <ol>
+            <li>
+                {!! _i('Set your location on the map or by entering the name and pressing the %s button.',
+                    '<strong>"' . _i('Search location') . '"</strong>') !!}
+            </li>
+            <div class="form-inline">
+                <input type="text" class="form-control" id="address" onkeypress="searchKeyPress(event);" placeholder="La Silla, Chile" autofocus></input>
+                &nbsp;
+                <input type="button" class="btn btn-primary" id="btnSearch" value="{{ _i('Search location') }}" onclick="codeAddress();" ></input>
+            </div>
+        </ol>
+    </form>
+    <div id="map"></div>
+
+    <br />
+
+    @if ($update)
+        <form role="form" action="/location/{{ $location->id }}" method="POST" enctype="multipart/form-data">
+        @method('PATCH')
+    @else
+        <form role="form" action="/location" method="POST" enctype="multipart/form-data">
+    @endif
+    @csrf
+    <input type="submit" class="btn btn-success float-right" name="add" value="@if ($update){{ _i("Change location") }}@else{{ _i("Add location") }}@endif">
     <div>
-        <hr />
-        <input type="submit" class="btn btn-success float-right" name="add" value="@if ($update){{ _i("Change location") }}@else{{ _i("Add location") }}@endif">
-        <br />
-        <form>
-            <ol>
-                <li>
-                    {!! _i('Set your location on the map or by entering the name and pressing the %s button.',
-                        '<strong>"' . _i('Search location') . '"</strong>') !!}
-                </li>
-                <div class="form-inline">
-                    <input type="text" class="form-control" id="address" onkeypress="searchKeyPress(event);" placeholder="La Silla, Chile" autofocus></input>
-                    &nbsp;
-                    <input type="button" class="btn btn-primary" id="btnSearch" value="{{ _i('Search location') }}" onclick="codeAddress();" ></input>
-                </div>
-            </form>
-            <div id="map"></div>
-
-            <br />
-
-            @if ($update)
-                <form role="form" action="/location/{{ $location->id }}" method="POST" enctype="multipart/form-data">
-                @method('PATCH')
-            @else
-                <form role="form" action="/location" method="POST" enctype="multipart/form-data">
-            @endif
-            @csrf
-
-            <div>
         <input type="hidden" name="latitude" id="latitude" />
         <input type="hidden" name="longitude" id="longitude" />
         <input type="hidden" name="country" id="country" />
@@ -108,15 +108,13 @@
                 </td>
                 <td>
                 </td>
-            </table>
-            <li>
-                {!! _i('Upload a picture of your location.') !!}
-            </li>
+            </tr>
+        </table>
+        <li>
+            {!! _i('Upload a picture of your location.') . ' (max 10 Mb)' !!}
+        </li>
 
-            <input id="picture" name="picture" type="file">
-
-        </ol>
-
+        <input id="picture" name="picture" type="file">
 
         <br />
 
@@ -125,8 +123,7 @@
     </form>
     <br />
     <br />
-    </div>
-</form>
+</div>
 @endsection
 
 @push('scripts')
@@ -138,12 +135,12 @@
             allowedFileTypes: ['image'],    // allow only images
             'showUpload': false,
             maxFileSize: 10000,
-            @if ($location->id != null && App\Location::find($location->id)->getFirstMedia('location') != null)
+            @if ($location->id != null && $location->getFirstMedia('location') != null)
             initialPreview: [
                 '<img class="file-preview-image kv-preview-data" src="/location/{{ $location->id }}/getImage">'
             ],
             initialPreviewConfig: [
-                {caption: "{{ App\Location::find($location->id)->getFirstMedia('location')->file_name }}", size: {{ App\Location::find($location->id)->getFirstMedia('location')->size }}, url: "/location/{{ $location->id }}/deleteImage", key: 1},
+                {caption: "{{ $location->getFirstMedia('location')->file_name }}", size: {{ $location->getFirstMedia('location')->size }}, url: "/location/{{ $location->id }}/deleteImage", key: 1},
             ],
             @endif
         }
@@ -154,8 +151,6 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ env("GOOGLEMAPS_KEY") }}&v=3.exp&language=en&libraries=places">
 
 </script>
-
-<script type="text/javascript" src="{{ URL::asset('js/sqm.js') }}"></script>
 
 <script type="text/javascript">
     var geocoder;
@@ -435,11 +430,14 @@
             lm = 0.0;
             $("#lm").val(lm);
         }
-        sqm = lmToSqm(lm, {{ Auth::user()->fstOffset }});
-        $("#sqm").val(sqm);
+        $.getJSON('/nelmToSqm/' + lm, function(data) {
+            $('#sqm').val(Math.round(Number(data.sqm) * 100) / 100);
+        });
 
         bortleChange = 0;
-        $("#bortle").val(sqmToBortle(sqm)).change();
+        $.getJSON('/nelmToBortle/' + lm, function(data) {
+            $('#bortle').val(Number(data.bortle));
+        });
     });
 
     // Javascript to convert from sqm to limiting magnitude and bortle
@@ -451,11 +449,14 @@
             $("#sqm").val(22.0);
         }
 
-        lm = sqmToLm(sqm, {{ Auth::user()->fstOffset }});
-        $("#lm").val(lm);
+        $.getJSON('/sqmToNelm/' + sqm, function(data) {
+            $('#lm').val(Math.round(Number(data.nelm) * 10) / 10);
+        });
 
         bortleChange = 0;
-        $("#bortle").val(sqmToBortle(sqm)).change();
+        $.getJSON('/sqmToBortle/' + sqm, function(data) {
+            $('#bortle').val(Number(data.bortle));
+        });
     });
 
     // Javascript to convert from bortle to limiting magnitude and sqm
@@ -464,8 +465,12 @@
             bortle = $(this).find("option:selected").attr("value");
 
             if (bortleChange == 1) {
-                $("#lm").val(bortleToLm(bortle, {{ Auth::user()->fstOffset }}));
-                $("#sqm").val(bortleToSqm(bortle));
+                $.getJSON('/bortleToNelm/' + bortle, function(data) {
+                    $('#lm').val(Number(data.nelm));
+                });
+                $.getJSON('/bortleToSqm/' + bortle, function(data) {
+                    $('#sqm').val(Number(data.sqm));
+                });
             } else {
                 bortleChange = 1;
             }

@@ -8,7 +8,11 @@
 <table class="table table-sm">
     <tr>
         <th><h4>{{ $filter->name }}</h4></th>
-        <th><img width="100" style="border-radius: 20%" src="/filter/{{ $filter->id }}/getImage"></th>
+        <th>
+            @if ($media)
+            <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $filter->name }}">
+            @endif
+        </th>
     </tr>
     <tr>
         <td>{{ _i("Type") }}</td>
@@ -43,6 +47,20 @@
         @endif
     @endif
 
+    @auth
+    @if ($filter->user_id == Auth::user()->id)
+        <tr>
+            <td>{{ _i("First observation") }}</td>
+            <td>ENTER FIRST OBSERVATION OR REMOVE IF NOT YET USED</td>
+        </tr>
+
+        <tr>
+            <td>{{ _i("Last observation") }}</td>
+            <td>ENTER LAST OBSERVATION OR REMOVE IF NOT YET USED</td>
+        </tr>
+    @endif
+    @endauth
+
     <tr>
         <td>{{ _i("Owner") }}</td>
         <td><a href="/users/{{ $filter->user_id }}">{{  $filter->user->name }}</a></td>
@@ -59,7 +77,7 @@
 </table>
 
 @auth
-    @if (Auth::user()->id === $filter->user_id || Auth::user()->isAdmin())
+    @if (Auth::user()->id == $filter->user_id || Auth::user()->isAdmin())
     <a href="/filter/{{ $filter->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">
             {{ _i('Edit') }} {{  $filter->name }}

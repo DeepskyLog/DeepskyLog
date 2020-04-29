@@ -37,7 +37,7 @@ class LocationController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified'])->except(['show']);
+        $this->middleware(['auth', 'verified'])->except(['show', 'getImage']);
     }
 
     /**
@@ -142,8 +142,7 @@ class LocationController extends Controller
 
         if ($request->picture != null) {
             // Add the picture
-            Location::find($location->id)
-                ->addMedia($request->picture->path())
+            $location->addMedia($request->picture->path())
                 ->usingFileName($location->id . '.png')
                 ->toMediaCollection('location');
         }
@@ -166,10 +165,15 @@ class LocationController extends Controller
         return $request->validate(
             [
                 'user_id' => 'required',
-                'name' => 'required|min:4',
-                'latitude' => 'required', 'longitude' => 'required',
+                'name' => 'required|min:6',
+                'latitude' => 'required|numeric|lte:90|gte:-90',
+                'longitude' => 'required|numeric|lte:180|gte:-180',
                 'country' => 'required',
-                'elevation' => 'required', 'timezone' => 'required'
+                'elevation' => 'required|numeric|lte:8888|gte:-200',
+                'timezone' => 'required|timezone',
+                'lm' => 'numeric|lte:8.0|gte:-1.0',
+                'sqm' => 'numeric|lte:22.0|gte:10.0',
+                'bortle' => 'numeric|lte:9|gte:1',
             ]
         );
     }
@@ -183,7 +187,10 @@ class LocationController extends Controller
      */
     public function show(Location $location)
     {
-        return view('layout.location.show', ['location' => $location]);
+        $media = $this->getImage($location);
+        return view(
+            'layout.location.show', ['location' => $location, 'media' => $media]
+        );
     }
 
     /**
@@ -261,16 +268,14 @@ class LocationController extends Controller
             $location->update(['bortle' => $request->get('bortle')]);
 
             if ($request->picture != null) {
-                if (Location::find($location->id)->getFirstMedia('location') != null
+                if ($location->getFirstMedia('location') != null
                 ) {
                     // First remove the current image
-                    Location::find($location->id)
-                    ->getFirstMedia('location')
-                    ->delete();
+                    $location->getFirstMedia('location')
+                        ->delete();
                 }
                 // Update the picture
-                Location::find($location->id)
-                    ->addMedia($request->picture->path())
+                $location->addMedia($request->picture->path())
                     ->usingFileName($location->id . '.png')
                     ->toMediaCollection('location');
             }
@@ -307,24 +312,18 @@ class LocationController extends Controller
     /**
      * Returns the image of the location.
      *
-     * @param int $id The id of the location
+     * @param Location $location The location
      *
      * @return MediaObject the image of the location
      */
-    public function getImage($id)
+    public function getImage(Location $location)
     {
-        if (Location::find($id)->hasMedia('location')) {
-            return Location::find($id)
-                ->getFirstMedia('location');
-        } else {
-            Location::find($id)
-                ->addMediaFromUrl(asset('images/location.png'))
-                ->usingFileName($id . '.png')
+        if (!$location->hasMedia('location')) {
+            $location->addMediaFromUrl(asset('images/location.png'))
+                ->usingFileName($location->id . '.png')
                 ->toMediaCollection('location');
-
-            return Location::find($id)
-                ->getFirstMedia('location');
         }
+        return $location->getFirstMedia('location');
     }
 
     /**
@@ -336,6 +335,8 @@ class LocationController extends Controller
      */
     public function deleteImage($id)
     {
+        $this->authorize('update', Location::find($id));
+
         Location::find($id)
             ->getFirstMedia('location')
             ->delete();

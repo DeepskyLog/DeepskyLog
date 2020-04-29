@@ -15,8 +15,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * Lens eloquent model.
@@ -29,9 +30,11 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
  */
 class Lens extends Model implements HasMedia
 {
-    use HasMediaTrait;
+    use InteractsWithMedia;
 
     protected $fillable = ['user_id', 'name', 'factor', 'active'];
+
+    protected $table = 'lens';
 
     /**
      * Activate the lens.
@@ -75,4 +78,17 @@ class Lens extends Model implements HasMedia
     //    {
     //        return $this->belongsTo(Observation::class);
     //    }
+
+    /**
+     * Also store a thumbnail of the image.
+     *
+     * @param $media the media
+     *
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(100)
+            ->height(100);
+    }
 }

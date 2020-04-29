@@ -18,9 +18,10 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\DeepskyLogVerificationNotification;
 use App\Notifications\DeepskyLogResetPassword;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Cmgmyr\Messenger\Traits\Messagable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * User eloquent model.
@@ -34,7 +35,7 @@ use Cmgmyr\Messenger\Traits\Messagable;
 class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
     use Notifiable;
-    use HasMediaTrait;
+    use InteractsWithMedia;
     use Messagable;
 
     public const ADMIN_TYPE = 'admin';
@@ -51,7 +52,17 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
-     * Users can have one or more lenses.
+     * Users can have one lens.
+     *
+     * @return HasOne The eloquent relationship
+     */
+    public function lens()
+    {
+        return $this->hasOne('App\Lens', 'user_id');
+    }
+
+    /**
+     * Users can have more lenses.
      *
      * @return HasMany The eloquent relationship
      */
@@ -61,7 +72,17 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
-     * Users can have one or more filters.
+     * Users can have one filter.
+     *
+     * @return HasOne The eloquent relationship
+     */
+    public function filter()
+    {
+        return $this->hasOne('App\Filter', 'user_id');
+    }
+
+    /**
+     * Users can have more filters.
      *
      * @return HasMany The eloquent relationship
      */
@@ -71,7 +92,17 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
-     * Users can have one or more eyepieces.
+     * Users can have one eyepiece.
+     *
+     * @return HasOne The eloquent relationship
+     */
+    public function eyepiece()
+    {
+        return $this->hasOne('App\Eyepiece', 'user_id');
+    }
+
+    /**
+     * Users can have more eyepieces.
      *
      * @return HasMany The eloquent relationship
      */
@@ -81,7 +112,17 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
-     * Users can have one or more instruments.
+     * Users can have one instrument.
+     *
+     * @return HasOne The eloquent relationship
+     */
+    public function instrument()
+    {
+        return $this->hasOne('App\Instrument', 'user_id');
+    }
+
+    /**
+     * Users can have more instruments.
      *
      * @return HasMany The eloquent relationship
      */
@@ -91,7 +132,17 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
-     * Users can have one or more locations.
+     * Users can have one location.
+     *
+     * @return HasOne The eloquent relationship
+     */
+    public function location()
+    {
+        return $this->hasOne('App\Location', 'user_id');
+    }
+
+    /**
+     * Users can have more locations.
      *
      * @return HasMany The eloquent relationship
      */
@@ -180,7 +231,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      *
      * @return None
      */
-    public function registerMediaCollections()
+    public function registerMediaCollections(): void
     {
         $this
             ->addMediaCollection('observer')
@@ -219,4 +270,17 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Also store a thumbnail of the image.
+     *
+     * @param $media the media
+     *
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(100)
+            ->height(100);
+    }
 }

@@ -1,42 +1,44 @@
 <?php
 
- /**
-  * TargetType eloquent model.
-  *
-  * PHP Version 7
-  *
-  * @category Targets
-  * @package  DeepskyLog
-  * @author   Wim De Meester <deepskywim@gmail.com>
-  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
-  * @link     http://www.deepskylog.org
-  */
+/**
+ * TargetType eloquent model.
+ *
+ * PHP Version 7
+ *
+ * @category Targets
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
 
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
- /**
-  * TargetType eloquent model.
-  *
-  * @category Targets
-  * @package  DeepskyLog
-  * @author   Wim De Meester <deepskywim@gmail.com>
-  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
-  * @link     http://www.deepskylog.org
-  */
+/**
+ * TargetType eloquent model.
+ *
+ * @category Targets
+ * @package  DeepskyLog
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
 class TargetType extends Model
 {
     protected $primaryKey = 'id';
 
     public $incrementing = false;
 
+    public $timestamps = false;
+
     /**
      * Adds the link to the targets.
      *
      * @return BelongsTo the targets this type belongs to
      */
-    public function targets()
+    public function target()
     {
         return $this->belongsTo('App\Target', 'id', 'type');
     }
@@ -48,6 +50,6 @@ class TargetType extends Model
      */
     public function observationType()
     {
-        return $this->hasOne('App\observationTypes', 'type', 'observation_type');
+        return $this->hasOne('App\ObservationType', 'type', 'observation_type');
     }
 }

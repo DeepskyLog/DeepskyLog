@@ -40,7 +40,7 @@ class UserController extends Controller
     {
         // isAdmin middleware lets only users with a
         // specific permission to access these resources
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth', 'verified'])->except(['getImage']);
     }
 
     /**
@@ -69,10 +69,23 @@ class UserController extends Controller
         $obsPerYear = $this->chartObservationsPerYear($user);
         $obsPerMonth = $this->chartObservationsPerMonth($user);
 
+        $media = $this->getImage($id);
+
+        $observationTypes = \App\ObservationType::all();
+
+        foreach ($observationTypes as $type) {
+            $numberOfObjects[$type->type]
+                = \App\ObservationType::targetCount($type->type);
+        }
+
         return view(
             'users.view',
-            ['user' => $user, 'observationsPerYear' => $obsPerYear,
-                'observationsPerMonth' => $obsPerMonth]
+            [
+                'user' => $user, 'observationsPerYear' => $obsPerYear,
+                'observationsPerMonth' => $obsPerMonth, 'media' => $media,
+                'observationTypes' => $observationTypes,
+                'numberOfObjects' => $numberOfObjects
+            ]
         );
     }
 
@@ -85,6 +98,8 @@ class UserController extends Controller
      */
     protected function chartObservationsPerYear($user)
     {
+        // TODO: Use https://charts.erik.cat/ here for charts!
+        // TODO: https://dev.to/arielmejiadev/use-laravel-charts-in-laravel-5bbm
         return \Chart::title(
             [
                 'text' => _i('Number of observations per year: ') . $user->name,
@@ -361,28 +376,24 @@ class UserController extends Controller
     /**
      * Returns the image of the observer.
      *
-     * @param int $id The id of the observer
+     * @param int $id The observer id
      *
      * @return MediaObject the image of the observer
      */
     public function getImage($id)
     {
-        if (User::find($id)->hasMedia('observer')) {
-            return User::find($id)
-                ->getFirstMedia('observer');
-        } else {
-            User::find($id)
-                ->addMediaFromUrl(asset('img/profile.png'))
-                ->usingFileName($id . '.png')
+        $user = User::findOrFail($id);
+        if (!$user->hasMedia('observer')) {
+            $user->addMediaFromUrl(asset('images/profile.png'))
+                ->usingFileName($user->id . '.png')
                 ->toMediaCollection('observer');
-
-            return User::find($id)
-                ->getFirstMedia('observer');
         }
+
+        return $user->getFirstMedia('observer');
     }
 
     /**
-     * Remove the image of the observer
+     * Remove the image of the observer.
      *
      * @param integer $id The id of the observer
      *

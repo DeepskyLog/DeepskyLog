@@ -20,6 +20,6 @@ class FilterPolicy
      */
     public function update(User $user, Filter $filter)
     {
-        return $user->id === $filter->user_id;
+        return $user->id == $filter->user_id;
     }
 }

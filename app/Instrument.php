@@ -17,8 +17,9 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * Instrument eloquent model.
@@ -31,7 +32,7 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
  */
 class Instrument extends Model implements HasMedia
 {
-    use HasMediaTrait;
+    use InteractsWithMedia;
 
     protected $fillable = [
         'user_id', 'name', 'diameter', 'type',
@@ -128,4 +129,17 @@ class Instrument extends Model implements HasMedia
     //    {
     //        return $this->belongsTo('App\Observation');
     //    }
+
+    /**
+     * Also store a thumbnail of the image.
+     *
+     * @param $media the media
+     *
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(100)
+            ->height(100);
+    }
 }

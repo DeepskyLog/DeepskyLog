@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2020-02-10 14:28+0100\n"
-"PO-Revision-Date: 2020-02-10 14:29+0100\n"
+"POT-Creation-Date: 2020-04-01 20:19+0200\n"
+"PO-Revision-Date: 2020-04-01 20:19+0200\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: fr_FR\n"
@@ -194,32 +194,32 @@ msgid "Corrective filter"
 msgstr "Filtre correcteur"
 
 #: ../resources/lang/en/translations.php:38
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:143
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:235
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:145
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:237
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:38
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:12
-#: Http/Controllers/UserController.php:143
-#: Http/Controllers/UserController.php:235
+#: Http/Controllers/UserController.php:145
+#: Http/Controllers/UserController.php:237
 msgid "Deepsky"
 msgstr "Ciel profond"
 
 #: ../resources/lang/en/translations.php:39
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:147
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:239
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:149
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:241
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:39
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:20
-#: Http/Controllers/UserController.php:147
-#: Http/Controllers/UserController.php:239
+#: Http/Controllers/UserController.php:149
+#: Http/Controllers/UserController.php:241
 msgid "Comets"
 msgstr "Comètes"
 
 #: ../resources/lang/en/translations.php:40
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:155
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:247
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:157
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:249
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:40
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:26
-#: Http/Controllers/UserController.php:155
-#: Http/Controllers/UserController.php:247
+#: Http/Controllers/UserController.php:157
+#: Http/Controllers/UserController.php:249
 msgid "Planets"
 msgstr "Planètes"
 
@@ -240,23 +240,23 @@ msgstr "Étoiles doubles"
 
 #: ../resources/lang/en/translations.php:44
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:53
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:159
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:251
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:161
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:253
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:44
-#: Http/Controllers/UserController.php:159
-#: Http/Controllers/UserController.php:251
+#: Http/Controllers/UserController.php:161
+#: Http/Controllers/UserController.php:253
 msgid "Sun"
 msgstr "Soleil"
 
 #: ../resources/lang/en/translations.php:45
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:14
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:36
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:163
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:255
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:165
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:257
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:45
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:23
-#: Http/Controllers/UserController.php:163
-#: Http/Controllers/UserController.php:255
+#: Http/Controllers/UserController.php:165
+#: Http/Controllers/UserController.php:257
 msgid "Moon"
 msgstr "Lune"
 
@@ -1025,38 +1025,38 @@ msgid "You did not specify a standard instrument. Please select one."
 msgstr ""
 "Vous n’avez pas spécifié d’instrument standard. Veuillez en sélectionner un."
 
-#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:186
-#: Http/Controllers/EyepieceController.php:186
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:177
+#: Http/Controllers/EyepieceController.php:177
 #, php-format
 msgid "Eyepiece %s created"
 msgstr "Oculaire %s cré"
 
-#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:298
-#: Http/Controllers/EyepieceController.php:298
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:302
+#: Http/Controllers/EyepieceController.php:302
 #, php-format
 msgid "Eyepiece %s updated"
 msgstr "Oculaire %s mis à jour"
 
-#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:304
-#: Http/Controllers/EyepieceController.php:304
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:308
+#: Http/Controllers/EyepieceController.php:308
 #, php-format
 msgid "Eyepiece %s is active"
 msgstr "L’oculaire %s est actif"
 
-#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:308
-#: Http/Controllers/EyepieceController.php:308
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:312
+#: Http/Controllers/EyepieceController.php:312
 #, php-format
 msgid "Eyepiece %s is not longer active"
 msgstr "L’oculaire %s n'est plus actif"
 
-#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:369
-#: Http/Controllers/EyepieceController.php:369
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:375
+#: Http/Controllers/EyepieceController.php:375
 #, php-format
 msgid "Eyepiece %s has observations. Impossible to delete."
 msgstr "L’oculaire %s a des observations. Impossible à supprimer."
 
-#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:381
-#: Http/Controllers/EyepieceController.php:381
+#: ../storage/framework/messages/0c342ce86c1479975e06a230c08cacde0760621a.php.php:387
+#: Http/Controllers/EyepieceController.php:387
 #, php-format
 msgid "Eyepiece %s deleted"
 msgstr "Oculaire %s supprimé"
@@ -1065,8 +1065,8 @@ msgstr "Oculaire %s supprimé"
 #: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:46
 #: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:37
 #: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:13
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:140
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:188
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:145
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:193
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:13
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:229
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:359
@@ -1078,7 +1078,7 @@ msgstr "Oculaire %s supprimé"
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:14
 #: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:13
 #: DataTables/EyepieceDatatable.php:174 DataTables/EyepieceDatatable.php:230
-#: DataTables/FilterDataTable.php:140 DataTables/FilterDataTable.php:188
+#: DataTables/FilterDataTable.php:145 DataTables/FilterDataTable.php:193
 #: DataTables/InstrumentDataTable.php:194
 #: DataTables/InstrumentDataTable.php:250 DataTables/TargetDataTable.php:229
 #: DataTables/TargetDataTable.php:359
@@ -1097,7 +1097,7 @@ msgstr "Nom générique"
 
 #: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:24
 #: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:87
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:30
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:35
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:212
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:268
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:156
@@ -1132,7 +1132,7 @@ msgid "Brand"
 msgstr "Marque"
 
 #: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:51
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:43
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:53
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:46
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:19
 #: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:22
@@ -1140,19 +1140,19 @@ msgid "Owner"
 msgstr "Propriétaire"
 
 #: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:55
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:47
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:57
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:50
-#: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:59
+#: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:92
 #: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:26
 #: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:190
 msgid "Number of observations"
 msgstr "Nombre d'observations"
 
 #: ../storage/framework/messages/0d8aabddc74ed81c421519eb4e9142e40d0f8d0c.php.php:69
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:92
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:104
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:64
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:7
-#: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:83
+#: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:116
 #: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:40
 msgid "Edit"
 msgstr "Modifier"
@@ -1187,15 +1187,15 @@ msgstr "ou spécifiez manuellement vos détails de filtre"
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:56
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:175
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:231
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:136
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:184
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:122
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:154
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:141
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:189
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:125
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:157
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:204
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:334
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:190
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:246
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:140
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:147
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:21
 #: ../storage/framework/messages/c62a6bb29c02311310b3ac1a29bc9e9865fdbcf6.php.php:50
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:152
@@ -1203,12 +1203,12 @@ msgstr "ou spécifiez manuellement vos détails de filtre"
 #: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:57
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:51
 #: DataTables/EyepieceDatatable.php:152 DataTables/EyepieceDatatable.php:208
-#: DataTables/FilterDataTable.php:136 DataTables/FilterDataTable.php:184
+#: DataTables/FilterDataTable.php:141 DataTables/FilterDataTable.php:189
 #: DataTables/InstrumentDataTable.php:190
-#: DataTables/InstrumentDataTable.php:246 DataTables/LensDataTable.php:122
-#: DataTables/LensDataTable.php:154 DataTables/LocationDataTable.php:175
+#: DataTables/InstrumentDataTable.php:246 DataTables/LensDataTable.php:125
+#: DataTables/LensDataTable.php:157 DataTables/LocationDataTable.php:175
 #: DataTables/LocationDataTable.php:231 DataTables/TargetDataTable.php:204
-#: DataTables/TargetDataTable.php:334 DataTables/UserDataTable.php:140
+#: DataTables/TargetDataTable.php:334 DataTables/UserDataTable.php:147
 msgid "Name"
 msgstr "Nom"
 
@@ -1222,10 +1222,10 @@ msgid "Filter type"
 msgstr "Type de filtre"
 
 #: ../storage/framework/messages/0df489c1c437e3c7dd75009d2dddf707bf3b68bc.php.php:69
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:145
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:192
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:150
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:197
 #: ../storage/framework/messages/49e0459cddd4d2a6d31d58a6ce6c03445f932aef.php.php:25
-#: DataTables/FilterDataTable.php:145 DataTables/FilterDataTable.php:192
+#: DataTables/FilterDataTable.php:150 DataTables/FilterDataTable.php:197
 msgid "Color"
 msgstr "Couleur"
 
@@ -1242,22 +1242,6 @@ msgstr "Numéro Schott"
 #: ../storage/framework/messages/0df489c1c437e3c7dd75009d2dddf707bf3b68bc.php.php:96
 msgid "Upload a picture of your filter."
 msgstr "Téléchargez une photo de votre filtre."
-
-#: ../storage/framework/messages/0ebd9f17667c6014081bcbcda01c06af7b2aff3c.php.php:2
-msgid "Too Many Requests"
-msgstr "Demandes trop nombreuses"
-
-#: ../storage/framework/messages/0ebd9f17667c6014081bcbcda01c06af7b2aff3c.php.php:9
-msgid "Sorry, you are making too many requests to our servers."
-msgstr "Désolé, vous faites trop de demandes à nos serveurs."
-
-#: ../storage/framework/messages/10150e68b84ffc8cddb21c7dbf7f8e1ea93b2eb6.php.php:2
-msgid "Forbidden"
-msgstr "Interdit"
-
-#: ../storage/framework/messages/10150e68b84ffc8cddb21c7dbf7f8e1ea93b2eb6.php.php:9
-msgid "Sorry, you are forbidden from accessing this page."
-msgstr "Désolé, il vous est interdit d'accéder cette page."
 
 #: ../storage/framework/messages/11f6ebc4e81a7590340020b242c158f72f6688de.php.php:82
 #: ../storage/framework/messages/11f6ebc4e81a7590340020b242c158f72f6688de.php.php:85
@@ -1387,7 +1371,7 @@ msgstr "Montant"
 
 #: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:151
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:279
-#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:32
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:38
 #: DataTables/TargetDataTable.php:279
 msgid "Transit"
 msgstr "Passage"
@@ -1467,8 +1451,8 @@ msgstr "Diamètre"
 
 #: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:73
 #: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:92
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:24
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:31
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:25
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:37
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:83
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:93
 #: DataTables/InstrumentDataTable.php:83 DataTables/InstrumentDataTable.php:93
@@ -1477,8 +1461,10 @@ msgstr "pouce"
 
 #: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:73
 #: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:92
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:24
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:31
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:25
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:28
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:37
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:40
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:85
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:95
 #: DataTables/InstrumentDataTable.php:85 DataTables/InstrumentDataTable.php:95
@@ -1498,7 +1484,7 @@ msgid " or "
 msgstr " ou "
 
 #: ../storage/framework/messages/1918c643fd774ca530330e9c1198e45d56fa02ff.php.php:98
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:37
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:47
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:218
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:274
 #: DataTables/InstrumentDataTable.php:218
@@ -1541,16 +1527,16 @@ msgstr "Modifier l'image du profil"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:46
 #: ../storage/framework/messages/b51de385dde6a1fb123f01cb6d1bb4dd4e2fa246.php.php:20
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:136
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:143
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:14
-#: DataTables/UserDataTable.php:136
+#: DataTables/UserDataTable.php:143
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
 #: ../storage/framework/messages/1d141463a383783e8ef4087da3645eb3010ab04d.php.php:51
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:144
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:151
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:28
-#: DataTables/UserDataTable.php:144
+#: DataTables/UserDataTable.php:151
 msgid "Email"
 msgstr "Email"
 
@@ -1737,55 +1723,55 @@ msgstr "Échelle Bortle"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:209
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:271
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:128
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:224
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:162
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:209
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:132
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:163
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:130
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:226
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:167
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:214
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:135
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:166
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:224
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:280
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:162
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:169
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:186
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:242
 #: DataTables/EyepieceDatatable.php:186 DataTables/EyepieceDatatable.php:242
-#: DataTables/FilterDataTable.php:162 DataTables/FilterDataTable.php:209
+#: DataTables/FilterDataTable.php:167 DataTables/FilterDataTable.php:214
 #: DataTables/InstrumentDataTable.php:224
-#: DataTables/InstrumentDataTable.php:280 DataTables/LensDataTable.php:132
-#: DataTables/LensDataTable.php:163 DataTables/LocationDataTable.php:209
-#: DataTables/LocationDataTable.php:271 DataTables/UserDataTable.php:162
-#: Http/Controllers/UserController.php:128
-#: Http/Controllers/UserController.php:224
+#: DataTables/InstrumentDataTable.php:280 DataTables/LensDataTable.php:135
+#: DataTables/LensDataTable.php:166 DataTables/LocationDataTable.php:209
+#: DataTables/LocationDataTable.php:271 DataTables/UserDataTable.php:169
+#: Http/Controllers/UserController.php:130
+#: Http/Controllers/UserController.php:226
 msgid "Observations"
 msgstr "Observations"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:215
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:287
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:168
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:219
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:138
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:173
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:173
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:224
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:141
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:176
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:230
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:296
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:156
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:163
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:192
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:251
 #: DataTables/EyepieceDatatable.php:192 DataTables/EyepieceDatatable.php:251
-#: DataTables/FilterDataTable.php:168 DataTables/FilterDataTable.php:219
+#: DataTables/FilterDataTable.php:173 DataTables/FilterDataTable.php:224
 #: DataTables/InstrumentDataTable.php:230
-#: DataTables/InstrumentDataTable.php:296 DataTables/LensDataTable.php:138
-#: DataTables/LensDataTable.php:173 DataTables/LocationDataTable.php:215
-#: DataTables/LocationDataTable.php:287 DataTables/UserDataTable.php:156
+#: DataTables/InstrumentDataTable.php:296 DataTables/LensDataTable.php:141
+#: DataTables/LensDataTable.php:176 DataTables/LocationDataTable.php:215
+#: DataTables/LocationDataTable.php:287 DataTables/UserDataTable.php:163
 msgid "Delete"
 msgstr "Supprimez"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:222
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:175
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:145
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:180
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:148
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:237
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:199
-#: DataTables/EyepieceDatatable.php:199 DataTables/FilterDataTable.php:175
-#: DataTables/InstrumentDataTable.php:237 DataTables/LensDataTable.php:145
+#: DataTables/EyepieceDatatable.php:199 DataTables/FilterDataTable.php:180
+#: DataTables/InstrumentDataTable.php:237 DataTables/LensDataTable.php:148
 #: DataTables/LocationDataTable.php:222
 msgid "Observer"
 msgstr "Observateur"
@@ -1796,13 +1782,13 @@ msgid "Weather forecast"
 msgstr "Prévisions météo"
 
 #: ../storage/framework/messages/1e62e067768719af6c49ef98d3508e5dc0083d6f.php.php:277
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:214
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:168
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:219
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:171
 #: ../storage/framework/messages/a922a4bcf5634a7496059cbab06b3db766963824.php.php:286
 #: ../storage/framework/messages/dd17bccb567f806ccf6d37bb1a1af8a13a0e5eeb.php.php:247
 #: ../storage/framework/messages/f1e0daf0905fb7c5337c268f7c7b70b73518889c.php.php:396
-#: DataTables/EyepieceDatatable.php:247 DataTables/FilterDataTable.php:214
-#: DataTables/InstrumentDataTable.php:286 DataTables/LensDataTable.php:168
+#: DataTables/EyepieceDatatable.php:247 DataTables/FilterDataTable.php:219
+#: DataTables/InstrumentDataTable.php:286 DataTables/LensDataTable.php:171
 #: DataTables/LocationDataTable.php:277
 msgid "Active"
 msgstr "Activé"
@@ -1880,55 +1866,47 @@ msgstr ""
 "Si vous n'avez pas demandé un réinitialisation de mot de passe, aucune autre "
 "action n'est requise."
 
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:90
-#: Http/Controllers/UserController.php:90
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:92
+#: Http/Controllers/UserController.php:92
 msgid "Number of observations per year: "
 msgstr "Nombre d’observations par an: "
 
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:102
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:196
-#: Http/Controllers/UserController.php:102
-#: Http/Controllers/UserController.php:196
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:104
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:198
+#: Http/Controllers/UserController.php:104
+#: Http/Controllers/UserController.php:198
 msgid "Source: "
 msgstr "Source: "
 
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:139
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:141
 #: ../storage/framework/messages/f01d6d8d7e3b66664b5fd874a83edf5b7091f7d1.php.php:183
-#: Http/Controllers/UserController.php:139
+#: Http/Controllers/UserController.php:141
 msgid "Total"
 msgstr "Total"
 
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:151
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:243
-#: Http/Controllers/UserController.php:151
-#: Http/Controllers/UserController.php:243
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:153
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:245
+#: Http/Controllers/UserController.php:153
+#: Http/Controllers/UserController.php:245
 msgid "Double stars"
 msgstr "Étoiles doubles"
 
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:181
-#: Http/Controllers/UserController.php:181
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:183
+#: Http/Controllers/UserController.php:183
 msgid "Number of observations per month: "
 msgstr "Nombre d’observations par mois: "
 
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:325
-#: Http/Controllers/UserController.php:325
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:339
+#: Http/Controllers/UserController.php:339
 #, php-format
 msgid "User %s successfully edited."
 msgstr "L'utilisateur %s édité avec succès."
 
-#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:342
-#: Http/Controllers/UserController.php:342
+#: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:356
+#: Http/Controllers/UserController.php:356
 #, php-format
 msgid "User %s successfully deleted."
 msgstr "L'utilisateur %s supprimé avec succès."
-
-#: ../storage/framework/messages/2d969ec1e8d255c1d9038cc399b295d324da0b34.php.php:2
-msgid "Page Not Found"
-msgstr "Page introuvable"
-
-#: ../storage/framework/messages/2d969ec1e8d255c1d9038cc399b295d324da0b34.php.php:9
-msgid "Sorry, the page you are looking for could not be found."
-msgstr "Désolé, la page que vous recherchez n'a pas pu être trouvée."
 
 #: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:14
 #: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:7
@@ -1939,27 +1917,30 @@ msgstr "Instrument"
 msgid "Instrument Type"
 msgstr "Type d'instrument"
 
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:56
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:66
 msgid "First light"
 msgstr "Première lumière"
 
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:61
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:71
 msgid "Last used on"
 msgstr "Dernière utilisation le"
 
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:67
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:78
+#: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:75
 msgid "Used eyepieces"
 msgstr "Oculaires usagés"
 
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:72
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:83
+#: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:80
 msgid "Used filters"
 msgstr "Filtres usagés"
 
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:77
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:88
+#: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:85
 msgid "Used lenses"
 msgstr "Lentilles usagées"
 
-#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:82
+#: ../storage/framework/messages/314c72d85eadd91b1d659d94673ee5805a9bff8e.php.php:93
 msgid "Observed in the following locations"
 msgstr "Observé aux endroits suivants"
 
@@ -1981,7 +1962,7 @@ msgstr "Basculer la navigation"
 #: ../storage/framework/messages/3b03ee3524b65bf4cd65259aac5e0ae61a5c3894.php.php:2
 #: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:2
 #: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:10
-#: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:73
+#: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:61
 msgid "Login"
 msgstr "Login"
 
@@ -2014,26 +1995,17 @@ msgstr "Oculaires de %s"
 msgid "Add eyepiece"
 msgstr "Ajouter un oculaire"
 
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:150
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:197
-#: DataTables/FilterDataTable.php:150 DataTables/FilterDataTable.php:197
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:155
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:202
+#: DataTables/FilterDataTable.php:155 DataTables/FilterDataTable.php:202
 msgid "Wratten"
 msgstr "Wratten"
 
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:156
-#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:203
-#: DataTables/FilterDataTable.php:156 DataTables/FilterDataTable.php:203
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:161
+#: ../storage/framework/messages/3f6185c264ae4a4e6a22a2d5e7e4d602f3b68a7a.php.php:208
+#: DataTables/FilterDataTable.php:161 DataTables/FilterDataTable.php:208
 msgid "Schott"
 msgstr "Schott"
-
-#: ../storage/framework/messages/4040fe44e56e00e78d2b38c1c83a75853675c8d2.php.php:2
-msgid "Service Unavailable"
-msgstr "Service indisponible"
-
-#: ../storage/framework/messages/4040fe44e56e00e78d2b38c1c83a75853675c8d2.php.php:9
-msgid "Sorry, we are doing some maintenance. Please check back soon."
-msgstr ""
-"Désolé, nous faisons un peu d'entretien. S'il vous plaît revenez bientôt."
 
 #: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:23
 #: ../storage/framework/messages/43d4ec80be6d12dffec0c28922b15548f1900657.php.php:26
@@ -2070,11 +2042,11 @@ msgstr "Filtre"
 msgid "Filter Type"
 msgstr "Type de filtre"
 
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:126
-#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:158
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:129
+#: ../storage/framework/messages/573370e698824e96b8c19a7147a484f70b2b6a2f.php.php:161
 #: ../storage/framework/messages/e5413a41d4257b20b739c22c6a946cff97adf25d.php.php:18
 #: ../storage/framework/messages/ffadcf92617acdf17f209cf2aa0e941d16be7ac4.php.php:57
-#: DataTables/LensDataTable.php:126 DataTables/LensDataTable.php:158
+#: DataTables/LensDataTable.php:129 DataTables/LensDataTable.php:161
 msgid "Factor"
 msgstr "Facteur"
 
@@ -2086,38 +2058,38 @@ msgstr "Liste"
 msgid "Manage list"
 msgstr "Gérer la liste"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:140
-#: Http/Controllers/LensController.php:140
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:134
+#: Http/Controllers/LensController.php:134
 #, php-format
 msgid "Lens %s created"
 msgstr "Lentille %s créée"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:215
-#: Http/Controllers/LensController.php:215
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:221
+#: Http/Controllers/LensController.php:221
 #, php-format
 msgid "Lens %s updated"
 msgstr "Lentille %s mise à jour"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:221
-#: Http/Controllers/LensController.php:221
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:227
+#: Http/Controllers/LensController.php:227
 #, php-format
 msgid "Lens %s is active"
 msgstr "Lentille %s est active"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:224
-#: Http/Controllers/LensController.php:224
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:230
+#: Http/Controllers/LensController.php:230
 #, php-format
 msgid "Lens %s is not longer active"
 msgstr "Lentille %s n’est plus active"
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:282
-#: Http/Controllers/LensController.php:282
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:290
+#: Http/Controllers/LensController.php:290
 #, php-format
 msgid "Lens %s has observations. Impossible to delete."
 msgstr "La lentille %s a des observations. Impossible à supprimer."
 
-#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:291
-#: Http/Controllers/LensController.php:291
+#: ../storage/framework/messages/58e7ddaba6cefcb7463d07310d1679cc9b591449.php.php:299
+#: Http/Controllers/LensController.php:299
 #, php-format
 msgid "Lens %s deleted"
 msgstr "Lentille %s supprimé"
@@ -2213,15 +2185,15 @@ msgstr "Ephémerides pour %s à %s"
 msgid "Month"
 msgstr "Mois"
 
-#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:40
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:51
 msgid "Astronomical night"
 msgstr "Nuit astronomique"
 
-#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:54
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:65
 msgid "Nautical night"
 msgstr "Nuit nautique"
 
-#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:68
+#: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:79
 msgid "Object rise<br />-<br />set"
 msgstr "Montant de l’objet<br />-<br />descandant"
 
@@ -2253,7 +2225,7 @@ msgstr "La conversation se situe entre "
 msgid "Answer message in DeepskyLog"
 msgstr "Répondez au message à DeepskyLog"
 
-#: ../storage/framework/messages/6d44b686891cd941f2ca89f5c3eb926d2a58cb96.php.php:25
+#: ../storage/framework/messages/6d44b686891cd941f2ca89f5c3eb926d2a58cb96.php.php:29
 msgid "Clear nights"
 msgstr "Nuits claires"
 
@@ -2299,57 +2271,89 @@ msgstr "Détails"
 msgid "Log out"
 msgstr "Se déconnecter"
 
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:352
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:373
-#: Target.php:352 Target.php:373
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:357
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:378
+#: Target.php:357 Target.php:378
 #, php-format
 msgid "%s does not rise above horizon"
 msgstr "%s ne monte pas au-dessus de l’horizon"
 
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:354
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:377
-#: Target.php:354 Target.php:377
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:359
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:382
+#: Target.php:359 Target.php:382
 #, php-format
 msgid "%s is circumpolar"
 msgstr "%s est circumpolair"
 
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:357
-#: Target.php:357
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:362
+#: Target.php:362
 #, php-format
 msgid "%s rises at %s on %s in %s"
 msgstr "%s monte à %s le %s à %s"
 
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:365
-#: Target.php:365
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:370
+#: Target.php:370
 #, php-format
 msgid "%s transits at %s on %s in %s"
 msgstr "%s passe à %s le %s à %s"
 
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:380
-#: Target.php:380
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:385
+#: Target.php:385
 #, php-format
 msgid "%s sets at %s on %s in %s"
 msgstr "%s déscend à %s le %s à %s"
 
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:389
-#: Target.php:389
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:394
+#: Target.php:394
 #, php-format
 msgid "%s does not rise above horizon in %s on %s"
 msgstr "%s ne s’élève pas au-dessus de l’horizon en %s sur %s"
 
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:396
-#: Target.php:396
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:401
+#: Target.php:401
 #, php-format
 msgid "%s reaches an altitude of %s in %s on %s"
 msgstr "%s atteint une altitude de %s à %s le %s"
 
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:835
-#: Target.php:835
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:726
+#: Target.php:726
+#, php-format
+msgid "%s reaches its highest altitude of the year"
+msgstr "%s atteint sa plus haute altitude de l’année"
+
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:749
+#: Target.php:749
+#, php-format
+msgid "%s reaches its highest altitude during the astronomical night"
+msgstr "%s atteint sa plus haute altitude pendant la nuit astronomique"
+
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:757
+#: Target.php:757
+#, php-format
+msgid "%s reaches its highest altitude during the nautical twilight"
+msgstr "%s atteint sa plus haute altitude pendant le crépuscule nautique"
+
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:775
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:790
+#: Target.php:775 Target.php:790
+#, php-format
+msgid "%s is visible during the night"
+msgstr "%s est visible pendant la nuit"
+
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:778
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:801
+#: Target.php:778 Target.php:801
+#, php-format
+msgid "%s is visible during the nautical twilight"
+msgstr "%s est visible pendant le crépuscule nautique"
+
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:853
+#: Target.php:853
 msgid "mid"
 msgstr "mi-"
 
-#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:835
-#: Target.php:835
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:853
+#: Target.php:853
 msgid "begin"
 msgstr "début"
 
@@ -2486,11 +2490,11 @@ msgstr "Dernière mise à jour"
 msgid "Hello!"
 msgstr "Bonjour!"
 
-#: ../storage/framework/messages/7f9d0c3d716746b3d833f54eeb6c5536a3c1c8f5.php.php:51
+#: ../storage/framework/messages/7f9d0c3d716746b3d833f54eeb6c5536a3c1c8f5.php.php:55
 msgid "Regards"
 msgstr "Cordialement"
 
-#: ../storage/framework/messages/7f9d0c3d716746b3d833f54eeb6c5536a3c1c8f5.php.php:59
+#: ../storage/framework/messages/7f9d0c3d716746b3d833f54eeb6c5536a3c1c8f5.php.php:63
 msgid ""
 "If you’re having trouble clicking the \":actionText\" button, copy and paste "
 "the URL below\n"
@@ -2586,8 +2590,8 @@ msgid "Check Objects"
 msgstr "Vérifier les objets"
 
 #: ../storage/framework/messages/9a0eed4517fa37707ce7ff336d16c55deaffe948.php.php:13
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:168
-#: DataTables/UserDataTable.php:168
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:175
+#: DataTables/UserDataTable.php:175
 msgid "Instruments"
 msgstr "Instruments"
 
@@ -2607,46 +2611,38 @@ msgstr "Filtres"
 msgid "Lenses"
 msgstr "Lentilles"
 
-#: ../storage/framework/messages/9aec4ce00dbb85586231d607c3e32c2f2aed2d3c.php.php:2
-msgid "Error"
-msgstr "Erreur"
-
-#: ../storage/framework/messages/9aec4ce00dbb85586231d607c3e32c2f2aed2d3c.php.php:9
-msgid "Whoops, something went wrong on our servers."
-msgstr "Whoops, quelque chose a mal tourné sur nos serveurs."
-
-#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:142
-#: Http/Controllers/FilterController.php:142
+#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:134
+#: Http/Controllers/FilterController.php:134
 #, php-format
 msgid "Filter %s created"
 msgstr "Filtre %s crée"
 
-#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:221
-#: Http/Controllers/FilterController.php:221
+#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:227
+#: Http/Controllers/FilterController.php:227
 #, php-format
 msgid "Filter %s updated"
 msgstr "Filtre %s mis à jour"
 
-#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:227
-#: Http/Controllers/FilterController.php:227
+#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:233
+#: Http/Controllers/FilterController.php:233
 #, php-format
 msgid "Filter %s is active"
 msgstr "Le filtre %s est actif"
 
-#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:231
-#: Http/Controllers/FilterController.php:231
+#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:237
+#: Http/Controllers/FilterController.php:237
 #, php-format
 msgid "Filter %s is not longer active"
 msgstr "Le filtre %s n'est plus actif"
 
-#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:291
-#: Http/Controllers/FilterController.php:291
+#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:299
+#: Http/Controllers/FilterController.php:299
 #, php-format
 msgid "Filter %s has observations. Impossible to delete."
 msgstr "Le filtre %s a des observations. Impossible à supprimer."
 
-#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:302
-#: Http/Controllers/FilterController.php:302
+#: ../storage/framework/messages/9e7d3b3d09b44728226e57181867e19f33da4a76.php.php:310
+#: Http/Controllers/FilterController.php:310
 #, php-format
 msgid "Filter %s deleted"
 msgstr "Filtre %s supprimé"
@@ -2655,6 +2651,18 @@ msgstr "Filtre %s supprimé"
 #: DataTables/InstrumentDataTable.php:290
 msgid "Default Instrument"
 msgstr "Instrument par défaut"
+
+#: ../storage/framework/messages/aef036ad260b6d6f26026674dd13cea7db724bc4.php.php:80
+#: ../storage/framework/messages/aef036ad260b6d6f26026674dd13cea7db724bc4.php.php:263
+#: Http/Controllers/MessageController.php:80
+#: Http/Controllers/MessageController.php:263
+msgid "The requested thread was not found."
+msgstr "Le fil demandé n'a pas été trouvé."
+
+#: ../storage/framework/messages/aef036ad260b6d6f26026674dd13cea7db724bc4.php.php:90
+#: Http/Controllers/MessageController.php:90
+msgid "Not authorized to see this message."
+msgstr "Non autorisé à voir ce message."
 
 #: ../storage/framework/messages/aff5890d6eb58acb3e41f85240024e3205c9cbf9.php.php:122
 #: Instrument.php:122
@@ -2728,18 +2736,18 @@ msgstr "Tous les instruments"
 msgid "Instruments of %s"
 msgstr "Instruments de %s"
 
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:148
-#: DataTables/UserDataTable.php:148
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:155
+#: DataTables/UserDataTable.php:155
 msgid "Date/Time Added"
 msgstr "Date/heure ajoutée"
 
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:152
-#: DataTables/UserDataTable.php:152
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:159
+#: DataTables/UserDataTable.php:159
 msgid "User Role"
 msgstr "Rôle de l’utilisateur"
 
-#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:174
-#: DataTables/UserDataTable.php:174
+#: ../storage/framework/messages/b9306faf0751f1e80a724684b41908f9b6cc2448.php.php:181
+#: DataTables/UserDataTable.php:181
 msgid "Lists"
 msgstr "Listes"
 
@@ -2771,14 +2779,6 @@ msgstr "Mes lentilles"
 msgid "Catalogs"
 msgstr "Catalogues"
 
-#: ../storage/framework/messages/c36ccd50664c526ac1570a8fd29fbf6ba34c0797.php.php:464
-msgid "Oh no"
-msgstr "Oh non"
-
-#: ../storage/framework/messages/c36ccd50664c526ac1570a8fd29fbf6ba34c0797.php.php:475
-msgid "Go Home"
-msgstr "Retour à l’accueil"
-
 #: ../storage/framework/messages/c4d84e918dc2dfaa2d90e424134941a1a933e823.php.php:1
 msgid "Edit User"
 msgstr "Modifier utilisateur"
@@ -2799,11 +2799,7 @@ msgstr "Adresse E-Mail ou login"
 msgid "Remember Me"
 msgstr "Rester connecté"
 
-#: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:59
-msgid "or log in using"
-msgstr "ou connectez-vous en utilisant"
-
-#: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:79
+#: ../storage/framework/messages/c604100e4611fe1a969f94c036a4994389613b76.php.php:67
 msgid "Forgot Your Password?"
 msgstr "Mot de passe oublié ?"
 
@@ -2841,106 +2837,98 @@ msgstr "Seulement pour les oculaires de zoom"
 msgid "Upload a picture of your eyepiece."
 msgstr "Téléchargez une photo de votre oculaire."
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:149
-#: Http/Controllers/InstrumentController.php:149
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:140
+#: Http/Controllers/InstrumentController.php:140
 #, php-format
 msgid "Instrument %s created"
 msgstr "Instrument %s créé"
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:242
-#: Http/Controllers/InstrumentController.php:242
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:245
+#: Http/Controllers/InstrumentController.php:245
 #, php-format
 msgid "Instrument %s updated"
 msgstr "Instrument %s mis à jour"
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:249
-#: Http/Controllers/InstrumentController.php:249
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:252
+#: Http/Controllers/InstrumentController.php:252
 #, php-format
 msgid "Instrument %s is active"
 msgstr "L'instrument %s est actif"
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:255
-#: Http/Controllers/InstrumentController.php:255
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:258
+#: Http/Controllers/InstrumentController.php:258
 #, php-format
 msgid "Impossible to deactivate the default instrument %s"
 msgstr "Impossible de désactiver l'instrument par défaut %s"
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:262
-#: Http/Controllers/InstrumentController.php:262
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:265
+#: Http/Controllers/InstrumentController.php:265
 #, php-format
 msgid "Instrument %s is not longer active"
 msgstr "L'instrument %s n'est plus actif"
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:324
-#: Http/Controllers/InstrumentController.php:324
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:329
+#: Http/Controllers/InstrumentController.php:329
 #, php-format
 msgid "Instrument %s has observations. Impossible to delete."
 msgstr "L’instrument %s a des observations. Impossible à supprimer."
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:331
-#: Http/Controllers/InstrumentController.php:331
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:336
+#: Http/Controllers/InstrumentController.php:336
 #, php-format
 msgid "Impossible to delete the default instrument %s"
 msgstr "Impossible de supprimer l'instrument par défaut %s"
 
-#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:343
-#: Http/Controllers/InstrumentController.php:343
+#: ../storage/framework/messages/c68a44ba37960d48caca22c39a4d8588acd7f7c3.php.php:348
+#: Http/Controllers/InstrumentController.php:348
 #, php-format
 msgid "Instrument %s deleted"
 msgstr "Instrument %s supprimé"
 
-#: ../storage/framework/messages/ce86130e9603deefb28c2df7d4d8617962eb24c9.php.php:2
-msgid "Unauthorized"
-msgstr "Non autorisé"
-
-#: ../storage/framework/messages/ce86130e9603deefb28c2df7d4d8617962eb24c9.php.php:9
-msgid "Sorry, you are not authorized to access this page."
-msgstr "Désolé, vous n'êtes pas autorisé à accéder à cette page."
-
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:159
-#: Http/Controllers/LocationController.php:159
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:151
+#: Http/Controllers/LocationController.php:151
 #, php-format
 msgid "Location %s created"
 msgstr "Emplacement %s créé"
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:274
-#: Http/Controllers/LocationController.php:274
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:278
+#: Http/Controllers/LocationController.php:278
 #, php-format
 msgid "Location %s updated"
 msgstr "Emplacement %s mis à jour"
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:281
-#: Http/Controllers/LocationController.php:281
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:285
+#: Http/Controllers/LocationController.php:285
 #, php-format
 msgid "Location %s is active"
 msgstr "L'emplacement %s est actif"
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:287
-#: Http/Controllers/LocationController.php:287
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:291
+#: Http/Controllers/LocationController.php:291
 #, php-format
 msgid "Impossible to deactivate the default location %s"
 msgstr "Impossible de désactiver l'emplacement par défaut %s"
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:294
-#: Http/Controllers/LocationController.php:294
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:298
+#: Http/Controllers/LocationController.php:298
 #, php-format
 msgid "Location %s is not longer active"
 msgstr "L'emplacement %s n'est plus actif"
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:356
-#: Http/Controllers/LocationController.php:356
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:362
+#: Http/Controllers/LocationController.php:362
 #, php-format
 msgid "Location %s has observations. Impossible to delete."
 msgstr "L'emplacement %s a des observations. Impossible à supprimer."
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:363
-#: Http/Controllers/LocationController.php:363
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:369
+#: Http/Controllers/LocationController.php:369
 #, php-format
 msgid "Impossible to delete the default location %s"
 msgstr "Impossible de supprimer l'emplacement par défaut %s"
 
-#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:375
-#: Http/Controllers/LocationController.php:375
+#: ../storage/framework/messages/d08bca7d2ff9e64db2f36a875a4ebcfb0e4b85a7.php.php:381
+#: Http/Controllers/LocationController.php:381
 #, php-format
 msgid "Location %s deleted"
 msgstr "Emplacement %s supprimé"
@@ -2973,29 +2961,23 @@ msgstr "Vérifiez votre adresse E-mail"
 msgid "A fresh verification link has been sent to your email address."
 msgstr "Un nouveau lien de vérification a été envoyé à votre adresse e-mail."
 
-#: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:21
+#: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:18
+msgid "If you did not receive the email"
+msgstr "Si vous n'avez pas reçu l'e-mail"
+
+#: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:22
 msgid "Before proceeding, please check your email for a verification link."
 msgstr ""
 "Avant de continuer, veuillez consulter votre e-mail pour obtenir un lien de "
 "vérification."
 
 #: ../storage/framework/messages/d92bffc3788469ecc64886100dbc4944cc9bb73b.php.php:26
-#, php-format
-msgid "If you did not receive the email, %sclick here to request another%s."
-msgstr ""
-"Si vous n'avez pas reçu l'e-mail, %scliquez ici pour demander un autre %s."
+msgid "click here to request another"
+msgstr "cliquez ici pour demander un autre"
 
 #: ../storage/framework/messages/e07b93c36b790f747ffe9fb83a87773cfcc0fd4f.php.php:1
 msgid "Sorry, no threads."
 msgstr "Désolé, pas de discussions."
-
-#: ../storage/framework/messages/e15293aba835f713cf43d4879750b7715e853fe6.php.php:2
-msgid "Page Expired"
-msgstr "Page expirée"
-
-#: ../storage/framework/messages/e15293aba835f713cf43d4879750b7715e853fe6.php.php:9
-msgid "Sorry, your session has expired. Please refresh and try again."
-msgstr "Désolé, votre session a expiré. Veuillez actualiser et réessayer."
 
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:15
 #: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:8
@@ -3047,7 +3029,19 @@ msgstr "Ciel urbain"
 msgid "Inner-city sky"
 msgstr "Ciel de centre-ville"
 
+#: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:62
+msgid "First observation"
+msgstr "Première observation"
+
 #: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:67
+msgid "Last observation"
+msgstr "Dernière observation"
+
+#: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:71
+msgid "Used instruments"
+msgstr "Instruments usagés"
+
+#: ../storage/framework/messages/e29da053169ed140687c06a37420e3c1d58abaa2.php.php:100
 msgid "Weather predictions"
 msgstr "Prévisions météorologiques"
 
@@ -3221,18 +3215,6 @@ msgstr "Magnitude limite"
 msgid "Not active"
 msgstr "Pas activé"
 
-#: ../storage/framework/messages/faaebdec877ab71868711a93e75c1d1b60ee024b.php.php:80
-#: ../storage/framework/messages/faaebdec877ab71868711a93e75c1d1b60ee024b.php.php:263
-#: Http/Controllers/MessagesController.php:80
-#: Http/Controllers/MessagesController.php:263
-msgid "The requested thread was not found."
-msgstr "Le fil demandé n'a pas été trouvé."
-
-#: ../storage/framework/messages/faaebdec877ab71868711a93e75c1d1b60ee024b.php.php:90
-#: Http/Controllers/MessagesController.php:90
-msgid "Not authorized to see this message."
-msgstr "Non autorisé à voir ce message."
-
 #: ../storage/framework/messages/fb05016e4beb3e6eed2255b94641e86977347784.php.php:3
 msgid "Add"
 msgstr "Ajoutez"
@@ -3241,8 +3223,8 @@ msgstr "Ajoutez"
 msgid "Object"
 msgstr "Objet"
 
-#: ../storage/framework/messages/fda6be050a67c030956937d8aad0da0d6699c8f6.php.php:117
-#: Http/Controllers/Auth/LoginController.php:117
+#: ../storage/framework/messages/fda6be050a67c030956937d8aad0da0d6699c8f6.php.php:118
+#: Http/Controllers/Auth/LoginController.php:118
 msgid ""
 "The account you are trying to login is not registered or it has been "
 "disabled."
@@ -3311,6 +3293,58 @@ msgstr ""
 msgid "Number of objects"
 msgstr "Nombre d'objets"
 
+#~ msgid "Too Many Requests"
+#~ msgstr "Demandes trop nombreuses"
+
+#~ msgid "Sorry, you are making too many requests to our servers."
+#~ msgstr "Désolé, vous faites trop de demandes à nos serveurs."
+
+#~ msgid "Forbidden"
+#~ msgstr "Interdit"
+
+#~ msgid "Sorry, you are forbidden from accessing this page."
+#~ msgstr "Désolé, il vous est interdit d'accéder cette page."
+
+#~ msgid "Page Not Found"
+#~ msgstr "Page introuvable"
+
+#~ msgid "Sorry, the page you are looking for could not be found."
+#~ msgstr "Désolé, la page que vous recherchez n'a pas pu être trouvée."
+
+#~ msgid "Service Unavailable"
+#~ msgstr "Service indisponible"
+
+#~ msgid "Sorry, we are doing some maintenance. Please check back soon."
+#~ msgstr ""
+#~ "Désolé, nous faisons un peu d'entretien. S'il vous plaît revenez bientôt."
+
+#~ msgid "Error"
+#~ msgstr "Erreur"
+
+#~ msgid "Whoops, something went wrong on our servers."
+#~ msgstr "Whoops, quelque chose a mal tourné sur nos serveurs."
+
+#~ msgid "Oh no"
+#~ msgstr "Oh non"
+
+#~ msgid "Go Home"
+#~ msgstr "Retour à l’accueil"
+
+#~ msgid "or log in using"
+#~ msgstr "ou connectez-vous en utilisant"
+
+#~ msgid "Unauthorized"
+#~ msgstr "Non autorisé"
+
+#~ msgid "Sorry, you are not authorized to access this page."
+#~ msgstr "Désolé, vous n'êtes pas autorisé à accéder à cette page."
+
+#~ msgid "Page Expired"
+#~ msgstr "Page expirée"
+
+#~ msgid "Sorry, your session has expired. Please refresh and try again."
+#~ msgstr "Désolé, votre session a expiré. Veuillez actualiser et réessayer."
+
 #~ msgid "Best"
 #~ msgstr "Meilleur"
 
@@ -3338,9 +3372,6 @@ msgstr "Nombre d'objets"
 #~ msgid "My sessions"
 #~ msgstr "Mes sessions"
 
-#~ msgid "Latest observations"
-#~ msgstr "Dernières observations"
-
 #~ msgid "Latest drawings"
 #~ msgstr "Derniers dessins"
 
@@ -3361,11 +3392,6 @@ msgstr "Nombre d'objets"
 
 #~ msgid "Session"
 #~ msgstr "Session"
-
-#~ msgid "observation"
-#~ msgid_plural "observations"
-#~ msgstr[0] "observation"
-#~ msgstr[1] "observations"
 
 #~ msgid "No observations"
 #~ msgstr "Aucune observation"
@@ -4549,9 +4575,6 @@ msgstr "Nombre d'objets"
 
 #~ msgid "Maximal altitude explanation"
 #~ msgstr "Explication de l’altitude maximale"
-
-#~ msgid "Highest altitude during the year"
-#~ msgstr "Altitude maximale durant l’année"
 
 #~ msgid "Highest from the month"
 #~ msgstr "Maximal à partir du mois"

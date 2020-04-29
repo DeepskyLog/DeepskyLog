@@ -15,7 +15,7 @@ class CreateLocationsTable extends Migration
         Schema::create(
             'locations',
             function (Blueprint $table) {
-                $table->bigIncrements('id');
+                $table->increments('id');
                 $table->string('name', 255);
                 $table->float('longitude', 8, 5);
                 $table->float('latitude', 8, 5);
@@ -27,7 +27,6 @@ class CreateLocationsTable extends Migration
                 $table->unsignedSmallInteger('bortle')->nullable();
                 $table->unsignedInteger('user_id');
                 $table->boolean('active')->default(true);
-                $table->unsignedInteger('observations')->default(0);
 
                 $table->timestamps();
 

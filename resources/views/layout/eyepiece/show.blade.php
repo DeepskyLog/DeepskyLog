@@ -8,7 +8,11 @@
 <table class="table table-sm">
     <tr>
         <th><h4>{{ $eyepiece->name }}</h4></th>
-        <th><img width="100" style="border-radius: 20%" src="/eyepiece/{{ $eyepiece->id }}/getImage"></th>
+        <th>
+            @if ($media)
+            <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $eyepiece->name }}">
+            @endif
+        </th>
     </tr>
 
     <tr>
@@ -18,7 +22,7 @@
 
     <tr>
         <td>{{ _i("Generic name") }}</td>
-        <td>{{ $eyepiece->genericname() }}</td>
+        <td>{{ $eyepiece->genericname }}</td>
     </tr>
 
     <tr>
@@ -48,6 +52,20 @@
         <td>{{  $eyepiece->type }}</td>
     </tr>
 
+    @auth
+    @if ($eyepiece->user_id == Auth::user()->id)
+        <tr>
+            <td>{{ _i("First observation") }}</td>
+            <td>ENTER FIRST OBSERVATION OR REMOVE IF NOT YET USED</td>
+        </tr>
+
+        <tr>
+            <td>{{ _i("Last observation") }}</td>
+            <td>ENTER LAST OBSERVATION OR REMOVE IF NOT YET USED</td>
+        </tr>
+    @endif
+    @endauth
+
     <tr>
         <td>{{ _i("Owner") }}</td>
         <td><a href="/users/{{ $eyepiece->user_id }}">{{  $eyepiece->user->name }}</a></td>
@@ -64,7 +82,7 @@
 </table>
 
 @auth
-    @if (Auth::user()->id === $eyepiece->user_id || Auth::user()->isAdmin())
+    @if (Auth::user()->id == $eyepiece->user_id || Auth::user()->isAdmin())
     <a href="/eyepiece/{{ $eyepiece->id }}/edit">
         <button type="button" class="btn btn-sm btn-primary">
             {{ _i('Edit') }} {{  $eyepiece->name }}
