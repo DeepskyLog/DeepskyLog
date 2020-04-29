@@ -43,21 +43,26 @@ class EyepieceTest extends TestCase
 
         foreach ($eyepieces as $eyepiece) {
             $this->assertStringContainsString(
-                $eyepiece->brand, $eyepiece->genericname
+                $eyepiece->brand,
+                $eyepiece->genericname
             );
             $this->assertStringContainsString(
-                $eyepiece->type, $eyepiece->genericname
+                $eyepiece->type,
+                $eyepiece->genericname
             );
             $this->assertStringContainsString(
-                $eyepiece->focalLength, $eyepiece->genericname
+                $eyepiece->focalLength,
+                $eyepiece->genericname
             );
             $this->assertStringContainsString(
-                'mm', $eyepiece->genericname
+                'mm',
+                $eyepiece->genericname
             );
 
             if ($eyepiece->maxFocalLength) {
                 $this->assertStringContainsString(
-                    $eyepiece->maxFocalLength, $eyepiece->genericname
+                    $eyepiece->maxFocalLength,
+                    $eyepiece->genericname
                 );
                 $this->assertStringContainsString('-', $eyepiece->genericname);
             }
