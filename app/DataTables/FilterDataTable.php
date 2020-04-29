@@ -6,7 +6,6 @@
  * PHP Version 7
  *
  * @category Filters
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -14,8 +13,8 @@
 
 namespace App\DataTables;
 
-use Yajra\DataTables\Services\DataTable;
 use App\Filter;
+use Yajra\DataTables\Services\DataTable;
 
 /**
  * Filter DataTable.
@@ -23,7 +22,6 @@ use App\Filter;
  * PHP Version 7
  *
  * @category Filters
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -71,8 +69,8 @@ class FilterDataTable extends DataTable
             ->editColumn(
                 'user.name',
                 function ($filter) {
-                    return '<a href="/users/' . $filter->user->id . '">'
-                        . $filter->user->name . '</a>';
+                    return '<a href="/users/'.$filter->user->id.'">'
+                        .$filter->user->name.'</a>';
                 }
             )
             ->editColumn(
@@ -118,10 +116,10 @@ class FilterDataTable extends DataTable
     protected function getMyParameters()
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
-            . \PeterColes\Languages\LanguagesFacade::lookup(
+            .\PeterColes\Languages\LanguagesFacade::lookup(
                 [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
-            )->first() . '.json'];
+            )->first().'.json', ];
         $mypars = $this->getBuilderParameters();
         $mypars['language'] = $language;
 
@@ -237,6 +235,6 @@ class FilterDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Filter_' . date('YmdHis');
+        return 'Filter_'.date('YmdHis');
     }
 }

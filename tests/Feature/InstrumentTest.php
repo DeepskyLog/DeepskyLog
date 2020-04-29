@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Test
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -13,18 +12,17 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
 
 /**
  * Tests for creating, deleting, and adapting instruments.
  *
  * @category Test
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -81,7 +79,7 @@ class InstrumentTest extends TestCase
         $response->assertStatus(200);
         // Check if we see the correct page
         $response->assertSee(
-            'Instruments of ' . $this->_user->name
+            'Instruments of '.$this->_user->name
         );
     }
 
@@ -107,7 +105,7 @@ class InstrumentTest extends TestCase
         $response->assertStatus(200);
 
         // Check if we see the correct page
-        $response->assertSee('Instruments of ' . $this->_user->name);
+        $response->assertSee('Instruments of '.$this->_user->name);
 
         $response->assertViewIs('layout.instrument.view');
 
@@ -164,7 +162,7 @@ class InstrumentTest extends TestCase
             'type' => 3,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('instrument', $attributes);
@@ -199,7 +197,7 @@ class InstrumentTest extends TestCase
             'type' => 3,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -230,7 +228,7 @@ class InstrumentTest extends TestCase
             'type' => 3,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -261,7 +259,7 @@ class InstrumentTest extends TestCase
             'type' => 3,
             'fd' => null,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -292,7 +290,7 @@ class InstrumentTest extends TestCase
             'type' => 3,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -323,7 +321,7 @@ class InstrumentTest extends TestCase
             'type' => 3,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -354,7 +352,7 @@ class InstrumentTest extends TestCase
             'type' => 3,
             'fd' => 0.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -385,7 +383,7 @@ class InstrumentTest extends TestCase
             'type' => 3,
             'fd' => 'test',
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -416,7 +414,7 @@ class InstrumentTest extends TestCase
             'type' => 3,
             'fd' => null,
             'fixedMagnification' => -0.3,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -447,7 +445,7 @@ class InstrumentTest extends TestCase
             'type' => 3,
             'fd' => null,
             'fixedMagnification' => 'test',
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -478,7 +476,7 @@ class InstrumentTest extends TestCase
             'type' => null,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -504,14 +502,14 @@ class InstrumentTest extends TestCase
         );
 
         $response = $this->actingAs($this->_user)->put(
-            '/instrument/' . $instrument->id,
+            '/instrument/'.$instrument->id,
             [
                 'name' => 'Test',
                 'diameter' => 457,
                 'type' => 4,
                 'fd' => 4.5,
                 'fixedMagnification' => null,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -537,14 +535,14 @@ class InstrumentTest extends TestCase
         );
 
         $response = $this->actingAs($this->_user)->patch(
-            '/instrument/' . $instrument->id,
+            '/instrument/'.$instrument->id,
             [
                 'name' => 'Test instrument',
                 'diameter' => null,
                 'type' => 4,
                 'fd' => 4.5,
                 'fixedMagnification' => null,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -570,14 +568,14 @@ class InstrumentTest extends TestCase
         );
 
         $response = $this->actingAs($this->_user)->patch(
-            '/instrument/' . $instrument->id,
+            '/instrument/'.$instrument->id,
             [
                 'name' => 'Test instrument',
                 'diameter' => null,
                 'type' => 4,
                 'fd' => 4.5,
                 'fixedMagnification' => null,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -592,11 +590,11 @@ class InstrumentTest extends TestCase
             'type' => 4,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/instrument/' . $instrument->id, $attributes
+            '/instrument/'.$instrument->id, $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['diameter']);
@@ -609,11 +607,11 @@ class InstrumentTest extends TestCase
             'type' => null,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/instrument/' . $instrument->id, $attributes
+            '/instrument/'.$instrument->id, $attributes
         );
 
         $response->assertStatus(302);
@@ -625,11 +623,11 @@ class InstrumentTest extends TestCase
             'type' => 4,
             'fd' => -1.2,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/instrument/' . $instrument->id, $attributes
+            '/instrument/'.$instrument->id, $attributes
         );
 
         $response->assertStatus(302);
@@ -643,16 +641,15 @@ class InstrumentTest extends TestCase
             'type' => 4,
             'fd' => null,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/instrument/' . $instrument->id, $attributes
+            '/instrument/'.$instrument->id, $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['fd']);
         $response->assertSessionHasErrors(['fixedMagnification']);
-
 
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
@@ -662,11 +659,11 @@ class InstrumentTest extends TestCase
             'type' => 4,
             'fd' => null,
             'fixedMagnification' => -4.3,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/instrument/' . $instrument->id, $attributes
+            '/instrument/'.$instrument->id, $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['fixedMagnification']);
@@ -711,7 +708,7 @@ class InstrumentTest extends TestCase
             'active' => $instrument->active,
         ];
 
-        $this->put('instrument/' . $instrument->id, $newAttributes);
+        $this->put('instrument/'.$instrument->id, $newAttributes);
 
         // Then there should be an updated instrument in the database
         $this->assertDatabaseHas('instruments', $newAttributes);
@@ -740,7 +737,7 @@ class InstrumentTest extends TestCase
             'type' => 4,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('instrument', $attributes);
@@ -763,12 +760,12 @@ class InstrumentTest extends TestCase
             'type' => 4,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(AuthorizationException::class);
 
-        $this->put('/instrument/' . $instrument->id, $newAttributes);
+        $this->put('/instrument/'.$instrument->id, $newAttributes);
     }
 
     /**
@@ -794,7 +791,7 @@ class InstrumentTest extends TestCase
             'type' => 4,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('instrument', $attributes);
@@ -818,10 +815,10 @@ class InstrumentTest extends TestCase
             'type' => 4,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
-        $this->put('/instrument/' . $instrument->id, $newAttributes);
+        $this->put('/instrument/'.$instrument->id, $newAttributes);
 
         // Then there should be an updated instrument in the database
         $this->assertDatabaseHas('instruments', $newAttributes);
@@ -856,13 +853,13 @@ class InstrumentTest extends TestCase
                 'fd' => $instrument->fd,
                 'fixedMagnification' => $instrument->fixedMagnification,
                 'active' => $instrument->active,
-                'user_id' => $instrument->user_id
+                'user_id' => $instrument->user_id,
             ]
         );
 
         $this->assertEquals(1, \App\Instrument::count());
 
-        $response = $this->delete('/instrument/' . $instrument->id);
+        $response = $this->delete('/instrument/'.$instrument->id);
 
         $response->assertStatus(302);
 
@@ -876,7 +873,7 @@ class InstrumentTest extends TestCase
                 'fd' => $instrument->fd,
                 'fixedMagnification' => $instrument->fixedMagnification,
                 'active' => $instrument->active,
-                'user_id' => $instrument->user_id
+                'user_id' => $instrument->user_id,
             ]
         );
         $this->assertEquals(0, \App\Instrument::count());
@@ -909,7 +906,7 @@ class InstrumentTest extends TestCase
                 'fd' => $instrument->fd,
                 'fixedMagnification' => $instrument->fixedMagnification,
                 'active' => $instrument->active,
-                'user_id' => $instrument->user_id
+                'user_id' => $instrument->user_id,
             ]
         );
 
@@ -919,7 +916,7 @@ class InstrumentTest extends TestCase
         $this->expectException(AuthorizationException::class);
 
         // Try to delete the instrument
-        $this->delete('/instrument/' . $instrument->id);
+        $this->delete('/instrument/'.$instrument->id);
     }
 
     /**
@@ -946,7 +943,7 @@ class InstrumentTest extends TestCase
             'fd' => $instrument->fd,
             'fixedMagnification' => $instrument->fixedMagnification,
             'active' => $instrument->active,
-            'user_id' => $instrument->user_id
+            'user_id' => $instrument->user_id,
         ];
 
         // Then there should be a new instrument in the database
@@ -958,7 +955,7 @@ class InstrumentTest extends TestCase
 
         $this->actingAs($newUser);
 
-        $this->delete('/instrument/' . $instrument->id);
+        $this->delete('/instrument/'.$instrument->id);
 
         // Then there should not be an instrument in the database anymore
         $this->assertDatabaseMissing('instruments', $attributes);
@@ -985,7 +982,7 @@ class InstrumentTest extends TestCase
             'type' => 4,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Auth\AuthenticationException::class);
@@ -1016,7 +1013,7 @@ class InstrumentTest extends TestCase
             'type' => 4,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('/instrument', $attributes);
@@ -1099,7 +1096,7 @@ class InstrumentTest extends TestCase
         );
 
         $response = $this->actingAs($this->_user)->get(
-            '/instrument/' . $instrument->id . '/edit'
+            '/instrument/'.$instrument->id.'/edit'
         );
 
         $response->assertStatus(200);
@@ -1111,7 +1108,6 @@ class InstrumentTest extends TestCase
      * Ensure that we can upload a picture.
      *
      * @test
-     *
      */
     public function testCreateInstrumentFileUploaded()
     {
@@ -1134,7 +1130,7 @@ class InstrumentTest extends TestCase
         $instrument = \App\Instrument::firstOrFail();
 
         Storage::disk('public')->assertExists(
-            $instrument->id . '/' . $instrument->id . '.png'
+            $instrument->id.'/'.$instrument->id.'.png'
         );
     }
 
@@ -1152,14 +1148,14 @@ class InstrumentTest extends TestCase
         );
 
         $response = $this->actingAs($this->_user)->get(
-            '/instrument/' . $instrument->id
+            '/instrument/'.$instrument->id
         );
 
         $response->assertStatus(200);
         $response->assertSee($instrument->name);
         $response->assertSee($instrument->diameter);
         $response->assertSee($this->_user->name);
-        $response->assertSee('Edit ' . $instrument->name);
+        $response->assertSee('Edit '.$instrument->name);
     }
 
     /**
@@ -1176,14 +1172,14 @@ class InstrumentTest extends TestCase
         $instrument = factory('App\Instrument')->create(['user_id' => $newUser->id]);
 
         $response = $this->actingAs($this->_user)->get(
-            '/instrument/' . $instrument->id
+            '/instrument/'.$instrument->id
         );
 
         $response->assertStatus(200);
         $response->assertSee($instrument->name);
         $response->assertSee($instrument->diameter);
         $response->assertSee($this->_user->name);
-        $response->assertDontSee('Edit ' . $instrument->name);
+        $response->assertDontSee('Edit '.$instrument->name);
     }
 
     /**
@@ -1200,13 +1196,13 @@ class InstrumentTest extends TestCase
             ['user_id' => $this->_user->id]
         );
 
-        $response = $this->actingAs($admin)->get('/instrument/' . $instrument->id);
+        $response = $this->actingAs($admin)->get('/instrument/'.$instrument->id);
 
         $response->assertStatus(200);
         $response->assertSee($instrument->name);
         $response->assertSee($instrument->diameter);
         $response->assertSee($this->_user->name);
-        $response->assertSee('Edit ' . $instrument->name);
+        $response->assertSee('Edit '.$instrument->name);
     }
 
     /**
@@ -1222,13 +1218,13 @@ class InstrumentTest extends TestCase
             ['user_id' => $this->_user->id]
         );
 
-        $response = $this->get('/instrument/' . $instrument->id);
+        $response = $this->get('/instrument/'.$instrument->id);
 
         $response->assertStatus(200);
         $response->assertSee($instrument->name);
         $response->assertSee($instrument->diameter);
         $response->assertSee($this->_user->name);
-        $response->assertDontSee('Edit ' . $instrument->name);
+        $response->assertDontSee('Edit '.$instrument->name);
     }
 
     /**
@@ -1276,13 +1272,13 @@ class InstrumentTest extends TestCase
         );
 
         // Only for logged in users!
-        $response = $this->get('/getInstrumentJson/' . $instrument->id);
+        $response = $this->get('/getInstrumentJson/'.$instrument->id);
         $response->assertStatus(302);
         $response->assertRedirect('/login');
 
         // Test for logged in user
         $response = $this->actingAs($this->_user)->get(
-            '/getInstrumentJson/' . $instrument->id
+            '/getInstrumentJson/'.$instrument->id
         );
 
         $this->assertEquals($response['name'], $instrument->name);
@@ -1315,11 +1311,11 @@ class InstrumentTest extends TestCase
 
         // Check the image, if no image is uploaded
         $this->actingAs($this->_user)->get(
-            'instrument/' . $instrument->id . '/getImage'
+            'instrument/'.$instrument->id.'/getImage'
         );
 
         Storage::disk('public')->assertExists(
-            $instrument->id . '/' . $instrument->id . '.png'
+            $instrument->id.'/'.$instrument->id.'.png'
         );
 
         // Check the image if we have uploaded an image
@@ -1339,7 +1335,7 @@ class InstrumentTest extends TestCase
         $instrument2 = DB::table('instruments')->latest('id')->first();
 
         Storage::disk('public')->assertExists(
-            $instrument2->id . '/' . $instrument2->id . '.png'
+            $instrument2->id.'/'.$instrument2->id.'.png'
         );
     }
 
@@ -1372,11 +1368,11 @@ class InstrumentTest extends TestCase
         $instrument = DB::table('instruments')->latest('id')->first();
 
         $this->actingAs($this->_user)->post(
-            'instrument/' . $instrument->id . '/deleteImage'
+            'instrument/'.$instrument->id.'/deleteImage'
         );
 
         Storage::disk('public')->assertMissing(
-            $instrument->id . '/' . $instrument->id . '.png'
+            $instrument->id.'/'.$instrument->id.'.png'
         );
 
         // Check if another user cannot delete the image if we have uploaded an image
@@ -1398,11 +1394,11 @@ class InstrumentTest extends TestCase
         $user = factory('App\User')->create();
 
         $this->actingAs($user)->post(
-            'instruments/' . $instrument->id . '/deleteImage'
+            'instruments/'.$instrument->id.'/deleteImage'
         );
 
         Storage::disk('public')->assertExists(
-            $instrument->id . '/' . $instrument->id . '.png'
+            $instrument->id.'/'.$instrument->id.'.png'
         );
     }
 
@@ -1462,11 +1458,11 @@ class InstrumentTest extends TestCase
             [
                 'user_id' => $user->id,
                 'diameter' => 457,
-                'fd' => 4.5
+                'fd' => 4.5,
             ]
         );
 
-        $response = $this->actingAs($user)->get('/instrument/' . $instrument->id);
+        $response = $this->actingAs($user)->get('/instrument/'.$instrument->id);
 
         $response->assertStatus(200);
         $response->assertSee($instrument->name);
@@ -1497,14 +1493,14 @@ class InstrumentTest extends TestCase
             'type' => 4,
             'fd' => 4.5,
             'fixedMagnification' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->actingAs($user)->post('instrument', $attributes);
 
         $instrument = \App\Instrument::firstOrFail();
 
-        $response = $this->actingAs($user)->get('/instrument/' . $instrument->id);
+        $response = $this->actingAs($user)->get('/instrument/'.$instrument->id);
 
         $response->assertStatus(200);
         $response->assertSee('Test instrument');
@@ -1534,7 +1530,7 @@ class InstrumentTest extends TestCase
         // As guest
         $this->assertGuest();
         $response = $this->get(
-            '/instrument/' . $instrument->id
+            '/instrument/'.$instrument->id
         );
         $response->assertStatus(200);
         $response->assertDontSee('Used eyepieces');
@@ -1545,7 +1541,7 @@ class InstrumentTest extends TestCase
         $response->assertSee('Last used on');
 
         $response = $this->actingAs($this->_user)->get(
-            '/instrument/' . $instrument->id
+            '/instrument/'.$instrument->id
         );
 
         $response->assertStatus(200);
@@ -1559,7 +1555,7 @@ class InstrumentTest extends TestCase
         // As other user
         $otherUser = factory('App\User')->create();
         $response = $this->actingAs($otherUser)->get(
-            '/instrument/' . $instrument->id
+            '/instrument/'.$instrument->id
         );
         $response->assertStatus(200);
         $response->assertDontSee('Used eyepieces');
@@ -1572,7 +1568,7 @@ class InstrumentTest extends TestCase
         // As admin
         $admin = factory('App\User')->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get(
-            '/instrument/' . $instrument->id
+            '/instrument/'.$instrument->id
         );
         $response->assertStatus(200);
         $response->assertDontSee('Used eyepieces');

@@ -1,15 +1,14 @@
 <?php
 
-use Illuminate\Database\Seeder;
-use App\LocationOld;
 use App\Location;
+use App\LocationOld;
 use App\User;
+use Illuminate\Database\Seeder;
 
 class LocationTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
      */
     public function run()
     {
@@ -20,11 +19,11 @@ class LocationTableSeeder extends Seeder
 
         foreach ($locationData as $location) {
             $observer = User::where('username', $location->observer)->pluck('id');
-            if (sizeof($observer) > 0) {
+            if (count($observer) > 0) {
                 if ($location->timestamp == '') {
                     $date = date('Y-m-d H:i:s');
                 } else {
-                    list($year, $month, $day, $hour, $minute, $second)
+                    [$year, $month, $day, $hour, $minute, $second]
                         = sscanf($location->timestamp, '%4d%2d%2d%2d%2d%d');
                     $date = date(
                         'Y-m-d H:i:s',
@@ -148,7 +147,7 @@ class LocationTableSeeder extends Seeder
                 } elseif ($location->country === 'Malaysia') {
                     $country = 'MY';
                 } else {
-                    echo 'MISSING COUNTRY: ' . $location->id . ' - ' . $location->name . ' - ' . $location->country . "\n";
+                    echo 'MISSING COUNTRY: '.$location->id.' - '.$location->name.' - '.$location->country."\n";
                     continue;
                 }
 
@@ -187,7 +186,7 @@ class LocationTableSeeder extends Seeder
                         'skyBackground' => $sqm,
                         'bortle' => $bortle,
                         'active' => $location->locationactive,
-                        'created_at' => $date
+                        'created_at' => $date,
                     ]
                 );
             }

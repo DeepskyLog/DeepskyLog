@@ -4,10 +4,10 @@ namespace Tests\Feature\Auth;
 
 use App\User;
 use Carbon\Traits\Test;
-use Tests\TestCase;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
+use Tests\TestCase;
 
 class EmailVerificationTest extends TestCase
 {
@@ -18,7 +18,7 @@ class EmailVerificationTest extends TestCase
     /**
      * The redirect after a succesfull verification.
      *
-     * @return String /home
+     * @return string /home
      */
     protected function successfulVerificationRoute()
     {
@@ -28,7 +28,7 @@ class EmailVerificationTest extends TestCase
     /**
      * The redirect after a verification notice.
      *
-     * @return String The verification notice route
+     * @return string The verification notice route
      */
     protected function verificationNoticeRoute()
     {
@@ -93,7 +93,6 @@ class EmailVerificationTest extends TestCase
 
     /**
      * Check that a guest can not see the Verification notice.
-     *
      */
     public function testGuestCannotSeeTheVerificationNotice()
     {
@@ -105,12 +104,11 @@ class EmailVerificationTest extends TestCase
     /**
      * Check that a user can see the Verification notice when the user is not
      * verified.
-     *
      */
     public function testUserSeesTheVerificationNoticeWhenNotVerified()
     {
         $user = factory(User::class)->create(
-            ['email_verified_at' => null, ]
+            ['email_verified_at' => null]
         );
 
         $response = $this->actingAs($user)->get($this->verificationNoticeRoute());
@@ -122,12 +120,11 @@ class EmailVerificationTest extends TestCase
     /**
      * Check that a verified user is redirected to the homepage when visiting the
      * verification page.
-     *
      */
     public function testVerifiedUserRedirectedHomeWhenVisitingVerificationNotice()
     {
         $user = factory(User::class)->create(
-            ['email_verified_at' => now(), ]
+            ['email_verified_at' => now()]
         );
 
         $response = $this->actingAs($user)->get($this->verificationNoticeRoute());
@@ -137,7 +134,6 @@ class EmailVerificationTest extends TestCase
 
     /**
      * Check that a guest can not see the Verification page.
-     *
      */
     public function testGuestCannotSeeTheVerificationVerifyRoute()
     {
@@ -155,7 +151,6 @@ class EmailVerificationTest extends TestCase
 
     /**
      * Check that a user can not Verify other users.
-     *
      */
     public function testUserCannotVerifyOthers()
     {
@@ -180,12 +175,11 @@ class EmailVerificationTest extends TestCase
 
     /**
      * Check that a verified user is redirected correctly.
-     *
      */
     public function testUserIsRedirectedToCorrectRouteWhenAlreadyVerified()
     {
         $user = factory(User::class)->create(
-            ['email_verified_at' => now(), ]
+            ['email_verified_at' => now()]
         );
 
         $response = $this->actingAs($user)->get(
@@ -199,12 +193,11 @@ class EmailVerificationTest extends TestCase
      * Check that forbidden is returned when signature is invalid.
      *
      * @test
-     *
      */
     public function forbiddenIsReturnedWhenSignatureIsInvalidInVerificationVerify()
     {
         $user = factory(User::class)->create(
-            ['email_verified_at' => now(), ]
+            ['email_verified_at' => now()]
         );
 
         $response = $this->actingAs($user)->get(
@@ -216,12 +209,11 @@ class EmailVerificationTest extends TestCase
 
     /**
      * Check that users can verify themselves.
-     *
      */
     public function testUserCanVerifyThemselves()
     {
         $user = factory(User::class)->create(
-            ['email_verified_at' => null, ]
+            ['email_verified_at' => null]
         );
 
         $response = $this->actingAs($user)->get(
@@ -234,7 +226,6 @@ class EmailVerificationTest extends TestCase
 
     /**
      * Check that a guest can not resend a verification email.
-     *
      */
     public function testGuestCannotResendAVerificationEmail()
     {
@@ -245,12 +236,11 @@ class EmailVerificationTest extends TestCase
 
     /**
      * Check that a user is correctly redirected if already correclty verified.
-     *
      */
     public function testUserIsRedirectedToCorrectRouteIfAlreadyVerified()
     {
         $user = factory(User::class)->create(
-            ['email_verified_at' => now(), ]
+            ['email_verified_at' => now()]
         );
 
         $response = $this->actingAs($user)->post($this->verificationResendRoute());
@@ -260,7 +250,6 @@ class EmailVerificationTest extends TestCase
 
     /**
      * Check that a user can resend a Verification mail.
-     *
      */
     public function testUserCanResendAVerificationEmail()
     {

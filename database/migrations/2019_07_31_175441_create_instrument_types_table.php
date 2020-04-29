@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateInstrumentTypesTable extends Migration
 {
@@ -22,73 +22,73 @@ class CreateInstrumentTypesTable extends Migration
 
         // Insert the instrument types
         DB::table('instrument_types')->insert(
-            array(
+            [
                 'id' => 0,
-                'type' => "Naked Eye"
-            )
+                'type' => 'Naked Eye',
+            ]
         );
 
         DB::table('instrument_types')->insert(
-            array(
+            [
                 'id' => 1,
-                'type' => "Binoculars"
-            )
+                'type' => 'Binoculars',
+            ]
         );
 
         DB::table('instrument_types')->insert(
-            array(
+            [
                 'id' => 2,
-                'type' => "Refractor"
-            )
+                'type' => 'Refractor',
+            ]
         );
 
         DB::table('instrument_types')->insert(
-            array(
+            [
                 'id' => 3,
-                'type' => "Reflector"
-            )
+                'type' => 'Reflector',
+            ]
         );
 
         DB::table('instrument_types')->insert(
-            array(
+            [
                 'id' => 4,
-                'type' => "Finderscope"
-            )
+                'type' => 'Finderscope',
+            ]
         );
 
         DB::table('instrument_types')->insert(
-            array(
+            [
                 'id' => 5,
-                'type' => "Other"
-            )
+                'type' => 'Other',
+            ]
         );
 
         DB::table('instrument_types')->insert(
-            array(
+            [
                 'id' => 6,
-                'type' => "Cassegrain"
-            )
+                'type' => 'Cassegrain',
+            ]
         );
 
         DB::table('instrument_types')->insert(
-            array(
+            [
                 'id' => 7,
-                'type' => "Kutter"
-            )
+                'type' => 'Kutter',
+            ]
         );
 
         DB::table('instrument_types')->insert(
-            array(
+            [
                 'id' => 8,
-                'type' => "Maksutov"
-            )
+                'type' => 'Maksutov',
+            ]
         );
 
         DB::table('instrument_types')->insert(
-            array(
+            [
                 'id' => 9,
-                'type' => "Schmidt Cassegrain"
-            )
+                'type' => 'Schmidt Cassegrain',
+            ]
         );
     }
 

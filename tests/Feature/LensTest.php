@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Test
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -13,18 +12,17 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
 
 /**
  * Tests for creating, deleting, and adapting lenses.
  *
  * @category Test
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -37,7 +35,6 @@ class LensTest extends TestCase
 
     /**
      * Set up the user.
-     *
      */
     public function setUp(): void
     {
@@ -210,7 +207,7 @@ class LensTest extends TestCase
         $lens = factory('App\Lens')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->put(
-            '/lens/' . $lens->id,
+            '/lens/'.$lens->id,
             ['name' => 'test', 'factor' => 1.3]
         );
 
@@ -256,7 +253,7 @@ class LensTest extends TestCase
             'factor' => 2.5,
         ];
 
-        $this->put('/lens/' . $lens->id, $newAttributes);
+        $this->put('/lens/'.$lens->id, $newAttributes);
 
         // Then there should be an updated lens in the database
         $this->assertDatabaseHas('lens', $newAttributes);
@@ -306,7 +303,7 @@ class LensTest extends TestCase
 
         $this->expectException(AuthorizationException::class);
 
-        $this->put('/lens/' . $lens->id, $newAttributes);
+        $this->put('/lens/'.$lens->id, $newAttributes);
     }
 
     /**
@@ -352,7 +349,7 @@ class LensTest extends TestCase
             'factor' => 2.5,
         ];
 
-        $this->put('/lens/' . $lens->id, $newAttributes);
+        $this->put('/lens/'.$lens->id, $newAttributes);
 
         // Then there should be an updated lens in the database
         $this->assertDatabaseHas('lens', $newAttributes);
@@ -383,13 +380,13 @@ class LensTest extends TestCase
                 'name' => $lens->name,
                 'factor' => $lens->factor,
                 'active' => $lens->active,
-                'user_id' => $lens->user_id
+                'user_id' => $lens->user_id,
             ]
         );
 
         $this->assertEquals(1, \App\Lens::count());
 
-        $response = $this->delete('/lens/' . $lens->id);
+        $response = $this->delete('/lens/'.$lens->id);
 
         $response->assertStatus(302);
 
@@ -400,7 +397,7 @@ class LensTest extends TestCase
                 'name' => $lens->name,
                 'factor' => $lens->factor,
                 'active' => $lens->active,
-                'user_id' => $lens->user_id
+                'user_id' => $lens->user_id,
             ]
         );
         $this->assertEquals(0, \App\Lens::count());
@@ -444,7 +441,7 @@ class LensTest extends TestCase
         $this->expectException(AuthorizationException::class);
 
         // Try to delete the lens
-        $this->delete('/lens/' . $lens->id);
+        $this->delete('/lens/'.$lens->id);
     }
 
     /**
@@ -484,7 +481,7 @@ class LensTest extends TestCase
 
         $this->actingAs($newUser);
 
-        $this->delete('/lens/' . $lens->id);
+        $this->delete('/lens/'.$lens->id);
 
         // Then there should not be a lens in the database anymore
         $this->assertDatabaseMissing('lens', $attributes);
@@ -507,7 +504,7 @@ class LensTest extends TestCase
         // passing the necessary data
         $attributes = [
             'name' => 'Test lens',
-            'factor' => 2.0
+            'factor' => 2.0,
         ];
 
         $this->expectException(\Illuminate\Auth\AuthenticationException::class);
@@ -537,7 +534,7 @@ class LensTest extends TestCase
         $attributes = [
             'user_id' => $user->id,
             'name' => 'Test lens for unverified user',
-            'factor' => 2.5
+            'factor' => 2.5,
         ];
 
         $this->post('/lens', $attributes);
@@ -618,7 +615,7 @@ class LensTest extends TestCase
         $lens = factory('App\Lens')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->get(
-            '/lens/' . $lens->id . '/edit'
+            '/lens/'.$lens->id.'/edit'
         );
 
         $response->assertStatus(200);
@@ -650,7 +647,7 @@ class LensTest extends TestCase
         $lens = \App\Lens::firstOrFail();
 
         Storage::disk('public')->assertExists(
-            $lens->id . '/' . $lens->id . '.png'
+            $lens->id.'/'.$lens->id.'.png'
         );
     }
 
@@ -665,12 +662,12 @@ class LensTest extends TestCase
     {
         $lens = factory('App\Lens')->create(['user_id' => $this->_user->id]);
 
-        $response = $this->actingAs($this->_user)->get('/lens/' . $lens->id);
+        $response = $this->actingAs($this->_user)->get('/lens/'.$lens->id);
 
         $response->assertStatus(200);
         $response->assertSee($lens->name);
         $response->assertSee($this->_user->name);
-        $response->assertSee('Edit ' . $lens->name);
+        $response->assertSee('Edit '.$lens->name);
         $response->assertSee($lens->factor);
     }
 
@@ -687,12 +684,12 @@ class LensTest extends TestCase
         $newUser = factory('App\User')->create();
         $lens = factory('App\Lens')->create(['user_id' => $newUser->id]);
 
-        $response = $this->actingAs($this->_user)->get('/lens/' . $lens->id);
+        $response = $this->actingAs($this->_user)->get('/lens/'.$lens->id);
 
         $response->assertStatus(200);
         $response->assertSee($lens->name);
         $response->assertSee($this->_user->name);
-        $response->assertDontSee('Edit ' . $lens->name);
+        $response->assertDontSee('Edit '.$lens->name);
         $response->assertSee($lens->factor);
     }
 
@@ -708,13 +705,13 @@ class LensTest extends TestCase
         $admin = factory('App\User')->create(['type' => 'admin']);
         $lens = factory('App\Lens')->create(['user_id' => $this->_user->id]);
 
-        $response = $this->actingAs($admin)->get('/lens/' . $lens->id);
+        $response = $this->actingAs($admin)->get('/lens/'.$lens->id);
 
         $response->assertStatus(200);
         $response->assertSee($lens->name);
         $response->assertSee($this->_user->name);
         $response->assertSee($lens->factor);
-        $response->assertSee('Edit ' . $lens->name);
+        $response->assertSee('Edit '.$lens->name);
     }
 
     /**
@@ -728,13 +725,13 @@ class LensTest extends TestCase
     {
         $lens = factory('App\Lens')->create(['user_id' => $this->_user->id]);
 
-        $response = $this->get('/lens/' . $lens->id);
+        $response = $this->get('/lens/'.$lens->id);
 
         $response->assertStatus(200);
         $response->assertSee($lens->name);
         $response->assertSee($lens->factor);
         $response->assertSee($this->_user->name);
-        $response->assertDontSee('Edit ' . $lens->name);
+        $response->assertDontSee('Edit '.$lens->name);
     }
 
     /**
@@ -780,13 +777,13 @@ class LensTest extends TestCase
         $lens = factory('App\Lens')->create(['user_id' => $this->_user->id]);
 
         // Only for logged in users!
-        $response = $this->get('/getLensJson/' . $lens->id);
+        $response = $this->get('/getLensJson/'.$lens->id);
         $response->assertStatus(302);
         $response->assertRedirect('/login');
 
         // Test for logged in user
         $response = $this->actingAs($this->_user)->get(
-            '/getLensJson/' . $lens->id
+            '/getLensJson/'.$lens->id
         );
 
         $this->assertEquals($response['name'], $lens->name);
@@ -800,7 +797,6 @@ class LensTest extends TestCase
      * Ensure that we get an image of a lens.
      *
      * @test
-     *
      */
     public function testGetLensImage()
     {
@@ -810,10 +806,10 @@ class LensTest extends TestCase
         $lens = factory('App\Lens')->create(['user_id' => $this->_user->id]);
 
         // Check the image, if no image is uploaded
-        $this->actingAs($this->_user)->get('lens/' . $lens->id . '/getImage');
+        $this->actingAs($this->_user)->get('lens/'.$lens->id.'/getImage');
 
         Storage::disk('public')->assertExists(
-            $lens->id . '/' . $lens->id . '.png'
+            $lens->id.'/'.$lens->id.'.png'
         );
 
         // Check the image if we have uploaded an image
@@ -829,7 +825,7 @@ class LensTest extends TestCase
         $lens2 = DB::table('lens')->latest('id')->first();
 
         Storage::disk('public')->assertExists(
-            $lens2->id . '/' . $lens2->id . '.png'
+            $lens2->id.'/'.$lens2->id.'.png'
         );
     }
 
@@ -837,7 +833,6 @@ class LensTest extends TestCase
      * Ensure that we can delete an image of a lens.
      *
      * @test
-     *
      */
     public function testDeleteFilterImage()
     {
@@ -857,11 +852,11 @@ class LensTest extends TestCase
         $lens = DB::table('lens')->latest('id')->first();
 
         $this->actingAs($this->_user)->post(
-            'lens/' . $lens->id . '/deleteImage'
+            'lens/'.$lens->id.'/deleteImage'
         );
 
         Storage::disk('public')->assertMissing(
-            $lens->id . '/' . $lens->id . '.png'
+            $lens->id.'/'.$lens->id.'.png'
         );
 
         // Check if another user cannot delete the image if we have uploaded an image
@@ -879,11 +874,11 @@ class LensTest extends TestCase
         $user = factory('App\User')->create();
 
         $this->actingAs($user)->post(
-            'lens/' . $lens->id . '/deleteImage'
+            'lens/'.$lens->id.'/deleteImage'
         );
 
         Storage::disk('public')->assertExists(
-            $lens->id . '/' . $lens->id . '.png'
+            $lens->id.'/'.$lens->id.'.png'
         );
     }
 

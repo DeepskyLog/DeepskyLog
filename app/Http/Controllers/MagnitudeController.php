@@ -6,7 +6,6 @@
  * PHP Version 7
  *
  * @category Magnitude
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -14,8 +13,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use deepskylog\AstronomyLibrary\Magnitude;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Magnitude Controller.
@@ -23,7 +22,6 @@ use deepskylog\AstronomyLibrary\Magnitude;
  * PHP Version 7
  *
  * @category Magnitude
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -45,7 +43,7 @@ class MagnitudeController extends Controller
             $fstOffset = 0.0;
         }
 
-        return ('{"sqm": ' . Magnitude::nelmToSqm($nelm, $fstOffset) . '}');
+        return '{"sqm": '.Magnitude::nelmToSqm($nelm, $fstOffset).'}';
     }
 
     /**
@@ -57,7 +55,7 @@ class MagnitudeController extends Controller
      */
     public function nelmToBortleJson(float $nelm): string
     {
-        return ('{"bortle": ' . Magnitude::nelmToBortle($nelm) . '}');
+        return '{"bortle": '.Magnitude::nelmToBortle($nelm).'}';
     }
 
     /**
@@ -75,7 +73,7 @@ class MagnitudeController extends Controller
             $fstOffset = 0.0;
         }
 
-        return ('{"nelm": ' . Magnitude::sqmToNelm($sqm, $fstOffset) . '}');
+        return '{"nelm": '.Magnitude::sqmToNelm($sqm, $fstOffset).'}';
     }
 
     /**
@@ -87,7 +85,7 @@ class MagnitudeController extends Controller
      */
     public function sqmToBortleJson(float $sqm): string
     {
-        return ('{"bortle": ' . Magnitude::sqmToBortle($sqm) . '}');
+        return '{"bortle": '.Magnitude::sqmToBortle($sqm).'}';
     }
 
     /**
@@ -105,7 +103,7 @@ class MagnitudeController extends Controller
             $fstOffset = 0.0;
         }
 
-        return ('{"nelm": ' . Magnitude::bortleToNelm($bortle, $fstOffset) . '}');
+        return '{"nelm": '.Magnitude::bortleToNelm($bortle, $fstOffset).'}';
     }
 
     /**
@@ -117,6 +115,6 @@ class MagnitudeController extends Controller
      */
     public function bortleTosqmJson(int $bortle): string
     {
-        return ('{"sqm": ' . Magnitude::bortleToSqm($bortle) . '}');
+        return '{"sqm": '.Magnitude::bortleToSqm($bortle).'}';
     }
 }

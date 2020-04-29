@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateFilterTypeTable extends Migration
 {
@@ -22,66 +22,66 @@ class CreateFilterTypeTable extends Migration
 
         // Insert the filter types
         DB::table('filter_types')->insert(
-            array(
+            [
                 'id' => 0,
-                'type' => "Other filter"
-            )
+                'type' => 'Other filter',
+            ]
         );
 
         DB::table('filter_types')->insert(
-            array(
+            [
                 'id' => 1,
-                'type' => "Broadband filter"
-            )
+                'type' => 'Broadband filter',
+            ]
         );
 
         DB::table('filter_types')->insert(
-            array(
+            [
                 'id' => 2,
-                'type' => "Narrowband filter"
-            )
+                'type' => 'Narrowband filter',
+            ]
         );
 
         DB::table('filter_types')->insert(
-            array(
+            [
                 'id' => 3,
-                'type' => "O-III filter"
-            )
+                'type' => 'O-III filter',
+            ]
         );
 
         DB::table('filter_types')->insert(
-            array(
+            [
                 'id' => 4,
-                'type' => "H beta filter"
-            )
+                'type' => 'H beta filter',
+            ]
         );
 
         DB::table('filter_types')->insert(
-            array(
+            [
                 'id' => 5,
-                'type' => "H alpha filter"
-            )
+                'type' => 'H alpha filter',
+            ]
         );
 
         DB::table('filter_types')->insert(
-            array(
+            [
                 'id' => 6,
-                'type' => "Color filter"
-            )
+                'type' => 'Color filter',
+            ]
         );
 
         DB::table('filter_types')->insert(
-            array(
+            [
                 'id' => 7,
-                'type' => "Neutral filter"
-            )
+                'type' => 'Neutral filter',
+            ]
         );
 
         DB::table('filter_types')->insert(
-            array(
+            [
                 'id' => 8,
-                'type' => "Corrective filter"
-            )
+                'type' => 'Corrective filter',
+            ]
         );
     }
 

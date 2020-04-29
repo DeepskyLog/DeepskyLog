@@ -6,7 +6,6 @@
  * PHP Version 7
  *
  * @category Eyepieces
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -23,7 +22,6 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * Eyepiece eloquent model.
  *
  * @category Eyepieces
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -34,7 +32,7 @@ class Eyepiece extends Model implements HasMedia
 
     protected $fillable = [
         'user_id', 'name', 'focalLength', 'apparentFOV',
-        'maxFocalLength', 'active', 'brand', 'type'
+        'maxFocalLength', 'active', 'brand', 'type',
     ];
 
     /**
@@ -66,16 +64,16 @@ class Eyepiece extends Model implements HasMedia
     /**
      * Returns the generic name of the eyepiece.
      *
-     * @return String the generic name of the eyepiece
+     * @return string the generic name of the eyepiece
      */
     public function getGenericnameAttribute()
     {
         if ($this->brand != '') {
             if ($this->maxFocalLength != '') {
-                return $this->focalLength . '-' . $this->maxFocalLength . 'mm '
-                    . $this->brand . ' ' . $this->type;
+                return $this->focalLength.'-'.$this->maxFocalLength.'mm '
+                    .$this->brand.' '.$this->type;
             } else {
-                return $this->focalLength . 'mm ' . $this->brand . ' ' . $this->type;
+                return $this->focalLength.'mm '.$this->brand.' '.$this->type;
             }
         } else {
             return $this->name;
@@ -103,7 +101,6 @@ class Eyepiece extends Model implements HasMedia
      * Also store a thumbnail of the image.
      *
      * @param $media the media
-     *
      */
     public function registerMediaConversions(Media $media = null): void
     {

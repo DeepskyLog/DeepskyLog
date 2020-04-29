@@ -3,21 +3,21 @@
 namespace Tests\Feature\Auth;
 
 use App\User;
-use Tests\TestCase;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ForgotPasswordTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * The route to the new password request
+     * The route to the new password request.
      *
-     * @return String The route to the new password request
+     * @return string The route to the new password request
      */
     protected function passwordRequestRoute()
     {
@@ -25,9 +25,9 @@ class ForgotPasswordTest extends TestCase
     }
 
     /**
-     * The route to the email password request
+     * The route to the email password request.
      *
-     * @return String The route to the new password request
+     * @return string The route to the new password request
      */
     protected function passwordEmailGetRoute()
     {
@@ -35,9 +35,9 @@ class ForgotPasswordTest extends TestCase
     }
 
     /**
-     * The route to the email password request
+     * The route to the email password request.
      *
-     * @return String The route to the email password request
+     * @return string The route to the email password request
      */
     protected function passwordEmailPostRoute()
     {
@@ -45,7 +45,7 @@ class ForgotPasswordTest extends TestCase
     }
 
     /**
-     * Check if a user can view the email password form
+     * Check if a user can view the email password form.
      *
      * @return void
      */
@@ -58,7 +58,7 @@ class ForgotPasswordTest extends TestCase
     }
 
     /**
-     * Check if a user can view the email password form when already authenticated
+     * Check if a user can view the email password form when already authenticated.
      *
      * @return void
      */
@@ -73,7 +73,7 @@ class ForgotPasswordTest extends TestCase
     }
 
     /**
-     * Check if a user receives an email with a password reset link
+     * Check if a user receives an email with a password reset link.
      *
      * @return void
      */
@@ -81,12 +81,12 @@ class ForgotPasswordTest extends TestCase
     {
         Notification::fake();
         $user = factory(User::class)->create(
-            ['email' => 'john@example.com',]
+            ['email' => 'john@example.com']
         );
 
         $response = $this->post(
             $this->passwordEmailPostRoute(),
-            ['email' => 'john@example.com',]
+            ['email' => 'john@example.com']
         );
 
         $this->assertNotNull($token = DB::table('password_resets')->first());
@@ -100,7 +100,7 @@ class ForgotPasswordTest extends TestCase
     }
 
     /**
-     * Check that an unregistered user does not receive an email
+     * Check that an unregistered user does not receive an email.
      *
      * @return void
      */
@@ -112,7 +112,7 @@ class ForgotPasswordTest extends TestCase
             $this->passwordEmailGetRoute()
         )->post(
             $this->passwordEmailPostRoute(),
-            ['email' => 'nobody@example.com',]
+            ['email' => 'nobody@example.com']
         );
 
         $response->assertRedirect($this->passwordEmailGetRoute());
@@ -124,7 +124,7 @@ class ForgotPasswordTest extends TestCase
     }
 
     /**
-     * Check that an email is required
+     * Check that an email is required.
      *
      * @return void
      */
@@ -139,7 +139,7 @@ class ForgotPasswordTest extends TestCase
     }
 
     /**
-     * Check that the email is a valid email
+     * Check that the email is a valid email.
      *
      * @return void
      */
@@ -147,7 +147,7 @@ class ForgotPasswordTest extends TestCase
     {
         $response = $this->from($this->passwordEmailGetRoute())->post(
             $this->passwordEmailPostRoute(),
-            ['email' => 'invalid-email',]
+            ['email' => 'invalid-email']
         );
 
         $response->assertRedirect($this->passwordEmailGetRoute());

@@ -8,7 +8,6 @@ class CreateEyepieceBrandsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      */
     public function up()
     {
@@ -22,7 +21,6 @@ class CreateEyepieceBrandsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
      */
     public function down()
     {

@@ -8,7 +8,6 @@ class UpdateEyepiece extends Migration
 {
     /**
      * Run the migrations.
-     *
      */
     public function up()
     {
@@ -17,13 +16,10 @@ class UpdateEyepiece extends Migration
             $table->string('brand')->after('name')->default('');
             $table->string('type')->after('focalLength')->default('');
         });
-
-
     }
 
     /**
      * Reverse the migrations.
-     *
      */
     public function down()
     {

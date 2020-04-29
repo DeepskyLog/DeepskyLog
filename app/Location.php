@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Location
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -15,15 +14,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * Location eloquent model.
  *
  * @category Location
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -36,7 +34,7 @@ class Location extends Model implements HasMedia
         'user_id', 'name', 'active',
         'longitude', 'latitude', 'country',
         'elevation', 'timezone', 'limitingMagnitude',
-        'skyBackground', 'bortle'
+        'skyBackground', 'bortle',
     ];
 
     /**
@@ -84,7 +82,7 @@ class Location extends Model implements HasMedia
     public static function getLocationOptions()
     {
         // Select all the countries of the locations of the user
-        $countries = \App\Location::where(
+        $countries = self::where(
             ['user_id' => Auth::user()->id]
         )->where(['active' => 1])->pluck('country')->unique();
 
@@ -99,26 +97,26 @@ class Location extends Model implements HasMedia
             ksort($translatedCountries);
 
             foreach ($translatedCountries as $countryid => $countryname) {
-                echo '<optgroup label="' . $countryname . '">';
+                echo '<optgroup label="'.$countryname.'">';
 
-                $locations = \App\Location::where(
+                $locations = self::where(
                     ['user_id' => Auth::user()->id]
                 )->where(['active' => 1])->where(['country' => $countryid])
                 ->pluck('id', 'name');
 
                 foreach ($locations as $name => $id) {
                     if ($id == Auth::user()->stdlocation) {
-                        echo '<option selected="selected" value="' . $id . '">'
-                           . $name . '</option>';
+                        echo '<option selected="selected" value="'.$id.'">'
+                           .$name.'</option>';
                     } else {
-                        echo '<option value="' . $id . '">' . $name . '</option>';
+                        echo '<option value="'.$id.'">'.$name.'</option>';
                     }
                 }
 
                 echo '</optgroup>';
             }
         } else {
-            echo '<option>' . _i('Add a location') . '</option>';
+            echo '<option>'._i('Add a location').'</option>';
         }
     }
 
@@ -127,7 +125,7 @@ class Location extends Model implements HasMedia
      *
      * @param float $sqm The sqm value
      *
-     * @return integer The bortle value
+     * @return int The bortle value
      */
     public static function getBortleFromSqm($sqm)
     {
@@ -161,7 +159,7 @@ class Location extends Model implements HasMedia
      */
     public static function getLimitingMagnitudeFromSqm($sqm)
     {
-        return (7.97 - 5 * log10(1 + pow(10, 4.316 - $sqm / 5.0)));
+        return 7.97 - 5 * log10(1 + pow(10, 4.316 - $sqm / 5.0));
     }
 
     /**
@@ -173,14 +171,13 @@ class Location extends Model implements HasMedia
      */
     public static function getSqmFromLimitingMagnitude($lm)
     {
-        return ((21.58 - 5 * log10(pow(10, (1.586 - $lm / 5.0)) - 1.0)));
+        return 21.58 - 5 * log10(pow(10, (1.586 - $lm / 5.0)) - 1.0);
     }
 
     /**
      * Also store a thumbnail of the image.
      *
      * @param $media the media
-     *
      */
     public function registerMediaConversions(Media $media = null): void
     {

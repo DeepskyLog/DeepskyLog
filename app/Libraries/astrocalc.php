@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Utils/Astronomy
- * @package  App\Libraries
  * @author   Deepsky Developers <developers@deepskylog.be>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -13,21 +12,20 @@
 
 namespace App\Libraries;
 
+use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
-use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Time;
 
 /**
  * Procedures for calculating astronomical timing etc.
  *
  * @category Utils/Astronomy
- * @package  App\Libraries
  * @author   Deepsky Developers <developers@deepskylog.be>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class AstroCalc
+class astrocalc
 {
     public $jd;
     protected $timedifference;
@@ -113,7 +111,7 @@ class AstroCalc
      * @param float $dec3            the declination of the object tomorrow
      * @param float $moonHorParallax the horizontal parallax of the moon
      *
-     * @return Array Rise time, transit time, setting time and transit altitude
+     * @return array Rise time, transit time, setting time and transit altitude
      */
     private function _calculateRiseTransitSettingTimeCommon(
         $jd,
@@ -215,7 +213,7 @@ class AstroCalc
 
         $m0 = ($deltaM + $m0) * 24.0;
 
-        if (!is_nan($Hcap0)) {
+        if (! is_nan($Hcap0)) {
             // 3.2 : rise time
             $theta = $theta0 * 15.0 + 360.985647 * $m1;
             $theta /= 360.0;
@@ -301,13 +299,13 @@ class AstroCalc
                 $toAdd = 0;
             }
             if ($minutes < 10) {
-                $minutes = '0' . $minutes;
+                $minutes = '0'.$minutes;
             }
             if ((floor($ris_tra_set[0]) + $toAdd) % 24 < 10) {
-                $ris_tra_set[0] = '0' . (floor($ris_tra_set[0]) + $toAdd) % 24
-                    . ':' . $minutes;
+                $ris_tra_set[0] = '0'.(floor($ris_tra_set[0]) + $toAdd) % 24
+                    .':'.$minutes;
             } else {
-                $ris_tra_set[0] = floor($ris_tra_set[0]) + $toAdd . ':' . $minutes;
+                $ris_tra_set[0] = floor($ris_tra_set[0]) + $toAdd.':'.$minutes;
             }
         }
 
@@ -330,13 +328,13 @@ class AstroCalc
                 $toAdd = 0;
             }
             if ($minutes < 10) {
-                $minutes = '0' . $minutes;
+                $minutes = '0'.$minutes;
             }
             if ((floor($ris_tra_set[1]) + $toAdd) % 24 < 10) {
-                $ris_tra_set[1] = '0' . (floor($ris_tra_set[1]) + $toAdd) % 24
-                    . ':' . $minutes;
+                $ris_tra_set[1] = '0'.(floor($ris_tra_set[1]) + $toAdd) % 24
+                    .':'.$minutes;
             } else {
-                $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ':' . $minutes;
+                $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd.':'.$minutes;
             }
         }
 
@@ -358,13 +356,13 @@ class AstroCalc
                 $toAdd = 0;
             }
             if ($minutes < 10) {
-                $minutes = '0' . $minutes;
+                $minutes = '0'.$minutes;
             }
             if ((floor($ris_tra_set[2]) + $toAdd) % 24 < 10) {
-                $ris_tra_set[2] = '0' . (floor($ris_tra_set[2]) + $toAdd) % 24
-                    . ':' . $minutes;
+                $ris_tra_set[2] = '0'.(floor($ris_tra_set[2]) + $toAdd) % 24
+                    .':'.$minutes;
             } else {
-                $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ':' . $minutes;
+                $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd.':'.$minutes;
             }
         }
         $ris_tra_set[4] = 0;
@@ -379,7 +377,7 @@ class AstroCalc
         $tempday = substr($temptime, 0, $temppos);
         $tempyear = substr($temptime, $temppos + 1);
 
-        $timestr = $tempyear . '-' . $tempmonth . '-' . $tempday;
+        $timestr = $tempyear.'-'.$tempmonth.'-'.$tempday;
 
         $sun_info = date_sun_info(
             strtotime($timestr),
@@ -485,17 +483,17 @@ class AstroCalc
                 $toAdd = 0;
             }
             if ($minutes < 10) {
-                $minutes = '0' . $minutes;
+                $minutes = '0'.$minutes;
             }
             if ($ris_tra_set[3] < 0) {
                 $ris_tra_set[3] = '-';
             } else {
                 if ((floor($ris_tra_set[3]) + $toAdd) % 24 < 10) {
-                    $ris_tra_set[3] = '0' . (floor($ris_tra_set[3]) + $toAdd) % 24
-                        . '&deg;' . $minutes . "'";
+                    $ris_tra_set[3] = '0'.(floor($ris_tra_set[3]) + $toAdd) % 24
+                        .'&deg;'.$minutes."'";
                 } else {
-                    $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . '&deg;'
-                        . $minutes . "'";
+                    $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd.'&deg;'
+                        .$minutes."'";
                 }
             }
 
@@ -519,14 +517,14 @@ class AstroCalc
                     $toAdd = 0;
                 }
                 if ($minutes < 10) {
-                    $minutes = '0' . $minutes;
+                    $minutes = '0'.$minutes;
                 }
                 if ((floor($ris_tra_set[4]) + $toAdd) % 24 < 10) {
-                    $ris_tra_set[4] = '0' . (floor($ris_tra_set[4]) + $toAdd) % 24
-                        . ':' . $minutes;
+                    $ris_tra_set[4] = '0'.(floor($ris_tra_set[4]) + $toAdd) % 24
+                        .':'.$minutes;
                 } else {
                     $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd
-                        . ':' . $minutes;
+                        .':'.$minutes;
                 }
             }
         } else {
@@ -535,7 +533,7 @@ class AstroCalc
         }
 
         // if no astro twilight, or no best astro time for object
-        if (!(($astroend > 0 && $astrobegin > 0))) {
+        if (! (($astroend > 0 && $astrobegin > 0))) {
             if ($nautend > 0 && $nautbegin > 0) {
                 $tocompare = -999;
                 if ($nautbegin > 12) {
@@ -614,17 +612,17 @@ class AstroCalc
                     $toAdd = 0;
                 }
                 if ($minutes < 10) {
-                    $minutes = '0' . $minutes;
+                    $minutes = '0'.$minutes;
                 }
                 if ($ris_tra_set[3] < 0) {
                     $ris_tra_set[3] = '-';
                 } else {
                     if ((floor($ris_tra_set[3]) + $toAdd) % 24 < 10) {
-                        $ris_tra_set[3] = '0' . (floor($ris_tra_set[3]) + $toAdd) % 24
-                            . '&deg;' . $minutes . "'";
+                        $ris_tra_set[3] = '0'.(floor($ris_tra_set[3]) + $toAdd) % 24
+                            .'&deg;'.$minutes."'";
                     } else {
-                        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . '&deg;'
-                            . $minutes . "'";
+                        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd.'&deg;'
+                            .$minutes."'";
                     }
                 }
 
@@ -650,14 +648,14 @@ class AstroCalc
                         $toAdd = 0;
                     }
                     if ($minutes < 10) {
-                        $minutes = '0' . $minutes;
+                        $minutes = '0'.$minutes;
                     }
                     if ((floor($ris_tra_set[4]) + $toAdd) % 24 < 10.0) {
-                        $ris_tra_set[4] = '0' . (floor($ris_tra_set[4]) + $toAdd) % 24
-                            . ':' . $minutes;
+                        $ris_tra_set[4] = '0'.(floor($ris_tra_set[4]) + $toAdd) % 24
+                            .':'.$minutes;
                     } else {
                         $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd
-                            . ':' . $minutes;
+                            .':'.$minutes;
                     }
                 }
             } else {
@@ -665,7 +663,7 @@ class AstroCalc
                 $ris_tra_set[4] = '-';
             }
             if ($ris_tra_set[3] !== '-') {
-                $ris_tra_set[3] = '(' . $ris_tra_set[3] . ')';
+                $ris_tra_set[3] = '('.$ris_tra_set[3].')';
             }
         }
 
@@ -676,7 +674,7 @@ class AstroCalc
      * Calculates the Rise, transit and setting time of the moon for a
      * given location.
      *
-     * @return Array The rise, transit and setting of the moon
+     * @return array The rise, transit and setting of the moon
      */
     public function calculateMoonRiseTransitSettingTime()
     {
@@ -717,7 +715,7 @@ class AstroCalc
      *
      * @param float $jd The julian day
      *
-     * @return Array the ra and dec of the moon
+     * @return array the ra and dec of the moon
      */
     private function _calculateMoonCoordinates($jd)
     {

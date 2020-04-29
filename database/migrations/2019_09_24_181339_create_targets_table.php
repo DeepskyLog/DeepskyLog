@@ -1,14 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTargetsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      */
     public function up()
     {
@@ -59,7 +58,7 @@ class CreateTargetsTable extends Migration
         \App\Target::create(
             [
                 'name' => 'Sun',
-                'type' => 'SUN'
+                'type' => 'SUN',
             ]
         );
 
@@ -67,49 +66,49 @@ class CreateTargetsTable extends Migration
         \App\Target::create(
             [
                 'name' => 'Mercury',
-                'type' => 'PLANET'
+                'type' => 'PLANET',
             ]
         );
 
         \App\Target::create(
             [
                 'name' => 'Venus',
-                'type' => 'PLANET'
+                'type' => 'PLANET',
             ]
         );
 
         \App\Target::create(
             [
                 'name' => 'Mars',
-                'type' => 'PLANET'
+                'type' => 'PLANET',
             ]
         );
 
         \App\Target::create(
             [
                 'name' => 'Jupiter',
-                'type' => 'PLANET'
+                'type' => 'PLANET',
             ]
         );
 
         \App\Target::create(
             [
                 'name' => 'Saturn',
-                'type' => 'PLANET'
+                'type' => 'PLANET',
             ]
         );
 
         \App\Target::create(
             [
                 'name' => 'Uranus',
-                'type' => 'PLANET'
+                'type' => 'PLANET',
             ]
         );
 
         \App\Target::create(
             [
                 'name' => 'Neptune',
-                'type' => 'PLANET'
+                'type' => 'PLANET',
             ]
         );
 
@@ -117,7 +116,7 @@ class CreateTargetsTable extends Migration
         \App\Target::create(
             [
                 'name' => 'Moon',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
 
@@ -125,5636 +124,5636 @@ class CreateTargetsTable extends Migration
         \App\Target::create(
             [
                 'name' => 'Abbot',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Abel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Abenezra',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Abetti',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Abulfeda',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Acosta',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Adams',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Agatharchides',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Agrippa',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Airy',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Akis',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Al-Bakri',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Al-Biruni',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Al-Marrakushi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Alan',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Albategnius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Aldrin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Alexander',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Alfraganus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Alhazen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Aliacensis',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Almanon',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Aloha',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Alpetragius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Alphonsus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ameghino',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ammonius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Amontons',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Amundsen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Anaxagoras',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Anaximander',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Anaximenes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Anděl',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Andersson',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ango',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Angström',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ann',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Annegrit',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ansgarius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Anville',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Apianus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Apollonius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Arago',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Aratus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Archimedes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Archytas',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Argelander',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ariadaeus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Aristarchus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Aristillus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Aristoteles',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Armstrong',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Arnold',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Arrhenius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Artemis',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Artsimovich',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Aryabhata',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Arzachel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Asada',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Asclepi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Aston',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Atlas',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Atwood',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Autolycus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Auwers',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Auzout',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Avery',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Azophi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Baade',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Babbage',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Back',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Baco',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Baillaud',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bailly',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Baily',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Balboa',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ball',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Balmer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Banachiewicz',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bancroft',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Banting',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Barkla',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Barnard',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Barocius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Barrow',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bartels',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bartels A',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bayer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Beals',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Beaumont',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Beer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Behaim',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Beketov',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Béla',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => "Bel'kovich",
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bellot',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bernoulli',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Berosus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Berzelius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bessarion',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bessel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bettinus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bianchini',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Biela',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bilharz',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Billy',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Biot',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Birmingham',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Birt',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Black',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Blagg',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Blancanus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Blanchinus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bliss',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bobillier',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bode',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Boethius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Boguslawsky',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bohnenberger',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bohr',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Boltzmann',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bombelli',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bonpland',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Boole',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Borda',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Borel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Boris',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Born',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Boscovich',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Boss',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bouguer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Boussingault',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bowen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Brackett',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Brayley',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Breislak',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Brenner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Brewster',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Brianchon',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Briggs',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Brisbane',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Brown',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bruce',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Brunner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Buch',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bullialdus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bunsen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Burckhardt',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Bürg',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Burnham',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Büsching',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Byrd',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Byrgius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'C. Herschel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'C. Mayer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cabeus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cajal',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Calippus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cameron',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Campanus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cannon',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Capella',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Capuanus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cardanus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Carlini',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Carlos',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Carmichael',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Carpenter',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Carrel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Carrillo',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Carrington',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cartan',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Casatus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cassini',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catalán',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catharina',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cauchy',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cavalerius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cavendish',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Caventou',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cayley',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Celsius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Censorinus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cepheus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Chacornac',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Challis',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Chang-Ngo',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Chevallier',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ching-Te',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Chladni',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cichus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Clairaut',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Clausius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Clavius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cleomedes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cleostratus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Clerke',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Collins',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Colombo',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Condon',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Condorcet',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Conon',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cook',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Copernicus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Couder',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Courtney',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cremona',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Crile',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Crozier',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Crüger',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ctesibius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Curie',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Curtis',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Curtius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cusanus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cuvier',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cyrillus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Cysatus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => "d'Arrest",
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'da Vinci',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dag',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Daguerre',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dale',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dalton',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Daly',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Damoiseau',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Daniell',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Darney',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Darwin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Daubrée',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Davy',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dawes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'de Gasparis',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'de Gerlache',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'de la Rue',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'de Moraes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'de Morgan',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'de Sitter',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'de Vico',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Debes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dechen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Delambre',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Delaunay',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Delia',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Delisle',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Delmotte',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Deluc',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dembowski',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Democritus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Demonax',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Desargues',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Descartes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Deseilligny',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Deslandres',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Diana',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dionysius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Diophantus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dollond',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Donati',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Donna',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Donner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Doppelmayer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dove',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Draper',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Drebbel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Drude',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dubyago',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dunthorne',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Eckert',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Eddington',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Edison',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Edith',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Egede',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Eichstadt',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Eimmart',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Einstein',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Elger',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Elmer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Encke',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Endymion',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Epigenes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Epimenides',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Eratosthenes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Erlanger',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Esclangon',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Euclides',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Euctemon',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Eudoxus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Euler',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fabbroni',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fabricius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fabry',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fahrenheit',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Faraday',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Faustini',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fauth',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Faye',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fedorov',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Felix',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fermat',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fernelius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Feuillée',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Finsch',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Firmicus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Flammarion',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Flamsteed',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Florensky',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Florey',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Focas',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fontana',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fontenelle',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Foucault',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fourier',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fra Mauro',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fracastorius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Franck',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Franklin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Franz',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fraunhofer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Fredholm',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Freud',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Furnerius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'G. Bond',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Galen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Galilaei',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Galle',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Galvani',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gambart',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gardner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gärtner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gassendi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gaston',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gaudibert',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gauricus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gauss',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gay-Lussac',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Geber',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
 
         \App\Target::create(
             [
                 'name' => 'Geissler',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Geminus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gemma Frisius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gerard',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gernsback',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gibbs',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gilbert',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gill',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ginzel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gioja',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Giordano Bruno',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Glaisher',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Glushko',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Goclenius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Goddard',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Godin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Goldschmidt',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Golgi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Goodacre',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gore',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gould',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Grace',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Graff',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Greaves',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Grimaldi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Grignard',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Grove',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gruemberger',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gruithuisen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Guericke',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gum',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gutenberg',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Guthnick',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Gyldén',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hagecius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hahn',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Haidinger',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hainzel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Haldane',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hale',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hall',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Halley',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hamilton',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hanno',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hansen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hansteen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Harding',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hargreaves',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Harlan',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Harold',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Harpalus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hartwig',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hase',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hausen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Haworth',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hayn',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hecataeus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hédervári',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hedin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Heinrich',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Heinsius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Heis',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Helicon',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hell',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Helmert',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Helmholtz',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Henry',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Henry Frères',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Henyey',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Heraclitus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hercules',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Herigonius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hermann',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hermite',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Herodotus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Herschel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hertz',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hesiodus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hevelius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hill',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hind',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hippalus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hinshelwood',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hipparchus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hirayama',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hohmann',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Holden',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hommel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hooke',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hornsby',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Horrebow',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Horrocks',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hortensius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Houtermans',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hubble',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Huggins',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Humason',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Humboldt',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hume',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Huxley',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hyginus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Hypatia',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ian',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ibn Bajja',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ibn Battuta',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ibn Yunus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ibn-Rushd',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => "Idel'son",
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ideler',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ina',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Inghirami',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Isabel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Isidorus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Isis',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ivan',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'J. Herschel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Jacobi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Jansen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Jansky',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Janssen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Jeans',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Jehan',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Jenkins',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Jenner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Jerik',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Joliot',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Jomo',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'José',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Joy',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Julienne',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Julius Caesar',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kaiser',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kane',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kant',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kao',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kapteyn',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Karima',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kästner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kathleen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Keldysh',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kepler',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kies',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kiess',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kinau',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kirch',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kircher',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kirchhoff',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Klaproth',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Klein',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Knox-Shaw',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'König',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kopff',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kozyrev',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Krafft',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kramarov',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Krasnov',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kreiken',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Krieger',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Krogh',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Krusenstern',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kugler',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kuiper',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kundt',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Kunowsky',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'la Caille',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'la Condamine',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'la Pérouse',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacchini',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacroix',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lade',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lagalla',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lagrange',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lalande',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lallemand',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lamarck',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lambert',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lamé',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lamèch',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lamont',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Landsteiner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Langley',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Langrenus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lansberg',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lassell',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Laue',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lauritsen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lavoisier',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lawrence',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'le Gentil',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'le Monnier',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'le Verrier',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Leakey',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lebesgue',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lee',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Legendre',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lehmann',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lepaute',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Letronne',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lexell',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Licetus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lichtenberg',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lick',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Liebig',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lilius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Linda',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lindbergh',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lindenau',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lindsay',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Linné',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Liouville',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lippershey',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Littrow',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lockyer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Loewy',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lohrmann',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lohse',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Longomontanus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lorentz',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Louise',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Louville',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lubbock',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lubiniezky',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lucian',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Luther',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lyapunov',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lyell',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lyot',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Maclaurin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Maclear',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'MacMillan',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Macrobius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mädler',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Maestlin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Magelhaens',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Magelhaens A',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Maginus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Main',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mairan',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Malapert',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Malinkin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mallet',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Manilius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Manners',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Manuel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Manzinus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Maraldi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Marco Polo',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Marinus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Marius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Markov',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Marth',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mary',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Maskelyne',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mason',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Maunder',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Maupertuis',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Maurolycus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Maury',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mavis',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'McAdie',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'McClure',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'McDonald',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'McLaughlin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mee',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mees',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Menelaus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Menzel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mercator',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mersenius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Messala',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Messier',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Metius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Meton',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Michael',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Milichius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Miller',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mitchell',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Moigno',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Moltke',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Monge',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Monira',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montanari',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Moretus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Morley',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Moseley',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mösting',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mouchez',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Müller',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Murchison',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mutus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nansen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Naonobu',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nasireddin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nasmyth',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Natasha',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Naumann',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Neander',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nearch',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Neison',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Neper',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Neumayer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Newcomb',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Newton',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nicholson',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nicolai',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nicollet',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nielsen',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nobile',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nobili',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nöggerath',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nonius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Norman',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Nunn',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Oenopides',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Oersted',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Oken',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Olbers',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Opelt',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Oppolzer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Orontius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Osama',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Osiris',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Osman',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Palisa',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Palitzsch',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pallas',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Palmieri',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Parrot',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Parry',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pascal',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Patricia',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Peary',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Peek',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Peirce',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Peirescius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pentland',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Petavius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Petermann',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Peters',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Petit',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Petrov',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pettit',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Phillips',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Philolaus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Phocylides',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Piazzi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Piazzi Smyth',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Picard',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Piccolomini',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pickering',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pictet',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pierazzo',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pilâtre',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pingré',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pitatus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pitiscus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Plana',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Plato',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Playfair',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Plinius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Plutarch',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Poczobutt',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Poisson',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Polybius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pomortsev',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Poncelet',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pons',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pontanus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pontécoulant',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Popov',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Porter',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Posidonius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Powell',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Prinz',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Priscilla',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Proclus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Proctor',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Protagoras',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ptolemaeus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Puiseux',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pupin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Purbach',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Purkyně',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pythagoras',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Pytheas',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rabbi Levi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Raman',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ramsden',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rankine',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ravi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rayleigh',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Réaumur',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Regiomontanus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Regnault',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Reichenbach',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Reimarus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Reiner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Reinhold',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Repsold',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Respighi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rhaeticus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rheita',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rhysling',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Riccioli',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Riccius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Riemann',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ritchey',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ritter',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ritz',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Robert',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Robinson',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rocca',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rocco',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Römer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rosa',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rosenberger',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ross',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rosse',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rost',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rothmann',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Runge',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Russell',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ruth',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rutherfurd',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sabatier',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sabine',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sacrobosco',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Samir',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sampson',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Santbech',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Santos-Dumont',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sarabhai',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sasserides',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Saunder',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Saussure',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Scheele',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Scheiner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Schiaparelli',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Schickard',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Schiller',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Schlüter',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Schmidt',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Schomberger',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Schönfeld',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Schorr',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Schröter',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Schubert',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Schumacher',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Schwabe',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Scoresby',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Scott',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Secchi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Seeliger',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Segner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Seleucus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Seneca',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Shaler',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Shapley',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sharp',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sheepshanks',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Shoemaker',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Short',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Shuckburgh',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Shuleykin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Silberschlag',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Simpelius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sinas',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sirsalis',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sklodowska',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Slocum',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Smithson',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Smoluchowski',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Snellius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Somerville',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sömmering',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Soraya',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sosigenes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'South',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Spallanzani',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Spörer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Spurr',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Stadius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Stadius A',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Steinheil',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Stella',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Stevinus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Stewart',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Stiborius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Stöfler',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Stokes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Strabo',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Street',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Struve',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Suess',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sulpicius Gallus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sundman',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Susan',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Swasey',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Swift',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sylvester',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'T. Mayer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Tacchini',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Tacitus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Tacquet',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Taizo',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Talbot',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Tannerus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Taruntius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Taylor',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Tebbutt',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Tempel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Thales',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Theaetetus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Thebit',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Theiler',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Theon Junior',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Theon Senior',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Theophilus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Theophrastus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Timaeus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Timocharis',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Tisserand',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Tolansky',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Torricelli',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Toscanelli',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Townley',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Tralles',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Triesnecker',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Trouvelot',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Tucker',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Turner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Tycho',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ukert',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Ulugh Beigh',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Urey',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Väisälä',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'van Albada',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Van Biesbroeck',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Van Vleck',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vasco da Gama',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vashakidze',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vega',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vendelinus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vera',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Verne',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Very',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vieta',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Virchow',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vitello',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vitruvius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vlacq',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vogel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Volta',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'von Behring',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'von Braun',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Voskresenskiy',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'W. Bond',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wallace',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wallach',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Walter',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Walther',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wargentin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Warner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Watt',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Watts',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Webb',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Weierstrass',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Weigel',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Weinek',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Weiss',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Werner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wexler',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Whewell',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wichmann',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Widmannstätten',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wildt',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wilhelm',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wilkins',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wilson',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Winthrop',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wöhler',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wolf',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wollaston',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wright',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wrottesley',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wurzelbauer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Wyld',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Xenophanes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Yakovkin',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => "Yangel'",
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Yerkes',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Yoshi',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Young',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Zach',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Zagut',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Zähringer',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Zasyadko',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Zeno',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Zinner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Zöllner',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Zucchius',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Zupus',
-                'type' => 'CRATER'
+                'type' => 'CRATER',
             ]
         );
 
@@ -5762,290 +5761,290 @@ class CreateTargetsTable extends Migration
         \App\Target::create(
             [
                 'name' => 'Mons Agnes',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Ampère',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons André',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Ardeshir',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Argaeus',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Blanc',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Bradley',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Delisle',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Dieter',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Dilip',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Esam',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Ganau',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Gruithuisen Delta',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Gruithuisen Gamma',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Hadley',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Hadley Delta',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Hansteen',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Herodotus',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Huygens',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons La Hire',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Maraldi',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Moro',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Penck',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Pico',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Piton',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Rümker',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Usov',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Vinogradov',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Vitruvius',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mons Wolff',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
 
         \App\Target::create(
             [
                 'name' => 'Montes Agricola',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Alpes',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Apenninus',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Archimedes',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Carpatus',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Caucasus',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Cordillera',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Haemus',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Harbinger',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Jura',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Pyrenaeus',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Recti',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Riphaeus',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Rook',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Secchi',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Spitzbergen',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Taurus',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Montes Teneriffe',
-                'type' => 'MOUNTAIN'
+                'type' => 'MOUNTAIN',
             ]
         );
 
@@ -6053,343 +6052,343 @@ class CreateTargetsTable extends Migration
         \App\Target::create(
             [
                 'name' => 'Mare Anguis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Australe',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Cognitum',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Crisium',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Fecunditatis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Frigoris',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Humboldtianum',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Humorum',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Imbrium',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Ingenii',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Insularum',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Marginis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Moscoviense',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Nectaris',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Nubium',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Orientale',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Serenitatis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Smythii',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Spumans',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Tranquillitatis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Undarum',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Mare Vaporum',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Oceanus Procellarum',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Aestatis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Autumni',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Bonitatis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Doloris',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Excellentiae',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Felicitatis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Gaudii',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Hiemalis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Lenitatis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Luxuriae',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Mortis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Oblivionis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Odii',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Perseverantiae',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Solitudinis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Somniorum',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Spei',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Temporis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Timoris',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Lacus Veris',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Palus Epidemiarum',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Palus Putredinis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Palus Somni',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sinus Aestuum',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sinus Amoris',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sinus Asperitatis',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sinus Concordiae',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sinus Fidei',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sinus Honoris',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sinus Iridum',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sinus Lunicus',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sinus Medii',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sinus Roris',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Sinus Successus',
-                'type' => 'SEA'
+                'type' => 'SEA',
             ]
         );
 
@@ -6397,73 +6396,73 @@ class CreateTargetsTable extends Migration
         \App\Target::create(
             [
                 'name' => 'Vallis Alpes',
-                'type' => 'VALLEY'
+                'type' => 'VALLEY',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vallis Baade',
-                'type' => 'VALLEY'
+                'type' => 'VALLEY',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vallis Bohr',
-                'type' => 'VALLEY'
+                'type' => 'VALLEY',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vallis Bouvard',
-                'type' => 'VALLEY'
+                'type' => 'VALLEY',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vallis Capella',
-                'type' => 'VALLEY'
+                'type' => 'VALLEY',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vallis Inghirami',
-                'type' => 'VALLEY'
+                'type' => 'VALLEY',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vallis Palitzsch',
-                'type' => 'VALLEY'
+                'type' => 'VALLEY',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vallis Planck',
-                'type' => 'VALLEY'
+                'type' => 'VALLEY',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vallis Rheita',
-                'type' => 'VALLEY'
+                'type' => 'VALLEY',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vallis Schrödinger',
-                'type' => 'VALLEY'
+                'type' => 'VALLEY',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vallis Schröteri',
-                'type' => 'VALLEY'
+                'type' => 'VALLEY',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Vallis Snellius',
-                'type' => 'VALLEY'
+                'type' => 'VALLEY',
             ]
         );
 
@@ -6471,1048 +6470,1047 @@ class CreateTargetsTable extends Migration
         \App\Target::create(
             [
                 'name' => 'Reiner Gamma',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catena Abulfeda',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catena Brigitte',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catena Davy',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catena Humboldt',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catena Krafft',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catena Littrow',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catena Pierre',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catena Sylvester',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catena Taruntius',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catena Timocharis',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Catena Yuri',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Aldrovandi',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Andrusov',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Argand',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Barlow',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Burnet',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Cato',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Dana',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Ewing',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Geikie',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Harker',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Lister',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Mawson',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Rubey',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Smirnov',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Sorby',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Stille',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Tetyaev',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsa Whiston',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
 
         \App\Target::create(
             [
                 'name' => 'Dorsum Arduino',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Azara',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Bucher',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Buckland',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Cayeux',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Cloos',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Cushman',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Gast',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Grabau',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Guettard',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Heim',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Higazy',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Nicol',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Niggli',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Oppel',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Owen',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Scilla',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Termier',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Thera',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Von Cotta',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Dorsum Zirkel',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Promontorium Agarum',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Promontorium Agassiz',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Promontorium Archerusia',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Promontorium Deville',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Promontorium Fresnel',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Promontorium Heraclides',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Promontorium Kelvin',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Promontorium Laplace',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Promontorium Taenarium',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
 
         \App\Target::create(
             [
                 'name' => 'Rima Agatharchides',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Agricola',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Archytas',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Ariadaeus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Billy',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Birt',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Bradley',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Brayley',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Calippus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Cardanus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Carmen',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Cauchy',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Cleomedes',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Cleopatra',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Conon',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Dawes',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Delisle',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Diophantus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Draper',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Euler',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Flammarion',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Furnerius',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima G. Bond',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Galilaei',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Gärtner',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Gay-Lussac',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Hadley',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Hansteen',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Hesiodus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Hyginus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Jansen',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Krieger',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Mairan',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Marcello',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Marius',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Messier',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Milichius',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Oppolzer',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Réaumur',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Reiko',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Rudolf',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Schröter',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Sharp',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Sheepshanks',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Siegfried',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Suess',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Sung-Mei',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima T. Mayer',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Vladimir',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Wan-Yu',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => "Rima Yangel'",
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rima Zahia',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Alphonsus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Apollonius',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Archimedes',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Aristarchus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Arzachel',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Atlas',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Bode',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Boscovich',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Chacornac',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Daniell',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Darwin',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Doppelmayer',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Focas',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Fresnel',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae de Gasparis',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Gassendi',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Gerard',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Goclenius',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Grimaldi',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Hypatia',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Janssen',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Kopff',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Liebig',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Littrow',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Maclear',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Maestlin',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Maupertuis',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Menelaus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Mersenius',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Opelt',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Palmieri',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Parry',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Petavius',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Pettit',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Pitatus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Plato',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Plinius',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Posidonius',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Prinz',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Ramsden',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Repsold',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Riccioli',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Ritter',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Römer',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Secchi',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Sirsalis',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Sosigenes',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Sulpicius Gallus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Taruntius',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Theaetetus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Triesnecker',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Vasco da Gama',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rimae Zupus',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rupes Altai',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rupes Boris',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rupes Cauchy',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rupes Kelvin',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rupes Liebig',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rupes Mercator',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rupes Recta',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
         \App\Target::create(
             [
                 'name' => 'Rupes Toscanelli',
-                'type' => 'OTHER'
+                'type' => 'OTHER',
             ]
         );
     }
 
     /**
      * Reverse the migrations.
-     *
      */
     public function down()
     {

@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Eyepieces
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -45,8 +44,8 @@ $factory->define(
             case 8:
                 $type = 'Delos';
                 break;
-            };
-        } else if ($brandNumber == 2) {
+            }
+        } elseif ($brandNumber == 2) {
             $brand = 'Baader';
             $typeNumber = $faker->numberBetween(1, 2);
             switch ($typeNumber) {
@@ -56,8 +55,8 @@ $factory->define(
             case 2:
                 $type = 'Morpheus';
                 break;
-            };
-        } else if ($brandNumber == 3) {
+            }
+        } elseif ($brandNumber == 3) {
             $brand = 'Meade';
             $typeNumber = $faker->numberBetween(1, 2);
             switch ($typeNumber) {
@@ -67,8 +66,8 @@ $factory->define(
             case 2:
                 $type = 'MWA';
                 break;
-            };
-        } else if ($brandNumber == 4) {
+            }
+        } elseif ($brandNumber == 4) {
             $brand = 'University Optics';
             $typeNumber = $faker->numberBetween(1, 6);
             switch ($typeNumber) {
@@ -90,8 +89,8 @@ $factory->define(
             case 6:
                 $type = 'UW';
                 break;
-            };
-        } else if ($brandNumber == 5) {
+            }
+        } elseif ($brandNumber == 5) {
             $brand = 'Pentax';
             $typeNumber = $faker->numberBetween(1, 3);
             switch ($typeNumber) {
@@ -104,8 +103,8 @@ $factory->define(
             case 3:
                 $type = 'SMC XF';
                 break;
-            };
-        } else if ($brandNumber == 6) {
+            }
+        } elseif ($brandNumber == 6) {
             $brand = 'Celestron';
             $typeNumber = $faker->numberBetween(1, 7);
             switch ($typeNumber) {
@@ -131,8 +130,8 @@ $factory->define(
                 $type = 'Erfle';
                 break;
 
-            };
-        } else if ($brandNumber == 7) {
+            }
+        } elseif ($brandNumber == 7) {
             $brand = 'Vixen';
             $typeNumber = $faker->numberBetween(1, 7);
             switch ($typeNumber) {
@@ -158,7 +157,7 @@ $factory->define(
                 $type = 'SSW';
                 break;
 
-            };
+            }
         }
 
         $focalLength = $faker->randomFloat(1, 1.0, 80.0);
@@ -178,7 +177,7 @@ $factory->define(
             'apparentFOV' => $faker->numberBetween(15, 130),
             'maxFocalLength' => $maxFocalLength,
             'user_id' => \App\User::inRandomOrder()->first()->id,
-            'active' => $faker->numberBetween(0, 1)
+            'active' => $faker->numberBetween(0, 1),
         ];
     }
 );

@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category UserManagement
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -13,12 +12,12 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
+use App\Notifications\DeepskyLogResetPassword;
+use App\Notifications\DeepskyLogVerificationNotification;
+use Cmgmyr\Messenger\Traits\Messagable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Notifications\DeepskyLogVerificationNotification;
-use App\Notifications\DeepskyLogResetPassword;
-use Cmgmyr\Messenger\Traits\Messagable;
+use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -27,7 +26,6 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * User eloquent model.
  *
  * @category UserManagement
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -250,7 +248,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         'detailFoV', 'overviewdsos', 'lookupdsos',
         'detaildsos', 'overviewstars', 'lookupstars', 'stdtelescope',
         'detailstars', 'photosize1', 'photosize2', 'atlaspagefont',
-        'stdlocation'
+        'stdlocation',
     ];
 
     /**
@@ -275,7 +273,6 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      * Also store a thumbnail of the image.
      *
      * @param $media the media
-     *
      */
     public function registerMediaConversions(Media $media = null): void
     {

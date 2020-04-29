@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Locations
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -13,18 +12,17 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\LocationDataTable;
 use App\Location;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\DataTables\LocationDataTable;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Location Controller.
  *
  * @category Locations
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -72,7 +70,7 @@ class LocationController extends Controller
      * Display a listing of the resource.
      *
      * @param LocationDataTable $dataTable The location datatable
-     * @param String            $user      user for a normal user, admin for an admin
+     * @param string            $user      user for a normal user, admin for an admin
      *
      * @return \Illuminate\Http\Response
      */
@@ -125,16 +123,14 @@ class LocationController extends Controller
 
         $location = Location::create($validated);
 
-        if ($request->get('timezone') == "undefined") {
+        if ($request->get('timezone') == 'undefined') {
             $location->update(
-                ['timezone' =>
-                    'UTC']
+                ['timezone' => 'UTC']
             );
         }
         if ($request->get('lm')) {
             $location->update(
-                ['limitingMagnitude' =>
-                    $request->get('lm') + Auth::user()->fstOffset]
+                ['limitingMagnitude' => $request->get('lm') + Auth::user()->fstOffset]
             );
         }
         $location->update(['skyBackground' => $request->get('sb')]);
@@ -143,7 +139,7 @@ class LocationController extends Controller
         if ($request->picture != null) {
             // Add the picture
             $location->addMedia($request->picture->path())
-                ->usingFileName($location->id . '.png')
+                ->usingFileName($location->id.'.png')
                 ->toMediaCollection('location');
         }
 
@@ -188,6 +184,7 @@ class LocationController extends Controller
     public function show(Location $location)
     {
         $media = $this->getImage($location);
+
         return view(
             'layout.location.show', ['location' => $location, 'media' => $media]
         );
@@ -211,7 +208,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Get the value from lightpollutionmap.info
+     * Get the value from lightpollutionmap.info.
      *
      * @param Request $request The request with the longitude and latitude
      *
@@ -220,10 +217,10 @@ class LocationController extends Controller
     public function lightpollutionmap(Request $request)
     {
         return file_get_contents(
-            "https://www.lightpollutionmap.info/QueryRaster/" .
-             "?ql=wa_2015&qt=point&qd=" . $request->longitude
-            . "," . $request->latitude . "&key="
-            . env('LIGHTPOLLUTION_KEY')
+            'https://www.lightpollutionmap.info/QueryRaster/'.
+             '?ql=wa_2015&qt=point&qd='.$request->longitude
+            .','.$request->latitude.'&key='
+            .env('LIGHTPOLLUTION_KEY')
         );
     }
 
@@ -250,18 +247,16 @@ class LocationController extends Controller
             $location->update(['country' => $request->get('country')]);
             $location->update(['elevation' => $request->get('elevation')]);
 
-            if ($request->get('timezone') == "undefined") {
+            if ($request->get('timezone') == 'undefined') {
                 $location->update(
-                    ['timezone' =>
-                        'UTC']
+                    ['timezone' => 'UTC']
                 );
             } else {
                 $location->update(['timezone' => $request->get('timezone')]);
             }
             if ($request->get('lm')) {
                 $location->update(
-                    ['limitingMagnitude' =>
-                        $request->get('lm') + Auth::user()->fstOffset]
+                    ['limitingMagnitude' => $request->get('lm') + Auth::user()->fstOffset]
                 );
             }
             $location->update(['skyBackground' => $request->get('sb')]);
@@ -276,7 +271,7 @@ class LocationController extends Controller
                 }
                 // Update the picture
                 $location->addMedia($request->picture->path())
-                    ->usingFileName($location->id . '.png')
+                    ->usingFileName($location->id.'.png')
                     ->toMediaCollection('location');
             }
 
@@ -318,18 +313,19 @@ class LocationController extends Controller
      */
     public function getImage(Location $location)
     {
-        if (!$location->hasMedia('location')) {
+        if (! $location->hasMedia('location')) {
             $location->addMediaFromUrl(asset('images/location.png'))
-                ->usingFileName($location->id . '.png')
+                ->usingFileName($location->id.'.png')
                 ->toMediaCollection('location');
         }
+
         return $location->getFirstMedia('location');
     }
 
     /**
-     * Remove the image of the location
+     * Remove the image of the location.
      *
-     * @param integer $id The id of the location
+     * @param int $id The id of the location
      *
      * @return None
      */

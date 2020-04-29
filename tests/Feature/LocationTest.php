@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Test
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -13,18 +12,17 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
 
 /**
  * Tests for creating, deleting, and adapting locations.
  *
  * @category Test
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -81,7 +79,7 @@ class LocationTest extends TestCase
         $response->assertStatus(200);
         // Check if we see the correct page
         $response->assertSee(
-            'Locations of ' . $this->_user->name
+            'Locations of '.$this->_user->name
         );
     }
 
@@ -107,7 +105,7 @@ class LocationTest extends TestCase
         $response->assertStatus(200);
 
         // Check if we see the correct page
-        $response->assertSee('Locations of ' . $this->_user->name);
+        $response->assertSee('Locations of '.$this->_user->name);
 
         $response->assertViewIs('layout.location.view');
 
@@ -177,7 +175,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('location', $attributes);
@@ -216,7 +214,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -248,7 +246,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -280,13 +278,14 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
 
         $this->post('location', $attributes);
     }
+
     /**
      * Checks whether an location has an elevation.
      *
@@ -311,13 +310,14 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
 
         $this->post('location', $attributes);
     }
+
     /**
      * Checks whether an location has a country.
      *
@@ -342,7 +342,7 @@ class LocationTest extends TestCase
             'elevation' => 1254,
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -374,7 +374,7 @@ class LocationTest extends TestCase
             'elevation' => 1254,
             'country' => 'ES',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -407,7 +407,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -440,7 +440,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -473,7 +473,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -506,7 +506,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -539,7 +539,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -572,7 +572,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -605,7 +605,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -638,7 +638,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -671,7 +671,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -704,7 +704,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/bla',
             'lm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -737,7 +737,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => -6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -770,7 +770,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 9.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -803,7 +803,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'lm' => 'TEST',
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -836,7 +836,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'sqm' => 6.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -869,7 +869,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'sqm' => 29.4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -902,7 +902,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'sqm' => 'TEST',
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -935,7 +935,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'bortle' => -4,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -968,7 +968,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'bortle' => 10,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -1001,7 +1001,7 @@ class LocationTest extends TestCase
             'country' => 'ES',
             'timezone' => 'Europe/Madrid',
             'bortle' => 'TEST',
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -1028,7 +1028,7 @@ class LocationTest extends TestCase
 
         // Name not long enough
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test',
                 'longitude' => -84.125,
@@ -1037,7 +1037,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1046,7 +1046,7 @@ class LocationTest extends TestCase
 
         // Longitude too low
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -184.125,
@@ -1055,7 +1055,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1064,7 +1064,7 @@ class LocationTest extends TestCase
 
         // Longitude too high
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => 184.125,
@@ -1073,7 +1073,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1082,7 +1082,7 @@ class LocationTest extends TestCase
 
         // Longitude not available
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => null,
@@ -1091,13 +1091,13 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
         // Latitude too low
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -14.125,
@@ -1106,7 +1106,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1115,7 +1115,7 @@ class LocationTest extends TestCase
 
         // Latitude too high
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => 14.125,
@@ -1124,7 +1124,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1133,7 +1133,7 @@ class LocationTest extends TestCase
 
         // Latitude not available
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => 1.215,
@@ -1142,7 +1142,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1151,7 +1151,7 @@ class LocationTest extends TestCase
 
         // Elevation too high
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1160,7 +1160,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1169,7 +1169,7 @@ class LocationTest extends TestCase
 
         // Elevation to low
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1178,7 +1178,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1187,7 +1187,7 @@ class LocationTest extends TestCase
 
         // Elevation not numeric
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1196,7 +1196,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1205,7 +1205,7 @@ class LocationTest extends TestCase
 
         // Elevation not given
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1214,17 +1214,16 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['elevation']);
 
-
         // Country not given
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1233,7 +1232,7 @@ class LocationTest extends TestCase
                 'country' => null,
                 'timezone' => 'Europe/Madrid',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1242,7 +1241,7 @@ class LocationTest extends TestCase
 
         // Timezone not given
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1251,7 +1250,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => null,
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1260,7 +1259,7 @@ class LocationTest extends TestCase
 
         // Timezone not valid
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1269,7 +1268,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/blah',
                 'lm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1278,7 +1277,7 @@ class LocationTest extends TestCase
 
         // Limiting magnitude not given
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1287,7 +1286,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => null,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1296,7 +1295,7 @@ class LocationTest extends TestCase
 
         // Limiting magnitude is too low
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1305,7 +1304,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => -6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1314,7 +1313,7 @@ class LocationTest extends TestCase
 
         // Limiting magnitude is too high
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1323,7 +1322,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 16.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1332,7 +1331,7 @@ class LocationTest extends TestCase
 
         // Limiting magnitude is a string
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1341,7 +1340,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'lm' => 'test',
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1350,7 +1349,7 @@ class LocationTest extends TestCase
 
         // sqm is a string
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1359,7 +1358,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'sqm' => 'test',
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1368,7 +1367,7 @@ class LocationTest extends TestCase
 
         // sqm is too high
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1377,7 +1376,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'sqm' => 26.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1386,7 +1385,7 @@ class LocationTest extends TestCase
 
         // sqm is too low
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1395,7 +1394,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'sqm' => 6.4,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1404,7 +1403,7 @@ class LocationTest extends TestCase
 
         // sqm is not given
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1413,7 +1412,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'sqm' => null,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1422,7 +1421,7 @@ class LocationTest extends TestCase
 
         // Bortle is a string
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1431,7 +1430,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'bortle' => 'test',
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1440,7 +1439,7 @@ class LocationTest extends TestCase
 
         // bortle is too high
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1449,7 +1448,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'bortle' => 11,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1458,7 +1457,7 @@ class LocationTest extends TestCase
 
         // bortle is too low
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1467,7 +1466,7 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'bortle' => 0,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -1476,7 +1475,7 @@ class LocationTest extends TestCase
 
         // Bortle is null
         $response = $this->actingAs($this->_user)->put(
-            '/location/' . $location->id,
+            '/location/'.$location->id,
             [
                 'name' => 'Test location',
                 'longitude' => -84.125,
@@ -1485,13 +1484,12 @@ class LocationTest extends TestCase
                 'country' => 'ES',
                 'timezone' => 'Europe/Madrid',
                 'bortle' => null,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['bortle']);
-
     }
 
     /**
@@ -1539,7 +1537,7 @@ class LocationTest extends TestCase
             'active' => $location->active,
         ];
 
-        $this->put('location/' . $location->id, $newAttributes);
+        $this->put('location/'.$location->id, $newAttributes);
 
         // Then there should be an updated location in the database
         $this->assertDatabaseHas('locations', $newAttributes);
@@ -1570,7 +1568,7 @@ class LocationTest extends TestCase
             'country' => 'BE',
             'timezone' => 'Europe/Brussels',
             'bortle' => 5,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('location', $attributes);
@@ -1595,12 +1593,12 @@ class LocationTest extends TestCase
             'country' => 'BE',
             'timezone' => 'Europe/Brussels',
             'bortle' => 3,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(AuthorizationException::class);
 
-        $this->put('/location/' . $location->id, $newAttributes);
+        $this->put('/location/'.$location->id, $newAttributes);
     }
 
     /**
@@ -1628,7 +1626,7 @@ class LocationTest extends TestCase
             'country' => 'BE',
             'timezone' => 'Europe/Brussels',
             'bortle' => 5,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('location', $attributes);
@@ -1654,10 +1652,10 @@ class LocationTest extends TestCase
             'country' => 'BE',
             'timezone' => 'Europe/Brussels',
             'bortle' => 3,
-            'active' => 1
+            'active' => 1,
         ];
 
-        $this->put('/location/' . $location->id, $newAttributes);
+        $this->put('/location/'.$location->id, $newAttributes);
 
         // Then there should be an updated location in the database
         $this->assertDatabaseHas('locations', $newAttributes);
@@ -1701,7 +1699,7 @@ class LocationTest extends TestCase
 
         $this->assertEquals(1, \App\Location::count());
 
-        $response = $this->delete('/location/' . $location->id);
+        $response = $this->delete('/location/'.$location->id);
 
         $response->assertStatus(302);
 
@@ -1764,7 +1762,7 @@ class LocationTest extends TestCase
         $this->expectException(AuthorizationException::class);
 
         // Try to delete the location
-        $this->delete('/location/' . $location->id);
+        $this->delete('/location/'.$location->id);
     }
 
     /**
@@ -1806,7 +1804,7 @@ class LocationTest extends TestCase
 
         $this->actingAs($newUser);
 
-        $this->delete('/location/' . $location->id);
+        $this->delete('/location/'.$location->id);
 
         // Then there should not be an location in the database anymore
         $this->assertDatabaseMissing('locations', $attributes);
@@ -1835,7 +1833,7 @@ class LocationTest extends TestCase
             'country' => 'BE',
             'timezone' => 'Europe/Brussels',
             'bortle' => 3,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Auth\AuthenticationException::class);
@@ -1868,7 +1866,7 @@ class LocationTest extends TestCase
             'country' => 'BE',
             'timezone' => 'Europe/Brussels',
             'bortle' => 3,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('/location', $attributes);
@@ -1951,7 +1949,7 @@ class LocationTest extends TestCase
         );
 
         $response = $this->actingAs($this->_user)->get(
-            '/location/' . $location->id . '/edit'
+            '/location/'.$location->id.'/edit'
         );
 
         $response->assertStatus(200);
@@ -1962,7 +1960,6 @@ class LocationTest extends TestCase
      * Ensure that we can upload a picture.
      *
      * @test
-     *
      */
     public function testCreateLocationFileUploaded()
     {
@@ -1987,7 +1984,7 @@ class LocationTest extends TestCase
         $location = \App\Location::firstOrFail();
 
         Storage::disk('public')->assertExists(
-            $location->id . '/' . $location->id . '.png'
+            $location->id.'/'.$location->id.'.png'
         );
     }
 
@@ -2005,14 +2002,14 @@ class LocationTest extends TestCase
         );
 
         $response = $this->actingAs($this->_user)->get(
-            '/location/' . $location->id
+            '/location/'.$location->id
         );
 
         $response->assertStatus(200);
         $response->assertSee($location->name);
         $response->assertSee($location->elevation);
         $response->assertSee($this->_user->name);
-        $response->assertSee('Edit ' . $location->name);
+        $response->assertSee('Edit '.$location->name);
     }
 
     /**
@@ -2029,14 +2026,14 @@ class LocationTest extends TestCase
         $location = factory('App\Location')->create(['user_id' => $newUser->id]);
 
         $response = $this->actingAs($this->_user)->get(
-            '/location/' . $location->id
+            '/location/'.$location->id
         );
 
         $response->assertStatus(200);
         $response->assertSee($location->name);
         $response->assertSee($location->elevation);
         $response->assertSee($this->_user->name);
-        $response->assertDontSee('Edit ' . $location->name);
+        $response->assertDontSee('Edit '.$location->name);
     }
 
     /**
@@ -2053,13 +2050,13 @@ class LocationTest extends TestCase
             ['user_id' => $this->_user->id]
         );
 
-        $response = $this->actingAs($admin)->get('/location/' . $location->id);
+        $response = $this->actingAs($admin)->get('/location/'.$location->id);
 
         $response->assertStatus(200);
         $response->assertSee($location->name);
         $response->assertSee($location->elevation);
         $response->assertSee($this->_user->name);
-        $response->assertSee('Edit ' . $location->name);
+        $response->assertSee('Edit '.$location->name);
     }
 
     /**
@@ -2075,13 +2072,13 @@ class LocationTest extends TestCase
             ['user_id' => $this->_user->id]
         );
 
-        $response = $this->get('/location/' . $location->id);
+        $response = $this->get('/location/'.$location->id);
 
         $response->assertStatus(200);
         $response->assertSee($location->name);
         $response->assertSee($location->elevation);
         $response->assertSee($this->_user->name);
-        $response->assertDontSee('Edit ' . $location->name);
+        $response->assertDontSee('Edit '.$location->name);
     }
 
     /**
@@ -2129,13 +2126,13 @@ class LocationTest extends TestCase
         );
 
         // Only for logged in users!
-        $response = $this->get('/getLocationJson/' . $location->id);
+        $response = $this->get('/getLocationJson/'.$location->id);
         $response->assertStatus(302);
         $response->assertRedirect('/login');
 
         // Test for logged in user
         $response = $this->actingAs($this->_user)->get(
-            '/getLocationJson/' . $location->id
+            '/getLocationJson/'.$location->id
         );
 
         $this->assertEquals($response['name'], $location->name);
@@ -2174,11 +2171,11 @@ class LocationTest extends TestCase
 
         // Check the image, if no image is uploaded
         $this->actingAs($this->_user)->get(
-            'location/' . $location->id . '/getImage'
+            'location/'.$location->id.'/getImage'
         );
 
         Storage::disk('public')->assertExists(
-            $location->id . '/' . $location->id . '.png'
+            $location->id.'/'.$location->id.'.png'
         );
 
         // Check the image if we have uploaded an image
@@ -2200,7 +2197,7 @@ class LocationTest extends TestCase
         $location2 = DB::table('locations')->latest('id')->first();
 
         Storage::disk('public')->assertExists(
-            $location2->id . '/' . $location2->id . '.png'
+            $location2->id.'/'.$location2->id.'.png'
         );
     }
 
@@ -2235,11 +2232,11 @@ class LocationTest extends TestCase
         $location = DB::table('locations')->latest('id')->first();
 
         $this->actingAs($this->_user)->post(
-            'location/' . $location->id . '/deleteImage'
+            'location/'.$location->id.'/deleteImage'
         );
 
         Storage::disk('public')->assertMissing(
-            $location->id . '/' . $location->id . '.png'
+            $location->id.'/'.$location->id.'.png'
         );
 
         // Check if another user cannot delete the image if we have uploaded an image
@@ -2263,11 +2260,11 @@ class LocationTest extends TestCase
         $user = factory('App\User')->create();
 
         $this->actingAs($user)->post(
-            'locations/' . $location->id . '/deleteImage'
+            'locations/'.$location->id.'/deleteImage'
         );
 
         Storage::disk('public')->assertExists(
-            $location->id . '/' . $location->id . '.png'
+            $location->id.'/'.$location->id.'.png'
         );
     }
 
@@ -2328,7 +2325,7 @@ class LocationTest extends TestCase
         // As guest
         $this->assertGuest();
         $response = $this->get(
-            '/location/' . $location->id
+            '/location/'.$location->id
         );
         $response->assertStatus(200);
         $response->assertDontSee('Used eyepieces');
@@ -2339,7 +2336,7 @@ class LocationTest extends TestCase
         $response->assertDontSee('Last observation');
 
         $response = $this->actingAs($this->_user)->get(
-            '/location/' . $location->id
+            '/location/'.$location->id
         );
 
         $response->assertStatus(200);
@@ -2353,7 +2350,7 @@ class LocationTest extends TestCase
         // As other user
         $otherUser = factory('App\User')->create();
         $response = $this->actingAs($otherUser)->get(
-            '/location/' . $location->id
+            '/location/'.$location->id
         );
         $response->assertStatus(200);
         $response->assertDontSee('Used eyepieces');
@@ -2366,7 +2363,7 @@ class LocationTest extends TestCase
         // As admin
         $admin = factory('App\User')->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get(
-            '/location/' . $location->id
+            '/location/'.$location->id
         );
         $response->assertStatus(200);
         $response->assertDontSee('Used eyepieces');

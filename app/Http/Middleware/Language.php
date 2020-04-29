@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Language
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -21,7 +20,6 @@ use Illuminate\Support\Facades\Auth;
  * Language middleware.
  *
  * @category Lenses
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -38,7 +36,7 @@ class Language
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::guest()) {
+        if (! Auth::guest()) {
             LaravelGettext::setLocale(Auth::user()->language);
         }
 

@@ -6,7 +6,6 @@
  * PHP Version 7
  *
  * @category Instruments
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -23,7 +22,6 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * Lens eloquent model.
  *
  * @category Instruments
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -83,7 +81,6 @@ class Lens extends Model implements HasMedia
      * Also store a thumbnail of the image.
      *
      * @param $media the media
-     *
      */
     public function registerMediaConversions(Media $media = null): void
     {

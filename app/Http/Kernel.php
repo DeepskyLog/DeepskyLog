@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Laravel
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -19,7 +18,6 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
  * Language middleware.
  *
  * @category Laravel
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
