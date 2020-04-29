@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category UserManagement
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -14,17 +13,16 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Auth;
 use deepskylog\LaravelGettext\Facades\LaravelGettext;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Socialite;
 
 /**
  * Logs in the user, sets the correct language and redirects to the home page.
  *
  * @category UserManagement
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -191,7 +189,7 @@ class LoginController extends Controller
     {
         $user = Socialite::with($service)->user();
 
-        print $user->name;
+        echo $user->name;
         dd($user->name);
     }
 }

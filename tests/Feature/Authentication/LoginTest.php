@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use App\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
+use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
@@ -13,7 +13,6 @@ class LoginTest extends TestCase
 
     /**
      * Can the user see the login form?
-     *
      */
     public function testUserCanViewALoginForm()
     {
@@ -26,7 +25,6 @@ class LoginTest extends TestCase
 
     /**
      * The login form should not be accessible when logged in.
-     *
      */
     public function testUserCannotViewALoginFormWhenAuthenticated()
     {
@@ -39,7 +37,6 @@ class LoginTest extends TestCase
 
     /**
      * Check for validation errors.
-     *
      */
     public function testLoginDisplaysValidationErrors()
     {
@@ -52,7 +49,6 @@ class LoginTest extends TestCase
 
     /**
      * Try to log in with the correct credentials.
-     *
      */
     public function testUserCanLoginWithCorrectCredentials()
     {
@@ -83,7 +79,6 @@ class LoginTest extends TestCase
 
     /**
      * Try to log in using the incorrect credentials.
-     *
      */
     public function testUserCannotLoginWithIncorrectPassword()
     {
@@ -110,7 +105,6 @@ class LoginTest extends TestCase
 
     /**
      * Test the Remember me functionality and check if the cookie does exist.
-     *
      */
     public function testRememberMeFunctionality()
     {
@@ -137,7 +131,7 @@ class LoginTest extends TestCase
             Auth::guard()->getRecallerName(),
             vsprintf(
                 '%s|%s|%s',
-                [$user->id, $user->getRememberToken(), $user->password, ]
+                [$user->id, $user->getRememberToken(), $user->password]
             )
         );
 
@@ -146,7 +140,6 @@ class LoginTest extends TestCase
 
     /**
      * Check that the user cannot log in with an email that does not exist.
-     *
      */
     public function testUserCannotLoginWithEmailThatDoesNotExist()
     {
@@ -167,7 +160,6 @@ class LoginTest extends TestCase
 
     /**
      * Check that the user cannot log in with a username that does not exist.
-     *
      */
     public function testUserCannotLoginWithUsernameThatDoesNotExist()
     {
@@ -188,7 +180,6 @@ class LoginTest extends TestCase
 
     /**
      * Test if the user can log out succesfully.
-     *
      */
     public function testUserCanLogout()
     {
@@ -202,7 +193,6 @@ class LoginTest extends TestCase
 
     /**
      * Test that an not authenticated user can not log out.
-     *
      */
     public function testUserCannotLogoutWhenNotAuthenticated()
     {
@@ -214,12 +204,11 @@ class LoginTest extends TestCase
 
     /**
      * Check that the user cannot make more than five login attempts in one minute.
-     *
      */
     public function testUserCannotMakeMoreThanFiveAttemptsInOneMinute()
     {
         $user = factory(User::class)->create(
-            ['password' => 'i-love-laravel', ]
+            ['password' => 'i-love-laravel']
         );
 
         foreach (range(0, 5) as $_) {

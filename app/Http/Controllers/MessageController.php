@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Messages
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -13,6 +12,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\MessageReceived;
 use App\User;
 use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Message;
@@ -21,14 +21,12 @@ use Cmgmyr\Messenger\Models\Thread;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use App\Mail\MessageReceived;
 use Illuminate\Support\Facades\Mail;
 
 /**
  * Messages Controller.
  *
  * @category Messages
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -69,7 +67,7 @@ class MessageController extends Controller
     /**
      * Shows a message thread.
      *
-     * @param Integer $id the id of the thread to show
+     * @param int $id the id of the thread to show
      *
      * @return mixed
      */
@@ -88,7 +86,7 @@ class MessageController extends Controller
         // show current user in list if not a current participant
         $allowedUsers = $thread->participantsUserIds();
 
-        if (!in_array(Auth::id(), $allowedUsers)) {
+        if (! in_array(Auth::id(), $allowedUsers)) {
             abort(403, _i('Not authorized to see this message.'));
         }
 
@@ -135,7 +133,7 @@ class MessageController extends Controller
     /**
      * Creates a new message thread.
      *
-     * @param Integer $id The id to send the mail to
+     * @param int $id The id to send the mail to
      *
      * @return mixed
      */
@@ -253,7 +251,7 @@ class MessageController extends Controller
     /**
      * Adds a new message to a current thread.
      *
-     * @param Integer $id the id of the thread to update
+     * @param int $id the id of the thread to update
      *
      * @return mixed
      */

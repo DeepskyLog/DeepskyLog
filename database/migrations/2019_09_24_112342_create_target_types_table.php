@@ -1,14 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTargetTypesTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      */
     public function up()
     {
@@ -26,7 +25,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'ASTER',
                 'type' => 'Asterism',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -34,7 +33,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'BRTNB',
                 'type' => 'Bright nebula',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -42,7 +41,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'CLANB',
                 'type' => 'Cluster with nebulosity',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -50,7 +49,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'DRKNB',
                 'type' => 'Dark nebula',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -58,7 +57,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'EMINB',
                 'type' => 'Emission nebula',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -66,7 +65,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'ENRNN',
                 'type' => 'Emission and Reflection nebula',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -74,7 +73,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'ENSTR',
                 'type' => 'Emission nebula around a star',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -82,7 +81,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'GALCL',
                 'type' => 'Galaxy cluster',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -90,7 +89,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'GALXY',
                 'type' => 'Galaxy',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -98,7 +97,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'GLOCL',
                 'type' => 'Globular cluster',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -106,7 +105,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'GXADN',
                 'type' => 'Diffuse nebula',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -114,7 +113,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'HII',
                 'type' => 'H-II',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -122,7 +121,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'NONEX',
                 'type' => 'Nonexistent',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -130,7 +129,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'OPNCL',
                 'type' => 'Open cluster',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -138,7 +137,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'PLNNB',
                 'type' => 'Planetary nebula',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -146,7 +145,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'REFNB',
                 'type' => 'Reflection nebula',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -154,7 +153,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'RNHII',
                 'type' => 'Reflection nebula and H-II',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -162,7 +161,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'SNOVA',
                 'type' => 'Supernova',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -170,7 +169,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'SNREM',
                 'type' => 'Supernova remnant',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -178,7 +177,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'STNEB',
                 'type' => 'Nebula around star',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -186,7 +185,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'QUASR',
                 'type' => 'Quasar',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -194,7 +193,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'WRNEB',
                 'type' => 'Wolf Rayet nebula',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -202,7 +201,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'REST',
                 'type' => 'Rest',
-                'observation_type' => 'ds'
+                'observation_type' => 'ds',
             ]
         );
 
@@ -210,7 +209,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'DS',
                 'type' => 'Double Star',
-                'observation_type' => 'double'
+                'observation_type' => 'double',
             ]
         );
 
@@ -218,7 +217,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'COMET',
                 'type' => 'Comet',
-                'observation_type' => 'comets'
+                'observation_type' => 'comets',
             ]
         );
 
@@ -226,7 +225,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'PLANET',
                 'type' => 'Planet',
-                'observation_type' => 'planets'
+                'observation_type' => 'planets',
             ]
         );
 
@@ -234,7 +233,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'SUN',
                 'type' => 'Sun',
-                'observation_type' => 'sun'
+                'observation_type' => 'sun',
             ]
         );
 
@@ -242,7 +241,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'CRATER',
                 'type' => 'Crater',
-                'observation_type' => 'moon'
+                'observation_type' => 'moon',
             ]
         );
 
@@ -250,7 +249,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'SEA',
                 'type' => 'Sea',
-                'observation_type' => 'moon'
+                'observation_type' => 'moon',
             ]
         );
 
@@ -258,7 +257,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'MOUNTAIN',
                 'type' => 'Mountain',
-                'observation_type' => 'moon'
+                'observation_type' => 'moon',
             ]
         );
 
@@ -266,7 +265,7 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'VALLEY',
                 'type' => 'Valley',
-                'observation_type' => 'moon'
+                'observation_type' => 'moon',
             ]
         );
 
@@ -274,14 +273,13 @@ class CreateTargetTypesTable extends Migration
             [
                 'id' => 'OTHER',
                 'type' => 'Other feature',
-                'observation_type' => 'moon'
+                'observation_type' => 'moon',
             ]
         );
     }
 
     /**
      * Reverse the migrations.
-     *
      */
     public function down()
     {

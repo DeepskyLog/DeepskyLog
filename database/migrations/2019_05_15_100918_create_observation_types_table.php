@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateObservationTypesTable extends Migration
 {
@@ -20,45 +20,45 @@ class CreateObservationTypesTable extends Migration
 
         // Insert the observation types
         DB::table('observation_types')->insert(
-            array(
+            [
                 'type' => 'ds',
-                'name' => "Deepsky"
-            )
+                'name' => 'Deepsky',
+            ]
         );
 
         DB::table('observation_types')->insert(
-            array(
+            [
                 'type' => 'comets',
-                'name' => "Comets"
-            )
+                'name' => 'Comets',
+            ]
         );
 
         DB::table('observation_types')->insert(
-            array(
+            [
                 'type' => 'planets',
-                'name' => "Planets"
-            )
+                'name' => 'Planets',
+            ]
         );
 
         DB::table('observation_types')->insert(
-            array(
+            [
                 'type' => 'double',
-                'name' => "Double Stars"
-            )
+                'name' => 'Double Stars',
+            ]
         );
 
         DB::table('observation_types')->insert(
-            array(
+            [
                 'type' => 'sun',
-                'name' => "Sun"
-            )
+                'name' => 'Sun',
+            ]
         );
 
         DB::table('observation_types')->insert(
-            array(
+            [
                 'type' => 'moon',
-                'name' => "Moon"
-            )
+                'name' => 'Moon',
+            ]
         );
     }
 

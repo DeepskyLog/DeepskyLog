@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAtlasTable extends Migration
 {
@@ -22,122 +22,122 @@ class CreateAtlasTable extends Migration
 
         // Insert the atlases
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'urano',
-                'name' => "Uranometria"
-            )
+                'name' => 'Uranometria',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'urano_new',
-                'name' => "Uranometria (2nd edition)"
-            )
+                'name' => 'Uranometria (2nd edition)',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'sky',
-                'name' => "Sky Atlas"
-            )
+                'name' => 'Sky Atlas',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'milleniumbase',
-                'name' => "Millenium Star Atlas"
-            )
+                'name' => 'Millenium Star Atlas',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'taki',
-                'name' => "Taki Atlas"
-            )
+                'name' => 'Taki Atlas',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'psa',
-                'name' => "Pocket Sky Atlas"
-            )
+                'name' => 'Pocket Sky Atlas',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'torresB',
-                'name' => "Triatlas B (Torres)"
-            )
+                'name' => 'Triatlas B (Torres)',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'torresBC',
-                'name' => "Triatlas BC (Torres)"
-            )
+                'name' => 'Triatlas BC (Torres)',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'torresC',
-                'name' => "Triatlas C (Torres)"
-            )
+                'name' => 'Triatlas C (Torres)',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'DSLDL',
-                'name' => "Deepskylog Detail Landscape"
-            )
+                'name' => 'Deepskylog Detail Landscape',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'DSLDP',
-                'name' => "Deepskylog Detail Portrait"
-            )
+                'name' => 'Deepskylog Detail Portrait',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'DSLLL',
-                'name' => "Deepskylog Lookup Landscape"
-            )
+                'name' => 'Deepskylog Lookup Landscape',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'DSLLP',
-                'name' => "Deepskylog Lookup Portrait"
-            )
+                'name' => 'Deepskylog Lookup Portrait',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'DSLOL',
-                'name' => "Deepskylog Overview Landscape"
-            )
+                'name' => 'Deepskylog Overview Landscape',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'DSLOP',
-                'name' => "Deepskylog Overview Portrait"
-            )
+                'name' => 'Deepskylog Overview Portrait',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'DeepskyHunter',
-                'name' => "Deep Sky Hunter"
-            )
+                'name' => 'Deep Sky Hunter',
+            ]
         );
 
         DB::table('atlases')->insert(
-            array(
+            [
                 'code' => 'Interstellarum',
-                'name' => "Interstellarum Deep Sky Atlas"
-            )
+                'name' => 'Interstellarum Deep Sky Atlas',
+            ]
         );
     }
 

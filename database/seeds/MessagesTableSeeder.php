@@ -6,25 +6,23 @@
  * PHP Version 7
  *
  * @category Database
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
 
-use Illuminate\Database\Seeder;
 use App\MessagesOld;
 use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Message;
 use Cmgmyr\Messenger\Models\Participant;
 use Cmgmyr\Messenger\Models\Thread;
+use Illuminate\Database\Seeder;
 
 /**
  * Seeder for the messages table of the database.
  * Fills the database with the messages of the old database.
  *
  * @category Database
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -50,15 +48,15 @@ class MessagesTableSeeder extends Seeder
                         if (strpos($message->subject, 'Re:') === false) {
                             // Get all the messages from the thread.
                             $thread = DB::connection('mysqlOld')->table('messages')
-                                ->where('subject', 'Re : ' . $message->subject)
+                                ->where('subject', 'Re : '.$message->subject)
                                 ->where('sender', $message->receiver)
                                 ->where('receiver', $message->sender)->get();
                             $thread2 = DB::connection('mysqlOld')->table('messages')
-                                ->where('subject', 'Re : ' . $message->subject)
+                                ->where('subject', 'Re : '.$message->subject)
                                 ->where('sender', $message->sender)
                                 ->where('receiver', $message->receiver)->get();
 
-                            $ids = Array();
+                            $ids = [];
                             $ids[] = $message->id;
                             $ids = array_merge(
                                 $ids, $thread->pluck('id')->toarray()
@@ -72,7 +70,7 @@ class MessagesTableSeeder extends Seeder
                             $thread = Thread::create(
                                 [
                                     'subject' => html_entity_decode($message->subject),
-                                    'created_at' => $message->date
+                                    'created_at' => $message->date,
                                 ]
                             );
 
@@ -83,15 +81,15 @@ class MessagesTableSeeder extends Seeder
                                 // Get the correct user ids.
                                 if ($messageToAdd->sender == 'vvs04478Admin') {
                                     $sender = 'vvs04478';
-                                } else if ($messageToAdd->sender == 'evdjadmin') {
+                                } elseif ($messageToAdd->sender == 'evdjadmin') {
                                     $sender = 'Eric VdJ';
-                                } else if ($messageToAdd->sender == 'TomC_developer') {
+                                } elseif ($messageToAdd->sender == 'TomC_developer') {
                                     $sender = 'vvs03296';
-                                } else if ($messageToAdd->sender == 'wvreeven-admin') {
+                                } elseif ($messageToAdd->sender == 'wvreeven-admin') {
                                     $sender = 'wvreeven';
-                                } else if ($messageToAdd->sender == 'Jef Admin') {
+                                } elseif ($messageToAdd->sender == 'Jef Admin') {
                                     $sender = 'Jef De Wit';
-                                } else if ($messageToAdd->sender == 'adminbob') {
+                                } elseif ($messageToAdd->sender == 'adminbob') {
                                     $sender = 'Bob Hogeveen';
                                 } else {
                                     $sender = $messageToAdd->sender;
@@ -102,15 +100,15 @@ class MessagesTableSeeder extends Seeder
 
                                 if ($messageToAdd->receiver == 'vvs04478Admin') {
                                     $receiver = 'vvs04478';
-                                } else if ($messageToAdd->receiver == 'evdjadmin') {
+                                } elseif ($messageToAdd->receiver == 'evdjadmin') {
                                     $receiver = 'Eric VdJ';
-                                } else if ($messageToAdd->receiver == 'TomC_developer') {
+                                } elseif ($messageToAdd->receiver == 'TomC_developer') {
                                     $receiver = 'vvs03296';
-                                } else if ($messageToAdd->receiver == 'wvreeven-admin') {
+                                } elseif ($messageToAdd->receiver == 'wvreeven-admin') {
                                     $receiver = 'wvreeven';
-                                } else if ($messageToAdd->receiver == 'Jef Admin') {
+                                } elseif ($messageToAdd->receiver == 'Jef Admin') {
                                     $receiver = 'Jef De Wit';
-                                } else if ($messageToAdd->receiver == 'adminbob') {
+                                } elseif ($messageToAdd->receiver == 'adminbob') {
                                     $receiver = 'Bob Hogeveen';
                                 } else {
                                     $receiver = $messageToAdd->receiver;
@@ -123,19 +121,19 @@ class MessagesTableSeeder extends Seeder
                                     continue;
                                 }
 
-                                $breaks = array("<br />","<br>","<br/>");
+                                $breaks = ['<br />', '<br>', '<br/>'];
 
                                 Message::create(
                                     [
                                         'thread_id' => $thread->id,
                                         'user_id' => $senderid,
                                         'body' => str_ireplace(
-                                            $breaks, "",
+                                            $breaks, '',
                                             html_entity_decode(
                                                 $messageToAdd->message
                                             )
                                         ),
-                                        'created_at' => $messageToAdd->date
+                                        'created_at' => $messageToAdd->date,
                                     ]
                                 );
 

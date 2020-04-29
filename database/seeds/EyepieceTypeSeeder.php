@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\EyepieceType;
+use Illuminate\Database\Seeder;
 
 class EyepieceTypeSeeder extends Seeder
 {
@@ -19,211 +19,211 @@ class EyepieceTypeSeeder extends Seeder
         EyepieceType::create(
             [
                 'brand' => 'Televue',
-                'type' => 'Plössl'
+                'type' => 'Plössl',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Televue',
-                'type' => 'Panoptic'
+                'type' => 'Panoptic',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Televue',
-                'type' => 'Nagler'
+                'type' => 'Nagler',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Televue',
-                'type' => 'Radian'
+                'type' => 'Radian',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Televue',
-                'type' => 'Apollo'
+                'type' => 'Apollo',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Televue',
-                'type' => 'Ethos'
+                'type' => 'Ethos',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Televue',
-                'type' => 'DeLite'
+                'type' => 'DeLite',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Televue',
-                'type' => 'Delos'
+                'type' => 'Delos',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Baader',
-                'type' => 'Hyperion'
+                'type' => 'Hyperion',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Baader',
-                'type' => 'Morpheus'
+                'type' => 'Morpheus',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Meade',
-                'type' => 'Super Plössl'
+                'type' => 'Super Plössl',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Meade',
-                'type' => 'MWA'
+                'type' => 'MWA',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'University Optics',
-                'type' => 'Ortho'
+                'type' => 'Ortho',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'University Optics',
-                'type' => 'König'
+                'type' => 'König',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'University Optics',
-                'type' => 'Wide Scan'
+                'type' => 'Wide Scan',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'University Optics',
-                'type' => 'K'
+                'type' => 'K',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'University Optics',
-                'type' => 'ER'
+                'type' => 'ER',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'University Optics',
-                'type' => 'UW'
+                'type' => 'UW',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Pentax',
-                'type' => 'SMC XW'
+                'type' => 'SMC XW',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Pentax',
-                'type' => 'SMC XL'
+                'type' => 'SMC XL',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Pentax',
-                'type' => 'SMC XF'
+                'type' => 'SMC XF',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Celestron',
-                'type' => 'X-Cel LX'
+                'type' => 'X-Cel LX',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Celestron',
-                'type' => 'Omni'
+                'type' => 'Omni',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Celestron',
-                'type' => 'Luminos'
+                'type' => 'Luminos',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Celestron',
-                'type' => 'Kellner'
+                'type' => 'Kellner',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Celestron',
-                'type' => 'Plössl'
+                'type' => 'Plössl',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Celestron',
-                'type' => 'Ortho'
+                'type' => 'Ortho',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Celestron',
-                'type' => 'Erfle'
+                'type' => 'Erfle',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Vixen',
-                'type' => 'LV'
+                'type' => 'LV',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Vixen',
-                'type' => 'NPL'
+                'type' => 'NPL',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Vixen',
-                'type' => 'SLV'
+                'type' => 'SLV',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Vixen',
-                'type' => 'NLVW'
+                'type' => 'NLVW',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Vixen',
-                'type' => 'NLV'
+                'type' => 'NLV',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Vixen',
-                'type' => 'HR'
+                'type' => 'HR',
             ]
         );
         EyepieceType::create(
             [
                 'brand' => 'Vixen',
-                'type' => 'SSW'
+                'type' => 'SSW',
             ]
         );
     }

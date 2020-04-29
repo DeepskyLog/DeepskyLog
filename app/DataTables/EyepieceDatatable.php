@@ -6,7 +6,6 @@
  * PHP Version 7
  *
  * @category Eyepieces
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -14,8 +13,8 @@
 
 namespace App\DataTables;
 
-use Yajra\DataTables\Services\DataTable;
 use App\Eyepiece;
+use Yajra\DataTables\Services\DataTable;
 
 /**
  * Eyepiece DataTable.
@@ -23,12 +22,11 @@ use App\Eyepiece;
  * PHP Version 7
  *
  * @category Eyepieces
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class EyepieceDataTable extends DataTable
+class EyepieceDatatable extends DataTable
 {
     /**
      * Make the correct ajax call.
@@ -59,20 +57,20 @@ class EyepieceDataTable extends DataTable
             ->editColumn(
                 'focalLength',
                 function ($eyepiece) {
-                    return $eyepiece->focalLength . ' mm';
+                    return $eyepiece->focalLength.' mm';
                 }
             )
             ->editColumn(
                 'apparentFOV',
                 function ($eyepiece) {
-                    return $eyepiece->apparentFOV . ' º';
+                    return $eyepiece->apparentFOV.' º';
                 }
             )
             ->editColumn(
                 'maxFocalLength',
                 function ($eyepiece) {
                     if ($eyepiece->maxFocalLength) {
-                        return $eyepiece->maxFocalLength . ' mm';
+                        return $eyepiece->maxFocalLength.' mm';
                     } else {
                         return '';
                     }
@@ -81,8 +79,8 @@ class EyepieceDataTable extends DataTable
             ->editColumn(
                 'user.name',
                 function ($eyepiece) {
-                    return '<a href="/users/' . $eyepiece->user->id . '">'
-                        . $eyepiece->user->name . '</a>';
+                    return '<a href="/users/'.$eyepiece->user->id.'">'
+                        .$eyepiece->user->name.'</a>';
                 }
             )
             ->editColumn(
@@ -128,11 +126,11 @@ class EyepieceDataTable extends DataTable
     protected function getMyParameters()
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
-            . \PeterColes\Languages\LanguagesFacade::lookup(
+            .\PeterColes\Languages\LanguagesFacade::lookup(
                 [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first()
-            . '.json'];
+            .'.json', ];
         $mypars = $this->getBuilderParameters();
         $mypars['language'] = $language;
 
@@ -264,6 +262,6 @@ class EyepieceDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Eyepiece_' . date('YmdHis');
+        return 'Eyepiece_'.date('YmdHis');
     }
 }

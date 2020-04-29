@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Messages
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -16,18 +15,16 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 /**
  * Message Received mailable.
  *
  * @category Messages
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class MessageReceived extends Mailable
+class messageReceived extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -43,7 +40,7 @@ class MessageReceived extends Mailable
      * @param string  $subject      The subject of the message.
      * @param string  $message      The content of the message.
      * @param string  $author       The author of the message.
-     * @param integer $id           The id of the thread.
+     * @param int $id           The id of the thread.
      * @param string  $participants The participants of the thread.
      *
      * @return void
@@ -70,7 +67,7 @@ class MessageReceived extends Mailable
                 'message'=>$this->message,
                 'author'=>$this->author,
                 'id'=>$this->id,
-                'participants'=>$this->participants
+                'participants'=>$this->participants,
             ]
         );
     }

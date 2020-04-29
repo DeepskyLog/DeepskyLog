@@ -68,7 +68,7 @@ return [
             'csv',
             'pdf',
             'print',
-            'colvis'
+            'colvis',
         ],
     ],
 ];

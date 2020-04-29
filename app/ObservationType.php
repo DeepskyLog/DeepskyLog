@@ -46,7 +46,7 @@ class ObservationType extends Model
     /**
      * Returns the number of targets of this observation type.
      *
-     * @param String $observation_type The observation type
+     * @param string $observation_type The observation type
      *
      * @return Collection The number of targets from this observation type
      */

@@ -1,13 +1,12 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\EyepieceBrand;
+use Illuminate\Database\Seeder;
 
 class EyepieceBrandSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
      */
     public function run()
     {

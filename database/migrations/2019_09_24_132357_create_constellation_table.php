@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateConstellationTable extends Migration
 {
@@ -24,620 +24,618 @@ class CreateConstellationTable extends Migration
         DB::table('constellations')->insert(
             [
                 'id' => 'AND',
-                'name' => 'Andromeda'
+                'name' => 'Andromeda',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'ANT',
-                'name' => 'Antlia'
+                'name' => 'Antlia',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'APS',
-                'name' => 'Apus'
+                'name' => 'Apus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'AQR',
-                'name' => 'Aquarius'
+                'name' => 'Aquarius',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'AQL',
-                'name' => 'Aquila'
+                'name' => 'Aquila',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'ARA',
-                'name' => 'Ara'
+                'name' => 'Ara',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'ARI',
-                'name' => 'Aries'
+                'name' => 'Aries',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'AUR',
-                'name' => 'Auriga'
+                'name' => 'Auriga',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'BOO',
-                'name' => 'Bootes'
+                'name' => 'Bootes',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CAE',
-                'name' => 'Caelum'
+                'name' => 'Caelum',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CAM',
-                'name' => 'Camelopardalis'
+                'name' => 'Camelopardalis',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CNC',
-                'name' => 'Cancer'
+                'name' => 'Cancer',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CVN',
-                'name' => 'Canes Venatici'
+                'name' => 'Canes Venatici',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CMA',
-                'name' => 'Canis Major'
+                'name' => 'Canis Major',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CMI',
-                'name' => 'Canis Minor'
+                'name' => 'Canis Minor',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CAP',
-                'name' => 'Capricornus'
+                'name' => 'Capricornus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CAR',
-                'name' => 'Carina'
+                'name' => 'Carina',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CAS',
-                'name' => 'Cassiopeia'
+                'name' => 'Cassiopeia',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CEN',
-                'name' => 'Centaurus'
+                'name' => 'Centaurus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CEP',
-                'name' => 'Cepheus'
+                'name' => 'Cepheus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CET',
-                'name' => 'Cetus'
+                'name' => 'Cetus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CHA',
-                'name' => 'Chamaeleon'
+                'name' => 'Chamaeleon',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CIR',
-                'name' => 'Circinus'
+                'name' => 'Circinus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'COL',
-                'name' => 'Columba'
+                'name' => 'Columba',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'COM',
-                'name' => 'Coma Berenices'
+                'name' => 'Coma Berenices',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CRA',
-                'name' => 'Corona Australis'
+                'name' => 'Corona Australis',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CRB',
-                'name' => 'Corona Borealis'
+                'name' => 'Corona Borealis',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CRV',
-                'name' => 'Corvus'
+                'name' => 'Corvus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CRT',
-                'name' => 'Crater'
+                'name' => 'Crater',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CRU',
-                'name' => 'Crux'
+                'name' => 'Crux',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'CYG',
-                'name' => 'Cygnus'
+                'name' => 'Cygnus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'DEL',
-                'name' => 'Delphinus'
+                'name' => 'Delphinus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'DOR',
-                'name' => 'Dorado'
+                'name' => 'Dorado',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'DRA',
-                'name' => 'Draco'
+                'name' => 'Draco',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'EQU',
-                'name' => 'Equuleus'
+                'name' => 'Equuleus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'ERI',
-                'name' => 'Eridanus'
+                'name' => 'Eridanus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'FOR',
-                'name' => 'Fornax'
+                'name' => 'Fornax',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'GEM',
-                'name' => 'Gemini'
+                'name' => 'Gemini',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'GRU',
-                'name' => 'Grus'
+                'name' => 'Grus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'HER',
-                'name' => 'Hercules'
+                'name' => 'Hercules',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'HOR',
-                'name' => 'Horologium'
+                'name' => 'Horologium',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'HYA',
-                'name' => 'Hydra'
+                'name' => 'Hydra',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'HYI',
-                'name' => 'Hydrus'
+                'name' => 'Hydrus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'IND',
-                'name' => 'Indus'
+                'name' => 'Indus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'LAC',
-                'name' => 'Lacerta'
+                'name' => 'Lacerta',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'LEO',
-                'name' => 'Leo'
+                'name' => 'Leo',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'LMI',
-                'name' => 'Leo Minor'
+                'name' => 'Leo Minor',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'LEP',
-                'name' => 'Lepus'
+                'name' => 'Lepus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'LIB',
-                'name' => 'Libra'
+                'name' => 'Libra',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'LUP',
-                'name' => 'Lupus'
+                'name' => 'Lupus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'LYN',
-                'name' => 'Lynx'
+                'name' => 'Lynx',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'LYR',
-                'name' => 'Lyra'
+                'name' => 'Lyra',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'MEN',
-                'name' => 'Mensa'
+                'name' => 'Mensa',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'MIC',
-                'name' => 'Microscopium'
+                'name' => 'Microscopium',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'MON',
-                'name' => 'Monoceros'
+                'name' => 'Monoceros',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'MUS',
-                'name' => 'Musca'
+                'name' => 'Musca',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'NOR',
-                'name' => 'Norma'
+                'name' => 'Norma',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'OCT',
-                'name' => 'Octans'
+                'name' => 'Octans',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'OPH',
-                'name' => 'Ophiuchus'
+                'name' => 'Ophiuchus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'ORI',
-                'name' => 'Orion'
+                'name' => 'Orion',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'PAV',
-                'name' => 'Pavo'
+                'name' => 'Pavo',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'PEG',
-                'name' => 'Pegasus'
+                'name' => 'Pegasus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'PER',
-                'name' => 'Perseus'
+                'name' => 'Perseus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'PHE',
-                'name' => 'Phoenix'
+                'name' => 'Phoenix',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'PIC',
-                'name' => 'Pictor'
+                'name' => 'Pictor',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'PSC',
-                'name' => 'Pisces'
+                'name' => 'Pisces',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'PSA',
-                'name' => 'Pisces Austrinus'
+                'name' => 'Pisces Austrinus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'PUP',
-                'name' => 'Puppis'
+                'name' => 'Puppis',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'PYX',
-                'name' => 'Pyxis'
+                'name' => 'Pyxis',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'RET',
-                'name' => 'Reticulum'
+                'name' => 'Reticulum',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'SGE',
-                'name' => 'Sagitta'
+                'name' => 'Sagitta',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'SGR',
-                'name' => 'Sagittarius'
+                'name' => 'Sagittarius',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'SCO',
-                'name' => 'Scorpius'
+                'name' => 'Scorpius',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'SCL',
-                'name' => 'Sculptor'
+                'name' => 'Sculptor',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'SCT',
-                'name' => 'Scutum'
+                'name' => 'Scutum',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'SER',
-                'name' => 'Serpens'
+                'name' => 'Serpens',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'SEX',
-                'name' => 'Sextans'
+                'name' => 'Sextans',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'TAU',
-                'name' => 'Taurus'
+                'name' => 'Taurus',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'TEL',
-                'name' => 'Telescopium'
+                'name' => 'Telescopium',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'TRA',
-                'name' => 'Triangulum Australe'
+                'name' => 'Triangulum Australe',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'TRI',
-                'name' => 'Triangulum'
+                'name' => 'Triangulum',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'TUC',
-                'name' => 'Tucana'
+                'name' => 'Tucana',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'UMA',
-                'name' => 'Ursa Major'
+                'name' => 'Ursa Major',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'UMI',
-                'name' => 'Ursa Minor'
+                'name' => 'Ursa Minor',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'VEL',
-                'name' => 'Vela'
+                'name' => 'Vela',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'VIR',
-                'name' => 'Virgo'
+                'name' => 'Virgo',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'VOL',
-                'name' => 'Volans'
+                'name' => 'Volans',
             ]
         );
 
         DB::table('constellations')->insert(
             [
                 'id' => 'VUL',
-                'name' => 'Vulpecula'
+                'name' => 'Vulpecula',
             ]
         );
-
-
     }
 
     /**

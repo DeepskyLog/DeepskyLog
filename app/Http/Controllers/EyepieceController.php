@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Eyepieces
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -13,17 +12,16 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\EyepieceDataTable;
 use App\Eyepiece;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\DataTables\EyepieceDataTable;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Eyepiece Controller.
  *
  * @category Eyepieces
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -71,7 +69,7 @@ class EyepieceController extends Controller
      * Display a listing of the resource.
      *
      * @param EyepieceDataTable $dataTable The eyepiece datatable
-     * @param String            $user      user for a normal user, admin for an admin
+     * @param string            $user      user for a normal user, admin for an admin
      *
      * @return \Illuminate\Http\Response
      */
@@ -145,7 +143,7 @@ class EyepieceController extends Controller
             // Add the new brand to the database
             \App\EyepieceBrand::create(
                 [
-                    'brand' => $request->get('brand')
+                    'brand' => $request->get('brand'),
                 ]
             );
         }
@@ -159,7 +157,7 @@ class EyepieceController extends Controller
             \App\EyepieceType::create(
                 [
                     'type' => $request->get('type'),
-                    'brand' => $request->get('brand')
+                    'brand' => $request->get('brand'),
                 ]
             );
         }
@@ -170,7 +168,7 @@ class EyepieceController extends Controller
             // Add the picture
             Eyepiece::find($eyepiece->id)
                 ->addMedia($request->picture->path())
-                ->usingFileName($eyepiece->id . '.png')
+                ->usingFileName($eyepiece->id.'.png')
                 ->toMediaCollection('eyepiece');
         }
 
@@ -197,7 +195,7 @@ class EyepieceController extends Controller
                 'type' => 'required',
                 'focalLength' => 'required|numeric|gte:1|lte:99',
                 'apparentFOV' => 'required|numeric|gte:20|lte:150',
-                'maxFocalLength' => 'gte:1|lte:99'
+                'maxFocalLength' => 'gte:1|lte:99',
             ]
         );
     }
@@ -212,6 +210,7 @@ class EyepieceController extends Controller
     public function show(Eyepiece $eyepiece)
     {
         $media = $this->getImage($eyepiece);
+
         return view(
             'layout.eyepiece.show', ['eyepiece' => $eyepiece, 'media' => $media]
         );
@@ -260,7 +259,7 @@ class EyepieceController extends Controller
                 // Add the new brand to the database
                 \App\EyepieceBrand::create(
                     [
-                        'brand' => $request->get('brand')
+                        'brand' => $request->get('brand'),
                     ]
                 );
             }
@@ -274,7 +273,7 @@ class EyepieceController extends Controller
                 \App\EyepieceType::create(
                     [
                         'type' => $request->get('type'),
-                        'brand' => $request->get('brand')
+                        'brand' => $request->get('brand'),
                     ]
                 );
             }
@@ -298,7 +297,7 @@ class EyepieceController extends Controller
                 // Update the picture
                 Eyepiece::find($eyepiece->id)
                     ->addMedia($request->picture->path())
-                    ->usingFileName($eyepiece->id . '.png')
+                    ->usingFileName($eyepiece->id.'.png')
                     ->toMediaCollection('eyepiece');
             }
 
@@ -329,18 +328,19 @@ class EyepieceController extends Controller
      */
     public function getImage(Eyepiece $eyepiece)
     {
-        if (!$eyepiece->hasMedia('eyepiece')) {
+        if (! $eyepiece->hasMedia('eyepiece')) {
             $eyepiece->addMediaFromUrl(asset('images/eyepiece.jpg'))
-                ->usingFileName($eyepiece->id . '.png')
+                ->usingFileName($eyepiece->id.'.png')
                 ->toMediaCollection('eyepiece');
         }
+
         return $eyepiece->getFirstMedia('eyepiece');
     }
 
     /**
-     * Remove the image of the eyepiece
+     * Remove the image of the eyepiece.
      *
-     * @param integer $id The id of the eyepiece
+     * @param int $id The id of the eyepiece
      *
      * @return None
      */

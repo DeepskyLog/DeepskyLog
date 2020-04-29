@@ -7,7 +7,6 @@
  * PHP Version 7
  *
  * @category Database
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -20,7 +19,6 @@ use Illuminate\Database\Seeder;
  * Fills the database with random values.
  *
  * @category Database
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -29,7 +27,6 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
-     *
      */
     public function run()
     {
@@ -39,7 +36,7 @@ class DatabaseSeeder extends Seeder
                 EyepieceBrandSeeder::class, EyepieceTypeSeeder::class,
                 MessagesTableSeeder::class, InstrumentTableSeeder::class,
                 LocationTableSeeder::class, TargetTableSeeder::class,
-                TargetNameTableSeeder::class, TargetPartOfTableSeeder::class]
+                TargetNameTableSeeder::class, TargetPartOfTableSeeder::class, ]
         );
     }
 }

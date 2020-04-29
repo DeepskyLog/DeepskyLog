@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Filters
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -13,17 +12,16 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\FilterDataTable;
 use App\Filter;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\DataTables\FilterDataTable;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Filter Controller.
  *
  * @category Filters
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -71,7 +69,7 @@ class FilterController extends Controller
      * Display a listing of the resource.
      *
      * @param FilterDataTable $dataTable The filter datatable
-     * @param String          $user      user for a normal user, admin for an admin
+     * @param string          $user      user for a normal user, admin for an admin
      *
      * @return \Illuminate\Http\Response
      */
@@ -127,7 +125,7 @@ class FilterController extends Controller
             // Add the picture
             Filter::find($filter->id)
                 ->addMedia($request->picture->path())
-                ->usingFileName($filter->id . '.png')
+                ->usingFileName($filter->id.'.png')
                 ->toMediaCollection('filter');
         }
 
@@ -136,7 +134,6 @@ class FilterController extends Controller
         // View the page with all filters for the user
         return redirect('/filter');
     }
-
 
     /**
      * Validate the values of the form.
@@ -153,7 +150,7 @@ class FilterController extends Controller
                 'name' => ['required', 'min:6'],
                 'type' => ['required'],
                 'color' => [], 'wratten' => ['max:5'],
-                'schott' => []
+                'schott' => [],
             ]
         );
     }
@@ -224,7 +221,7 @@ class FilterController extends Controller
                 // Update the picture
                 Filter::find($filter->id)
                     ->addMedia($request->picture->path())
-                    ->usingFileName($filter->id . '.png')
+                    ->usingFileName($filter->id.'.png')
                     ->toMediaCollection('filter');
             }
 
@@ -255,18 +252,19 @@ class FilterController extends Controller
      */
     public function getImage(Filter $filter)
     {
-        if (!$filter->hasMedia('filter')) {
+        if (! $filter->hasMedia('filter')) {
             $filter->addMediaFromUrl(asset('images/filter.jpg'))
-                ->usingFileName($filter->id . '.png')
+                ->usingFileName($filter->id.'.png')
                 ->toMediaCollection('filter');
         }
+
         return $filter->getFirstMedia('filter');
     }
 
     /**
-     * Remove the image of the filter
+     * Remove the image of the filter.
      *
-     * @param integer $id The id of the filter
+     * @param int $id The id of the filter
      *
      * @return None
      */

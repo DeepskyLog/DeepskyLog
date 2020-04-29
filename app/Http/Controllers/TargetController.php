@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Targets
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -13,16 +12,15 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\TargetDataTable;
 use App\Target;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\DataTables\TargetDataTable;
 
 /**
  * Target Controller.
  *
  * @category Targets
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -63,11 +61,11 @@ class TargetController extends Controller
     /**
      * Display the specified target.
      *
-     * @param String $targetname The name of the target to show
+     * @param string $targetname The name of the target to show
      *
      * @return \Illuminate\Http\Response The reponse
      */
-    public function show(String $targetname, TargetDataTable $dataTable)
+    public function show(string $targetname, TargetDataTable $dataTable)
     {
         $targetname = \App\TargetName::where('altname', $targetname)
             ->first();
@@ -137,9 +135,9 @@ class TargetController extends Controller
     /**
      * Returns the data from one catalog in JSON format.
      *
-     * @param String $catalogname The name of the catalog
+     * @param string $catalogname The name of the catalog
      *
-     * @return String The JSON with all information on the objects
+     * @return string The JSON with all information on the objects
      */
     public function getCatalogData($catalogname)
     {
@@ -149,7 +147,7 @@ class TargetController extends Controller
                     target_names.objectname, target_names.altname
                     FROM targets JOIN target_names
                     ON targets.name = target_names.objectname WHERE catalog="'
-                    . $catalogname . '" ORDER BY objectname'
+                    .$catalogname.'" ORDER BY objectname'
             )
         );
 
@@ -167,9 +165,9 @@ class TargetController extends Controller
     /**
      * Returns the constellation data from one catalog in JSON format.
      *
-     * @param String $catalogname The name of the catalog
+     * @param string $catalogname The name of the catalog
      *
-     * @return String The JSON with all constellation information on the objects
+     * @return string The JSON with all constellation information on the objects
      */
     public static function getConstellationInfo($catalogname)
     {
@@ -180,7 +178,7 @@ class TargetController extends Controller
                     JOIN target_names ON targets.name = target_names.objectname
                     JOIN constellations ON targets.con = constellations.id
                     WHERE catalog="'
-                    . $catalogname . '" GROUP BY targets.con'
+                    .$catalogname.'" GROUP BY targets.con'
             )
         );
         foreach ($cons as $con) {
@@ -193,9 +191,9 @@ class TargetController extends Controller
     /**
      * Returns the type data from one catalog in JSON format.
      *
-     * @param String $catalogname The name of the catalog
+     * @param string $catalogname The name of the catalog
      *
-     * @return String The JSON with all type information of the objects
+     * @return string The JSON with all type information of the objects
      */
     public static function getTypeInfo($catalogname)
     {
@@ -206,7 +204,7 @@ class TargetController extends Controller
                     JOIN target_names ON targets.name = target_names.objectname
                     JOIN target_types ON targets.type = target_types.id
                     WHERE catalog="'
-                    . $catalogname . '" GROUP BY targets.type'
+                    .$catalogname.'" GROUP BY targets.type'
             )
         );
 

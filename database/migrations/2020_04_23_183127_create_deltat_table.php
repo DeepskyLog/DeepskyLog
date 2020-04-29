@@ -1,16 +1,15 @@
 <?php
 
 use deepskylog\AstronomyLibrary\Imports\DeltaTImport;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CreateDeltaTTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      */
     public function up()
     {
@@ -27,7 +26,6 @@ class CreateDeltaTTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
      */
     public function down()
     {

@@ -7,23 +7,21 @@
  * PHP Version 7
  *
  * @category Database
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
 
-use Illuminate\Database\Seeder;
-use App\InstrumentOld;
 use App\Instrument;
+use App\InstrumentOld;
 use App\User;
+use Illuminate\Database\Seeder;
 
 /**
  * Seeder for the Instrument table of the database.
  * Fills the database with the instruments from the old database.
  *
  * @category Database
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -44,11 +42,11 @@ class InstrumentTableSeeder extends Seeder
 
         foreach ($instrumentData as $instrument) {
             $observer = User::where('username', $instrument->observer)->pluck('id');
-            if (sizeof($observer) > 0) {
+            if (count($observer) > 0) {
                 if ($instrument->timestamp == '') {
                     $date = date('Y-m-d H:i:s');
                 } else {
-                    list($year, $month, $day, $hour, $minute, $second)
+                    [$year, $month, $day, $hour, $minute, $second]
                         = sscanf($instrument->timestamp, '%4d%2d%2d%2d%2d%d');
                     $date = date(
                         'Y-m-d H:i:s',
@@ -84,11 +82,10 @@ class InstrumentTableSeeder extends Seeder
                         'fixedMagnification' => $fm,
                         'user_id' => $observer[0],
                         'active' => $instrument->instrumentactive,
-                        'created_at' => $date
+                        'created_at' => $date,
                     ]
                 );
             }
         }
     }
 }
-

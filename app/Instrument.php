@@ -6,17 +6,16 @@
   * PHP Version 7
   *
   * @category Instruments
-  * @package  DeepskyLog
   * @author   Wim De Meester <deepskywim@gmail.com>
   * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
   * @link     http://www.deepskylog.org
   */
 
- namespace App;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -25,7 +24,6 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * Instrument eloquent model.
  *
  * @category Instrument
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -36,7 +34,7 @@ class Instrument extends Model implements HasMedia
 
     protected $fillable = [
         'user_id', 'name', 'diameter', 'type',
-        'fd', 'fixedMagnification', 'active'
+        'fd', 'fixedMagnification', 'active',
     ];
 
     /**
@@ -79,7 +77,7 @@ class Instrument extends Model implements HasMedia
     /**
      * Returns the name of the instrument type.
      *
-     * @return String the name of the instrument type
+     * @return string the name of the instrument type
      */
     public function typeName()
     {
@@ -99,20 +97,20 @@ class Instrument extends Model implements HasMedia
         $count = 0;
 
         foreach ($types as $typeid => $type) {
-            $instruments = \App\Instrument::where(
+            $instruments = self::where(
                 ['user_id' => Auth::user()->id]
             )->where(['type' => $typeid])->where(['active' => 1])->pluck('id', 'name');
 
             if (count($instruments) > 0) {
-                echo '<optgroup label="' . _i($type->type) . '">';
+                echo '<optgroup label="'._i($type->type).'">';
 
                 foreach ($instruments as $name => $id) {
                     $count++;
                     if ($id == Auth::user()->stdtelescope) {
-                        echo '<option selected="selected" value="' . $id . '}}">'
-                           . $name . '</option>';
+                        echo '<option selected="selected" value="'.$id.'}}">'
+                           .$name.'</option>';
                     } else {
-                        echo '<option value="' . $id . '}}">' . $name . '</option>';
+                        echo '<option value="'.$id.'}}">'.$name.'</option>';
                     }
                 }
                 echo '</optgroup>';
@@ -120,7 +118,7 @@ class Instrument extends Model implements HasMedia
         }
 
         if ($count === 0) {
-            echo '<option>' . _i('Add an instrument') . '</option>';
+            echo '<option>'._i('Add an instrument').'</option>';
         }
     }
 
@@ -134,7 +132,6 @@ class Instrument extends Model implements HasMedia
      * Also store a thumbnail of the image.
      *
      * @param $media the media
-     *
      */
     public function registerMediaConversions(Media $media = null): void
     {

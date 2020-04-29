@@ -6,7 +6,6 @@
  * PHP Version 7
  *
  * @category Filters
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -24,7 +23,6 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * Filter eloquent model.
  *
  * @category Filters
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -34,7 +32,7 @@ class Filter extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $fillable = [
-        'user_id', 'name', 'type', 'color', 'wratten', 'schott', 'active'
+        'user_id', 'name', 'type', 'color', 'wratten', 'schott', 'active',
     ];
 
     /**
@@ -77,7 +75,7 @@ class Filter extends Model implements HasMedia
     /**
      * Returns the name of the filter type.
      *
-     * @return String the name of the filter type
+     * @return string the name of the filter type
      */
     public function typeName()
     {
@@ -88,7 +86,7 @@ class Filter extends Model implements HasMedia
     /**
      * Returns the name of the filter color.
      *
-     * @return String the name of the filter color
+     * @return string the name of the filter color
      */
     public function colorName()
     {

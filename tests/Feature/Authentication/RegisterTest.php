@@ -3,11 +3,11 @@
 namespace Tests\Feature\Auth;
 
 use App\User;
-use Tests\TestCase;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
 
 class RegisterTest extends TestCase
 {
@@ -16,7 +16,7 @@ class RegisterTest extends TestCase
     /**
      * Returns the redirection after successful registration.
      *
-     * @return String The redirection after successful registration
+     * @return string The redirection after successful registration
      */
     protected function successfulRegistrationRoute()
     {
@@ -26,7 +26,7 @@ class RegisterTest extends TestCase
     /**
      * Returns the redirection for registering.
      *
-     * @return String The redirection for registering
+     * @return string The redirection for registering
      */
     protected function registerGetRoute()
     {
@@ -36,7 +36,7 @@ class RegisterTest extends TestCase
     /**
      * Returns the redirection for registering.
      *
-     * @return String The redirection for registering
+     * @return string The redirection for registering
      */
     protected function registerPostRoute()
     {
@@ -46,7 +46,7 @@ class RegisterTest extends TestCase
     /**
      * Returns the redirection for the guest middleware.
      *
-     * @return String The redirection for the guest middleware
+     * @return string The redirection for the guest middleware
      */
     protected function guestMiddlewareRoute()
     {
@@ -55,7 +55,6 @@ class RegisterTest extends TestCase
 
     /**
      * Tests if the user can see a registration form.
-     *
      */
     public function testUserCanViewARegistrationForm()
     {
@@ -67,7 +66,6 @@ class RegisterTest extends TestCase
 
     /**
      * Tests if the user cannot see a registration form when already authenticated.
-     *
      */
     public function testUserCannotViewARegistrationFormWhenAuthenticated()
     {
@@ -80,7 +78,6 @@ class RegisterTest extends TestCase
 
     /**
      * Tests if the user can register.
-     *
      */
     public function testUserCanRegister()
     {
@@ -96,7 +93,7 @@ class RegisterTest extends TestCase
                 'password_confirmation' => 'i-love-laravel',
                 'country' => 'BE',
                 'observationlanguage' => 'en',
-                'language' => 'en'
+                'language' => 'en',
             ]
         );
 
@@ -118,7 +115,6 @@ class RegisterTest extends TestCase
 
     /**
      * Tests that the user cannot register without a name.
-     *
      */
     public function testUserCannotRegisterWithoutName()
     {
@@ -144,7 +140,6 @@ class RegisterTest extends TestCase
 
     /**
      * Tests that the user cannot register without an email.
-     *
      */
     public function testUserCannotRegisterWithoutEmail()
     {
@@ -170,7 +165,6 @@ class RegisterTest extends TestCase
 
     /**
      * Tests that the user cannot register with an invalid email.
-     *
      */
     public function testUserCannotRegisterWithInvalidEmail()
     {
@@ -197,7 +191,6 @@ class RegisterTest extends TestCase
 
     /**
      * Tests that the user cannot register without a password.
-     *
      */
     public function testUserCannotRegisterWithoutPassword()
     {
@@ -224,7 +217,6 @@ class RegisterTest extends TestCase
 
     /**
      * Test that the user cannot register without confirming the password.
-     *
      */
     public function testUserCannotRegisterWithoutPasswordConfirmation()
     {
@@ -251,7 +243,6 @@ class RegisterTest extends TestCase
 
     /**
      * Tests that the user cannot register when the passwords don't match.
-     *
      */
     public function testUserCannotRegisterWithPasswordsNotMatching()
     {

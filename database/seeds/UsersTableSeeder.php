@@ -6,22 +6,20 @@
  * PHP Version 7
  *
  * @category Database
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
 
-use Illuminate\Database\Seeder;
 use App\ObserversOld;
 use App\User;
+use Illuminate\Database\Seeder;
 
 /**
  * Seeder for the Users table of the database.
  * Fills the database with the users from the old database.
  *
  * @category Database
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -48,9 +46,9 @@ class UsersTableSeeder extends Seeder
                 $type = 'default';
             }
 
-            if ($accountSingle->id === "vvs04478"
-                || $accountSingle->id === "Eric VdJ"
-                || $accountSingle->id === "vvs03296"
+            if ($accountSingle->id === 'vvs04478'
+                || $accountSingle->id === 'Eric VdJ'
+                || $accountSingle->id === 'vvs03296'
                 || $accountSingle->id === 'wvreeven'
                 || $accountSingle->id === 'Jef De Wit'
                 || $accountSingle->id === 'Bob Hogeveen'
@@ -60,31 +58,31 @@ class UsersTableSeeder extends Seeder
 
             if ($accountSingle->language == 'en') {
                 $language = 'en_US';
-            } else if ($accountSingle->language == 'de') {
+            } elseif ($accountSingle->language == 'de') {
                 $language = 'de_DE';
-            } else if ($accountSingle->language == 'fr') {
+            } elseif ($accountSingle->language == 'fr') {
                 $language = 'fr_FR';
-            } else if ($accountSingle->language == 'nl') {
+            } elseif ($accountSingle->language == 'nl') {
                 $language = 'nl_NL';
-            } else if ($accountSingle->language == 'sv') {
+            } elseif ($accountSingle->language == 'sv') {
                 $language = 'sv_SV';
-            } else if ($accountSingle->language == 'es') {
+            } elseif ($accountSingle->language == 'es') {
                 $language = 'es_ES';
             } else {
                 $language = 'en_US';
             }
 
-            list($year, $month, $day, $hour, $minute)
-                = sscanf($accountSingle->registrationDate, "%4d%2d%2d %2d:%2d");
+            [$year, $month, $day, $hour, $minute]
+                = sscanf($accountSingle->registrationDate, '%4d%2d%2d %2d:%2d');
             $date = date(
                 'Y-m-d H:i:s', mktime($hour, $minute, 0, $month, $day, $year)
             );
 
             $name = html_entity_decode($accountSingle->firstname)
-                        . ' ' . html_entity_decode($accountSingle->name);
+                        .' '.html_entity_decode($accountSingle->name);
 
             if ($accountSingle->id === 'admin') {
-                $name = "Administrator";
+                $name = 'Administrator';
             }
 
             if ($accountSingle->standardAtlasCode == '') {
@@ -102,35 +100,35 @@ class UsersTableSeeder extends Seeder
             ) {
                 $user = User::create(
                     [
-                    'username' => $accountSingle->id,
-                    'name' => $name,
-                    'email' => $accountSingle->email,
-                    'email_verified_at' => $date,
-                    'type' => $type,
-                    'stdlocation' => $accountSingle->stdlocation,
-                    'stdtelescope' => $accountSingle->stdtelescope,
-                    'language' => $language,
-                    'icqname' => $accountSingle->icqname,
-                    'observationlanguage' => $accountSingle->observationlanguage,
-                    'standardAtlasCode' => $atlas,
-                    'fstOffset' => $accountSingle->fstOffset,
-                    'copyright' => $accountSingle->copyright,
-                    'overviewdsos' => $accountSingle->overviewdsos,
-                    'lookupdsos' => $accountSingle->lookupdsos,
-                    'detaildsos' => $accountSingle->detaildsos,
-                    'overviewstars' => $accountSingle->overviewstars,
-                    'lookupstars' => $accountSingle->lookupstars,
-                    'detailstars' => $accountSingle->detailstars,
-                    'atlaspagefont' => $accountSingle->atlaspagefont,
-                    'photosize1' => $accountSingle->photosize1,
-                    'overviewFoV' => $accountSingle->overviewFoV,
-                    'photosize2' => $accountSingle->photosize2,
-                    'lookupFoV' => $accountSingle->lookupFoV,
-                    'detailFoV' => $accountSingle->detailFoV,
-                    'sendMail' => $accountSingle->sendMail,
-                    'version' => $accountSingle->version,
-                    'showInches' => $accountSingle->showInches,
-                    'created_at' => $date,
+                        'username' => $accountSingle->id,
+                        'name' => $name,
+                        'email' => $accountSingle->email,
+                        'email_verified_at' => $date,
+                        'type' => $type,
+                        'stdlocation' => $accountSingle->stdlocation,
+                        'stdtelescope' => $accountSingle->stdtelescope,
+                        'language' => $language,
+                        'icqname' => $accountSingle->icqname,
+                        'observationlanguage' => $accountSingle->observationlanguage,
+                        'standardAtlasCode' => $atlas,
+                        'fstOffset' => $accountSingle->fstOffset,
+                        'copyright' => $accountSingle->copyright,
+                        'overviewdsos' => $accountSingle->overviewdsos,
+                        'lookupdsos' => $accountSingle->lookupdsos,
+                        'detaildsos' => $accountSingle->detaildsos,
+                        'overviewstars' => $accountSingle->overviewstars,
+                        'lookupstars' => $accountSingle->lookupstars,
+                        'detailstars' => $accountSingle->detailstars,
+                        'atlaspagefont' => $accountSingle->atlaspagefont,
+                        'photosize1' => $accountSingle->photosize1,
+                        'overviewFoV' => $accountSingle->overviewFoV,
+                        'photosize2' => $accountSingle->photosize2,
+                        'lookupFoV' => $accountSingle->lookupFoV,
+                        'detailFoV' => $accountSingle->detailFoV,
+                        'sendMail' => $accountSingle->sendMail,
+                        'version' => $accountSingle->version,
+                        'showInches' => $accountSingle->showInches,
+                        'created_at' => $date,
                     ]
                 );
                 $user->setMd5Password($accountSingle->password);
@@ -138,12 +136,12 @@ class UsersTableSeeder extends Seeder
 
                 // TODO: Make sure to make a link to the correct directory!
                 $filename = 'observer_pics/'
-                    . $user->username . '.jpg';
+                    .$user->username.'.jpg';
 
                 if (file_exists($filename)) {
                     $user
                         ->copyMedia($filename)
-                        ->usingFileName($user->username . '.png')
+                        ->usingFileName($user->username.'.png')
                         ->toMediaCollection('observer');
                 }
             }

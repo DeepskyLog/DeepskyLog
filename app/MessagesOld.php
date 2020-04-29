@@ -6,7 +6,6 @@
  * PHP Version 7
  *
  * @category Messages
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -20,7 +19,6 @@ use Illuminate\Database\Eloquent\Model;
  * Old messages eloquent model.
  *
  * @category Messages
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org

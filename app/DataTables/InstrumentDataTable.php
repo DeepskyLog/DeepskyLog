@@ -6,7 +6,6 @@
  * PHP Version 7
  *
  * @category Instruments
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -14,10 +13,10 @@
 
 namespace App\DataTables;
 
-use Yajra\DataTables\Services\DataTable;
 use App\Instrument;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Services\DataTable;
 
 /**
  * Instrument DataTable.
@@ -25,7 +24,6 @@ use Illuminate\Support\Facades\DB;
  * PHP Version 7
  *
  * @category Instruments
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -67,9 +65,9 @@ class InstrumentDataTable extends DataTable
             ->editColumn(
                 'name',
                 function ($instrument) {
-                    return '<a href="/instrument/' .
-                        $instrument->id . '">' .
-                        $instrument->name . '</a>';
+                    return '<a href="/instrument/'.
+                        $instrument->id.'">'.
+                        $instrument->name.'</a>';
                 }
             )->editColumn(
                 'type',
@@ -80,9 +78,9 @@ class InstrumentDataTable extends DataTable
                 'diameter',
                 function ($instrument) {
                     if (Auth::user()->showInches) {
-                        return round($instrument->diameter / 25.4, 2) . ' ' . _i('inch');
+                        return round($instrument->diameter / 25.4, 2).' '._i('inch');
                     } else {
-                        return $instrument->diameter . ' ' . _i('mm');
+                        return $instrument->diameter.' '._i('mm');
                     }
                 }
             )->editColumn(
@@ -90,9 +88,9 @@ class InstrumentDataTable extends DataTable
                 function ($instrument) {
                     if ($instrument->focalLength) {
                         if (Auth::user()->showInches) {
-                            return $instrument->focalLength . ' ' . _i('inch');
+                            return $instrument->focalLength.' '._i('inch');
                         } else {
-                            return $instrument->focalLength . ' ' . _i('mm');
+                            return $instrument->focalLength.' '._i('mm');
                         }
                     }
                 }
@@ -109,25 +107,25 @@ class InstrumentDataTable extends DataTable
             )->editColumn(
                 'user.name',
                 function ($instrument) {
-                    return '<a href="/users/' . $instrument->user->id . '">'
-                        . $instrument->user->name . '</a>';
+                    return '<a href="/users/'.$instrument->user->id.'">'
+                        .$instrument->user->name.'</a>';
                 }
             )->addColumn(
                 'standard',
                 function ($instrument) {
                     if ($instrument->id == Auth::user()->stdtelescope) {
                         return '<input type="radio" name="stdinstrument" value="'
-                            . $instrument->id
-                            . '" checked="checked" onclick="submit();" />';
+                            .$instrument->id
+                            .'" checked="checked" onclick="submit();" />';
                     } else {
                         if ($instrument->active) {
                             return '<input type="radio" name="stdinstrument" value="'
-                            . $instrument->id
-                            . '" onclick="submit();" />';
+                            .$instrument->id
+                            .'" onclick="submit();" />';
                         } else {
                             return '<input type="radio" name="stdinstrument" value="'
-                            . $instrument->id
-                            . '" disabled />';
+                            .$instrument->id
+                            .'" disabled />';
                         }
                     }
                 }
@@ -142,7 +140,7 @@ class InstrumentDataTable extends DataTable
                         </form>'
             )->rawColumns(
                 ['name', 'observations', 'active', 'delete',
-                    'user.name', 'standard']
+                    'user.name', 'standard', ]
             )->make(true);
     }
 
@@ -166,11 +164,11 @@ class InstrumentDataTable extends DataTable
     protected function getMyParameters()
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
-            . \PeterColes\Languages\LanguagesFacade::lookup(
+            .\PeterColes\Languages\LanguagesFacade::lookup(
                 [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first()
-            . '.json'];
+            .'.json', ];
         $mypars = $this->getBuilderParameters();
         $mypars['language'] = $language;
 
@@ -310,6 +308,6 @@ class InstrumentDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Instrument_' . date('YmdHis');
+        return 'Instrument_'.date('YmdHis');
     }
 }

@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Instruments
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -21,7 +20,7 @@ $factory->define(
             $fd = null;
             $diameter = $faker->numberBetween(2, 8);
             $fixedMagnification = 1;
-        } else if ($typeNumber == 1 || $typeNumber == 4) {
+        } elseif ($typeNumber == 1 || $typeNumber == 4) {
             $fixed = $faker->numberBetween(0, 1);
             if ($fixed) {
                 $fixedMagnification = $faker->numberBetween(5, 50);
@@ -45,7 +44,7 @@ $factory->define(
             'type' => $typeNumber,
             'fixedMagnification' => $fixedMagnification,
             'user_id' => \App\User::inRandomOrder()->first()->id,
-            'active' => $faker->numberBetween(0, 1)
+            'active' => $faker->numberBetween(0, 1),
         ];
     }
 );

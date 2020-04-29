@@ -1,14 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTargetNamesTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      */
     public function up()
     {
@@ -32,7 +31,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Sun',
                 'catalog' => '',
                 'catindex' => 'Sol',
-                'altname' => 'Sol'
+                'altname' => 'Sol',
             ]
         );
 
@@ -41,7 +40,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Moon',
                 'catalog' => '',
                 'catindex' => 'Månen',
-                'altname' => 'Månen'
+                'altname' => 'Månen',
             ]
         );
 
@@ -50,7 +49,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Sun',
                 'catalog' => '',
                 'catindex' => 'Zon',
-                'altname' => 'Zon'
+                'altname' => 'Zon',
             ]
         );
 
@@ -59,7 +58,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Moon',
                 'catalog' => '',
                 'catindex' => 'Maan',
-                'altname' => 'Maan'
+                'altname' => 'Maan',
             ]
         );
 
@@ -68,7 +67,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Mercury',
                 'catalog' => '',
                 'catindex' => 'Mercurius',
-                'altname' => 'Mercurius'
+                'altname' => 'Mercurius',
             ]
         );
 
@@ -77,7 +76,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Saturn',
                 'catalog' => '',
                 'catindex' => 'Saturnus',
-                'altname' => 'Saturnus'
+                'altname' => 'Saturnus',
             ]
         );
 
@@ -86,7 +85,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Neptune',
                 'catalog' => '',
                 'catindex' => 'Neptunus',
-                'altname' => 'Neptunus'
+                'altname' => 'Neptunus',
             ]
         );
 
@@ -95,7 +94,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Sun',
                 'catalog' => '',
                 'catindex' => 'Sonne',
-                'altname' => 'Sonne'
+                'altname' => 'Sonne',
             ]
         );
 
@@ -104,7 +103,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Moon',
                 'catalog' => '',
                 'catindex' => 'Mond',
-                'altname' => 'Mond'
+                'altname' => 'Mond',
             ]
         );
 
@@ -113,7 +112,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Mercury',
                 'catalog' => '',
                 'catindex' => 'Merkur',
-                'altname' => 'Merkur'
+                'altname' => 'Merkur',
             ]
         );
 
@@ -122,7 +121,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Neptune',
                 'catalog' => '',
                 'catindex' => 'Neptun',
-                'altname' => 'Neptun'
+                'altname' => 'Neptun',
             ]
         );
 
@@ -131,7 +130,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Sun',
                 'catalog' => '',
                 'catindex' => 'Soleil',
-                'altname' => 'Soleil'
+                'altname' => 'Soleil',
             ]
         );
 
@@ -140,7 +139,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Moon',
                 'catalog' => '',
                 'catindex' => 'Lune',
-                'altname' => 'Lune'
+                'altname' => 'Lune',
             ]
         );
 
@@ -149,7 +148,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Mercury',
                 'catalog' => '',
                 'catindex' => 'Mercure',
-                'altname' => 'Mercure'
+                'altname' => 'Mercure',
             ]
         );
 
@@ -158,7 +157,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Saturn',
                 'catalog' => '',
                 'catindex' => 'Saturne',
-                'altname' => 'Saturne'
+                'altname' => 'Saturne',
             ]
         );
 
@@ -167,7 +166,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Moon',
                 'catalog' => '',
                 'catindex' => 'Luna',
-                'altname' => 'Luna'
+                'altname' => 'Luna',
             ]
         );
 
@@ -176,7 +175,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Mercury',
                 'catalog' => '',
                 'catindex' => 'Mercurio',
-                'altname' => 'Mercurio'
+                'altname' => 'Mercurio',
             ]
         );
 
@@ -185,7 +184,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Mars',
                 'catalog' => '',
                 'catindex' => 'Marte',
-                'altname' => 'Marte'
+                'altname' => 'Marte',
             ]
         );
 
@@ -194,7 +193,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Saturn',
                 'catalog' => '',
                 'catindex' => 'Saturno',
-                'altname' => 'Saturno'
+                'altname' => 'Saturno',
             ]
         );
 
@@ -203,7 +202,7 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Uranus',
                 'catalog' => '',
                 'catindex' => 'Urano',
-                'altname' => 'Urano'
+                'altname' => 'Urano',
             ]
         );
 
@@ -212,14 +211,13 @@ class CreateTargetNamesTable extends Migration
                 'objectname' => 'Neptune',
                 'catalog' => '',
                 'catindex' => 'Neptuno',
-                'altname' => 'Neptuno'
+                'altname' => 'Neptuno',
             ]
         );
     }
 
     /**
      * Reverse the migrations.
-     *
      */
     public function down()
     {

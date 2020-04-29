@@ -5,7 +5,6 @@
  * PHP Version 7
  *
  * @category Test
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -13,18 +12,17 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
 
 /**
  * Tests for creating, deleting, and adapting eyepieces.
  *
  * @category Test
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -37,7 +35,6 @@ class EyepieceTest extends TestCase
 
     /**
      * Set up the user.
-     *
      */
     public function setUp(): void
     {
@@ -80,7 +77,7 @@ class EyepieceTest extends TestCase
         $response->assertStatus(200);
         // Check if we see the correct page
         $response->assertSee(
-            'Eyepieces of ' . $this->_user->name
+            'Eyepieces of '.$this->_user->name
         );
     }
 
@@ -104,7 +101,7 @@ class EyepieceTest extends TestCase
         $response->assertStatus(200);
 
         // Check if we see the correct page
-        $response->assertSee('Eyepieces of ' . $this->_user->name);
+        $response->assertSee('Eyepieces of '.$this->_user->name);
 
         $response->assertViewIs('layout.eyepiece.view');
 
@@ -161,7 +158,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('eyepiece', $attributes);
@@ -180,7 +177,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos2',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('eyepiece', $attributes);
@@ -219,7 +216,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -251,7 +248,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -283,7 +280,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -315,7 +312,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -347,7 +344,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -379,7 +376,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -411,7 +408,7 @@ class EyepieceTest extends TestCase
             'type' => null,
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -443,7 +440,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => null,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -475,7 +472,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 15.3,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -507,7 +504,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 185.2,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -539,7 +536,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => null,
             'maxFocalLength' => 'test',
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -571,7 +568,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 80,
             'maxFocalLength' => 152.2,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -603,7 +600,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 52,
             'maxFocalLength' => 0.5,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -627,7 +624,7 @@ class EyepieceTest extends TestCase
         $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             [
                 'name' => 'test',
                 'brand' => 'Televue',
@@ -635,7 +632,7 @@ class EyepieceTest extends TestCase
                 'type' => 'Ethos',
                 'apparentFOV' => 107,
                 'maxFocalLength' => null,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -659,7 +656,7 @@ class EyepieceTest extends TestCase
         $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->patch(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             [
                 'name' => 'Test eyepiece',
                 'brand' => null,
@@ -667,7 +664,7 @@ class EyepieceTest extends TestCase
                 'type' => 'Ethos',
                 'apparentFOV' => 84,
                 'maxFocalLength' => null,
-                'active' => 1
+                'active' => 1,
             ]
         );
 
@@ -691,7 +688,7 @@ class EyepieceTest extends TestCase
         $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->patch(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             [
                 'name' => 'test eyepiece',
                 'brand' => 'Televue',
@@ -713,11 +710,11 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             $attributes
         );
         $response->assertStatus(302);
@@ -732,11 +729,11 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             $attributes
         );
 
@@ -750,11 +747,11 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             $attributes
         );
 
@@ -770,11 +767,11 @@ class EyepieceTest extends TestCase
             'type' => null,
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             $attributes
         );
         $response->assertStatus(302);
@@ -789,11 +786,11 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => null,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             $attributes
         );
         $response->assertStatus(302);
@@ -808,11 +805,11 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 15.3,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             $attributes
         );
         $response->assertStatus(302);
@@ -827,11 +824,11 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 185.2,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             $attributes
         );
         $response->assertStatus(302);
@@ -846,11 +843,11 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => null,
             'maxFocalLength' => 'test',
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             $attributes
         );
         $response->assertStatus(302);
@@ -865,11 +862,11 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => null,
             'maxFocalLength' => 152.2,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             $attributes
         );
         $response->assertStatus(302);
@@ -884,11 +881,11 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => null,
             'maxFocalLength' => 0.5,
-            'active' => 1
+            'active' => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/eyepiece/' . $eyepiece->id,
+            '/eyepiece/'.$eyepiece->id,
             $attributes
         );
         $response->assertStatus(302);
@@ -939,7 +936,7 @@ class EyepieceTest extends TestCase
             'active' => $eyepiece->active,
         ];
 
-        $this->put('eyepiece/' . $eyepiece->id, $newAttributes);
+        $this->put('eyepiece/'.$eyepiece->id, $newAttributes);
 
         // Then there should be an updated eyepiece in the database
         $this->assertDatabaseHas('eyepieces', $newAttributes);
@@ -969,7 +966,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('eyepiece', $attributes);
@@ -1000,7 +997,7 @@ class EyepieceTest extends TestCase
 
         $this->expectException(AuthorizationException::class);
 
-        $this->put('/eyepiece/' . $eyepiece->id, $newAttributes);
+        $this->put('/eyepiece/'.$eyepiece->id, $newAttributes);
     }
 
     /**
@@ -1027,7 +1024,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('eyepiece', $attributes);
@@ -1056,7 +1053,7 @@ class EyepieceTest extends TestCase
             'active' => $eyepiece->active,
         ];
 
-        $this->put('/eyepiece/' . $eyepiece->id, $newAttributes);
+        $this->put('/eyepiece/'.$eyepiece->id, $newAttributes);
 
         // Then there should be an updated eyepiece in the database
         $this->assertDatabaseHas('eyepieces', $newAttributes);
@@ -1090,13 +1087,13 @@ class EyepieceTest extends TestCase
                 'brand' => $eyepiece->brand,
                 'focalLength' => $eyepiece->focalLength,
                 'apparentFOV' => $eyepiece->apparentFOV,
-                'user_id' => $eyepiece->user_id
+                'user_id' => $eyepiece->user_id,
             ]
         );
 
         $this->assertEquals(1, \App\Eyepiece::count());
 
-        $response = $this->delete('/eyepiece/' . $eyepiece->id);
+        $response = $this->delete('/eyepiece/'.$eyepiece->id);
 
         $response->assertStatus(302);
 
@@ -1109,7 +1106,7 @@ class EyepieceTest extends TestCase
                 'brand' => $eyepiece->brand,
                 'focalLength' => $eyepiece->focalLength,
                 'apparentFOV' => $eyepiece->apparentFOV,
-                'user_id' => $eyepiece->user_id
+                'user_id' => $eyepiece->user_id,
             ]
         );
         $this->assertEquals(0, \App\Eyepiece::count());
@@ -1141,7 +1138,7 @@ class EyepieceTest extends TestCase
                 'brand' => $eyepiece->brand,
                 'focalLength' => $eyepiece->focalLength,
                 'apparentFOV' => $eyepiece->apparentFOV,
-                'user_id' => $eyepiece->user_id
+                'user_id' => $eyepiece->user_id,
             ]
         );
 
@@ -1151,7 +1148,7 @@ class EyepieceTest extends TestCase
         $this->expectException(AuthorizationException::class);
 
         // Try to delete the eyepiece
-        $this->delete('/eyepiece/' . $eyepiece->id);
+        $this->delete('/eyepiece/'.$eyepiece->id);
     }
 
     /**
@@ -1177,7 +1174,7 @@ class EyepieceTest extends TestCase
             'brand' => $eyepiece->brand,
             'focalLength' => $eyepiece->focalLength,
             'apparentFOV' => $eyepiece->apparentFOV,
-            'user_id' => $eyepiece->user_id
+            'user_id' => $eyepiece->user_id,
         ];
 
         // Then there should be a new eyepiece in the database
@@ -1190,7 +1187,7 @@ class EyepieceTest extends TestCase
 
         $this->actingAs($newUser);
 
-        $this->delete('/eyepiece/' . $eyepiece->id);
+        $this->delete('/eyepiece/'.$eyepiece->id);
 
         // Then there should not be an eyepiece in the database anymore
         $this->assertDatabaseMissing('eyepieces', $attributes);
@@ -1218,7 +1215,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->expectException(\Illuminate\Auth\AuthenticationException::class);
@@ -1250,7 +1247,7 @@ class EyepieceTest extends TestCase
             'type' => 'Ethos',
             'apparentFOV' => 107,
             'maxFocalLength' => null,
-            'active' => 1
+            'active' => 1,
         ];
 
         $this->post('/eyepiece', $attributes);
@@ -1331,7 +1328,7 @@ class EyepieceTest extends TestCase
         $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->get(
-            '/eyepiece/' . $eyepiece->id . '/edit'
+            '/eyepiece/'.$eyepiece->id.'/edit'
         );
 
         $response->assertStatus(200);
@@ -1344,7 +1341,6 @@ class EyepieceTest extends TestCase
      * Ensure that we can upload a picture.
      *
      * @test
-     *
      */
     public function testCreateEyepieceFileUploaded()
     {
@@ -1368,7 +1364,7 @@ class EyepieceTest extends TestCase
         $eyepiece = \App\Eyepiece::firstOrFail();
 
         Storage::disk('public')->assertExists(
-            $eyepiece->id . '/' . $eyepiece->id . '.png'
+            $eyepiece->id.'/'.$eyepiece->id.'.png'
         );
     }
 
@@ -1376,13 +1372,12 @@ class EyepieceTest extends TestCase
      * Ensure that the owner of an eyepiece can see the change eyepiece button.
      *
      * @test
-     *
      */
     public function testShowEyepieceDetailWithChangeButton()
     {
         $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
 
-        $response = $this->actingAs($this->_user)->get('/eyepiece/' . $eyepiece->id);
+        $response = $this->actingAs($this->_user)->get('/eyepiece/'.$eyepiece->id);
 
         $response->assertStatus(200);
         $response->assertSee($eyepiece->name);
@@ -1392,7 +1387,7 @@ class EyepieceTest extends TestCase
         $response->assertSee($eyepiece->apparentFOV);
         $response->assertSee($eyepiece->name);
         $response->assertSee($this->_user->name);
-        $response->assertSee('Edit ' . $eyepiece->name);
+        $response->assertSee('Edit '.$eyepiece->name);
     }
 
     /**
@@ -1400,14 +1395,13 @@ class EyepieceTest extends TestCase
      * see the change eyepiece button.
      *
      * @test
-     *
      */
     public function testShowEyepieceDetailWithoutChangeButton()
     {
         $newUser = factory('App\User')->create();
         $eyepiece = factory('App\Eyepiece')->create(['user_id' => $newUser->id]);
 
-        $response = $this->actingAs($this->_user)->get('/eyepiece/' . $eyepiece->id);
+        $response = $this->actingAs($this->_user)->get('/eyepiece/'.$eyepiece->id);
 
         $response->assertStatus(200);
         $response->assertSee($eyepiece->name);
@@ -1417,21 +1411,20 @@ class EyepieceTest extends TestCase
         $response->assertSee($eyepiece->apparentFOV);
         $response->assertSee($eyepiece->name);
         $response->assertSee($this->_user->name);
-        $response->assertDontSee('Edit ' . $eyepiece->name);
+        $response->assertDontSee('Edit '.$eyepiece->name);
     }
 
     /**
      * Ensure that an admin can always see the change eyepiece button.
      *
      * @test
-     *
      */
     public function testAdminAlwaysSeesChangeButton()
     {
         $admin = factory('App\User')->create(['type' => 'admin']);
         $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
 
-        $response = $this->actingAs($admin)->get('/eyepiece/' . $eyepiece->id);
+        $response = $this->actingAs($admin)->get('/eyepiece/'.$eyepiece->id);
 
         $response->assertStatus(200);
         $response->assertSee($eyepiece->name);
@@ -1441,20 +1434,19 @@ class EyepieceTest extends TestCase
         $response->assertSee($eyepiece->apparentFOV);
         $response->assertSee($eyepiece->name);
         $response->assertSee($this->_user->name);
-        $response->assertSee('Edit ' . $eyepiece->name);
+        $response->assertSee('Edit '.$eyepiece->name);
     }
 
     /**
      * Ensure that a guest user can not see the change eyepiece button.
      *
      * @test
-     *
      */
     public function testGuestNeverSeesChangeButton()
     {
         $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
 
-        $response = $this->get('/eyepiece/' . $eyepiece->id);
+        $response = $this->get('/eyepiece/'.$eyepiece->id);
 
         $response->assertStatus(200);
         $response->assertSee($eyepiece->name);
@@ -1464,14 +1456,13 @@ class EyepieceTest extends TestCase
         $response->assertSee($eyepiece->apparentFOV);
         $response->assertSee($eyepiece->name);
         $response->assertSee($this->_user->name);
-        $response->assertDontSee('Edit ' . $eyepiece->name);
+        $response->assertDontSee('Edit '.$eyepiece->name);
     }
 
     /**
      * Ensure that only an admin can see the admin page with all the eyepieces.
      *
      * @test
-     *
      */
     public function testOnlyAdminCanSeeOverviewOfAllEyepieces()
     {
@@ -1501,20 +1492,19 @@ class EyepieceTest extends TestCase
      * Ensure that logged in users can see the Json information of an eyepiece.
      *
      * @test
-     *
      */
     public function testJsonInformationForEyepiece()
     {
         $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         // Only for logged in users!
-        $response = $this->get('/getEyepieceJson/' . $eyepiece->id);
+        $response = $this->get('/getEyepieceJson/'.$eyepiece->id);
         $response->assertStatus(302);
         $response->assertRedirect('/login');
 
         // Test for logged in user
         $response = $this->actingAs($this->_user)->get(
-            '/getEyepieceJson/' . $eyepiece->id
+            '/getEyepieceJson/'.$eyepiece->id
         );
 
         $this->assertEquals($response['name'], $eyepiece->name);
@@ -1531,7 +1521,6 @@ class EyepieceTest extends TestCase
      * Ensure that we get an image of an eyepiece.
      *
      * @test
-     *
      */
     public function testGetEyepieceImage()
     {
@@ -1542,11 +1531,11 @@ class EyepieceTest extends TestCase
 
         // Check the image, if no image is uploaded
         $this->actingAs($this->_user)->get(
-            'eyepiece/' . $eyepiece->id . '/getImage'
+            'eyepiece/'.$eyepiece->id.'/getImage'
         );
 
         Storage::disk('public')->assertExists(
-            $eyepiece->id . '/' . $eyepiece->id . '.png'
+            $eyepiece->id.'/'.$eyepiece->id.'.png'
         );
 
         // Check the image if we have uploaded an image
@@ -1565,7 +1554,7 @@ class EyepieceTest extends TestCase
         $eyepiece2 = DB::table('eyepieces')->latest('id')->first();
 
         Storage::disk('public')->assertExists(
-            $eyepiece2->id . '/' . $eyepiece2->id . '.png'
+            $eyepiece2->id.'/'.$eyepiece2->id.'.png'
         );
     }
 
@@ -1573,7 +1562,6 @@ class EyepieceTest extends TestCase
      * Ensure that we can delete an image of an eyepiece.
      *
      * @test
-     *
      */
     public function testDeleteEyepieceImage()
     {
@@ -1596,11 +1584,11 @@ class EyepieceTest extends TestCase
         $eyepiece = DB::table('eyepieces')->latest('id')->first();
 
         $this->actingAs($this->_user)->post(
-            'eyepiece/' . $eyepiece->id . '/deleteImage'
+            'eyepiece/'.$eyepiece->id.'/deleteImage'
         );
 
         Storage::disk('public')->assertMissing(
-            $eyepiece->id . '/' . $eyepiece->id . '.png'
+            $eyepiece->id.'/'.$eyepiece->id.'.png'
         );
 
         // Check if another user cannot delete the image if we have uploaded an image
@@ -1621,11 +1609,11 @@ class EyepieceTest extends TestCase
         $user = factory('App\User')->create();
 
         $this->actingAs($user)->post(
-            'eyepieces/' . $eyepiece->id . '/deleteImage'
+            'eyepieces/'.$eyepiece->id.'/deleteImage'
         );
 
         Storage::disk('public')->assertExists(
-            $eyepiece->id . '/' . $eyepiece->id . '.png'
+            $eyepiece->id.'/'.$eyepiece->id.'.png'
         );
     }
 
@@ -1633,7 +1621,6 @@ class EyepieceTest extends TestCase
      * Ensure that the autocomplete works for select2.
      *
      * @test
-     *
      */
     public function testAutocompleteForEyepiece()
     {

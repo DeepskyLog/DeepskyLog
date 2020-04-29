@@ -22,6 +22,6 @@ class VerifyCsrfToken extends Middleware
         '/setSession', '/instrument/*/deleteImage',
         '/users/*/deleteImage', '/location/*/deleteImage',
         '/eyepiece/*/deleteImage', '/lens/*/deleteImage',
-        '/filter/*/deleteImage'
+        '/filter/*/deleteImage',
     ];
 }

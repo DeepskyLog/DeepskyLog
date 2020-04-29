@@ -6,7 +6,6 @@
  * PHP Version 7
  *
  * @category Lenses
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -14,8 +13,8 @@
 
 namespace App\DataTables;
 
-use Yajra\DataTables\Services\DataTable;
 use App\Lens;
+use Yajra\DataTables\Services\DataTable;
 
 /**
  * Lens DataTable.
@@ -23,7 +22,6 @@ use App\Lens;
  * PHP Version 7
  *
  * @category Lenses
- * @package  DeepskyLog
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
@@ -57,8 +55,8 @@ class LensDataTable extends DataTable
             )->editColumn(
                 'user.name',
                 function ($lens) {
-                    return '<a href="/users/' . $lens->user->id . '">'
-                        . $lens->user->name . '</a>';
+                    return '<a href="/users/'.$lens->user->id.'">'
+                        .$lens->user->name.'</a>';
                 }
             )->editColumn(
                 'active',
@@ -101,11 +99,11 @@ class LensDataTable extends DataTable
     protected function getMyParameters()
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
-            . \PeterColes\Languages\LanguagesFacade::lookup(
+            .\PeterColes\Languages\LanguagesFacade::lookup(
                 [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first()
-            . '.json'];
+            .'.json', ];
         $mypars = $this->getBuilderParameters();
         $mypars['language'] = $language;
 
@@ -189,6 +187,6 @@ class LensDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Lens_' . date('YmdHis');
+        return 'Lens_'.date('YmdHis');
     }
 }
