@@ -15,6 +15,7 @@ namespace App\Libraries;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
+use deepskylog\AstronomyLibrary\Coordinates\EclipticalCoordinates;
 use deepskylog\AstronomyLibrary\Time;
 
 /**
@@ -213,7 +214,7 @@ class astrocalc
 
         $m0 = ($deltaM + $m0) * 24.0;
 
-        if (! is_nan($Hcap0)) {
+        if (!is_nan($Hcap0)) {
             // 3.2 : rise time
             $theta = $theta0 * 15.0 + 360.985647 * $m1;
             $theta /= 360.0;
@@ -299,13 +300,13 @@ class astrocalc
                 $toAdd = 0;
             }
             if ($minutes < 10) {
-                $minutes = '0'.$minutes;
+                $minutes = '0' . $minutes;
             }
             if ((floor($ris_tra_set[0]) + $toAdd) % 24 < 10) {
-                $ris_tra_set[0] = '0'.(floor($ris_tra_set[0]) + $toAdd) % 24
-                    .':'.$minutes;
+                $ris_tra_set[0] = '0' . (floor($ris_tra_set[0]) + $toAdd) % 24
+                    . ':' . $minutes;
             } else {
-                $ris_tra_set[0] = floor($ris_tra_set[0]) + $toAdd.':'.$minutes;
+                $ris_tra_set[0] = floor($ris_tra_set[0]) + $toAdd . ':' . $minutes;
             }
         }
 
@@ -328,13 +329,13 @@ class astrocalc
                 $toAdd = 0;
             }
             if ($minutes < 10) {
-                $minutes = '0'.$minutes;
+                $minutes = '0' . $minutes;
             }
             if ((floor($ris_tra_set[1]) + $toAdd) % 24 < 10) {
-                $ris_tra_set[1] = '0'.(floor($ris_tra_set[1]) + $toAdd) % 24
-                    .':'.$minutes;
+                $ris_tra_set[1] = '0' . (floor($ris_tra_set[1]) + $toAdd) % 24
+                    . ':' . $minutes;
             } else {
-                $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd.':'.$minutes;
+                $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ':' . $minutes;
             }
         }
 
@@ -356,13 +357,13 @@ class astrocalc
                 $toAdd = 0;
             }
             if ($minutes < 10) {
-                $minutes = '0'.$minutes;
+                $minutes = '0' . $minutes;
             }
             if ((floor($ris_tra_set[2]) + $toAdd) % 24 < 10) {
-                $ris_tra_set[2] = '0'.(floor($ris_tra_set[2]) + $toAdd) % 24
-                    .':'.$minutes;
+                $ris_tra_set[2] = '0' . (floor($ris_tra_set[2]) + $toAdd) % 24
+                    . ':' . $minutes;
             } else {
-                $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd.':'.$minutes;
+                $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ':' . $minutes;
             }
         }
         $ris_tra_set[4] = 0;
@@ -377,7 +378,7 @@ class astrocalc
         $tempday = substr($temptime, 0, $temppos);
         $tempyear = substr($temptime, $temppos + 1);
 
-        $timestr = $tempyear.'-'.$tempmonth.'-'.$tempday;
+        $timestr = $tempyear . '-' . $tempmonth . '-' . $tempday;
 
         $sun_info = date_sun_info(
             strtotime($timestr),
@@ -483,17 +484,17 @@ class astrocalc
                 $toAdd = 0;
             }
             if ($minutes < 10) {
-                $minutes = '0'.$minutes;
+                $minutes = '0' . $minutes;
             }
             if ($ris_tra_set[3] < 0) {
                 $ris_tra_set[3] = '-';
             } else {
                 if ((floor($ris_tra_set[3]) + $toAdd) % 24 < 10) {
-                    $ris_tra_set[3] = '0'.(floor($ris_tra_set[3]) + $toAdd) % 24
-                        .'&deg;'.$minutes."'";
+                    $ris_tra_set[3] = '0' . (floor($ris_tra_set[3]) + $toAdd) % 24
+                        . '&deg;' . $minutes . "'";
                 } else {
-                    $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd.'&deg;'
-                        .$minutes."'";
+                    $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . '&deg;'
+                        . $minutes . "'";
                 }
             }
 
@@ -517,14 +518,14 @@ class astrocalc
                     $toAdd = 0;
                 }
                 if ($minutes < 10) {
-                    $minutes = '0'.$minutes;
+                    $minutes = '0' . $minutes;
                 }
                 if ((floor($ris_tra_set[4]) + $toAdd) % 24 < 10) {
-                    $ris_tra_set[4] = '0'.(floor($ris_tra_set[4]) + $toAdd) % 24
-                        .':'.$minutes;
+                    $ris_tra_set[4] = '0' . (floor($ris_tra_set[4]) + $toAdd) % 24
+                        . ':' . $minutes;
                 } else {
                     $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd
-                        .':'.$minutes;
+                        . ':' . $minutes;
                 }
             }
         } else {
@@ -533,7 +534,7 @@ class astrocalc
         }
 
         // if no astro twilight, or no best astro time for object
-        if (! (($astroend > 0 && $astrobegin > 0))) {
+        if (!(($astroend > 0 && $astrobegin > 0))) {
             if ($nautend > 0 && $nautbegin > 0) {
                 $tocompare = -999;
                 if ($nautbegin > 12) {
@@ -612,17 +613,17 @@ class astrocalc
                     $toAdd = 0;
                 }
                 if ($minutes < 10) {
-                    $minutes = '0'.$minutes;
+                    $minutes = '0' . $minutes;
                 }
                 if ($ris_tra_set[3] < 0) {
                     $ris_tra_set[3] = '-';
                 } else {
                     if ((floor($ris_tra_set[3]) + $toAdd) % 24 < 10) {
-                        $ris_tra_set[3] = '0'.(floor($ris_tra_set[3]) + $toAdd) % 24
-                            .'&deg;'.$minutes."'";
+                        $ris_tra_set[3] = '0' . (floor($ris_tra_set[3]) + $toAdd) % 24
+                            . '&deg;' . $minutes . "'";
                     } else {
-                        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd.'&deg;'
-                            .$minutes."'";
+                        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . '&deg;'
+                            . $minutes . "'";
                     }
                 }
 
@@ -648,14 +649,14 @@ class astrocalc
                         $toAdd = 0;
                     }
                     if ($minutes < 10) {
-                        $minutes = '0'.$minutes;
+                        $minutes = '0' . $minutes;
                     }
                     if ((floor($ris_tra_set[4]) + $toAdd) % 24 < 10.0) {
-                        $ris_tra_set[4] = '0'.(floor($ris_tra_set[4]) + $toAdd) % 24
-                            .':'.$minutes;
+                        $ris_tra_set[4] = '0' . (floor($ris_tra_set[4]) + $toAdd) % 24
+                            . ':' . $minutes;
                     } else {
                         $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd
-                            .':'.$minutes;
+                            . ':' . $minutes;
                     }
                 }
             } else {
@@ -663,7 +664,7 @@ class astrocalc
                 $ris_tra_set[4] = '-';
             }
             if ($ris_tra_set[3] !== '-') {
-                $ris_tra_set[3] = '('.$ris_tra_set[3].')';
+                $ris_tra_set[3] = '(' . $ris_tra_set[3] . ')';
             }
         }
 
@@ -953,53 +954,14 @@ class astrocalc
 
         $eclLongitude += $nutat[0] / 3600.0;
 
-        $ecl = [$eclLongitude, $eclLatitude];
+        $ecl = new EclipticalCoordinates($eclLongitude, $eclLatitude);
 
         // Now we transform from ecliptical to equatorial coordinates
-        $equa = $this->_convertFromEclipticalToEquatorialCoordinates(
-            $ecl,
-            $nutat[3]
-        );
+        $equa = $ecl->convertToEquatorial($nutat[3]);
 
-        $moonRa = $equa[0] / 15;
-        $moonDecl = $equa[1];
+        $moonRa = $equa->getRA();
+        $moonDecl = $equa->getDeclination();
 
         return [$moonRa, $moonDecl, $pi];
-    }
-
-    /**
-     * Converts from ecliptical coordinates to equatorial coordinates.
-     *
-     * @param array $coords       The ecliptical coordinates
-     * @param float $nutObliquity The nutation in Obliquity
-     *
-     * @return array The equatorial coordinates
-     */
-    private function _convertFromEclipticalToEquatorialCoordinates(
-        $coords,
-        $nutObliquity
-    ) {
-        $ra = rad2deg(
-            atan2(
-                sin(deg2rad($coords[0])) *
-                cos(deg2rad($nutObliquity)) - tan(deg2rad($coords[1])) *
-                sin(deg2rad($nutObliquity)),
-                cos(deg2rad($coords[0]))
-            )
-        );
-
-        $decl = rad2deg(
-            asin(
-                sin(deg2rad($coords[1])) * cos(deg2rad($nutObliquity))
-                + cos(deg2rad($coords[1])) * sin(deg2rad($nutObliquity)) *
-                sin(deg2rad($coords[0]))
-            )
-        );
-
-        if ($ra < 0.0) {
-            $ra += 360.0;
-        }
-
-        return [$ra, $decl];
     }
 }
