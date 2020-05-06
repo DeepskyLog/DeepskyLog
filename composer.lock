@@ -1062,16 +1062,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v7.10.1",
+            "version": "v7.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d92e25358e85a962f1f868376f14935eb8ac53d6"
+                "reference": "4110965660ffc459206a5f1e5c3b40354347cd08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d92e25358e85a962f1f868376f14935eb8ac53d6",
-                "reference": "d92e25358e85a962f1f868376f14935eb8ac53d6",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/4110965660ffc459206a5f1e5c3b40354347cd08",
+                "reference": "4110965660ffc459206a5f1e5c3b40354347cd08",
                 "shasum": ""
             },
             "require": {
@@ -1210,7 +1210,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-05-05T15:54:26+00:00"
+            "time": "2020-05-05T22:17:38+00:00"
         },
         {
             "name": "laravel/helpers",
@@ -6396,16 +6396,16 @@
         },
         {
             "name": "laravel/telescope",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/telescope.git",
-                "reference": "503242109c4756af6f23c63a59294a76ef9a774f"
+                "reference": "7ee2149122c6a58d5e6d9b3f2eb0d63511413c01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/503242109c4756af6f23c63a59294a76ef9a774f",
-                "reference": "503242109c4756af6f23c63a59294a76ef9a774f",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/7ee2149122c6a58d5e6d9b3f2eb0d63511413c01",
+                "reference": "7ee2149122c6a58d5e6d9b3f2eb0d63511413c01",
                 "shasum": ""
             },
             "require": {
@@ -6455,7 +6455,7 @@
                 "laravel",
                 "monitoring"
             ],
-            "time": "2020-04-28T16:03:44+00:00"
+            "time": "2020-05-05T18:48:12+00:00"
         },
         {
             "name": "maximebf/debugbar",

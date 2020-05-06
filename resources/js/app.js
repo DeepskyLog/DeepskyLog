@@ -40,6 +40,9 @@ require( 'popper.js/dist/umd/popper.min.js' );
 require( 'bootstrap-fileinput/js/fileinput.min.js');
 require( 'bootstrap-fileinput/themes/fas/theme.min.js');
 
+// Lity
+require( 'lity/dist/lity.js');
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
