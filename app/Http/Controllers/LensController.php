@@ -12,10 +12,11 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\LensDataTable;
 use App\Lens;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\DataTables\LensDataTable;
+use App\Http\Requests\LensRequest;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -109,15 +110,14 @@ class LensController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request The request with all information
+     * @param \Illuminate\Http\LensRequest $request The request with all information
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(LensRequest $request)
     {
-        $request['user_id'] = auth()->id();
-
-        $validated = $this->validateInput($request);
+        $validated = $request->validated();
+        $validated['user_id'] = auth()->id();
 
         $lens = Lens::create($validated);
 
@@ -125,7 +125,7 @@ class LensController extends Controller
             // Add the picture
             Lens::find($lens->id)
                 ->addMedia($request->picture->path())
-                ->usingFileName($lens->id.'.png')
+                ->usingFileName($lens->id . '.png')
                 ->toMediaCollection('lens');
         }
 
@@ -133,24 +133,6 @@ class LensController extends Controller
 
         // View the page with all lenses for the user
         return redirect('/lens');
-    }
-
-    /**
-     * Validate the values of the form.
-     *
-     * @param \Illuminate\Http\Request $request The request with all information
-     *
-     * @return \Illuminate\Http\Request The validated request
-     */
-    public function validateInput(Request $request)
-    {
-        return $request->validate(
-            [
-                'user_id' => 'required',
-                'name' => ['required', 'min:6'],
-                'factor' => ['required', 'numeric', 'min:0', 'max:10'],
-            ]
-        );
     }
 
     /**
@@ -184,20 +166,20 @@ class LensController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request The request with all information
-     * @param Lens    $lens    The lens to adapt
+     * @param LensRequest $request The request with all information
+     * @param Lens        $lens    The lens to adapt
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Lens $lens)
+    public function update(LensRequest $request, Lens $lens)
     {
-        $this->authorize('update', $lens);
-
         $request['user_id'] = $lens->user_id;
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('factor')) {
-            $this->validateInput($request);
+            $validated = $request->validated();
+            $validated['user_id'] = auth()->id();
+            $this->authorize('update', $lens);
 
             $lens->update(['factor' => $request->get('factor')]);
             $lens->update(['name' => $request->get('name')]);
@@ -214,7 +196,7 @@ class LensController extends Controller
                 // Update the picture
                 Lens::find($lens->id)
                     ->addMedia($request->picture->path())
-                    ->usingFileName($lens->id.'.png')
+                    ->usingFileName($lens->id . '.png')
                     ->toMediaCollection('lens');
             }
 
@@ -243,9 +225,9 @@ class LensController extends Controller
      */
     public function getImage(Lens $lens)
     {
-        if (! $lens->hasMedia('lens')) {
+        if (!$lens->hasMedia('lens')) {
             $lens->addMediaFromUrl(asset('images/lens.jpg'))
-                ->usingFileName($lens->id.'.png')
+                ->usingFileName($lens->id . '.png')
                 ->toMediaCollection('lens');
         }
 
