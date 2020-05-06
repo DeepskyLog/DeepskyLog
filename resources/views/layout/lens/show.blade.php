@@ -10,7 +10,9 @@
         <th><h4>{{ $lens->name }}</h4></th>
         <th>
             @if ($media)
-            <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $lens->name }}">
+            <a href={{ $media->getUrl() }} data-lity>
+                <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $lens->name }}">
+            </a>
             @endif
         </th>
     </tr>

@@ -10,7 +10,9 @@
         <th><h4>{{ $instrument->name }}</h4></th>
         <th>
             @if ($media)
-            <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $instrument->name }}">
+            <a href={{ $media->getUrl() }} data-lity>
+                <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $instrument->name }}">
+            </a>
             @endif
         </th>
     </tr>

@@ -10,7 +10,9 @@
         <td>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             @if ($media)
-            <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $user->name }}">
+            <a href={{ $media->getUrl() }} data-lity>
+                <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $user->name }}">
+            </a>
             @endif
         </td>
     </tr>
