@@ -13,10 +13,11 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\UserDataTable;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\DataTables\UserDataTable;
+use App\Http\Requests\UserRequest;
 
 /**
  * User Controller.
@@ -100,7 +101,7 @@ class UserController extends Controller
         // TODO: https://dev.to/arielmejiadev/use-laravel-charts-in-laravel-5bbm
         return \Chart::title(
             [
-                'text' => _i('Number of observations per year: ').$user->name,
+                'text' => _i('Number of observations per year: ') . $user->name,
             ]
         )->chart(
             [
@@ -112,7 +113,7 @@ class UserController extends Controller
             ]
         )->subtitle(
             [
-                'text' => _i('Source: ').'https://www.deepskylog.org/',
+                'text' => _i('Source: ') . 'https://www.deepskylog.org/',
             ]
         )->xaxis(
             [
@@ -191,7 +192,7 @@ class UserController extends Controller
     {
         return \Chart::title(
             [
-                'text' => _i('Number of observations per month: ').$user->name,
+                'text' => _i('Number of observations per month: ') . $user->name,
             ]
         )->chart(
             [
@@ -206,7 +207,7 @@ class UserController extends Controller
             ]
         )->subtitle(
             [
-                'text' => _i('Source: ').'https://www.deepskylog.org/',
+                'text' => _i('Source: ') . 'https://www.deepskylog.org/',
             ]
         )->xaxis(
             [
@@ -306,39 +307,20 @@ class UserController extends Controller
     }
 
     /**
-     * Validate the values of the form.
-     *
-     * @param \Illuminate\Http\Request $request The request with all information
-     *
-     * @return \Illuminate\Http\Request The validated request
-     */
-    public function validateInput(Request $request)
-    {
-        return $request->validate(
-            [
-                'email' => 'required|unique|min:2',
-                'name' => 'required|max:120',
-                'email' => 'required|email|unique:users,email,'.$id,
-                'type' => 'required',
-            ]
-        );
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request The request
-     * @param int                      $id      The id of the user to update
+     * @param UserRequest $request The request
+     * @param int         $id      The id of the user to update
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
         //Get user specified by id
         $user = User::findOrFail($id);
 
         //Validate name, email and password fields
-        $this->validateInput($request);
+        $validated = $request->validated();
 
         // Retrieve the name, email and password fields
         $input = $request->only(['username', 'name', 'email', 'type']);
@@ -381,9 +363,9 @@ class UserController extends Controller
     public function getImage($id)
     {
         $user = User::findOrFail($id);
-        if (! $user->hasMedia('observer')) {
+        if (!$user->hasMedia('observer')) {
             $user->addMediaFromUrl(asset('images/profile.png'))
-                ->usingFileName($user->id.'.png')
+                ->usingFileName($user->id . '.png')
                 ->toMediaCollection('observer');
         }
 
@@ -420,7 +402,7 @@ class UserController extends Controller
         } else {
             User::find($id)
                 ->addMediaFromUrl(asset('img/profile.png'))
-                ->usingFileName($id.'.png')
+                ->usingFileName($id . '.png')
                 ->toMediaCollection('observer');
 
             return User::find($id)
@@ -615,7 +597,7 @@ class UserController extends Controller
             // Update the picture
             User::find($user->id)
                 ->addMedia($request->picture->path())
-                ->usingFileName($user->id.'.png')
+                ->usingFileName($user->id . '.png')
                 ->toMediaCollection('observer');
         }
 
