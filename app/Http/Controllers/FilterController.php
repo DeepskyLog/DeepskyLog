@@ -12,11 +12,12 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\FilterDataTable;
 use App\Filter;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use App\DataTables\FilterDataTable;
+use App\Http\Requests\FilterRequest;
 
 /**
  * Filter Controller.
@@ -102,7 +103,8 @@ class FilterController extends Controller
     public function create(Filter $filter)
     {
         return view(
-            'layout.filter.create', ['filter' => $filter, 'update' => false]
+            'layout.filter.create',
+            ['filter' => $filter, 'update' => false]
         );
     }
 
@@ -113,11 +115,10 @@ class FilterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FilterRequest $request)
     {
-        $request['user_id'] = auth()->id();
-
-        $validated = $this->validateInput($request);
+        $validated = $request->validated();
+        $validated['user_id'] = auth()->id();
 
         $filter = Filter::create($validated);
 
@@ -125,7 +126,7 @@ class FilterController extends Controller
             // Add the picture
             Filter::find($filter->id)
                 ->addMedia($request->picture->path())
-                ->usingFileName($filter->id.'.png')
+                ->usingFileName($filter->id . '.png')
                 ->toMediaCollection('filter');
         }
 
@@ -133,26 +134,6 @@ class FilterController extends Controller
 
         // View the page with all filters for the user
         return redirect('/filter');
-    }
-
-    /**
-     * Validate the values of the form.
-     *
-     * @param \Illuminate\Http\Request $request The request with all information
-     *
-     * @return \Illuminate\Http\Request The validated request
-     */
-    public function validateInput(Request $request)
-    {
-        return $request->validate(
-            [
-                'user_id' => 'required',
-                'name' => ['required', 'min:6'],
-                'type' => ['required'],
-                'color' => [], 'wratten' => ['max:5'],
-                'schott' => [],
-            ]
-        );
     }
 
     /**
@@ -167,7 +148,8 @@ class FilterController extends Controller
         $media = $this->getImage($filter);
 
         return view(
-            'layout.filter.show', ['filter' => $filter, 'media' => $media]
+            'layout.filter.show',
+            ['filter' => $filter, 'media' => $media]
         );
     }
 
@@ -193,7 +175,7 @@ class FilterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Filter $filter)
+    public function update(FilterRequest $request, Filter $filter)
     {
         $this->authorize('update', $filter);
 
@@ -201,7 +183,8 @@ class FilterController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('type')) {
-            $this->validateInput($request);
+            $validated = $request->validated();
+            $validated['user_id'] = auth()->id();
 
             $filter->update(['type' => $request->get('type')]);
             $filter->update(['name' => $request->get('name')]);
@@ -221,7 +204,7 @@ class FilterController extends Controller
                 // Update the picture
                 Filter::find($filter->id)
                     ->addMedia($request->picture->path())
-                    ->usingFileName($filter->id.'.png')
+                    ->usingFileName($filter->id . '.png')
                     ->toMediaCollection('filter');
             }
 
@@ -252,9 +235,9 @@ class FilterController extends Controller
      */
     public function getImage(Filter $filter)
     {
-        if (! $filter->hasMedia('filter')) {
+        if (!$filter->hasMedia('filter')) {
             $filter->addMediaFromUrl(asset('images/filter.jpg'))
-                ->usingFileName($filter->id.'.png')
+                ->usingFileName($filter->id . '.png')
                 ->toMediaCollection('filter');
         }
 
