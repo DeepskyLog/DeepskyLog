@@ -12,12 +12,13 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\InstrumentDataTable;
 use App\Instrument;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\DataTables\InstrumentDataTable;
+use App\Http\Requests\InstrumentRequest;
 
 /**
  * Instrument Controller.
@@ -111,15 +112,14 @@ class InstrumentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request The request with all information
+     * @param InstrumentRequest $request The request with all information
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(InstrumentRequest $request)
     {
-        $request['user_id'] = auth()->id();
-
-        $validated = $this->validateInput($request);
+        $validated = $request->validated();
+        $validated['user_id'] = auth()->id();
 
         $instrument = Instrument::create($validated);
 
@@ -131,7 +131,7 @@ class InstrumentController extends Controller
             // Add the picture
             Instrument::find($instrument->id)
                 ->addMedia($request->picture->path())
-                ->usingFileName($instrument->id.'.png')
+                ->usingFileName($instrument->id . '.png')
                 ->toMediaCollection('instrument');
         }
 
@@ -139,27 +139,6 @@ class InstrumentController extends Controller
 
         // View the page with all instruments for the user
         return redirect('/instrument');
-    }
-
-    /**
-     * Validate the values of the form.
-     *
-     * @param \Illuminate\Http\Request $request The request with all information
-     *
-     * @return \Illuminate\Http\Request The validated request
-     */
-    public function validateInput(Request $request)
-    {
-        return $request->validate(
-            [
-                'user_id' => 'required',
-                'name' => 'required|min:6',
-                'type' => 'required',
-                'diameter' => 'required|numeric|gt:0',
-                'fd' => 'gte:1|required_without:fixedMagnification',
-                'fixedMagnification' => 'gte:0|required_without:fd',
-            ]
-        );
     }
 
     /**
@@ -199,12 +178,12 @@ class InstrumentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request    $request    The request with all information
-     * @param Instrument $instrument The instrument to adapt
+     * @param InstrumentRequest $request    The request with all information
+     * @param Instrument        $instrument The instrument to adapt
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Instrument $instrument)
+    public function update(InstrumentRequest $request, Instrument $instrument)
     {
         $this->authorize('update', $instrument);
 
@@ -212,7 +191,8 @@ class InstrumentController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('type')) {
-            $this->validateInput($request);
+            $validated = $request->validated();
+            $validated['user_id'] = auth()->id();
 
             $instrument->update(['type' => $request->get('type')]);
             $instrument->update(['name' => $request->get('name')]);
@@ -241,7 +221,7 @@ class InstrumentController extends Controller
                 // Update the picture
                 Instrument::find($instrument->id)
                     ->addMedia($request->picture->path())
-                    ->usingFileName($instrument->id.'.png')
+                    ->usingFileName($instrument->id . '.png')
                     ->toMediaCollection('instrument');
             }
 
@@ -283,9 +263,9 @@ class InstrumentController extends Controller
      */
     public function getImage(Instrument $instrument)
     {
-        if (! $instrument->hasMedia('instrument')) {
+        if (!$instrument->hasMedia('instrument')) {
             $instrument->addMediaFromUrl(asset('images/telescopeCartoon.png'))
-                ->usingFileName($instrument->id.'.png')
+                ->usingFileName($instrument->id . '.png')
                 ->toMediaCollection('instrument');
         }
 
