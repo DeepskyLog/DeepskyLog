@@ -12,12 +12,13 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\LocationDataTable;
 use App\Location;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\DataTables\LocationDataTable;
+use App\Http\Requests\LocationRequest;
 
 /**
  * Location Controller.
@@ -111,15 +112,14 @@ class LocationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request The request with all information
+     * @param LocationRequest $request The request with all information
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(LocationRequest $request)
     {
-        $request['user_id'] = auth()->id();
-
-        $validated = $this->validateInput($request);
+        $validated = $request->validated();
+        $validated['user_id'] = auth()->id();
 
         $location = Location::create($validated);
 
@@ -139,7 +139,7 @@ class LocationController extends Controller
         if ($request->picture != null) {
             // Add the picture
             $location->addMedia($request->picture->path())
-                ->usingFileName($location->id.'.png')
+                ->usingFileName($location->id . '.png')
                 ->toMediaCollection('location');
         }
 
@@ -147,31 +147,6 @@ class LocationController extends Controller
 
         // View the page with all locations for the user
         return redirect('/location');
-    }
-
-    /**
-     * Validate the values of the form.
-     *
-     * @param \Illuminate\Http\Request $request The request with all information
-     *
-     * @return \Illuminate\Http\Request The validated request
-     */
-    public function validateInput(Request $request)
-    {
-        return $request->validate(
-            [
-                'user_id' => 'required',
-                'name' => 'required|min:6',
-                'latitude' => 'required|numeric|lte:90|gte:-90',
-                'longitude' => 'required|numeric|lte:180|gte:-180',
-                'country' => 'required',
-                'elevation' => 'required|numeric|lte:8888|gte:-200',
-                'timezone' => 'required|timezone',
-                'lm' => 'numeric|lte:8.0|gte:-1.0',
-                'sqm' => 'numeric|lte:22.0|gte:10.0',
-                'bortle' => 'numeric|lte:9|gte:1',
-            ]
-        );
     }
 
     /**
@@ -186,7 +161,8 @@ class LocationController extends Controller
         $media = $this->getImage($location);
 
         return view(
-            'layout.location.show', ['location' => $location, 'media' => $media]
+            'layout.location.show',
+            ['location' => $location, 'media' => $media]
         );
     }
 
@@ -217,29 +193,30 @@ class LocationController extends Controller
     public function lightpollutionmap(Request $request)
     {
         return file_get_contents(
-            'https://www.lightpollutionmap.info/QueryRaster/'.
-             '?ql=wa_2015&qt=point&qd='.$request->longitude
-            .','.$request->latitude.'&key='
-            .env('LIGHTPOLLUTION_KEY')
+            'https://www.lightpollutionmap.info/QueryRaster/' .
+             '?ql=wa_2015&qt=point&qd=' . $request->longitude
+            . ',' . $request->latitude . '&key='
+            . env('LIGHTPOLLUTION_KEY')
         );
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request  $request  The request with all information
-     * @param Location $location The location to adapt
+     * @param LocationRequest $request  The request with all information
+     * @param Location        $location The location to adapt
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Location $location)
+    public function update(LocationRequest $request, Location $location)
     {
         $this->authorize('update', $location);
         $request['user_id'] = $location->user_id;
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('latitude')) {
-            $this->validateInput($request);
+            $validated = $request->validated();
+            $validated['user_id'] = auth()->id();
 
             $location->update(['name' => $request->get('name')]);
             $location->update(['latitude' => $request->get('latitude')]);
@@ -271,7 +248,7 @@ class LocationController extends Controller
                 }
                 // Update the picture
                 $location->addMedia($request->picture->path())
-                    ->usingFileName($location->id.'.png')
+                    ->usingFileName($location->id . '.png')
                     ->toMediaCollection('location');
             }
 
@@ -313,9 +290,9 @@ class LocationController extends Controller
      */
     public function getImage(Location $location)
     {
-        if (! $location->hasMedia('location')) {
+        if (!$location->hasMedia('location')) {
             $location->addMediaFromUrl(asset('images/location.png'))
-                ->usingFileName($location->id.'.png')
+                ->usingFileName($location->id . '.png')
                 ->toMediaCollection('location');
         }
 
