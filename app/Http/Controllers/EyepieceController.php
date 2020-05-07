@@ -12,11 +12,12 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\EyepieceDataTable;
 use App\Eyepiece;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use App\DataTables\EyepieceDataTable;
+use App\Http\Requests\EyepieceRequest;
 
 /**
  * Eyepiece Controller.
@@ -125,19 +126,19 @@ class EyepieceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request The request with all information
+     * @param EyepieceRequest $request The request with all information
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EyepieceRequest $request)
     {
-        $request['user_id'] = auth()->id();
-
-        $validated = $this->validateInput($request);
+        $validated = $request->validated();
+        $validated['user_id'] = auth()->id();
 
         // Check if brand is already in the database.
         if (\App\EyepieceBrand::where(
-            'brand', $request->get('brand')
+            'brand',
+            $request->get('brand')
         )->get()->isEmpty()
         ) {
             // Add the new brand to the database
@@ -150,7 +151,8 @@ class EyepieceController extends Controller
 
         // Check if brand is already in the database.
         if (\App\EyepieceType::where(
-            'type', $request->get('type')
+            'type',
+            $request->get('type')
         )->where('brand', $request->get('brand'))->get()->isEmpty()
         ) {
             // Add the new brand to the database
@@ -168,7 +170,7 @@ class EyepieceController extends Controller
             // Add the picture
             Eyepiece::find($eyepiece->id)
                 ->addMedia($request->picture->path())
-                ->usingFileName($eyepiece->id.'.png')
+                ->usingFileName($eyepiece->id . '.png')
                 ->toMediaCollection('eyepiece');
         }
 
@@ -176,28 +178,6 @@ class EyepieceController extends Controller
 
         // View the page with all eyepieces for the user
         return redirect('/eyepiece');
-    }
-
-    /**
-     * Validate the values of the form.
-     *
-     * @param \Illuminate\Http\Request $request The request with all information
-     *
-     * @return \Illuminate\Http\Request The validated request
-     */
-    public function validateInput(Request $request)
-    {
-        return $request->validate(
-            [
-                'user_id' => 'required',
-                'name' => 'required|min:6',
-                'brand' => 'required',
-                'type' => 'required',
-                'focalLength' => 'required|numeric|gte:1|lte:99',
-                'apparentFOV' => 'required|numeric|gte:20|lte:150',
-                'maxFocalLength' => 'gte:1|lte:99',
-            ]
-        );
     }
 
     /**
@@ -212,7 +192,8 @@ class EyepieceController extends Controller
         $media = $this->getImage($eyepiece);
 
         return view(
-            'layout.eyepiece.show', ['eyepiece' => $eyepiece, 'media' => $media]
+            'layout.eyepiece.show',
+            ['eyepiece' => $eyepiece, 'media' => $media]
         );
     }
 
@@ -236,12 +217,12 @@ class EyepieceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request  $request  The request with all information
-     * @param Eyepiece $eyepiece The eyepiece to adapt
+     * @param EyepieceRequest $request  The request with all information
+     * @param Eyepiece        $eyepiece The eyepiece to adapt
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Eyepiece $eyepiece)
+    public function update(EyepieceRequest $request, Eyepiece $eyepiece)
     {
         $this->authorize('update', $eyepiece);
 
@@ -249,11 +230,13 @@ class EyepieceController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('focalLength')) {
-            $this->validateInput($request);
+            $validated = $request->validated();
+            $validated['user_id'] = auth()->id();
 
             // Check if brand is already in the database.
             if (\App\EyepieceBrand::where(
-                'brand', $request->get('brand')
+                'brand',
+                $request->get('brand')
             )->get()->isEmpty()
             ) {
                 // Add the new brand to the database
@@ -266,7 +249,8 @@ class EyepieceController extends Controller
 
             // Check if brand is already in the database.
             if (\App\EyepieceType::where(
-                'type', $request->get('type')
+                'type',
+                $request->get('type')
             )->where('brand', $request->get('brand'))->get()->isEmpty()
             ) {
                 // Add the new brand to the database
@@ -297,7 +281,7 @@ class EyepieceController extends Controller
                 // Update the picture
                 Eyepiece::find($eyepiece->id)
                     ->addMedia($request->picture->path())
-                    ->usingFileName($eyepiece->id.'.png')
+                    ->usingFileName($eyepiece->id . '.png')
                     ->toMediaCollection('eyepiece');
             }
 
@@ -328,9 +312,9 @@ class EyepieceController extends Controller
      */
     public function getImage(Eyepiece $eyepiece)
     {
-        if (! $eyepiece->hasMedia('eyepiece')) {
+        if (!$eyepiece->hasMedia('eyepiece')) {
             $eyepiece->addMediaFromUrl(asset('images/eyepiece.jpg'))
-                ->usingFileName($eyepiece->id.'.png')
+                ->usingFileName($eyepiece->id . '.png')
                 ->toMediaCollection('eyepiece');
         }
 
