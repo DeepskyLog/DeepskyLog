@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature;
 
 use App\User;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -47,7 +47,6 @@ class ForgotPasswordTest extends TestCase
     /**
      * Check if a user can view the email password form.
      *
-     * @return void
      */
     public function testUserCanViewAnEmailPasswordForm()
     {
@@ -60,7 +59,6 @@ class ForgotPasswordTest extends TestCase
     /**
      * Check if a user can view the email password form when already authenticated.
      *
-     * @return void
      */
     public function testUserCannotViewAnEmailPasswordFormWhenAuthenticated()
     {
@@ -75,7 +73,6 @@ class ForgotPasswordTest extends TestCase
     /**
      * Check if a user receives an email with a password reset link.
      *
-     * @return void
      */
     public function testUserReceivesAnEmailWithAPasswordResetLink()
     {
@@ -102,7 +99,6 @@ class ForgotPasswordTest extends TestCase
     /**
      * Check that an unregistered user does not receive an email.
      *
-     * @return void
      */
     public function testUserDoesNotReceiveEmailWhenNotRegistered()
     {
@@ -126,7 +122,6 @@ class ForgotPasswordTest extends TestCase
     /**
      * Check that an email is required.
      *
-     * @return void
      */
     public function testEmailIsRequired()
     {
@@ -141,7 +136,6 @@ class ForgotPasswordTest extends TestCase
     /**
      * Check that the email is a valid email.
      *
-     * @return void
      */
     public function testEmailIsAValidEmail()
     {
