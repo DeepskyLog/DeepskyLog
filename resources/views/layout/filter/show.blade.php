@@ -65,7 +65,7 @@
 
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td><a href="/users/{{ $filter->user_id }}">{{  $filter->user->name }}</a></td>
+        <td><a href="{{ route('users.show', $filter->user) }}">{{  $filter->user->name }}</a></td>
     </tr>
     <tr>
         <td>{{ _i("Number of observations") }}</td>
@@ -80,7 +80,7 @@
 
 @auth
     @if (Auth::user()->id == $filter->user_id || Auth::user()->isAdmin())
-    <a href="/filter/{{ $filter->id }}/edit">
+    <a href="{{ route('filter.edit', $filter) }}">
         <button type="button" class="btn btn-sm btn-primary">
             {{ _i('Edit') }} {{  $filter->name }}
         </button>

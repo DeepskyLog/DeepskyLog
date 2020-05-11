@@ -316,11 +316,11 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, $id)
     {
-        //Get user specified by id
+        // Get user specified by id
         $user = User::findOrFail($id);
 
-        //Validate name, email and password fields
-        $validated = $request->validated();
+        // Validate name, email and password fields
+        $request->validated();
 
         // Retrieve the name, email and password fields
         $input = $request->only(['username', 'name', 'email', 'type']);

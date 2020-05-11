@@ -133,7 +133,7 @@ class FilterController extends Controller
         laraflash(_i('Filter %s created', $request->name))->success();
 
         // View the page with all filters for the user
-        return redirect('/filter');
+        return redirect(route('filter.index'));
     }
 
     /**
@@ -223,7 +223,7 @@ class FilterController extends Controller
             }
         }
 
-        return redirect('/filter');
+        return redirect(route('filter.index'));
     }
 
     /**

@@ -177,7 +177,7 @@ class EyepieceController extends Controller
         laraflash(_i('Eyepiece %s created', $request->name))->success();
 
         // View the page with all eyepieces for the user
-        return redirect('/eyepiece');
+        return redirect(route('eyepiece.index'));
     }
 
     /**
@@ -300,7 +300,7 @@ class EyepieceController extends Controller
             }
         }
 
-        return redirect('/eyepiece');
+        return redirect(route('eyepiece.index'));
     }
 
     /**

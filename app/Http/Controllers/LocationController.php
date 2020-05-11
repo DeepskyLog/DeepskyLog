@@ -146,7 +146,7 @@ class LocationController extends Controller
         laraflash(_i('Location %s created', $request->name))->success();
 
         // View the page with all locations for the user
-        return redirect('/location');
+        return redirect(route('location.index'));
     }
 
     /**
@@ -278,7 +278,7 @@ class LocationController extends Controller
             }
         }
 
-        return redirect('/location');
+        return redirect(route('location.index'));
     }
 
     /**

@@ -40,7 +40,7 @@
     @endauth
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td><a href="/users/{{ $lens->user_id }}">{{  $lens->user->name }}</a></td>
+        <td><a href="{{ route('users.show', $lens->user) }}">{{  $lens->user->name }}</a></td>
     </tr>
     <tr>
         <td>{{ _i("Number of observations") }}</td>
@@ -55,7 +55,7 @@
 
 @auth
     @if (Auth::user()->id == $lens->user_id || Auth::user()->isAdmin())
-    <a href="/lens/{{  $lens->id }}/edit">
+    <a href="{{ route('lens.edit', $lens) }}">
         <button type="button" class="btn btn-sm btn-primary">
             {{ _i('Edit') }} {{  $lens->name }}
         </button>

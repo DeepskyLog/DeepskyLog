@@ -132,7 +132,7 @@ class LensController extends Controller
         laraflash(_i('Lens %s created', $request->name))->success();
 
         // View the page with all lenses for the user
-        return redirect('/lens');
+        return redirect(route('lens.index'));
     }
 
     /**
@@ -213,7 +213,7 @@ class LensController extends Controller
             }
         }
 
-        return redirect('/lens');
+        return redirect(route('lens.index'));
     }
 
     /**

@@ -138,7 +138,7 @@ class InstrumentController extends Controller
         laraflash(_i('Instrument %s created', $request->name))->success();
 
         // View the page with all instruments for the user
-        return redirect('/instrument');
+        return redirect(route('instrument.index'));
     }
 
     /**
@@ -251,7 +251,7 @@ class InstrumentController extends Controller
             }
         }
 
-        return redirect('/instrument');
+        return redirect(route('instrument.index'));
     }
 
     /**

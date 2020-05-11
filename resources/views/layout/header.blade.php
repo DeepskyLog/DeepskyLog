@@ -6,25 +6,25 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            @include('layout.header.view');
-            @include('layout.header.search');
+            @include('layout.header.view')
+            @include('layout.header.search')
             @auth
-                @include('layout.header.add');
+                @include('layout.header.add')
             @endauth
             @admin('')
-                @include('layout.header.admin');
+                @include('layout.header.admin')
             @endadmin
-            @include('layout.header.downloads');
-            @include('layout.header.help');
+            @include('layout.header.downloads')
+            @include('layout.header.help')
         </ul>
 
         <ul class="navbar-nav">
             <button class="btn btn-light fas fa-adjust" id="darkSwitch" style="margin-right:5px;border:0;" alt="Night Mode"></button>
 
             @if (Auth::guest())
-                @include('layout.header.register');
+                @include('layout.header.register')
             @else
-                @include('layout.header.user');
+                @include('layout.header.user')
 
                 <button class="btn" style="margin-right:5px;border:0;">
                     <a href="/messages">

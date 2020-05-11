@@ -70,7 +70,7 @@
 
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td><a href="/users/{{ $eyepiece->user_id }}">{{  $eyepiece->user->name }}</a></td>
+        <td><a href="{{ route('users.show', $eyepiece->user) }}">{{  $eyepiece->user->name }}</a></td>
     </tr>
     <tr>
         <td>{{ _i("Number of observations") }}</td>
@@ -85,7 +85,7 @@
 
 @auth
     @if (Auth::user()->id == $eyepiece->user_id || Auth::user()->isAdmin())
-    <a href="/eyepiece/{{ $eyepiece->id }}/edit">
+    <a href="{{ route('eyepiece.edit', $eyepiece) }}">
         <button type="button" class="btn btn-sm btn-primary">
             {{ _i('Edit') }} {{  $eyepiece->name }}
         </button>

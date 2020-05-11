@@ -58,7 +58,7 @@
 
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td><a href="/users/{{ $instrument->user_id }}">{{  $instrument->user->name }}</a></td>
+        <td><a href="{{ route('users.show', $instrument->user) }}">{{  $instrument->user->name }}</a></td>
     </tr>
     <tr>
         <td>{{ _i("Number of observations") }}</td>
@@ -106,7 +106,7 @@
 
 @auth
     @if (Auth::user()->id == $instrument->user_id || Auth::user()->isAdmin())
-    <a href="/instrument/{{ $instrument->id }}/edit">
+    <a href="{{ route('instrument.edit', $instrument) }}">
         <button type="button" class="btn btn-sm btn-primary">
             {{ _i('Edit') }} {{  $instrument->name }}
         </button>

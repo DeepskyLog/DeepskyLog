@@ -24,7 +24,7 @@
 
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td><a href="/users/{{ $location->user_id }}">{{ $location->user->name }}</a></td>
+        <td><a href="{{ route('users.show', $location->user) }}">{{ $location->user->name }}</a></td>
     </tr>
     <tr>
         <td>{{ _i("Country") }}</td>
@@ -118,7 +118,7 @@
 @auth
     @if (Auth::user()->id == $location->user_id || Auth::user()->isAdmin())
     <br />
-    <a href="/location/{{ $location->id }}/edit">
+    <a href="{{ route('location.edit', $location) }}">
         <button type="button" class="btn btn-sm btn-primary">
             {{ _i('Edit') }} {{ $location->name }}
         </button>

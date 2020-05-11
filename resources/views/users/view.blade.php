@@ -66,7 +66,7 @@
                 <td> {{ _i("Default observing site") }} </td>
                 <td>
                     @if ($user->stdlocation !== 0)
-                        <a href="/location/{{ $user->stdlocation }}">
+                        <a href="{{ route('location.show', $user->stdlocation) }}">
                             {{ \App\Location::where(['id' => $user->stdlocation])->first()->name }}
                         </a>
                     @endif
@@ -78,7 +78,7 @@
                 <td> {{ _i("Default instrument") }} </td>
                 <td>
                     @if ($user->stdtelescope !== 0)
-                        <a href="/instrument/{{ $user->stdtelescope }}">
+                        <a href="{{ route('instrument.show', $user->stdtelescope) }}">
                             {{ \App\Instrument::where(['id' => $user->stdtelescope])->first()->name }}
                         </a>
                     @endif
@@ -90,7 +90,7 @@
                 <td> {{ _i("Number of locations") }} </td>
                 <td>
                     @if ($user->id === Auth::user()->id)
-                        <a href="/location">
+                        <a href="{{ route('location.index') }}">
                     @endif
                     {{ count($user->locations) }}
                     @if ($user->id === Auth::user()->id)
@@ -104,7 +104,7 @@
                 <td> {{ _i("Number of instruments") }} </td>
                 <td>
                     @if ($user->id === Auth::user()->id)
-                        <a href="/instrument">
+                        <a href="{{ route('instrument.index') }}">
                     @endif
                     {{ count($user->instruments) }}
                     @if ($user->id === Auth::user()->id)
@@ -118,7 +118,7 @@
                 <td> {{ _i("Number of eyepieces") }} </td>
                 <td>
                     @if ($user->id === Auth::user()->id)
-                        <a href="/eyepiece">
+                        <a href="{{ route('eyepiece.index') }}">
                     @endif
                     {{ count($user->eyepieces) }}
                     @if ($user->id === Auth::user()->id)
@@ -132,7 +132,7 @@
                 <td> {{ _i("Number of filters") }} </td>
                 <td>
                     @if ($user->id === Auth::user()->id)
-                        <a href="/filter">
+                        <a href="{{ route('filter.index') }}">
                     @endif
                     {{ count($user->filters) }}
                     @if ($user->id === Auth::user()->id)
@@ -146,7 +146,7 @@
                 <td> {{ _i("Number of lenses") }} </td>
                 <td>
                     @if ($user->id === Auth::user()->id)
-                        <a href="/lens">
+                        <a href="{{ route('lens.index') }}">
                     @endif
                     {{ count($user->lenses) }}
                     @if ($user->id === Auth::user()->id)
