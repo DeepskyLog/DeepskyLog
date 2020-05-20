@@ -36,8 +36,9 @@ class Language
      */
     public function handle($request, Closure $next)
     {
-        if (! Auth::guest()) {
+        if (!Auth::guest()) {
             LaravelGettext::setLocale(Auth::user()->language);
+            \Carbon\Carbon::setLocale(Auth::user()->language);
         }
 
         return $next($request);

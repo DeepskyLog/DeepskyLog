@@ -146,7 +146,10 @@
         @if ($target->isNonSolarSystem())
         <tr>
             <td>{{ _i('Date') }}</td>
-            <td>@php echo session('date') @endphp</td>
+            <td>@php $datestr = Session::get('date');
+                $date = \Carbon\Carbon::createFromFormat('d/m/Y', $datestr);
+                $date->hour = 12;
+                @endphp {{ $date->isoFormat('LL') }}</td>
             <td>{{ _i("Rise") }}</td>
             <td>
                 <span data-toggle="tooltip" data-placement="bottom" title="{{ $target->rise_popup }}">{{ $target->rise }}</span>

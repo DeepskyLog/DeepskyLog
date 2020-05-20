@@ -12,11 +12,13 @@
 
 namespace App\Libraries;
 
-use Carbon\Carbon;
 use DateTime;
-use DateTimeZone;
-use deepskylog\AstronomyLibrary\Coordinates\EclipticalCoordinates;
+use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Time;
+use deepskylog\AstronomyLibrary\Targets\Moon;
+use deepskylog\AstronomyLibrary\Coordinates\EclipticalCoordinates;
+use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
+use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 
 /**
  * Procedures for calculating astronomical timing etc.
@@ -29,9 +31,8 @@ use deepskylog\AstronomyLibrary\Time;
 class astrocalc
 {
     public $jd;
-    protected $timedifference;
-    protected $longitude;
-    protected $latitude;
+    private $_geo_coords = null;
+    private $_timezone = 'UTC';
 
     /**
      * Constructor initialises the public astroCalc property.
@@ -49,633 +50,20 @@ class astrocalc
         $longitude,
         $timezone
     ) {
-        $day = $date->format('d');
-        $month = $date->format('m');
-        $year = $date->format('Y');
         $this->jd = Time::getJd(Carbon::instance($date));
-        $dateTimeZone = new DateTimeZone($timezone);
-        $datestr = sprintf('%02d/%02d/%d', $month, $day, $year);
-        $dateTime = new DateTime($datestr, $dateTimeZone);
 
-        // Returns timedifference in seconds
-        $timedifference = $dateTimeZone->getOffset($dateTime);
-        $timedifference /= 3600.0;
+        $this->_timezone = $timezone;
+        $this->_geo_coords = new GeographicalCoordinates($longitude, $latitude);
 
-        if (strncmp($timezone, 'Etc/GMT', 7) === 0) {
-            $timedifference = -$timedifference;
-        }
-
-        $this->timedifference = $timedifference;
-        $this->longitude = $longitude;
-        $this->latitude = $latitude;
-    }
-
-    /**
-     * This function calculates the rise, transit and setting time of an object (not
-     * the sun of the moon). The accuracy is a few minutes... When the object does
-     * not rise above the horizon, the setting time and the rising time will be NaN.
-     * The transit time will be given (the time of the highest point of the object,
-     * even when the object is under the horizon).
-     * The rising, transit and setting time are given in UT. They should be corrected
-     * with the offset in hours of the observing place.
-     *
-     * @param float $ra  The right ascension of the ephemerids
-     * @param float $dec The declination of the object
-     * @param float $jd  The julian date for the ephemerids
-     *
-     * @return array [0] is the rising time, [1] the transit time and [2] the setting
-     *               time
-     */
-    public function calculateRiseTransitSettingTime($ra, $dec, $jd)
-    {
-        return $this->_calculateRiseTransitSettingTimeCommon(
-            $jd,
-            $ra,
-            $ra,
-            $ra,
-            $dec,
-            $dec,
-            $dec,
-            -99.99
-        );
-    }
-
-    /**
-     * This function does the calculations for the rise and setting of moon and stars.
-     *
-     * @param float $jd              The julian date
-     * @param float $ra1             the right ascension of the object yesterday
-     * @param float $ra2             the right ascension of the object today
-     * @param float $ra3             the right ascension of the object tomorrow
-     * @param float $dec1            the declination of the object yesterday
-     * @param float $dec2            the declination of the object today
-     * @param float $dec3            the declination of the object tomorrow
-     * @param float $moonHorParallax the horizontal parallax of the moon
-     *
-     * @return array Rise time, transit time, setting time and transit altitude
-     */
-    private function _calculateRiseTransitSettingTimeCommon(
-        $jd,
-        $ra1,
-        $ra2,
-        $ra3,
-        $dec1,
-        $dec2,
-        $dec3,
-        $moonHorParallax
-    ) {
-        // Step 1 : Calculate the apparent siderial time at Greenwich at 0h UT.
-        $jd = floor($jd) - 0.5;
-
-        $T = ($jd - 2451545.0) / 36525.0;
-
-        $theta0 = 100.46061837 + 36000.770053608 * $T + 0.000387933 * $T * $T
-            - $T * $T * $T / 38710000.0;
-
-        if ($theta0 < 0.0) {
-            $a = -floor($theta0 / 360.0) + 1;
-            $theta0 += $a * 360.0;
-        }
-        if ($theta0 > 360.0) {
-            $a = floor($theta0 / 360.0);
-            $theta0 -= $a * 360.0;
-        }
-        $theta0 /= 15.0;
-
-        $nutat = Time::nutation($jd);
-
-        $theta0 += (($nutat[0] *
-            cos(deg2rad($nutat[3])) / 15.0) / 3600.0);
-
-        // STEP 2 : Calculating the rise, transit and set time of the object
-        $ra1 *= 15.0;
-        $ra2 *= 15.0;
-        $ra3 *= 15.0;
-
-        // Tests when the object passes ra 24 and goes back to 0
-        if ($ra3 - $ra2 < -50.0) {
-            $ra3 += 360.0;
-        } elseif ($ra2 - $ra1 < -50.0) {
-            $ra3 += 360.0;
-            $ra2 += 360.0;
-        } elseif ($ra2 - $ra3 < -50.0) {
-            $ra1 += 360.0;
-            $ra2 += 360.0;
-        } elseif ($ra1 - $ra2 < -50.0) {
-            $ra1 += 360.0;
-        }
-        $longitude = -$this->longitude;
-
-        if ($moonHorParallax === -99.99) {
-            $h0 = -0.5667;
-        } else {
-            $h0 = 0.7275 * $moonHorParallax - 0.566667;
-        }
-
-        $Hcap0 = rad2deg(
-            acos(
-                (sin(deg2rad($h0)) - sin(deg2rad($this->latitude))
-                    * sin(deg2rad($dec2)))
-                / (cos(deg2rad($this->latitude))
-                * cos(deg2rad($dec2)))
-            )
-        );
-
-        $m0 = ($ra2 + $longitude - $theta0 * 15.0) / 360.0;
-        $m0 -= floor($m0);
-
-        if (is_nan($Hcap0)) {
-            $m1 = 99;
-            $m2 = 99;
-        } else {
-            $m1 = $m0 - $Hcap0 / 360.0;
-            $m1 -= floor($m1);
-            $m2 = $m0 + $Hcap0 / 360.0;
-            $m2 -= floor($m2);
-        }
-
-        // STEP 3 : Extra calculation to work for moving bodies...
-        // 3.1 : transit time
-        $theta = $theta0 * 15.0 + 360.985647 * $m0;
-        $theta /= 360.0;
-        $theta -= floor($theta);
-        $theta *= 360.0;
-
-        // Use delta t from laravel-astronomy-library.
-        // We use delta t for the given date.
-        $n = $m0 + Time::deltaT(Time::fromJd($jd)) / 86400;
-
-        $a = $ra2 - $ra1;
-        $b = $ra3 - $ra2;
-        $c = $b - $a;
-        $alphaInterpol = $ra2 + $n / 2.0 * ($a + $b + $n * $c);
-        $H = $theta - $longitude - $alphaInterpol;
-        $deltaM = -$H / 360.0;
-
-        $m0 = ($deltaM + $m0) * 24.0;
-
-        if (!is_nan($Hcap0)) {
-            // 3.2 : rise time
-            $theta = $theta0 * 15.0 + 360.985647 * $m1;
-            $theta /= 360.0;
-            $theta -= floor($theta);
-            $theta *= 360.0;
-
-            $n = $m1 + 56 / 86400;
-
-            $a = $ra2 - $ra1;
-            $b = $ra3 - $ra2;
-            $c = $b - $a;
-            $alphaInterpol = $ra2 + $n / 2.0 * ($a + $b + $n * $c);
-
-            $a = $dec2 - $dec1;
-            $b = $dec3 - $dec2;
-            $c = $b - $a;
-            $deltaInterpol = $dec2 + $n / 2.0 * ($a + $b + $n * $c);
-
-            $H = $theta - $longitude - $alphaInterpol;
-            $h = rad2deg(
-                asin(
-                    sin(deg2rad($this->latitude)) * sin(deg2rad($deltaInterpol))
-                    + cos(deg2rad($this->latitude)) * cos(deg2rad($deltaInterpol))
-                    * cos(deg2rad($H))
-                )
-            );
-            $deltaM = ($h - $h0)
-                / (360.0 * cos(deg2rad($deltaInterpol))
-                * cos(deg2rad($this->latitude))
-                * sin(deg2rad($H)));
-
-            $m1 = ($deltaM + $m1) * 24.0;
-
-            // 3.3 : set time
-            $theta = $theta0 * 15.0 + 360.985647 * $m2;
-            $theta /= 360.0;
-            $theta -= floor($theta);
-            $theta *= 360.0;
-
-            $n = $m2 + 56 / 86400;
-
-            $a = $ra2 - $ra1;
-            $b = $ra3 - $ra2;
-            $c = $b - $a;
-            $alphaInterpol = $ra2 + $n / 2.0 * ($a + $b + $n * $c);
-
-            $a = $dec2 - $dec1;
-            $b = $dec3 - $dec2;
-            $c = $b - $a;
-            $deltaInterpol = $dec2 + $n / 2.0 * ($a + $b + $n * $c);
-
-            $H = $theta - $longitude - $alphaInterpol;
-            $h = rad2deg(
-                asin(
-                    sin(deg2rad($this->latitude)) * sin(deg2rad($deltaInterpol))
-                    + cos(deg2rad($this->latitude)) * cos(deg2rad($deltaInterpol))
-                    * cos(deg2rad($H))
-                )
-            );
-            $deltaM = ($h - $h0)
-                / (360.0 * cos(deg2rad($deltaInterpol))
-                * cos(deg2rad($this->latitude)) * sin(deg2rad($H)));
-
-            $m2 = ($deltaM + $m2) * 24.0;
-        }
-        $ris_tra_set = [$m1, $m0, $m2];
-
-        if ($ris_tra_set[0] > 48 || $ris_tra_set[0] < -24) {
-            $ris_tra_set[0] = '-';
-        } else {
-            $ris_tra_set[0] += $this->timedifference;
-            if ($ris_tra_set[0] < 0) {
-                $ris_tra_set[0] += 24;
-            }
-            if ($ris_tra_set[0] > 24) {
-                $ris_tra_set[0] -= 24;
-            }
-            $minutes = round(($ris_tra_set[0] - floor($ris_tra_set[0])) * 60);
-            if ($minutes >= 60) {
-                $minutes = 0;
-                $toAdd = 1;
-            } else {
-                $toAdd = 0;
-            }
-            if ($minutes < 10) {
-                $minutes = '0' . $minutes;
-            }
-            if ((floor($ris_tra_set[0]) + $toAdd) % 24 < 10) {
-                $ris_tra_set[0] = '0' . (floor($ris_tra_set[0]) + $toAdd) % 24
-                    . ':' . $minutes;
-            } else {
-                $ris_tra_set[0] = floor($ris_tra_set[0]) + $toAdd . ':' . $minutes;
-            }
-        }
-
-        $transit = $ris_tra_set[1];
-        if ($ris_tra_set[1] > 48 || $ris_tra_set[1] < -24) {
-            $ris_tra_set[1] = '-';
-        } else {
-            $ris_tra_set[1] += $this->timedifference;
-            if ($ris_tra_set[1] < 0) {
-                $ris_tra_set[1] += 24;
-            }
-            if ($ris_tra_set[1] > 24) {
-                $ris_tra_set[1] -= 24;
-            }
-            $minutes = round(($ris_tra_set[1] - floor($ris_tra_set[1])) * 60);
-            if ($minutes >= 60) {
-                $minutes = 0;
-                $toAdd = 1;
-            } else {
-                $toAdd = 0;
-            }
-            if ($minutes < 10) {
-                $minutes = '0' . $minutes;
-            }
-            if ((floor($ris_tra_set[1]) + $toAdd) % 24 < 10) {
-                $ris_tra_set[1] = '0' . (floor($ris_tra_set[1]) + $toAdd) % 24
-                    . ':' . $minutes;
-            } else {
-                $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ':' . $minutes;
-            }
-        }
-
-        if ($ris_tra_set[2] > 48 || $ris_tra_set[2] < -24) {
-            $ris_tra_set[2] = '-';
-        } else {
-            $ris_tra_set[2] += $this->timedifference;
-            if ($ris_tra_set[2] < 0) {
-                $ris_tra_set[2] += 24;
-            }
-            if ($ris_tra_set[2] > 24) {
-                $ris_tra_set[2] -= 24;
-            }
-            $minutes = round(($ris_tra_set[2] - floor($ris_tra_set[2])) * 60);
-            if ($minutes >= 60) {
-                $minutes = 0;
-                $toAdd = 1;
-            } else {
-                $toAdd = 0;
-            }
-            if ($minutes < 10) {
-                $minutes = '0' . $minutes;
-            }
-            if ((floor($ris_tra_set[2]) + $toAdd) % 24 < 10) {
-                $ris_tra_set[2] = '0' . (floor($ris_tra_set[2]) + $toAdd) % 24
-                    . ':' . $minutes;
-            } else {
-                $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ':' . $minutes;
-            }
-        }
-        $ris_tra_set[4] = 0;
-        $ra2 /= 15;
-
-        date_default_timezone_set('UTC');
-        $temptime = jdtogregorian($jd + 1);
-        $temppos = strpos($temptime, '/');
-        $tempmonth = substr($temptime, 0, $temppos);
-        $temptime = substr($temptime, $temppos + 1);
-        $temppos = strpos($temptime, '/');
-        $tempday = substr($temptime, 0, $temppos);
-        $tempyear = substr($temptime, $temppos + 1);
-
-        $timestr = $tempyear . '-' . $tempmonth . '-' . $tempday;
-
-        $sun_info = date_sun_info(
-            strtotime($timestr),
-            $this->latitude,
-            -$longitude
-        );
-        $astrobegin = date('H:i', $sun_info['astronomical_twilight_begin']);
-        sscanf($astrobegin, '%d:%d', $hour, $minute);
-        $astrobegin = ($hour + $minute / 60.0);
-
-        $astroend = date('H:i', $sun_info['astronomical_twilight_end']);
-        sscanf($astroend, '%d:%d', $hour, $minute);
-        $astroend = ($hour + $minute / 60.0);
-
-        $nautbegin = date('H:i', $sun_info['nautical_twilight_begin']);
-        sscanf($nautbegin, '%d:%d', $hour, $minute);
-        $nautbegin = ($hour + $minute / 60.0);
-
-        $nautend = date('H:i', $sun_info['nautical_twilight_end']);
-        sscanf($nautend, '%d:%d', $hour, $minute);
-        $nautend = ($hour + $minute / 60.0);
-
-        if ($transit > 0) {
-            $transit = $transit % 24.0 + ($transit - floor($transit));
-        } else {
-            $toAdd = floor(-$transit / 24.0) + 1.0;
-            $transit += 24.0 * $toAdd;
-        }
-        if ($astroend > 0 && $astrobegin > 0) {
-            $tocompare = -999;
-            if ($astrobegin > 12) {
-                $toCheck = $astrobegin;
-            } else {
-                $toCheck = $astrobegin + 24;
-            }
-            if (($transit + 24 < $astroend + 24) && ($transit + 24 > $toCheck)) {
-                // The transit is during the day
-                // Check the rise time for $astroend and for $astrobegin
-                $theta0w = $theta0 + ($astrobegin * 1.00273790935);
-                if ($theta0w > 0) {
-                    $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w));
-                } else {
-                    $toAdd = floor(-$theta0w / 24.0) + 1;
-                    $theta0w += 24.0 * $toAdd;
-                }
-                $H = ($theta0w - $longitude / 15 - $ra2) * 15.0;
-                if ($H > 0) {
-                    $H = $H % 360.0 + ($H - floor($H));
-                } else {
-                    $toAdd = floor(-$H / 360.0) + 1;
-                    $H += 360.0 * $toAdd;
-                }
-
-                $tocompare = rad2deg(
-                    asin(
-                        sin(deg2rad($this->latitude)) * sin(deg2rad($dec2))
-                            + cos(deg2rad($this->latitude)) * cos(deg2rad($dec2))
-                            * cos(deg2rad($H))
-                    )
-                );
-
-                $transit = $astroend;
-            }
-
-            $theta0 += ($transit * 1.00273790935);
-            if ($theta0 > 0) {
-                $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0));
-            } else {
-                $toAdd = floor(-$theta0 / 24.0) + 1;
-                $theta0 += 24.0 * $toAdd;
-            }
-            $H = ($theta0 - $longitude / 15 - $ra2) * 15.0;
-            if ($H > 0) {
-                $H = $H % 360.0 + ($H - floor($H));
-            } else {
-                $toAdd = floor(-$H / 360.0) + 1;
-                $H += 360.0 * $toAdd;
-            }
-
-            $ris_tra_set[3] = rad2deg(
-                asin(
-                    sin(deg2rad($this->latitude)) * sin(deg2rad($dec2))
-                    + cos(deg2rad($this->latitude)) * cos(deg2rad($dec2))
-                    * cos(deg2rad($H))
-                )
-            );
-            if ($tocompare !== -999) {
-                if ($tocompare > $ris_tra_set[3]) {
-                    $ris_tra_set[3] = $tocompare;
-                    $ris_tra_set[4] = $astrobegin;
-                } else {
-                    $ris_tra_set[4] = $astroend;
-                }
-            } else {
-                $ris_tra_set[4] = $transit;
-            }
-
-            $minutes = round(($ris_tra_set[3] - floor($ris_tra_set[3])) * 60);
-            if ($minutes >= 60) {
-                $minutes = 0;
-                $toAdd = 1;
-            } else {
-                $toAdd = 0;
-            }
-            if ($minutes < 10) {
-                $minutes = '0' . $minutes;
-            }
-            if ($ris_tra_set[3] < 0) {
-                $ris_tra_set[3] = '-';
-            } else {
-                if ((floor($ris_tra_set[3]) + $toAdd) % 24 < 10) {
-                    $ris_tra_set[3] = '0' . (floor($ris_tra_set[3]) + $toAdd) % 24
-                        . '&deg;' . $minutes . "'";
-                } else {
-                    $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . '&deg;'
-                        . $minutes . "'";
-                }
-            }
-
-            if ($ris_tra_set[4] > 24
-                || $ris_tra_set[4] < 0 || $ris_tra_set[3] === '-'
-            ) {
-                $ris_tra_set[4] = '-';
-            } else {
-                $ris_tra_set[4] += $this->timedifference;
-                if ($ris_tra_set[4] < 0) {
-                    $ris_tra_set[4] += 24;
-                }
-                if ($ris_tra_set[4] > 24) {
-                    $ris_tra_set[4] -= 24;
-                }
-                $minutes = round(($ris_tra_set[4] - floor($ris_tra_set[4])) * 60);
-                if ($minutes >= 60) {
-                    $minutes = 0;
-                    $toAdd = 1;
-                } else {
-                    $toAdd = 0;
-                }
-                if ($minutes < 10) {
-                    $minutes = '0' . $minutes;
-                }
-                if ((floor($ris_tra_set[4]) + $toAdd) % 24 < 10) {
-                    $ris_tra_set[4] = '0' . (floor($ris_tra_set[4]) + $toAdd) % 24
-                        . ':' . $minutes;
-                } else {
-                    $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd
-                        . ':' . $minutes;
-                }
-            }
-        } else {
-            $ris_tra_set[3] = '-';
-            $ris_tra_set[4] = '-';
-        }
-
-        // if no astro twilight, or no best astro time for object
-        if (!(($astroend > 0 && $astrobegin > 0))) {
-            if ($nautend > 0 && $nautbegin > 0) {
-                $tocompare = -999;
-                if ($nautbegin > 12) {
-                    $toCheck = $nautbegin;
-                } else {
-                    $toCheck = $nautbegin + 24;
-                }
-                if (($transit + 24 < $nautend + 24) && ($transit + 24 > $toCheck)) {
-                    // The transit is during the day
-                    // Check the rise time for $nautend and for $nautbegin
-                    $theta0w = $theta0 + ($nautbegin * 1.00273790935);
-                    if ($theta0w > 0) {
-                        $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w));
-                    } else {
-                        $toAdd = floor(-$theta0w / 24.0) + 1;
-                        $theta0w = $theta0w + 24.0 * $toAdd;
-                    }
-                    $H = ($theta0w - $longitude / 15 - $ra2) * 15.0;
-                    if ($H > 0) {
-                        $H = $H % 360.0 + ($H - floor($H));
-                    } else {
-                        $toAdd = floor(-$H / 360.0) + 1;
-                        $H += 360.0 * $toAdd;
-                    }
-
-                    $tocompare = rad2deg(
-                        asin(
-                            sin(deg2rad($this->latitude)) * sin(deg2rad($dec2))
-                            + cos(deg2rad($this->latitude)) * cos(deg2rad($dec2))
-                            * cos(deg2rad($H))
-                        )
-                    );
-
-                    $transit = $nautend;
-                }
-
-                $theta0 += ($transit * 1.00273790935);
-                if ($theta0 > 0) {
-                    $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0));
-                } else {
-                    $toAdd = floor(-$theta0 / 24.0) + 1;
-                    $theta0 += 24.0 * $toAdd;
-                }
-                $H = ($theta0 - $longitude / 15 - $ra2) * 15.0;
-                if ($H > 0) {
-                    $H = $H % 360.0 + ($H - floor($H));
-                } else {
-                    $toAdd = floor(-$H / 360.0) + 1;
-                    $H += 360.0 * $toAdd;
-                }
-
-                $ris_tra_set[3] = rad2deg(
-                    asin(
-                        sin(deg2rad($this->latitude)) * sin(deg2rad($dec2))
-                        + cos(deg2rad($this->latitude)) * cos(deg2rad($dec2))
-                        * cos(deg2rad($H))
-                    )
-                );
-
-                if ($tocompare !== -999) {
-                    if ($tocompare > $ris_tra_set[3]) {
-                        $ris_tra_set[3] = $tocompare;
-                        $ris_tra_set[4] = $nautbegin;
-                    } else {
-                        $ris_tra_set[4] = $nautend;
-                    }
-                } else {
-                    $ris_tra_set[4] = $transit;
-                }
-
-                $minutes = round(($ris_tra_set[3] - floor($ris_tra_set[3])) * 60);
-                if ($minutes >= 60) {
-                    $minutes = 0;
-                    $toAdd = 1;
-                } else {
-                    $toAdd = 0;
-                }
-                if ($minutes < 10) {
-                    $minutes = '0' . $minutes;
-                }
-                if ($ris_tra_set[3] < 0) {
-                    $ris_tra_set[3] = '-';
-                } else {
-                    if ((floor($ris_tra_set[3]) + $toAdd) % 24 < 10) {
-                        $ris_tra_set[3] = '0' . (floor($ris_tra_set[3]) + $toAdd) % 24
-                            . '&deg;' . $minutes . "'";
-                    } else {
-                        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . '&deg;'
-                            . $minutes . "'";
-                    }
-                }
-
-                if ($ris_tra_set[4] > 24
-                    || $ris_tra_set[4] < 0 || $ris_tra_set[3] === '-'
-                ) {
-                    $ris_tra_set[4] = '-';
-                } else {
-                    $ris_tra_set[4] += $this->timedifference;
-                    if ($ris_tra_set[4] < 0) {
-                        $ris_tra_set[4] += 24;
-                    }
-                    if ($ris_tra_set[4] > 24) {
-                        $ris_tra_set[4] -= 24;
-                    }
-                    $minutes = round(
-                        ($ris_tra_set[4] - floor($ris_tra_set[4])) * 60
-                    );
-                    if ($minutes >= 60) {
-                        $minutes = 0;
-                        $toAdd = 1;
-                    } else {
-                        $toAdd = 0;
-                    }
-                    if ($minutes < 10) {
-                        $minutes = '0' . $minutes;
-                    }
-                    if ((floor($ris_tra_set[4]) + $toAdd) % 24 < 10.0) {
-                        $ris_tra_set[4] = '0' . (floor($ris_tra_set[4]) + $toAdd) % 24
-                            . ':' . $minutes;
-                    } else {
-                        $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd
-                            . ':' . $minutes;
-                    }
-                }
-            } else {
-                $ris_tra_set[3] = '-';
-                $ris_tra_set[4] = '-';
-            }
-            if ($ris_tra_set[3] !== '-') {
-                $ris_tra_set[3] = '(' . $ris_tra_set[3] . ')';
-            }
-        }
-
-        return $ris_tra_set;
+        // TODO: Stylsheet for white on yellow background
+        // TODO: More popups for yearephemerides?
     }
 
     /**
      * Calculates the Rise, transit and setting time of the moon for a
      * given location.
      *
-     * @return array The rise, transit and setting of the moon
+     * @return Moon The moon target
      */
     public function calculateMoonRiseTransitSettingTime()
     {
@@ -685,30 +73,45 @@ class astrocalc
 
         $radec1 = $this->_calculateMoonCoordinates(
             $jd - 1,
-            $this->longitude,
-            $this->latitude
+            $this->_geo_coords->getLongitude(),
+            $this->_geo_coords->getLatitude()
         );
         $radec2 = $this->_calculateMoonCoordinates(
             $jd,
-            $this->longitude,
-            $this->latitude
+            $this->_geo_coords->getLongitude(),
+            $this->_geo_coords->getLatitude()
         );
         $radec3 = $this->_calculateMoonCoordinates(
             $jd + 1,
-            $this->longitude,
-            $this->latitude
+            $this->_geo_coords->getLongitude(),
+            $this->_geo_coords->getLatitude()
+        );
+        $equa_yesterday = new EquatorialCoordinates($radec1[0], $radec1[1]);
+        $equa_today = new EquatorialCoordinates($radec2[0], $radec2[1]);
+        $equa_tomorrow = new EquatorialCoordinates($radec3[0], $radec3[1]);
+
+        $date = Time::fromJd($jd);
+        $date->hour = 12;
+        $date->timezone($this->_timezone);
+
+        $greenwichSiderialTime = Time::apparentSiderialTimeGreenwich(
+            $date
+        );
+        $deltaT = Time::deltaT($date);
+
+        $target = new Moon();
+        $target->setEquatorialCoordinatesYesterday($equa_yesterday);
+        $target->setEquatorialCoordinatesToday($equa_today);
+        $target->setEquatorialCoordinatesTomorrow($equa_tomorrow);
+
+        // Calculate the ephemerids for the target
+        $target->calculateEphemerides(
+            $this->_geo_coords,
+            $greenwichSiderialTime,
+            $deltaT
         );
 
-        return $this->_calculateRiseTransitSettingTimeCommon(
-            $jd,
-            $radec1[0],
-            $radec2[0],
-            $radec3[0],
-            $radec1[1],
-            $radec2[1],
-            $radec3[1],
-            $this->timedifference
-        );
+        return $target;
     }
 
     /**
@@ -959,8 +362,8 @@ class astrocalc
         // Now we transform from ecliptical to equatorial coordinates
         $equa = $ecl->convertToEquatorial($nutat[3]);
 
-        $moonRa = $equa->getRA();
-        $moonDecl = $equa->getDeclination();
+        $moonRa = $equa->getRA()->getCoordinate();
+        $moonDecl = $equa->getDeclination()->getCoordinate();
 
         return [$moonRa, $moonDecl, $pi];
     }

@@ -40,19 +40,19 @@
                     $location->timezone
                 );
 
+                // Use time zones and real coordinates of the location
+                $location = \App\Location::where('id', Auth::user()->stdlocation)->first();
+
                 $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime();
             @endphp
 
-            <td>{{ $moon[0] }}</td>
-            <td>{{ $moon[2] }}</td>
+            <td>{{ $moon->getRising()->timezone($location->timezone)->format('H:i') }}</td>
+            <td>{{ $moon->getSetting()->timezone($location->timezone)->format('H:i') }}</td>
         </tr>
 	    <tr>
             <td>{{ _i("Sun") }}</td>
             @php
                 // Use time zones and real coordinates of the location
-                $location = \App\Location::where('id', Auth::user()->stdlocation)->first();
-
-                print $location->timezone;
                 $sun_info_down = date_sun_info($date->getTimestamp(), $location->latitude, $location->longitude);
                 $sun_info_up = date_sun_info($nextdate->getTimestamp(), $location->latitude, $location->longitude);
 

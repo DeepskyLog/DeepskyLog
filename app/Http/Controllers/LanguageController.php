@@ -14,6 +14,7 @@ class LanguageController extends Controller
     public function changeLang()
     {
         LaravelGettext::setLocale(request('language'));
+        \Carbon\Carbon::setLocale(request('language'));
 
         return back();
     }

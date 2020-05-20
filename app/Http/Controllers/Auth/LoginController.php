@@ -65,6 +65,7 @@ class LoginController extends Controller
     public function authenticated()
     {
         LaravelGettext::setLocale(Auth::user()->language);
+        \Carbon\Carbon::setLocale(Auth::user()->language);
     }
 
     /**
