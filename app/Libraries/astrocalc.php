@@ -54,9 +54,6 @@ class astrocalc
 
         $this->_timezone = $timezone;
         $this->_geo_coords = new GeographicalCoordinates($longitude, $latitude);
-
-        // TODO: Stylsheet for white on yellow background
-        // TODO: More popups for yearephemerides?
     }
 
     /**

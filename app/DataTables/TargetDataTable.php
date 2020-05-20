@@ -42,8 +42,8 @@ class TargetDataTable extends DataTable
             ->editColumn(
                 'name',
                 function ($target) {
-                    return '<a href="/target/'.$target->name.'">'
-                        .$target->name.'</a>';
+                    return '<a href="/target/' . $target->name . '">'
+                        . $target->name . '</a>';
                 }
             )
             ->editColumn(
@@ -62,7 +62,7 @@ class TargetDataTable extends DataTable
                 'size',
                 function ($target) {
                     if ($target->pa != 999) {
-                        return $target->size().'/'.$target->pa.'°';
+                        return $target->size() . '/' . $target->pa . '°';
                     } else {
                         return $target->size();
                     }
@@ -81,7 +81,7 @@ class TargetDataTable extends DataTable
                 }
             );
 
-        if (! auth()->guest()) {
+        if (!auth()->guest()) {
             $toReturn->editColumn(
                 'atlas',
                 function ($target) {
@@ -98,32 +98,33 @@ class TargetDataTable extends DataTable
 //                        . '</span>';
                 }
             )
-*/            ->editColumn(
-    'rise',
-    function ($target) {
-        return '<span data-toggle="tooltip" data-placement="bottom" title="'
-                        .$target->rise_popup.'">'.$target->rise.'</span>';
-    }
-)
+*/
+            ->editColumn(
+                'rise',
+                function ($target) {
+                    return '<span data-toggle="tooltip" data-placement="bottom" title="'
+                        . $target->rise_popup . '">' . $target->rise . '</span>';
+                }
+            )
             ->editColumn(
                 'transit',
                 function ($target) {
                     return '<span data-toggle="tooltip" data-placement="bottom" title="'
-                        .$target->transit_popup.'">'.$target->transit.'</span>';
+                        . $target->transit_popup . '">' . $target->transit . '</span>';
                 }
             )
             ->editColumn(
                 'set',
                 function ($target) {
                     return '<span data-toggle="tooltip" data-placement="bottom" title="'
-                        .$target->set_popup.'">'.$target->set.'</span>';
+                        . $target->set_popup . '">' . $target->set . '</span>';
                 }
             )
             ->editColumn(
                 'maxAlt',
                 function ($target) {
                     return '<span data-toggle="tooltip" data-placement="bottom" title="'
-                        .$target->maxAlt_popup.'">'.$target->maxAlt.'</span>';
+                        . $target->maxAlt_popup . '">' . $target->maxAlt . '</span>';
                 }
             )
             ->rawColumns(
@@ -178,11 +179,11 @@ class TargetDataTable extends DataTable
     protected function getMyParameters()
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
-        .\PeterColes\Languages\LanguagesFacade::lookup(
+        . \PeterColes\Languages\LanguagesFacade::lookup(
             [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
             'en'
         )->first()
-            .'.json', ];
+            . '.json', ];
         $mypars = $this->getBuilderParameters();
         $mypars['language'] = $language;
 
@@ -196,7 +197,7 @@ class TargetDataTable extends DataTable
      */
     protected function getColumns()
     {
-        if (! auth()->guest()) {
+        if (!auth()->guest()) {
             return [
                 ['name' => 'name',
                     'title' => _i('Name'),
@@ -389,6 +390,6 @@ class TargetDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Targets_'.date('YmdHis');
+        return 'Targets_' . date('YmdHis');
     }
 }

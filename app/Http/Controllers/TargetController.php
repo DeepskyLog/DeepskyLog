@@ -147,7 +147,7 @@ class TargetController extends Controller
                     target_names.objectname, target_names.altname
                     FROM targets JOIN target_names
                     ON targets.name = target_names.objectname WHERE catalog="'
-                    .$catalogname.'" ORDER BY objectname'
+                    . $catalogname . '" ORDER BY objectname'
             )
         );
 
@@ -178,7 +178,7 @@ class TargetController extends Controller
                     JOIN target_names ON targets.name = target_names.objectname
                     JOIN constellations ON targets.con = constellations.id
                     WHERE catalog="'
-                    .$catalogname.'" GROUP BY targets.con'
+                    . $catalogname . '" GROUP BY targets.con'
             )
         );
         foreach ($cons as $con) {
@@ -204,7 +204,7 @@ class TargetController extends Controller
                     JOIN target_names ON targets.name = target_names.objectname
                     JOIN target_types ON targets.type = target_types.id
                     WHERE catalog="'
-                    .$catalogname.'" GROUP BY targets.type'
+                    . $catalogname . '" GROUP BY targets.type'
             )
         );
 

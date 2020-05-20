@@ -63,7 +63,7 @@ class Target extends Model
      *
      * @return string The contrast of the target
      */
-    public function getContrastAttribute()
+    public function getContrastAttribute(): string
     {
         if (!auth()->guest()) {
             if (!isset($this->_contrast)) {
@@ -71,6 +71,8 @@ class Target extends Model
             }
 
             return $this->_contrast->contrast;
+        } else {
+            return '-';
         }
     }
 
@@ -80,7 +82,7 @@ class Target extends Model
      *
      * @return string The contrast type of the target
      */
-    public function getContrastTypeAttribute()
+    public function getContrastTypeAttribute(): string
     {
         if (!auth()->guest()) {
             if (!isset($this->_contrast)) {
@@ -88,6 +90,8 @@ class Target extends Model
             }
 
             return $this->_contrast->contype;
+        } else {
+            return '-';
         }
     }
 
@@ -96,7 +100,7 @@ class Target extends Model
      *
      * @return string The popup with the contrast of the target
      */
-    public function getContrastPopupAttribute()
+    public function getContrastPopupAttribute(): string
     {
         if (!auth()->guest()) {
             if (!isset($this->_contrast)) {
@@ -104,6 +108,8 @@ class Target extends Model
             }
 
             return $this->_contrast->popup;
+        } else {
+            return '-';
         }
     }
 
@@ -113,7 +119,7 @@ class Target extends Model
      *
      * @return string The preferred magnitude of the target
      */
-    public function getPrefMagAttribute()
+    public function getPrefMagAttribute(): string
     {
         if (!auth()->guest()) {
             if (!isset($this->_contrast)) {
@@ -121,6 +127,8 @@ class Target extends Model
             }
 
             return $this->_contrast->prefMag;
+        } else {
+            return '-';
         }
     }
 
@@ -129,7 +137,7 @@ class Target extends Model
      *
      * @return string The preferred magnitude of the target
      */
-    public function getPrefMagEasyAttribute()
+    public function getPrefMagEasyAttribute(): string
     {
         if (!auth()->guest()) {
             if (!isset($this->_contrast)) {
@@ -137,6 +145,8 @@ class Target extends Model
             }
 
             return $this->_contrast->prefMagEasy;
+        } else {
+            return '-';
         }
     }
 
@@ -145,14 +155,14 @@ class Target extends Model
      *
      * @return string The rise time of the target
      */
-    public function getRiseAttribute()
+    public function getRiseAttribute(): string
     {
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
 
-        return $this->_target->getRising() ? $this->_target->getRising()
-            ->timezone($this->_location->timezone)->format('H:i') : '-';
+        return Auth::guest() ? '-' : ($this->_target->getRising() ? $this->_target->getRising()
+            ->timezone($this->_location->timezone)->format('H:i') : '-');
     }
 
     /**
@@ -160,13 +170,17 @@ class Target extends Model
      *
      * @return string The popup for the rise time of the target
      */
-    public function getRisePopupAttribute()
+    public function getRisePopupAttribute(): string
     {
-        if (!$this->_target) {
-            $this->getRiseSetTransit();
-        }
+        if (!auth()->guest()) {
+            if (!$this->_target) {
+                $this->getRiseSetTransit();
+            }
 
-        return $this->_popup[0];
+            return $this->_popup[0];
+        } else {
+            return '-';
+        }
     }
 
     /**
@@ -174,8 +188,11 @@ class Target extends Model
      *
      * @return string The transit time of the target
      */
-    public function getTransitAttribute()
+    public function getTransitAttribute(): string
     {
+        if (Auth::guest()) {
+            return '-';
+        }
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
@@ -189,8 +206,11 @@ class Target extends Model
      *
      * @return string The popup for the transit time of the target
      */
-    public function getTransitPopupAttribute()
+    public function getTransitPopupAttribute(): string
     {
+        if (Auth::guest()) {
+            return '-';
+        }
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
@@ -203,8 +223,11 @@ class Target extends Model
      *
      * @return string The set time of the target
      */
-    public function getSetAttribute()
+    public function getSetAttribute(): string
     {
+        if (Auth::guest()) {
+            return '-';
+        }
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
@@ -218,8 +241,12 @@ class Target extends Model
      *
      * @return string The popup for the set time of the target
      */
-    public function getSetPopupAttribute()
+    public function getSetPopupAttribute(): string
     {
+        if (Auth::guest()) {
+            return '-';
+        }
+
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
@@ -232,8 +259,12 @@ class Target extends Model
      *
      * @return string The best time of the target
      */
-    public function getBestTimeAttribute()
+    public function getBestTimeAttribute(): string
     {
+        if (Auth::guest()) {
+            return '-';
+        }
+
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
@@ -248,8 +279,11 @@ class Target extends Model
      *
      * @return string The maximum altitude of the target
      */
-    public function getMaxAltAttribute()
+    public function getMaxAltAttribute(): string
     {
+        if (Auth::guest()) {
+            return '-';
+        }
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
@@ -264,8 +298,11 @@ class Target extends Model
      *
      * @return string The popup for the maximum altitude of the target
      */
-    public function getMaxAltPopupAttribute()
+    public function getMaxAltPopupAttribute(): string
     {
+        if (Auth::guest()) {
+            return '-';
+        }
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
@@ -278,8 +315,11 @@ class Target extends Model
      *
      * @return string The highest altitude of the target
      */
-    public function getHighestAltAttribute()
+    public function getHighestAltAttribute(): string
     {
+        if (Auth::guest()) {
+            return '-';
+        }
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
@@ -292,8 +332,11 @@ class Target extends Model
      *
      * @return string Returns the month from which the highest altitude is reached
      */
-    public function getHighestFromAttribute()
+    public function getHighestFromAttribute(): string
     {
+        if (Auth::guest()) {
+            return '-';
+        }
         if (!isset($this->_ephemerides)) {
             $this->getYearEphemerides();
         }
@@ -306,8 +349,11 @@ class Target extends Model
      *
      * @return string Returns the month around which the highest altitude is reached
      */
-    public function getHighestAroundAttribute()
+    public function getHighestAroundAttribute(): string
     {
+        if (Auth::guest()) {
+            return '-';
+        }
         if (!isset($this->_ephemerides)) {
             $this->getYearEphemerides();
         }
@@ -320,8 +366,11 @@ class Target extends Model
      *
      * @return string Returns the month to which the highest altitude is reached
      */
-    public function getHighestToAttribute()
+    public function getHighestToAttribute(): string
     {
+        if (Auth::guest()) {
+            return '-';
+        }
         if (!isset($this->_ephemerides)) {
             $this->getYearEphemerides();
         }
@@ -334,8 +383,14 @@ class Target extends Model
      *
      * @return None
      */
-    public function getRiseSetTransit()
+    public function getRiseSetTransit(): void
     {
+        $this->_target = new \deepskylog\AstronomyLibrary\Targets\Target();
+        $equa = new EquatorialCoordinates($this->ra, $this->decl);
+
+        // Add equatorial coordinates to the target.
+        $this->_target->setEquatorialCoordinates($equa);
+
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation != 0 && Auth::user()->stdtelescope != 0) {
                 if ($this->isNonSolarSystem()) {
@@ -356,13 +411,6 @@ class Target extends Model
                     );
 
                     $date->timezone($this->_location->timezone);
-
-                    $this->_target = new
-                        \deepskylog\AstronomyLibrary\Targets\Target();
-                    $equa = new EquatorialCoordinates($this->ra, $this->decl);
-
-                    // Add equatorial coordinates to the target.
-                    $this->_target->setEquatorialCoordinates($equa);
 
                     $greenwichSiderialTime = Time::apparentSiderialTimeGreenwich(
                         $date
@@ -466,7 +514,7 @@ class Target extends Model
      *
      * @return string The page where the target can be found in the atlas
      */
-    public function atlasPage($atlasname)
+    public function atlasPage($atlasname): string
     {
         return $this->$atlasname;
     }
@@ -476,37 +524,18 @@ class Target extends Model
      *
      * @return string The declination
      */
-    public function declination()
+    public function declination(): string
     {
-        $decl = $this->decl;
-        $sign = ' ';
-        if ($decl < 0) {
-            $sign = '-';
-            $decl = -$decl;
-        }
-        $decl_degrees = floor($decl);
-        $subminutes = 60 * ($decl - $decl_degrees);
-        $decl_minutes = floor($subminutes);
-        $subseconds = 60 * ($subminutes - $decl_minutes);
-        $decl_seconds = round($subseconds);
-        if ($decl_seconds == 60) {
-            $decl_seconds = 0;
-            $decl_minutes++;
-        }
-        if ($decl_minutes == 60) {
-            $decl_minutes = 0;
-            $decl_degrees++;
-        }
-
-        return $sign . sprintf('%02d', $decl_degrees) . '°'
-            . sprintf('%02d', $decl_minutes) . "'"
-            . sprintf('%02d', $decl_seconds) . '"';
+        return $this->_target->getEquatorialCoordinates()
+            ->getDeclination()->convertToDegrees();
     }
 
     /**
      * Sets the observation types for the target.
+     *
+     * @return None
      */
-    private function _setObservationType()
+    private function _setObservationType(): void
     {
         $this->_targetType = $this->type()->first();
         $this->_observationType = $this->_targetType
@@ -519,7 +548,7 @@ class Target extends Model
      *
      * @return string The Observation Type / Target Type
      */
-    public function getObservationTypeAttribute()
+    public function getObservationTypeAttribute(): string
     {
         if ($this->_observationType == null) {
             $this->_setObservationType();
@@ -534,7 +563,7 @@ class Target extends Model
      *
      * @return bool true if the targer is deepsky or double star
      */
-    public function isNonSolarSystem()
+    public function isNonSolarSystem(): bool
     {
         if ($this->_observationType == null) {
             $this->_setObservationType();
@@ -549,28 +578,14 @@ class Target extends Model
      *
      * @return string The right ascension
      */
-    public function ra()
+    public function ra(): string
     {
-        $ra = $this->ra;
-        $ra_hours = floor($ra);
-        $subminutes = 60 * ($ra - $ra_hours);
-        $ra_minutes = floor($subminutes);
-        $ra_seconds = round(60 * ($subminutes - $ra_minutes));
-        if ($ra_seconds == 60) {
-            $ra_seconds = 0;
-            $ra_minutes++;
-        }
-        if ($ra_minutes == 60) {
-            $ra_minutes = 0;
-            $ra_hours++;
-        }
-        if ($ra_hours == 24) {
-            $ra_hours = 0;
+        if (!$this->_target) {
+            $this->getRiseSetTransit();
         }
 
-        return sprintf('%02d', $ra_hours) . 'h'
-            . sprintf('%02d', $ra_minutes) . 'm'
-            . sprintf('%02d', $ra_seconds) . 's';
+        return $this->_target->getEquatorialCoordinates()
+            ->getRA()->convertToHours();
     }
 
     /**
@@ -578,7 +593,7 @@ class Target extends Model
      *
      * @return string The size
      */
-    public function size()
+    public function size(): string
     {
         $size = '-';
         if ($this->diam1 != 0.0) {
@@ -619,7 +634,7 @@ class Target extends Model
      *
      * @return string The Field Of View
      */
-    public function getFOV()
+    public function getFOV(): string
     {
         if (preg_match('/(?i)^AA\d*STAR$/', $this->type)
             || preg_match('/(?i)^PLNNB$/', $this->type)
@@ -638,50 +653,41 @@ class Target extends Model
      *
      * @return string The coordinates
      */
-    public function raDecToAladin()
+    public function raDecToAladin(): string
     {
-        $decl = $this->decl;
-        $ra = $this->ra;
-
-        $sign = '';
-        if ($decl < 0) {
-            $sign = '-';
-            $decl = -$decl;
-        } else {
-            $sign = '+';
-        }
-
-        $ra_hours = floor($ra);
-        $subminutes = 60 * ($ra - $ra_hours);
-        $ra_minutes = floor($subminutes);
-        $ra_seconds = round(60 * ($subminutes - $ra_minutes));
-        if ($ra_seconds == 60) {
-            $ra_seconds = 0;
-            $ra_minutes++;
-        }
-        if ($ra_minutes == 60) {
-            $ra_minutes = 0;
-            $ra_hours++;
-        }
-        if ($ra_hours == 24) {
-            $ra_hours = 0;
-        }
-
-        $decl_degrees = floor($decl);
-        $subminutes = 60 * ($decl - $decl_degrees);
-        $decl_minutes = floor($subminutes);
-        $decl_seconds = round(60 * ($subminutes - $decl_minutes));
-        if ($decl_seconds == 60) {
-            $decl_seconds = 0;
-            $decl_minutes++;
-        }
-        if ($decl_minutes == 60) {
-            $decl_minutes = 0;
-            $decl_degrees++;
-        }
-
-        return $ra_hours . ' ' . $ra_minutes . ' ' . $ra_seconds . ' '
-            . $sign . $decl_degrees . ' ' . $decl_minutes . ' ' . $decl_seconds;
+        return str_replace(
+            '  ',
+            ' +',
+            str_replace(
+                'h',
+                ' ',
+                str_replace(
+                    'm',
+                    ' ',
+                    str_replace(
+                        's',
+                        '',
+                        str_replace(
+                            '°',
+                            ' ',
+                            str_replace(
+                                "'",
+                                ' ',
+                                str_replace(
+                                    '"',
+                                    '',
+                                    $this->_target->getEquatorialCoordinates()
+                                        ->getRA()->convertToHours()
+                                    . ' '
+                                    . $this->_target->getEquatorialCoordinates()
+                                        ->getDeclination()->convertToDegrees()
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        );
     }
 
     /**
@@ -690,7 +696,7 @@ class Target extends Model
      *
      * @return array the ephemerides for a whole year
      */
-    public function getYearEphemerides()
+    public function getYearEphemerides(): array
     {
         if (auth()->guest()) {
             return $this->_ephemerides;
@@ -756,13 +762,24 @@ class Target extends Model
                     $ephemerides[$cnt]['set'] = $target->getSetting() ?
                         $target->getSetting()->timezone($this->_location->timezone)
                         ->format('H:i') : '-';
+                    $ephemerides[$cnt]['transitCarbon'] = $target->getTransit()
+                        ->timezone($this->_location->timezone);
+                    $ephemerides[$cnt]['riseCarbon'] = $target->getRising() ?
+                        $target->getRising()->timezone($this->_location->timezone)
+                        : '-';
+                    $ephemerides[$cnt]['setCarbon'] = $target->getSetting() ?
+                        $target->getSetting()->timezone($this->_location->timezone)
+                        : '-';
 
                     $ephemerides[$cnt]['astronomical_twilight_end'] = is_bool(
                         $nightephemerides['astronomical_twilight_end']
                     ) ? null :
                         $date->copy()
                         ->setTimeFromTimeString(
-                            date('H:i', $nightephemerides['astronomical_twilight_end'])
+                            date(
+                                'H:i',
+                                $nightephemerides['astronomical_twilight_end']
+                            )
                         )->timezone($this->_location->timezone);
 
                     $ephemerides[$cnt]['astronomical_twilight_begin'] = is_bool(
@@ -770,7 +787,10 @@ class Target extends Model
                     ) ? null :
                     $date->copy()
                         ->setTimeFromTimeString(
-                            date('H:i', $nightephemerides['astronomical_twilight_begin'])
+                            date(
+                                'H:i',
+                                $nightephemerides['astronomical_twilight_begin']
+                            )
                         )->timezone($this->_location->timezone);
 
                     $ephemerides[$cnt]['nautical_twilight_end'] = is_bool(
@@ -869,24 +889,30 @@ class Target extends Model
                     }
                     if ($ephem['astronomical_twilight_end'] != null
                         && $this->_checkNightHourMinutePeriodOverlap(
-                            $ephem['rise'],
-                            $ephem['set'],
+                            $ephem['riseCarbon'],
+                            $ephem['setCarbon'],
                             $ephem['astronomical_twilight_end'],
                             $ephem['astronomical_twilight_begin']
                         )
                     ) {
-                        $ephemerides[$cnt]['rise_popup'] = _i('%s is visible during the night', $this->name);
+                        $ephemerides[$cnt]['rise_popup'] = _i(
+                            '%s is visible during the night',
+                            $this->name
+                        );
                         $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
                     } elseif ($ephem['nautical_twilight_end'] != null
                         && $this->_checkNightHourMinutePeriodOverlap(
-                            $ephem['rise'],
-                            $ephem['set'],
+                            $ephem['riseCarbon'],
+                            $ephem['setCarbon'],
                             $ephem['nautical_twilight_end'],
                             $ephem['nautical_twilight_begin']
                         )
                     ) {
                         $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
-                        $ephemerides[$cnt]['rise_popup'] = _i('%s is visible during the nautical twilight', $this->name);
+                        $ephemerides[$cnt]['rise_popup'] = _i(
+                            '%s is visible during the nautical twilight',
+                            $this->name
+                        );
                     }
                 }
 
@@ -936,61 +962,50 @@ class Target extends Model
      *
      * @return string The name of the month
      */
-    private function _convertToMonth($number)
+    private function _convertToMonth($number): string
     {
+        $date = Carbon::now()->month($number / 2);
+
         return ($number % 2 ? _i('mid') : _i('begin'))
                 . ' '
-                . date(
-                    'M',
-                    mktime(
-                        0,
-                        0,
-                        0,
-                        $number / 2,
-                        1
-                    )
-                );
+                . $date->isoFormat('MMMM');
     }
 
     /**
      * Checks if there is an overlap between the two given time periods.
      *
-     * @param string $firststart  the start of the first time interval
-     * @param string $firstend    the end of the first time interval
+     * @param Carbon $firststart  the start of the first time interval
+     * @param Carbon $firstend    the end of the first time interval
      * @param Carbon $secondstart the start of the second time interval
      * @param Carbon $secondend   the end of the second time interval
      *
      * @return bool true if the two time intervals overlap
      */
     private function _checkNightHourMinutePeriodOverlap(
-        $firststart,
-        $firstend,
-        $secondstart,
-        $secondend
+        Carbon $firststart,
+        Carbon $firstend,
+        Carbon $secondstart,
+        Carbon $secondend
     ) {
-        $firststartvalue = str_replace(':', '', $firststart);
-        $firstendvalue = str_replace(':', '', $firstend);
-        $secondstartvalue = $secondstart->format('Hi');
-        $secondendvalue = $secondend->format('Hi');
-        if ($secondstartvalue < $secondendvalue) {
-            return (($firststartvalue > $secondstartvalue)
-                && ($firststartvalue < $secondendvalue))
-                || (($firstendvalue > $secondstartvalue)
-                && ($firstendvalue < $secondendvalue))
-                || (($firststartvalue < $secondend)
-                && ($firstendvalue > $secondendvalue))
-                || (($firststartvalue < $secondstartvalue)
-                && ($firststartvalue > $firstendvalue))
-                | (($firstendvalue > $secondendvalue)
-                && ($firststartvalue > $firstendvalue));
+        if ($secondstart->lt($secondend)) {
+            return ($firststart->gt($secondstart)
+                 && $firststart->lt($secondend))
+                 || ($firstend->gt($secondstart)
+                 && $firstend->lt($secondend))
+                 || ($firststart->lt($secondend)
+                 && $firstend->gt($secondend))
+                 || ($firststart->lt($secondstart)
+                 && $firststart->gt($firstend))
+                 || ($firstend->gt($secondend)
+                 && $firststart->gt($firstend));
         } else {
-            return ($firststartvalue > $secondstartvalue)
-                || ($firststartvalue < $secondendvalue)
-                || ($firstendvalue > $secondstartvalue)
-                || ($firstendvalue < $secondendvalue)
-                || (($firststartvalue < $secondstartvalue)
-                && ($firstendvalue > $secondendvalue)
-                && ($firststartvalue > $firstendvalue));
+            return $firststart->gt($secondstart)
+                 || $firststart->lt($secondend)
+                 || $firstend->gt($secondstart)
+                 || $firstend->lt($secondend)
+                 || ($firststart->lt($secondstart)
+                 && $firstend->gt($secondend)
+                 && $firststart->gt($firstend));
         }
     }
 
