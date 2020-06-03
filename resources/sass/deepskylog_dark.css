@@ -682,3 +682,7 @@
 [data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
     color: #fff;
 }
+
+[data-theme="dark"] div.gm-style {
+    color: black;
+}

@@ -28,7 +28,7 @@
     },
     "dependencies": {
         "axios": "^0.19.2",
-        "bootstrap-fileinput": "^5.0.8",
+        "bootstrap-fileinput": "^5.0.9",
         "datatables.net": "^1.10.21",
         "datatables.net-bs4": "^1.10.21",
         "datatables.net-buttons": "^1.6.2",
