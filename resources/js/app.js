@@ -7,8 +7,6 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
-
 require('select2');
 
 import $ from 'jquery';
@@ -43,43 +41,7 @@ require( 'bootstrap-fileinput/themes/fas/theme.min.js');
 // Lity
 require( 'lity/dist/lity.js');
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-import Vue from 'vue';
-
-// register globally
-Vue.component('select2', {
-    props: ['options', 'value'],
-    watch: {
-      value: function (value) {
-        // update value
-        $(this.$el)
-            .val(value)
-            .trigger('change')
-      },
-      options: function (options) {
-        // update options
-        $(this.$el).empty().select2({ data: options })
-      }
-    },
-    mounted: function () {
-      var vm = this
-      $(this.$el)
-        // init select2
-        .select2({ data: this.options, theme: 'bootstrap', width: '100%', allowClear: true })
-        .val(this.value)
-        .trigger('change')
-        // emit event on change.
-        .on('select2:select', function () {
-          vm.$emit('input', this.value)
-        })
-    },
-    destroyed: function () {
-      $(this.$el).off().select2('destroy')
-    },
-    template: '<select><slot></slot></select>'
-  })
+// Highcharts
+var Highcharts = require('highcharts/highcharts.js');
+// Load module after Highcharts is loaded
+require('highcharts/modules/exporting')(Highcharts);
