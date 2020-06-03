@@ -46,8 +46,19 @@
                 $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime();
             @endphp
 
-            <td>{{ $moon->getRising()->timezone($location->timezone)->format('H:i') }}</td>
-            <td>{{ $moon->getSetting()->timezone($location->timezone)->format('H:i') }}</td>
+            <td>@if ($moon->getRising())
+                {{ $moon->getRising()->timezone($location->timezone)->format('H:i') }}
+            @else
+                -
+            @endif
+            </td>
+            <td>
+            @if ($moon->getSetting())
+                {{ $moon->getSetting()->timezone($location->timezone)->format('H:i') }}
+            @else
+                -
+            @endif
+            </td>
         </tr>
 	    <tr>
             <td>{{ _i("Sun") }}</td>

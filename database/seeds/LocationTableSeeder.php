@@ -1,9 +1,10 @@
 <?php
 
+use App\User;
 use App\Location;
 use App\LocationOld;
-use App\User;
 use Illuminate\Database\Seeder;
+use deepskylog\AstronomyLibrary\Magnitude;
 
 class LocationTableSeeder extends Seeder
 {
@@ -147,7 +148,7 @@ class LocationTableSeeder extends Seeder
                 } elseif ($location->country === 'Malaysia') {
                     $country = 'MY';
                 } else {
-                    echo 'MISSING COUNTRY: '.$location->id.' - '.$location->name.' - '.$location->country."\n";
+                    echo 'MISSING COUNTRY: ' . $location->id . ' - ' . $location->name . ' - ' . $location->country . "\n";
                     continue;
                 }
 
@@ -165,11 +166,11 @@ class LocationTableSeeder extends Seeder
 
                 // Calculate the sqm from the lm
                 if ($lm > 0) {
-                    $sqm = Location::getSqmFromLimitingMagnitude($lm);
-                    $bortle = Location::getBortleFromSqm($sqm);
+                    $sqm = Magnitude::nelmToSqm($lm);
+                    $bortle = Magnitude::sqmToBortle($sqm);
                 } elseif ($sqm > 0) {
-                    $lm = Location::getLimitingMagnitudeFromSqm($sqm);
-                    $bortle = Location::getBortleFromSqm($sqm);
+                    $lm = Magnitude::sqmToNelm($sqm);
+                    $bortle = Magnitude::sqmToBortle($sqm);
                 }
 
                 $newLocation = Location::create(

@@ -11,6 +11,10 @@
 + Using local time everywhere in DeepskyLog.
 + Registration doesn't need a manual intervention anymore. The newly registered user receives a mail to activate the registration.
 + Logging in and registering can be done using the observers facebook, github, google or twitter account.
++ Added a plot of the altitude of the object dusing the night:
+![Altitude plot](./documentation/Altitude.png "Altitude plot")
++ Added a plot of the length of the night for every location:
+![Length of night plot](./documentation/Night.png "Length of night plot")
 + Added a lot of tests for DeepskyLog functionalities.
 
 ## Technology

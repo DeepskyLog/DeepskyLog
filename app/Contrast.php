@@ -211,7 +211,7 @@ class Contrast extends Model
                                 $this->_magnifications[] = $instrument->diameter
                                     * $instrument->fd / $focalLengthEyepiece;
                                 $this->_magnificationsName[] = $eyepiece->name
-                                    .' - '.$focalLengthEyepiece.'mm';
+                                    . ' - ' . $focalLengthEyepiece . 'mm';
                                 $this->_fov[] = 1.0 /
                                     ($instrument->diameter * $instrument->fd
                                     / $focalLengthEyepiece)
@@ -241,7 +241,7 @@ class Contrast extends Model
                                 $magnifications[] = $origmagnifications[$i]
                                     * $factor;
                                 $magnificationsName[] = $origmagnificationsName[$i]
-                                    .', '.$name;
+                                    . ', ' . $name;
                                 $fov[] = $origfov[$i] / $factor;
                             }
                         }
@@ -502,12 +502,12 @@ class Contrast extends Model
                     );
                 }
                 $this->contrast = sprintf('%.2f', $this->_logContrastDiff);
-                $this->prefMagEasy = sprintf('%d', $this->_x).'x';
+                $this->prefMagEasy = sprintf('%d', $this->_x) . 'x';
                 if ($this->_xName == '') {
-                    $this->prefMag = sprintf('%d', $this->_x).'x';
+                    $this->prefMag = sprintf('%d', $this->_x) . 'x';
                 } else {
-                    $this->prefMag = sprintf('%d', $this->_x).'x'
-                        .' - '.$this->_xName;
+                    $this->prefMag = sprintf('%d', $this->_x) . 'x'
+                        . ' - ' . $this->_xName;
                 }
             }
         }

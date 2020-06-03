@@ -15,8 +15,8 @@ class AddColumnsToUsersTable extends Migration
             $table->string('username')->after('id')->default('');
             $table->string('type')->default('default');
             $table->string('country')->default('');
-            $table->unsignedinteger('stdlocation')->default(0);
-            $table->unsignedinteger('stdtelescope')->default(0);
+            $table->unsignedinteger('stdlocation')->nullable();
+            $table->unsignedinteger('stdtelescope')->nullable();
             $table->string('language')->default('en_US');
             $table->string('icqname')->nullable();
             $table->string('observationlanguage')->default('en');
@@ -39,8 +39,10 @@ class AddColumnsToUsersTable extends Migration
             $table->string('version')->default('2019.12');
             $table->boolean('showInches')->default(false);
 
-            $table->foreign('stdlocation')->references('id')->on('locations');
-            $table->foreign('stdtelescope')->references('id')->on('instruments');
+            $table->foreign('stdlocation')->nullable()->references('id')
+                ->on('locations');
+            $table->foreign('stdtelescope')->nullable()->references('id')
+                ->on('instruments');
             $table->foreign('standardAtlasCode')->references('code')->on('atlases');
         });
     }

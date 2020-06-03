@@ -126,7 +126,7 @@ class RegisterController extends Controller
 
         $request->session()->flash(
             str_random(4),
-            ['type' => 'success', 'message'=> _i('User "%s" successfully registered. You can now log in.', $user->name)]
+            ['type' => 'success', 'message' => _i('User "%s" successfully registered. You can now log in.', $user->name)]
         );
 
         if ($this->registered($request, $user)) {

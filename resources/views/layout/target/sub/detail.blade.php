@@ -38,6 +38,16 @@
         <td colspan="3">{{ $target->observationType }}</td>
     </tr>
 
+    @if (!Auth::guest())
+        @if(Auth::user()->stdlocation != null)
+        <tr>
+            <td colspan="12">
+                {!! $target->getAltitudeGraph() !!}
+            </td>
+        </tr>
+        @endif
+    @endif
+
     @if ($target->isNonSolarSystem())
         <tr>
             <td colspan="3">{{ _i('Right Ascension') }}</td>
@@ -183,7 +193,16 @@
 
     @if ($target->ra != null && $target->decl != null)
     <tr>
-        <td colspan="3">Aladin</td>
+        <td colspan="3">Aladin<br /><br />
+            @auth
+            // TODO: Show name of telescope
+            // TODO: If no telescope or no eyepieces are set, don't show anything.
+            // TODO: Add standard lens and eyepiece in the observer settings
+            // TODO: Add Dropdown for eyepieces and lenses
+            // TODO: Change FOV using javascript
+            {{ auth()->user()->stdtelescope }}
+            @endauth
+        </td>
         <td colspan="100">
             <div id="aladin-lite-div" style="width:600px;height:400px;"></div>
             <link rel="stylesheet" href="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />

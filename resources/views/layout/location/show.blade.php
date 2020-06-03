@@ -104,6 +104,28 @@
         @endif
     </tr>
     <tr>
+        <td>{{ _i("Length of night") }}</td>
+        <td>
+            {!! $location->getLengthOfNightPlot() !!}
+        </td>
+    </tr>
+    <tr>
+        <td>{{ _i("Today sunrise / sunset / transit") }}</td>
+        <td>{{ $location->sunriseSetTransit() }}</td>
+    </tr>
+    <tr>
+        <td>{{ _i("Today Civil Darkness") }}</td>
+        <td>{{ $location->civilTwilight() }}</td>
+    </tr>
+    <tr>
+        <td>{{ _i("Today Nautical Darkness") }}</td>
+        <td>{{ $location->nauticalTwilight() }}</td>
+    </tr>
+    <tr>
+        <td>{{ _i("Today Astronomical Darkness") }}</td>
+        <td>{{ $location->astronomicalTwilight() }}</td>
+    </tr>
+    <tr>
         <td>{{ _i('Weather predictions') }}</td>
         <td>
             <a href="http://clearoutside.com/forecast/{{ round($location->latitude, 2) }}/{{ round($location->longitude, 2) }}">

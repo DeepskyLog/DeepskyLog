@@ -99,6 +99,72 @@ class UserController extends Controller
     {
         // TODO: Use https://charts.erik.cat/ here for charts!
         // TODO: https://dev.to/arielmejiadev/use-laravel-charts-in-laravel-5bbm
+        //     $altChart = new AltitudeChart;
+
+        //     // Start at noon
+        //     $date->hour = 12;
+
+        //     $hours = [];
+        //     $altitude = [];
+
+        //     for ($i = 0; $i < 24;$i++) {
+        //         $hours[] = $date->isoFormat('HH:mm');
+
+        //         // Calculate the apparent siderial time
+        //         $siderial_time = Time::apparentSiderialTime($date, $geo_coords);
+
+        //         // Calculate the horizontal coordinates
+        //         $horizontal = $this->getEquatorialCoordinatesToday()
+        //             ->convertToHorizontal(
+        //                 $geo_coords,
+        //                 $siderial_time
+        //             );
+
+        //         $altitude[] = $horizontal->getAltitude()->getCoordinate();
+
+        //         // Add an hour
+        //         $date->addHour();
+        //     }
+
+        //     $altChart->labels(
+        //         $hours
+        //     );
+
+        //     $altChart->dataset(
+        //         _i('Altitude'),
+        //         'spline',
+        //         $altitude
+        //     );
+
+        //     $altChart->options(
+        //         [
+        //             'title' => [
+        //                 'text' => null,
+        //             ],
+        //             'yAxis' => [
+        //                 'endOnTick' => false,
+        //                 'startOnTick' => false,
+        //                 'tickInterval' => 30,
+        //                 'min' => -90,
+        //                 'max' => 90,
+        //                 'title' => [
+        //                     'text' => _i('Altitude (in °)'),
+        //                 ],
+        //             ],
+        //             'xAxis' => [
+        //                 'zoomEnabled' => true
+        //             ],
+        //             'tooltip' => [
+        //                 'valueDecimals' => 1,
+        //                 'valueSuffix' => '°',
+        //             ]
+        //         ],
+        //         true
+        //     );
+
+        //     $this->_altitudeChart = $altChart;
+        // }
+
         return \Chart::title(
             [
                 'text' => _i('Number of observations per year: ') . $user->name,

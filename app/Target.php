@@ -66,14 +66,16 @@ class Target extends Model
     public function getContrastAttribute(): string
     {
         if (!auth()->guest()) {
-            if (!isset($this->_contrast)) {
-                $this->_contrast = new \App\Contrast($this);
-            }
+            if (count(auth()->user()->instruments) > 0) {
+                if (!isset($this->_contrast)) {
+                    $this->_contrast = new \App\Contrast($this);
+                }
 
-            return $this->_contrast->contrast;
-        } else {
-            return '-';
+                return $this->_contrast->contrast;
+            }
         }
+
+        return '-';
     }
 
     /**
@@ -85,14 +87,16 @@ class Target extends Model
     public function getContrastTypeAttribute(): string
     {
         if (!auth()->guest()) {
-            if (!isset($this->_contrast)) {
-                $this->_contrast = new \App\Contrast($this);
-            }
+            if (count(auth()->user()->instruments) > 0) {
+                if (!isset($this->_contrast)) {
+                    $this->_contrast = new \App\Contrast($this);
+                }
 
-            return $this->_contrast->contype;
-        } else {
-            return '-';
+                return $this->_contrast->contype;
+            }
         }
+
+        return '-';
     }
 
     /**
@@ -103,14 +107,16 @@ class Target extends Model
     public function getContrastPopupAttribute(): string
     {
         if (!auth()->guest()) {
-            if (!isset($this->_contrast)) {
-                $this->_contrast = new \App\Contrast($this);
-            }
+            if (count(auth()->user()->instruments) > 0) {
+                if (!isset($this->_contrast)) {
+                    $this->_contrast = new \App\Contrast($this);
+                }
 
-            return $this->_contrast->popup;
-        } else {
-            return '-';
+                return $this->_contrast->popup;
+            }
         }
+
+        return '-';
     }
 
     /**
@@ -122,14 +128,16 @@ class Target extends Model
     public function getPrefMagAttribute(): string
     {
         if (!auth()->guest()) {
-            if (!isset($this->_contrast)) {
-                $this->_contrast = new \App\Contrast($this);
-            }
+            if (count(auth()->user()->instruments) > 0) {
+                if (!isset($this->_contrast)) {
+                    $this->_contrast = new \App\Contrast($this);
+                }
 
-            return $this->_contrast->prefMag;
-        } else {
-            return '-';
+                return $this->_contrast->prefMag;
+            }
         }
+
+        return '-';
     }
 
     /**
@@ -140,14 +148,16 @@ class Target extends Model
     public function getPrefMagEasyAttribute(): string
     {
         if (!auth()->guest()) {
-            if (!isset($this->_contrast)) {
-                $this->_contrast = new \App\Contrast($this);
-            }
+            if (count(auth()->user()->instruments) > 0) {
+                if (!isset($this->_contrast)) {
+                    $this->_contrast = new \App\Contrast($this);
+                }
 
-            return $this->_contrast->prefMagEasy;
-        } else {
-            return '-';
+                return $this->_contrast->prefMagEasy;
+            }
         }
+
+        return '-';
     }
 
     /**
@@ -161,8 +171,15 @@ class Target extends Model
             $this->getRiseSetTransit();
         }
 
-        return Auth::guest() ? '-' : ($this->_target->getRising() ? $this->_target->getRising()
-            ->timezone($this->_location->timezone)->format('H:i') : '-');
+        $rise = '-';
+        if (!Auth::guest()) {
+            if (Auth::user()->stdlocation) {
+                $rise = $this->_target->getRising() ? $this->_target->getRising()
+                    ->timezone($this->_location->timezone)->format('H:i') : '-';
+            }
+        }
+
+        return $rise;
     }
 
     /**
@@ -190,15 +207,19 @@ class Target extends Model
      */
     public function getTransitAttribute(): string
     {
-        if (Auth::guest()) {
-            return '-';
-        }
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
 
-        return $this->_target->getTransit()
-            ->timezone($this->_location->timezone)->format('H:i');
+        $transit = '-';
+        if (!Auth::guest()) {
+            if (Auth::user()->stdlocation) {
+                $transit = $this->_target->getTransit() ? $this->_target->getTransit()
+                    ->timezone($this->_location->timezone)->format('H:i') : '-';
+            }
+        }
+
+        return $transit;
     }
 
     /**
@@ -225,15 +246,19 @@ class Target extends Model
      */
     public function getSetAttribute(): string
     {
-        if (Auth::guest()) {
-            return '-';
-        }
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
 
-        return $this->_target->getSetting() ? $this->_target->getSetting()
-            ->timezone($this->_location->timezone)->format('H:i') : '-';
+        $set = '-';
+        if (!Auth::guest()) {
+            if (Auth::user()->stdlocation) {
+                $set = $this->_target->getSetting() ? $this->_target->getSetting()
+                    ->timezone($this->_location->timezone)->format('H:i') : '-';
+            }
+        }
+
+        return $set;
     }
 
     /**
@@ -261,17 +286,20 @@ class Target extends Model
      */
     public function getBestTimeAttribute(): string
     {
-        if (Auth::guest()) {
-            return '-';
-        }
-
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
 
-        return $this->_target->getBestTimeToObserve() ?
-            $this->_target->getBestTimeToObserve()
-            ->timezone($this->_location->timezone)->format('H:i') : '-';
+        $best = '-';
+        if (!Auth::guest()) {
+            if (Auth::user()->stdlocation) {
+                $best = $this->_target->getBestTimeToObserve() ?
+                    $this->_target->getBestTimeToObserve()
+                    ->timezone($this->_location->timezone)->format('H:i') : '-';
+            }
+        }
+
+        return $best;
     }
 
     /**
@@ -281,16 +309,20 @@ class Target extends Model
      */
     public function getMaxAltAttribute(): string
     {
-        if (Auth::guest()) {
-            return '-';
-        }
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
 
-        return $this->_target->getMaxHeightAtNight() ?
-            $this->_target->getMaxHeightAtNight()
-            ->convertToDegrees() : '-';
+        $maxalt = '-';
+        if (!Auth::guest()) {
+            if (Auth::user()->stdlocation) {
+                $maxalt = $this->_target->getMaxHeightAtNight() ?
+                $this->_target->getMaxHeightAtNight()
+                    ->convertToDegrees() : '-';
+            }
+        }
+
+        return $maxalt;
     }
 
     /**
@@ -317,14 +349,17 @@ class Target extends Model
      */
     public function getHighestAltAttribute(): string
     {
-        if (Auth::guest()) {
-            return '-';
-        }
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
+        $high = '-';
+        if (!Auth::guest()) {
+            if (Auth::user()->stdlocation) {
+                return $this->_highestFromToAround[3];
+            }
+        }
 
-        return $this->_highestFromToAround[3];
+        return $high;
     }
 
     /**
@@ -334,14 +369,18 @@ class Target extends Model
      */
     public function getHighestFromAttribute(): string
     {
-        if (Auth::guest()) {
-            return '-';
-        }
         if (!isset($this->_ephemerides)) {
             $this->getYearEphemerides();
         }
 
-        return $this->_highestFromToAround[0];
+        $high = '-';
+        if (!Auth::guest()) {
+            if (Auth::user()->stdlocation) {
+                $high = $this->_highestFromToAround[0];
+            }
+        }
+
+        return $high;
     }
 
     /**
@@ -351,14 +390,18 @@ class Target extends Model
      */
     public function getHighestAroundAttribute(): string
     {
-        if (Auth::guest()) {
-            return '-';
-        }
         if (!isset($this->_ephemerides)) {
             $this->getYearEphemerides();
         }
 
-        return $this->_highestFromToAround[1];
+        $high = '-';
+        if (!Auth::guest()) {
+            if (Auth::user()->stdlocation) {
+                $high = $this->_highestFromToAround[1];
+            }
+        }
+
+        return $high;
     }
 
     /**
@@ -368,14 +411,18 @@ class Target extends Model
      */
     public function getHighestToAttribute(): string
     {
-        if (Auth::guest()) {
-            return '-';
-        }
         if (!isset($this->_ephemerides)) {
             $this->getYearEphemerides();
         }
 
-        return $this->_highestFromToAround[2];
+        $high = '-';
+        if (!Auth::guest()) {
+            if (Auth::user()->stdlocation) {
+                $high = $this->_highestFromToAround[2];
+            }
+        }
+
+        return $high;
     }
 
     /**
@@ -391,8 +438,13 @@ class Target extends Model
         // Add equatorial coordinates to the target.
         $this->_target->setEquatorialCoordinates($equa);
 
+        $this->_popup[0] = '-';
+        $this->_popup[1] = '-';
+        $this->_popup[2] = '-';
+        $this->_popup[3] = '-';
+
         if (!Auth::guest()) {
-            if (Auth::user()->stdlocation != 0 && Auth::user()->stdtelescope != 0) {
+            if (Auth::user()->stdlocation && Auth::user()->stdtelescope) {
                 if ($this->isNonSolarSystem()) {
                     $datestr = Session::get('date');
                     $date = Carbon::createFromFormat('d/m/Y', $datestr);
@@ -696,9 +748,12 @@ class Target extends Model
      *
      * @return array the ephemerides for a whole year
      */
-    public function getYearEphemerides(): array
+    public function getYearEphemerides(): ?array
     {
         if (auth()->guest()) {
+            return $this->_ephemerides;
+        }
+        if (!auth()->user()->stdlocation) {
             return $this->_ephemerides;
         }
         if (isset($this->_ephemerides)) {
@@ -887,30 +942,37 @@ class Target extends Model
                             $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
                         }
                     }
-                    if ($ephem['astronomical_twilight_end'] != null
-                        && $this->_checkNightHourMinutePeriodOverlap(
-                            $ephem['riseCarbon'],
-                            $ephem['setCarbon'],
-                            $ephem['astronomical_twilight_end'],
-                            $ephem['astronomical_twilight_begin']
-                        )
-                    ) {
+                    if ($ephem['riseCarbon'] != '-' && $ephem['setCarbon'] != '-') {
+                        if ($ephem['astronomical_twilight_end'] != null
+                            && $this->_checkNightHourMinutePeriodOverlap(
+                                $ephem['riseCarbon'],
+                                $ephem['setCarbon'],
+                                $ephem['astronomical_twilight_end'],
+                                $ephem['astronomical_twilight_begin']
+                            )
+                        ) {
+                            $ephemerides[$cnt]['rise_popup'] = _i(
+                                '%s is visible during the night',
+                                $this->name
+                            );
+                            $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
+                        } elseif ($ephem['nautical_twilight_end'] != null
+                            && $this->_checkNightHourMinutePeriodOverlap(
+                                $ephem['riseCarbon'],
+                                $ephem['setCarbon'],
+                                $ephem['nautical_twilight_end'],
+                                $ephem['nautical_twilight_begin']
+                            )
+                        ) {
+                            $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
+                            $ephemerides[$cnt]['rise_popup'] = _i(
+                                '%s is visible during the nautical twilight',
+                                $this->name
+                            );
+                        }
+                    } else {
                         $ephemerides[$cnt]['rise_popup'] = _i(
-                            '%s is visible during the night',
-                            $this->name
-                        );
-                        $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
-                    } elseif ($ephem['nautical_twilight_end'] != null
-                        && $this->_checkNightHourMinutePeriodOverlap(
-                            $ephem['riseCarbon'],
-                            $ephem['setCarbon'],
-                            $ephem['nautical_twilight_end'],
-                            $ephem['nautical_twilight_begin']
-                        )
-                    ) {
-                        $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
-                        $ephemerides[$cnt]['rise_popup'] = _i(
-                            '%s is visible during the nautical twilight',
+                            '%s is not visible during the night',
                             $this->name
                         );
                     }
@@ -982,10 +1044,10 @@ class Target extends Model
      * @return bool true if the two time intervals overlap
      */
     private function _checkNightHourMinutePeriodOverlap(
-        Carbon $firststart,
-        Carbon $firstend,
-        Carbon $secondstart,
-        Carbon $secondend
+        ?Carbon $firststart,
+        ?Carbon $firstend,
+        ?Carbon $secondstart,
+        ?Carbon $secondend
     ) {
         if ($secondstart->lt($secondend)) {
             return ($firststart->gt($secondstart)
@@ -1034,5 +1096,51 @@ class Target extends Model
     public function getConstellation()
     {
         return \App\Constellation::where('id', $this->con)->first()->name;
+    }
+
+    /**
+     * Returns the graph with the altitude of the target.
+     *
+     * @return string The altitude of the target
+     */
+    public function getAltitudeGraph()
+    {
+        if (Auth::guest()) {
+            return '';
+        }
+
+        if (!Auth::user()->stdlocation) {
+            return '';
+        }
+
+        if (!$this->ra) {
+            return '';
+        }
+
+        if (!$this->_target) {
+            $this->getRiseSetTransit();
+        }
+
+        if ($this->_location == null) {
+            $this->_location = \App\Location::where(
+                'id',
+                Auth::user()->stdlocation
+            )->first();
+        }
+        $location = $this->_location;
+
+        $geo_coords = new GeographicalCoordinates(
+            $location->longitude,
+            $location->latitude
+        );
+
+        $datestr = Session::get('date');
+        $date = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date->hour = 12;
+        $date->minute = 0;
+        $date->second = 0;
+        $date->timezone($location->timezone);
+
+        return $this->_target->altitudeGraph($geo_coords, $date);
     }
 }

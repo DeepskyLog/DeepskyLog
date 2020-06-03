@@ -12,11 +12,15 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Session;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 
 /**
  * Location eloquent model.
@@ -97,7 +101,7 @@ class Location extends Model implements HasMedia
             ksort($translatedCountries);
 
             foreach ($translatedCountries as $countryid => $countryname) {
-                echo '<optgroup label="'.$countryname.'">';
+                echo '<optgroup label="' . $countryname . '">';
 
                 $locations = self::where(
                     ['user_id' => Auth::user()->id]
@@ -106,72 +110,18 @@ class Location extends Model implements HasMedia
 
                 foreach ($locations as $name => $id) {
                     if ($id == Auth::user()->stdlocation) {
-                        echo '<option selected="selected" value="'.$id.'">'
-                           .$name.'</option>';
+                        echo '<option selected="selected" value="' . $id . '">'
+                           . $name . '</option>';
                     } else {
-                        echo '<option value="'.$id.'">'.$name.'</option>';
+                        echo '<option value="' . $id . '">' . $name . '</option>';
                     }
                 }
 
                 echo '</optgroup>';
             }
         } else {
-            echo '<option>'._i('Add a location').'</option>';
+            echo '<option>' . _i('Add a location') . '</option>';
         }
-    }
-
-    /**
-     * Return the bortle value if the sqm value is given.
-     *
-     * @param float $sqm The sqm value
-     *
-     * @return int The bortle value
-     */
-    public static function getBortleFromSqm($sqm)
-    {
-        if ($sqm <= 17.5) {
-            return 9;
-        } elseif ($sqm <= 18.0) {
-            return 8;
-        } elseif ($sqm <= 18.5) {
-            return 7;
-        } elseif ($sqm <= 19.1) {
-            return 6;
-        } elseif ($sqm <= 20.4) {
-            return 5;
-        } elseif ($sqm <= 21.3) {
-            return 4;
-        } elseif ($sqm <= 21.5) {
-            return 3;
-        } elseif ($sqm <= 21.7) {
-            return 2;
-        } else {
-            return 1;
-        }
-    }
-
-    /**
-     * Return the limiting magnitude if the sqm value is given.
-     *
-     * @param float $sqm The sqm value
-     *
-     * @return float The limiting magnitude
-     */
-    public static function getLimitingMagnitudeFromSqm($sqm)
-    {
-        return 7.97 - 5 * log10(1 + pow(10, 4.316 - $sqm / 5.0));
-    }
-
-    /**
-     * Return the sqm if the limiting magnitude if the sqm value is given.
-     *
-     * @param float $lm The limiting magnitude
-     *
-     * @return float The sqm value
-     */
-    public static function getSqmFromLimitingMagnitude($lm)
-    {
-        return 21.58 - 5 * log10(pow(10, (1.586 - $lm / 5.0)) - 1.0);
     }
 
     /**
@@ -185,4 +135,187 @@ class Location extends Model implements HasMedia
             ->width(100)
             ->height(100);
     }
+
+    /**
+     * Returns the length of the night plot for the year.
+     *
+     * @return string the image with the length of the night plot for the year
+     */
+    public function getLengthOfNightPlot(): string
+    {
+        $coords = new GeographicalCoordinates($this->longitude, $this->latitude);
+        $datestr = Session::get('date');
+        $date = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date->hour = 12;
+
+        $astrolib = new AstronomyLibrary($date, $coords);
+
+        return $astrolib->getLengthOfNightPlot($this->timezone);
+    }
+
+    /**
+     * Returns the sunrise, sunset and transit time for the location.
+     *
+     * @return string The sunrise / sunset / transit
+     */
+    public function sunriseSetTransit(): string
+    {
+        $datestr = Session::get('date');
+        $date = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date->hour = 12;
+
+        $sun_info = date_sun_info(
+            $date->timestamp,
+            $this->latitude,
+            $this->longitude
+        );
+
+        if ($sun_info['sunrise'] === true) {
+            $sunrise = '-';
+        } elseif ($sun_info['sunrise'] === false) {
+            $sunrise = '-';
+        } else {
+            $sunrise = Carbon::createFromTimestamp(
+                $sun_info['sunrise']
+            )->timezone($this->timezone)->isoFormat('HH:mm');
+        }
+
+        if ($sun_info['sunset'] === true) {
+            $sunset = '-';
+        } elseif ($sun_info['sunrise'] === false) {
+            $sunset = '-';
+        } else {
+            $sunset = Carbon::createFromTimestamp(
+                $sun_info['sunset']
+            )->timezone($this->timezone)->isoFormat('HH:mm');
+        }
+
+        return $sunrise . ' / ' . $sunset . ' / ' .
+            Carbon::createFromTimestamp(
+                $sun_info['transit']
+            )->timezone($this->timezone)->isoFormat('HH:mm');
+    }
+
+    /**
+     * Returns the start and end of the civil twilight for the location.
+     *
+     * @return string The civil twilight
+     */
+    public function civilTwilight(): string
+    {
+        $datestr = Session::get('date');
+        $date = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date->hour = 12;
+
+        $sun_info = date_sun_info(
+            $date->timestamp,
+            $this->latitude,
+            $this->longitude
+        );
+
+        if ($sun_info['civil_twilight_end'] === true) {
+            $end = '-';
+        } elseif ($sun_info['civil_twilight_end'] === false) {
+            $end = '-';
+        } else {
+            $end = Carbon::createFromTimestamp(
+                $sun_info['civil_twilight_end']
+            )->timezone($this->timezone)->isoFormat('HH:mm');
+        }
+
+        if ($sun_info['civil_twilight_begin'] === true) {
+            $start = '-';
+        } elseif ($sun_info['civil_twilight_begin'] === false) {
+            $start = '-';
+        } else {
+            $start = Carbon::createFromTimestamp(
+                $sun_info['civil_twilight_begin']
+            )->timezone($this->timezone)->isoFormat('HH:mm');
+        }
+
+        return $end . ' / ' . $start;
+    }
+
+    /**
+     * Returns the start and end of the nautical twilight for the location.
+     *
+     * @return string The civil twilight
+     */
+    public function nauticalTwilight(): string
+    {
+        $datestr = Session::get('date');
+        $date = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date->hour = 12;
+
+        $sun_info = date_sun_info(
+            $date->timestamp,
+            $this->latitude,
+            $this->longitude
+        );
+
+        if ($sun_info['nautical_twilight_end'] === true) {
+            $end = '-';
+        } elseif ($sun_info['nautical_twilight_end'] === false) {
+            $end = '-';
+        } else {
+            $end = Carbon::createFromTimestamp(
+                $sun_info['nautical_twilight_end']
+            )->timezone($this->timezone)->isoFormat('HH:mm');
+        }
+
+        if ($sun_info['nautical_twilight_begin'] === true) {
+            $start = '-';
+        } elseif ($sun_info['nautical_twilight_begin'] === false) {
+            $start = '-';
+        } else {
+            $start = Carbon::createFromTimestamp(
+                $sun_info['nautical_twilight_begin']
+            )->timezone($this->timezone)->isoFormat('HH:mm');
+        }
+
+        return $end . ' / ' . $start;
+    }
+
+    /**
+     * Returns the start and end of the nautical twilight for the location.
+     *
+     * @return string The civil twilight
+     */
+    public function astronomicalTwilight(): string
+    {
+        $datestr = Session::get('date');
+        $date = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date->hour = 12;
+
+        $sun_info = date_sun_info(
+            $date->timestamp,
+            $this->latitude,
+            $this->longitude
+        );
+
+        if ($sun_info['astronomical_twilight_end'] === true) {
+            $end = '-';
+        } elseif ($sun_info['astronomical_twilight_end'] === false) {
+            $end = '-';
+        } else {
+            $end = Carbon::createFromTimestamp(
+                $sun_info['astronomical_twilight_end']
+            )->timezone($this->timezone)->isoFormat('HH:mm');
+        }
+
+        if ($sun_info['astronomical_twilight_begin'] === true) {
+            $start = '-';
+        } elseif ($sun_info['astronomical_twilight_begin'] === false) {
+            $start = '-';
+        } else {
+            $start = Carbon::createFromTimestamp(
+                $sun_info['astronomical_twilight_begin']
+            )->timezone($this->timezone)->isoFormat('HH:mm');
+        }
+
+        return $end . ' / ' . $start;
+    }
+
+    // TODO: Detail of other locations not visible in dark mode.
+    // TODO: Changing location does not work if changing location by moving the pointer in the map.
 }
