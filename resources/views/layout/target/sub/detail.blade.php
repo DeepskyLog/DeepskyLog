@@ -196,6 +196,13 @@
         <td colspan="3">Aladin<br /><br />
             @auth
                 @if (auth()->user()->stdtelescope)
+                    @php
+                        if (!App\Instrument::where('id', auth()->user()->stdtelescope)->first()->fd) {
+                            $disabled = true;
+                        } else {
+                            $disabled = false;
+                        }
+                    @endphp
                     <form role="form" action="/users/{{ Auth::id() }}/settings" method="POST">
                         @csrf
                         @method('PATCH')
@@ -209,7 +216,7 @@
                         @csrf
                         @method('PATCH')
 
-                        <select class="form-control selection" name="stdeyepiece" id="defaultEyepiece">
+                        <select class="form-control selection" {{ $disabled ? 'disabled' : '' }} name="stdeyepiece" id="defaultEyepiece">
                             {!! App\Eyepiece::getEyepieceOptions() !!}
                         </select>
                     </form>
@@ -218,17 +225,20 @@
                         @csrf
                         @method('PATCH')
 
-                        <select class="form-control selection" name="stdlens" id="defaultLens">
+                        <select class="form-control selection" {{ $disabled ? 'disabled' : '' }} name="stdlens" id="defaultLens">
                             {!! App\Lens::getLensOptions() !!}
                         </select>
                     </form>
-                    // TODO: Add Dropdown for fixed FOV
-                    // TODO: Show used field of view
-                    // TODO: Change FOV
                 @endif
             @endauth
+            <br />
+            {{ _i("Field of view: ") }}
+            @php
+                $fovc = new deepskylog\AstronomyLibrary\Coordinates\Coordinate($target->getFov());
+                echo $fovc->convertToDegrees();
+            @endphp
         </td>
-        <td colspan="100">
+        <td colspan="9">
             <div id="aladin-lite-div" style="width:600px;height:400px;"></div>
             <link rel="stylesheet" href="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
             <script type="text/javascript" src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>

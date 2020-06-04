@@ -11,7 +11,7 @@
 
 @auth
     @if (auth()->user()->stdtelescope)
-        {{ _i('Information about ' . _i($target->name) . ' with') }}
+        {{ _i('Information about') . ' ' . _i($target->name) . ' ' . _i('with') }}
         <form role="form" action="/users/{{ Auth::id() }}/settings" method="POST">
             @csrf
             @method('PATCH')

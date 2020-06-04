@@ -688,13 +688,46 @@ class Target extends Model
      */
     public function getFOV(): string
     {
-        if (preg_match('/(?i)^AA\d*STAR$/', $this->type)
-            || preg_match('/(?i)^PLNNB$/', $this->type)
-            || $this->diam1 == 0 && $this->diam2 == 0
-        ) {
-            $fov = 1;
-        } else {
-            $fov = 2 * max($this->diam1, $this->diam2) / 3600;
+        $standard = true;
+
+        if (auth()->user()) {
+            if (auth()->user()->stdlens) {
+                $factor = Lens::where(
+                    'id',
+                    auth()->user()->stdlens
+                )->first()->factor;
+            } else {
+                $factor = 1.0;
+            }
+            if (auth()->user()->stdtelescope) {
+                $instrument = Instrument::where(
+                    'id',
+                    auth()->user()->stdtelescope
+                )->first();
+                if ($instrument->fd) {
+                    $focalLength = $instrument->diameter * $instrument->fd * $factor;
+                    if (auth()->user()->stdeyepiece) {
+                        $eyepiece = Eyepiece::where(
+                            'id',
+                            auth()->user()->stdeyepiece
+                        )->first();
+                        $magnification = $focalLength / $eyepiece->focalLength;
+                        $fov = $eyepiece->apparentFOV / $magnification;
+                        $standard = false;
+                    }
+                }
+            }
+        }
+
+        if ($standard) {
+            if (preg_match('/(?i)^AA\d*STAR$/', $this->type)
+                || preg_match('/(?i)^PLNNB$/', $this->type)
+                || $this->diam1 == 0 && $this->diam2 == 0
+            ) {
+                $fov = 1;
+            } else {
+                $fov = 2 * max($this->diam1, $this->diam2) / 3600;
+            }
         }
 
         return $fov;
