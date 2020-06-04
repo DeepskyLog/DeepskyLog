@@ -686,3 +686,7 @@
 [data-theme="dark"] div.gm-style {
     color: black;
 }
+
+[data-theme="dark"] .select2-container--default.select2-container--disabled .select2-selection--single {
+    background-color: #666;
+}
