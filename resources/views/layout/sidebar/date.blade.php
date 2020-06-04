@@ -1,7 +1,7 @@
-<span class="navbar-text">
-    {{ _i('Date') }}
-</span>
 &nbsp;&nbsp;
+<h4>
+    {{ _i('Date') }}
+</h4>
 <script type="text/javascript" src="{{ URL::asset('js/degrees.js') }}"></script>
 <script type="text/javascript" src="{{ URL::asset('js/astro.js') }}"></script>
 <script type="text/javascript" src="{{ URL::asset('js/moon.js') }}"></script>

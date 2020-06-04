@@ -10,6 +10,9 @@
             <!-- Quickpick -->
             @include('layout.sidebar.quickpick')
 
+            <!-- Change date -->
+            @include('layout.sidebar.date')
+
             <!-- Moon -->
             @include('layout.sidebar.moon')
         </ul>

@@ -18,7 +18,6 @@
 
     <body>
         @include('layout.header')
-        @include('layout.subheader')
 
         <div class="container-fluid">
             <div class="row">
