@@ -195,12 +195,13 @@
     <tr>
         <td colspan="3">Aladin<br /><br />
             @auth
-            // TODO: Show name of telescope
-            // TODO: If no telescope or no eyepieces are set, don't show anything.
-            // TODO: Add standard lens and eyepiece in the observer settings
-            // TODO: Add Dropdown for eyepieces and lenses
-            // TODO: Change FOV using javascript
-            {{ auth()->user()->stdtelescope }}
+                @if (auth()->user()->stdtelescope)
+                    // TODO: Show name of telescope
+                    // TODO: Add standard lens and eyepiece in the observer settings
+                    // TODO: Add Dropdown for eyepieces and lenses
+                    // TODO: Change FOV using javascript
+                    {{ auth()->user()->stdtelescope }}
+                @endif
             @endauth
         </td>
         <td colspan="100">

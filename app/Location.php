@@ -315,7 +315,4 @@ class Location extends Model implements HasMedia
 
         return $end . ' / ' . $start;
     }
-
-    // TODO: Detail of other locations not visible in dark mode.
-    // TODO: Changing location does not work if changing location by moving the pointer in the map.
 }

@@ -5,11 +5,6 @@
 
     <div class="collapse navbar-collapse" id="navbarHeader2">
         <ul class="navbar-nav mr-auto">
-            @auth
-                @include('layout.subheader.location')
-                @include('layout.subheader.instrument')
-            @endauth
-
             @include('layout.subheader.list')
         </ul>
         <ul class="navbar-nav ml-auto">

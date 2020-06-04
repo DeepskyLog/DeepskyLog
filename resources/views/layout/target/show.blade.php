@@ -6,8 +6,32 @@
 
 @section('content')
 <h4>
-    {{ _i($target->name) }}
+{{ _i($target->name) }}
 </h4>
+
+@auth
+    @if (auth()->user()->stdtelescope)
+        {{ _i('Information about ' . _i($target->name) . ' with') }}
+        <form role="form" action="/users/{{ Auth::id() }}/settings" method="POST">
+            @csrf
+            @method('PATCH')
+
+            <select class="form-control selection" name="stdinstrument" id="defaultInstrument">
+                {!! App\Instrument::getInstrumentOptions() !!}
+            </select>
+        </form>
+        {{ _i('at') }}
+        <form role="form" action="/users/{{ Auth::id() }}/settings" method="POST">
+            @csrf
+            @method('PATCH')
+
+            <select class="form-control selection" name="stdlocation" id="defaultLocation">
+                {!! App\Location::getLocationOptions() !!}
+            </select>
+        </form>
+        <br />
+    @endif
+@endauth
 
 @include('layout.target.sub.detail')
 
