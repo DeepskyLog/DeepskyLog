@@ -196,12 +196,35 @@
         <td colspan="3">Aladin<br /><br />
             @auth
                 @if (auth()->user()->stdtelescope)
-                    {{ App\Instrument::where('id', auth()->user()->stdtelescope)->first()->name }}
+                    <form role="form" action="/users/{{ Auth::id() }}/settings" method="POST">
+                        @csrf
+                        @method('PATCH')
+
+                        <select class="form-control selection" name="stdinstrument" id="defaultInstrument2">
+                            {!! App\Instrument::getInstrumentOptions() !!}
+                        </select>
+                    </form>
                     <br />
-                    // TODO: Add Dropdown for eyepieces and lenses
+                    <form role="form" action="/users/{{ Auth::id() }}/settings" method="POST">
+                        @csrf
+                        @method('PATCH')
+
+                        <select class="form-control selection" name="stdeyepiece" id="defaultEyepiece">
+                            {!! App\Eyepiece::getEyepieceOptions() !!}
+                        </select>
+                    </form>
+                    <br />
+                    <form role="form" action="/users/{{ Auth::id() }}/settings" method="POST">
+                        @csrf
+                        @method('PATCH')
+
+                        <select class="form-control selection" name="stdlens" id="defaultLens">
+                            {!! App\Lens::getLensOptions() !!}
+                        </select>
+                    </form>
                     // TODO: Add Dropdown for fixed FOV
-                    // TODO: Change FOV using javascript
-                    {{ auth()->user()->stdtelescope }}
+                    // TODO: Show used field of view
+                    // TODO: Change FOV
                 @endif
             @endauth
         </td>

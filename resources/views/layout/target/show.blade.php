@@ -51,6 +51,18 @@
 {!! $dataTable->scripts() !!}
 
 <script>
+$('#defaultInstrument2').change(function() {
+    this.form.submit();
+});
+
+$('#defaultLens').change(function() {
+    this.form.submit();
+});
+
+$('#defaultEyepiece').change(function() {
+    this.form.submit();
+});
+
 $(function () {
     $('[data-toggle="tooltip"]').tooltip()
 })
