@@ -13,8 +13,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -87,5 +88,32 @@ class Lens extends Model implements HasMedia
         $this->addMediaConversion('thumb')
             ->width(100)
             ->height(100);
+    }
+
+    /**
+     * Return all lenses for use in a selection.
+     *
+     * @return None the method print the option tags
+     */
+    public static function getLensOptions()
+    {
+        $lenses = self::where(
+            ['user_id' => Auth::user()->id]
+        )->where(['active' => 1])->pluck('id', 'name');
+
+        if (count($lenses) > 0) {
+            echo '<option>' . _i('No default lens') . '</option>';
+
+            foreach ($lenses as $name => $id) {
+                if ($id == Auth::user()->stdlens) {
+                    echo '<option selected="selected" value="' . $id . '}}">'
+                           . $name . '</option>';
+                } else {
+                    echo '<option value="' . $id . '}}">' . $name . '</option>';
+                }
+            }
+        } else {
+            echo '<option>' . _i('Add a lens') . '</option>';
+        }
     }
 }

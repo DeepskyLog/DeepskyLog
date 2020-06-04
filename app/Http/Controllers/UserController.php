@@ -531,6 +531,20 @@ class UserController extends Controller
             );
         }
 
+        // Update the standard eyepiece
+        if ($request->has('stdeyepiece')) {
+            $user->update(
+                ['stdeyepiece' => $request->get('stdeyepiece')]
+            );
+        }
+
+        // Update the standard lens
+        if ($request->has('stdlens')) {
+            $user->update(
+                ['stdlens' => $request->get('stdlens')]
+            );
+        }
+
         // Update the standard atlas
         if ($request->has('standardAtlasCode')) {
             $user->update(

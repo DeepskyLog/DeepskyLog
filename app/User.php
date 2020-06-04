@@ -248,7 +248,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         'detailFoV', 'overviewdsos', 'lookupdsos',
         'detaildsos', 'overviewstars', 'lookupstars', 'stdtelescope',
         'detailstars', 'photosize1', 'photosize2', 'atlaspagefont',
-        'stdlocation',
+        'stdlocation', 'stdlens', 'stdeyepiece',
     ];
 
     /**

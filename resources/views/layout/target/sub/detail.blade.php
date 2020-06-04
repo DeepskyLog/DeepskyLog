@@ -196,9 +196,10 @@
         <td colspan="3">Aladin<br /><br />
             @auth
                 @if (auth()->user()->stdtelescope)
-                    // TODO: Show name of telescope
-                    // TODO: Add standard lens and eyepiece in the observer settings
+                    {{ App\Instrument::where('id', auth()->user()->stdtelescope)->first()->name }}
+                    <br />
                     // TODO: Add Dropdown for eyepieces and lenses
+                    // TODO: Add Dropdown for fixed FOV
                     // TODO: Change FOV using javascript
                     {{ auth()->user()->stdtelescope }}
                 @endif

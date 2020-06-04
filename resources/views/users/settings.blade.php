@@ -163,6 +163,29 @@
                     </span>
                 </div>
 
+                <div class="form-group">
+                    <label for="stdeyepiece">{{ _i("Default eyepiece") }}</label>
+                    <div class="form">
+                        <select class="form-control selection" style="width: 100%" id="stdeyepiece" name="stdeyepiece">
+                            {!! App\Eyepiece::getEyepieceOptions() !!}
+                        </select>
+                    </div>
+                    <span class="help-block">
+                        <a href="/eyepiece/create"> {{ _i("Add eyepiece") }}</a>
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="stdlens">{{ _i("Default lens") }}</label>
+                    <div class="form">
+                        <select class="form-control selection" style="width: 100%" id="stdlens" name="stdlens">
+                            {!! App\Lens::getLensOptions() !!}
+                        </select>
+                    </div>
+                    <span class="help-block">
+                        <a href="/lens/create"> {{ _i("Add lens") }}</a>
+                    </span>
+                </div>
 
                 <div class="form-group">
                     <label for="stdatlas">{{ _i("Default atlas") }}</label>

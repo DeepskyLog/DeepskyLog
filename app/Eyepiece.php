@@ -13,8 +13,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -70,10 +71,10 @@ class Eyepiece extends Model implements HasMedia
     {
         if ($this->brand != '') {
             if ($this->maxFocalLength != '') {
-                return $this->focalLength.'-'.$this->maxFocalLength.'mm '
-                    .$this->brand.' '.$this->type;
+                return $this->focalLength . '-' . $this->maxFocalLength . 'mm '
+                    . $this->brand . ' ' . $this->type;
             } else {
-                return $this->focalLength.'mm '.$this->brand.' '.$this->type;
+                return $this->focalLength . 'mm ' . $this->brand . ' ' . $this->type;
             }
         } else {
             return $this->name;
@@ -91,7 +92,7 @@ class Eyepiece extends Model implements HasMedia
         return $this->belongsTo('App\User');
     }
 
-    // TODO: A filter belongs to one or more observations.
+    // TODO: An eyepiece belongs to one or more observations.
     //    public function observation()
     //    {
     //        return $this->belongsTo(Observation::class);
@@ -107,5 +108,32 @@ class Eyepiece extends Model implements HasMedia
         $this->addMediaConversion('thumb')
             ->width(100)
             ->height(100);
+    }
+
+    /**
+     * Return all eyepieces for use in a selection.
+     *
+     * @return None the method print the optgroup and option tags
+     */
+    public static function getEyepieceOptions()
+    {
+        $eyepieces = self::where(
+            ['user_id' => Auth::user()->id]
+        )->where(['active' => 1])->pluck('id', 'name');
+
+        if (count($eyepieces) > 0) {
+            echo '<option>' . _i('No default eyepiece') . '</option>';
+
+            foreach ($eyepieces as $name => $id) {
+                if ($id == Auth::user()->stdeyepiece) {
+                    echo '<option selected="selected" value="' . $id . '}}">'
+                           . $name . '</option>';
+                } else {
+                    echo '<option value="' . $id . '}}">' . $name . '</option>';
+                }
+            }
+        } else {
+            echo '<option>' . _i('Add an eyepiece') . '</option>';
+        }
     }
 }
