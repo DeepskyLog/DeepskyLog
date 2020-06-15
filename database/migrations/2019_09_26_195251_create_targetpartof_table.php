@@ -9,20 +9,20 @@ class CreateTargetpartofTable extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
      */
     public function up()
     {
         Schema::create(
-            'target_partof', function (Blueprint $table) {
-                $table->string('objectname', 128);
-                $table->string('partofname', 128);
-                $table->index('objectname', 'Index_object');
-                $table->index('partofname', 'Index_partof');
+            'target_partof',
+            function (Blueprint $table) {
+                $table->foreignId('target_id', 128);
+                $table->foreignId('partof_id', 128);
                 $table->timestamps();
-                $table->unique(['objectname', 'partofname']);
+                $table->unique(['target_id', 'partof_id']);
 
-                $table->foreign('objectname')->references('objectname')
+                $table->foreign('target_id')->references('target_id')
+                    ->on('target_names');
+                $table->foreign('partof_id')->references('target_id')
                     ->on('target_names');
             }
         );
@@ -30,8 +30,6 @@ class CreateTargetpartofTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 
 /**
  * Target eloquent model.
@@ -29,8 +31,10 @@ use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class Target extends Model
+class Target extends Model implements TranslatableContract
 {
+    use Translatable;
+
     private $_contrast;
 
     private $_popup;
@@ -43,7 +47,7 @@ class Target extends Model
 
     private $_highestFromToAround;
 
-    protected $fillable = ['name', 'type'];
+    protected $fillable = ['type'];
 
     // These are the fields that are created dynamically, using the get...Attribute methods.
     protected $appends = ['rise', 'contrast', 'contrast_type', 'contrast_popup',
@@ -51,12 +55,14 @@ class Target extends Model
         'set', 'set_popup', 'bestTime', 'maxAlt', 'maxAlt_popup',
         'highest_from', 'highest_around', 'highest_to', 'highest_alt', ];
 
-    protected $primaryKey = 'name';
+    public $translatedAttributes = ['target_name'];
+
+    //protected $primaryKey = 'target_name';
 
     private $_observationType = null;
     private $_targetType = null;
 
-    public $incrementing = false;
+    public $incrementing = true;
 
     /**
      * Returns the contrast of the target.
@@ -690,7 +696,7 @@ class Target extends Model
     {
         $standard = true;
 
-        if (auth()->user()) {
+        if (auth()->check()) {
             if (auth()->user()->stdlens) {
                 $factor = Lens::where(
                     'id',
