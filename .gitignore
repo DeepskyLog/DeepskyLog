@@ -16,3 +16,4 @@ messages/
 .env.homestead
 .env.mac
 lib/setup/databaseInfo.php
+.vscode/settings.json

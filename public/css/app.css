@@ -3087,10 +3087,6 @@ tr.details td.details-control {
     border-color: #800000;
 }
 
-[data-theme="night"] ::-webkit-input-placeholder {
-    color: red !important;
-}
-
 [data-theme="night"] ::-moz-placeholder {
     color: red !important;
 }
@@ -3777,10 +3773,6 @@ tr.details td.details-control {
     color: #ffffff;
     background-color: #999999;
     border-color: #808080;
-}
-
-[data-theme="dark"] ::-webkit-input-placeholder {
-    color: gray !important;
 }
 
 [data-theme="dark"] ::-moz-placeholder {
@@ -6823,11 +6815,6 @@ pre code {
   border-color: #a1cbef;
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
-}
-
-.form-control::-webkit-input-placeholder {
-  color: #6c757d;
-  opacity: 1;
 }
 
 .form-control::-moz-placeholder {

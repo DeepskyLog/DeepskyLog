@@ -8,6 +8,7 @@
   - [Flash messages](#flash-messages)
   - [Internationalization](#internationalization)
     - [Translate the strings](#translate-the-strings)
+    - [Add a new language](#add-a-new-language)
   - [Authentication](#authentication)
     - [Using policies](#using-policies)
     - [Checking user permissions](#checking-user-permissions)
@@ -85,6 +86,10 @@ php artisan gettext:update
 in order to compile all blade views to plain php before updating the translations in Poedit.
 
 Open Poedit and read in the language file to translate (in resources/lang/i18n/LANGUAGE/messages.po). Click on the update catalogue button in POedit to bring in the latest strings to translate.
+
+### Add a new language
+
+- Add the new language to config/laravel-gettext.php and to config/translatable.php
 
 ## Authentication
 

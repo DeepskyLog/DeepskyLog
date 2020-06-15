@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.4",
         "anhskohbo/no-captcha": "^3.0",
+        "astrotomic/laravel-translatable": "^11.8",
         "cmgmyr/messenger": "^2.17",
         "coderello/laraflash": "^3.0",
         "deepskylog/laravel-astronomy-library": "@dev",
