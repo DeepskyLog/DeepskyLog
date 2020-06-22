@@ -10,7 +10,6 @@
     "require": {
         "php": "^7.4",
         "anhskohbo/no-captcha": "^3.0",
-        "astrotomic/laravel-translatable": "^11.8",
         "cmgmyr/messenger": "^2.17",
         "coderello/laraflash": "^3.0",
         "deepskylog/laravel-astronomy-library": "@dev",
@@ -34,6 +33,7 @@
         "socialiteproviders/twitter": "^3.0",
         "spatie/laravel-cookie-consent": "^2.8",
         "spatie/laravel-medialibrary": "^8.0.0",
+        "spatie/laravel-translatable": "^4.3",
         "spatie/pdf-to-image": "^2.0",
         "yajra/laravel-datatables": "^1.0",
         "yajra/laravel-datatables-oracle": "~9.0"
