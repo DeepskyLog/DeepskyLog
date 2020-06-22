@@ -15,8 +15,8 @@ class CreateTargetpartofTable extends Migration
         Schema::create(
             'target_partof',
             function (Blueprint $table) {
-                $table->foreignId('target_id', 128);
-                $table->foreignId('partof_id', 128);
+                $table->foreignId('target_id');
+                $table->foreignId('partof_id');
                 $table->timestamps();
                 $table->unique(['target_id', 'partof_id']);
 

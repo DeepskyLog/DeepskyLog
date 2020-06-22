@@ -34,13 +34,13 @@ class TargetNameTableSeeder extends Seeder
     {
         // Add all names for the comets, moon, planets, sun
         foreach (\App\TargetType::where('observation_type', '!=', 'ds')->where('observation_type', '!=', 'double')->get() as $type) {
-            foreach (\App\Target::where('type', $type->id)->get() as $target) {
+            foreach (\App\Target::where('target_type', $type->id)->get() as $target) {
                 \App\TargetName::create(
                     [
-                        'objectname' => $target->name,
+                        'target_id' => $target->id,
                         'catalog' => '',
-                        'catindex' => $target->name,
-                        'altname' => $target->name,
+                        'catindex' => $target->target_name,
+                        'altname' => $target->target_name,
                     ]
                 );
             }
@@ -54,22 +54,26 @@ class TargetNameTableSeeder extends Seeder
                 $date = date('Y-m-d H:i:s');
             } else {
                 [$year, $month, $day, $hour, $minute, $second]
-                       = sscanf($oldObject->timestamp, '%4d%2d%2d%2d%2d%d');
+                    = sscanf($oldObject->timestamp, '%4d%2d%2d%2d%2d%d');
                 $date = date(
                     'Y-m-d H:i:s',
                     mktime($hour, $minute, $second, $month, $day, $year)
                 );
             }
 
-            TargetName::create(
+            $target = TargetName::firstOrCreate(
                 [
-                    'objectname' => $oldObject->objectname,
-                    'catalog' => $oldObject->catalog,
-                    'catindex' => $oldObject->catindex,
+                    'target_id' => \App\Target::whereTranslation(
+                        'target_name',
+                        $oldObject->objectname
+                    )->first()->id,
                     'altname' => $oldObject->altname,
-                    'created_at' => $date,
                 ]
             );
+            $target->catalog = $oldObject->catalog;
+            $target->catindex = $oldObject->catindex;
+
+            $target->created_at = $date;
         }
     }
 }

@@ -12,9 +12,9 @@ class CreateTargetsTable extends Migration
     public function up()
     {
         Schema::create('targets', function (Blueprint $table) {
-            $table->id('target_id');
-            $table->string('target_type', 8);
-            $table->string('constellation', 5)->nullable();
+            $table->id('id');
+            $table->string('target_type');
+            $table->string('constellation')->nullable();
             $table->float('ra', 10, 5)->unsigned()->nullable();
             $table->float('decl', 10, 5)->nullable();
             $table->float('mag')->nullable();

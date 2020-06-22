@@ -17,10 +17,10 @@ class TargetTranslationsTable extends Migration
             $table->string('locale')->index();
 
             // Foreign key to the main model
-            $table->foreignId('target_id');
+            $table->biginteger('target_id')->unsigned();
             $table->unique(['target_id', 'locale']);
             $table->unique(['target_name', 'locale']);
-            $table->foreign('target_id')->references('target_id')->on('targets')
+            $table->foreign('target_id')->references('id')->on('targets')
                 ->onDelete('cascade');
 
             // Actual fields you want to translate

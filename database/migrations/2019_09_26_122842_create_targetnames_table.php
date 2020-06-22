@@ -12,16 +12,17 @@ class CreateTargetNamesTable extends Migration
     public function up()
     {
         Schema::create('target_names', function (Blueprint $table) {
-            $table->foreignId('target_id');
+            $table->biginteger('target_id')->unsigned();
             $table->string('catalog', 128)->nullable();
             $table->string('catindex', 128)->nullable();
             $table->string('altname', 128);
             $table->index(['catalog', 'catindex'], 'Index_catalog');
             $table->index('altname', 'Index_altname');
+            $table->primary(['target_id', 'altname']);
             $table->timestamps();
 
             $table->foreign('target_id')
-                ->references('target_id')->on('targets');
+                ->references('id')->on('targets');
         });
     }
 

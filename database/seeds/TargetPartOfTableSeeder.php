@@ -29,7 +29,6 @@ class TargetPartOfTableSeeder extends Seeder
     /**
      * Run the database seeds.
      *
-     * @return void
      */
     public function run()
     {
@@ -48,11 +47,14 @@ class TargetPartOfTableSeeder extends Seeder
                 );
             }
 
-            if (TargetName::where('objectname', '=', $oldObject->objectname)->count()) {
+            $target = TargetName::where('altname', '=', $oldObject->objectname);
+            $partof = TargetName::where('altname', '=', $oldObject->partofname);
+
+            if ($target->count() && $partof->count()) {
                 TargetPartOf::firstOrCreate(
                     [
-                        'objectname' => $oldObject->objectname,
-                        'partofname' => $oldObject->partofname,
+                        'target_id' => $target->first()->target_id,
+                        'partof_id' => $partof->first()->target_id,
                         'created_at' => $date,
                     ]
                 );
