@@ -13,6 +13,7 @@ class CreateTargetsTable extends Migration
     {
         Schema::create('targets', function (Blueprint $table) {
             $table->id('id');
+            $table->text('target_name');
             $table->string('target_type');
             $table->string('constellation')->nullable();
             $table->float('ra', 10, 5)->unsigned()->nullable();

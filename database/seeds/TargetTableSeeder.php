@@ -37,229 +37,82 @@ class TargetTableSeeder extends Seeder
         $objectData = ObjectOld::all();
 
         // Sun
-        $target_data = [
-            'en' => [
-                'target_name' => 'Sun',
-            ],
-            'fr' => [
-                'target_name' => 'Soleil',
-            ],
-            'es' => [
-                'target_name' => 'Sol',
-            ],
-            'nl' => [
-                'target_name' => 'Zon',
-            ],
-            'de' => [
-                'target_name' => 'Sonne',
-            ],
-            'sv' => [
-                'target_name' => 'Sol',
-            ],
-            'target_type' => 'SUN'
-        ];
+        $sun = Target::create(['target_name' => 'Sun', 'target_type' => 'SUN']);
 
-        Target::create($target_data);
+        $sun->setTranslation('target_name', 'fr', 'Soleil');
+        $sun->setTranslation('target_name', 'es', 'Sol');
+        $sun->setTranslation('target_name', 'nl', 'Zon');
+        $sun->setTranslation('target_name', 'de', 'Sonne');
+        $sun->setTranslation('target_name', 'sv', 'Sol');
+
+        $sun->save();
 
         // Moon
-        $target_data = [
-            'en' => [
-                'target_name' => 'Moon',
-            ],
-            'fr' => [
-                'target_name' => 'Lune',
-            ],
-            'es' => [
-                'target_name' => 'Luna',
-            ],
-            'nl' => [
-                'target_name' => 'Maan',
-            ],
-            'de' => [
-                'target_name' => 'Mond',
-            ],
-            'sv' => [
-                'target_name' => 'Måne',
-            ],
-            'target_type' => 'OTHER'
-        ];
+        $moon = Target::create(['target_name' => 'Moon', 'target_type' => 'OTHER']);
 
-        Target::create($target_data);
+        $moon->setTranslation('target_name', 'fr', 'Lune');
+        $moon->setTranslation('target_name', 'es', 'Luna');
+        $moon->setTranslation('target_name', 'nl', 'Maan');
+        $moon->setTranslation('target_name', 'de', 'Mond');
+        $moon->setTranslation('target_name', 'sv', 'Måne');
+
+        $moon->save();
 
         // Mercury
-        $target_data = [
-            'en' => [
-                'target_name' => 'Mercury',
-            ],
-            'fr' => [
-                'target_name' => 'Mercure',
-            ],
-            'es' => [
-                'target_name' => 'Mercurio',
-            ],
-            'nl' => [
-                'target_name' => 'Mercurius',
-            ],
-            'de' => [
-                'target_name' => 'Merkur',
-            ],
-            'sv' => [
-                'target_name' => 'Mercury',
-            ],
-            'target_type' => 'PLANET'
-        ];
+        $mercury = Target::create(['target_name' => 'Mercury', 'target_type' => 'PLANET']);
 
-        Target::create($target_data);
+        $mercury->setTranslation('target_name', 'fr', 'Mercure');
+        $mercury->setTranslation('target_name', 'es', 'Mercurio');
+        $mercury->setTranslation('target_name', 'nl', 'Mercurius');
+        $mercury->setTranslation('target_name', 'de', 'Merkur');
+
+        $mercury->save();
 
         // Venus
-        $target_data = [
-            'en' => [
-                'target_name' => 'Venus',
-            ],
-            'fr' => [
-                'target_name' => 'Vénus',
-            ],
-            'es' => [
-                'target_name' => 'Venus',
-            ],
-            'nl' => [
-                'target_name' => 'Venus',
-            ],
-            'de' => [
-                'target_name' => 'Venus',
-            ],
-            'sv' => [
-                'target_name' => 'Venus',
-            ],
-            'target_type' => 'PLANET'
-        ];
+        $venus = Target::create(['target_name' => 'Venus', 'target_type' => 'PLANET']);
 
-        Target::create($target_data);
+        $venus->setTranslation('target_name', 'fr', 'Vénus');
+
+        $venus->save();
 
         // Mars
-        $target_data = [
-            'en' => [
-                'target_name' => 'Mars',
-            ],
-            'fr' => [
-                'target_name' => 'Mars',
-            ],
-            'es' => [
-                'target_name' => 'Marte',
-            ],
-            'nl' => [
-                'target_name' => 'Mars',
-            ],
-            'de' => [
-                'target_name' => 'Mars',
-            ],
-            'sv' => [
-                'target_name' => 'Mars',
-            ],
-            'target_type' => 'PLANET'
-        ];
+        $mars = Target::create(['target_name' => 'Mars', 'target_type' => 'PLANET']);
 
-        Target::create($target_data);
+        $mars->setTranslation('target_name', 'es', 'Marte');
+
+        $mars->save();
 
         // Jupiter
-        $target_data = [
-            'en' => [
-                'target_name' => 'Jupiter',
-            ],
-            'fr' => [
-                'target_name' => 'Jupiter',
-            ],
-            'es' => [
-                'target_name' => 'Júpiter',
-            ],
-            'nl' => [
-                'target_name' => 'Jupiter',
-            ],
-            'de' => [
-                'target_name' => 'Jupiter',
-            ],
-            'sv' => [
-                'target_name' => 'Jupiter',
-            ],
-            'target_type' => 'PLANET'
-        ];
+        $jupiter = Target::create(['target_name' => 'Jupiter', 'target_type' => 'PLANET']);
 
-        Target::create($target_data);
+        $jupiter->setTranslation('target_name', 'es', 'Júpiter');
+
+        $jupiter->save();
 
         // Saturn
-        $target_data = [
-            'en' => [
-                'target_name' => 'Saturn',
-            ],
-            'fr' => [
-                'target_name' => 'Saturne',
-            ],
-            'es' => [
-                'target_name' => 'Saturno',
-            ],
-            'nl' => [
-                'target_name' => 'Saturnus',
-            ],
-            'de' => [
-                'target_name' => 'Saturn',
-            ],
-            'sv' => [
-                'target_name' => 'Saturn',
-            ],
-            'target_type' => 'PLANET'
-        ];
+        $saturn = Target::create(['target_name' => 'Saturn', 'target_type' => 'PLANET']);
 
-        Target::create($target_data);
+        $saturn->setTranslation('target_name', 'fr', 'Saturne');
+        $saturn->setTranslation('target_name', 'es', 'Saturno');
+        $saturn->setTranslation('target_name', 'nl', 'Saturnus');
+
+        $saturn->save();
 
         // Uranus
-        $target_data = [
-            'en' => [
-                'target_name' => 'Uranus',
-            ],
-            'fr' => [
-                'target_name' => 'Uranus',
-            ],
-            'es' => [
-                'target_name' => 'Urano',
-            ],
-            'nl' => [
-                'target_name' => 'Uranus',
-            ],
-            'de' => [
-                'target_name' => 'Uranus',
-            ],
-            'sv' => [
-                'target_name' => 'Uranus',
-            ],
-            'target_type' => 'PLANET'
-        ];
+        $uranus = Target::create(['target_name' => 'Uranus', 'target_type' => 'PLANET']);
 
-        Target::create($target_data);
+        $uranus->setTranslation('target_name', 'es', 'Urano');
+
+        $uranus->save();
 
         // Neptune
-        $target_data = [
-            'en' => [
-                'target_name' => 'Neptune',
-            ],
-            'fr' => [
-                'target_name' => 'Neptune',
-            ],
-            'es' => [
-                'target_name' => 'Neptuno',
-            ],
-            'nl' => [
-                'target_name' => 'Neptunus',
-            ],
-            'de' => [
-                'target_name' => 'Neptun',
-            ],
-            'sv' => [
-                'target_name' => 'Neptune',
-            ],
-            'target_type' => 'PLANET'
-        ];
+        $neptune = Target::create(['target_name' => 'Neptune', 'target_type' => 'PLANET']);
 
-        Target::create($target_data);
+        $neptune->setTranslation('target_name', 'es', 'Neptuno');
+        $neptune->setTranslation('target_name', 'nl', 'Neptunus');
+        $neptune->setTranslation('target_name', 'de', 'Neptun');
+
+        $neptune->save();
 
         // Insert the craters
         \App\Target::create(
