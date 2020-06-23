@@ -484,57 +484,60 @@ class Target extends Model
                     if ($this->_target->getMaxHeight()->getCoordinate() < 0.0) {
                         $popup[0] = sprintf(
                             _i('%s does not rise above horizon'),
-                            $this->name
+                            $this->target_name
                         );
                         $popup[2] = $popup[0];
                     } elseif (!$this->_target->getRising()) {
-                        $popup[0] = sprintf(_i('%s is circumpolar'), $this->name);
+                        $popup[0] = sprintf(
+                            _i('%s is circumpolar'),
+                            $this->target_name
+                        );
                         $popup[2] = $popup[0];
                     } else {
                         $popup[0] = sprintf(
                             _i('%s rises at %s in %s on ')
                                 . $date->isoFormat('LL'),
-                            $this->name,
+                            $this->target_name,
                             $this->_target->getRising()
                                 ->timezone($location->timezone)->format('H:i'),
-                            $location->name
+                            $location->target_name
                         );
                         $popup[2] = sprintf(
                             _i('%s sets at %s in %s on ')
                                 . $date->isoFormat('LL'),
-                            $this->name,
+                            $this->target_name,
                             $this->_target->getSetting()
                                 ->timezone($location->timezone)->format('H:i'),
-                            $location->name
+                            $location->target_name
                         );
                     }
                     $popup[1] = sprintf(
                         _i('%s transits at %s in %s on ')
                             . $date->isoFormat('LL'),
-                        $this->name,
+                        $this->target_name,
                         $this->_target->getTransit()
                             ->timezone($location->timezone)->format('H:i'),
-                        $location->name
+                        $location->target_name
                     );
 
                     if ($this->_target->getMaxHeightAtNight()->getCoordinate() < 0) {
                         $popup[3] = sprintf(
                             _i('%s does not rise above horizon in %s on ')
                                 . $date->isoFormat('LL'),
-                            $this->name,
-                            $location->name,
+                            $this->target_name,
+                            $location->target_name,
                             $datestr
                         );
                     } else {
                         $popup[3] = sprintf(
                             _i('%s reaches an altitude of %s in %s on ')
                                 . $date->isoFormat('LL'),
-                            $this->name,
+                            $this->target_name,
                             trim(
                                 $this->_target->getMaxHeightAtNight()
                                     ->convertToDegrees()
                             ),
-                            $location->name,
+                            $location->target_name,
                         );
                     }
 
@@ -857,6 +860,8 @@ class Target extends Model
                     $ephemerides[$cnt]['max_alt'] = trim(
                         $target->getMaxHeightAtNight()->convertToDegrees()
                     );
+                    $ephemerides[$cnt]['max_alt_float'] = $target
+                        ->getMaxHeightAtNight()->getCoordinate();
                     $ephemerides[$cnt]['transit'] = $target->getTransit()
                         ->timezone($this->_location->timezone)->format('H:i');
                     $ephemerides[$cnt]['rise'] = $target->getRising() ?
@@ -929,12 +934,15 @@ class Target extends Model
                 // altitude is maximal
                 if (($ephem['max_alt'] != '-'
                     && $ephemerides[($cnt + 1) % 24]['max_alt'] != '-')
-                    && (($ephem['max_alt'] == $ephemerides[($cnt + 1) % 24]['max_alt'])
-                    || ($ephem['max_alt'] == $ephemerides[($cnt + 23) % 24]['max_alt']))
+                    && (abs($ephem['max_alt_float'] - $ephemerides[($cnt + 1) % 24]['max_alt_float']) <= 0.1
+                    || abs($ephem['max_alt_float'] - $ephemerides[($cnt + 23) % 24]['max_alt_float']) <= 0.1)
                 ) {
                     $ephemerides[$cnt]['max_alt_color'] = 'ephemeridesgreen';
                     $ephemerides[$cnt]['max_alt_popup']
-                        = _i('%s reaches its highest altitude of the year', $this->name);
+                        = _i(
+                            '%s reaches its highest altitude of the year',
+                            $this->target_name
+                        );
                 } else {
                     $ephemerides[$cnt]['max_alt_color'] = '';
                     $ephemerides[$cnt]['max_alt_popup'] = '';
@@ -957,7 +965,10 @@ class Target extends Model
                     ) {
                         // Also add a popup explaining the color code: Issue 416
                         $ephemerides[$cnt]['transit_color'] = 'ephemeridesgreen';
-                        $ephemerides[$cnt]['transit_popup'] = _i('%s reaches its highest altitude during the astronomical night', $this->name);
+                        $ephemerides[$cnt]['transit_popup'] = _i(
+                            '%s reaches its highest altitude during the astronomical night',
+                            $this->target_name
+                        );
                     } elseif ($ephem['nautical_twilight_end'] != null
                         && $time->between(
                             $ephem['nautical_twilight_begin'],
@@ -965,7 +976,10 @@ class Target extends Model
                         )
                     ) {
                         $ephemerides[$cnt]['transit_color'] = 'ephemeridesyellow';
-                        $ephemerides[$cnt]['transit_popup'] = _i('%s reaches its highest altitude during the nautical twilight', $this->name);
+                        $ephemerides[$cnt]['transit_popup'] = _i(
+                            '%s reaches its highest altitude during the nautical twilight',
+                            $this->target_name
+                        );
                     } else {
                         $ephemerides[$cnt]['transit_color'] = '';
                         $ephemerides[$cnt]['transit_popup'] = '';
@@ -983,10 +997,16 @@ class Target extends Model
                 } else {
                     if ($ephem['rise'] == '-') {
                         if ($ephem['astronomical_twilight_end'] != null) {
-                            $ephemerides[$cnt]['rise_popup'] = _i('%s is visible during the night', $this->name);
+                            $ephemerides[$cnt]['rise_popup'] = _i(
+                                '%s is visible during the night',
+                                $this->target_name
+                            );
                             $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
                         } elseif ($ephem['nautical_twilight_end'] != null) {
-                            $ephemerides[$cnt]['rise_popup'] = _i('%s is visible during the nautical twilight', $this->name);
+                            $ephemerides[$cnt]['rise_popup'] = _i(
+                                '%s is visible during the nautical twilight',
+                                $this->target_name
+                            );
                             $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
                         }
                     }
@@ -1001,7 +1021,7 @@ class Target extends Model
                         ) {
                             $ephemerides[$cnt]['rise_popup'] = _i(
                                 '%s is visible during the night',
-                                $this->name
+                                $this->target_name
                             );
                             $ephemerides[$cnt]['rise_color'] = 'ephemeridesgreen';
                         } elseif ($ephem['nautical_twilight_end'] != null
@@ -1015,13 +1035,13 @@ class Target extends Model
                             $ephemerides[$cnt]['rise_color'] = 'ephemeridesyellow';
                             $ephemerides[$cnt]['rise_popup'] = _i(
                                 '%s is visible during the nautical twilight',
-                                $this->name
+                                $this->target_name
                             );
                         }
                     } else {
                         $ephemerides[$cnt]['rise_popup'] = _i(
                             '%s is not visible during the night',
-                            $this->name
+                            $this->target_name
                         );
                     }
                 }
@@ -1032,11 +1052,11 @@ class Target extends Model
             $this->_ephemerides = $ephemerides;
 
             $collection = collect($ephemerides);
-            $max_alt = $collection->max('max_alt');
 
+            $max_alt = $collection->max('max_alt_float');
             $filter = $collection->filter(
                 function ($value) use ($max_alt) {
-                    if ($value['max_alt'] == $max_alt) {
+                    if (abs($value['max_alt_float'] - $max_alt) < 0.1) {
                         return true;
                     }
                 }
