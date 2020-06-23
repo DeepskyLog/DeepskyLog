@@ -2,7 +2,7 @@
 
 ## Warning
 
-
++ DeepskyLog uses spatie/laravel-translatable and this package only works with **mysql**. So make sure that **mysql** is used as database, and not **mariadb**.
 + After making an empty database and doing a migration to create the tables:
   + Make a link from observers to /observer_pics
   

@@ -36,7 +36,7 @@ databases:
     - deepskylog
 
 features:
-    - mariadb: true
+    - mariadb: false
     - ohmyzsh: false
     - webdriver: false
 ```

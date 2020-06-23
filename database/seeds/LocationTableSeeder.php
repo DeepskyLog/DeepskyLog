@@ -156,10 +156,17 @@ class LocationTableSeeder extends Seeder
                 if ($sqm < 0) {
                     $sqm = null;
                 }
+                if ($sqm > 22.0) {
+                    $sqm = 22.0;
+                }
                 $lm = $location->limitingMagnitude;
 
                 if ($lm < 0) {
                     $lm = null;
+                }
+
+                if ($lm > 7) {
+                    $lm = 6.5;
                 }
 
                 $bortle = null;

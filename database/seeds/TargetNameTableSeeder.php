@@ -61,19 +61,25 @@ class TargetNameTableSeeder extends Seeder
                 );
             }
 
-            $target = TargetName::firstOrCreate(
-                [
-                    'target_id' => \App\Target::whereTranslation(
-                        'target_name',
-                        $oldObject->objectname
-                    )->first()->id,
-                    'altname' => $oldObject->altname,
-                ]
-            );
-            $target->catalog = $oldObject->catalog;
-            $target->catindex = $oldObject->catindex;
+            if (\App\Target::where(
+                'target_name->en',
+                $oldObject->objectname
+            )->count()
+            ) {
+                $target = TargetName::firstOrCreate(
+                    [
+                        'target_id' => \App\Target::where(
+                            'target_name->en',
+                            $oldObject->objectname
+                        )->first()->id,
+                        'altname' => $oldObject->altname
+                    ]
+                );
+                $target->catalog = $oldObject->catalog;
+                $target->catindex = $oldObject->catindex;
 
-            $target->created_at = $date;
+                $target->created_at = $date;
+            }
         }
     }
 }
