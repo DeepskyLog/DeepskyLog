@@ -102,7 +102,7 @@
             if(($j % 3) == 0) {
                 text += '<tr>';
             }
-	        text += '<td class="td33pct"><a href="/target/' + ($catalogdata[$j]['altname']) + '">' + $catalogdata[$j]['altname'] + ($catalogdata[$j]['altname'] != $catalogdata[$j]['objectname'] ? "&nbsp;(" + $catalogdata[$j]['objectname'] + ")" : "") + "</a></td>";
+	        text += '<td class="td33pct"><a href="/target/' + ($catalogdata[$j]['altname']) + '">' + $catalogdata[$j]['altname'] + ($catalogdata[$j]['altname'] != $catalogdata[$j]['target_name'] ? "&nbsp;(" + $catalogdata[$j]['target_name'] + ")" : "") + "</a></td>";
 	        if (($j % 3) == 2) {
                 text += '</tr>';
             }

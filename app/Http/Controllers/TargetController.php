@@ -71,7 +71,8 @@ class TargetController extends Controller
             ->first();
 
         if ($targetname != null) {
-            $target = $targetname->target()->get()[0];
+            $target = \App\Target::where('id', $targetname->target_id)->first();
+
             if ($target != null) {
                 return $dataTable->with('target', $target)->render(
                     'layout.target.show',
@@ -141,25 +142,10 @@ class TargetController extends Controller
      */
     public function getCatalogData($catalogname)
     {
-        $targets = DB::select(
-            DB::raw(
-                'SELECT targets.name, targets.con, targets.type,
-                    target_names.objectname, target_names.altname
-                    FROM targets JOIN target_names
-                    ON targets.name = target_names.objectname WHERE catalog="'
-                    . $catalogname . '" ORDER BY objectname'
-            )
-        );
-
-        // Natural sort the array, so that the targets are sorted by name.
-        usort(
-            $targets,
-            function ($a, $b) {
-                return strnatcmp($a->altname, $b->altname);
-            }
-        );
-
-        return $targets;
+        // \App\TargetName::with('target')->where('catalog', 'M')->get('target_id', 'target_name')->sortBy('altname', SORT_NATURAL);
+        // TODO: Use livewire for this.
+        return \App\TargetName::where('catalog', $catalogname)->get()
+            ->sortBy('altname', SORT_NATURAL)->toJson();
     }
 
     /**
@@ -174,13 +160,13 @@ class TargetController extends Controller
         $cons = DB::select(
             DB::raw(
                 'SELECT constellations.name as con,
-                    count((targets.con)) as count FROM targets
-                    JOIN target_names ON targets.name = target_names.objectname
-                    JOIN constellations ON targets.con = constellations.id
-                    WHERE catalog="'
-                    . $catalogname . '" GROUP BY targets.con'
+                count((targets.constellation)) as count FROM targets
+                JOIN target_names ON targets.id = target_names.target_id
+                JOIN constellations ON targets.constellation = constellations.id
+                WHERE catalog="' . $catalogname . '" GROUP BY targets.constellation'
             )
         );
+
         foreach ($cons as $con) {
             $con->con = _i($con->con);
         }
@@ -199,12 +185,12 @@ class TargetController extends Controller
     {
         $types = DB::select(
             DB::raw(
-                'SELECT target_types.type, count((targets.type)) as count
+                'SELECT target_types.type, count((targets.target_type)) as count
                     FROM targets
-                    JOIN target_names ON targets.name = target_names.objectname
-                    JOIN target_types ON targets.type = target_types.id
+                    JOIN target_names ON targets.id = target_names.target_id
+                    JOIN target_types ON targets.target_type = target_types.id
                     WHERE catalog="'
-                    . $catalogname . '" GROUP BY targets.type'
+                    . $catalogname . '" GROUP BY targets.target_type'
             )
         );
 

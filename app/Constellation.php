@@ -15,6 +15,6 @@ class Constellation extends Model
      */
     public function target()
     {
-        return $this->belongsTo('App\Target', 'con');
+        return $this->belongsTo('App\Target', 'id', 'constellation');
     }
 }

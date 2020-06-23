@@ -38,7 +38,7 @@ class TargetType extends Model
      */
     public function target()
     {
-        return $this->belongsTo('App\Target', 'id', 'type');
+        return $this->belongsTo('App\Target', 'id', 'target_type');
     }
 
     /**

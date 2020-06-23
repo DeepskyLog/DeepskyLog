@@ -20,8 +20,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
-use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Target eloquent model.
@@ -31,9 +31,9 @@ use Astrotomic\Translatable\Translatable;
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class Target extends Model implements TranslatableContract
+class Target extends Model
 {
-    use Translatable;
+    use HasTranslations;
 
     private $_contrast;
 
@@ -47,7 +47,7 @@ class Target extends Model implements TranslatableContract
 
     private $_highestFromToAround;
 
-    protected $fillable = ['type'];
+    protected $fillable = ['target_type'];
 
     // These are the fields that are created dynamically, using the get...Attribute methods.
     protected $appends = ['rise', 'contrast', 'contrast_type', 'contrast_popup',
@@ -55,8 +55,7 @@ class Target extends Model implements TranslatableContract
         'set', 'set_popup', 'bestTime', 'maxAlt', 'maxAlt_popup',
         'highest_from', 'highest_around', 'highest_to', 'highest_alt', ];
 
-    public $translatedAttributes = ['target_name'];
-
+    public $translatable = ['target_name'];
     //protected $primaryKey = 'target_name';
 
     private $_observationType = null;
@@ -550,9 +549,9 @@ class Target extends Model implements TranslatableContract
      *
      * @return HasOne The eloquent relationship
      */
-    public function type()
+    public function type(): HasOne
     {
-        return $this->hasOne('App\TargetType', 'id', 'type');
+        return $this->hasOne('App\TargetType', 'id', 'target_type');
     }
 
     /**
@@ -560,9 +559,19 @@ class Target extends Model implements TranslatableContract
      *
      * @return HasOne The eloquent relationship
      */
-    public function constellation()
+    public function constellation(): HasOne
     {
-        return $this->hasOne('App\Constellation', 'id', 'con');
+        return $this->hasOne('App\Constellation', 'id', 'constellation');
+    }
+
+    /**
+     * Returns the short name of the constellation.
+     *
+     * @return string The short name of the constellation
+     */
+    public function getConstellationShortAttribute(): string
+    {
+        return $this->constellation;
     }
 
     /**

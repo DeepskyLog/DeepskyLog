@@ -2,7 +2,7 @@
 <div id="ephemeridesdiv">
 
 <h4>{{ _i("Ephemerides for %s in %s",
-        $target->name,
+        $target->target_name,
         \App\Location::where('id', Auth::user()->stdlocation)->first()->name) }}
 </h4>
 <hr />

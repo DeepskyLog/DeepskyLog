@@ -42,14 +42,20 @@ class TargetDataTable extends DataTable
             ->editColumn(
                 'name',
                 function ($target) {
-                    return '<a href="/target/' . $target->name . '">'
-                        . $target->name . '</a>';
+                    return '<a href="/target/' . $target->target_name . '">'
+                        . $target->target_name . '</a>';
                 }
             )
             ->editColumn(
                 'constellation',
                 function ($target) {
                     return $target->constellation()->first()['name'];
+                }
+            )
+            ->editColumn(
+                'constellationShort',
+                function ($target) {
+                    return $target->constellationShort;
                 }
             )
             ->editColumn(
@@ -209,7 +215,7 @@ class TargetDataTable extends DataTable
                 ],
                 ['name' => 'con',
                     'title' => _i('Const.'),
-                    'data' => 'con',
+                    'data' => 'constellationShort',
                     'width' => '10%',
                 ],
                 ['name' => 'mag',
@@ -230,7 +236,7 @@ class TargetDataTable extends DataTable
                 ],
                 ['name' => 'type',
                     'title' => _i('Typ'),
-                    'data' => 'type',
+                    'data' => 'target_type',
                     'searchable' => false,
                 ],
                 ['name' => 'Size',
@@ -339,7 +345,7 @@ class TargetDataTable extends DataTable
                 ],
                 ['name' => 'con',
                     'title' => _i('Const.'),
-                    'data' => 'con',
+                    'data' => 'constellationShort',
                     'width' => '10%',
                 ],
                 ['name' => 'Mag',
@@ -360,7 +366,7 @@ class TargetDataTable extends DataTable
                 ],
                 ['name' => 'Type',
                     'title' => _i('Typ'),
-                    'data' => 'type',
+                    'data' => 'target_type',
                     'searchable' => false,
                 ],
                 ['name' => 'Size',

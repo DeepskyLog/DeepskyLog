@@ -79,6 +79,7 @@ class TargetNameTableSeeder extends Seeder
                 $target->catindex = $oldObject->catindex;
 
                 $target->created_at = $date;
+                $target->save();
             }
         }
     }

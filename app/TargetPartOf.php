@@ -32,45 +32,47 @@ class TargetPartOf extends Model
     /**
      * Check if the object is part of another object.
      *
-     * @param string $name the name of the object
+     * @param Target $target the target
      *
      * @return bool True if the object is part of another object
      */
-    public static function isPartOf($name)
+    public static function isPartOf(Target $target): bool
     {
-        return self::where('objectname', $name)->get()->count();
+        return self::where('target_id', $target->id)->get()->count();
     }
 
     /**
      * Check if the object contains other objects.
      *
-     * @param string $name the name of the object
+     * @param Target $target the target
      *
      * @return bool True if the object contains other objects
      */
-    public static function contains($name)
+    public static function contains(Target $target): bool
     {
-        return self::where('partofname', $name)->get()->count();
+        return self::where('partof_id', $target->id)->get()->count();
     }
 
     /**
      * Returns the string with the information if the object contains or is
      * part of another object.
      *
-     * @param string $name the name of the object
+     * @param Target $target the target
      *
      * @return string The string with the contains / part of information
      */
-    public static function partOfContains($name)
+    public static function partOfContains(Target $target): string
     {
         $output = '(';
 
         $contains = '';
-        if (self::contains($name)) {
-            foreach (self::where('partofname', $name)->get() as $partOfObject) {
+        if (self::contains($target)) {
+            foreach (self::where('partof_id', $target->id)->get() as $partOfObject) {
+                $containsName = \App\Target::where('id', $partOfObject->target_id)
+                    ->first()->target_name;
                 $contains .= ($contains ? '/' : '')
-                    .'<a href="/target/'.$partOfObject->objectname.'">'
-                    .$partOfObject->objectname.'</a>';
+                    . '<a href="/target/' . $containsName . '">'
+                    . $containsName . '</a>';
             }
         } else {
             $contains .= '-';
@@ -80,11 +82,13 @@ class TargetPartOf extends Model
         $output .= ')/';
 
         $partOf = '';
-        if (self::isPartOf($name)) {
-            foreach (self::where('objectname', $name)->get() as $partOfObject) {
+        if (self::isPartOf($target)) {
+            foreach (self::where('target_id', $target->id)->get() as $partOfObject) {
+                $partofname = \App\Target::where('id', $partOfObject->partof_id)
+                    ->first()->target_name;
                 $partOf .= ($partOf ? '/' : '')
-                    .'<a href="/target/'.$partOfObject->partofname.'">'
-                    .$partOfObject->partofname.'</a>';
+                    . '<a href="/target/' . $partofname . '">'
+                    . $partofname . '</a>';
             }
         } else {
             $partOf .= '-';

@@ -14,6 +14,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Collection;
 
 /**
  * Target name eloquent model.
@@ -36,9 +38,9 @@ class TargetName extends Model
      *
      * @return HasOne The eloquent relationship
      */
-    public function target()
+    public function target(): HasOne
     {
-        return $this->hasOne('App\Target', 'name', 'objectname');
+        return $this->hasOne('App\Target', 'id', 'target_id');
     }
 
     /**
@@ -46,7 +48,7 @@ class TargetName extends Model
      *
      * @return Collection The list with the different catalogs
      */
-    public static function getCatalogs()
+    public static function getCatalogs(): Collection
     {
         /*
         // First get the deepsky catalogs
@@ -65,13 +67,13 @@ class TargetName extends Model
     /**
      * Check if the object has alternative names.
      *
-     * @param string $name the name of the object
+     * @param Target $target the target
      *
      * @return bool True if the object has alternative names
      */
-    public static function hasAlternativeNames($name)
+    public static function hasAlternativeNames(Target $target): bool
     {
-        if (self::where('objectname', $name)->get()->count() > 1) {
+        if (self::where('target_id', $target->id)->get()->count() > 1) {
             return true;
         } else {
             return false;
@@ -81,17 +83,17 @@ class TargetName extends Model
     /**
      * Returns the alternative names of the object.
      *
-     * @param string $name the name of the object
+     * @param Target $target the target
      *
      * @return string The alternative names of the object
      */
-    public static function getAlternativeNames($name)
+    public static function getAlternativeNames(Target $target): string
     {
         $alternativeNames = '';
-        foreach (self::where('objectname', $name)->get() as $targetname) {
-            if ($targetname->altname != $name) {
+        foreach (self::where('target_id', $target->id)->get() as $targetname) {
+            if ($targetname->altname != $target->target_name) {
                 $alternativeNames .= ($alternativeNames ? '/' : '')
-                    .$targetname->altname;
+                    . $targetname->altname;
             }
         }
 
