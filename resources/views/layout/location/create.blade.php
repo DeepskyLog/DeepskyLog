@@ -89,20 +89,19 @@
                         <input type="number" min="10.0" max="25.0" step="0.01" class="form-control" maxlength="5" id="sqm" name="sb" size="5" value="@if ($location->skyBackground){{ $location->skyBackground }}@else{{ old('sb') }}@endif"/>
                     </div>
                 </td>
-
                 <td>
                     <div class="form-inline">
                         <select id="bortle" name="bortle">
                             <option></option>
-                            <option value="1" @if ($location->bortle == 1)selected @endif>1 - {{_i("Excellent dark-sky site")}}</option>
-                            <option value="2" @if ($location->bortle == 2)selected @endif>2 - {{_i("Typical truly dark site")}}</option>
-                            <option value="3" @if ($location->bortle == 3)selected @endif>3 - {{_i("Rural sky")}}</option>
-                            <option value="4" @if ($location->bortle == 4)selected @endif>4 - {{_i("Rural/suburban transition")}}</option>
-                            <option value="5" @if ($location->bortle == 5)selected @endif>5 - {{_i("Suburban sky")}}</option>
-                            <option value="6" @if ($location->bortle == 6)selected @endif>6 - {{_i("Bright suburban sky")}}</option>
-                            <option value="7" @if ($location->bortle == 7)selected @endif>7 - {{_i("Suburban/urban transition")}}</option>
-                            <option value="8" @if ($location->bortle == 8)selected @endif>8 - {{_i("City sky")}}</option>
-                            <option value="9" @if ($location->bortle == 9)selected @endif>9 - {{_i("Inner-city sky")}}</option>
+                            <option value="1" @if ($location->bortle == 1 || old('bortle') == 1) selected @endif>1 - {{_i("Excellent dark-sky site")}}</option>
+                            <option value="2" @if ($location->bortle == 2 || old('bortle') == 2)selected @endif>2 - {{_i("Typical truly dark site")}}</option>
+                            <option value="3" @if ($location->bortle == 3 || old('bortle') == 3)selected @endif>3 - {{_i("Rural sky")}}</option>
+                            <option value="4" @if ($location->bortle == 4 || old('bortle') == 4)selected @endif>4 - {{_i("Rural/suburban transition")}}</option>
+                            <option value="5" @if ($location->bortle == 5 || old('bortle') == 5)selected @endif>5 - {{_i("Suburban sky")}}</option>
+                            <option value="6" @if ($location->bortle == 6 || old('bortle') == 6)selected @endif>6 - {{_i("Bright suburban sky")}}</option>
+                            <option value="7" @if ($location->bortle == 7 || old('bortle') == 7)selected @endif>7 - {{_i("Suburban/urban transition")}}</option>
+                            <option value="8" @if ($location->bortle == 8 || old('bortle') == 8)selected @endif>8 - {{_i("City sky")}}</option>
+                            <option value="9" @if ($location->bortle == 9 || old('bortle') == 9)selected @endif>9 - {{_i("Inner-city sky")}}</option>
                         </select>
                     </div>
                 </td>
@@ -157,11 +156,15 @@
     var map;
     var infowindow;
     @if ($update)
-    var getLocation = false;
-    var loca = new google.maps.LatLng({{ $location->latitude }}, {{ $location->longitude }});
+        var getLocation = false;
+        var loca = new google.maps.LatLng({{ $location->latitude }}, {{ $location->longitude  }});
     @else
-    var getLocation = true;
-    var loca = new google.maps.LatLng(-29.2558, -70.7403);
+        var getLocation = true;
+        @if (old('latitude'))
+            var loca = new google.maps.LatLng({{ old('latitude') }} , {{ old('longitude') }});
+        @else
+            var loca = new google.maps.LatLng(-29.2558, -70.7403);
+        @endif
     @endif
     var myLocationMarker;
     var myLocations = [];
@@ -198,7 +201,11 @@
         @if ($update)
             var loca = new google.maps.LatLng({{ $location->latitude }}, {{ $location->longitude }});
         @else
-            var loca = new google.maps.LatLng(-29.2558, -70.7403);
+            @if (old('latitude'))
+                var loca = new google.maps.LatLng({{ old('latitude') }} , {{ old('longitude') }});
+            @else
+                var loca = new google.maps.LatLng(-29.2558, -70.7403);
+            @endif
         @endif
         map = new google.maps.Map(document.getElementById('map'), {
             mapTypeId: google.maps.MapTypeId.ROADMAP,

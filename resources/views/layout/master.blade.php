@@ -13,7 +13,8 @@
 
         <script type="text/javascript" src="{{ asset('/js/app.js') }}"></script>
 
-    	<title>@yield('title', 'DeepskyLog')</title>
+        <title>@yield('title', 'DeepskyLog')</title>
+        <livewire:styles>
     </head>
 
     <body>
@@ -56,5 +57,7 @@
         @stack('scripts')
 
         @include('cookieConsent::index')
+
+        <livewire:scripts>
     </body>
 </html>
