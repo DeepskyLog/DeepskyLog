@@ -23,6 +23,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "laravelcollective/html": "^6.0",
+        "livewire/livewire": "^1.2",
         "monarobase/country-list": "^3.0",
         "muhamadrezaar/highcharts": "^2.0",
         "petercoles/multilingual-language-list": "^1.1",

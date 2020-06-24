@@ -47,5 +47,5 @@ var Highcharts = require('highcharts/highcharts.js');
 require('highcharts/modules/exporting')(Highcharts);
 
 // Enable turoblinks
-//var Turbolinks = require("turbolinks")
-//Turbolinks.start()
+var Turbolinks = require("turbolinks")
+Turbolinks.start()
