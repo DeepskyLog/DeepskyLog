@@ -1223,6 +1223,42 @@ class Target extends Model
      */
     public static function getCatalogData($catalogname): array
     {
+        if (in_array(
+            $catalogname,
+            [
+                _i('Comets'), _i('Planets'), _i('Sun'),
+                _i('Moon Craters'), _i('Moon Mountains'),
+                _i('Moon Other Feature'), _i('Moon Sea'), _i('Moon Valley')
+            ]
+        )
+        ) {
+            if ($catalogname == _i('Comets')) {
+                $id = 'COMET';
+            } elseif ($catalogname == _i('Planets')) {
+                $id = 'PLANET';
+            } elseif ($catalogname == _i('Sun')) {
+                $id = 'SUN';
+            } elseif ($catalogname == _i('Moon Craters')) {
+                $id = 'CRATER';
+            } elseif ($catalogname == _i('Moon Mountains')) {
+                $id = 'MOUNTAIN';
+            } elseif ($catalogname == _i('Moon Other Feature')) {
+                $id = 'OTHER';
+            } elseif ($catalogname == _i('Moon Sea')) {
+                $id = 'SEA';
+            } elseif ($catalogname == _i('Moon Valley')) {
+                $id = 'VALLEY';
+            }
+            $allData = \App\Target::where('target_type', $id)
+                ->get('id')->pluck('id');
+            $targetnames = \App\TargetName::whereIn(
+                'target_id',
+                $allData
+            )->get();
+            $data = $targetnames->collect()->sortBy('altname', SORT_NATURAL);
+
+            return [$data, new Collection(), new Collection()];
+        }
         $allData = \App\TargetName::with('target')->where('catalog', $catalogname)
             ->get()->collect()->sortBy('altname', SORT_NATURAL);
         $data = \App\TargetName::where('catalog', $catalogname);

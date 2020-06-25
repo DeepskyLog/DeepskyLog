@@ -232,13 +232,9 @@ Route::get('/bortleToSqm/{bortle}', 'MagnitudeController@bortleToSqmJson');
 Route::get('/catalogs', 'TargetController@catalogs')
     ->name('catalogs');
 
-Route::get('/getCatalogData/{catalog}', 'TargetController@getCatalogData');
-Route::get(
-    '/getConstellationInfo/{catalog}',
-    'TargetController@getConstellationInfo'
-);
-Route::get('/getTypeInfo/{catalog}', 'TargetController@getTypeInfo');
-Route::get('/target/{name}', 'TargetController@show');
+// Also allow slashes in URIs for comets
+Route::get('/target/{name}', 'TargetController@show')
+    ->where('name', '[A-Za-z0-9_/-]+');
 
 // Social log in
 //Route::get('/redirect/{service}', 'SocialAuthController@redirect');

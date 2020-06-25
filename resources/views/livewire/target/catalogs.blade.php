@@ -3,7 +3,7 @@
         <select id="catalog" class="form-control" name="state">
             <option value=""></option>
             @foreach (\App\TargetName::getCatalogs() as $catalog)
-                <option value="{{ $catalog->catalog }}">{{ $catalog->catalog }}</option>
+                <option value="{{ $catalog }}">{{ $catalog }}</option>
             @endforeach
         </select>
     </div>

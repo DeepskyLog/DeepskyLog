@@ -50,18 +50,21 @@ class TargetName extends Model
      */
     public static function getCatalogs(): Collection
     {
-        /*
         // First get the deepsky catalogs
         $catalogs = TargetName::where('catalog', '!=', '')
-            ->select('catalog')->distinct()->get();
+            ->select('catalog')->distinct()->get()->pluck('catalog');
 
-        // We add the comets, planets, Moon, Moon craters, ..., Sun, ...
-        $catalogs->push('{"catalog":"Solar System"}');
-        dd($catalogs);
+        // We add the comets, planets, Moon, Moon craters, ..., Sun.
+        $catalogs->push(_i('Planets'));
+        $catalogs->push(_i('Moon Craters'));
+        $catalogs->push(_i('Moon Mountains'));
+        $catalogs->push(_i('Moon Other Feature'));
+        $catalogs->push(_i('Moon Sea'));
+        $catalogs->push(_i('Moon Valley'));
+        $catalogs->push(_i('Sun'));
+        $catalogs->push(_i('Comets'));
 
-        return $catalogs;*/
-        return self::where('catalog', '!=', '')
-            ->select('catalog')->distinct()->get();
+        return $catalogs->sort();
     }
 
     /**
