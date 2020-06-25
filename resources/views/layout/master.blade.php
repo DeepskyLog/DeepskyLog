@@ -36,6 +36,8 @@
         <br />
         @include('layout.footer')
 
+        <livewire:scripts>
+
         <script>
             $(document).ready(function() {
                 $(".selection").select2({
@@ -58,6 +60,5 @@
 
         @include('cookieConsent::index')
 
-        <livewire:scripts>
     </body>
 </html>

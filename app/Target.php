@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Session;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Collection;
 use Spatie\Translatable\HasTranslations;
 
 /**
@@ -1210,5 +1211,37 @@ class Target extends Model
         $date->timezone($location->timezone);
 
         return $this->_target->altitudeGraph($geo_coords, $date);
+    }
+
+    /**
+     * Returns the data from one catalog.
+     *
+     * @param string $catalogname The name of the catalog
+     *
+     * @return array the array with the collection with all the target information,
+     *               array with constellations and array with types
+     */
+    public static function getCatalogData($catalogname): array
+    {
+        $allData = \App\TargetName::with('target')->where('catalog', $catalogname)
+            ->get()->collect()->sortBy('altname', SORT_NATURAL);
+        $data = \App\TargetName::where('catalog', $catalogname);
+
+        $orig_data = \App\Target::whereIn('id', $data->get('target_id'))->get();
+        $constellations = $orig_data->groupBy('constellation')->map(
+            function ($constellation) {
+                return $constellation->count();
+            }
+        )->toArray();
+        ksort($constellations);
+
+        $types = $orig_data->groupBy('target_type')->map(
+            function ($target_type) {
+                return $target_type->count();
+            }
+        )->toArray();
+        ksort($types);
+
+        return [$allData, $constellations, $types];
     }
 }

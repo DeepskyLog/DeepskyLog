@@ -15,7 +15,6 @@ namespace App\Http\Controllers;
 use App\DataTables\TargetDataTable;
 use App\Target;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Target Controller.
@@ -131,73 +130,5 @@ class TargetController extends Controller
         return view(
             'layout.target.catalogs'
         );
-    }
-
-    /**
-     * Returns the data from one catalog in JSON format.
-     *
-     * @param string $catalogname The name of the catalog
-     *
-     * @return string The JSON with all information on the objects
-     */
-    public function getCatalogData($catalogname)
-    {
-        // \App\TargetName::with('target')->where('catalog', 'M')->get('target_id', 'target_name')->sortBy('altname', SORT_NATURAL);
-        // TODO: Use livewire for this.
-        return \App\TargetName::where('catalog', $catalogname)->get()
-            ->sortBy('altname', SORT_NATURAL)->toJson();
-    }
-
-    /**
-     * Returns the constellation data from one catalog in JSON format.
-     *
-     * @param string $catalogname The name of the catalog
-     *
-     * @return string The JSON with all constellation information on the objects
-     */
-    public static function getConstellationInfo($catalogname)
-    {
-        $cons = DB::select(
-            DB::raw(
-                'SELECT constellations.name as con,
-                count((targets.constellation)) as count FROM targets
-                JOIN target_names ON targets.id = target_names.target_id
-                JOIN constellations ON targets.constellation = constellations.id
-                WHERE catalog="' . $catalogname . '" GROUP BY targets.constellation'
-            )
-        );
-
-        foreach ($cons as $con) {
-            $con->con = _i($con->con);
-        }
-
-        return $cons;
-    }
-
-    /**
-     * Returns the type data from one catalog in JSON format.
-     *
-     * @param string $catalogname The name of the catalog
-     *
-     * @return string The JSON with all type information of the objects
-     */
-    public static function getTypeInfo($catalogname)
-    {
-        $types = DB::select(
-            DB::raw(
-                'SELECT target_types.type, count((targets.target_type)) as count
-                    FROM targets
-                    JOIN target_names ON targets.id = target_names.target_id
-                    JOIN target_types ON targets.target_type = target_types.id
-                    WHERE catalog="'
-                    . $catalogname . '" GROUP BY targets.target_type'
-            )
-        );
-
-        foreach ($types as $type) {
-            $type->type = _i($type->type);
-        }
-
-        return $types;
     }
 }
