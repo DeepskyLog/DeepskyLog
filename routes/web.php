@@ -234,7 +234,7 @@ Route::get('/catalogs', 'TargetController@catalogs')
 
 // Also allow slashes in URIs for comets
 Route::get('/target/{name}', 'TargetController@show')
-    ->where('name', '[A-Za-z0-9_/-]+');
+    ->where('name', '[ A-Za-z0-9_/-]+');
 
 // Social log in
 //Route::get('/redirect/{service}', 'SocialAuthController@redirect');
