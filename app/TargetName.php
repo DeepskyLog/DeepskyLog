@@ -56,6 +56,7 @@ class TargetName extends Model
 
         // We add the comets, planets, Moon, Moon craters, ..., Sun.
         $catalogs->push(_i('Planets'));
+        $catalogs->push(_i('Planetary Moons'));
         $catalogs->push(_i('Moon Craters'));
         $catalogs->push(_i('Moon Mountains'));
         $catalogs->push(_i('Moon Other Feature'));
@@ -63,6 +64,7 @@ class TargetName extends Model
         $catalogs->push(_i('Moon Valley'));
         $catalogs->push(_i('Sun'));
         $catalogs->push(_i('Comets'));
+        $catalogs->push(_i('Asteroids'));
 
         return $catalogs->sort();
     }
