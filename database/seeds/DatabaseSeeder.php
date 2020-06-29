@@ -36,7 +36,8 @@ class DatabaseSeeder extends Seeder
                 EyepieceBrandSeeder::class, EyepieceTypeSeeder::class,
                 MessagesTableSeeder::class, InstrumentTableSeeder::class,
                 LocationTableSeeder::class, TargetTableSeeder::class,
-                TargetNameTableSeeder::class, TargetPartOfTableSeeder::class, ]
+                TargetNameTableSeeder::class, TargetPartOfTableSeeder::class,
+                MoonSeeder::class]
         );
     }
 }
