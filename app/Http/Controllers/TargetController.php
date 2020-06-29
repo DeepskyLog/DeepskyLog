@@ -12,9 +12,10 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\TargetDataTable;
 use App\Target;
 use Illuminate\Http\Request;
+use App\DataTables\TargetDataTable;
+use deepskylog\LaravelGettext\Facades\LaravelGettext;
 
 /**
  * Target Controller.
@@ -60,13 +61,13 @@ class TargetController extends Controller
     /**
      * Display the specified target.
      *
-     * @param string $targetname The name of the target to show
+     * @param string $name The name of the target to show
      *
      * @return \Illuminate\Http\Response The reponse
      */
-    public function show(string $targetname, TargetDataTable $dataTable)
+    public function show(string $name, TargetDataTable $dataTable)
     {
-        $targetname = \App\TargetName::where('altname', $targetname)
+        $targetname = \App\TargetName::where('altname', $name)
             ->first();
 
         if ($targetname != null) {
@@ -81,7 +82,20 @@ class TargetController extends Controller
                 abort(403, _i('The requested target does not exist.'));
             }
         } else {
-            abort(403, _i('The requested target does not exist.'));
+            // Check all the translations
+            $target = \App\Target::where(
+                'target_name->' . LaravelGettext::getLocaleLanguage(),
+                $name
+            )->first();
+
+            if ($target != null) {
+                return $dataTable->with('target', $target)->render(
+                    'layout.target.show',
+                    compact('target', $target)
+                );
+            } else {
+                abort(403, _i('The requested target does not exist.'));
+            }
         }
     }
 

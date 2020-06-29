@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2020-06-29 11:14+0200\n"
-"PO-Revision-Date: 2020-06-29 11:15+0200\n"
+"POT-Creation-Date: 2020-06-29 11:22+0200\n"
+"PO-Revision-Date: 2020-06-29 11:23+0200\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: es_ES\n"
@@ -2301,6 +2301,13 @@ msgstr "Mar de la Luna"
 #: Target.php:1231 Target.php:1250 TargetName.php:64
 msgid "Moon Valley"
 msgstr "Valle de la luna"
+
+#: ../storage/framework/messages/6cf6023e491cd9e6fbfca9113f8f307d738e17f4.php.php:67
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1232
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1254
+#: Target.php:1232 Target.php:1254 TargetName.php:67
+msgid "Asteroids"
+msgstr "Asteroides"
 
 #: ../storage/framework/messages/6d44b686891cd941f2ca89f5c3eb926d2a58cb96.php.php:3
 msgid "You received the following DeepskyLog message from "

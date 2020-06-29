@@ -218,7 +218,7 @@
                 <td>240 / {{ \App\Target::count() }} ({{ number_format(240.0 / \App\Target::count() * 100, 2)}}%)</td>
                 @foreach ($observationTypes as $type)
                     <td>40 / {{ $numberOfObjects[$type->type] }}
-                        ({{ number_format(40 / $numberOfObjects[$type->type] * 100, 2) }}%)</td>
+                        (@if ($numberOfObjects[$type->type] == 0) 0%) @else {{ number_format(40 / $numberOfObjects[$type->type] * 100, 2) }}%) @endif</td>
                 @endforeach
             </tr>
 

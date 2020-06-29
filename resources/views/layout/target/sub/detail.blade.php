@@ -120,14 +120,16 @@
             <td colspan="9">{{ \App\TargetName::getAlternativeNames($target) }}</td>
         </tr>
         @endif
+    @endif
 
-        @if (\App\TargetPartOf::isPartOf($target) || \App\TargetPartOf::contains($target))
-            <tr>
+    @if (\App\TargetPartOf::isPartOf($target) || \App\TargetPartOf::contains($target))
+        <tr>
             <td colspan="3"> {{ _i("(Contains)/Part of") }}</td>
             <td colspan="9">{!! \App\TargetPartOf::partOfContains($target) !!}</td>
-            </tr>
-        @endif
+        </tr>
+    @endif
 
+    @if ($target->isNonSolarSystem())
         {{-- TODO: Make it possible to show description added to the list and to change it
         if ($listname && ($objList->checkObjectInMyActiveList ( $object ))) {
             echo "<tr>";
