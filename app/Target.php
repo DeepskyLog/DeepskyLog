@@ -1229,7 +1229,7 @@ class Target extends Model
                 _i('Comets'), _i('Planets'), _i('Sun'),
                 _i('Moon Craters'), _i('Moon Mountains'),
                 _i('Moon Other Feature'), _i('Moon Sea'), _i('Moon Valley'),
-                _i('Planetary Moons'), _i('Asteroids')
+                _i('Planetary Moons'), _i('Asteroids'), _i('Dwarf Planets')
             ]
         )
         ) {
@@ -1253,6 +1253,8 @@ class Target extends Model
                 $id = 'MOON';
             } elseif ($catalogname == _i('Asteroids')) {
                 $id = 'ASTEROID';
+            } elseif ($catalogname == _i('Dwarf Planets')) {
+                $id = 'DWARF';
             }
             $allData = \App\Target::where('target_type', $id)
                 ->get('id')->pluck('id');

@@ -42,7 +42,7 @@
         "lity": "^2.4.1",
         "node-sass": "^4.14.1",
         "password-strength-meter": "^2.0",
-        "pdfmake": "^0.1.65",
+        "pdfmake": "^0.1.66",
         "popper": "^1.0.1",
         "select2": "^4.0.13",
         "select2-bootstrap4-theme": "^1.0.0",

@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | DeepkyLog Language Lines
@@ -177,4 +176,5 @@ return [
     _i('Virgo'),
     _i('Volans'),
     _i('Vulpecula'),
+    _i('Dwarf Planet'),
 ];

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2020-06-29 11:23+0200\n"
-"PO-Revision-Date: 2020-06-29 11:23+0200\n"
+"POT-Creation-Date: 2020-06-30 15:41+0200\n"
+"PO-Revision-Date: 2020-06-30 15:41+0200\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: fr_FR\n"
@@ -73,140 +73,140 @@ msgstr ""
 "Nous ne parvenons pas à trouver un utilisateur qui utilise cette adresse e-"
 "mail."
 
-#: ../resources/lang/en/translations.php:14
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:14
+#: ../resources/lang/en/translations.php:13
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:13
 msgid "Light red"
 msgstr "Rouge clair"
 
-#: ../resources/lang/en/translations.php:15
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:15
+#: ../resources/lang/en/translations.php:14
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:14
 msgid "Red"
 msgstr "Rouge"
 
-#: ../resources/lang/en/translations.php:16
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:16
+#: ../resources/lang/en/translations.php:15
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:15
 msgid "Deep red"
 msgstr "Rouge profond"
 
-#: ../resources/lang/en/translations.php:17
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:17
+#: ../resources/lang/en/translations.php:16
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:16
 msgid "Orange"
 msgstr "Orange"
 
-#: ../resources/lang/en/translations.php:18
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:18
+#: ../resources/lang/en/translations.php:17
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:17
 msgid "Light yellow"
 msgstr "Jaune clair"
 
-#: ../resources/lang/en/translations.php:19
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:19
+#: ../resources/lang/en/translations.php:18
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:18
 msgid "Deep yellow"
 msgstr "Jaune profond"
 
-#: ../resources/lang/en/translations.php:20
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:20
+#: ../resources/lang/en/translations.php:19
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:19
 msgid "Yellow"
 msgstr "Jaune"
 
-#: ../resources/lang/en/translations.php:21
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:21
+#: ../resources/lang/en/translations.php:20
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:20
 msgid "Yellow-Green"
 msgstr "Jaune-vert"
 
-#: ../resources/lang/en/translations.php:22
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:22
+#: ../resources/lang/en/translations.php:21
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:21
 msgid "Light green"
 msgstr "Vert clair"
 
-#: ../resources/lang/en/translations.php:23
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:23
+#: ../resources/lang/en/translations.php:22
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:22
 msgid "Green"
 msgstr "Vert"
 
-#: ../resources/lang/en/translations.php:24
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:24
+#: ../resources/lang/en/translations.php:23
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:23
 msgid "Medium blue"
 msgstr "Bleu moyen"
 
-#: ../resources/lang/en/translations.php:25
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:25
+#: ../resources/lang/en/translations.php:24
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:24
 msgid "Pale blue"
 msgstr "Bleu pâle"
 
-#: ../resources/lang/en/translations.php:26
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:26
+#: ../resources/lang/en/translations.php:25
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:25
 msgid "Blue"
 msgstr "Bleu"
 
-#: ../resources/lang/en/translations.php:27
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:27
+#: ../resources/lang/en/translations.php:26
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:26
 msgid "Deep blue"
 msgstr "Bleu profond"
 
-#: ../resources/lang/en/translations.php:28
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:28
+#: ../resources/lang/en/translations.php:27
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:27
 msgid "Deep Violet"
 msgstr "Violette profonde"
 
-#: ../resources/lang/en/translations.php:29
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:29
+#: ../resources/lang/en/translations.php:28
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:28
 msgid "Other filter"
 msgstr "Autre filtre"
 
-#: ../resources/lang/en/translations.php:30
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:30
+#: ../resources/lang/en/translations.php:29
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:29
 msgid "Broadband filter"
 msgstr "Filtre Broadband"
 
-#: ../resources/lang/en/translations.php:31
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:31
+#: ../resources/lang/en/translations.php:30
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:30
 msgid "Narrowband filter"
 msgstr "Filtre Narrowband"
 
-#: ../resources/lang/en/translations.php:32
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:32
+#: ../resources/lang/en/translations.php:31
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:31
 msgid "O-III filter"
 msgstr "Filtre O-III"
 
-#: ../resources/lang/en/translations.php:33
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:33
+#: ../resources/lang/en/translations.php:32
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:32
 msgid "H beta filter"
 msgstr "Filtre H-bêta"
 
-#: ../resources/lang/en/translations.php:34
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:34
+#: ../resources/lang/en/translations.php:33
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:33
 msgid "H alpha filter"
 msgstr "Filtre H alpha"
 
-#: ../resources/lang/en/translations.php:35
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:35
+#: ../resources/lang/en/translations.php:34
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:34
 msgid "Color filter"
 msgstr "Filtre couleur"
 
-#: ../resources/lang/en/translations.php:36
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:36
+#: ../resources/lang/en/translations.php:35
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:35
 msgid "Neutral filter"
 msgstr "Filtre neutre"
 
-#: ../resources/lang/en/translations.php:37
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:37
+#: ../resources/lang/en/translations.php:36
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:36
 msgid "Corrective filter"
 msgstr "Filtre correcteur"
 
-#: ../resources/lang/en/translations.php:38
+#: ../resources/lang/en/translations.php:37
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:223
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:315
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:38
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:37
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:12
 #: Http/Controllers/UserController.php:223
 #: Http/Controllers/UserController.php:315
 msgid "Deepsky"
 msgstr "Ciel profond"
 
-#: ../resources/lang/en/translations.php:39
+#: ../resources/lang/en/translations.php:38
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:227
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:319
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:39
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:38
 #: ../storage/framework/messages/6cf6023e491cd9e6fbfca9113f8f307d738e17f4.php.php:66
 #: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1229
 #: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1236
@@ -217,10 +217,10 @@ msgstr "Ciel profond"
 msgid "Comets"
 msgstr "Comètes"
 
-#: ../resources/lang/en/translations.php:40
+#: ../resources/lang/en/translations.php:39
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:235
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:327
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:40
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:39
 #: ../storage/framework/messages/6cf6023e491cd9e6fbfca9113f8f307d738e17f4.php.php:58
 #: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1229
 #: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1238
@@ -231,26 +231,26 @@ msgstr "Comètes"
 msgid "Planets"
 msgstr "Planètes"
 
-#: ../resources/lang/en/translations.php:41
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:41
+#: ../resources/lang/en/translations.php:40
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:40
 msgid "Comet"
 msgstr "Comète"
 
-#: ../resources/lang/en/translations.php:42
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:42
+#: ../resources/lang/en/translations.php:41
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:41
 msgid "Planet"
 msgstr "Planète"
 
-#: ../resources/lang/en/translations.php:43
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:43
+#: ../resources/lang/en/translations.php:42
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:42
 msgid "Double Stars"
 msgstr "Étoiles doubles"
 
-#: ../resources/lang/en/translations.php:44
+#: ../resources/lang/en/translations.php:43
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:69
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:239
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:331
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:44
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:43
 #: ../storage/framework/messages/6cf6023e491cd9e6fbfca9113f8f307d738e17f4.php.php:65
 #: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1229
 #: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1240
@@ -260,684 +260,689 @@ msgstr "Étoiles doubles"
 msgid "Sun"
 msgstr "Soleil"
 
-#: ../resources/lang/en/translations.php:45
+#: ../resources/lang/en/translations.php:44
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:14
 #: ../storage/framework/messages/1379d60bd9a4b16100151ab2d0c0a518ee38004f.php.php:36
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:243
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:335
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:45
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:44
 #: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:23
 #: Http/Controllers/UserController.php:243
 #: Http/Controllers/UserController.php:335
 msgid "Moon"
 msgstr "Lune"
 
-#: ../resources/lang/en/translations.php:46
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:46
+#: ../resources/lang/en/translations.php:45
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:45
 msgid "Mercury"
 msgstr "Mercure"
 
-#: ../resources/lang/en/translations.php:47
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:47
+#: ../resources/lang/en/translations.php:46
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:46
 msgid "Venus"
 msgstr "Vénus"
 
-#: ../resources/lang/en/translations.php:48
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:48
+#: ../resources/lang/en/translations.php:47
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:47
 msgid "Mars"
 msgstr "Mars"
 
-#: ../resources/lang/en/translations.php:49
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:49
+#: ../resources/lang/en/translations.php:48
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:48
 msgid "Jupiter"
 msgstr "Jupiter"
 
-#: ../resources/lang/en/translations.php:50
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:50
+#: ../resources/lang/en/translations.php:49
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:49
 msgid "Saturn"
 msgstr "Saturn"
 
-#: ../resources/lang/en/translations.php:51
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:51
+#: ../resources/lang/en/translations.php:50
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:50
 msgid "Uranus"
 msgstr "Uranus"
 
-#: ../resources/lang/en/translations.php:52
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:52
+#: ../resources/lang/en/translations.php:51
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:51
 msgid "Neptune"
 msgstr "Neptune"
 
-#: ../resources/lang/en/translations.php:53
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:53
+#: ../resources/lang/en/translations.php:52
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:52
 msgid "Naked Eye"
 msgstr "Oeil nu"
 
-#: ../resources/lang/en/translations.php:54
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:54
+#: ../resources/lang/en/translations.php:53
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:53
 msgid "Binoculars"
 msgstr "Jumelles"
 
-#: ../resources/lang/en/translations.php:55
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:55
+#: ../resources/lang/en/translations.php:54
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:54
 msgid "Refractor"
 msgstr "Réfracteur"
 
-#: ../resources/lang/en/translations.php:56
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:56
+#: ../resources/lang/en/translations.php:55
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:55
 msgid "Reflector"
 msgstr "Réflecteur"
 
-#: ../resources/lang/en/translations.php:57
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:57
+#: ../resources/lang/en/translations.php:56
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:56
 msgid "Finderscope"
 msgstr "Chercheur"
 
-#: ../resources/lang/en/translations.php:58
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:58
+#: ../resources/lang/en/translations.php:57
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:57
 msgid "Other"
 msgstr "Autre"
 
-#: ../resources/lang/en/translations.php:59
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:59
+#: ../resources/lang/en/translations.php:58
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:58
 msgid "Cassegrain"
 msgstr "Cassegrain"
 
-#: ../resources/lang/en/translations.php:60
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:60
+#: ../resources/lang/en/translations.php:59
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:59
 msgid "Kutter"
 msgstr "Kutter"
 
-#: ../resources/lang/en/translations.php:61
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:61
+#: ../resources/lang/en/translations.php:60
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:60
 msgid "Maksutov"
 msgstr "Maksutov"
 
-#: ../resources/lang/en/translations.php:62
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:62
+#: ../resources/lang/en/translations.php:61
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:61
 msgid "Schmidt Cassegrain"
 msgstr "Schmidt Cassegrain"
 
-#: ../resources/lang/en/translations.php:63
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:63
+#: ../resources/lang/en/translations.php:62
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:62
 msgid "Asterism"
 msgstr "Asterism"
 
-#: ../resources/lang/en/translations.php:64
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:64
+#: ../resources/lang/en/translations.php:63
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:63
 msgid "Bright nebula"
 msgstr "Nébuleuse lumineuse"
 
-#: ../resources/lang/en/translations.php:65
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:65
+#: ../resources/lang/en/translations.php:64
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:64
 msgid "Cluster with nebulosity"
 msgstr "Cluster avec nébulosité"
 
-#: ../resources/lang/en/translations.php:66
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:66
+#: ../resources/lang/en/translations.php:65
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:65
 msgid "Double Star"
 msgstr "Étoile double"
 
-#: ../resources/lang/en/translations.php:67
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:67
+#: ../resources/lang/en/translations.php:66
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:66
 msgid "Dark nebula"
 msgstr "Nébuleuse sombre"
 
-#: ../resources/lang/en/translations.php:68
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:68
+#: ../resources/lang/en/translations.php:67
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:67
 msgid "Emission nebula"
 msgstr "Nébuleuse d'émission"
 
-#: ../resources/lang/en/translations.php:69
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:69
+#: ../resources/lang/en/translations.php:68
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:68
 msgid "Emission and Reflection nebula"
 msgstr "Nébuleuse d'émission et de réflexion"
 
-#: ../resources/lang/en/translations.php:70
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:70
+#: ../resources/lang/en/translations.php:69
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:69
 msgid "Emission nebula around a star"
 msgstr "Nébuleuse d'émission autour d'une étoile"
 
-#: ../resources/lang/en/translations.php:71
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:71
+#: ../resources/lang/en/translations.php:70
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:70
 msgid "Galaxy cluster"
 msgstr "Amas de galaxies"
 
-#: ../resources/lang/en/translations.php:72
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:72
+#: ../resources/lang/en/translations.php:71
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:71
 msgid "Galaxy"
 msgstr "Galaxie"
 
-#: ../resources/lang/en/translations.php:73
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:73
+#: ../resources/lang/en/translations.php:72
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:72
 msgid "Globular cluster"
 msgstr "Amas globulaire"
 
-#: ../resources/lang/en/translations.php:74
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:74
+#: ../resources/lang/en/translations.php:73
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:73
 msgid "Diffuse nebula"
 msgstr "Nébuleuse diffuse"
 
-#: ../resources/lang/en/translations.php:75
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:75
+#: ../resources/lang/en/translations.php:74
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:74
 msgid "H-II"
 msgstr "H-II"
 
-#: ../resources/lang/en/translations.php:76
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:76
+#: ../resources/lang/en/translations.php:75
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:75
 msgid "Nonexistent"
 msgstr "Inexistant"
 
-#: ../resources/lang/en/translations.php:77
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:77
+#: ../resources/lang/en/translations.php:76
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:76
 msgid "Open cluster"
 msgstr "Amas ouvert"
 
-#: ../resources/lang/en/translations.php:78
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:78
+#: ../resources/lang/en/translations.php:77
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:77
 msgid "Planetary nebula"
 msgstr "Nébuleuse planétaire"
 
-#: ../resources/lang/en/translations.php:79
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:79
+#: ../resources/lang/en/translations.php:78
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:78
 msgid "Reflection nebula"
 msgstr "Nébuleuse de réflexion"
 
-#: ../resources/lang/en/translations.php:80
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:80
+#: ../resources/lang/en/translations.php:79
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:79
 msgid "Reflection nebula and H-II"
 msgstr "Nébuleuse de réflexion et H-II"
 
-#: ../resources/lang/en/translations.php:81
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:81
+#: ../resources/lang/en/translations.php:80
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:80
 msgid "Supernova"
 msgstr "Supernova"
 
-#: ../resources/lang/en/translations.php:82
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:82
+#: ../resources/lang/en/translations.php:81
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:81
 msgid "Supernova remnant"
 msgstr "Vestige Supernova"
 
-#: ../resources/lang/en/translations.php:83
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:83
+#: ../resources/lang/en/translations.php:82
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:82
 msgid "Nebula around star"
 msgstr "Nébuleuse autour de l'étoile"
 
-#: ../resources/lang/en/translations.php:84
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:84
+#: ../resources/lang/en/translations.php:83
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:83
 msgid "Quasar"
 msgstr "Quasar"
 
-#: ../resources/lang/en/translations.php:85
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:85
+#: ../resources/lang/en/translations.php:84
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:84
 msgid "Wolf Rayet nebula"
 msgstr "Nébuleuse de Wolf Rayet"
 
-#: ../resources/lang/en/translations.php:86
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:86
+#: ../resources/lang/en/translations.php:85
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:85
 msgid "Rest"
 msgstr "Reste"
 
-#: ../resources/lang/en/translations.php:87
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:87
+#: ../resources/lang/en/translations.php:86
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:86
 msgid "Mountain"
 msgstr "Montagne"
 
-#: ../resources/lang/en/translations.php:88
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:88
+#: ../resources/lang/en/translations.php:87
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:87
 msgid "Sea"
 msgstr "Mer"
 
-#: ../resources/lang/en/translations.php:89
-#: ../resources/lang/en/translations.php:120
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:89
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:120
+#: ../resources/lang/en/translations.php:88
+#: ../resources/lang/en/translations.php:119
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:88
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:119
 msgid "Crater"
 msgstr "Cratère"
 
-#: ../resources/lang/en/translations.php:90
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:90
+#: ../resources/lang/en/translations.php:89
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:89
 msgid "Valley"
 msgstr "Vallée"
 
-#: ../resources/lang/en/translations.php:91
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:91
+#: ../resources/lang/en/translations.php:90
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:90
 msgid "Other feature"
 msgstr "Autre caractéristique"
 
-#: ../resources/lang/en/translations.php:92
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:92
+#: ../resources/lang/en/translations.php:91
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:91
 msgid "Andromeda"
 msgstr "Andromeda"
 
-#: ../resources/lang/en/translations.php:93
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:93
+#: ../resources/lang/en/translations.php:92
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:92
 msgid "Antlia"
 msgstr "Antlia"
 
-#: ../resources/lang/en/translations.php:94
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:94
+#: ../resources/lang/en/translations.php:93
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:93
 msgid "Apus"
 msgstr "Apus"
 
-#: ../resources/lang/en/translations.php:95
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:95
+#: ../resources/lang/en/translations.php:94
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:94
 msgid "Aquarius"
 msgstr "Aquarius"
 
-#: ../resources/lang/en/translations.php:96
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:96
+#: ../resources/lang/en/translations.php:95
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:95
 msgid "Aquila"
 msgstr "Aquila"
 
-#: ../resources/lang/en/translations.php:97
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:97
+#: ../resources/lang/en/translations.php:96
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:96
 msgid "Ara"
 msgstr "Ara"
 
-#: ../resources/lang/en/translations.php:98
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:98
+#: ../resources/lang/en/translations.php:97
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:97
 msgid "Aries"
 msgstr "Aries"
 
-#: ../resources/lang/en/translations.php:99
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:99
+#: ../resources/lang/en/translations.php:98
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:98
 msgid "Auriga"
 msgstr "Auriga"
 
-#: ../resources/lang/en/translations.php:100
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:100
+#: ../resources/lang/en/translations.php:99
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:99
 msgid "Bootes"
 msgstr "Bootes"
 
-#: ../resources/lang/en/translations.php:101
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:101
+#: ../resources/lang/en/translations.php:100
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:100
 msgid "Caelum"
 msgstr "Caelum"
 
-#: ../resources/lang/en/translations.php:102
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:102
+#: ../resources/lang/en/translations.php:101
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:101
 msgid "Camelopardalis"
 msgstr "Camelopardalis"
 
-#: ../resources/lang/en/translations.php:103
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:103
+#: ../resources/lang/en/translations.php:102
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:102
 msgid "Cancer"
 msgstr "Cancer"
 
-#: ../resources/lang/en/translations.php:104
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:104
+#: ../resources/lang/en/translations.php:103
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:103
 msgid "Canes Venatici"
 msgstr "Canes Venatici"
 
-#: ../resources/lang/en/translations.php:105
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:105
+#: ../resources/lang/en/translations.php:104
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:104
 msgid "Canis Major"
 msgstr "Canis Major"
 
-#: ../resources/lang/en/translations.php:106
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:106
+#: ../resources/lang/en/translations.php:105
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:105
 msgid "Canis Minor"
 msgstr "Canis Minor"
 
-#: ../resources/lang/en/translations.php:107
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:107
+#: ../resources/lang/en/translations.php:106
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:106
 msgid "Capricornus"
 msgstr "Capricornus"
 
-#: ../resources/lang/en/translations.php:108
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:108
+#: ../resources/lang/en/translations.php:107
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:107
 msgid "Carina"
 msgstr "Carina"
 
-#: ../resources/lang/en/translations.php:109
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:109
+#: ../resources/lang/en/translations.php:108
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:108
 msgid "Cassiopeia"
 msgstr "Cassiopeia"
 
-#: ../resources/lang/en/translations.php:110
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:110
+#: ../resources/lang/en/translations.php:109
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:109
 msgid "Centaurus"
 msgstr "Centaurus"
 
-#: ../resources/lang/en/translations.php:111
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:111
+#: ../resources/lang/en/translations.php:110
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:110
 msgid "Cepheus"
 msgstr "Cepheus"
 
-#: ../resources/lang/en/translations.php:112
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:112
+#: ../resources/lang/en/translations.php:111
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:111
 msgid "Cetus"
 msgstr "Cetus"
 
-#: ../resources/lang/en/translations.php:113
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:113
+#: ../resources/lang/en/translations.php:112
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:112
 msgid "Chamaeleon"
 msgstr "Chamaeleon"
 
-#: ../resources/lang/en/translations.php:114
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:114
+#: ../resources/lang/en/translations.php:113
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:113
 msgid "Circinus"
 msgstr "Circinus"
 
-#: ../resources/lang/en/translations.php:115
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:115
+#: ../resources/lang/en/translations.php:114
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:114
 msgid "Columba"
 msgstr "Columba"
 
-#: ../resources/lang/en/translations.php:116
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:116
+#: ../resources/lang/en/translations.php:115
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:115
 msgid "Coma Berenices"
 msgstr "Coma Berenices"
 
-#: ../resources/lang/en/translations.php:117
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:117
+#: ../resources/lang/en/translations.php:116
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:116
 msgid "Corona Australis"
 msgstr "Corona Australis"
 
-#: ../resources/lang/en/translations.php:118
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:118
+#: ../resources/lang/en/translations.php:117
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:117
 msgid "Corona Borealis"
 msgstr "Corona Borealis"
 
-#: ../resources/lang/en/translations.php:119
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:119
+#: ../resources/lang/en/translations.php:118
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:118
 msgid "Corvus"
 msgstr "Corvus"
 
-#: ../resources/lang/en/translations.php:121
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:121
+#: ../resources/lang/en/translations.php:120
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:120
 msgid "Crux"
 msgstr "Crux"
 
-#: ../resources/lang/en/translations.php:122
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:122
+#: ../resources/lang/en/translations.php:121
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:121
 msgid "Cygnus"
 msgstr "Cygnus"
 
-#: ../resources/lang/en/translations.php:123
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:123
+#: ../resources/lang/en/translations.php:122
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:122
 msgid "Delphinus"
 msgstr "Delphinus"
 
-#: ../resources/lang/en/translations.php:124
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:124
+#: ../resources/lang/en/translations.php:123
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:123
 msgid "Dorado"
 msgstr "Dorado"
 
-#: ../resources/lang/en/translations.php:125
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:125
+#: ../resources/lang/en/translations.php:124
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:124
 msgid "Draco"
 msgstr "Draco"
 
-#: ../resources/lang/en/translations.php:126
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:126
+#: ../resources/lang/en/translations.php:125
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:125
 msgid "Equuleus"
 msgstr "Equuleus"
 
-#: ../resources/lang/en/translations.php:127
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:127
+#: ../resources/lang/en/translations.php:126
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:126
 msgid "Eridanus"
 msgstr "Eridanus"
 
-#: ../resources/lang/en/translations.php:128
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:128
+#: ../resources/lang/en/translations.php:127
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:127
 msgid "Fornax"
 msgstr "Fornax"
 
-#: ../resources/lang/en/translations.php:129
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:129
+#: ../resources/lang/en/translations.php:128
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:128
 msgid "Gemini"
 msgstr "Gemini"
 
-#: ../resources/lang/en/translations.php:130
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:130
+#: ../resources/lang/en/translations.php:129
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:129
 msgid "Grus"
 msgstr "Grus"
 
-#: ../resources/lang/en/translations.php:131
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:131
+#: ../resources/lang/en/translations.php:130
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:130
 msgid "Hercules"
 msgstr "Hercules"
 
-#: ../resources/lang/en/translations.php:132
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:132
+#: ../resources/lang/en/translations.php:131
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:131
 msgid "Horologium"
 msgstr "Horologium"
 
-#: ../resources/lang/en/translations.php:133
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:133
+#: ../resources/lang/en/translations.php:132
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:132
 msgid "Hydra"
 msgstr "Hydra"
 
-#: ../resources/lang/en/translations.php:134
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:134
+#: ../resources/lang/en/translations.php:133
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:133
 msgid "Hydrus"
 msgstr "Hydrus"
 
-#: ../resources/lang/en/translations.php:135
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:135
+#: ../resources/lang/en/translations.php:134
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:134
 msgid "Indus"
 msgstr "Indus"
 
-#: ../resources/lang/en/translations.php:136
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:136
+#: ../resources/lang/en/translations.php:135
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:135
 msgid "Lacerta"
 msgstr "Lacerta"
 
-#: ../resources/lang/en/translations.php:137
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:137
+#: ../resources/lang/en/translations.php:136
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:136
 msgid "Leo"
 msgstr "Leo"
 
-#: ../resources/lang/en/translations.php:138
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:138
+#: ../resources/lang/en/translations.php:137
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:137
 msgid "Leo Minor"
 msgstr "Leo Minor"
 
-#: ../resources/lang/en/translations.php:139
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:139
+#: ../resources/lang/en/translations.php:138
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:138
 msgid "Lepus"
 msgstr "Lepus"
 
-#: ../resources/lang/en/translations.php:140
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:140
+#: ../resources/lang/en/translations.php:139
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:139
 msgid "Libra"
 msgstr "Libra"
 
-#: ../resources/lang/en/translations.php:141
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:141
+#: ../resources/lang/en/translations.php:140
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:140
 msgid "Lupus"
 msgstr "Lupus"
 
-#: ../resources/lang/en/translations.php:142
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:142
+#: ../resources/lang/en/translations.php:141
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:141
 msgid "Lynx"
 msgstr "Lynx"
 
-#: ../resources/lang/en/translations.php:143
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:143
+#: ../resources/lang/en/translations.php:142
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:142
 msgid "Lyra"
 msgstr "Lyra"
 
-#: ../resources/lang/en/translations.php:144
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:144
+#: ../resources/lang/en/translations.php:143
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:143
 msgid "Mensa"
 msgstr "Mensa"
 
-#: ../resources/lang/en/translations.php:145
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:145
+#: ../resources/lang/en/translations.php:144
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:144
 msgid "Microscopium"
 msgstr "Microscopium"
 
-#: ../resources/lang/en/translations.php:146
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:146
+#: ../resources/lang/en/translations.php:145
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:145
 msgid "Monoceros"
 msgstr "Monoceros"
 
-#: ../resources/lang/en/translations.php:147
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:147
+#: ../resources/lang/en/translations.php:146
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:146
 msgid "Musca"
 msgstr "Musca"
 
-#: ../resources/lang/en/translations.php:148
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:148
+#: ../resources/lang/en/translations.php:147
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:147
 msgid "Norma"
 msgstr "Norma"
 
-#: ../resources/lang/en/translations.php:149
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:149
+#: ../resources/lang/en/translations.php:148
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:148
 msgid "Octans"
 msgstr "Octans"
 
-#: ../resources/lang/en/translations.php:150
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:150
+#: ../resources/lang/en/translations.php:149
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:149
 msgid "Ophiuchus"
 msgstr "Ophiuchus"
 
-#: ../resources/lang/en/translations.php:151
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:151
+#: ../resources/lang/en/translations.php:150
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:150
 msgid "Orion"
 msgstr "Orion"
 
-#: ../resources/lang/en/translations.php:152
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:152
+#: ../resources/lang/en/translations.php:151
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:151
 msgid "Pavo"
 msgstr "Pavo"
 
-#: ../resources/lang/en/translations.php:153
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:153
+#: ../resources/lang/en/translations.php:152
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:152
 msgid "Pegasus"
 msgstr "Pegasus"
 
-#: ../resources/lang/en/translations.php:154
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:154
+#: ../resources/lang/en/translations.php:153
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:153
 msgid "Perseus"
 msgstr "Perseus"
 
-#: ../resources/lang/en/translations.php:155
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:155
+#: ../resources/lang/en/translations.php:154
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:154
 msgid "Phoenix"
 msgstr "Phoenix"
 
-#: ../resources/lang/en/translations.php:156
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:156
+#: ../resources/lang/en/translations.php:155
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:155
 msgid "Pictor"
 msgstr "Pictor"
 
-#: ../resources/lang/en/translations.php:157
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:157
+#: ../resources/lang/en/translations.php:156
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:156
 msgid "Pisces"
 msgstr "Pisces"
 
-#: ../resources/lang/en/translations.php:158
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:158
+#: ../resources/lang/en/translations.php:157
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:157
 msgid "Pisces Austrinus"
 msgstr "Pisces Austrinus"
 
-#: ../resources/lang/en/translations.php:159
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:159
+#: ../resources/lang/en/translations.php:158
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:158
 msgid "Puppis"
 msgstr "Puppis"
 
-#: ../resources/lang/en/translations.php:160
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:160
+#: ../resources/lang/en/translations.php:159
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:159
 msgid "Pyxis"
 msgstr "Pyxis"
 
-#: ../resources/lang/en/translations.php:161
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:161
+#: ../resources/lang/en/translations.php:160
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:160
 msgid "Reticulum"
 msgstr "Reticulum"
 
-#: ../resources/lang/en/translations.php:162
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:162
+#: ../resources/lang/en/translations.php:161
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:161
 msgid "Sagitta"
 msgstr "Sagitta"
 
-#: ../resources/lang/en/translations.php:163
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:163
+#: ../resources/lang/en/translations.php:162
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:162
 msgid "Sagittarius"
 msgstr "Sagittarius"
 
-#: ../resources/lang/en/translations.php:164
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:164
+#: ../resources/lang/en/translations.php:163
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:163
 msgid "Scorpius"
 msgstr "Scorpius"
 
-#: ../resources/lang/en/translations.php:165
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:165
+#: ../resources/lang/en/translations.php:164
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:164
 msgid "Sculptor"
 msgstr "Sculptor"
 
-#: ../resources/lang/en/translations.php:166
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:166
+#: ../resources/lang/en/translations.php:165
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:165
 msgid "Scutum"
 msgstr "Scutum"
 
-#: ../resources/lang/en/translations.php:167
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:167
+#: ../resources/lang/en/translations.php:166
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:166
 msgid "Serpens"
 msgstr "Serpens"
 
-#: ../resources/lang/en/translations.php:168
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:168
+#: ../resources/lang/en/translations.php:167
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:167
 msgid "Sextans"
 msgstr "Sextans"
 
-#: ../resources/lang/en/translations.php:169
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:169
+#: ../resources/lang/en/translations.php:168
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:168
 msgid "Taurus"
 msgstr "Taurus"
 
-#: ../resources/lang/en/translations.php:170
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:170
+#: ../resources/lang/en/translations.php:169
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:169
 msgid "Telescopium"
 msgstr "Telescopium"
 
-#: ../resources/lang/en/translations.php:171
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:171
+#: ../resources/lang/en/translations.php:170
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:170
 msgid "Triangulum Australe"
 msgstr "Triangulum Australe"
 
-#: ../resources/lang/en/translations.php:172
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:172
+#: ../resources/lang/en/translations.php:171
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:171
 msgid "Triangulum"
 msgstr "Triangulum"
 
-#: ../resources/lang/en/translations.php:173
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:173
+#: ../resources/lang/en/translations.php:172
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:172
 msgid "Tucana"
 msgstr "Tucana"
 
-#: ../resources/lang/en/translations.php:174
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:174
+#: ../resources/lang/en/translations.php:173
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:173
 msgid "Ursa Major"
 msgstr "Ursa Major"
 
-#: ../resources/lang/en/translations.php:175
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:175
+#: ../resources/lang/en/translations.php:174
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:174
 msgid "Ursa Minor"
 msgstr "Ursa Minor"
 
-#: ../resources/lang/en/translations.php:176
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:176
+#: ../resources/lang/en/translations.php:175
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:175
 msgid "Vela"
 msgstr "Vela"
 
-#: ../resources/lang/en/translations.php:177
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:177
+#: ../resources/lang/en/translations.php:176
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:176
 msgid "Virgo"
 msgstr "Virgo"
 
-#: ../resources/lang/en/translations.php:178
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:178
+#: ../resources/lang/en/translations.php:177
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:177
 msgid "Volans"
 msgstr "Volans"
 
-#: ../resources/lang/en/translations.php:179
-#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:179
+#: ../resources/lang/en/translations.php:178
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:178
 msgid "Vulpecula"
 msgstr "Vulpecula"
+
+#: ../resources/lang/en/translations.php:179
+#: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:179
+msgid "Dwarf Planet"
+msgstr "Planète naine"
 
 #: ../resources/views/auth/passwords/reset.blade.php:75
 #: ../resources/views/auth/register.blade.php:210
@@ -2311,6 +2316,13 @@ msgstr "Vallée de la Lune"
 #: Target.php:1232 Target.php:1254 TargetName.php:67
 msgid "Asteroids"
 msgstr "Astéroïdes"
+
+#: ../storage/framework/messages/6cf6023e491cd9e6fbfca9113f8f307d738e17f4.php.php:68
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1232
+#: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1256
+#: Target.php:1232 Target.php:1256 TargetName.php:68
+msgid "Dwarf Planets"
+msgstr "Planètes naines"
 
 #: ../storage/framework/messages/6d44b686891cd941f2ca89f5c3eb926d2a58cb96.php.php:3
 msgid "You received the following DeepskyLog message from "

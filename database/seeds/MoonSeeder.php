@@ -30,11 +30,37 @@ class MoonSeeder extends Seeder
             ]
         );
 
+        // TODO: Splitsen in dwerg planeten en asteroiden?
         DB::table('target_types')->insert(
             [
                 'id' => 'ASTEROID',
                 'type' => 'Asteroid',
                 'observation_type' => 'asteroids',
+            ]
+        );
+
+        DB::table('target_types')->insert(
+            [
+                'id' => 'DWARF',
+                'type' => 'Dwarf Planets',
+                'observation_type' => 'asteroids',
+            ]
+        );
+
+        $pluto = Target::create(
+            ['target_name' => 'Pluto', 'target_type' => 'DWARF']
+        );
+        $pluto->setTranslation('target_name', 'es', 'Plutón');
+        $pluto->setTranslation('target_name', 'fr', 'Pluton');
+
+        $pluto->save();
+
+        TargetName::create(
+            [
+                'target_id' => $pluto->id,
+                'catalog' => '',
+                'catindex' => 'Pluto',
+                'altname' => 'Pluto',
             ]
         );
 

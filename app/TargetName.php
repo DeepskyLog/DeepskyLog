@@ -65,6 +65,7 @@ class TargetName extends Model
         $catalogs->push(_i('Sun'));
         $catalogs->push(_i('Comets'));
         $catalogs->push(_i('Asteroids'));
+        $catalogs->push(_i('Dwarf Planets'));
 
         return $catalogs->sort();
     }
