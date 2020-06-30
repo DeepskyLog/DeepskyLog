@@ -37,17 +37,18 @@
         <td colspan="3"><span class="float-right">{{ _i('Type') }}</span></td>
         <td colspan="3">{{ $target->observationType }}</td>
     </tr>
-    @if (!Auth::guest())
-        @if(Auth::user()->stdlocation != null)
-        <tr>
-            <td colspan="12">
-                {!! $target->getAltitudeGraph() !!}
-            </td>
-        </tr>
-        @endif
-    @endif
 
     @if ($target->isNonSolarSystem())
+        @if (!Auth::guest())
+            @if(Auth::user()->stdlocation != null)
+            <tr>
+                <td colspan="12">
+                    {!! $target->getAltitudeGraph() !!}
+                </td>
+            </tr>
+            @endif
+        @endif
+
         <tr>
             <td colspan="3">{{ _i('Right Ascension') }}</td>
             <td colspan="3">{{ $target->ra() }}</td>
