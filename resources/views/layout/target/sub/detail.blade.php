@@ -22,7 +22,7 @@
         </div>
         <div class="col-sm">
             <br />
-            <a class="btn btn-success" href="/observation/{{ $target->name }}" role="button">{{ _i("Add new observation of %s", $target->target_name) }}</a>
+            <a class="btn btn-success" href="/observation/{{ $target->target_name }}" role="button">{{ _i("Add new observation of %s", $target->target_name) }}</a>
         </div>
     </div>
 </div>
@@ -33,10 +33,17 @@
 <table class="table table-sm table-striped table-hover">
     <tr>
         <td colspan="3">{{ _i("Name") }}</td>
-        <td colspan="3">{{ _i($target->target_name) }}</td>
+        <td colspan="3">{{ $target->target_name }}</td>
         <td colspan="3"><span class="float-right">{{ _i('Type') }}</span></td>
         <td colspan="3">{{ $target->observationType }}</td>
     </tr>
+
+    @if (\App\TargetName::hasAlternativeNames($target))
+    <tr>
+        <td colspan="3">{{ _i("Alternative name") }}</td>
+        <td colspan="9">{{ \App\TargetName::getAlternativeNames($target) }}</td>
+    </tr>
+    @endif
 
     @if ($target->isNonSolarSystem())
         @if (!Auth::guest())
@@ -114,13 +121,6 @@
         </tr>
         @endif
         @endauth
-
-        @if (\App\TargetName::hasAlternativeNames($target))
-        <tr>
-            <td colspan="3">{{ _i("Alternative name") }}</td>
-            <td colspan="9">{{ \App\TargetName::getAlternativeNames($target) }}</td>
-        </tr>
-        @endif
     @endif
 
     @if (\App\TargetPartOf::isPartOf($target) || \App\TargetPartOf::contains($target))

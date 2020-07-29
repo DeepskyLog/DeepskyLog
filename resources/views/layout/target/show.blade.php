@@ -1,17 +1,17 @@
 @extends("layout.master")
 
 @section('title')
-    {{ _i('Object details') . ' - ' . _i($target->name) }}
+    {{ _i('Object details') . ' - ' . _i($target->target_name) }}
 @endsection
 
 @section('content')
 <h4>
-{{ _i($target->name) }}
+{{ $target->target_name }}
 </h4>
 
 @auth
     @if (auth()->user()->stdtelescope)
-        {{ _i('Information about') . ' ' . _i($target->name) . ' ' . _i('with') }}
+        {{ _i('Information about') . ' ' . $target->target_name . ' ' . _i('with') }}
         <form role="form" action="/users/{{ Auth::id() }}/settings" method="POST">
             @csrf
             @method('PATCH')
