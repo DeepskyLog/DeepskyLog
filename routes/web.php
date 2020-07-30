@@ -236,7 +236,10 @@ Route::get('/catalogs', 'TargetController@catalogs')
 Route::get('/target/{name}', 'TargetController@show')
     ->where('name', '[ A-Za-z0-9_/-]+');
 
-// Social log in
+Route::get('/target/autocomplete', 'TargetController@dataAjax')
+    ->name('target.dataAjax');
+
+    // Social log in
 //Route::get('/redirect/{service}', 'SocialAuthController@redirect');
 //Route::get('/callback/{service}', 'SocialAuthController@callback');
 //Route::get('/callback/{service}', 'Auth\LoginController@handleProviderCallback');

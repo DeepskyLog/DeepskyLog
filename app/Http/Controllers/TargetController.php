@@ -145,4 +145,34 @@ class TargetController extends Controller
             'layout.target.catalogs'
         );
     }
+
+    /**
+     * Ajax request for the quick search selection.
+     *
+     * @param Request $request The request
+     *
+     * @return string the JSON response
+     */
+    public function dataAjax(Request $request)
+    {
+        dd('test');
+        $search = trim($request->q);
+
+        if ($search === '') {
+            return \Response::json([]);
+        }
+
+        $data = [];
+
+        if ($request->has('q')) {
+            $data = DB::table('instruments')
+                ->groupBy('name')
+                ->select('id', 'name')
+                ->where('name', 'LIKE', "%$search%")
+                ->limit(20)
+                ->get();
+        }
+
+        return response()->json($data);
+    }
 }
