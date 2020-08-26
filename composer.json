@@ -27,7 +27,6 @@
         "monarobase/country-list": "^3.0",
         "muhamadrezaar/highcharts": "^2.0",
         "petercoles/multilingual-language-list": "^1.1",
-        "sebastian/global-state": "^4.0",
         "socialiteproviders/facebook": "^1.0",
         "socialiteproviders/github": "dev-master",
         "socialiteproviders/google": "^3.0",
@@ -46,8 +45,8 @@
         "fzaninotto/faker": "^1.4",
         "laravel/telescope": "^3.2",
         "mockery/mockery": "^1.0",
-        "phpunit/php-code-coverage": "^8.0",
-        "phpunit/phpunit": "^9.0"
+        "phpunit/php-code-coverage": "^9.0",
+        "phpunit/phpunit": "^9.3"
     },
     "config": {
         "optimize-autoloader": true,

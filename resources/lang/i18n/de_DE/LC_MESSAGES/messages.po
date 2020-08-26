@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2020-06-30 15:41+0200\n"
-"PO-Revision-Date: 2020-06-30 15:41+0200\n"
+"POT-Creation-Date: 2020-08-05 14:17+0200\n"
+"PO-Revision-Date: 2020-08-05 14:17+0200\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3.1\n"
+"X-Generator: Poedit 2.4\n"
 "X-Poedit-KeywordsList: _;__;_i;_s;gettext;_n:1,2;ngettext:1,2;dgettext:2\n"
 "X-Poedit-Basepath: ../../../../../app\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -194,7 +194,6 @@ msgstr "Korrektur Filter"
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:223
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:315
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:37
-#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:12
 #: Http/Controllers/UserController.php:223
 #: Http/Controllers/UserController.php:315
 msgid "Deepsky"
@@ -207,7 +206,6 @@ msgstr "Deepsky"
 #: ../storage/framework/messages/6cf6023e491cd9e6fbfca9113f8f307d738e17f4.php.php:66
 #: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1229
 #: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1236
-#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:20
 #: Http/Controllers/UserController.php:227
 #: Http/Controllers/UserController.php:319 Target.php:1229 Target.php:1236
 #: TargetName.php:66
@@ -221,7 +219,6 @@ msgstr "Kometen"
 #: ../storage/framework/messages/6cf6023e491cd9e6fbfca9113f8f307d738e17f4.php.php:58
 #: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1229
 #: ../storage/framework/messages/7a87f09124232d4b0b4237e0c9eae0e42e5a6d8b.php.php:1238
-#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:26
 #: Http/Controllers/UserController.php:235
 #: Http/Controllers/UserController.php:327 Target.php:1229 Target.php:1238
 #: TargetName.php:58
@@ -263,7 +260,6 @@ msgstr "Sonne"
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:243
 #: ../storage/framework/messages/2b0b83bda6a2adb9fa7d3cfa4fd5f5ca359dd168.php.php:335
 #: ../storage/framework/messages/5c52c9afd4026fb15e9e68bbee5b8480166d5569.php.php:44
-#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:23
 #: Http/Controllers/UserController.php:243
 #: Http/Controllers/UserController.php:335
 msgid "Moon"
@@ -1271,10 +1267,10 @@ msgstr "SCHOTT Nummer"
 msgid "Upload a picture of your filter."
 msgstr "Laden Sie ein Bild Ihres Filters hoch."
 
-#: ../storage/framework/messages/11f6ebc4e81a7590340020b242c158f72f6688de.php.php:82
-#: ../storage/framework/messages/11f6ebc4e81a7590340020b242c158f72f6688de.php.php:97
-#: Http/Controllers/TargetController.php:82
-#: Http/Controllers/TargetController.php:97
+#: ../storage/framework/messages/11f6ebc4e81a7590340020b242c158f72f6688de.php.php:85
+#: ../storage/framework/messages/11f6ebc4e81a7590340020b242c158f72f6688de.php.php:100
+#: Http/Controllers/TargetController.php:86
+#: Http/Controllers/TargetController.php:101
 msgid "The requested target does not exist."
 msgstr "Das angeforderte Ziel ist nicht vorhanden."
 
@@ -1320,122 +1316,122 @@ msgstr "Anzahl der eigenen Zeichnungen"
 msgid "Add new observation of %s"
 msgstr "Hinzufügen einer neuen Beobachtung von %s"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:53
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:43
+msgid "Alternative name"
+msgstr "Alternativer Name"
+
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:61
 msgid "Right Ascension"
 msgstr "RA"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:55
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:63
 msgid "Declination"
 msgstr "Dekl"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:60
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:68
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:213
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:343
 #: DataTables/TargetDataTable.php:213 DataTables/TargetDataTable.php:343
 msgid "Constellation"
 msgstr "Sternbild"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:67
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:75
 msgid " page"
 msgstr " seite"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:74
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:82
 msgid "Magnitude"
 msgstr "Magnitude"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:82
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:90
 msgid "Surface brightness"
 msgstr "Oberflächenhelligkeit"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:93
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:101
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:243
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:373
 #: DataTables/TargetDataTable.php:243 DataTables/TargetDataTable.php:373
 msgid "Size"
 msgstr "Größe"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:95
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:103
 msgid "Position angle"
 msgstr "Positions Winkel"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:107
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:115
 msgid "Contrast reserve"
 msgstr "Kontrast Reserve"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:113
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:121
 msgid "Optimum detection magnification"
 msgstr "Beste Vergrößerung"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:124
-msgid "Alternative name"
-msgstr "Alternativer Name"
-
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:132
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:133
 msgid "(Contains)/Part of"
 msgstr "(enthält)/Teil von"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:140
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:141
 msgid "Description"
 msgstr "Beschreibung"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:140
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:141
 msgid "NGC/IC, Dreyer codes"
 msgstr "NGC/IC, Dreyer Codes"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:147
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:148
 msgid "In my lists"
 msgstr "In meinen Listen"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:154
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:155
 #: ../storage/framework/messages/42880d5a96baccfb40f8cdeb7d4cc5e2d4645f97.php.php:3
 msgid "Date"
 msgstr "Datum"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:159
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:160
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:279
 #: DataTables/TargetDataTable.php:279
 msgid "Rise"
 msgstr "Aufgang"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:163
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:164
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:284
 #: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:38
 #: DataTables/TargetDataTable.php:284
 msgid "Transit"
 msgstr "Transit"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:167
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:168
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:289
 #: DataTables/TargetDataTable.php:289
 msgid "Set"
 msgstr "Untergang"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:171
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:172
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:294
 #: DataTables/TargetDataTable.php:294
 msgid "Best Time"
 msgstr "Beste"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:173
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:174
 #: ../storage/framework/messages/5a92d158405b0d2c03839b46f3ad6c308749b8e0.php.php:299
 #: ../storage/framework/messages/6663cdf9c9bd846ae10eac7b917eb4b8cbab2770.php.php:24
 #: DataTables/TargetDataTable.php:299
 msgid "Max Alt"
 msgstr "Max Höhe"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:180
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:181
 msgid "Highest From"
 msgstr "Am höchsten von"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:182
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:183
 msgid "Highest Around"
 msgstr "Am höchsten um"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:184
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:185
 msgid "Highest To"
 msgstr "Am höchsten bis"
 
-#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:234
+#: ../storage/framework/messages/139fe96fc2fcb1f2a8ef3d60fdf4ea848d34a533.php.php:235
 msgid "Field of view: "
 msgstr "Sichtfeld: "
 
@@ -2222,10 +2218,14 @@ msgid "Ask question"
 msgstr "Frage stellen"
 
 #: ../storage/framework/messages/6397ba5ce5097379e2a9d002db902c5cf1fb266c.php.php:8
+msgid "Subscribe to mailing list"
+msgstr "Abonnieren der Mailingliste"
+
+#: ../storage/framework/messages/6397ba5ce5097379e2a9d002db902c5cf1fb266c.php.php:9
 msgid "Report issue"
 msgstr "Melde Probleme"
 
-#: ../storage/framework/messages/6397ba5ce5097379e2a9d002db902c5cf1fb266c.php.php:9
+#: ../storage/framework/messages/6397ba5ce5097379e2a9d002db902c5cf1fb266c.php.php:10
 msgid "What's new in DeepskyLog"
 msgstr "Was gibt es Neues in DeepskyLog"
 
@@ -3071,11 +3071,21 @@ msgstr "Alle Filter"
 msgid "Filters of %s"
 msgstr "Filter von %s"
 
-#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:4
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:5
 msgid "Quick Search"
 msgstr "Schnellsuche"
 
-#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:39
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:8
+#, php-format
+msgid "Enter the name of the object. Use % for a wildcard."
+msgstr ""
+"Geben Sie den Namen des Objekts ein. Verwenden Sie % für einen Platzhalter."
+
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:8
+msgid "Enter object"
+msgstr "Geben Sie Objektnamen ein"
+
+#: ../storage/framework/messages/d8d9f29b4df3f3ec426852f8a70138341e4723d1.php.php:14
 msgid "Search Object"
 msgstr "Such Objekt"
 
@@ -5108,9 +5118,6 @@ msgstr "Objektkataloge"
 #~ msgstr ""
 #~ "(*) Alle Beobachtungen (AO), meine Beobachtungen (MO), meine letzten "
 #~ "Beobachtungen (LO) dieses Objekts"
-
-#~ msgid "Filter objects"
-#~ msgstr "Filter Objekte"
 
 #~ msgid "Please enter a title"
 #~ msgstr "Bitte geben Sie einen Namen an"

@@ -670,8 +670,8 @@
     color: #220000;
 }
 
-[data-theme="night"] .fa-trash-alt:before {
-    color: #ff0000;
+[data-theme="night"] .icon {
+    filter: invert(16%) sepia(84%) saturate(7500%) hue-rotate(5deg) brightness(102%) contrast(119%);
 }
 
 [data-theme="night"] .select2-container--default .select2-selection--multiple .select2-selection__choice {
