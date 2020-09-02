@@ -180,8 +180,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
         Yajra\DataTables\HtmlServiceProvider::class,
-
-        \SocialiteProviders\Manager\ServiceProvider::class,
     ],
 
     /*

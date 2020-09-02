@@ -1,5 +1,5 @@
 <h4>
-    {{ $target->name }}
+    {{ $target->target_name }}
 @php
     $zoom = 30;
     if (isset($_GET['zoom'])) {
@@ -15,7 +15,7 @@
     }}
 
     <span class="float-right">
-        <form class="form-inline" action="/target/{{ $target->name }}" method="get">
+        <form class="form-inline" action="/target/{{ $target->target_name }}" method="get">
             <div>
                 {{ _i("up to about ") }}
                 <select class="form-control" name="zoom" onchange="submit();">

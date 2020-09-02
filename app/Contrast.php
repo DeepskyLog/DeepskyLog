@@ -439,7 +439,7 @@ class Contrast extends Model
         $this->prefMag = '-';
         $this->prefMagEasy = '-';
 
-        $showname = $this->_target->name;
+        $showname = $this->_target->target_name;
 
         if (Auth::guest()) {
             return;

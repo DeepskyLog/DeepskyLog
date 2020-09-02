@@ -282,16 +282,27 @@
 
         <br />
         <a class="btn btn-success" href="/observations/user/{{ $user->id }}">
-            <i class="far fa-eye"></i>&nbsp;{{ _i("All observations of ") . $user->name }}
+            <svg width="1.1em" height="1.1em" viewBox="0 1 16 16" class="bi bi-eye-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                <path fill-rule="evenodd" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+            </svg>
+            &nbsp;{{ _i("All observations of ") . $user->name }}
         </a>
 
         <a class="btn btn-success" href="/observations/drawings/user/{{ $user->id }}">
-            <i class="fas fa-pencil-alt"></i>&nbsp;{{ _i("All drawings of ") . $user->name }}
+            <svg width="1em" height="1em" viewBox="0 1 16 16" class="bi bi-pencil" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M11.293 1.293a1 1 0 0 1 1.414 0l2 2a1 1 0 0 1 0 1.414l-9 9a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z"/>
+                <path fill-rule="evenodd" d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 0 0 .5.5H4v.5a.5.5 0 0 0 .5.5H5v.5a.5.5 0 0 0 .5.5H6v-1.5a.5.5 0 0 0-.5-.5H5v-.5a.5.5 0 0 0-.5-.5H3z"/>
+            </svg>
+            &nbsp;{{ _i("All drawings of ") . $user->name }}
         </a>
 
         @if ($user->id != Auth::user()->id)
             <a class="btn btn-primary" href="/messages/create/{{ $user->id }}">
-                <i class="fas fa-envelope-open"></i>&nbsp;{{ _i("Send message to ") . $user->name }}
+                <svg width="1em" height="1em" viewBox="0 1 16 16" class="bi bi-envelope" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383l-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"/>
+                </svg>
+                &nbsp;{{ _i("Send message to ") . $user->name }}
             </a>
         @endif
     </div>
