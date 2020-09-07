@@ -45,7 +45,3 @@ require( 'lity/dist/lity.js');
 var Highcharts = require('highcharts/highcharts.js');
 // Load module after Highcharts is loaded
 require('highcharts/modules/exporting')(Highcharts);
-
-// Enable turoblinks
-var Turbolinks = require("turbolinks")
-Turbolinks.start()
