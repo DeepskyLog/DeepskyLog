@@ -1,31 +1,31 @@
 <?php
 
 /**
- * Old eyepieces eloquent model.
+ * Old object names eloquent model.
  *
  * PHP Version 7
  *
- * @category Instruments
+ * @category Objects
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Old eyepieces eloquent model.
+ * Old object names eloquent model.
  *
- * @category Intruments
+ * @category Objects
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class EyepieceOld extends Model
+class ObjectPartofOld extends Model
 {
     protected $connection = 'mysqlOld';
 
-    protected $table = 'eyepieces';
+    protected $table = 'objectpartof';
 }

@@ -13,7 +13,7 @@
 
 namespace App\DataTables;
 
-use App\Lens;
+use App\Models\Lens;
 use Yajra\DataTables\Services\DataTable;
 
 /**

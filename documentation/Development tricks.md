@@ -119,7 +119,7 @@ Add in AuthServiceProvider:
 
 ```php
     protected $policies = [
-        'App\Lens' => 'App\Policies\LensPolicy'
+        'App\Models\Lens' => 'App\Policies\LensPolicy'
     ];
 ```
 

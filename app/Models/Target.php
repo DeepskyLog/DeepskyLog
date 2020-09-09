@@ -11,7 +11,7 @@
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -74,7 +74,7 @@ class Target extends Model
         if (!auth()->guest()) {
             if (count(auth()->user()->instruments) > 0) {
                 if (!isset($this->_contrast)) {
-                    $this->_contrast = new \App\Contrast($this);
+                    $this->_contrast = new \App\Models\Contrast($this);
                 }
 
                 return $this->_contrast->contrast;
@@ -95,7 +95,7 @@ class Target extends Model
         if (!auth()->guest()) {
             if (count(auth()->user()->instruments) > 0) {
                 if (!isset($this->_contrast)) {
-                    $this->_contrast = new \App\Contrast($this);
+                    $this->_contrast = new \App\Models\Contrast($this);
                 }
 
                 return $this->_contrast->contype;
@@ -115,7 +115,7 @@ class Target extends Model
         if (!auth()->guest()) {
             if (count(auth()->user()->instruments) > 0) {
                 if (!isset($this->_contrast)) {
-                    $this->_contrast = new \App\Contrast($this);
+                    $this->_contrast = new \App\Models\Contrast($this);
                 }
 
                 return $this->_contrast->popup;
@@ -136,7 +136,7 @@ class Target extends Model
         if (!auth()->guest()) {
             if (count(auth()->user()->instruments) > 0) {
                 if (!isset($this->_contrast)) {
-                    $this->_contrast = new \App\Contrast($this);
+                    $this->_contrast = new \App\Models\Contrast($this);
                 }
 
                 return $this->_contrast->prefMag;
@@ -156,7 +156,7 @@ class Target extends Model
         if (!auth()->guest()) {
             if (count(auth()->user()->instruments) > 0) {
                 if (!isset($this->_contrast)) {
-                    $this->_contrast = new \App\Contrast($this);
+                    $this->_contrast = new \App\Models\Contrast($this);
                 }
 
                 return $this->_contrast->prefMagEasy;
@@ -456,7 +456,7 @@ class Target extends Model
                     $date = Carbon::createFromFormat('d/m/Y', $datestr);
                     $date->hour = 12;
                     if ($this->_location == null) {
-                        $this->_location = \App\Location::where(
+                        $this->_location = \App\Models\Location::where(
                             'id',
                             Auth::user()->stdlocation
                         )->first();
@@ -555,7 +555,7 @@ class Target extends Model
      */
     public function type(): HasOne
     {
-        return $this->hasOne('App\TargetType', 'id', 'target_type');
+        return $this->hasOne('App\Models\TargetType', 'id', 'target_type');
     }
 
     /**
@@ -565,7 +565,7 @@ class Target extends Model
      */
     public function constellation(): HasOne
     {
-        return $this->hasOne('App\Constellation', 'id', 'constellation');
+        return $this->hasOne('App\Models\Constellation', 'id', 'constellation');
     }
 
     /**
@@ -812,7 +812,7 @@ class Target extends Model
             return $this->_ephemerides;
         } else {
             if ($this->_location == null) {
-                $this->_location = \App\Location::where(
+                $this->_location = \App\Models\Location::where(
                     'id',
                     Auth::user()->stdlocation
                 )->first();
@@ -1164,7 +1164,7 @@ class Target extends Model
      */
     public function getConstellation()
     {
-        return \App\Constellation::where('id', $this->con)->first()->name;
+        return \App\Models\Constellation::where('id', $this->con)->first()->name;
     }
 
     /**
@@ -1191,7 +1191,7 @@ class Target extends Model
         }
 
         if ($this->_location == null) {
-            $this->_location = \App\Location::where(
+            $this->_location = \App\Models\Location::where(
                 'id',
                 Auth::user()->stdlocation
             )->first();
@@ -1256,9 +1256,9 @@ class Target extends Model
             } elseif ($catalogname == _i('Dwarf Planets')) {
                 $id = 'DWARF';
             }
-            $allData = \App\Target::where('target_type', $id)
+            $allData = \App\Models\Target::where('target_type', $id)
                 ->get('id')->pluck('id');
-            $targetnames = \App\TargetName::whereIn(
+            $targetnames = \App\Models\TargetName::whereIn(
                 'target_id',
                 $allData
             )->get();
@@ -1266,11 +1266,11 @@ class Target extends Model
 
             return [$data, new Collection(), new Collection()];
         }
-        $allData = \App\TargetName::with('target')->where('catalog', $catalogname)
+        $allData = \App\Models\TargetName::with('target')->where('catalog', $catalogname)
             ->get()->collect()->sortBy('altname', SORT_NATURAL);
-        $data = \App\TargetName::where('catalog', $catalogname);
+        $data = \App\Models\TargetName::where('catalog', $catalogname);
 
-        $orig_data = \App\Target::whereIn('id', $data->get('target_id'))->get();
+        $orig_data = \App\Models\Target::whereIn('id', $data->get('target_id'))->get();
         $constellations = $orig_data->groupBy('constellation')->map(
             function ($constellation) {
                 return $constellation->count();

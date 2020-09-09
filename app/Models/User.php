@@ -10,10 +10,10 @@
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
-use App\Notifications\DeepskyLogResetPassword;
-use App\Notifications\DeepskyLogVerificationNotification;
+use App\Models\Notifications\DeepskyLogResetPassword;
+use App\Models\Notifications\DeepskyLogVerificationNotification;
 use Cmgmyr\Messenger\Traits\Messagable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -56,7 +56,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function lens()
     {
-        return $this->hasOne('App\Lens', 'user_id');
+        return $this->hasOne('App\Models\Lens', 'user_id');
     }
 
     /**
@@ -66,7 +66,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function lenses()
     {
-        return $this->hasMany('App\Lens', 'user_id');
+        return $this->hasMany('App\Models\Lens', 'user_id');
     }
 
     /**
@@ -76,7 +76,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function filter()
     {
-        return $this->hasOne('App\Filter', 'user_id');
+        return $this->hasOne('App\Models\Filter', 'user_id');
     }
 
     /**
@@ -86,7 +86,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function filters()
     {
-        return $this->hasMany('App\Filter', 'user_id');
+        return $this->hasMany('App\Models\Filter', 'user_id');
     }
 
     /**
@@ -96,7 +96,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function eyepiece()
     {
-        return $this->hasOne('App\Eyepiece', 'user_id');
+        return $this->hasOne('App\Models\Eyepiece', 'user_id');
     }
 
     /**
@@ -106,7 +106,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function eyepieces()
     {
-        return $this->hasMany('App\Eyepiece', 'user_id');
+        return $this->hasMany('App\Models\Eyepiece', 'user_id');
     }
 
     /**
@@ -116,7 +116,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function instrument()
     {
-        return $this->hasOne('App\Instrument', 'user_id');
+        return $this->hasOne('App\Models\Instrument', 'user_id');
     }
 
     /**
@@ -126,7 +126,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function instruments()
     {
-        return $this->hasMany('App\Instrument', 'user_id');
+        return $this->hasMany('App\Models\Instrument', 'user_id');
     }
 
     /**
@@ -136,7 +136,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function location()
     {
-        return $this->hasOne('App\Location', 'user_id');
+        return $this->hasOne('App\Models\Location', 'user_id');
     }
 
     /**
@@ -146,7 +146,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function locations()
     {
-        return $this->hasMany('App\Location', 'user_id');
+        return $this->hasMany('App\Models\Location', 'user_id');
     }
 
     /**

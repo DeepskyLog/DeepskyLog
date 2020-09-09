@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Eyepiece;
-use App\User;
+use App\Models\Eyepiece;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EyepiecePolicy
@@ -13,8 +13,8 @@ class EyepiecePolicy
     /**
      * Determine whether the user can update the eyepiece.
      *
-     * @param \App\User     $user     The user
-     * @param \App\Eyepiece $eyepiece The eyepiece
+     * @param \App\Models\User     $user     The user
+     * @param \App\Models\Eyepiece $eyepiece The eyepiece
      *
      * @return mixed
      */

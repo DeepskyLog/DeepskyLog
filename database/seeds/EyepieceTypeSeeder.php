@@ -1,6 +1,6 @@
 <?php
 
-use App\EyepieceType;
+use App\Models\EyepieceType;
 use Illuminate\Database\Seeder;
 
 class EyepieceTypeSeeder extends Seeder
@@ -8,7 +8,6 @@ class EyepieceTypeSeeder extends Seeder
     /**
      * Run the database seeds.
      *
-     * @return void
      */
     public function run()
     {

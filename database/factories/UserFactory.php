@@ -15,7 +15,7 @@ use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
 $factory->define(
-    App\User::class,
+    App\Models\User::class,
     function (Faker $faker) {
         $copyright = ['Attribution CC BY', 'Attribution-ShareAlike CC BY-SA',
             'Attribution-NoDerivs CC BY-ND', 'Attribution-NonCommercial CC BY-NC',

@@ -13,7 +13,8 @@
 use Faker\Generator as Faker;
 
 $factory->define(
-    App\Eyepiece::class, function (Faker $faker) {
+    App\Models\Eyepiece::class,
+    function (Faker $faker) {
         $brandNumber = $faker->numberBetween(1, 7);
 
         if ($brandNumber == 1) {
@@ -129,7 +130,6 @@ $factory->define(
             case 7:
                 $type = 'Erfle';
                 break;
-
             }
         } elseif ($brandNumber == 7) {
             $brand = 'Vixen';
@@ -156,7 +156,6 @@ $factory->define(
             case 7:
                 $type = 'SSW';
                 break;
-
             }
         }
 
@@ -176,7 +175,7 @@ $factory->define(
             'type' => $type,
             'apparentFOV' => $faker->numberBetween(15, 130),
             'maxFocalLength' => $maxFocalLength,
-            'user_id' => \App\User::inRandomOrder()->first()->id,
+            'user_id' => \App\Models\User::inRandomOrder()->first()->id,
             'active' => $faker->numberBetween(0, 1),
         ];
     }

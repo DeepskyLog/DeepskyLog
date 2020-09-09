@@ -41,7 +41,7 @@ class LocationTest extends TestCase
     {
         parent::setup();
 
-        $this->_user = factory('App\User')->create();
+        $this->_user = factory('App\Models\User')->create();
     }
 
     /**
@@ -95,7 +95,7 @@ class LocationTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $location = factory('App\Location')->create(
+        $location = factory('App\Models\Location')->create(
             ['user_id' => $this->_user->id]
         );
 
@@ -1029,7 +1029,7 @@ class LocationTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $location = factory('App\Location')->create(
+        $location = factory('App\Models\Location')->create(
             ['user_id' => $this->_user->id]
         );
 
@@ -1513,7 +1513,7 @@ class LocationTest extends TestCase
         $this->actingAs($this->_user);
 
         // Get a new location from the factory
-        $location = factory('App\Location')->create(['user_id' => $this->_user->id]);
+        $location = factory('App\Models\Location')->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new location in the database
         $attributes = [
@@ -1586,9 +1586,9 @@ class LocationTest extends TestCase
         // Then there should be a new location in the database
         $this->assertDatabaseHas('locations', $attributes);
 
-        $location = \App\Location::firstOrFail();
+        $location = \App\Models\Location::firstOrFail();
 
-        $newUser = factory('App\User')->create();
+        $newUser = factory('App\Models\User')->create();
         $this->actingAs($newUser);
 
         // Adapt the name and the diameter
@@ -1644,9 +1644,9 @@ class LocationTest extends TestCase
         // Then there should be a new location in the database
         $this->assertDatabaseHas('locations', $attributes);
 
-        $location = \App\Location::firstOrFail();
+        $location = \App\Models\Location::firstOrFail();
 
-        $newUser = factory('App\User')->create(['type' => 'admin']);
+        $newUser = factory('App\Models\User')->create(['type' => 'admin']);
 
         $this->actingAs($newUser);
 
@@ -1685,7 +1685,7 @@ class LocationTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $location = factory('App\Location')->create(['user_id' => $this->_user->id]);
+        $location = factory('App\Models\Location')->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new location in the database
         $this->assertDatabaseHas(
@@ -1704,7 +1704,7 @@ class LocationTest extends TestCase
             ]
         );
 
-        $this->assertEquals(1, \App\Location::count());
+        $this->assertEquals(1, \App\Models\Location::count());
 
         $response = $this->delete('/location/' . $location->id);
 
@@ -1726,7 +1726,7 @@ class LocationTest extends TestCase
                 'active' => $location->active,
             ]
         );
-        $this->assertEquals(0, \App\Location::count());
+        $this->assertEquals(0, \App\Models\Location::count());
     }
 
     /**
@@ -1744,7 +1744,7 @@ class LocationTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $location = factory('App\Location')->create(['user_id' => $this->_user->id]);
+        $location = factory('App\Models\Location')->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new location in the database
         $this->assertDatabaseHas(
@@ -1763,7 +1763,7 @@ class LocationTest extends TestCase
             ]
         );
 
-        $newUser = factory('App\User')->create();
+        $newUser = factory('App\Models\User')->create();
         $this->actingAs($newUser);
 
         $this->expectException(AuthorizationException::class);
@@ -1787,7 +1787,7 @@ class LocationTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $location = factory('App\Location')->create(['user_id' => $this->_user->id]);
+        $location = factory('App\Models\Location')->create(['user_id' => $this->_user->id]);
 
         $attributes = [
             'name' => $location->name,
@@ -1808,7 +1808,7 @@ class LocationTest extends TestCase
             $attributes
         );
 
-        $newUser = factory('App\User')->create(['type' => 'admin']);
+        $newUser = factory('App\Models\User')->create(['type' => 'admin']);
 
         $this->actingAs($newUser);
 
@@ -1860,7 +1860,7 @@ class LocationTest extends TestCase
     {
         // Given I am a user who is logged in and not verified
         // Act as a new user created by the factory
-        $user = factory('App\User')->create(['email_verified_at' => null]);
+        $user = factory('App\Models\User')->create(['email_verified_at' => null]);
 
         $this->actingAs($user);
 
@@ -1906,7 +1906,7 @@ class LocationTest extends TestCase
      */
     public function createPageIsNotAccessibleForUnverifiedUsers()
     {
-        $user = factory('App\User')->create(['email_verified_at' => null]);
+        $user = factory('App\Models\User')->create(['email_verified_at' => null]);
 
         $response = $this->actingAs($user)->get('/location/create');
 
@@ -1937,7 +1937,7 @@ class LocationTest extends TestCase
      */
     public function createPageIsAccessibleForAdmin()
     {
-        $user = factory('App\User')->create(['type' => 'admin']);
+        $user = factory('App\Models\User')->create(['type' => 'admin']);
         $response = $this->actingAs($user)->get('/location/create');
 
         $response->assertStatus(200);
@@ -1952,7 +1952,7 @@ class LocationTest extends TestCase
      */
     public function updateLocationPageContainsCorrectValues()
     {
-        $location = factory('App\Location')->create(
+        $location = factory('App\Models\Location')->create(
             ['user_id' => $this->_user->id]
         );
 
@@ -1989,7 +1989,7 @@ class LocationTest extends TestCase
             ]
         );
 
-        $location = \App\Location::firstOrFail();
+        $location = \App\Models\Location::firstOrFail();
 
         Storage::disk('public')->assertExists(
             $location->id . '/' . $location->id . '.png'
@@ -2004,7 +2004,7 @@ class LocationTest extends TestCase
      */
     public function testShowLocationDetailWithChangeButton()
     {
-        $location = factory('App\Location')->create(
+        $location = factory('App\Models\Location')->create(
             ['user_id' => $this->_user->id]
         );
 
@@ -2028,8 +2028,8 @@ class LocationTest extends TestCase
      */
     public function testShowLocationDetailWithoutChangeButton()
     {
-        $newUser = factory('App\User')->create();
-        $location = factory('App\Location')->create(['user_id' => $newUser->id]);
+        $newUser = factory('App\Models\User')->create();
+        $location = factory('App\Models\Location')->create(['user_id' => $newUser->id]);
 
         $response = $this->actingAs($this->_user)->get(
             '/location/' . $location->id
@@ -2050,8 +2050,8 @@ class LocationTest extends TestCase
      */
     public function testAdminAlwaysSeesChangeButton()
     {
-        $admin = factory('App\User')->create(['type' => 'admin']);
-        $location = factory('App\Location')->create(
+        $admin = factory('App\Models\User')->create(['type' => 'admin']);
+        $location = factory('App\Models\Location')->create(
             ['user_id' => $this->_user->id]
         );
 
@@ -2072,7 +2072,7 @@ class LocationTest extends TestCase
      */
     public function testGuestNeverSeesChangeButton()
     {
-        $location = factory('App\Location')->create(
+        $location = factory('App\Models\Location')->create(
             ['user_id' => $this->_user->id]
         );
 
@@ -2093,8 +2093,8 @@ class LocationTest extends TestCase
      */
     public function testOnlyAdminCanSeeOverviewOfAllLocations()
     {
-        factory('App\User', 50)->create();
-        $location = factory('App\Location', 500)->create();
+        factory('App\Models\User', 50)->create();
+        $location = factory('App\Models\Location', 500)->create();
 
         // Check as guest
         $response = $this->get('/location/admin');
@@ -2108,7 +2108,7 @@ class LocationTest extends TestCase
         $response->assertStatus(401);
 
         // Check as admin
-        $admin = factory('App\User')->create(['type' => 'admin']);
+        $admin = factory('App\Models\User')->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get('/location/admin');
 
         $response->assertStatus(200);
@@ -2123,7 +2123,7 @@ class LocationTest extends TestCase
      */
     public function testJsonInformationForLocation()
     {
-        $location = factory('App\Location')->create(
+        $location = factory('App\Models\Location')->create(
             ['user_id' => $this->_user->id]
         );
 
@@ -2168,7 +2168,7 @@ class LocationTest extends TestCase
         // Will put the fake image in
         Storage::fake('public');
 
-        $location = factory('App\Location')->create(
+        $location = factory('App\Models\Location')->create(
             ['user_id' => $this->_user->id]
         );
 
@@ -2259,7 +2259,7 @@ class LocationTest extends TestCase
 
         $location = DB::table('locations')->latest('id')->first();
 
-        $user = factory('App\User')->create();
+        $user = factory('App\Models\User')->create();
 
         $this->actingAs($user)->post(
             'locations/' . $location->id . '/deleteImage'
@@ -2278,11 +2278,11 @@ class LocationTest extends TestCase
      */
     public function testAutocompleteForLocation()
     {
-        $location = factory('App\Location')->create(
+        $location = factory('App\Models\Location')->create(
             ['user_id' => $this->_user->id, 'name' => 'DeepskyLog test location']
         );
 
-        $location2 = factory('App\Location')->create(
+        $location2 = factory('App\Models\Location')->create(
             ['user_id' => $this->_user->id, 'name' => 'Other test location']
         );
 
@@ -2320,7 +2320,7 @@ class LocationTest extends TestCase
      */
     public function testShowLocationDetailAsOwner()
     {
-        $location = factory('App\Location')->create();
+        $location = factory('App\Models\Location')->create();
 
         // As guest
         $this->assertGuest();
@@ -2348,7 +2348,7 @@ class LocationTest extends TestCase
         $response->assertSee('Last observation');
 
         // As other user
-        $otherUser = factory('App\User')->create();
+        $otherUser = factory('App\Models\User')->create();
         $response = $this->actingAs($otherUser)->get(
             '/location/' . $location->id
         );
@@ -2361,7 +2361,7 @@ class LocationTest extends TestCase
         $response->assertDontSee('Last observation');
 
         // As admin
-        $admin = factory('App\User')->create(['type' => 'admin']);
+        $admin = factory('App\Models\User')->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get(
             '/location/' . $location->id
         );

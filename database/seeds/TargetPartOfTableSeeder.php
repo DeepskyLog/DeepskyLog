@@ -11,9 +11,9 @@
  * @link     http://www.deepskylog.org
  */
 
-use App\ObjectPartofOld;
-use App\TargetName;
-use App\TargetPartOf;
+use App\Models\ObjectPartofOld;
+use App\Models\TargetName;
+use App\Models\TargetPartOf;
 use Illuminate\Database\Seeder;
 
 /**

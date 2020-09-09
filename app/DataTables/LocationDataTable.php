@@ -13,7 +13,7 @@
 
 namespace App\DataTables;
 
-use App\Location;
+use App\Models\Location;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Services\DataTable;
 

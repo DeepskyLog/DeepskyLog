@@ -33,7 +33,7 @@
             <td> {{ _i("Moon") }} </td>
             @php
                 // Moon rise and set
-                $location = App\Location::where('id', Auth::user()->stdlocation)->first();
+                $location = App\Models\Location::where('id', Auth::user()->stdlocation)->first();
 
                 $objAstroCalc = new \App\Libraries\AstroCalc(
                     $date, $location->latitude, $location->longitude,
@@ -41,7 +41,7 @@
                 );
 
                 // Use time zones and real coordinates of the location
-                $location = \App\Location::where('id', Auth::user()->stdlocation)->first();
+                $location = \App\Models\Location::where('id', Auth::user()->stdlocation)->first();
 
                 $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime();
             @endphp

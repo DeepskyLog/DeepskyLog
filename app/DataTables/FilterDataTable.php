@@ -13,7 +13,7 @@
 
 namespace App\DataTables;
 
-use App\Filter;
+use App\Models\Filter;
 use Yajra\DataTables\Services\DataTable;
 
 /**

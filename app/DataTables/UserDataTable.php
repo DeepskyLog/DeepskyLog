@@ -13,7 +13,7 @@
 
 namespace App\DataTables;
 
-use App\User;
+use App\Models\User;
 use Yajra\DataTables\Services\DataTable;
 
 /**

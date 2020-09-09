@@ -11,7 +11,7 @@
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -69,7 +69,7 @@ class Filter extends Model implements HasMedia
     public function user()
     {
         // Also method on user: filters()
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     /**
@@ -105,7 +105,6 @@ class Filter extends Model implements HasMedia
      *
      * @param $media the media
      *
-     * @return void
      */
     public function registerMediaConversions(Media $media = null): void
     {

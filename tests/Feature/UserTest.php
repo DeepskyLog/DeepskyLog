@@ -40,13 +40,13 @@ class UserTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $user = factory('App\User')->create();
+        $user = factory('App\Models\User')->create();
         $this->actingAs($user);
 
         $this->assertTrue($this->isAuthenticated());
 
         // Create a new lens
-        $lens = new \App\Lens;
+        $lens = new \App\Models\Lens;
         $lens->name = 'Tested lens';
         $lens->factor = 1.43;
         $lens->user_id = $user->id;

@@ -13,7 +13,8 @@
 use Faker\Generator as Faker;
 
 $factory->define(
-    App\Instrument::class, function (Faker $faker) {
+    App\Models\Instrument::class,
+    function (Faker $faker) {
         $typeNumber = $faker->numberBetween(0, 9);
 
         if ($typeNumber == 0) {
@@ -43,7 +44,7 @@ $factory->define(
             'fd' => $fd,
             'type' => $typeNumber,
             'fixedMagnification' => $fixedMagnification,
-            'user_id' => \App\User::inRandomOrder()->first()->id,
+            'user_id' => \App\Models\User::inRandomOrder()->first()->id,
             'active' => $faker->numberBetween(0, 1),
         ];
     }

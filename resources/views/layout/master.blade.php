@@ -14,7 +14,7 @@
         <script type="text/javascript" src="{{ asset('/js/app.js') }}"></script>
 
         <title>@yield('title', 'DeepskyLog')</title>
-        <livewire:styles>
+        <livewire:styles />
     </head>
 
     <body>
@@ -36,7 +36,7 @@
         <br />
         @include('layout.footer')
 
-        <livewire:scripts>
+        <livewire:scripts />
 
         <script>
             $(document).ready(function() {

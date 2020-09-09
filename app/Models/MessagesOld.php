@@ -1,33 +1,31 @@
 <?php
 
 /**
- * Old observers eloquent model.
+ * Old messages eloquent model.
  *
  * PHP Version 7
  *
- * @category Authentication
+ * @category Messages
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Old observers eloquent model.
+ * Old messages eloquent model.
  *
- * @category Authentication
+ * @category Messages
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class ObserversOld extends Model
+class MessagesOld extends Model
 {
-    protected $casts = ['id' => 'string'];
-
     protected $connection = 'mysqlOld';
 
-    protected $table = 'observers';
+    protected $table = 'messages';
 }

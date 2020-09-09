@@ -43,7 +43,7 @@ class MessagesTest extends TestCase
     {
         parent::setup();
 
-        $this->_user = factory('App\User')->create();
+        $this->_user = factory('App\Models\User')->create();
     }
 
     /**
@@ -126,7 +126,7 @@ class MessagesTest extends TestCase
         );
 
         // Add recipient
-        $newUser = factory('App\User')->create();
+        $newUser = factory('App\Models\User')->create();
         $thread->addParticipant($newUser->id);
 
         $response = $this->get('/messages');

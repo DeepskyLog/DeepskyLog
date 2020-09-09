@@ -67,7 +67,7 @@
                 <td>
                     @if ($user->stdlocation !== 0)
                         <a href="{{ route('location.show', $user->stdlocation) }}">
-                            {{ \App\Location::where(['id' => $user->stdlocation])->first()->name }}
+                            {{ \App\Models\Location::where(['id' => $user->stdlocation])->first()->name }}
                         </a>
                     @endif
                 </td>
@@ -79,7 +79,7 @@
                 <td>
                     @if ($user->stdtelescope !== 0)
                         <a href="{{ route('instrument.show', $user->stdtelescope) }}">
-                            {{ \App\Instrument::where(['id' => $user->stdtelescope])->first()->name }}
+                            {{ \App\Models\Instrument::where(['id' => $user->stdtelescope])->first()->name }}
                         </a>
                     @endif
                 </td>
@@ -215,7 +215,7 @@
 
             <tr>
                 <td> {{ _i("Different objects") }} </td>
-                <td>240 / {{ \App\Target::count() }} ({{ number_format(240.0 / \App\Target::count() * 100, 2)}}%)</td>
+                <td>240 / {{ \App\Models\Target::count() }} ({{ number_format(240.0 / \App\Models\Target::count() * 100, 2)}}%)</td>
                 @foreach ($observationTypes as $type)
                     <td>40 / {{ $numberOfObjects[$type->type] }}
                         (@if ($numberOfObjects[$type->type] == 0) 0%) @else {{ number_format(40 / $numberOfObjects[$type->type] * 100, 2) }}%) @endif</td>

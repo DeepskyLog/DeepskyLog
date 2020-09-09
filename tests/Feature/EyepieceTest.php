@@ -40,7 +40,7 @@ class EyepieceTest extends TestCase
     {
         parent::setup();
 
-        $this->_user = factory('App\User')->create();
+        $this->_user = factory('App\Models\User')->create();
     }
 
     /**
@@ -94,7 +94,7 @@ class EyepieceTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $response = $this->get('/eyepiece');
         // Code 200 is the code for a working page
@@ -621,7 +621,7 @@ class EyepieceTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->put(
             '/eyepiece/'.$eyepiece->id,
@@ -653,7 +653,7 @@ class EyepieceTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->patch(
             '/eyepiece/'.$eyepiece->id,
@@ -685,7 +685,7 @@ class EyepieceTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->patch(
             '/eyepiece/'.$eyepiece->id,
@@ -906,7 +906,7 @@ class EyepieceTest extends TestCase
         $this->actingAs($this->_user);
 
         // Get a new eyepiece from the factory
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new eyepiece in the database
         $attributes = [
@@ -977,9 +977,9 @@ class EyepieceTest extends TestCase
         // Then there should be a new eyepiece in the database
         $this->assertDatabaseHas('eyepieces', $attributes);
 
-        $eyepiece = \App\Eyepiece::firstOrFail();
+        $eyepiece = \App\Models\Eyepiece::firstOrFail();
 
-        $newUser = factory('App\User')->create();
+        $newUser = factory('App\Models\User')->create();
         $this->actingAs($newUser);
 
         // Adapt the name and the factor
@@ -1035,9 +1035,9 @@ class EyepieceTest extends TestCase
         // Then there should be a new eyepiece in the database
         $this->assertDatabaseHas('eyepieces', $attributes);
 
-        $eyepiece = \App\Eyepiece::firstOrFail();
+        $eyepiece = \App\Models\Eyepiece::firstOrFail();
 
-        $newUser = factory('App\User')->create(['type' => 'admin']);
+        $newUser = factory('App\Models\User')->create(['type' => 'admin']);
 
         $this->actingAs($newUser);
 
@@ -1076,7 +1076,7 @@ class EyepieceTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new eyepiece in the database
         $this->assertDatabaseHas(
@@ -1091,7 +1091,7 @@ class EyepieceTest extends TestCase
             ]
         );
 
-        $this->assertEquals(1, \App\Eyepiece::count());
+        $this->assertEquals(1, \App\Models\Eyepiece::count());
 
         $response = $this->delete('/eyepiece/'.$eyepiece->id);
 
@@ -1109,7 +1109,7 @@ class EyepieceTest extends TestCase
                 'user_id' => $eyepiece->user_id,
             ]
         );
-        $this->assertEquals(0, \App\Eyepiece::count());
+        $this->assertEquals(0, \App\Models\Eyepiece::count());
     }
 
     /**
@@ -1127,7 +1127,7 @@ class EyepieceTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new eyepiece in the database
         $this->assertDatabaseHas(
@@ -1142,7 +1142,7 @@ class EyepieceTest extends TestCase
             ]
         );
 
-        $newUser = factory('App\User')->create();
+        $newUser = factory('App\Models\User')->create();
         $this->actingAs($newUser);
 
         $this->expectException(AuthorizationException::class);
@@ -1166,7 +1166,7 @@ class EyepieceTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $attributes = [
             'name' => $eyepiece->name,
@@ -1183,7 +1183,7 @@ class EyepieceTest extends TestCase
             $attributes
         );
 
-        $newUser = factory('App\User')->create(['type' => 'admin']);
+        $newUser = factory('App\Models\User')->create(['type' => 'admin']);
 
         $this->actingAs($newUser);
 
@@ -1234,7 +1234,7 @@ class EyepieceTest extends TestCase
     {
         // Given I am a user who is logged in and not verified
         // Act as a new user created by the factory
-        $user = factory('App\User')->create(['email_verified_at' => null]);
+        $user = factory('App\Models\User')->create(['email_verified_at' => null]);
 
         $this->actingAs($user);
 
@@ -1279,7 +1279,7 @@ class EyepieceTest extends TestCase
      */
     public function createPageIsNotAccessibleForUnverifiedUsers()
     {
-        $user = factory('App\User')->create(['email_verified_at' => null]);
+        $user = factory('App\Models\User')->create(['email_verified_at' => null]);
 
         $response = $this->actingAs($user)->get('/eyepiece/create');
 
@@ -1310,7 +1310,7 @@ class EyepieceTest extends TestCase
      */
     public function createPageIsAccessibleForAdmin()
     {
-        $user = factory('App\User')->create(['type' => 'admin']);
+        $user = factory('App\Models\User')->create(['type' => 'admin']);
         $response = $this->actingAs($user)->get('/eyepiece/create');
 
         $response->assertStatus(200);
@@ -1325,7 +1325,7 @@ class EyepieceTest extends TestCase
      */
     public function updateEyepiecePageContainsCorrectValues()
     {
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->get(
             '/eyepiece/'.$eyepiece->id.'/edit'
@@ -1361,7 +1361,7 @@ class EyepieceTest extends TestCase
             ]
         );
 
-        $eyepiece = \App\Eyepiece::firstOrFail();
+        $eyepiece = \App\Models\Eyepiece::firstOrFail();
 
         Storage::disk('public')->assertExists(
             $eyepiece->id.'/'.$eyepiece->id.'.png'
@@ -1375,7 +1375,7 @@ class EyepieceTest extends TestCase
      */
     public function testShowEyepieceDetailWithChangeButton()
     {
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->get('/eyepiece/'.$eyepiece->id);
 
@@ -1398,8 +1398,8 @@ class EyepieceTest extends TestCase
      */
     public function testShowEyepieceDetailWithoutChangeButton()
     {
-        $newUser = factory('App\User')->create();
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $newUser->id]);
+        $newUser = factory('App\Models\User')->create();
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $newUser->id]);
 
         $response = $this->actingAs($this->_user)->get('/eyepiece/'.$eyepiece->id);
 
@@ -1421,8 +1421,8 @@ class EyepieceTest extends TestCase
      */
     public function testAdminAlwaysSeesChangeButton()
     {
-        $admin = factory('App\User')->create(['type' => 'admin']);
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $admin = factory('App\Models\User')->create(['type' => 'admin']);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($admin)->get('/eyepiece/'.$eyepiece->id);
 
@@ -1444,7 +1444,7 @@ class EyepieceTest extends TestCase
      */
     public function testGuestNeverSeesChangeButton()
     {
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         $response = $this->get('/eyepiece/'.$eyepiece->id);
 
@@ -1466,8 +1466,8 @@ class EyepieceTest extends TestCase
      */
     public function testOnlyAdminCanSeeOverviewOfAllEyepieces()
     {
-        factory('App\User', 50)->create();
-        $eyepiece = factory('App\Eyepiece', 500)->create();
+        factory('App\Models\User', 50)->create();
+        $eyepiece = factory('App\Models\Eyepiece', 500)->create();
 
         // Check as guest
         $response = $this->get('/eyepiece/admin');
@@ -1481,7 +1481,7 @@ class EyepieceTest extends TestCase
         $response->assertStatus(401);
 
         // Check as admin
-        $admin = factory('App\User')->create(['type' => 'admin']);
+        $admin = factory('App\Models\User')->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get('/eyepiece/admin');
 
         $response->assertStatus(200);
@@ -1495,7 +1495,7 @@ class EyepieceTest extends TestCase
      */
     public function testJsonInformationForEyepiece()
     {
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         // Only for logged in users!
         $response = $this->get('/getEyepieceJson/'.$eyepiece->id);
@@ -1527,7 +1527,7 @@ class EyepieceTest extends TestCase
         // Will put the fake image in
         Storage::fake('public');
 
-        $eyepiece = factory('App\Eyepiece')->create(['user_id' => $this->_user->id]);
+        $eyepiece = factory('App\Models\Eyepiece')->create(['user_id' => $this->_user->id]);
 
         // Check the image, if no image is uploaded
         $this->actingAs($this->_user)->get(
@@ -1606,7 +1606,7 @@ class EyepieceTest extends TestCase
 
         $eyepiece = DB::table('eyepieces')->latest('id')->first();
 
-        $user = factory('App\User')->create();
+        $user = factory('App\Models\User')->create();
 
         $this->actingAs($user)->post(
             'eyepieces/'.$eyepiece->id.'/deleteImage'
@@ -1624,11 +1624,11 @@ class EyepieceTest extends TestCase
      */
     public function testAutocompleteForEyepiece()
     {
-        $eyepiece = factory('App\Eyepiece')->create(
+        $eyepiece = factory('App\Models\Eyepiece')->create(
             ['user_id' => $this->_user->id, 'name' => 'DeepskyLog test eyepiece']
         );
 
-        $eyepiece2 = factory('App\Eyepiece')->create(
+        $eyepiece2 = factory('App\Models\Eyepiece')->create(
             ['user_id' => $this->_user->id, 'name' => 'Other test eyepiece']
         );
 

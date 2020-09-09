@@ -11,7 +11,7 @@
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -58,12 +58,12 @@ class Contrast extends Model
      */
     public function __construct(Target $target)
     {
-        $this->_telescope = \App\Instrument::where(
+        $this->_telescope = \App\Models\Model\Instrument::where(
             'id',
             Auth::user()->stdtelescope
         )->get()->first();
 
-        $this->_location = \App\Location::where(
+        $this->_location = \App\Models\Location::where(
             'id',
             Auth::user()->stdlocation
         )->get()->first();
@@ -199,7 +199,7 @@ class Contrast extends Model
                     // We are not setting $magnifications
                     $this->_magnifications = [];
                 } elseif ($instrument->fixedMagnification == 0) {
-                    $eyepieces = \App\Eyepiece::where('user_id', Auth::user()->id)
+                    $eyepieces = \App\Models\Eyepiece::where('user_id', Auth::user()->id)
                         ->get();
                     foreach ($eyepieces as $eyepiece) {
                         if ($eyepiece->maxFocalLength != null) {
@@ -228,7 +228,7 @@ class Contrast extends Model
                         }
                     }
 
-                    $lenses = \App\Lens::where('user_id', Auth::user()->id)
+                    $lenses = \App\Models\Lens::where('user_id', Auth::user()->id)
                         ->get();
                     if (count($lenses) > 0) {
                         $origmagnifications = $this->_magnifications;

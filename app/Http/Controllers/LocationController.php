@@ -12,7 +12,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Location;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -152,7 +152,7 @@ class LocationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Location $location The location to show
+     * @param \App\Models\Location $location The location to show
      *
      * @return \Illuminate\Http\Response
      */

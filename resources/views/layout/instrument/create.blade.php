@@ -53,7 +53,7 @@
 
             <div class="form">
                 <select id="type" name="type" class="form-control">
-                    @foreach (\App\InstrumentType::all() as $type)
+                    @foreach (\App\Models\InstrumentType::all() as $type)
                         <option value="{{ $type->id }}" @if ($instrument->type == $type->id || old('type') == $type->id) selected="selected" @endif>{{ _i($type->type) }}</option>
                     @endforeach
 

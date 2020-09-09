@@ -36,8 +36,8 @@ class EyepieceTest extends TestCase
      */
     public function checkGenericName()
     {
-        factory('App\User', 1)->create();
-        $eyepieces = factory('App\Eyepiece', 5)->create(['user_id' => 1]);
+        factory('App\Models\User', 1)->create();
+        $eyepieces = factory('App\Models\Eyepiece', 5)->create(['user_id' => 1]);
 
         foreach ($eyepieces as $eyepiece) {
             $this->assertStringContainsString(

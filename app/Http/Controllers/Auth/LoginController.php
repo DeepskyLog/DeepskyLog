@@ -159,9 +159,9 @@ class LoginController extends Controller
         ) ? $email : 'username';
 
         if ($input == 'username') {
-            $user = \App\User::where('username', $request->input('email'))->first();
+            $user = \App\Models\User::where('username', $request->input('email'))->first();
         } else {
-            $user = \App\User::where('email', $request->input('email'))->first();
+            $user = \App\Models\User::where('email', $request->input('email'))->first();
         }
 
         // Check if the old md5 password is still in the database.

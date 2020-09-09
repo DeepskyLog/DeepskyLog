@@ -1,31 +1,33 @@
 <?php
 
 /**
- * Old instruments eloquent model.
+ * Old observers eloquent model.
  *
  * PHP Version 7
  *
- * @category Instruments
+ * @category Authentication
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Old instruments eloquent model.
+ * Old observers eloquent model.
  *
- * @category Intruments
+ * @category Authentication
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class InstrumentOld extends Model
+class ObserversOld extends Model
 {
+    protected $casts = ['id' => 'string'];
+
     protected $connection = 'mysqlOld';
 
-    protected $table = 'instruments';
+    protected $table = 'observers';
 }

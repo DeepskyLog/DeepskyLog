@@ -1,31 +1,31 @@
 <?php
 
 /**
- * Old lenses eloquent model.
+ * Old comet objects eloquent model.
  *
  * PHP Version 7
  *
- * @category Instruments
+ * @category Objects
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Old lenses eloquent model.
+ * Old comet objects eloquent model.
  *
- * @category Intruments
+ * @category Objects
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class LensOld extends Model
+class CometObjectOld extends Model
 {
     protected $connection = 'mysqlOld';
 
-    protected $table = 'lenses';
+    protected $table = 'cometobjects';
 }

@@ -13,7 +13,7 @@
 
 namespace App\DataTables;
 
-use App\Target;
+use App\Models\Target;
 use Yajra\DataTables\Services\DataTable;
 
 /**
@@ -257,7 +257,7 @@ class TargetDataTable extends DataTable
                 ],
                 ['name' => auth()->user()->standardAtlasCode,
                     'title' => _i(
-                        \App\Atlas::where(
+                        \App\Models\Atlas::where(
                             'code',
                             auth()->user()->standardAtlasCode
                         )->first()->name

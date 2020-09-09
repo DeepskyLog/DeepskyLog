@@ -1,31 +1,31 @@
 <?php
 
 /**
- * Old messages eloquent model.
+ * Old filters eloquent model.
  *
  * PHP Version 7
  *
- * @category Messages
+ * @category Instruments
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Old messages eloquent model.
+ * Old filters eloquent model.
  *
- * @category Messages
+ * @category Intruments
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class MessagesOld extends Model
+class FilterOld extends Model
 {
     protected $connection = 'mysqlOld';
 
-    protected $table = 'messages';
+    protected $table = 'filters';
 }

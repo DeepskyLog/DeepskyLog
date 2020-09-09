@@ -10,7 +10,7 @@
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Carbon\Carbon;
 use Spatie\MediaLibrary\HasMedia;
@@ -49,7 +49,7 @@ class Location extends Model implements HasMedia
     public function user()
     {
         // Also method on user: locations()
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     /**

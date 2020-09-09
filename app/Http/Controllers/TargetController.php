@@ -12,7 +12,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Target;
+use App\Models\Target;
 use Illuminate\Http\Request;
 use App\DataTables\TargetDataTable;
 use deepskylog\LaravelGettext\Facades\LaravelGettext;
@@ -67,11 +67,11 @@ class TargetController extends Controller
      */
     public function show(string $name, TargetDataTable $dataTable)
     {
-        $targetname = \App\TargetName::where('altname', $name)
+        $targetname = \App\Models\TargetName::where('altname', $name)
             ->first();
 
         if ($targetname != null) {
-            $target = \App\Target::where('id', $targetname->target_id)->first();
+            $target = \App\Models\Target::where('id', $targetname->target_id)->first();
 
             if ($target != null) {
                 return $dataTable->with('target', $target)->render(
@@ -83,7 +83,7 @@ class TargetController extends Controller
             }
         } else {
             // Check all the translations
-            $target = \App\Target::where(
+            $target = \App\Models\Target::where(
                 'target_name->' . LaravelGettext::getLocaleLanguage(),
                 $name
             )->first();
@@ -102,7 +102,7 @@ class TargetController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Target               $target
+     * @param  \App\Models\Target         $target
      * @return \Illuminate\Http\Response
      */
     public function edit(Target $target)
@@ -114,7 +114,7 @@ class TargetController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Target               $target
+     * @param  \App\Models\Target         $target
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Target $target)
@@ -125,7 +125,7 @@ class TargetController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Target $target
+     * @param \App\Models\Model\Target $target
      *
      * @return \Illuminate\Http\Response
      */

@@ -13,7 +13,8 @@
 use Faker\Generator as Faker;
 
 $factory->define(
-    App\Filter::class, function (Faker $faker) {
+    App\Models\Filter::class,
+    function (Faker $faker) {
         $type = $faker->numberBetween(0, 8);
 
         if ($type == 6) {
@@ -43,7 +44,7 @@ $factory->define(
             'color' => $color,
             'wratten' => $wratten,
             'schott' => $schott,
-            'user_id' => \App\User::inRandomOrder()->first()->id,
+            'user_id' => \App\Models\User::inRandomOrder()->first()->id,
             'active' => $faker->numberBetween(0, 1),
         ];
     }

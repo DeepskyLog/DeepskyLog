@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -20,7 +20,7 @@ class ObservationType extends Model
      */
     public function targetType()
     {
-        return $this->belongsTo('App\TargetType', 'type', 'observation_type');
+        return $this->belongsTo('App\Models\TargetType', 'type', 'observation_type');
     }
 
     /**
@@ -32,7 +32,7 @@ class ObservationType extends Model
     {
         $col = collect();
 
-        $observationTypes = \App\TargetType::with('App\Target')->where(
+        $observationTypes = \App\Models\TargetType::with('App\Models\Target')->where(
             'observation_type',
             $observation_type
         )->get();
@@ -55,7 +55,7 @@ class ObservationType extends Model
         $count = 0;
 
         // Eager loading and directly counting the targets
-        $types = \App\TargetType::withCount('target')
+        $types = \App\Models\TargetType::withCount('target')
             ->where('observation_type', $observation_type)->get();
 
         foreach ($types as $type) {

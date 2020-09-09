@@ -13,12 +13,12 @@
 use Faker\Generator as Faker;
 
 $factory->define(
-    App\Lens::class,
+    App\Models\Lens::class,
     function (Faker $faker) {
         return [
             'name' => $faker->sentence(3, true),
             'factor' => $faker->randomFloat(2, 0.1, 5.0),
-            'user_id' => \App\User::inRandomOrder()->first()->id,
+            'user_id' => \App\Models\User::inRandomOrder()->first()->id,
             'active' => $faker->numberBetween(0, 1),
         ];
     }

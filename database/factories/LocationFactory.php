@@ -13,7 +13,8 @@
 use Faker\Generator as Faker;
 
 $factory->define(
-    App\Location::class, function (Faker $faker) {
+    App\Models\Location::class,
+    function (Faker $faker) {
         return [
             'name' => $faker->sentence(3, true),
             'longitude' => $faker->longitude(),
@@ -24,7 +25,7 @@ $factory->define(
             'limitingMagnitude' => $faker->randomFloat(1, 3.5, 7.0),
             'skyBackground' => $faker->randomFloat(2, 18.0, 22.0),
             'bortle' => $faker->numberBetween(1, 9),
-            'user_id' => \App\User::inRandomOrder()->first()->id,
+            'user_id' => \App\Models\User::inRandomOrder()->first()->id,
             'active' => $faker->numberBetween(0, 1),
         ];
     }

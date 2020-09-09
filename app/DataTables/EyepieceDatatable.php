@@ -13,7 +13,7 @@
 
 namespace App\DataTables;
 
-use App\Eyepiece;
+use App\Models\Eyepiece;
 use Yajra\DataTables\Services\DataTable;
 
 /**

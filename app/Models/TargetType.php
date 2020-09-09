@@ -11,7 +11,7 @@
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,7 +38,7 @@ class TargetType extends Model
      */
     public function target()
     {
-        return $this->belongsTo('App\Target', 'id', 'target_type');
+        return $this->belongsTo('App\Models\Target', 'id', 'target_type');
     }
 
     /**
@@ -48,6 +48,6 @@ class TargetType extends Model
      */
     public function observationType()
     {
-        return $this->hasOne('App\ObservationType', 'type', 'observation_type');
+        return $this->hasOne('App\Models\ObservationType', 'type', 'observation_type');
     }
 }

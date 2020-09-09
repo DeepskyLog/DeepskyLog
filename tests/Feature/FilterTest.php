@@ -42,7 +42,7 @@ class FilterTest extends TestCase
     {
         parent::setup();
 
-        $this->_user = factory('App\User')->create();
+        $this->_user = factory('App\Models\User')->create();
     }
 
     /**
@@ -152,7 +152,7 @@ class FilterTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $filter = factory('App\Filter')->create(['user_id' => $this->_user->id]);
+        $filter = factory('App\Models\Filter')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->put(
             '/filter/'.$filter->id,
@@ -177,7 +177,7 @@ class FilterTest extends TestCase
         $this->actingAs($this->_user);
 
         // Get a new filter from the factory
-        $filter = factory('App\Filter')->create(['user_id' => $this->_user->id]);
+        $filter = factory('App\Models\Filter')->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new filter in the database
         $attributes = [
@@ -238,9 +238,9 @@ class FilterTest extends TestCase
         // Then there should be a new filter in the database
         $this->assertDatabaseHas('filters', $attributes);
 
-        $filter = \App\Filter::firstOrFail();
+        $filter = \App\Models\Filter::firstOrFail();
 
-        $newUser = factory('App\User')->create();
+        $newUser = factory('App\Models\User')->create();
         $this->actingAs($newUser);
 
         // Adapt the name and the factor
@@ -285,9 +285,9 @@ class FilterTest extends TestCase
         // Then there should be a new filter in the database
         $this->assertDatabaseHas('filters', $attributes);
 
-        $filter = \App\Filter::firstOrFail();
+        $filter = \App\Models\Filter::firstOrFail();
 
-        $newUser = factory('App\User')->create(['type' => 'admin']);
+        $newUser = factory('App\Models\User')->create(['type' => 'admin']);
 
         $this->actingAs($newUser);
 
@@ -322,7 +322,7 @@ class FilterTest extends TestCase
 
         // When they hit the endpoint in /filter to create a new filter
         // while passing the necessary data
-        $filter = factory('App\Filter')->create(['user_id' => $this->_user->id]);
+        $filter = factory('App\Models\Filter')->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new filter in the database
         $this->assertDatabaseHas(
@@ -335,7 +335,7 @@ class FilterTest extends TestCase
             ]
         );
 
-        $this->assertEquals(1, \App\Filter::count());
+        $this->assertEquals(1, \App\Models\Filter::count());
 
         $response = $this->delete('/filter/'.$filter->id);
 
@@ -351,7 +351,7 @@ class FilterTest extends TestCase
                 'user_id' => $filter->user_id,
             ]
         );
-        $this->assertEquals(0, \App\Filter::count());
+        $this->assertEquals(0, \App\Models\Filter::count());
     }
 
     /**
@@ -384,9 +384,9 @@ class FilterTest extends TestCase
         // Then there should be a new filter in the database
         $this->assertDatabaseHas('filters', $attributes);
 
-        $filter = \App\Filter::firstOrFail();
+        $filter = \App\Models\Filter::firstOrFail();
 
-        $newUser = factory('App\User')->create();
+        $newUser = factory('App\Models\User')->create();
         $this->actingAs($newUser);
 
         $this->expectException(AuthorizationException::class);
@@ -425,9 +425,9 @@ class FilterTest extends TestCase
         // Then there should be a new filter in the database
         $this->assertDatabaseHas('filters', $attributes);
 
-        $filter = \App\Filter::firstOrFail();
+        $filter = \App\Models\Filter::firstOrFail();
 
-        $newUser = factory('App\User')->create(['type' => 'admin']);
+        $newUser = factory('App\Models\User')->create(['type' => 'admin']);
 
         $this->actingAs($newUser);
 
@@ -473,7 +473,7 @@ class FilterTest extends TestCase
     {
         // Given I am a user who is logged in and not verified
         // Act as a new user created by the factory
-        $user = factory('App\User')->create(['email_verified_at' => null]);
+        $user = factory('App\Models\User')->create(['email_verified_at' => null]);
 
         $this->actingAs($user);
 
@@ -514,7 +514,7 @@ class FilterTest extends TestCase
      */
     public function createPageIsNotAccessibleForUnverifiedUsers()
     {
-        $user = factory('App\User')->create(['email_verified_at' => null]);
+        $user = factory('App\Models\User')->create(['email_verified_at' => null]);
 
         $response = $this->actingAs($user)->get('/filter/create');
 
@@ -545,7 +545,7 @@ class FilterTest extends TestCase
      */
     public function createPageIsAccessibleForAdmin()
     {
-        $user = factory('App\User')->create(['type' => 'admin']);
+        $user = factory('App\Models\User')->create(['type' => 'admin']);
         $response = $this->actingAs($user)->get('/filter/create');
 
         $response->assertStatus(200);
@@ -560,7 +560,7 @@ class FilterTest extends TestCase
      */
     public function updateFilterPageContainsCorrectValues()
     {
-        $filter = factory('App\Filter')->create(['user_id' => $this->_user->id]);
+        $filter = factory('App\Models\Filter')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->get(
             '/filter/'.$filter->id.'/edit'
@@ -589,7 +589,7 @@ class FilterTest extends TestCase
             ]
         );
 
-        $filter = \App\Filter::firstOrFail();
+        $filter = \App\Models\Filter::firstOrFail();
 
         Storage::disk('public')->assertExists(
             $filter->id.'/'.$filter->id.'.png'
@@ -605,7 +605,7 @@ class FilterTest extends TestCase
      */
     public function testShowFilterDetailWithChangeButton()
     {
-        $filter = factory('App\Filter')->create(['user_id' => $this->_user->id]);
+        $filter = factory('App\Models\Filter')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->get('/filter/'.$filter->id);
 
@@ -625,8 +625,8 @@ class FilterTest extends TestCase
      */
     public function testShowFilterDetailWithoutChangeButton()
     {
-        $newUser = factory('App\User')->create();
-        $filter = factory('App\Filter')->create(['user_id' => $newUser->id]);
+        $newUser = factory('App\Models\User')->create();
+        $filter = factory('App\Models\Filter')->create(['user_id' => $newUser->id]);
 
         $response = $this->actingAs($this->_user)->get('/filter/'.$filter->id);
 
@@ -645,8 +645,8 @@ class FilterTest extends TestCase
      */
     public function testAdminAlwaysSeesChangeButton()
     {
-        $admin = factory('App\User')->create(['type' => 'admin']);
-        $filter = factory('App\Filter')->create(['user_id' => $this->_user->id]);
+        $admin = factory('App\Models\User')->create(['type' => 'admin']);
+        $filter = factory('App\Models\Filter')->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($admin)->get('/filter/'.$filter->id);
 
@@ -665,7 +665,7 @@ class FilterTest extends TestCase
      */
     public function testGuestNeverSeesChangeButton()
     {
-        $filter = factory('App\Filter')->create(['user_id' => $this->_user->id]);
+        $filter = factory('App\Models\Filter')->create(['user_id' => $this->_user->id]);
 
         $response = $this->get('/filter/'.$filter->id);
 
@@ -684,8 +684,8 @@ class FilterTest extends TestCase
      */
     public function testOnlyAdminCanSeeOverviewOfAllFilters()
     {
-        factory('App\User', 50)->create();
-        $filter = factory('App\Filter', 500)->create();
+        factory('App\Models\User', 50)->create();
+        $filter = factory('App\Models\Filter', 500)->create();
 
         // Check as guest
         $response = $this->get('/filter/admin');
@@ -699,7 +699,7 @@ class FilterTest extends TestCase
         $response->assertStatus(401);
 
         // Check as admin
-        $admin = factory('App\User')->create(['type' => 'admin']);
+        $admin = factory('App\Models\User')->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get('/filter/admin');
 
         $response->assertStatus(200);
@@ -715,7 +715,7 @@ class FilterTest extends TestCase
      */
     public function testJsonInformationForFilter()
     {
-        $filter = factory('App\Filter')->create(['user_id' => $this->_user->id]);
+        $filter = factory('App\Models\Filter')->create(['user_id' => $this->_user->id]);
 
         // Only for logged in users!
         $response = $this->get('/getFilterJson/'.$filter->id);
@@ -747,7 +747,7 @@ class FilterTest extends TestCase
         // Will put the fake image in
         Storage::fake('public');
 
-        $filter = factory('App\Filter')->create(['user_id' => $this->_user->id]);
+        $filter = factory('App\Models\Filter')->create(['user_id' => $this->_user->id]);
 
         // Check the image, if no image is uploaded
         $this->actingAs($this->_user)->get('filter/'.$filter->id.'/getImage');
@@ -815,7 +815,7 @@ class FilterTest extends TestCase
 
         $filter = DB::table('filters')->latest('id')->first();
 
-        $user = factory('App\User')->create();
+        $user = factory('App\Models\User')->create();
 
         $this->actingAs($user)->post(
             'filter/'.$filter->id.'/deleteImage'
@@ -835,11 +835,11 @@ class FilterTest extends TestCase
      */
     public function testAutocompleteForFilter()
     {
-        $filter = factory('App\Filter')->create(
+        $filter = factory('App\Models\Filter')->create(
             ['user_id' => $this->_user->id, 'name' => 'DeepskyLog test filter']
         );
 
-        $filter2 = factory('App\Filter')->create(
+        $filter2 = factory('App\Models\Filter')->create(
             ['user_id' => $this->_user->id, 'name' => 'Other test filter']
         );
 

@@ -1,6 +1,6 @@
 <?php
 
-use App\EyepieceBrand;
+use App\Models\EyepieceBrand;
 use Illuminate\Database\Seeder;
 
 class EyepieceBrandSeeder extends Seeder

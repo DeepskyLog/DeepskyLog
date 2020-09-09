@@ -12,7 +12,7 @@
         "anhskohbo/no-captcha": "^3.0",
         "cmgmyr/messenger": "^2.17",
         "coderello/laraflash": "^3.0",
-        "deepskylog/laravel-astronomy-library": "@dev",
+        "deepskylog/laravel-astronomy-library": "^4.0",
         "deepskylog/laravel-gettext": "^7.3",
         "dompdf/dompdf": "^0.8.3",
         "fideloper/proxy": "^4.0",
@@ -38,7 +38,7 @@
         "beyondcode/laravel-query-detector": "^1.2",
         "filp/whoops": "^2.0",
         "fzaninotto/faker": "^1.4",
-        "laravel/telescope": "^3.2",
+        "laravel/telescope": "^3.0",
         "mockery/mockery": "^1.0",
         "phpunit/php-code-coverage": "^9.0",
         "phpunit/phpunit": "^9.3"

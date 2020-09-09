@@ -11,9 +11,9 @@
  * @link     http://www.deepskylog.org
  */
 
-use App\Filter;
-use App\FilterOld;
-use App\User;
+use App\Models\Filter;
+use App\Models\FilterOld;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /**

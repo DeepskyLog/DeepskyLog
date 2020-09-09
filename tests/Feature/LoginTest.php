@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
@@ -28,7 +28,7 @@ class LoginTest extends TestCase
      */
     public function testUserCannotViewALoginFormWhenAuthenticated()
     {
-        $user = factory('App\User')->make();
+        $user = factory('App\Models\User')->make();
 
         $response = $this->actingAs($user)->get('/login');
 

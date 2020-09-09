@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Old comet objects eloquent model.
+ * Old objects eloquent model.
  *
  * PHP Version 7
  *
@@ -11,21 +11,21 @@
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Old comet objects eloquent model.
+ * Old objects eloquent model.
  *
  * @category Objects
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class CometObjectOld extends Model
+class ObjectOld extends Model
 {
     protected $connection = 'mysqlOld';
 
-    protected $table = 'cometobjects';
+    protected $table = 'objects';
 }

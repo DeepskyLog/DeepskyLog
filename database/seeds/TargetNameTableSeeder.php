@@ -12,8 +12,8 @@
  * @link     http://www.deepskylog.org
  */
 
-use App\ObjectNamesOld;
-use App\TargetName;
+use App\Models\ObjectNamesOld;
+use App\Models\TargetName;
 use Illuminate\Database\Seeder;
 
 /**
@@ -33,9 +33,9 @@ class TargetNameTableSeeder extends Seeder
     public function run()
     {
         // Add all names for the comets, moon, planets, sun
-        foreach (\App\TargetType::where('observation_type', '!=', 'ds')->where('observation_type', '!=', 'double')->get() as $type) {
-            foreach (\App\Target::where('target_type', $type->id)->get() as $target) {
-                \App\TargetName::create(
+        foreach (\App\Models\TargetType::where('observation_type', '!=', 'ds')->where('observation_type', '!=', 'double')->get() as $type) {
+            foreach (\App\Models\Target::where('target_type', $type->id)->get() as $target) {
+                \App\Models\TargetName::create(
                     [
                         'target_id' => $target->id,
                         'catalog' => '',
@@ -61,14 +61,14 @@ class TargetNameTableSeeder extends Seeder
                 );
             }
 
-            if (\App\Target::where(
+            if (\App\Models\Target::where(
                 'target_name->en',
                 $oldObject->objectname
             )->count()
             ) {
                 $target = TargetName::firstOrCreate(
                     [
-                        'target_id' => \App\Target::where(
+                        'target_id' => \App\Models\Target::where(
                             'target_name->en',
                             $oldObject->objectname
                         )->first()->id,

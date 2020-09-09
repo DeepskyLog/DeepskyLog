@@ -11,7 +11,7 @@
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Auth;
@@ -69,7 +69,7 @@ class Lens extends Model implements HasMedia
     public function user()
     {
         // Also method on user: lenses()
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     // TODO: A lens belongs to one or more observations.

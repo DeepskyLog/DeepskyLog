@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +15,6 @@ class Constellation extends Model
      */
     public function target()
     {
-        return $this->belongsTo('App\Target', 'id', 'constellation');
+        return $this->belongsTo('App\Models\Target', 'id', 'constellation');
     }
 }

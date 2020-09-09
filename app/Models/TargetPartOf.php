@@ -11,7 +11,7 @@
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -68,7 +68,7 @@ class TargetPartOf extends Model
         $contains = '';
         if (self::contains($target)) {
             foreach (self::where('partof_id', $target->id)->get() as $partOfObject) {
-                $containsName = \App\Target::where('id', $partOfObject->target_id)
+                $containsName = \App\Models\Target::where('id', $partOfObject->target_id)
                     ->first()->target_name;
                 $contains .= ($contains ? '/' : '')
                     . '<a href="/target/' . $containsName . '">'
@@ -84,7 +84,7 @@ class TargetPartOf extends Model
         $partOf = '';
         if (self::isPartOf($target)) {
             foreach (self::where('target_id', $target->id)->get() as $partOfObject) {
-                $partofname = \App\Target::where('id', $partOfObject->partof_id)
+                $partofname = \App\Models\Target::where('id', $partOfObject->partof_id)
                     ->first()->target_name;
                 $partOf .= ($partOf ? '/' : '')
                     . '<a href="/target/' . $partofname . '">'

@@ -1,17 +1,17 @@
 <?php
 
- /**
-  * Instrument eloquent model.
-  *
-  * PHP Version 7
-  *
-  * @category Instruments
-  * @author   Wim De Meester <deepskywim@gmail.com>
-  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
-  * @link     http://www.deepskylog.org
-  */
+/**
+ * Instrument eloquent model.
+ *
+ * PHP Version 7
+ *
+ * @category Instruments
+ * @author   Wim De Meester <deepskywim@gmail.com>
+ * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
+ * @link     http://www.deepskylog.org
+ */
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -71,7 +71,7 @@ class Instrument extends Model implements HasMedia
     public function user()
     {
         // Also method on user: instruments()
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     /**
@@ -102,15 +102,15 @@ class Instrument extends Model implements HasMedia
             )->where(['type' => $typeid])->where(['active' => 1])->pluck('id', 'name');
 
             if (count($instruments) > 0) {
-                echo '<optgroup label="'._i($type->type).'">';
+                echo '<optgroup label="' . _i($type->type) . '">';
 
                 foreach ($instruments as $name => $id) {
                     $count++;
                     if ($id == Auth::user()->stdtelescope) {
-                        echo '<option selected="selected" value="'.$id.'}}">'
-                           .$name.'</option>';
+                        echo '<option selected="selected" value="' . $id . '}}">'
+                           . $name . '</option>';
                     } else {
-                        echo '<option value="'.$id.'}}">'.$name.'</option>';
+                        echo '<option value="' . $id . '}}">' . $name . '</option>';
                     }
                 }
                 echo '</optgroup>';
@@ -118,14 +118,14 @@ class Instrument extends Model implements HasMedia
         }
 
         if ($count === 0) {
-            echo '<option>'._i('Add an instrument').'</option>';
+            echo '<option>' . _i('Add an instrument') . '</option>';
         }
     }
 
     // TODO: An instrument belongs to one or more observations.
     //    public function observation()
     //    {
-    //        return $this->belongsTo('App\Observation');
+    //        return $this->belongsTo('App\Models\Observation');
     //    }
 
     /**

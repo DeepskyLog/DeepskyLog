@@ -11,7 +11,7 @@
  * @link     http://www.deepskylog.org
  */
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -40,7 +40,7 @@ class TargetName extends Model
      */
     public function target(): HasOne
     {
-        return $this->hasOne('App\Target', 'id', 'target_id');
+        return $this->hasOne('App\Models\Target', 'id', 'target_id');
     }
 
     /**

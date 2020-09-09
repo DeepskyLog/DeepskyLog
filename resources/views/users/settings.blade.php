@@ -143,7 +143,7 @@
                     <label for="stdlocation">{{ _i("Default observing site") }}</label>
                     <div class="form">
                         <select class="form-control selection" style="width: 100%" id="stdlocation" name="stdlocation">
-                            {!! App\Location::getLocationOptions() !!}
+                            {!! App\Models\Location::getLocationOptions() !!}
                         </select>
                     </div>
                     <span class="help-block">
@@ -155,7 +155,7 @@
                     <label for="stdinstrument">{{ _i("Default instrument") }}</label>
                     <div class="form">
                         <select class="form-control selection" style="width: 100%" id="stdinstrument" name="stdinstrument">
-                            {!! App\Instrument::getInstrumentOptions() !!}
+                            {!! App\Models\Instrument::getInstrumentOptions() !!}
                         </select>
                     </div>
                     <span class="help-block">
@@ -167,7 +167,7 @@
                     <label for="stdeyepiece">{{ _i("Default eyepiece") }}</label>
                     <div class="form">
                         <select class="form-control selection" style="width: 100%" id="stdeyepiece" name="stdeyepiece">
-                            {!! App\Eyepiece::getEyepieceOptions() !!}
+                            {!! App\Models\Eyepiece::getEyepieceOptions() !!}
                         </select>
                     </div>
                     <span class="help-block">
@@ -179,7 +179,7 @@
                     <label for="stdlens">{{ _i("Default lens") }}</label>
                     <div class="form">
                         <select class="form-control selection" style="width: 100%" id="stdlens" name="stdlens">
-                            {!! App\Lens::getLensOptions() !!}
+                            {!! App\Models\Lens::getLensOptions() !!}
                         </select>
                     </div>
                     <span class="help-block">
@@ -191,7 +191,7 @@
                     <label for="stdatlas">{{ _i("Default atlas") }}</label>
                     <div class="form">
                         <select class="form-control selection" style="width: 100%" id="standardAtlasCode" name="standardAtlasCode">
-                            @foreach(\App\Atlas::All() as $atlas)
+                            @foreach(\App\Models\Atlas::All() as $atlas)
                                 <option @if ($atlas->code == $user->standardAtlasCode) selected @endif value="{{ $atlas->code }}">{{ $atlas->name }}</option>
                             @endforeach
                         </select>

@@ -11,8 +11,8 @@
  * @link     http://www.deepskylog.org
  */
 
-use App\ObserversOld;
-use App\User;
+use App\Models\ObserversOld;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /**
@@ -33,7 +33,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        // factory(App\User::class, 50)->create();
+        // factory(App\Models\User::class, 50)->create();
 
         $accountData = ObserversOld::all();
         DB::statement('SET FOREIGN_KEY_CHECKS=0');

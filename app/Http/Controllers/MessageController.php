@@ -13,7 +13,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\MessageReceived;
-use App\User;
+use App\Models\User;
 use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Message;
 use Cmgmyr\Messenger\Models\Participant;
@@ -86,7 +86,7 @@ class MessageController extends Controller
         // show current user in list if not a current participant
         $allowedUsers = $thread->participantsUserIds();
 
-        if (! in_array(Auth::id(), $allowedUsers)) {
+        if (!in_array(Auth::id(), $allowedUsers)) {
             abort(403, _i('Not authorized to see this message.'));
         }
 

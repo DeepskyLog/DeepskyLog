@@ -13,7 +13,7 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\DataTables\UserDataTable;
@@ -70,11 +70,11 @@ class UserController extends Controller
 
         $media = $this->getImage($id);
 
-        $observationTypes = \App\ObservationType::all();
+        $observationTypes = \App\Models\ObservationType::all();
 
         foreach ($observationTypes as $type) {
             $numberOfObjects[$type->type]
-                = \App\ObservationType::targetCount($type->type);
+                = \App\Models\ObservationType::targetCount($type->type);
         }
 
         return view(

@@ -94,7 +94,7 @@
                     }
                 @endphp
                 <option value=""></option>
-                @foreach (\App\EyepieceBrand::all()->pluck('brand')->sort() as $brand)
+                @foreach (\App\Models\EyepieceBrand::all()->pluck('brand')->sort() as $brand)
                     <option value="{{ $brand }}" {{ ($selected == $brand ? "selected":"") }}>{{ $brand }}</option>
                 @endforeach
             </select>
@@ -110,7 +110,7 @@
                         old('type');
                     }
                 @endphp
-                @foreach (\App\EyepieceType::where('brand', $eyepiece->brand)->pluck('type')->sort() as $type)
+                @foreach (\App\Models\EyepieceType::where('brand', $eyepiece->brand)->pluck('type')->sort() as $type)
                     <option value="{{ $type }}" {{ ($selected == $type ? "selected":"") }}>{{ $type }}</option>
                 @endforeach
             </select>

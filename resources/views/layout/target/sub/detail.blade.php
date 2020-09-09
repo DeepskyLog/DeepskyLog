@@ -38,10 +38,10 @@
         <td colspan="3">{{ $target->observationType }}</td>
     </tr>
 
-    @if (\App\TargetName::hasAlternativeNames($target))
+    @if (\App\Models\TargetName::hasAlternativeNames($target))
     <tr>
         <td colspan="3">{{ _i("Alternative name") }}</td>
-        <td colspan="9">{{ \App\TargetName::getAlternativeNames($target) }}</td>
+        <td colspan="9">{{ \App\Models\TargetName::getAlternativeNames($target) }}</td>
     </tr>
     @endif
 
@@ -69,7 +69,7 @@
             @auth
             <td colspan="3"><span class="float-right">
                 @if ($target->ra != null)
-                    {{ App\Atlas::where('code', Auth::user()->standardAtlasCode)->first()['name'] }}
+                    {{ App\Models\Atlas::where('code', Auth::user()->standardAtlasCode)->first()['name'] }}
                     {{ _i(" page") }}</span></td>
                 @endif
             <td colspan="3">{{ $target->atlaspage(Auth::user()->standardAtlasCode) }}</td>
@@ -123,10 +123,10 @@
         @endauth
     @endif
 
-    @if (\App\TargetPartOf::isPartOf($target) || \App\TargetPartOf::contains($target))
+    @if (\App\Models\TargetPartOf::isPartOf($target) || \App\Models\TargetPartOf::contains($target))
         <tr>
             <td colspan="3"> {{ _i("(Contains)/Part of") }}</td>
-            <td colspan="9">{!! \App\TargetPartOf::partOfContains($target) !!}</td>
+            <td colspan="9">{!! \App\Models\TargetPartOf::partOfContains($target) !!}</td>
         </tr>
     @endif
 
@@ -199,7 +199,7 @@
             @auth
                 @if (auth()->user()->stdtelescope)
                     @php
-                        if (!App\Instrument::where('id', auth()->user()->stdtelescope)->first()->fd) {
+                        if (!App\Models\Instrument::where('id', auth()->user()->stdtelescope)->first()->fd) {
                             $disabled = true;
                         } else {
                             $disabled = false;
@@ -210,7 +210,7 @@
                         @method('PATCH')
 
                         <select class="form-control selection" name="stdinstrument" id="defaultInstrument2">
-                            {!! App\Instrument::getInstrumentOptions() !!}
+                            {!! App\Models\Instrument::getInstrumentOptions() !!}
                         </select>
                     </form>
                     <br />
@@ -219,7 +219,7 @@
                         @method('PATCH')
 
                         <select class="form-control selection" {{ $disabled ? 'disabled' : '' }} name="stdeyepiece" id="defaultEyepiece">
-                            {!! App\Eyepiece::getEyepieceOptions() !!}
+                            {!! App\Models\Eyepiece::getEyepieceOptions() !!}
                         </select>
                     </form>
                     <br />
@@ -228,7 +228,7 @@
                         @method('PATCH')
 
                         <select class="form-control selection" {{ $disabled ? 'disabled' : '' }} name="stdlens" id="defaultLens">
-                            {!! App\Lens::getLensOptions() !!}
+                            {!! App\Models\Lens::getLensOptions() !!}
                         </select>
                     </form>
                 @endif

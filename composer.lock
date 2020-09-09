@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d88ce33f7792534b8221ff65434a431",
+    "content-hash": "15ae015689224d46e5a98f2586d56d6b",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -232,20 +232,20 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v4.6",
+            "version": "v4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "84af338238c117df01f799f1199331b1072bf8d0"
+                "reference": "5258827b6079d570212181cd17160a98262b1052"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/84af338238c117df01f799f1199331b1072bf8d0",
-                "reference": "84af338238c117df01f799f1199331b1072bf8d0",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/5258827b6079d570212181cd17160a98262b1052",
+                "reference": "5258827b6079d570212181cd17160a98262b1052",
                 "shasum": ""
             },
             "require": {
-                "laravel/framework": "^7.0",
+                "laravel/framework": "^7.0|^8.0",
                 "maatwebsite/excel": "^3.1",
                 "php": ">=7.4"
             },
@@ -288,7 +288,7 @@
                 "laravel",
                 "laravel-astronomylibrary"
             ],
-            "time": "2020-08-03T08:07:45+00:00"
+            "time": "2020-09-09T10:35:59+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
@@ -1122,16 +1122,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v7.27.0",
+            "version": "v7.28.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "17777a92da9b3cf0026f26462d289d596420e6d0"
+                "reference": "5d3b4e3e62294716e3c810be3d2eb1375685b87d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/17777a92da9b3cf0026f26462d289d596420e6d0",
-                "reference": "17777a92da9b3cf0026f26462d289d596420e6d0",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/5d3b4e3e62294716e3c810be3d2eb1375685b87d",
+                "reference": "5d3b4e3e62294716e3c810be3d2eb1375685b87d",
                 "shasum": ""
             },
             "require": {
@@ -1276,7 +1276,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-09-01T13:41:48+00:00"
+            "time": "2020-09-08T15:10:40+00:00"
         },
         {
             "name": "laravel/helpers",
@@ -1397,16 +1397,16 @@
         },
         {
             "name": "laravel/ui",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/ui.git",
-                "reference": "fb1404f04ece6eee128e3fb750d3a1e064238b33"
+                "reference": "456daa330a32483b0fa9794334e60af6b2db3bf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/ui/zipball/fb1404f04ece6eee128e3fb750d3a1e064238b33",
-                "reference": "fb1404f04ece6eee128e3fb750d3a1e064238b33",
+                "url": "https://api.github.com/repos/laravel/ui/zipball/456daa330a32483b0fa9794334e60af6b2db3bf6",
+                "reference": "456daa330a32483b0fa9794334e60af6b2db3bf6",
                 "shasum": ""
             },
             "require": {
@@ -1448,32 +1448,32 @@
                 "laravel",
                 "ui"
             ],
-            "time": "2020-08-25T18:30:43+00:00"
+            "time": "2020-09-08T13:09:39+00:00"
         },
         {
             "name": "laravelcollective/html",
-            "version": "v6.1.2",
+            "version": "v6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LaravelCollective/html.git",
-                "reference": "5ef9a3c9ae2423fe5618996f3cde375d461a3fc6"
+                "reference": "3bb99be7502feb2129b375cd026ccb0fa4b66628"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/5ef9a3c9ae2423fe5618996f3cde375d461a3fc6",
-                "reference": "5ef9a3c9ae2423fe5618996f3cde375d461a3fc6",
+                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/3bb99be7502feb2129b375cd026ccb0fa4b66628",
+                "reference": "3bb99be7502feb2129b375cd026ccb0fa4b66628",
                 "shasum": ""
             },
             "require": {
-                "illuminate/http": "^6.0|^7.0",
-                "illuminate/routing": "^6.0|^7.0",
-                "illuminate/session": "^6.0|^7.0",
-                "illuminate/support": "^6.0|^7.0",
-                "illuminate/view": "^6.0|^7.0",
+                "illuminate/http": "^6.0|^7.0|^8.0",
+                "illuminate/routing": "^6.0|^7.0|^8.0",
+                "illuminate/session": "^6.0|^7.0|^8.0",
+                "illuminate/support": "^6.0|^7.0|^8.0",
+                "illuminate/view": "^6.0|^7.0|^8.0",
                 "php": ">=7.2.5"
             },
             "require-dev": {
-                "illuminate/database": "^6.0|^7.0",
+                "illuminate/database": "^6.0|^7.0|^8.0",
                 "mockery/mockery": "~1.0",
                 "phpunit/phpunit": "~7.1"
             },
@@ -1516,7 +1516,7 @@
             ],
             "description": "HTML and Form Builders for the Laravel Framework",
             "homepage": "https://laravelcollective.com",
-            "time": "2020-05-19T18:02:16+00:00"
+            "time": "2020-09-07T19:59:40+00:00"
         },
         {
             "name": "league/commonmark",
@@ -1882,16 +1882,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v2.0.0",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "38efc158e227a864c21bac907a94d80128d50fbf"
+                "reference": "43bfe091c909b7baf1e9fae7decbbe19ec7dd6ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/38efc158e227a864c21bac907a94d80128d50fbf",
-                "reference": "38efc158e227a864c21bac907a94d80128d50fbf",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/43bfe091c909b7baf1e9fae7decbbe19ec7dd6ad",
+                "reference": "43bfe091c909b7baf1e9fae7decbbe19ec7dd6ad",
                 "shasum": ""
             },
             "require": {
@@ -1943,31 +1943,30 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-07T04:28:01+00:00"
+            "time": "2020-09-09T03:29:38+00:00"
         },
         {
             "name": "maatwebsite/excel",
-            "version": "3.1.21",
+            "version": "3.1.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
-                "reference": "405ff5f0dd014a0d5a1fdb8fd6f525a9a1ece3f6"
+                "reference": "ba7152670257ba9f47bb6ff7cee025f8fc9da608"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/405ff5f0dd014a0d5a1fdb8fd6f525a9a1ece3f6",
-                "reference": "405ff5f0dd014a0d5a1fdb8fd6f525a9a1ece3f6",
+                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/ba7152670257ba9f47bb6ff7cee025f8fc9da608",
+                "reference": "ba7152670257ba9f47bb6ff7cee025f8fc9da608",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "illuminate/support": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0|^7.0",
+                "illuminate/support": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0|^7.0|^8.0",
                 "php": "^7.0",
                 "phpoffice/phpspreadsheet": "^1.14"
             },
             "require-dev": {
-                "orchestra/database": "^5.0",
-                "orchestra/testbench": "^5.0",
+                "orchestra/testbench": "^6.0",
                 "predis/predis": "^1.1"
             },
             "type": "library",
@@ -2018,7 +2017,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-08-06T09:25:20+00:00"
+            "time": "2020-09-08T15:29:50+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -3797,27 +3796,27 @@
         },
         {
             "name": "spatie/laravel-cookie-consent",
-            "version": "2.12.8",
+            "version": "2.12.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-cookie-consent.git",
-                "reference": "917986a07313bd4390cc2fc37c35d8417b3f0987"
+                "reference": "423f17b60aaca47431414d0a0ef07614711f73d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-cookie-consent/zipball/917986a07313bd4390cc2fc37c35d8417b3f0987",
-                "reference": "917986a07313bd4390cc2fc37c35d8417b3f0987",
+                "url": "https://api.github.com/repos/spatie/laravel-cookie-consent/zipball/423f17b60aaca47431414d0a0ef07614711f73d0",
+                "reference": "423f17b60aaca47431414d0a0ef07614711f73d0",
                 "shasum": ""
             },
             "require": {
-                "illuminate/cookie": "~5.8.0|^6.0|^7.0",
-                "illuminate/support": "~5.8.0|^6.0|^7.0",
-                "illuminate/view": "~5.8.0|^6.0|^7.0",
+                "illuminate/cookie": "~5.8.0|^6.0|^7.0|^8.0",
+                "illuminate/support": "~5.8.0|^6.0|^7.0|^8.0",
+                "illuminate/view": "~5.8.0|^6.0|^7.0|^8.0",
                 "php": "^7.2"
             },
             "require-dev": {
                 "fzaninotto/faker": "~1.4",
-                "orchestra/testbench": "~3.8.0|^4.0|^5.0"
+                "orchestra/testbench": "~3.8.0|^4.0|^5.0|^6.0"
             },
             "type": "library",
             "extra": {
@@ -3866,30 +3865,30 @@
                     "type": "custom"
                 }
             ],
-            "time": "2020-08-23T09:31:31+00:00"
+            "time": "2020-09-09T07:21:51+00:00"
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "8.7.0",
+            "version": "8.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "29906f88d78fdb3ca43b86cfe7c78bc985739f8f"
+                "reference": "316bdc11fbca573415b99eaed9830bdeb383ad44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/29906f88d78fdb3ca43b86cfe7c78bc985739f8f",
-                "reference": "29906f88d78fdb3ca43b86cfe7c78bc985739f8f",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/316bdc11fbca573415b99eaed9830bdeb383ad44",
+                "reference": "316bdc11fbca573415b99eaed9830bdeb383ad44",
                 "shasum": ""
             },
             "require": {
                 "ext-fileinfo": "*",
                 "ext-json": "*",
-                "illuminate/bus": "^6.18|^7.0",
-                "illuminate/console": "^6.18|^7.0",
-                "illuminate/database": "^6.18|^7.0",
-                "illuminate/pipeline": "^6.18|^7.0",
-                "illuminate/support": "^6.18|^7.0",
+                "illuminate/bus": "^6.18|^7.0|^8.0",
+                "illuminate/console": "^6.18|^7.0|^8.0",
+                "illuminate/database": "^6.18|^7.0|^8.0",
+                "illuminate/pipeline": "^6.18|^7.0|^8.0",
+                "illuminate/support": "^6.18|^7.0|^8.0",
                 "league/flysystem": "^1.0.64",
                 "maennchen/zipstream-php": "^1.0|^2.0",
                 "php": "^7.4",
@@ -3908,7 +3907,7 @@
                 "guzzlehttp/guzzle": "^6.3",
                 "league/flysystem-aws-s3-v3": "^1.0.23",
                 "mockery/mockery": "^1.3",
-                "orchestra/testbench": "^4.0|^5.0",
+                "orchestra/testbench": "^4.0|^5.0|^6.0",
                 "php-ffmpeg/php-ffmpeg": "^0.16.0",
                 "phpunit/phpunit": "^9.1",
                 "spatie/pdf-to-image": "^2.0",
@@ -3966,7 +3965,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-03T07:57:29+00:00"
+            "time": "2020-09-08T17:55:03+00:00"
         },
         {
             "name": "spatie/laravel-translatable",
@@ -4098,16 +4097,16 @@
         },
         {
             "name": "spatie/temporary-directory",
-            "version": "1.2.3",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/temporary-directory.git",
-                "reference": "eeb84a7a3543e90759cd852ccb468e3d3340d99d"
+                "reference": "8efe8e61e0ca943d84341f10e51ef3a9606af932"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/temporary-directory/zipball/eeb84a7a3543e90759cd852ccb468e3d3340d99d",
-                "reference": "eeb84a7a3543e90759cd852ccb468e3d3340d99d",
+                "url": "https://api.github.com/repos/spatie/temporary-directory/zipball/8efe8e61e0ca943d84341f10e51ef3a9606af932",
+                "reference": "8efe8e61e0ca943d84341f10e51ef3a9606af932",
                 "shasum": ""
             },
             "require": {
@@ -4140,7 +4139,7 @@
                 "spatie",
                 "temporary-directory"
             ],
-            "time": "2020-06-08T08:58:45+00:00"
+            "time": "2020-09-07T20:41:15+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -4366,16 +4365,16 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v2.1.3",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "5e20b83385a77593259c9f8beb2c43cd03b2ac14"
+                "reference": "5fa56b4074d1ae755beb55617ddafe6f5d78f665"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/5e20b83385a77593259c9f8beb2c43cd03b2ac14",
-                "reference": "5e20b83385a77593259c9f8beb2c43cd03b2ac14",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/5fa56b4074d1ae755beb55617ddafe6f5d78f665",
+                "reference": "5fa56b4074d1ae755beb55617ddafe6f5d78f665",
                 "shasum": ""
             },
             "require": {
@@ -4384,7 +4383,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.1-dev"
+                    "dev-master": "2.2-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -4426,7 +4425,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-06-06T08:49:21+00:00"
+            "time": "2020-09-07T11:33:47+00:00"
         },
         {
             "name": "symfony/error-handler",
@@ -4587,16 +4586,16 @@
         },
         {
             "name": "symfony/event-dispatcher-contracts",
-            "version": "v2.1.3",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher-contracts.git",
-                "reference": "f6f613d74cfc5a623fc36294d3451eb7fa5a042b"
+                "reference": "0ba7d54483095a198fa51781bc608d17e84dffa2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/f6f613d74cfc5a623fc36294d3451eb7fa5a042b",
-                "reference": "f6f613d74cfc5a623fc36294d3451eb7fa5a042b",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/0ba7d54483095a198fa51781bc608d17e84dffa2",
+                "reference": "0ba7d54483095a198fa51781bc608d17e84dffa2",
                 "shasum": ""
             },
             "require": {
@@ -4609,7 +4608,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.1-dev"
+                    "dev-master": "2.2-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -4659,7 +4658,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-06T13:23:11+00:00"
+            "time": "2020-09-07T11:33:47+00:00"
         },
         {
             "name": "symfony/finder",
@@ -5927,16 +5926,16 @@
         },
         {
             "name": "symfony/service-contracts",
-            "version": "v2.1.3",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/service-contracts.git",
-                "reference": "58c7475e5457c5492c26cc740cc0ad7464be9442"
+                "reference": "d15da7ba4957ffb8f1747218be9e1a121fd298a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/58c7475e5457c5492c26cc740cc0ad7464be9442",
-                "reference": "58c7475e5457c5492c26cc740cc0ad7464be9442",
+                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/d15da7ba4957ffb8f1747218be9e1a121fd298a1",
+                "reference": "d15da7ba4957ffb8f1747218be9e1a121fd298a1",
                 "shasum": ""
             },
             "require": {
@@ -5949,7 +5948,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.1-dev"
+                    "dev-master": "2.2-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -5999,7 +5998,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-06T13:23:11+00:00"
+            "time": "2020-09-07T11:33:47+00:00"
         },
         {
             "name": "symfony/string",
@@ -6180,16 +6179,16 @@
         },
         {
             "name": "symfony/translation-contracts",
-            "version": "v2.1.3",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation-contracts.git",
-                "reference": "616a9773c853097607cf9dd6577d5b143ffdcd63"
+                "reference": "77ce1c3627c9f39643acd9af086631f842c50c4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/616a9773c853097607cf9dd6577d5b143ffdcd63",
-                "reference": "616a9773c853097607cf9dd6577d5b143ffdcd63",
+                "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/77ce1c3627c9f39643acd9af086631f842c50c4d",
+                "reference": "77ce1c3627c9f39643acd9af086631f842c50c4d",
                 "shasum": ""
             },
             "require": {
@@ -6201,7 +6200,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.1-dev"
+                    "dev-master": "2.2-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -6251,7 +6250,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-06T13:23:11+00:00"
+            "time": "2020-09-07T11:33:47+00:00"
         },
         {
             "name": "symfony/var-dumper",
@@ -6626,20 +6625,20 @@
         },
         {
             "name": "yajra/laravel-datatables-buttons",
-            "version": "v4.9.3",
+            "version": "v4.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-buttons.git",
-                "reference": "0ba6c5e095ed1e51d09643639290cbaaa35730b8"
+                "reference": "de06c1fedd84d86360d61a71ebf5bfcb43e95176"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-buttons/zipball/0ba6c5e095ed1e51d09643639290cbaaa35730b8",
-                "reference": "0ba6c5e095ed1e51d09643639290cbaaa35730b8",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-buttons/zipball/de06c1fedd84d86360d61a71ebf5bfcb43e95176",
+                "reference": "de06c1fedd84d86360d61a71ebf5bfcb43e95176",
                 "shasum": ""
             },
             "require": {
-                "illuminate/console": "^5.5|^6|^7",
+                "illuminate/console": "*",
                 "maatwebsite/excel": "^3.0",
                 "php": ">=7.0",
                 "yajra/laravel-datatables-html": "3.*|4.*",
@@ -6696,27 +6695,27 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-07-07T01:57:55+00:00"
+            "time": "2020-09-09T05:15:27+00:00"
         },
         {
             "name": "yajra/laravel-datatables-editor",
-            "version": "v1.21.0",
+            "version": "v1.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-editor.git",
-                "reference": "d46f8110af82daa14463c6ad7fbec23d75b90c3a"
+                "reference": "149f0560bd02ce6475a0911157b6da6d27396a7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-editor/zipball/d46f8110af82daa14463c6ad7fbec23d75b90c3a",
-                "reference": "d46f8110af82daa14463c6ad7fbec23d75b90c3a",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-editor/zipball/149f0560bd02ce6475a0911157b6da6d27396a7e",
+                "reference": "149f0560bd02ce6475a0911157b6da6d27396a7e",
                 "shasum": ""
             },
             "require": {
-                "illuminate/console": "5.5.*|5.6.*|5.7.*|5.8.*|^6|^7",
-                "illuminate/database": "5.5.*|5.6.*|5.7.*|5.8.*|^6|^7",
-                "illuminate/http": "5.5.*|5.6.*|5.7.*|5.8.*|^6|^7",
-                "illuminate/validation": "5.5.*|5.6.*|5.7.*|5.8.*|^6|^7",
+                "illuminate/console": "*",
+                "illuminate/database": "*",
+                "illuminate/http": "*",
+                "illuminate/validation": "*",
                 "php": ">=7.0",
                 "yajra/laravel-datatables-buttons": "3.*|4.*"
             },
@@ -6758,7 +6757,17 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2020-04-02T04:11:10+00:00"
+            "funding": [
+                {
+                    "url": "https://www.paypal.me/yajra",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/yajra",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2020-09-09T05:22:02+00:00"
         },
         {
             "name": "yajra/laravel-datatables-fractal",
@@ -6890,24 +6899,24 @@
         },
         {
             "name": "yajra/laravel-datatables-oracle",
-            "version": "v9.10.2",
+            "version": "v9.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables.git",
-                "reference": "7ccbc890aa03d645bd509c03299234dc631240ee"
+                "reference": "fb12721a46dd9071236d7e7e6de440413bc69087"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/7ccbc890aa03d645bd509c03299234dc631240ee",
-                "reference": "7ccbc890aa03d645bd509c03299234dc631240ee",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/fb12721a46dd9071236d7e7e6de440413bc69087",
+                "reference": "fb12721a46dd9071236d7e7e6de440413bc69087",
                 "shasum": ""
             },
             "require": {
-                "illuminate/database": "5.8.*|^6|^7",
-                "illuminate/filesystem": "5.8.*|^6|^7",
-                "illuminate/http": "5.8.*|^6|^7",
-                "illuminate/support": "5.8.*|^6|^7",
-                "illuminate/view": "5.8.*|^6|^7",
+                "illuminate/database": "5.8.*|^6|^7|^8",
+                "illuminate/filesystem": "5.8.*|^6|^7|^8",
+                "illuminate/http": "5.8.*|^6|^7|^8",
+                "illuminate/support": "5.8.*|^6|^7|^8",
+                "illuminate/view": "5.8.*|^6|^7|^8",
                 "php": "^7.1.3"
             },
             "require-dev": {
@@ -6967,41 +6976,42 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-06-17T03:08:37+00:00"
+            "time": "2020-09-09T02:36:16+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "barryvdh/laravel-debugbar",
-            "version": "v3.4.2",
+            "version": "v3.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-debugbar.git",
-                "reference": "91ee8b3acf0d72a4937f4855bd245acbda9910ac"
+                "reference": "233c10688f4c1a6e66ed2ef123038b1363d1bedc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/91ee8b3acf0d72a4937f4855bd245acbda9910ac",
-                "reference": "91ee8b3acf0d72a4937f4855bd245acbda9910ac",
+                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/233c10688f4c1a6e66ed2ef123038b1363d1bedc",
+                "reference": "233c10688f4c1a6e66ed2ef123038b1363d1bedc",
                 "shasum": ""
             },
             "require": {
-                "illuminate/routing": "^5.5|^6|^7",
-                "illuminate/session": "^5.5|^6|^7",
-                "illuminate/support": "^5.5|^6|^7",
+                "illuminate/routing": "^6|^7|^8",
+                "illuminate/session": "^6|^7|^8",
+                "illuminate/support": "^6|^7|^8",
                 "maximebf/debugbar": "^1.16.3",
-                "php": ">=7.0",
-                "symfony/debug": "^3|^4|^5",
-                "symfony/finder": "^3|^4|^5"
+                "php": ">=7.2",
+                "symfony/debug": "^4.3|^5",
+                "symfony/finder": "^4.3|^5"
             },
             "require-dev": {
-                "orchestra/testbench": "^3.5|^4.0|^5.0",
-                "phpunit/phpunit": "^6.0|^7.0|^8.5|^9.0"
+                "orchestra/testbench-dusk": "^4|^5|^6",
+                "phpunit/phpunit": "^8.5|^9.0",
+                "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.5-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -7044,7 +7054,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-08-30T07:08:17+00:00"
+            "time": "2020-09-07T19:32:39+00:00"
         },
         {
             "name": "beyondcode/laravel-query-detector",
@@ -7934,16 +7944,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.28",
+            "version": "2.0.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "d1ca58cf33cb21046d702ae3a7b14fdacd9f3260"
+                "reference": "497856a8d997f640b4a516062f84228a772a48a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/d1ca58cf33cb21046d702ae3a7b14fdacd9f3260",
-                "reference": "d1ca58cf33cb21046d702ae3a7b14fdacd9f3260",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/497856a8d997f640b4a516062f84228a772a48a8",
+                "reference": "497856a8d997f640b4a516062f84228a772a48a8",
                 "shasum": ""
             },
             "require": {
@@ -7952,7 +7962,6 @@
             "require-dev": {
                 "phing/phing": "~2.7",
                 "phpunit/phpunit": "^4.8.35|^5.7|^6.0",
-                "sami/sami": "~2.0",
                 "squizlabs/php_codesniffer": "~2.0"
             },
             "suggest": {
@@ -8036,7 +8045,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-08T09:08:33+00:00"
+            "time": "2020-09-08T04:24:43+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -9567,9 +9576,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "deepskylog/laravel-astronomy-library": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

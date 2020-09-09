@@ -12,7 +12,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Lens;
+use App\Models\Lens;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\DataTables\LensDataTable;
@@ -138,7 +138,7 @@ class LensController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Lens $lens The lens to show
+     * @param \App\Models\Lens $lens The lens to show
      *
      * @return \Illuminate\Http\Response
      */
