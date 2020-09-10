@@ -11,12 +11,28 @@
  * @link     http://www.deepskylog.org
  */
 
-use Faker\Generator as Faker;
+namespace Database\Factories;
+
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-$factory->define(
-    App\Models\User::class,
-    function (Faker $faker) {
+class UserFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = User::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
         $copyright = ['Attribution CC BY', 'Attribution-ShareAlike CC BY-SA',
             'Attribution-NoDerivs CC BY-ND', 'Attribution-NonCommercial CC BY-NC',
             'Attribution-NonCommercial-ShareAlike CC BY-NC-SA',
@@ -25,16 +41,16 @@ $factory->define(
         ];
 
         return [
-            'username' => $faker->firstName,
-            'name' => $faker->name,
-            'email' => $faker->unique()->safeEmail,
+            'username' => $this->faker->firstName,
+            'name' => $this->faker->name,
+            'email' => $this->faker->unique()->safeEmail,
             'email_verified_at' => now(),
-            'country' => $faker->countryCode,
-            'copyright' => $faker->randomElement($copyright),
+            'country' => $this->faker->countryCode,
+            'copyright' => $this->faker->randomElement($copyright),
             'password' => 'secret',
             'remember_token' => Str::random(10),
             'language' => 'en_US',
             'type' => 'default',
         ];
     }
-);
+}

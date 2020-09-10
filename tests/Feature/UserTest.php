@@ -40,7 +40,7 @@ class UserTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $user = factory('App\Models\User')->create();
+        $user = User::factory()->create();
         $this->actingAs($user);
 
         $this->assertTrue($this->isAuthenticated());

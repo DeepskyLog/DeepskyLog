@@ -10,23 +10,39 @@
  * @link     http://www.deepskylog.org
  */
 
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(
-    App\Models\Location::class,
-    function (Faker $faker) {
+use App\Models\Location;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class LocationFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Location::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
         return [
-            'name' => $faker->sentence(3, true),
-            'longitude' => $faker->longitude(),
-            'latitude' => $faker->latitude(),
-            'elevation' => $faker->numberBetween(0, 4000),
-            'country' => $faker->countryCode(),
-            'timezone' => $faker->timezone(),
-            'limitingMagnitude' => $faker->randomFloat(1, 3.5, 7.0),
-            'skyBackground' => $faker->randomFloat(2, 18.0, 22.0),
-            'bortle' => $faker->numberBetween(1, 9),
+            'name' => $this->faker->sentence(3, true),
+            'longitude' => $this->faker->longitude(),
+            'latitude' => $this->faker->latitude(),
+            'elevation' => $this->faker->numberBetween(0, 4000),
+            'country' => $this->faker->countryCode(),
+            'timezone' => $this->faker->timezone(),
+            'limitingMagnitude' => $this->faker->randomFloat(1, 3.5, 7.0),
+            'skyBackground' => $this->faker->randomFloat(2, 18.0, 22.0),
+            'bortle' => $this->faker->numberBetween(1, 9),
             'user_id' => \App\Models\User::inRandomOrder()->first()->id,
-            'active' => $faker->numberBetween(0, 1),
+            'active' => $this->faker->numberBetween(0, 1),
         ];
     }
-);
+}

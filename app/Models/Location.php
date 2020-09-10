@@ -17,6 +17,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -33,6 +34,7 @@ use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 class Location extends Model implements HasMedia
 {
     use InteractsWithMedia;
+    use HasFactory;
 
     protected $fillable = [
         'user_id', 'name', 'active',

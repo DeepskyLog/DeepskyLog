@@ -1,4 +1,4 @@
-< ? php
+<?php
 /**
  * Tests for creating, deleting, and adapting lenses.
  *
@@ -10,14 +10,16 @@
  * @link     http://www.deepskylog.org
  */
 
-namespace Tests\ Feature;
+namespace Tests\Feature;
 
-use Illuminate\ Auth\ Access\ AuthorizationException;
-use Illuminate\ Foundation\ Testing\ RefreshDatabase;
-use Illuminate\ Http\ UploadedFile;
-use Illuminate\ Support\ Facades\ DB;
-use Illuminate\ Support\ Facades\ Storage;
-use Tests\ TestCase;
+use Tests\TestCase;
+use App\Models\Lens;
+use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
  * Tests for creating, deleting, and adapting lenses.
@@ -27,7 +29,8 @@ use Tests\ TestCase;
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class LensTest extends TestCase {
+class LensTest extends TestCase
+{
     use RefreshDatabase;
 
     private $_user;
@@ -35,11 +38,11 @@ class LensTest extends TestCase {
     /**
      * Set up the user.
      */
-    public
-    function setUp(): void {
+    public function setUp(): void
+    {
         parent::setup();
 
-        $this - > _user = factory('App\Models\User') - > create();
+        $this->_user = User::factory()->create();
     }
 
     /**
@@ -49,13 +52,13 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function listLensesNotLoggedIn() {
-        $response = $this - > get('/lens');
+    public function listLensesNotLoggedIn()
+    {
+        $response = $this->get('/lens');
         // Code 302 is the code for redirecting
-        $response - > assertStatus(302);
+        $response->assertStatus(302);
         // Check if we are redirected to the login page
-        $response - > assertRedirect('/login');
+        $response->assertRedirect('/login');
     }
 
     /**
@@ -65,17 +68,17 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function listLensesLoggedIn() {
+    public function listLensesLoggedIn()
+    {
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this - > actingAs($this - > _user);
+        $this->actingAs($this->_user);
 
-        $response = $this - > get('/lens');
+        $response = $this->get('/lens');
         // Code 200 is the code for a working page
-        $response - > assertStatus(200);
+        $response->assertStatus(200);
         // Check if we see the correct page
-        $response - > assertSee('Lenses of');
+        $response->assertSee('Lenses of');
     }
 
     /**
@@ -85,13 +88,13 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function aUserCanCreateALens() {
-        $this - > withoutExceptionHandling();
+    public function aUserCanCreateALens()
+    {
+        $this->withoutExceptionHandling();
 
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this - > actingAs($this - > _user);
+        $this->actingAs($this->_user);
 
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
@@ -100,13 +103,13 @@ class LensTest extends TestCase {
             'factor' => 2.0,
         ];
 
-        $this - > post('lens', $attributes);
+        $this->post('lens', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['user_id'] = $this - > _user - > id;
+        $attributes['user_id'] = $this->_user->id;
 
         // Then there should be a new lens in the database
-        $this - > assertDatabaseHas('lens', $attributes);
+        $this->assertDatabaseHas('lens', $attributes);
     }
 
     /**
@@ -116,13 +119,13 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function aLensShouldHaveALongEnoughName() {
-        $this - > withoutExceptionHandling();
+    public function aLensShouldHaveALongEnoughName()
+    {
+        $this->withoutExceptionHandling();
 
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this - > actingAs($this - > _user);
+        $this->actingAs($this->_user);
 
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
@@ -131,9 +134,9 @@ class LensTest extends TestCase {
             'factor' => 2.0,
         ];
 
-        $this - > expectException(\Illuminate\ Validation\ ValidationException::class);
+        $this->expectException(\Illuminate\Validation\ValidationException::class);
 
-        $this - > post('lens', $attributes);
+        $this->post('lens', $attributes);
     }
 
     /**
@@ -143,13 +146,13 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function aLensShouldHaveAPositiveFactor() {
-        $this - > withoutExceptionHandling();
+    public function aLensShouldHaveAPositiveFactor()
+    {
+        $this->withoutExceptionHandling();
 
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this - > actingAs($this - > _user);
+        $this->actingAs($this->_user);
 
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
@@ -158,9 +161,9 @@ class LensTest extends TestCase {
             'factor' => -2.0,
         ];
 
-        $this - > expectException(\Illuminate\ Validation\ ValidationException::class);
+        $this->expectException(\Illuminate\Validation\ValidationException::class);
 
-        $this - > post('lens', $attributes);
+        $this->post('lens', $attributes);
     }
 
     /**
@@ -170,13 +173,13 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function aLensShouldHaveAFactorSmallerThan10() {
-        $this - > withoutExceptionHandling();
+    public function aLensShouldHaveAFactorSmallerThan10()
+    {
+        $this->withoutExceptionHandling();
 
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this - > actingAs($this - > _user);
+        $this->actingAs($this->_user);
 
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
@@ -185,9 +188,9 @@ class LensTest extends TestCase {
             'factor' => 12.0,
         ];
 
-        $this - > expectException(\Illuminate\ Validation\ ValidationException::class);
+        $this->expectException(\Illuminate\Validation\ValidationException::class);
 
-        $this - > post('lens', $attributes);
+        $this->post('lens', $attributes);
     }
 
     /**
@@ -197,21 +200,21 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function aLensShouldHaveALongEnoughNameAfterUpdate() {
+    public function aLensShouldHaveALongEnoughNameAfterUpdate()
+    {
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this - > actingAs($this - > _user);
+        $this->actingAs($this->_user);
 
-        $lens = factory('App\Models\Lens') - > create(['user_id' => $this - > _user - > id]);
+        $lens = Lens::factory()->create(['user_id' => $this->_user->id]);
 
-        $response = $this - > actingAs($this - > _user) - > put(
-            '/lens/'.$lens - > id,
+        $response = $this->actingAs($this->_user)->put(
+            '/lens/' . $lens->id,
             ['name' => 'test', 'factor' => 1.3]
         );
 
-        $response - > assertStatus(302);
-        $response - > assertSessionHasErrors(['name']);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['name']);
     }
 
     /**
@@ -221,41 +224,41 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function aLensShouldBeUpdateable() {
-        $this - > withoutExceptionHandling();
+    public function aLensShouldBeUpdateable()
+    {
+        $this->withoutExceptionHandling();
 
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this - > actingAs($this - > _user);
+        $this->actingAs($this->_user);
 
         // Get a new filter from the factory
-        $lens = factory('App\Models\Lens') - > create(['user_id' => $this - > _user - > id]);
+        $lens = Lens::factory()->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new lens in the database
         $attributes = [
-            'user_id' => $lens - > user_id,
-            'name' => $lens - > name,
-            'factor' => $lens - > factor,
-            'active' => $lens - > active,
+            'user_id' => $lens->user_id,
+            'name' => $lens->name,
+            'factor' => $lens->factor,
+            'active' => $lens->active,
         ];
 
         // Then there should be a new lens in the database
-        $this - > assertDatabaseHas('lens', $attributes);
+        $this->assertDatabaseHas('lens', $attributes);
 
-        $lens = \App\ Models\ Lens::firstOrFail();
+        $lens = \App\Models\Lens::firstOrFail();
 
         // Adapt the name and the factor
         $newAttributes = [
-            'user_id' => $this - > _user - > id,
+            'user_id' => $this->_user->id,
             'name' => 'My updated lens',
             'factor' => 2.5,
         ];
 
-        $this - > put('/lens/'.$lens - > id, $newAttributes);
+        $this->put('/lens/' . $lens->id, $newAttributes);
 
         // Then there should be an updated lens in the database
-        $this - > assertDatabaseHas('lens', $newAttributes);
+        $this->assertDatabaseHas('lens', $newAttributes);
     }
 
     /**
@@ -265,13 +268,13 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function aLensShouldNotBeUpdateableByOtherUser() {
-        $this - > withoutExceptionHandling();
+    public function aLensShouldNotBeUpdateableByOtherUser()
+    {
+        $this->withoutExceptionHandling();
 
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this - > actingAs($this - > _user);
+        $this->actingAs($this->_user);
 
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
@@ -280,29 +283,29 @@ class LensTest extends TestCase {
             'factor' => 2.0,
         ];
 
-        $this - > post('lens', $attributes);
+        $this->post('lens', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['user_id'] = $this - > _user - > id;
+        $attributes['user_id'] = $this->_user->id;
 
         // Then there should be a new lens in the database
-        $this - > assertDatabaseHas('lens', $attributes);
+        $this->assertDatabaseHas('lens', $attributes);
 
-        $lens = \App\ Models\ Lens::firstOrFail();
+        $lens = \App\Models\Lens::firstOrFail();
 
-        $newUser = factory('App\Models\User') - > create();
-        $this - > actingAs($newUser);
+        $newUser = User::factory()->create();
+        $this->actingAs($newUser);
 
         // Adapt the name and the factor
         $newAttributes = [
-            'user_id' => $newUser - > id,
+            'user_id' => $newUser->id,
             'name' => 'My updated lens',
             'factor' => 2.5,
         ];
 
-        $this - > expectException(AuthorizationException::class);
+        $this->expectException(AuthorizationException::class);
 
-        $this - > put('/lens/'.$lens - > id, $newAttributes);
+        $this->put('/lens/' . $lens->id, $newAttributes);
     }
 
     /**
@@ -312,13 +315,13 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function aLensShouldBeUpdateableByAdmin() {
-        $this - > withoutExceptionHandling();
+    public function aLensShouldBeUpdateableByAdmin()
+    {
+        $this->withoutExceptionHandling();
 
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this - > actingAs($this - > _user);
+        $this->actingAs($this->_user);
 
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
@@ -327,20 +330,20 @@ class LensTest extends TestCase {
             'factor' => 2.0,
         ];
 
-        $this - > post('lens', $attributes);
+        $this->post('lens', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['user_id'] = $this - > _user - > id;
+        $attributes['user_id'] = $this->_user->id;
 
         // Then there should be a new lens in the database
-        $this - > assertDatabaseHas('lens', $attributes);
+        $this->assertDatabaseHas('lens', $attributes);
 
-        $lens = \App\ Models\ Lens::firstOrFail();
+        $lens = \App\Models\Lens::firstOrFail();
 
-        $newUser = factory('App\Models\User') - > create();
-        $newUser - > type = 'admin';
+        $newUser = User::factory()->create();
+        $newUser->type = 'admin';
 
-        $this - > actingAs($newUser);
+        $this->actingAs($newUser);
 
         // Adapt the name and the factor
         $newAttributes = [
@@ -348,10 +351,10 @@ class LensTest extends TestCase {
             'factor' => 2.5,
         ];
 
-        $this - > put('/lens/'.$lens - > id, $newAttributes);
+        $this->put('/lens/' . $lens->id, $newAttributes);
 
         // Then there should be an updated lens in the database
-        $this - > assertDatabaseHas('lens', $newAttributes);
+        $this->assertDatabaseHas('lens', $newAttributes);
     }
 
     /**
@@ -361,45 +364,45 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function aLensShouldBeDeleteable() {
+    public function aLensShouldBeDeleteable()
+    {
         // TODO: Only make it possible to delete the lens if there are no observations!
-        $this - > withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this - > actingAs($this - > _user);
+        $this->actingAs($this->_user);
 
-        $lens = factory('App\Models\Lens') - > create(['user_id' => $this - > _user - > id]);
+        $lens = Lens::factory()->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new filter in the database
-        $this - > assertDatabaseHas(
+        $this->assertDatabaseHas(
             'lens',
             [
-                'name' => $lens - > name,
-                'factor' => $lens - > factor,
-                'active' => $lens - > active,
-                'user_id' => $lens - > user_id,
+                'name' => $lens->name,
+                'factor' => $lens->factor,
+                'active' => $lens->active,
+                'user_id' => $lens->user_id,
             ]
         );
 
-        $this - > assertEquals(1, \App\ Models\ Lens::count());
+        $this->assertEquals(1, \App\Models\Lens::count());
 
-        $response = $this - > delete('/lens/'.$lens - > id);
+        $response = $this->delete('/lens/' . $lens->id);
 
-        $response - > assertStatus(302);
+        $response->assertStatus(302);
 
         // Then there shouldn't be a filter in the database anymore
-        $this - > assertDatabaseMissing(
+        $this->assertDatabaseMissing(
             'lens',
             [
-                'name' => $lens - > name,
-                'factor' => $lens - > factor,
-                'active' => $lens - > active,
-                'user_id' => $lens - > user_id,
+                'name' => $lens->name,
+                'factor' => $lens->factor,
+                'active' => $lens->active,
+                'user_id' => $lens->user_id,
             ]
         );
-        $this - > assertEquals(0, \App\ Models\ Lens::count());
+        $this->assertEquals(0, \App\Models\Lens::count());
     }
 
     /**
@@ -409,13 +412,13 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function aLensShouldNotBeDeleteableByOtherUser() {
-        $this - > withoutExceptionHandling();
+    public function aLensShouldNotBeDeleteableByOtherUser()
+    {
+        $this->withoutExceptionHandling();
 
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this - > actingAs($this - > _user);
+        $this->actingAs($this->_user);
 
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
@@ -424,23 +427,23 @@ class LensTest extends TestCase {
             'factor' => 2.0,
         ];
 
-        $this - > post('lens', $attributes);
+        $this->post('lens', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['user_id'] = $this - > _user - > id;
+        $attributes['user_id'] = $this->_user->id;
 
         // Then there should be a new lens in the database
-        $this - > assertDatabaseHas('lens', $attributes);
+        $this->assertDatabaseHas('lens', $attributes);
 
-        $lens = \App\ Models\ Lens::firstOrFail();
+        $lens = \App\Models\Lens::firstOrFail();
 
-        $newUser = factory('App\Models\User') - > create();
-        $this - > actingAs($newUser);
+        $newUser = User::factory()->create();
+        $this->actingAs($newUser);
 
-        $this - > expectException(AuthorizationException::class);
+        $this->expectException(AuthorizationException::class);
 
         // Try to delete the lens
-        $this - > delete('/lens/'.$lens - > id);
+        $this->delete('/lens/' . $lens->id);
     }
 
     /**
@@ -450,13 +453,13 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function aLensShouldBeDeleteableByAdmin() {
-        $this - > withoutExceptionHandling();
+    public function aLensShouldBeDeleteableByAdmin()
+    {
+        $this->withoutExceptionHandling();
 
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
-        $this - > actingAs($this - > _user);
+        $this->actingAs($this->_user);
 
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
@@ -465,25 +468,25 @@ class LensTest extends TestCase {
             'factor' => 2.0,
         ];
 
-        $this - > post('lens', $attributes);
+        $this->post('lens', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['user_id'] = $this - > _user - > id;
+        $attributes['user_id'] = $this->_user->id;
 
         // Then there should be a new lens in the database
-        $this - > assertDatabaseHas('lens', $attributes);
+        $this->assertDatabaseHas('lens', $attributes);
 
-        $lens = \App\ Models\ Lens::firstOrFail();
+        $lens = \App\Models\Lens::firstOrFail();
 
-        $newUser = factory('App\Models\User') - > create();
-        $newUser - > type = 'admin';
+        $newUser = User::factory()->create();
+        $newUser->type = 'admin';
 
-        $this - > actingAs($newUser);
+        $this->actingAs($newUser);
 
-        $this - > delete('/lens/'.$lens - > id);
+        $this->delete('/lens/' . $lens->id);
 
         // Then there should not be a lens in the database anymore
-        $this - > assertDatabaseMissing('lens', $attributes);
+        $this->assertDatabaseMissing('lens', $attributes);
     }
 
     /**
@@ -493,11 +496,11 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function guestsMayNotCreateALens() {
-        $this - > withoutExceptionHandling();
+    public function guestsMayNotCreateALens()
+    {
+        $this->withoutExceptionHandling();
 
-        $this - > assertGuest();
+        $this->assertGuest();
 
         // When they hit the endpoint in /lens to create a new lens while
         // passing the necessary data
@@ -506,9 +509,9 @@ class LensTest extends TestCase {
             'factor' => 2.0,
         ];
 
-        $this - > expectException(\Illuminate\ Auth\ AuthenticationException::class);
+        $this->expectException(\Illuminate\Auth\AuthenticationException::class);
 
-        $this - > post('/lens', $attributes);
+        $this->post('/lens', $attributes);
     }
 
     /**
@@ -518,27 +521,27 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function unverifiedUsersMayNotCreateALens() {
+    public function unverifiedUsersMayNotCreateALens()
+    {
         //$this->withoutExceptionHandling();
 
         // Given I am a user who is logged in and not verified
         // Act as a new user created by the factory
-        $user = factory('App\Models\User') - > create(['email_verified_at' => null]);
+        $user = User::factory()->create(['email_verified_at' => null]);
 
-        $this - > actingAs($user);
+        $this->actingAs($user);
 
         // When they hit the endpoint in /lens to create a new lens while
         // passing the necessary data
         $attributes = [
-            'user_id' => $user - > id,
+            'user_id' => $user->id,
             'name' => 'Test lens for unverified user',
             'factor' => 2.5,
         ];
 
-        $this - > post('/lens', $attributes);
+        $this->post('/lens', $attributes);
 
-        $this - > assertDatabaseMissing('lens', $attributes);
+        $this->assertDatabaseMissing('lens', $attributes);
     }
 
     /**
@@ -548,12 +551,12 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function createPageIsNotAccessibleForGuests() {
-        $response = $this - > get('/lens/create');
+    public function createPageIsNotAccessibleForGuests()
+    {
+        $response = $this->get('/lens/create');
 
-        $response - > assertStatus(302);
-        $response - > assertRedirect('/login');
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
     }
 
     /**
@@ -563,14 +566,14 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function createPageIsNotAccessibleForUnverifiedUsers() {
-        $user = factory('App\Models\User') - > create(['email_verified_at' => null]);
+    public function createPageIsNotAccessibleForUnverifiedUsers()
+    {
+        $user = User::factory()->create(['email_verified_at' => null]);
 
-        $response = $this - > actingAs($user) - > get('/lens/create');
+        $response = $this->actingAs($user)->get('/lens/create');
 
-        $response - > assertStatus(302);
-        $response - > assertRedirect('/email/verify');
+        $response->assertStatus(302);
+        $response->assertRedirect('/email/verify');
     }
 
     /**
@@ -580,11 +583,11 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function createPageIsAccessibleForUser() {
-        $response = $this - > actingAs($this - > _user) - > get('/lens/create');
+    public function createPageIsAccessibleForUser()
+    {
+        $response = $this->actingAs($this->_user)->get('/lens/create');
 
-        $response - > assertStatus(200);
+        $response->assertStatus(200);
     }
 
     /**
@@ -594,12 +597,12 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function createPageIsAccessibleForAdmin() {
-        $user = factory('App\Models\User') - > create(['type' => 'admin']);
-        $response = $this - > actingAs($user) - > get('/lens/create');
+    public function createPageIsAccessibleForAdmin()
+    {
+        $user = User::factory()->create(['type' => 'admin']);
+        $response = $this->actingAs($user)->get('/lens/create');
 
-        $response - > assertStatus(200);
+        $response->assertStatus(200);
     }
 
     /**
@@ -609,18 +612,18 @@ class LensTest extends TestCase {
      *
      * @return None
      */
-    public
-    function updateLensPageContainsCorrectValues() {
-        $lens = factory('App\Models\Lens') - > create(['user_id' => $this - > _user - > id]);
+    public function updateLensPageContainsCorrectValues()
+    {
+        $lens = Lens::factory()->create(['user_id' => $this->_user->id]);
 
-        $response = $this - > actingAs($this - > _user) - > get(
-            '/lens/'.$lens - > id.
+        $response = $this->actingAs($this->_user)->get(
+            '/lens/' . $lens->id .
             '/edit'
         );
 
-        $response - > assertStatus(200);
-        $response - > assertSee($lens - > name);
-        $response - > assertSee($lens - > factor);
+        $response->assertStatus(200);
+        $response->assertSee($lens->name);
+        $response->assertSee($lens->factor);
     }
 
     /**
@@ -628,27 +631,26 @@ class LensTest extends TestCase {
      *
      * @test
      *
-     * @return void
      */
-    public
-    function testCreateLensFileUploaded() {
+    public function testCreateLensFileUploaded()
+    {
         // Will put the fake image in
         Storage::fake('public');
 
-        $this - > actingAs($this - > _user) - > post(
+        $this->actingAs($this->_user)->post(
             'lens',
             [
                 'name' => 'Test lens',
                 'factor' => 3.3,
-                'picture' => UploadedFile::fake() - > image('lens.png'),
+                'picture' => UploadedFile::fake()->image('lens.png'),
             ]
         );
 
-        $lens = \App\ Models\ Lens::firstOrFail();
+        $lens = \App\Models\Lens::firstOrFail();
 
-        Storage::disk('public') - > assertExists(
-            $lens - > id.
-            '/'.$lens - > id.
+        Storage::disk('public')->assertExists(
+            $lens->id .
+            '/' . $lens->id .
             '.png'
         );
     }
@@ -658,19 +660,18 @@ class LensTest extends TestCase {
      *
      * @test
      *
-     * @return void
      */
-    public
-    function testShowFilterDetailWithChangeButton() {
-        $lens = factory('App\Models\Lens') - > create(['user_id' => $this - > _user - > id]);
+    public function testShowFilterDetailWithChangeButton()
+    {
+        $lens = Lens::factory()->create(['user_id' => $this->_user->id]);
 
-        $response = $this - > actingAs($this - > _user) - > get('/lens/'.$lens - > id);
+        $response = $this->actingAs($this->_user)->get('/lens/' . $lens->id);
 
-        $response - > assertStatus(200);
-        $response - > assertSee($lens - > name);
-        $response - > assertSee($this - > _user - > name);
-        $response - > assertSee('Edit '.$lens - > name);
-        $response - > assertSee($lens - > factor);
+        $response->assertStatus(200);
+        $response->assertSee($lens->name);
+        $response->assertSee($this->_user->name);
+        $response->assertSee('Edit ' . $lens->name);
+        $response->assertSee($lens->factor);
     }
 
     /**
@@ -679,20 +680,19 @@ class LensTest extends TestCase {
      *
      * @test
      *
-     * @return void
      */
-    public
-    function testShowFilterDetailWithoutChangeButton() {
-        $newUser = factory('App\Models\User') - > create();
-        $lens = factory('App\Models\Lens') - > create(['user_id' => $newUser - > id]);
+    public function testShowFilterDetailWithoutChangeButton()
+    {
+        $newUser = User::factory()->create();
+        $lens = Lens::factory()->create(['user_id' => $newUser->id]);
 
-        $response = $this - > actingAs($this - > _user) - > get('/lens/'.$lens - > id);
+        $response = $this->actingAs($this->_user)->get('/lens/' . $lens->id);
 
-        $response - > assertStatus(200);
-        $response - > assertSee($lens - > name);
-        $response - > assertSee($this - > _user - > name);
-        $response - > assertDontSee('Edit '.$lens - > name);
-        $response - > assertSee($lens - > factor);
+        $response->assertStatus(200);
+        $response->assertSee($lens->name);
+        $response->assertSee($this->_user->name);
+        $response->assertDontSee('Edit ' . $lens->name);
+        $response->assertSee($lens->factor);
     }
 
     /**
@@ -700,20 +700,19 @@ class LensTest extends TestCase {
      *
      * @test
      *
-     * @return void
      */
-    public
-    function testAdminAlwaysSeesChangeButton() {
-        $admin = factory('App\Models\User') - > create(['type' => 'admin']);
-        $lens = factory('App\Models\Lens') - > create(['user_id' => $this - > _user - > id]);
+    public function testAdminAlwaysSeesChangeButton()
+    {
+        $admin = User::factory()->create(['type' => 'admin']);
+        $lens = Lens::factory()->create(['user_id' => $this->_user->id]);
 
-        $response = $this - > actingAs($admin) - > get('/lens/'.$lens - > id);
+        $response = $this->actingAs($admin)->get('/lens/' . $lens->id);
 
-        $response - > assertStatus(200);
-        $response - > assertSee($lens - > name);
-        $response - > assertSee($this - > _user - > name);
-        $response - > assertSee($lens - > factor);
-        $response - > assertSee('Edit '.$lens - > name);
+        $response->assertStatus(200);
+        $response->assertSee($lens->name);
+        $response->assertSee($this->_user->name);
+        $response->assertSee($lens->factor);
+        $response->assertSee('Edit ' . $lens->name);
     }
 
     /**
@@ -721,19 +720,18 @@ class LensTest extends TestCase {
      *
      * @test
      *
-     * @return void
      */
-    public
-    function testGuestNeverSeesChangeButton() {
-        $lens = factory('App\Models\Lens') - > create(['user_id' => $this - > _user - > id]);
+    public function testGuestNeverSeesChangeButton()
+    {
+        $lens = Lens::factory()->create(['user_id' => $this->_user->id]);
 
-        $response = $this - > get('/lens/'.$lens - > id);
+        $response = $this->get('/lens/' . $lens->id);
 
-        $response - > assertStatus(200);
-        $response - > assertSee($lens - > name);
-        $response - > assertSee($lens - > factor);
-        $response - > assertSee($this - > _user - > name);
-        $response - > assertDontSee('Edit '.$lens - > name);
+        $response->assertStatus(200);
+        $response->assertSee($lens->name);
+        $response->assertSee($lens->factor);
+        $response->assertSee($this->_user->name);
+        $response->assertDontSee('Edit ' . $lens->name);
     }
 
     /**
@@ -741,30 +739,29 @@ class LensTest extends TestCase {
      *
      * @test
      *
-     * @return void
      */
-    public
-    function testOnlyAdminCanSeeOverviewOfAllLenses() {
-        factory('App\Models\User', 50) - > create();
-        $lens = factory('App\Models\Lens', 500) - > create();
+    public function testOnlyAdminCanSeeOverviewOfAllLenses()
+    {
+        User::factory(50)->create();
+        $lens = Lens::factory(500)->create();
 
         // Check as guest
-        $response = $this - > get('/lens/admin');
+        $response = $this->get('/lens/admin');
 
-        $response - > assertStatus(302);
-        $response - > assertRedirect('/login');
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
 
         // Check as normal user
-        $response = $this - > actingAs($this - > _user) - > get('/lens/admin');
+        $response = $this->actingAs($this->_user)->get('/lens/admin');
 
-        $response - > assertStatus(401);
+        $response->assertStatus(401);
 
         // Check as admin
-        $admin = factory('App\Models\User') - > create(['type' => 'admin']);
-        $response = $this - > actingAs($admin) - > get('/lens/admin');
+        $admin = User::factory()->create(['type' => 'admin']);
+        $response = $this->actingAs($admin)->get('/lens/admin');
 
-        $response - > assertStatus(200);
-        $response - > assertSee('All lenses');
+        $response->assertStatus(200);
+        $response->assertSee('All lenses');
     }
 
     /**
@@ -772,27 +769,26 @@ class LensTest extends TestCase {
      *
      * @test
      *
-     * @return void
      */
-    public
-    function testJsonInformationForLens() {
-        $lens = factory('App\Models\Lens') - > create(['user_id' => $this - > _user - > id]);
+    public function testJsonInformationForLens()
+    {
+        $lens = Lens::factory()->create(['user_id' => $this->_user->id]);
 
         // Only for logged in users!
-        $response = $this - > get('/getLensJson/'.$lens - > id);
-        $response - > assertStatus(302);
-        $response - > assertRedirect('/login');
+        $response = $this->get('/getLensJson/' . $lens->id);
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
 
         // Test for logged in user
-        $response = $this - > actingAs($this - > _user) - > get(
-            '/getLensJson/'.$lens - > id
+        $response = $this->actingAs($this->_user)->get(
+            '/getLensJson/' . $lens->id
         );
 
-        $this - > assertEquals($response['name'], $lens - > name);
-        $this - > assertEquals($response['id'], $lens - > id);
-        $this - > assertEquals($response['user_id'], $lens - > user_id);
-        $this - > assertEquals($response['factor'], $lens - > factor);
-        $this - > assertEquals($response['active'], $lens - > active);
+        $this->assertEquals($response['name'], $lens->name);
+        $this->assertEquals($response['id'], $lens->id);
+        $this->assertEquals($response['user_id'], $lens->user_id);
+        $this->assertEquals($response['factor'], $lens->factor);
+        $this->assertEquals($response['active'], $lens->active);
     }
 
     /**
@@ -800,38 +796,38 @@ class LensTest extends TestCase {
      *
      * @test
      */
-    public
-    function testGetLensImage() {
+    public function testGetLensImage()
+    {
         // Will put the fake image in
         Storage::fake('public');
 
-        $lens = factory('App\Models\Lens') - > create(['user_id' => $this - > _user - > id]);
+        $lens = Lens::factory()->create(['user_id' => $this->_user->id]);
 
         // Check the image, if no image is uploaded
-        $this - > actingAs($this - > _user) - > get('lens/'.$lens - > id.
+        $this->actingAs($this->_user)->get('lens/' . $lens->id .
             '/getImage');
 
-        Storage::disk('public') - > assertExists(
-            $lens - > id.
-            '/'.$lens - > id.
+        Storage::disk('public')->assertExists(
+            $lens->id .
+            '/' . $lens->id .
             '.png'
         );
 
         // Check the image if we have uploaded an image
-        $this - > actingAs($this - > _user) - > post(
+        $this->actingAs($this->_user)->post(
             'lens',
             [
                 'name' => 'Test lens',
                 'factor' => 3.2,
-                'picture' => UploadedFile::fake() - > image('lens.png'),
+                'picture' => UploadedFile::fake()->image('lens.png'),
             ]
         );
 
-        $lens2 = DB::table('lens') - > latest('id') - > first();
+        $lens2 = DB::table('lens')->latest('id')->first();
 
-        Storage::disk('public') - > assertExists(
-            $lens2 - > id.
-            '/'.$lens2 - > id.
+        Storage::disk('public')->assertExists(
+            $lens2->id .
+            '/' . $lens2->id .
             '.png'
         );
     }
@@ -841,56 +837,56 @@ class LensTest extends TestCase {
      *
      * @test
      */
-    public
-    function testDeleteFilterImage() {
+    public function testDeleteFilterImage()
+    {
         // Will put the fake image in
         Storage::fake('public');
 
         // Check if we can delete the image if we have uploaded an image
-        $this - > actingAs($this - > _user) - > post(
+        $this->actingAs($this->_user)->post(
             'lens',
             [
                 'name' => 'Test lens',
                 'factor' => 3.1,
-                'picture' => UploadedFile::fake() - > image('lens.png'),
+                'picture' => UploadedFile::fake()->image('lens.png'),
             ]
         );
 
-        $lens = DB::table('lens') - > latest('id') - > first();
+        $lens = DB::table('lens')->latest('id')->first();
 
-        $this - > actingAs($this - > _user) - > post(
-            'lens/'.$lens - > id.
+        $this->actingAs($this->_user)->post(
+            'lens/' . $lens->id .
             '/deleteImage'
         );
 
-        Storage::disk('public') - > assertMissing(
-            $lens - > id.
-            '/'.$lens - > id.
+        Storage::disk('public')->assertMissing(
+            $lens->id .
+            '/' . $lens->id .
             '.png'
         );
 
         // Check if another user cannot delete the image if we have uploaded an image
-        $this - > actingAs($this - > _user) - > post(
+        $this->actingAs($this->_user)->post(
             'lens',
             [
                 'name' => 'Test lens',
                 'factor' => 3.1,
-                'picture' => UploadedFile::fake() - > image('lens.png'),
+                'picture' => UploadedFile::fake()->image('lens.png'),
             ]
         );
 
-        $lens = DB::table('lens') - > latest('id') - > first();
+        $lens = DB::table('lens')->latest('id')->first();
 
-        $user = factory('App\Models\User') - > create();
+        $user = User::factory()->create();
 
-        $this - > actingAs($user) - > post(
-            'lens/'.$lens - > id.
+        $this->actingAs($user)->post(
+            'lens/' . $lens->id .
             '/deleteImage'
         );
 
-        Storage::disk('public') - > assertExists(
-            $lens - > id.
-            '/'.$lens - > id.
+        Storage::disk('public')->assertExists(
+            $lens->id .
+            '/' . $lens->id .
             '.png'
         );
     }
@@ -900,39 +896,38 @@ class LensTest extends TestCase {
      *
      * @test
      *
-     * @return void
      */
-    public
-    function testAutocompleteForLens() {
-        $lens = factory('App\Models\Lens') - > create(
-            ['user_id' => $this - > _user - > id, 'name' => 'DeepskyLog test lens']
+    public function testAutocompleteForLens()
+    {
+        $lens = Lens::factory()->create(
+            ['user_id' => $this->_user->id, 'name' => 'DeepskyLog test lens']
         );
 
-        $lens2 = factory('App\Models\Lens') - > create(
-            ['user_id' => $this - > _user - > id, 'name' => 'Other test lens']
+        $lens2 = Lens::factory()->create(
+            ['user_id' => $this->_user->id, 'name' => 'Other test lens']
         );
 
         // Only for logged in users!
-        $response = $this - > get('/lens/autocomplete?q=Deep');
-        $response - > assertStatus(302);
-        $response - > assertRedirect('/login');
+        $response = $this->get('/lens/autocomplete?q=Deep');
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
 
         // Test for logged in user
-        $response = $this - > actingAs($this - > _user) - > get(
+        $response = $this->actingAs($this->_user)->get(
             '/lens/autocomplete?q=Deep'
         );
 
-        $this - > assertEquals($lens - > id, $response[0]['id']);
-        $this - > assertEquals($lens - > name, $response[0]['name']);
+        $this->assertEquals($lens->id, $response[0]['id']);
+        $this->assertEquals($lens->name, $response[0]['name']);
 
-        $response = $this - > actingAs($this - > _user) - > get(
+        $response = $this->actingAs($this->_user)->get(
             '/lens/autocomplete?q=test'
         );
 
-        $this - > assertEquals($lens - > id, $response[0]['id']);
-        $this - > assertEquals($lens - > name, $response[0]['name']);
+        $this->assertEquals($lens->id, $response[0]['id']);
+        $this->assertEquals($lens->name, $response[0]['name']);
 
-        $this - > assertEquals($lens2 - > id, $response[1]['id']);
-        $this - > assertEquals($lens2 - > name, $response[1]['name']);
+        $this->assertEquals($lens2->id, $response[1]['id']);
+        $this->assertEquals($lens2->name, $response[1]['name']);
     }
 }

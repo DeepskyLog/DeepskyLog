@@ -18,6 +18,7 @@ use Cmgmyr\Messenger\Traits\Messagable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -35,6 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     use Notifiable;
     use InteractsWithMedia;
     use Messagable;
+    use HasFactory;
 
     public const ADMIN_TYPE = 'admin';
     public const DEFAULT_TYPE = 'default';

@@ -28,7 +28,7 @@ class LoginTest extends TestCase
      */
     public function testUserCannotViewALoginFormWhenAuthenticated()
     {
-        $user = factory('App\Models\User')->make();
+        $user = User::factory()->make();
 
         $response = $this->actingAs($user)->get('/login');
 
