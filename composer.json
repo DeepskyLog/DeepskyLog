@@ -11,7 +11,7 @@
         "php": "^7.4",
         "anhskohbo/no-captcha": "^3.0",
         "cmgmyr/messenger": "^2.17",
-        "coderello/laraflash": "^3.0",
+        "coderello/laraflash": "^4.0",
         "deepskylog/laravel-astronomy-library": "^4.0",
         "deepskylog/laravel-gettext": "^7.3",
         "dompdf/dompdf": "^0.8.3",
