@@ -15,7 +15,7 @@ namespace Database\Factories;
 use App\Models\Lens;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserFactory extends Factory
+class LensFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
