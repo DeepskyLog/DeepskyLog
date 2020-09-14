@@ -8,21 +8,21 @@
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
-            "version": "3.2.1",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/anhskohbo/no-captcha.git",
-                "reference": "6386365b76cfa6a6043dc2783a2a615c8574faf9"
+                "reference": "f654a4093bd2e9ddbdfad3297bb7aa142a55e611"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anhskohbo/no-captcha/zipball/6386365b76cfa6a6043dc2783a2a615c8574faf9",
-                "reference": "6386365b76cfa6a6043dc2783a2a615c8574faf9",
+                "url": "https://api.github.com/repos/anhskohbo/no-captcha/zipball/f654a4093bd2e9ddbdfad3297bb7aa142a55e611",
+                "reference": "f654a4093bd2e9ddbdfad3297bb7aa142a55e611",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^6.2|^7.0",
-                "illuminate/support": "^5.0|^6.0|^7.0",
+                "illuminate/support": "^5.0|^6.0|^7.0|^8.0",
                 "php": ">=5.5.5"
             },
             "require-dev": {
@@ -64,7 +64,7 @@
                 "no-captcha",
                 "recaptcha"
             ],
-            "time": "2020-08-06T05:45:09+00:00"
+            "time": "2020-09-10T02:31:52+00:00"
         },
         {
             "name": "brick/math",
@@ -1122,16 +1122,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v7.28.0",
+            "version": "v7.28.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "5d3b4e3e62294716e3c810be3d2eb1375685b87d"
+                "reference": "f7493ab717ca2a9598b1db2d6a3bae8ac8c755e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/5d3b4e3e62294716e3c810be3d2eb1375685b87d",
-                "reference": "5d3b4e3e62294716e3c810be3d2eb1375685b87d",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/f7493ab717ca2a9598b1db2d6a3bae8ac8c755e8",
+                "reference": "f7493ab717ca2a9598b1db2d6a3bae8ac8c755e8",
                 "shasum": ""
             },
             "require": {
@@ -1276,7 +1276,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-09-08T15:10:40+00:00"
+            "time": "2020-09-09T15:02:46+00:00"
         },
         {
             "name": "laravel/helpers",
@@ -1397,16 +1397,16 @@
         },
         {
             "name": "laravel/ui",
-            "version": "v2.2.1",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/ui.git",
-                "reference": "456daa330a32483b0fa9794334e60af6b2db3bf6"
+                "reference": "2ccaa3b821ea8ac7e05393b946d0578bdb46099b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/ui/zipball/456daa330a32483b0fa9794334e60af6b2db3bf6",
-                "reference": "456daa330a32483b0fa9794334e60af6b2db3bf6",
+                "url": "https://api.github.com/repos/laravel/ui/zipball/2ccaa3b821ea8ac7e05393b946d0578bdb46099b",
+                "reference": "2ccaa3b821ea8ac7e05393b946d0578bdb46099b",
                 "shasum": ""
             },
             "require": {
@@ -1448,7 +1448,7 @@
                 "laravel",
                 "ui"
             ],
-            "time": "2020-09-08T13:09:39+00:00"
+            "time": "2020-09-09T12:07:59+00:00"
         },
         {
             "name": "laravelcollective/html",
@@ -1882,16 +1882,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v2.1.2",
+            "version": "v2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "43bfe091c909b7baf1e9fae7decbbe19ec7dd6ad"
+                "reference": "a91505905a65f58955657d43f0348d97c43e72fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/43bfe091c909b7baf1e9fae7decbbe19ec7dd6ad",
-                "reference": "43bfe091c909b7baf1e9fae7decbbe19ec7dd6ad",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/a91505905a65f58955657d43f0348d97c43e72fc",
+                "reference": "a91505905a65f58955657d43f0348d97c43e72fc",
                 "shasum": ""
             },
             "require": {
@@ -1943,7 +1943,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-09T03:29:38+00:00"
+            "time": "2020-09-10T19:37:42+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -2252,20 +2252,20 @@
         },
         {
             "name": "monarobase/country-list",
-            "version": "3.1.0",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Monarobase/country-list.git",
-                "reference": "b5e6d1b237c4fa38c989b4bdb9917c803824c77d"
+                "reference": "c3726af5e7113a7c12710f2c2d0ca4e1b733d876"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Monarobase/country-list/zipball/b5e6d1b237c4fa38c989b4bdb9917c803824c77d",
-                "reference": "b5e6d1b237c4fa38c989b4bdb9917c803824c77d",
+                "url": "https://api.github.com/repos/Monarobase/country-list/zipball/c3726af5e7113a7c12710f2c2d0ca4e1b733d876",
+                "reference": "c3726af5e7113a7c12710f2c2d0ca4e1b733d876",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^5.8|^6|^7",
+                "illuminate/support": "^5.8|^6|^7|^8",
                 "php": ">=5.6.0",
                 "umpirsky/country-list": "2.0.*"
             },
@@ -2305,7 +2305,7 @@
                 "countries",
                 "laravel"
             ],
-            "time": "2020-03-10T15:42:14+00:00"
+            "time": "2020-09-09T11:59:52+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2494,16 +2494,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.39.1",
+            "version": "2.39.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "7af467873250583cc967a59ee9df29fabab193c1"
+                "reference": "326efde1bc09077a26cb77f6e2e32e13f06c27f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/7af467873250583cc967a59ee9df29fabab193c1",
-                "reference": "7af467873250583cc967a59ee9df29fabab193c1",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/326efde1bc09077a26cb77f6e2e32e13f06c27f2",
+                "reference": "326efde1bc09077a26cb77f6e2e32e13f06c27f2",
                 "shasum": ""
             },
             "require": {
@@ -2579,7 +2579,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-04T13:11:37+00:00"
+            "time": "2020-09-10T12:16:42+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -3491,16 +3491,16 @@
         },
         {
             "name": "ramsey/collection",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/collection.git",
-                "reference": "044184884e3c803e4cbb6451386cb71562939b18"
+                "reference": "24d93aefb2cd786b7edd9f45b554aea20b28b9b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/collection/zipball/044184884e3c803e4cbb6451386cb71562939b18",
-                "reference": "044184884e3c803e4cbb6451386cb71562939b18",
+                "url": "https://api.github.com/repos/ramsey/collection/zipball/24d93aefb2cd786b7edd9f45b554aea20b28b9b1",
+                "reference": "24d93aefb2cd786b7edd9f45b554aea20b28b9b1",
                 "shasum": ""
             },
             "require": {
@@ -3556,7 +3556,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-08-11T00:57:21+00:00"
+            "time": "2020-09-10T20:58:17+00:00"
         },
         {
             "name": "ramsey/uuid",
@@ -8410,16 +8410,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.3.8",
+            "version": "9.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "93d78d8e2a06393a0d0c1ead6fe9984f1af1f88c"
+                "reference": "60c90ba713075e83bd039db4760226df7ad9a5cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/93d78d8e2a06393a0d0c1ead6fe9984f1af1f88c",
-                "reference": "93d78d8e2a06393a0d0c1ead6fe9984f1af1f88c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/60c90ba713075e83bd039db4760226df7ad9a5cb",
+                "reference": "60c90ba713075e83bd039db4760226df7ad9a5cb",
                 "shasum": ""
             },
             "require": {
@@ -8433,7 +8433,7 @@
                 "myclabs/deep-copy": "^1.10.1",
                 "phar-io/manifest": "^2.0.1",
                 "phar-io/version": "^3.0.2",
-                "php": "^7.3 || ^8.0",
+                "php": ">=7.3",
                 "phpspec/prophecy": "^1.11.1",
                 "phpunit/php-code-coverage": "^9.1.5",
                 "phpunit/php-file-iterator": "^3.0.4",
@@ -8505,7 +8505,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-08-27T06:30:58+00:00"
+            "time": "2020-09-11T12:42:34+00:00"
         },
         {
             "name": "sebastian/cli-parser",
