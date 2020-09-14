@@ -292,28 +292,28 @@
         },
         {
             "name": "deepskylog/laravel-gettext",
-            "version": "7.3.0",
+            "version": "v7.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-gettext.git",
-                "reference": "f6be05e0c19b1b91fb99fe98ec36a53b878b7a4b"
+                "reference": "087a8490e8d02a61d5999907a007e4e2f48080ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-gettext/zipball/f6be05e0c19b1b91fb99fe98ec36a53b878b7a4b",
-                "reference": "f6be05e0c19b1b91fb99fe98ec36a53b878b7a4b",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-gettext/zipball/087a8490e8d02a61d5999907a007e4e2f48080ad",
+                "reference": "087a8490e8d02a61d5999907a007e4e2f48080ad",
                 "shasum": ""
             },
             "require": {
-                "laravel/framework": "^5.6 || ^6.0 || ^7.0",
+                "laravel/framework": "^6.0 || ^7.0 || ^8.0",
                 "laravel/helpers": "^1.1",
-                "php": ">=7.1"
+                "php": ">=7.2"
             },
             "require-dev": {
-                "laravel/laravel": "^5.6 || ^6.0",
+                "laravel/laravel": "^6.0 || ^7.0 || ^8.0",
                 "mockery/mockery": "dev-master",
                 "php-coveralls/php-coveralls": "^2.1",
-                "phpunit/phpunit": "~7.0 || ^8",
+                "phpunit/phpunit": "~7.0 || ^8.5 || ^9",
                 "squizlabs/php_codesniffer": "1.5.*"
             },
             "type": "library",
@@ -360,7 +360,7 @@
                 "poEdit",
                 "translation"
             ],
-            "time": "2020-04-22T09:37:55+00:00"
+            "time": "2020-09-14T09:07:22+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1397,27 +1397,27 @@
         },
         {
             "name": "laravel/ui",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/ui.git",
-                "reference": "2ccaa3b821ea8ac7e05393b946d0578bdb46099b"
+                "reference": "f5398544a9cd4804a42d09ce51735e37cd51ea2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/ui/zipball/2ccaa3b821ea8ac7e05393b946d0578bdb46099b",
-                "reference": "2ccaa3b821ea8ac7e05393b946d0578bdb46099b",
+                "url": "https://api.github.com/repos/laravel/ui/zipball/f5398544a9cd4804a42d09ce51735e37cd51ea2d",
+                "reference": "f5398544a9cd4804a42d09ce51735e37cd51ea2d",
                 "shasum": ""
             },
             "require": {
-                "illuminate/console": "^7.0|^8.0",
-                "illuminate/filesystem": "^7.0|^8.0",
-                "illuminate/support": "^7.0|^8.0",
+                "illuminate/console": "^7.0",
+                "illuminate/filesystem": "^7.0",
+                "illuminate/support": "^7.0",
                 "php": "^7.2.5"
             },
             "require-dev": {
                 "mockery/mockery": "^1.0",
-                "phpunit/phpunit": "^8.0|^9.0"
+                "phpunit/phpunit": "^8.0"
             },
             "type": "library",
             "extra": {
@@ -1448,7 +1448,7 @@
                 "laravel",
                 "ui"
             ],
-            "time": "2020-09-09T12:07:59+00:00"
+            "time": "2020-09-11T15:31:52+00:00"
         },
         {
             "name": "laravelcollective/html",
@@ -1520,16 +1520,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "1.5.4",
+            "version": "1.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "21819c989e69bab07e933866ad30c7e3f32984ba"
+                "reference": "45832dfed6007b984c0d40addfac48d403dc6432"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/21819c989e69bab07e933866ad30c7e3f32984ba",
-                "reference": "21819c989e69bab07e933866ad30c7e3f32984ba",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/45832dfed6007b984c0d40addfac48d403dc6432",
+                "reference": "45832dfed6007b984c0d40addfac48d403dc6432",
                 "shasum": ""
             },
             "require": {
@@ -1541,7 +1541,7 @@
             },
             "require-dev": {
                 "cebe/markdown": "~1.0",
-                "commonmark/commonmark.js": "0.29.1",
+                "commonmark/commonmark.js": "0.29.2",
                 "erusev/parsedown": "~1.0",
                 "ext-json": "*",
                 "github/gfm": "0.29.0",
@@ -1611,7 +1611,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-18T01:19:12+00:00"
+            "time": "2020-09-13T14:44:46+00:00"
         },
         {
             "name": "league/flysystem",
@@ -1882,16 +1882,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v2.1.4",
+            "version": "v2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "a91505905a65f58955657d43f0348d97c43e72fc"
+                "reference": "ad3f8de28e77acded47af1bc1cba2f9d719e2323"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/a91505905a65f58955657d43f0348d97c43e72fc",
-                "reference": "a91505905a65f58955657d43f0348d97c43e72fc",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/ad3f8de28e77acded47af1bc1cba2f9d719e2323",
+                "reference": "ad3f8de28e77acded47af1bc1cba2f9d719e2323",
                 "shasum": ""
             },
             "require": {
@@ -1905,8 +1905,8 @@
                 "calebporzio/sushi": "^2.1",
                 "laravel/framework": "^7.0|^8.0",
                 "mockery/mockery": "^1.3.1",
-                "orchestra/testbench": "^5.0",
-                "orchestra/testbench-dusk": "^5.2",
+                "orchestra/testbench": "^5.0|^6.0",
+                "orchestra/testbench-dusk": "^5.2|^6.0",
                 "phpunit/phpunit": "^8.4|^9.0",
                 "psy/psysh": "@stable"
             },
@@ -1943,7 +1943,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-10T19:37:42+00:00"
+            "time": "2020-09-13T23:07:50+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -8410,16 +8410,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.3.9",
+            "version": "9.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "60c90ba713075e83bd039db4760226df7ad9a5cb"
+                "reference": "919333f2d046a89f9238f15d09f17a8f0baa5cc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/60c90ba713075e83bd039db4760226df7ad9a5cb",
-                "reference": "60c90ba713075e83bd039db4760226df7ad9a5cb",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/919333f2d046a89f9238f15d09f17a8f0baa5cc2",
+                "reference": "919333f2d046a89f9238f15d09f17a8f0baa5cc2",
                 "shasum": ""
             },
             "require": {
@@ -8505,7 +8505,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-11T12:42:34+00:00"
+            "time": "2020-09-12T09:34:39+00:00"
         },
         {
             "name": "sebastian/cli-parser",
