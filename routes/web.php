@@ -239,7 +239,11 @@ Route::get('/target/{name}', 'TargetController@show')
 Route::get('/target/autocomplete', 'TargetController@dataAjax')
     ->name('target.dataAjax');
 
-    // Social log in
+Route::get('/sponsors', function () {
+    return view('layout.sponsors');
+});
+
+// Social log in
 //Route::get('/redirect/{service}', 'SocialAuthController@redirect');
 //Route::get('/callback/{service}', 'SocialAuthController@callback');
 //Route::get('/callback/{service}', 'Auth\LoginController@handleProviderCallback');
