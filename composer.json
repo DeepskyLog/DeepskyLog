@@ -10,7 +10,7 @@
     "require": {
         "php": "^7.4",
         "anhskohbo/no-captcha": "^3.0",
-        "cmgmyr/messenger": "@dev",
+        "cmgmyr/messenger": "^2.0",
         "coderello/laraflash": "^4.0",
         "deepskylog/laravel-astronomy-library": "^4.0",
         "deepskylog/laravel-gettext": "^7.3",
