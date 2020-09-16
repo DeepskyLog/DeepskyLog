@@ -120,29 +120,29 @@
         },
         {
             "name": "cmgmyr/messenger",
-            "version": "2.20",
+            "version": "2.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cmgmyr/laravel-messenger.git",
-                "reference": "9cab0744ab744a6aecfb75646f5cf781b32938b3"
+                "reference": "fc9e943684ec3549d5bc0792249b906efe080fd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cmgmyr/laravel-messenger/zipball/9cab0744ab744a6aecfb75646f5cf781b32938b3",
-                "reference": "9cab0744ab744a6aecfb75646f5cf781b32938b3",
+                "url": "https://api.github.com/repos/cmgmyr/laravel-messenger/zipball/fc9e943684ec3549d5bc0792249b906efe080fd6",
+                "reference": "fc9e943684ec3549d5bc0792249b906efe080fd6",
                 "shasum": ""
             },
             "require": {
-                "illuminate/config": "^5.5|^6.0|^7.0",
-                "illuminate/database": "^5.5|^6.0|^7.0",
-                "illuminate/support": "^5.5|^6.0|^7.0",
-                "php": "^7.1.3"
+                "illuminate/config": "^5.5|^6.0|^7.0|^8.0",
+                "illuminate/database": "^5.5|^6.0|^7.0|^8.0",
+                "illuminate/support": "^5.5|^6.0|^7.0|^8.0",
+                "php": "^7.2"
             },
             "require-dev": {
                 "adamwathan/faktory": "0.3.*",
                 "friendsofphp/php-cs-fixer": "^2.5",
-                "orchestra/testbench": "^3.0|^4.0|^5.0",
-                "phpunit/phpunit": "^7.0"
+                "orchestra/testbench": "^3.0|^4.0|^5.0|^6.0",
+                "phpunit/phpunit": "^8.0"
             },
             "type": "library",
             "extra": {
@@ -176,7 +176,13 @@
                 "messaging",
                 "user messaging"
             ],
-            "time": "2020-03-09T16:36:17+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/cmgmyr",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-09-16T12:55:23+00:00"
         },
         {
             "name": "coderello/laraflash",
@@ -2494,16 +2500,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.39.2",
+            "version": "2.40.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "326efde1bc09077a26cb77f6e2e32e13f06c27f2"
+                "reference": "6c7646154181013ecd55e80c201b9fd873c6ee5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/326efde1bc09077a26cb77f6e2e32e13f06c27f2",
-                "reference": "326efde1bc09077a26cb77f6e2e32e13f06c27f2",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/6c7646154181013ecd55e80c201b9fd873c6ee5d",
+                "reference": "6c7646154181013ecd55e80c201b9fd873c6ee5d",
                 "shasum": ""
             },
             "require": {
@@ -2579,7 +2585,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-10T12:16:42+00:00"
+            "time": "2020-09-11T19:00:58+00:00"
         },
         {
             "name": "nikic/php-parser",
