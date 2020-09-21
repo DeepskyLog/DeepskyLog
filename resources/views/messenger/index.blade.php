@@ -53,7 +53,7 @@
 @endsection
 
 @php
-    $url = "http://cdn.datatables.net/plug-ins/1.10.19/i18n/" . \PeterColes\Languages\LanguagesFacade::lookup(
+    $url = "http://cdn.datatables.net/plug-ins/1.10.19/i18n/" . \DeepskyLog\Languages\LanguagesFacade::lookup(
         [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
         'en'
     )->first()
