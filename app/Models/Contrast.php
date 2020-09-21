@@ -58,7 +58,7 @@ class Contrast extends Model
      */
     public function __construct(Target $target)
     {
-        $this->_telescope = \App\Models\Model\Instrument::where(
+        $this->_telescope = \App\Models\Instrument::where(
             'id',
             Auth::user()->stdtelescope
         )->get()->first();

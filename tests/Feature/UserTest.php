@@ -12,8 +12,9 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
  * Tests for creating, deleting, and adapting users.
@@ -34,7 +35,6 @@ class UserTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function aUserCanHaveALens()
     {

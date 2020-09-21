@@ -17,8 +17,8 @@ class InstrumentRequest extends FormRequest
             'name' => 'required|min:6',
             'type' => 'required',
             'diameter' => 'required|numeric|gt:0',
-            'fd' => 'gte:1|required_without:fixedMagnification',
-            'fixedMagnification' => 'gte:0|required_without:fd',
+            'fd' => 'nullable|gte:1|required_without:fixedMagnification',
+            'fixedMagnification' => 'nullable|gte:0|required_without:fd',
         ];
     }
 }
