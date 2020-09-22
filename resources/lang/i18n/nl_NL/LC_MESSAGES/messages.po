@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
 "POT-Creation-Date: 2020-09-15 15:11+0200\n"
-"PO-Revision-Date: 2020-09-15 15:12+0200\n"
+"PO-Revision-Date: 2020-09-22 10:57+0200\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: nl_NL\n"
@@ -2680,7 +2680,7 @@ msgstr ""
 
 #: ../storage/framework/messages/9636353a16a12a66e8f7f17eefe51228d6661c36.php.php:15
 msgid "You can sponsor DeepskyLog from the GitHub page."
-msgstr "Je DeepskyLog sponsoren via de GitHub-pagina."
+msgstr "Je kan DeepskyLog sponsoren via de GitHub-pagina."
 
 #: ../storage/framework/messages/9636353a16a12a66e8f7f17eefe51228d6661c36.php.php:22
 msgid "Sponsor"
