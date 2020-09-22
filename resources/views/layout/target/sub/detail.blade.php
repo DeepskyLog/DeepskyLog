@@ -45,17 +45,17 @@
     </tr>
     @endif
 
-    @if ($target->isNonSolarSystem())
-        @if (!Auth::guest())
-            @if(Auth::user()->stdlocation != null)
+    @if (!Auth::guest())
+        @if(Auth::user()->stdlocation != null)
             <tr>
                 <td colspan="12">
                     {!! $target->getAltitudeGraph() !!}
                 </td>
             </tr>
-            @endif
         @endif
+    @endif
 
+    @if ($target->isNonSolarSystem() || $target->isSolarSystem())
         <tr>
             <td colspan="3">{{ _i('Right Ascension') }}</td>
             <td colspan="3">{{ $target->ra() }}</td>
@@ -63,6 +63,7 @@
             <td colspan="3">{{ $target->declination() }}</td>
         </tr>
 
+        @if ($target->constellation)
         <tr>
             <td colspan="3">{{ _i('Constellation') }}</td>
             <td colspan="3">{{ _i($target->constellation()->first()['name']) }}</td>
@@ -75,7 +76,9 @@
             <td colspan="3">{{ $target->atlaspage(Auth::user()->standardAtlasCode) }}</td>
             @endauth
         </tr>
+        @endif
 
+        @if ($target->isNonSolarSystem())
         <tr>
             <td colspan="3">{{ _i('Magnitude') }}</td>
             <td colspan="3">@if ($target->mag == null)
@@ -121,6 +124,7 @@
         </tr>
         @endif
         @endauth
+        @endif
     @endif
 
     @if (\App\Models\TargetPartOf::isPartOf($target) || \App\Models\TargetPartOf::contains($target))
@@ -155,7 +159,7 @@
     </tr>
 
     @auth
-        @if ($target->isNonSolarSystem())
+        @if ($target->isNonSolarSystem() || $target->isSolarSystem())
         <tr>
             <td>{{ _i('Date') }}</td>
             <td>@php $datestr = Session::get('date');
@@ -174,26 +178,33 @@
             <td>
                 <span data-toggle="tooltip" data-placement="bottom" title="{{ $target->set_popup }}">{{ $target->set }}</span>
             </td>
-            <td>{{ _i('Best Time') }}</td>
-            <td>{{ $target->BestTime }}</td>
-            <td>{{ _i("Max Alt") }}</td>
-            <td>
-                <span data-toggle="tooltip" data-placement="bottom" title="{!! $target->maxAlt_popup !!}">{!! $target->maxAlt !!}</span>
-            </td>
-        </tr>
-
-        <tr>
-            <td>{{ _i('Highest From') }}</td>
-            <td colspan="3">{{ $target->highest_from }}</td>
-            <td>{{ _i('Highest Around') }}</td>
-            <td colspan="3">{{ $target->highest_around }}</td>
-            <td>{{ _i('Highest To') }}</td>
-            <td colspan="3">{{ $target->highest_to }}</td>
-        </tr>
+            @if ($target->isSun())
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            @else
+                <td>{{ _i('Best Time') }}</td>
+                <td>{{ $target->BestTime }}</td>
+                <td>{{ _i("MaxAlt") }}</td>
+                <td>
+                    <span data-toggle="tooltip" data-placement="bottom" title="{!! $target->maxAlt_popup !!}">{!! $target->maxAlt !!}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ _i('Highest From') }}</td>
+                <td colspan="3">{{ $target->highest_from }}</td>
+                <td>{{ _i('Highest Around') }}</td>
+                <td colspan="3">{{ $target->highest_around }}</td>
+                <td>{{ _i('Highest To') }}</td>
+                <td colspan="3">{{ $target->highest_to }}</td>
+            </tr>
+            @endif
         @endif
     @endauth
 
-    @if ($target->ra != null && $target->decl != null)
+    @if ($target->isNonSolarSystem())
     <tr>
         <td colspan="3">Aladin<br /><br />
             @auth
@@ -250,7 +261,6 @@
         </td>
     </tr>
     @endif
-
 </table>
 
 <hr />

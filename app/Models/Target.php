@@ -438,12 +438,15 @@ class Target extends Model
      */
     public function getRiseSetTransit(): void
     {
-        $this->_target = new \deepskylog\AstronomyLibrary\Targets\Target();
-        $equa = new EquatorialCoordinates($this->ra, $this->decl);
+        if ($this->_observationType['type'] == 'sun') {
+            $this->_target = new \deepskylog\AstronomyLibrary\Targets\Sun();
+        } else {
+            $this->_target = new \deepskylog\AstronomyLibrary\Targets\Target();
+            $equa = new EquatorialCoordinates($this->ra, $this->decl);
 
-        // Add equatorial coordinates to the target.
-        $this->_target->setEquatorialCoordinates($equa);
-
+            // Add equatorial coordinates to the target.
+            $this->_target->setEquatorialCoordinates($equa);
+        }
         $this->_popup[0] = '-';
         $this->_popup[1] = '-';
         $this->_popup[2] = '-';
@@ -451,7 +454,7 @@ class Target extends Model
 
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation && Auth::user()->stdtelescope) {
-                if ($this->isNonSolarSystem()) {
+                if ($this->isNonSolarSystem() || $this->isSolarSystem()) {
                     $datestr = Session::get('date');
                     $date = Carbon::createFromFormat('d/m/Y', $datestr);
                     $date->hour = 12;
@@ -475,6 +478,11 @@ class Target extends Model
                     );
                     $deltaT = Time::deltaT($date);
 
+                    if ($this->isSolarSystem()) {
+                        $nutation = Time::nutation($deltaT);
+
+                        $this->_target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
+                    }
                     // Calculate the ephemerids for the target
                     $this->_target->calculateEphemerides(
                         $geo_coords,
@@ -632,7 +640,7 @@ class Target extends Model
     /**
      *  Check if the target is deepsky or a double star.
      *
-     * @return bool true if the targer is deepsky or double star
+     * @return bool true if the target is deepsky or double star
      */
     public function isNonSolarSystem(): bool
     {
@@ -642,6 +650,30 @@ class Target extends Model
 
         return $this->_observationType['type'] == 'ds'
             || $this->_observationType['type'] == 'double';
+}
+
+    /**
+     *  Check if the target is a solar system target
+     *
+     * @return bool true if the target is a solar system target
+     */
+    public function isSolarSystem(): bool
+    {
+        return $this->_observationType['type'] == 'sun';
+//            || $this->_observationType['type'] == 'asteroids'
+//            || $this->_observationType['type'] == 'comets'
+//            || $this->_observationType['type'] == 'moon'
+//            || $this->_observationType['type'] == 'planets';
+    }
+
+    /**
+     *  Check if the target is the sun.
+     *
+     * @return bool true if the target is the sun
+     */
+    public function isSun(): bool
+    {
+        return $this->_observationType['type'] == 'sun';
     }
 
     /**
@@ -1181,11 +1213,6 @@ class Target extends Model
         if (!Auth::user()->stdlocation) {
             return '';
         }
-
-        if (!$this->ra) {
-            return '';
-        }
-
         if (!$this->_target) {
             $this->getRiseSetTransit();
         }
