@@ -10,16 +10,32 @@
  * @link     http://www.deepskylog.org
  */
 
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(
-    App\Models\Lens::class,
-    function (Faker $faker) {
+use App\Models\Lens;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class LensFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Lens::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
         return [
-            'name' => $faker->sentence(3, true),
-            'factor' => $faker->randomFloat(2, 0.1, 5.0),
+            'name' => $this->faker->sentence(3, true),
+            'factor' => $this->faker->randomFloat(2, 0.1, 5.0),
             'user_id' => \App\Models\User::inRandomOrder()->first()->id,
-            'active' => $faker->numberBetween(0, 1),
+            'active' => $this->faker->numberBetween(0, 1),
         ];
     }
-);
+}

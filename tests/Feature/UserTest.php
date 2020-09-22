@@ -12,8 +12,9 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
  * Tests for creating, deleting, and adapting users.
@@ -34,13 +35,12 @@ class UserTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function aUserCanHaveALens()
     {
         $this->withoutExceptionHandling();
 
-        $user = factory('App\Models\User')->create();
+        $user = User::factory()->create();
         $this->actingAs($user);
 
         $this->assertTrue($this->isAuthenticated());

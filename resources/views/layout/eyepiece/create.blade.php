@@ -56,7 +56,7 @@
         <div class="form-group focalLength">
             <label for="name">{{ _i("Focal length") }}</label>
             <div class="input-group mb-3">
-                <input type="number" placeholder="31" required max="99" min="1" class="form-control {{ $errors->has('focalLength') ? 'is-invalid' : '' }}" maxlength="5" name="focalLength" size="30" value="@if ($eyepiece->focalLength){{ $eyepiece->focalLength }}@else{{ old('focalLength') }}@endif" />
+                <input type="number" placeholder="31" required max="99.9" min="1.0" step="0.1" class="form-control {{ $errors->has('focalLength') ? 'is-invalid' : '' }}" maxlength="5" name="focalLength" size="30" value="@if ($eyepiece->focalLength){{ $eyepiece->focalLength }}@else{{ old('focalLength') }}@endif" />
                 <div class="input-group-append">
                     <span class="input-group-text">mm</span>
                 </div>

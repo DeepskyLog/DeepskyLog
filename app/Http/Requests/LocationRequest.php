@@ -20,9 +20,9 @@ class LocationRequest extends FormRequest
             'country' => 'required',
             'elevation' => 'required|numeric|lte:8888|gte:-200',
             'timezone' => 'required|timezone',
-            'lm' => 'numeric|lte:8.0|gte:-1.0|nullable',
-            'sqm' => 'numeric|lte:22.0|gte:10.0|nullable',
-            'bortle' => 'numeric|lte:9|gte:1|nullable',
+            'lm' => 'numeric|lte:8.0|gte:-1.0',
+            'sqm' => 'numeric|lte:22.0|gte:10.0',
+            'bortle' => 'numeric|lte:9|gte:1',
         ];
     }
 }

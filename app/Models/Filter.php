@@ -15,6 +15,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -30,6 +31,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class Filter extends Model implements HasMedia
 {
     use InteractsWithMedia;
+    use HasFactory;
 
     protected $fillable = [
         'user_id', 'name', 'type', 'color', 'wratten', 'schott', 'active',
