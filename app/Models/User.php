@@ -12,8 +12,6 @@
 
 namespace App\Models;
 
-use App\Models\Notifications\DeepskyLogResetPassword;
-use App\Models\Notifications\DeepskyLogVerificationNotification;
 use Cmgmyr\Messenger\Traits\Messagable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -211,7 +209,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new DeepskyLogVerificationNotification());
+        $this->notify(new \App\Notifications\DeepskyLogVerificationNotification());
     }
 
     /**
@@ -223,7 +221,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      */
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new DeepskyLogResetPassword($token));
+        $this->notify(new \App\Notifications\DeepskyLogResetPassword($token));
     }
 
     /**

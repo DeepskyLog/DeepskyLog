@@ -12,16 +12,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\MessageReceived;
-use App\Models\User;
 use Carbon\Carbon;
-use Cmgmyr\Messenger\Models\Message;
-use Cmgmyr\Messenger\Models\Participant;
+use App\Models\User;
+use App\Mail\MessageReceived;
 use Cmgmyr\Messenger\Models\Thread;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Cmgmyr\Messenger\Models\Message;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Request;
+use Cmgmyr\Messenger\Models\Participant;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * Messages Controller.
@@ -61,7 +61,7 @@ class MessageController extends Controller
 
         $oldThreads = $allThreads->diff($newThreads);
 
-        return view('messenger.index', compact('newThreads'), compact('oldThreads'));
+        return view('layout.messages.index', compact('newThreads'), compact('oldThreads'));
     }
 
     /**
@@ -99,7 +99,7 @@ class MessageController extends Controller
 
         $thread->markAsRead($userId);
 
-        return view('messenger.show', compact('thread', 'users'));
+        return view('layout.messages.show', compact('thread', 'users'));
     }
 
     /**
@@ -111,7 +111,7 @@ class MessageController extends Controller
     {
         $users = User::where('id', '!=', Auth::id())->get();
 
-        return view('messenger.create', compact('users'));
+        return view('layout.messages.create', compact('users'));
     }
 
     /**
@@ -124,7 +124,7 @@ class MessageController extends Controller
         if (auth()->user()->isAdmin()) {
             $users = 'All';
 
-            return view('messenger.create', compact('users'));
+            return view('layout.messages.create', compact('users'));
         } else {
             abort(401);
         }
@@ -141,7 +141,7 @@ class MessageController extends Controller
     {
         $users = User::where('id', '!=', Auth::id())->get();
 
-        return view('messenger.create', compact('users'), compact('id'));
+        return view('layout.messages.create', compact('users'), compact('id'));
     }
 
     /**
@@ -151,7 +151,7 @@ class MessageController extends Controller
      */
     public function store()
     {
-        $input = Input::all();
+        $input = Request::all();
 
         if (count($input['recipients']) == 1) {
             if ($input['recipients'][0] == 'All') {
@@ -225,7 +225,7 @@ class MessageController extends Controller
         );
 
         // Recipients
-        if (Input::has('recipients')) {
+        if (Request::has('recipients')) {
             $thread->addParticipant($input['recipients']);
         }
 
@@ -274,7 +274,7 @@ class MessageController extends Controller
             [
                 'thread_id' => $thread->id,
                 'user_id' => Auth::id(),
-                'body' => Input::get('message'),
+                'body' => Request::input('message'),
             ]
         );
 
@@ -289,8 +289,8 @@ class MessageController extends Controller
         $participant->save();
 
         // Recipients
-        if (Input::has('recipients')) {
-            $thread->addParticipant(Input::get('recipients'));
+        if (Request::has('recipients')) {
+            $thread->addParticipant(Request::input('recipients'));
         }
 
         // Only send mail if the user wants to receive mail

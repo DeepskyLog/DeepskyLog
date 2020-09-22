@@ -137,7 +137,7 @@ class MessagesTest extends TestCase
         // Check if we see the correct page
         $response->assertSee('New messages');
 
-        $response->assertViewIs('layout.messages.view');
+        $response->assertViewIs('layout.messages.index');
 
         // $this->assertEquals($this->_user->instruments->first()->id, $instrument->id);
         // $this->assertEquals(

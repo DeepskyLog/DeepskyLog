@@ -216,7 +216,7 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test',
+            'name' => 'Tt',
             'longitude' => 12.2215,
             'latitude' => -14.2158,
             'elevation' => 1254,
@@ -1025,7 +1025,7 @@ class LocationTest extends TestCase
      *
      * @return None
      */
-    public function anLocationShouldHaveAllParametersCorrectAfterUpdate()
+    public function aLocationShouldHaveAllParametersCorrectAfterUpdate()
     {
         // Given I am a user who is logged in and verified
         // Act as a new user created by the factory
@@ -1039,7 +1039,7 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test',
+                'name' => 'Tt',
                 'longitude' => -84.125,
                 'latitude' => 4.2158,
                 'elevation' => 1234,
