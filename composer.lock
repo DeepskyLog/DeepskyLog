@@ -238,16 +238,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v4.9.1",
+            "version": "v4.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "6401c000b40e5efd731c0ba8b2911448f9cdc7ec"
+                "reference": "b86338bb3f36c554f045f70a168554f04b6564ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/6401c000b40e5efd731c0ba8b2911448f9cdc7ec",
-                "reference": "6401c000b40e5efd731c0ba8b2911448f9cdc7ec",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/b86338bb3f36c554f045f70a168554f04b6564ad",
+                "reference": "b86338bb3f36c554f045f70a168554f04b6564ad",
                 "shasum": ""
             },
             "require": {
@@ -300,7 +300,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-22T11:47:55+00:00"
+            "time": "2020-09-23T08:17:49+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
@@ -1276,16 +1276,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.5.0",
+            "version": "v8.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "5a748eecae35fd453e0b1e4d4b6f4fadf0d3e7ac"
+                "reference": "a71952a6dba55de0bb11b5fbbd84874eda2a755c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/5a748eecae35fd453e0b1e4d4b6f4fadf0d3e7ac",
-                "reference": "5a748eecae35fd453e0b1e4d4b6f4fadf0d3e7ac",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/a71952a6dba55de0bb11b5fbbd84874eda2a755c",
+                "reference": "a71952a6dba55de0bb11b5fbbd84874eda2a755c",
                 "shasum": ""
             },
             "require": {
@@ -1435,7 +1435,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-09-18T21:27:11+00:00"
+            "time": "2020-09-22T13:42:02+00:00"
         },
         {
             "name": "laravel/helpers",
@@ -2040,16 +2040,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v2.2.5",
+            "version": "v2.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "ffaa43e02e9b9ae56c8ae16a438b48844f6e9147"
+                "reference": "97a380cc39760e3076f26559cd79e4a8c98b8916"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/ffaa43e02e9b9ae56c8ae16a438b48844f6e9147",
-                "reference": "ffaa43e02e9b9ae56c8ae16a438b48844f6e9147",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/97a380cc39760e3076f26559cd79e4a8c98b8916",
+                "reference": "97a380cc39760e3076f26559cd79e4a8c98b8916",
                 "shasum": ""
             },
             "require": {
@@ -2101,7 +2101,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-18T13:55:17+00:00"
+            "time": "2020-09-22T19:24:38+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -7393,16 +7393,16 @@
         },
         {
             "name": "laravel/telescope",
-            "version": "v4.0.0",
+            "version": "v4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/telescope.git",
-                "reference": "ff4594284ad73e895070265a26e1c0538b984191"
+                "reference": "4bd0a8b01b889c7704cd0a1d04a849c8da993f43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/ff4594284ad73e895070265a26e1c0538b984191",
-                "reference": "ff4594284ad73e895070265a26e1c0538b984191",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/4bd0a8b01b889c7704cd0a1d04a849c8da993f43",
+                "reference": "4bd0a8b01b889c7704cd0a1d04a849c8da993f43",
                 "shasum": ""
             },
             "require": {
@@ -7448,7 +7448,7 @@
                 "laravel",
                 "monitoring"
             ],
-            "time": "2020-09-08T14:55:22+00:00"
+            "time": "2020-09-22T16:49:01+00:00"
         },
         {
             "name": "maximebf/debugbar",
