@@ -30,7 +30,6 @@ class MoonSeeder extends Seeder
             ]
         );
 
-        // TODO: Splitsen in dwerg planeten en asteroiden?
         DB::table('target_types')->insert(
             [
                 'id' => 'ASTEROID',

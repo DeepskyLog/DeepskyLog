@@ -145,6 +145,8 @@ class LocationTableSeeder extends Seeder
                     $country = 'ZW';
                 } elseif ($location->country === 'Zambia') {
                     $country = 'ZM';
+                } elseif ($location->country === 'Indonesia') {
+                    $country = 'ID';
                 } elseif ($location->country === 'Malaysia') {
                     $country = 'MY';
                 } else {
