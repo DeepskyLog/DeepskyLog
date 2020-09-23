@@ -13,7 +13,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -92,7 +92,7 @@ class RegisterController extends Controller
      *
      * @param array $data The validated data
      *
-     * @return \App\User
+     * @return \App\Models\User
      */
     protected function create(array $data)
     {

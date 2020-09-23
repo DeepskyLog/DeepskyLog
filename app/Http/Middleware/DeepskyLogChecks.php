@@ -15,6 +15,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 /**
  * DeepskyLog middleware. Does some checks and adds a flash message if needed.
@@ -36,13 +37,20 @@ class DeepskyLogChecks
      */
     public function handle($request, Closure $next)
     {
-        if (! Auth::guest()) {
+        $datetime = new \Carbon\Carbon();
+        $date = $datetime->format('d/m/Y');
+
+        if (!Session::has('date')) {
+            Session::put('date', $date);
+        }
+
+        if (!Auth::guest()) {
             // Check if the observer has set a country of residence.
             if (Auth::user()->country === '') {
                 laraflash(
                     _i(
                         'Your country of residence is not set. Please set it in the %sobserver settings%s',
-                        '<a href="users/'.Auth::user()->id.'/settings">',
+                        '<a href="users/' . Auth::user()->id . '/settings">',
                         '</a>.'
                     )
                 )->warning();
@@ -71,9 +79,10 @@ class DeepskyLogChecks
                     _i(
                         'At least one of your eyepieces (%s) does not have a brand or a type.
                         Please add the needed information in the %seyepiece page%s',
-                        '<a href="/eyepiece/'.$eyepieceId.'">'
-                        .$eyepieceToCheck.'</a>',
-                        '<a href="/eyepiece/">', '</a>.'
+                        '<a href="/eyepiece/' . $eyepieceId . '">'
+                        . $eyepieceToCheck . '</a>',
+                        '<a href="/eyepiece/">',
+                        '</a>.'
                     )
                 )->warning();
             }
@@ -83,7 +92,8 @@ class DeepskyLogChecks
                 laraflash(
                     _i(
                         'DeepskyLog will be able to calculate the visibility of objects when you %sadd some instruments%s',
-                        '<a href="/instrument/create">', '</a>.'
+                        '<a href="/instrument/create">',
+                        '</a>.'
                     )
                 )->warning();
             } else {

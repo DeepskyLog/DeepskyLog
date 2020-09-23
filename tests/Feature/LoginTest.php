@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
@@ -28,7 +28,7 @@ class LoginTest extends TestCase
      */
     public function testUserCannotViewALoginFormWhenAuthenticated()
     {
-        $user = factory('App\User')->make();
+        $user = User::factory()->make();
 
         $response = $this->actingAs($user)->get('/login');
 
@@ -53,7 +53,7 @@ class LoginTest extends TestCase
     public function testUserCanLoginWithCorrectCredentials()
     {
         // Create a user
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             [
                 'username' => 'deepskylogUser',
                 'password' => 'password123',
@@ -82,7 +82,7 @@ class LoginTest extends TestCase
      */
     public function testUserCannotLoginWithIncorrectPassword()
     {
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             [
                 'password' => 'password123',
             ]
@@ -108,7 +108,7 @@ class LoginTest extends TestCase
      */
     public function testRememberMeFunctionality()
     {
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             [
                 'id' => random_int(1, 100),
                 'password' => $password = 'password123',
@@ -183,7 +183,7 @@ class LoginTest extends TestCase
      */
     public function testUserCanLogout()
     {
-        $this->be(factory(User::class)->create());
+        $this->be(User::factory()->create());
 
         $response = $this->post(route('logout'));
 
@@ -207,7 +207,7 @@ class LoginTest extends TestCase
      */
     public function testUserCannotMakeMoreThanFiveAttemptsInOneMinute()
     {
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             ['password' => 'i-love-laravel']
         );
 

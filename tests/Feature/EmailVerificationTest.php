@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use App\Models\User;
 use Carbon\Traits\Test;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
@@ -107,7 +107,7 @@ class EmailVerificationTest extends TestCase
      */
     public function testUserSeesTheVerificationNoticeWhenNotVerified()
     {
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             ['email_verified_at' => null]
         );
 
@@ -123,7 +123,7 @@ class EmailVerificationTest extends TestCase
      */
     public function testVerifiedUserRedirectedHomeWhenVisitingVerificationNotice()
     {
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             ['email_verified_at' => now()]
         );
 
@@ -137,7 +137,7 @@ class EmailVerificationTest extends TestCase
      */
     public function testGuestCannotSeeTheVerificationVerifyRoute()
     {
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             [
                 'id' => 1,
                 'email_verified_at' => null,
@@ -154,14 +154,14 @@ class EmailVerificationTest extends TestCase
      */
     public function testUserCannotVerifyOthers()
     {
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             [
                 'id' => 1,
                 'email_verified_at' => null,
             ]
         );
 
-        $user2 = factory(User::class)->create(
+        $user2 = User::factory()->create(
             ['id' => 2, 'email_verified_at' => null]
         );
 
@@ -178,7 +178,7 @@ class EmailVerificationTest extends TestCase
      */
     public function testUserIsRedirectedToCorrectRouteWhenAlreadyVerified()
     {
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             ['email_verified_at' => now()]
         );
 
@@ -196,7 +196,7 @@ class EmailVerificationTest extends TestCase
      */
     public function forbiddenIsReturnedWhenSignatureIsInvalidInVerificationVerify()
     {
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             ['email_verified_at' => now()]
         );
 
@@ -212,7 +212,7 @@ class EmailVerificationTest extends TestCase
      */
     public function testUserCanVerifyThemselves()
     {
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             ['email_verified_at' => null]
         );
 
@@ -239,7 +239,7 @@ class EmailVerificationTest extends TestCase
      */
     public function testUserIsRedirectedToCorrectRouteIfAlreadyVerified()
     {
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             ['email_verified_at' => now()]
         );
 
@@ -256,7 +256,7 @@ class EmailVerificationTest extends TestCase
         Notification::fake();
         Notification::assertNothingSent();
 
-        $user = factory(User::class)->create(
+        $user = User::factory()->create(
             ['email_verified_at' => null]
         );
 

@@ -21,7 +21,9 @@
                 $nextdate = $nextdate->modify('+1 day');
                 $nextdatestr = $nextdate->format('d/m/Y');
             @endphp
-            {{ _i("on") }} {{ $datestr }} &gt;&lt; {{ $nextdatestr }}
+            {{ _i("on") }} {{ $datestr }} <svg width="1.5em" height="1.5em" viewBox="0 1 16 16" class="bi bi-arrow-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+              </svg> {{ $nextdatestr }}
         </span>
     </p>
 
@@ -33,7 +35,7 @@
             <td> {{ _i("Moon") }} </td>
             @php
                 // Moon rise and set
-                $location = App\Location::where('id', Auth::user()->stdlocation)->first();
+                $location = App\Models\Location::where('id', Auth::user()->stdlocation)->first();
 
                 $objAstroCalc = new \App\Libraries\AstroCalc(
                     $date, $location->latitude, $location->longitude,
@@ -41,7 +43,7 @@
                 );
 
                 // Use time zones and real coordinates of the location
-                $location = \App\Location::where('id', Auth::user()->stdlocation)->first();
+                $location = \App\Models\Location::where('id', Auth::user()->stdlocation)->first();
 
                 $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime();
             @endphp

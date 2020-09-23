@@ -11,9 +11,9 @@
  * @link     http://www.deepskylog.org
  */
 
-use App\Eyepiece;
-use App\EyepieceOld;
-use App\User;
+use App\Models\Eyepiece;
+use App\Models\EyepieceOld;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /**
@@ -30,7 +30,6 @@ class EyepieceTableSeeder extends Seeder
     /**
      * Run the database seeds.
      *
-     * @return void
      */
     public function run()
     {

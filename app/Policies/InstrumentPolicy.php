@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Instrument;
-use App\User;
+use App\Models\Instrument;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class InstrumentPolicy
@@ -13,8 +13,8 @@ class InstrumentPolicy
     /**
      * Determine whether the user can update the instrument.
      *
-     * @param \App\User       $user       The user
-     * @param \App\Instrument $instrument The instrument
+     * @param \App\Models\User       $user       The user
+     * @param \App\Models\Instrument $instrument The instrument
      *
      * @return mixed
      */

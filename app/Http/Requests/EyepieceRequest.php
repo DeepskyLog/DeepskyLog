@@ -19,7 +19,7 @@ class EyepieceRequest extends FormRequest
             'type' => 'required',
             'focalLength' => 'required|numeric|gte:1|lte:99',
             'apparentFOV' => 'required|numeric|gte:20|lte:150',
-            'maxFocalLength' => 'gte:1|lte:99',
+            'maxFocalLength' => 'nullable|gte:1|lte:99',
         ];
     }
 }

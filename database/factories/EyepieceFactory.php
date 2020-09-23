@@ -10,15 +10,32 @@
  * @link     http://www.deepskylog.org
  */
 
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(
-    App\Eyepiece::class, function (Faker $faker) {
-        $brandNumber = $faker->numberBetween(1, 7);
+use App\Models\Eyepiece;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class EyepieceFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Eyepiece::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        $brandNumber = $this->faker->numberBetween(1, 7);
 
         if ($brandNumber == 1) {
             $brand = 'Televue';
-            $typeNumber = $faker->numberBetween(1, 8);
+            $typeNumber = $this->faker->numberBetween(1, 8);
             switch ($typeNumber) {
             case 1:
                 $type = 'Plössl';
@@ -47,7 +64,7 @@ $factory->define(
             }
         } elseif ($brandNumber == 2) {
             $brand = 'Baader';
-            $typeNumber = $faker->numberBetween(1, 2);
+            $typeNumber = $this->faker->numberBetween(1, 2);
             switch ($typeNumber) {
             case 1:
                 $type = 'Hyperion';
@@ -58,7 +75,7 @@ $factory->define(
             }
         } elseif ($brandNumber == 3) {
             $brand = 'Meade';
-            $typeNumber = $faker->numberBetween(1, 2);
+            $typeNumber = $this->faker->numberBetween(1, 2);
             switch ($typeNumber) {
             case 1:
                 $type = 'Super Plössl';
@@ -69,7 +86,7 @@ $factory->define(
             }
         } elseif ($brandNumber == 4) {
             $brand = 'University Optics';
-            $typeNumber = $faker->numberBetween(1, 6);
+            $typeNumber = $this->faker->numberBetween(1, 6);
             switch ($typeNumber) {
             case 1:
                 $type = 'Ortho';
@@ -92,7 +109,7 @@ $factory->define(
             }
         } elseif ($brandNumber == 5) {
             $brand = 'Pentax';
-            $typeNumber = $faker->numberBetween(1, 3);
+            $typeNumber = $this->faker->numberBetween(1, 3);
             switch ($typeNumber) {
             case 1:
                 $type = 'SMC XW';
@@ -106,7 +123,7 @@ $factory->define(
             }
         } elseif ($brandNumber == 6) {
             $brand = 'Celestron';
-            $typeNumber = $faker->numberBetween(1, 7);
+            $typeNumber = $this->faker->numberBetween(1, 7);
             switch ($typeNumber) {
             case 1:
                 $type = 'X-Cel LX';
@@ -129,11 +146,10 @@ $factory->define(
             case 7:
                 $type = 'Erfle';
                 break;
-
             }
         } elseif ($brandNumber == 7) {
             $brand = 'Vixen';
-            $typeNumber = $faker->numberBetween(1, 7);
+            $typeNumber = $this->faker->numberBetween(1, 7);
             switch ($typeNumber) {
             case 1:
                 $type = 'LV';
@@ -156,28 +172,27 @@ $factory->define(
             case 7:
                 $type = 'SSW';
                 break;
-
             }
         }
 
-        $focalLength = $faker->randomFloat(1, 1.0, 80.0);
+        $focalLength = $this->faker->randomFloat(1, 1.0, 80.0);
 
-        $rnd = $faker->numberBetween(1, 10);
+        $rnd = $this->faker->numberBetween(1, 10);
         if ($rnd == 10) {
-            $maxFocalLength = $faker->randomFloat(1, $focalLength + 0.1, 85.0);
+            $maxFocalLength = $this->faker->randomFloat(1, $focalLength + 0.1, 85.0);
         } else {
             $maxFocalLength = null;
         }
 
         return [
-            'name' => $faker->sentence(3, true),
+            'name' => $this->faker->sentence(3, true),
             'brand' => $brand,
             'focalLength' => $focalLength,
             'type' => $type,
-            'apparentFOV' => $faker->numberBetween(15, 130),
+            'apparentFOV' => $this->faker->numberBetween(15, 130),
             'maxFocalLength' => $maxFocalLength,
-            'user_id' => \App\User::inRandomOrder()->first()->id,
-            'active' => $faker->numberBetween(0, 1),
+            'user_id' => \App\Models\User::inRandomOrder()->first()->id,
+            'active' => $this->faker->numberBetween(0, 1),
         ];
     }
-);
+}

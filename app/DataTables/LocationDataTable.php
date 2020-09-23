@@ -13,7 +13,7 @@
 
 namespace App\DataTables;
 
-use App\Location;
+use App\Models\Location;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Services\DataTable;
 
@@ -152,7 +152,7 @@ class LocationDataTable extends DataTable
     protected function getMyParameters()
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
-            . \PeterColes\Languages\LanguagesFacade::lookup(
+            . \DeepskyLog\Languages\LanguagesFacade::lookup(
                 [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first()

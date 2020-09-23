@@ -1,9 +1,9 @@
 <?php
 
-use App\Target;
+use App\Models\Target;
 use Carbon\Carbon;
-use App\TargetName;
-use App\TargetPartOf;
+use App\Models\TargetName;
+use App\Models\TargetPartOf;
 use Illuminate\Database\Seeder;
 
 class MoonSeeder extends Seeder

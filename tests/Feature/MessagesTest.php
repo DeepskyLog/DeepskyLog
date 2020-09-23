@@ -15,6 +15,7 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 use Tests\TestCase;
+use App\Models\User;
 use Cmgmyr\Messenger\Models\Thread;
 use Cmgmyr\Messenger\Models\Message;
 use Cmgmyr\Messenger\Models\Participant;
@@ -43,7 +44,7 @@ class MessagesTest extends TestCase
     {
         parent::setup();
 
-        $this->_user = factory('App\User')->create();
+        $this->_user = User::factory()->create();
     }
 
     /**
@@ -126,7 +127,7 @@ class MessagesTest extends TestCase
         );
 
         // Add recipient
-        $newUser = factory('App\User')->create();
+        $newUser = User::factory()->create();
         $thread->addParticipant($newUser->id);
 
         $response = $this->get('/messages');
@@ -136,7 +137,7 @@ class MessagesTest extends TestCase
         // Check if we see the correct page
         $response->assertSee('New messages');
 
-        $response->assertViewIs('layout.messages.view');
+        $response->assertViewIs('layout.messages.index');
 
         // $this->assertEquals($this->_user->instruments->first()->id, $instrument->id);
         // $this->assertEquals(

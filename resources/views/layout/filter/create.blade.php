@@ -54,7 +54,7 @@
 
             <div class="form">
                 <select id="type" name="type" class="form-control">
-                    @foreach (\App\FilterType::all() as $type)
+                    @foreach (\App\Models\FilterType::all() as $type)
                         <option value="{{ $type->id }}" @if ($filter->type == $type->id || old('type') == $type->id) selected="selected" @endif>{{ _i($type->type) }}</option>
                     @endforeach
 
@@ -68,7 +68,7 @@
             <div class="form">
                 <select id="color" name="color" class="form-control" width="100">
                     <option value="0"> </option>
-                    @foreach (\App\FilterColor::all() as $color)
+                    @foreach (\App\Models\FilterColor::all() as $color)
                         <option value="{{ $color->id }}" @if ($filter->color == $color->id || old('color') == $color->id) selected="selected" @endif>{{ _i($color->color) }}</option>
                     @endforeach
 

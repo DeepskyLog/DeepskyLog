@@ -11,8 +11,8 @@
  * @link     http://www.deepskylog.org
  */
 
-use App\ObserversOld;
-use App\User;
+use App\Models\ObserversOld;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /**
@@ -33,8 +33,6 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        // factory(App\User::class, 50)->create();
-
         $accountData = ObserversOld::all();
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
         DB::table('users')->truncate();
@@ -75,11 +73,12 @@ class UsersTableSeeder extends Seeder
             [$year, $month, $day, $hour, $minute]
                 = sscanf($accountSingle->registrationDate, '%4d%2d%2d %2d:%2d');
             $date = date(
-                'Y-m-d H:i:s', mktime($hour, $minute, 0, $month, $day, $year)
+                'Y-m-d H:i:s',
+                mktime($hour, $minute, 0, $month, $day, $year)
             );
 
             $name = html_entity_decode($accountSingle->firstname)
-                        .' '.html_entity_decode($accountSingle->name);
+                        . ' ' . html_entity_decode($accountSingle->name);
 
             if ($accountSingle->id === 'admin') {
                 $name = 'Administrator';
@@ -136,12 +135,12 @@ class UsersTableSeeder extends Seeder
 
                 // TODO: Make sure to make a link to the correct directory!
                 $filename = 'observer_pics/'
-                    .$user->username.'.jpg';
+                    . $user->username . '.jpg';
 
                 if (file_exists($filename)) {
                     $user
                         ->copyMedia($filename)
-                        ->usingFileName($user->username.'.png')
+                        ->usingFileName($user->username . '.png')
                         ->toMediaCollection('observer');
                 }
             }

@@ -2,7 +2,7 @@
     <div wire:ignore>
         <select id="catalog" class="form-control" name="state">
             <option value=""></option>
-            @foreach (\App\TargetName::getCatalogs() as $catalog)
+            @foreach (\App\Models\TargetName::getCatalogs() as $catalog)
                 <option value="{{ $catalog }}">{{ $catalog }}</option>
             @endforeach
         </select>
@@ -12,7 +12,7 @@
         <br>
         <div wire:loading.remove>
             <h3>{{ $selected_catalog }}</h3>
-            @php $data = \App\Target::getCatalogData($selected_catalog); @endphp
+            @php $data = \App\Models\Target::getCatalogData($selected_catalog); @endphp
             {{ _i("Number of objects") . ": " . $data[0]->count() }}
 
             <div class="table-responsive">

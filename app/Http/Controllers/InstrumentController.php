@@ -12,7 +12,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Instrument;
+use App\Models\Instrument;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -144,7 +144,7 @@ class InstrumentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Instrument $instrument The instrument to show
+     * @param \App\Models\Instrument $instrument The instrument to show
      *
      * @return \Illuminate\Http\Response
      */

@@ -12,12 +12,14 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+use App\Models\User;
+use App\Models\Instrument;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
  * Tests for creating, deleting, and adapting instruments.
@@ -36,13 +38,12 @@ class InstrumentTest extends TestCase
     /**
      * Set up the user.
      *
-     * @return void
      */
     public function setUp(): void
     {
         parent::setup();
 
-        $this->_user = factory('App\User')->create();
+        $this->_user = User::factory()->create();
     }
 
     /**
@@ -79,7 +80,7 @@ class InstrumentTest extends TestCase
         $response->assertStatus(200);
         // Check if we see the correct page
         $response->assertSee(
-            'Instruments of '.$this->_user->name
+            'Instruments of ' . $this->_user->name
         );
     }
 
@@ -96,7 +97,7 @@ class InstrumentTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $instrument = factory('App\Instrument')->create(
+        $instrument =Instrument::factory()->create(
             ['user_id' => $this->_user->id]
         );
 
@@ -105,23 +106,26 @@ class InstrumentTest extends TestCase
         $response->assertStatus(200);
 
         // Check if we see the correct page
-        $response->assertSee('Instruments of '.$this->_user->name);
+        $response->assertSee('Instruments of ' . $this->_user->name);
 
         $response->assertViewIs('layout.instrument.view');
 
         $this->assertEquals($this->_user->instruments->first()->id, $instrument->id);
         $this->assertEquals(
-            $this->_user->instruments->first()->name, $instrument->name
+            $this->_user->instruments->first()->name,
+            $instrument->name
         );
         $this->assertEquals(
-            $this->_user->instruments->first()->brand, $instrument->brand
+            $this->_user->instruments->first()->brand,
+            $instrument->brand
         );
         $this->assertEquals(
             $this->_user->instruments->first()->focalLength,
             floatval($instrument->focalLength)
         );
         $this->assertEquals(
-            $this->_user->instruments->first()->type, $instrument->type
+            $this->_user->instruments->first()->type,
+            $instrument->type
         );
         $this->assertEquals(
             $this->_user->instruments->first()->apparentFOV,
@@ -132,10 +136,12 @@ class InstrumentTest extends TestCase
             $instrument->maxFocalLength
         );
         $this->assertEquals(
-            $this->_user->instruments->first()->active, $instrument->active
+            $this->_user->instruments->first()->active,
+            $instrument->active
         );
         $this->assertEquals(
-            $this->_user->instruments->first()->user_id, $instrument->user_id
+            $this->_user->instruments->first()->user_id,
+            $instrument->user_id
         );
     }
 
@@ -497,12 +503,12 @@ class InstrumentTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $instrument = factory('App\Instrument')->create(
+        $instrument =Instrument::factory()->create(
             ['user_id' => $this->_user->id]
         );
 
         $response = $this->actingAs($this->_user)->put(
-            '/instrument/'.$instrument->id,
+            '/instrument/' . $instrument->id,
             [
                 'name' => 'Test',
                 'diameter' => 457,
@@ -530,12 +536,12 @@ class InstrumentTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $instrument = factory('App\Instrument')->create(
+        $instrument =Instrument::factory()->create(
             ['user_id' => $this->_user->id]
         );
 
         $response = $this->actingAs($this->_user)->patch(
-            '/instrument/'.$instrument->id,
+            '/instrument/' . $instrument->id,
             [
                 'name' => 'Test instrument',
                 'diameter' => null,
@@ -563,12 +569,12 @@ class InstrumentTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $instrument = factory('App\Instrument')->create(
+        $instrument =Instrument::factory()->create(
             ['user_id' => $this->_user->id]
         );
 
         $response = $this->actingAs($this->_user)->patch(
-            '/instrument/'.$instrument->id,
+            '/instrument/' . $instrument->id,
             [
                 'name' => 'Test instrument',
                 'diameter' => null,
@@ -594,7 +600,8 @@ class InstrumentTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/instrument/'.$instrument->id, $attributes
+            '/instrument/' . $instrument->id,
+            $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['diameter']);
@@ -611,7 +618,8 @@ class InstrumentTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/instrument/'.$instrument->id, $attributes
+            '/instrument/' . $instrument->id,
+            $attributes
         );
 
         $response->assertStatus(302);
@@ -627,7 +635,8 @@ class InstrumentTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/instrument/'.$instrument->id, $attributes
+            '/instrument/' . $instrument->id,
+            $attributes
         );
 
         $response->assertStatus(302);
@@ -645,7 +654,8 @@ class InstrumentTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/instrument/'.$instrument->id, $attributes
+            '/instrument/' . $instrument->id,
+            $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['fd']);
@@ -663,7 +673,8 @@ class InstrumentTest extends TestCase
         ];
 
         $response = $this->actingAs($this->_user)->put(
-            '/instrument/'.$instrument->id, $attributes
+            '/instrument/' . $instrument->id,
+            $attributes
         );
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['fixedMagnification']);
@@ -683,7 +694,7 @@ class InstrumentTest extends TestCase
         $this->actingAs($this->_user);
 
         // Get a new instrument from the factory
-        $instrument = factory('App\Instrument')->create(['user_id' => $this->_user->id]);
+        $instrument =Instrument::factory()->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new instrument in the database
         $attributes = [
@@ -708,7 +719,7 @@ class InstrumentTest extends TestCase
             'active' => $instrument->active,
         ];
 
-        $this->put('instrument/'.$instrument->id, $newAttributes);
+        $this->put('instrument/' . $instrument->id, $newAttributes);
 
         // Then there should be an updated instrument in the database
         $this->assertDatabaseHas('instruments', $newAttributes);
@@ -748,9 +759,9 @@ class InstrumentTest extends TestCase
         // Then there should be a new instrument in the database
         $this->assertDatabaseHas('instruments', $attributes);
 
-        $instrument = \App\Instrument::firstOrFail();
+        $instrument = \App\Models\Instrument::firstOrFail();
 
-        $newUser = factory('App\User')->create();
+        $newUser = User::factory()->create();
         $this->actingAs($newUser);
 
         // Adapt the name and the diameter
@@ -765,7 +776,7 @@ class InstrumentTest extends TestCase
 
         $this->expectException(AuthorizationException::class);
 
-        $this->put('/instrument/'.$instrument->id, $newAttributes);
+        $this->put('/instrument/' . $instrument->id, $newAttributes);
     }
 
     /**
@@ -802,9 +813,9 @@ class InstrumentTest extends TestCase
         // Then there should be a new instrument in the database
         $this->assertDatabaseHas('instruments', $attributes);
 
-        $instrument = \App\Instrument::firstOrFail();
+        $instrument = \App\Models\Instrument::firstOrFail();
 
-        $newUser = factory('App\User')->create(['type' => 'admin']);
+        $newUser = User::factory()->create(['type' => 'admin']);
 
         $this->actingAs($newUser);
 
@@ -818,7 +829,7 @@ class InstrumentTest extends TestCase
             'active' => 1,
         ];
 
-        $this->put('/instrument/'.$instrument->id, $newAttributes);
+        $this->put('/instrument/' . $instrument->id, $newAttributes);
 
         // Then there should be an updated instrument in the database
         $this->assertDatabaseHas('instruments', $newAttributes);
@@ -841,7 +852,7 @@ class InstrumentTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $instrument = factory('App\Instrument')->create(['user_id' => $this->_user->id]);
+        $instrument =Instrument::factory()->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new instrument in the database
         $this->assertDatabaseHas(
@@ -857,9 +868,9 @@ class InstrumentTest extends TestCase
             ]
         );
 
-        $this->assertEquals(1, \App\Instrument::count());
+        $this->assertEquals(1, \App\Models\Instrument::count());
 
-        $response = $this->delete('/instrument/'.$instrument->id);
+        $response = $this->delete('/instrument/' . $instrument->id);
 
         $response->assertStatus(302);
 
@@ -876,7 +887,7 @@ class InstrumentTest extends TestCase
                 'user_id' => $instrument->user_id,
             ]
         );
-        $this->assertEquals(0, \App\Instrument::count());
+        $this->assertEquals(0, \App\Models\Instrument::count());
     }
 
     /**
@@ -894,7 +905,7 @@ class InstrumentTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $instrument = factory('App\Instrument')->create(['user_id' => $this->_user->id]);
+        $instrument =Instrument::factory()->create(['user_id' => $this->_user->id]);
 
         // Then there should be a new instrument in the database
         $this->assertDatabaseHas(
@@ -910,13 +921,13 @@ class InstrumentTest extends TestCase
             ]
         );
 
-        $newUser = factory('App\User')->create();
+        $newUser = User::factory()->create();
         $this->actingAs($newUser);
 
         $this->expectException(AuthorizationException::class);
 
         // Try to delete the instrument
-        $this->delete('/instrument/'.$instrument->id);
+        $this->delete('/instrument/' . $instrument->id);
     }
 
     /**
@@ -934,7 +945,7 @@ class InstrumentTest extends TestCase
         // Act as a new user created by the factory
         $this->actingAs($this->_user);
 
-        $instrument = factory('App\Instrument')->create(['user_id' => $this->_user->id]);
+        $instrument =Instrument::factory()->create(['user_id' => $this->_user->id]);
 
         $attributes = [
             'name' => $instrument->name,
@@ -948,14 +959,15 @@ class InstrumentTest extends TestCase
 
         // Then there should be a new instrument in the database
         $this->assertDatabaseHas(
-            'instruments', $attributes
+            'instruments',
+            $attributes
         );
 
-        $newUser = factory('App\User')->create(['type' => 'admin']);
+        $newUser = User::factory()->create(['type' => 'admin']);
 
         $this->actingAs($newUser);
 
-        $this->delete('/instrument/'.$instrument->id);
+        $this->delete('/instrument/' . $instrument->id);
 
         // Then there should not be an instrument in the database anymore
         $this->assertDatabaseMissing('instruments', $attributes);
@@ -1001,7 +1013,7 @@ class InstrumentTest extends TestCase
     {
         // Given I am a user who is logged in and not verified
         // Act as a new user created by the factory
-        $user = factory('App\User')->create(['email_verified_at' => null]);
+        $user = User::factory()->create(['email_verified_at' => null]);
 
         $this->actingAs($user);
 
@@ -1045,7 +1057,7 @@ class InstrumentTest extends TestCase
      */
     public function createPageIsNotAccessibleForUnverifiedUsers()
     {
-        $user = factory('App\User')->create(['email_verified_at' => null]);
+        $user = User::factory()->create(['email_verified_at' => null]);
 
         $response = $this->actingAs($user)->get('/instrument/create');
 
@@ -1076,7 +1088,7 @@ class InstrumentTest extends TestCase
      */
     public function createPageIsAccessibleForAdmin()
     {
-        $user = factory('App\User')->create(['type' => 'admin']);
+        $user = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($user)->get('/instrument/create');
 
         $response->assertStatus(200);
@@ -1091,12 +1103,12 @@ class InstrumentTest extends TestCase
      */
     public function updateInstrumentPageContainsCorrectValues()
     {
-        $instrument = factory('App\Instrument')->create(
+        $instrument =Instrument::factory()->create(
             ['user_id' => $this->_user->id]
         );
 
         $response = $this->actingAs($this->_user)->get(
-            '/instrument/'.$instrument->id.'/edit'
+            '/instrument/' . $instrument->id . '/edit'
         );
 
         $response->assertStatus(200);
@@ -1127,10 +1139,10 @@ class InstrumentTest extends TestCase
             ]
         );
 
-        $instrument = \App\Instrument::firstOrFail();
+        $instrument = \App\Models\Instrument::firstOrFail();
 
         Storage::disk('public')->assertExists(
-            $instrument->id.'/'.$instrument->id.'.png'
+            $instrument->id . '/' . $instrument->id . '.png'
         );
     }
 
@@ -1139,23 +1151,22 @@ class InstrumentTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testShowInstrumentDetailWithChangeButton()
     {
-        $instrument = factory('App\Instrument')->create(
+        $instrument =Instrument::factory()->create(
             ['user_id' => $this->_user->id]
         );
 
         $response = $this->actingAs($this->_user)->get(
-            '/instrument/'.$instrument->id
+            '/instrument/' . $instrument->id
         );
 
         $response->assertStatus(200);
         $response->assertSee($instrument->name);
         $response->assertSee($instrument->diameter);
         $response->assertSee($this->_user->name);
-        $response->assertSee('Edit '.$instrument->name);
+        $response->assertSee('Edit ' . $instrument->name);
     }
 
     /**
@@ -1164,22 +1175,21 @@ class InstrumentTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testShowInstrumentDetailWithoutChangeButton()
     {
-        $newUser = factory('App\User')->create();
-        $instrument = factory('App\Instrument')->create(['user_id' => $newUser->id]);
+        $newUser = User::factory()->create();
+        $instrument =Instrument::factory()->create(['user_id' => $newUser->id]);
 
         $response = $this->actingAs($this->_user)->get(
-            '/instrument/'.$instrument->id
+            '/instrument/' . $instrument->id
         );
 
         $response->assertStatus(200);
         $response->assertSee($instrument->name);
         $response->assertSee($instrument->diameter);
         $response->assertSee($this->_user->name);
-        $response->assertDontSee('Edit '.$instrument->name);
+        $response->assertDontSee('Edit ' . $instrument->name);
     }
 
     /**
@@ -1187,22 +1197,21 @@ class InstrumentTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testAdminAlwaysSeesChangeButton()
     {
-        $admin = factory('App\User')->create(['type' => 'admin']);
-        $instrument = factory('App\Instrument')->create(
+        $admin = User::factory()->create(['type' => 'admin']);
+        $instrument =Instrument::factory()->create(
             ['user_id' => $this->_user->id]
         );
 
-        $response = $this->actingAs($admin)->get('/instrument/'.$instrument->id);
+        $response = $this->actingAs($admin)->get('/instrument/' . $instrument->id);
 
         $response->assertStatus(200);
         $response->assertSee($instrument->name);
         $response->assertSee($instrument->diameter);
         $response->assertSee($this->_user->name);
-        $response->assertSee('Edit '.$instrument->name);
+        $response->assertSee('Edit ' . $instrument->name);
     }
 
     /**
@@ -1210,21 +1219,20 @@ class InstrumentTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testGuestNeverSeesChangeButton()
     {
-        $instrument = factory('App\Instrument')->create(
+        $instrument =Instrument::factory()->create(
             ['user_id' => $this->_user->id]
         );
 
-        $response = $this->get('/instrument/'.$instrument->id);
+        $response = $this->get('/instrument/' . $instrument->id);
 
         $response->assertStatus(200);
         $response->assertSee($instrument->name);
         $response->assertSee($instrument->diameter);
         $response->assertSee($this->_user->name);
-        $response->assertDontSee('Edit '.$instrument->name);
+        $response->assertDontSee('Edit ' . $instrument->name);
     }
 
     /**
@@ -1232,12 +1240,11 @@ class InstrumentTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testOnlyAdminCanSeeOverviewOfAllInstruments()
     {
-        factory('App\User', 50)->create();
-        $instrument = factory('App\Instrument', 500)->create();
+        User::factory(50)->create();
+        $instrument = Instrument::factory(500)->create();
 
         // Check as guest
         $response = $this->get('/instrument/admin');
@@ -1251,7 +1258,7 @@ class InstrumentTest extends TestCase
         $response->assertStatus(401);
 
         // Check as admin
-        $admin = factory('App\User')->create(['type' => 'admin']);
+        $admin = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get('/instrument/admin');
 
         $response->assertStatus(200);
@@ -1263,22 +1270,21 @@ class InstrumentTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testJsonInformationForInstrument()
     {
-        $instrument = factory('App\Instrument')->create(
+        $instrument =Instrument::factory()->create(
             ['user_id' => $this->_user->id]
         );
 
         // Only for logged in users!
-        $response = $this->get('/getInstrumentJson/'.$instrument->id);
+        $response = $this->get('/getInstrumentJson/' . $instrument->id);
         $response->assertStatus(302);
         $response->assertRedirect('/login');
 
         // Test for logged in user
         $response = $this->actingAs($this->_user)->get(
-            '/getInstrumentJson/'.$instrument->id
+            '/getInstrumentJson/' . $instrument->id
         );
 
         $this->assertEquals($response['name'], $instrument->name);
@@ -1288,7 +1294,8 @@ class InstrumentTest extends TestCase
         $this->assertEquals($response['diameter'], $instrument->diameter);
         $this->assertEquals($response['fd'], $instrument->fd);
         $this->assertEquals(
-            $response['fixedMagnification'], $instrument->fixedMagnification
+            $response['fixedMagnification'],
+            $instrument->fixedMagnification
         );
         $this->assertEquals($response['active'], $instrument->active);
     }
@@ -1298,24 +1305,23 @@ class InstrumentTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testGetInstrumentImage()
     {
         // Will put the fake image in
         Storage::fake('public');
 
-        $instrument = factory('App\Instrument')->create(
+        $instrument =Instrument::factory()->create(
             ['user_id' => $this->_user->id]
         );
 
         // Check the image, if no image is uploaded
         $this->actingAs($this->_user)->get(
-            'instrument/'.$instrument->id.'/getImage'
+            'instrument/' . $instrument->id . '/getImage'
         );
 
         Storage::disk('public')->assertExists(
-            $instrument->id.'/'.$instrument->id.'.png'
+            $instrument->id . '/' . $instrument->id . '.png'
         );
 
         // Check the image if we have uploaded an image
@@ -1335,7 +1341,7 @@ class InstrumentTest extends TestCase
         $instrument2 = DB::table('instruments')->latest('id')->first();
 
         Storage::disk('public')->assertExists(
-            $instrument2->id.'/'.$instrument2->id.'.png'
+            $instrument2->id . '/' . $instrument2->id . '.png'
         );
     }
 
@@ -1344,7 +1350,6 @@ class InstrumentTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testDeleteInstrumentImage()
     {
@@ -1368,11 +1373,11 @@ class InstrumentTest extends TestCase
         $instrument = DB::table('instruments')->latest('id')->first();
 
         $this->actingAs($this->_user)->post(
-            'instrument/'.$instrument->id.'/deleteImage'
+            'instrument/' . $instrument->id . '/deleteImage'
         );
 
         Storage::disk('public')->assertMissing(
-            $instrument->id.'/'.$instrument->id.'.png'
+            $instrument->id . '/' . $instrument->id . '.png'
         );
 
         // Check if another user cannot delete the image if we have uploaded an image
@@ -1391,14 +1396,14 @@ class InstrumentTest extends TestCase
 
         $instrument = DB::table('instruments')->latest('id')->first();
 
-        $user = factory('App\User')->create();
+        $user = User::factory()->create();
 
         $this->actingAs($user)->post(
-            'instruments/'.$instrument->id.'/deleteImage'
+            'instruments/' . $instrument->id . '/deleteImage'
         );
 
         Storage::disk('public')->assertExists(
-            $instrument->id.'/'.$instrument->id.'.png'
+            $instrument->id . '/' . $instrument->id . '.png'
         );
     }
 
@@ -1407,15 +1412,14 @@ class InstrumentTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testAutocompleteForInstrument()
     {
-        $instrument = factory('App\Instrument')->create(
+        $instrument =Instrument::factory()->create(
             ['user_id' => $this->_user->id, 'name' => 'DeepskyLog test instrument']
         );
 
-        $instrument2 = factory('App\Instrument')->create(
+        $instrument2 =Instrument::factory()->create(
             ['user_id' => $this->_user->id, 'name' => 'Other test instrument']
         );
 
@@ -1449,12 +1453,11 @@ class InstrumentTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testImperialUnitsDisplayInstrument()
     {
-        $user = factory('App\User')->create(['showInches' => 1]);
-        $instrument = factory('App\Instrument')->create(
+        $user = User::factory()->create(['showInches' => 1]);
+        $instrument =Instrument::factory()->create(
             [
                 'user_id' => $user->id,
                 'diameter' => 457,
@@ -1462,7 +1465,7 @@ class InstrumentTest extends TestCase
             ]
         );
 
-        $response = $this->actingAs($user)->get('/instrument/'.$instrument->id);
+        $response = $this->actingAs($user)->get('/instrument/' . $instrument->id);
 
         $response->assertStatus(200);
         $response->assertSee($instrument->name);
@@ -1479,11 +1482,10 @@ class InstrumentTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testImperialUnitsAddInstrument()
     {
-        $user = factory('App\User')->create(['showInches' => 1]);
+        $user = User::factory()->create(['showInches' => 1]);
 
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
@@ -1498,9 +1500,9 @@ class InstrumentTest extends TestCase
 
         $this->actingAs($user)->post('instrument', $attributes);
 
-        $instrument = \App\Instrument::firstOrFail();
+        $instrument = \App\Models\Instrument::firstOrFail();
 
-        $response = $this->actingAs($user)->get('/instrument/'.$instrument->id);
+        $response = $this->actingAs($user)->get('/instrument/' . $instrument->id);
 
         $response->assertStatus(200);
         $response->assertSee('Test instrument');
@@ -1521,16 +1523,15 @@ class InstrumentTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function testShowInstrumentDetailAsOwner()
     {
-        $instrument = factory('App\Instrument')->create();
+        $instrument = Instrument::factory()->create();
 
         // As guest
         $this->assertGuest();
         $response = $this->get(
-            '/instrument/'.$instrument->id
+            '/instrument/' . $instrument->id
         );
         $response->assertStatus(200);
         $response->assertDontSee('Used eyepieces');
@@ -1541,7 +1542,7 @@ class InstrumentTest extends TestCase
         $response->assertSee('Last used on');
 
         $response = $this->actingAs($this->_user)->get(
-            '/instrument/'.$instrument->id
+            '/instrument/' . $instrument->id
         );
 
         $response->assertStatus(200);
@@ -1553,9 +1554,9 @@ class InstrumentTest extends TestCase
         $response->assertSee('Last used on');
 
         // As other user
-        $otherUser = factory('App\User')->create();
+        $otherUser = User::factory()->create();
         $response = $this->actingAs($otherUser)->get(
-            '/instrument/'.$instrument->id
+            '/instrument/' . $instrument->id
         );
         $response->assertStatus(200);
         $response->assertDontSee('Used eyepieces');
@@ -1566,9 +1567,9 @@ class InstrumentTest extends TestCase
         $response->assertSee('Last used on');
 
         // As admin
-        $admin = factory('App\User')->create(['type' => 'admin']);
+        $admin = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get(
-            '/instrument/'.$instrument->id
+            '/instrument/' . $instrument->id
         );
         $response->assertStatus(200);
         $response->assertDontSee('Used eyepieces');

@@ -1,8 +1,8 @@
 <?php
 
-use App\User;
-use App\Location;
-use App\LocationOld;
+use App\Models\User;
+use App\Models\Location;
+use App\Models\LocationOld;
 use Illuminate\Database\Seeder;
 use deepskylog\AstronomyLibrary\Magnitude;
 

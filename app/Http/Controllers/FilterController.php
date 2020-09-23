@@ -12,7 +12,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Filter;
+use App\Models\Filter;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -139,7 +139,7 @@ class FilterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Filter $filter The filter to show
+     * @param \App\Models\Filter $filter The filter to show
      *
      * @return \Illuminate\Http\Response
      */

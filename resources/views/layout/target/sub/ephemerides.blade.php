@@ -3,7 +3,7 @@
 
 <h4>{{ _i("Ephemerides for %s in %s",
         $target->target_name,
-        \App\Location::where('id', Auth::user()->stdlocation)->first()->name) }}
+        \App\Models\Location::where('id', Auth::user()->stdlocation)->first()->name) }}
 </h4>
 <hr />
 @php

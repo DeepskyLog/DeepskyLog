@@ -13,7 +13,7 @@
 
 namespace App\DataTables;
 
-use App\Target;
+use App\Models\Target;
 use Yajra\DataTables\Services\DataTable;
 
 /**
@@ -185,7 +185,7 @@ class TargetDataTable extends DataTable
     protected function getMyParameters()
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
-        . \PeterColes\Languages\LanguagesFacade::lookup(
+        . \DeepskyLog\Languages\LanguagesFacade::lookup(
             [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
             'en'
         )->first()
@@ -257,7 +257,7 @@ class TargetDataTable extends DataTable
                 ],
                 ['name' => auth()->user()->standardAtlasCode,
                     'title' => _i(
-                        \App\Atlas::where(
+                        \App\Models\Atlas::where(
                             'code',
                             auth()->user()->standardAtlasCode
                         )->first()->name

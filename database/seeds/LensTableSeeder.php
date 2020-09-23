@@ -11,9 +11,9 @@
  * @link     http://www.deepskylog.org
  */
 
-use App\Lens;
-use App\LensOld;
-use App\User;
+use App\Models\Lens;
+use App\Models\LensOld;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /**

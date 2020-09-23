@@ -11,7 +11,7 @@
  * @link     http://www.deepskylog.org
  */
 
-use App\MessagesOld;
+use App\Models\MessagesOld;
 use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Message;
 use Cmgmyr\Messenger\Models\Participant;
@@ -48,21 +48,23 @@ class MessagesTableSeeder extends Seeder
                         if (strpos($message->subject, 'Re:') === false) {
                             // Get all the messages from the thread.
                             $thread = DB::connection('mysqlOld')->table('messages')
-                                ->where('subject', 'Re : '.$message->subject)
+                                ->where('subject', 'Re : ' . $message->subject)
                                 ->where('sender', $message->receiver)
                                 ->where('receiver', $message->sender)->get();
                             $thread2 = DB::connection('mysqlOld')->table('messages')
-                                ->where('subject', 'Re : '.$message->subject)
+                                ->where('subject', 'Re : ' . $message->subject)
                                 ->where('sender', $message->sender)
                                 ->where('receiver', $message->receiver)->get();
 
                             $ids = [];
                             $ids[] = $message->id;
                             $ids = array_merge(
-                                $ids, $thread->pluck('id')->toarray()
+                                $ids,
+                                $thread->pluck('id')->toarray()
                             );
                             $ids = array_merge(
-                                $ids, $thread2->pluck('id')->toarray()
+                                $ids,
+                                $thread2->pluck('id')->toarray()
                             );
                             asort($ids);
 
@@ -128,7 +130,8 @@ class MessagesTableSeeder extends Seeder
                                         'thread_id' => $thread->id,
                                         'user_id' => $senderid,
                                         'body' => str_ireplace(
-                                            $breaks, '',
+                                            $breaks,
+                                            '',
                                             html_entity_decode(
                                                 $messageToAdd->message
                                             )

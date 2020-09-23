@@ -12,7 +12,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Eyepiece;
+use App\Models\Eyepiece;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -102,7 +102,7 @@ class EyepieceController extends Controller
      */
     public function getEyepieceTypeJson(string $brand)
     {
-        $types = \App\EyepieceType::where('brand', $brand)
+        $types = \App\Models\EyepieceType::where('brand', $brand)
             ->pluck('type')->sort()->values();
 
         return response($types->jsonSerialize(), Response::HTTP_OK);
@@ -136,13 +136,13 @@ class EyepieceController extends Controller
         $validated['user_id'] = auth()->id();
 
         // Check if brand is already in the database.
-        if (\App\EyepieceBrand::where(
+        if (\App\Models\EyepieceBrand::where(
             'brand',
             $request->get('brand')
         )->get()->isEmpty()
         ) {
             // Add the new brand to the database
-            \App\EyepieceBrand::create(
+            \App\Models\EyepieceBrand::create(
                 [
                     'brand' => $request->get('brand'),
                 ]
@@ -150,13 +150,13 @@ class EyepieceController extends Controller
         }
 
         // Check if brand is already in the database.
-        if (\App\EyepieceType::where(
+        if (\App\Models\EyepieceType::where(
             'type',
             $request->get('type')
         )->where('brand', $request->get('brand'))->get()->isEmpty()
         ) {
             // Add the new brand to the database
-            \App\EyepieceType::create(
+            \App\Models\EyepieceType::create(
                 [
                     'type' => $request->get('type'),
                     'brand' => $request->get('brand'),
@@ -183,7 +183,7 @@ class EyepieceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Eyepiece $eyepiece The eyepiece to show
+     * @param \App\Models\Eyepiece $eyepiece The eyepiece to show
      *
      * @return \Illuminate\Http\Response
      */
@@ -234,13 +234,13 @@ class EyepieceController extends Controller
             $validated['user_id'] = auth()->id();
 
             // Check if brand is already in the database.
-            if (\App\EyepieceBrand::where(
+            if (\App\Models\EyepieceBrand::where(
                 'brand',
                 $request->get('brand')
             )->get()->isEmpty()
             ) {
                 // Add the new brand to the database
-                \App\EyepieceBrand::create(
+                \App\Models\EyepieceBrand::create(
                     [
                         'brand' => $request->get('brand'),
                     ]
@@ -248,13 +248,13 @@ class EyepieceController extends Controller
             }
 
             // Check if brand is already in the database.
-            if (\App\EyepieceType::where(
+            if (\App\Models\EyepieceType::where(
                 'type',
                 $request->get('type')
             )->where('brand', $request->get('brand'))->get()->isEmpty()
             ) {
                 // Add the new brand to the database
-                \App\EyepieceType::create(
+                \App\Models\EyepieceType::create(
                     [
                         'type' => $request->get('type'),
                         'brand' => $request->get('brand'),

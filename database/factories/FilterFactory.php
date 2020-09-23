@@ -10,24 +10,40 @@
  * @link     http://www.deepskylog.org
  */
 
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(
-    App\Filter::class, function (Faker $faker) {
-        $type = $faker->numberBetween(0, 8);
+use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Filter;
 
+class FilterFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Filter::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        $type = $this->faker->numberBetween(0, 8);
         if ($type == 6) {
-            $ran = $faker->numberBetween(1, 3);
+            $ran = $this->faker->numberBetween(1, 3);
             if ($ran == 1) {
-                $color = $faker->numberBetween(1, 15);
+                $color = $this->faker->numberBetween(1, 15);
                 $wratten = null;
                 $schott = null;
             } elseif ($ran == 2) {
-                $wratten = $faker->numberBetween(1, 50);
+                $wratten = $this->faker->numberBetween(1, 50);
                 $color = null;
                 $schott = null;
             } else {
-                $schott = $faker->numberBetween(1, 90);
+                $schott = $this->faker->numberBetween(1, 90);
                 $color = null;
                 $wratten = null;
             }
@@ -38,13 +54,13 @@ $factory->define(
         }
 
         return [
-            'name' => $faker->sentence(3, true),
+            'name' => $this->faker->sentence(3, true),
             'type' => $type,
             'color' => $color,
             'wratten' => $wratten,
             'schott' => $schott,
-            'user_id' => \App\User::inRandomOrder()->first()->id,
-            'active' => $faker->numberBetween(0, 1),
+            'user_id' => \App\Models\User::inRandomOrder()->first()->id,
+            'active' => $this->faker->numberBetween(0, 1),
         ];
     }
-);
+}

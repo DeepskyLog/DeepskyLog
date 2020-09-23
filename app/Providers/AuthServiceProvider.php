@@ -15,20 +15,20 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Lens' => 'App\Policies\LensPolicy',
+        'App\Models\Lens' => 'App\Policies\LensPolicy',
     ];
 
     /**
      * Register any authentication / authorization services.
      *
-     * @return void
      */
     public function boot(Gate $gate)
     {
         $this->registerPolicies();
 
         Blade::if(
-            'admin', function () {
+            'admin',
+            function () {
                 if (Auth::check()) {
                     $condition = auth()->user()->isAdmin();
                 } else {

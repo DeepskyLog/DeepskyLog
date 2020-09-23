@@ -12,9 +12,9 @@
  * @link     http://www.deepskylog.org
  */
 
-use App\Instrument;
-use App\InstrumentOld;
-use App\User;
+use App\Models\Instrument;
+use App\Models\InstrumentOld;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /**
@@ -31,7 +31,6 @@ class InstrumentTableSeeder extends Seeder
     /**
      * Run the database seeds.
      *
-     * @return void
      */
     public function run()
     {

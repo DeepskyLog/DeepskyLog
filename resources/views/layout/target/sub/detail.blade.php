@@ -38,24 +38,24 @@
         <td colspan="3">{{ $target->observationType }}</td>
     </tr>
 
-    @if (\App\TargetName::hasAlternativeNames($target))
+    @if (\App\Models\TargetName::hasAlternativeNames($target))
     <tr>
         <td colspan="3">{{ _i("Alternative name") }}</td>
-        <td colspan="9">{{ \App\TargetName::getAlternativeNames($target) }}</td>
+        <td colspan="9">{{ \App\Models\TargetName::getAlternativeNames($target) }}</td>
     </tr>
     @endif
 
-    @if ($target->isNonSolarSystem())
-        @if (!Auth::guest())
-            @if(Auth::user()->stdlocation != null)
+    @if (!Auth::guest())
+        @if(Auth::user()->stdlocation != null)
             <tr>
                 <td colspan="12">
                     {!! $target->getAltitudeGraph() !!}
                 </td>
             </tr>
-            @endif
         @endif
+    @endif
 
+    @if ($target->isNonSolarSystem() || $target->isSolarSystem())
         <tr>
             <td colspan="3">{{ _i('Right Ascension') }}</td>
             <td colspan="3">{{ $target->ra() }}</td>
@@ -63,19 +63,22 @@
             <td colspan="3">{{ $target->declination() }}</td>
         </tr>
 
+        @if ($target->constellation)
         <tr>
             <td colspan="3">{{ _i('Constellation') }}</td>
             <td colspan="3">{{ _i($target->constellation()->first()['name']) }}</td>
             @auth
             <td colspan="3"><span class="float-right">
                 @if ($target->ra != null)
-                    {{ App\Atlas::where('code', Auth::user()->standardAtlasCode)->first()['name'] }}
+                    {{ App\Models\Atlas::where('code', Auth::user()->standardAtlasCode)->first()['name'] }}
                     {{ _i(" page") }}</span></td>
                 @endif
             <td colspan="3">{{ $target->atlaspage(Auth::user()->standardAtlasCode) }}</td>
             @endauth
         </tr>
+        @endif
 
+        @if ($target->isNonSolarSystem())
         <tr>
             <td colspan="3">{{ _i('Magnitude') }}</td>
             <td colspan="3">@if ($target->mag == null)
@@ -121,12 +124,13 @@
         </tr>
         @endif
         @endauth
+        @endif
     @endif
 
-    @if (\App\TargetPartOf::isPartOf($target) || \App\TargetPartOf::contains($target))
+    @if (\App\Models\TargetPartOf::isPartOf($target) || \App\Models\TargetPartOf::contains($target))
         <tr>
             <td colspan="3"> {{ _i("(Contains)/Part of") }}</td>
-            <td colspan="9">{!! \App\TargetPartOf::partOfContains($target) !!}</td>
+            <td colspan="9">{!! \App\Models\TargetPartOf::partOfContains($target) !!}</td>
         </tr>
     @endif
 
@@ -155,7 +159,7 @@
     </tr>
 
     @auth
-        @if ($target->isNonSolarSystem())
+        @if ($target->isNonSolarSystem() || $target->isSolarSystem())
         <tr>
             <td>{{ _i('Date') }}</td>
             <td>@php $datestr = Session::get('date');
@@ -174,32 +178,39 @@
             <td>
                 <span data-toggle="tooltip" data-placement="bottom" title="{{ $target->set_popup }}">{{ $target->set }}</span>
             </td>
-            <td>{{ _i('Best Time') }}</td>
-            <td>{{ $target->BestTime }}</td>
-            <td>{{ _i("Max Alt") }}</td>
-            <td>
-                <span data-toggle="tooltip" data-placement="bottom" title="{!! $target->maxAlt_popup !!}">{!! $target->maxAlt !!}</span>
-            </td>
-        </tr>
-
-        <tr>
-            <td>{{ _i('Highest From') }}</td>
-            <td colspan="3">{{ $target->highest_from }}</td>
-            <td>{{ _i('Highest Around') }}</td>
-            <td colspan="3">{{ $target->highest_around }}</td>
-            <td>{{ _i('Highest To') }}</td>
-            <td colspan="3">{{ $target->highest_to }}</td>
-        </tr>
+            @if ($target->isSun())
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            @else
+                <td>{{ _i('Best Time') }}</td>
+                <td>{{ $target->BestTime }}</td>
+                <td>{{ _i("MaxAlt") }}</td>
+                <td>
+                    <span data-toggle="tooltip" data-placement="bottom" title="{!! $target->maxAlt_popup !!}">{!! $target->maxAlt !!}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ _i('Highest From') }}</td>
+                <td colspan="3">{{ $target->highest_from }}</td>
+                <td>{{ _i('Highest Around') }}</td>
+                <td colspan="3">{{ $target->highest_around }}</td>
+                <td>{{ _i('Highest To') }}</td>
+                <td colspan="3">{{ $target->highest_to }}</td>
+            </tr>
+            @endif
         @endif
     @endauth
 
-    @if ($target->ra != null && $target->decl != null)
+    @if ($target->isNonSolarSystem())
     <tr>
         <td colspan="3">Aladin<br /><br />
             @auth
                 @if (auth()->user()->stdtelescope)
                     @php
-                        if (!App\Instrument::where('id', auth()->user()->stdtelescope)->first()->fd) {
+                        if (!App\Models\Instrument::where('id', auth()->user()->stdtelescope)->first()->fd) {
                             $disabled = true;
                         } else {
                             $disabled = false;
@@ -210,7 +221,7 @@
                         @method('PATCH')
 
                         <select class="form-control selection" name="stdinstrument" id="defaultInstrument2">
-                            {!! App\Instrument::getInstrumentOptions() !!}
+                            {!! App\Models\Instrument::getInstrumentOptions() !!}
                         </select>
                     </form>
                     <br />
@@ -219,7 +230,7 @@
                         @method('PATCH')
 
                         <select class="form-control selection" {{ $disabled ? 'disabled' : '' }} name="stdeyepiece" id="defaultEyepiece">
-                            {!! App\Eyepiece::getEyepieceOptions() !!}
+                            {!! App\Models\Eyepiece::getEyepieceOptions() !!}
                         </select>
                     </form>
                     <br />
@@ -228,7 +239,7 @@
                         @method('PATCH')
 
                         <select class="form-control selection" {{ $disabled ? 'disabled' : '' }} name="stdlens" id="defaultLens">
-                            {!! App\Lens::getLensOptions() !!}
+                            {!! App\Models\Lens::getLensOptions() !!}
                         </select>
                     </form>
                 @endif
@@ -250,7 +261,6 @@
         </td>
     </tr>
     @endif
-
 </table>
 
 <hr />

@@ -13,7 +13,7 @@
 
 namespace App\DataTables;
 
-use App\Filter;
+use App\Models\Filter;
 use Yajra\DataTables\Services\DataTable;
 
 /**
@@ -119,7 +119,7 @@ class FilterDataTable extends DataTable
     protected function getMyParameters()
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
-            . \PeterColes\Languages\LanguagesFacade::lookup(
+            . \DeepskyLog\Languages\LanguagesFacade::lookup(
                 [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first() . '.json', ];

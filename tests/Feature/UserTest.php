@@ -12,8 +12,9 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
  * Tests for creating, deleting, and adapting users.
@@ -34,19 +35,18 @@ class UserTest extends TestCase
      *
      * @test
      *
-     * @return void
      */
     public function aUserCanHaveALens()
     {
         $this->withoutExceptionHandling();
 
-        $user = factory('App\User')->create();
+        $user = User::factory()->create();
         $this->actingAs($user);
 
         $this->assertTrue($this->isAuthenticated());
 
         // Create a new lens
-        $lens = new \App\Lens;
+        $lens = new \App\Models\Lens;
         $lens->name = 'Tested lens';
         $lens->factor = 1.43;
         $lens->user_id = $user->id;

@@ -17,7 +17,7 @@
             @method('PATCH')
 
             <select class="form-control selection" name="stdinstrument" id="defaultInstrument">
-                {!! App\Instrument::getInstrumentOptions() !!}
+                {!! App\Models\Instrument::getInstrumentOptions() !!}
             </select>
         </form>
         {{ _i('at') }}
@@ -26,7 +26,7 @@
             @method('PATCH')
 
             <select class="form-control selection" name="stdlocation" id="defaultLocation">
-                {!! App\Location::getLocationOptions() !!}
+                {!! App\Models\Location::getLocationOptions() !!}
             </select>
         </form>
         <br />

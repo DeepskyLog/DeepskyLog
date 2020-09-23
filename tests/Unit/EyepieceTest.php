@@ -12,8 +12,10 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\User;
+use App\Models\Eyepiece;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
  * Tests for creating, deleting, and adapting filters.
@@ -36,8 +38,8 @@ class EyepieceTest extends TestCase
      */
     public function checkGenericName()
     {
-        factory('App\User', 1)->create();
-        $eyepieces = factory('App\Eyepiece', 5)->create(['user_id' => 1]);
+        User::factory()->create();
+        $eyepieces = Eyepiece::factory(5)->create(['user_id' => 1]);
 
         foreach ($eyepieces as $eyepiece) {
             $this->assertStringContainsString(
