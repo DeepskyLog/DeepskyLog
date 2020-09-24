@@ -167,7 +167,7 @@ class InstrumentDataTable extends DataTable
     protected function getMyParameters()
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
-            . \DeepskyLog\Languages\LanguagesFacade::lookup(
+            . \PeterColes\Languages\LanguagesFacade::lookup(
                 [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first()

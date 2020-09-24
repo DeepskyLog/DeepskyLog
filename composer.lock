@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "34134d247743567bb4dc8e1961226758",
+    "content-hash": "05d36d00dabb35487317ea9c4b270442",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -373,69 +373,6 @@
                 "translation"
             ],
             "time": "2020-09-14T09:07:22+00:00"
-        },
-        {
-            "name": "deepskylog/multilingual-language-list",
-            "version": "1.15.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/DeepskyLog/Multilingual-Language-List.git",
-                "reference": "651d7516aa9399c0d633a8fcda45391090c141b0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/Multilingual-Language-List/zipball/651d7516aa9399c0d633a8fcda45391090c141b0",
-                "reference": "651d7516aa9399c0d633a8fcda45391090c141b0",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "~5|~6|~7|~8",
-                "php": "^7.2"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1",
-                "phpunit/phpunit": "^8|~9"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "DeepskyLog\\Languages\\LanguagesServiceProvider"
-                    ],
-                    "aliases": {
-                        "Languages": "DeepskyLog\\Languages\\LanguagesFacade"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "DeepskyLog\\Languages\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Peter Coles",
-                    "email": "peterdcoles@gmail.com",
-                    "homepage": "https://petercoles.com"
-                },
-                {
-                    "name": "Wim De Meester",
-                    "email": "deepskywim@gmail.com"
-                }
-            ],
-            "description": "Lookup Objects for Language Names and Codes",
-            "homepage": "https://github.com/petercoles/multilingual-language-list",
-            "keywords": [
-                "language codes",
-                "language lists",
-                "language lookup",
-                "laravel"
-            ],
-            "time": "2020-09-17T11:18:53+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -2040,16 +1977,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v2.2.6",
+            "version": "v2.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "97a380cc39760e3076f26559cd79e4a8c98b8916"
+                "reference": "2bb227d3e678bfef0c31124cfb6491929c7b65d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/97a380cc39760e3076f26559cd79e4a8c98b8916",
-                "reference": "97a380cc39760e3076f26559cd79e4a8c98b8916",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/2bb227d3e678bfef0c31124cfb6491929c7b65d3",
+                "reference": "2bb227d3e678bfef0c31124cfb6491929c7b65d3",
                 "shasum": ""
             },
             "require": {
@@ -2101,7 +2038,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-22T19:24:38+00:00"
+            "time": "2020-09-24T16:59:01+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -2896,6 +2833,65 @@
                 "random"
             ],
             "time": "2018-07-02T15:55:56+00:00"
+        },
+        {
+            "name": "petercoles/multilingual-language-list",
+            "version": "1.15.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/petercoles/Multilingual-Language-List.git",
+                "reference": "9e9be075dec4bf3df09576b9220dc4d5ae74dddc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/petercoles/Multilingual-Language-List/zipball/9e9be075dec4bf3df09576b9220dc4d5ae74dddc",
+                "reference": "9e9be075dec4bf3df09576b9220dc4d5ae74dddc",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5|~6|~7|~8",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1",
+                "phpunit/phpunit": ">=8"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PeterColes\\Languages\\LanguagesServiceProvider"
+                    ],
+                    "aliases": {
+                        "Languages": "PeterColes\\Languages\\LanguagesFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PeterColes\\Languages\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Peter Coles",
+                    "email": "peterdcoles@gmail.com",
+                    "homepage": "https://petercoles.com"
+                }
+            ],
+            "description": "Lookup Objects for Language Names and Codes",
+            "homepage": "https://github.com/petercoles/multilingual-language-list",
+            "keywords": [
+                "language codes",
+                "language lists",
+                "language lookup",
+                "laravel"
+            ],
+            "time": "2020-09-24T15:10:15+00:00"
         },
         {
             "name": "phenx/php-font-lib",
