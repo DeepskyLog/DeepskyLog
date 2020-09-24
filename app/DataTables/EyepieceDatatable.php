@@ -26,7 +26,7 @@ use Yajra\DataTables\Services\DataTable;
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
  * @link     http://www.deepskylog.org
  */
-class EyepieceDatatable extends DataTable
+class EyepieceDataTable extends DataTable
 {
     /**
      * Make the correct ajax call.

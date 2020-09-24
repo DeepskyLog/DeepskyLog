@@ -37,7 +37,7 @@
                 // Moon rise and set
                 $location = App\Models\Location::where('id', Auth::user()->stdlocation)->first();
 
-                $objAstroCalc = new \App\Libraries\AstroCalc(
+                $objAstroCalc = new \App\Libraries\astrocalc(
                     $date, $location->latitude, $location->longitude,
                     $location->timezone
                 );
