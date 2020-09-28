@@ -63,20 +63,20 @@
             <td colspan="3">{{ $target->declination() }}</td>
         </tr>
 
-        @if ($target->constellation)
         <tr>
             <td colspan="3">{{ _i('Constellation') }}</td>
-            <td colspan="3">{{ _i($target->constellation()->first()['name']) }}</td>
+            <td colspan="3">{{ _i($target->getConstellation()) }}</td>
             @auth
             <td colspan="3"><span class="float-right">
+            @if ($target->isNonSolarSystem())
                 @if ($target->ra != null)
                     {{ App\Models\Atlas::where('code', Auth::user()->standardAtlasCode)->first()['name'] }}
                     {{ _i(" page") }}</span></td>
                 @endif
             <td colspan="3">{{ $target->atlaspage(Auth::user()->standardAtlasCode) }}</td>
+            @endif
             @endauth
         </tr>
-        @endif
 
         @if ($target->isNonSolarSystem())
         <tr>

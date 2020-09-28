@@ -6,31 +6,35 @@
  * PHP Version 7
  *
  * @category Targets
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use deepskylog\AstronomyLibrary\Time;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Session;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
+use deepskylog\AstronomyLibrary\Time;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Spatie\Translatable\HasTranslations;
 
 /**
  * Target eloquent model.
  *
  * @category Targets
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 class Target extends Model
 {
@@ -505,7 +509,7 @@ class Target extends Model
                     } else {
                         $popup[0] = sprintf(
                             _i('%s rises at %s in %s on ')
-                                . $date->isoFormat('LL'),
+                                .$date->isoFormat('LL'),
                             $this->target_name,
                             $this->_target->getRising()
                                 ->timezone($location->timezone)->format('H:i'),
@@ -513,7 +517,7 @@ class Target extends Model
                         );
                         $popup[2] = sprintf(
                             _i('%s sets at %s in %s on ')
-                                . $date->isoFormat('LL'),
+                                .$date->isoFormat('LL'),
                             $this->target_name,
                             $this->_target->getSetting()
                                 ->timezone($location->timezone)->format('H:i'),
@@ -522,7 +526,7 @@ class Target extends Model
                     }
                     $popup[1] = sprintf(
                         _i('%s transits at %s in %s on ')
-                            . $date->isoFormat('LL'),
+                            .$date->isoFormat('LL'),
                         $this->target_name,
                         $this->_target->getTransit()
                             ->timezone($location->timezone)->format('H:i'),
@@ -532,7 +536,7 @@ class Target extends Model
                     if ($this->_target->getMaxHeightAtNight()->getCoordinate() < 0) {
                         $popup[3] = sprintf(
                             _i('%s does not rise above horizon in %s on ')
-                                . $date->isoFormat('LL'),
+                                .$date->isoFormat('LL'),
                             $this->target_name,
                             $location->target_name,
                             $datestr
@@ -540,7 +544,7 @@ class Target extends Model
                     } else {
                         $popup[3] = sprintf(
                             _i('%s reaches an altitude of %s in %s on ')
-                                . $date->isoFormat('LL'),
+                                .$date->isoFormat('LL'),
                             $this->target_name,
                             trim(
                                 $this->_target->getMaxHeightAtNight()
@@ -574,6 +578,23 @@ class Target extends Model
     public function constellation(): HasOne
     {
         return $this->hasOne('App\Models\Constellation', 'id', 'constellation');
+    }
+
+    /**
+     * Returns the constellation of this target.
+     *
+     * @return string the constellation this target belongs to
+     */
+    public function getConstellation()
+    {
+        if ($this->constellation) {
+            return \App\Models\Constellation::where('id', $this->constellation)->first()->name;
+        } else {
+            return \App\Models\Constellation::where(
+                'id',
+                $this->_target->getConstellation()
+            )->first()->name;
+        }
     }
 
     /**
@@ -634,7 +655,7 @@ class Target extends Model
         }
 
         return _i($this->_observationType['name'])
-            . ' / ' . _i($this->_targetType['type']);
+            .' / '._i($this->_targetType['type']);
     }
 
     /**
@@ -650,10 +671,10 @@ class Target extends Model
 
         return $this->_observationType['type'] == 'ds'
             || $this->_observationType['type'] == 'double';
-}
+    }
 
     /**
-     *  Check if the target is a solar system target
+     *  Check if the target is a solar system target.
      *
      * @return bool true if the target is a solar system target
      */
@@ -713,18 +734,18 @@ class Target extends Model
                 if ($this->diam2 != 0.0) {
                     if (round($this->diam2 / 60.0) == ($this->diam2 / 60.0)) {
                         if (($this->diam2 / 60.0) > 30.0) {
-                            $size = $size . sprintf("x%.0f'", $this->diam2 / 60.0);
+                            $size = $size.sprintf("x%.0f'", $this->diam2 / 60.0);
                         } else {
-                            $size = $size . sprintf("x%.1f'", $this->diam2 / 60.0);
+                            $size = $size.sprintf("x%.1f'", $this->diam2 / 60.0);
                         }
                     } else {
-                        $size = $size . sprintf("x%.1f'", $this->diam2 / 60.0);
+                        $size = $size.sprintf("x%.1f'", $this->diam2 / 60.0);
                     }
                 }
             } else {
                 $size = sprintf('%.1f"', $this->diam1);
                 if ($this->diam2 != 0.0) {
-                    $size = $size . sprintf('x%.1f"', $this->diam2);
+                    $size = $size.sprintf('x%.1f"', $this->diam2);
                 }
             }
         }
@@ -814,8 +835,8 @@ class Target extends Model
                                     '',
                                     $this->_target->getEquatorialCoordinates()
                                         ->getRA()->convertToHours()
-                                    . ' '
-                                    . $this->_target->getEquatorialCoordinates()
+                                    .' '
+                                    .$this->_target->getEquatorialCoordinates()
                                         ->getDeclination()->convertToDegrees()
                                 )
                             )
@@ -864,10 +885,10 @@ class Target extends Model
             // Add equatorial coordinates to the target.
             $target->setEquatorialCoordinates($equa);
 
-            for ($i = 1; $i < 13; $i++) {
+            for ($i = 1; $i < 13; ++$i) {
                 for ($j = 1; $j < 16; $j = $j + 14) {
-                    $datestr = sprintf('%02d', $j) . '/' . sprintf('%02d', $i) . '/'
-                        . \Carbon\Carbon::now()->format('Y');
+                    $datestr = sprintf('%02d', $j).'/'.sprintf('%02d', $i).'/'
+                        .\Carbon\Carbon::now()->format('Y');
                     $date = Carbon::createFromFormat('d/m/Y', $datestr);
                     $date->hour = 12;
                     $date->timezone($this->_location->timezone);
@@ -956,7 +977,7 @@ class Target extends Model
                     }
                     $ephemerides[$cnt]['count'] = ($j == 1) ? '' : $i;
 
-                    $cnt++;
+                    ++$cnt;
                 }
             }
 
@@ -1079,7 +1100,7 @@ class Target extends Model
                     }
                 }
 
-                $cnt++;
+                ++$cnt;
             }
 
             $this->_ephemerides = $ephemerides;
@@ -1100,7 +1121,7 @@ class Target extends Model
             if ($months->min() == 0 && $months->max() == 23) {
                 $missing = collect(range(0, 23))->diff($months);
 
-                for ($i = 0; $i < $missing->min(); $i++) {
+                for ($i = 0; $i < $missing->min(); ++$i) {
                     $months[$i] += 24;
                 }
             }
@@ -1130,8 +1151,8 @@ class Target extends Model
         $date = Carbon::now()->month($number / 2);
 
         return ($number % 2 ? _i('mid') : _i('begin'))
-                . ' '
-                . $date->isoFormat('MMMM');
+                .' '
+                .$date->isoFormat('MMMM');
     }
 
     /**
@@ -1187,16 +1208,6 @@ class Target extends Model
             ->where('ra', '<', $this->ra + $dra)
             ->where('decl', '>', $this->decl - $dist / 60.0)
             ->where('decl', '<', $this->decl + $dist / 60.0);
-    }
-
-    /**
-     * Returns the constellation of this target.
-     *
-     * @return string the constellation this target belongs to
-     */
-    public function getConstellation()
-    {
-        return \App\Models\Constellation::where('id', $this->con)->first()->name;
     }
 
     /**
@@ -1256,7 +1267,7 @@ class Target extends Model
                 _i('Comets'), _i('Planets'), _i('Sun'),
                 _i('Moon Craters'), _i('Moon Mountains'),
                 _i('Moon Other Feature'), _i('Moon Sea'), _i('Moon Valley'),
-                _i('Planetary Moons'), _i('Asteroids'), _i('Dwarf Planets')
+                _i('Planetary Moons'), _i('Asteroids'), _i('Dwarf Planets'),
             ]
         )
         ) {
