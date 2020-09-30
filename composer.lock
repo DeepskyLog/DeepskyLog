@@ -1213,16 +1213,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.6.0",
+            "version": "v8.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "a71952a6dba55de0bb11b5fbbd84874eda2a755c"
+                "reference": "3fb29e904a152b3e1fe49581f66ba5e02fe991f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/a71952a6dba55de0bb11b5fbbd84874eda2a755c",
-                "reference": "a71952a6dba55de0bb11b5fbbd84874eda2a755c",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/3fb29e904a152b3e1fe49581f66ba5e02fe991f2",
+                "reference": "3fb29e904a152b3e1fe49581f66ba5e02fe991f2",
                 "shasum": ""
             },
             "require": {
@@ -1372,7 +1372,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-09-22T13:42:02+00:00"
+            "time": "2020-09-29T15:39:07+00:00"
         },
         {
             "name": "laravel/helpers",
@@ -1977,16 +1977,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v2.2.7",
+            "version": "v2.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "2bb227d3e678bfef0c31124cfb6491929c7b65d3"
+                "reference": "cddda1536c3c1d3b3a7e57eb471cf9ba57117f37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/2bb227d3e678bfef0c31124cfb6491929c7b65d3",
-                "reference": "2bb227d3e678bfef0c31124cfb6491929c7b65d3",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/cddda1536c3c1d3b3a7e57eb471cf9ba57117f37",
+                "reference": "cddda1536c3c1d3b3a7e57eb471cf9ba57117f37",
                 "shasum": ""
             },
             "require": {
@@ -2038,20 +2038,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-24T16:59:01+00:00"
+            "time": "2020-09-29T13:53:53+00:00"
         },
         {
             "name": "maatwebsite/excel",
-            "version": "3.1.22",
+            "version": "3.1.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
-                "reference": "ba7152670257ba9f47bb6ff7cee025f8fc9da608"
+                "reference": "b8145257f020635f374d2314ccd556674efcbfcb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/ba7152670257ba9f47bb6ff7cee025f8fc9da608",
-                "reference": "ba7152670257ba9f47bb6ff7cee025f8fc9da608",
+                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/b8145257f020635f374d2314ccd556674efcbfcb",
+                "reference": "b8145257f020635f374d2314ccd556674efcbfcb",
                 "shasum": ""
             },
             "require": {
@@ -2112,7 +2112,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-08T15:29:50+00:00"
+            "time": "2020-09-29T07:30:12+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -7009,27 +7009,27 @@
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v4.30.0",
+            "version": "v4.30.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "ceb5eea82fed6c874478d69e35175964a72384fe"
+                "reference": "c663ea3478a027afde7d866b2f439259a1a2b47f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/ceb5eea82fed6c874478d69e35175964a72384fe",
-                "reference": "ceb5eea82fed6c874478d69e35175964a72384fe",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/c663ea3478a027afde7d866b2f439259a1a2b47f",
+                "reference": "c663ea3478a027afde7d866b2f439259a1a2b47f",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "laravelcollective/html": "^5.4|^6|^7",
                 "php": ">=7.0",
-                "yajra/laravel-datatables-oracle": "8.*|9.*"
+                "yajra/laravel-datatables-oracle": "~9.0"
             },
             "require-dev": {
-                "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "~6.0"
+                "mockery/mockery": "^1.3.1",
+                "phpunit/phpunit": "^9.3"
             },
             "type": "library",
             "extra": {
@@ -7075,7 +7075,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-06-18T10:30:27+00:00"
+            "time": "2020-09-29T03:56:29+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",
@@ -7957,16 +7957,16 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.12.0",
+            "version": "1.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "765cd5d5d237525f8bbadaec5dc161c83a369119"
+                "reference": "8ce87516be71aae9b956f81906aaf0338e0d8a2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/765cd5d5d237525f8bbadaec5dc161c83a369119",
-                "reference": "765cd5d5d237525f8bbadaec5dc161c83a369119",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/8ce87516be71aae9b956f81906aaf0338e0d8a2d",
+                "reference": "8ce87516be71aae9b956f81906aaf0338e0d8a2d",
                 "shasum": ""
             },
             "require": {
@@ -8016,7 +8016,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2020-09-28T12:23:07+00:00"
+            "time": "2020-09-29T09:10:42+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -8572,16 +8572,16 @@
         },
         {
             "name": "sebastian/comparator",
-            "version": "4.0.4",
+            "version": "4.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "e717aabeafe4eac045d3e947dad3207118664c72"
+                "reference": "7a8ff306445707539c1a6397372a982a1ec55120"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/e717aabeafe4eac045d3e947dad3207118664c72",
-                "reference": "e717aabeafe4eac045d3e947dad3207118664c72",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/7a8ff306445707539c1a6397372a982a1ec55120",
+                "reference": "7a8ff306445707539c1a6397372a982a1ec55120",
                 "shasum": ""
             },
             "require": {
@@ -8638,7 +8638,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-28T05:31:46+00:00"
+            "time": "2020-09-30T06:47:25+00:00"
         },
         {
             "name": "sebastian/complexity",
