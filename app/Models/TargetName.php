@@ -6,9 +6,11 @@
  * PHP Version 7
  *
  * @category Targets
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 
 namespace App\Models;
@@ -21,9 +23,11 @@ use Illuminate\Support\Collection;
  * Target name eloquent model.
  *
  * @category Targets
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 class TargetName extends Model
 {
@@ -99,7 +103,7 @@ class TargetName extends Model
         foreach (self::where('target_id', $target->id)->get() as $targetname) {
             if ($targetname->altname != $target->target_name) {
                 $alternativeNames .= ($alternativeNames ? '/' : '')
-                    . $targetname->altname;
+                    .$targetname->altname;
             }
         }
 
