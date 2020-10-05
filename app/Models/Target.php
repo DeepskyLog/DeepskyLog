@@ -616,7 +616,11 @@ class Target extends Model
      */
     public function atlasPage($atlasname): string
     {
-        return $this->$atlasname;
+        if ($this->atlasname) {
+            return $this->$atlasname;
+        } else {
+            return $this->_target->getEquatorialCoordinates()->calculateAtlasPage($atlasname);
+        }
     }
 
     /**
