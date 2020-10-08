@@ -5,18 +5,20 @@
  * PHP Version 7
  *
  * @category UserManagement
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 
 namespace App\Models;
 
 use Cmgmyr\Messenger\Traits\Messagable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -25,9 +27,11 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * User eloquent model.
  *
  * @category UserManagement
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
@@ -248,7 +252,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         'detailFoV', 'overviewdsos', 'lookupdsos',
         'detaildsos', 'overviewstars', 'lookupstars', 'stdtelescope',
         'detailstars', 'photosize1', 'photosize2', 'atlaspagefont',
-        'stdlocation', 'stdlens', 'stdeyepiece',
+        'stdlocation', 'stdlens', 'stdeyepiece', 'about',
     ];
 
     /**

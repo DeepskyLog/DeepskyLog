@@ -4,19 +4,26 @@
 
 @section('content')
 
-<table>
-    <tr>
-        <td><h3>{{ $user->name }}</h3></td>
-        <td>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<div class="row">
+        <h3>{{ $user->name }}</h3>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             @if ($media)
             <a href={{ $media->getUrl() }} data-lity>
-                <img style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $user->name }}">
+                <img class="float-right" style="border-radius: 20%" src="{{ $media->getUrl('thumb') }}" alt="{{ $user->name }}">
             </a>
             @endif
-        </td>
-    </tr>
-</table>
+</div>
+<br />
+    @if ($user->about)
+    <div class="row col-8">
+        <div class="card float-right">
+            <div class="card-body">
+                {{ $user->about }}
+            </div>
+        </div>
+    </div>
+    @endif
+
 <hr>
 
 <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">

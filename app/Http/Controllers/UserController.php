@@ -6,18 +6,20 @@
  * PHP Version 7
  *
  * @category Authentication
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 
 namespace App\Http\Controllers;
 
+use App\DataTables\UserDataTable;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\DataTables\UserDataTable;
-use App\Http\Requests\UserRequest;
 
 /**
  * User Controller.
@@ -25,9 +27,11 @@ use App\Http\Requests\UserRequest;
  * PHP Version 7
  *
  * @category Authentication
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 class UserController extends Controller
 {
@@ -167,7 +171,7 @@ class UserController extends Controller
 
         return \Chart::title(
             [
-                'text' => _i('Number of observations per year: ') . $user->name,
+                'text' => _i('Number of observations per year: ').$user->name,
             ]
         )->chart(
             [
@@ -179,7 +183,7 @@ class UserController extends Controller
             ]
         )->subtitle(
             [
-                'text' => _i('Source: ') . 'https://www.deepskylog.org/',
+                'text' => _i('Source: ').'https://www.deepskylog.org/',
             ]
         )->xaxis(
             [
@@ -258,7 +262,7 @@ class UserController extends Controller
     {
         return \Chart::title(
             [
-                'text' => _i('Number of observations per month: ') . $user->name,
+                'text' => _i('Number of observations per month: ').$user->name,
             ]
         )->chart(
             [
@@ -273,7 +277,7 @@ class UserController extends Controller
             ]
         )->subtitle(
             [
-                'text' => _i('Source: ') . 'https://www.deepskylog.org/',
+                'text' => _i('Source: ').'https://www.deepskylog.org/',
             ]
         )->xaxis(
             [
@@ -431,7 +435,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         if (!$user->hasMedia('observer')) {
             $user->addMediaFromUrl(asset('images/profile.png'))
-                ->usingFileName($user->id . '.png')
+                ->usingFileName($user->id.'.png')
                 ->toMediaCollection('observer');
         }
 
@@ -468,7 +472,7 @@ class UserController extends Controller
         } else {
             User::find($id)
                 ->addMediaFromUrl(asset('img/profile.png'))
-                ->usingFileName($id . '.png')
+                ->usingFileName($id.'.png')
                 ->toMediaCollection('observer');
 
             return User::find($id)
@@ -507,6 +511,10 @@ class UserController extends Controller
             }
         }
 
+        // Update the about
+        if ($request->has('about')) {
+            $user->update(['about' => $request->get('about')]);
+        }
         // Update the fstOffset
         if ($request->has('fstOffset')) {
             $user->update(['fstOffset' => $request->get('fstOffset')]);
@@ -677,7 +685,7 @@ class UserController extends Controller
             // Update the picture
             User::find($user->id)
                 ->addMedia($request->picture->path())
-                ->usingFileName($user->id . '.png')
+                ->usingFileName($user->id.'.png')
                 ->toMediaCollection('observer');
         }
 

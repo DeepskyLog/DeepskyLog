@@ -5,7 +5,7 @@
 > Log and compare your visual astronomical observations
 
 * Visit [DeepskyLog](https://www.deepskylog.org) and start using a web application to prepare, log, and compare visual astronomical observations.
-* You can find more than 140,000 observations and 16,000 sketches in DeepskyLog. There are visual observations of
+* You can find more than 150,000 observations and 17,000 sketches in DeepskyLog. There are visual observations of
   * Deep-sky objects
   * Comets
   * Planets

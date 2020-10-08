@@ -6,9 +6,11 @@
  * PHP Version 7
  *
  * @category Common
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 
 namespace App\Http\Middleware;
@@ -21,9 +23,11 @@ use Illuminate\Support\Facades\Session;
  * DeepskyLog middleware. Does some checks and adds a flash message if needed.
  *
  * @category Common
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 class DeepskyLogChecks
 {
@@ -50,7 +54,7 @@ class DeepskyLogChecks
                 laraflash(
                     _i(
                         'Your country of residence is not set. Please set it in the %sobserver settings%s',
-                        '<a href="users/' . Auth::user()->id . '/settings">',
+                        '<a href="users/'.Auth::user()->id.'/settings">',
                         '</a>.'
                     )
                 )->warning();
@@ -60,6 +64,17 @@ class DeepskyLogChecks
             if (Auth::user()->stdlocation === 0) {
                 laraflash(
                     _i('You did not specify a standard location. Please select one.')
+                )->warning();
+            }
+
+            // Check if the about user information is set
+            if (!Auth::user()->about) {
+                laraflash(
+                    _i(
+                        'You did not enter information about yourself. Please set it in the %sobserver settings%s',
+                        '<a href="users/'.Auth::user()->id.'/settings">',
+                        '</a>.'
+                    )
                 )->warning();
             }
 
@@ -79,8 +94,8 @@ class DeepskyLogChecks
                     _i(
                         'At least one of your eyepieces (%s) does not have a brand or a type.
                         Please add the needed information in the %seyepiece page%s',
-                        '<a href="/eyepiece/' . $eyepieceId . '">'
-                        . $eyepieceToCheck . '</a>',
+                        '<a href="/eyepiece/'.$eyepieceId.'">'
+                        .$eyepieceToCheck.'</a>',
                         '<a href="/eyepiece/">',
                         '</a>.'
                     )

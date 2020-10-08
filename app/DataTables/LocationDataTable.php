@@ -6,9 +6,11 @@
  * PHP Version 7
  *
  * @category Locations
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 
 namespace App\DataTables;
@@ -23,9 +25,11 @@ use Yajra\DataTables\Services\DataTable;
  * PHP Version 7
  *
  * @category Locations
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 class LocationDataTable extends DataTable
 {
@@ -51,18 +55,18 @@ class LocationDataTable extends DataTable
                 'weather',
                 function ($location) {
                     return '<a href="http://clearoutside.com/forecast/'
-                        . round($location->latitude, 2) . '/'
-                        . round($location->longitude, 2) . '">
+                        .round($location->latitude, 2).'/'
+                        .round($location->longitude, 2).'">
                         <img src="http://clearoutside.com/forecast_image_small/'
-                        . round($location->latitude, 2) . '/'
-                        . round($location->longitude, 2) . '/forecast.png" />
+                        .round($location->latitude, 2).'/'
+                        .round($location->longitude, 2).'/forecast.png" />
                         </a>';
                 }
             )->editColumn(
                 'name',
                 function ($location) {
-                    return '<a href="/location/' . $location->id . '">' .
-                        $location->name . '</a>';
+                    return '<a href="/location/'.$location->id.'">'.
+                        $location->name.'</a>';
                 }
             )->editColumn(
                 'observations',
@@ -85,8 +89,8 @@ class LocationDataTable extends DataTable
             )->editColumn(
                 'user.name',
                 function ($location) {
-                    return '<a href="/users/' . $location->user->id . '">'
-                        . $location->user->name . '</a>';
+                    return '<a href="/users/'.$location->user->id.'">'
+                        .$location->user->name.'</a>';
                 }
             )->editColumn(
                 'active',
@@ -100,17 +104,17 @@ class LocationDataTable extends DataTable
                 function ($location) {
                     if ($location->id == Auth::user()->stdlocation) {
                         return '<input type="radio" name="stdlocation" value="'
-                            . $location->id
-                            . '" checked="checked" onclick="submit();" />';
+                            .$location->id
+                            .'" checked="checked" onclick="submit();" />';
                     } else {
                         if ($location->active) {
                             return '<input type="radio" name="stdlocation" value="'
-                            . $location->id
-                            . '" onclick="submit();" />';
+                            .$location->id
+                            .'" onclick="submit();" />';
                         } else {
                             return '<input type="radio" name="stdlocation" value="'
-                            . $location->id
-                            . '" disabled />';
+                            .$location->id
+                            .'" disabled />';
                         }
                     }
                 }
@@ -152,11 +156,11 @@ class LocationDataTable extends DataTable
     protected function getMyParameters()
     {
         $language = ['url' => 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/'
-            . \DeepskyLog\Languages\LanguagesFacade::lookup(
+            .\PeterColes\Languages\LanguagesFacade::lookup(
                 [\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage()],
                 'en'
             )->first()
-            . '.json', ];
+            .'.json', ];
         $mypars = $this->getBuilderParameters();
         $mypars['language'] = $language;
 
@@ -302,6 +306,6 @@ class LocationDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Location_' . date('YmdHis');
+        return 'Location_'.date('YmdHis');
     }
 }
