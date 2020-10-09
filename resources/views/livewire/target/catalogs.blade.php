@@ -13,16 +13,16 @@
         <div wire:loading.remove>
             <h3>{{ $selected_catalog }}</h3>
             @php $data = \App\Models\Target::getCatalogData($selected_catalog); @endphp
-            {{ _i("Number of objects") . ": " . $data[0]->count() }}
+            {{ _i('Number of objects') . ': ' . $data[0]->count() }}
 
             <div class="table-responsive">
                 <table class="table table-sm table-bordered table-hover">
                     @php $counter = 0; @endphp
-                    @foreach ($data[1] as $const=>$count)
+                    @foreach ($data[1] as $const => $count)
                         @if ($counter % 3 == 0)
                             <tr>
                         @endif
-                        <td>{{ $const . ': ' . $count}}</td>
+                        <td>{{ $const . ': ' . $count }}</td>
                         @if ($counter % 3 == 2)
                             </tr>
                         @endif
@@ -34,11 +34,11 @@
             <div class="table-responsive">
                 <table class="table table-sm table-bordered table-hover">
                     @php $counter = 0; @endphp
-                    @foreach ($data[2] as $type=>$count)
+                    @foreach ($data[2] as $type => $count)
                         @if ($counter % 3 == 0)
                             <tr>
                         @endif
-                        <td>{{ $type . ': ' . $count}}</td>
+                        <td>{{ $type . ': ' . $count }}</td>
                         @if ($counter % 3 == 2)
                             </tr>
                         @endif
@@ -56,9 +56,9 @@
                         @endif
                         <td>
                             <a href="/target/{{ $target->altname }}">{{ $target->altname }}
-                            @if ($target['altname'] != $target->target->target_name)
-                                ({{ $target->target->target_name }})
-                            @endif
+                                @if ($target['altname'] != $target->target->target_name)
+                                    ({{ $target->target->target_name }})
+                                @endif
                         </td>
                         @if ($counter % 3 == 2)
                             </tr>
@@ -83,15 +83,3 @@
         </div>
     @endif
 </div>
-
-
-@push('scripts')
-<script>
-    $(document).ready(function() {
-        $('#catalog').select2();
-        $('#catalog').on('change', function (e) {
-            @this.set('selected_catalog', e.target.value);
-        });
-    });
-</script>
-@endpush

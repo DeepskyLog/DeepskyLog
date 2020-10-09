@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2020-09-15 15:14+0200\n"
-"PO-Revision-Date: 2020-09-15 15:15+0200\n"
+"POT-Creation-Date: 2020-10-08 15:23+0200\n"
+"PO-Revision-Date: 2020-10-08 15:24+0200\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: fr_FR\n"
@@ -196,38 +196,38 @@ msgstr "Filtre correcteur"
 #: ../resources/lang/en/translations.php:37
 #: ../storage/framework/messages/2a12e2677371cfe7ba0ad0da35bf33197a24834b.php.php:12
 #: ../storage/framework/messages/39b4c973a80357f39b72c0549cd664422f85d438.php.php:37
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:223
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:315
-#: Http/Controllers/UserController.php:223
-#: Http/Controllers/UserController.php:315
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:227
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:319
+#: Http/Controllers/UserController.php:227
+#: Http/Controllers/UserController.php:319
 msgid "Deepsky"
 msgstr "Ciel profond"
 
 #: ../resources/lang/en/translations.php:38
 #: ../storage/framework/messages/2a12e2677371cfe7ba0ad0da35bf33197a24834b.php.php:20
 #: ../storage/framework/messages/39b4c973a80357f39b72c0549cd664422f85d438.php.php:38
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:227
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:319
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1229
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1236
-#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:66
-#: Http/Controllers/UserController.php:227
-#: Http/Controllers/UserController.php:319 Models/Target.php:1229
-#: Models/Target.php:1236 Models/TargetName.php:66
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:231
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:323
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1271
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1278
+#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:70
+#: Http/Controllers/UserController.php:231
+#: Http/Controllers/UserController.php:323 Models/Target.php:1271
+#: Models/Target.php:1278 Models/TargetName.php:70
 msgid "Comets"
 msgstr "Comètes"
 
 #: ../resources/lang/en/translations.php:39
 #: ../storage/framework/messages/2a12e2677371cfe7ba0ad0da35bf33197a24834b.php.php:26
 #: ../storage/framework/messages/39b4c973a80357f39b72c0549cd664422f85d438.php.php:39
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:235
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:327
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1229
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1238
-#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:58
-#: Http/Controllers/UserController.php:235
-#: Http/Controllers/UserController.php:327 Models/Target.php:1229
-#: Models/Target.php:1238 Models/TargetName.php:58
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:239
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:331
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1271
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1280
+#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:62
+#: Http/Controllers/UserController.php:239
+#: Http/Controllers/UserController.php:331 Models/Target.php:1271
+#: Models/Target.php:1280 Models/TargetName.php:62
 msgid "Planets"
 msgstr "Planètes"
 
@@ -248,27 +248,27 @@ msgstr "Étoiles doubles"
 
 #: ../resources/lang/en/translations.php:43
 #: ../storage/framework/messages/39b4c973a80357f39b72c0549cd664422f85d438.php.php:43
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:239
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:331
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1229
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1240
-#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:65
-#: ../storage/framework/messages/abec6cfd997694f3369a590a1ba1d69452b2c602.php.php:69
-#: Http/Controllers/UserController.php:239
-#: Http/Controllers/UserController.php:331 Models/Target.php:1229
-#: Models/Target.php:1240 Models/TargetName.php:65
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:243
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:335
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1271
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1282
+#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:69
+#: ../storage/framework/messages/abec6cfd997694f3369a590a1ba1d69452b2c602.php.php:71
+#: Http/Controllers/UserController.php:243
+#: Http/Controllers/UserController.php:335 Models/Target.php:1271
+#: Models/Target.php:1282 Models/TargetName.php:69
 msgid "Sun"
 msgstr "Soleil"
 
 #: ../resources/lang/en/translations.php:44
 #: ../storage/framework/messages/2a12e2677371cfe7ba0ad0da35bf33197a24834b.php.php:23
 #: ../storage/framework/messages/39b4c973a80357f39b72c0549cd664422f85d438.php.php:44
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:243
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:335
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:247
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:339
 #: ../storage/framework/messages/abec6cfd997694f3369a590a1ba1d69452b2c602.php.php:14
-#: ../storage/framework/messages/abec6cfd997694f3369a590a1ba1d69452b2c602.php.php:36
-#: Http/Controllers/UserController.php:243
-#: Http/Controllers/UserController.php:335
+#: ../storage/framework/messages/abec6cfd997694f3369a590a1ba1d69452b2c602.php.php:38
+#: Http/Controllers/UserController.php:247
+#: Http/Controllers/UserController.php:339
 msgid "Moon"
 msgstr "Lune"
 
@@ -946,54 +946,54 @@ msgstr "Planète naine"
 
 #: ../resources/views/auth/passwords/reset.blade.php:75
 #: ../resources/views/auth/register.blade.php:210
-#: ../resources/views/users/settings.blade.php:360
+#: ../resources/views/users/settings.blade.php:350
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:212
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:371
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:361
 #: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:75
 msgid "The password is too short"
 msgstr "Le mot de passe est trop court"
 
 #: ../resources/views/auth/passwords/reset.blade.php:76
 #: ../resources/views/auth/register.blade.php:211
-#: ../resources/views/users/settings.blade.php:361
+#: ../resources/views/users/settings.blade.php:351
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:213
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:372
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:362
 #: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:76
 msgid "Weak; try combining letters & numbers"
 msgstr "Faible; essayez de combiner des lettres et des chiffres"
 
 #: ../resources/views/auth/passwords/reset.blade.php:77
 #: ../resources/views/auth/register.blade.php:212
-#: ../resources/views/users/settings.blade.php:362
+#: ../resources/views/users/settings.blade.php:352
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:214
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:373
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:363
 #: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:77
 msgid "Medium; try using special characters"
 msgstr "Moyen; essayez d'utiliser des caractères spéciaux"
 
 #: ../resources/views/auth/passwords/reset.blade.php:78
 #: ../resources/views/auth/register.blade.php:213
-#: ../resources/views/users/settings.blade.php:363
+#: ../resources/views/users/settings.blade.php:353
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:215
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:374
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:364
 #: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:78
 msgid "Strong password"
 msgstr "Mot de passe fort"
 
 #: ../resources/views/auth/passwords/reset.blade.php:79
 #: ../resources/views/auth/register.blade.php:214
-#: ../resources/views/users/settings.blade.php:364
+#: ../resources/views/users/settings.blade.php:354
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:216
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:375
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:365
 #: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:79
 msgid "The password contains the username"
 msgstr "Le mot de passe contient le nom d'utilisateur"
 
 #: ../resources/views/auth/passwords/reset.blade.php:80
 #: ../resources/views/auth/register.blade.php:215
-#: ../resources/views/users/settings.blade.php:365
+#: ../resources/views/users/settings.blade.php:355
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:217
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:376
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:366
 #: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:80
 msgid "Type your password"
 msgstr "Tapez votre mot de passe"
@@ -1005,77 +1005,67 @@ msgstr "Tapez votre mot de passe"
 msgid "The requested target does not exist."
 msgstr "L’objet demandé n'existe pas."
 
-#: ../storage/framework/messages/11f35517f27c2c58d1baa3b9d9635e81ce9c2f37.php.php:1
-msgid "Messages"
-msgstr "Messages"
-
-#: ../storage/framework/messages/11f35517f27c2c58d1baa3b9d9635e81ce9c2f37.php.php:9
-msgid "New messages"
-msgstr "Nouveaux messages"
-
-#: ../storage/framework/messages/11f35517f27c2c58d1baa3b9d9635e81ce9c2f37.php.php:15
-msgid "Old messages"
-msgstr "Vieux messages"
-
-#: ../storage/framework/messages/11f35517f27c2c58d1baa3b9d9635e81ce9c2f37.php.php:50
-msgid "Start new conversation"
-msgstr "Démarrer une nouvelle conversation"
-
-#: ../storage/framework/messages/12686e825760c670be990b5496bba1a6c1e4ef5b.php.php:1
-msgid "Sorry, no threads."
-msgstr "Désolé, pas de discussions."
-
-#: ../storage/framework/messages/14281692a25c2468513b2420db54664225a3a3d7.php.php:121
-#: Models/Instrument.php:121
-msgid "Add an instrument"
-msgstr "Rajouter un instrument"
-
-#: ../storage/framework/messages/1a6f1865f2c277c4c383b305d55a7f971c89f018.php.php:1
+#: ../storage/framework/messages/0be2dacf003887bb50fe96c4ab12759f609d9165.php.php:1
 msgid "New message"
 msgstr "Nouveau message"
 
-#: ../storage/framework/messages/1a6f1865f2c277c4c383b305d55a7f971c89f018.php.php:5
+#: ../storage/framework/messages/0be2dacf003887bb50fe96c4ab12759f609d9165.php.php:5
 msgid "Create a new message"
 msgstr "Ecrire un nouveau message"
 
-#: ../storage/framework/messages/1a6f1865f2c277c4c383b305d55a7f971c89f018.php.php:7
+#: ../storage/framework/messages/0be2dacf003887bb50fe96c4ab12759f609d9165.php.php:7
 msgid "Create a new message for all users"
 msgstr "Créer un nouveau message pour tous les utilisateurs"
 
-#: ../storage/framework/messages/1a6f1865f2c277c4c383b305d55a7f971c89f018.php.php:16
-#: ../storage/framework/messages/21eeafc8bc1c8b14b55bb95867b4d61c731dec04.php.php:4
+#: ../storage/framework/messages/0be2dacf003887bb50fe96c4ab12759f609d9165.php.php:16
+#: ../storage/framework/messages/6c23402a8cab13d02b6825dba1b9e4ff7a6292b7.php.php:4
 msgid "Subject"
 msgstr "Sujet"
 
-#: ../storage/framework/messages/1a6f1865f2c277c4c383b305d55a7f971c89f018.php.php:23
-#: ../storage/framework/messages/fcf470196d1307af2b92d2b01aae1e761d47669f.php.php:1
+#: ../storage/framework/messages/0be2dacf003887bb50fe96c4ab12759f609d9165.php.php:23
+#: ../storage/framework/messages/422d6b4b07998a287763d44316e34788893052be.php.php:1
 msgid "Message"
 msgstr "Message"
 
-#: ../storage/framework/messages/1a6f1865f2c277c4c383b305d55a7f971c89f018.php.php:28
+#: ../storage/framework/messages/0be2dacf003887bb50fe96c4ab12759f609d9165.php.php:28
 msgid "Participants in the conversation"
 msgstr "Participants à la conversation"
 
-#: ../storage/framework/messages/1a6f1865f2c277c4c383b305d55a7f971c89f018.php.php:45
-#: ../storage/framework/messages/b1cb4bd2b603a8a2785a0cea220515434f46efa5.php.php:27
+#: ../storage/framework/messages/0be2dacf003887bb50fe96c4ab12759f609d9165.php.php:45
+#: ../storage/framework/messages/929ba05f435bc807f5035fbc58645f6dd8828ffa.php.php:27
 msgid "Submit"
 msgstr "Envoyer"
 
-#: ../storage/framework/messages/21eeafc8bc1c8b14b55bb95867b4d61c731dec04.php.php:8
-msgid "Unread messages"
-msgstr "Messages non lus"
+#: ../storage/framework/messages/14281692a25c2468513b2420db54664225a3a3d7.php.php:123
+#: Models/Instrument.php:123
+msgid "Add an instrument"
+msgstr "Rajouter un instrument"
 
-#: ../storage/framework/messages/21eeafc8bc1c8b14b55bb95867b4d61c731dec04.php.php:12
-msgid "Message started by"
-msgstr "Message lancé par"
+#: ../storage/framework/messages/158d356aa1d32f3e10d4793f0f0163213975b184.php.php:1
+msgid "Messages"
+msgstr "Messages"
 
-#: ../storage/framework/messages/21eeafc8bc1c8b14b55bb95867b4d61c731dec04.php.php:16
-msgid "Latest message by"
-msgstr "Dernier message par"
+#: ../storage/framework/messages/158d356aa1d32f3e10d4793f0f0163213975b184.php.php:9
+msgid "New messages"
+msgstr "Nouveaux messages"
 
-#: ../storage/framework/messages/21eeafc8bc1c8b14b55bb95867b4d61c731dec04.php.php:20
-msgid "Latest update"
-msgstr "Dernière mise à jour"
+#: ../storage/framework/messages/158d356aa1d32f3e10d4793f0f0163213975b184.php.php:15
+msgid "Old messages"
+msgstr "Vieux messages"
+
+#: ../storage/framework/messages/158d356aa1d32f3e10d4793f0f0163213975b184.php.php:50
+msgid "Start new conversation"
+msgstr "Démarrer une nouvelle conversation"
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:3
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:179
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:84
+msgid "Country of residence"
+msgstr "Pays de résidence"
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:17
+msgid "Let other people know what are your astronomical interests"
+msgstr "Faites savoir aux autres quels sont vos intérêts astronomiques"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:81
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:91
@@ -1101,14 +1091,14 @@ msgstr "mm"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:191
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:247
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:64
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:176
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:232
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:153
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:209
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:72
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:180
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:236
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:50
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:153
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:209
 #: ../storage/framework/messages/6716d68c6ef2a5cd24094258f4001ad610fee57d.php.php:21
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:56
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:52
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:142
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:190
 #: ../storage/framework/messages/b0560d46aeab0e1ad0a93e4dce599db14d49b9bb.php.php:153
@@ -1120,20 +1110,20 @@ msgstr "mm"
 #: ../storage/framework/messages/e3a3e85fecb182d29e33fe54f9a9e36a8f1f2a3f.php.php:339
 #: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:50
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:51
-#: DataTables/EyepieceDatatable.php:153 DataTables/EyepieceDatatable.php:209
+#: DataTables/EyepieceDataTable.php:153 DataTables/EyepieceDataTable.php:209
 #: DataTables/FilterDataTable.php:142 DataTables/FilterDataTable.php:190
 #: DataTables/InstrumentDataTable.php:191
 #: DataTables/InstrumentDataTable.php:247 DataTables/LensDataTable.php:126
-#: DataTables/LensDataTable.php:158 DataTables/LocationDataTable.php:176
-#: DataTables/LocationDataTable.php:232 DataTables/TargetDataTable.php:209
+#: DataTables/LensDataTable.php:158 DataTables/LocationDataTable.php:180
+#: DataTables/LocationDataTable.php:236 DataTables/TargetDataTable.php:209
 #: DataTables/TargetDataTable.php:339 DataTables/UserDataTable.php:153
 msgid "Name"
 msgstr "Nom"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:195
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:251
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:175
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:231
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:175
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:231
 #: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:19
 #: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:19
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:146
@@ -1146,7 +1136,7 @@ msgstr "Nom"
 #: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:20
 #: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:52
 #: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:19
-#: DataTables/EyepieceDatatable.php:175 DataTables/EyepieceDatatable.php:231
+#: DataTables/EyepieceDataTable.php:175 DataTables/EyepieceDataTable.php:231
 #: DataTables/FilterDataTable.php:146 DataTables/FilterDataTable.php:194
 #: DataTables/InstrumentDataTable.php:195
 #: DataTables/InstrumentDataTable.php:251 DataTables/TargetDataTable.php:234
@@ -1173,12 +1163,12 @@ msgstr "F/D"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:213
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:269
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:157
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:213
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:87
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:157
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:213
 #: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:30
 #: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:41
-#: DataTables/EyepieceDatatable.php:157 DataTables/EyepieceDatatable.php:213
+#: DataTables/EyepieceDataTable.php:157 DataTables/EyepieceDataTable.php:213
 #: DataTables/InstrumentDataTable.php:213
 #: DataTables/InstrumentDataTable.php:269
 msgid "Focal Length"
@@ -1195,68 +1185,68 @@ msgstr "Magnification fixe"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:225
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:281
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:210
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:272
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:187
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:243
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:214
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:276
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:187
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:243
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:168
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:215
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:208
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:304
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:212
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:308
 #: ../storage/framework/messages/b0560d46aeab0e1ad0a93e4dce599db14d49b9bb.php.php:175
 #: ../storage/framework/messages/e2a171fc63fddf9f9a1eebb646f33968cbb21d50.php.php:136
 #: ../storage/framework/messages/e2a171fc63fddf9f9a1eebb646f33968cbb21d50.php.php:167
-#: DataTables/EyepieceDatatable.php:187 DataTables/EyepieceDatatable.php:243
+#: DataTables/EyepieceDataTable.php:187 DataTables/EyepieceDataTable.php:243
 #: DataTables/FilterDataTable.php:168 DataTables/FilterDataTable.php:215
 #: DataTables/InstrumentDataTable.php:225
 #: DataTables/InstrumentDataTable.php:281 DataTables/LensDataTable.php:136
-#: DataTables/LensDataTable.php:167 DataTables/LocationDataTable.php:210
-#: DataTables/LocationDataTable.php:272 DataTables/UserDataTable.php:175
-#: Http/Controllers/UserController.php:208
-#: Http/Controllers/UserController.php:304
+#: DataTables/LensDataTable.php:167 DataTables/LocationDataTable.php:214
+#: DataTables/LocationDataTable.php:276 DataTables/UserDataTable.php:175
+#: Http/Controllers/UserController.php:212
+#: Http/Controllers/UserController.php:308
 msgid "Observations"
 msgstr "Observations"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:231
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:297
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:216
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:288
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:193
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:252
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:220
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:292
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:193
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:252
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:174
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:225
 #: ../storage/framework/messages/b0560d46aeab0e1ad0a93e4dce599db14d49b9bb.php.php:169
 #: ../storage/framework/messages/e2a171fc63fddf9f9a1eebb646f33968cbb21d50.php.php:142
 #: ../storage/framework/messages/e2a171fc63fddf9f9a1eebb646f33968cbb21d50.php.php:177
-#: DataTables/EyepieceDatatable.php:193 DataTables/EyepieceDatatable.php:252
+#: DataTables/EyepieceDataTable.php:193 DataTables/EyepieceDataTable.php:252
 #: DataTables/FilterDataTable.php:174 DataTables/FilterDataTable.php:225
 #: DataTables/InstrumentDataTable.php:231
 #: DataTables/InstrumentDataTable.php:297 DataTables/LensDataTable.php:142
-#: DataTables/LensDataTable.php:177 DataTables/LocationDataTable.php:216
-#: DataTables/LocationDataTable.php:288 DataTables/UserDataTable.php:169
+#: DataTables/LensDataTable.php:177 DataTables/LocationDataTable.php:220
+#: DataTables/LocationDataTable.php:292 DataTables/UserDataTable.php:169
 msgid "Delete"
 msgstr "Supprimez"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:238
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:223
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:200
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:227
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:200
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:181
 #: ../storage/framework/messages/e2a171fc63fddf9f9a1eebb646f33968cbb21d50.php.php:149
-#: DataTables/EyepieceDatatable.php:200 DataTables/FilterDataTable.php:181
+#: DataTables/EyepieceDataTable.php:200 DataTables/FilterDataTable.php:181
 #: DataTables/InstrumentDataTable.php:238 DataTables/LensDataTable.php:149
-#: DataTables/LocationDataTable.php:223
+#: DataTables/LocationDataTable.php:227
 msgid "Observer"
 msgstr "Observateur"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:287
 #: ../storage/framework/messages/32a8d19370490284a596e24d49b95921b4af9e52.php.php:398
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:278
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:248
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:282
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:248
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:220
 #: ../storage/framework/messages/e2a171fc63fddf9f9a1eebb646f33968cbb21d50.php.php:172
-#: DataTables/EyepieceDatatable.php:248 DataTables/FilterDataTable.php:220
+#: DataTables/EyepieceDataTable.php:248 DataTables/FilterDataTable.php:220
 #: DataTables/InstrumentDataTable.php:287 DataTables/LensDataTable.php:172
-#: DataTables/LocationDataTable.php:278
+#: DataTables/LocationDataTable.php:282
 msgid "Active"
 msgstr "Activé"
 
@@ -1298,79 +1288,73 @@ msgstr "Cherchez l’objet"
 msgid "Observer details"
 msgstr "Détails de l’observateur"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:23
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:31
 msgid "Info"
 msgstr "Info"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:29
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:37
 msgid "Observations per year"
 msgstr "Observations par an"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:35
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:43
 msgid "Observations per month"
 msgstr "Observations par mois"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:41
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:49
 msgid "Object types observed"
 msgstr "Type d’objets observé"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:47
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:55
 msgid "Observations per country"
 msgstr "Observations par pays"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:53
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:61
 msgid "DeepskyLog stars"
 msgstr "Étoiles de DeepskyLog"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:70
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:145
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:78
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:135
 msgid "Default observing site"
 msgstr "Site d'observation par défaut"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:83
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:158
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:91
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:148
 msgid "Default instrument"
 msgstr "Instrument par défaut"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:96
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:104
 msgid "Number of locations"
 msgstr "Nombre de locations"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:111
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:119
 msgid "Number of instruments"
 msgstr "Nombre d'instruments"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:126
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:134
 msgid "Number of eyepieces"
 msgstr "Nombre d’oculaires"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:141
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:149
 msgid "Number of filters"
 msgstr "Nombre de filtres"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:156
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:164
 msgid "Number of lenses"
 msgstr "Nombre de lentilles"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:171
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:84
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:61
-msgid "Country of residence"
-msgstr "Pays de résidence"
-
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:182
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:190
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:159
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:129
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:119
 msgid "Copyright notice"
 msgstr "Avis de Copyright"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:190
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:219
-#: Http/Controllers/UserController.php:219
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:198
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:223
+#: Http/Controllers/UserController.php:223
 msgid "Total"
 msgstr "Total"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:197
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:205
 #: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:45
 #: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:70
 #: ../storage/framework/messages/bac600a65d87e2c10e06020c5a4e0bf4d606734c.php.php:98
@@ -1379,51 +1363,51 @@ msgstr "Total"
 msgid "Number of observations"
 msgstr "Nombre d'observations"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:205
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:213
 msgid "Observations last year"
 msgstr "Observations l'an dernier"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:213
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:221
 msgid "Number of drawings"
 msgstr "Nombre de dessins"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:221
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:229
 msgid "Drawings last year"
 msgstr "Dessins l'an dernier"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:229
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:237
 msgid "Different objects"
 msgstr "Objects différents"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:239
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:252
 msgid "Messier objects"
 msgstr "Objets Messier"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:251
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:264
 msgid "Caldwell objects"
 msgstr "Objets Caldwell"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:263
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:276
 msgid "H400 objects"
 msgstr "Objets H400"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:275
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:288
 msgid "H400-II objects"
 msgstr "Objets H400-II"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:287
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:300
 msgid "Rank"
 msgstr "Classement"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:302
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:317
 msgid "All observations of "
 msgstr "Toutes les observations de "
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:311
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:329
 msgid "All drawings of "
 msgstr "Tous les dessins de "
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:320
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:340
 msgid "Send message to "
 msgstr "Envoyer un message à "
 
@@ -1547,13 +1531,13 @@ msgstr "Magnitude limite"
 msgid "Not active"
 msgstr "Pas activé"
 
-#: ../storage/framework/messages/336331738befda39468a8d49a96c9e82c5a8db43.php.php:105
-#: Models/Lens.php:105
+#: ../storage/framework/messages/336331738befda39468a8d49a96c9e82c5a8db43.php.php:107
+#: Models/Lens.php:107
 msgid "No default lens"
 msgstr "Pas d’objectif par défaut"
 
-#: ../storage/framework/messages/336331738befda39468a8d49a96c9e82c5a8db43.php.php:116
-#: Models/Lens.php:116
+#: ../storage/framework/messages/336331738befda39468a8d49a96c9e82c5a8db43.php.php:118
+#: Models/Lens.php:118
 msgid "Add a lens"
 msgstr "Ajouter une lentille"
 
@@ -1568,8 +1552,8 @@ msgstr "Tous les emplacements"
 msgid "Locations of %s"
 msgstr "Emplacements de %s"
 
-#: ../storage/framework/messages/3c6bd8d820c7a10f6e6ff47a6b2aee6f98e5f598.php.php:123
-#: Models/Location.php:123
+#: ../storage/framework/messages/3c6bd8d820c7a10f6e6ff47a6b2aee6f98e5f598.php.php:125
+#: Models/Location.php:125
 msgid "Add a location"
 msgstr "Ajouter un emplacement"
 
@@ -1577,6 +1561,10 @@ msgstr "Ajouter un emplacement"
 #: ../storage/framework/messages/40c1079e1172a9765ab8edad2acf60b446ff2a52.php.php:8
 msgid "Object catalogs"
 msgstr "Catalogues d'objets"
+
+#: ../storage/framework/messages/422d6b4b07998a287763d44316e34788893052be.php.php:7
+msgid "Conversation between"
+msgstr "Conversation entre"
 
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:5
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:13
@@ -1588,7 +1576,7 @@ msgstr "S'enregistrer"
 
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:20
 #: ../storage/framework/messages/6716d68c6ef2a5cd24094258f4001ad610fee57d.php.php:14
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:46
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:42
 #: ../storage/framework/messages/b0560d46aeab0e1ad0a93e4dce599db14d49b9bb.php.php:149
 #: DataTables/UserDataTable.php:149
 msgid "Username"
@@ -1616,32 +1604,32 @@ msgid "Confirm Password"
 msgstr "Confirmer le mot de passe"
 
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:97
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:334
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:324
 msgid "Standard language for observations"
 msgstr "Langue standard pour les observations"
 
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:114
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:319
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:309
 msgid "Language for user interface"
 msgstr "Langue pour l'interface utilisateur"
 
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:134
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:105
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:95
 msgid "License for drawings"
 msgstr "Licence pour les dessins"
 
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:144
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:114
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:104
 msgid "No license (Not recommended!)"
 msgstr "Pas de licence (non recommandé!)"
 
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:145
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:115
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:105
 msgid "Enter your own copyright text"
 msgstr "Entrez votre propre texte copyright"
 
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:150
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:121
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:111
 #, php-format
 msgid ""
 "It is important to select the correct license for your drawings!\n"
@@ -1777,48 +1765,48 @@ msgstr ""
 "En cas de questions ou de préoccupations concernant vos données "
 "personnelles, n'hésitez pas à nous contacter à %sdevelopers@deepskylog.be%s."
 
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:180
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:242
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:184
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:246
 #: ../storage/framework/messages/bac600a65d87e2c10e06020c5a4e0bf4d606734c.php.php:29
-#: DataTables/LocationDataTable.php:180 DataTables/LocationDataTable.php:242
+#: DataTables/LocationDataTable.php:184 DataTables/LocationDataTable.php:246
 msgid "Country"
 msgstr "Pays"
 
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:186
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:248
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:190
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:252
 #: ../storage/framework/messages/bac600a65d87e2c10e06020c5a4e0bf4d606734c.php.php:33
-#: DataTables/LocationDataTable.php:186 DataTables/LocationDataTable.php:248
+#: DataTables/LocationDataTable.php:190 DataTables/LocationDataTable.php:252
 msgid "Elevation"
 msgstr "Élévation"
 
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:192
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:254
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:196
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:258
 #: ../storage/framework/messages/bac600a65d87e2c10e06020c5a4e0bf4d606734c.php.php:44
-#: DataTables/LocationDataTable.php:192 DataTables/LocationDataTable.php:254
+#: DataTables/LocationDataTable.php:196 DataTables/LocationDataTable.php:258
 msgid "NELM"
 msgstr "NELM"
 
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:198
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:260
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:202
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:264
 #: ../storage/framework/messages/bac600a65d87e2c10e06020c5a4e0bf4d606734c.php.php:38
-#: DataTables/LocationDataTable.php:198 DataTables/LocationDataTable.php:260
+#: DataTables/LocationDataTable.php:202 DataTables/LocationDataTable.php:264
 msgid "SQM"
 msgstr "SQM"
 
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:204
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:266
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:208
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:270
 #: ../storage/framework/messages/bac600a65d87e2c10e06020c5a4e0bf4d606734c.php.php:50
-#: DataTables/LocationDataTable.php:204 DataTables/LocationDataTable.php:266
+#: DataTables/LocationDataTable.php:208 DataTables/LocationDataTable.php:270
 msgid "Bortle"
 msgstr "Échelle Bortle"
 
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:236
-#: DataTables/LocationDataTable.php:236
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:240
+#: DataTables/LocationDataTable.php:240
 msgid "Weather forecast"
 msgstr "Prévisions météo"
 
-#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:282
-#: DataTables/LocationDataTable.php:282
+#: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:286
+#: DataTables/LocationDataTable.php:286
 msgid "Default Location"
 msgstr "Emplacement par Défaut"
 
@@ -1834,7 +1822,7 @@ msgid "Eyepieces of %s"
 msgstr "Oculaires de %s"
 
 #: ../storage/framework/messages/50d7811d5a91e887396d8233f0919e4c74dbffa4.php.php:23
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:179
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:169
 #: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:32
 #: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:129
 msgid "Add eyepiece"
@@ -1936,29 +1924,6 @@ msgstr "%s est facile à voir de %s avec votre %s"
 msgid "%s is very easy to see from %s with your %s"
 msgstr "%s est très facile à voir de %s avec votre %s"
 
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:163
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:219
-#: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:90
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:47
-#: DataTables/EyepieceDatatable.php:163 DataTables/EyepieceDatatable.php:219
-msgid "Brand"
-msgstr "Marque"
-
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:169
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:225
-#: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:70
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:35
-#: DataTables/EyepieceDatatable.php:169 DataTables/EyepieceDatatable.php:225
-msgid "Apparent Field of View"
-msgstr "Champ de vue apparent"
-
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:181
-#: ../storage/framework/messages/5383cdee1f594e5a1d1f42a0d029ca1a39b04a3d.php.php:237
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:41
-#: DataTables/EyepieceDatatable.php:181 DataTables/EyepieceDatatable.php:237
-msgid "Maximum Focal Length"
-msgstr "Longueur focale maximale"
-
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:6
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:18
 msgid "Add a new instrument"
@@ -1971,7 +1936,7 @@ msgstr "Changer d'instrument"
 
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:32
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:113
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:166
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:156
 #: ../storage/framework/messages/88ac00ea878eba197cafdf7f59f7768612fd0467.php.php:23
 msgid "Add instrument"
 msgstr "Ajouter un instrument"
@@ -2009,6 +1974,29 @@ msgstr "Réinitialiser le mot de passe"
 #: ../storage/framework/messages/546ad19dc2096554c48187a24fc5cb6ce8a812be.php.php:41
 msgid "Send Password Reset Link"
 msgstr "Envoyer un lien de réinitialisation du mot de passe"
+
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:163
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:219
+#: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:90
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:47
+#: DataTables/EyepieceDataTable.php:163 DataTables/EyepieceDataTable.php:219
+msgid "Brand"
+msgstr "Marque"
+
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:169
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:225
+#: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:70
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:35
+#: DataTables/EyepieceDataTable.php:169 DataTables/EyepieceDataTable.php:225
+msgid "Apparent Field of View"
+msgstr "Champ de vue apparent"
+
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:181
+#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:237
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:41
+#: DataTables/EyepieceDataTable.php:181 DataTables/EyepieceDataTable.php:237
+msgid "Maximum Focal Length"
+msgstr "Longueur focale maximale"
 
 #: ../storage/framework/messages/583a0b2dce9ec2ea5311d79187c94dde87cc20f9.php.php:10
 msgid "Hello!"
@@ -2058,7 +2046,7 @@ msgid "Edit"
 msgstr "Modifier"
 
 #: ../storage/framework/messages/6716d68c6ef2a5cd24094258f4001ad610fee57d.php.php:28
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:51
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:47
 #: ../storage/framework/messages/b0560d46aeab0e1ad0a93e4dce599db14d49b9bb.php.php:157
 #: DataTables/UserDataTable.php:157
 msgid "Email"
@@ -2088,6 +2076,22 @@ msgstr "avec"
 msgid "at"
 msgstr "à"
 
+#: ../storage/framework/messages/6c23402a8cab13d02b6825dba1b9e4ff7a6292b7.php.php:8
+msgid "Unread messages"
+msgstr "Messages non lus"
+
+#: ../storage/framework/messages/6c23402a8cab13d02b6825dba1b9e4ff7a6292b7.php.php:12
+msgid "Message started by"
+msgstr "Message lancé par"
+
+#: ../storage/framework/messages/6c23402a8cab13d02b6825dba1b9e4ff7a6292b7.php.php:16
+msgid "Latest message by"
+msgstr "Dernier message par"
+
+#: ../storage/framework/messages/6c23402a8cab13d02b6825dba1b9e4ff7a6292b7.php.php:20
+msgid "Latest update"
+msgstr "Dernière mise à jour"
+
 #: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:1
 #: ../storage/framework/messages/77c58937b8e632f2a77b5394e24dba7494f160ea.php.php:12
 msgid "Settings"
@@ -2109,109 +2113,109 @@ msgstr "Atlas"
 msgid "Languages"
 msgstr "Langues"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:39
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:59
 msgid "Change profile picture"
 msgstr "Modifier l'image du profil"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:76
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:66
 msgid "Send emails"
 msgstr "Envoyer des e-mails"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:80
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:70
 msgid "fstOffset"
 msgstr "fstOffset"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:82
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:72
 msgid "Offset between measured SQM value and the faintest visible star."
 msgstr ""
 "Différence entre les valeurs SQM mesurées et l’étoile la plus faible qui est "
 "visible."
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:133
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:217
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:308
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:345
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:123
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:207
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:298
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:335
 msgid "Update"
 msgstr "Mettre à jour"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:153
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:143
 msgid "Add new observing site"
 msgstr "Ajouter un nouveau site d'observation"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:171
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:161
 msgid "Default eyepiece"
 msgstr "Oculaire par défaut"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:184
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:174
 msgid "Default lens"
 msgstr "Lentille par défaut"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:192
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:182
 #: ../storage/framework/messages/d8cd8e104dd4640cd688af3c0f90046383ee02e8.php.php:23
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:32
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:71
 msgid "Add lens"
 msgstr "Ajouter une lentille"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:197
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:187
 msgid "Default atlas"
 msgstr "Atlas par défaut"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:208
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:198
 msgid "Default units"
 msgstr "Unités par défaut"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:211
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:201
 msgid "Metric (mm)"
 msgstr "Métrique (mm)"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:212
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:202
 msgid "Imperial (inches)"
 msgstr "Imperial (pouces)"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:228
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:218
 msgid "Atlas standard object FoVs:"
 msgstr "Les champs de vue standard de l’atlas:"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:233
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:252
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:271
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:223
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:242
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:261
 msgid "Overview"
 msgstr "Aperçu"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:237
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:256
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:275
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:227
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:246
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:265
 msgid "Lookup"
 msgstr "Chercher"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:241
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:260
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:279
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:231
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:250
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:269
 msgid "Detail"
 msgstr "Détail"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:247
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:237
 msgid "Atlas standard object magnitudes:"
 msgstr "Les magnitudes des objets dans l’atlas:"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:266
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:256
 msgid "Atlas standard star magnitudes:"
 msgstr "Les magnitudes des étoiles dans l’atlas:"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:285
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:275
 msgid "Standard size of photos:"
 msgstr "Taille standard des photos:"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:290
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:280
 msgid "Photo 1"
 msgstr "Photo 1"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:294
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:284
 msgid "Photo 2"
 msgstr "Photo 2"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:300
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:290
 msgid "Font size printed atlas pages (6..9)"
 msgstr "Taille de la police dans l’atlas (6..9)"
 
@@ -2253,6 +2257,10 @@ msgstr "Recherche"
 #: ../storage/framework/messages/762fd3b513018fb4e8a7891a39acbd843e52c7c4.php.php:8
 msgid "Search Objects"
 msgstr "Rechercher des objets"
+
+#: ../storage/framework/messages/76cb7272acba95c80b20596572c219e5cb93a55b.php.php:1
+msgid "Sorry, no threads."
+msgstr "Désolé, pas de discussions."
 
 #: ../storage/framework/messages/77c58937b8e632f2a77b5394e24dba7494f160ea.php.php:11
 msgid "Details"
@@ -2469,8 +2477,8 @@ msgstr "Mes lentilles"
 msgid "Catalogs"
 msgstr "Catalogues"
 
-#: ../storage/framework/messages/8484280fdddfc487746f9748fc4ba5398357ea46.php.php:44
-#: Http/Middleware/DeepskyLogChecks.php:44
+#: ../storage/framework/messages/8484280fdddfc487746f9748fc4ba5398357ea46.php.php:56
+#: Http/Middleware/DeepskyLogChecks.php:56
 #, php-format
 msgid ""
 "Your country of residence is not set. Please set it in the %sobserver "
@@ -2479,14 +2487,24 @@ msgstr ""
 "Votre pays de résidence n’est pas établi. Veuillez le définir dans les "
 "%sparamètres d’observateur%s"
 
-#: ../storage/framework/messages/8484280fdddfc487746f9748fc4ba5398357ea46.php.php:54
-#: Http/Middleware/DeepskyLogChecks.php:54
+#: ../storage/framework/messages/8484280fdddfc487746f9748fc4ba5398357ea46.php.php:66
+#: Http/Middleware/DeepskyLogChecks.php:66
 msgid "You did not specify a standard location. Please select one."
 msgstr ""
 "Vous n’avez pas spécifié d’emplacement standard. Veuillez en sélectionner un."
 
-#: ../storage/framework/messages/8484280fdddfc487746f9748fc4ba5398357ea46.php.php:72
-#: Http/Middleware/DeepskyLogChecks.php:72
+#: ../storage/framework/messages/8484280fdddfc487746f9748fc4ba5398357ea46.php.php:74
+#: Http/Middleware/DeepskyLogChecks.php:74
+#, php-format
+msgid ""
+"You did not enter information about yourself. Please set it in the "
+"%sobserver settings%s"
+msgstr ""
+"Vous n’avez pas entré d’informations sur vous-même. S’il vous plaît le "
+"définir dans les %sparamètres d’observateur%s"
+
+#: ../storage/framework/messages/8484280fdddfc487746f9748fc4ba5398357ea46.php.php:95
+#: Http/Middleware/DeepskyLogChecks.php:95
 #, php-format
 msgid ""
 "At least one of your eyepieces (%s) does not have a brand or a type.\n"
@@ -2497,8 +2515,8 @@ msgstr ""
 "                        S’il vous plaît ajouter les informations nécessaires "
 "dans la page %soculaire%s"
 
-#: ../storage/framework/messages/8484280fdddfc487746f9748fc4ba5398357ea46.php.php:85
-#: Http/Middleware/DeepskyLogChecks.php:85
+#: ../storage/framework/messages/8484280fdddfc487746f9748fc4ba5398357ea46.php.php:109
+#: Http/Middleware/DeepskyLogChecks.php:109
 #, php-format
 msgid ""
 "DeepskyLog will be able to calculate the visibility of objects when you "
@@ -2507,8 +2525,8 @@ msgstr ""
 "DeepskyLog peut calculer la visibilité des objets lorsque vous %sajoutez "
 "quelques instruments%s"
 
-#: ../storage/framework/messages/8484280fdddfc487746f9748fc4ba5398357ea46.php.php:93
-#: Http/Middleware/DeepskyLogChecks.php:93
+#: ../storage/framework/messages/8484280fdddfc487746f9748fc4ba5398357ea46.php.php:118
+#: Http/Middleware/DeepskyLogChecks.php:118
 msgid "You did not specify a standard instrument. Please select one."
 msgstr ""
 "Vous n’avez pas spécifié d’instrument standard. Veuillez en sélectionner un."
@@ -2596,6 +2614,10 @@ msgstr "Impossible de supprimer l'emplacement par défaut %s"
 msgid "Location %s deleted"
 msgstr "Emplacement %s supprimé"
 
+#: ../storage/framework/messages/8d5e447db12c53bf431cbe71f20469c8e267f88c.php.php:7
+msgid "Posted"
+msgstr "Publié"
+
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:156
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:203
 #: DataTables/FilterDataTable.php:156 DataTables/FilterDataTable.php:203
@@ -2665,6 +2687,14 @@ msgstr ""
 "Le compte que vous tentez de vous connecter n’est pas enregistré ou il a été "
 "désactivé."
 
+#: ../storage/framework/messages/929ba05f435bc807f5035fbc58645f6dd8828ffa.php.php:1
+msgid "Add a new message"
+msgstr "Ajouter un nouveau message"
+
+#: ../storage/framework/messages/929ba05f435bc807f5035fbc58645f6dd8828ffa.php.php:14
+msgid "Add extra participants to this message"
+msgstr "Ajouter des participants supplémentaires à ce message"
+
 #: ../storage/framework/messages/9636353a16a12a66e8f7f17eefe51228d6661c36.php.php:2
 #: ../storage/framework/messages/9636353a16a12a66e8f7f17eefe51228d6661c36.php.php:7
 msgid "DeepskyLog sponsors"
@@ -2724,185 +2754,185 @@ msgstr "Rester connecté"
 msgid "Forgot Your Password?"
 msgstr "Mot de passe oublié ?"
 
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:170
-#: Http/Controllers/UserController.php:170
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:174
+#: Http/Controllers/UserController.php:174
 msgid "Number of observations per year: "
 msgstr "Nombre d’observations par an: "
 
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:182
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:276
-#: Http/Controllers/UserController.php:182
-#: Http/Controllers/UserController.php:276
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:186
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:280
+#: Http/Controllers/UserController.php:186
+#: Http/Controllers/UserController.php:280
 msgid "Source: "
 msgstr "Source: "
 
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:231
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:323
-#: Http/Controllers/UserController.php:231
-#: Http/Controllers/UserController.php:323
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:235
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:327
+#: Http/Controllers/UserController.php:235
+#: Http/Controllers/UserController.php:327
 msgid "Double stars"
 msgstr "Étoiles doubles"
 
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:261
-#: Http/Controllers/UserController.php:261
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:265
+#: Http/Controllers/UserController.php:265
 msgid "Number of observations per month: "
 msgstr "Nombre d’observations par mois: "
 
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:398
-#: Http/Controllers/UserController.php:398
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:402
+#: Http/Controllers/UserController.php:402
 #, php-format
 msgid "User %s successfully edited."
 msgstr "L'utilisateur %s édité avec succès."
 
-#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:415
-#: Http/Controllers/UserController.php:415
+#: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:419
+#: Http/Controllers/UserController.php:419
 #, php-format
 msgid "User %s successfully deleted."
 msgstr "L'utilisateur %s supprimé avec succès."
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:487
-#: Models/Target.php:487
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:499
+#: Models/Target.php:499
 #, php-format
 msgid "%s does not rise above horizon"
 msgstr "%s ne monte pas au-dessus de l’horizon"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:493
-#: Models/Target.php:493
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:505
+#: Models/Target.php:505
 #, php-format
 msgid "%s is circumpolar"
 msgstr "%s est circumpolair"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:499
-#: Models/Target.php:499
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:511
+#: Models/Target.php:511
 #, php-format
 msgid "%s rises at %s in %s on "
 msgstr "%s monte à %s à %s le"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:507
-#: Models/Target.php:507
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:519
+#: Models/Target.php:519
 #, php-format
 msgid "%s sets at %s in %s on "
 msgstr "%s déscend à %s à %s le "
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:516
-#: Models/Target.php:516
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:528
+#: Models/Target.php:528
 #, php-format
 msgid "%s transits at %s in %s on "
 msgstr "%s passe à %s à %s le "
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:526
-#: Models/Target.php:526
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:538
+#: Models/Target.php:538
 #, php-format
 msgid "%s does not rise above horizon in %s on "
 msgstr "%s ne s’élève pas au-dessus de l’horizon sur %s le "
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:534
-#: Models/Target.php:534
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:546
+#: Models/Target.php:546
 #, php-format
 msgid "%s reaches an altitude of %s in %s on "
 msgstr "%s atteint une altitude de %s à %s le "
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:944
-#: Models/Target.php:944
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1001
+#: Models/Target.php:1001
 #, php-format
 msgid "%s reaches its highest altitude of the year"
 msgstr "%s atteint sa plus haute altitude de l’année"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:970
-#: Models/Target.php:970
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1027
+#: Models/Target.php:1027
 #, php-format
 msgid "%s reaches its highest altitude during the astronomical night"
 msgstr "%s atteint sa plus haute altitude pendant la nuit astronomique"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:981
-#: Models/Target.php:981
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1038
+#: Models/Target.php:1038
 #, php-format
 msgid "%s reaches its highest altitude during the nautical twilight"
 msgstr "%s atteint sa plus haute altitude pendant le crépuscule nautique"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1002
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1024
-#: Models/Target.php:1002 Models/Target.php:1024
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1059
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1081
+#: Models/Target.php:1059 Models/Target.php:1081
 #, php-format
 msgid "%s is visible during the night"
 msgstr "%s est visible pendant la nuit"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1008
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1038
-#: Models/Target.php:1008 Models/Target.php:1038
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1065
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1095
+#: Models/Target.php:1065 Models/Target.php:1095
 #, php-format
 msgid "%s is visible during the nautical twilight"
 msgstr "%s est visible pendant le crépuscule nautique"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1044
-#: Models/Target.php:1044
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1101
+#: Models/Target.php:1101
 #, php-format
 msgid "%s is not visible during the night"
 msgstr "%s n’est pas visible pendant la nuit"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1100
-#: Models/Target.php:1100
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1157
+#: Models/Target.php:1157
 msgid "mid"
 msgstr "mi-"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1100
-#: Models/Target.php:1100
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1157
+#: Models/Target.php:1157
 msgid "begin"
 msgstr "début"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1230
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1242
-#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:60
-#: Models/Target.php:1230 Models/Target.php:1242 Models/TargetName.php:60
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1272
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1284
+#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:64
+#: Models/Target.php:1272 Models/Target.php:1284 Models/TargetName.php:64
 msgid "Moon Craters"
 msgstr "Cratères de la lune"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1230
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1244
-#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:61
-#: Models/Target.php:1230 Models/Target.php:1244 Models/TargetName.php:61
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1272
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1286
+#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:65
+#: Models/Target.php:1272 Models/Target.php:1286 Models/TargetName.php:65
 msgid "Moon Mountains"
 msgstr "Montagnes de la Lune"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1231
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1246
-#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:62
-#: Models/Target.php:1231 Models/Target.php:1246 Models/TargetName.php:62
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1273
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1288
+#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:66
+#: Models/Target.php:1273 Models/Target.php:1288 Models/TargetName.php:66
 msgid "Moon Other Feature"
 msgstr "Lune Autre caractéristique"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1231
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1248
-#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:63
-#: Models/Target.php:1231 Models/Target.php:1248 Models/TargetName.php:63
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1273
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1290
+#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:67
+#: Models/Target.php:1273 Models/Target.php:1290 Models/TargetName.php:67
 msgid "Moon Sea"
 msgstr "Mer de la Lune"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1231
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1250
-#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:64
-#: Models/Target.php:1231 Models/Target.php:1250 Models/TargetName.php:64
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1273
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1292
+#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:68
+#: Models/Target.php:1273 Models/Target.php:1292 Models/TargetName.php:68
 msgid "Moon Valley"
 msgstr "Vallée de la Lune"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1232
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1252
-#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:59
-#: Models/Target.php:1232 Models/Target.php:1252 Models/TargetName.php:59
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1274
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1294
+#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:63
+#: Models/Target.php:1274 Models/Target.php:1294 Models/TargetName.php:63
 msgid "Planetary Moons"
 msgstr "Lunes planétaires"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1232
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1254
-#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:67
-#: Models/Target.php:1232 Models/Target.php:1254 Models/TargetName.php:67
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1274
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1296
+#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:71
+#: Models/Target.php:1274 Models/Target.php:1296 Models/TargetName.php:71
 msgid "Asteroids"
 msgstr "Astéroïdes"
 
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1232
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1256
-#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:68
-#: Models/Target.php:1232 Models/Target.php:1256 Models/TargetName.php:68
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1274
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1298
+#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:72
+#: Models/Target.php:1274 Models/Target.php:1298 Models/TargetName.php:72
 msgid "Dwarf Planets"
 msgstr "Planètes naines"
 
@@ -2916,7 +2946,6 @@ msgid "Month"
 msgstr "Mois"
 
 #: ../storage/framework/messages/a8e1e36d695eee1149fc5cdabdf3f03d90079901.php.php:24
-#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:174
 #: ../storage/framework/messages/e3a3e85fecb182d29e33fe54f9a9e36a8f1f2a3f.php.php:299
 #: DataTables/TargetDataTable.php:299
 msgid "Max Alt"
@@ -2949,15 +2978,15 @@ msgstr "Lune / Soleil"
 msgid "on"
 msgstr "le"
 
-#: ../storage/framework/messages/abec6cfd997694f3369a590a1ba1d69452b2c602.php.php:100
+#: ../storage/framework/messages/abec6cfd997694f3369a590a1ba1d69452b2c602.php.php:102
 msgid "Naut."
 msgstr "Naut."
 
-#: ../storage/framework/messages/abec6cfd997694f3369a590a1ba1d69452b2c602.php.php:114
+#: ../storage/framework/messages/abec6cfd997694f3369a590a1ba1d69452b2c602.php.php:116
 msgid "Astro."
 msgstr "Astro."
 
-#: ../storage/framework/messages/abec6cfd997694f3369a590a1ba1d69452b2c602.php.php:149
+#: ../storage/framework/messages/abec6cfd997694f3369a590a1ba1d69452b2c602.php.php:151
 #: ../storage/framework/messages/b1a0752e4c8d03798687436942906d5ac11e3a5f.php.php:52
 msgid "New moon"
 msgstr "Nouvelle lune"
@@ -2981,14 +3010,6 @@ msgstr "Listes"
 #: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:155
 msgid "Date"
 msgstr "Date"
-
-#: ../storage/framework/messages/b1cb4bd2b603a8a2785a0cea220515434f46efa5.php.php:1
-msgid "Add a new message"
-msgstr "Ajouter un nouveau message"
-
-#: ../storage/framework/messages/b1cb4bd2b603a8a2785a0cea220515434f46efa5.php.php:14
-msgid "Add extra participants to this message"
-msgstr "Ajouter des participants supplémentaires à ce message"
 
 #: ../storage/framework/messages/b955141f7fd424c92d29f45baff22b708d8cbbb8.php.php:6
 #: ../storage/framework/messages/b955141f7fd424c92d29f45baff22b708d8cbbb8.php.php:18
@@ -3177,34 +3198,34 @@ msgstr "Déclination"
 msgid "Constellation"
 msgstr "Constellation"
 
-#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:75
+#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:74
 msgid " page"
 msgstr " page"
 
-#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:82
+#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:81
 msgid "Magnitude"
 msgstr "Magnitude"
 
-#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:90
+#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:89
 msgid "Surface brightness"
 msgstr "Luminosité de surface"
 
-#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:101
+#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:100
 #: ../storage/framework/messages/e3a3e85fecb182d29e33fe54f9a9e36a8f1f2a3f.php.php:243
 #: ../storage/framework/messages/e3a3e85fecb182d29e33fe54f9a9e36a8f1f2a3f.php.php:373
 #: DataTables/TargetDataTable.php:243 DataTables/TargetDataTable.php:373
 msgid "Size"
 msgstr "Taille"
 
-#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:103
+#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:102
 msgid "Position angle"
 msgstr "Angle de position"
 
-#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:115
+#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:114
 msgid "Contrast reserve"
 msgstr "Réserve de contraste"
 
-#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:121
+#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:120
 msgid "Optimum detection magnification"
 msgstr "Grossissement de détection optimal"
 
@@ -3236,25 +3257,29 @@ msgstr "Montant"
 msgid "Set"
 msgstr "Coucher"
 
-#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:172
+#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:179
 #: ../storage/framework/messages/e3a3e85fecb182d29e33fe54f9a9e36a8f1f2a3f.php.php:294
 #: DataTables/TargetDataTable.php:294
 msgid "Best Time"
 msgstr "Meilleur"
 
 #: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:181
+msgid "MaxAlt"
+msgstr "Maxalt"
+
+#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:187
 msgid "Highest From"
 msgstr "Le plus haut de"
 
-#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:183
+#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:189
 msgid "Highest Around"
 msgstr "Le plus haut autour"
 
-#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:185
+#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:191
 msgid "Highest To"
 msgstr "Le plus haut jusqu’à"
 
-#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:235
+#: ../storage/framework/messages/d5f6ffc40012395589d422b0d0f33fd6670a7575.php.php:242
 msgid "Field of view: "
 msgstr "Champ de vision: "
 
@@ -3269,19 +3294,15 @@ msgstr "Toutes les lentilles"
 msgid "Lenses of %s"
 msgstr "Lentilles de %s"
 
-#: ../storage/framework/messages/d9a0e22364855eb10e809a39ea780d59e56a1a16.php.php:125
-#: Models/Eyepiece.php:125
+#: ../storage/framework/messages/d9a0e22364855eb10e809a39ea780d59e56a1a16.php.php:127
+#: Models/Eyepiece.php:127
 msgid "No default eyepiece"
 msgstr "Aucun oculaire par défaut"
 
-#: ../storage/framework/messages/d9a0e22364855eb10e809a39ea780d59e56a1a16.php.php:136
-#: Models/Eyepiece.php:136
+#: ../storage/framework/messages/d9a0e22364855eb10e809a39ea780d59e56a1a16.php.php:138
+#: Models/Eyepiece.php:138
 msgid "Add an eyepiece"
 msgstr "Ajouter un oculaire"
-
-#: ../storage/framework/messages/ddadf918729393525cba44e0fb2b56f6f8093626.php.php:7
-msgid "Posted"
-msgstr "Publié"
 
 #: ../storage/framework/messages/dfd03cfd59f09b0285d4fdae18d2338108e23bd2.php.php:3
 #: ../storage/framework/messages/dfd03cfd59f09b0285d4fdae18d2338108e23bd2.php.php:15
@@ -3423,10 +3444,6 @@ msgstr "Le fil demandé n'a pas été trouvé."
 #: Http/Controllers/MessageController.php:90
 msgid "Not authorized to see this message."
 msgstr "Non autorisé à voir ce message."
-
-#: ../storage/framework/messages/fcf470196d1307af2b92d2b01aae1e761d47669f.php.php:7
-msgid "Conversation between"
-msgstr "Conversation entre"
 
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:6
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:18

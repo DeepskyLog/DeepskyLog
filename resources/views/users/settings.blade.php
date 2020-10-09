@@ -46,23 +46,6 @@
                     <input type="text" required class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" maxlength="64" name="email" size="30" value="{{ $user->email }}"/>
                 </div>
 
-                <div class="form-group name">
-                    <label for="name">{{ _i("Name") }}</label>
-                    <input type="text" required class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30" value="{{ $user->name }}" />
-                </div>
-
-                <div class="form-group" name="country" id="country">
-                    <label for="country">{{ _i('Country of residence') }}</label>
-                    <div class="form">
-                        <select class="selection" style="width: 100%" id="country" name="country">
-                            <option value="">&nbsp;</option>
-                            @foreach (Countries::getList(LaravelGettext::getLocaleLanguage()) as $code=>$country)
-                                <option @if ($code == $user->country) selected="selected"@endif value="{{ $code }}">{{ $country }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
                 <livewire:user-settings :user="$user" />
 
                 <br />
