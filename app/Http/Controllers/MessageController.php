@@ -5,31 +5,35 @@
  * PHP Version 7
  *
  * @category Messages
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\User;
 use App\Mail\MessageReceived;
-use Cmgmyr\Messenger\Models\Thread;
+use App\Models\User;
+use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Message;
+use Cmgmyr\Messenger\Models\Participant;
+use Cmgmyr\Messenger\Models\Thread;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
-use Cmgmyr\Messenger\Models\Participant;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * Messages Controller.
  *
  * @category Messages
+ *
  * @author   Wim De Meester <deepskywim@gmail.com>
  * @license  GPL3 <https://opensource.org/licenses/GPL-3.0>
- * @link     http://www.deepskylog.org
+ *
+ * @see     http://www.deepskylog.org
  */
 class MessageController extends Controller
 {
@@ -100,6 +104,24 @@ class MessageController extends Controller
         $thread->markAsRead($userId);
 
         return view('layout.messages.show', compact('thread', 'users'));
+    }
+
+    /**
+     * Mark all messages as read.
+     *
+     * @return view The page with all messages
+     */
+    public function markAllRead()
+    {
+        $newThreads = Thread::forUserWithNewMessages(
+            Auth::id()
+        )->get();
+
+        foreach ($newThreads as $thread) {
+            $thread->markAsRead(Auth::id());
+        }
+
+        return redirect()->route('messages');
     }
 
     /**
@@ -177,7 +199,7 @@ class MessageController extends Controller
                         [
                             'thread_id' => $thread->id,
                             'user_id' => Auth::id(),
-                            'last_read' => new Carbon,
+                            'last_read' => new Carbon(),
                         ]
                     );
 
@@ -220,7 +242,7 @@ class MessageController extends Controller
             [
                 'thread_id' => $thread->id,
                 'user_id' => Auth::id(),
-                'last_read' => new Carbon,
+                'last_read' => new Carbon(),
             ]
         );
 
@@ -285,7 +307,7 @@ class MessageController extends Controller
                 'user_id' => Auth::id(),
             ]
         );
-        $participant->last_read = new Carbon;
+        $participant->last_read = new Carbon();
         $participant->save();
 
         // Recipients

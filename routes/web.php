@@ -198,6 +198,10 @@ Route::group(
             ['as' => 'messages.create', 'uses' => 'MessageController@create']
         );
         Route::get(
+            'markAllRead',
+            ['as' => 'messages.markAlRead', 'uses' => 'MessageController@markAllRead']
+        );
+        Route::get(
             'createAll',
             'MessageController@createAll'
         )->name('messages.createAll');
