@@ -12,7 +12,7 @@ yarn-error.log
 .env.testing
 scanner_config.php
 /observer_pics
-messages/
+storage/framework/messages/
 .env.homestead
 .env.mac
 lib/setup/databaseInfo.php
