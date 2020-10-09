@@ -38,10 +38,6 @@
 
                 <livewire:user-settings :user="$user" />
 
-                <br />
-                <label class="col-form-label"> {{ _i("Change profile picture") . ' (max 10 Mb)' }}</label>
-                <input id="picture" name="picture" type="file">
-
                 <div class="form-group form-check sendMail">
                     <input type="checkbox" class="form-check-input {{ $errors->has('sendMail') ? 'is-invalid' : '' }}" name="sendMail" @if ($user->sendMail)
                         checked

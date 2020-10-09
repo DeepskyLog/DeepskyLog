@@ -602,6 +602,11 @@
     border-color: #ffffff;
 }
 
+[data-theme="dark"] #card-bg {
+    background-color: #999999;
+    border-color: #ffffff;
+}
+
 [data-theme="dark"] .ui-widget-content {
     border: 1px solid #dddddd;
     background: #666666;
