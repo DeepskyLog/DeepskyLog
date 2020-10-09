@@ -673,7 +673,7 @@ class UserController extends Controller
         }
 
         // Update the image
-        if ($request->picture != null) {
+        if ($request->photo != null) {
             if (User::find($user->id)->getFirstMedia('observer') != null
             ) {
                 // First remove the current image
@@ -684,7 +684,7 @@ class UserController extends Controller
 
             // Update the picture
             User::find($user->id)
-                ->addMedia($request->picture->path())
+                ->addMedia($request->photo->path())
                 ->usingFileName($user->id.'.png')
                 ->toMediaCollection('observer');
         }

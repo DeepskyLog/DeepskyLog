@@ -606,6 +606,11 @@
     border-color: #ff0000;
 }
 
+[data-theme="night"] #card-bg {
+    background-color: #990000;
+    border-color: #ff0000;
+}
+
 [data-theme="night"] .ui-widget-content {
     border: 1px solid #dd0000;
     background: #990000;
