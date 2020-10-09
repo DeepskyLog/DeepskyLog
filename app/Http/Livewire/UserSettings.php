@@ -11,12 +11,14 @@ class UserSettings extends Component
     public $user;
     public $selected_country = '';
     public $about;
+    public $email;
+    public $username;
     public $name;
 
     protected $rules = [
-        // 'username' => 'required|unique|min:2',
+        'username' => 'required|unique|min:2',
         'name' => 'required|max:64|min:4',
-        // 'email' => 'required|email|unique:users,email',
+        'email' => 'required|email',
         // 'type' => 'required',
     ];
 
@@ -27,8 +29,10 @@ class UserSettings extends Component
      */
     public function mount()
     {
+        $this->username = $this->user->username;
         $this->about = $this->user->about;
         $this->name = $this->user->name;
+        $this->email = $this->user->email;
         $this->selected_country = $this->user->country;
     }
 

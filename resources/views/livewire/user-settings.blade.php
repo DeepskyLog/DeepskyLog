@@ -1,4 +1,21 @@
 <div>
+    {{-- username --}}
+    <div class="form-group username">
+        <label for="name">{{ _i('Username') }}</label>
+        <input wire:model="username" readonly type="text" required
+            class="form-control {{ $errors->has('username') ? 'is-invalid' : '' }}" maxlength="64" name="username"
+            size="30" value="{{ $user->username }}" />
+    </div>
+
+    {{-- Email address --}}
+    <div class="form-group email">
+        <label for="name">{{ _i('Email') }}</label>
+        <input wire:model="email" type="text" required
+            class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" maxlength="64" name="email" size="30"
+            value="{{ $user->email }}" />
+        @error('email') <span class="small text-error">{{ $message }}</span> @enderror
+    </div>
+
     {{-- Name of the observer --}}
     <div class="form-group" name="name" id="name">
         <label for="name">{{ _i('Name') }}</label>
@@ -34,6 +51,8 @@
             </small>
         </p>
     </div>
+
+
 </div>
 
 @push('scripts')

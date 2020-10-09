@@ -36,16 +36,6 @@
                 @csrf
                 @method('PATCH')
 
-                <div class="form-group username">
-                    <label for="name">{{ _i("Username") }}</label>
-                    <input readonly type="text" required class="form-control {{ $errors->has('username') ? 'is-invalid' : '' }}" maxlength="64" name="username" size="30" value="{{ $user->username }}"/>
-                </div>
-
-                <div class="form-group email">
-                    <label for="name">{{ _i("Email") }}</label>
-                    <input type="text" required class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" maxlength="64" name="email" size="30" value="{{ $user->email }}"/>
-                </div>
-
                 <livewire:user-settings :user="$user" />
 
                 <br />
