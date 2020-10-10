@@ -673,6 +673,7 @@ class UserController extends Controller
         }
 
         // Update the image
+        // TODO: DOES NOT WORK!!!
         if ($request->photo != null) {
             if (User::find($user->id)->getFirstMedia('observer') != null
             ) {

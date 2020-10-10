@@ -75,8 +75,8 @@
 
                         <div class="custom-file">
                             <input type="file" class="custom-file-input {{ $errors->has('photo') ? 'is-invalid' : '' }}"
-                                id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" wire:model="photo">
-                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                wire:model="photo">
+                            <label class="custom-file-label">Choose file</label>
                         </div>
                         <div wire:loading wire:target="photo" class="text-sm text-gray-500 italic">
                             {{ _i('Uploading...') }}
@@ -86,6 +86,24 @@
                 </div>
             </div>
         </div>
+
+        <div class="form-group form-check sendMail">
+            <input type="checkbox" wire:model="sendMail"
+                class="form-check-input {{ $errors->has('sendMail') ? 'is-invalid' : '' }}" name="sendMail" @if ($user->sendMail)
+            checked
+            @endif />
+            <label class="form-check-label" for="name">{{ _i('Send emails') }}</label>
+        </div>
+
+        <div class="form-group fstOffset">
+            <label for="fstOffset">{{ _i('fstOffset') }}</label>
+            <input wire:model="fstOffset" type="number" min="-5.0" max="5.0" step="0.01"
+                class="form-control {{ $errors->has('fstOffset') ? 'is-invalid' : '' }}" maxlength="4" name="fstOffset"
+                size="4" value="{{ $fstOffset }}" />
+            <span class="help-block">{{ _i('Offset between measured SQM value and the faintest visible star.') }}</span>
+        </div>
+
+        {{ $fstOffset }}
         {{-- <button type="submit"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save
             Photo</button>

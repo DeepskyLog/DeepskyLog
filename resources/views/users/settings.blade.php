@@ -38,19 +38,6 @@
 
                 <livewire:user-settings :user="$user" />
 
-                <div class="form-group form-check sendMail">
-                    <input type="checkbox" class="form-check-input {{ $errors->has('sendMail') ? 'is-invalid' : '' }}" name="sendMail" @if ($user->sendMail)
-                        checked
-                    @endif />
-                    <label class="form-check-label" for="name">{{ _i("Send emails") }}</label>
-                </div>
-
-                <div class="form-group fstOffset">
-                    <label for="fstOffset">{{ _i("fstOffset") }}</label>
-                    <input type="number" min="-5.0" max="5.0" step="0.01" class="form-control {{ $errors->has('fstOffset') ? 'is-invalid' : '' }}" maxlength="4" name="fstOffset" size="4" value="{{ $user->fstOffset }}" />
-                    <span class="help-block">{{ _i("Offset between measured SQM value and the faintest visible star.") }}</span>
-                </div>
-
                 @php
                     if ("Attribution CC BY" == $user->copyright) {
                         $copval = 0;

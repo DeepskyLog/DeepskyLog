@@ -19,6 +19,8 @@ class UserSettings extends Component
     public $username;
     public $name;
     public $photo;
+    public $sendMail;
+    public $fstOffset;
 
     protected $rules = [
         'username' => 'required|unique|min:2',
@@ -40,6 +42,7 @@ class UserSettings extends Component
         $this->name = $this->user->name;
         $this->email = $this->user->email;
         $this->selected_country = $this->user->country;
+        $this->fstOffset = $this->user->fstOffset;
     }
 
     /**
