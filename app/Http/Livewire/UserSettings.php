@@ -23,6 +23,9 @@ class UserSettings extends Component
     public float $fstOffset;
     public String $cclicense;
     public String $copyright;
+    public $changePassword;
+    public $password;
+    public $password_confirmation;
 
     protected $licenses = [
         'Attribution CC BY'                                => 0,
@@ -54,6 +57,7 @@ class UserSettings extends Component
         $this->email            = $this->user->email;
         $this->selected_country = $this->user->country;
         $this->fstOffset        = $this->user->fstOffset;
+        $this->sendMail         = $this->user->sendMail;
 
         if (in_array($this->user->copyright, $this->licenses)) {
             $this->cclicense = $this->licenses[$this->user->copyright];
@@ -82,6 +86,23 @@ class UserSettings extends Component
         } elseif ($this->cclicense == 6) {
             $this->copyright = '';
         }
+
+        if ($this->changePassword == 0) {
+            $this->password              = '';
+            $this->password_confirmation = '';
+        }
+
+        if (strlen($this->password) > 0) {
+            $this->validate(
+                ['password' => ['required',
+                    'min:8',
+                    'regex:/[a-z]/',      // must contain at least one lowercase letter
+                    'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                    'regex:/[0-9]/',      // must contain at least one digit
+                    'regex:/[@$!%*#?&^]/',
+                    'confirmed', ]]
+            );
+        }
     }
 
     /**
@@ -101,7 +122,21 @@ class UserSettings extends Component
         $this->user->update(['fstOffset' => $this->fstOffset]);
         $this->user->update(['copyright' => $this->copyright]);
 
-        // TODO: Password
+        // Password change
+        if (strlen($this->password) > 0) {
+            $this->validate(
+                ['password' => ['required',
+                    'min:8',
+                    'regex:/[a-z]/',      // must contain at least one lowercase letter
+                    'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                    'regex:/[0-9]/',      // must contain at least one digit
+                    'regex:/[@$!%*#?&^]/',
+                    'confirmed', ]]
+            );
+            $this->user->update(['password' => $this->password]);
+        }
+
+        // TODO: Add button to change the password
         // TODO: Photo
 
         // Upload of the image

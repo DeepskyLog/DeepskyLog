@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2020-10-09 15:08+0200\n"
-"PO-Revision-Date: 2020-10-09 15:08+0200\n"
+"POT-Creation-Date: 2020-10-14 16:08+0200\n"
+"PO-Revision-Date: 2020-10-14 16:08+0200\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: es_ES\n"
@@ -944,60 +944,6 @@ msgstr "Vulpecula"
 msgid "Dwarf Planet"
 msgstr "Planeta enano"
 
-#: ../resources/views/auth/passwords/reset.blade.php:75
-#: ../resources/views/auth/register.blade.php:210
-#: ../resources/views/users/settings.blade.php:331
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:212
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:342
-#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:75
-msgid "The password is too short"
-msgstr "La contraseña es demasiado corta"
-
-#: ../resources/views/auth/passwords/reset.blade.php:76
-#: ../resources/views/auth/register.blade.php:211
-#: ../resources/views/users/settings.blade.php:332
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:213
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:343
-#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:76
-msgid "Weak; try combining letters & numbers"
-msgstr "Débil; intenta combinar letras y números"
-
-#: ../resources/views/auth/passwords/reset.blade.php:77
-#: ../resources/views/auth/register.blade.php:212
-#: ../resources/views/users/settings.blade.php:333
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:214
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:344
-#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:77
-msgid "Medium; try using special characters"
-msgstr "Medio; intenta usar caracteres especiales"
-
-#: ../resources/views/auth/passwords/reset.blade.php:78
-#: ../resources/views/auth/register.blade.php:213
-#: ../resources/views/users/settings.blade.php:334
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:215
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:345
-#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:78
-msgid "Strong password"
-msgstr "Contraseña segura"
-
-#: ../resources/views/auth/passwords/reset.blade.php:79
-#: ../resources/views/auth/register.blade.php:214
-#: ../resources/views/users/settings.blade.php:335
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:216
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:346
-#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:79
-msgid "The password contains the username"
-msgstr "La contraseña contiene el nombre de usuario"
-
-#: ../resources/views/auth/passwords/reset.blade.php:80
-#: ../resources/views/auth/register.blade.php:215
-#: ../resources/views/users/settings.blade.php:336
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:217
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:347
-#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:80
-msgid "Type your password"
-msgstr "Escriba su contraseña"
-
 #: ../storage/framework/messages/0207245de2a07d757c5c0246d482a987a5acd49f.php.php:82
 #: ../storage/framework/messages/0207245de2a07d757c5c0246d482a987a5acd49f.php.php:97
 #: Http/Controllers/TargetController.php:82
@@ -1061,22 +1007,61 @@ msgstr "Iniciar nueva conversación"
 msgid "Mark all messages read"
 msgstr "Marcar todos los mensajes leídos"
 
-#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:6
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:20
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:7
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:21
 #: ../storage/framework/messages/6716d68c6ef2a5cd24094258f4001ad610fee57d.php.php:14
 #: ../storage/framework/messages/b0560d46aeab0e1ad0a93e4dce599db14d49b9bb.php.php:149
 #: DataTables/UserDataTable.php:149
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:14
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:24
+msgid "Change password"
+msgstr "Cambiar contraseña"
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:31
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:72
+#: ../storage/framework/messages/9ea2db6645fac81039aa9aa7df8f3acbbe50c751.php.php:31
+#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:38
+msgid "Password"
+msgstr "Contraseña"
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:46
+#, fuzzy
+#| msgid ""
+#| "The password should at least be 8 characters, and contain a least one "
+#| "uppercase character (A –\n"
+#| "                Z), one lowercase character (a – z), one digit (0 – 9), "
+#| "and one Non-alphanumeric (!, @, #, $, %, ^, &,\n"
+#| "                ?, or *) characters"
+msgid ""
+"The password should at least be 8 characters, and contain a least one "
+"uppercase character (A –\n"
+"                Z), one lowercase character (a – z), one digit (0 – 9), and "
+"one Non-alphanumeric (!, @, #, $, %, ^, &,\n"
+"                ?, or *) character"
+msgstr ""
+"La contraseña debe tener al menos 8 caracteres y contener al menos un "
+"carácter en mayúsculas (A –\n"
+"                Z), un carácter en minúsculas (a – z), un 10 dígitos base (0 "
+"–\n"
+"                9), y un carácter no alfanumérico (!, @, #, $, %, ^, &, ?, o "
+"*)"
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:69
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:89
+#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:55
+msgid "Confirm Password"
+msgstr "Confirmar contraseña"
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:78
 #: ../storage/framework/messages/6716d68c6ef2a5cd24094258f4001ad610fee57d.php.php:28
 #: ../storage/framework/messages/b0560d46aeab0e1ad0a93e4dce599db14d49b9bb.php.php:157
 #: DataTables/UserDataTable.php:157
 msgid "Email"
 msgstr "Correo electrónico"
 
-#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:30
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:100
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:191
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:247
 #: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:72
@@ -1107,23 +1092,77 @@ msgstr "Correo electrónico"
 msgid "Name"
 msgstr "Nombre"
 
-#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:46
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:122
 #: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:179
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:84
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:99
 msgid "Country of residence"
 msgstr "País de residencia"
 
-#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:60
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:136
 msgid "Let other people know what are your astronomical interests"
 msgstr "Haz que otras personas sepan cuáles son tus intereses astronómicos"
 
-#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:95
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:178
 msgid "Change profile picture"
 msgstr "Cambiar imagen de perfil"
 
-#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:103
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:193
 msgid "Uploading..."
 msgstr "Subiendo..."
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:221
+msgid "Send emails"
+msgstr "Enviar emails"
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:226
+msgid "fstOffset"
+msgstr "fstOffset"
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:237
+msgid "Offset between measured SQM value and the faintest visible star."
+msgstr "Offset entre el valor medido del sqm y la estrella visible más débil."
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:250
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:159
+msgid "License for drawings"
+msgstr "Licencia para dibujos"
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:258
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:177
+msgid "No license (Not recommended!)"
+msgstr "No licencia (no se recomienda!)"
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:260
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:179
+msgid "Enter your own copyright text"
+msgstr "Ingrese su propio texto de copyright"
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:266
+#, php-format
+msgid ""
+"It is important to select the correct license for your drawings!\n"
+"                For help, see the %sCreative Commons license chooser%s."
+msgstr ""
+"¡Es importante seleccionar la licencia correcta para sus dibujos!\n"
+"                Para obtener ayuda, consulte %sCreative Commons license "
+"chooser%s."
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:276
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:190
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:196
+msgid "Copyright notice"
+msgstr "Aviso de copyright"
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:292
+msgid "Please fix the errors in the settings."
+msgstr "Corrija los errores en la configuración."
+
+#: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:296
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:124
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:227
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:266
+msgid "Update"
+msgstr "Actualizar"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:81
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:91
@@ -1340,12 +1379,12 @@ msgid "DeepskyLog stars"
 msgstr "Estrellas DeepskyLog"
 
 #: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:78
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:116
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:47
 msgid "Default observing site"
 msgstr "Sitio de observación predeterminado"
 
 #: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:91
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:129
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:60
 msgid "Default instrument"
 msgstr "Instrumento predeterminado"
 
@@ -1368,12 +1407,6 @@ msgstr "Número de filtros"
 #: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:164
 msgid "Number of lenses"
 msgstr "Número de lentes"
-
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:190
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:159
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:100
-msgid "Copyright notice"
-msgstr "Aviso de copyright"
 
 #: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:198
 #: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:223
@@ -1596,76 +1629,51 @@ msgstr "Conversación entre"
 
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:5
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:13
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:180
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:220
 #: ../storage/framework/messages/468594b0fbdafcbd6c2a367dabf6de610b3b2966.php.php:3
 #: ../storage/framework/messages/632230a491fb209409ec2564c3bcf63171d54c01.php.php:49
 msgid "Register"
 msgstr "Registrarse"
 
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:34
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:38
 msgid "Full Name"
 msgstr "Nombre completo"
 
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:48
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:55
 #: ../storage/framework/messages/546ad19dc2096554c48187a24fc5cb6ce8a812be.php.php:25
-#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:20
+#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:21
 msgid "E-Mail Address"
 msgstr "Dirección de correo electrónico"
 
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:62
-#: ../storage/framework/messages/9ea2db6645fac81039aa9aa7df8f3acbbe50c751.php.php:31
-#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:34
-msgid "Password"
-msgstr "Contraseña"
-
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:76
-#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:48
-msgid "Confirm Password"
-msgstr "Confirmar contraseña"
-
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:97
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:305
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:114
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:254
 msgid "Standard language for observations"
 msgstr "Idioma estándar para las observaciones"
 
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:114
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:290
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:135
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:238
 msgid "Language for user interface"
 msgstr "Idioma para la interfaz de usuario"
 
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:134
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:76
-msgid "License for drawings"
-msgstr "Licencia para dibujos"
-
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:144
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:85
-msgid "No license (Not recommended!)"
-msgstr "No licencia (no se recomienda!)"
-
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:145
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:86
-msgid "Enter your own copyright text"
-msgstr "Ingrese su propio texto de copyright"
-
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:150
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:92
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:184
 #, php-format
 msgid ""
 "It is important to select the correct license for your drawings!\n"
-"                                            For help, see the %sCreative "
-"Commons license chooser%s."
+"                                    For help, see the %sCreative Commons "
+"license chooser%s."
 msgstr ""
 "¡Es importante seleccionar la licencia correcta para sus dibujos!\n"
-"                                            Para obtener ayuda, consulte "
-"%sel selector de Creative Commons licencia%s."
+"                                     Para obtener ayuda, consulte %sel "
+"selector de Creative Commons licencia%s."
 
-#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:174
+#: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:212
 #, php-format
 msgid ""
-"Your personal information will be processed in accordance with the %sprivacy "
-"policy%s and shall be used only for user management and to keep you informed "
-"about our activities."
+"Your personal information will be processed in accordance with the "
+"%sprivacy\n"
+"                        policy%s and shall be used only for user management "
+"and to keep you informed about our\n"
+"                        activities."
 msgstr ""
 "Su información personal será procesada de acuerdo con la %sPolítica de "
 "privacidad%s y sólo se usará para la administración del usuario y para "
@@ -1840,7 +1848,7 @@ msgid "Eyepieces of %s"
 msgstr "Oculares de %s"
 
 #: ../storage/framework/messages/50d7811d5a91e887396d8233f0919e4c74dbffa4.php.php:23
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:150
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:81
 #: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:32
 #: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:129
 msgid "Add eyepiece"
@@ -1954,7 +1962,7 @@ msgstr "Cambiar instrumento"
 
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:32
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:113
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:137
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:68
 #: ../storage/framework/messages/88ac00ea878eba197cafdf7f59f7768612fd0467.php.php:23
 msgid "Add instrument"
 msgstr "Agregar instrumento"
@@ -1984,7 +1992,7 @@ msgstr "Sube una foto de tu instrumento."
 #: ../storage/framework/messages/718a94e54fe71c36309c6d413e41222013df12d1.php.php:21
 #: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:2
 #: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:11
-#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:58
+#: ../storage/framework/messages/f59af0d71b47067a686711fea4f129d16a1c41ef.php.php:66
 #: Notifications/DeepskyLogResetPassword.php:21
 msgid "Reset Password"
 msgstr "Restablecer contraseña"
@@ -2123,103 +2131,84 @@ msgstr "Atlas"
 msgid "Languages"
 msgstr "Idiomas"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:47
-msgid "Send emails"
-msgstr "Enviar emails"
-
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:51
-msgid "fstOffset"
-msgstr "fstOffset"
-
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:53
-msgid "Offset between measured SQM value and the faintest visible star."
-msgstr "Offset entre el valor medido del sqm y la estrella visible más débil."
-
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:104
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:188
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:279
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:316
-msgid "Update"
-msgstr "Actualizar"
-
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:124
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:55
 msgid "Add new observing site"
 msgstr "Agregar nuevo sitio de observación"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:142
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:73
 msgid "Default eyepiece"
 msgstr "Ocular predeterminado"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:155
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:86
 msgid "Default lens"
 msgstr "Lente predeterminada"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:163
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:94
 #: ../storage/framework/messages/d8cd8e104dd4640cd688af3c0f90046383ee02e8.php.php:23
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:32
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:71
 msgid "Add lens"
 msgstr "Agregar lente"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:168
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:99
 msgid "Default atlas"
 msgstr "Atlas predeterminado"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:179
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:113
 msgid "Default units"
 msgstr "Unidades predeterminadas"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:182
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:117
 msgid "Metric (mm)"
 msgstr "Métrica (mm)"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:183
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:119
 msgid "Imperial (inches)"
 msgstr "Imperial (pulgadas)"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:199
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:135
 msgid "Atlas standard object FoVs:"
 msgstr "Campo del objeto estándar del Atlas:"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:204
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:223
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:242
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:140
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:162
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:184
 msgid "Overview"
 msgstr "Resumen"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:208
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:227
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:246
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:145
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:167
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:189
 msgid "Lookup"
 msgstr "Búsqueda"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:212
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:231
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:250
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:150
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:172
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:194
 msgid "Detail"
 msgstr "Detalle"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:218
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:157
 msgid "Atlas standard object magnitudes:"
 msgstr "Magnitudes del objeto estándar del Atlas:"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:237
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:179
 msgid "Atlas standard star magnitudes:"
 msgstr "Magnitudes estelares estándar del Atlas:"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:256
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:201
 msgid "Standard size of photos:"
 msgstr "Tamaño estándar de las fotos:"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:261
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:206
 msgid "Photo 1"
 msgstr "Foto 1"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:265
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:211
 msgid "Photo 2"
 msgstr "Foto 2"
 
-#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:271
+#: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:218
 msgid "Font size printed atlas pages (6..9)"
 msgstr "Tamaño de la fuente páginas de Atlas impresas (6.. 9)"
 
@@ -3137,8 +3126,8 @@ msgstr "El filtro %s tiene observaciones. Imposible de eliminar."
 msgid "Filter %s deleted"
 msgstr "Filtro %s eliminado"
 
-#: ../storage/framework/messages/c8341998560c12a01dcc24c35450ac23e81b5150.php.php:129
-#: Http/Controllers/Auth/RegisterController.php:129
+#: ../storage/framework/messages/c8341998560c12a01dcc24c35450ac23e81b5150.php.php:132
+#: Http/Controllers/Auth/RegisterController.php:132
 #, php-format
 msgid "User \"%s\" successfully registered. You can now log in."
 msgstr "Usuario \"%s\" registrado correctamente. Ahora puede iniciar sesión."
@@ -3489,6 +3478,48 @@ msgstr "Ultima utilización en"
 #: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:99
 msgid "Observed in the following locations"
 msgstr "Observado en las siguientes ubicaciones"
+
+#~ msgid ""
+#~ "\n"
+#~ "            The password is too short "
+#~ msgstr "La contraseña es demasiado corta"
+
+#, fuzzy
+#~| msgid "Weak; try combining letters & numbers"
+#~ msgid ""
+#~ "\n"
+#~ "            Weak;\n"
+#~ "            try combining letters & numbers "
+#~ msgstr "Débil; intenta combinar letras y números"
+
+#, fuzzy
+#~| msgid "Medium; try using special characters"
+#~ msgid ""
+#~ "\n"
+#~ "            Medium;\n"
+#~ "            try using special characters "
+#~ msgstr "Medio; intenta usar caracteres especiales"
+
+#, fuzzy
+#~| msgid "Strong password"
+#~ msgid ""
+#~ "\n"
+#~ "            Strong password "
+#~ msgstr "Contraseña segura"
+
+#, fuzzy
+#~| msgid "The password contains the username"
+#~ msgid ""
+#~ "\n"
+#~ "            The password contains the username "
+#~ msgstr "La contraseña contiene el nombre de usuario"
+
+#, fuzzy
+#~| msgid "Type your password"
+#~ msgid ""
+#~ "\n"
+#~ "            Type your password "
+#~ msgstr "Escriba su contraseña"
 
 #, php-format
 #~ msgid "Enter the name of the object. Use % for a wildcard."
@@ -4863,9 +4894,6 @@ msgstr "Observado en las siguientes ubicaciones"
 
 #~ msgid "Define which languages you want to see in the descriptions"
 #~ msgstr "Defina qué idiomas desea ver en las descripciones"
-
-#~ msgid "Current password"
-#~ msgstr "Contraseña actual"
 
 #~ msgid ""
 #~ "You wanted to change an eyepiece, but none is specified. Please contact "

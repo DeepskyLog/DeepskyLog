@@ -1,31 +1,68 @@
 <div>
-    {{-- <form >
-        --}}
+    <br />
     <form wire:submit.prevent="save" role="form" action="/users/{{ $user->id }}/settings">
 
         {{-- username --}}
         <div class="form-group username">
             <label for="name">{{ _i('Username') }}</label>
             <input wire:model="username" readonly type="text" required
-                class="form-control {{ $errors->has('username') ? 'is-invalid' : '' }}" maxlength="64" name="username"
-                size="30" value="{{ $user->username }}" />
+                class="form-control @error('username') is-invalid @enderror" maxlength="64" name="username" size="30"
+                value="{{ $user->username }}" />
         </div>
+
+        {{-- Change password button --}}
+        <div class="form-group">
+            <label class="btn btn-success">
+                <input type="checkbox" wire:model="changePassword" autocomplete="off" checked>
+                &nbsp;{{ _i('Change password') }}
+            </label>
+        </div>
+        @if ($changePassword)
+        {{-- Change password field--}}
+        <div class="form-group">
+            <label for="password">{{ _i('Password') }}</label>
+
+            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
+                wire:model="password" autocomplete="off">
+
+            <span class="help-block">
+                @php
+                // Use the correct language for the chooser tool
+                echo _i('The password should at least be 8 characters, and contain a least one uppercase character (A –
+                Z), one lowercase character (a – z), one digit (0 – 9), and one Non-alphanumeric (!, @, #, $, %, ^, &,
+                ?, or *) character');
+                @endphp
+            </span>
+            @error('password')
+            <br />
+            <span class="small text-error">
+                {{ $message }}
+            </span>
+            @enderror
+        </div>
+
+        {{-- Change password confirmation field --}}
+        <div class="form-group">
+            <label for="password-confirm">{{ _i('Confirm Password') }}</label>
+
+            <input id="password-confirm" type="password" class="form-control" wire:model="password_confirmation"
+                autocomplete="off">
+        </div>
+        @endif
 
         {{-- Email address --}}
         <div class="form-group email">
             <label for="name">{{ _i('Email') }}</label>
-            <input wire:model="email" type="text" required
-                class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" maxlength="64" name="email"
-                size="30" value="{{ $user->email }}" />
+            <input wire:model="email" type="text" required class="form-control @error('email') is-invalid @enderror"
+                maxlength="64" name="email" size="30" value="{{ $user->email }}" />
             @error('email') <span class="small text-error">{{ $message }}</span> @enderror
         </div>
 
         {{-- Name of the observer --}}
         <div class="form-group" name="name" id="name">
             <label for="name">{{ _i('Name') }}</label>
-            <input wire:model="name" type="text" required
-                class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" maxlength="64" name="name" size="30"
-                value="{{ $user->name }}" />
+            <input wire:model="name" type="text" required class="form-control @error('name') is-invalid @enderror"
+                maxlength="64" name="name" size="30" value="{{ $user->name }}" />
             @error('name') <span class="small text-error">{{ $message }}</span> @enderror
         </div>
 
@@ -46,8 +83,8 @@
         {{-- about the observer --}}
         <div class="form-group" name="about" id="about">
             <label for="about">{{ _i('Let other people know what are your astronomical interests') }}</label>
-            <textarea wire:model="about" required class="form-control {{ $errors->has('about') ? 'is-invalid' : '' }}"
-                rows="5" maxlength="500" name="about">{{ $user->about }}</textarea>
+            <textarea wire:model="about" required class="form-control @error('about') is-invalid @enderror" rows="5"
+                maxlength="500" name="about">{{ $user->about }}</textarea>
 
             <p class="text-center {{ strlen($about) >= 485 ? 'text-danger' : '' }}">
                 <small>
@@ -75,7 +112,7 @@
                         <h5 class="card-title">{{ _i('Change profile picture') . ' (max 10 Mb)' }}</h5>
 
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input {{ $errors->has('photo') ? 'is-invalid' : '' }}"
+                            <input type="file" class="custom-file-input @error('photo') is-invalid @enderror"
                                 wire:model="photo">
                             <label class="custom-file-label">Choose file</label>
                         </div>
@@ -91,7 +128,7 @@
         {{-- Send mail --}}
         <div class="form-group form-check sendMail">
             <input type="checkbox" wire:model="sendMail" @if ($user->sendMail) checked @endif
-            class="form-check-input {{ $errors->has('sendMail') ? 'is-invalid' : '' }}" name="sendMail"
+            class="form-check-input @error('sendMail') is-invalid @enderror" name="sendMail"
             />
             <label class="form-check-label" for="name">{{ _i('Send emails') }}</label>
         </div>
@@ -100,8 +137,8 @@
         <div class="form-group fstOffset">
             <label for="fstOffset">{{ _i('fstOffset') }}</label>
             <input wire:model="fstOffset" type="number" min="-5.0" max="5.0" step="0.01"
-                class="form-control {{ $errors->has('fstOffset') ? 'is-invalid' : '' }}" maxlength="4" name="fstOffset"
-                size="4" value="{{ $fstOffset }}" />
+                class="form-control @error('fstOffset') is-invalid @enderror" maxlength="4" name="fstOffset" size="4"
+                value="{{ $fstOffset }}" />
             <span class="help-block">{{ _i('Offset between measured SQM value and the faintest visible star.') }}</span>
             @error('fstOffset') <br /><span class="small text-error">{{ $message }}</span> @enderror
         </div>

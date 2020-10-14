@@ -14,16 +14,13 @@
         "cross-env": "^7.0.2",
         "eslint": "^7.11.0",
         "eslint-config-google": "^0.14.0",
-        "eslint-plugin-vue": "^6.2.2",
         "jquery": "^3.5.1",
         "laravel-mix": "^5.0.7",
         "lodash": "^4.17.19",
-        "popper.js": "^1.16.1",
         "resolve-url-loader": "^3.1.1",
         "sass": "^1.27.0",
         "sass-loader": "^10.0.3",
-        "vue": "^2.6.11",
-        "vue-template-compiler": "^2.6.11"
+        "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
         "axios": "^0.20.0",
@@ -40,9 +37,8 @@
         "jquery-ui": "^1.12.1",
         "jszip": "^3.5.0",
         "lity": "^2.4.1",
-        "password-strength-meter": "^2.0",
         "pdfmake": "^0.1.68",
-        "popper": "^1.0.1",
+        "popper.js": "^1.16.1-lts",
         "select2": "^4.0.13",
         "select2-bootstrap4-theme": "^1.0.0"
     }

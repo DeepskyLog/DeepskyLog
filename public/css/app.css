@@ -4435,7 +4435,7 @@ a.dt-button.processing:after {
   -moz-animation: dtb-spinner 1500ms infinite linear;
 }
 table.DTCR_clonedTable.dataTable{position:absolute !important;background-color:rgba(255,255,255,0.7);z-index:202}div.DTCR_pointer{width:1px;background-color:#0275d8;z-index:201}
-.pass-graybar{height:3px;background-color:#ccc;width:100%;position:relative}.pass-colorbar{height:3px;background-image:url(/images/vendor/password-strength-meter/dist/passwordstrength.jpg?442e476bf50e3da0cdae8c7bc1fa069d);position:absolute;top:0;left:0}.pass-percent,.pass-text{font-size:1em}.pass-percent{margin-right:5px}/*!
+/*!
  * bootstrap-fileinput v5.1.2
  * http://plugins.krajee.com/file-input
  *

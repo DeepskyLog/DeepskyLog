@@ -12,12 +12,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 /**
  * User registration.
@@ -72,15 +72,18 @@ class RegisterController extends Controller
                 'username' => [
                     'required', 'string', 'max:255', 'min:2', 'unique:users',
                 ],
-                'name' => ['required', 'string', 'max:255', 'min:5'],
+                'name'  => ['required', 'string', 'max:255', 'min:5'],
                 'email' => [
                     'required', 'string', 'email', 'max:255', 'unique:users',
                 ],
-                'password' => ['required', 'string', 'min:6', 'confirmed'],
-                'country' => ['required'],
-                'type' => User::DEFAULT_TYPE,
+                'password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/[a-z]/',      // must contain at least one lowercase letter
+                    'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                    'regex:/[0-9]/',      // must contain at least one digit
+                    'regex:/[@$!%*#?&^]/', ],
+                'country'             => ['required'],
+                'type'                => User::DEFAULT_TYPE,
                 'observationlanguage' => ['required'],
-                'language' => ['required'],
+                'language'            => ['required'],
                 'copyright',
                 'g-recaptcha-response' => 'required|captcha',
             ]
@@ -98,15 +101,15 @@ class RegisterController extends Controller
     {
         return User::create(
             [
-                'username' => $data['username'],
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => $data['password'],
-                'country' => $data['country'],
+                'username'            => $data['username'],
+                'name'                => $data['name'],
+                'email'               => $data['email'],
+                'password'            => $data['password'],
+                'country'             => $data['country'],
                 'observationlanguage' => $data['observationlanguage'],
-                'language' => $data['language'],
-                'copyright' => $data['copyright'],
-                'type' => User::DEFAULT_TYPE,
+                'language'            => $data['language'],
+                'copyright'           => $data['copyright'],
+                'type'                => User::DEFAULT_TYPE,
             ]
         );
     }

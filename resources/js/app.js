@@ -31,10 +31,7 @@ var pdfMake = require('pdfmake/build/pdfmake.js');
 var pdfFonts = require('pdfmake/build/vfs_fonts.js');
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-require( 'password-strength-meter/dist/password.min.js' );
-
 // bootstrap-fileinput
-require( 'popper.js/dist/umd/popper.min.js' );
 require( 'bootstrap-fileinput/js/fileinput.min.js');
 require( 'bootstrap-fileinput/themes/fas/theme.min.js');
 
