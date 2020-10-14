@@ -1,6 +1,7 @@
 <div>
-    {{-- <form wire:submit.prevent="save">
+    {{-- <form >
         --}}
+    <form wire:submit.prevent="save" role="form" action="/users/{{ $user->id }}/settings">
 
         {{-- username --}}
         <div class="form-group username">
@@ -35,8 +36,8 @@
                 <select class="form-control countrySel" id="countrySel" name="country">
                     <option value="">&nbsp;</option>
                     @foreach (Countries::getList(LaravelGettext::getLocaleLanguage()) as $code => $country)
-                        <option @if ($code == $user->country) selected="selected"
-                    @endif value="{{ $code }}">{{ $country }}</option>
+                    <option @if ($code==$user->country) selected="selected"
+                        @endif value="{{ $code }}">{{ $country }}</option>
                     @endforeach
                 </select>
             </div>
@@ -61,11 +62,11 @@
                 <div class="col-2" id="card-bg">
                     @error('photo')
                     <img class="card-img-top" style="border-radius: 20%" src="/users/{{ $user->id }}/getImage">
-                @else
-                    @if ($photo)
-                        <img class="card-img-top" style="border-radius: 20%" src="{{ $photo->temporaryUrl() }}">
                     @else
-                        <img class="card-img-top" style="border-radius: 20%" src="/users/{{ $user->id }}/getImage">
+                    @if ($photo)
+                    <img class="card-img-top" style="border-radius: 20%" src="{{ $photo->temporaryUrl() }}">
+                    @else
+                    <img class="card-img-top" style="border-radius: 20%" src="/users/{{ $user->id }}/getImage">
                     @endif
                     @enderror
                 </div>
@@ -87,37 +88,95 @@
             </div>
         </div>
 
+        {{-- Send mail --}}
         <div class="form-group form-check sendMail">
-            <input type="checkbox" wire:model="sendMail"
-                class="form-check-input {{ $errors->has('sendMail') ? 'is-invalid' : '' }}" name="sendMail" @if ($user->sendMail)
-            checked
-            @endif />
+            <input type="checkbox" wire:model="sendMail" @if ($user->sendMail) checked @endif
+            class="form-check-input {{ $errors->has('sendMail') ? 'is-invalid' : '' }}" name="sendMail"
+            />
             <label class="form-check-label" for="name">{{ _i('Send emails') }}</label>
         </div>
 
+        {{-- fst offset --}}
         <div class="form-group fstOffset">
             <label for="fstOffset">{{ _i('fstOffset') }}</label>
             <input wire:model="fstOffset" type="number" min="-5.0" max="5.0" step="0.01"
                 class="form-control {{ $errors->has('fstOffset') ? 'is-invalid' : '' }}" maxlength="4" name="fstOffset"
                 size="4" value="{{ $fstOffset }}" />
             <span class="help-block">{{ _i('Offset between measured SQM value and the faintest visible star.') }}</span>
+            @error('fstOffset') <br /><span class="small text-error">{{ $message }}</span> @enderror
         </div>
 
-        {{ $fstOffset }}
-        {{-- <button type="submit"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save
-            Photo</button>
-    </form> --}}
+        {{-- License --}}
+        <div class="form-group">
+            <label for="cclicense">{{ _i('License for drawings') }}</label>
+            <div class="form" wire:ignore>
+                <select wire:model="cclicense" name="cclicense" class="form-control license" style="width: 100%"
+                    id="license">
+                    @foreach ($licenses as $license=>$number)
+                    <option value="{{ $number }}">{{ $license }}</option>
+                    @endforeach
+                    <option value="6">
+                        {{ _i('No license (Not recommended!)') }}</option>
+                    <option value="7">
+                        {{ _i('Enter your own copyright text') }}</option>
+                </select>
+            </div>
+            <span class="help-block">
+                @php
+                // Use the correct language for the chooser tool
+                echo _i('It is important to select the correct license for your drawings!
+                For help, see the %sCreative Commons license chooser%s.',
+                '<a href="http://creativecommons.org/choose/?lang=' . LaravelGettext::getLocale() . '">', '</a>');
+                @endphp
+            </span>
+        </div>
+
+        {{-- The copyright notice --}}
+        @if ($cclicense == 7)
+        <div class="form-group">
+            <label for="copyright">{{ _i('Copyright notice') }}</label>
+            <input wire:model="copyright" id="copyright" type="text" class="form-control" maxlength="128"
+                name="copyright" value="{{ $cclicense }}">
+            <p class="text-center {{ strlen($copyright) >= 118 ? 'text-danger' : '' }}">
+                <small>
+                    {{ strlen($copyright) . '/128' }}
+                </small>
+            </p>
+
+        </div>
+        @endif
+
+        <div>
+            @if (!$errors->isEmpty())
+            <div class="alert alert-danger">
+                {{  _i('Please fix the errors in the settings.') }}
+            </div>
+            @else
+            <input type="submit" class="btn btn-success" name="add" value="{{ _i('Update') }}" />
+            @endif
+            @if (session()->has('message'))
+            <br /><br />
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+            @endif
+        </div>
+
+    </form>
 </div>
 
 @push('scripts')
-    <script>
-        $(document).ready(function() {
+<script>
+    $(document).ready(function() {
             $('.countrySel').select2();
             $('.countrySel').on('change', function(e) {
                 @this.set('selected_country', e.target.value);
             });
+            $('.license').select2();
+            $('.license').on('change', function(e) {
+                @this.set('cclicense', e.target.value);
+            });
         });
 
-    </script>
+</script>
 @endpush

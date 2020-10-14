@@ -15,9 +15,9 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Collection;
 
 /**
  * Target name eloquent model.
@@ -103,7 +103,7 @@ class TargetName extends Model
         foreach (self::where('target_id', $target->id)->get() as $targetname) {
             if ($targetname->altname != $target->target_name) {
                 $alternativeNames .= ($alternativeNames ? '/' : '')
-                    .$targetname->altname;
+                    . $targetname->altname;
             }
         }
 

@@ -3,31 +3,42 @@
 namespace App\Http\Livewire;
 
 use App\Models\User;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 
 class UserSettings extends Component
 {
     use WithFileUploads;
 
-    public $user;
-    public $selected_country = '';
-    public $about;
-    public $email;
-    public $username;
-    public $name;
+    public User $user;
+    public String $selected_country = '';
+    public String $about;
+    public String $email;
+    public String $username;
+    public String $name;
     public $photo;
     public $sendMail;
-    public $fstOffset;
+    public float $fstOffset;
+    public String $cclicense;
+    public String $copyright;
+
+    protected $licenses = [
+        'Attribution CC BY'                                => 0,
+        'Attribution-ShareAlike CC BY-SA'                  => 1,
+        'Attribution-NoDerivs CC BY-ND'                    => 2,
+        'Attribution-NonCommercial CC BY-NC'               => 3,
+        'Attribution-NonCommercial-ShareAlike CC BY-NC-SA' => 4,
+        'Attribution-NonCommercial-NoDerivs CC BY-NC-ND'   => 5,
+    ];
 
     protected $rules = [
-        'username' => 'required|unique|min:2',
-        'name' => 'required|max:64|min:4',
-        'email' => 'required|email',
-        'photo' => 'image|max:10240',
-        // 'type' => 'required',
+        'name'      => 'required|max:64|min:4',
+        'email'     => 'required|email',
+        'about'     => 'max:500',
+        'fstOffset' => 'numeric|min:-5.0|max:5.0',
+        'copyright' => 'max:128',
     ];
 
     /**
@@ -37,12 +48,22 @@ class UserSettings extends Component
      */
     public function mount()
     {
-        $this->username = $this->user->username;
-        $this->about = $this->user->about;
-        $this->name = $this->user->name;
-        $this->email = $this->user->email;
+        $this->username         = $this->user->username;
+        $this->about            = $this->user->about;
+        $this->name             = $this->user->name;
+        $this->email            = $this->user->email;
         $this->selected_country = $this->user->country;
-        $this->fstOffset = $this->user->fstOffset;
+        $this->fstOffset        = $this->user->fstOffset;
+
+        if (in_array($this->user->copyright, $this->licenses)) {
+            $this->cclicense = $this->licenses[$this->user->copyright];
+        } elseif ('' == $this->user->copyright) {
+            $this->cclicense = 6;
+        } else {
+            $this->cclicense = 7;
+        }
+
+        $this->copyright = $this->user->copyright;
     }
 
     /**
@@ -55,6 +76,12 @@ class UserSettings extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
+
+        if (in_array($this->cclicense, $this->licenses)) {
+            $this->copyright = array_search($this->cclicense, $this->licenses);
+        } elseif ($this->cclicense == 6) {
+            $this->copyright = '';
+        }
     }
 
     /**
@@ -64,26 +91,37 @@ class UserSettings extends Component
      */
     public function save()
     {
-        // Only for the upload of the image
-        $this->validate([
-            'photo' => 'image|max:1024',
-        ]);
+        $this->validate();
 
-        if (User::find($this->user->id)->getFirstMedia('observer') != null
-        ) {
-            // First remove the current image
-            User::find($this->user->id)
-            ->getFirstMedia('observer')
-            ->delete();
-        }
+        $this->user->update(['email' => $this->email]);
+        $this->user->update(['name' => $this->name]);
+        $this->user->update(['country' => $this->selected_country]);
+        $this->user->update(['about' => $this->about]);
+        $this->user->update(['sendMail' => $this->sendMail]);
+        $this->user->update(['fstOffset' => $this->fstOffset]);
+        $this->user->update(['copyright' => $this->copyright]);
 
-        // Update the picture
-        User::find($this->user->id)
-            ->addMedia($this->photo->getRealPath())
-            ->usingFileName($this->user->id.'.png')
-            ->toMediaCollection('observer');
+        // TODO: Password
+        // TODO: Photo
 
-        // TODO: Also update the database with the name, email, about,...
+        // Upload of the image
+
+        // if (User::find($this->user->id)->getFirstMedia('observer') != null
+        // ) {
+        //     // First remove the current image
+        //     User::find($this->user->id)
+        //     ->getFirstMedia('observer')
+        //     ->delete();
+        // }
+
+        // // Update the picture
+        // User::find($this->user->id)
+        //     ->addMedia($this->photo->getRealPath())
+        //     ->usingFileName($this->user->id . '.png')
+        //     ->toMediaCollection('observer');
+
+        // Message if there was an error or if the changes were written succesfully
+        session()->flash('message', 'Settings successfully updated.');
     }
 
     /**
@@ -93,6 +131,6 @@ class UserSettings extends Component
      */
     public function render()
     {
-        return view('livewire.user-settings');
+        return view('livewire.user-settings', ['licenses' => $this->licenses]);
     }
 }
