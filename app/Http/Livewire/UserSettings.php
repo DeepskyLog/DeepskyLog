@@ -103,6 +103,12 @@ class UserSettings extends Component
                     'confirmed', ]]
             );
         }
+
+        if ($this->photo) {
+            $this->validate([
+                'photo' => 'image|max:10240',
+            ]);
+        }
     }
 
     /**
@@ -136,24 +142,28 @@ class UserSettings extends Component
             $this->user->update(['password' => $this->password]);
         }
 
-        // TODO: Add button to change the password
-        // TODO: Photo
-
         // Upload of the image
+        if ($this->photo) {
+            $this->validate([
+                'photo' => 'image|max:10240',
+            ]);
+            if (User::find($this->user->id)->getFirstMedia('observer') != null
+            ) {
+                // First remove the current image
+                User::find($this->user->id)
+                ->getFirstMedia('observer')
+                ->delete();
+            }
 
-        // if (User::find($this->user->id)->getFirstMedia('observer') != null
-        // ) {
-        //     // First remove the current image
-        //     User::find($this->user->id)
-        //     ->getFirstMedia('observer')
-        //     ->delete();
-        // }
+            // Update the picture
+            User::find($this->user->id)
+                ->addMedia($this->photo->getRealPath())
+                ->usingName('observer')
+                ->usingFileName($this->user->id . $this->photo->extension())
+                ->toMediaCollection('observer');
 
-        // // Update the picture
-        // User::find($this->user->id)
-        //     ->addMedia($this->photo->getRealPath())
-        //     ->usingFileName($this->user->id . '.png')
-        //     ->toMediaCollection('observer');
+            $this->photo = null;
+        }
 
         // Message if there was an error or if the changes were written succesfully
         session()->flash('message', 'Settings successfully updated.');

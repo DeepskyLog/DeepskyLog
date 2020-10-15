@@ -97,15 +97,9 @@
         <div class="card mb-3">
             <div class="row no-gutters">
                 <div class="col-2" id="card-bg">
-                    @error('photo')
-                    <img class="card-img-top" style="border-radius: 20%" src="/users/{{ $user->id }}/getImage">
-                    @else
                     @if ($photo)
                     <img class="card-img-top" style="border-radius: 20%" src="{{ $photo->temporaryUrl() }}">
-                    @else
-                    <img class="card-img-top" style="border-radius: 20%" src="/users/{{ $user->id }}/getImage">
                     @endif
-                    @enderror
                 </div>
                 <div class="col-10" id="card-bg">
                     <div class="card-body">

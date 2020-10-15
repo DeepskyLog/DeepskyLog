@@ -15,11 +15,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Http\Request;
 use App\DataTables\UserDataTable;
 use App\Http\Requests\UserRequest;
-use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 /**
  * User Controller.
@@ -69,7 +69,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $obsPerYear = $this->chartObservationsPerYear($user);
+        $obsPerYear  = $this->chartObservationsPerYear($user);
         $obsPerMonth = $this->chartObservationsPerMonth($user);
 
         $media = $this->getImage($id);
@@ -84,10 +84,10 @@ class UserController extends Controller
         return view(
             'users.view',
             [
-                'user' => $user, 'observationsPerYear' => $obsPerYear,
+                'user'                 => $user, 'observationsPerYear' => $obsPerYear,
                 'observationsPerMonth' => $obsPerMonth, 'media' => $media,
-                'observationTypes' => $observationTypes,
-                'numberOfObjects' => $numberOfObjects,
+                'observationTypes'     => $observationTypes,
+                'numberOfObjects'      => $numberOfObjects,
             ]
         );
     }
@@ -171,7 +171,7 @@ class UserController extends Controller
 
         return \Chart::title(
             [
-                'text' => _i('Number of observations per year: ').$user->name,
+                'text' => _i('Number of observations per year: ') . $user->name,
             ]
         )->chart(
             [
@@ -183,7 +183,7 @@ class UserController extends Controller
             ]
         )->subtitle(
             [
-                'text' => _i('Source: ').'https://www.deepskylog.org/',
+                'text' => _i('Source: ') . 'https://www.deepskylog.org/',
             ]
         )->xaxis(
             [
@@ -202,7 +202,7 @@ class UserController extends Controller
                 ],
                 'labels' => [
                     'rotation' => 0,
-                    'align' => 'top',
+                    'align'    => 'top',
                     //'formatter' => 'startJs:function(){return this.value}:endJs',
                     // use 'startJs:yourjavasscripthere:endJs'
                 ],
@@ -213,8 +213,8 @@ class UserController extends Controller
             ]
         )->legend(
             [
-                'layout' => 'vertikal',
-                'align' => 'right',
+                'layout'        => 'vertikal',
+                'align'         => 'right',
                 'verticalAlign' => 'middle',
             ]
         )->series(
@@ -262,7 +262,7 @@ class UserController extends Controller
     {
         return \Chart::title(
             [
-                'text' => _i('Number of observations per month: ').$user->name,
+                'text' => _i('Number of observations per month: ') . $user->name,
             ]
         )->chart(
             [
@@ -277,7 +277,7 @@ class UserController extends Controller
             ]
         )->subtitle(
             [
-                'text' => _i('Source: ').'https://www.deepskylog.org/',
+                'text' => _i('Source: ') . 'https://www.deepskylog.org/',
             ]
         )->xaxis(
             [
@@ -298,7 +298,7 @@ class UserController extends Controller
                 ],
                 'labels' => [
                     'rotation' => 0,
-                    'align' => 'center',
+                    'align'    => 'center',
                     //'formatter' => 'startJs:function(){return this.value}:endJs',
                     // use 'startJs:yourjavasscripthere:endJs'
                 ],
@@ -309,8 +309,8 @@ class UserController extends Controller
             ]
         )->legend(
             [
-                'layout' => 'vertikal',
-                'align' => 'right',
+                'layout'        => 'vertikal',
+                'align'         => 'right',
                 'verticalAlign' => 'middle',
             ]
         )->series(
@@ -434,12 +434,18 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         if (!$user->hasMedia('observer')) {
-            $user->addMediaFromUrl(asset('images/profile.png'))
-                ->usingFileName($user->id.'.png')
-                ->toMediaCollection('observer');
+            $this->addDefaultMedia($id);
         }
 
         return $user->getFirstMedia('observer');
+    }
+
+    private function addDefaultMedia($id)
+    {
+        $user = User::findOrFail($id);
+        $user->addMediaFromUrl(asset('images/profile.png'))
+            ->usingFileName($user->id . '.png')
+            ->toMediaCollection('observer');
     }
 
     /**
@@ -472,7 +478,7 @@ class UserController extends Controller
         } else {
             User::find($id)
                 ->addMediaFromUrl(asset('img/profile.png'))
-                ->usingFileName($id.'.png')
+                ->usingFileName($id . '.png')
                 ->toMediaCollection('observer');
 
             return User::find($id)
@@ -492,38 +498,6 @@ class UserController extends Controller
     {
         // The authenticated user
         $user = auth()->user();
-
-        // Update the email
-        if ($request->has('email')) {
-            $user->update(['email' => $request->get('email')]);
-        }
-
-        // Update the name
-        if ($request->has('name')) {
-            $user->update(['name' => $request->get('name')]);
-        }
-
-        if ($request->has('username')) {
-            if ($request->has('sendMail')) {
-                $user->update(['sendMail' => 1]);
-            } else {
-                $user->update(['sendMail' => '0']);
-            }
-        }
-
-        // Update the about
-        if ($request->has('about')) {
-            $user->update(['about' => $request->get('about')]);
-        }
-        // Update the fstOffset
-        if ($request->has('fstOffset')) {
-            $user->update(['fstOffset' => $request->get('fstOffset')]);
-        }
-
-        // Update the copyright
-        if ($request->has('copyright')) {
-            $user->update(['copyright' => $request->get('copyright')]);
-        }
 
         // Update the standard instrument
         if ($request->has('stdinstrument')) {
@@ -670,24 +644,6 @@ class UserController extends Controller
             $user->update(
                 ['observationlanguage' => $request->get('observationlanguage')]
             );
-        }
-
-        // Update the image
-        // TODO: DOES NOT WORK!!!
-        if ($request->photo != null) {
-            if (User::find($user->id)->getFirstMedia('observer') != null
-            ) {
-                // First remove the current image
-                User::find($user->id)
-                ->getFirstMedia('observer')
-                ->delete();
-            }
-
-            // Update the picture
-            User::find($user->id)
-                ->addMedia($request->photo->path())
-                ->usingFileName($user->id.'.png')
-                ->toMediaCollection('observer');
         }
 
         return redirect()->back();

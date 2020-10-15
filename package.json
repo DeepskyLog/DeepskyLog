@@ -38,7 +38,7 @@
         "jszip": "^3.5.0",
         "lity": "^2.4.1",
         "pdfmake": "^0.1.68",
-        "popper.js": "^1.16.1-lts",
+        "popper.js": "^1.16.1",
         "select2": "^4.0.13",
         "select2-bootstrap4-theme": "^1.0.0"
     }
