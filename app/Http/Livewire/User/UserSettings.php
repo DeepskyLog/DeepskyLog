@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\User;
 
 use App\Models\User;
 use Livewire\Component;
@@ -176,6 +176,6 @@ class UserSettings extends Component
      */
     public function render()
     {
-        return view('livewire.user-settings', ['licenses' => $this->licenses]);
+        return view('livewire.user.user-settings', ['licenses' => $this->licenses]);
     }
 }

@@ -31,12 +31,12 @@
 <div id="my-tab-content" class="tab-content">
     <!-- Personal tab -->
     <div class="tab-pane active" id="info">
-        <livewire:user-settings :user="$user" />
+        <livewire:user.user-settings :user="$user" />
     </div>
 
     <!-- Observing tab -->
     <div class="tab-pane" id="observingDetails">
-        <livewire:user-observing-settings :user="$user" />
+        <livewire:user.user-observing-settings :user="$user" />
     </div>
 
     <!-- Atlasses tab -->

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\User;
 
 use App\Models\User;
 use Livewire\Component;
@@ -57,6 +57,6 @@ class UserObservingSettings extends Component
      */
     public function render()
     {
-        return view('livewire.user-observing-settings');
+        return view('livewire.user.user-observing-settings');
     }
 }
