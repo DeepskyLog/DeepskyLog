@@ -499,48 +499,6 @@ class UserController extends Controller
         // The authenticated user
         $user = auth()->user();
 
-        // Update the standard instrument
-        if ($request->has('stdinstrument')) {
-            $user->update(
-                ['stdtelescope' => $request->get('stdinstrument')]
-            );
-        }
-
-        // Update the standard instrument
-        if ($request->has('stdlocation')) {
-            $user->update(
-                ['stdlocation' => $request->get('stdlocation')]
-            );
-        }
-
-        // Update the standard eyepiece
-        if ($request->has('stdeyepiece')) {
-            $user->update(
-                ['stdeyepiece' => $request->get('stdeyepiece')]
-            );
-        }
-
-        // Update the standard lens
-        if ($request->has('stdlens')) {
-            $user->update(
-                ['stdlens' => $request->get('stdlens')]
-            );
-        }
-
-        // Update the standard atlas
-        if ($request->has('standardAtlasCode')) {
-            $user->update(
-                ['standardAtlasCode' => $request->get('standardAtlasCode')]
-            );
-        }
-
-        // Update imperial / metric
-        if ($request->has('showInches')) {
-            $user->update(
-                ['showInches' => $request->get('showInches')]
-            );
-        }
-
         // Update the overviewFoV
         if ($request->has('overviewFoV')) {
             $user->update(
@@ -622,13 +580,6 @@ class UserController extends Controller
         if ($request->has('atlaspagefont')) {
             $user->update(
                 ['atlaspagefont' => $request->get('atlaspagefont')]
-            );
-        }
-
-        // Update the country of residence
-        if ($request->has('country')) {
-            $user->update(
-                ['country' => $request->get('country')]
             );
         }
 

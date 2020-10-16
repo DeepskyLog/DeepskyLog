@@ -45,7 +45,7 @@ class UserSettings extends Component
     ];
 
     /**
-     * Sets the database value of the about textarea.
+     * Sets the database values.
      *
      * @return void
      */

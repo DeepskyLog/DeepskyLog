@@ -177,6 +177,7 @@
         </div>
         @endif
 
+        {{-- Submit button --}}
         <div>
             @if (!$errors->isEmpty())
             <div class="alert alert-danger">
