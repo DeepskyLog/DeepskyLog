@@ -16,15 +16,15 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
-use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
-use deepskylog\AstronomyLibrary\Time;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use deepskylog\AstronomyLibrary\Time;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 use Spatie\Translatable\HasTranslations;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
+use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 
 /**
  * Target eloquent model.
@@ -64,7 +64,7 @@ class Target extends Model
     //protected $primaryKey = 'target_name';
 
     private $_observationType = null;
-    private $_targetType = null;
+    private $_targetType      = null;
 
     public $incrementing = true;
 
@@ -446,7 +446,7 @@ class Target extends Model
             $this->_target = new \deepskylog\AstronomyLibrary\Targets\Sun();
         } else {
             $this->_target = new \deepskylog\AstronomyLibrary\Targets\Target();
-            $equa = new EquatorialCoordinates($this->ra, $this->decl);
+            $equa          = new EquatorialCoordinates($this->ra, $this->decl);
 
             // Add equatorial coordinates to the target.
             $this->_target->setEquatorialCoordinates($equa);
@@ -456,106 +456,108 @@ class Target extends Model
         $this->_popup[2] = '-';
         $this->_popup[3] = '-';
 
-        if (!Auth::guest()) {
-            if (Auth::user()->stdlocation && Auth::user()->stdtelescope) {
-                if ($this->isNonSolarSystem() || $this->isSolarSystem()) {
-                    $datestr = Session::get('date');
-                    $date = Carbon::createFromFormat('d/m/Y', $datestr);
-                    $date->hour = 12;
-                    if ($this->_location == null) {
-                        $this->_location = \App\Models\Location::where(
-                            'id',
-                            Auth::user()->stdlocation
-                        )->first();
-                    }
-                    $location = $this->_location;
+        $datestr    = Session::get('date');
+        $date       = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date->hour = 12;
 
-                    $geo_coords = new GeographicalCoordinates(
-                        $location->longitude,
-                        $location->latitude
+        if (Auth::user()->stdlocation) {
+            if ($this->_location == null) {
+                $this->_location = \App\Models\Location::where(
+                    'id',
+                    Auth::user()->stdlocation
+                )->first();
+            }
+            $location = $this->_location;
+
+            $geo_coords = new GeographicalCoordinates(
+                $location->longitude,
+                $location->latitude
+            );
+
+            $date->timezone($this->_location->timezone);
+        }
+
+        $greenwichSiderialTime = Time::apparentSiderialTimeGreenwich(
+            $date
+        );
+        $deltaT = Time::deltaT($date);
+
+        if ($this->isSolarSystem()) {
+            $nutation = Time::nutation($deltaT);
+
+            $this->_target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
+        }
+
+        if (Auth::user()->stdlocation && Auth::user()->stdtelescope) {
+            if ($this->isNonSolarSystem() || $this->isSolarSystem()) {
+                // Calculate the ephemerids for the target
+                $this->_target->calculateEphemerides(
+                    $geo_coords,
+                    $greenwichSiderialTime,
+                    $deltaT
+                );
+
+                if ($this->_target->getMaxHeight()->getCoordinate() < 0.0) {
+                    $popup[0] = sprintf(
+                        _i('%s does not rise above horizon'),
+                        $this->target_name
                     );
-
-                    $date->timezone($this->_location->timezone);
-
-                    $greenwichSiderialTime = Time::apparentSiderialTimeGreenwich(
-                        $date
+                    $popup[2] = $popup[0];
+                } elseif (!$this->_target->getRising()) {
+                    $popup[0] = sprintf(
+                        _i('%s is circumpolar'),
+                        $this->target_name
                     );
-                    $deltaT = Time::deltaT($date);
-
-                    if ($this->isSolarSystem()) {
-                        $nutation = Time::nutation($deltaT);
-
-                        $this->_target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
-                    }
-                    // Calculate the ephemerids for the target
-                    $this->_target->calculateEphemerides(
-                        $geo_coords,
-                        $greenwichSiderialTime,
-                        $deltaT
-                    );
-
-                    if ($this->_target->getMaxHeight()->getCoordinate() < 0.0) {
-                        $popup[0] = sprintf(
-                            _i('%s does not rise above horizon'),
-                            $this->target_name
-                        );
-                        $popup[2] = $popup[0];
-                    } elseif (!$this->_target->getRising()) {
-                        $popup[0] = sprintf(
-                            _i('%s is circumpolar'),
-                            $this->target_name
-                        );
-                        $popup[2] = $popup[0];
-                    } else {
-                        $popup[0] = sprintf(
-                            _i('%s rises at %s in %s on ')
-                                .$date->isoFormat('LL'),
-                            $this->target_name,
-                            $this->_target->getRising()
-                                ->timezone($location->timezone)->format('H:i'),
-                            $location->target_name
-                        );
-                        $popup[2] = sprintf(
-                            _i('%s sets at %s in %s on ')
-                                .$date->isoFormat('LL'),
-                            $this->target_name,
-                            $this->_target->getSetting()
-                                ->timezone($location->timezone)->format('H:i'),
-                            $location->target_name
-                        );
-                    }
-                    $popup[1] = sprintf(
-                        _i('%s transits at %s in %s on ')
-                            .$date->isoFormat('LL'),
+                    $popup[2] = $popup[0];
+                } else {
+                    $popup[0] = sprintf(
+                        _i('%s rises at %s in %s on ')
+                                . $date->isoFormat('LL'),
                         $this->target_name,
-                        $this->_target->getTransit()
-                            ->timezone($location->timezone)->format('H:i'),
+                        $this->_target->getRising()
+                                ->timezone($location->timezone)->format('H:i'),
                         $location->target_name
                     );
-
-                    if ($this->_target->getMaxHeightAtNight()->getCoordinate() < 0) {
-                        $popup[3] = sprintf(
-                            _i('%s does not rise above horizon in %s on ')
-                                .$date->isoFormat('LL'),
-                            $this->target_name,
-                            $location->target_name,
-                            $datestr
-                        );
-                    } else {
-                        $popup[3] = sprintf(
-                            _i('%s reaches an altitude of %s in %s on ')
-                                .$date->isoFormat('LL'),
-                            $this->target_name,
-                            trim(
-                                $this->_target->getMaxHeightAtNight()
-                                    ->convertToDegrees()
-                            ),
-                            $location->target_name,
-                        );
-                    }
-
-                    $this->_popup = $popup;
+                    $popup[2] = sprintf(
+                        _i('%s sets at %s in %s on ')
+                                . $date->isoFormat('LL'),
+                        $this->target_name,
+                        $this->_target->getSetting()
+                                ->timezone($location->timezone)->format('H:i'),
+                        $location->target_name
+                    );
                 }
+                $popup[1] = sprintf(
+                    _i('%s transits at %s in %s on ')
+                            . $date->isoFormat('LL'),
+                    $this->target_name,
+                    $this->_target->getTransit()
+                            ->timezone($location->timezone)->format('H:i'),
+                    $location->target_name
+                );
+
+                if ($this->_target->getMaxHeightAtNight()->getCoordinate() < 0) {
+                    $popup[3] = sprintf(
+                        _i('%s does not rise above horizon in %s on ')
+                                . $date->isoFormat('LL'),
+                        $this->target_name,
+                        $location->target_name,
+                        $datestr
+                    );
+                } else {
+                    $popup[3] = sprintf(
+                        _i('%s reaches an altitude of %s in %s on ')
+                                . $date->isoFormat('LL'),
+                        $this->target_name,
+                        trim(
+                        $this->_target->getMaxHeightAtNight()
+                                    ->convertToDegrees()
+                    ),
+                        $location->target_name,
+                    );
+                }
+
+                $this->_popup = $popup;
             }
         }
     }
@@ -641,7 +643,7 @@ class Target extends Model
      */
     private function _setObservationType(): void
     {
-        $this->_targetType = $this->type()->first();
+        $this->_targetType      = $this->type()->first();
         $this->_observationType = $this->_targetType
             ->observationType()->first();
     }
@@ -659,7 +661,7 @@ class Target extends Model
         }
 
         return _i($this->_observationType['name'])
-            .' / '._i($this->_targetType['type']);
+            . ' / ' . _i($this->_targetType['type']);
     }
 
     /**
@@ -738,18 +740,18 @@ class Target extends Model
                 if ($this->diam2 != 0.0) {
                     if (round($this->diam2 / 60.0) == ($this->diam2 / 60.0)) {
                         if (($this->diam2 / 60.0) > 30.0) {
-                            $size = $size.sprintf("x%.0f'", $this->diam2 / 60.0);
+                            $size = $size . sprintf("x%.0f'", $this->diam2 / 60.0);
                         } else {
-                            $size = $size.sprintf("x%.1f'", $this->diam2 / 60.0);
+                            $size = $size . sprintf("x%.1f'", $this->diam2 / 60.0);
                         }
                     } else {
-                        $size = $size.sprintf("x%.1f'", $this->diam2 / 60.0);
+                        $size = $size . sprintf("x%.1f'", $this->diam2 / 60.0);
                     }
                 }
             } else {
                 $size = sprintf('%.1f"', $this->diam1);
                 if ($this->diam2 != 0.0) {
-                    $size = $size.sprintf('x%.1f"', $this->diam2);
+                    $size = $size . sprintf('x%.1f"', $this->diam2);
                 }
             }
         }
@@ -788,8 +790,8 @@ class Target extends Model
                             auth()->user()->stdeyepiece
                         )->first();
                         $magnification = $focalLength / $eyepiece->focalLength;
-                        $fov = $eyepiece->apparentFOV / $magnification;
-                        $standard = false;
+                        $fov           = $eyepiece->apparentFOV / $magnification;
+                        $standard      = false;
                     }
                 }
             }
@@ -839,8 +841,8 @@ class Target extends Model
                                     '',
                                     $this->_target->getEquatorialCoordinates()
                                         ->getRA()->convertToHours()
-                                    .' '
-                                    .$this->_target->getEquatorialCoordinates()
+                                    . ' '
+                                    . $this->_target->getEquatorialCoordinates()
                                         ->getDeclination()->convertToDegrees()
                                 )
                             )
@@ -875,7 +877,7 @@ class Target extends Model
                 )->first();
             }
             $location = $this->_location;
-            $cnt = 0;
+            $cnt      = 0;
 
             $geo_coords = new GeographicalCoordinates(
                 $location->longitude,
@@ -891,9 +893,9 @@ class Target extends Model
 
             for ($i = 1; $i < 13; ++$i) {
                 for ($j = 1; $j < 16; $j = $j + 14) {
-                    $datestr = sprintf('%02d', $j).'/'.sprintf('%02d', $i).'/'
-                        .\Carbon\Carbon::now()->format('Y');
-                    $date = Carbon::createFromFormat('d/m/Y', $datestr);
+                    $datestr = sprintf('%02d', $j) . '/' . sprintf('%02d', $i) . '/'
+                        . \Carbon\Carbon::now()->format('Y');
+                    $date       = Carbon::createFromFormat('d/m/Y', $datestr);
                     $date->hour = 12;
                     $date->timezone($this->_location->timezone);
                     $ephemerides[$cnt]['date'] = $date;
@@ -1112,7 +1114,7 @@ class Target extends Model
             $collection = collect($ephemerides);
 
             $max_alt = $collection->max('max_alt_float');
-            $filter = $collection->filter(
+            $filter  = $collection->filter(
                 function ($value) use ($max_alt) {
                     if (abs($value['max_alt_float'] - $max_alt) < 0.1) {
                         return true;
@@ -1132,7 +1134,7 @@ class Target extends Model
             $around = ($months->min()
                 + ($months->max() - $months->min()) / 2) % 24 + 1;
             $from = $months->min() % 24 + 1;
-            $to = $months->max() % 24 + 1;
+            $to   = $months->max() % 24 + 1;
 
             $this->_highestFromToAround[0] = $this->_convertToMonth($from);
             $this->_highestFromToAround[1] = $this->_convertToMonth($around);
@@ -1155,8 +1157,8 @@ class Target extends Model
         $date = Carbon::now()->month($number / 2);
 
         return ($number % 2 ? _i('mid') : _i('begin'))
-                .' '
-                .$date->isoFormat('MMMM');
+                . ' '
+                . $date->isoFormat('MMMM');
     }
 
     /**
@@ -1245,9 +1247,9 @@ class Target extends Model
             $location->latitude
         );
 
-        $datestr = Session::get('date');
-        $date = Carbon::createFromFormat('d/m/Y', $datestr);
-        $date->hour = 12;
+        $datestr      = Session::get('date');
+        $date         = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date->hour   = 12;
         $date->minute = 0;
         $date->second = 0;
         $date->timezone($location->timezone);
@@ -1312,7 +1314,7 @@ class Target extends Model
             ->get()->collect()->sortBy('altname', SORT_NATURAL);
         $data = \App\Models\TargetName::where('catalog', $catalogname);
 
-        $orig_data = \App\Models\Target::whereIn('id', $data->get('target_id'))->get();
+        $orig_data      = \App\Models\Target::whereIn('id', $data->get('target_id'))->get();
         $constellations = $orig_data->groupBy('constellation')->map(
             function ($constellation) {
                 return $constellation->count();
