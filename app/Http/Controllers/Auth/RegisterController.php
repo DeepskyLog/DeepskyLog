@@ -76,10 +76,11 @@ class RegisterController extends Controller
                 'email' => [
                     'required', 'string', 'email', 'max:255', 'unique:users',
                 ],
-                'password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/[a-z]/',      // must contain at least one lowercase letter
+                'password' => ['required', 'string', 'min:8', 'regex:/[a-z]/',      // must contain at least one lowercase letter
                     'regex:/[A-Z]/',      // must contain at least one uppercase letter
                     'regex:/[0-9]/',      // must contain at least one digit
-                    'regex:/[@$!%*#?&^]/', ],
+                    'regex:/[@$!%*#?&^]/',
+                    'confirmed', ],
                 'country'             => ['required'],
                 'type'                => User::DEFAULT_TYPE,
                 'observationlanguage' => ['required'],
@@ -124,6 +125,23 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
+
+        $licenses = [
+            'Attribution CC BY'                                => 0,
+            'Attribution-ShareAlike CC BY-SA'                  => 1,
+            'Attribution-NoDerivs CC BY-ND'                    => 2,
+            'Attribution-NonCommercial CC BY-NC'               => 3,
+            'Attribution-NonCommercial-ShareAlike CC BY-NC-SA' => 4,
+            'Attribution-NonCommercial-NoDerivs CC BY-NC-ND'   => 5,
+        ];
+
+        if ($request['cclicense'] < 7) {
+            if ($request['cclicense'] == 6) {
+                $request['copyright'] = '';
+            } else {
+                $request['copyright'] = array_search($request['cclicense'], $licenses);
+            }
+        }
 
         event(new Registered($user = $this->create($request->all())));
 

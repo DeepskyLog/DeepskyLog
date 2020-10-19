@@ -52,7 +52,11 @@ class UserSettings extends Component
     public function mount()
     {
         $this->username         = $this->user->username;
-        $this->about            = $this->user->about;
+        if ($this->user->about) {
+            $this->about            = $this->user->about;
+        } else {
+            $this->about = '';
+        }
         $this->name             = $this->user->name;
         $this->email            = $this->user->email;
         $this->selected_country = $this->user->country;

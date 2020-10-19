@@ -68,7 +68,7 @@
             </div>
         </div>
 
-        {{-- TODO --}}
+        {{-- Imperial or metric units  --}}
         <div class="form-group">
             <label for="showInches">{{ _i('Default units') }}</label>
             <div wire:ignore>

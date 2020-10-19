@@ -30,6 +30,7 @@
         "spatie/laravel-medialibrary": "^8.0.0",
         "spatie/laravel-translatable": "^4.3",
         "spatie/pdf-to-image": "^2.0",
+        "stevebauman/location": "^5.2",
         "yajra/laravel-datatables": "^1.0",
         "yajra/laravel-datatables-oracle": "~9.0"
     },

@@ -26,12 +26,9 @@
                 wire:model="password" autocomplete="off">
 
             <span class="help-block">
-                @php
-                // Use the correct language for the chooser tool
-                echo _i('The password should at least be 8 characters, and contain a least one uppercase character (A –
+                {{ _i('The password should at least be 8 characters, and contain a least one uppercase character (A –
                 Z), one lowercase character (a – z), one digit (0 – 9), and one Non-alphanumeric (!, @, #, $, %, ^, &,
-                ?, or *) character');
-                @endphp
+                ?, or *) character') }}
             </span>
             @error('password')
             <br />

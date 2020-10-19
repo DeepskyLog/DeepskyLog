@@ -11,8 +11,8 @@
  * @link     http://www.deepskylog.org
  */
 
-use App\Models\ObserversOld;
 use App\Models\User;
+use App\Models\ObserversOld;
 use Illuminate\Database\Seeder;
 
 /**
@@ -71,7 +71,7 @@ class UsersTableSeeder extends Seeder
             }
 
             [$year, $month, $day, $hour, $minute]
-                = sscanf($accountSingle->registrationDate, '%4d%2d%2d %2d:%2d');
+                  = sscanf($accountSingle->registrationDate, '%4d%2d%2d %2d:%2d');
             $date = date(
                 'Y-m-d H:i:s',
                 mktime($hour, $minute, 0, $month, $day, $year)
@@ -90,6 +90,18 @@ class UsersTableSeeder extends Seeder
                 $atlas = $accountSingle->standardAtlasCode;
             }
 
+            if ($accountSingle->stdlocation == 0) {
+                $stdlocation = null;
+            } else {
+                $stdlocation = $accountSingle->stdlocation;
+            }
+
+            if ($accountSingle->stdtelescope == 0) {
+                $stdtelescope = null;
+            } else {
+                $stdtelescope = $accountSingle->stdtelescope;
+            }
+
             if ($accountSingle->id !== 'vvs04478Admin'
                 && $accountSingle->id !== 'evdjadmin'
                 && $accountSingle->id !== 'TomC_developer'
@@ -99,35 +111,35 @@ class UsersTableSeeder extends Seeder
             ) {
                 $user = User::create(
                     [
-                        'username' => $accountSingle->id,
-                        'name' => $name,
-                        'email' => $accountSingle->email,
-                        'email_verified_at' => $date,
-                        'type' => $type,
-                        'stdlocation' => $accountSingle->stdlocation,
-                        'stdtelescope' => $accountSingle->stdtelescope,
-                        'language' => $language,
-                        'icqname' => $accountSingle->icqname,
+                        'username'            => $accountSingle->id,
+                        'name'                => $name,
+                        'email'               => $accountSingle->email,
+                        'email_verified_at'   => $date,
+                        'type'                => $type,
+                        'stdlocation'         => $stdlocation,
+                        'stdtelescope'        => $stdtelescope,
+                        'language'            => $language,
+                        'icqname'             => $accountSingle->icqname,
                         'observationlanguage' => $accountSingle->observationlanguage,
-                        'standardAtlasCode' => $atlas,
-                        'fstOffset' => $accountSingle->fstOffset,
-                        'copyright' => $accountSingle->copyright,
-                        'overviewdsos' => $accountSingle->overviewdsos,
-                        'lookupdsos' => $accountSingle->lookupdsos,
-                        'detaildsos' => $accountSingle->detaildsos,
-                        'overviewstars' => $accountSingle->overviewstars,
-                        'lookupstars' => $accountSingle->lookupstars,
-                        'detailstars' => $accountSingle->detailstars,
-                        'atlaspagefont' => $accountSingle->atlaspagefont,
-                        'photosize1' => $accountSingle->photosize1,
-                        'overviewFoV' => $accountSingle->overviewFoV,
-                        'photosize2' => $accountSingle->photosize2,
-                        'lookupFoV' => $accountSingle->lookupFoV,
-                        'detailFoV' => $accountSingle->detailFoV,
-                        'sendMail' => $accountSingle->sendMail,
-                        'version' => $accountSingle->version,
-                        'showInches' => $accountSingle->showInches,
-                        'created_at' => $date,
+                        'standardAtlasCode'   => $atlas,
+                        'fstOffset'           => $accountSingle->fstOffset,
+                        'copyright'           => $accountSingle->copyright,
+                        'overviewdsos'        => $accountSingle->overviewdsos,
+                        'lookupdsos'          => $accountSingle->lookupdsos,
+                        'detaildsos'          => $accountSingle->detaildsos,
+                        'overviewstars'       => $accountSingle->overviewstars,
+                        'lookupstars'         => $accountSingle->lookupstars,
+                        'detailstars'         => $accountSingle->detailstars,
+                        'atlaspagefont'       => $accountSingle->atlaspagefont,
+                        'photosize1'          => $accountSingle->photosize1,
+                        'overviewFoV'         => $accountSingle->overviewFoV,
+                        'photosize2'          => $accountSingle->photosize2,
+                        'lookupFoV'           => $accountSingle->lookupFoV,
+                        'detailFoV'           => $accountSingle->detailFoV,
+                        'sendMail'            => $accountSingle->sendMail,
+                        'version'             => $accountSingle->version,
+                        'showInches'          => $accountSingle->showInches,
+                        'created_at'          => $date,
                     ]
                 );
                 $user->setMd5Password($accountSingle->password);
