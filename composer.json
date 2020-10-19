@@ -82,11 +82,5 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ]
-    },
-    "repositories": {
-        "local": {
-            "type": "path",
-            "url": "../laravel-astronomy-library"
-        }
     }
 }
