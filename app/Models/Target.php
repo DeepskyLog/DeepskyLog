@@ -460,7 +460,7 @@ class Target extends Model
         $date       = Carbon::createFromFormat('d/m/Y', $datestr);
         $date->hour = 12;
 
-        if (Auth::user()->stdlocation) {
+        if (!Auth::guest() && Auth::user()->stdlocation) {
             if ($this->_location == null) {
                 $this->_location = \App\Models\Location::where(
                     'id',
@@ -488,76 +488,78 @@ class Target extends Model
             $this->_target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
         }
 
-        if (Auth::user()->stdlocation && Auth::user()->stdtelescope) {
-            if ($this->isNonSolarSystem() || $this->isSolarSystem()) {
-                // Calculate the ephemerids for the target
-                $this->_target->calculateEphemerides(
-                    $geo_coords,
-                    $greenwichSiderialTime,
-                    $deltaT
-                );
+        if (!Auth::guest()) {
+            if (Auth::user()->stdlocation && Auth::user()->stdtelescope) {
+                if ($this->isNonSolarSystem() || $this->isSolarSystem()) {
+                    // Calculate the ephemerids for the target
+                    $this->_target->calculateEphemerides(
+                        $geo_coords,
+                        $greenwichSiderialTime,
+                        $deltaT
+                    );
 
-                if ($this->_target->getMaxHeight()->getCoordinate() < 0.0) {
-                    $popup[0] = sprintf(
-                        _i('%s does not rise above horizon'),
-                        $this->target_name
-                    );
-                    $popup[2] = $popup[0];
-                } elseif (!$this->_target->getRising()) {
-                    $popup[0] = sprintf(
-                        _i('%s is circumpolar'),
-                        $this->target_name
-                    );
-                    $popup[2] = $popup[0];
-                } else {
-                    $popup[0] = sprintf(
-                        _i('%s rises at %s in %s on ')
+                    if ($this->_target->getMaxHeight()->getCoordinate() < 0.0) {
+                        $popup[0] = sprintf(
+                            _i('%s does not rise above horizon'),
+                            $this->target_name
+                        );
+                        $popup[2] = $popup[0];
+                    } elseif (!$this->_target->getRising()) {
+                        $popup[0] = sprintf(
+                            _i('%s is circumpolar'),
+                            $this->target_name
+                        );
+                        $popup[2] = $popup[0];
+                    } else {
+                        $popup[0] = sprintf(
+                            _i('%s rises at %s in %s on ')
                                 . $date->isoFormat('LL'),
-                        $this->target_name,
-                        $this->_target->getRising()
+                            $this->target_name,
+                            $this->_target->getRising()
                                 ->timezone($location->timezone)->format('H:i'),
-                        $location->target_name
-                    );
-                    $popup[2] = sprintf(
-                        _i('%s sets at %s in %s on ')
+                            $location->target_name
+                        );
+                        $popup[2] = sprintf(
+                            _i('%s sets at %s in %s on ')
                                 . $date->isoFormat('LL'),
-                        $this->target_name,
-                        $this->_target->getSetting()
+                            $this->target_name,
+                            $this->_target->getSetting()
                                 ->timezone($location->timezone)->format('H:i'),
-                        $location->target_name
-                    );
-                }
-                $popup[1] = sprintf(
-                    _i('%s transits at %s in %s on ')
+                            $location->target_name
+                        );
+                    }
+                    $popup[1] = sprintf(
+                        _i('%s transits at %s in %s on ')
                             . $date->isoFormat('LL'),
-                    $this->target_name,
-                    $this->_target->getTransit()
+                        $this->target_name,
+                        $this->_target->getTransit()
                             ->timezone($location->timezone)->format('H:i'),
-                    $location->target_name
-                );
-
-                if ($this->_target->getMaxHeightAtNight()->getCoordinate() < 0) {
-                    $popup[3] = sprintf(
-                        _i('%s does not rise above horizon in %s on ')
-                                . $date->isoFormat('LL'),
-                        $this->target_name,
-                        $location->target_name,
-                        $datestr
+                        $location->target_name
                     );
-                } else {
-                    $popup[3] = sprintf(
-                        _i('%s reaches an altitude of %s in %s on ')
+
+                    if ($this->_target->getMaxHeightAtNight()->getCoordinate() < 0) {
+                        $popup[3] = sprintf(
+                            _i('%s does not rise above horizon in %s on ')
                                 . $date->isoFormat('LL'),
-                        $this->target_name,
-                        trim(
-                        $this->_target->getMaxHeightAtNight()
+                            $this->target_name,
+                            $location->target_name,
+                            $datestr
+                        );
+                    } else {
+                        $popup[3] = sprintf(
+                            _i('%s reaches an altitude of %s in %s on ')
+                                . $date->isoFormat('LL'),
+                            $this->target_name,
+                            trim(
+                                $this->_target->getMaxHeightAtNight()
                                     ->convertToDegrees()
-                    ),
-                        $location->target_name,
-                    );
-                }
+                            ),
+                            $location->target_name,
+                        );
+                    }
 
-                $this->_popup = $popup;
+                    $this->_popup = $popup;
+                }
             }
         }
     }
