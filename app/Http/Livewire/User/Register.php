@@ -50,7 +50,7 @@ class Register extends Component
 
         $this->observationlanguage = LaravelGettext::getLocaleLanguage();
         $this->language            = LaravelGettext::getLocale();
-        $this->country             = Location::get(trim(shell_exec('dig +short myip.opendns.com @resolver1.opendns.com')))->countryCode;
+        $this->country             = Location::get(\Request::ip())->countryCode;
     }
 
     /**
