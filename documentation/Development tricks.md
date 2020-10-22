@@ -191,11 +191,19 @@ For the dropdown menus, we use choices.js. For selections with multiple inputs, 
 <x-input.selectmultiple prettyname="modelprettyname" :options="$array" name=recipients[] />
 ```
 
+For a selection with a single input, the options shoud be given as a string, containing the html code for the options.  The selection can be added the following way:
+
+```blade
+<div x-data=''>
+    <x-input.select id="quickpickobject" :options="$objects" />
+</div>
+```
+
 For a selection with a single input, the options shoud be given as a string, containing the html code for the options.  Livewire is expected.  The selection can be added the following way:
 
 ```blade
 <div x-data=''>
-    <x-input.select wire:model="eyepiece" prettyname="myeyepiece" :options="$allEyepieces" selected="('eyepiece')" />
+    <x-input.select-live-wire wire:model="eyepiece" prettyname="myeyepiece" :options="$allEyepieces" selected="('eyepiece')" />
 </div>
 ```
 

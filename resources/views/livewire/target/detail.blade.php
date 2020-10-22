@@ -12,14 +12,14 @@
         $allLocations = App\Models\Location::getLocationOptions();
         @endphp
         <div x-data=''>
-            <x-input.select wire:model="instrument" prettyname="myinstrument" :options="$allInstruments"
+            <x-input.select-live-wire wire:model="instrument" prettyname="myinstrument" :options="$allInstruments"
                 selected="('instrument')" />
         </div>
 
         {{ _i('at') }}
 
         <div x-data=''>
-            <x-input.select wire:model="location" prettyname="mylocation" :options="$allLocations"
+            <x-input.select-live-wire wire:model="location" prettyname="mylocation" :options="$allLocations"
                 selected="('location')" />
         </div>
         <br />
@@ -67,7 +67,7 @@
         <br />
         <br /><br />
 
-        <table class="table table-sm table-striped table-hover">
+        <table class="table table-sm table-striped">
             <tr>
                 <td colspan="3">{{ _i("Name") }}</td>
                 <td colspan="3">{{ $target->target_name }}</td>
@@ -253,8 +253,8 @@
                 <td colspan="3">Aladin<br /><br />
                     @auth
                     <div x-data=''>
-                        <x-input.select wire:model="instrument2" prettyname="myinstrument2" :options="$allInstruments"
-                            selected="('instrument2')" />
+                        <x-input.select-live-wire wire:model="instrument2" prettyname="myinstrument2"
+                            :options="$allInstruments" selected="('instrument2')" />
                     </div>
                     <br />
                     @php
@@ -263,12 +263,12 @@
                     @endphp
                     @if (!$disabled)
                     <div x-data=''>
-                        <x-input.select wire:model="eyepiece" prettyname="myeyepiece" :options="$allEyepieces"
+                        <x-input.select-live-wire wire:model="eyepiece" prettyname="myeyepiece" :options="$allEyepieces"
                             selected="('eyepiece')" />
                     </div>
                     <br />
                     <div x-data=''>
-                        <x-input.select wire:model="lens" prettyname="mylens" :options="$allLenses"
+                        <x-input.select-live-wire wire:model="lens" prettyname="mylens" :options="$allLenses"
                             selected="('lens')" />
                     </div>
                     @endif
