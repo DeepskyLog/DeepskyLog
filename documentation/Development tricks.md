@@ -13,7 +13,7 @@
     - [Using policies](#using-policies)
     - [Checking user permissions](#checking-user-permissions)
   - [Tests](#tests)
-  - [Select library](#select-library)
+  - [Choices library](#choices-library)
   - [Datatables](#datatables)
 
 <!-- /code_chunk_output -->
@@ -183,9 +183,21 @@ The tests are located in the test directory. They can be executed using:
 phpunit
 ```
 
-## Select library
+## Choices library
 
-For the dropdown menus, we use select2. Nothing has to be done for enabling select2.
+For the dropdown menus, we use choices.js. For selections with multiple inputs, the options should be given as an array.  The selection can be added the following way:
+
+```blade
+<x-input.selectmultiple prettyname="modelprettyname" :options="$array" name=recipients[] />
+```
+
+For a selection with a single input, the options shoud be given as a string, containing the html code for the options.  Livewire is expected.  The selection can be added the following way:
+
+```blade
+<div x-data=''>
+    <x-input.select wire:model="eyepiece" prettyname="myeyepiece" :options="$allEyepieces" selected="('eyepiece')" />
+</div>
+```
 
 ## Datatables
 

@@ -92,7 +92,6 @@ class Detail extends Component
         return view('livewire.target.detail', ['target' => $this->object]);
     }
 
-    // TODO: Change stylesheet (certainly for the dark theme)
     // TODO: Use Choices everywhere instead of select2
     // TODO: Remove select2
 }
