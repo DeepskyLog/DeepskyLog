@@ -558,5 +558,9 @@ tr.details td.details-control {
 }
 
 a, a:visited, a:focus {
-    color:lightskyblue;
+    color: #3490dc;
+}
+
+.btn-primary {
+    color: #fff !important;
 }

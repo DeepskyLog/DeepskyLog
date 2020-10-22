@@ -55,195 +55,6 @@
     color: #ececec;
 }
 
-[data-theme="dark"] .select2-dropdown {
-    background-color: #535353;
-    border: 1px solid #808080;
-}
-
-[data-theme="dark"] .select2-close-mask {
-    background-color: #000;
-}
-
-[data-theme="dark"] .select2-container--default .select2-selection--single {
-    background-color: #999999;
-    border: 1px solid #8e8e8e;
-}
-
-[data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: #222222;
-}
-
-[data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__placeholder {
-    color: #ffffff;
-}
-
-[data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__arrow b {
-    border-color: #ffffff transparent transparent transparent;
-}
-
-[data-theme="dark"] .select2-container--default.select2-container--disabled .select2-selection--single {
-    background-color: #eee;
-}
-
-[data-theme="dark"] .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
-    border-color: transparent transparent #888 transparent;
-}
-
-[data-theme="dark"] .select2-container--default .select2-selection--multiple {
-    background-color: #535353;
-    border: 1px solid #ffffff;
-}
-
-[data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
-    color: #ffffff;
-}
-
-[data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-}
-
-[data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-    color: #999;
-}
-
-[data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
-    color: #333
-}
-
-[data-theme="dark"] .select2-container--default.select2-container--focus .select2-selection--multiple {
-    border: solid #000 1px;
-}
-
-[data-theme="dark"] .select2-container--default.select2-container--disabled .select2-selection--multiple {
-    background-color: #eee;
-}
-
-[data-theme="dark"] .select2-container--default .select2-search--dropdown .select2-search__field {
-    border: 1px solid #808080;
-    background-color: #2d2d2d;
-}
-
-[data-theme="dark"] .select2-container--default .select2-results__option[aria-disabled=true] {
-    color: #999
-}
-
-[data-theme="dark"] .select2-container--default .select2-results__option[aria-selected=true] {
-    background-color: #2d2d2d;
-}
-
-[data-theme="dark"] .select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background-color: #b7b7b7;
-    color: #222222;
-}
-
-[data-theme="dark"] .select2-container--classic .select2-selection--single {
-    background-color: #f7f7f7;
-    border: 1px solid #808080;
-    background-image: -webkit-linear-gradient(top, #fff 50%, #eee 100%);
-    background-image: -o-linear-gradient(top, #fff 50%, #eee 100%);
-    background-image: linear-gradient(to bottom, #fff 50%, #eee 100%);
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFEEEEEE', GradientType=0);
-}
-
-[data-theme="dark"] .select2-container--classic .select2-selection--single:focus {
-    border: 1px solid #b7b7b7;
-}
-
-[data-theme="dark"] .select2-container--classic .select2-selection--single .select2-selection__rendered {
-    color: #444;
-}
-
-[data-theme="dark"] .select2-container--classic .select2-selection--single .select2-selection__placeholder {
-    color: #999
-}
-
-[data-theme="dark"] .select2-container--classic .select2-selection--single .select2-selection__arrow {
-    background-color: #2d2d2d;
-    border-left: 1px solid #808080;
-    background-image: -webkit-linear-gradient(top, #eee 50%, #ccc 100%);
-    background-image: -o-linear-gradient(top, #eee 50%, #ccc 100%);
-    background-image: linear-gradient(to bottom, #eee 50%, #ccc 100%);
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#FFEEEEEE', endColorstr='#FFCCCCCC', GradientType=0)
-}
-
-[data-theme="dark"] .select2-container--classic .select2-selection--single .select2-selection__arrow b {
-    border-color: #888 transparent transparent transparent;
-}
-
-[data-theme="dark"] .select2-container--classic[dir="rtl"] .select2-selection--single .select2-selection__arrow {
-    border-right: 1px solid #808080;
-}
-
-[data-theme="dark"] .select2-container--classic.select2-container--open .select2-selection--single {
-    border: 1px solid #b7b7b7;
-}
-
-[data-theme="dark"] .select2-container--classic.select2-container--open .select2-selection--single .select2-selection__arrow b {
-    border-color: transparent transparent #888 transparent;
-}
-
-[data-theme="dark"] .select2-container--classic.select2-container--open.select2-container--above .select2-selection--single {
-    background-image: -webkit-linear-gradient(top, #fff 0%, #eee 50%);
-    background-image: -o-linear-gradient(top, #fff 0%, #eee 50%);
-    background-image: linear-gradient(to bottom, #fff 0%, #eee 50%);
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFEEEEEE', GradientType=0)
-}
-
-[data-theme="dark"] .select2-container--classic.select2-container--open.select2-container--below .select2-selection--single {
-    background-image: -webkit-linear-gradient(top, #eee 50%, #fff 100%);
-    background-image: -o-linear-gradient(top, #eee 50%, #fff 100%);
-    background-image: linear-gradient(to bottom, #eee 50%, #fff 100%);
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#FFEEEEEE', endColorstr='#FFFFFFFF', GradientType=0)
-}
-
-[data-theme="dark"] .select2-container--classic .select2-selection--multiple {
-    background-color: #535353;
-    border: 1px solid #808080;
-}
-
-[data-theme="dark"] .select2-container--classic .select2-selection--multiple:focus {
-    border: 1px solid #b7b7b7;
-}
-
-[data-theme="dark"] .select2-container--classic .select2-selection--multiple .select2-selection__choice {
-    background-color: #e4e4e4;
-    border: 1px solid #808080;
-}
-
-[data-theme="dark"] .select2-container--classic .select2-selection--multiple .select2-selection__choice__remove {
-    color: #888;
-}
-
-[data-theme="dark"] .select2-container--classic .select2-selection--multiple .select2-selection__choice__remove:hover {
-    color: #555
-}
-
-[data-theme="dark"] .select2-container--classic.select2-container--open .select2-selection--multiple {
-    border: 1px solid #b7b7b7;
-}
-
-[data-theme="dark"] .select2-container--classic .select2-search--dropdown .select2-search__field {
-    border: 1px solid #808080;
-}
-
-[data-theme="dark"] .select2-container--classic .select2-dropdown {
-    background-color: #fff;
-}
-
-[data-theme="dark"] .select2-container--classic .select2-results__option[aria-disabled=true] {
-    color: grey
-}
-
-[data-theme="dark"] .select2-container--classic .select2-results__option--highlighted[aria-selected] {
-    background-color: #3875d7;
-    color: #fff;
-}
-
-[data-theme="dark"] .select2-container--classic.select2-container--open .select2-dropdown {
-    border-color: #b7b7b7;
-}
-
 [data-theme="dark"] .btn-success {
     color: #393939;
     background-color: #b7b7b7;
@@ -679,23 +490,26 @@
     filter: invert(100%) sepia(100%) saturate(1%) hue-rotate(87deg) brightness(108%) contrast(101%);
 }
 
-[data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: #999;
-    border: 1px solid #cccccc;
-}
-
-[data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-    color: #fff;
-}
-
 [data-theme="dark"] div.gm-style {
     color: black;
-}
-
-[data-theme="dark"] .select2-container--default.select2-container--disabled .select2-selection--single {
-    background-color: #666;
 }
 
 [data-theme="dark"] .choices__inner {
     background-color: #535353;
 }
+
+[data-theme="dark"] .choices__list--dropdown {
+    background-color: #535353;
+}
+
+[data-theme="dark"] .choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background-color: black;
+}
+
+[data-theme="dark"] .choices__input {
+    background-color: #535353;
+}
+
+[data-theme="dark"] .choices[data-type*='select-one'] .choices__input {
+    background-color: black;
+  }
