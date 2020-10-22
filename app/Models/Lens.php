@@ -16,8 +16,8 @@ namespace App\Models;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
@@ -95,27 +95,30 @@ class Lens extends Model implements HasMedia
     /**
      * Return all lenses for use in a selection.
      *
-     * @return None the method print the option tags
+     * @return String the option tags
      */
-    public static function getLensOptions()
+    public static function getLensOptions(): string
     {
         $lenses = self::where(
             ['user_id' => Auth::user()->id]
         )->where(['active' => 1])->pluck('id', 'name');
 
+        $toReturn = '';
+
         if (count($lenses) > 0) {
-            echo '<option>' . _i('No default lens') . '</option>';
+            $toReturn .= '<option>' . _i('No default lens') . '</option>';
 
             foreach ($lenses as $name => $id) {
                 if ($id == Auth::user()->stdlens) {
-                    echo '<option selected="selected" value="' . $id . '}}">'
+                    $toReturn .= '<option selected="selected" value="' . $id . '">'
                            . $name . '</option>';
                 } else {
-                    echo '<option value="' . $id . '}}">' . $name . '</option>';
+                    $toReturn .= '<option value="' . $id . '">' . $name . '</option>';
                 }
             }
         } else {
-            echo '<option>' . _i('Add a lens') . '</option>';
+            $toReturn .= '<option>' . _i('Add a lens') . '</option>';
         }
+        return $toReturn;
     }
 }

@@ -13,12 +13,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
@@ -90,13 +90,54 @@ class Instrument extends Model implements HasMedia
     /**
      * Return all instruments, sorted by type for use in a selection.
      *
-     * @return None the method print the optgroup and option tags
+     * @return String the optgroup and option tags
      */
-    public static function getInstrumentOptions()
+    public static function getInstrumentOptions(): string
     {
         // Loop over the instrument types and make separate groups.
         $types = DB::table('instrument_types')->get();
         $count = 0;
+
+        $toReturn = '';
+        foreach ($types as $typeid => $type) {
+            $instruments = self::where(
+                ['user_id' => Auth::user()->id]
+            )->where(['type' => $typeid])->where(['active' => 1])->pluck('id', 'name');
+
+            if (count($instruments) > 0) {
+                $toReturn .= '<optgroup label="' . _i($type->type) . '">';
+
+                foreach ($instruments as $name => $id) {
+                    $count++;
+                    if ($id == Auth::user()->stdtelescope) {
+                        $toReturn .= '<option selected="selected" value="' . $id . '">'
+                           . $name . '</option>';
+                    } else {
+                        $toReturn .= '<option value="' . $id . '">' . $name . '</option>';
+                    }
+                }
+                $toReturn .= '</optgroup>';
+            }
+        }
+
+        if ($count === 0) {
+            $toReturn = '<option>' . _i('Add an instrument') . '</option>';
+        }
+
+        return $toReturn;
+    }
+
+    /**
+     * Return all instruments, sorted by type for use in a selection.
+     *
+     * @return None the method print the optgroup and option tags
+     */
+    public static function getInstrumentOptions2()
+    {
+        // Loop over the instrument types and make separate groups.
+        $types      = DB::table('instrument_types')->get();
+        $count      = 0;
+        $instrument = [];
 
         foreach ($types as $typeid => $type) {
             $instruments = self::where(
@@ -104,24 +145,17 @@ class Instrument extends Model implements HasMedia
             )->where(['type' => $typeid])->where(['active' => 1])->pluck('id', 'name');
 
             if (count($instruments) > 0) {
-                echo '<optgroup label="' . _i($type->type) . '">';
+//                echo '<optgroup label="' . _i($type->type) . '">';
 
                 foreach ($instruments as $name => $id) {
-                    $count++;
-                    if ($id == Auth::user()->stdtelescope) {
-                        echo '<option selected="selected" value="' . $id . '}}">'
-                           . $name . '</option>';
-                    } else {
-                        echo '<option value="' . $id . '}}">' . $name . '</option>';
-                    }
+                    $array[$id] = $name;
                 }
-                echo '</optgroup>';
             }
         }
-
-        if ($count === 0) {
-            echo '<option>' . _i('Add an instrument') . '</option>';
-        }
+        return $array;
+        // if ($count === 0) {
+        //     echo '<option>' . _i('Add an instrument') . '</option>';
+        // }
     }
 
     // TODO: An instrument belongs to one or more observations.

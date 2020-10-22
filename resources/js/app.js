@@ -9,6 +9,9 @@ require('./bootstrap');
 
 require('select2');
 
+import 'alpinejs';
+const Choices = require('choices.js/public/assets/scripts/choices.js');
+
 import $ from 'jquery';
 window.$ = window.jQuery = require( 'jquery' );
 

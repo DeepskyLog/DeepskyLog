@@ -42,7 +42,7 @@ class DeepskyLogChecks
     public function handle($request, Closure $next)
     {
         $datetime = new \Carbon\Carbon();
-        $date = $datetime->format('d/m/Y');
+        $date     = $datetime->format('d/m/Y');
 
         if (!Session::has('date')) {
             Session::put('date', $date);
@@ -54,7 +54,7 @@ class DeepskyLogChecks
                 laraflash(
                     _i(
                         'Your country of residence is not set. Please set it in the %sobserver settings%s',
-                        '<a href="users/'.Auth::user()->id.'/settings">',
+                        '<a href="/users/' . Auth::user()->id . '/settings">',
                         '</a>.'
                     )
                 )->warning();
@@ -72,21 +72,21 @@ class DeepskyLogChecks
                 laraflash(
                     _i(
                         'You did not enter information about yourself. Please set it in the %sobserver settings%s',
-                        '<a href="users/'.Auth::user()->id.'/settings">',
+                        '<a href="/users/' . Auth::user()->id . '/settings">',
                         '</a>.'
                     )
                 )->warning();
             }
 
             // Check if there are eyepieces without a brand or a type
-            $eyepieces = Auth::user()->eyepieces;
+            $eyepieces       = Auth::user()->eyepieces;
             $eyepieceToCheck = '';
-            $eyepieceId = 0;
+            $eyepieceId      = 0;
 
             foreach ($eyepieces as $eyepiece) {
                 if ($eyepiece->brand == '' || $eyepiece->type == '') {
                     $eyepieceToCheck = $eyepiece->name;
-                    $eyepieceId = $eyepiece->id;
+                    $eyepieceId      = $eyepiece->id;
                 }
             }
             if ($eyepieceToCheck != '') {
@@ -94,8 +94,8 @@ class DeepskyLogChecks
                     _i(
                         'At least one of your eyepieces (%s) does not have a brand or a type.
                         Please add the needed information in the %seyepiece page%s',
-                        '<a href="/eyepiece/'.$eyepieceId.'">'
-                        .$eyepieceToCheck.'</a>',
+                        '<a href="/eyepiece/' . $eyepieceId . '">'
+                        . $eyepieceToCheck . '</a>',
                         '<a href="/eyepiece/">',
                         '</a>.'
                     )

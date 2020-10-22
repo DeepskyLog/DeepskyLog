@@ -16,6 +16,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use RuntimeException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use deepskylog\AstronomyLibrary\Time;
@@ -76,7 +77,7 @@ class Target extends Model
     public function getContrastAttribute(): string
     {
         if (!auth()->guest()) {
-            if (count(auth()->user()->instruments) > 0) {
+            if (auth()->user()->stdtelescope) {
                 if (!isset($this->_contrast)) {
                     $this->_contrast = new \App\Models\Contrast($this);
                 }
@@ -97,7 +98,7 @@ class Target extends Model
     public function getContrastTypeAttribute(): string
     {
         if (!auth()->guest()) {
-            if (count(auth()->user()->instruments) > 0) {
+            if (auth()->user()->stdtelescope) {
                 if (!isset($this->_contrast)) {
                     $this->_contrast = new \App\Models\Contrast($this);
                 }
@@ -117,7 +118,7 @@ class Target extends Model
     public function getContrastPopupAttribute(): string
     {
         if (!auth()->guest()) {
-            if (count(auth()->user()->instruments) > 0) {
+            if (auth()->user()->stdtelescope) {
                 if (!isset($this->_contrast)) {
                     $this->_contrast = new \App\Models\Contrast($this);
                 }
@@ -138,7 +139,7 @@ class Target extends Model
     public function getPrefMagAttribute(): string
     {
         if (!auth()->guest()) {
-            if (count(auth()->user()->instruments) > 0) {
+            if (auth()->user()->stdtelescope) {
                 if (!isset($this->_contrast)) {
                     $this->_contrast = new \App\Models\Contrast($this);
                 }
@@ -158,7 +159,7 @@ class Target extends Model
     public function getPrefMagEasyAttribute(): string
     {
         if (!auth()->guest()) {
-            if (count(auth()->user()->instruments) > 0) {
+            if (auth()->user()->stdtelescope) {
                 if (!isset($this->_contrast)) {
                     $this->_contrast = new \App\Models\Contrast($this);
                 }
@@ -177,15 +178,23 @@ class Target extends Model
      */
     public function getRiseAttribute(): string
     {
-        if (!$this->_target) {
-            $this->getRiseSetTransit();
-        }
-
         $rise = '-';
+
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
-                $rise = $this->_target->getRising() ? $this->_target->getRising()
-                    ->timezone($this->_location->timezone)->format('H:i') : '-';
+                if (!$this->_target) {
+                    $this->getRiseSetTransit();
+                }
+            }
+            if (Auth::user()->stdlocation && Auth::user()->stdtelescope) {
+                try {
+                    $riseObj = $this->_target->getRising();
+                    if ($riseObj) {
+                        $rise = $riseObj->timezone($this->_location->timezone)->format('H:i');
+                    }
+                } catch (RuntimeException $ex) {
+                    $rise = '-';
+                }
             }
         }
 
@@ -442,6 +451,10 @@ class Target extends Model
      */
     public function getRiseSetTransit(): void
     {
+        if (!$this->_observationType) {
+            $this->_setObservationType();
+        }
+
         if ($this->_observationType['type'] == 'sun') {
             $this->_target = new \deepskylog\AstronomyLibrary\Targets\Sun();
         } else {
@@ -489,7 +502,7 @@ class Target extends Model
         }
 
         if (!Auth::guest()) {
-            if (Auth::user()->stdlocation && Auth::user()->stdtelescope) {
+            if (Auth::user()->stdlocation) {
                 if ($this->isNonSolarSystem() || $this->isSolarSystem()) {
                     // Calculate the ephemerids for the target
                     $this->_target->calculateEphemerides(
@@ -497,7 +510,6 @@ class Target extends Model
                         $greenwichSiderialTime,
                         $deltaT
                     );
-
                     if ($this->_target->getMaxHeight()->getCoordinate() < 0.0) {
                         $popup[0] = sprintf(
                             _i('%s does not rise above horizon'),
@@ -557,7 +569,6 @@ class Target extends Model
                             $location->target_name,
                         );
                     }
-
                     $this->_popup = $popup;
                 }
             }
@@ -886,12 +897,15 @@ class Target extends Model
                 $location->latitude
             );
 
-            $target = new
+            if ($this->_observationType['type'] == 'sun') {
+                $target     = new \deepskylog\AstronomyLibrary\Targets\Sun();
+            } else {
+                $target = new
                 \deepskylog\AstronomyLibrary\Targets\Target();
-            $equa = new EquatorialCoordinates($this->ra, $this->decl);
-
-            // Add equatorial coordinates to the target.
-            $target->setEquatorialCoordinates($equa);
+                $equa = new EquatorialCoordinates($this->ra, $this->decl);
+                // Add equatorial coordinates to the target.
+                $target->setEquatorialCoordinates($equa);
+            }
 
             for ($i = 1; $i < 13; ++$i) {
                 for ($j = 1; $j < 16; $j = $j + 14) {
@@ -908,11 +922,24 @@ class Target extends Model
                     $deltaT = Time::deltaT($date);
 
                     // Calculate the ephemerids for the target
-                    $target->calculateEphemerides(
-                        $geo_coords,
-                        $greenwichSiderialTime,
-                        $deltaT
-                    );
+                    if ($this->_observationType['type'] == 'sun') {
+                        $deltaT     = Time::deltaT($date);
+
+                        $nutation = Time::nutation($deltaT);
+
+                        $target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
+                        $target->calculateEphemerides(
+                            $geo_coords,
+                            $greenwichSiderialTime,
+                            $deltaT
+                        );
+                    } else {
+                        $target->calculateEphemerides(
+                            $geo_coords,
+                            $greenwichSiderialTime,
+                            $deltaT
+                        );
+                    }
 
                     $nightephemerides = date_sun_info(
                         $date->getTimestamp(),

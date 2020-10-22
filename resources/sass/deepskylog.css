@@ -556,3 +556,7 @@ tr.details td.details-control {
     float:right;
     margin: 0 10px 0 0;
 }
+
+a, a:visited, a:focus {
+    color:lightskyblue;
+}

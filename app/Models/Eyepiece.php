@@ -16,8 +16,8 @@ namespace App\Models;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
@@ -115,27 +115,30 @@ class Eyepiece extends Model implements HasMedia
     /**
      * Return all eyepieces for use in a selection.
      *
-     * @return None the method print the optgroup and option tags
+     * @return String the optgroup and option tags
      */
-    public static function getEyepieceOptions()
+    public static function getEyepieceOptions(): string
     {
         $eyepieces = self::where(
             ['user_id' => Auth::user()->id]
         )->where(['active' => 1])->pluck('id', 'name');
 
+        $toReturn = '';
+
         if (count($eyepieces) > 0) {
-            echo '<option>' . _i('No default eyepiece') . '</option>';
+            $toReturn .= '<option>' . _i('No default eyepiece') . '</option>';
 
             foreach ($eyepieces as $name => $id) {
                 if ($id == Auth::user()->stdeyepiece) {
-                    echo '<option selected="selected" value="' . $id . '}}">'
+                    $toReturn .= '<option selected="selected" value="' . $id . '">'
                            . $name . '</option>';
                 } else {
-                    echo '<option value="' . $id . '}}">' . $name . '</option>';
+                    $toReturn .= '<option value="' . $id . '">' . $name . '</option>';
                 }
             }
         } else {
-            echo '<option>' . _i('Add an eyepiece') . '</option>';
+            $toReturn .= '<option>' . _i('Add an eyepiece') . '</option>';
         }
+        return $toReturn;
     }
 }

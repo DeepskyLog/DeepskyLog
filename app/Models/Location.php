@@ -17,9 +17,9 @@ use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 
@@ -83,9 +83,9 @@ class Location extends Model implements HasMedia
     /**
      * Return all locations, sorted by country for use in a selection.
      *
-     * @return None the method print the optgroup and option tags
+     * @return string the optgroup and option tags
      */
-    public static function getLocationOptions()
+    public static function getLocationOptions(): string
     {
         // Select all the countries of the locations of the user
         $countries = self::where(
@@ -99,11 +99,12 @@ class Location extends Model implements HasMedia
             );
         }
 
+        $toReturn = '';
         if (isset($translatedCountries) && count($translatedCountries) > 0) {
             ksort($translatedCountries);
 
             foreach ($translatedCountries as $countryid => $countryname) {
-                echo '<optgroup label="' . $countryname . '">';
+                $toReturn .= '<optgroup label="' . $countryname . '">';
 
                 $locations = self::where(
                     ['user_id' => Auth::user()->id]
@@ -112,18 +113,19 @@ class Location extends Model implements HasMedia
 
                 foreach ($locations as $name => $id) {
                     if ($id == Auth::user()->stdlocation) {
-                        echo '<option selected="selected" value="' . $id . '">'
+                        $toReturn .= '<option selected="selected" value="' . $id . '">'
                            . $name . '</option>';
                     } else {
-                        echo '<option value="' . $id . '">' . $name . '</option>';
+                        $toReturn .= '<option value="' . $id . '">' . $name . '</option>';
                     }
                 }
 
-                echo '</optgroup>';
+                $toReturn .= '</optgroup>';
             }
         } else {
-            echo '<option>' . _i('Add a location') . '</option>';
+            $toReturn .= '<option>' . _i('Add a location') . '</option>';
         }
+        return $toReturn;
     }
 
     /**
@@ -145,9 +147,9 @@ class Location extends Model implements HasMedia
      */
     public function getLengthOfNightPlot(): string
     {
-        $coords = new GeographicalCoordinates($this->longitude, $this->latitude);
-        $datestr = Session::get('date');
-        $date = Carbon::createFromFormat('d/m/Y', $datestr);
+        $coords     = new GeographicalCoordinates($this->longitude, $this->latitude);
+        $datestr    = Session::get('date');
+        $date       = Carbon::createFromFormat('d/m/Y', $datestr);
         $date->hour = 12;
 
         $astrolib = new AstronomyLibrary($date, $coords);
@@ -162,8 +164,8 @@ class Location extends Model implements HasMedia
      */
     public function sunriseSetTransit(): string
     {
-        $datestr = Session::get('date');
-        $date = Carbon::createFromFormat('d/m/Y', $datestr);
+        $datestr    = Session::get('date');
+        $date       = Carbon::createFromFormat('d/m/Y', $datestr);
         $date->hour = 12;
 
         $sun_info = date_sun_info(
@@ -205,8 +207,8 @@ class Location extends Model implements HasMedia
      */
     public function civilTwilight(): string
     {
-        $datestr = Session::get('date');
-        $date = Carbon::createFromFormat('d/m/Y', $datestr);
+        $datestr    = Session::get('date');
+        $date       = Carbon::createFromFormat('d/m/Y', $datestr);
         $date->hour = 12;
 
         $sun_info = date_sun_info(
@@ -245,8 +247,8 @@ class Location extends Model implements HasMedia
      */
     public function nauticalTwilight(): string
     {
-        $datestr = Session::get('date');
-        $date = Carbon::createFromFormat('d/m/Y', $datestr);
+        $datestr    = Session::get('date');
+        $date       = Carbon::createFromFormat('d/m/Y', $datestr);
         $date->hour = 12;
 
         $sun_info = date_sun_info(
@@ -285,8 +287,8 @@ class Location extends Model implements HasMedia
      */
     public function astronomicalTwilight(): string
     {
-        $datestr = Session::get('date');
-        $date = Carbon::createFromFormat('d/m/Y', $datestr);
+        $datestr    = Session::get('date');
+        $date       = Carbon::createFromFormat('d/m/Y', $datestr);
         $date->hour = 12;
 
         $sun_info = date_sun_info(
