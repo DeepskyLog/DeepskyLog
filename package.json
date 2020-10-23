@@ -10,22 +10,22 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "bootstrap": "^4.5.3",
         "cross-env": "^7.0.2",
         "eslint": "^7.11.0",
         "eslint-config-google": "^0.14.0",
-        "jquery": "^3.5.1",
         "laravel-mix": "^5.0.7",
         "lodash": "^4.17.19",
         "resolve-url-loader": "^3.1.2",
         "sass": "^1.27.0",
-        "sass-loader": "^10.0.3",
+        "sass-loader": "^10.0.4",
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
-        "alpinejs": "^2.7.1",
+        "bootstrap": "^4.5.3",
+        "alpinejs": "^2.7.2",
         "axios": "^0.20.0",
         "bootstrap-fileinput": "^5.1.2",
+        "jquery": "^3.5.1",
         "bootstrap-icons": "^1.0.0",
         "choices.js": "^9.0.1",
         "datatables.net": "^1.10.22",
@@ -35,13 +35,11 @@
         "datatables.net-colreorder-bs4": "^1.5.2",
         "datatables.net-plugins": "^1.10.20",
         "fibers": "^5.0",
-        "highcharts": "^8.1.2",
+        "highcharts": "^8.2.2",
         "jquery-ui": "^1.12.1",
         "jszip": "^3.5.0",
         "lity": "^2.4.1",
         "pdfmake": "^0.1.68",
-        "popper.js": "^1.16.1",
-        "select2": "^4.0.13",
-        "select2-bootstrap4-theme": "^1.0.0"
+        "popper.js": "^1.16.1"
     }
 }
