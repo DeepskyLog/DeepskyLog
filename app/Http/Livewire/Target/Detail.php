@@ -92,7 +92,6 @@ class Detail extends Component
         return view('livewire.target.detail', ['target' => $this->object]);
     }
 
-    // TODO: Use Choices everywhere instead of select2
-    // TODO: Error at loading of page that select2 is not found
-    // TODO: No users seens as administrator
+    // TODO: No users seen as administrator
+    // TODO: Use livewire for adding eyepiece, ...
 }

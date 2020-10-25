@@ -18,3 +18,5 @@ storage/framework/messages/
 lib/setup/databaseInfo.php
 .vscode/settings.json
 storage/media-library/
+public/js/app.js
+public/css/app.css
