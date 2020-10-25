@@ -86,15 +86,3 @@
     </div>
     @endif
 </div>
-
-@push('scripts')
-<script>
-    $(document).ready(function() {
-            $('.selectCatalog').select2();
-            $('.selectCatalog').on('change', function(e) {
-                @this.set('selected_catalog', e.target.value);
-            });
-        });
-
-</script>
-@endpush

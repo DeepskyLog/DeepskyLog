@@ -251,6 +251,7 @@
             @if ($target->isNonSolarSystem())
             <tr>
                 <td colspan="3">Aladin<br /><br />
+                    @if (count(auth()->user()->instruments) > 0)
                     @auth
                     <div x-data=''>
                         <x-input.select-live-wire wire:model="instrument2" prettyname="myinstrument2"
@@ -274,6 +275,7 @@
                     @endif
                     @endauth
                     <br />
+                    @endif
                     {{ _i("Field of view: ") }}
                     @php
                     $fovc = new deepskylog\AstronomyLibrary\Coordinates\Coordinate($target->getFov());

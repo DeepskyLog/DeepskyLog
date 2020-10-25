@@ -29,10 +29,13 @@ class Detail extends Component
             $this->location     = Auth::user()->stdlocation;
             $this->eyepiece     = Auth::user()->stdeyepiece;
             $this->lens         = Auth::user()->stdlens;
-            if (!\App\Models\Instrument::where('id', $this->instrument)->first()->fd) {
-                $this->disabled = true;
-            } else {
-                $this->disabled = false;
+
+            $this->disabled = true;
+
+            if ($this->instrument) {
+                if (\App\Models\Instrument::where('id', $this->instrument)->first()->fd) {
+                    $this->disabled = false;
+                }
             }
         }
     }
@@ -91,7 +94,4 @@ class Detail extends Component
     {
         return view('livewire.target.detail', ['target' => $this->object]);
     }
-
-    // TODO: No users seen as administrator
-    // TODO: Use livewire for adding eyepiece, ...
 }
