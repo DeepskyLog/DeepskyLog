@@ -199,12 +199,18 @@ For a selection with a single input, the options shoud be given as a string, con
 </div>
 ```
 
-For a selection with a single input, the options shoud be given as a string, containing the html code for the options.  Livewire is expected.  The selection can be added the following way:
+For a selection with a single input using livewire, the options shoud be given as a string, containing the html code for the options.  The selection can be added the following way:
 
 ```blade
 <div x-data=''>
     <x-input.select-live-wire wire:model="eyepiece" prettyname="myeyepiece" :options="$allEyepieces" selected="('eyepiece')" />
 </div>
+```
+
+If the value of the selection is not used, the selected values will jump back to the original value.  This can be solved be just showing the selection, for example:
+
+```html
+<p hidden>{{ $country }}</p>
 ```
 
 ## Datatables
