@@ -93,5 +93,6 @@ class Detail extends Component
     }
 
     // TODO: Use Choices everywhere instead of select2
-    // TODO: Remove select2
+    // TODO: Error at loading of page that select2 is not found
+    // TODO: No users seens as administrator
 }

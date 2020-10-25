@@ -40,13 +40,6 @@
 
         <livewire:scripts />
 
-        <script>
-            $(document).ready(function() {
-                $(".selection").select2({
-                });
-            });
-        </script>
-
         <script src="{{ asset('/js/dark-mode-switch.js') }}"></script>
         <script src="{{ mix("js/choices.js") }}"></script>
 

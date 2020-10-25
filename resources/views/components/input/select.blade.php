@@ -12,7 +12,8 @@
 	{{-- let selected = parseInt(@this.get{!! $attributes['selected'] !!}).toString();
 	choices.setChoiceByValue(selected); --}}
     }">
-    <select class="form-control-sm" id="{{ $attributes['id'] }}" x-ref="{{ $attributes['id'] }}">
+    <select class="form-control-sm" id="{{ $attributes['id'] }}" name="{{ $attributes['id'] }}"
+        x-ref="{{ $attributes['id'] }}">
         {!! htmlspecialchars_decode($attributes['options']) !!}
     </select>
 </div>

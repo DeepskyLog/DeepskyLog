@@ -1,3 +1,46 @@
+@php
+if (Location::get(Request::ip())) {
+$IpCountry = Location::get(Request::ip())->countryCode;
+} else {
+$IpCountry = Location::get(trim(shell_exec('dig +short myip.opendns.com @resolver1.opendns.com')))->countryCode;
+}
+
+$allCountries = '<option value="">&nbsp;</option>';
+foreach (\Countries::getList(LaravelGettext::getLocaleLanguage()) as $code => $mycountry) {
+$allCountries .= '<option ';
+if ($IpCountry == $code) {
+    $allCountries .= ' selected="selected" ';
+}
+    $allCountries .= ' value="' . $code . '">' . $mycountry . '</option>';
+}
+
+$allObservationLanguages = '';
+foreach (Languages::lookup('major', LaravelGettext::getLocaleLanguage()) as $code=>$lang) {
+$allObservationLanguages .= '<option ';
+if ($code == LaravelGettext::getLocaleLanguage()) {
+    $allObservationLanguages .= ' selected="selected" ';
+}
+$allObservationLanguages .= ' value="' . $code . '">' . ucfirst($lang) . '</option>' ;
+}
+
+$allAppLanguages = '';
+foreach(Config::get('laravel-gettext.supported-locales') as $locale) {
+$localeText = ucwords(Locale::getDisplayLanguage($locale, LaravelGettext::getLocale()));
+$allAppLanguages .= '<option ';
+if ($code == LaravelGettext::getLocale()) {
+    $allAppLanguages .= ' selected="selected" ';
+}
+    $allAppLanguages .= ' value="' . $locale . '">' . $localeText . '</option>';
+}
+
+$allLicenses = '';
+foreach ($licenses as $license=>$number) {
+$allLicenses .= '<option value="' . $number . '">' . $license . '</option>';
+}
+$allLicenses .= '<option value="6">' . _i('No license (Not recommended!)') . '</option>';
+$allLicenses .= '<option value="7">' . _i('Enter your own copyright text') . '</option>';
+@endphp
+
 <div>
     <div class="form-group row">
         <label for="username" class="col-md-4 col-form-label text-md-right">{{ _i('Username') }}</label>
@@ -80,15 +123,13 @@
     <div class="form-group row">
         <label for="country" class="col-md-4 col-form-label text-md-right">{{ _i('Country of residence') }}</label>
 
+
         <div class="col-md-6">
-            <div class="form" wire:ignore>
-                <select wire:model="country" class="form-control countrySelection" id="country" name="country">
-                    @foreach (Countries::getList(LaravelGettext::getLocaleLanguage()) as $code=>$country)
-                    <option @if ($code==old('country')) selected="selected" @endif value="{{ $code }}">
-                        {{ $country }}</option>
-                    @endforeach
-                </select>
+            <div x-data=''>
+                <x-input.select-live-wire wire:model="country" prettyname="mycountry" :options="$allCountries"
+                    selected="('country')" />
             </div>
+            <p hidden>{{ $country }}</p>
         </div>
     </div>
 
@@ -97,14 +138,11 @@
             class="col-md-4 col-form-label text-md-right">{{ _i('Standard language for observations') }}</label>
 
         <div class="col-md-6">
-            <div class="form" wire:ignore>
-                <select wire:model="observationlanguage" class="form-control observationLanguageSelection"
-                    id="observationlanguage" name="observationlanguage">
-                    @foreach (Languages::lookup('major', LaravelGettext::getLocaleLanguage()) as $code=>$language)
-                    <option value="{{ $code }}"> {{ ucfirst($language) }}</option>
-                    @endforeach
-                </select>
+            <div x-data=''>
+                <x-input.select-live-wire wire:model="observationlanguage" prettyname="myobservationlanguage"
+                    :options="$allObservationLanguages" selected="('observationlanguage')" />
             </div>
+            <p hidden>{{ $observationlanguage }}</p>
         </div>
     </div>
 
@@ -113,17 +151,11 @@
             class="col-md-4 col-form-label text-md-right">{{ _i('Language for user interface') }}</label>
 
         <div class="col-md-6">
-            <div class="form" wire:ignore>
-                <select wire:model="language" class="form-control languageSelection" id="language" name="language">
-                    @foreach(Config::get('laravel-gettext.supported-locales') as $locale)
-                    @php
-                    $localeText = ucwords(Locale::getDisplayLanguage($locale,
-                    LaravelGettext::getLocale()));
-                    @endphp
-                    <option value="{{ $locale }}">{{ $localeText }}</option>
-                    @endforeach
-                </select>
+            <div x-data=''>
+                <x-input.select-live-wire wire:model="language" prettyname="myapplanguage" :options="$allAppLanguages"
+                    selected="('language')" />
             </div>
+            <p hidden>{{ $language }}</p>
         </div>
     </div>
 
@@ -132,18 +164,11 @@
         <label for="cclicense" class="col-md-4 col-form-label text-md-right">{{ _i("License for drawings") }}</label>
 
         <div class="col-md-6">
-            <div class="form" wire:ignore>
-                <select wire:model="cclicense" name="cclicense" class="form-control license" style="width: 100%"
-                    id="license">
-                    @foreach ($licenses as $license=>$number)
-                    <option value="{{ $number }}">{{ $license }}</option>
-                    @endforeach
-                    <option value="6">
-                        {{ _i('No license (Not recommended!)') }}</option>
-                    <option value="7">
-                        {{ _i('Enter your own copyright text') }}</option>
-                </select>
+            <div x-data=''>
+                <x-input.select-live-wire wire:model="cclicense" prettyname="mylicense" :options="$allLicenses"
+                    selected="('cclicense')" />
             </div>
+            <p hidden>{{ $cclicense }}</p>
             <span class="help-block">
                 @php
                 // Use the correct language for the chooser tool
@@ -156,13 +181,13 @@
         </div>
     </div>
 
-    @if ($cclicense == 7)
-    <div class="form-group row">
+    {{-- @if ($cclicense == 7) --}}
+    <div class='form-group row'>
         <label for="copyright" class="col-md-4 col-form-label text-md-right">{{ _i('Copyright notice') }}</label>
 
         <div class="col-md-6">
-            <input wire:model="copyright" id="copyright" type="text" class="form-control" maxlength="128"
-                name="copyright" value="{{ old('copyright') }}">
+            <input @if ($cclicense!=7) disabled @endif wire:model="copyright" id="copyright" type="text"
+                class="form-control" maxlength="128" name="copyright" value="{{ old('copyright') }}">
             <p class="text-center {{ strlen($copyright) >= 118 ? 'text-danger' : '' }}">
                 <small>
                     {{ strlen($copyright) . '/128' }}
@@ -170,7 +195,7 @@
             </p>
         </div>
     </div>
-    @endif
+    {{-- @endif --}}
 
     <div class="form-group row" wire:ignore>
         <label class="col-md-4 col-form-label text-md-right"></label>
@@ -179,6 +204,7 @@
         </div>
     </div>
 
+    <br />
     @php echo _i("Your personal information will be processed in accordance with the %sprivacy
     policy%s and shall be used only for user management and to keep you informed about our
     activities.", "<a href='/privacy'>", "</a>") . "<br /><br />";
@@ -200,28 +226,4 @@
         </div>
         @endif
     </div>
-
 </div>
-
-@push('scripts')
-<script>
-    $(document).ready(function() {
-        $('.license').select2();
-        $('.observationLanguageSelection').select2();
-        $('.languageSelection').select2();
-        $('.countrySelection').select2();
-        $('.license').on('change', function(e) {
-            @this.set('cclicense', e.target.value);
-        });
-        $('.countrySelection').on('change', function(e) {
-            @this.set('country', e.target.value);
-        });
-        $('.languageSelection').on('change', function(e) {
-            @this.set('language', e.target.value);
-        });
-        $('.observationLanguageSelection').on('change', function(e) {
-            @this.set('observationlanguage', e.target.value);
-        });
-    });
-</script>
-@endpush

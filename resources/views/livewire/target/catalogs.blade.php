@@ -1,11 +1,14 @@
 <div>
-    <div wire:ignore>
-        <select id="catalog" class="form-control selectCatalog" name="state">
-            <option value=""></option>
-            @foreach (\App\Models\TargetName::getCatalogs() as $catalog)
-            <option value="{{ $catalog }}">{{ $catalog }}</option>
-            @endforeach
-        </select>
+    @php
+    $allCatalogs = '<option value=""></option>';
+    foreach (\App\Models\TargetName::getCatalogs() as $catalog) {
+    $allCatalogs .= '<option value="' . $catalog . '">' . $catalog . '</option>';
+    }
+    @endphp
+
+    <div x-data=''>
+        <x-input.select-live-wire wire:model="selected_catalog" prettyname="mycatalog" :options="$allCatalogs"
+            selected="('selected_catalog')" />
     </div>
 
     @if ($selected_catalog)

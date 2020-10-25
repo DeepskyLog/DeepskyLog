@@ -9,13 +9,14 @@
     </div>
 
     @if($users->count() > 0)
-        {{ _i("Add extra participants to this message") }}
-        <select class="form-control selection" name="recipients[]" multiple="multiple">
-            <option value=""> </option>
-            @foreach($users as $user)
-                <option value="{{ $user->id }}">{!! $user->name !!}</option>
-            @endforeach
-        </select>
+    {{ _i("Add extra participants to this message") }}
+    @foreach($users as $list)
+    @php
+    $array[$list['id']]=$list['name'];
+    @endphp
+    @endforeach
+
+    <x-input.selectmultiple prettyname="modelprettyname" :options="$array" name=recipients[] />
     @endif
 
     <br /><br />

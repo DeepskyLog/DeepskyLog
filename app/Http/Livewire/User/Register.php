@@ -3,8 +3,6 @@
 namespace App\Http\Livewire\User;
 
 use Livewire\Component;
-use Illuminate\Support\Facades\Request;
-use Stevebauman\Location\Facades\Location;
 use deepskylog\LaravelGettext\Facades\LaravelGettext;
 
 class Register extends Component
@@ -51,12 +49,6 @@ class Register extends Component
 
         $this->observationlanguage = LaravelGettext::getLocaleLanguage();
         $this->language            = LaravelGettext::getLocale();
-
-        if (Location::get(Request::ip())) {
-            $this->country = Location::get(Request::ip())->countryCode;
-        } else {
-            $this->country = Location::get(trim(shell_exec('dig +short myip.opendns.com @resolver1.opendns.com')))->countryCode;
-        }
     }
 
     /**

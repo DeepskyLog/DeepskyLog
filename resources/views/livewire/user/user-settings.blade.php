@@ -2,6 +2,20 @@
     <br />
     <form wire:submit.prevent="save" role="form" action="/users/{{ $user->id }}/settings">
 
+        @auth
+        @php
+        $allInstruments = \App\Models\Instrument::getInstrumentOptions();
+
+        $allCountries = '<option value="">&nbsp;</option>';
+        foreach (\Countries::getList(LaravelGettext::getLocaleLanguage()) as $code => $mycountry) {
+        $allCountries .= '<option ';
+            if ($code == $user->country) {
+                $allCountries .= ' selected="selected" ';
+            }
+            $allCountries .= ' value="' . $code . '">' . $mycountry . '</option>';
+        }
+        @endphp
+
         {{-- username --}}
         <div class="form-group username">
             <label for="name">{{ _i('Username') }}</label>
@@ -64,25 +78,18 @@
         </div>
 
         {{-- Country of residence --}}
-        <div class="form-group">
-            <label for="country">{{ _i('Country of residence') }}</label>
-            <div wire:ignore>
-                <select class="form-control countrySel" id="countrySel" name="country">
-                    <option value="">&nbsp;</option>
-                    @foreach (Countries::getList(LaravelGettext::getLocaleLanguage()) as $code => $country)
-                    <option @if ($code==$user->country) selected="selected"
-                        @endif value="{{ $code }}">{{ $country }}</option>
-                    @endforeach
-                </select>
-            </div>
+        <div x-data=''>
+            <label>{{ _i('Country of residence') }}</label>
+            <x-input.select-live-wire wire:model="country" prettyname="mycountry" :options="$allCountries"
+                selected="('country')" />
         </div>
-
+        <p hidden>{{ $country }}</p>
+        <p></p>
         {{-- about the observer --}}
         <div class="form-group" name="about" id="about">
-            <label for="about">{{ _i('Let other people know what are your astronomical interests') }}</label>
+            <label for="about">{{ _i('Let other people your astronomical interests') }}</label>
             <textarea wire:model="about" required class="form-control @error('about') is-invalid @enderror" rows="5"
                 maxlength="500" name="about">{{ $user->about }}</textarea>
-
             <p class="text-center {{ strlen($about) >= 485 ? 'text-danger' : '' }}">
                 <small>
                     {{ strlen($about) . '/500' }}
@@ -135,20 +142,32 @@
         </div>
 
         {{-- License --}}
+        @php
+        $allLicenses = '';
+        foreach ($licenses as $license=>$number) {
+        $allLicenses .= '<option value="' . $number . '"';
+        if ($cclicense == $number) {
+            $allLicenses .= ' selected="selected"';
+        }
+        $allLicenses .= '>' . $license . '</option>';
+        }
+        if ($cclicense == 6) {
+        $allLicenses .= '<option value="6" selected="selected">' . _i('No license (Not recommended!)') . '</option>';
+        $allLicenses .= '<option value="6">' . _i('No license (Not recommended!)') . '</option>';
+        }
+        if ($cclicense == 7) {
+        $allLicenses .= '<option value="7" selected="selected">' . _i('Enter your own copyright text') . '</option>';
+        } else {
+        $allLicenses .= '<option value="7">' . _i('Enter your own copyright text') . '</option>';
+        }
+        @endphp
         <div class="form-group">
             <label for="cclicense">{{ _i('License for drawings') }}</label>
-            <div class="form" wire:ignore>
-                <select wire:model="cclicense" name="cclicense" class="form-control license" style="width: 100%"
-                    id="license">
-                    @foreach ($licenses as $license=>$number)
-                    <option value="{{ $number }}">{{ $license }}</option>
-                    @endforeach
-                    <option value="6">
-                        {{ _i('No license (Not recommended!)') }}</option>
-                    <option value="7">
-                        {{ _i('Enter your own copyright text') }}</option>
-                </select>
+            <div x-data=''>
+                <x-input.select-live-wire wire:model="cclicense" prettyname="mylicense" :options="$allLicenses"
+                    selected="('cclicense')" />
             </div>
+
             <span class="help-block">
                 @php
                 // Use the correct language for the chooser tool
@@ -158,6 +177,7 @@
                 @endphp
             </span>
         </div>
+        <p hidden>{{ $cclicense }}</p>
 
         {{-- The copyright notice --}}
         @if ($cclicense == 7)
@@ -170,7 +190,6 @@
                     {{ strlen($copyright) . '/128' }}
                 </small>
             </p>
-
         </div>
         @endif
 
@@ -190,22 +209,6 @@
             </div>
             @endif
         </div>
-
+        @endauth
     </form>
 </div>
-
-@push('scripts')
-<script>
-    $(document).ready(function() {
-            $('.countrySel').select2();
-            $('.countrySel').on('change', function(e) {
-                @this.set('selected_country', e.target.value);
-            });
-            $('.license').select2();
-            $('.license').on('change', function(e) {
-                @this.set('cclicense', e.target.value);
-            });
-        });
-
-</script>
-@endpush

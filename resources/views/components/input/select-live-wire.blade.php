@@ -10,7 +10,7 @@
 	  },
 	  false,
 	);
-	let selected = parseInt(@this.get{!! $attributes['selected'] !!}).toString();
+    let selected = @this.get{!! $attributes['selected'] !!};
 	choices.setChoiceByValue(selected);
     }">
     <select class="form-control-sm" id="{{ $attributes['prettyname'] }}" wire-model="{{ $attributes['wire:model'] }}"

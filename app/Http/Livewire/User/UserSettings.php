@@ -6,26 +6,28 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\View\Factory;
 
 class UserSettings extends Component
 {
-    use WithFileUploads;
+    // use WithFileUploads;
 
     public User $user;
-    public String $selected_country = '';
-    public String $about;
-    public String $email;
-    public String $username;
-    public String $name;
+    public $country;
+    public $about;
+    public $email;
+    public $username;
+    public $name;
     public $photo;
     public $sendMail;
-    public float $fstOffset;
-    public String $cclicense;
-    public String $copyright;
+    public $fstOffset;
+    public $cclicense;
+    public $copyright;
     public $changePassword;
     public $password;
     public $password_confirmation;
+    public $instrument;
 
     protected $licenses = [
         'Attribution CC BY'                                => 0,
@@ -51,6 +53,7 @@ class UserSettings extends Component
      */
     public function mount()
     {
+        $this->instrument       = Auth::user()->stdtelescope;
         $this->username         = $this->user->username;
         if ($this->user->about) {
             $this->about            = $this->user->about;
@@ -59,14 +62,14 @@ class UserSettings extends Component
         }
         $this->name             = $this->user->name;
         $this->email            = $this->user->email;
-        $this->selected_country = $this->user->country;
+        $this->country          = $this->user->country;
         $this->fstOffset        = $this->user->fstOffset;
         $this->sendMail         = $this->user->sendMail;
 
-        if (in_array($this->user->copyright, $this->licenses)) {
-            $this->cclicense = $this->licenses[$this->user->copyright];
-        } elseif ('' == $this->user->copyright) {
+        if ('' == $this->user->copyright) {
             $this->cclicense = 6;
+        } elseif (array_key_exists($this->user->copyright, $this->licenses)) {
+            $this->cclicense = $this->licenses[$this->user->copyright];
         } else {
             $this->cclicense = 7;
         }
@@ -126,7 +129,7 @@ class UserSettings extends Component
 
         $this->user->update(['email' => $this->email]);
         $this->user->update(['name' => $this->name]);
-        $this->user->update(['country' => $this->selected_country]);
+        $this->user->update(['country' => $this->country]);
         $this->user->update(['about' => $this->about]);
         $this->user->update(['sendMail' => $this->sendMail]);
         $this->user->update(['fstOffset' => $this->fstOffset]);

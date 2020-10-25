@@ -1,8 +1,34 @@
 @extends("layout.master")
 
-@section('title', _i('Settings'))
+@section('title')
+{{ _i('Settings') }}
+@endsection
 
 @section('content')
+
+@php
+$languages = '';
+foreach (Config::get('laravel-gettext.supported-locales') as $locale) {
+$localeText = ucwords(Locale::getDisplayLanguage($locale, LaravelGettext::getLocale()));
+
+$languages .= '<option value="' . $locale . '"';
+if ($locale==$user->language) {
+    $languages .= ' selected="selected"';
+}
+$languages .= '>' . $localeText . '</option>';
+}
+
+$observationLanguages = '';
+foreach (Languages::lookup('major', LaravelGettext::getLocaleLanguage()) as $code => $language) {
+$observationLanguages .= '<option value="' . $code . '"';
+    if ($code==$user->observationlanguage) {
+        $observationLanguages .= ' selected="selected"';
+    }
+    $observationLanguages .= '>' . ucfirst($language) . '</option>';
+}
+
+@endphp
+
 
 <h3>Settings for {{ $user->name }}</h3>
 <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
@@ -53,30 +79,12 @@
             <div class="form-group">
                 <label for="language">{{ _i('Language for user interface') }}</label>
 
-                <div class="form">
-                    <select class="selection" style="width: 100%" id="language" name="language">
-                        @foreach (Config::get('laravel-gettext.supported-locales') as $locale)
-                        @php
-                        $localeText = ucwords(Locale::getDisplayLanguage($locale, LaravelGettext::getLocale()));
-                        @endphp
-                        <option value="{{ $locale }}" @if ($locale==$user->language)
-                            selected="selected"@endif>{{ $localeText }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <x-input.select id="language" :options="$languages" />
             </div>
-
             <div class="form-group">
                 <label for="observationlanguage">{{ _i('Standard language for observations') }}</label>
 
-                <div class="form">
-                    <select class="selection" style="width: 100%" id="observationlanguage" name="observationlanguage">
-                        @foreach (Languages::lookup('major', LaravelGettext::getLocaleLanguage()) as $code => $language)
-                        <option value="{{ $code }}" @if ($code==$user->observationlanguage) selected="selected"
-                            @endif>{{ ucfirst($language) }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <x-input.select id="observationlanguage" :options="$observationLanguages" />
             </div>
 
             <input type="submit" class="btn btn-success" name="add" value="{{ _i('Update') }}" />
