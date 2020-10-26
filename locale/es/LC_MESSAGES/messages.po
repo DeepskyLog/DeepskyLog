@@ -443,7 +443,7 @@ msgstr "ICQ"
 #: deepsky/content/view_object.php:399 lib/datatables_setup.php:13
 #: lib/datatables_setup.php:14
 msgid "Sorry, no observations found!"
-msgstr "¡Lo siento, no hay objetos!"
+msgstr "¡Lo siento, no hayobservaciones!"
 
 #: comets/content/selected_observations2.php:343
 #: comets/content/selected_observations2.php:347
