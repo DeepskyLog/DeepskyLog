@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-01-30 21:14+0100\n"
-"PO-Revision-Date: 2020-10-26 12:17+0100\n"
+"PO-Revision-Date: 2020-10-26 13:51+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -443,7 +443,7 @@ msgstr "ICQ"
 #: deepsky/content/view_object.php:399 lib/datatables_setup.php:13
 #: lib/datatables_setup.php:14
 msgid "Sorry, no observations found!"
-msgstr "¡Lo siento, no hay objetos!"
+msgstr "¡Lo siento, no hay observaciones!"
 
 #: comets/content/selected_observations2.php:343
 #: comets/content/selected_observations2.php:347
