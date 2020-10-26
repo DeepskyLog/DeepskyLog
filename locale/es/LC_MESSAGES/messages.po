@@ -55,7 +55,7 @@ msgstr "Política de Privacidad"
 #: index.php:136 deepsky/content/view_list.php:21
 #: deepsky/content/view_list.php:31
 msgid "Create a new observing list"
-msgstr "Crear una nueva lista de observaciiones"
+msgstr "Crear una nueva lista de observaciones"
 
 #: index.php:140
 msgid "Name for the new observing list"
