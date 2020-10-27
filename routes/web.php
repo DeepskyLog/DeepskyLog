@@ -23,8 +23,6 @@ Route::post('/lang', 'LanguageController@changeLang');
 Route::post('/setSession', 'SessionController@createSession');
 
 // Lenses
-Route::get('/lens/autocomplete', 'LensController@dataAjax')->name('lens.dataAjax');
-
 Route::get('/lens/create/{lens}', 'LensController@create')->middleware('verified')
     ->name('lens.create');
 
@@ -37,8 +35,6 @@ Route::resource(
 )->middleware('verified')->except('show');
 
 Route::get('/lens/{lens}', 'LensController@show')->name('lens.show');
-
-Route::get('/getLensJson/{id}', 'LensController@getLensJson');
 
 Route::get('/lens/{lens}/getImage', 'LensController@getImage')
     ->name('lens.getImage');

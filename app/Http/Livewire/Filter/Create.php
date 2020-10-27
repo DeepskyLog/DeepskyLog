@@ -135,8 +135,7 @@ class Create extends Component
             $this->validate([
                 'photo' => 'image|max:10240',
             ]);
-            if (Filter::find($filter->id)->getFirstMedia('filter') != null
-                    ) {
+            if (Filter::find($filter->id)->getFirstMedia('filter') != null) {
                 // First remove the current image
                 Filter::find($filter->id)
                         ->getFirstMedia('filter')

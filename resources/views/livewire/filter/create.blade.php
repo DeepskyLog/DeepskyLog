@@ -85,7 +85,7 @@
 
         @endif
 
-        {{-- Profile picture --}}
+        {{-- Filter picture --}}
         <div class="form-group">
 
             <div class="card mb-3">

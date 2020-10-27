@@ -99,7 +99,7 @@ class LensTest extends TestCase
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test lens',
+            'name'   => 'Test lens',
             'factor' => 2.0,
         ];
 
@@ -130,7 +130,7 @@ class LensTest extends TestCase
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test1',
+            'name'   => 'Test1',
             'factor' => 2.0,
         ];
 
@@ -157,7 +157,7 @@ class LensTest extends TestCase
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
         $attributes = [
-            'name' => 'My new lens',
+            'name'   => 'My new lens',
             'factor' => -2.0,
         ];
 
@@ -184,7 +184,7 @@ class LensTest extends TestCase
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
         $attributes = [
-            'name' => 'My new lens',
+            'name'   => 'My new lens',
             'factor' => 12.0,
         ];
 
@@ -238,9 +238,9 @@ class LensTest extends TestCase
         // Then there should be a new lens in the database
         $attributes = [
             'user_id' => $lens->user_id,
-            'name' => $lens->name,
-            'factor' => $lens->factor,
-            'active' => $lens->active,
+            'name'    => $lens->name,
+            'factor'  => $lens->factor,
+            'active'  => $lens->active,
         ];
 
         // Then there should be a new lens in the database
@@ -251,8 +251,8 @@ class LensTest extends TestCase
         // Adapt the name and the factor
         $newAttributes = [
             'user_id' => $this->_user->id,
-            'name' => 'My updated lens',
-            'factor' => 2.5,
+            'name'    => 'My updated lens',
+            'factor'  => 2.5,
         ];
 
         $this->put('/lens/' . $lens->id, $newAttributes);
@@ -279,7 +279,7 @@ class LensTest extends TestCase
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
         $attributes = [
-            'name' => 'My new lens',
+            'name'   => 'My new lens',
             'factor' => 2.0,
         ];
 
@@ -299,8 +299,8 @@ class LensTest extends TestCase
         // Adapt the name and the factor
         $newAttributes = [
             'user_id' => $newUser->id,
-            'name' => 'My updated lens',
-            'factor' => 2.5,
+            'name'    => 'My updated lens',
+            'factor'  => 2.5,
         ];
 
         $this->expectException(AuthorizationException::class);
@@ -326,7 +326,7 @@ class LensTest extends TestCase
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
         $attributes = [
-            'name' => 'My new lens',
+            'name'   => 'My new lens',
             'factor' => 2.0,
         ];
 
@@ -340,14 +340,14 @@ class LensTest extends TestCase
 
         $lens = \App\Models\Lens::firstOrFail();
 
-        $newUser = User::factory()->create();
+        $newUser       = User::factory()->create();
         $newUser->type = 'admin';
 
         $this->actingAs($newUser);
 
         // Adapt the name and the factor
         $newAttributes = [
-            'name' => 'My updated lens',
+            'name'   => 'My updated lens',
             'factor' => 2.5,
         ];
 
@@ -379,9 +379,9 @@ class LensTest extends TestCase
         $this->assertDatabaseHas(
             'lens',
             [
-                'name' => $lens->name,
-                'factor' => $lens->factor,
-                'active' => $lens->active,
+                'name'    => $lens->name,
+                'factor'  => $lens->factor,
+                'active'  => $lens->active,
                 'user_id' => $lens->user_id,
             ]
         );
@@ -396,9 +396,9 @@ class LensTest extends TestCase
         $this->assertDatabaseMissing(
             'lens',
             [
-                'name' => $lens->name,
-                'factor' => $lens->factor,
-                'active' => $lens->active,
+                'name'    => $lens->name,
+                'factor'  => $lens->factor,
+                'active'  => $lens->active,
                 'user_id' => $lens->user_id,
             ]
         );
@@ -423,7 +423,7 @@ class LensTest extends TestCase
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
         $attributes = [
-            'name' => 'My new lens',
+            'name'   => 'My new lens',
             'factor' => 2.0,
         ];
 
@@ -464,7 +464,7 @@ class LensTest extends TestCase
         // When they hit the endpoint in /lens to create a new lens
         // while passing the necessary data
         $attributes = [
-            'name' => 'My new lens',
+            'name'   => 'My new lens',
             'factor' => 2.0,
         ];
 
@@ -478,7 +478,7 @@ class LensTest extends TestCase
 
         $lens = \App\Models\Lens::firstOrFail();
 
-        $newUser = User::factory()->create();
+        $newUser       = User::factory()->create();
         $newUser->type = 'admin';
 
         $this->actingAs($newUser);
@@ -505,7 +505,7 @@ class LensTest extends TestCase
         // When they hit the endpoint in /lens to create a new lens while
         // passing the necessary data
         $attributes = [
-            'name' => 'Test lens',
+            'name'   => 'Test lens',
             'factor' => 2.0,
         ];
 
@@ -535,8 +535,8 @@ class LensTest extends TestCase
         // passing the necessary data
         $attributes = [
             'user_id' => $user->id,
-            'name' => 'Test lens for unverified user',
-            'factor' => 2.5,
+            'name'    => 'Test lens for unverified user',
+            'factor'  => 2.5,
         ];
 
         $this->post('/lens', $attributes);
@@ -599,7 +599,7 @@ class LensTest extends TestCase
      */
     public function createPageIsAccessibleForAdmin()
     {
-        $user = User::factory()->create(['type' => 'admin']);
+        $user     = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($user)->get('/lens/create');
 
         $response->assertStatus(200);
@@ -640,8 +640,8 @@ class LensTest extends TestCase
         $this->actingAs($this->_user)->post(
             'lens',
             [
-                'name' => 'Test lens',
-                'factor' => 3.3,
+                'name'    => 'Test lens',
+                'factor'  => 3.3,
                 'picture' => UploadedFile::fake()->image('lens.png'),
             ]
         );
@@ -684,7 +684,7 @@ class LensTest extends TestCase
     public function testShowFilterDetailWithoutChangeButton()
     {
         $newUser = User::factory()->create();
-        $lens = Lens::factory()->create(['user_id' => $newUser->id]);
+        $lens    = Lens::factory()->create(['user_id' => $newUser->id]);
 
         $response = $this->actingAs($this->_user)->get('/lens/' . $lens->id);
 
@@ -704,7 +704,7 @@ class LensTest extends TestCase
     public function testAdminAlwaysSeesChangeButton()
     {
         $admin = User::factory()->create(['type' => 'admin']);
-        $lens = Lens::factory()->create(['user_id' => $this->_user->id]);
+        $lens  = Lens::factory()->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($admin)->get('/lens/' . $lens->id);
 
@@ -757,7 +757,7 @@ class LensTest extends TestCase
         $response->assertStatus(401);
 
         // Check as admin
-        $admin = User::factory()->create(['type' => 'admin']);
+        $admin    = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get('/lens/admin');
 
         $response->assertStatus(200);
@@ -817,8 +817,8 @@ class LensTest extends TestCase
         $this->actingAs($this->_user)->post(
             'lens',
             [
-                'name' => 'Test lens',
-                'factor' => 3.2,
+                'name'    => 'Test lens',
+                'factor'  => 3.2,
                 'picture' => UploadedFile::fake()->image('lens.png'),
             ]
         );
@@ -846,8 +846,8 @@ class LensTest extends TestCase
         $this->actingAs($this->_user)->post(
             'lens',
             [
-                'name' => 'Test lens',
-                'factor' => 3.1,
+                'name'    => 'Test lens',
+                'factor'  => 3.1,
                 'picture' => UploadedFile::fake()->image('lens.png'),
             ]
         );
@@ -869,8 +869,8 @@ class LensTest extends TestCase
         $this->actingAs($this->_user)->post(
             'lens',
             [
-                'name' => 'Test lens',
-                'factor' => 3.1,
+                'name'    => 'Test lens',
+                'factor'  => 3.1,
                 'picture' => UploadedFile::fake()->image('lens.png'),
             ]
         );
@@ -889,45 +889,5 @@ class LensTest extends TestCase
             '/' . $lens->id .
             '.png'
         );
-    }
-
-    /**
-     * Ensure that the autocomplete works for select2.
-     *
-     * @test
-     *
-     */
-    public function testAutocompleteForLens()
-    {
-        $lens = Lens::factory()->create(
-            ['user_id' => $this->_user->id, 'name' => 'DeepskyLog test lens']
-        );
-
-        $lens2 = Lens::factory()->create(
-            ['user_id' => $this->_user->id, 'name' => 'Other test lens']
-        );
-
-        // Only for logged in users!
-        $response = $this->get('/lens/autocomplete?q=Deep');
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
-
-        // Test for logged in user
-        $response = $this->actingAs($this->_user)->get(
-            '/lens/autocomplete?q=Deep'
-        );
-
-        $this->assertEquals($lens->id, $response[0]['id']);
-        $this->assertEquals($lens->name, $response[0]['name']);
-
-        $response = $this->actingAs($this->_user)->get(
-            '/lens/autocomplete?q=test'
-        );
-
-        $this->assertEquals($lens->id, $response[0]['id']);
-        $this->assertEquals($lens->name, $response[0]['name']);
-
-        $this->assertEquals($lens2->id, $response[1]['id']);
-        $this->assertEquals($lens2->name, $response[1]['name']);
     }
 }

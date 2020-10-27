@@ -14,10 +14,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Lens;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use App\DataTables\LensDataTable;
 use App\Http\Requests\LensRequest;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Lens Controller.
@@ -82,20 +80,6 @@ class LensController extends Controller
     }
 
     /**
-     * Display a listing of the resource in JSON format.
-     *
-     * @param int $id The id of the lens to return
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getLensJson(int $id)
-    {
-        $lens = Lens::findOrFail($id);
-
-        return response($lens->jsonSerialize(), Response::HTTP_OK);
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @param Lens $lens The lens to fill out in the fields
@@ -116,7 +100,7 @@ class LensController extends Controller
      */
     public function store(LensRequest $request)
     {
-        $validated = $request->validated();
+        $validated            = $request->validated();
         $validated['user_id'] = auth()->id();
 
         $lens = Lens::create($validated);
@@ -177,7 +161,7 @@ class LensController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('factor')) {
-            $validated = $request->validated();
+            $validated            = $request->validated();
             $validated['user_id'] = auth()->id();
             $this->authorize('update', $lens);
 
@@ -277,34 +261,5 @@ class LensController extends Controller
         }
 
         return redirect()->back();
-    }
-
-    /**
-     * Ajax request for select2.
-     *
-     * @param Request $request The request
-     *
-     * @return string the JSON response
-     */
-    public function dataAjax(Request $request)
-    {
-        $search = trim($request->q);
-
-        if ($search === '') {
-            return \Response::json([]);
-        }
-
-        $data = [];
-
-        if ($request->has('q')) {
-            $data = DB::table('lens')
-                ->groupBy('name')
-                ->select('id', 'name')
-                ->where('name', 'LIKE', "%$search%")
-                ->limit(20)
-                ->get();
-        }
-
-        return response()->json($data);
     }
 }
