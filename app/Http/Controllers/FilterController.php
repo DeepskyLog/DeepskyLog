@@ -14,8 +14,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Filter;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use App\DataTables\FilterDataTable;
 use App\Http\Requests\FilterRequest;
 
@@ -80,20 +78,6 @@ class FilterController extends Controller
     }
 
     /**
-     * Display a listing of the resource in JSON format.
-     *
-     * @param int $id The id of the filter to return
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getFilterJson(int $id)
-    {
-        $filter = Filter::findOrFail($id);
-
-        return response($filter->jsonSerialize(), Response::HTTP_OK);
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @param Filter $filter The filter to fill out in the fields
@@ -117,7 +101,7 @@ class FilterController extends Controller
      */
     public function store(FilterRequest $request)
     {
-        $validated = $request->validated();
+        $validated            = $request->validated();
         $validated['user_id'] = auth()->id();
 
         $filter = Filter::create($validated);
@@ -183,7 +167,7 @@ class FilterController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('type')) {
-            $validated = $request->validated();
+            $validated            = $request->validated();
             $validated['user_id'] = auth()->id();
 
             $filter->update(['type' => $request->get('type')]);
@@ -290,34 +274,5 @@ class FilterController extends Controller
         }
 
         return redirect()->back();
-    }
-
-    /**
-     * Ajax request for select2.
-     *
-     * @param Request $request The request
-     *
-     * @return string the JSON response
-     */
-    public function dataAjax(Request $request)
-    {
-        $search = trim($request->q);
-
-        if ($search === '') {
-            return \Response::json([]);
-        }
-
-        $data = [];
-
-        if ($request->has('q')) {
-            $data = DB::table('filters')
-                ->groupBy('name')
-                ->select('id', 'name')
-                ->where('name', 'LIKE', "%$search%")
-                ->limit(20)
-                ->get();
-        }
-
-        return response()->json($data);
     }
 }

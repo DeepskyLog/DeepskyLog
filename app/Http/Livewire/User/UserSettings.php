@@ -11,7 +11,7 @@ use Illuminate\Contracts\View\Factory;
 
 class UserSettings extends Component
 {
-    // use WithFileUploads;
+    use WithFileUploads;
 
     public User $user;
     public $country;

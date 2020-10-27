@@ -157,7 +157,7 @@ class FilterTest extends TestCase
         $filter =Filter::factory()->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->put(
-            '/filter/'.$filter->id,
+            '/filter/' . $filter->id,
             ['name' => 'test', 'type' => 3]
         );
 
@@ -184,12 +184,12 @@ class FilterTest extends TestCase
         // Then there should be a new filter in the database
         $attributes = [
             'user_id' => $filter->user_id,
-            'name' => $filter->name,
-            'type' => $filter->type,
-            'color' => $filter->color,
+            'name'    => $filter->name,
+            'type'    => $filter->type,
+            'color'   => $filter->color,
             'wratten' => $filter->wratten,
-            'schott' => $filter->schott,
-            'active' => $filter->active,
+            'schott'  => $filter->schott,
+            'active'  => $filter->active,
         ];
 
         $this->assertDatabaseHas('filters', $attributes);
@@ -197,14 +197,14 @@ class FilterTest extends TestCase
         // Adapt the name and the factor
         $newAttributes = [
             'user_id' => $filter->user_id,
-            'name' => 'My updated filter',
-            'type' => 2,
-            'color' => $filter->color,
+            'name'    => 'My updated filter',
+            'type'    => 2,
+            'color'   => $filter->color,
             'wratten' => $filter->wratten,
-            'schott' => $filter->schott,
+            'schott'  => $filter->schott,
         ];
 
-        $this->put('filter/'.$filter->id, $newAttributes);
+        $this->put('filter/' . $filter->id, $newAttributes);
 
         // Then there should be an updated filter in the database
         $this->assertDatabaseHas('filters', $newAttributes);
@@ -248,13 +248,13 @@ class FilterTest extends TestCase
         // Adapt the name and the factor
         $newAttributes = [
             'user_id' => $newUser->id,
-            'name' => 'My updated filter',
-            'type' => 6,
+            'name'    => 'My updated filter',
+            'type'    => 6,
         ];
 
         $this->expectException(AuthorizationException::class);
 
-        $this->put('/filter/'.$filter->id, $newAttributes);
+        $this->put('/filter/' . $filter->id, $newAttributes);
     }
 
     /**
@@ -299,7 +299,7 @@ class FilterTest extends TestCase
             'type' => 3,
         ];
 
-        $this->put('/filter/'.$filter->id, $newAttributes);
+        $this->put('/filter/' . $filter->id, $newAttributes);
 
         // Then there should be an updated filter in the database
         $this->assertDatabaseHas('filters', $newAttributes);
@@ -330,16 +330,16 @@ class FilterTest extends TestCase
         $this->assertDatabaseHas(
             'filters',
             [
-                'name' => $filter->name,
-                'type' => $filter->type,
-                'color' => $filter->color,
+                'name'    => $filter->name,
+                'type'    => $filter->type,
+                'color'   => $filter->color,
                 'user_id' => $filter->user_id,
             ]
         );
 
         $this->assertEquals(1, \App\Models\Filter::count());
 
-        $response = $this->delete('/filter/'.$filter->id);
+        $response = $this->delete('/filter/' . $filter->id);
 
         $response->assertStatus(302);
 
@@ -347,9 +347,9 @@ class FilterTest extends TestCase
         $this->assertDatabaseMissing(
             'filters',
             [
-                'name' => $filter->name,
-                'type' => $filter->type,
-                'color' => $filter->color,
+                'name'    => $filter->name,
+                'type'    => $filter->type,
+                'color'   => $filter->color,
                 'user_id' => $filter->user_id,
             ]
         );
@@ -394,7 +394,7 @@ class FilterTest extends TestCase
         $this->expectException(AuthorizationException::class);
 
         // Try to delete the filter
-        $this->delete('/filter/'.$filter->id);
+        $this->delete('/filter/' . $filter->id);
     }
 
     /**
@@ -433,7 +433,7 @@ class FilterTest extends TestCase
 
         $this->actingAs($newUser);
 
-        $this->delete('/filter/'.$filter->id);
+        $this->delete('/filter/' . $filter->id);
 
         // Then there should not be a filter in the database anymore
         $this->assertDatabaseMissing('filters', $attributes);
@@ -455,7 +455,7 @@ class FilterTest extends TestCase
         // When they hit the endpoint in /filter to create a new filter while
         // passing the necessary data
         $attributes = [
-            'name' => 'Test filter',
+            'name'   => 'Test filter',
             'factor' => 2.0,
         ];
 
@@ -483,8 +483,8 @@ class FilterTest extends TestCase
         // passing the necessary data
         $attributes = [
             'user_id' => $user->id,
-            'name' => 'Test filter for unverified user',
-            'type' => 2,
+            'name'    => 'Test filter for unverified user',
+            'type'    => 2,
         ];
 
         $this->post('/filter', $attributes);
@@ -547,7 +547,7 @@ class FilterTest extends TestCase
      */
     public function createPageIsAccessibleForAdmin()
     {
-        $user = User::factory()->create(['type' => 'admin']);
+        $user     = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($user)->get('/filter/create');
 
         $response->assertStatus(200);
@@ -565,7 +565,7 @@ class FilterTest extends TestCase
         $filter =Filter::factory()->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($this->_user)->get(
-            '/filter/'.$filter->id.'/edit'
+            '/filter/' . $filter->id . '/edit'
         );
 
         $response->assertStatus(200);
@@ -585,8 +585,8 @@ class FilterTest extends TestCase
         $this->actingAs($this->_user)->post(
             'filter',
             [
-                'name' => 'Test filter',
-                'type' => 3,
+                'name'    => 'Test filter',
+                'type'    => 3,
                 'picture' => UploadedFile::fake()->image('filter.png'),
             ]
         );
@@ -594,7 +594,7 @@ class FilterTest extends TestCase
         $filter = \App\Models\Filter::firstOrFail();
 
         Storage::disk('public')->assertExists(
-            $filter->id.'/'.$filter->id.'.png'
+            $filter->id . '/' . $filter->id . '.png'
         );
     }
 
@@ -609,12 +609,12 @@ class FilterTest extends TestCase
     {
         $filter =Filter::factory()->create(['user_id' => $this->_user->id]);
 
-        $response = $this->actingAs($this->_user)->get('/filter/'.$filter->id);
+        $response = $this->actingAs($this->_user)->get('/filter/' . $filter->id);
 
         $response->assertStatus(200);
         $response->assertSee($filter->name);
         $response->assertSee($this->_user->name);
-        $response->assertSee('Edit '.$filter->name);
+        $response->assertSee('Edit ' . $filter->name);
     }
 
     /**
@@ -628,14 +628,14 @@ class FilterTest extends TestCase
     public function testShowFilterDetailWithoutChangeButton()
     {
         $newUser = User::factory()->create();
-        $filter =Filter::factory()->create(['user_id' => $newUser->id]);
+        $filter  =Filter::factory()->create(['user_id' => $newUser->id]);
 
-        $response = $this->actingAs($this->_user)->get('/filter/'.$filter->id);
+        $response = $this->actingAs($this->_user)->get('/filter/' . $filter->id);
 
         $response->assertStatus(200);
         $response->assertSee($filter->name);
         $response->assertSee($this->_user->name);
-        $response->assertDontSee('Edit '.$filter->name);
+        $response->assertDontSee('Edit ' . $filter->name);
     }
 
     /**
@@ -647,15 +647,15 @@ class FilterTest extends TestCase
      */
     public function testAdminAlwaysSeesChangeButton()
     {
-        $admin = User::factory()->create(['type' => 'admin']);
+        $admin  = User::factory()->create(['type' => 'admin']);
         $filter =Filter::factory()->create(['user_id' => $this->_user->id]);
 
-        $response = $this->actingAs($admin)->get('/filter/'.$filter->id);
+        $response = $this->actingAs($admin)->get('/filter/' . $filter->id);
 
         $response->assertStatus(200);
         $response->assertSee($filter->name);
         $response->assertSee($this->_user->name);
-        $response->assertSee('Edit '.$filter->name);
+        $response->assertSee('Edit ' . $filter->name);
     }
 
     /**
@@ -669,12 +669,12 @@ class FilterTest extends TestCase
     {
         $filter =Filter::factory()->create(['user_id' => $this->_user->id]);
 
-        $response = $this->get('/filter/'.$filter->id);
+        $response = $this->get('/filter/' . $filter->id);
 
         $response->assertStatus(200);
         $response->assertSee($filter->name);
         $response->assertSee($this->_user->name);
-        $response->assertDontSee('Edit '.$filter->name);
+        $response->assertDontSee('Edit ' . $filter->name);
     }
 
     /**
@@ -701,7 +701,7 @@ class FilterTest extends TestCase
         $response->assertStatus(401);
 
         // Check as admin
-        $admin = User::factory()->create(['type' => 'admin']);
+        $admin    = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get('/filter/admin');
 
         $response->assertStatus(200);
@@ -720,13 +720,13 @@ class FilterTest extends TestCase
         $filter =Filter::factory()->create(['user_id' => $this->_user->id]);
 
         // Only for logged in users!
-        $response = $this->get('/getFilterJson/'.$filter->id);
+        $response = $this->get('/getFilterJson/' . $filter->id);
         $response->assertStatus(302);
         $response->assertRedirect('/login');
 
         // Test for logged in user
         $response = $this->actingAs($this->_user)->get(
-            '/getFilterJson/'.$filter->id
+            '/getFilterJson/' . $filter->id
         );
 
         $this->assertEquals($response['name'], $filter->name);
@@ -752,18 +752,18 @@ class FilterTest extends TestCase
         $filter =Filter::factory()->create(['user_id' => $this->_user->id]);
 
         // Check the image, if no image is uploaded
-        $this->actingAs($this->_user)->get('filter/'.$filter->id.'/getImage');
+        $this->actingAs($this->_user)->get('filter/' . $filter->id . '/getImage');
 
         Storage::disk('public')->assertExists(
-            $filter->id.'/'.$filter->id.'.png'
+            $filter->id . '/' . $filter->id . '.png'
         );
 
         // Check the image if we have uploaded an image
         $this->actingAs($this->_user)->post(
             'filter',
             [
-                'name' => 'Test filter',
-                'type' => 3,
+                'name'    => 'Test filter',
+                'type'    => 3,
                 'picture' => UploadedFile::fake()->image('filter.png'),
             ]
         );
@@ -771,7 +771,7 @@ class FilterTest extends TestCase
         $filter2 = DB::table('filters')->latest('id')->first();
 
         Storage::disk('public')->assertExists(
-            $filter2->id.'/'.$filter2->id.'.png'
+            $filter2->id . '/' . $filter2->id . '.png'
         );
     }
 
@@ -789,8 +789,8 @@ class FilterTest extends TestCase
         $this->actingAs($this->_user)->post(
             'filter',
             [
-                'name' => 'Test filter',
-                'type' => 3,
+                'name'    => 'Test filter',
+                'type'    => 3,
                 'picture' => UploadedFile::fake()->image('filter.png'),
             ]
         );
@@ -798,19 +798,19 @@ class FilterTest extends TestCase
         $filter = DB::table('filters')->latest('id')->first();
 
         $this->actingAs($this->_user)->post(
-            'filter/'.$filter->id.'/deleteImage'
+            'filter/' . $filter->id . '/deleteImage'
         );
 
         Storage::disk('public')->assertMissing(
-            $filter->id.'/'.$filter->id.'.png'
+            $filter->id . '/' . $filter->id . '.png'
         );
 
         // Check if another user cannot delete the image if we have uploaded an image
         $this->actingAs($this->_user)->post(
             'filter',
             [
-                'name' => 'Test filter',
-                'type' => 3,
+                'name'    => 'Test filter',
+                'type'    => 3,
                 'picture' => UploadedFile::fake()->image('filter.png'),
             ]
         );
@@ -820,52 +820,11 @@ class FilterTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($user)->post(
-            'filter/'.$filter->id.'/deleteImage'
+            'filter/' . $filter->id . '/deleteImage'
         );
 
         Storage::disk('public')->assertExists(
-            $filter->id.'/'.$filter->id.'.png'
+            $filter->id . '/' . $filter->id . '.png'
         );
-    }
-
-    /**
-     * Ensure that the autocomplete works for select2.
-     *
-     * @test
-     *
-     * @return void
-     */
-    public function testAutocompleteForFilter()
-    {
-        $filter =Filter::factory()->create(
-            ['user_id' => $this->_user->id, 'name' => 'DeepskyLog test filter']
-        );
-
-        $filter2 =Filter::factory()->create(
-            ['user_id' => $this->_user->id, 'name' => 'Other test filter']
-        );
-
-        // Only for logged in users!
-        $response = $this->get('/filter/autocomplete?q=Deep');
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
-
-        // Test for logged in user
-        $response = $this->actingAs($this->_user)->get(
-            '/filter/autocomplete?q=Deep'
-        );
-
-        $this->assertEquals($filter->id, $response[0]['id']);
-        $this->assertEquals($filter->name, $response[0]['name']);
-
-        $response = $this->actingAs($this->_user)->get(
-            '/filter/autocomplete?q=test'
-        );
-
-        $this->assertEquals($filter->id, $response[0]['id']);
-        $this->assertEquals($filter->name, $response[0]['name']);
-
-        $this->assertEquals($filter2->id, $response[1]['id']);
-        $this->assertEquals($filter2->name, $response[1]['name']);
     }
 }

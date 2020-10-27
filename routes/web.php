@@ -47,9 +47,6 @@ Route::post('/lens/{lens}/deleteImage', 'LensController@deleteImage')
     ->name('lens.deleteImage');
 
 // Filters
-Route::get('/filter/autocomplete', 'FilterController@dataAjax')
-    ->name('filter.dataAjax');
-
 Route::get('/filter/create/{filter}', 'FilterController@create')
     ->middleware('verified')
     ->name('filter.create');
@@ -64,8 +61,6 @@ Route::resource(
 )->middleware('verified')->except('show');
 
 Route::get('/filter/{filter}', 'FilterController@show')->name('filter.show');
-
-Route::get('/getFilterJson/{id}', 'FilterController@getFilterJson');
 
 Route::get('/filter/{filter}/getImage', 'FilterController@getImage')
     ->name('filter.getImage');

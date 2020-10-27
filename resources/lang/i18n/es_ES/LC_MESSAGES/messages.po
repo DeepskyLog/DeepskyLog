@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
 "POT-Creation-Date: 2020-10-14 16:08+0200\n"
-"PO-Revision-Date: 2020-10-14 16:08+0200\n"
+"PO-Revision-Date: 2020-10-26 12:49+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: es_ES\n"
@@ -310,7 +310,7 @@ msgstr "Neptuno"
 #: ../resources/lang/en/translations.php:52
 #: ../storage/framework/messages/39b4c973a80357f39b72c0549cd664422f85d438.php.php:52
 msgid "Naked Eye"
-msgstr "Ojo desnudo"
+msgstr "Simple vista"
 
 #: ../resources/lang/en/translations.php:53
 #: ../storage/framework/messages/39b4c973a80357f39b72c0549cd664422f85d438.php.php:53
@@ -985,7 +985,7 @@ msgstr "Enviar"
 #: ../storage/framework/messages/14281692a25c2468513b2420db54664225a3a3d7.php.php:123
 #: Models/Instrument.php:123
 msgid "Add an instrument"
-msgstr "Agregar un instrumento"
+msgstr "Añadir un instrumento"
 
 #: ../storage/framework/messages/158d356aa1d32f3e10d4793f0f0163213975b184.php.php:1
 msgid "Messages"
@@ -1017,7 +1017,7 @@ msgstr "Nombre de usuario"
 
 #: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:24
 msgid "Change password"
-msgstr "Cambiar contraseña"
+msgstr "Modificar contraseña"
 
 #: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:31
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:72
@@ -1104,7 +1104,7 @@ msgstr "Haz que otras personas sepan cuáles son tus intereses astronómicos"
 
 #: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:178
 msgid "Change profile picture"
-msgstr "Cambiar imagen de perfil"
+msgstr "Modificar imagen de perfil"
 
 #: ../storage/framework/messages/2850072c31227aaa4e4dd53f67d0113cbdb02824.php.php:193
 msgid "Uploading..."
@@ -1344,7 +1344,7 @@ msgstr "hasta aproximadamente "
 
 #: ../storage/framework/messages/2a12e2677371cfe7ba0ad0da35bf33197a24834b.php.php:4
 msgid "Quick Search"
-msgstr "Búsqueda rápida"
+msgstr "Buscara rápida"
 
 #: ../storage/framework/messages/2a12e2677371cfe7ba0ad0da35bf33197a24834b.php.php:39
 msgid "Search Object"
@@ -1437,7 +1437,7 @@ msgstr "Dibujos del año pasado"
 
 #: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:237
 msgid "Different objects"
-msgstr "Diferentes objetos"
+msgstr "Objetos diferentes"
 
 #: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:252
 msgid "Messier objects"
@@ -1493,7 +1493,7 @@ msgstr ""
 #: ../storage/framework/messages/32a8d19370490284a596e24d49b95921b4af9e52.php.php:50
 #: ../storage/framework/messages/32a8d19370490284a596e24d49b95921b4af9e52.php.php:126
 msgid "Change location"
-msgstr "Cambiar localización"
+msgstr "Modificar localización"
 
 #: ../storage/framework/messages/32a8d19370490284a596e24d49b95921b4af9e52.php.php:50
 #: ../storage/framework/messages/32a8d19370490284a596e24d49b95921b4af9e52.php.php:126
@@ -1503,7 +1503,7 @@ msgstr "Añadir ubicación"
 
 #: ../storage/framework/messages/32a8d19370490284a596e24d49b95921b4af9e52.php.php:59
 msgid "Add site"
-msgstr "Agregar sitio"
+msgstr "Añadir sitio"
 
 #: ../storage/framework/messages/32a8d19370490284a596e24d49b95921b4af9e52.php.php:58
 #, php-format
@@ -1676,7 +1676,7 @@ msgid ""
 "                        activities."
 msgstr ""
 "Su información personal será procesada de acuerdo con la %sPolítica de "
-"privacidad%s y sólo se usará para la administración del usuario y para "
+"Privacidad%s y sólo se usará para la administración del usuario y para "
 "mantenerle informado sobre nuestras actividades."
 
 #: ../storage/framework/messages/468594b0fbdafcbd6c2a367dabf6de610b3b2966.php.php:2
@@ -1730,7 +1730,7 @@ msgstr "Ocular %s eliminado"
 
 #: ../storage/framework/messages/4b4d00d592fa93e01b0c98ba13789101d09b83d8.php.php:5
 msgid "DeepskyLog Privacy Policy"
-msgstr "Política de privacidad de DeepskyLog"
+msgstr "Política de Privacidad de DeepskyLog"
 
 #: ../storage/framework/messages/4b4d00d592fa93e01b0c98ba13789101d09b83d8.php.php:8
 msgid ""
@@ -1852,7 +1852,7 @@ msgstr "Oculares de %s"
 #: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:32
 #: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:129
 msgid "Add eyepiece"
-msgstr "Agregar ocular"
+msgstr "Añadir ocular"
 
 #: ../storage/framework/messages/52aabc12f17c8543efdf79d1abd7590fb5eda404.php.php:186
 #: Models/Contrast.php:186
@@ -1958,14 +1958,14 @@ msgstr "Añadir un nuevo instrumento"
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:32
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:113
 msgid "Change instrument"
-msgstr "Cambiar instrumento"
+msgstr "Modificar instrumento"
 
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:32
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:113
 #: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:68
 #: ../storage/framework/messages/88ac00ea878eba197cafdf7f59f7768612fd0467.php.php:23
 msgid "Add instrument"
-msgstr "Agregar instrumento"
+msgstr "Añadir instrumento"
 
 #: ../storage/framework/messages/53f7087f05acb6439a1d09964ee995c2a320ebfd.php.php:36
 msgid "Select an existing instrument"
@@ -2047,7 +2047,7 @@ msgstr "Base de datos basada en Eye&Telescope y Tycho2+ y USNO-UCAC3"
 
 #: ../storage/framework/messages/615d95b06e8d3af66fa6409a401acd7f0da2e633.php.php:14
 msgid "Privacy Policy"
-msgstr "Política de privacidad"
+msgstr "Política de Privacidad"
 
 #: ../storage/framework/messages/632230a491fb209409ec2564c3bcf63171d54c01.php.php:30
 msgid "Toggle navigation"
@@ -2133,7 +2133,7 @@ msgstr "Idiomas"
 
 #: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:55
 msgid "Add new observing site"
-msgstr "Agregar nuevo sitio de observación"
+msgstr "Añadir nuevo sitio de observación"
 
 #: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:73
 msgid "Default eyepiece"
@@ -2148,7 +2148,7 @@ msgstr "Lente predeterminada"
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:32
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:71
 msgid "Add lens"
-msgstr "Agregar lente"
+msgstr "Añadir lente"
 
 #: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:99
 msgid "Default atlas"
@@ -2180,7 +2180,7 @@ msgstr "Resumen"
 #: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:167
 #: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:189
 msgid "Lookup"
-msgstr "Búsqueda"
+msgstr "Buscar"
 
 #: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:150
 #: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:172
@@ -2507,7 +2507,7 @@ msgid ""
 "page%s"
 msgstr ""
 "Al menos uno de sus oculares (%s) no tiene una marca o un tipo.\n"
-"                        Por favor, agregue la información necesaria en la "
+"                        Por favor, añade la información necesaria en la "
 "página %soculares%s"
 
 #: ../storage/framework/messages/8484280fdddfc487746f9748fc4ba5398357ea46.php.php:109
@@ -3008,12 +3008,12 @@ msgstr "Fecha"
 #: ../storage/framework/messages/b955141f7fd424c92d29f45baff22b708d8cbbb8.php.php:6
 #: ../storage/framework/messages/b955141f7fd424c92d29f45baff22b708d8cbbb8.php.php:18
 msgid "Add a new filter"
-msgstr "Agregar un nuevo filtro"
+msgstr "Añadir un nuevo filtro"
 
 #: ../storage/framework/messages/b955141f7fd424c92d29f45baff22b708d8cbbb8.php.php:32
 #: ../storage/framework/messages/b955141f7fd424c92d29f45baff22b708d8cbbb8.php.php:103
 msgid "Change filter"
-msgstr "Cambiar filtro"
+msgstr "Modificar filtro"
 
 #: ../storage/framework/messages/b955141f7fd424c92d29f45baff22b708d8cbbb8.php.php:32
 #: ../storage/framework/messages/b955141f7fd424c92d29f45baff22b708d8cbbb8.php.php:103
@@ -3376,12 +3376,12 @@ msgstr "Más alto alrededor"
 #: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:6
 #: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:18
 msgid "Add a new eyepiece"
-msgstr "Agregar un nuevo ocular"
+msgstr "Añadir un nuevo ocular"
 
 #: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:32
 #: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:129
 msgid "Change eyepiece"
-msgstr "Cambiar ocular"
+msgstr "Modificar ocular"
 
 #: ../storage/framework/messages/e87a8a8639def56ad8df622f133bb709940e93d7.php.php:36
 msgid "Select an existing eyepiece"
@@ -3440,12 +3440,12 @@ msgstr "No autorizado para ver este mensaje."
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:6
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:18
 msgid "Add a new lens"
-msgstr "Agregar un nuevo lente"
+msgstr "Añadir un nuevo lente"
 
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:32
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:71
 msgid "Change lens"
-msgstr "Cambiar lente"
+msgstr "Modificar lente"
 
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:36
 msgid "Select an existing lens"
@@ -3657,10 +3657,10 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Lente desactivada: "
 
 #~ msgid "Name for the new observing list"
-#~ msgstr "Nombre de la nueva lista de observación"
+#~ msgstr "Nombre de la nueva lista de observaciones"
 
 #~ msgid "Make this list a public list"
-#~ msgstr "Haga que esta lista sea una lista pública"
+#~ msgstr "Hacer esta lista pública"
 
 #~ msgid "Create list"
 #~ msgstr "Crear lista"
@@ -3669,7 +3669,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Resumen de todas las observaciones de %s"
 
 #~ msgid "Object name"
-#~ msgstr "Nombre de objeto"
+#~ msgstr "Nombre del objeto"
 
 #~ msgid "Coma"
 #~ msgstr "Coma"
@@ -3687,7 +3687,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "dibujo"
 
 #~ msgid "Overview selected objects"
-#~ msgstr "Descripción de objetos seleccionados"
+#~ msgstr "Descripción de los objetos seleccionados"
 
 #~ msgid "ICQ name"
 #~ msgstr "Nombre ICQ"
@@ -3696,7 +3696,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Visto"
 
 #~ msgid "Sorry, no objects found!"
-#~ msgstr "¡Lo siento, no se encontraron objetos!"
+#~ msgstr "¡Lo siento, no hay objetos!"
 
 #~ msgid "Most popular objects"
 #~ msgstr "Objetos más populares"
@@ -3755,28 +3755,28 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ "Debe iniciar sesión como administrador para ejecutar estas operaciones."
 
 #~ msgid "Add new object"
-#~ msgstr "Agregar nuevo objeto"
+#~ msgstr "Añadir objeto nuevo"
 
 #~ msgid "Add observation"
 #~ msgstr "Añadir observación"
 
 #~ msgid "Overview all observations"
-#~ msgstr "Resumen todas las observaciones"
+#~ msgstr "Resumen de todas las observaciones"
 
 #~ msgid "Overview selected observations"
-#~ msgstr "Resumen observaciones seleccionadas"
+#~ msgstr "Resumen de las observaciones seleccionadas"
 
 #~ msgid "ICQ"
 #~ msgstr "ICQ"
 
 #~ msgid "Sorry, no observations found!"
-#~ msgstr "¡Lo siento, no se encontraron observaciones!"
+#~ msgstr "¡Lo siento, no hay observaciones!"
 
 #~ msgid "Perform another search"
 #~ msgstr "Realizar otra búsqueda"
 
 #~ msgid "You didn't specify any queries to search on!"
-#~ msgstr "¡No especificó ninguna consulta para buscar!"
+#~ msgstr "¡Ningún parámetro especificado!"
 
 #~ msgid "or"
 #~ msgstr "o"
@@ -3818,10 +3818,10 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Buscar objetos"
 
 #~ msgid "Change"
-#~ msgstr "Cambiar"
+#~ msgstr "Modificar"
 
 #~ msgid "Change comet"
-#~ msgstr "Cambiar cometa"
+#~ msgstr "Modificar cometa"
 
 #~ msgid "All observations"
 #~ msgstr "Todas las observaciones"
@@ -3878,10 +3878,10 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "¡Ya hay un objeto con este nombre (alternativo)!"
 
 #~ msgid "Please, only upload drawings smaller than 2mb!"
-#~ msgstr "Por favor, sólo sube los dibujos más pequeños que 2Mb!"
+#~ msgstr "Por favor, sólo se admiten los dibujos más pequeños que 2Mb!"
 
 #~ msgid "No corresponding object found for %s"
-#~ msgstr "No se encontró ningún objeto correspondiente para %s"
+#~ msgstr "No se encontró ningún objeto correspondiente a %s"
 
 #~ msgid "The object %s is moved up in the list %s"
 #~ msgstr "El objeto %s se desplaza hacia arriba la lista %s"
@@ -3905,16 +3905,16 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Lista eliminada: "
 
 #~ msgid " The object %s is added to the list %s"
-#~ msgstr " El objeto %s se agrega a la lista %s"
+#~ msgstr " El objeto %s ha sido añadido a la lista %s"
 
 #~ msgid " The observation is added to the list %s"
-#~ msgstr " La observación se agrega a la lista %s"
+#~ msgstr " La observación iha sido añadido a la lista %s"
 
 #~ msgid " The object %s is removed from the list %s"
-#~ msgstr " El objeto %s se elimina de la lista %s"
+#~ msgstr " El objeto %s ha sido eliminado de la lista %s"
 
 #~ msgid " The objects have been added to the list %s"
-#~ msgstr " Los objetos se han agregado a la lista %s"
+#~ msgstr " Los objetos han sido añadido a la lista %s"
 
 #~ msgid ""
 #~ "You wanted to watch an object, but none is specified. Please contact the "
@@ -3967,13 +3967,13 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Visión general de los instrumentos"
 
 #~ msgid "or add instrument manually"
-#~ msgstr "o agregue el instrumento manualmente"
+#~ msgstr "o añade el instrumento manualmente"
 
 #~ msgid "or F/D"
 #~ msgstr "o F/D"
 
 #~ msgid "Only for binoculars, finder scopes, ..."
-#~ msgstr "Sólo para prismáticos, telescopios de búsqueda,..."
+#~ msgstr "Sólo para prismáticos, buscadores,..."
 
 #~ msgid "All DeepskyLog users"
 #~ msgstr "Todos los usuarios de DeepskyLog"
@@ -4013,10 +4013,10 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Nombre"
 
 #~ msgid "Change email / firstname / name"
-#~ msgstr "Cambiar email/apellido/nombre"
+#~ msgstr "Modificar email/apellido/nombre"
 
 #~ msgid "Change role"
-#~ msgstr "Cambiar rol"
+#~ msgstr "Modificar rol"
 
 #~ msgid "H II objects"
 #~ msgstr "Objetos H II"
@@ -4438,7 +4438,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ "observaciones y dibujos."
 
 #~ msgid "Add new filter"
-#~ msgstr "Agregar nuevo filtro"
+#~ msgstr "Añadir nuevo filtro"
 
 #~ msgid "(e.g. Lumicon O-III)"
 #~ msgstr "(p.ej. Lumicon O-III)"
@@ -4860,7 +4860,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ "contacto con los desarrolladores con este mensaje."
 
 #~ msgid "Change site"
-#~ msgstr "Cambiar sitio"
+#~ msgstr "Modificar sitio"
 
 #~ msgid "by "
 #~ msgstr "por "
@@ -4937,7 +4937,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ "elementary data, an object description when available, and 2 photos by "
 #~ "the size indicated by you (15, 30 or 60 arc minutes, or nothing)."
 #~ msgstr ""
-#~ "Antes de cada objeto, puede Agregar una sección de datos. Esto contiene "
+#~ "Antes de cada objeto, puede Añadir una sección de datos. Esto contiene "
 #~ "los datos elementales, una descripción del objeto cuando está disponible, "
 #~ "y 2 fotos por el tamaño indicado por usted (15, 30 o 60 arco minutos, o "
 #~ "nada)."
@@ -4946,7 +4946,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ "You can add an index after each section. This index contains an overview "
 #~ "of all the objects on each of the maps."
 #~ msgstr ""
-#~ "Puede Agregar un índice después de cada sección. Este índice contiene una "
+#~ "Puede Añadir un índice después de cada sección. Este índice contiene una "
 #~ "visión general de todos los objetos de cada uno de los mapas."
 
 #~ msgid ""
@@ -4971,7 +4971,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Generar todos"
 
 #~ msgid "Add a data page"
-#~ msgstr "Agregar una página de datos"
+#~ msgstr "Añadir una página de datos"
 
 #~ msgid "with ephemerides"
 #~ msgstr "con efemérides"
@@ -4980,7 +4980,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "con efemérides del año"
 
 #~ msgid "Add an index page"
-#~ msgstr "Agregar una página de índice"
+#~ msgstr "Añadir una página de índice"
 
 #~ msgid "Please select a layout for the index page."
 #~ msgstr "Seleccione un diseño para la página de índice."
@@ -5656,14 +5656,14 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Abreviaturas Page - utilice A para activarla o desactivarla"
 
 #~ msgid "Add object"
-#~ msgstr "Agregar objeto"
+#~ msgstr "Añadir objeto"
 
 #~ msgid ""
 #~ "Now continue entering the object details.When all is ready, confirm using "
 #~ "the button above, named 'Add object'."
 #~ msgstr ""
 #~ "Ahora siga introduciendo los detalles del objeto. Cuando todo esté listo, "
-#~ "confirme con el botón anterior, llamado ‘Agregar objeto'."
+#~ "confirme con el botón anterior, llamado ‘Añadir objeto'."
 
 #~ msgid "Cancel adding"
 #~ msgstr "Cancelar adición"
@@ -5799,7 +5799,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Adaptar una sesión"
 
 #~ msgid "Add session"
-#~ msgstr "Agregar sesión"
+#~ msgstr "Añadir sesión"
 
 #~ msgid "Adapt session"
 #~ msgstr "Adaptar sesión"
@@ -5849,7 +5849,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ "mensaje para hacer una sesión similar."
 
 #~ msgid "Add observer"
-#~ msgstr "Agregar observador"
+#~ msgstr "Añadir observador"
 
 #~ msgid "Select an observer to add to your observing session."
 #~ msgstr "Seleccione un observador para agregarlo a su sesión de observación."
@@ -5888,7 +5888,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Quitar la lista"
 
 #~ msgid "Change name"
-#~ msgstr "Cambiar nombre"
+#~ msgstr "Modificar nombre"
 
 #~ msgid "Rename"
 #~ msgstr "Renombre"
@@ -5900,7 +5900,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Hacer público"
 
 #~ msgid "Add new list"
-#~ msgstr "Agregar nueva lista"
+#~ msgstr "Añadir nueva lista"
 
 #~ msgid "Import data"
 #~ msgstr "Importar datos"
@@ -6256,10 +6256,10 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Seleccione una de las sesiones añadidas por otros observadores"
 
 #~ msgid "Add a new session"
-#~ msgstr "Agregar una nueva sesión"
+#~ msgstr "Añadir una nueva sesión"
 
 #~ msgid "Change the observation details "
-#~ msgstr "Cambiar los detalles de la observación "
+#~ msgstr "Modificar los detalles de la observación "
 
 #~ msgid "Enter observation details "
 #~ msgstr "Introducir detalles de observación "
@@ -6414,7 +6414,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Lista activa: "
 
 #~ msgid "Add all results to the list "
-#~ msgstr "Agregar todos los resultados a la lista "
+#~ msgstr "Añadir todos los resultados a la lista "
 
 #~ msgid "Show no associated objects"
 #~ msgstr "No mostrar ningún objeto asociado"
@@ -6423,7 +6423,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Mostrar objetos asociados"
 
 #~ msgid "Switch names and alternative names"
-#~ msgstr "Cambiar nombres y nombres alternativos"
+#~ msgstr "Modificar nombres y nombres alternativos"
 
 #~ msgid "Public: "
 #~ msgstr "Público: "
@@ -6583,7 +6583,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ "algunos enlaces interesantes para empezar:"
 
 #~ msgid "Add an observing site"
-#~ msgstr "Agregar un sitio de observación"
+#~ msgstr "Añadir un sitio de observación"
 
 #~ msgid ""
 #~ "After entering a typical limiting magnitude or a typical SQM-value, "
@@ -6846,7 +6846,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "Marque hasta aquí como leído."
 
 #~ msgid "Add the observation to the list "
-#~ msgstr "Agregar la observación a la lista "
+#~ msgstr "Añadir la observación a la lista "
 
 #~ msgid "under the horizon"
 #~ msgstr "bajo el horizonte"
@@ -6886,7 +6886,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ "A similar session is prepared for you. Check %sAdd/Sessions</a> to "
 #~ "validate the session."
 #~ msgstr ""
-#~ "Una sesión similar está preparada para usted. Compruebe %sAgregar/"
+#~ "Una sesión similar está preparada para usted. Compruebe %sAñadir/"
 #~ "Sesiónes </a> para validar la sesión."
 
 #~ msgid "Begin"
@@ -7097,7 +7097,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "8 estrellas"
 
 #~ msgid "Add one or more instruments"
-#~ msgstr "Agregar uno o más instrumentos"
+#~ msgstr "Añadir uno o más instrumentos"
 
 #~ msgid "Click on Change and select Instruments. Add at least 1 instrument."
 #~ msgstr ""
@@ -7117,7 +7117,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ "instrumento es conocido por DeepskyLog."
 
 #~ msgid "Add one or more locations"
-#~ msgstr "Agregar una o más ubicaciones"
+#~ msgstr "Añadir una o más ubicaciones"
 
 #~ msgid "Click on Change and select Locations. Add at least 1 location."
 #~ msgstr ""
@@ -7186,7 +7186,7 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgstr "En las listas públicas"
 
 #~ msgid "Add all results of the page to list %s"
-#~ msgstr "Agregar todos los resultados de la página a la lista %s"
+#~ msgstr "Añadir todos los resultados de la página a la lista %s"
 
 #~ msgid "Remove all results of the page from list %s"
 #~ msgstr "Eliminar todos los resultados de la página de la lista %s"

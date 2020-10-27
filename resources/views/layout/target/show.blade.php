@@ -26,8 +26,4 @@
 @push('scripts')
 {!! $dataTable->scripts() !!}
 
-$(function () {
-$('[data-toggle="tooltip"]').tooltip()
-})
-
 @endpush

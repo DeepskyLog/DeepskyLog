@@ -947,7 +947,7 @@ class Target extends Model
                         $location->longitude
                     );
                     $ephemerides[$cnt]['max_alt'] = trim(
-                        $target->getMaxHeightAtNight()->convertToDegrees()
+                        $target->getMaxHeightAtNight()->convertToShortDegrees()
                     );
                     $ephemerides[$cnt]['max_alt_float'] = $target
                         ->getMaxHeightAtNight()->getCoordinate();

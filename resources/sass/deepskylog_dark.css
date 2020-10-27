@@ -495,11 +495,11 @@
 }
 
 [data-theme="dark"] .choices__inner {
-    background-color: #535353;
+    background-color: #999999;
 }
 
 [data-theme="dark"] .choices__list--dropdown {
-    background-color: #535353;
+    background-color: #999999;
 }
 
 [data-theme="dark"] .choices__list--dropdown .choices__item--selectable.is-highlighted {
@@ -507,7 +507,7 @@
 }
 
 [data-theme="dark"] .choices__input {
-    background-color: #535353;
+    background-color: #999999;
 }
 
 [data-theme="dark"] .choices[data-type*='select-one'] .choices__input {
