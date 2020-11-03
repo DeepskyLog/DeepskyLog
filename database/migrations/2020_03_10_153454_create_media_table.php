@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateMediaTable extends Migration
 {
@@ -22,6 +22,7 @@ class CreateMediaTable extends Migration
             $table->unsignedBigInteger('size');
             $table->json('manipulations');
             $table->json('custom_properties');
+            $table->json('generated_conversions');
             $table->json('responsive_images');
             $table->unsignedInteger('order_column')->nullable();
 

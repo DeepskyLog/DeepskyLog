@@ -27,7 +27,7 @@
         "muhamadrezaar/highcharts": "^2.0",
         "petercoles/multilingual-language-list": "^1.15",
         "spatie/laravel-cookie-consent": "^2.8",
-        "spatie/laravel-medialibrary": "^8.0.0",
+        "spatie/laravel-medialibrary": "^9.0",
         "spatie/laravel-translatable": "^4.3",
         "spatie/pdf-to-image": "^2.0",
         "stevebauman/location": "^5.2",
