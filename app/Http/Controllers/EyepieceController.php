@@ -14,8 +14,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Eyepiece;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use App\DataTables\EyepieceDataTable;
 use App\Http\Requests\EyepieceRequest;
 
@@ -80,35 +78,6 @@ class EyepieceController extends Controller
     }
 
     /**
-     * Display a listing of the resource in JSON format.
-     *
-     * @param int $id The id of the eyepiece to return
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getEyepieceJson(int $id)
-    {
-        $eyepiece = Eyepiece::findOrFail($id);
-
-        return response($eyepiece->jsonSerialize(), Response::HTTP_OK);
-    }
-
-    /**
-     * Display a listing of the types of eyepieces of a given brand in JSON format.
-     *
-     * @param string $brand The brand of the eyepiece
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getEyepieceTypeJson(string $brand)
-    {
-        $types = \App\Models\EyepieceType::where('brand', $brand)
-            ->pluck('type')->sort()->values();
-
-        return response($types->jsonSerialize(), Response::HTTP_OK);
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @param Eyepiece $eyepiece The eyepiece to fill out in the fields
@@ -132,7 +101,7 @@ class EyepieceController extends Controller
      */
     public function store(EyepieceRequest $request)
     {
-        $validated = $request->validated();
+        $validated            = $request->validated();
         $validated['user_id'] = auth()->id();
 
         // Check if brand is already in the database.
@@ -158,7 +127,7 @@ class EyepieceController extends Controller
             // Add the new brand to the database
             \App\Models\EyepieceType::create(
                 [
-                    'type' => $request->get('type'),
+                    'type'  => $request->get('type'),
                     'brand' => $request->get('brand'),
                 ]
             );
@@ -230,7 +199,7 @@ class EyepieceController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('focalLength')) {
-            $validated = $request->validated();
+            $validated            = $request->validated();
             $validated['user_id'] = auth()->id();
 
             // Check if brand is already in the database.
@@ -247,16 +216,16 @@ class EyepieceController extends Controller
                 );
             }
 
-            // Check if brand is already in the database.
+            // Check if type is already in the database.
             if (\App\Models\EyepieceType::where(
                 'type',
                 $request->get('type')
             )->where('brand', $request->get('brand'))->get()->isEmpty()
             ) {
-                // Add the new brand to the database
+                // Add the new type to the database
                 \App\Models\EyepieceType::create(
                     [
-                        'type' => $request->get('type'),
+                        'type'  => $request->get('type'),
                         'brand' => $request->get('brand'),
                     ]
                 );
@@ -369,34 +338,5 @@ class EyepieceController extends Controller
         }
 
         return redirect()->back();
-    }
-
-    /**
-     * Ajax request for select2.
-     *
-     * @param Request $request The request
-     *
-     * @return string the JSON response
-     */
-    public function dataAjax(Request $request)
-    {
-        $search = trim($request->q);
-
-        if ($search === '') {
-            return \Response::json([]);
-        }
-
-        $data = [];
-
-        if ($request->has('q')) {
-            $data = DB::table('eyepieces')
-                ->groupBy('name')
-                ->select('id', 'name')
-                ->where('name', 'LIKE', "%$search%")
-                ->limit(20)
-                ->get();
-        }
-
-        return response()->json($data);
     }
 }

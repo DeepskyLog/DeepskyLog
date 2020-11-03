@@ -154,13 +154,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 26.3,
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 26.3,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->post('eyepiece', $attributes);
@@ -173,13 +173,13 @@ class EyepieceTest extends TestCase
 
         // Check brand and type after adding a new eyepiece with unknown brand!
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'New Brand',
-            'focalLength' => 26.3,
-            'type' => 'Ethos2',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'New Brand',
+            'focalLength'    => 26.3,
+            'type'           => 'Ethos2',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->post('eyepiece', $attributes);
@@ -212,13 +212,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test1',
-            'brand' => 'Televue',
-            'focalLength' => 26.3,
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test1',
+            'brand'          => 'Televue',
+            'focalLength'    => 26.3,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -244,13 +244,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => null,
-            'focalLength' => 26.3,
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => null,
+            'focalLength'    => 26.3,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -276,13 +276,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => null,
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => null,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -308,13 +308,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 0.12,
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 0.12,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -340,13 +340,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 123.5,
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 123.5,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -372,13 +372,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 'test',
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 'test',
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -404,13 +404,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 28.4,
-            'type' => null,
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 28.4,
+            'type'           => null,
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -436,13 +436,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 27.2,
-            'type' => 'Ethos',
-            'apparentFOV' => null,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 27.2,
+            'type'           => 'Ethos',
+            'apparentFOV'    => null,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -468,13 +468,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 27.2,
-            'type' => 'Ethos',
-            'apparentFOV' => 15.3,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 27.2,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 15.3,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -500,13 +500,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 27.2,
-            'type' => 'Ethos',
-            'apparentFOV' => 185.2,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 27.2,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 185.2,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -532,13 +532,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 27.2,
-            'type' => 'Ethos',
-            'apparentFOV' => null,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 27.2,
+            'type'           => 'Ethos',
+            'apparentFOV'    => null,
             'maxFocalLength' => 'test',
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -564,13 +564,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 27.2,
-            'type' => 'Ethos',
-            'apparentFOV' => 80,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 27.2,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 80,
             'maxFocalLength' => 152.2,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -596,13 +596,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 27.2,
-            'type' => 'Ethos',
-            'apparentFOV' => 52,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 27.2,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 52,
             'maxFocalLength' => 0.5,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -628,13 +628,13 @@ class EyepieceTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/eyepiece/' . $eyepiece->id,
             [
-                'name' => 'test',
-                'brand' => 'Televue',
-                'focalLength' => 26.3,
-                'type' => 'Ethos',
-                'apparentFOV' => 107,
+                'name'           => 'test',
+                'brand'          => 'Televue',
+                'focalLength'    => 26.3,
+                'type'           => 'Ethos',
+                'apparentFOV'    => 107,
                 'maxFocalLength' => null,
-                'active' => 1,
+                'active'         => 1,
             ]
         );
 
@@ -660,13 +660,13 @@ class EyepieceTest extends TestCase
         $response = $this->actingAs($this->_user)->patch(
             '/eyepiece/' . $eyepiece->id,
             [
-                'name' => 'Test eyepiece',
-                'brand' => null,
-                'focalLength' => 26.3,
-                'type' => 'Ethos',
-                'apparentFOV' => 84,
+                'name'           => 'Test eyepiece',
+                'brand'          => null,
+                'focalLength'    => 26.3,
+                'type'           => 'Ethos',
+                'apparentFOV'    => 84,
                 'maxFocalLength' => null,
-                'active' => 1,
+                'active'         => 1,
             ]
         );
 
@@ -692,9 +692,9 @@ class EyepieceTest extends TestCase
         $response = $this->actingAs($this->_user)->patch(
             '/eyepiece/' . $eyepiece->id,
             [
-                'name' => 'test eyepiece',
-                'brand' => 'Televue',
-                'type' => 'Ethos',
+                'name'        => 'test eyepiece',
+                'brand'       => 'Televue',
+                'type'        => 'Ethos',
                 'focalLength' => 0.26,
                 'apparentFOV' => 107,
             ]
@@ -706,13 +706,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 123.5,
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 123.5,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -725,13 +725,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 'test',
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 'test',
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -743,13 +743,13 @@ class EyepieceTest extends TestCase
         $response->assertSessionHasErrors(['focalLength']);
 
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => null,
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => null,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -763,13 +763,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 28.4,
-            'type' => null,
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 28.4,
+            'type'           => null,
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -782,13 +782,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 27.2,
-            'type' => 'Ethos',
-            'apparentFOV' => null,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 27.2,
+            'type'           => 'Ethos',
+            'apparentFOV'    => null,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -801,13 +801,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 27.2,
-            'type' => 'Ethos',
-            'apparentFOV' => 15.3,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 27.2,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 15.3,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -820,13 +820,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 27.2,
-            'type' => 'Ethos',
-            'apparentFOV' => 185.2,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 27.2,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 185.2,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -839,13 +839,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 27.2,
-            'type' => 'Ethos',
-            'apparentFOV' => null,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 27.2,
+            'type'           => 'Ethos',
+            'apparentFOV'    => null,
             'maxFocalLength' => 'test',
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -858,13 +858,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 27.2,
-            'type' => 'Ethos',
-            'apparentFOV' => null,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 27.2,
+            'type'           => 'Ethos',
+            'apparentFOV'    => null,
             'maxFocalLength' => 152.2,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -877,13 +877,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 27.2,
-            'type' => 'Ethos',
-            'apparentFOV' => null,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 27.2,
+            'type'           => 'Ethos',
+            'apparentFOV'    => null,
             'maxFocalLength' => 0.5,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -912,30 +912,30 @@ class EyepieceTest extends TestCase
 
         // Then there should be a new eyepiece in the database
         $attributes = [
-            'user_id' => $eyepiece->user_id,
-            'name' => $eyepiece->name,
-            'brand' => $eyepiece->brand,
-            'focalLength' => $eyepiece->focalLength,
-            'type' => $eyepiece->type,
-            'apparentFOV' => $eyepiece->apparentFOV,
+            'user_id'        => $eyepiece->user_id,
+            'name'           => $eyepiece->name,
+            'brand'          => $eyepiece->brand,
+            'focalLength'    => $eyepiece->focalLength,
+            'type'           => $eyepiece->type,
+            'apparentFOV'    => $eyepiece->apparentFOV,
             'maxFocalLength' => $eyepiece->maxFocalLength,
-            'user_id' => $eyepiece->user_id,
-            'active' => $eyepiece->active,
+            'user_id'        => $eyepiece->user_id,
+            'active'         => $eyepiece->active,
         ];
 
         $this->assertDatabaseHas('eyepieces', $attributes);
 
         // Adapt the name and the factor
         $newAttributes = [
-            'user_id' => $eyepiece->user_id,
-            'name' => 'Updated eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 31,
-            'type' => 'Nagler',
-            'apparentFOV' => 82,
+            'user_id'        => $eyepiece->user_id,
+            'name'           => 'Updated eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 31,
+            'type'           => 'Nagler',
+            'apparentFOV'    => 82,
             'maxFocalLength' => $eyepiece->maxFocalLength,
-            'user_id' => $eyepiece->user_id,
-            'active' => $eyepiece->active,
+            'user_id'        => $eyepiece->user_id,
+            'active'         => $eyepiece->active,
         ];
 
         $this->put('eyepiece/' . $eyepiece->id, $newAttributes);
@@ -962,13 +962,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 26.3,
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 26.3,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->post('eyepiece', $attributes);
@@ -986,15 +986,15 @@ class EyepieceTest extends TestCase
 
         // Adapt the name and the factor
         $newAttributes = [
-            'user_id' => $newUser->id,
-            'name' => 'Updated eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 31,
-            'type' => 'Nagler',
-            'apparentFOV' => 82,
+            'user_id'        => $newUser->id,
+            'name'           => 'Updated eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 31,
+            'type'           => 'Nagler',
+            'apparentFOV'    => 82,
             'maxFocalLength' => $eyepiece->maxFocalLength,
-            'user_id' => $eyepiece->user_id,
-            'active' => $eyepiece->active,
+            'user_id'        => $eyepiece->user_id,
+            'active'         => $eyepiece->active,
         ];
 
         $this->expectException(AuthorizationException::class);
@@ -1020,13 +1020,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 26.3,
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 26.3,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->post('eyepiece', $attributes);
@@ -1045,14 +1045,14 @@ class EyepieceTest extends TestCase
 
         // Adapt the name and the factor
         $newAttributes = [
-            'name' => 'Updated eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 31,
-            'type' => 'Nagler',
-            'apparentFOV' => 82,
+            'name'           => 'Updated eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 31,
+            'type'           => 'Nagler',
+            'apparentFOV'    => 82,
             'maxFocalLength' => $eyepiece->maxFocalLength,
-            'user_id' => $eyepiece->user_id,
-            'active' => $eyepiece->active,
+            'user_id'        => $eyepiece->user_id,
+            'active'         => $eyepiece->active,
         ];
 
         $this->put('/eyepiece/' . $eyepiece->id, $newAttributes);
@@ -1084,12 +1084,12 @@ class EyepieceTest extends TestCase
         $this->assertDatabaseHas(
             'eyepieces',
             [
-                'name' => $eyepiece->name,
-                'type' => $eyepiece->type,
-                'brand' => $eyepiece->brand,
+                'name'        => $eyepiece->name,
+                'type'        => $eyepiece->type,
+                'brand'       => $eyepiece->brand,
                 'focalLength' => $eyepiece->focalLength,
                 'apparentFOV' => $eyepiece->apparentFOV,
-                'user_id' => $eyepiece->user_id,
+                'user_id'     => $eyepiece->user_id,
             ]
         );
 
@@ -1103,12 +1103,12 @@ class EyepieceTest extends TestCase
         $this->assertDatabaseMissing(
             'eyepieces',
             [
-                'name' => $eyepiece->name,
-                'type' => $eyepiece->type,
-                'brand' => $eyepiece->brand,
+                'name'        => $eyepiece->name,
+                'type'        => $eyepiece->type,
+                'brand'       => $eyepiece->brand,
                 'focalLength' => $eyepiece->focalLength,
                 'apparentFOV' => $eyepiece->apparentFOV,
-                'user_id' => $eyepiece->user_id,
+                'user_id'     => $eyepiece->user_id,
             ]
         );
         $this->assertEquals(0, \App\Models\Eyepiece::count());
@@ -1135,12 +1135,12 @@ class EyepieceTest extends TestCase
         $this->assertDatabaseHas(
             'eyepieces',
             [
-                'name' => $eyepiece->name,
-                'type' => $eyepiece->type,
-                'brand' => $eyepiece->brand,
+                'name'        => $eyepiece->name,
+                'type'        => $eyepiece->type,
+                'brand'       => $eyepiece->brand,
                 'focalLength' => $eyepiece->focalLength,
                 'apparentFOV' => $eyepiece->apparentFOV,
-                'user_id' => $eyepiece->user_id,
+                'user_id'     => $eyepiece->user_id,
             ]
         );
 
@@ -1171,12 +1171,12 @@ class EyepieceTest extends TestCase
         $eyepiece = Eyepiece::factory()->create(['user_id' => $this->_user->id]);
 
         $attributes = [
-            'name' => $eyepiece->name,
-            'type' => $eyepiece->type,
-            'brand' => $eyepiece->brand,
+            'name'        => $eyepiece->name,
+            'type'        => $eyepiece->type,
+            'brand'       => $eyepiece->brand,
             'focalLength' => $eyepiece->focalLength,
             'apparentFOV' => $eyepiece->apparentFOV,
-            'user_id' => $eyepiece->user_id,
+            'user_id'     => $eyepiece->user_id,
         ];
 
         // Then there should be a new eyepiece in the database
@@ -1211,13 +1211,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece while
         // passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 26.3,
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 26.3,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->expectException(\Illuminate\Auth\AuthenticationException::class);
@@ -1243,13 +1243,13 @@ class EyepieceTest extends TestCase
         // When they hit the endpoint in /eyepiece to create a new eyepiece while
         // passing the necessary data
         $attributes = [
-            'name' => 'Test eyepiece',
-            'brand' => 'Televue',
-            'focalLength' => 26.3,
-            'type' => 'Ethos',
-            'apparentFOV' => 107,
+            'name'           => 'Test eyepiece',
+            'brand'          => 'Televue',
+            'focalLength'    => 26.3,
+            'type'           => 'Ethos',
+            'apparentFOV'    => 107,
             'maxFocalLength' => null,
-            'active' => 1,
+            'active'         => 1,
         ];
 
         $this->post('/eyepiece', $attributes);
@@ -1312,7 +1312,7 @@ class EyepieceTest extends TestCase
      */
     public function createPageIsAccessibleForAdmin()
     {
-        $user = User::factory()->create(['type' => 'admin']);
+        $user     = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($user)->get('/eyepiece/create');
 
         $response->assertStatus(200);
@@ -1352,14 +1352,14 @@ class EyepieceTest extends TestCase
         $this->actingAs($this->_user)->post(
             'eyepiece',
             [
-                'name' => 'Test eyepiece',
-                'brand' => 'Televue',
-                'focalLength' => 26.3,
-                'type' => 'Ethos',
-                'apparentFOV' => 107,
+                'name'           => 'Test eyepiece',
+                'brand'          => 'Televue',
+                'focalLength'    => 26.3,
+                'type'           => 'Ethos',
+                'apparentFOV'    => 107,
                 'maxFocalLength' => null,
-                'active' => 1,
-                'picture' => UploadedFile::fake()->image('eyepiece.png'),
+                'active'         => 1,
+                'picture'        => UploadedFile::fake()->image('eyepiece.png'),
             ]
         );
 
@@ -1400,7 +1400,7 @@ class EyepieceTest extends TestCase
      */
     public function testShowEyepieceDetailWithoutChangeButton()
     {
-        $newUser = User::factory()->create();
+        $newUser  = User::factory()->create();
         $eyepiece = Eyepiece::factory()->create(['user_id' => $newUser->id]);
 
         $response = $this->actingAs($this->_user)->get('/eyepiece/' . $eyepiece->id);
@@ -1423,7 +1423,7 @@ class EyepieceTest extends TestCase
      */
     public function testAdminAlwaysSeesChangeButton()
     {
-        $admin = User::factory()->create(['type' => 'admin']);
+        $admin    = User::factory()->create(['type' => 'admin']);
         $eyepiece = Eyepiece::factory()->create(['user_id' => $this->_user->id]);
 
         $response = $this->actingAs($admin)->get('/eyepiece/' . $eyepiece->id);
@@ -1483,7 +1483,7 @@ class EyepieceTest extends TestCase
         $response->assertStatus(401);
 
         // Check as admin
-        $admin = User::factory()->create(['type' => 'admin']);
+        $admin    = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get('/eyepiece/admin');
 
         $response->assertStatus(200);
@@ -1544,12 +1544,12 @@ class EyepieceTest extends TestCase
         $this->actingAs($this->_user)->post(
             'eyepiece',
             [
-                'name' => 'Test eyepiece',
+                'name'        => 'Test eyepiece',
                 'focalLength' => 13,
                 'apparentFOV' => 72,
-                'brand' => 'Televue',
-                'type' => 'Ethos',
-                'picture' => UploadedFile::fake()->image('eyepiece.png'),
+                'brand'       => 'Televue',
+                'type'        => 'Ethos',
+                'picture'     => UploadedFile::fake()->image('eyepiece.png'),
             ]
         );
 
@@ -1574,12 +1574,12 @@ class EyepieceTest extends TestCase
         $this->actingAs($this->_user)->post(
             'eyepiece',
             [
-                'name' => 'Test eyepiece',
+                'name'        => 'Test eyepiece',
                 'focalLength' => 13,
                 'apparentFOV' => 72,
-                'brand' => 'Televue',
-                'type' => 'Ethos',
-                'picture' => UploadedFile::fake()->image('eyepiece.png'),
+                'brand'       => 'Televue',
+                'type'        => 'Ethos',
+                'picture'     => UploadedFile::fake()->image('eyepiece.png'),
             ]
         );
 
@@ -1597,12 +1597,12 @@ class EyepieceTest extends TestCase
         $this->actingAs($this->_user)->post(
             'eyepiece',
             [
-                'name' => 'Test eyepiece',
+                'name'        => 'Test eyepiece',
                 'focalLength' => 13,
                 'apparentFOV' => 72,
-                'brand' => 'Televue',
-                'type' => 'Ethos',
-                'picture' => UploadedFile::fake()->image('eyepiece.png'),
+                'brand'       => 'Televue',
+                'type'        => 'Ethos',
+                'picture'     => UploadedFile::fake()->image('eyepiece.png'),
             ]
         );
 
@@ -1617,44 +1617,5 @@ class EyepieceTest extends TestCase
         Storage::disk('public')->assertExists(
             $eyepiece->id . '/' . $eyepiece->id . '.png'
         );
-    }
-
-    /**
-     * Ensure that the autocomplete works for select2.
-     *
-     * @test
-     */
-    public function testAutocompleteForEyepiece()
-    {
-        $eyepiece = Eyepiece::factory()->create(
-            ['user_id' => $this->_user->id, 'name' => 'DeepskyLog test eyepiece']
-        );
-
-        $eyepiece2 = Eyepiece::factory()->create(
-            ['user_id' => $this->_user->id, 'name' => 'Other test eyepiece']
-        );
-
-        // Only for logged in users!
-        $response = $this->get('/eyepiece/autocomplete?q=Deep');
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
-
-        // Test for logged in user
-        $response = $this->actingAs($this->_user)->get(
-            '/eyepiece/autocomplete?q=Deep'
-        );
-
-        $this->assertEquals($eyepiece->id, $response[0]['id']);
-        $this->assertEquals($eyepiece->name, $response[0]['name']);
-
-        $response = $this->actingAs($this->_user)->get(
-            '/eyepiece/autocomplete?q=test'
-        );
-
-        $this->assertEquals($eyepiece->id, $response[0]['id']);
-        $this->assertEquals($eyepiece->name, $response[0]['name']);
-
-        $this->assertEquals($eyepiece2->id, $response[1]['id']);
-        $this->assertEquals($eyepiece2->name, $response[1]['name']);
     }
 }

@@ -65,9 +65,6 @@ Route::post('/filter/{filter}/deleteImage', 'FilterController@deleteImage')
     ->name('filter.deleteImage');
 
 // Eyepieces
-Route::get('/eyepiece/autocomplete', 'EyepieceController@dataAjax')
-    ->name('eyepiece.dataAjax');
-
 Route::get('/eyepiece/create/{eyepiece}', 'EyepieceController@create')
     ->middleware('verified')
     ->name('eyepiece.create');
@@ -82,10 +79,6 @@ Route::resource(
 )->middleware('verified')->except('show');
 
 Route::get('/eyepiece/{eyepiece}', 'EyepieceController@show')->name('eyepiece.show');
-
-Route::get('/getEyepieceJson/{id}', 'EyepieceController@getEyepieceJson');
-
-Route::get('/getEyepieceTypeJson/{brand}', 'EyepieceController@getEyepieceTypeJson');
 
 Route::get('/eyepiece/{eyepiece}/getImage', 'EyepieceController@getImage')
     ->name('eyepiece.getImage');

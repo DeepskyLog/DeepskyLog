@@ -10,14 +10,13 @@
 	  },
 	  false,
 	);
-    let selected = parseInt(@this.get{!! $attributes['selected'] !!}).toString();
-	choices.setChoiceByValue(selected);
+    let selected = @this.get{!! $attributes['selected'] !!};
+	{{-- choices.setChoiceByValue(selected); --}}
 	}">
     <select id="{{ $attributes['prettyname'] }}" wire-model="{{ $attributes['wire:model'] }}"
         wire:change="{{ $attributes['wire:change'] }}" x-ref="{{ $attributes['prettyname'] }}">
         @if(count($attributes['options'])>0)
         @foreach($attributes['options'] as $key=>$option)
-        @php print ($attributes['first'] . ' - ' . $key . ';') @endphp
         <option @if($attributes['first']==$key) selected="selected" @endif value="{{$key}}">{{$option}}
         </option>
         @endforeach
