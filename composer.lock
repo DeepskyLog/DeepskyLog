@@ -4409,16 +4409,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "9.0.1",
+            "version": "9.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "119c61568e85d5aa3f15deb2dd5705b7a3432e07"
+                "reference": "89291b9330da8ffd542b6e5c019562307c2cd762"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/119c61568e85d5aa3f15deb2dd5705b7a3432e07",
-                "reference": "119c61568e85d5aa3f15deb2dd5705b7a3432e07",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/89291b9330da8ffd542b6e5c019562307c2cd762",
+                "reference": "89291b9330da8ffd542b6e5c019562307c2cd762",
                 "shasum": ""
             },
             "require": {
@@ -4498,7 +4498,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-medialibrary/issues",
-                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.0.1"
+                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.1.0"
             },
             "funding": [
                 {
@@ -4510,7 +4510,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-30T10:23:04+00:00"
+            "time": "2020-11-04T09:23:42+00:00"
         },
         {
             "name": "spatie/laravel-translatable",
