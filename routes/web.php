@@ -87,9 +87,6 @@ Route::post('/eyepiece/{eyepiece}/deleteImage', 'EyepieceController@deleteImage'
     ->name('eyepiece.deleteImage');
 
 // Instruments
-Route::get('/instrument/autocomplete', 'InstrumentController@dataAjax')
-    ->name('instrument.dataAjax');
-
 Route::get('/instrument/create/{instrument}', 'InstrumentController@create')
     ->middleware('verified')
     ->name('instrument.create');
@@ -105,8 +102,6 @@ Route::resource(
 
 Route::get('/instrument/{instrument}', 'InstrumentController@show')
     ->name('instrument.show');
-
-Route::get('/getInstrumentJson/{id}', 'InstrumentController@getInstrumentJson');
 
 Route::get('/instrument/{instrument}/getImage', 'InstrumentController@getImage')
     ->name('instrument.getImage');

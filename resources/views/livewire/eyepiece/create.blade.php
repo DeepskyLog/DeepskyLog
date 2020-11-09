@@ -29,7 +29,7 @@
                 value="@if ($eyepiece->name){{ $eyepiece->name }}@else{{ old('name') }}@endif" />
             @error('name') <span class="small text-error">{{ $message }}<br /></span> @enderror
 
-            <span class="help-block">{{ _i("e.g. Baader O-III") }}</span>
+            <span class="help-block">{{ _i("e.g. Televue 13mm Ethos") }}</span>
         </div>
 
         {{-- The generic name of the eyepiece --}}

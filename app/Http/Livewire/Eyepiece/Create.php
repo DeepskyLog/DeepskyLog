@@ -206,7 +206,7 @@ class Create extends Component
             $this->photo = null;
         }
 
-        // View the page with all filters for the user
+        // View the page with all eyepieces for the user
         return redirect(route('eyepiece.index'));
     }
 
