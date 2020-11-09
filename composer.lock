@@ -329,16 +329,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v4.14",
+            "version": "v4.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "46a83aef1c38da93fc0874fd75d32e51942fc019"
+                "reference": "e82ede2a6e3eb2cedc76730450fef292ce22ddff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/46a83aef1c38da93fc0874fd75d32e51942fc019",
-                "reference": "46a83aef1c38da93fc0874fd75d32e51942fc019",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/e82ede2a6e3eb2cedc76730450fef292ce22ddff",
+                "reference": "e82ede2a6e3eb2cedc76730450fef292ce22ddff",
                 "shasum": ""
             },
             "require": {
@@ -387,7 +387,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.14"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.15"
             },
             "funding": [
                 {
@@ -395,7 +395,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-26T09:42:30+00:00"
+            "time": "2020-11-09T10:01:34+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
@@ -3140,16 +3140,16 @@
         },
         {
             "name": "opis/closure",
-            "version": "3.6.0",
+            "version": "3.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opis/closure.git",
-                "reference": "c547f8262a5fa9ff507bd06cc394067b83a75085"
+                "reference": "943b5d70cc5ae7483f6aff6ff43d7e34592ca0f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opis/closure/zipball/c547f8262a5fa9ff507bd06cc394067b83a75085",
-                "reference": "c547f8262a5fa9ff507bd06cc394067b83a75085",
+                "url": "https://api.github.com/repos/opis/closure/zipball/943b5d70cc5ae7483f6aff6ff43d7e34592ca0f5",
+                "reference": "943b5d70cc5ae7483f6aff6ff43d7e34592ca0f5",
                 "shasum": ""
             },
             "require": {
@@ -3199,9 +3199,9 @@
             ],
             "support": {
                 "issues": "https://github.com/opis/closure/issues",
-                "source": "https://github.com/opis/closure/tree/3.6.0"
+                "source": "https://github.com/opis/closure/tree/3.6.1"
             },
-            "time": "2020-10-11T21:42:15+00:00"
+            "time": "2020-11-07T02:01:34+00:00"
         },
         {
             "name": "petercoles/multilingual-language-list",
@@ -4409,16 +4409,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "9.1.0",
+            "version": "9.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "89291b9330da8ffd542b6e5c019562307c2cd762"
+                "reference": "c42ddce19b29c4039b3b9c1f48eb0474869f38e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/89291b9330da8ffd542b6e5c019562307c2cd762",
-                "reference": "89291b9330da8ffd542b6e5c019562307c2cd762",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/c42ddce19b29c4039b3b9c1f48eb0474869f38e5",
+                "reference": "c42ddce19b29c4039b3b9c1f48eb0474869f38e5",
                 "shasum": ""
             },
             "require": {
@@ -4498,7 +4498,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-medialibrary/issues",
-                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.1.0"
+                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.1.1"
             },
             "funding": [
                 {
@@ -4510,7 +4510,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-11-04T09:23:42+00:00"
+            "time": "2020-11-06T09:14:07+00:00"
         },
         {
             "name": "spatie/laravel-translatable",
@@ -7174,23 +7174,23 @@
         },
         {
             "name": "voku/portable-ascii",
-            "version": "1.5.3",
+            "version": "1.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/portable-ascii.git",
-                "reference": "25bcbf01678930251fd572891447d9e318a6e2b8"
+                "reference": "87dc337d4200b32717dd3849fea846319e897658"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/portable-ascii/zipball/25bcbf01678930251fd572891447d9e318a6e2b8",
-                "reference": "25bcbf01678930251fd572891447d9e318a6e2b8",
+                "url": "https://api.github.com/repos/voku/portable-ascii/zipball/87dc337d4200b32717dd3849fea846319e897658",
+                "reference": "87dc337d4200b32717dd3849fea846319e897658",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~6.0 || ~7.0"
+                "phpunit/phpunit": "~6.0 || ~7.0 || ~9.0"
             },
             "suggest": {
                 "ext-intl": "Use Intl for transliterator_transliterate() support"
@@ -7220,7 +7220,7 @@
             ],
             "support": {
                 "issues": "https://github.com/voku/portable-ascii/issues",
-                "source": "https://github.com/voku/portable-ascii/tree/master"
+                "source": "https://github.com/voku/portable-ascii/tree/1.5.4"
             },
             "funding": [
                 {
@@ -7244,7 +7244,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-22T23:32:04+00:00"
+            "time": "2020-11-08T21:15:15+00:00"
         },
         {
             "name": "yajra/laravel-datatables",
@@ -7298,16 +7298,16 @@
         },
         {
             "name": "yajra/laravel-datatables-buttons",
-            "version": "v4.10.1",
+            "version": "v4.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-buttons.git",
-                "reference": "d0d5e125054f833a6858f7b2336f7b130fe2bc14"
+                "reference": "ae234f48ebb5885d5ca3e4428fb8803a9621c4eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-buttons/zipball/d0d5e125054f833a6858f7b2336f7b130fe2bc14",
-                "reference": "d0d5e125054f833a6858f7b2336f7b130fe2bc14",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-buttons/zipball/ae234f48ebb5885d5ca3e4428fb8803a9621c4eb",
+                "reference": "ae234f48ebb5885d5ca3e4428fb8803a9621c4eb",
                 "shasum": ""
             },
             "require": {
@@ -7360,7 +7360,7 @@
             ],
             "support": {
                 "issues": "https://github.com/yajra/laravel-datatables-buttons/issues",
-                "source": "https://github.com/yajra/laravel-datatables-buttons/tree/v4.10.1"
+                "source": "https://github.com/yajra/laravel-datatables-buttons/tree/v4.10.2"
             },
             "funding": [
                 {
@@ -7372,7 +7372,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-10-31T09:54:49+00:00"
+            "time": "2020-11-05T08:23:51+00:00"
         },
         {
             "name": "yajra/laravel-datatables-editor",
@@ -7996,16 +7996,16 @@
         },
         {
             "name": "laravel/telescope",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/telescope.git",
-                "reference": "14d7be946ec934e05403f86886eec7aa800a06d4"
+                "reference": "7e9d9fdab18b86db6c8368f2a026ff695c8287e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/14d7be946ec934e05403f86886eec7aa800a06d4",
-                "reference": "14d7be946ec934e05403f86886eec7aa800a06d4",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/7e9d9fdab18b86db6c8368f2a026ff695c8287e9",
+                "reference": "7e9d9fdab18b86db6c8368f2a026ff695c8287e9",
                 "shasum": ""
             },
             "require": {
@@ -8054,9 +8054,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/telescope/issues",
-                "source": "https://github.com/laravel/telescope/tree/v4.3.0"
+                "source": "https://github.com/laravel/telescope/tree/v4.3.1"
             },
-            "time": "2020-11-03T19:33:42+00:00"
+            "time": "2020-11-05T12:12:19+00:00"
         },
         {
             "name": "maximebf/debugbar",

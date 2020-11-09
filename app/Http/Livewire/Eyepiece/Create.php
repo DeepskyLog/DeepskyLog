@@ -75,6 +75,8 @@ class Create extends Component
             $this->brand       = $this->eyepiece->brand;
             $this->allTypes    = \App\Models\EyepieceType::where('brand', $this->eyepiece->brand)->pluck('type', 'type')->toArray();
             $this->type        = $this->eyepiece->type;
+            $this->newBrand    = '';
+            $this->newType     = '';
         }
 
         if ($propertyName == 'newBrand') {
