@@ -154,7 +154,7 @@ class Create extends Component
             // Update the picture
             Instrument::find($instrument->id)
                 ->addMedia($this->photo->getRealPath())
-                ->usingFileName($instrument->id . $this->photo->extension())
+                ->usingFileName($instrument->id . '.' . $this->photo->extension())
                 ->toMediaCollection('instrument');
 
             $this->photo = null;

@@ -1491,35 +1491,6 @@ class EyepieceTest extends TestCase
     }
 
     /**
-     * Ensure that logged in users can see the Json information of an eyepiece.
-     *
-     * @test
-     */
-    public function testJsonInformationForEyepiece()
-    {
-        $eyepiece = Eyepiece::factory()->create(['user_id' => $this->_user->id]);
-
-        // Only for logged in users!
-        $response = $this->get('/getEyepieceJson/' . $eyepiece->id);
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
-
-        // Test for logged in user
-        $response = $this->actingAs($this->_user)->get(
-            '/getEyepieceJson/' . $eyepiece->id
-        );
-
-        $this->assertEquals($response['name'], $eyepiece->name);
-        $this->assertEquals($response['id'], $eyepiece->id);
-        $this->assertEquals($response['user_id'], $eyepiece->user_id);
-        $this->assertEquals($response['type'], $eyepiece->type);
-        $this->assertEquals($response['brand'], $eyepiece->brand);
-        $this->assertEquals($response['focalLength'], $eyepiece->focalLength);
-        $this->assertEquals($response['apparentFOV'], $eyepiece->apparentFOV);
-        $this->assertEquals($response['active'], $eyepiece->active);
-    }
-
-    /**
      * Ensure that we get an image of an eyepiece.
      *
      * @test

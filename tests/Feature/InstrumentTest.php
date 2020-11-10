@@ -163,12 +163,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => 3,
-            'fd' => 4.5,
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => 3,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->post('instrument', $attributes);
@@ -198,12 +198,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test1',
-            'diameter' => 457,
-            'type' => 3,
-            'fd' => 4.5,
+            'name'               => 'Test1',
+            'diameter'           => 457,
+            'type'               => 3,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -229,12 +229,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => null,
-            'type' => 3,
-            'fd' => 4.5,
+            'name'               => 'Test instrument',
+            'diameter'           => null,
+            'type'               => 3,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -260,12 +260,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => 3,
-            'fd' => null,
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => 3,
+            'fd'                 => null,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -291,12 +291,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => -3,
-            'type' => 3,
-            'fd' => 4.5,
+            'name'               => 'Test instrument',
+            'diameter'           => -3,
+            'type'               => 3,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -322,12 +322,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 'test',
-            'type' => 3,
-            'fd' => 4.5,
+            'name'               => 'Test instrument',
+            'diameter'           => 'test',
+            'type'               => 3,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -353,12 +353,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => 3,
-            'fd' => 0.5,
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => 3,
+            'fd'                 => 0.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -384,12 +384,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => 3,
-            'fd' => 'test',
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => 3,
+            'fd'                 => 'test',
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -415,12 +415,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => 3,
-            'fd' => null,
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => 3,
+            'fd'                 => null,
             'fixedMagnification' => -0.3,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -446,12 +446,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => 3,
-            'fd' => null,
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => 3,
+            'fd'                 => null,
             'fixedMagnification' => 'test',
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -477,12 +477,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => null,
-            'fd' => 4.5,
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => null,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -510,12 +510,12 @@ class InstrumentTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/instrument/' . $instrument->id,
             [
-                'name' => 'Test',
-                'diameter' => 457,
-                'type' => 4,
-                'fd' => 4.5,
+                'name'               => 'Test',
+                'diameter'           => 457,
+                'type'               => 4,
+                'fd'                 => 4.5,
                 'fixedMagnification' => null,
-                'active' => 1,
+                'active'             => 1,
             ]
         );
 
@@ -543,12 +543,12 @@ class InstrumentTest extends TestCase
         $response = $this->actingAs($this->_user)->patch(
             '/instrument/' . $instrument->id,
             [
-                'name' => 'Test instrument',
-                'diameter' => null,
-                'type' => 4,
-                'fd' => 4.5,
+                'name'               => 'Test instrument',
+                'diameter'           => null,
+                'type'               => 4,
+                'fd'                 => 4.5,
                 'fixedMagnification' => null,
-                'active' => 1,
+                'active'             => 1,
             ]
         );
 
@@ -576,12 +576,12 @@ class InstrumentTest extends TestCase
         $response = $this->actingAs($this->_user)->patch(
             '/instrument/' . $instrument->id,
             [
-                'name' => 'Test instrument',
-                'diameter' => null,
-                'type' => 4,
-                'fd' => 4.5,
+                'name'               => 'Test instrument',
+                'diameter'           => null,
+                'type'               => 4,
+                'fd'                 => 4.5,
                 'fixedMagnification' => null,
-                'active' => 1,
+                'active'             => 1,
             ]
         );
 
@@ -591,12 +591,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => -3,
-            'type' => 4,
-            'fd' => 4.5,
+            'name'               => 'Test instrument',
+            'diameter'           => -3,
+            'type'               => 4,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -609,12 +609,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => null,
-            'fd' => 4.5,
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => null,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -626,12 +626,12 @@ class InstrumentTest extends TestCase
         $response->assertSessionHasErrors(['type']);
 
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => 4,
-            'fd' => -1.2,
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => 4,
+            'fd'                 => -1.2,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -645,12 +645,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => 4,
-            'fd' => null,
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => 4,
+            'fd'                 => null,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -664,12 +664,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => 4,
-            'fd' => null,
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => 4,
+            'fd'                 => null,
             'fixedMagnification' => -4.3,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $response = $this->actingAs($this->_user)->put(
@@ -698,25 +698,25 @@ class InstrumentTest extends TestCase
 
         // Then there should be a new instrument in the database
         $attributes = [
-            'name' => $instrument->name,
-            'diameter' => $instrument->diameter,
-            'type' => $instrument->type,
-            'fd' => $instrument->fd,
+            'name'               => $instrument->name,
+            'diameter'           => $instrument->diameter,
+            'type'               => $instrument->type,
+            'fd'                 => $instrument->fd,
             'fixedMagnification' => $instrument->fixedMagnification,
-            'active' => $instrument->active,
+            'active'             => $instrument->active,
         ];
 
         $this->assertDatabaseHas('instruments', $attributes);
 
         // Adapt the name and the factor
         $newAttributes = [
-            'user_id' => $instrument->user_id,
-            'name' => 'My test instrument',
-            'diameter' => 457.2,
-            'type' => 3,
-            'fd' => 4.5,
+            'user_id'            => $instrument->user_id,
+            'name'               => 'My test instrument',
+            'diameter'           => 457.2,
+            'type'               => 3,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => $instrument->active,
+            'active'             => $instrument->active,
         ];
 
         $this->put('instrument/' . $instrument->id, $newAttributes);
@@ -743,12 +743,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => 4,
-            'fd' => 4.5,
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => 4,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->post('instrument', $attributes);
@@ -766,12 +766,12 @@ class InstrumentTest extends TestCase
 
         // Adapt the name and the diameter
         $newAttributes = [
-            'name' => 'New test instrument',
-            'diameter' => 342,
-            'type' => 4,
-            'fd' => 4.5,
+            'name'               => 'New test instrument',
+            'diameter'           => 342,
+            'type'               => 4,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->expectException(AuthorizationException::class);
@@ -797,12 +797,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 457,
-            'type' => 4,
-            'fd' => 4.5,
+            'name'               => 'Test instrument',
+            'diameter'           => 457,
+            'type'               => 4,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->post('instrument', $attributes);
@@ -821,12 +821,12 @@ class InstrumentTest extends TestCase
 
         // Adapt the name and the diameter
         $newAttributes = [
-            'name' => 'New test instrument',
-            'diameter' => 352,
-            'type' => 4,
-            'fd' => 4.5,
+            'name'               => 'New test instrument',
+            'diameter'           => 352,
+            'type'               => 4,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->put('/instrument/' . $instrument->id, $newAttributes);
@@ -858,13 +858,13 @@ class InstrumentTest extends TestCase
         $this->assertDatabaseHas(
             'instruments',
             [
-                'name' => $instrument->name,
-                'diameter' => $instrument->diameter,
-                'type' => $instrument->type,
-                'fd' => $instrument->fd,
+                'name'               => $instrument->name,
+                'diameter'           => $instrument->diameter,
+                'type'               => $instrument->type,
+                'fd'                 => $instrument->fd,
                 'fixedMagnification' => $instrument->fixedMagnification,
-                'active' => $instrument->active,
-                'user_id' => $instrument->user_id,
+                'active'             => $instrument->active,
+                'user_id'            => $instrument->user_id,
             ]
         );
 
@@ -878,13 +878,13 @@ class InstrumentTest extends TestCase
         $this->assertDatabaseMissing(
             'instruments',
             [
-                'name' => $instrument->name,
-                'diameter' => $instrument->diameter,
-                'type' => $instrument->type,
-                'fd' => $instrument->fd,
+                'name'               => $instrument->name,
+                'diameter'           => $instrument->diameter,
+                'type'               => $instrument->type,
+                'fd'                 => $instrument->fd,
                 'fixedMagnification' => $instrument->fixedMagnification,
-                'active' => $instrument->active,
-                'user_id' => $instrument->user_id,
+                'active'             => $instrument->active,
+                'user_id'            => $instrument->user_id,
             ]
         );
         $this->assertEquals(0, \App\Models\Instrument::count());
@@ -911,13 +911,13 @@ class InstrumentTest extends TestCase
         $this->assertDatabaseHas(
             'instruments',
             [
-                'name' => $instrument->name,
-                'diameter' => $instrument->diameter,
-                'type' => $instrument->type,
-                'fd' => $instrument->fd,
+                'name'               => $instrument->name,
+                'diameter'           => $instrument->diameter,
+                'type'               => $instrument->type,
+                'fd'                 => $instrument->fd,
                 'fixedMagnification' => $instrument->fixedMagnification,
-                'active' => $instrument->active,
-                'user_id' => $instrument->user_id,
+                'active'             => $instrument->active,
+                'user_id'            => $instrument->user_id,
             ]
         );
 
@@ -948,13 +948,13 @@ class InstrumentTest extends TestCase
         $instrument =Instrument::factory()->create(['user_id' => $this->_user->id]);
 
         $attributes = [
-            'name' => $instrument->name,
-            'diameter' => $instrument->diameter,
-            'type' => $instrument->type,
-            'fd' => $instrument->fd,
+            'name'               => $instrument->name,
+            'diameter'           => $instrument->diameter,
+            'type'               => $instrument->type,
+            'fd'                 => $instrument->fd,
             'fixedMagnification' => $instrument->fixedMagnification,
-            'active' => $instrument->active,
-            'user_id' => $instrument->user_id,
+            'active'             => $instrument->active,
+            'user_id'            => $instrument->user_id,
         ];
 
         // Then there should be a new instrument in the database
@@ -989,12 +989,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument while
         // passing the necessary data
         $attributes = [
-            'name' => 'New test instrument',
-            'diameter' => 352,
-            'type' => 4,
-            'fd' => 4.5,
+            'name'               => 'New test instrument',
+            'diameter'           => 352,
+            'type'               => 4,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->expectException(\Illuminate\Auth\AuthenticationException::class);
@@ -1020,12 +1020,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument while
         // passing the necessary data
         $attributes = [
-            'name' => 'New test instrument',
-            'diameter' => 352,
-            'type' => 4,
-            'fd' => 4.5,
+            'name'               => 'New test instrument',
+            'diameter'           => 352,
+            'type'               => 4,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->post('/instrument', $attributes);
@@ -1088,7 +1088,7 @@ class InstrumentTest extends TestCase
      */
     public function createPageIsAccessibleForAdmin()
     {
-        $user = User::factory()->create(['type' => 'admin']);
+        $user     = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($user)->get('/instrument/create');
 
         $response->assertStatus(200);
@@ -1129,13 +1129,13 @@ class InstrumentTest extends TestCase
         $this->actingAs($this->_user)->post(
             'instrument',
             [
-                'name' => 'New test instrument',
-                'diameter' => 352,
-                'type' => 4,
-                'fd' => 4.5,
+                'name'               => 'New test instrument',
+                'diameter'           => 352,
+                'type'               => 4,
+                'fd'                 => 4.5,
                 'fixedMagnification' => null,
-                'active' => 1,
-                'picture' => UploadedFile::fake()->image('instrument.png'),
+                'active'             => 1,
+                'picture'            => UploadedFile::fake()->image('instrument.png'),
             ]
         );
 
@@ -1178,7 +1178,7 @@ class InstrumentTest extends TestCase
      */
     public function testShowInstrumentDetailWithoutChangeButton()
     {
-        $newUser = User::factory()->create();
+        $newUser    = User::factory()->create();
         $instrument =Instrument::factory()->create(['user_id' => $newUser->id]);
 
         $response = $this->actingAs($this->_user)->get(
@@ -1200,7 +1200,7 @@ class InstrumentTest extends TestCase
      */
     public function testAdminAlwaysSeesChangeButton()
     {
-        $admin = User::factory()->create(['type' => 'admin']);
+        $admin      = User::factory()->create(['type' => 'admin']);
         $instrument =Instrument::factory()->create(
             ['user_id' => $this->_user->id]
         );
@@ -1258,46 +1258,11 @@ class InstrumentTest extends TestCase
         $response->assertStatus(401);
 
         // Check as admin
-        $admin = User::factory()->create(['type' => 'admin']);
+        $admin    = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get('/instrument/admin');
 
         $response->assertStatus(200);
         $response->assertSee('All instruments');
-    }
-
-    /**
-     * Ensure that logged in users can see the Json information of an instrument.
-     *
-     * @test
-     *
-     */
-    public function testJsonInformationForInstrument()
-    {
-        $instrument =Instrument::factory()->create(
-            ['user_id' => $this->_user->id]
-        );
-
-        // Only for logged in users!
-        $response = $this->get('/getInstrumentJson/' . $instrument->id);
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
-
-        // Test for logged in user
-        $response = $this->actingAs($this->_user)->get(
-            '/getInstrumentJson/' . $instrument->id
-        );
-
-        $this->assertEquals($response['name'], $instrument->name);
-        $this->assertEquals($response['id'], $instrument->id);
-        $this->assertEquals($response['user_id'], $instrument->user_id);
-        $this->assertEquals($response['type'], $instrument->type);
-        $this->assertEquals($response['diameter'], $instrument->diameter);
-        $this->assertEquals($response['fd'], $instrument->fd);
-        $this->assertEquals(
-            $response['fixedMagnification'],
-            $instrument->fixedMagnification
-        );
-        $this->assertEquals($response['active'], $instrument->active);
     }
 
     /**
@@ -1328,13 +1293,13 @@ class InstrumentTest extends TestCase
         $this->actingAs($this->_user)->post(
             'instrument',
             [
-                'name' => 'New test instrument',
-                'diameter' => 352,
-                'type' => 4,
-                'fd' => 4.5,
+                'name'               => 'New test instrument',
+                'diameter'           => 352,
+                'type'               => 4,
+                'fd'                 => 4.5,
                 'fixedMagnification' => null,
-                'active' => 1,
-                'picture' => UploadedFile::fake()->image('instrument.png'),
+                'active'             => 1,
+                'picture'            => UploadedFile::fake()->image('instrument.png'),
             ]
         );
 
@@ -1360,13 +1325,13 @@ class InstrumentTest extends TestCase
         $this->actingAs($this->_user)->post(
             'instrument',
             [
-                'name' => 'New test instrument',
-                'diameter' => 352,
-                'type' => 4,
-                'fd' => 4.5,
+                'name'               => 'New test instrument',
+                'diameter'           => 352,
+                'type'               => 4,
+                'fd'                 => 4.5,
                 'fixedMagnification' => null,
-                'active' => 1,
-                'picture' => UploadedFile::fake()->image('instrument.png'),
+                'active'             => 1,
+                'picture'            => UploadedFile::fake()->image('instrument.png'),
             ]
         );
 
@@ -1384,13 +1349,13 @@ class InstrumentTest extends TestCase
         $this->actingAs($this->_user)->post(
             'instrument',
             [
-                'name' => 'New test instrument',
-                'diameter' => 352,
-                'type' => 4,
-                'fd' => 4.5,
+                'name'               => 'New test instrument',
+                'diameter'           => 352,
+                'type'               => 4,
+                'fd'                 => 4.5,
                 'fixedMagnification' => null,
-                'active' => 1,
-                'picture' => UploadedFile::fake()->image('instrument.png'),
+                'active'             => 1,
+                'picture'            => UploadedFile::fake()->image('instrument.png'),
             ]
         );
 
@@ -1408,46 +1373,6 @@ class InstrumentTest extends TestCase
     }
 
     /**
-     * Ensure that the autocomplete works for select2.
-     *
-     * @test
-     *
-     */
-    public function testAutocompleteForInstrument()
-    {
-        $instrument =Instrument::factory()->create(
-            ['user_id' => $this->_user->id, 'name' => 'DeepskyLog test instrument']
-        );
-
-        $instrument2 =Instrument::factory()->create(
-            ['user_id' => $this->_user->id, 'name' => 'Other test instrument']
-        );
-
-        // Only for logged in users!
-        $response = $this->get('/instrument/autocomplete?q=Deep');
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
-
-        // Test for logged in user
-        $response = $this->actingAs($this->_user)->get(
-            '/instrument/autocomplete?q=Deep'
-        );
-
-        $this->assertEquals($instrument->id, $response[0]['id']);
-        $this->assertEquals($instrument->name, $response[0]['name']);
-
-        $response = $this->actingAs($this->_user)->get(
-            '/instrument/autocomplete?q=test'
-        );
-
-        $this->assertEquals($instrument->id, $response[0]['id']);
-        $this->assertEquals($instrument->name, $response[0]['name']);
-
-        $this->assertEquals($instrument2->id, $response[1]['id']);
-        $this->assertEquals($instrument2->name, $response[1]['name']);
-    }
-
-    /**
      * Ensure that the diameter and focal length are shown in imperial units if
      * requested.
      *
@@ -1456,12 +1381,12 @@ class InstrumentTest extends TestCase
      */
     public function testImperialUnitsDisplayInstrument()
     {
-        $user = User::factory()->create(['showInches' => 1]);
+        $user       = User::factory()->create(['showInches' => 1]);
         $instrument =Instrument::factory()->create(
             [
-                'user_id' => $user->id,
+                'user_id'  => $user->id,
                 'diameter' => 457,
-                'fd' => 4.5,
+                'fd'       => 4.5,
             ]
         );
 
@@ -1490,12 +1415,12 @@ class InstrumentTest extends TestCase
         // When they hit the endpoint in /instrument to create a new instrument
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test instrument',
-            'diameter' => 18,
-            'type' => 4,
-            'fd' => 4.5,
+            'name'               => 'Test instrument',
+            'diameter'           => 18,
+            'type'               => 4,
+            'fd'                 => 4.5,
             'fixedMagnification' => null,
-            'active' => 1,
+            'active'             => 1,
         ];
 
         $this->actingAs($user)->post('instrument', $attributes);
@@ -1555,7 +1480,7 @@ class InstrumentTest extends TestCase
 
         // As other user
         $otherUser = User::factory()->create();
-        $response = $this->actingAs($otherUser)->get(
+        $response  = $this->actingAs($otherUser)->get(
             '/instrument/' . $instrument->id
         );
         $response->assertStatus(200);
@@ -1567,7 +1492,7 @@ class InstrumentTest extends TestCase
         $response->assertSee('Last used on');
 
         // As admin
-        $admin = User::factory()->create(['type' => 'admin']);
+        $admin    = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get(
             '/instrument/' . $instrument->id
         );

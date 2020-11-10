@@ -144,7 +144,7 @@ class Create extends Component
             // Update the picture
             Filter::find($filter->id)
                 ->addMedia($this->photo->getRealPath())
-                ->usingFileName($filter->id . $this->photo->extension())
+                ->usingFileName($filter->id . '.' . $this->photo->extension())
                 ->toMediaCollection('filter');
 
             $this->photo = null;

@@ -177,20 +177,20 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 12.2215,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->post('location', $attributes);
 
         // Also check if the user_id is correct
-        $attributes['user_id'] = $this->_user->id;
+        $attributes['user_id']           = $this->_user->id;
         $attributes['limitingMagnitude'] = $attributes['lm'];
         unset($attributes['lm']);
 
@@ -216,14 +216,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Tt',
+            'name'      => 'Tt',
             'longitude' => 12.2215,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -249,13 +249,13 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test',
-            'latitude' => -14.2158,
+            'name'      => 'Test',
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -281,13 +281,13 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 4.125,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -313,13 +313,13 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 4.125,
-            'latitude' => -14.2158,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'latitude'  => -14.2158,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -345,13 +345,13 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 4.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -377,13 +377,13 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 4.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -409,14 +409,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 184.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -442,14 +442,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => -184.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -475,14 +475,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 'bla',
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -508,14 +508,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => -18.125,
-            'latitude' => -95.2158,
+            'latitude'  => -95.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -541,14 +541,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => -84.125,
-            'latitude' => 94.2158,
+            'latitude'  => 94.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -574,14 +574,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => -84.125,
-            'latitude' => 'bla',
+            'latitude'  => 'bla',
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -607,14 +607,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => -84.125,
-            'latitude' => 4.2158,
+            'latitude'  => 4.2158,
             'elevation' => 11234,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -640,14 +640,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => -84.125,
-            'latitude' => 4.2158,
+            'latitude'  => 4.2158,
             'elevation' => -834,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -673,14 +673,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => -84.125,
-            'latitude' => 4.2158,
+            'latitude'  => 4.2158,
             'elevation' => 'Bla',
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -706,14 +706,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => -84.125,
-            'latitude' => 4.2158,
+            'latitude'  => 4.2158,
             'elevation' => 1234,
-            'country' => 'ES',
-            'timezone' => 'Europe/bla',
-            'lm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/bla',
+            'lm'        => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -739,14 +739,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 14.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => -6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => -6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -772,14 +772,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 184.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 9.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 9.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -805,14 +805,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 184.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'lm' => 'TEST',
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'lm'        => 'TEST',
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -838,14 +838,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 14.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'sqm' => 6.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'sqm'       => 6.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -871,14 +871,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 184.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'sqm' => 29.4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'sqm'       => 29.4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -904,14 +904,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 184.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'sqm' => 'TEST',
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'sqm'       => 'TEST',
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -937,14 +937,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 14.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'bortle' => -4,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'bortle'    => -4,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -970,14 +970,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 184.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'bortle' => 10,
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'bortle'    => 10,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -1003,14 +1003,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'Test location',
+            'name'      => 'Test location',
             'longitude' => 184.125,
-            'latitude' => -14.2158,
+            'latitude'  => -14.2158,
             'elevation' => 1254,
-            'country' => 'ES',
-            'timezone' => 'Europe/Madrid',
-            'bortle' => 'TEST',
-            'active' => 1,
+            'country'   => 'ES',
+            'timezone'  => 'Europe/Madrid',
+            'bortle'    => 'TEST',
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
@@ -1039,14 +1039,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Tt',
+                'name'      => 'Tt',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1057,14 +1057,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -184.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1075,14 +1075,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => 184.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1093,14 +1093,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => null,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1108,14 +1108,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -14.125,
-                'latitude' => -94.2158,
+                'latitude'  => -94.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1126,14 +1126,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => 14.125,
-                'latitude' => 94.2158,
+                'latitude'  => 94.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1144,14 +1144,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => 1.215,
-                'latitude' => null,
+                'latitude'  => null,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1162,14 +1162,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 11234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1180,14 +1180,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => -1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1198,14 +1198,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 'test',
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1216,14 +1216,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => null,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1234,14 +1234,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => null,
-                'timezone' => 'Europe/Madrid',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => null,
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1252,14 +1252,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => null,
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => null,
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1270,14 +1270,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/blah',
-                'lm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/blah',
+                'lm'        => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1288,14 +1288,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => null,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => null,
+                'active'    => 1,
             ]
         );
 
@@ -1306,14 +1306,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => -6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => -6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1324,14 +1324,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 16.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 16.4,
+                'active'    => 1,
             ]
         );
 
@@ -1342,14 +1342,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'lm' => 'test',
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'lm'        => 'test',
+                'active'    => 1,
             ]
         );
 
@@ -1360,14 +1360,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'sqm' => 'test',
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'sqm'       => 'test',
+                'active'    => 1,
             ]
         );
 
@@ -1378,14 +1378,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'sqm' => 26.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'sqm'       => 26.4,
+                'active'    => 1,
             ]
         );
 
@@ -1396,14 +1396,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'sqm' => 6.4,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'sqm'       => 6.4,
+                'active'    => 1,
             ]
         );
 
@@ -1414,14 +1414,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'sqm' => null,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'sqm'       => null,
+                'active'    => 1,
             ]
         );
 
@@ -1432,14 +1432,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'bortle' => 'test',
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'bortle'    => 'test',
+                'active'    => 1,
             ]
         );
 
@@ -1450,14 +1450,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'bortle' => 11,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'bortle'    => 11,
+                'active'    => 1,
             ]
         );
 
@@ -1468,14 +1468,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'bortle' => 0,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'bortle'    => 0,
+                'active'    => 1,
             ]
         );
 
@@ -1486,14 +1486,14 @@ class LocationTest extends TestCase
         $response = $this->actingAs($this->_user)->put(
             '/location/' . $location->id,
             [
-                'name' => 'Test location',
+                'name'      => 'Test location',
                 'longitude' => -84.125,
-                'latitude' => 4.2158,
+                'latitude'  => 4.2158,
                 'elevation' => 1234,
-                'country' => 'ES',
-                'timezone' => 'Europe/Madrid',
-                'bortle' => null,
-                'active' => 1,
+                'country'   => 'ES',
+                'timezone'  => 'Europe/Madrid',
+                'bortle'    => null,
+                'active'    => 1,
             ]
         );
 
@@ -1519,31 +1519,31 @@ class LocationTest extends TestCase
 
         // Then there should be a new location in the database
         $attributes = [
-            'name' => $location->name,
-            'longitude' => $location->longitude,
-            'latitude' => $location->latitude,
-            'elevation' => $location->elevation,
-            'country' => $location->country,
-            'timezone' => $location->timezone,
+            'name'              => $location->name,
+            'longitude'         => $location->longitude,
+            'latitude'          => $location->latitude,
+            'elevation'         => $location->elevation,
+            'country'           => $location->country,
+            'timezone'          => $location->timezone,
             'limitingMagnitude' => $location->limitingMagnitude,
-            'skyBackground' => $location->skyBackground,
-            'bortle' => $location->bortle,
-            'active' => $location->active,
+            'skyBackground'     => $location->skyBackground,
+            'bortle'            => $location->bortle,
+            'active'            => $location->active,
         ];
 
         $this->assertDatabaseHas('locations', $attributes);
 
         // Adapt the settings
         $newAttributes = [
-            'user_id' => $location->user_id,
-            'name' => 'My test location',
+            'user_id'   => $location->user_id,
+            'name'      => 'My test location',
             'longitude' => 12.21,
-            'latitude' => 50.12,
+            'latitude'  => 50.12,
             'elevation' => 75,
-            'country' => 'BE',
-            'timezone' => 'Europe/Brussels',
-            'bortle' => 5,
-            'active' => $location->active,
+            'country'   => 'BE',
+            'timezone'  => 'Europe/Brussels',
+            'bortle'    => 5,
+            'active'    => $location->active,
         ];
 
         $this->put('location/' . $location->id, $newAttributes);
@@ -1570,14 +1570,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'My test location',
+            'name'      => 'My test location',
             'longitude' => 12.21,
-            'latitude' => 50.12,
+            'latitude'  => 50.12,
             'elevation' => 75,
-            'country' => 'BE',
-            'timezone' => 'Europe/Brussels',
-            'bortle' => 5,
-            'active' => 1,
+            'country'   => 'BE',
+            'timezone'  => 'Europe/Brussels',
+            'bortle'    => 5,
+            'active'    => 1,
         ];
 
         $this->post('location', $attributes);
@@ -1595,14 +1595,14 @@ class LocationTest extends TestCase
 
         // Adapt the name and the diameter
         $newAttributes = [
-            'name' => 'My new test location',
+            'name'      => 'My new test location',
             'longitude' => 12.21,
-            'latitude' => 50.12,
+            'latitude'  => 50.12,
             'elevation' => 75,
-            'country' => 'BE',
-            'timezone' => 'Europe/Brussels',
-            'bortle' => 3,
-            'active' => 1,
+            'country'   => 'BE',
+            'timezone'  => 'Europe/Brussels',
+            'bortle'    => 3,
+            'active'    => 1,
         ];
 
         $this->expectException(AuthorizationException::class);
@@ -1628,14 +1628,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location
         // while passing the necessary data
         $attributes = [
-            'name' => 'My test location',
+            'name'      => 'My test location',
             'longitude' => 12.21,
-            'latitude' => 50.12,
+            'latitude'  => 50.12,
             'elevation' => 75,
-            'country' => 'BE',
-            'timezone' => 'Europe/Brussels',
-            'bortle' => 5,
-            'active' => 1,
+            'country'   => 'BE',
+            'timezone'  => 'Europe/Brussels',
+            'bortle'    => 5,
+            'active'    => 1,
         ];
 
         $this->post('location', $attributes);
@@ -1654,14 +1654,14 @@ class LocationTest extends TestCase
 
         // Adapt the name and the diameter
         $newAttributes = [
-            'name' => 'My new test location',
+            'name'      => 'My new test location',
             'longitude' => 12.21,
-            'latitude' => 50.12,
+            'latitude'  => 50.12,
             'elevation' => 75,
-            'country' => 'BE',
-            'timezone' => 'Europe/Brussels',
-            'bortle' => 3,
-            'active' => 1,
+            'country'   => 'BE',
+            'timezone'  => 'Europe/Brussels',
+            'bortle'    => 3,
+            'active'    => 1,
         ];
 
         $this->put('/location/' . $location->id, $newAttributes);
@@ -1693,16 +1693,16 @@ class LocationTest extends TestCase
         $this->assertDatabaseHas(
             'locations',
             [
-                'name' => $location->name,
-                'longitude' => $location->longitude,
-                'latitude' => $location->latitude,
-                'elevation' => $location->elevation,
-                'country' => $location->country,
-                'timezone' => $location->timezone,
+                'name'              => $location->name,
+                'longitude'         => $location->longitude,
+                'latitude'          => $location->latitude,
+                'elevation'         => $location->elevation,
+                'country'           => $location->country,
+                'timezone'          => $location->timezone,
                 'limitingMagnitude' => $location->limitingMagnitude,
-                'skyBackground' => $location->skyBackground,
-                'bortle' => $location->bortle,
-                'active' => $location->active,
+                'skyBackground'     => $location->skyBackground,
+                'bortle'            => $location->bortle,
+                'active'            => $location->active,
             ]
         );
 
@@ -1716,16 +1716,16 @@ class LocationTest extends TestCase
         $this->assertDatabaseMissing(
             'locations',
             [
-                'name' => $location->name,
-                'longitude' => $location->longitude,
-                'latitude' => $location->latitude,
-                'elevation' => $location->elevation,
-                'country' => $location->country,
-                'timezone' => $location->timezone,
+                'name'              => $location->name,
+                'longitude'         => $location->longitude,
+                'latitude'          => $location->latitude,
+                'elevation'         => $location->elevation,
+                'country'           => $location->country,
+                'timezone'          => $location->timezone,
                 'limitingMagnitude' => $location->limitingMagnitude,
-                'skyBackground' => $location->skyBackground,
-                'bortle' => $location->bortle,
-                'active' => $location->active,
+                'skyBackground'     => $location->skyBackground,
+                'bortle'            => $location->bortle,
+                'active'            => $location->active,
             ]
         );
         $this->assertEquals(0, \App\Models\Location::count());
@@ -1752,16 +1752,16 @@ class LocationTest extends TestCase
         $this->assertDatabaseHas(
             'locations',
             [
-                'name' => $location->name,
-                'longitude' => $location->longitude,
-                'latitude' => $location->latitude,
-                'elevation' => $location->elevation,
-                'country' => $location->country,
-                'timezone' => $location->timezone,
+                'name'              => $location->name,
+                'longitude'         => $location->longitude,
+                'latitude'          => $location->latitude,
+                'elevation'         => $location->elevation,
+                'country'           => $location->country,
+                'timezone'          => $location->timezone,
                 'limitingMagnitude' => $location->limitingMagnitude,
-                'skyBackground' => $location->skyBackground,
-                'bortle' => $location->bortle,
-                'active' => $location->active,
+                'skyBackground'     => $location->skyBackground,
+                'bortle'            => $location->bortle,
+                'active'            => $location->active,
             ]
         );
 
@@ -1792,16 +1792,16 @@ class LocationTest extends TestCase
         $location = Location::factory()->create(['user_id' => $this->_user->id]);
 
         $attributes = [
-            'name' => $location->name,
-            'longitude' => $location->longitude,
-            'latitude' => $location->latitude,
-            'elevation' => $location->elevation,
-            'country' => $location->country,
-            'timezone' => $location->timezone,
+            'name'              => $location->name,
+            'longitude'         => $location->longitude,
+            'latitude'          => $location->latitude,
+            'elevation'         => $location->elevation,
+            'country'           => $location->country,
+            'timezone'          => $location->timezone,
             'limitingMagnitude' => $location->limitingMagnitude,
-            'skyBackground' => $location->skyBackground,
-            'bortle' => $location->bortle,
-            'active' => $location->active,
+            'skyBackground'     => $location->skyBackground,
+            'bortle'            => $location->bortle,
+            'active'            => $location->active,
         ];
 
         // Then there should be a new location in the database
@@ -1836,14 +1836,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location while
         // passing the necessary data
         $attributes = [
-            'name' => 'My new test location',
+            'name'      => 'My new test location',
             'longitude' => 12.21,
-            'latitude' => 50.12,
+            'latitude'  => 50.12,
             'elevation' => 75,
-            'country' => 'BE',
-            'timezone' => 'Europe/Brussels',
-            'bortle' => 3,
-            'active' => 1,
+            'country'   => 'BE',
+            'timezone'  => 'Europe/Brussels',
+            'bortle'    => 3,
+            'active'    => 1,
         ];
 
         $this->expectException(\Illuminate\Auth\AuthenticationException::class);
@@ -1869,14 +1869,14 @@ class LocationTest extends TestCase
         // When they hit the endpoint in /location to create a new location while
         // passing the necessary data
         $attributes = [
-            'name' => 'My new test location',
+            'name'      => 'My new test location',
             'longitude' => 12.21,
-            'latitude' => 50.12,
+            'latitude'  => 50.12,
             'elevation' => 75,
-            'country' => 'BE',
-            'timezone' => 'Europe/Brussels',
-            'bortle' => 3,
-            'active' => 1,
+            'country'   => 'BE',
+            'timezone'  => 'Europe/Brussels',
+            'bortle'    => 3,
+            'active'    => 1,
         ];
 
         $this->post('/location', $attributes);
@@ -1939,7 +1939,7 @@ class LocationTest extends TestCase
      */
     public function createPageIsAccessibleForAdmin()
     {
-        $user = User::factory()->create(['type' => 'admin']);
+        $user     = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($user)->get('/location/create');
 
         $response->assertStatus(200);
@@ -1979,15 +1979,15 @@ class LocationTest extends TestCase
         $this->actingAs($this->_user)->post(
             'location',
             [
-                'name' => 'My new test location',
+                'name'      => 'My new test location',
                 'longitude' => 12.21,
-                'latitude' => 50.12,
+                'latitude'  => 50.12,
                 'elevation' => 75,
-                'country' => 'BE',
-                'timezone' => 'Europe/Brussels',
-                'bortle' => 3,
-                'active' => 1,
-                'picture' => UploadedFile::fake()->image('location.png'),
+                'country'   => 'BE',
+                'timezone'  => 'Europe/Brussels',
+                'bortle'    => 3,
+                'active'    => 1,
+                'picture'   => UploadedFile::fake()->image('location.png'),
             ]
         );
 
@@ -2030,7 +2030,7 @@ class LocationTest extends TestCase
      */
     public function testShowLocationDetailWithoutChangeButton()
     {
-        $newUser = User::factory()->create();
+        $newUser  = User::factory()->create();
         $location = Location::factory()->create(['user_id' => $newUser->id]);
 
         $response = $this->actingAs($this->_user)->get(
@@ -2052,7 +2052,7 @@ class LocationTest extends TestCase
      */
     public function testAdminAlwaysSeesChangeButton()
     {
-        $admin = User::factory()->create(['type' => 'admin']);
+        $admin    = User::factory()->create(['type' => 'admin']);
         $location = Location::factory()->create(
             ['user_id' => $this->_user->id]
         );
@@ -2110,53 +2110,11 @@ class LocationTest extends TestCase
         $response->assertStatus(401);
 
         // Check as admin
-        $admin = User::factory()->create(['type' => 'admin']);
+        $admin    = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get('/location/admin');
 
         $response->assertStatus(200);
         $response->assertSee('All locations');
-    }
-
-    /**
-     * Ensure that logged in users can see the Json information of an location.
-     *
-     * @test
-     *
-     */
-    public function testJsonInformationForLocation()
-    {
-        $location = Location::factory()->create(
-            ['user_id' => $this->_user->id]
-        );
-
-        // Only for logged in users!
-        $response = $this->get('/getLocationJson/' . $location->id);
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
-
-        // Test for logged in user
-        $response = $this->actingAs($this->_user)->get(
-            '/getLocationJson/' . $location->id
-        );
-
-        $this->assertEquals($response['name'], $location->name);
-        $this->assertEquals($response['id'], $location->id);
-        $this->assertEquals($response['user_id'], $location->user_id);
-        $this->assertEquals($response['longitude'], $location->longitude);
-        $this->assertEquals($response['latitude'], $location->latitude);
-        $this->assertEquals($response['elevation'], $location->elevation);
-        $this->assertEquals(
-            $response['country'],
-            $location->country
-        );
-        $this->assertEquals($response['timezone'], $location->timezone);
-        $this->assertEquals(
-            $response['limitingMagnitude'],
-            $location->limitingMagnitude
-        );
-        $this->assertEquals($response['skyBackground'], $location->skyBackground);
-        $this->assertEquals($response['bortle'], $location->bortle);
-        $this->assertEquals($response['active'], $location->active);
     }
 
     /**
@@ -2187,15 +2145,15 @@ class LocationTest extends TestCase
         $this->actingAs($this->_user)->post(
             'location',
             [
-                'name' => 'My new test location',
+                'name'      => 'My new test location',
                 'longitude' => 12.21,
-                'latitude' => 50.12,
+                'latitude'  => 50.12,
                 'elevation' => 75,
-                'country' => 'BE',
-                'timezone' => 'Europe/Brussels',
-                'bortle' => 3,
-                'active' => 1,
-                'picture' => UploadedFile::fake()->image('location.png'),
+                'country'   => 'BE',
+                'timezone'  => 'Europe/Brussels',
+                'bortle'    => 3,
+                'active'    => 1,
+                'picture'   => UploadedFile::fake()->image('location.png'),
             ]
         );
 
@@ -2221,15 +2179,15 @@ class LocationTest extends TestCase
         $this->actingAs($this->_user)->post(
             'location',
             [
-                'name' => 'My new test location',
+                'name'      => 'My new test location',
                 'longitude' => 12.21,
-                'latitude' => 50.12,
+                'latitude'  => 50.12,
                 'elevation' => 75,
-                'country' => 'BE',
-                'timezone' => 'Europe/Brussels',
-                'bortle' => 3,
-                'active' => 1,
-                'picture' => UploadedFile::fake()->image('location.png'),
+                'country'   => 'BE',
+                'timezone'  => 'Europe/Brussels',
+                'bortle'    => 3,
+                'active'    => 1,
+                'picture'   => UploadedFile::fake()->image('location.png'),
             ]
         );
 
@@ -2247,15 +2205,15 @@ class LocationTest extends TestCase
         $this->actingAs($this->_user)->post(
             'location',
             [
-                'name' => 'My new test location',
+                'name'      => 'My new test location',
                 'longitude' => 12.21,
-                'latitude' => 50.12,
+                'latitude'  => 50.12,
                 'elevation' => 75,
-                'country' => 'BE',
-                'timezone' => 'Europe/Brussels',
-                'bortle' => 3,
-                'active' => 1,
-                'picture' => UploadedFile::fake()->image('location.png'),
+                'country'   => 'BE',
+                'timezone'  => 'Europe/Brussels',
+                'bortle'    => 3,
+                'active'    => 1,
+                'picture'   => UploadedFile::fake()->image('location.png'),
             ]
         );
 
@@ -2270,46 +2228,6 @@ class LocationTest extends TestCase
         Storage::disk('public')->assertExists(
             $location->id . '/' . $location->id . '.png'
         );
-    }
-
-    /**
-     * Ensure that the autocomplete works for select2.
-     *
-     * @test
-     *
-     */
-    public function testAutocompleteForLocation()
-    {
-        $location = Location::factory()->create(
-            ['user_id' => $this->_user->id, 'name' => 'DeepskyLog test location']
-        );
-
-        $location2 = Location::factory()->create(
-            ['user_id' => $this->_user->id, 'name' => 'Other test location']
-        );
-
-        // Only for logged in users!
-        $response = $this->get('/location/autocomplete?q=Deep');
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
-
-        // Test for logged in user
-        $response = $this->actingAs($this->_user)->get(
-            '/location/autocomplete?q=Deep'
-        );
-
-        $this->assertEquals($location->id, $response[0]['id']);
-        $this->assertEquals($location->name, $response[0]['name']);
-
-        $response = $this->actingAs($this->_user)->get(
-            '/location/autocomplete?q=test'
-        );
-
-        $this->assertEquals($location->id, $response[0]['id']);
-        $this->assertEquals($location->name, $response[0]['name']);
-
-        $this->assertEquals($location2->id, $response[1]['id']);
-        $this->assertEquals($location2->name, $response[1]['name']);
     }
 
     /**
@@ -2351,7 +2269,7 @@ class LocationTest extends TestCase
 
         // As other user
         $otherUser = User::factory()->create();
-        $response = $this->actingAs($otherUser)->get(
+        $response  = $this->actingAs($otherUser)->get(
             '/location/' . $location->id
         );
         $response->assertStatus(200);
@@ -2363,7 +2281,7 @@ class LocationTest extends TestCase
         $response->assertDontSee('Last observation');
 
         // As admin
-        $admin = User::factory()->create(['type' => 'admin']);
+        $admin    = User::factory()->create(['type' => 'admin']);
         $response = $this->actingAs($admin)->get(
             '/location/' . $location->id
         );

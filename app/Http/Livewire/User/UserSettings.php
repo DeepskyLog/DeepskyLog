@@ -166,7 +166,7 @@ class UserSettings extends Component
             User::find($this->user->id)
                 ->addMedia($this->photo->getRealPath())
                 ->usingName('observer')
-                ->usingFileName($this->user->id . $this->photo->extension())
+                ->usingFileName($this->user->id . '.' . $this->photo->extension())
                 ->toMediaCollection('observer');
 
             $this->photo = null;

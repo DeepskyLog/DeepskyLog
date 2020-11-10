@@ -87,7 +87,7 @@ class Create extends Component
             // Update the picture
             Lens::find($lens->id)
                 ->addMedia($this->photo->getRealPath())
-                ->usingFileName($lens->id . $this->photo->extension())
+                ->usingFileName($lens->id . '.' . $this->photo->extension())
                 ->toMediaCollection('lens');
 
             $this->photo = null;

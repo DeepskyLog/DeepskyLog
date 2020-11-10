@@ -709,37 +709,6 @@ class FilterTest extends TestCase
     }
 
     /**
-     * Ensure that logged in users can see the Json information of a filter.
-     *
-     * @test
-     *
-     * @return void
-     */
-    public function testJsonInformationForFilter()
-    {
-        $filter =Filter::factory()->create(['user_id' => $this->_user->id]);
-
-        // Only for logged in users!
-        $response = $this->get('/getFilterJson/' . $filter->id);
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
-
-        // Test for logged in user
-        $response = $this->actingAs($this->_user)->get(
-            '/getFilterJson/' . $filter->id
-        );
-
-        $this->assertEquals($response['name'], $filter->name);
-        $this->assertEquals($response['id'], $filter->id);
-        $this->assertEquals($response['user_id'], $filter->user_id);
-        $this->assertEquals($response['type'], $filter->type);
-        $this->assertEquals($response['color'], $filter->color);
-        $this->assertEquals($response['wratten'], $filter->wratten);
-        $this->assertEquals($response['schott'], $filter->schott);
-        $this->assertEquals($response['active'], $filter->active);
-    }
-
-    /**
      * Ensure that we get an image of a filter.
      *
      * @test

@@ -14,8 +14,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Location;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\LocationDataTable;
 use App\Http\Requests\LocationRequest;
@@ -81,20 +79,6 @@ class LocationController extends Controller
     }
 
     /**
-     * Display a listing of the resource in JSON format.
-     *
-     * @param int $id The id of the location to return
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getLocationJson(int $id)
-    {
-        $location = Location::findOrFail($id);
-
-        return response($location->jsonSerialize(), Response::HTTP_OK);
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @param Location $location The location to fill out in the fields
@@ -118,7 +102,7 @@ class LocationController extends Controller
      */
     public function store(LocationRequest $request)
     {
-        $validated = $request->validated();
+        $validated            = $request->validated();
         $validated['user_id'] = auth()->id();
 
         $location = Location::create($validated);
@@ -184,23 +168,6 @@ class LocationController extends Controller
     }
 
     /**
-     * Get the value from lightpollutionmap.info.
-     *
-     * @param Request $request The request with the longitude and latitude
-     *
-     * @return The value from lightpollutionmap.info
-     */
-    public function lightpollutionmap(Request $request)
-    {
-        return file_get_contents(
-            'https://www.lightpollutionmap.info/QueryRaster/' .
-             '?ql=wa_2015&qt=point&qd=' . $request->longitude
-            . ',' . $request->latitude . '&key='
-            . env('LIGHTPOLLUTION_KEY')
-        );
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param LocationRequest $request  The request with all information
@@ -215,7 +182,7 @@ class LocationController extends Controller
 
         // If the factor is set, the name should also be set in the form.
         if ($request->has('latitude')) {
-            $validated = $request->validated();
+            $validated            = $request->validated();
             $validated['user_id'] = auth()->id();
 
             $location->update(['name' => $request->get('name')]);
@@ -354,34 +321,5 @@ class LocationController extends Controller
         }
 
         return redirect()->back();
-    }
-
-    /**
-     * Ajax request for select2.
-     *
-     * @param Request $request The request
-     *
-     * @return string the JSON response
-     */
-    public function dataAjax(Request $request)
-    {
-        $search = trim($request->q);
-
-        if ($search === '') {
-            return \Response::json([]);
-        }
-
-        $data = [];
-
-        if ($request->has('q')) {
-            $data = DB::table('locations')
-                ->groupBy('name')
-                ->select('id', 'name')
-                ->where('name', 'LIKE', "%$search%")
-                ->limit(20)
-                ->get();
-        }
-
-        return response()->json($data);
     }
 }

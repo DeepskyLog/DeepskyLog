@@ -13,8 +13,8 @@
 
 namespace App\Http\Controllers;
 
-use deepskylog\AstronomyLibrary\Magnitude;
 use Illuminate\Support\Facades\Auth;
+use deepskylog\AstronomyLibrary\Magnitude;
 
 /**
  * Magnitude Controller.
@@ -35,7 +35,7 @@ class MagnitudeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function nelmToSqmJson(float $nelm): string
+    public static function nelmToSqm(float $nelm): string
     {
         if (Auth::user()) {
             $fstOffset = Auth::user()->fstOffset;
@@ -43,7 +43,7 @@ class MagnitudeController extends Controller
             $fstOffset = 0.0;
         }
 
-        return '{"sqm": '.Magnitude::nelmToSqm($nelm, $fstOffset).'}';
+        return Magnitude::nelmToSqm($nelm, $fstOffset);
     }
 
     /**
@@ -53,9 +53,9 @@ class MagnitudeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function nelmToBortleJson(float $nelm): string
+    public static function nelmToBortle(float $nelm): string
     {
-        return '{"bortle": '.Magnitude::nelmToBortle($nelm).'}';
+        return Magnitude::nelmToBortle($nelm);
     }
 
     /**
@@ -65,7 +65,7 @@ class MagnitudeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sqmToNelmJson(float $sqm): string
+    public static function sqmToNelm(float $sqm): string
     {
         if (Auth::user()) {
             $fstOffset = Auth::user()->fstOffset;
@@ -73,7 +73,7 @@ class MagnitudeController extends Controller
             $fstOffset = 0.0;
         }
 
-        return '{"nelm": '.Magnitude::sqmToNelm($sqm, $fstOffset).'}';
+        return Magnitude::sqmToNelm($sqm, $fstOffset);
     }
 
     /**
@@ -83,9 +83,9 @@ class MagnitudeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sqmToBortleJson(float $sqm): string
+    public static function sqmToBortle(float $sqm): string
     {
-        return '{"bortle": '.Magnitude::sqmToBortle($sqm).'}';
+        return Magnitude::sqmToBortle($sqm);
     }
 
     /**
@@ -95,7 +95,7 @@ class MagnitudeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function bortleToNelmJson(int $bortle): string
+    public static function bortleToNelm(int $bortle): string
     {
         if (Auth::user()) {
             $fstOffset = Auth::user()->fstOffset;
@@ -103,7 +103,7 @@ class MagnitudeController extends Controller
             $fstOffset = 0.0;
         }
 
-        return '{"nelm": '.Magnitude::bortleToNelm($bortle, $fstOffset).'}';
+        return Magnitude::bortleToNelm($bortle, $fstOffset);
     }
 
     /**
@@ -113,8 +113,8 @@ class MagnitudeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function bortleTosqmJson(int $bortle): string
+    public static function bortleTosqm(int $bortle): string
     {
-        return '{"sqm": '.Magnitude::bortleToSqm($bortle).'}';
+        return Magnitude::bortleToSqm($bortle);
     }
 }

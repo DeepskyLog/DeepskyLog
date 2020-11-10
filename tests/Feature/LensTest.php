@@ -765,33 +765,6 @@ class LensTest extends TestCase
     }
 
     /**
-     * Ensure that logged in users can see the Json information of a lens.
-     *
-     * @test
-     *
-     */
-    public function testJsonInformationForLens()
-    {
-        $lens = Lens::factory()->create(['user_id' => $this->_user->id]);
-
-        // Only for logged in users!
-        $response = $this->get('/getLensJson/' . $lens->id);
-        $response->assertStatus(302);
-        $response->assertRedirect('/login');
-
-        // Test for logged in user
-        $response = $this->actingAs($this->_user)->get(
-            '/getLensJson/' . $lens->id
-        );
-
-        $this->assertEquals($response['name'], $lens->name);
-        $this->assertEquals($response['id'], $lens->id);
-        $this->assertEquals($response['user_id'], $lens->user_id);
-        $this->assertEquals($response['factor'], $lens->factor);
-        $this->assertEquals($response['active'], $lens->active);
-    }
-
-    /**
      * Ensure that we get an image of a lens.
      *
      * @test

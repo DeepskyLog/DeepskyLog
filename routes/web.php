@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -110,17 +111,12 @@ Route::post('/instrument/{instrument}/deleteImage', 'InstrumentController@delete
     ->name('instrument.deleteImage');
 
 // Locations
-Route::get('/location/autocomplete', 'LocationController@dataAjax')
-    ->name('location.dataAjax');
-
 Route::get('/location/create/{location}', 'LocationController@create')
     ->middleware('verified')
     ->name('location.create');
 
 Route::get('/location/admin', 'LocationController@indexAdmin')
     ->name('location.indexAdmin');
-
-Route::get('/location/lightpollutionmap', 'LocationController@lightpollutionmap');
 
 Route::get('/location/{location}/getImage', 'LocationController@getImage')
     ->name('location.getImage');
@@ -136,8 +132,6 @@ Route::resource(
 
 Route::get('/location/{location}', 'LocationController@show')
     ->name('location.show');
-
-Route::get('/getLocationJson/{id}', 'LocationController@getLocationJson');
 
 // Users
 Auth::routes(['verify' => true]);
@@ -202,14 +196,6 @@ Route::group(
         )->name('messages.createId');
     }
 );
-
-// Converting nelm, sqm and bortle
-Route::get('/nelmToSqm/{nelm}', 'MagnitudeController@nelmToSqmJson');
-Route::get('/nelmToBortle/{nelm}', 'MagnitudeController@nelmToBortleJson');
-Route::get('/sqmToNelm/{sqm}', 'MagnitudeController@sqmToNelmJson');
-Route::get('/sqmToBortle/{sqm}', 'MagnitudeController@sqmToBortleJson');
-Route::get('/bortleToNelm/{bortle}', 'MagnitudeController@bortleToNelmJson');
-Route::get('/bortleToSqm/{bortle}', 'MagnitudeController@bortleToSqmJson');
 
 // Targets
 Route::get('/catalogs', 'TargetController@catalogs')

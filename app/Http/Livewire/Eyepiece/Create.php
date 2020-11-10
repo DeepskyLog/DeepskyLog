@@ -200,7 +200,7 @@ class Create extends Component
             // Update the picture
             Eyepiece::find($eyepiece->id)
                         ->addMedia($this->photo->getRealPath())
-                        ->usingFileName($eyepiece->id . $this->photo->extension())
+                        ->usingFileName($eyepiece->id . '.' . $this->photo->extension())
                         ->toMediaCollection('eyepiece');
 
             $this->photo = null;
