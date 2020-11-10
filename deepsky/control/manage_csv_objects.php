@@ -76,9 +76,9 @@ function manage_csv_objects()
 	  	{ $objObject->setDsoProperty($object[$i],'decl', $catindex_data[$i]);
 	  	  $objObject->setDsObjectAtlasPages($object[$i]);
 	  	}
-	  	elseif ($instruction[$i] == "CON")
+        elseif ($instruction[$i] == "CON") {
 	  	  $objObject->setDsoProperty($object[$i],'con', $catindex_data[$i]);
-	  	elseif ($instruction[$i] == "TYP")
+        } elseif ($instruction[$i] == "TYP")
 	  	  $objObject->setDsoProperty($object[$i],'type', $catindex_data[$i]);
 	  	elseif ($instruction[$i] == "MG")
 	  	{ $objObject->setDsoProperty($object[$i],'mag', $catindex_data[$i]);

@@ -773,7 +773,11 @@ class Objects
                 // The number of personal observations of this object.
                 echo ' <tr>';
                 echo '  <td>'._('Number of own observations').'</td>';
+                if ($cat) {
                 echo '  <td><a href="'.$baseURL.'index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog='.$cat.'&number='.rawurlencode($number).'&observer='.$loggedUser.'">'.$get3->PersObsCnt.'</a></td>';
+                } else {
+                    echo '  <td>0</td>';
+                }
                 echo ' </tr>';
 
                 // The date of observer's last observation of this object.
