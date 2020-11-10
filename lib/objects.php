@@ -756,10 +756,10 @@ class Objects
         echo '  <td>'._('Number of drawings').'</td>';
         $run4 = $objDatabase->selectRecordset('SELECT COUNT(observations.id) As totDraw FROM observations WHERE objectname = "'.$object.'" AND visibility != 7 AND hasDrawing=1');
         $totDraw = $run4->fetch(PDO::FETCH_OBJ)->totDraw;
+        $obj = preg_split('/ /', $object);
+        $cat = $obj[0];
+        $number = $obj[1];
         if ($totDraw > 0) {
-            $obj = preg_split('/ /', $object);
-            $cat = $obj[0];
-            $number = $obj[1];
             echo '  <td><a href="'.$baseURL.'index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog='.$cat.'&number='.rawurlencode($number).'&drawings=on">'.$totDraw.'</a></td>';
         } else {
             echo '  <td>0</td>';
