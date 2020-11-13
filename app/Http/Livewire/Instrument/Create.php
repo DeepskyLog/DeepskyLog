@@ -54,7 +54,9 @@ class Create extends Component
                 $this->diameter                 = $this->instrument->diameter;
             }
             $this->fd                       = $this->instrument->fd;
-            $this->focalLength              = round($this->fd * $this->diameter);
+            if ($this->fd != 0) {
+                $this->focalLength              = round($this->fd * $this->diameter);
+            }
             $this->fixedMagnification       = $this->instrument->fixedMagnification;
         } else {
             $this->update      = false;
@@ -153,9 +155,6 @@ class Create extends Component
 
         // Upload of the image
         if ($this->file) {
-            // $this->validate([
-            //     'photo' => 'image|max:10240',
-            // ]);
             if (Instrument::find($instrument->id)->getFirstMedia('instrument') != null) {
                 // First remove the current image
                 Instrument::find($instrument->id)

@@ -61,18 +61,18 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id the user id to show
+     * @param string $slug the user slug to show
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('slug', $slug)->firstOrFail();
 
         $obsPerYear  = $this->chartObservationsPerYear($user);
         $obsPerMonth = $this->chartObservationsPerMonth($user);
 
-        $media = $this->getImage($id);
+        $media = $this->getImage($slug);
 
         $observationTypes = \App\Models\ObservationType::all();
 
@@ -350,11 +350,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function settings($id)
+    public function settings($slug)
     {
-        if (auth()->user()->id == $id) {
-            $user = auth()->user();
+        $user = User::where('slug', $slug)->firstOrFail();
 
+        if (auth()->user()->id == $user->id) {
             return view('users.settings', ['user' => $user]);
         } else {
             abort(401);
@@ -364,14 +364,14 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id the user id to edit
+     * @param string $slug the user slug to edit
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {
-        //Get user with specified id
-        $user = User::findOrFail($id);
+        //Get user with specified slug
+        $user = User::where('slug', $slug)->firstOrFail();
         //pass user data to view
         return view('users.edit', compact('user'));
     }
@@ -380,14 +380,14 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param UserRequest $request The request
-     * @param int         $id      The id of the user to update
+     * @param string      $slug    The slug of the user to update
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, $id)
+    public function update(UserRequest $request, $slug)
     {
-        // Get user specified by id
-        $user = User::findOrFail($id);
+        // Get user specified by slug
+        $user = User::where('slug', $slug)->firstOrFail();
 
         // Validate name, email and password fields
         $request->validated();
@@ -407,14 +407,14 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id the user id of the user to delete
+     * @param int $slug the user slug of the user to delete
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($slug)
     {
-        //Find a user with a given id and delete
-        $user = User::findOrFail($id);
+        //Find a user with a given slug and delete
+        $user = User::where('slug', $slug)->firstOrFail();
 
         laraflash(_i('User %s successfully deleted.', $user->name))->warning();
 
@@ -426,23 +426,22 @@ class UserController extends Controller
     /**
      * Returns the image of the observer.
      *
-     * @param int $id The observer id
+     * @param string $slug The observer slug
      *
      * @return MediaObject the image of the observer
      */
-    public function getImage($id)
+    public function getImage($slug)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('slug', $slug)->firstOrFail();
         if (!$user->hasMedia('observer')) {
-            $this->addDefaultMedia($id);
+            $this->addDefaultMedia($user);
         }
 
         return $user->getFirstMedia('observer');
     }
 
-    private function addDefaultMedia($id)
+    private function addDefaultMedia($user)
     {
-        $user = User::findOrFail($id);
         $user->addMediaFromUrl(asset('images/profile.png'))
             ->usingFileName($user->id . '.png')
             ->toMediaCollection('observer');
@@ -490,11 +489,11 @@ class UserController extends Controller
      * Patch the settings for the observer.
      *
      * @param Request $request The request object with all information
-     * @param int     $id      The id of the observer
+     * @param string  $slug    The id of the observer
      *
      * @return None
      */
-    public function patchSettings(Request $request, $id)
+    public function patchSettings(Request $request, $slug)
     {
         // The authenticated user
         $user = auth()->user();

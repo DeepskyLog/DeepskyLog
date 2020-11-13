@@ -14,14 +14,15 @@
 
 namespace App\Models;
 
+use Spatie\MediaLibrary\HasMedia;
 use Cmgmyr\Messenger\Traits\Messagable;
+use Illuminate\Notifications\Notifiable;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * User eloquent model.
@@ -39,8 +40,9 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     use InteractsWithMedia;
     use Messagable;
     use HasFactory;
+    use Sluggable;
 
-    public const ADMIN_TYPE = 'admin';
+    public const ADMIN_TYPE   = 'admin';
     public const DEFAULT_TYPE = 'default';
 
     /**
@@ -283,5 +285,19 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         $this->addMediaConversion('thumb')
             ->width(100)
             ->height(100);
+    }
+
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'username',
+            ],
+        ];
     }
 }

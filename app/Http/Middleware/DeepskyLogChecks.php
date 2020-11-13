@@ -54,7 +54,7 @@ class DeepskyLogChecks
                 laraflash(
                     _i(
                         'Your country of residence is not set. Please set it in the %sobserver settings%s',
-                        '<a href="/users/' . Auth::user()->id . '/settings">',
+                        '<a href="/users/' . Auth::user()->slug . '/settings">',
                         '</a>.'
                     )
                 )->warning();
@@ -72,7 +72,7 @@ class DeepskyLogChecks
                 laraflash(
                     _i(
                         'You did not enter information about yourself. Please set it in the %sobserver settings%s',
-                        '<a href="/users/' . Auth::user()->id . '/settings">',
+                        '<a href="/users/' . Auth::user()->slug . '/settings">',
                         '</a>.'
                     )
                 )->warning();

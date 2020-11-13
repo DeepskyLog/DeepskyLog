@@ -39,10 +39,10 @@ class UserDataTable extends DataTable
             ->eloquent($this->query())
             ->editColumn(
                 'username',
-                '<a href="/users/{{ $id }}/edit">{{ $username }}</a>'
+                '<a href="/users/{{ $slug }}/edit">{{ $username }}</a>'
             )->editColumn(
                 'name',
-                '<a href="/users/{{ $id }}/edit">{{ $name }}</a>'
+                '<a href="/users/{{ $slug }}/edit">{{ $name }}</a>'
             )->editColumn(
                 'email',
                 '<a href="mailto:{{ $email }}">{{ $email }}</a>'
@@ -53,7 +53,7 @@ class UserDataTable extends DataTable
                 }
             )->addColumn(
                 'delete',
-                '<form method="POST" action="/users/{{ $id }}">
+                '<form method="POST" action="/users/{{ $slug }}">
                             @method("DELETE")
                             @csrf
                             <button type="button" class="btn btn-sm btn-link" onClick="this.form.submit()">
@@ -131,7 +131,7 @@ class UserDataTable extends DataTable
                 'en'
             )->first()
             . '.json', ];
-        $mypars = $this->getBuilderParameters();
+        $mypars             = $this->getBuilderParameters();
         $mypars['language'] = $language;
 
         return $mypars;
@@ -147,52 +147,52 @@ class UserDataTable extends DataTable
         return [
             ['username' => 'username',
                 'title' => _i('Username'),
-                'data' => 'username',
+                'data'  => 'username',
             ],
-            ['name' => 'name',
+            ['name'     => 'name',
                 'title' => _i('Name'),
-                'data' => 'name',
+                'data'  => 'name',
             ],
-            ['name' => 'email',
+            ['name'     => 'email',
                 'title' => _i('Email'),
-                'data' => 'email',
+                'data'  => 'email',
             ],
-            ['name' => 'created_at',
+            ['name'     => 'created_at',
                 'title' => _i('Date/Time Added'),
-                'data' => 'created_at',
+                'data'  => 'created_at',
             ],
-            ['name' => 'type',
+            ['name'     => 'type',
                 'title' => _i('User Role'),
-                'data' => 'type',
+                'data'  => 'type',
             ],
-            ['name' => 'delete',
-                'title' => _i('Delete'),
-                'data' => 'delete',
-                'orderable' => false,
+            ['name'          => 'delete',
+                'title'      => _i('Delete'),
+                'data'       => 'delete',
+                'orderable'  => false,
                 'searchable' => false,
             ],
-            ['name' => 'observations',
-                'title' => _i('Observations'),
-                'data' => 'observations',
-                'orderable' => false,
+            ['name'          => 'observations',
+                'title'      => _i('Observations'),
+                'data'       => 'observations',
+                'orderable'  => false,
                 'searchable' => false,
             ],
-            ['name' => 'instruments',
-                'title' => _i('Instruments'),
-                'data' => 'instruments',
-                'orderable' => false,
+            ['name'          => 'instruments',
+                'title'      => _i('Instruments'),
+                'data'       => 'instruments',
+                'orderable'  => false,
                 'searchable' => false,
             ],
-            ['name' => 'locations',
-                'title' => _i('Locations'),
-                'data' => 'locations',
-                'orderable' => false,
+            ['name'          => 'locations',
+                'title'      => _i('Locations'),
+                'data'       => 'locations',
+                'orderable'  => false,
                 'searchable' => false,
             ],
-            ['name' => 'lists',
-                'title' => _i('Lists'),
-                'data' => 'lists',
-                'orderable' => false,
+            ['name'          => 'lists',
+                'title'      => _i('Lists'),
+                'data'       => 'lists',
+                'orderable'  => false,
                 'searchable' => false,
             ],
         ];

@@ -70,8 +70,10 @@ class TargetPartOf extends Model
             foreach (self::where('partof_id', $target->id)->get() as $partOfObject) {
                 $containsName = \App\Models\Target::where('id', $partOfObject->target_id)
                     ->first()->target_name;
+                $slug = \App\Models\Target::where('id', $partOfObject->target_id)
+                    ->first()->slug;
                 $contains .= ($contains ? '/' : '')
-                    . '<a href="/target/' . $containsName . '">'
+                    . '<a href="/target/' . $slug . '">'
                     . $containsName . '</a>';
             }
         } else {
@@ -86,8 +88,10 @@ class TargetPartOf extends Model
             foreach (self::where('target_id', $target->id)->get() as $partOfObject) {
                 $partofname = \App\Models\Target::where('id', $partOfObject->partof_id)
                     ->first()->target_name;
+                $slug = \App\Models\Target::where('id', $partOfObject->partof_id)
+                    ->first()->slug;
                 $partOf .= ($partOf ? '/' : '')
-                    . '<a href="/target/' . $partofname . '">'
+                    . '<a href="/target/' . $slug . '">'
                     . $partofname . '</a>';
             }
         } else {

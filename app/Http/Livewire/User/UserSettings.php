@@ -21,7 +21,6 @@ class UserSettings extends Component
     public $email;
     public $username;
     public $name;
-    public $photo;
     public $sendMail;
     public $fstOffset;
     public $cclicense;
@@ -122,12 +121,6 @@ class UserSettings extends Component
                     'confirmed', ]]
             );
         }
-
-        if ($this->photo) {
-            $this->validate([
-                'photo' => 'image|max:10240',
-            ]);
-        }
     }
 
     /**
@@ -163,9 +156,6 @@ class UserSettings extends Component
 
         // Upload of the image
         if ($this->file) {
-            // $this->validate([
-            //     'photo' => 'image|max:10240',
-            // ]);
             if (User::find($this->user->id)->getFirstMedia('observer') != null
             ) {
                 // First remove the current image

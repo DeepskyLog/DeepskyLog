@@ -17,6 +17,7 @@ namespace App\Models;
 
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -31,6 +32,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class TargetName extends Model
 {
+    use Sluggable;
+
     protected $fillable = ['objectname', 'catalog', 'catindex', 'altname'];
 
     protected $primaryKey = 'altname';
@@ -108,5 +111,19 @@ class TargetName extends Model
         }
 
         return $alternativeNames;
+    }
+
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'altname',
+            ],
+        ];
     }
 }

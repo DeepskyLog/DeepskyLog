@@ -58,7 +58,7 @@
                 <tr>
                     @endif
                     <td>
-                        <a href="/target/{{ $target->altname }}">{{ $target->altname }}
+                        <a href="/target/{{ $target->slug }}">{{ $target->altname }}
                             @if ($target['altname'] != $target->target->target_name)
                             ({{ $target->target->target_name }})
                             @endif

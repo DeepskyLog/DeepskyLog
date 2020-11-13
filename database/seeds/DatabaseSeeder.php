@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
                 MessagesTableSeeder::class, InstrumentTableSeeder::class,
                 LocationTableSeeder::class, TargetTableSeeder::class,
                 TargetNameTableSeeder::class, TargetPartOfTableSeeder::class,
-                MoonSeeder::class, ]
+                MoonSeeder::class, SlugSeeder::class, ]
         );
     }
 }

@@ -1,6 +1,6 @@
 <div>
     <br />
-    <form wire:submit.prevent="save" role="form" action="/users/{{ $user->id }}/settings">
+    <form wire:submit.prevent="save" role="form" action="/users/{{ $user->slug }}/settings">
 
         @php
         $allLocations = App\Models\Location::getLocationOptions();

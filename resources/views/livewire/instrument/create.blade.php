@@ -110,6 +110,7 @@
         {{-- Instrument picture --}}
         <x-media-library-attachment rules="max:10240" name="media" :media="$file" />
 
+        <br />
         <input type="submit" class="btn btn-success" name="add"
             value="@if ($update){{ _i("Change instrument") }}@else{{ _i("Add instrument") }}@endif" />
 

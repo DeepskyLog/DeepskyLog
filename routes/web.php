@@ -23,14 +23,13 @@ Route::post('/lang', 'LanguageController@changeLang');
 
 Route::post('/setSession', 'SessionController@createSession');
 
-// Lenses
-Route::get('/lens/create/{lens}', 'LensController@create')->middleware('verified')
-    ->name('lens.create');
-
-Route::get('/lens/admin', 'LensController@indexAdmin')->name('lens.indexAdmin');
-
 // Needed for medialibrary-pro
 Route::mediaLibrary();
+
+// Lenses
+Route::get('/lens/create/{lens}', 'LensController@create')->middleware('verified');
+
+Route::get('/lens/admin', 'LensController@indexAdmin')->name('lens.indexAdmin');
 
 Route::resource(
     'lens',
@@ -48,8 +47,7 @@ Route::post('/lens/{lens}/deleteImage', 'LensController@deleteImage')
 
 // Filters
 Route::get('/filter/create/{filter}', 'FilterController@create')
-    ->middleware('verified')
-    ->name('filter.create');
+    ->middleware('verified');
 
 Route::get('/filter/admin', 'FilterController@indexAdmin')
     ->name('filter.indexAdmin');
@@ -70,8 +68,7 @@ Route::post('/filter/{filter}/deleteImage', 'FilterController@deleteImage')
 
 // Eyepieces
 Route::get('/eyepiece/create/{eyepiece}', 'EyepieceController@create')
-    ->middleware('verified')
-    ->name('eyepiece.create');
+    ->middleware('verified');
 
 Route::get('/eyepiece/admin', 'EyepieceController@indexAdmin')
     ->name('eyepiece.indexAdmin');
@@ -92,8 +89,7 @@ Route::post('/eyepiece/{eyepiece}/deleteImage', 'EyepieceController@deleteImage'
 
 // Instruments
 Route::get('/instrument/create/{instrument}', 'InstrumentController@create')
-    ->middleware('verified')
-    ->name('instrument.create');
+    ->middleware('verified');
 
 Route::get('/instrument/admin', 'InstrumentController@indexAdmin')
     ->name('instrument.indexAdmin');
@@ -115,8 +111,7 @@ Route::post('/instrument/{instrument}/deleteImage', 'InstrumentController@delete
 
 // Locations
 Route::get('/location/create/{location}', 'LocationController@create')
-    ->middleware('verified')
-    ->name('location.create');
+    ->middleware('verified');
 
 Route::get('/location/admin', 'LocationController@indexAdmin')
     ->name('location.indexAdmin');

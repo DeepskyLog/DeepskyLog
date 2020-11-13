@@ -1,6 +1,6 @@
 <div>
     <br />
-    <form wire:submit.prevent="save" role="form" action="/users/{{ $user->id }}/settings">
+    <form wire:submit.prevent="save" role="form" action="/users/{{ $user->slug }}/settings">
 
         @auth
         @php
@@ -99,11 +99,24 @@
 
         {{-- Profile picture --}}
         {{ _i('Change profile picture') . ' (max 10 Mb)' }}
-        <x-media-library-attachment multiple rules="max:10240" name="media" :media="$file" />
+        <x-media-library-attachment rules="max:10240" name="media" :media="$file" {{-- :translations="{
+            fileTypeNotAllowed: _i('You must upload a file of type'),
+            tooLarge: _i('File too large, max'),
+            tooSmall: _i('File too small, min'),
+            tryAgain: _i('please try uploading this file again'),
+            somethingWentWrong: _i('Something went wrong while uploading this file'),
+            selectOrDrag: _i('Select or drag files'),
+            selectOrDragMax: _i('Select or drag max {maxItems} {file}'),
+            file: { singular: _i('file'), plural: _i('files') },
+            anyImage: _i('any image'),
+            goBack: _i('Go back'),
+            dropFile: _i('Drop file to upload'),
+            dragHere: _i('Drag file here'),
+            remove: _i('Remove'),} " --}} />
         <br /><br />
 
         {{-- Send mail --}}
-        <div class="form-group form-check sendMail">
+        <div class=" form-group form-check sendMail">
             <input type="checkbox" wire:model="sendMail" @if ($user->sendMail) checked @endif
             class="form-check-input @error('sendMail') is-invalid @enderror" name="sendMail"
             />

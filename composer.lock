@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e1859cc914c6f27f23e205a47987ddf8",
+    "content-hash": "f3a5c30c4d267753c76fdf883aff84c1",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -197,6 +197,80 @@
             "time": "2020-09-16T12:55:23+00:00"
         },
         {
+            "name": "cocur/slugify",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cocur/slugify.git",
+                "reference": "3f1ffc300f164f23abe8b64ffb3f92d35cec8307"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cocur/slugify/zipball/3f1ffc300f164f23abe8b64ffb3f92d35cec8307",
+                "reference": "3f1ffc300f164f23abe8b64ffb3f92d35cec8307",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=7.0"
+            },
+            "conflict": {
+                "symfony/config": "<3.4 || >=4,<4.3",
+                "symfony/dependency-injection": "<3.4 || >=4,<4.3",
+                "symfony/http-kernel": "<3.4 || >=4,<4.3",
+                "twig/twig": "<2.12.1"
+            },
+            "require-dev": {
+                "laravel/framework": "~5.1",
+                "latte/latte": "~2.2",
+                "league/container": "^2.2.0",
+                "mikey179/vfsstream": "~1.6.8",
+                "mockery/mockery": "^1.3",
+                "nette/di": "~2.4",
+                "phpunit/phpunit": "^5.7.27",
+                "pimple/pimple": "~1.1",
+                "plumphp/plum": "~0.1",
+                "symfony/config": "^3.4 || ^4.3 || ^5.0",
+                "symfony/dependency-injection": "^3.4 || ^4.3 || ^5.0",
+                "symfony/http-kernel": "^3.4 || ^4.3 || ^5.0",
+                "twig/twig": "^2.12.1 || ~3.0",
+                "zendframework/zend-modulemanager": "~2.2",
+                "zendframework/zend-servicemanager": "~2.2",
+                "zendframework/zend-view": "~2.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cocur\\Slugify\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Florian Eckerstorfer",
+                    "email": "florian@eckerstorfer.co",
+                    "homepage": "https://florian.ec"
+                },
+                {
+                    "name": "Ivo Bathke",
+                    "email": "ivo.bathke@gmail.com"
+                }
+            ],
+            "description": "Converts a string into a slug.",
+            "keywords": [
+                "slug",
+                "slugify"
+            ],
+            "support": {
+                "issues": "https://github.com/cocur/slugify/issues",
+                "source": "https://github.com/cocur/slugify/tree/master"
+            },
+            "time": "2019-12-14T13:04:14+00:00"
+        },
+        {
             "name": "coderello/laraflash",
             "version": "4.0.1",
             "source": {
@@ -326,6 +400,73 @@
                 }
             ],
             "time": "2020-08-23T12:54:47+00:00"
+        },
+        {
+            "name": "cviebrock/eloquent-sluggable",
+            "version": "8.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cviebrock/eloquent-sluggable.git",
+                "reference": "a86500442ae8b1e2d965acb0340a1b867bf6c0f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cviebrock/eloquent-sluggable/zipball/a86500442ae8b1e2d965acb0340a1b867bf6c0f5",
+                "reference": "a86500442ae8b1e2d965acb0340a1b867bf6c0f5",
+                "shasum": ""
+            },
+            "require": {
+                "cocur/slugify": "^4.0",
+                "illuminate/config": "^8.0",
+                "illuminate/database": "^8.0",
+                "illuminate/support": "^8.0",
+                "php": "^7.3"
+            },
+            "require-dev": {
+                "limedeck/phpunit-detailed-printer": "^6.0",
+                "mockery/mockery": "^1.4.2",
+                "orchestra/database": "^6.0",
+                "orchestra/testbench": "^6.0",
+                "phpunit/phpunit": "^9.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Cviebrock\\EloquentSluggable\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Cviebrock\\EloquentSluggable\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Colin Viebrock",
+                    "email": "colin@viebrock.ca"
+                }
+            ],
+            "description": "Easy creation of slugs for your Eloquent models in Laravel",
+            "homepage": "https://github.com/cviebrock/eloquent-sluggable",
+            "keywords": [
+                "eloquent",
+                "eloquent-sluggable",
+                "laravel",
+                "lumen",
+                "slug",
+                "sluggable"
+            ],
+            "support": {
+                "issues": "https://github.com/cviebrock/eloquent-sluggable/issues",
+                "source": "https://github.com/cviebrock/eloquent-sluggable/tree/8.0.1"
+            },
+            "time": "2020-09-28T15:38:25+00:00"
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
@@ -2297,16 +2438,16 @@
         },
         {
             "name": "maatwebsite/excel",
-            "version": "3.1.24",
+            "version": "3.1.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
-                "reference": "8b267b4a940634195eb6ea60c2da62f178a15940"
+                "reference": "a3e56f1a60e49f21798fd242a3b3d2f4051eeda7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/8b267b4a940634195eb6ea60c2da62f178a15940",
-                "reference": "8b267b4a940634195eb6ea60c2da62f178a15940",
+                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/a3e56f1a60e49f21798fd242a3b3d2f4051eeda7",
+                "reference": "a3e56f1a60e49f21798fd242a3b3d2f4051eeda7",
                 "shasum": ""
             },
             "require": {
@@ -2359,7 +2500,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Maatwebsite/Laravel-Excel/issues",
-                "source": "https://github.com/Maatwebsite/Laravel-Excel/tree/3.1.24"
+                "source": "https://github.com/Maatwebsite/Laravel-Excel/tree/3.1.25"
             },
             "funding": [
                 {
@@ -2371,7 +2512,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-28T09:10:05+00:00"
+            "time": "2020-11-13T10:37:36+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -4220,16 +4361,16 @@
         },
         {
             "name": "spatie/image",
-            "version": "1.8.1",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/image.git",
-                "reference": "321f756ecbb556afb59b588639874fecb90c267c"
+                "reference": "cef42a2d131e28d6f3e0af91c0570f6ba45a8d40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/image/zipball/321f756ecbb556afb59b588639874fecb90c267c",
-                "reference": "321f756ecbb556afb59b588639874fecb90c267c",
+                "url": "https://api.github.com/repos/spatie/image/zipball/cef42a2d131e28d6f3e0af91c0570f6ba45a8d40",
+                "reference": "cef42a2d131e28d6f3e0af91c0570f6ba45a8d40",
                 "shasum": ""
             },
             "require": {
@@ -4237,7 +4378,7 @@
                 "ext-mbstring": "*",
                 "league/glide": "^1.4",
                 "php": "^7.2|^8.0",
-                "spatie/image-optimizer": "^1.0",
+                "spatie/image-optimizer": "^1.1",
                 "spatie/temporary-directory": "^1.0.0",
                 "symfony/process": "^3.0|^4.0|^5.0"
             },
@@ -4271,7 +4412,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/image/issues",
-                "source": "https://github.com/spatie/image/tree/1.8.1"
+                "source": "https://github.com/spatie/image/tree/1.9.0"
             },
             "funding": [
                 {
@@ -4283,7 +4424,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-11-12T19:01:49+00:00"
+            "time": "2020-11-13T09:39:41+00:00"
         },
         {
             "name": "spatie/image-optimizer",
@@ -4522,17 +4663,17 @@
         },
         {
             "name": "spatie/laravel-medialibrary-pro",
-            "version": "dev-livewire-forms",
+            "version": "1.0.15",
             "source": {
                 "type": "git",
                 "url": "git@github.com:spatie/laravel-medialibrary-pro.git",
-                "reference": "d867cb60d91d12ecbc694071dfc5383068d90a6a"
+                "reference": "29a5c3fe4d60ae43d729c457dbffea29b15de26e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-d867cb60d91d12ecbc694071dfc5383068d90a6a-zip-26f980.zip",
-                "reference": "d867cb60d91d12ecbc694071dfc5383068d90a6a",
-                "shasum": "42afb89f4cfd62dff0ee764604c0ecb5cb249d44"
+                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-29a5c3fe4d60ae43d729c457dbffea29b15de26e-zip-fb9a90.zip",
+                "reference": "29a5c3fe4d60ae43d729c457dbffea29b15de26e",
+                "shasum": "97526ef4ca2b4f85f6772373173a5a7da904b8cc"
             },
             "require": {
                 "ext-json": "*",
@@ -4597,10 +4738,10 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/livewire-forms",
+                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.0.15",
                 "issues": "https://github.com/spatie/laravel-medialibrary-pro/issues"
             },
-            "time": "2020-11-12T12:40:28+00:00"
+            "time": "2020-11-13T16:31:06+00:00"
         },
         {
             "name": "spatie/laravel-translatable",
@@ -7605,16 +7746,16 @@
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v4.35.0",
+            "version": "v4.35.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "d8091a68c3ea0e0bec036b9cf17d190b081e0a6e"
+                "reference": "6c902a84139825d68bd7a6ed413329009b39ca6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/d8091a68c3ea0e0bec036b9cf17d190b081e0a6e",
-                "reference": "d8091a68c3ea0e0bec036b9cf17d190b081e0a6e",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/6c902a84139825d68bd7a6ed413329009b39ca6f",
+                "reference": "6c902a84139825d68bd7a6ed413329009b39ca6f",
                 "shasum": ""
             },
             "require": {
@@ -7663,7 +7804,7 @@
             ],
             "support": {
                 "issues": "https://github.com/yajra/laravel-datatables-html/issues",
-                "source": "https://github.com/yajra/laravel-datatables-html/tree/v4.35.0"
+                "source": "https://github.com/yajra/laravel-datatables-html/tree/v4.35.1"
             },
             "funding": [
                 {
@@ -7675,7 +7816,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-11-03T10:11:19+00:00"
+            "time": "2020-11-13T10:21:18+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",
@@ -8283,16 +8424,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.10.1",
+            "version": "1.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "969b211f9a51aa1f6c01d1d2aef56d3bd91598e5"
+                "reference": "776f831124e9c62e1a2c601ecc52e776d8bb7220"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/969b211f9a51aa1f6c01d1d2aef56d3bd91598e5",
-                "reference": "969b211f9a51aa1f6c01d1d2aef56d3bd91598e5",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/776f831124e9c62e1a2c601ecc52e776d8bb7220",
+                "reference": "776f831124e9c62e1a2c601ecc52e776d8bb7220",
                 "shasum": ""
             },
             "require": {
@@ -8329,7 +8470,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.x"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.10.2"
             },
             "funding": [
                 {
@@ -8337,7 +8478,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-06-29T13:22:24+00:00"
+            "time": "2020-11-13T09:40:50+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -10235,9 +10376,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "spatie/laravel-medialibrary-pro": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

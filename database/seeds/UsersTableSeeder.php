@@ -111,7 +111,7 @@ class UsersTableSeeder extends Seeder
             ) {
                 $user = User::create(
                     [
-                        'username'            => $accountSingle->id,
+                        'username'            => html_entity_decode($accountSingle->id),
                         'name'                => $name,
                         'email'               => $accountSingle->email,
                         'email_verified_at'   => $date,

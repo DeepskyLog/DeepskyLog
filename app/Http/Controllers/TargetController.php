@@ -61,13 +61,13 @@ class TargetController extends Controller
     /**
      * Display the specified target.
      *
-     * @param string $name The name of the target to show
+     * @param string $slug The slug of the target to show
      *
      * @return \Illuminate\Http\Response The reponse
      */
-    public function show(string $name, TargetDataTable $dataTable)
+    public function show(string $slug, TargetDataTable $dataTable)
     {
-        $targetname = \App\Models\TargetName::where('altname', $name)
+        $targetname = \App\Models\TargetName::where('slug', $slug)
             ->first();
 
         if ($targetname != null) {
@@ -85,7 +85,7 @@ class TargetController extends Controller
             // Check all the translations
             $target = \App\Models\Target::where(
                 'target_name->' . LaravelGettext::getLocaleLanguage(),
-                $name
+                $slug
             )->first();
 
             if ($target != null) {
@@ -155,7 +155,6 @@ class TargetController extends Controller
      */
     public function dataAjax(Request $request)
     {
-        dd('test');
         $search = trim($request->q);
 
         if ($search === '') {

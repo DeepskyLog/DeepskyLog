@@ -1,6 +1,6 @@
 <div>
     <br />
-    <form wire:submit.prevent="save" role="form" action="/users/{{ $user->id }}/settings">
+    <form wire:submit.prevent="save" role="form" action="/users/{{ $user->slug }}/settings">
 
         {{-- Standard object field of views --}}
         {{ _i('Atlas standard object FoVs:') }}

@@ -89,7 +89,7 @@ class LocationDataTable extends DataTable
             )->editColumn(
                 'user.name',
                 function ($location) {
-                    return '<a href="/users/' . $location->user->id . '">'
+                    return '<a href="/users/' . $location->user->slug . '">'
                         . $location->user->name . '</a>';
                 }
             )->editColumn(

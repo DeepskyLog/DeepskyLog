@@ -55,7 +55,7 @@ class LensDataTable extends DataTable
             )->editColumn(
                 'user.name',
                 function ($lens) {
-                    return '<a href="/users/' . $lens->user->id . '">'
+                    return '<a href="/users/' . $lens->user->slug . '">'
                         . $lens->user->name . '</a>';
                 }
             )->editColumn(
@@ -107,7 +107,7 @@ class LensDataTable extends DataTable
                 'en'
             )->first()
             . '.json', ];
-        $mypars = $this->getBuilderParameters();
+        $mypars             = $this->getBuilderParameters();
         $mypars['language'] = $language;
 
         return $mypars;
@@ -122,61 +122,61 @@ class LensDataTable extends DataTable
     {
         if ($this->user === 'admin') {
             return [
-                ['name' => 'name',
+                ['name'     => 'name',
                     'title' => _i('Name'),
-                    'data' => 'name',
+                    'data'  => 'name',
                 ],
-                ['name' => 'factor',
-                    'title' => _i('Factor'),
-                    'data' => 'factor',
-                    'width' => '10%',
+                ['name'          => 'factor',
+                    'title'      => _i('Factor'),
+                    'data'       => 'factor',
+                    'width'      => '10%',
                     'searchable' => true,
                 ],
-                ['name' => 'observations',
-                    'title' => _i('Observations'),
-                    'data' => 'observations',
-                    'width' => '10%',
+                ['name'          => 'observations',
+                    'title'      => _i('Observations'),
+                    'data'       => 'observations',
+                    'width'      => '10%',
                     'searchable' => true,
                 ],
-                ['name' => 'delete',
-                    'title' => _i('Delete'),
-                    'data' => 'delete',
-                    'orderable' => false,
+                ['name'          => 'delete',
+                    'title'      => _i('Delete'),
+                    'data'       => 'delete',
+                    'orderable'  => false,
                     'searchable' => false,
-                    'width' => '10%',
+                    'width'      => '10%',
                 ],
-                ['name' => 'user.name',
-                    'title' => _i('Observer'),
-                    'data' => 'user.name',
-                    'orderable' => true,
+                ['name'          => 'user.name',
+                    'title'      => _i('Observer'),
+                    'data'       => 'user.name',
+                    'orderable'  => true,
                     'searchable' => true,
                 ],
             ];
         } else {
             return [
-                ['name' => 'name',
+                ['name'     => 'name',
                     'title' => _i('Name'),
-                    'data' => 'name',
+                    'data'  => 'name',
                 ],
-                ['name' => 'factor',
-                    'title' => _i('Factor'),
-                    'data' => 'factor',
+                ['name'          => 'factor',
+                    'title'      => _i('Factor'),
+                    'data'       => 'factor',
                     'searchable' => true,
                 ],
-                ['name' => 'observations',
-                    'title' => _i('Observations'),
-                    'data' => 'observations',
+                ['name'          => 'observations',
+                    'title'      => _i('Observations'),
+                    'data'       => 'observations',
                     'searchable' => true,
                 ],
-                ['name' => 'active',
-                    'title' => _i('Active'),
-                    'data' => 'active',
+                ['name'          => 'active',
+                    'title'      => _i('Active'),
+                    'data'       => 'active',
                     'searchable' => true,
                 ],
-                ['name' => 'delete',
-                    'title' => _i('Delete'),
-                    'data' => 'delete',
-                    'orderable' => false,
+                ['name'          => 'delete',
+                    'title'      => _i('Delete'),
+                    'data'       => 'delete',
+                    'orderable'  => false,
                     'searchable' => false,
                 ],
             ];

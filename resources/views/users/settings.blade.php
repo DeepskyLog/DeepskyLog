@@ -72,7 +72,7 @@ $observationLanguages .= '<option value="' . $code . '"';
 
     <div class="tab-pane" id="languages">
         <br />
-        <form role="form" action="/users/{{ $user->id }}/settings" method="POST">
+        <form role="form" action="/users/{{ $user->slug }}/settings" method="POST">
             @csrf
             @method('PATCH')
 

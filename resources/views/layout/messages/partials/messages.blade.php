@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-body">
-        <img width="75" style="border-radius: 20%" class="float-right" src="/users/{{ $message->user->id }}/getImage">
+        <img width="75" style="border-radius: 20%" class="float-right" src="/users/{{ $message->user->slug }}/getImage">
         <h5 class="media-heading">{{ $message->user->name }}</h5>
         <p>{!! nl2br($message->body) !!}</p>
         <div class="text-muted">
