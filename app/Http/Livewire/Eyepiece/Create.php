@@ -6,10 +6,12 @@ use Livewire\Component;
 use App\Models\Eyepiece;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
 
 class Create extends Component
 {
     use WithFileUploads;
+    use ValidatesMedia;
 
     public $eyepiece;
     public $sel_eyepiece;
@@ -24,7 +26,7 @@ class Create extends Component
     public $newBrand;
     public $allTypes;
     public $newType;
-    public $photo;
+    public $file = [];
 
     protected $rules = [
         'name'           => ['required', 'min:6'],
@@ -36,6 +38,15 @@ class Create extends Component
         'apparentFov'    => 'required|numeric|gte:20|lte:150',
         'maxFocalLength' => 'nullable|gte:1|lte:99',
     ];
+
+    protected $listeners = [
+        'mediaChanged',
+    ];
+
+    public function mediaChanged($media)
+    {
+        $this->file = $media;
+    }
 
     public function mount()
     {
@@ -187,10 +198,10 @@ class Create extends Component
         }
 
         // Upload of the image
-        if ($this->photo) {
-            $this->validate([
-                'photo' => 'image|max:10240',
-            ]);
+        if ($this->file) {
+            // $this->validate([
+            //     'photo' => 'image|max:10240',
+            // ]);
             if (Eyepiece::find($eyepiece->id)->getFirstMedia('eyepiece') != null) {
                 // First remove the current image
                 Eyepiece::find($eyepiece->id)
@@ -199,11 +210,8 @@ class Create extends Component
             }
             // Update the picture
             Eyepiece::find($eyepiece->id)
-                        ->addMedia($this->photo->getRealPath())
-                        ->usingFileName($eyepiece->id . '.' . $this->photo->extension())
-                        ->toMediaCollection('eyepiece');
-
-            $this->photo = null;
+                ->addFromMediaLibraryRequest($this->file)
+                ->toMediaCollection('eyepiece');
         }
 
         // View the page with all eyepieces for the user

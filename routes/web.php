@@ -29,6 +29,9 @@ Route::get('/lens/create/{lens}', 'LensController@create')->middleware('verified
 
 Route::get('/lens/admin', 'LensController@indexAdmin')->name('lens.indexAdmin');
 
+// Needed for medialibrary-pro
+Route::mediaLibrary();
+
 Route::resource(
     'lens',
     'LensController',

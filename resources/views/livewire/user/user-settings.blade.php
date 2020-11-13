@@ -98,30 +98,9 @@
         </div>
 
         {{-- Profile picture --}}
-        <div class="card mb-3">
-            <div class="row no-gutters">
-                <div class="col-2" id="card-bg">
-                    @if ($photo)
-                    <img class="card-img-top" style="border-radius: 20%" src="{{ $photo->temporaryUrl() }}">
-                    @endif
-                </div>
-                <div class="col-10" id="card-bg">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ _i('Change profile picture') . ' (max 10 Mb)' }}</h5>
-
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input @error('photo') is-invalid @enderror"
-                                wire:model="photo">
-                            <label class="custom-file-label">Choose file</label>
-                        </div>
-                        <div wire:loading wire:target="photo" class="text-sm text-gray-500 italic">
-                            {{ _i('Uploading...') }}
-                        </div>
-                        @error('photo') <br /><span class="small text-error">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{ _i('Change profile picture') . ' (max 10 Mb)' }}
+        <x-media-library-attachment multiple rules="max:10240" name="media" :media="$file" />
+        <br /><br />
 
         {{-- Send mail --}}
         <div class="form-group form-check sendMail">

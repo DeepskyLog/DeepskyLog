@@ -6,10 +6,12 @@ use App\Models\Filter;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
 
 class Create extends Component
 {
     use WithFileUploads;
+    use ValidatesMedia;
 
     public $filter;
     public $sel_filter;
@@ -21,7 +23,7 @@ class Create extends Component
     public $firstcolor;
     public $wratten;
     public $schott;
-    public $photo;
+    public $file = [];
     public $disableColorFields;
 
     protected $rules = [
@@ -29,6 +31,15 @@ class Create extends Component
         'type'    => ['required'],
         'wratten' => ['max:5'],
     ];
+
+    protected $listeners = [
+        'mediaChanged',
+    ];
+
+    public function mediaChanged($media)
+    {
+        $this->file = $media;
+    }
 
     public function mount()
     {
@@ -131,10 +142,10 @@ class Create extends Component
         }
 
         // Upload of the image
-        if ($this->photo) {
-            $this->validate([
-                'photo' => 'image|max:10240',
-            ]);
+        if ($this->file) {
+            // $this->validate([
+            //     'photo' => 'image|max:10240',
+            // ]);
             if (Filter::find($filter->id)->getFirstMedia('filter') != null) {
                 // First remove the current image
                 Filter::find($filter->id)
@@ -143,11 +154,8 @@ class Create extends Component
             }
             // Update the picture
             Filter::find($filter->id)
-                ->addMedia($this->photo->getRealPath())
-                ->usingFileName($filter->id . '.' . $this->photo->extension())
+                ->addFromMediaLibraryRequest($this->file)
                 ->toMediaCollection('filter');
-
-            $this->photo = null;
         }
 
         // View the page with all filters for the user

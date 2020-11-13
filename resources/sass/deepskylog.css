@@ -564,3 +564,13 @@ a, a:visited, a:focus {
 .btn-primary {
     color: #fff !important;
 }
+
+.media-library-properties button {
+    border: none;
+    padding: 0;
+    font: inherit;
+}
+
+.media-library-dropzone {
+    background-color: transparent;
+}

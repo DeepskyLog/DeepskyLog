@@ -6,10 +6,12 @@ use Livewire\Component;
 use App\Models\Instrument;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
 
 class Create extends Component
 {
     use WithFileUploads;
+    use ValidatesMedia;
 
     public $update;
     public $instrument;
@@ -20,7 +22,7 @@ class Create extends Component
     public $fd;
     public $focalLength;
     public $fixedMagnification;
-    public $photo;
+    public $file = [];
 
     protected $rules = [
         'name'               => ['required', 'min:6'],
@@ -30,6 +32,15 @@ class Create extends Component
         'focalLength'        => 'nullable|gte:1|required_without:fixedMagnification',
         'fixedMagnification' => 'nullable|gte:1|required_without:fd',
     ];
+
+    protected $listeners = [
+        'mediaChanged',
+    ];
+
+    public function mediaChanged($media)
+    {
+        $this->file = $media;
+    }
 
     public function mount()
     {
@@ -141,10 +152,10 @@ class Create extends Component
         }
 
         // Upload of the image
-        if ($this->photo) {
-            $this->validate([
-                'photo' => 'image|max:10240',
-            ]);
+        if ($this->file) {
+            // $this->validate([
+            //     'photo' => 'image|max:10240',
+            // ]);
             if (Instrument::find($instrument->id)->getFirstMedia('instrument') != null) {
                 // First remove the current image
                 Instrument::find($instrument->id)
@@ -153,11 +164,8 @@ class Create extends Component
             }
             // Update the picture
             Instrument::find($instrument->id)
-                ->addMedia($this->photo->getRealPath())
-                ->usingFileName($instrument->id . '.' . $this->photo->extension())
+                ->addFromMediaLibraryRequest($this->file)
                 ->toMediaCollection('instrument');
-
-            $this->photo = null;
         }
 
         // View the page with all instruments for the user

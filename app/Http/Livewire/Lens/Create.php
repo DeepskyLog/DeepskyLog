@@ -6,22 +6,33 @@ use App\Models\Lens;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
 
 class Create extends Component
 {
     use WithFileUploads;
+    use ValidatesMedia;
 
     public $update;
     public $lens;
     public $sel_lens;
     public $name;
     public $factor;
-    public $photo;
+    public $file = [];
 
     protected $rules = [
         'name'      => ['required', 'min:6'],
         'factor'    => ['required', 'numeric', 'gt:0', 'lt:10'],
     ];
+
+    protected $listeners = [
+        'mediaChanged',
+    ];
+
+    public function mediaChanged($media)
+    {
+        $this->file = $media;
+    }
 
     public function mount()
     {
@@ -74,10 +85,10 @@ class Create extends Component
         }
 
         // Upload of the image
-        if ($this->photo) {
-            $this->validate([
-                'photo' => 'image|max:10240',
-            ]);
+        if ($this->file) {
+            // $this->validate([
+            //     'photo' => 'image|max:10240',
+            // ]);
             if (Lens::find($lens->id)->getFirstMedia('lens') != null) {
                 // First remove the current image
                 Lens::find($lens->id)
@@ -86,11 +97,8 @@ class Create extends Component
             }
             // Update the picture
             Lens::find($lens->id)
-                ->addMedia($this->photo->getRealPath())
-                ->usingFileName($lens->id . '.' . $this->photo->extension())
+                ->addFromMediaLibraryRequest($this->file)
                 ->toMediaCollection('lens');
-
-            $this->photo = null;
         }
 
         // View the page with all lenses for the user

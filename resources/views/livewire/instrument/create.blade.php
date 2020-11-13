@@ -108,34 +108,7 @@
         </div>
 
         {{-- Instrument picture --}}
-        <div class="form-group">
-
-            <div class="card mb-3">
-                <div class="row no-gutters">
-                    <div class="col-2" id="card-bg">
-                        @if ($photo)
-                        <img class="card-img-top" style="border-radius: 20%" src="{{ $photo->temporaryUrl() }}">
-                        @endif
-                    </div>
-                    <div class="col-10" id="card-bg">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ _i('Upload a picture of your instrument.') . ' (max 10 Mb)' }}
-                            </h5>
-
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input @error('photo') is-invalid @enderror"
-                                    wire:model="photo">
-                                <label class="custom-file-label">{{ _i('Choose file') }}</label>
-                            </div>
-                            <div wire:loading wire:target="photo" class="text-sm text-gray-500 italic">
-                                {{ _i('Uploading...') }}
-                            </div>
-                            @error('photo') <br /><span class="small text-error">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <x-media-library-attachment rules="max:10240" name="media" :media="$file" />
 
         <input type="submit" class="btn btn-success" name="add"
             value="@if ($update){{ _i("Change instrument") }}@else{{ _i("Add instrument") }}@endif" />

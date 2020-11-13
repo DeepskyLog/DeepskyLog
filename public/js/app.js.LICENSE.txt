@@ -5,7 +5,7 @@ object-assign
 */
 
 /*!
-  * Bootstrap v4.5.2 (https://getbootstrap.com/)
+  * Bootstrap v4.5.3 (https://getbootstrap.com/)
   * Copyright 2011-2020 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
@@ -13,6 +13,15 @@ object-assign
 /*!
  * Column visibility buttons for Buttons and DataTables.
  * 2016 SpryMedia Ltd - datatables.net/license
+ */
+
+/*!
+ * Fuse.js v3.4.5 - Lightweight fuzzy-search (http://fusejs.io)
+ * 
+ * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
+ * All Rights Reserved. Apache Software License 2.0
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
  */
 
 /*!
@@ -54,30 +63,6 @@ object-assign
  */
 
 /*!
- * bootstrap-fileinput v5.1.2
- * http://plugins.krajee.com/file-input
- *
- * Author: Kartik Visweswaran
- * Copyright: 2014 - 2020, Kartik Visweswaran, Krajee.com
- *
- * Licensed under the BSD-3-Clause
- * https://github.com/kartik-v/bootstrap-fileinput/blob/master/LICENSE.md
- */
-
-/*!
- * bootstrap-fileinput v5.1.2
- * http://plugins.krajee.com/file-input
- *
- * Font Awesome 5 icon theme configuration for bootstrap-fileinput. Requires font awesome 5 assets to be loaded.
- *
- * Author: Kartik Visweswaran
- * Copyright: 2014 - 2020, Kartik Visweswaran, Krajee.com
- *
- * Licensed under the BSD-3-Clause
- * https://github.com/kartik-v/bootstrap-fileinput/blob/master/LICENSE.md
- */
-
-/*!
  * jQuery JavaScript Library v3.5.1
  * https://jquery.com/
  *
@@ -113,7 +98,7 @@ object-assign
  * ©2018 SpryMedia Ltd - datatables.net/license
  */
 
-/*! Buttons for DataTables 1.6.4
+/*! Buttons for DataTables 1.6.5
  * ©2016-2020 SpryMedia Ltd - datatables.net/license
  */
 
@@ -133,15 +118,13 @@ object-assign
 * http://sorgalla.com/lity/
 * Copyright (c) 2015-2020 Jan Sorgalla; Licensed MIT */
 
+/*! choices.js v9.0.1 | © 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+
 /*! http://mths.be/fromcodepoint v0.1.0 by @mathias */
 
-/*! pdfmake v0.1.68, @license MIT, @link http://pdfmake.org */
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
-/**
- * @author Òscar Casajuana a.k.a. elboletaire <elboletaire at underave dot net>
- * @link https://github.com/elboletaire/password-strength-meter
- * @license GPL-3.0
- */
+/*! pdfmake v0.1.68, @license MIT, @link http://pdfmake.org */
 
 /**
  * @license
@@ -150,11 +133,6 @@ object-assign
  * Released under MIT license <https://lodash.com/license>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
-
-/**
- * @license almond 0.3.3 Copyright jQuery Foundation and other contributors.
- * Released under MIT license, http://github.com/requirejs/almond/LICENSE
  */
 
 /** @preserve

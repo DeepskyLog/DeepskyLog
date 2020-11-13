@@ -11,7 +11,14 @@ const mix = require('laravel-mix');
  |
  */
 
+mix.webpackConfig({
+	resolve: {
+		modules: [
+			'node_modules',
+			__dirname + '/vendor/spatie/laravel-medialibrary-pro/resources/js',
+		],
+	},
+});
 mix.js('resources/js/app.js', 'public/js')
 	.sass('resources/sass/app.scss', 'public/css');
-
 mix.copy('node_modules/choices.js/public/assets/scripts/choices.js', 'public/js');

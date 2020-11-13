@@ -8,10 +8,12 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\MagnitudeController;
+use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
 
 class Create extends Component
 {
     use WithFileUploads;
+    use ValidatesMedia;
 
     public $name;
     public $location;
@@ -24,7 +26,7 @@ class Create extends Component
     public $limitingMagnitude;
     public $bortle;
     public $skyBackground;
-    public $photo;
+    public $file = [];
 
     protected $rules = [
         'name'                               => 'required|min:3',
@@ -33,9 +35,10 @@ class Create extends Component
         'country'                            => 'required',
         'elevation'                          => 'required|numeric|lte:8888|gte:-200',
         'timezone'                           => 'required|timezone',
-        'limitingMagnitude'                  => 'numeric|lte:8.0|gte:-1.0',
-        'skyBackground'                      => 'numeric|lte:22.0|gte:10.0',
-        'bortle'                             => 'numeric|lte:9|gte:1',
+        'limitingMagnitude'                  => 'nullable|numeric|lte:8.0|gte:-1.0',
+        'skyBackground'                      => 'nullable|numeric|lte:22.0|gte:10.0',
+        'bortle'                             => 'nullable|numeric|lte:9|gte:1',
+        // 'photo' => [$this->validateSingleMedia()->maxItemSizeInKb(10000)]
     ];
 
     protected $listeners = [
@@ -44,7 +47,13 @@ class Create extends Component
         'country'     => 'setCountry',
         'timezone'    => 'setTimezone',
         'elevation'   => 'setElevation',
+        'mediaChanged',
     ];
+
+    public function mediaChanged($media)
+    {
+        $this->file = $media;
+    }
 
     /**
      * Listener for the latitude event
@@ -196,10 +205,10 @@ class Create extends Component
         }
 
         // Upload of the image
-        if ($this->photo) {
-            $this->validate([
-                'photo' => 'image|max:10240',
-            ]);
+        if ($this->file) {
+            // $this->validate([
+            //     'photo' => 'image|max:10240',
+            // ]);
             if (Location::find($location->id)->getFirstMedia('location') != null) {
                 // First remove the current image
                 Location::find($location->id)
@@ -208,11 +217,8 @@ class Create extends Component
             }
             // Update the picture
             Location::find($location->id)
-                                ->addMedia($this->photo->getRealPath())
-                                ->usingFileName($location->id . '.' . $this->photo->extension())
-                                ->toMediaCollection('location');
-
-            $this->photo = null;
+                        ->addFromMediaLibraryRequest($this->file)
+                        ->toMediaCollection('location');
         }
 
         // View the page with all locations for the user

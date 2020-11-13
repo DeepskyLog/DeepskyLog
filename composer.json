@@ -26,8 +26,10 @@
         "monarobase/country-list": "^3.0",
         "muhamadrezaar/highcharts": "^2.0",
         "petercoles/multilingual-language-list": "^1.15",
+        "spatie/image": "^1.8",
         "spatie/laravel-cookie-consent": "^2.8",
         "spatie/laravel-medialibrary": "^9.0",
+        "spatie/laravel-medialibrary-pro": "dev-livewire-forms",
         "spatie/laravel-translatable": "^4.3",
         "spatie/pdf-to-image": "^2.0",
         "stevebauman/location": "^5.2",
@@ -82,5 +84,9 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ]
-    }
+    },
+    "repositories": [{
+        "type": "composer",
+        "url": "https://satis.spatie.be"
+    }]
 }

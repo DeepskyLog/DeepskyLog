@@ -8,10 +8,12 @@ use Livewire\WithFileUploads;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\View\Factory;
+use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
 
 class UserSettings extends Component
 {
     use WithFileUploads;
+    use ValidatesMedia;
 
     public User $user;
     public $country;
@@ -28,6 +30,7 @@ class UserSettings extends Component
     public $password;
     public $password_confirmation;
     public $instrument;
+    public $file = [];
 
     protected $licenses = [
         'Attribution CC BY'                                => 0,
@@ -45,6 +48,15 @@ class UserSettings extends Component
         'fstOffset' => 'numeric|min:-5.0|max:5.0',
         'copyright' => 'max:128',
     ];
+
+    protected $listeners = [
+        'mediaChanged',
+    ];
+
+    public function mediaChanged($media)
+    {
+        $this->file = $media;
+    }
 
     /**
      * Sets the database values.
@@ -150,10 +162,10 @@ class UserSettings extends Component
         }
 
         // Upload of the image
-        if ($this->photo) {
-            $this->validate([
-                'photo' => 'image|max:10240',
-            ]);
+        if ($this->file) {
+            // $this->validate([
+            //     'photo' => 'image|max:10240',
+            // ]);
             if (User::find($this->user->id)->getFirstMedia('observer') != null
             ) {
                 // First remove the current image
@@ -164,12 +176,10 @@ class UserSettings extends Component
 
             // Update the picture
             User::find($this->user->id)
-                ->addMedia($this->photo->getRealPath())
-                ->usingName('observer')
-                ->usingFileName($this->user->id . '.' . $this->photo->extension())
+                ->addFromMediaLibraryRequest($this->file)
                 ->toMediaCollection('observer');
 
-            $this->photo = null;
+            $this->emit('clearMedia');
         }
 
         // Message if there was an error or if the changes were written succesfully
