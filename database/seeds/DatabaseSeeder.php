@@ -31,13 +31,14 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(
-            [UsersTableSeeder::class, LensTableSeeder::class,
+            [
+                UsersTableSeeder::class, LensTableSeeder::class,
                 FilterTableSeeder::class, EyepieceTableSeeder::class,
                 EyepieceBrandSeeder::class, EyepieceTypeSeeder::class,
                 MessagesTableSeeder::class, InstrumentTableSeeder::class,
                 LocationTableSeeder::class, TargetTableSeeder::class,
                 TargetNameTableSeeder::class, TargetPartOfTableSeeder::class,
-                MoonSeeder::class, SlugSeeder::class, ]
+                MoonSeeder::class, ]
         );
     }
 }

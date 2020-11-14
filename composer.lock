@@ -4663,17 +4663,17 @@
         },
         {
             "name": "spatie/laravel-medialibrary-pro",
-            "version": "1.0.15",
+            "version": "1.0.16",
             "source": {
                 "type": "git",
                 "url": "git@github.com:spatie/laravel-medialibrary-pro.git",
-                "reference": "29a5c3fe4d60ae43d729c457dbffea29b15de26e"
+                "reference": "17c2c7da34bb8671e2e5ae67fd4af5c3c1d398aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-29a5c3fe4d60ae43d729c457dbffea29b15de26e-zip-fb9a90.zip",
-                "reference": "29a5c3fe4d60ae43d729c457dbffea29b15de26e",
-                "shasum": "97526ef4ca2b4f85f6772373173a5a7da904b8cc"
+                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-17c2c7da34bb8671e2e5ae67fd4af5c3c1d398aa-zip-9ea0a5.zip",
+                "reference": "17c2c7da34bb8671e2e5ae67fd4af5c3c1d398aa",
+                "shasum": "21fcfe2ca248847cef056e3864740bbc03acc1e0"
             },
             "require": {
                 "ext-json": "*",
@@ -4738,10 +4738,10 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.0.15",
+                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/master",
                 "issues": "https://github.com/spatie/laravel-medialibrary-pro/issues"
             },
-            "time": "2020-11-13T16:31:06+00:00"
+            "time": "2020-11-13T21:59:36+00:00"
         },
         {
             "name": "spatie/laravel-translatable",
@@ -7746,16 +7746,16 @@
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v4.35.1",
+            "version": "v4.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "6c902a84139825d68bd7a6ed413329009b39ca6f"
+                "reference": "b51c7a6e036ea685b292e8fe92138cbc2ecc28cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/6c902a84139825d68bd7a6ed413329009b39ca6f",
-                "reference": "6c902a84139825d68bd7a6ed413329009b39ca6f",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/b51c7a6e036ea685b292e8fe92138cbc2ecc28cc",
+                "reference": "b51c7a6e036ea685b292e8fe92138cbc2ecc28cc",
                 "shasum": ""
             },
             "require": {
@@ -7804,7 +7804,7 @@
             ],
             "support": {
                 "issues": "https://github.com/yajra/laravel-datatables-html/issues",
-                "source": "https://github.com/yajra/laravel-datatables-html/tree/v4.35.1"
+                "source": "https://github.com/yajra/laravel-datatables-html/tree/v4.36.0"
             },
             "funding": [
                 {
@@ -7816,7 +7816,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-11-13T10:21:18+00:00"
+            "time": "2020-11-14T06:56:53+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",
