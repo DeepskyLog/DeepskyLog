@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -211,6 +212,8 @@ Route::get('/sponsors', function () {
 });
 
 // Social log in
+Route::get('/login/github', [LoginController::class, 'redirectToProvider']);
+Route::get('/login/github/callback', [LoginController::class, 'handleProviderCallback']);
 //Route::get('/redirect/{service}', 'SocialAuthController@redirect');
 //Route::get('/callback/{service}', 'SocialAuthController@callback');
 //Route::get('/callback/{service}', 'Auth\LoginController@handleProviderCallback');

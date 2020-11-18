@@ -12,12 +12,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use deepskylog\LaravelGettext\Facades\LaravelGettext;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Socialite;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use deepskylog\LaravelGettext\Facades\LaravelGettext;
 
 /**
  * Logs in the user, sets the correct language and redirects to the home page.
@@ -80,7 +81,7 @@ class LoginController extends Controller
         $field = $this->field($request);
 
         return [
-            $field => $request->get($this->username()),
+            $field     => $request->get($this->username()),
             'password' => $request->get('password'),
         ];
     }
@@ -121,7 +122,7 @@ class LoginController extends Controller
             $request,
             [
                 $this->username() => "required|exists:users,{$field}",
-                'password' => 'required',
+                'password'        => 'required',
             ],
             $messages
         );
@@ -186,11 +187,45 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
-    public function handleProviderCallback($service)
+    /**
+     * Redirect the user to the GitHub authentication page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function redirectToProvider()
     {
-        $user = Socialite::with($service)->user();
+        return Socialite::driver('github')->redirect();
+    }
 
-        echo $user->name;
-        dd($user->name);
+    /**
+     * Obtain the user information from GitHub.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function handleProviderCallback()
+    {
+        $githubUser = Socialite::driver('github')->user();
+
+        // dump($githubUser->getNickname());
+
+        $user  = User::firstOrCreate(
+            ['email' => $githubUser->getEmail()],
+            [
+                'name'                => $githubUser->getName(),
+                'username'            => $githubUser->getNickname(),
+                'language'            => LaravelGettext::getLocale(),
+                'observationLanguage' => LaravelGettext::getLocaleLanguage(),
+                'email_verified_at'   => now(),
+            ]
+        );
+        // Adapt database
+        // 1) Make password nullable
+        // 2) Add $table->string('provider_id')->nullable();
+
+        // Log user in
+        auth()->login($user, true);
+
+        // Redirect to dashboard
+        return redirect($this->redirectTo);
     }
 }
