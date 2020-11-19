@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\MagnitudeController;
 use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
+use Spatie\MediaLibraryPro\Http\Livewire\Concerns\WithMedia;
 
 class Create extends Component
 {
     use WithFileUploads;
     use ValidatesMedia;
+    use WithMedia;
 
     public $name;
     public $location;
@@ -26,7 +28,8 @@ class Create extends Component
     public $limitingMagnitude;
     public $bortle;
     public $skyBackground;
-    public $file = [];
+    public $media;
+    public $mediaComponentNames = ['media'];
 
     protected $rules = [
         'name'                               => 'required|min:3',
@@ -47,13 +50,7 @@ class Create extends Component
         'country'     => 'setCountry',
         'timezone'    => 'setTimezone',
         'elevation'   => 'setElevation',
-        'mediaChanged',
     ];
-
-    public function mediaChanged($media)
-    {
-        $this->file = $media;
-    }
 
     /**
      * Listener for the latitude event
@@ -186,6 +183,7 @@ class Create extends Component
             $this->location->update(['limitingMagnitude' => $this->limitingMagnitude]);
             $this->location->update(['bortle' => $this->bortle]);
             $this->location->update(['skyBackground' => $this->skyBackground]);
+            $location = $this->location;
         } else {
             // Create a new location
             $location = Location::create(
@@ -205,10 +203,7 @@ class Create extends Component
         }
 
         // Upload of the image
-        if ($this->file) {
-            // $this->validate([
-            //     'photo' => 'image|max:10240',
-            // ]);
+        if ($this->media) {
             if (Location::find($location->id)->getFirstMedia('location') != null) {
                 // First remove the current image
                 Location::find($location->id)
@@ -217,7 +212,7 @@ class Create extends Component
             }
             // Update the picture
             Location::find($location->id)
-                        ->addFromMediaLibraryRequest($this->file)
+                        ->addFromMediaLibraryRequest($this->media)
                         ->toMediaCollection('location');
         }
 

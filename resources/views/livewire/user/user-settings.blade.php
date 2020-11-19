@@ -99,7 +99,7 @@
 
         {{-- Profile picture --}}
         {{ _i('Change profile picture') . ' (max 10 Mb)' }}
-        <x-media-library-attachment rules="max:10240" name="media" :media="$file" {{-- :translations="{
+        <x-media-library-attachment rules="max:10240" name="userPicture" {{-- :translations="{
             fileTypeNotAllowed: _i('You must upload a file of type'),
             tooLarge: _i('File too large, max'),
             tooSmall: _i('File too small, min'),

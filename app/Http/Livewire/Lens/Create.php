@@ -7,32 +7,26 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
+use Spatie\MediaLibraryPro\Http\Livewire\Concerns\WithMedia;
 
 class Create extends Component
 {
     use WithFileUploads;
     use ValidatesMedia;
+    use WithMedia;
 
     public $update;
     public $lens;
     public $sel_lens;
     public $name;
     public $factor;
-    public $file = [];
+    public $media;
+    public $mediaComponentNames = ['media'];
 
     protected $rules = [
         'name'      => ['required', 'min:6'],
         'factor'    => ['required', 'numeric', 'gt:0', 'lt:10'],
     ];
-
-    protected $listeners = [
-        'mediaChanged',
-    ];
-
-    public function mediaChanged($media)
-    {
-        $this->file = $media;
-    }
 
     public function mount()
     {
@@ -85,10 +79,7 @@ class Create extends Component
         }
 
         // Upload of the image
-        if ($this->file) {
-            // $this->validate([
-            //     'photo' => 'image|max:10240',
-            // ]);
+        if ($this->media) {
             if (Lens::find($lens->id)->getFirstMedia('lens') != null) {
                 // First remove the current image
                 Lens::find($lens->id)
@@ -97,7 +88,7 @@ class Create extends Component
             }
             // Update the picture
             Lens::find($lens->id)
-                ->addFromMediaLibraryRequest($this->file)
+                ->addFromMediaLibraryRequest($this->media)
                 ->toMediaCollection('lens');
         }
 

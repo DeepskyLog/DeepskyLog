@@ -126,7 +126,7 @@
         {{-- Eyepiece picture --}}
         {{ _i('Upload a picture of your eyepiece.') . ' (max 10 Mb)' }}
 
-        <x-media-library-attachment rules="max:10240" name="media" :media="$file" />
+        <x-media-library-attachment rules="max:10240" name="media" />
 
         <br />
         <input type="submit" class="btn btn-success" name="add"

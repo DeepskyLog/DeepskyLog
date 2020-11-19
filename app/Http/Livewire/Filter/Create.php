@@ -7,11 +7,13 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
+use Spatie\MediaLibraryPro\Http\Livewire\Concerns\WithMedia;
 
 class Create extends Component
 {
     use WithFileUploads;
     use ValidatesMedia;
+    use WithMedia;
 
     public $filter;
     public $sel_filter;
@@ -23,7 +25,8 @@ class Create extends Component
     public $firstcolor;
     public $wratten;
     public $schott;
-    public $file = [];
+    public $media;
+    public $mediaComponentNames = ['media'];
     public $disableColorFields;
 
     protected $rules = [
@@ -31,15 +34,6 @@ class Create extends Component
         'type'    => ['required'],
         'wratten' => ['max:5'],
     ];
-
-    protected $listeners = [
-        'mediaChanged',
-    ];
-
-    public function mediaChanged($media)
-    {
-        $this->file = $media;
-    }
 
     public function mount()
     {
@@ -142,10 +136,7 @@ class Create extends Component
         }
 
         // Upload of the image
-        if ($this->file) {
-            // $this->validate([
-            //     'photo' => 'image|max:10240',
-            // ]);
+        if ($this->media) {
             if (Filter::find($filter->id)->getFirstMedia('filter') != null) {
                 // First remove the current image
                 Filter::find($filter->id)
@@ -154,7 +145,7 @@ class Create extends Component
             }
             // Update the picture
             Filter::find($filter->id)
-                ->addFromMediaLibraryRequest($this->file)
+                ->addFromMediaLibraryRequest($this->media)
                 ->toMediaCollection('filter');
         }
 

@@ -9,11 +9,13 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\View\Factory;
 use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
+use Spatie\MediaLibraryPro\Http\Livewire\Concerns\WithMedia;
 
 class UserSettings extends Component
 {
     use WithFileUploads;
     use ValidatesMedia;
+    use WithMedia;
 
     public User $user;
     public $country;
@@ -29,7 +31,8 @@ class UserSettings extends Component
     public $password;
     public $password_confirmation;
     public $instrument;
-    public $file = [];
+    public $userPicture;
+    public $mediaComponentNames = ['userPicture'];
 
     protected $licenses = [
         'Attribution CC BY'                                => 0,
@@ -47,15 +50,6 @@ class UserSettings extends Component
         'fstOffset' => 'numeric|min:-5.0|max:5.0',
         'copyright' => 'max:128',
     ];
-
-    protected $listeners = [
-        'mediaChanged',
-    ];
-
-    public function mediaChanged($media)
-    {
-        $this->file = $media;
-    }
 
     /**
      * Sets the database values.
@@ -155,7 +149,7 @@ class UserSettings extends Component
         }
 
         // Upload of the image
-        if ($this->file) {
+        if ($this->userPicture) {
             if (User::find($this->user->id)->getFirstMedia('observer') != null
             ) {
                 // First remove the current image
@@ -166,10 +160,10 @@ class UserSettings extends Component
 
             // Update the picture
             User::find($this->user->id)
-                ->addFromMediaLibraryRequest($this->file)
+                ->addFromMediaLibraryRequest($this->userPicture)
                 ->toMediaCollection('observer');
 
-            $this->emit('clearMedia');
+            $this->clearMedia();
         }
 
         // Message if there was an error or if the changes were written succesfully

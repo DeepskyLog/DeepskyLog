@@ -251,8 +251,8 @@
             @if ($target->isNonSolarSystem())
             <tr>
                 <td colspan="3">Aladin<br /><br />
-                    @if (count(auth()->user()->instruments) > 0)
                     @auth
+                    @if (count(auth()->user()->instruments) > 0)
                     <div x-data=''>
                         <x-input.select-live-wire wire:model="instrument2" prettyname="myinstrument2"
                             :options="$allInstruments" selected="('instrument2')" />
