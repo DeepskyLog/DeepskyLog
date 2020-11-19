@@ -15,13 +15,13 @@ class SlugSeeder extends Seeder
      */
     public function run()
     {
-        // // Loop over the users
-        // $users = User::all();
+        // Loop over the users
+        $users = User::all();
 
-        // foreach ($users as $user) {
-        //     // Add the slugs to the users
-        //     $user->save();
-        // }
+        foreach ($users as $user) {
+            // Add the slugs to the users
+            $user->save();
+        }
 
         // Loop over the targetnames
         $targetnames = TargetName::all();
