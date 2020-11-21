@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2020-11-21 20:52+0100\n"
-"PO-Revision-Date: 2020-11-21 20:54+0100\n"
+"POT-Creation-Date: 2020-11-21 21:16+0100\n"
+"PO-Revision-Date: 2020-11-21 21:16+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: nl_NL\n"
@@ -2178,7 +2178,11 @@ msgstr "Sorry, geen threads."
 msgid "Details"
 msgstr "Details"
 
-#: ../storage/framework/messages/77c58937b8e632f2a77b5394e24dba7494f160ea.php.php:14
+#: ../storage/framework/messages/77c58937b8e632f2a77b5394e24dba7494f160ea.php.php:12
+msgid "DeepskyLog Mailbox"
+msgstr "DeepskyLog Mailbox"
+
+#: ../storage/framework/messages/77c58937b8e632f2a77b5394e24dba7494f160ea.php.php:16
 msgid "Log out"
 msgstr "Uitloggen"
 
@@ -4526,9 +4530,6 @@ msgstr "Waargenomen op de volgende locaties"
 
 #~ msgid "Lookup atlas page for M 45"
 #~ msgstr "Lookup atlas pagina voor M 45"
-
-#~ msgid "DeepskyLog atlases"
-#~ msgstr "DeepskyLog atlassen"
 
 #~ msgid ""
 #~ "The <b>overview</b> atlases have pages of 20 degrees, and show stars to "
