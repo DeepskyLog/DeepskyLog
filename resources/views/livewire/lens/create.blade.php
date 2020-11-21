@@ -39,7 +39,7 @@
         </div>
 
         {{-- Filter picture --}}
-        {{ _i('Upload a picture of your filter.') . ' (max 10 Mb)' }}
+        {{ _i('Upload a picture of your lens.') . ' (max 10 Mb)' }}
 
         <x-media-library-attachment rules="max:10240" name="media" />
 

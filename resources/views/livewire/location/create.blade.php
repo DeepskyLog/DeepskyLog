@@ -82,22 +82,24 @@
                     @php
                     $bortleOptions = '
                     <option value=""></option>
-                    <option' . (($bortle==1) ? ' selected="selected" ' : '' ) . ' value="1">1 - ' . _i("Excellent
-                        dark-sky site") . '</option>
-                    <option' . (($bortle==2) ? ' selected="selected" ' : '' ) . ' value="2">2 - ' . _i("Typical truly
-                        dark site") . '</option>
-                    <option' . (($bortle==3) ? ' selected="selected" ' : '' ) . ' value="3">3 - ' . _i("Rural sky") . '</option>
-                    <option' . (($bortle==4) ? ' selected="selected" ' : '' ) . ' value="4">4 - ' . _i("Rural/suburban
-                        transition") . '</option>
-                    <option' . (($bortle==5) ? ' selected="selected" ' : '' ) . ' value="5">5 - ' . _i("Suburban sky")
-                        . '</option>
-                    <option' . (($bortle==6) ? ' selected="selected" ' : '' ) . ' value="6">6 - ' . _i("Bright suburban
-                        sky") . '</option>
-                    <option' . (($bortle==7) ? ' selected="selected" ' : '' ) . ' value="7">7 - ' . _i("Suburban/urban
-                        transition") . '</option>
-                    <option' . (($bortle==8) ? ' selected="selected" ' : '' ) . ' value="8">8 - ' . _i("City sky") . '</option>
-                    <option' . (($bortle==9) ? ' selected="selected" ' : '' ) . ' value="9">9 - ' . _i("Inner-city
-                        sky") . '</option>' ; @endphp <div x-data=''>
+                    <option' . (($bortle==1) ? ' selected="selected" ' : '' ) . '
+                        value="1">1 - ' . _i("Excellent dark-sky site") . '</option>
+                    <option' . (($bortle==2) ? ' selected="selected" ' : '' ) . '
+                        value="2">2 - ' . _i("Typical truly dark site") . '</option>
+                    <option' . (($bortle==3) ? ' selected="selected" ' : '' ) . '
+                        value="3">3 - ' . _i("Rural sky") . '</option>
+                    <option' . (($bortle==4) ? ' selected="selected" ' : '' ) . '
+                        value="4">4 - ' . _i("Rural/suburban transition") . '</option>
+                    <option' . (($bortle==5) ? ' selected="selected" ' : '' ) . '
+                        value="5">5 - ' . _i("Suburban sky") . '</option>
+                    <option' . (($bortle==6) ? ' selected="selected" ' : '' ) . '
+                        value="6">6 - ' . _i("Bright suburban sky") . '</option>
+                    <option' . (($bortle==7) ? ' selected="selected" ' : '' ) . '
+                        value="7">7 - ' . _i("Suburban/urban transition") . '</option>
+                    <option' . (($bortle==8) ? ' selected="selected" ' : '' ) . '
+                        value="8">8 - ' . _i("City sky") . '</option>
+                    <option' . (($bortle==9) ? ' selected="selected" ' : '' ) . '
+                        value="9">9 - ' . _i("Inner-city sky") . '</option>' ; @endphp <div x-data=''>
                         <x-input.select-live-wire wire:model="bortle" prettyname="mybortle" :options="$bortleOptions"
                             selected="('bortle')" />
                 </div>

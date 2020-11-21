@@ -99,20 +99,7 @@
 
         {{-- Profile picture --}}
         {{ _i('Change profile picture') . ' (max 10 Mb)' }}
-        <x-media-library-attachment rules="max:10240" name="userPicture" {{-- :translations="{
-            fileTypeNotAllowed: _i('You must upload a file of type'),
-            tooLarge: _i('File too large, max'),
-            tooSmall: _i('File too small, min'),
-            tryAgain: _i('please try uploading this file again'),
-            somethingWentWrong: _i('Something went wrong while uploading this file'),
-            selectOrDrag: _i('Select or drag files'),
-            selectOrDragMax: _i('Select or drag max {maxItems} {file}'),
-            file: { singular: _i('file'), plural: _i('files') },
-            anyImage: _i('any image'),
-            goBack: _i('Go back'),
-            dropFile: _i('Drop file to upload'),
-            dragHere: _i('Drag file here'),
-            remove: _i('Remove'),} " --}} />
+        <x-media-library-attachment rules="max:10240" name="userPicture" />
         <br /><br />
 
         {{-- Send mail --}}
