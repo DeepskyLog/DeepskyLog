@@ -73,7 +73,7 @@
                                 <a class="btn btn-light" href="/login/github"><img width="18" height="18"
                                         src="/img/GitHub-Mark-32px.png" />&nbsp;&nbsp;GitHub</a>
                                 <a class="btn btn-light" href="/login/facebook"><img width="18" height="18"
-                                        src="/img/f_logo_RGB-Blue_58..png" />&nbsp;&nbsp;Facebook</a>
+                                        src="/img/f_logo_RGB-Blue_58.png" />&nbsp;&nbsp;Facebook</a>
                             </div>
                         </div>
 
