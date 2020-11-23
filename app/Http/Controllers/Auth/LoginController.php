@@ -192,9 +192,69 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function redirectToProvider()
+    public function redirectToGithub()
     {
         return Socialite::driver('github')->redirect();
+    }
+
+    /**
+     * Redirect the user to the Facebook authentication page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function redirectToFacebook()
+    {
+        return Socialite::driver('facebook')->redirect();
+    }
+
+    /**
+     * Redirect the user to the Twitter authentication page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function redirectToTwitter()
+    {
+        return Socialite::driver('twitter')->redirect();
+    }
+
+    /**
+     * Redirect the user to the Google authentication page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    /**
+     * Obtain the user information from Google.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function handleGoogleCallback()
+    {
+        return $this->handleCallback('google');
+    }
+
+    /**
+     * Obtain the user information from Facebook.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function handleFacebookCallback()
+    {
+        return $this->handleCallback('facebook');
+    }
+
+    /**
+     * Obtain the user information from Twitter.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function handleTwitterCallback()
+    {
+        return $this->handleCallback('twitter');
     }
 
     /**
@@ -202,11 +262,19 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function handleProviderCallback()
+    public function handleGithubCallback()
     {
-        $githubUser = Socialite::driver('github')->user();
+        return $this->handleCallback('github');
+    }
 
-        // dump($githubUser->getNickname());
+    /**
+     * Obtain the user information from GitHub.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function handleCallback($service)
+    {
+        $githubUser = Socialite::driver($service)->user();
 
         $user  = User::firstOrCreate(
             ['email' => $githubUser->getEmail()],

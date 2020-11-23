@@ -470,16 +470,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v4.16",
+            "version": "v4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "000e5c3b634558399e6be76885a9a33e39f8c0c4"
+                "reference": "d7293dfbfcb9b698e1eff04a7a4ee08ac942d0f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/000e5c3b634558399e6be76885a9a33e39f8c0c4",
-                "reference": "000e5c3b634558399e6be76885a9a33e39f8c0c4",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/d7293dfbfcb9b698e1eff04a7a4ee08ac942d0f3",
+                "reference": "d7293dfbfcb9b698e1eff04a7a4ee08ac942d0f3",
                 "shasum": ""
             },
             "require": {
@@ -528,7 +528,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.16"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.17"
             },
             "funding": [
                 {
@@ -536,7 +536,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-11-16T10:41:09+00:00"
+            "time": "2020-11-23T12:47:15+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
@@ -4719,16 +4719,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "9.1.4",
+            "version": "9.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "4536fd9ac0d890766bc0012ffa46c34772dd6506"
+                "reference": "fce33ddd6613f8048ef554d64e82ffa5b05204d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/4536fd9ac0d890766bc0012ffa46c34772dd6506",
-                "reference": "4536fd9ac0d890766bc0012ffa46c34772dd6506",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/fce33ddd6613f8048ef554d64e82ffa5b05204d6",
+                "reference": "fce33ddd6613f8048ef554d64e82ffa5b05204d6",
                 "shasum": ""
             },
             "require": {
@@ -4807,7 +4807,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-medialibrary/issues",
-                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.1.4"
+                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.1.5"
             },
             "funding": [
                 {
@@ -4819,27 +4819,27 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-11-19T07:34:26+00:00"
+            "time": "2020-11-22T21:40:26+00:00"
         },
         {
             "name": "spatie/laravel-medialibrary-pro",
-            "version": "1.3.4",
+            "version": "1.3.7",
             "source": {
                 "type": "git",
                 "url": "git@github.com:spatie/laravel-medialibrary-pro.git",
-                "reference": "c64ca2ad5c4c1c29e0e484226fbbb8a73ee6e4ad"
+                "reference": "35c62489e81feceb1faef2253bcdc9413f7e7bfe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-c64ca2ad5c4c1c29e0e484226fbbb8a73ee6e4ad-zip-3ebf07.zip",
-                "reference": "c64ca2ad5c4c1c29e0e484226fbbb8a73ee6e4ad",
-                "shasum": "4e5382c6b5426ccba1d0e0a89716c49146472c3c"
+                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-35c62489e81feceb1faef2253bcdc9413f7e7bfe-zip-533213.zip",
+                "reference": "35c62489e81feceb1faef2253bcdc9413f7e7bfe",
+                "shasum": "88c5f30ba165700cb14daf2ec92ebcd46a32a9f9"
             },
             "require": {
                 "ext-json": "*",
                 "illuminate/validation": "^7.25|^8.0",
                 "php": "^7.4",
-                "spatie/laravel-medialibrary": "^9.0",
+                "spatie/laravel-medialibrary": "^9.1.5",
                 "symfony/mime": "^5.1"
             },
             "require-dev": {
@@ -4898,10 +4898,10 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/master",
+                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/v1.0.18",
                 "issues": "https://github.com/spatie/laravel-medialibrary-pro/issues"
             },
-            "time": "2020-11-21T10:58:55+00:00"
+            "time": "2020-11-23T09:41:12+00:00"
         },
         {
             "name": "spatie/laravel-translatable",
@@ -8215,16 +8215,16 @@
         },
         {
             "name": "fakerphp/faker",
-            "version": "v1.11.0",
+            "version": "v1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FakerPHP/Faker.git",
-                "reference": "f228dc5112bafc14c77d40a2acc0c48058e184b0"
+                "reference": "9aa6c9e289860951e6b4d010c7a841802d015cd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/f228dc5112bafc14c77d40a2acc0c48058e184b0",
-                "reference": "f228dc5112bafc14c77d40a2acc0c48058e184b0",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/9aa6c9e289860951e6b4d010c7a841802d015cd8",
+                "reference": "9aa6c9e289860951e6b4d010c7a841802d015cd8",
                 "shasum": ""
             },
             "require": {
@@ -8261,9 +8261,9 @@
             ],
             "support": {
                 "issues": "https://github.com/FakerPHP/Faker/issues",
-                "source": "https://github.com/FakerPHP/Faker/tree/v1.11.0"
+                "source": "https://github.com/FakerPHP/Faker/tree/v1.12.0"
             },
-            "time": "2020-11-15T20:27:00+00:00"
+            "time": "2020-11-23T09:33:08+00:00"
         },
         {
             "name": "filp/whoops",
