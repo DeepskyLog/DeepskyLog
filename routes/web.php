@@ -212,8 +212,14 @@ Route::get('/sponsors', function () {
 });
 
 // Social log in
-Route::get('/login/github', [LoginController::class, 'redirectToProvider']);
-Route::get('/login/github/callback', [LoginController::class, 'handleProviderCallback']);
+Route::get('/login/github', [LoginController::class, 'redirectToGithub']);
+Route::get('/login/github/callback', [LoginController::class, 'handleGithubCallback']);
+Route::get('/login/google', [LoginController::class, 'redirectToGoogle']);
+Route::get('/login/google/callback', [LoginController::class, 'handleGoogleCallback']);
+Route::get('/login/facebook', [LoginController::class, 'redirectToFacebook']);
+Route::get('/login/facebook/callback', [LoginController::class, 'handleFacebookCallback']);
+Route::get('/login/twitter', [LoginController::class, 'redirectToTwitter']);
+Route::get('/login/twitter/callback', [LoginController::class, 'handleTwitterCallback']);
 //Route::get('/redirect/{service}', 'SocialAuthController@redirect');
 //Route::get('/callback/{service}', 'SocialAuthController@callback');
 //Route::get('/callback/{service}', 'Auth\LoginController@handleProviderCallback');
