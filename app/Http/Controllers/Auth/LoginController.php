@@ -276,11 +276,16 @@ class LoginController extends Controller
     {
         $githubUser = Socialite::driver($service)->user();
 
+        $nickname = $githubUser->getNickname();
+        if (!$nickname) {
+            $nickname = str_slug($githubUser->getName(), '-');
+        }
+
         $user  = User::firstOrCreate(
             ['email' => $githubUser->getEmail()],
             [
                 'name'                => $githubUser->getName(),
-                'username'            => $githubUser->getNickname(),
+                'username'            => $nickname,
                 'language'            => LaravelGettext::getLocale(),
                 'observationLanguage' => LaravelGettext::getLocaleLanguage(),
                 'email_verified_at'   => now(),
