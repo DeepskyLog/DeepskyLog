@@ -163,6 +163,7 @@ class UserSettings extends Component
                 ->addFromMediaLibraryRequest($this->userPicture)
                 ->toMediaCollection('observer');
 
+            $this->emit('newProfilePicture', $this->userPicture);
             $this->clearMedia();
         }
 

@@ -1,9 +1,6 @@
 <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        <img height="24px" style="border-radius: 20%" src="/users/{{ Auth::user()->slug }}/getImage">
-        {{ Auth::user()->name }}
-    </a>
+    <livewire:user.menu :user="$user" />
+
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         <a class="dropdown-item" href="/users/{{ Auth::user()->slug }}">{{ _i('Details') }}</a>
         <a class="dropdown-item" href="/users/{{ Auth::user()->slug }}/settings">{{ _i('Settings') }}</a>

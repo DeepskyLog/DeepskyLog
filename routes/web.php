@@ -220,6 +220,3 @@ Route::get('/login/facebook', [LoginController::class, 'redirectToFacebook']);
 Route::get('/login/facebook/callback', [LoginController::class, 'handleFacebookCallback']);
 Route::get('/login/twitter', [LoginController::class, 'redirectToTwitter']);
 Route::get('/login/twitter/callback', [LoginController::class, 'handleTwitterCallback']);
-//Route::get('/redirect/{service}', 'SocialAuthController@redirect');
-//Route::get('/callback/{service}', 'SocialAuthController@callback');
-//Route::get('/callback/{service}', 'Auth\LoginController@handleProviderCallback');
