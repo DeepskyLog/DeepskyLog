@@ -13,7 +13,12 @@ const Choices = require('choices.js/public/assets/scripts/choices.js');
 import $ from 'jquery';
 window.$ = window.jQuery = require( 'jquery' );
 
-import 'jquery-ui/ui/widgets/datepicker.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/l10n/nl.js';
+import 'flatpickr/dist/l10n/es.js';
+import 'flatpickr/dist/l10n/sv.js';
+import 'flatpickr/dist/l10n/fr.js';
+import 'flatpickr/dist/l10n/de.js';
 
 require( 'datatables.net' );
 require( 'datatables.net-bs4' );

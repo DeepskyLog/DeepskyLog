@@ -433,10 +433,6 @@
     background: #990000;
 }
 
-[data-theme="night"] .ui-datepicker .ui-datepicker-buttonpane button {
-    background-color: #bb0000;
-}
-
 [data-theme="night"] .ui-state-default, [data-theme="night"] .ui-widget-content .ui-state-default {
     border: 1px solid #c50000;
     background: #660000;

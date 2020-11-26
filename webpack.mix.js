@@ -22,3 +22,4 @@ mix.webpackConfig({
 mix.js('resources/js/app.js', 'public/js')
 	.sass('resources/sass/app.scss', 'public/css');
 mix.copy('node_modules/choices.js/public/assets/scripts/choices.js', 'public/js');
+mix.copy('node_modules/popper.js/dist/popper.js.map', 'public/js');

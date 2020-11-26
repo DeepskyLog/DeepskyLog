@@ -14,9 +14,6 @@
 @import '~choices.js/public/assets/styles/base.css';
 @import '~choices.js/public/assets/styles/choices.css';
 
-// jquery-ui
-@import '~jquery-ui/themes/base/all.css';
-
 // DeepskyLog
 @import './deepskylog.css';
 @import './deepskylog_night.css';
@@ -29,6 +26,10 @@
 
 // lity
 @import '~lity/dist/lity.css';
+
+// flatpickr
+@import "~flatpickr/dist/flatpickr.css";
+@import "~flatpickr/dist/themes/dark.css";
 
 .navbar-laravel {
   background-color: #fff;
