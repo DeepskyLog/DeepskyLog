@@ -16,6 +16,12 @@ class Detail extends Component
     public $lens;
     public $disabled;
 
+    protected $listeners = ['dateChanged' => 'dateChanged'];
+
+    public function dateChanged()
+    {
+    }
+
     /**
      * Sets the database values.
      *

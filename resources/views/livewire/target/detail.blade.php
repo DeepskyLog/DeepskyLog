@@ -230,9 +230,9 @@
             <td>{{ $target->BestTime }}</td>
             <td>{{ _i("MaxAlt") }}</td>
             <td>
-                <span data-toggle="tooltip" data-placement="bottom" title="{!! $target->maxAlt_popup !!}">{!!
-                    $target->maxAlt
-                    !!}</span>
+                <span data-toggle="tooltip" data-placement="bottom" title="{!! $target->maxAlt_popup !!}">
+                    {!! $target->maxAlt !!}
+                </span>
             </td>
             </tr>
             <tr>

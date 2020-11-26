@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
 "POT-Creation-Date: 2020-11-21 21:16+0100\n"
-"PO-Revision-Date: 2020-11-21 21:16+0100\n"
+"PO-Revision-Date: 2020-11-26 21:12+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: nl_NL\n"
@@ -2030,7 +2030,7 @@ msgstr "Beste tijd"
 
 #: ../storage/framework/messages/65ac65000ac38110b139737f4ab9d44d52dcf334.php.php:248
 msgid "MaxAlt"
-msgstr "MaxAlt MaxAlt"
+msgstr "MaxAlt"
 
 #: ../storage/framework/messages/65ac65000ac38110b139737f4ab9d44d52dcf334.php.php:254
 msgid "Highest From"
