@@ -46,6 +46,7 @@ class Date extends Component
             Request::session()->put('date', $this->carbonDateString);
             $this->carbonDateString = $this->carbonDate->isoFormat('LL');
             $this->date             = $this->carbonDate;
+            $this->emit('dateChanged');
         } catch (Exception $e) {
         }
     }
