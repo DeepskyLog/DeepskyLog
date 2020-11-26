@@ -149,7 +149,7 @@ class Location extends Model implements HasMedia
     {
         $coords     = new GeographicalCoordinates($this->longitude, $this->latitude);
         $datestr    = Session::get('date');
-        $date       = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date       = Carbon::createFromFormat('Y-m-d', $datestr);
         $date->hour = 12;
 
         $astrolib = new AstronomyLibrary($date, $coords);
@@ -165,7 +165,7 @@ class Location extends Model implements HasMedia
     public function sunriseSetTransit(): string
     {
         $datestr    = Session::get('date');
-        $date       = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date       = Carbon::createFromFormat('Y-m-d', $datestr);
         $date->hour = 12;
 
         $sun_info = date_sun_info(
@@ -208,7 +208,7 @@ class Location extends Model implements HasMedia
     public function civilTwilight(): string
     {
         $datestr    = Session::get('date');
-        $date       = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date       = Carbon::createFromFormat('Y-m-d', $datestr);
         $date->hour = 12;
 
         $sun_info = date_sun_info(
@@ -248,7 +248,7 @@ class Location extends Model implements HasMedia
     public function nauticalTwilight(): string
     {
         $datestr    = Session::get('date');
-        $date       = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date       = Carbon::createFromFormat('Y-m-d', $datestr);
         $date->hour = 12;
 
         $sun_info = date_sun_info(
@@ -288,7 +288,7 @@ class Location extends Model implements HasMedia
     public function astronomicalTwilight(): string
     {
         $datestr    = Session::get('date');
-        $date       = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date       = Carbon::createFromFormat('Y-m-d', $datestr);
         $date->hour = 12;
 
         $sun_info = date_sun_info(

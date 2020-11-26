@@ -201,7 +201,7 @@
             <tr>
                 <td>{{ _i('Date') }}</td>
                 <td>@php $datestr = Session::get('date');
-                    $date = \Carbon\Carbon::createFromFormat('d/m/Y', $datestr);
+                    $date = \Carbon\Carbon::createFromFormat('Y-m-d', $datestr);
                     $date->hour = 12;
                     @endphp {{ $date->isoFormat('LL') }}</td>
                 <td>{{ _i("Rise") }}</td>

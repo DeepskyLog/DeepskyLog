@@ -13,10 +13,11 @@
 
         <link type="text/css" rel="stylesheet" href="{{ mix('css/app.css') }}">
 
-        <script type="text/javascript" src="{{ asset('/js/app.js') }}"></script>
-
         <title>@yield('title', 'DeepskyLog')</title>
         <livewire:styles />
+        <livewire:scripts />
+
+        <script type="text/javascript" src="{{ asset('/js/app.js') }}"></script>
     </head>
 
     <body>
@@ -37,8 +38,6 @@
 
         <br />
         @include('layout.footer')
-
-        <livewire:scripts />
 
         <script src="{{ asset('/js/dark-mode-switch.js') }}"></script>
         <script src="{{ mix("js/choices.js") }}"></script>

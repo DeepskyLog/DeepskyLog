@@ -4,17 +4,14 @@
             <br />
             <!-- Language -->
             @if (Auth::guest())
-                @include('layout.sidebar.language')
+            @include('layout.sidebar.language')
             @endif
 
             <!-- Quickpick -->
             @include('layout.sidebar.quickpick')
 
-            <!-- Change date -->
+            <!-- Change date and moon -->
             @include('layout.sidebar.date')
-
-            <!-- Moon -->
-            @include('layout.sidebar.moon')
         </ul>
     </div>
 </nav>

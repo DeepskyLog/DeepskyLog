@@ -470,7 +470,7 @@ class Target extends Model
         $this->_popup[3] = '-';
 
         $datestr    = Session::get('date');
-        $date       = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date       = Carbon::createFromFormat('Y-m-d', $datestr);
         $date->hour = 12;
 
         if (!Auth::guest() && Auth::user()->stdlocation) {
@@ -1277,7 +1277,7 @@ class Target extends Model
         );
 
         $datestr      = Session::get('date');
-        $date         = Carbon::createFromFormat('d/m/Y', $datestr);
+        $date         = Carbon::createFromFormat('Y-m-d', $datestr);
         $date->hour   = 12;
         $date->minute = 0;
         $date->second = 0;
