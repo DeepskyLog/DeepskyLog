@@ -19,6 +19,7 @@ class Date extends Component
 
     public function mount()
     {
+        // Current date
         $this->dslDate          = Session::get('date');
         $date                   = \Carbon\Carbon::createFromFormat('Y-m-d', $this->dslDate);
         $date->hour             = 12;

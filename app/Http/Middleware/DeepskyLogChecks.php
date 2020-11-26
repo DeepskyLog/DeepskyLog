@@ -42,7 +42,7 @@ class DeepskyLogChecks
     public function handle($request, Closure $next)
     {
         $datetime = new \Carbon\Carbon();
-        $date     = $datetime->format('d/m/Y');
+        $date     = $datetime->format('Y-m-d');
 
         if (!Session::has('date')) {
             Session::put('date', $date);
