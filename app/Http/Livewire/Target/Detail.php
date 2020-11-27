@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Target;
 use App\Models\Target;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class Detail extends Component
 {
@@ -16,10 +17,13 @@ class Detail extends Component
     public $lens;
     public $disabled;
 
+    public $date;
+
     protected $listeners = ['dateChanged' => 'dateChanged'];
 
     public function dateChanged()
     {
+        $this->date = Session::get('date');
     }
 
     /**
@@ -30,6 +34,8 @@ class Detail extends Component
     public function mount()
     {
         if (!Auth::guest()) {
+            $this->date = Session::get('date');
+
             $this->instrument   = Auth::user()->stdtelescope;
             $this->instrument2  = Auth::user()->stdtelescope;
             $this->location     = Auth::user()->stdlocation;

@@ -31,6 +31,8 @@ class Date extends Component
         $this->location = Location::where('id', Auth::user()->stdlocation)->first();
     }
 
+    // TODO: Werkt maar een keer bij targets, test ook bij locatie
+
     /**
      * Set the session when updating.
      *

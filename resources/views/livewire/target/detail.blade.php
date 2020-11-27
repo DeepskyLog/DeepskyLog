@@ -26,7 +26,6 @@
         @endif
         @endauth
 
-
         <div class="container">
             <div class="row">
                 <div class="col-sm">
@@ -200,10 +199,10 @@
             @if ($target->isNonSolarSystem() || $target->isSolarSystem())
             <tr>
                 <td>{{ _i('Date') }}</td>
-                <td>@php $datestr = Session::get('date');
-                    $date = \Carbon\Carbon::createFromFormat('Y-m-d', $datestr);
-                    $date->hour = 12;
-                    @endphp {{ $date->isoFormat('LL') }}</td>
+                <td>@php
+                    $carbondate = \Carbon\Carbon::createFromFormat('Y-m-d', $date);
+                    @endphp {{ $carbondate->isoFormat('LL') }}
+                </td>
                 <td>{{ _i("Rise") }}</td>
                 <td>
                     <span data-toggle="tooltip" data-placement="bottom"
@@ -226,11 +225,11 @@
                 <td>&nbsp;</td>
             </tr>
             @else
-            <td>{{ _i('Best Time') }}</td>
+            <td>{{ _i('BestTime') }}</td>
             <td>{{ $target->BestTime }}</td>
             <td>{{ _i("MaxAlt") }}</td>
             <td>
-                <span data-toggle="tooltip" data-placement="bottom" title="{!! $target->maxAlt_popup !!}">
+                <span data-toggle="tooltip" data-placement="bottom" title='{{ $target->maxAlt_popup }}'>
                     {!! $target->maxAlt !!}
                 </span>
             </td>

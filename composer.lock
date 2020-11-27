@@ -4722,16 +4722,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "9.1.7",
+            "version": "9.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "3c09714188bfcb08640f2d73ae95ea2d80105d6c"
+                "reference": "21c40b4d06bd8d16c0454f553c6de4d1e35aba3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/3c09714188bfcb08640f2d73ae95ea2d80105d6c",
-                "reference": "3c09714188bfcb08640f2d73ae95ea2d80105d6c",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/21c40b4d06bd8d16c0454f553c6de4d1e35aba3e",
+                "reference": "21c40b4d06bd8d16c0454f553c6de4d1e35aba3e",
                 "shasum": ""
             },
             "require": {
@@ -4810,7 +4810,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-medialibrary/issues",
-                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.1.7"
+                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.2.0"
             },
             "funding": [
                 {
@@ -4822,21 +4822,21 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-11-24T07:45:21+00:00"
+            "time": "2020-11-26T21:57:23+00:00"
         },
         {
             "name": "spatie/laravel-medialibrary-pro",
-            "version": "1.5.2",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:spatie/laravel-medialibrary-pro.git",
-                "reference": "23e8ff3967704e9d5866a82bd893b923978bee43"
+                "reference": "1d1286570b0cea7f87381b987be4d4bb51749f23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-23e8ff3967704e9d5866a82bd893b923978bee43-zip-1c167d.zip",
-                "reference": "23e8ff3967704e9d5866a82bd893b923978bee43",
-                "shasum": "833647e56d52cf2c73fdb7bdbb3d893fa6a66bdd"
+                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-1d1286570b0cea7f87381b987be4d4bb51749f23-zip-2b2d93.zip",
+                "reference": "1d1286570b0cea7f87381b987be4d4bb51749f23",
+                "shasum": "f17ad4ec2f4863d58466161dd9661167f122042b"
             },
             "require": {
                 "ext-json": "*",
@@ -4901,10 +4901,10 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.5.2",
+                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/v1.1.1",
                 "issues": "https://github.com/spatie/laravel-medialibrary-pro/issues"
             },
-            "time": "2020-11-26T14:50:05+00:00"
+            "time": "2020-11-26T14:51:50+00:00"
         },
         {
             "name": "spatie/laravel-translatable",
@@ -8035,16 +8035,16 @@
         },
         {
             "name": "yajra/laravel-datatables-oracle",
-            "version": "v9.14.1",
+            "version": "v9.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables.git",
-                "reference": "7e45885588225b31a9e7bdf4b04733c44432531c"
+                "reference": "9de204f96649665a8d902ea59a780839ffbe1cfe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/7e45885588225b31a9e7bdf4b04733c44432531c",
-                "reference": "7e45885588225b31a9e7bdf4b04733c44432531c",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/9de204f96649665a8d902ea59a780839ffbe1cfe",
+                "reference": "9de204f96649665a8d902ea59a780839ffbe1cfe",
                 "shasum": ""
             },
             "require": {
@@ -8104,7 +8104,7 @@
             ],
             "support": {
                 "issues": "https://github.com/yajra/laravel-datatables/issues",
-                "source": "https://github.com/yajra/laravel-datatables/tree/v9.14.1"
+                "source": "https://github.com/yajra/laravel-datatables/tree/v9.14.2"
             },
             "funding": [
                 {
@@ -8116,7 +8116,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-11-11T07:12:41+00:00"
+            "time": "2020-11-27T01:51:56+00:00"
         }
     ],
     "packages-dev": [
@@ -9034,16 +9034,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "9.2.3",
+            "version": "9.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "6b20e2055f7c29b56cb3870b3de7cc463d7add41"
+                "reference": "0a7f0acf9269c190fd982b5c04423feae986b6e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6b20e2055f7c29b56cb3870b3de7cc463d7add41",
-                "reference": "6b20e2055f7c29b56cb3870b3de7cc463d7add41",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/0a7f0acf9269c190fd982b5c04423feae986b6e0",
+                "reference": "0a7f0acf9269c190fd982b5c04423feae986b6e0",
                 "shasum": ""
             },
             "require": {
@@ -9099,7 +9099,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.3"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.4"
             },
             "funding": [
                 {
@@ -9107,7 +9107,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-30T10:46:41+00:00"
+            "time": "2020-11-27T06:15:15+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
