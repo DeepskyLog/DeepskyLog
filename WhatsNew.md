@@ -2,6 +2,7 @@
 
 ## Functionality
 
++ Added responsivity of DeepskyLog by not reloading the whole page every time.
 + Added planets, moon (craters, maria, ...), and sun to the list of objects. Comets don't have a separate module anymore, but are now part of the main DeepskyLog module.
 + Add dark mode for the website (night mode was already available).
 + Pictures for locations, instruments, eyepieces, filters and lenses.
@@ -21,3 +22,4 @@
 
 + Laravel 8
 + Bootstrap 4
++ Livewire 2

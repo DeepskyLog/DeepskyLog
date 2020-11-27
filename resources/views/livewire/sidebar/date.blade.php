@@ -30,6 +30,8 @@
     @auth
     @if (Auth::user()->stdlocation != 0)
     @php
+    $location = \App\Models\Location::where('id', Auth::user()->stdlocation)->first();
+
     $objAstroCalc = new \App\Libraries\astrocalc(
     $date,
     $location->latitude,

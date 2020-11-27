@@ -4,8 +4,6 @@ namespace App\Http\Livewire\Sidebar;
 
 use Exception;
 use Livewire\Component;
-use App\Models\Location;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -26,9 +24,6 @@ class Date extends Component
         $this->carbonDate       = $date;
         $this->carbonDateString = $this->carbonDate->isoFormat('LL');
         $this->date             = $this->carbonDate;
-
-        // Moon rise and set
-        $this->location = Location::where('id', Auth::user()->stdlocation)->first();
     }
 
     // TODO: Werkt maar een keer bij targets, test ook bij locatie
