@@ -49,7 +49,7 @@ function addXmlObservations()
 
     // Make a DomDocument from the file.
     $dom = new DomDocument();
-    
+
     if ($_POST['obsid']) {
         $xmlfile = "/tmp/". $_REQUEST['uniqName'];
     } else {
@@ -168,9 +168,8 @@ function addXmlObservations()
             }
             $tmpObserverArray['id'] = $id;
         } else {
-            // Use the user id of the logged in user. Only for invalid xml 
+            // Use the user id of the logged in user. Only for invalid xml
             // files (SkySafari...)
-            print_r($_POST);
             $id = $_POST['obsid'];
             $tmpObserverArray['name'] = $objObserver->getObserverProperty(
                 $_SESSION['deepskylog_id'],
@@ -205,6 +204,7 @@ function addXmlObservations()
             );
         }
     }
+
     // Make a list of all targets
     $targets = $dom->getElementsByTagName('targets');
     $target = $targets->item(0)->getElementsByTagName('target');
@@ -569,6 +569,11 @@ function addXmlObservations()
         $scopeid = $scope->getAttribute('id');
 
         $scopeInfoArray['name'] = htmlentities(
+            ($scope->getElementsByTagName('vendor')->item(0)->nodeValue),
+            ENT_COMPAT,
+            'UTF-8',
+            0
+        ) . ' ' . htmlentities(
             ($scope->getElementsByTagName('model')->item(0)->nodeValue),
             ENT_COMPAT,
             'UTF-8',
@@ -594,6 +599,8 @@ function addXmlObservations()
                     $typeToSave = INSTRUMENTCASSEGRAIN;
                 } elseif ($type == 'K' || $type == 'Kutter') {
                     $typeToSave = INSTRUMENTKUTTER;
+                } elseif ($type = "Finder") {
+                    $typeToSave = INSTRUMENTFINDERSCOPE;
                 } elseif ($type == 'M' || $type == 'Maksutov') {
                     $typeToSave = INSTRUMENTMAKSUTOV;
                 } elseif ($type == 'S' || $type == 'Schmidt-Cassegrain') {
@@ -1369,6 +1376,7 @@ function addXmlObservations()
                                 );
                             } else {
                                 // else, add new object
+                                continue;
                                 $targetName = preg_replace(
                                     $pattern,
                                     '${1} ${2}',
@@ -1443,8 +1451,8 @@ function addXmlObservations()
                                 ) {
                                     $entryMessage .= 'On the live server, '
                                             . 'a mail would be sent with the'
-                                            . ' subject: ' 
-                                            . _('DeepskyLog - New Object ') 
+                                            . ' subject: '
+                                            . _('DeepskyLog - New Object ')
                                             . ' ' . $targetName
                                             . _(' added during XML import')
                                             . '.<br />';
