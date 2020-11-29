@@ -1366,14 +1366,14 @@ function addXmlObservations()
 
                                 // Also add alternative name to the existing
                                 // object.
-                                $names = explode(' ', $objeId);
-                                $aliasNames = explode(' ', $targetName);
+                                // $names = explode(' ', $objeId);
+                                // $aliasNames = explode(' ', $targetName);
 
-                                $objObject->newAltName(
-                                    $names[0] . ' ' . $names[1],
-                                    $aliasNames[0],
-                                    $aliasNames[1]
-                                );
+                                // $objObject->newAltName(
+                                //     $names[0] . ' ' . $names[1],
+                                //     $aliasNames[0],
+                                //     $aliasNames[1]
+                                // );
                             } else {
                                 // else, add new object
                                 continue;
