@@ -1,9 +1,9 @@
 <?php
-/** 
+/**
  * Contains a series of definitions
- * 
+ *
  * PHP version 7
- * 
+ *
  * @category Utilities
  * @package  DeepskyLog
  * @author   DeepskyLog Developers <developers@deepskylog.be>
@@ -18,7 +18,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 define("VERSIONINFO", "2020.1");
 define("COPYRIGHTINFO", "©2004 - 2020");
 define("DSLINFO", "DeepskyLog");
-define("OBJECTINFO", "Database based on Eye&amp;Telescope and Tycho2+ &amp; USNO-UCAC3");
+define("OBJECTINFO", "NGC/IC database by <a href='http://www.klima-luft.de/steinicke/index_e.htm'>Steinicke</a>, stars Tycho2+ &amp; USNO-UCAC3");
 
 define("ATLASOVERVIEWZOOM", 17);
 define("ATLASLOOKUPZOOM", 18);
@@ -93,7 +93,7 @@ $GLOBALS['VisibilityOC1'] = _("Very prominent and very beautiful cluster");
 $GLOBALS['VisibilityOC2'] = _("Prominent and beautiful cluster");
 $GLOBALS['VisibilityOC3'] = _("Conspicuously seen cluster");
 $GLOBALS['VisibilityOC4'] = _("Cluster hardly attracts attention");
-$GLOBALS['VisibilityOC5'] 
+$GLOBALS['VisibilityOC5']
     = _("Very unconspicuously, easily overlooked when slewing");
 $GLOBALS['VisibilityOC6']
     = _("Questionable sighting; star density similar to neighborhood");
