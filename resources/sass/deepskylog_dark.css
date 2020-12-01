@@ -508,4 +508,8 @@
 
 [data-theme="dark"] .choices[data-type*='select-one'] .choices__input {
     background-color: black;
-  }
+}
+
+[data-theme="dark"]  .dslsidebar {
+    background-color: #040000;
+}

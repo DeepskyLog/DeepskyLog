@@ -1,14 +1,18 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-top border-bottom">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarFooter" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarFooter"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-        <div class="collapse navbar-collapse" id="navbarFooter">
+    <div class="collapse navbar-collapse" id="navbarFooter">
         <span class="navbar-text">
             ©2004 - {{ now()->year }} - DeepskyLog
             <a href="https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog">
                 {{ config('app.dslversion') }}
-            </a> - {{ _i('Database based on Eye&Telescope and Tycho2+ & USNO-UCAC3') }} -
+            </a> -
+            {{ _i('Database uses NGC/IC information by ') }}<a
+                href="http://www.klima-luft.de/steinicke/index_e.htm">Steinicke</a>
+            -
             <a href='/privacy'>
                 {{ _i('Privacy Policy') }}
             </a>

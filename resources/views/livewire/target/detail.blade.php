@@ -225,7 +225,7 @@
                 <td>&nbsp;</td>
             </tr>
             @else
-            <td>{{ _i('BestTime') }}</td>
+            <td>{{ _i('Best Time') }}</td>
             <td>{{ $target->BestTime }}</td>
             <td>{{ _i("MaxAlt") }}</td>
             <td>

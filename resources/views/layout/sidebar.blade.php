@@ -1,6 +1,6 @@
-<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-    <div class="sidebar-sticky">
-        <ul class="nav flex-column">
+<div id="sidebar-wrapper">
+    <div class="list-group list-group-flush">
+        <ul class="nav flex-column list-group-item dslsidebar">
             <br />
             <!-- Language -->
             @if (Auth::guest())
@@ -14,4 +14,4 @@
             @include('layout.sidebar.date')
         </ul>
     </div>
-</nav>
+</div>

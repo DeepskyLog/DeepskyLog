@@ -21,23 +21,33 @@
     </head>
 
     <body>
-        @include('layout.header')
+        <div class="d-flex" id="wrapper">
 
-        <div class="container-fluid">
-            <div class="row">
-                @include('layout.sidebar')
+            <!-- Sidebar -->
+            @include('layout.sidebar')
 
-                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <!-- /#sidebar-wrapper -->
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+
+                @include('layout.header')
+
+                <div class="container-fluid">
                     @include('layout.errors')
                     @include('layout.flash')
                     <br />
                     @yield('content')
-                </main>
-            </div>
-        </div>
+                    <br />
+                    @include('layout.footer')
 
-        <br />
-        @include('layout.footer')
+
+                </div>
+            </div>
+            <!-- /#page-content-wrapper -->
+
+        </div>
+        <!-- /#wrapper -->
 
         <script src="{{ asset('/js/dark-mode-switch.js') }}"></script>
         <script src="{{ mix("js/choices.js") }}"></script>
@@ -45,8 +55,14 @@
         <!-- App scripts -->
         @stack('scripts')
 
-        @include('cookieConsent::index')
+        <script>
+            $("#menu-toggle").click(function(e) {
+              e.preventDefault();
+              $("#wrapper").toggleClass("toggled");
+            });
+        </script>
 
+        @include('cookieConsent::index')
     </body>
 
 </html>
