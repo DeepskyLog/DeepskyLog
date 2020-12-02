@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Session;
 
 class Date extends Component
 {
-    public $dslDate;
     public $carbonDate;
     public $carbonDateString;
     public $date;
@@ -18,15 +17,13 @@ class Date extends Component
     public function mount()
     {
         // Current date
-        $this->dslDate          = Session::get('date');
-        $date                   = \Carbon\Carbon::createFromFormat('Y-m-d', $this->dslDate);
+        $dslDate                = Session::get('date');
+        $date                   = \Carbon\Carbon::createFromFormat('Y-m-d', $dslDate);
         $date->hour             = 12;
         $this->carbonDate       = $date;
         $this->carbonDateString = $this->carbonDate->isoFormat('LL');
         $this->date             = $this->carbonDate;
     }
-
-    // TODO: Werkt maar een keer bij targets, test ook bij locatie
 
     /**
      * Set the session when updating.
@@ -38,14 +35,15 @@ class Date extends Component
     public function updated($propertyName)
     {
         try {
-            $date                   = \Carbon\Carbon::createFromFormat('Y-m-d', $this->carbonDateString);
+            $date                   = \Carbon\Carbon::createFromIsoFormat('LL', $this->carbonDateString, null, \deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage());
             $date->hour             = 12;
             $this->carbonDate       = $date;
-            Request::session()->put('date', $this->carbonDateString);
-            $this->carbonDateString = $this->carbonDate->isoFormat('LL');
-            $this->date             = $this->carbonDate;
+            Request::session()->put('date', $date->isoFormat('Y-M-D'));
+            // $this->carbonDateString = $this->carbonDate->isoFormat('LL');
+            $this->date             = $date;
             $this->emit('dateChanged');
         } catch (Exception $e) {
+            dd($e);
         }
     }
 

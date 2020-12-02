@@ -193,8 +193,10 @@
                         "&nbsp;</span>";
                 },
                 locale: "{{ \deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage() }}",
-                defaultDate: "{{ $dslDate }}",
+                defaultDate: "{{ $carbonDateString }}",
                 allowInput: false,
+                dateFormat: "@php if (\deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage() == 'en') echo 'F j, Y'; else echo 'j F Y'; @endphp"
+
         });
     </script>
 </div>
