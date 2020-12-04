@@ -66,14 +66,14 @@
                                 {{ _i('or log in using') }}
                             </div>
                             <div class="col-md-8 offset-md-2">
-                                <a class="btn btn-light" href="/login/google"><img width="18" height="18"
+                                <a class="btn btn-light" href="/login/google"><img class="inline" width="18" height="18"
                                         src="/img/google.png" />&nbsp;&nbsp;Google</a>
-                                <a class="btn btn-light" href="/login/twitter"><img width="18" height="18"
-                                        src="/img/Twitter_Logo_Blue.png">&nbsp;&nbsp;Twitter</a>
-                                <a class="btn btn-light" href="/login/github"><img width="18" height="18"
+                                <a class="btn btn-light" href="/login/twitter"><img class="inline" width="18"
+                                        height="18" src="/img/Twitter_Logo_Blue.png">&nbsp;&nbsp;Twitter</a>
+                                <a class="btn btn-light" href="/login/github"><img class="inline" width="18" height="18"
                                         src="/img/GitHub-Mark-32px.png" />&nbsp;&nbsp;GitHub</a>
-                                <a class="btn btn-light" href="/login/facebook"><img width="18" height="18"
-                                        src="/img/f_logo_RGB-Blue_58.png" />&nbsp;&nbsp;Facebook</a>
+                                <a class="btn btn-light" href="/login/facebook"><img class="inline" width="18"
+                                        height="18" src="/img/f_logo_RGB-Blue_58.png" />&nbsp;&nbsp;Facebook</a>
                             </div>
                         </div>
 

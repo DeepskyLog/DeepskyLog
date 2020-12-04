@@ -522,11 +522,11 @@ table.tablesorter tr.type2 td {
     display: block;
 }
 td.details-control {
-    background: url('/styles/images/details_open.png') no-repeat center center;
+    background: no-repeat center center;
     cursor: pointer;
 }
 tr.details td.details-control {
-    background: url('/styles/images/details_close.png') no-repeat center center;
+    background: no-repeat center center;
 }
 
 .details tr{
@@ -612,4 +612,8 @@ a, a:visited, a:focus {
 }
 @media screen and (min-width: 768px) {
     #menu-toggle { display: none; }   /* hide it on larger screens */
+}
+
+[x-cloak] {
+    display: none;
 }

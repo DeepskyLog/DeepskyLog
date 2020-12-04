@@ -291,7 +291,7 @@
 
         <br />
         <a class="btn btn-success" href="/observations/user/{{ $user->slug }}">
-            <svg width="1.1em" height="1.1em" viewBox="0 1 16 16" class="bi bi-eye-fill" fill="currentColor"
+            <svg width="1.1em" height="1.1em" viewBox="0 1 16 16" class="bi bi-eye-fill inline" fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg">
                 <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
                 <path fill-rule="evenodd"
@@ -301,7 +301,7 @@
         </a>
 
         <a class="btn btn-success" href="/observations/drawings/user/{{ $user->slug }}">
-            <svg width="1em" height="1em" viewBox="0 1 16 16" class="bi bi-pencil" fill="currentColor"
+            <svg width="1em" height="1em" viewBox="0 1 16 16" class="bi bi-pencil inline" fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd"
                     d="M11.293 1.293a1 1 0 0 1 1.414 0l2 2a1 1 0 0 1 0 1.414l-9 9a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z" />
@@ -313,7 +313,7 @@
 
         @if ($user->id != Auth::user()->id)
         <a class="btn btn-primary" href="/messages/create/{{ $user->id }}">
-            <svg width="1em" height="1em" viewBox="0 1 16 16" class="bi bi-envelope" fill="currentColor"
+            <svg width="1em" height="1em" viewBox="0 1 16 16" class="bi bi-envelope inline" fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd"
                     d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383l-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z" />

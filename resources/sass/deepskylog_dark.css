@@ -510,6 +510,45 @@
     background-color: black;
 }
 
-[data-theme="dark"]  .dslsidebar {
+[data-theme="dark"] .dslsidebar {
     background-color: #040000;
+}
+
+[data-theme="dark"] .bg-white {
+    background-color: #999 !important;
+}
+
+[data-theme="dark"] .text-green-500 {
+    --tw-text-opacity: 1;
+    color: rgba(25, 100, 25, var(--tw-text-opacity));
+}
+
+[data-theme="dark"] .text-blue-500 {
+    --tw-text-opacity: 1;
+    color: rgba(25, 25, 150, var(--tw-text-opacity));
+}
+
+[data-theme="dark"] .bg-gray-50 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(149, 150, 151, var(--tw-bg-opacity));
+}
+
+[data-theme="dark"] .bg-gray-100 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(110, 110, 110, var(--tw-bg-opacity)) !important;
+}
+
+[data-theme="dark"] .text-gray-500 {
+    --tw-text-opacity: 1;
+    color: rgba(57, 64, 68, var(--tw-text-opacity));
+}
+
+[data-theme="dark"] .bg-blue-100 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(19, 24, 44, var(--tw-bg-opacity));
+}
+
+[data-theme="dark"] .focus\:bg-white:focus {
+    --tw-bg-opacity: 1;
+    background-color: rgba(149, 150, 151, var(--tw-bg-opacity));
 }

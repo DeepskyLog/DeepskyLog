@@ -17,37 +17,25 @@
                 {{ _i('Privacy Policy') }}
             </a>
         </span>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a href="https://github.com/DeepskyLog/DeepskyLog/fork" rel="external">
-                    <img width="36" height="36" src="/img/GitHub-Mark-32px.png">
-                </a>&nbsp;&nbsp;&nbsp;
-            </li>
-            <li class="nav-item">
-                <a href="https://github.com/openastronomylog/openastronomylog" rel="external">
-                    <img width="36" height="36" src="{{ asset('img/oallogo.jpg') }}">
-                </a>&nbsp;&nbsp;&nbsp;
-            </li>
-            <li class="nav-item">
-                <a href="https://www.facebook.com/deepskylog" rel="external">
-                    <img width="36" height="36" src="/img/f_logo_RGB-Blue_58.png">
-                </a>&nbsp;&nbsp;&nbsp;
-            </li>
-            <li class="nav-item">
-                <a href="https://www.instagram.com/deepskylog.be" rel="external">
-                    <img width="36" height="36" src="/img/glyph-logo_May2016.png">
-                </a>&nbsp;&nbsp;&nbsp;
-            </li>
-            <li class="nav-item">
-                <a href="https://twitter.com/DeepskyLog" rel="external">
-                    <img width="36" height="36" src="/img/Twitter_Logo_Blue.png">
-                </a>&nbsp;&nbsp;&nbsp;
-            </li>
-            <li class="nav-item">
-                <a href="https://www.youtube.com/channel/UC66H7w2Fl9q3krRy_tHRK5g" rel="external">
-                    <img width="36" height="36" src="/img/youtube_social_circle_red.png">
-                </a>
-            </li>
-        </ul>
+        <div class="navbar-nav ml-auto inline flex">
+            <a href="https://github.com/DeepskyLog/DeepskyLog/fork" rel="external">
+                <img width="36" height="36" src="/img/GitHub-Mark-32px.png">
+            </a>&nbsp;&nbsp;&nbsp;
+            <a href="https://github.com/openastronomylog/openastronomylog" rel="external">
+                <img width="36" height="36" src="{{ asset('img/oallogo.jpg') }}">
+            </a>&nbsp;&nbsp;&nbsp;
+            <a href="https://www.facebook.com/deepskylog" rel="external">
+                <img width="36" height="36" src="/img/f_logo_RGB-Blue_58.png">
+            </a>&nbsp;&nbsp;&nbsp;
+            <a href="https://www.instagram.com/deepskylog.be" rel="external">
+                <img width="36" height="36" src="/img/glyph-logo_May2016.png">
+            </a>&nbsp;&nbsp;&nbsp;
+            <a href="https://twitter.com/DeepskyLog" rel="external">
+                <img width="36" height="36" src="/img/Twitter_Logo_Blue.png">
+            </a>&nbsp;&nbsp;&nbsp;
+            <a href="https://www.youtube.com/channel/UC66H7w2Fl9q3krRy_tHRK5g" rel="external">
+                <img width="36" height="36" src="/img/youtube_social_circle_red.png">
+            </a>
+        </div>
     </div>
 </nav>

@@ -206,7 +206,11 @@ class Create extends Component
         }
 
         // View the page with all eyepieces for the user
-        return redirect(route('eyepiece.index'));
+        if (!auth()->user()->isAdmin()) {
+            return redirect(route('eyepiece.index'));
+        } else {
+            return redirect(route('eyepiece.indexAdmin'));
+        }
     }
 
     public function render()
