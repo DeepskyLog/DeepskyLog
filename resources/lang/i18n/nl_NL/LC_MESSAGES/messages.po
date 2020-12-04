@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2020-12-01 21:36+0100\n"
-"PO-Revision-Date: 2020-12-01 21:38+0100\n"
+"POT-Creation-Date: 2020-12-04 21:46+0100\n"
+"PO-Revision-Date: 2020-12-04 21:46+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: nl_NL\n"
@@ -241,7 +241,7 @@ msgstr "Dubbelsterren"
 
 #: ../resources/lang/en/translations.php:43
 #: ../storage/framework/messages/39b4c973a80357f39b72c0549cd664422f85d438.php.php:43
-#: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:70
+#: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:68
 #: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:243
 #: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:335
 #: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1302
@@ -256,7 +256,7 @@ msgstr "Zon"
 #: ../resources/lang/en/translations.php:44
 #: ../storage/framework/messages/39b4c973a80357f39b72c0549cd664422f85d438.php.php:44
 #: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:19
-#: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:51
+#: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:49
 #: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:247
 #: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:339
 #: Http/Controllers/UserController.php:247
@@ -969,7 +969,7 @@ msgid "Default eyepiece"
 msgstr "Standaard oculair"
 
 #: ../storage/framework/messages/001254d5f2ecc04c62802a708a363c9eb1a8ef40.php.php:101
-#: ../storage/framework/messages/50d7811d5a91e887396d8233f0919e4c74dbffa4.php.php:23
+#: ../storage/framework/messages/69a082a8da62de57264c4328fd016b68497b9885.php.php:34
 #: ../storage/framework/messages/ad9effd19dd9771c8200409f61b8a884b489bdb7.php.php:239
 msgid "Add eyepiece"
 msgstr "Voeg oculair toe"
@@ -1129,10 +1129,9 @@ msgstr "mm"
 #: ../storage/framework/messages/35d734841123544781c575390e7494b5ee974393.php.php:37
 #: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:180
 #: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:236
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:153
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:209
 #: ../storage/framework/messages/65ac65000ac38110b139737f4ab9d44d52dcf334.php.php:93
 #: ../storage/framework/messages/6716d68c6ef2a5cd24094258f4001ad610fee57d.php.php:21
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:34
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:142
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:190
 #: ../storage/framework/messages/98e3cf83943fc86efea15dcc268c5278b5f14478.php.php:38
@@ -1144,21 +1143,20 @@ msgstr "mm"
 #: ../storage/framework/messages/e3a3e85fecb182d29e33fe54f9a9e36a8f1f2a3f.php.php:209
 #: ../storage/framework/messages/e3a3e85fecb182d29e33fe54f9a9e36a8f1f2a3f.php.php:339
 #: ../storage/framework/messages/e48571d92404b51b87dc97599499cb7e05b2b8b3.php.php:35
-#: DataTables/EyepieceDataTable.php:153 DataTables/EyepieceDataTable.php:209
 #: DataTables/FilterDataTable.php:142 DataTables/FilterDataTable.php:190
 #: DataTables/InstrumentDataTable.php:191
 #: DataTables/InstrumentDataTable.php:247 DataTables/LensDataTable.php:126
 #: DataTables/LensDataTable.php:158 DataTables/LocationDataTable.php:180
 #: DataTables/LocationDataTable.php:236 DataTables/TargetDataTable.php:209
 #: DataTables/TargetDataTable.php:339 DataTables/UserDataTable.php:153
+#: Http/Livewire/EyepieceTable.php:34
 msgid "Name"
 msgstr "Naam"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:195
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:251
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:175
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:231
 #: ../storage/framework/messages/65ac65000ac38110b139737f4ab9d44d52dcf334.php.php:95
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:126
 #: ../storage/framework/messages/71157b6bcfce27a06ef73193c047db45859d12ec.php.php:17
 #: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:19
 #: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:19
@@ -1170,11 +1168,10 @@ msgstr "Naam"
 #: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:20
 #: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:52
 #: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:19
-#: DataTables/EyepieceDataTable.php:175 DataTables/EyepieceDataTable.php:231
 #: DataTables/FilterDataTable.php:146 DataTables/FilterDataTable.php:194
 #: DataTables/InstrumentDataTable.php:195
 #: DataTables/InstrumentDataTable.php:251 DataTables/TargetDataTable.php:234
-#: DataTables/TargetDataTable.php:364
+#: DataTables/TargetDataTable.php:364 Http/Livewire/EyepieceTable.php:126
 msgid "Type"
 msgstr "Type"
 
@@ -1197,14 +1194,12 @@ msgstr "F/D"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:213
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:269
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:157
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:213
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:38
 #: ../storage/framework/messages/98e3cf83943fc86efea15dcc268c5278b5f14478.php.php:144
 #: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:30
 #: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:41
-#: DataTables/EyepieceDataTable.php:157 DataTables/EyepieceDataTable.php:213
 #: DataTables/InstrumentDataTable.php:213
-#: DataTables/InstrumentDataTable.php:269
+#: DataTables/InstrumentDataTable.php:269 Http/Livewire/EyepieceTable.php:38
 msgid "Focal Length"
 msgstr "Brandpuntsafstand"
 
@@ -1221,8 +1216,6 @@ msgstr "Vaste vergroting"
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:281
 #: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:214
 #: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:276
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:187
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:243
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:168
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:215
 #: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:212
@@ -1230,7 +1223,6 @@ msgstr "Vaste vergroting"
 #: ../storage/framework/messages/b0560d46aeab0e1ad0a93e4dce599db14d49b9bb.php.php:175
 #: ../storage/framework/messages/e2a171fc63fddf9f9a1eebb646f33968cbb21d50.php.php:136
 #: ../storage/framework/messages/e2a171fc63fddf9f9a1eebb646f33968cbb21d50.php.php:167
-#: DataTables/EyepieceDataTable.php:187 DataTables/EyepieceDataTable.php:243
 #: DataTables/FilterDataTable.php:168 DataTables/FilterDataTable.php:215
 #: DataTables/InstrumentDataTable.php:225
 #: DataTables/InstrumentDataTable.php:281 DataTables/LensDataTable.php:136
@@ -1245,42 +1237,39 @@ msgstr "Waarnemingen"
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:297
 #: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:220
 #: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:292
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:193
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:252
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:170
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:174
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:225
 #: ../storage/framework/messages/b0560d46aeab0e1ad0a93e4dce599db14d49b9bb.php.php:169
 #: ../storage/framework/messages/e2a171fc63fddf9f9a1eebb646f33968cbb21d50.php.php:142
 #: ../storage/framework/messages/e2a171fc63fddf9f9a1eebb646f33968cbb21d50.php.php:177
-#: DataTables/EyepieceDataTable.php:193 DataTables/EyepieceDataTable.php:252
 #: DataTables/FilterDataTable.php:174 DataTables/FilterDataTable.php:225
 #: DataTables/InstrumentDataTable.php:231
 #: DataTables/InstrumentDataTable.php:297 DataTables/LensDataTable.php:142
 #: DataTables/LensDataTable.php:177 DataTables/LocationDataTable.php:220
 #: DataTables/LocationDataTable.php:292 DataTables/UserDataTable.php:169
+#: Http/Livewire/EyepieceTable.php:170
 msgid "Delete"
 msgstr "Verwijder"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:238
 #: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:227
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:200
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:181
 #: ../storage/framework/messages/e2a171fc63fddf9f9a1eebb646f33968cbb21d50.php.php:149
-#: DataTables/EyepieceDataTable.php:200 DataTables/FilterDataTable.php:181
-#: DataTables/InstrumentDataTable.php:238 DataTables/LensDataTable.php:149
-#: DataTables/LocationDataTable.php:227
+#: DataTables/FilterDataTable.php:181 DataTables/InstrumentDataTable.php:238
+#: DataTables/LensDataTable.php:149 DataTables/LocationDataTable.php:227
 msgid "Observer"
 msgstr "Waarnemer"
 
 #: ../storage/framework/messages/28b49f16a59a5bfe9c2877a5faf1d49eb2beaf1e.php.php:287
 #: ../storage/framework/messages/32a8d19370490284a596e24d49b95921b4af9e52.php.php:284
 #: ../storage/framework/messages/501e668c7a76bc69a209f0e23f07539caaf33c60.php.php:282
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:248
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:151
 #: ../storage/framework/messages/8e066317225f141a1190e9998df305231d2c45af.php.php:220
 #: ../storage/framework/messages/e2a171fc63fddf9f9a1eebb646f33968cbb21d50.php.php:172
-#: DataTables/EyepieceDataTable.php:248 DataTables/FilterDataTable.php:220
-#: DataTables/InstrumentDataTable.php:287 DataTables/LensDataTable.php:172
-#: DataTables/LocationDataTable.php:282
+#: DataTables/FilterDataTable.php:220 DataTables/InstrumentDataTable.php:287
+#: DataTables/LensDataTable.php:172 DataTables/LocationDataTable.php:282
+#: Http/Livewire/EyepieceTable.php:151
 msgid "Active"
 msgstr "Actief"
 
@@ -1578,44 +1567,36 @@ msgstr "Inloggen"
 msgid "User Administration"
 msgstr "Gebruikersbeheer"
 
-#: ../storage/framework/messages/48456bd3c3cc62c179c0c73fced91ea1840f3f23.php.php:146
+#: ../storage/framework/messages/48456bd3c3cc62c179c0c73fced91ea1840f3f23.php.php:140
 #: ../storage/framework/messages/b30fc59ca5b65018f6df9f4fca7c334ac55eebb7.php.php:191
-#: Http/Controllers/EyepieceController.php:146
+#: Http/Controllers/EyepieceController.php:140
 #: Http/Livewire/Eyepiece/Create.php:191
 #, php-format
 msgid "Eyepiece %s created"
 msgstr "Oculair %s aangemaakt"
 
-#: ../storage/framework/messages/48456bd3c3cc62c179c0c73fced91ea1840f3f23.php.php:257
+#: ../storage/framework/messages/48456bd3c3cc62c179c0c73fced91ea1840f3f23.php.php:251
 #: ../storage/framework/messages/b30fc59ca5b65018f6df9f4fca7c334ac55eebb7.php.php:173
-#: Http/Controllers/EyepieceController.php:257
+#: Http/Controllers/EyepieceController.php:251
 #: Http/Livewire/Eyepiece/Create.php:173
 #, php-format
 msgid "Eyepiece %s updated"
 msgstr "Oculair %s bijgewerkt"
 
-#: ../storage/framework/messages/48456bd3c3cc62c179c0c73fced91ea1840f3f23.php.php:263
-#: Http/Controllers/EyepieceController.php:263
-#, php-format
-msgid "Eyepiece %s is active"
-msgstr "Oculair %s is actief"
-
-#: ../storage/framework/messages/48456bd3c3cc62c179c0c73fced91ea1840f3f23.php.php:267
-#: Http/Controllers/EyepieceController.php:267
-#, php-format
-msgid "Eyepiece %s is not longer active"
-msgstr "Oculair %s is niet langer actief"
-
-#: ../storage/framework/messages/48456bd3c3cc62c179c0c73fced91ea1840f3f23.php.php:325
-#: Http/Controllers/EyepieceController.php:325
+#: ../storage/framework/messages/48456bd3c3cc62c179c0c73fced91ea1840f3f23.php.php:307
+#: ../storage/framework/messages/f85e7a49b5178ac8d195c0d96a7573abedc4227f.php.php:38
+#: Http/Controllers/EyepieceController.php:307
+#: Http/Livewire/Eyepiece/View.php:38
 #, php-format
 msgid "Eyepiece %s has observations. Impossible to delete."
 msgstr ""
 "Er zijn waarnemingen met oculair %s. Onmogelijk om het oculair te "
 "verwijderen."
 
-#: ../storage/framework/messages/48456bd3c3cc62c179c0c73fced91ea1840f3f23.php.php:337
-#: Http/Controllers/EyepieceController.php:337
+#: ../storage/framework/messages/48456bd3c3cc62c179c0c73fced91ea1840f3f23.php.php:319
+#: ../storage/framework/messages/f85e7a49b5178ac8d195c0d96a7573abedc4227f.php.php:53
+#: Http/Controllers/EyepieceController.php:319
+#: Http/Livewire/Eyepiece/View.php:53
 #, php-format
 msgid "Eyepiece %s deleted"
 msgstr "Oculair %s verwijderd"
@@ -1732,12 +1713,12 @@ msgid "Default Location"
 msgstr "Standaard locatie"
 
 #: ../storage/framework/messages/50d7811d5a91e887396d8233f0919e4c74dbffa4.php.php:3
-#: ../storage/framework/messages/50d7811d5a91e887396d8233f0919e4c74dbffa4.php.php:15
+#: ../storage/framework/messages/69a082a8da62de57264c4328fd016b68497b9885.php.php:24
 msgid "All eyepieces"
 msgstr "Alle oculairs"
 
 #: ../storage/framework/messages/50d7811d5a91e887396d8233f0919e4c74dbffa4.php.php:5
-#: ../storage/framework/messages/50d7811d5a91e887396d8233f0919e4c74dbffa4.php.php:17
+#: ../storage/framework/messages/69a082a8da62de57264c4328fd016b68497b9885.php.php:26
 #, php-format
 msgid "Eyepieces of %s"
 msgstr "Oculairs van %s"
@@ -1859,28 +1840,6 @@ msgstr "E-mail adres"
 #: ../storage/framework/messages/546ad19dc2096554c48187a24fc5cb6ce8a812be.php.php:41
 msgid "Send Password Reset Link"
 msgstr "Verstuur herstel link voor het wachtwoord"
-
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:163
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:219
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:47
-#: DataTables/EyepieceDataTable.php:163 DataTables/EyepieceDataTable.php:219
-msgid "Brand"
-msgstr "Merk"
-
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:169
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:225
-#: ../storage/framework/messages/ad9effd19dd9771c8200409f61b8a884b489bdb7.php.php:98
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:35
-#: DataTables/EyepieceDataTable.php:169 DataTables/EyepieceDataTable.php:225
-msgid "Apparent Field of View"
-msgstr "Schijnbaar gezichtsveld"
-
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:181
-#: ../storage/framework/messages/582e51d255264dc2203503f383fe56a556cdea62.php.php:237
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:41
-#: DataTables/EyepieceDataTable.php:181 DataTables/EyepieceDataTable.php:237
-msgid "Maximum Focal Length"
-msgstr "Maximale brandpuntsafstand"
 
 #: ../storage/framework/messages/583a0b2dce9ec2ea5311d79187c94dde87cc20f9.php.php:10
 msgid "Hello!"
@@ -2101,6 +2060,49 @@ msgstr "Rol"
 msgid "Adapt"
 msgstr "Pas aan"
 
+#: ../storage/framework/messages/69a082a8da62de57264c4328fd016b68497b9885.php.php:40
+msgid "Information about eyepieces with "
+msgstr "Informatie over oculairs met "
+
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:46
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:41
+#: Http/Livewire/EyepieceTable.php:46
+msgid "Maximum Focal Length"
+msgstr "Maximale brandpuntsafstand"
+
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:53
+#: ../storage/framework/messages/ad9effd19dd9771c8200409f61b8a884b489bdb7.php.php:98
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:35
+#: Http/Livewire/EyepieceTable.php:53
+msgid "Apparent Field of View"
+msgstr "Schijnbaar gezichtsveld"
+
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:73
+#: Http/Livewire/EyepieceTable.php:73
+msgid "True Field of View"
+msgstr "Waar gezichtsveld"
+
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:91
+#: Http/Livewire/EyepieceTable.php:91
+msgid "Magnification"
+msgstr "Vergroting"
+
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:110
+#: Http/Livewire/EyepieceTable.php:110
+msgid "Pupil Size"
+msgstr "Pupilgrootte"
+
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:117
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:47
+#: Http/Livewire/EyepieceTable.php:117
+msgid "Brand"
+msgstr "Merk"
+
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:139
+#: Http/Livewire/EyepieceTable.php:139
+msgid "User name"
+msgstr "Gebruikersnaam"
+
 #: ../storage/framework/messages/6c23402a8cab13d02b6825dba1b9e4ff7a6292b7.php.php:8
 msgid "Unread messages"
 msgstr "Ongelezen berichten"
@@ -2144,7 +2146,7 @@ msgid "Standard language for observations"
 msgstr "Standaardtaal voor waarnemingen"
 
 #: ../storage/framework/messages/71157b6bcfce27a06ef73193c047db45859d12ec.php.php:18
-#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:8
+#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:11
 msgid "Location"
 msgstr "Waarneemplaats"
 
@@ -2302,7 +2304,7 @@ msgid "Sorry, no threads."
 msgstr "Sorry, geen threads."
 
 #: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:20
-#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:11
+#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:14
 msgid "Lens"
 msgstr "Lens"
 
@@ -2336,7 +2338,7 @@ msgid "click here to request another"
 msgstr "klik hier om een andere aan te vragen"
 
 #: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:20
-#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:10
+#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:13
 msgid "Filter"
 msgstr "Filter"
 
@@ -2444,27 +2446,27 @@ msgstr "Lens %s verwijderd"
 msgid "View"
 msgstr "Bekijk"
 
-#: ../storage/framework/messages/8372524b3edb35d6ee11db43fcfa6a75416d451c.php.php:9
+#: ../storage/framework/messages/8372524b3edb35d6ee11db43fcfa6a75416d451c.php.php:12
 msgid "My instruments"
 msgstr "Mijn instrumenten"
 
-#: ../storage/framework/messages/8372524b3edb35d6ee11db43fcfa6a75416d451c.php.php:10
+#: ../storage/framework/messages/8372524b3edb35d6ee11db43fcfa6a75416d451c.php.php:13
 msgid "My locations"
 msgstr "Mijn waarneemplaatsen"
 
-#: ../storage/framework/messages/8372524b3edb35d6ee11db43fcfa6a75416d451c.php.php:11
+#: ../storage/framework/messages/8372524b3edb35d6ee11db43fcfa6a75416d451c.php.php:14
 msgid "My eyepieces"
 msgstr "Mijn oculairs"
 
-#: ../storage/framework/messages/8372524b3edb35d6ee11db43fcfa6a75416d451c.php.php:12
+#: ../storage/framework/messages/8372524b3edb35d6ee11db43fcfa6a75416d451c.php.php:15
 msgid "My filters"
 msgstr "Mijn filters"
 
-#: ../storage/framework/messages/8372524b3edb35d6ee11db43fcfa6a75416d451c.php.php:13
+#: ../storage/framework/messages/8372524b3edb35d6ee11db43fcfa6a75416d451c.php.php:16
 msgid "My lenses"
 msgstr "Mijn lenzen"
 
-#: ../storage/framework/messages/8372524b3edb35d6ee11db43fcfa6a75416d451c.php.php:16
+#: ../storage/framework/messages/8372524b3edb35d6ee11db43fcfa6a75416d451c.php.php:20
 msgid "Catalogs"
 msgstr "Catalogi"
 
@@ -2754,7 +2756,7 @@ msgstr ""
 msgid "You can sponsor DeepskyLog from the GitHub page."
 msgstr "Je kan DeepskyLog sponsoren via de GitHub-pagina."
 
-#: ../storage/framework/messages/9636353a16a12a66e8f7f17eefe51228d6661c36.php.php:22
+#: ../storage/framework/messages/9636353a16a12a66e8f7f17eefe51228d6661c36.php.php:24
 msgid "Sponsor"
 msgstr "Sponsor"
 
@@ -2865,18 +2867,22 @@ msgid "Moon / Sun"
 msgstr "Maan / Zon"
 
 #: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:24
-msgid "on"
-msgstr "op"
+msgid "Night of "
+msgstr "Nacht van "
 
-#: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:102
+#: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:24
+msgid " to "
+msgstr " tot "
+
+#: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:100
 msgid "Naut."
 msgstr "Naut."
 
-#: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:116
+#: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:114
 msgid "Astro."
 msgstr "Astro."
 
-#: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:152
+#: ../storage/framework/messages/990e3f0a99f8e922531745c8d58897a62df1f5d7.php.php:150
 msgid "New moon"
 msgstr "Nieuwe maan"
 
@@ -3291,21 +3297,21 @@ msgstr "Filter %s verwijderd"
 msgid "User \"%s\" successfully registered. You can now log in."
 msgstr "Gebruiker “%s” is succesvol geregistreerd. U kunt nu inloggen."
 
-#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:3
+#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:4
 msgid "Add"
 msgstr "Toevoegen"
 
-#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:7
+#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:10
 #: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:20
 msgid "Instrument"
 msgstr "Instrument"
 
-#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:9
+#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:12
 #: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:21
 msgid "Eyepiece"
 msgstr "Oculair"
 
-#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:13
+#: ../storage/framework/messages/d5b41da140be03966eae186e35e2b5f42acff75c.php.php:18
 msgid "Object"
 msgstr "Object"
 
@@ -3320,13 +3326,13 @@ msgstr "Alle lenzen"
 msgid "Lenses of %s"
 msgstr "Lenzen van %s"
 
-#: ../storage/framework/messages/d9a0e22364855eb10e809a39ea780d59e56a1a16.php.php:129
-#: Models/Eyepiece.php:129
+#: ../storage/framework/messages/d9a0e22364855eb10e809a39ea780d59e56a1a16.php.php:117
+#: Models/Eyepiece.php:117
 msgid "No default eyepiece"
 msgstr "Geen standaard oculair"
 
-#: ../storage/framework/messages/d9a0e22364855eb10e809a39ea780d59e56a1a16.php.php:140
-#: Models/Eyepiece.php:140
+#: ../storage/framework/messages/d9a0e22364855eb10e809a39ea780d59e56a1a16.php.php:128
+#: Models/Eyepiece.php:128
 msgid "Add an eyepiece"
 msgstr "Voeg een oculair toe"
 
@@ -3499,6 +3505,18 @@ msgstr "De gevraagde thread is niet gevonden."
 msgid "Not authorized to see this message."
 msgstr "Niet gemachtigd om dit bericht te zien."
 
+#: ../storage/framework/messages/f85e7a49b5178ac8d195c0d96a7573abedc4227f.php.php:24
+#: Http/Livewire/Eyepiece/View.php:24
+#, php-format
+msgid "Eyepiece %s is active"
+msgstr "Oculair %s is actief"
+
+#: ../storage/framework/messages/f85e7a49b5178ac8d195c0d96a7573abedc4227f.php.php:26
+#: Http/Livewire/Eyepiece/View.php:26
+#, php-format
+msgid "Eyepiece %s is not longer active"
+msgstr "Oculair %s is niet langer actief"
+
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:6
 #: ../storage/framework/messages/fcf92ae1a45cafee0b5ea7bf32c602d652af7339.php.php:18
 msgid "Add a new lens"
@@ -3519,6 +3537,9 @@ msgstr "Laatst gebruikt op"
 #: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:99
 msgid "Observed in the following locations"
 msgstr "Waargenomen op de volgende locaties"
+
+#~ msgid "on"
+#~ msgstr "op"
 
 #~ msgid "Database based on Eye&Telescope and Tycho2+ & USNO-UCAC3"
 #~ msgstr "Database gebaseerd op Eye&telescoop en Tycho2 + & USNO-UCAC3"
@@ -3934,9 +3955,6 @@ msgstr "Waargenomen op de volgende locaties"
 
 #~ msgid "(hours-minutes)"
 #~ msgstr "(uren-minuten)"
-
-#~ msgid "Magnification"
-#~ msgstr "Vergroting"
 
 #~ msgid "Magnitude method key"
 #~ msgstr "Schattingsmethode"
@@ -6164,9 +6182,6 @@ msgstr "Waargenomen op de volgende locaties"
 
 #~ msgid "Clear fields"
 #~ msgstr "Wis velden"
-
-#~ msgid " to "
-#~ msgstr " tot "
 
 #~ msgid "Maximum contrast reserve"
 #~ msgstr "Maximale contrast reserve"
