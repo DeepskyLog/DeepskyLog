@@ -19,7 +19,18 @@ mix.webpackConfig({
 		],
 	},
 });
+
+// mix.js('resources/js/app.js', 'public/js')
+// 	.postCss('resources/css/app.css', 'public/css', [
+// 		require('tailwindcss'),
+// 	]);
 mix.js('resources/js/app.js', 'public/js')
-	.sass('resources/sass/app.scss', 'public/css');
+// .sass('resources/sass/app.scss', 'public/css').postCss([
+// 	require('tailwindcss'),
+// ]);
+	.sass('resources/sass/app.scss', 'public/css').options({
+		postCss: [
+			require('tailwindcss'),
+		]});
 mix.copy('node_modules/choices.js/public/assets/scripts/choices.js', 'public/js');
 mix.copy('node_modules/popper.js/dist/popper.js.map', 'public/js');

@@ -25,6 +25,7 @@
         "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.0",
         "livewire/livewire": "^2.0",
+        "mediconesystems/livewire-datatables": "^0.4.3",
         "monarobase/country-list": "^3.0",
         "muhamadrezaar/highcharts": "^2.0",
         "petercoles/multilingual-language-list": "^1.15",

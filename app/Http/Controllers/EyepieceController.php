@@ -14,7 +14,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Eyepiece;
 use Illuminate\Http\Request;
-use App\DataTables\EyepieceDataTable;
 use App\Http\Requests\EyepieceRequest;
 
 /**
@@ -39,26 +38,22 @@ class EyepieceController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param EyepieceDataTable $dataTable The eyepiece datatable
-     *
      * @return \Illuminate\Http\Response
      */
-    public function index(EyepieceDataTable $dataTable)
+    public function index()
     {
-        return $this->_indexView($dataTable, 'user');
+        return $this->_indexView('user');
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @param EyepieceDataTable $dataTable The eyepiece datatable
-     *
      * @return \Illuminate\Http\Response
      */
-    public function indexAdmin(EyepieceDataTable $dataTable)
+    public function indexAdmin()
     {
         if (auth()->user()->isAdmin()) {
-            return $this->_indexView($dataTable, 'admin');
+            return $this->_indexView('admin');
         } else {
             abort(401);
         }
@@ -67,14 +62,13 @@ class EyepieceController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param EyepieceDataTable $dataTable The eyepiece datatable
      * @param string            $user      user for a normal user, admin for an admin
      *
      * @return \Illuminate\Http\Response
      */
-    private function _indexView($dataTable, $user)
+    private function _indexView($user)
     {
-        return $dataTable->with('user', $user)->render('layout.eyepiece.view');
+        return view('layout.eyepiece.view', ['user' => $user]);
     }
 
     /**
@@ -255,18 +249,6 @@ class EyepieceController extends Controller
             }
 
             laraflash(_i('Eyepiece %s updated', $eyepiece->name))->warning();
-        } else {
-            // This is only reached when clicking the active checkbox in the
-            // eyepiece overview.
-            if ($request->has('active')) {
-                $eyepiece->active();
-                laraflash(_i('Eyepiece %s is active', $eyepiece->name))->warning();
-            } else {
-                $eyepiece->inactive();
-                laraflash(
-                    _i('Eyepiece %s is not longer active', $eyepiece->name)
-                )->warning();
-            }
         }
 
         return redirect(route('eyepiece.index'));
