@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2020-12-04 21:45+0100\n"
-"PO-Revision-Date: 2020-12-04 21:45+0100\n"
+"POT-Creation-Date: 2020-12-05 20:56+0100\n"
+"PO-Revision-Date: 2020-12-05 20:56+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: fr_FR\n"
@@ -1080,8 +1080,13 @@ msgstr "Boîte aux lettres DeepskyLog"
 msgid "Log out"
 msgstr "Se déconnecter"
 
-#: ../storage/framework/messages/14281692a25c2468513b2420db54664225a3a3d7.php.php:124
-#: Models/Instrument.php:124
+#: ../storage/framework/messages/14281692a25c2468513b2420db54664225a3a3d7.php.php:102
+#: Models/Instrument.php:102
+msgid "No default instrument"
+msgstr "Aucun instrument par défaut"
+
+#: ../storage/framework/messages/14281692a25c2468513b2420db54664225a3a3d7.php.php:125
+#: Models/Instrument.php:125
 msgid "Add an instrument"
 msgstr "Rajouter un instrument"
 

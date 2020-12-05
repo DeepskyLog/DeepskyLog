@@ -54,6 +54,4 @@
     @else
     <livewire:eyepiece-table hideable="select" hide="active" exportable />
     @endif
-
-    {{-- TODO: Issue to keep the settings after refreshing --}}
 </div>

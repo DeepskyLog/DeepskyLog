@@ -99,6 +99,9 @@ class Instrument extends Model implements HasMedia
         $count = 0;
 
         $toReturn = '';
+        if (!auth()->user()->stdtelescope) {
+            $toReturn .= '<optgroup><option value="NULL">' . _i('No default instrument') . '</option></optgroup>';
+        }
         foreach ($types as $typeid => $type) {
             $instruments = self::where(
                 ['user_id' => Auth::user()->id]
