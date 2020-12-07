@@ -457,6 +457,33 @@ class Target extends Model
 
         if ($this->_observationType['type'] == 'sun') {
             $this->_target = new \deepskylog\AstronomyLibrary\Targets\Sun();
+        } elseif ($this->_observationType['type'] == 'planets') {
+            switch ($this->getTranslation('target_name', 'en')) {
+                case 'Mercury':
+                    $this->_target = new \deepskylog\AstronomyLibrary\Targets\Mercury();
+                    break;
+                case 'Venus':
+                    $this->_target = new \deepskylog\AstronomyLibrary\Targets\Venus();
+                    break;
+                case 'Mars':
+                    $this->_target = new \deepskylog\AstronomyLibrary\Targets\Mars();
+                    break;
+                case 'Jupiter':
+                    $this->_target = new \deepskylog\AstronomyLibrary\Targets\Jupiter();
+                    break;
+                case 'Saturn':
+                    $this->_target = new \deepskylog\AstronomyLibrary\Targets\Saturn();
+                    break;
+                case 'Uranus':
+                    $this->_target = new \deepskylog\AstronomyLibrary\Targets\Uranus();
+                    break;
+                case 'Neptune':
+                    $this->_target = new \deepskylog\AstronomyLibrary\Targets\Neptune();
+                    break;
+
+                default:
+            break;
+            }
         } else {
             $this->_target = new \deepskylog\AstronomyLibrary\Targets\Target();
             $equa          = new EquatorialCoordinates($this->ra, $this->decl);
@@ -498,7 +525,11 @@ class Target extends Model
         if ($this->isSolarSystem()) {
             $nutation = Time::nutation($deltaT);
 
-            $this->_target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
+            if ($this->_observationType['type'] == 'sun') {
+                $this->_target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
+            } elseif ($this->_observationType['type'] == 'planets') {
+                $this->_target->calculateEquatorialCoordinates($date);
+            }
         }
 
         if (!Auth::guest()) {
@@ -699,11 +730,11 @@ class Target extends Model
      */
     public function isSolarSystem(): bool
     {
-        return $this->_observationType['type'] == 'sun';
+        return $this->_observationType['type'] == 'sun'
 //            || $this->_observationType['type'] == 'asteroids'
 //            || $this->_observationType['type'] == 'comets'
 //            || $this->_observationType['type'] == 'moon'
-//            || $this->_observationType['type'] == 'planets';
+            || $this->_observationType['type'] == 'planets';
     }
 
     /**
@@ -899,6 +930,33 @@ class Target extends Model
 
             if ($this->_observationType['type'] == 'sun') {
                 $target     = new \deepskylog\AstronomyLibrary\Targets\Sun();
+            } elseif ($this->_observationType['type'] == 'planets') {
+                switch ($this->getTranslation('target_name', 'en')) {
+                    case 'Mercury':
+                        $target = new \deepskylog\AstronomyLibrary\Targets\Mercury();
+                        break;
+                    case 'Venus':
+                        $target = new \deepskylog\AstronomyLibrary\Targets\Venus();
+                        break;
+                    case 'Mars':
+                        $target = new \deepskylog\AstronomyLibrary\Targets\Mars();
+                        break;
+                    case 'Jupiter':
+                        $target = new \deepskylog\AstronomyLibrary\Targets\Jupiter();
+                        break;
+                    case 'Saturn':
+                        $target = new \deepskylog\AstronomyLibrary\Targets\Saturn();
+                        break;
+                    case 'Uranus':
+                        $target = new \deepskylog\AstronomyLibrary\Targets\Uranus();
+                        break;
+                    case 'Neptune':
+                        $target = new \deepskylog\AstronomyLibrary\Targets\Neptune();
+                        break;
+
+                    default:
+                break;
+                }
             } else {
                 $target = new
                 \deepskylog\AstronomyLibrary\Targets\Target();
@@ -928,6 +986,15 @@ class Target extends Model
                         $nutation = Time::nutation($deltaT);
 
                         $target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
+                        $target->calculateEphemerides(
+                            $geo_coords,
+                            $greenwichSiderialTime,
+                            $deltaT
+                        );
+                    } elseif ($this->_observationType['type'] == 'planets') {
+                        $deltaT     = Time::deltaT($date);
+
+                        $target->calculateEquatorialCoordinates($date);
                         $target->calculateEphemerides(
                             $geo_coords,
                             $greenwichSiderialTime,

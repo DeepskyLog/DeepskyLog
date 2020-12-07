@@ -470,16 +470,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v4.19",
+            "version": "v4.19.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "370f3c5a957991dcd6d13418933d7eda54a371fa"
+                "reference": "71f9fb6daacab221cca842dc12ef8c277a997b46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/370f3c5a957991dcd6d13418933d7eda54a371fa",
-                "reference": "370f3c5a957991dcd6d13418933d7eda54a371fa",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/71f9fb6daacab221cca842dc12ef8c277a997b46",
+                "reference": "71f9fb6daacab221cca842dc12ef8c277a997b46",
                 "shasum": ""
             },
             "require": {
@@ -528,7 +528,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.19"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.19.1"
             },
             "funding": [
                 {
@@ -536,7 +536,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-12-07T14:05:12+00:00"
+            "time": "2020-12-07T19:24:46+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
