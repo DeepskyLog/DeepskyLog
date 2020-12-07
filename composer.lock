@@ -470,16 +470,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v4.18",
+            "version": "v4.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "1afae666c064234c91e65f7c260a9f4282ec79b4"
+                "reference": "370f3c5a957991dcd6d13418933d7eda54a371fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/1afae666c064234c91e65f7c260a9f4282ec79b4",
-                "reference": "1afae666c064234c91e65f7c260a9f4282ec79b4",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/370f3c5a957991dcd6d13418933d7eda54a371fa",
+                "reference": "370f3c5a957991dcd6d13418933d7eda54a371fa",
                 "shasum": ""
             },
             "require": {
@@ -528,7 +528,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.18"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.19"
             },
             "funding": [
                 {
@@ -536,7 +536,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-11-30T14:10:49+00:00"
+            "time": "2020-12-07T14:05:12+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
@@ -8580,25 +8580,25 @@
         },
         {
             "name": "maximebf/debugbar",
-            "version": "v1.16.3",
+            "version": "v1.16.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maximebf/php-debugbar.git",
-                "reference": "1a1605b8e9bacb34cc0c6278206d699772e1d372"
+                "reference": "c86c717e4bf3c6d98422da5c38bfa7b0f494b04c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/1a1605b8e9bacb34cc0c6278206d699772e1d372",
-                "reference": "1a1605b8e9bacb34cc0c6278206d699772e1d372",
+                "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/c86c717e4bf3c6d98422da5c38bfa7b0f494b04c",
+                "reference": "c86c717e4bf3c6d98422da5c38bfa7b0f494b04c",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1",
+                "php": "^7.1|^8",
                 "psr/log": "^1.0",
                 "symfony/var-dumper": "^2.6|^3|^4|^5"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5"
+                "phpunit/phpunit": "^7.5.20 || ^9.4.2"
             },
             "suggest": {
                 "kriswallsmith/assetic": "The best way to manage assets",
@@ -8639,9 +8639,9 @@
             ],
             "support": {
                 "issues": "https://github.com/maximebf/php-debugbar/issues",
-                "source": "https://github.com/maximebf/php-debugbar/tree/v1.16.3"
+                "source": "https://github.com/maximebf/php-debugbar/tree/v1.16.4"
             },
-            "time": "2020-05-06T07:06:27+00:00"
+            "time": "2020-12-07T10:48:48+00:00"
         },
         {
             "name": "mockery/mockery",

@@ -13,11 +13,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
@@ -38,29 +38,17 @@ class Filter extends Model implements HasMedia
     ];
 
     /**
-     * Activate the filter.
-     *
-     * @param bool $active true to activate the filter, false to deactivate
+     * Activate or deactivate the filter.
      *
      * @return None
      */
-    public function active($active = true)
+    public function toggleActive()
     {
-        if ($active === false) {
+        if ($this->active) {
             $this->update(['active' => 0]);
         } else {
-            $this->update(compact('active'));
+            $this->update(['active' => 1]);
         }
-    }
-
-    /**
-     * Deactivate the filter.
-     *
-     * @return None
-     */
-    public function inactive()
-    {
-        $this->active(false);
     }
 
     /**

@@ -14,7 +14,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Filter;
 use Illuminate\Http\Request;
-use App\DataTables\FilterDataTable;
 use App\Http\Requests\FilterRequest;
 
 /**
@@ -39,26 +38,22 @@ class FilterController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param FilterDataTable $dataTable The filter datatable
-     *
      * @return \Illuminate\Http\Response
      */
-    public function index(FilterDataTable $dataTable)
+    public function index()
     {
-        return $this->_indexView($dataTable, 'user');
+        return $this->_indexView('user');
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @param FilterDataTable $dataTable The filter datatable
-     *
      * @return \Illuminate\Http\Response
      */
-    public function indexAdmin(FilterDataTable $dataTable)
+    public function indexAdmin()
     {
         if (auth()->user()->isAdmin()) {
-            return $this->_indexView($dataTable, 'admin');
+            return $this->_indexView('admin');
         } else {
             abort(401);
         }
@@ -67,14 +62,13 @@ class FilterController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param FilterDataTable $dataTable The filter datatable
-     * @param string          $user      user for a normal user, admin for an admin
+     * @param string            $user      user for a normal user, admin for an admin
      *
      * @return \Illuminate\Http\Response
      */
-    private function _indexView($dataTable, $user)
+    private function _indexView($user)
     {
-        return $dataTable->with('user', $user)->render('layout.filter.view');
+        return view('layout.filter.view', ['user' => $user]);
     }
 
     /**
