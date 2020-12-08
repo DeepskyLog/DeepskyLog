@@ -17,11 +17,15 @@ class View extends Component
     public function activate($id)
     {
         $instrument = Instrument::where('id', $id)->first();
-        $instrument->toggleActive();
-        if ($instrument->active) {
-            session()->flash('message', _i('Instrument %s is active', $instrument->name));
+        if (Auth::user()->stdtelescope == $id) {
+            session()->flash('message', _i('Default instrument can not be deactivated'));
         } else {
-            session()->flash('message', _i('Instrument %s is not longer active', $instrument->name));
+            $instrument->toggleActive();
+            if ($instrument->active) {
+                session()->flash('message', _i('Instrument %s is active', $instrument->name));
+            } else {
+                session()->flash('message', _i('Instrument %s is not longer active', $instrument->name));
+            }
         }
         $this->emit('refreshLivewireDatatable');
     }

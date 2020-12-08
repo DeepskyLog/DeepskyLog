@@ -15,7 +15,6 @@ namespace App\Http\Controllers;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\DataTables\LocationDataTable;
 use App\Http\Requests\LocationRequest;
 
 /**
@@ -40,26 +39,22 @@ class LocationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param LocationDataTable $dataTable The location datatable
-     *
      * @return \Illuminate\Http\Response
      */
-    public function index(LocationDataTable $dataTable)
+    public function index()
     {
-        return $this->_indexView($dataTable, 'user');
+        return $this->_indexView('user');
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @param LocationDataTable $dataTable The location datatable
-     *
      * @return \Illuminate\Http\Response
      */
-    public function indexAdmin(LocationDataTable $dataTable)
+    public function indexAdmin()
     {
         if (auth()->user()->isAdmin()) {
-            return $this->_indexView($dataTable, 'admin');
+            return $this->_indexView('admin');
         } else {
             abort(401);
         }
@@ -68,14 +63,13 @@ class LocationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param LocationDataTable $dataTable The location datatable
      * @param string            $user      user for a normal user, admin for an admin
      *
      * @return \Illuminate\Http\Response
      */
-    private function _indexView($dataTable, $user)
+    private function _indexView($user)
     {
-        return $dataTable->with('user', $user)->render('layout.location.view');
+        return view('layout.location.view');
     }
 
     /**
@@ -165,87 +159,6 @@ class LocationController extends Controller
             'layout.location.create',
             ['location' => $location, 'update' => true]
         );
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param LocationRequest $request  The request with all information
-     * @param Location        $location The location to adapt
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function update(LocationRequest $request, Location $location)
-    {
-        $this->authorize('update', $location);
-        $request['user_id'] = $location->user_id;
-
-        // If the factor is set, the name should also be set in the form.
-        if ($request->has('latitude')) {
-            $validated            = $request->validated();
-            $validated['user_id'] = auth()->id();
-
-            $location->update(['name' => $request->get('name')]);
-            $location->update(['latitude' => $request->get('latitude')]);
-            $location->update(['longitude' => $request->get('longitude')]);
-            $location->update(['country' => $request->get('country')]);
-            $location->update(['elevation' => $request->get('elevation')]);
-
-            if ($request->get('timezone') == 'undefined') {
-                $location->update(
-                    ['timezone' => 'UTC']
-                );
-            } else {
-                $location->update(['timezone' => $request->get('timezone')]);
-            }
-            if ($request->get('lm')) {
-                $location->update(
-                    ['limitingMagnitude' => $request->get('lm') + Auth::user()->fstOffset]
-                );
-            }
-            $location->update(['skyBackground' => $request->get('sb')]);
-            $location->update(['bortle' => $request->get('bortle')]);
-
-            if ($request->picture != null) {
-                if ($location->getFirstMedia('location') != null
-                ) {
-                    // First remove the current image
-                    $location->getFirstMedia('location')
-                        ->delete();
-                }
-                // Update the picture
-                $location->addMedia($request->picture->path())
-                    ->usingFileName($location->id . '.png')
-                    ->toMediaCollection('location');
-            }
-
-            laraflash(_i('Location %s updated', $location->name))->warning();
-        } else {
-            // This is only reached when clicking the active checkbox in the
-            // location overview.
-            if ($request->has('active')) {
-                $location->active();
-                laraflash(
-                    _i('Location %s is active', $location->name)
-                )->warning();
-            } else {
-                if ($location->id == Auth::user()->stdlocation) {
-                    laraflash(
-                        _i(
-                            'Impossible to deactivate the default location %s',
-                            $location->name
-                        )
-                    )->danger();
-                } else {
-                    $location->inactive();
-                    laraflash(
-                        _i('Location %s is not longer active', $location->name)
-                    )->warning();
-                }
-            }
-        }
-
-        return redirect(route('location.index'));
     }
 
     /**

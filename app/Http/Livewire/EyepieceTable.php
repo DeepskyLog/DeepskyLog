@@ -134,9 +134,9 @@ class EyepieceTable extends LivewireDatatable
         if (auth()->user()->isAdmin()) {
             array_push(
                 $toReturn,
-                Column::name('user.name')->callback(['user_id', 'user.name', 'user.slug'], function ($user_id, $user_name, $user_slug) {
+                Column::name('user.name')->callback(['user.name', 'user.slug'], function ($user_name, $user_slug) {
                     return '<a href="/users/' . $user_slug . '">' . $user_name . '</a>';
-                })->label(_i('User name'))->searchable()
+                })->label(_i('User name'))->searchable('user.name')
             );
         } else {
             array_push(
