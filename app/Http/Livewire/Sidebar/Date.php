@@ -35,7 +35,9 @@ class Date extends Component
     public function updated($propertyName)
     {
         try {
-            $date                   = \Carbon\Carbon::createFromIsoFormat('LL', $this->carbonDateString, null, \deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage());
+            $date = \Carbon\Carbon::parseFromLocale($this->carbonDateString, \deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage());
+            // $date                   = \Carbon\Carbon::createFromIsoFormat('LL', $this->carbonDateString, null, \deepskylog\LaravelGettext\Facades\LaravelGettext::getLocaleLanguage());
+            // dd('test');
             $date->hour             = 12;
             $this->carbonDate       = $date;
             Request::session()->put('date', $date->isoFormat('Y-M-D'));

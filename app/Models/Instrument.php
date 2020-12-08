@@ -40,29 +40,17 @@ class Instrument extends Model implements HasMedia
     ];
 
     /**
-     * Activate the instrument.
-     *
-     * @param bool $active true to activate the instrument, false to deactivate
+     * Activate or deactivate the instrument.
      *
      * @return None
      */
-    public function active($active = true)
+    public function toggleActive()
     {
-        if ($active === false) {
+        if ($this->active) {
             $this->update(['active' => 0]);
         } else {
-            $this->update(compact('active'));
+            $this->update(['active' => 1]);
         }
-    }
-
-    /**
-     * Deactivate the instrument.
-     *
-     * @return None
-     */
-    public function inactive()
-    {
-        $this->active(false);
     }
 
     /**

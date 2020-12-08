@@ -15,7 +15,6 @@ namespace App\Http\Controllers;
 use App\Models\Instrument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\DataTables\InstrumentDataTable;
 use App\Http\Requests\InstrumentRequest;
 
 /**
@@ -40,26 +39,22 @@ class InstrumentController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param InstrumentDataTable $dataTable The instrument datatable
-     *
      * @return \Illuminate\Http\Response
      */
-    public function index(InstrumentDataTable $dataTable)
+    public function index()
     {
-        return $this->_indexView($dataTable, 'user');
+        return $this->_indexView('user');
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @param InstrumentDataTable $dataTable The instrument datatable
-     *
      * @return \Illuminate\Http\Response
      */
-    public function indexAdmin(InstrumentDataTable $dataTable)
+    public function indexAdmin()
     {
         if (auth()->user()->isAdmin()) {
-            return $this->_indexView($dataTable, 'admin');
+            return $this->_indexView('admin');
         } else {
             abort(401);
         }
@@ -68,14 +63,13 @@ class InstrumentController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param InstrumentDataTable $dataTable The instrument datatable
      * @param string              $user      user for a normal user, admin for an admin
      *
      * @return \Illuminate\Http\Response
      */
-    private function _indexView($dataTable, $user)
+    private function _indexView($user)
     {
-        return $dataTable->with('user', $user)->render('layout.instrument.view');
+        return view('layout.instrument.view');
     }
 
     /**
@@ -157,85 +151,6 @@ class InstrumentController extends Controller
             'layout.instrument.create',
             ['instrument' => $instrument, 'update' => true]
         );
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param InstrumentRequest $request    The request with all information
-     * @param Instrument        $instrument The instrument to adapt
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function update(InstrumentRequest $request, Instrument $instrument)
-    {
-        $this->authorize('update', $instrument);
-
-        $request['user_id'] = $instrument->user_id;
-
-        // If the factor is set, the name should also be set in the form.
-        if ($request->has('type')) {
-            $validated            = $request->validated();
-            $validated['user_id'] = auth()->id();
-
-            $instrument->update(['type' => $request->get('type')]);
-            $instrument->update(['name' => $request->get('name')]);
-
-            if (Auth::user()->showInches) {
-                $instrument->update(
-                    ['diameter' => $request->get('diameter') * 25.4]
-                );
-            } else {
-                $instrument->update(['diameter' => $request->get('diameter')]);
-            }
-            $instrument->update(['fd' => $request->get('fd')]);
-            $instrument->update(
-                ['fixedMagnification' => $request->get('fixedMagnification')]
-            );
-
-            if ($request->picture != null) {
-                if (Instrument::find($instrument->id)->getFirstMedia('instrument') != null
-                ) {
-                    // First remove the current image
-                    Instrument::find($instrument->id)
-                    ->getFirstMedia('instrument')
-                    ->delete();
-                }
-
-                // Update the picture
-                Instrument::find($instrument->id)
-                    ->addMedia($request->picture->path())
-                    ->usingFileName($instrument->id . '.png')
-                    ->toMediaCollection('instrument');
-            }
-
-            laraflash(_i('Instrument %s updated', $instrument->name))->warning();
-        } else {
-            // This is only reached when clicking the active checkbox in the
-            // instrument overview.
-            if ($request->has('active')) {
-                $instrument->active();
-                laraflash(
-                    _i('Instrument %s is active', $instrument->name)
-                )->warning();
-            } else {
-                if ($instrument->id == Auth::user()->stdtelescope) {
-                    laraflash(
-                        _i(
-                            'Impossible to deactivate the default instrument %s',
-                            $instrument->name
-                        )
-                    )->danger();
-                } else {
-                    $instrument->inactive();
-                    laraflash(
-                        _i('Instrument %s is not longer active', $instrument->name)
-                    )->warning();
-                }
-            }
-        }
-
-        return redirect(route('instrument.index'));
     }
 
     /**
