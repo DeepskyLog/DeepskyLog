@@ -72,9 +72,11 @@
                 <td> {{ _i('Default observing site') }} </td>
                 <td>
                     @if ($user->stdlocation)
+                    @if (\App\Models\Location::where(['id' => $user->stdlocation])->first())
                     <a href="{{ route('location.show', $user->stdlocation) }}">
                         {{ \App\Models\Location::where(['id' => $user->stdlocation])->first()->name }}
                     </a>
+                    @endif
                     @endif
                 </td>
             </tr>
@@ -84,9 +86,11 @@
                 <td> {{ _i('Default instrument') }} </td>
                 <td>
                     @if ($user->stdtelescope)
+                    @if (\App\Models\Instrument::where(['id' => $user->stdtelescope])->first())
                     <a href="{{ route('instrument.show', $user->stdtelescope) }}">
                         {{ \App\Models\Instrument::where(['id' => $user->stdtelescope])->first()->name }}
                     </a>
+                    @endif
                     @endif
                 </td>
             </tr>

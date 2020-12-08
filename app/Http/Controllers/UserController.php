@@ -18,7 +18,6 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\DataTables\UserDataTable;
 use App\Http\Requests\UserRequest;
 
 /**
@@ -49,13 +48,11 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param UserDataTable $dataTable The user datatable
-     *
      * @return \Illuminate\Http\Response
      */
-    public function index(UserDataTable $dataTable)
+    public function index()
     {
-        return $dataTable->render('users.index');
+        return view('users.index');
     }
 
     /**

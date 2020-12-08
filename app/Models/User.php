@@ -116,6 +116,16 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
+     * Number of eyepieces.
+     *
+     * @return int The number of eyepieces
+     */
+    public function getNumberOfEyepiecesAttribute(): int
+    {
+        return count($this->eyepieces);
+    }
+
+    /**
      * Users can have one instrument.
      *
      * @return HasOne The eloquent relationship
