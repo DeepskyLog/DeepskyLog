@@ -38,29 +38,17 @@ class Lens extends Model implements HasMedia
     protected $table = 'lens';
 
     /**
-     * Activate the lens.
-     *
-     * @param bool $active true to activate the lens, false to deactivate
+     * Activate or deactivate the filter.
      *
      * @return None
      */
-    public function active($active = true)
+    public function toggleActive()
     {
-        if ($active === false) {
+        if ($this->active) {
             $this->update(['active' => 0]);
         } else {
-            $this->update(compact('active'));
+            $this->update(['active' => 1]);
         }
-    }
-
-    /**
-     * Deactivate the lens.
-     *
-     * @return None
-     */
-    public function inactive()
-    {
-        $this->active(false);
     }
 
     /**

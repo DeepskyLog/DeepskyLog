@@ -146,65 +146,6 @@ class FilterController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request The request with all information
-     * @param Filter  $filter  The filter to adapt
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function update(FilterRequest $request, Filter $filter)
-    {
-        $this->authorize('update', $filter);
-
-        $request['user_id'] = $filter->user_id;
-
-        // If the factor is set, the name should also be set in the form.
-        if ($request->has('type')) {
-            $validated            = $request->validated();
-            $validated['user_id'] = auth()->id();
-
-            $filter->update(['type' => $request->get('type')]);
-            $filter->update(['name' => $request->get('name')]);
-            $filter->update(['color' => $request->get('color')]);
-            $filter->update(['wratten' => $request->get('wratten')]);
-            $filter->update(['schott' => $request->get('schott')]);
-
-            if ($request->picture != null) {
-                if (Filter::find($filter->id)->getFirstMedia('filter') != null
-                ) {
-                    // First remove the current image
-                    Filter::find($filter->id)
-                    ->getFirstMedia('filter')
-                    ->delete();
-                }
-
-                // Update the picture
-                Filter::find($filter->id)
-                    ->addMedia($request->picture->path())
-                    ->usingFileName($filter->id . '.png')
-                    ->toMediaCollection('filter');
-            }
-
-            laraflash(_i('Filter %s updated', $filter->name))->warning();
-        } else {
-            // This is only reached when clicking the active checkbox in the
-            // filter overview.
-            if ($request->has('active')) {
-                $filter->active();
-                laraflash(_i('Filter %s is active', $filter->name))->warning();
-            } else {
-                $filter->inactive();
-                laraflash(
-                    _i('Filter %s is not longer active', $filter->name)
-                )->warning();
-            }
-        }
-
-        return redirect(route('filter.index'));
-    }
-
-    /**
      * Returns the image of the filter.
      *
      * @param Filter $filter The filter

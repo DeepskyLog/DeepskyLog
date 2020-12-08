@@ -14,7 +14,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Lens;
 use Illuminate\Http\Request;
-use App\DataTables\LensDataTable;
 use App\Http\Requests\LensRequest;
 
 /**
@@ -39,28 +38,22 @@ class LensController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param LensDataTable $dataTable The lens datatable
-     *
      * @return \Illuminate\Http\Response
      */
-    public function index(LensDataTable $dataTable)
+    public function index()
     {
-        return $this->_indexView($dataTable, 'user');
+        return $this->_indexView('user');
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @param LensDataTable $dataTable The lens datatable
-     *
      * @return \Illuminate\Http\Response
      */
-    public function indexAdmin(LensDataTable $dataTable)
+    public function indexAdmin()
     {
         if (auth()->user()->isAdmin()) {
-            //$lenses = Lens::all();
-
-            return $this->_indexView($dataTable, 'admin');
+            return $this->_indexView('admin');
         } else {
             abort(401);
         }
@@ -69,14 +62,13 @@ class LensController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param LensDataTable $dataTable The lens datatable
      * @param string        $user      user for a normal user, admin for an admin
      *
      * @return \Illuminate\Http\Response
      */
-    private function _indexView($dataTable, $user)
+    private function _indexView($user)
     {
-        return $dataTable->with('user', $user)->render('layout.lens.view');
+        return view('layout.lens.view');
     }
 
     /**
@@ -145,59 +137,6 @@ class LensController extends Controller
         $this->authorize('update', $lens);
 
         return view('layout.lens.create', ['lens' => $lens, 'update' => true]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param LensRequest $request The request with all information
-     * @param Lens        $lens    The lens to adapt
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function update(LensRequest $request, Lens $lens)
-    {
-        $request['user_id'] = $lens->user_id;
-
-        // If the factor is set, the name should also be set in the form.
-        if ($request->has('factor')) {
-            $validated            = $request->validated();
-            $validated['user_id'] = auth()->id();
-            $this->authorize('update', $lens);
-
-            $lens->update(['factor' => $request->get('factor')]);
-            $lens->update(['name' => $request->get('name')]);
-
-            if ($request->picture != null) {
-                if (Lens::find($lens->id)->getFirstMedia('lens') != null
-                ) {
-                    // First remove the current image
-                    Lens::find($lens->id)
-                    ->getFirstMedia('lens')
-                    ->delete();
-                }
-
-                // Update the picture
-                Lens::find($lens->id)
-                    ->addMedia($request->picture->path())
-                    ->usingFileName($lens->id . '.png')
-                    ->toMediaCollection('lens');
-            }
-
-            laraflash(_i('Lens %s updated', $lens->name))->warning();
-        } else {
-            // This is only reached when clicking the active checkbox in the
-            // lens overview.
-            if ($request->has('active')) {
-                $lens->active();
-                laraflash(_i('Lens %s is active', $lens->name))->warning();
-            } else {
-                $lens->inactive();
-                laraflash(_i('Lens %s is not longer active', $lens->name))->warning();
-            }
-        }
-
-        return redirect(route('lens.index'));
     }
 
     /**
