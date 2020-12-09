@@ -83,6 +83,7 @@ class Detail extends Component
         }
         if ($propertyName == 'location') {
             Auth::user()->update(['stdlocation' => $this->location]);
+            $this->emit('locationChanged');
         }
         if ($propertyName == 'eyepiece') {
             if ($this->eyepiece == 0) {

@@ -928,6 +928,10 @@ class Target extends Model
                 $location->latitude
             );
 
+            if (!$this->_observationType) {
+                $this->_setObservationType();
+            }
+
             if ($this->_observationType['type'] == 'sun') {
                 $target     = new \deepskylog\AstronomyLibrary\Targets\Sun();
             } elseif ($this->_observationType['type'] == 'planets') {
