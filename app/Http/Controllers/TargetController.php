@@ -14,7 +14,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Target;
 use Illuminate\Http\Request;
-use App\DataTables\TargetDataTable;
 use deepskylog\LaravelGettext\Facades\LaravelGettext;
 
 /**
@@ -65,7 +64,7 @@ class TargetController extends Controller
      *
      * @return \Illuminate\Http\Response The reponse
      */
-    public function show(string $slug, TargetDataTable $dataTable)
+    public function show(string $slug)
     {
         $targetname = \App\Models\TargetName::where('slug', $slug)
             ->first();
@@ -74,7 +73,7 @@ class TargetController extends Controller
             $target = \App\Models\Target::where('id', $targetname->target_id)->first();
 
             if ($target != null) {
-                return $dataTable->with('target', $target)->render(
+                return view(
                     'layout.target.show',
                     compact('target', $target)
                 );
@@ -89,7 +88,7 @@ class TargetController extends Controller
             )->first();
 
             if ($target != null) {
-                return $dataTable->with('target', $target)->render(
+                return view(
                     'layout.target.show',
                     compact('target', $target)
                 );

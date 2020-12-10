@@ -20,14 +20,6 @@ import 'flatpickr/dist/l10n/sv.js';
 import 'flatpickr/dist/l10n/fr.js';
 import 'flatpickr/dist/l10n/de.js';
 
-require( 'datatables.net' );
-require( 'datatables.net-bs4' );
-require( 'datatables.net-buttons/js/buttons.colVis.js' );
-require( 'datatables.net-buttons/js/buttons.html5.js' );
-require( 'datatables.net-colreorder-bs4' );
-require( 'datatables.net-buttons/js/buttons.print.js' );
-require( 'datatables.net-plugins/sorting/natural.js');
-
 var pdfMake = require('pdfmake/build/pdfmake.js');
 var pdfFonts = require('pdfmake/build/vfs_fonts.js');
 pdfMake.vfs = pdfFonts.pdfMake.vfs;

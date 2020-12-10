@@ -215,26 +215,17 @@ If the value of the selection is not used, the selected values will jump back to
 
 ## Datatables
 
-DeepskyLog uses jquery datatables. To make a DataTable model, execute the following command:
+DeepskyLog uses Livewire datatables. For more information, see https://github.com/MedicOneSystems/livewire-datatables
+To make a DataTable model, execute the following command:
 
 ```bash
-php artisan datatables:make --model Lens
+php artisan livewire:datatable LensTable
 ```
 
-Adapt the app/DataTables/LensDatatable.php file.
+Adapt the app/Http/Livewire/LensTable.php file.
 
-To show the datatable:
-
-```php
-    {!! $dataTable->table(['class' => 'table table-sm table-striped table-hover']) !!}
-```
-
-and
+Show the data table using:
 
 ```php
-@push('scripts')
-
-{!! $dataTable->scripts() !!}
-
-@endpush
+    <livewire:lens-table hideable="select" exportable :zoom='$zoomDiameter' :slug='$target->slug' />
 ```
