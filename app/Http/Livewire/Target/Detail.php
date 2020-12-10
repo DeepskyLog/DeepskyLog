@@ -70,6 +70,7 @@ class Detail extends Component
                 $this->disabled = false;
             }
             $this->instrument2 = $this->instrument;
+            $this->emit('instrumentChanged');
         }
         if ($propertyName == 'instrument2') {
             Auth::user()->update(['stdtelescope' => $this->instrument2]);
@@ -80,6 +81,7 @@ class Detail extends Component
                 $this->disabled = false;
             }
             $this->instrument = $this->instrument2;
+            $this->emit('instrumentChanged');
         }
         if ($propertyName == 'location') {
             Auth::user()->update(['stdlocation' => $this->location]);

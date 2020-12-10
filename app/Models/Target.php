@@ -59,7 +59,7 @@ class Target extends Model
     protected $appends = ['rise', 'contrast', 'contrast_type', 'contrast_popup',
         'prefMag', 'prefMagEasy', 'rise_popup', 'transit', 'transit_popup',
         'set', 'set_popup', 'bestTime', 'maxAlt', 'maxAlt_popup',
-        'highest_from', 'highest_around', 'highest_to', 'highest_alt', ];
+        'highest_from', 'highest_around', 'highest_to', 'highest_alt', 'slug', ];
 
     public $translatable = ['target_name'];
     //protected $primaryKey = 'target_name';
@@ -77,7 +77,7 @@ class Target extends Model
     public function getContrastAttribute(): string
     {
         if (!auth()->guest()) {
-            if (auth()->user()->stdtelescope) {
+            if (auth()->user()->stdtelescope && auth()->user()->stdlocation) {
                 if (!isset($this->_contrast)) {
                     $this->_contrast = new \App\Models\Contrast($this);
                 }
@@ -90,6 +90,16 @@ class Target extends Model
     }
 
     /**
+     * Returns the slug of the target
+     *
+     * @return string The slug of the target
+     */
+    public function getSlugAttribute(): string
+    {
+        return \App\Models\TargetName::where('altname', $this->target_name)->first()->slug;
+    }
+
+    /**
      * Returns the contrast type of the target, for showing
      * the correct background color.
      *
@@ -98,7 +108,7 @@ class Target extends Model
     public function getContrastTypeAttribute(): string
     {
         if (!auth()->guest()) {
-            if (auth()->user()->stdtelescope) {
+            if (auth()->user()->stdtelescope && auth()->user()->stdlocation) {
                 if (!isset($this->_contrast)) {
                     $this->_contrast = new \App\Models\Contrast($this);
                 }
@@ -118,7 +128,7 @@ class Target extends Model
     public function getContrastPopupAttribute(): string
     {
         if (!auth()->guest()) {
-            if (auth()->user()->stdtelescope) {
+            if (auth()->user()->stdtelescope && auth()->user()->stdlocation) {
                 if (!isset($this->_contrast)) {
                     $this->_contrast = new \App\Models\Contrast($this);
                 }
@@ -139,7 +149,7 @@ class Target extends Model
     public function getPrefMagAttribute(): string
     {
         if (!auth()->guest()) {
-            if (auth()->user()->stdtelescope) {
+            if (auth()->user()->stdtelescope && auth()->user()->stdlocation) {
                 if (!isset($this->_contrast)) {
                     $this->_contrast = new \App\Models\Contrast($this);
                 }
@@ -159,7 +169,7 @@ class Target extends Model
     public function getPrefMagEasyAttribute(): string
     {
         if (!auth()->guest()) {
-            if (auth()->user()->stdtelescope) {
+            if (auth()->user()->stdtelescope && auth()->user()->stdlocation && auth()->user()->stdlocation) {
                 if (!isset($this->_contrast)) {
                     $this->_contrast = new \App\Models\Contrast($this);
                 }
@@ -337,7 +347,7 @@ class Target extends Model
             if (Auth::user()->stdlocation) {
                 $maxalt = $this->_target->getMaxHeightAtNight() ?
                 $this->_target->getMaxHeightAtNight()
-                    ->convertToDegrees() : '-';
+                    ->convertToShortDegrees() : '-';
             }
         }
 
@@ -374,7 +384,9 @@ class Target extends Model
         $high = '-';
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
-                return $this->_highestFromToAround[3];
+                $high = $this->_target->getMaxHeight() ?
+                $this->_target->getMaxHeight()
+                    ->convertToShortDegrees() : '-';
             }
         }
 
@@ -1430,5 +1442,15 @@ class Target extends Model
         ksort($types);
 
         return [$allData, $constellations, $types];
+    }
+
+    /**
+     * Target can have more target_names.
+     *
+     * @return HasMany The eloquent relationship
+     */
+    public function target_names()
+    {
+        return $this->hasMany('App\Models\TargetName', 'target_id');
     }
 }

@@ -17,13 +17,8 @@
 @endif
 @endauth
 
-{{-- @if ($target->ra != null)
-    @include('layout.target.sub.nearby')
-@endif --}}
+@if ($target->ra != null)
+@include('layout.target.sub.nearby')
+@endif
 
 @endsection
-
-@push('scripts')
-{!! $dataTable->scripts() !!}
-
-@endpush
