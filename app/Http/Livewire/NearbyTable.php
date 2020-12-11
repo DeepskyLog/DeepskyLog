@@ -14,6 +14,8 @@ class NearbyTable extends LivewireDatatable
     public $slug;
     private $_currentTarget;
     private $_targets;
+    private $_types;
+    public $_constellations = [];
 
     protected $listeners = [
         'zoomUpdated' => 'zoomUpdated', 'locationChanged' => 'locationChanged', 'instrumentChanged' => 'locationChanged',
@@ -31,6 +33,7 @@ class NearbyTable extends LivewireDatatable
         $this->zoom                   = $zoom;
         $targetname                   = \App\Models\TargetName::where('slug', $this->slug)->with('target')->first();
         $this->_targets               = $targetname->target->getNearbyObjects($this->zoom);
+        $this->_constellations        = $this->_targets->groupBy('constellation')->get()->pluck('constellation')->flatten()->toArray();
     }
 
     public function builder()
@@ -38,10 +41,11 @@ class NearbyTable extends LivewireDatatable
         $targetname = \App\Models\TargetName::where('slug', $this->slug)->with('target')->first();
         // dd($targetname->target->ra);
         // $target = \App\Models\Target::where('id', $this->targetid)->first();
-
         $this->_targets               = $targetname->target->getNearbyObjects($this->zoom);
         // TODO: Should we move this to targetnames to be able to search for names?
         // dd($this->_targets->get());
+        $this->_constellations = $this->_targets->groupBy('constellation')->get()->pluck('constellation')->flatten()->toArray();
+
         return $this->_targets;
     }
 
@@ -53,14 +57,15 @@ class NearbyTable extends LivewireDatatable
                 return '<a href="/target/' . $this->_currentTarget->slug . '">' . $this->_currentTarget->target_name . '</a>';
             })->label(_i('Name'))
             ->searchable('target_name'),
-            Column::name('constellation')->callback(['constellation'], function ($constellation) {
-                return \App\Models\Constellation::where('id', $constellation)->first()->name;
-            })->label(_i('Constellation'))->filterable($this->getConstellations()),
+            Column::name('constellation.name')->label(_i('Constellation'))
+                ->filterable($this->constellations),
             NumberColumn::name('mag')->label(_i('Mag'))->filterable(),
             NumberColumn::name('subr')->label(_i('SB'))->filterable(),
-            Column::name('target_type')->callback(['target_type'], function ($target_type) {
-                return _i(\App\Models\TargetType::where('id', $target_type)->pluck('type')->first());
-            })->label(_i('Type'))->filterable($this->getTypes()),
+            Column::name(_i('type.type'))
+            ->callback(['type.type'], function ($type) {
+                return _i($type);
+            })
+            ->label(_i('Type'))->filterable($this->getTypes()),
             Column::name('diam1')->callback(['id', 'pa'], function ($id, $pa) {
                 if ($pa != 999) {
                     return $this->_currentTarget->size() . '/' . $this->_currentTarget->pa . '°';
@@ -156,27 +161,42 @@ class NearbyTable extends LivewireDatatable
         // // TODO: Does not work...
         // // TODO: Also add translation to real constellation name
 
+        if ($this->_constellations) {
+            dd($this->_constellations);
+            return $this->_constellations;
+        }
         if ($this->_targets) {
+            // dd($this->_targets);
             return $this->_targets->groupBy('constellation')->get()->pluck('constellation')->flatten()->toArray();
         } else {
             return [];
         }
     }
 
+    public function getConstellationsProperty()
+    {
+        return \App\Models\Constellation::pluck('name', 'id');
+        if ($this->_targets) {
+            dd($this->_targets);
+            return $this->_targets->groupBy('constellation')->get()->pluck('constellation')->flatten()->toArray();
+        } else {
+            return [];
+        }
+        // return Planet::pluck('name');
+    }
+
     public function getTypes()
     {
         // TODO: Implement
-        return [];
+        return $this->_types;
     }
 
     // TODO: Search for the name of the object
-    // TODO: Sort on constellation
     // TODO: Filter on constellation
-    // TODO: Sort on type
     // TODO: Filter on type
     // TODO: Sort on preferred magnification
     // TODO: Sort on rise / set / transit / best time
     // TODO: Sort on max altitude / max elevation
     // TODO: Contrast reserve is not correct -> Berk 59 is -4.19 and should be 0.15
-        // TODO:    Test to see if the sorting is of contrast reserve is ok
+        // TODO:    Test to see if the sorting of contrast reserve is ok
 }

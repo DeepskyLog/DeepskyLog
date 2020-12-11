@@ -4640,16 +4640,16 @@
         },
         {
             "name": "spatie/laravel-cookie-consent",
-            "version": "2.12.10",
+            "version": "2.12.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-cookie-consent.git",
-                "reference": "ee6358d18750d3e5bb6eda23d328b5d0b0f94187"
+                "reference": "655654a74e84e089c40cf112e4b213f4e0d92294"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-cookie-consent/zipball/ee6358d18750d3e5bb6eda23d328b5d0b0f94187",
-                "reference": "ee6358d18750d3e5bb6eda23d328b5d0b0f94187",
+                "url": "https://api.github.com/repos/spatie/laravel-cookie-consent/zipball/655654a74e84e089c40cf112e4b213f4e0d92294",
+                "reference": "655654a74e84e089c40cf112e4b213f4e0d92294",
                 "shasum": ""
             },
             "require": {
@@ -4705,7 +4705,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-cookie-consent/issues",
-                "source": "https://github.com/spatie/laravel-cookie-consent/tree/2.12.10"
+                "source": "https://github.com/spatie/laravel-cookie-consent/tree/2.12.11"
             },
             "funding": [
                 {
@@ -4713,7 +4713,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2020-11-28T23:12:36+00:00"
+            "time": "2020-12-11T07:53:33+00:00"
         },
         {
             "name": "spatie/laravel-medialibrary",
