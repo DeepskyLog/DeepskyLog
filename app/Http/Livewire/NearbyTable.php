@@ -150,37 +150,15 @@ class NearbyTable extends LivewireDatatable
         return $toReturn;
     }
 
-    public function getConstellations()
-    {
-        // $target = \App\Models\Target::where('id', $this->targetid)->first();
-
-        // $targets               = $target->getNearbyObjects($this->zoom);
-
-        // // TODO: Does not work...
-        // // TODO: Also add translation to real constellation name
-
-        if ($this->_constellations) {
-            dd($this->_constellations);
-            return $this->_constellations;
-        }
-        if ($this->_targets) {
-            // dd($this->_targets);
-            return $this->_targets->groupBy('constellation')->get()->pluck('constellation')->flatten()->toArray();
-        } else {
-            return [];
-        }
-    }
-
     public function getConstellationsProperty()
     {
-        return \App\Models\Constellation::pluck('name', 'id');
+        return \App\Models\Constellation::pluck('id', 'name')->toArray();
         if ($this->_targets) {
             dd($this->_targets);
             return $this->_targets->groupBy('constellation')->get()->pluck('constellation')->flatten()->toArray();
         } else {
             return [];
         }
-        // return Planet::pluck('name');
     }
 
     public function getTypes()
@@ -189,10 +167,9 @@ class NearbyTable extends LivewireDatatable
         return $this->_types;
     }
 
-    // TODO: Filter on constellation
     // TODO: Filter on type
     // TODO: Sort on preferred magnification
     // TODO: Sort on rise / set / transit / best time
     // TODO: Sort on max altitude / max elevation
-    // TODO: Sorting of contrast reserve is ok
+    // TODO: Sorting of contrast reserve -> set max and min?
 }
