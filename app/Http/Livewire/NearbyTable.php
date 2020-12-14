@@ -38,12 +38,8 @@ class NearbyTable extends LivewireDatatable
 
     public function builder()
     {
-        $targetname = \App\Models\TargetName::where('slug', $this->slug)->with('target')->first();
-        // dd($targetname->target->ra);
-        // $target = \App\Models\Target::where('id', $this->targetid)->first();
-        $this->_targets               = $targetname->target->getNearbyObjects($this->zoom);
-        // TODO: Should we move this to targetnames to be able to search for names?
-        // dd($this->_targets->get());
+        $targetname          = \App\Models\TargetName::where('slug', $this->slug)->with('target')->first();
+        $this->_targets      = $targetname->target->getNearbyObjects($this->zoom);
         // TODO: The following line breaks the table: Only the first item is shown
         //$this->_constellations = $this->_targets->groupBy('constellation')->get()->pluck('constellation')->flatten()->toArray();
 
@@ -53,11 +49,10 @@ class NearbyTable extends LivewireDatatable
     public function columns()
     {
         $toReturn = [
-            Column::name('target_name')->callback(['target_name', 'id'], function ($target_name, $id) {
+            Column::name('name')->callback(['name', 'id'], function ($name, $id) {
                 $this->_currentTarget = \App\Models\Target::where('id', $id)->first();
-                return '<a href="/target/' . $this->_currentTarget->slug . '">' . $this->_currentTarget->target_name . '</a>';
-            })->label(_i('Name'))
-            ->searchable('target_name'),
+                return '<a href="/target/' . $this->_currentTarget->slug . '">' . $name . '</a>';
+            })->label(_i('Name'))->searchable(),
             Column::name('constellation.name')->label(_i('Constellation'))
                 ->filterable($this->constellations),
             NumberColumn::name('mag')->label(_i('Mag'))->filterable(),
@@ -68,6 +63,8 @@ class NearbyTable extends LivewireDatatable
             })
             ->label(_i('Type'))->filterable($this->getTypes()),
             Column::name('diam1')->callback(['id', 'pa'], function ($id, $pa) {
+                $this->_currentTarget = \App\Models\Target::where('id', $id)->first();
+
                 if ($pa != 999) {
                     return $this->_currentTarget->size() . '/' . $this->_currentTarget->pa . '°';
                 } else {
@@ -192,7 +189,6 @@ class NearbyTable extends LivewireDatatable
         return $this->_types;
     }
 
-    // TODO: Search for the name of the object
     // TODO: Filter on constellation
     // TODO: Filter on type
     // TODO: Sort on preferred magnification

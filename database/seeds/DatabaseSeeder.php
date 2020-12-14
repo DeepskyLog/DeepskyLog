@@ -13,6 +13,7 @@
  */
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\AddTargetNameSeeder;
 
 /**
  * Seeder for the database.
@@ -38,7 +39,7 @@ class DatabaseSeeder extends Seeder
                 MessagesTableSeeder::class, InstrumentTableSeeder::class,
                 LocationTableSeeder::class, TargetTableSeeder::class,
                 TargetNameTableSeeder::class, TargetPartOfTableSeeder::class,
-                MoonSeeder::class, SBObjSeeder::class, ]
+                MoonSeeder::class, SBObjSeeder::class, AddTargetNameSeeder::class, ]
         );
     }
 }
