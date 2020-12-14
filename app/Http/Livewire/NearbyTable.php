@@ -44,7 +44,8 @@ class NearbyTable extends LivewireDatatable
         $this->_targets               = $targetname->target->getNearbyObjects($this->zoom);
         // TODO: Should we move this to targetnames to be able to search for names?
         // dd($this->_targets->get());
-        $this->_constellations = $this->_targets->groupBy('constellation')->get()->pluck('constellation')->flatten()->toArray();
+        // TODO: The following line breaks the table: Only the first item is shown
+        //$this->_constellations = $this->_targets->groupBy('constellation')->get()->pluck('constellation')->flatten()->toArray();
 
         return $this->_targets;
     }
@@ -197,6 +198,5 @@ class NearbyTable extends LivewireDatatable
     // TODO: Sort on preferred magnification
     // TODO: Sort on rise / set / transit / best time
     // TODO: Sort on max altitude / max elevation
-    // TODO: Contrast reserve is not correct -> Berk 59 is -4.19 and should be 0.15
-        // TODO:    Test to see if the sorting of contrast reserve is ok
+    // TODO: Sorting of contrast reserve is ok
 }
