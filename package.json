@@ -27,7 +27,7 @@
         "autoprefixer": "^10.1.0",
         "axios": "^0.21.0",
         "bootstrap": "^4.5.3",
-        "bootstrap-icons": "^1.1.0",
+        "bootstrap-icons": "^1.2.1",
         "camelcase": "^6.2.0",
         "choices.js": "^9.0.1",
         "fibers": "^5.0",
@@ -39,6 +39,6 @@
         "lity": "^2.4.1",
         "pdfmake": "^0.1.68",
         "popper.js": "^1.16.1",
-        "tailwindcss": "^2.0.1"
+        "tailwindcss": "^2.0.2"
     }
 }
