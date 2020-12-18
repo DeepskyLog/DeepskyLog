@@ -96,7 +96,7 @@ class Target extends Model
      */
     public function getSlugAttribute(): string
     {
-        return \App\Models\TargetName::where('altname', $this->target_name)->first()->slug;
+        return \App\Models\TargetName::where('altname', $this->getTranslation('target_name', 'en'))->first()->slug;
     }
 
     /**

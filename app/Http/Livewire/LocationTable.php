@@ -8,6 +8,7 @@ use Mediconesystems\LivewireDatatables\Column;
 use Mediconesystems\LivewireDatatables\NumberColumn;
 use deepskylog\LaravelGettext\Facades\LaravelGettext;
 use Mediconesystems\LivewireDatatables\BooleanColumn;
+use deepskylog\AstronomyLibrary\Coordinates\Coordinate;
 use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
 
 class LocationTable extends LivewireDatatable
@@ -58,6 +59,20 @@ class LocationTable extends LivewireDatatable
             Column::name('country')->callback(['country'], function ($country) {
                 return \Countries::getOne($country, LaravelGettext::getLocaleLanguage());
             })->label(_i('Country'))
+        );
+
+        array_push(
+            $toReturn,
+            NumberColumn::name('longitude')->callback(['longitude'], function ($longitude) {
+                return (new Coordinate($longitude, -180, 180))->convertToShortDegrees();
+            })->label(_i('Longitude'))
+        );
+
+        array_push(
+            $toReturn,
+            NumberColumn::name('latitude')->callback(['latitude'], function ($latitude) {
+                return (new Coordinate($latitude, -90, 90))->convertToShortDegrees();
+            })->label(_i('Latitude'))
         );
 
         array_push(

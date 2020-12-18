@@ -23,7 +23,7 @@
         "webpack-cli": "^4.2.0"
     },
     "dependencies": {
-        "alpinejs": "^2.7.3",
+        "alpinejs": "^2.8.0",
         "autoprefixer": "^10.1.0",
         "axios": "^0.21.0",
         "bootstrap": "^4.5.3",

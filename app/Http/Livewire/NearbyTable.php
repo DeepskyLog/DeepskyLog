@@ -61,7 +61,7 @@ class NearbyTable extends LivewireDatatable
             ->callback(['type.type'], function ($type) {
                 return _i($type);
             })
-            ->label(_i('Type'))->filterable($this->getTypes()),
+            ->label(_i('Type'))->filterable($this->types),
             Column::name('diam1')->callback(['id', 'pa'], function ($id, $pa) {
                 $this->_currentTarget = \App\Models\Target::where('id', $id)->first();
 
@@ -70,7 +70,7 @@ class NearbyTable extends LivewireDatatable
                 } else {
                     return $this->_currentTarget->size();
                 }
-            })->sortBy('diam1')->label(_i('Size')),
+            })->sortBy('diam1*diam2')->label(_i('Size')),
             Column::name('ra')->callback(['ra'], function ($ra) {
                 return (new Coordinate($ra))->convertToHours();
             })->label(_i('RA')),
@@ -90,12 +90,12 @@ class NearbyTable extends LivewireDatatable
             );
             array_push(
                 $toReturn,
-                Column::name('SBObj')->callback(['SBObj', 'id'], function ($SBObj, $id) {
+                NumberColumn::name('SBObj')->callback(['SBObj', 'id'], function ($SBObj, $id) {
                     return '<span class="' . $this->_currentTarget->contrast_type
                        . '" data-toggle="tooltip" data-placement="bottom" title="'
                        . $this->_currentTarget->contrast_popup . '">' . $this->_currentTarget->contrast
                        . '</span>';
-                })->label(_i('Contrast Reserve'))
+                })->filterable()->sortBy('contrast')->label(_i('Contrast Reserve'))
             );
             array_push(
                 $toReturn,
@@ -153,23 +153,15 @@ class NearbyTable extends LivewireDatatable
     public function getConstellationsProperty()
     {
         return \App\Models\Constellation::pluck('id', 'name')->toArray();
-        if ($this->_targets) {
-            dd($this->_targets);
-            return $this->_targets->groupBy('constellation')->get()->pluck('constellation')->flatten()->toArray();
-        } else {
-            return [];
-        }
     }
 
-    public function getTypes()
+    public function getTypesProperty()
     {
-        // TODO: Implement
-        return $this->_types;
+        return \App\Models\TargetType::pluck('id', 'type')->toArray();
     }
 
-    // TODO: Filter on type
+    // TODO: Sorting of contrast reserve -> set max and min?
     // TODO: Sort on preferred magnification
     // TODO: Sort on rise / set / transit / best time
     // TODO: Sort on max altitude / max elevation
-    // TODO: Sorting of contrast reserve -> set max and min?
 }
