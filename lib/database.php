@@ -17,13 +17,14 @@ class Database {
 
         return $run;
     }
-    public function execSQL($sql) 
+    public function execSQL($sql)
     {
         if (!$this->databaseId) {
             echo "Database connection lost...";
             $this->newLogin();
         }
         $run = $this->mysql_query_encaps($sql);
+        return $run;
     }
     public function selectKeyValueArray($sql, $key, $value) {
         if (! $this->databaseId) {
