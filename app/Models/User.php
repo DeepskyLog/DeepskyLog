@@ -116,6 +116,16 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
+     * Users can have more sets.
+     *
+     * @return HasMany The eloquent relationship
+     */
+    public function sets()
+    {
+        return $this->hasMany('App\Models\Set', 'user_id');
+    }
+
+    /**
      * Number of eyepieces.
      *
      * @return int The number of eyepieces
