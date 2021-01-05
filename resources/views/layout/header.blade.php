@@ -18,11 +18,12 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            @include('layout.header.view')
-            @include('layout.header.search')
             @auth
-            @include('layout.header.add')
+            @include('layout.header.gear')
             @endauth
+            @include('layout.header.objects')
+            @include('layout.header.observations')
+            @include('layout.header.statistics')
             @admin('')
             @include('layout.header.admin')
             @endadmin

@@ -57,7 +57,7 @@ class NearbyTable extends LivewireDatatable
                 ->filterable($this->constellations),
             NumberColumn::name('mag')->label(_i('Mag'))->filterable(),
             NumberColumn::name('subr')->label(_i('SB'))->filterable(),
-            Column::name(_i('type.type'))
+            Column::name('type.type')
             ->callback(['type.type'], function ($type) {
                 return _i($type);
             })
