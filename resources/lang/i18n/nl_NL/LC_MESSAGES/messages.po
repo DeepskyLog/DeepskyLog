@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2021-01-05 14:04+0100\n"
-"PO-Revision-Date: 2021-01-05 14:06+0100\n"
+"POT-Creation-Date: 2021-01-06 15:12+0100\n"
+"PO-Revision-Date: 2021-01-06 15:14+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: nl_NL\n"
@@ -1140,6 +1140,108 @@ msgstr "Nieuw gesprek starten"
 #: ../storage/framework/messages/158d356aa1d32f3e10d4793f0f0163213975b184.php.php:64
 msgid "Mark all messages read"
 msgstr "Alle berichten als gelezen markeren"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:2
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:7
+msgid "Sketch and observation forms"
+msgstr "Schets- en observatieformulieren"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:22
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:68
+msgid "Compact sketch form"
+msgstr "Compact schetsformulier"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:25
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:70
+msgid ""
+"A compact sketch form that folds in half so you can do two sketches on one "
+"piece of paper."
+msgstr ""
+"Een compact schetsformulier dat je dubbel kan vouwen zodat je twee schetsen "
+"op een vel papier kunt maken."
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:28
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:73
+msgid "This format allows you to sketch on top of a book like your PSA."
+msgstr "Het formaat past gemakkelijk op een boek zoals je PSA."
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:37
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:86
+msgid "Big sketch form"
+msgstr "Groot schetsformulier"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:40
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:88
+msgid ""
+"Utilizes the maximum amount of drawing space for your sketch. With a 17cm "
+"sketch circle and simplified details area."
+msgstr ""
+"Gebruikt de maximale grootte voor je schets. Bevat een 17cm schetscirkel en "
+"een vereenvoudigd details formulier."
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:49
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:101
+msgid "Observation log form"
+msgstr "Observatie logformulier"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:52
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:103
+msgid ""
+"If you want to jot down multiple brief observation notes on one piece of "
+"paper."
+msgstr ""
+"Voor als je snelle aantekeningen over meerdere objecten op papier wil zetten."
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:82
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:97
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:112
+msgid "Download"
+msgstr "Download"
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:2
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:7
+#: ../storage/framework/messages/72603e96c3a39c55d0cd146a90fd9a605e8fa1ad.php.php:8
+msgid "Image Catalogs"
+msgstr "Beeldencatalogi"
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:21
+msgid ""
+"DeepskyLog is a very powerful tool, where you can create personalized "
+"atlases and image catalogs."
+msgstr ""
+"DeepskyLog is een zeer krachtige applicatie, die het mogelijk maakt om "
+"gepersonaliseerde atlassen en beeldencatalogi aan te maken."
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:30
+msgid ""
+"However, making your own image catalog is time consuming. To help you, we "
+"created some interesting image catalogs and made them available for download."
+msgstr ""
+"Het kan echter een hele tijd duren voor een beelden cataloog is aangemaakt. "
+"Om de gebruikers het leven eenvoudiger te maken, hebben we enkele "
+"interessante catalogi aangemaakt en beschikbaar gemaakt."
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:33
+msgid ""
+"They are very useful for telescopes with a goto system, where the goto "
+"system guides you to the neighbourhood of the object. Using the images, it "
+"is very easy to find the final object."
+msgstr ""
+"De catalogi zijn zeer nuttig voor goto-telescopen, waar het goto systeem je "
+"al in de buurt van het object brengt. Met behulp van de beeldjes, is het "
+"eenvoudig om het object te vinden."
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:52
+msgid "Catalogs sorted by name"
+msgstr "Catalogi gesorteerd op naam"
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:59
+msgid "The Abell Planetary Nebula Catalog"
+msgstr "De Abell Planetaire Nevel cataloog"
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:71
+msgid "Catalogs sorted by constellation"
+msgstr "Catalogi gesorteerd op sterrenbeeld"
 
 #: ../storage/framework/messages/2597c5df1322b26a9408e0b01d7e19be582b0f5b.php.php:15
 #: ../storage/framework/messages/3a5a1b71485421179844186788b599d15946578c.php.php:3
@@ -2325,11 +2427,7 @@ msgstr ""
 msgid "Downloads"
 msgstr "Downloads"
 
-#: ../storage/framework/messages/72603e96c3a39c55d0cd146a90fd9a605e8fa1ad.php.php:8
-msgid "Image Catalogs"
-msgstr "Beeldencatalogi"
-
-#: ../storage/framework/messages/72603e96c3a39c55d0cd146a90fd9a605e8fa1ad.php.php:10
+#: ../storage/framework/messages/72603e96c3a39c55d0cd146a90fd9a605e8fa1ad.php.php:9
 msgid "Forms"
 msgstr "Formulieren"
 
@@ -3561,9 +3659,6 @@ msgstr "Waargenomen op de volgende locaties"
 #~ msgid "Select or drag files"
 #~ msgstr "Selecteer of sleep bestand"
 
-#~ msgid "Download"
-#~ msgstr "Download"
-
 #~ msgid "Remove"
 #~ msgstr "Verwijder"
 
@@ -4666,41 +4761,6 @@ msgstr "Waargenomen op de volgende locaties"
 
 #~ msgid "Example page for Abell 84"
 #~ msgstr "Voorbeeld pagina voor Abell 84"
-
-#~ msgid "Sketch and observation forms"
-#~ msgstr "Schets- en observatieformulieren"
-
-#~ msgid "Compact sketch form"
-#~ msgstr "Compact schetsformulier"
-
-#~ msgid ""
-#~ "A compact sketch form that folds in half so you can do two sketches on "
-#~ "one piece of paper. <br/>This format allows you to sketch on top of a "
-#~ "book like your PSA."
-#~ msgstr ""
-#~ "Een compact schetsformulier dat je dubbel kan vouwen zodat je twee "
-#~ "schetsen op een vel papier kunt maken. <br/>Het formaat past gemakkelijk "
-#~ "op een boek zoals je PSA."
-
-#~ msgid "Big sketch form"
-#~ msgstr "Groot schetsformulier"
-
-#~ msgid ""
-#~ "Utilizes the maximum amount of drawing space for your sketch. With a 17cm "
-#~ "sketch circle and simplified details area."
-#~ msgstr ""
-#~ "Gebruikt de maximale grootte voor je schets. Bevat een 17cm schetscirkel "
-#~ "en een vereenvoudigd details formulier."
-
-#~ msgid "Observation log form"
-#~ msgstr "Observatie logformulier"
-
-#~ msgid ""
-#~ "If you want to jot down multiple brief observation notes on one piece of "
-#~ "paper."
-#~ msgstr ""
-#~ "Voor als je snelle aantekeningen over meerdere objecten op papier wil "
-#~ "zetten."
 
 #~ msgid "Focal length (mm)"
 #~ msgstr "Brandpuntsafstand (mm)"
@@ -6390,40 +6450,6 @@ msgstr "Waargenomen op de volgende locaties"
 
 #~ msgid "Search object"
 #~ msgstr "Zoek object"
-
-#~ msgid ""
-#~ "DeepskyLog is a very powerful tool, where you can create personalized "
-#~ "atlases and image catalogs."
-#~ msgstr ""
-#~ "DeepskyLog is een zeer krachtige applicatie, die het mogelijk maakt om "
-#~ "gepersonaliseerde atlassen en beeldencatalogi aan te maken."
-
-#~ msgid ""
-#~ "However, making your own image catalog is time consuming. To help you, we "
-#~ "created some interesting image catalogs and made them available for "
-#~ "download."
-#~ msgstr ""
-#~ "Het kan echter een hele tijd duren voor een beelden cataloog is "
-#~ "aangemaakt. Om de gebruikers het leven eenvoudiger te maken, hebben we "
-#~ "enkele interessante catalogi aangemaakt en beschikbaar gemaakt."
-
-#~ msgid ""
-#~ "They are very useful for telescopes with a goto system, where the goto "
-#~ "system guides you to the neighbourhood of the object. Using the images, "
-#~ "it is very easy to find the final object."
-#~ msgstr ""
-#~ "De catalogi zijn zeer nuttig voor goto-telescopen, waar het goto systeem "
-#~ "je al in de buurt van het object brengt. Met behulp van de beeldjes, is "
-#~ "het eenvoudig om het object te vinden."
-
-#~ msgid "Catalogs sorted by name"
-#~ msgstr "Catalogi gesorteerd op naam"
-
-#~ msgid "The Abell Planetary Nebula Catalog"
-#~ msgstr "De Abell Planetaire Nevel cataloog"
-
-#~ msgid "Catalogs sorted by constellation"
-#~ msgstr "Catalogi gesorteerd op sterrenbeeld"
 
 #~ msgid "Active list"
 #~ msgstr "Actieve lijst"

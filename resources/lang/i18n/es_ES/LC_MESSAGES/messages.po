@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2021-01-05 14:02+0100\n"
-"PO-Revision-Date: 2021-01-05 14:04+0100\n"
+"POT-Creation-Date: 2021-01-06 15:11+0100\n"
+"PO-Revision-Date: 2021-01-06 15:12+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: es_ES\n"
@@ -1144,6 +1144,109 @@ msgstr "Iniciar nueva conversación"
 #: ../storage/framework/messages/158d356aa1d32f3e10d4793f0f0163213975b184.php.php:64
 msgid "Mark all messages read"
 msgstr "Marcar todos los mensajes leídos"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:2
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:7
+msgid "Sketch and observation forms"
+msgstr "Formas del bosquejo y de la observación"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:22
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:68
+msgid "Compact sketch form"
+msgstr "Forma compacta del bosquejo"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:25
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:70
+msgid ""
+"A compact sketch form that folds in half so you can do two sketches on one "
+"piece of paper."
+msgstr ""
+"Una forma de boceto compacto que se pliega por la mitad para que pueda hacer "
+"dos bocetos en una sola pieza de papel."
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:28
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:73
+msgid "This format allows you to sketch on top of a book like your PSA."
+msgstr ""
+"Este formato le permite esbozar en la parte superior de un libro como su PSA."
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:37
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:86
+msgid "Big sketch form"
+msgstr "Forma del bosquejo grande"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:40
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:88
+msgid ""
+"Utilizes the maximum amount of drawing space for your sketch. With a 17cm "
+"sketch circle and simplified details area."
+msgstr ""
+"Utiliza la cantidad máxima de espacio de dibujo para su boceto. Con un "
+"círculo del bosquejo del 17cm y un área simplificada de los detalles."
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:49
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:101
+msgid "Observation log form"
+msgstr "Formulario de registro de observación"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:52
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:103
+msgid ""
+"If you want to jot down multiple brief observation notes on one piece of "
+"paper."
+msgstr ""
+"Si desea anotar varias notas de observación breves en una hoja de papel."
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:82
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:97
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:112
+msgid "Download"
+msgstr "Descargar"
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:2
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:7
+#: ../storage/framework/messages/72603e96c3a39c55d0cd146a90fd9a605e8fa1ad.php.php:8
+msgid "Image Catalogs"
+msgstr "Catálogos de imágenes"
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:21
+msgid ""
+"DeepskyLog is a very powerful tool, where you can create personalized "
+"atlases and image catalogs."
+msgstr ""
+"DeepskyLog es una herramienta muy potente, donde se pueden crear Atlas "
+"personalizados y catálogos de imágenes."
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:30
+msgid ""
+"However, making your own image catalog is time consuming. To help you, we "
+"created some interesting image catalogs and made them available for download."
+msgstr ""
+"Sin embargo, hacer su propio catálogo de imágenes es una pérdida de tiempo. "
+"Para ayudarle, hemos creado algunos catálogos de imágenes interesantes y los "
+"hemos hecho disponibles para su descarga."
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:33
+msgid ""
+"They are very useful for telescopes with a goto system, where the goto "
+"system guides you to the neighbourhood of the object. Using the images, it "
+"is very easy to find the final object."
+msgstr ""
+"Son muy útiles para telescopios con un sistema Goto, donde el sistema Goto "
+"le guía hacia el vecindario del objeto. Utilizando las imágenes, es muy "
+"fácil encontrar el objeto final."
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:52
+msgid "Catalogs sorted by name"
+msgstr "Catálogos ordenados por nombre"
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:59
+msgid "The Abell Planetary Nebula Catalog"
+msgstr "El catálogo de la nebulosa planetaria Abell"
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:71
+msgid "Catalogs sorted by constellation"
+msgstr "Catálogos ordenados por constelación"
 
 #: ../storage/framework/messages/2597c5df1322b26a9408e0b01d7e19be582b0f5b.php.php:15
 #: ../storage/framework/messages/3a5a1b71485421179844186788b599d15946578c.php.php:3
@@ -2327,11 +2430,7 @@ msgstr ""
 msgid "Downloads"
 msgstr "Descargas"
 
-#: ../storage/framework/messages/72603e96c3a39c55d0cd146a90fd9a605e8fa1ad.php.php:8
-msgid "Image Catalogs"
-msgstr "Catálogos de imágenes"
-
-#: ../storage/framework/messages/72603e96c3a39c55d0cd146a90fd9a605e8fa1ad.php.php:10
+#: ../storage/framework/messages/72603e96c3a39c55d0cd146a90fd9a605e8fa1ad.php.php:9
 msgid "Forms"
 msgstr "Formularios"
 
@@ -4643,43 +4742,6 @@ msgstr "Observado en las siguientes ubicaciones"
 #~ msgid "Example page for Abell 84"
 #~ msgstr "Página de ejemplo para Abell 84"
 
-#~ msgid "Sketch and observation forms"
-#~ msgstr "Formas del bosquejo y de la observación"
-
-#~ msgid "Compact sketch form"
-#~ msgstr "Forma compacta del bosquejo"
-
-#~ msgid ""
-#~ "A compact sketch form that folds in half so you can do two sketches on "
-#~ "one piece of paper. <br/>This format allows you to sketch on top of a "
-#~ "book like your PSA."
-#~ msgstr ""
-#~ "Una forma de boceto compacto que se pliega por la mitad para que pueda "
-#~ "hacer dos bocetos en una sola pieza de papel. <br/> Este formato le "
-#~ "permite esbozar en la parte superior de un libro como su PSA."
-
-#~ msgid "Big sketch form"
-#~ msgstr "Forma del bosquejo grande"
-
-#~ msgid ""
-#~ "Utilizes the maximum amount of drawing space for your sketch. With a 17cm "
-#~ "sketch circle and simplified details area."
-#~ msgstr ""
-#~ "Utiliza la cantidad máxima de espacio de dibujo para su boceto. Con un "
-#~ "círculo del bosquejo del 17cm y un área simplificada de los detalles."
-
-#~ msgid "Observation log form"
-#~ msgstr "Formulario de registro de observación"
-
-#~ msgid ""
-#~ "If you want to jot down multiple brief observation notes on one piece of "
-#~ "paper."
-#~ msgstr ""
-#~ "Si desea anotar varias notas de observación breves en una hoja de papel."
-
-#~ msgid "Download"
-#~ msgstr "Descargar"
-
 #~ msgid "Focal length (mm)"
 #~ msgstr "Longitud focal (milímetro)"
 
@@ -6390,40 +6452,6 @@ msgstr "Observado en las siguientes ubicaciones"
 
 #~ msgid "Search object"
 #~ msgstr "Buscar objeto"
-
-#~ msgid ""
-#~ "DeepskyLog is a very powerful tool, where you can create personalized "
-#~ "atlases and image catalogs."
-#~ msgstr ""
-#~ "DeepskyLog es una herramienta muy potente, donde se pueden crear Atlas "
-#~ "personalizados y catálogos de imágenes."
-
-#~ msgid ""
-#~ "However, making your own image catalog is time consuming. To help you, we "
-#~ "created some interesting image catalogs and made them available for "
-#~ "download."
-#~ msgstr ""
-#~ "Sin embargo, hacer su propio catálogo de imágenes es una pérdida de "
-#~ "tiempo. Para ayudarle, hemos creado algunos catálogos de imágenes "
-#~ "interesantes y los hemos hecho disponibles para su descarga."
-
-#~ msgid ""
-#~ "They are very useful for telescopes with a goto system, where the goto "
-#~ "system guides you to the neighbourhood of the object. Using the images, "
-#~ "it is very easy to find the final object."
-#~ msgstr ""
-#~ "Son muy útiles para telescopios con un sistema Goto, donde el sistema "
-#~ "Goto le guía hacia el vecindario del objeto. Utilizando las imágenes, es "
-#~ "muy fácil encontrar el objeto final."
-
-#~ msgid "Catalogs sorted by name"
-#~ msgstr "Catálogos ordenados por nombre"
-
-#~ msgid "The Abell Planetary Nebula Catalog"
-#~ msgstr "El catálogo de la nebulosa planetaria Abell"
-
-#~ msgid "Catalogs sorted by constellation"
-#~ msgstr "Catálogos ordenados por constelación"
 
 #~ msgid "Active list"
 #~ msgstr "Lista activa"

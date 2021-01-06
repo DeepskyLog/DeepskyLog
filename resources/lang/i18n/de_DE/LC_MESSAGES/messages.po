@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2021-01-05 13:58+0100\n"
-"PO-Revision-Date: 2021-01-05 13:59+0100\n"
+"POT-Creation-Date: 2021-01-06 15:11+0100\n"
+"PO-Revision-Date: 2021-01-06 15:11+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: de_DE\n"
@@ -1141,6 +1141,109 @@ msgstr "Neue Unterhaltung starten"
 #: ../storage/framework/messages/158d356aa1d32f3e10d4793f0f0163213975b184.php.php:64
 msgid "Mark all messages read"
 msgstr "Alle als gelesen markieren"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:2
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:7
+msgid "Sketch and observation forms"
+msgstr "Skizzen und Beobachtungs Formen"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:22
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:68
+msgid "Compact sketch form"
+msgstr "Kompakte Skizzen Form"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:25
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:70
+msgid ""
+"A compact sketch form that folds in half so you can do two sketches on one "
+"piece of paper."
+msgstr ""
+"Eine kompakte Skizzen Form, die in der Hälfte klappt, so dass man zwei "
+"Skizzen auf einem Blatt Papier machen kann."
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:28
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:73
+msgid "This format allows you to sketch on top of a book like your PSA."
+msgstr "Mit diesem Format können Sie auf einem Buch wie Ihrem PSA skizzieren."
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:37
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:86
+msgid "Big sketch form"
+msgstr "Große Skizzen Form"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:40
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:88
+msgid ""
+"Utilizes the maximum amount of drawing space for your sketch. With a 17cm "
+"sketch circle and simplified details area."
+msgstr ""
+"Nutzt die maximale Anzahl an Zeichnungsräumen für ihre Skizze. Mit einem "
+"17cm-Skizzen Kreis und vereinfachter Detail Fläche."
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:49
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:101
+msgid "Observation log form"
+msgstr "Logbuch für Beobachtungen"
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:52
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:103
+msgid ""
+"If you want to jot down multiple brief observation notes on one piece of "
+"paper."
+msgstr ""
+"Wenn Sie mehrere kurze Beobachtungs Notizen auf einem Blatt Papier herunter "
+"schreiben wollen."
+
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:82
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:97
+#: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:112
+msgid "Download"
+msgstr "Download"
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:2
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:7
+#: ../storage/framework/messages/72603e96c3a39c55d0cd146a90fd9a605e8fa1ad.php.php:8
+msgid "Image Catalogs"
+msgstr "Bildbände"
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:21
+msgid ""
+"DeepskyLog is a very powerful tool, where you can create personalized "
+"atlases and image catalogs."
+msgstr ""
+"DeepskyLog ist ein mächtiges Werkzeug. Sie können u.a. personalisierte "
+"Atlanten und Bildbände erzeugen."
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:30
+msgid ""
+"However, making your own image catalog is time consuming. To help you, we "
+"created some interesting image catalogs and made them available for download."
+msgstr ""
+"Das Erstellen Ihres eigenen Bildbandes ist zeitaufwändig. Um Ihnen die "
+"Arbeit zu erleichtern bieten wir einige interessante Bildbände bereits zum "
+"Download an."
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:33
+msgid ""
+"They are very useful for telescopes with a goto system, where the goto "
+"system guides you to the neighbourhood of the object. Using the images, it "
+"is very easy to find the final object."
+msgstr ""
+"Diese Bildbände sind sehr nützlich für Teleskope mit Goto-System, bei denen "
+"Sie durch das Goto-System in die Nähe eines Objektes geführt werden. Mittels "
+"des Bilder ist es so einfach möglich das gesuchte Objekt zu finden."
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:52
+msgid "Catalogs sorted by name"
+msgstr "Kataloge sortiert nach Namen"
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:59
+msgid "The Abell Planetary Nebula Catalog"
+msgstr "Der Abell planetarische Nebel Katalog"
+
+#: ../storage/framework/messages/249293867bb4d62a9149f3bc9cd65c3cf6c981d8.php.php:71
+msgid "Catalogs sorted by constellation"
+msgstr "Kataloge sortiert nach Sternbildern"
 
 #: ../storage/framework/messages/2597c5df1322b26a9408e0b01d7e19be582b0f5b.php.php:15
 #: ../storage/framework/messages/3a5a1b71485421179844186788b599d15946578c.php.php:3
@@ -2322,11 +2425,7 @@ msgstr ""
 msgid "Downloads"
 msgstr "Downloads"
 
-#: ../storage/framework/messages/72603e96c3a39c55d0cd146a90fd9a605e8fa1ad.php.php:8
-msgid "Image Catalogs"
-msgstr "Bildbände"
-
-#: ../storage/framework/messages/72603e96c3a39c55d0cd146a90fd9a605e8fa1ad.php.php:10
+#: ../storage/framework/messages/72603e96c3a39c55d0cd146a90fd9a605e8fa1ad.php.php:9
 msgid "Forms"
 msgstr "Formulieren"
 
@@ -3499,6 +3598,25 @@ msgstr "Zuletzt verwendet auf"
 msgid "Observed in the following locations"
 msgstr "Beobachtet an folgenden Orten"
 
+#~ msgid ""
+#~ "A compact sketch form that folds in half so you can do two sketches on "
+#~ "one piece of paper.\n"
+#~ "                    This format allows you to sketch on top of a book "
+#~ "like your PSA."
+#~ msgstr ""
+#~ "Eine kompakte Skizzen Form, die in der Hälfte klappt, so dass man zwei "
+#~ "Skizzen auf einem Blatt Papier machen kann.\n"
+#~ "                     Dieses Format ermöglicht es Ihnen, auf einem Buch "
+#~ "wie Ihrem PSA zu skizzieren."
+
+#~ msgid ""
+#~ "Utilizes the maximum amount of drawing space for your sketch.\n"
+#~ "                    With a 17cm sketch circle and simplified details area."
+#~ msgstr ""
+#~ "Nutzt die maximale Anzahl an Zeichnungsräumen für ihre Skizze.\n"
+#~ "                    Mit einem 17cm-Skizzen Kreis und vereinfachter Detail "
+#~ "Fläche."
+
 #, fuzzy
 #~| msgid "Filter type"
 #~ msgid "type.type"
@@ -4648,44 +4766,6 @@ msgstr "Beobachtet an folgenden Orten"
 
 #~ msgid "Example page for Abell 84"
 #~ msgstr "Beispielseite für Abell 84"
-
-#~ msgid "Sketch and observation forms"
-#~ msgstr "Skizzen und Beobachtungs Formen"
-
-#~ msgid "Compact sketch form"
-#~ msgstr "Kompakte Skizzen Form"
-
-#~ msgid ""
-#~ "A compact sketch form that folds in half so you can do two sketches on "
-#~ "one piece of paper. <br/>This format allows you to sketch on top of a "
-#~ "book like your PSA."
-#~ msgstr ""
-#~ "Eine kompakte Skizzen Form, die in der Hälfte klappt, so dass man zwei "
-#~ "Skizzen auf einem Blatt Papier machen kann. <br/>Dieses Format ermöglicht "
-#~ "es Ihnen, auf einem Buch wie Ihrem PSA zu skizzieren."
-
-#~ msgid "Big sketch form"
-#~ msgstr "Große Skizzen Form"
-
-#~ msgid ""
-#~ "Utilizes the maximum amount of drawing space for your sketch. With a 17cm "
-#~ "sketch circle and simplified details area."
-#~ msgstr ""
-#~ "Nutzt die maximale Anzahl an Zeichnungsräumen für ihre Skizze. Mit einem "
-#~ "17cm-Skizzen Kreis und vereinfachter Detail Fläche."
-
-#~ msgid "Observation log form"
-#~ msgstr "Logbuch für Beobachtungen"
-
-#~ msgid ""
-#~ "If you want to jot down multiple brief observation notes on one piece of "
-#~ "paper."
-#~ msgstr ""
-#~ "Wenn Sie mehrere kurze Beobachtungs Notizen auf einem Blatt Papier "
-#~ "herunter schreiben wollen."
-
-#~ msgid "Download"
-#~ msgstr "Download"
 
 #~ msgid "Focal length (mm)"
 #~ msgstr "Brennweite (mm)"
@@ -6407,41 +6487,6 @@ msgstr "Beobachtet an folgenden Orten"
 
 #~ msgid "Search object"
 #~ msgstr "Such Objekt"
-
-#~ msgid ""
-#~ "DeepskyLog is a very powerful tool, where you can create personalized "
-#~ "atlases and image catalogs."
-#~ msgstr ""
-#~ "DeepskyLog ist ein mächtiges Werkzeug. Sie können u.a. personalisierte "
-#~ "Atlanten und Bildbände erzeugen."
-
-#~ msgid ""
-#~ "However, making your own image catalog is time consuming. To help you, we "
-#~ "created some interesting image catalogs and made them available for "
-#~ "download."
-#~ msgstr ""
-#~ "Das Erstellen Ihres eigenen Bildbandes ist zeitaufwändig. Um Ihnen die "
-#~ "Arbeit zu erleichtern bieten wir einige interessante Bildbände bereits "
-#~ "zum Download an."
-
-#~ msgid ""
-#~ "They are very useful for telescopes with a goto system, where the goto "
-#~ "system guides you to the neighbourhood of the object. Using the images, "
-#~ "it is very easy to find the final object."
-#~ msgstr ""
-#~ "Diese Bildbände sind sehr nützlich für Teleskope mit Goto-System, bei "
-#~ "denen Sie durch das Goto-System in die Nähe eines Objektes geführt "
-#~ "werden. Mittels des Bilder ist es so einfach möglich das gesuchte Objekt "
-#~ "zu finden."
-
-#~ msgid "Catalogs sorted by name"
-#~ msgstr "Kataloge sortiert nach Namen"
-
-#~ msgid "The Abell Planetary Nebula Catalog"
-#~ msgstr "Der Abell planetarische Nebel Katalog"
-
-#~ msgid "Catalogs sorted by constellation"
-#~ msgstr "Kataloge sortiert nach Sternbildern"
 
 #~ msgid "Active list"
 #~ msgstr "Aktive Liste"

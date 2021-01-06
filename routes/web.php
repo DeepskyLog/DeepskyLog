@@ -211,6 +211,14 @@ Route::get('/sponsors', function () {
     return view('layout.sponsors');
 });
 
+Route::get('/downloads/imageCatalogs', function () {
+    return view('layout.imageCatalogs');
+});
+
+Route::get('/downloads/forms', function () {
+    return view('layout.forms');
+});
+
 // Social log in
 Route::get('/login/github', [LoginController::class, 'redirectToGithub']);
 Route::get('/login/github/callback', [LoginController::class, 'handleGithubCallback']);
