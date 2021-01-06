@@ -15,7 +15,7 @@
         "cviebrock/eloquent-sluggable": "^8.0",
         "deepskylog/laravel-astronomy-library": "^4.0",
         "deepskylog/laravel-gettext": "^7.3",
-        "dompdf/dompdf": "^0.8.3",
+        "dompdf/dompdf": "^1.0",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^7.0",
         "janbarasek/php-moon-phase": "^2.0",
@@ -35,7 +35,7 @@
         "spatie/laravel-medialibrary-pro": "^1.0.0",
         "spatie/laravel-translatable": "^4.3",
         "spatie/pdf-to-image": "^2.0",
-        "stevebauman/location": "^5.2"
+        "stevebauman/location": "^6"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
