@@ -461,7 +461,7 @@ function instructions() {
 		if (array_key_exists ( 'number', $_POST ) && (! $_POST ['number']))
 			$_GET ['indexAction'] = "query_objects";
 		elseif (array_key_exists ( 'number', $_POST ) && (! ($_GET ['object'] = $objObject->getExactDsObject ( trim ( $objUtil->checkPostKey ( 'catalog' ) ) . ' ' . trim ( $objUtil->checkPostKey ( 'number' ) ), '', '' )))) {
-            $entryMessage .= sprintf(_("No corresponding object found for %s"), 
+            $entryMessage .= sprintf(_("No corresponding object found for %s"),
                 $objUtil->checkPostKey('catalog') . " " . $objUtil->checkPostKey('number'));
 			$_GET ['indexAction'] = "query_objects";
 		} else {
@@ -521,10 +521,10 @@ function instructions() {
 		$objList->ObjectDownInList ( $_GET ['ObjectDownInList'] );
 		unset ( $_SESSION ['QobjParams'] );
 		$entryMessage .= sprintf(
-            _("The object %s is moved up in the list %s"), 
-            $_GET['ObjectDownInList'], 
-            "<a href=\"" . $baseURL . 
-            "index.php?indexAction=listaction&amp;manage=manage\">" . 
+            _("The object %s is moved up in the list %s"),
+            $_GET['ObjectDownInList'],
+            "<a href=\"" . $baseURL .
+            "index.php?indexAction=listaction&amp;manage=manage\">" .
             $listname_ss . "</a>."
         );
 		unset($_GET ['ObjectDownInList']);
@@ -535,8 +535,8 @@ function instructions() {
 		$entryMessage .= sprintf(
             _("The object %s is moved down in the list %s"),
             $_GET['ObjectUpInList'],
-            "<a href=\"" . $baseURL . 
-            "index.php?indexAction=listaction&amp;manage=manage\">" . 
+            "<a href=\"" . $baseURL .
+            "index.php?indexAction=listaction&amp;manage=manage\">" .
             $listname_ss . "</a>."
         );
 		unset ( $_GET ['ObjectUpInList'] );
@@ -670,7 +670,7 @@ function instructions() {
 		$objList->addObjectToList ( $_GET ['addObjectToList'], $objUtil->checkGetKey ( 'showname', $_GET ['addObjectToList'] ) );
 
 		// Show a toast message.
-        $toastMessage = sprintf(_(" The object %s is added to the list %s"), 
+        $toastMessage = sprintf(_(" The object %s is added to the list %s"),
             $_GET['showname'], $listname_ss);
 		unset ( $_GET ['addObjectToList'] );
 	}
@@ -681,7 +681,7 @@ function instructions() {
 	}
 	if (array_key_exists ( 'removeObjectFromList', $_GET ) && $_GET ['removeObjectFromList'] && $myList) {
 		$objList->removeObjectFromList ( $_GET ['removeObjectFromList'] );
-        $toastMessage = sprintf(_(" The object %s is removed from the list %s"), 
+        $toastMessage = sprintf(_(" The object %s is removed from the list %s"),
             $_GET['removeObjectFromList'], $listname_ss);
 		unset ( $_GET ['removeObjectFromList'] );
 	}
@@ -790,7 +790,7 @@ function instructions() {
 			}
 			if ($_GET ['newaction'] == "ObjectSetCon")
 				$objObject->setDsoProperty ( $_GET ['object'], 'con', $_GET ['newnumber'] );
-			if ($_GET ['newaction'] == "SetType")
+			if ($_GET ['newaction'] == "ObjectSetType")
 				$objObject->setDsoProperty ( $_GET ['object'], 'type', $_GET ['newnumber'] );
 			if ($_GET ['newaction'] == "ObjectSetMag") {
 				$objObject->setDsoProperty ( $_GET ['object'], 'mag', $_GET ['newnumber'] );
