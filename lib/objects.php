@@ -17,8 +17,13 @@ class Objects
         ];
         $sql = implode('', $array);
         $objDatabase->execSQL($sql);
+        // Check if the combination objectname - altname does already exist.  If this is the case, don't add the combination a second time to the database.
         $newcatindex = ucwords(trim($catindex));
-        $objDatabase->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")))");
+        $objectnames = $objDatabase->selectSingleArray('SELECT * FROM objectnames WHERE objectname="' . $name . '" AND altname="' . $cat . ' ' . $newcatindex . '"', 'objectname');
+        //  print ($name . ' - ' . $cat . " " . $newcatindex);
+        if (count($objectnames) == 0) {
+            $objDatabase->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")))");
+        }
         $this->setDsObjectAtlasPages($name);
         $this->setDsObjectSBObj(($name));
     }
