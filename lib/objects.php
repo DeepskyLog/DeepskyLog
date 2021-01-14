@@ -20,7 +20,6 @@ class Objects
         // Check if the combination objectname - altname does already exist.  If this is the case, don't add the combination a second time to the database.
         $newcatindex = ucwords(trim($catindex));
         $objectnames = $objDatabase->selectSingleArray('SELECT * FROM objectnames WHERE objectname="' . $name . '" AND altname="' . $cat . ' ' . $newcatindex . '"', 'objectname');
-        //  print ($name . ' - ' . $cat . " " . $newcatindex);
         if (count($objectnames) == 0) {
             $objDatabase->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")))");
         }
@@ -1114,8 +1113,13 @@ class Objects
         $newcatindex = ucwords(trim($catindex));
         global $objDatabase;
         $objDatabase->execSQL("UPDATE objects SET name=\"$newname\" WHERE name = \"$name\"");
-        $objDatabase->execSQL("UPDATE objectnames SET catalog=\"$cat\", catindex=\"$newcatindex\", altname=TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")) WHERE objectname = \"$name\" AND altname = \"$name\"");
-        $objDatabase->execSQL("UPDATE objectnames SET objectname=\"$newname\" WHERE objectname = \"$name\"");
+
+        $objectnames = $objDatabase->selectSingleArray('SELECT * FROM objectnames WHERE objectname="' . $newname . '" AND altname="' . $newname . '"', 'objectname');
+        if (count($objectnames) == 0) {
+            $objDatabase->execSQL("UPDATE objectnames SET catalog=\"$cat\", catindex=\"$newcatindex\", altname=TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")) WHERE objectname = \"$name\" AND altname = \"$name\"");
+            $objDatabase->execSQL("UPDATE objectnames SET objectname=\"$newname\" WHERE objectname = \"$name\"");
+        }
+
         $objDatabase->execSQL("UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname = \"$name\"");
         $objDatabase->execSQL("UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname = \"$name\"");
         $objDatabase->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname = \"$name\"");
