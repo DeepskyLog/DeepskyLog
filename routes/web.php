@@ -219,6 +219,21 @@ Route::get('/downloads/forms', function () {
     return view('layout.forms');
 });
 
+// Sets
+// Route::get('/set/create/{eyepiece}', 'SetController@create')
+//     ->middleware('verified');
+
+// Route::get('/set/admin', 'SetController@indexAdmin')
+//     ->name('set.indexAdmin');
+
+Route::resource(
+    'set',
+    'SetController',
+    ['parameters' => ['set' => 'set']]
+)->middleware('verified');
+
+Route::get('/set/{set}', 'SetController@show')->name('set.show');
+
 // Social log in
 Route::get('/login/github', [LoginController::class, 'redirectToGithub']);
 Route::get('/login/github/callback', [LoginController::class, 'handleGithubCallback']);

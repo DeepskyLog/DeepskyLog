@@ -17,8 +17,7 @@
         @endif
     </div>
     <h4>
-        <!-- We have to check if admin is part of request, because we can not
-            add a variable to the view, because we are using YarJa dataTables. -->
+        <!-- We have to check if admin is part of request. -->
         @php if (strpos(Request::url(), 'admin') !== false) {
         echo _i("All eyepieces");
         } else {

@@ -10,6 +10,10 @@ class Set extends Model
 {
     use HasFactory;
 
+    protected $table = 'set';
+
+    protected $fillable = ['name', 'description', 'user_id'];
+
     /**
      * Adds the link to the observer.
      *
