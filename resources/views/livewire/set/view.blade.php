@@ -49,13 +49,30 @@
         </div>
 
         {{-- about the observer --}}
-        <div class="form-group">
-            <label for="description">{{ _i('Describe your equipment set') }}</label>
-            <textarea wire:model="description" required class="form-control @error('description') is-invalid @enderror"
-                rows="5" maxlength="500" name="description"></textarea>
-            <p class="text-center {{ strlen($description) >= 485 ? 'text-danger' : '' }}">
+        <div class="mb-4" wire:model.debounce.365ms="description.body">
+            <div wire:ignore>
+                <label class="block" for="description">
+                    {{ _i('Describe your equipment set') }}
+                </label>
+                <input id="body" value="" type="hidden" name="content">
+                <trix-editor class="trix-content" input="body"></trix-editor>
+            </div>
+            @error('description')
+            <p class="text-red-700 font-semibold mt-2">
+                {{$message}}
+            </p>
+            @enderror
+
+            @php
+            if ($description) {
+            $size = strlen(html_entity_decode(strip_tags($description['body'])));
+            } else {
+            $size = 0;
+            }
+            @endphp
+            <p class="text-center {{ $size >= 485 ? 'text-danger' : '' }}">
                 <small>
-                    {{ strlen($description) . '/500' }}
+                    {{ $size . '/500' }}
                 </small>
             </p>
         </div>
@@ -80,6 +97,10 @@
     </form>
     @endif
     <br /><br />
+    {{-- Use trix rich text editor for the description
+        - To show the formatted text: class="trix-content"
+        - Use trix for adding the about field for the observer
+        --}}
     {{-- If a new set is added, the set should appear in the table. The table should show the number of instruments, filters, ... --}}
     {{-- When a set is clicked, add the possibility to add and remove new Eyepieces, Instruments, ... and to change the name and description of the set.--}}
     {{-- Make it possible to delete a set --}}

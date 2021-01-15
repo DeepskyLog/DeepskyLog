@@ -18,6 +18,7 @@
         <livewire:scripts />
 
         <script type="text/javascript" src="{{ asset('/js/app.js') }}"></script>
+        <script src="{{ mix("js/trix.js") }}"></script>
     </head>
 
     <body>
@@ -59,6 +60,9 @@
             $("#menu-toggle").click(function(e) {
               e.preventDefault();
               $("#wrapper").toggleClass("toggled");
+            });
+            window.addEventListener("trix-file-accept", function(event) {
+                event.preventDefault()
             });
         </script>
 

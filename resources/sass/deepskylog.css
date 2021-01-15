@@ -617,3 +617,5 @@ a, a:visited, a:focus {
 [x-cloak] {
     display: none;
 }
+
+.trix-button-group--file-tools { display: none !important; }

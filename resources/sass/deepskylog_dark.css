@@ -552,3 +552,12 @@
     --tw-bg-opacity: 1;
     background-color: rgba(149, 150, 151, var(--tw-bg-opacity));
 }
+
+[data-theme="dark"] trix-toolbar .trix-button--icon::before {
+    background-color: grey;
+}
+
+[data-theme="dark"] trix-toolbar .trix-button--icon:disabled::before {
+    background-color: #505050;
+    opacity: 0.6;
+}

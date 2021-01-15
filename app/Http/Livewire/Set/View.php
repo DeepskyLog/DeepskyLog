@@ -14,7 +14,7 @@ class View extends Component
 
     protected $rules = [
         'name'        => 'required|max:100|min:4',
-        'description' => 'required|max:500|min:4',
+        'description' => 'required|max:500',
     ];
 
     public function newSet()
@@ -54,11 +54,13 @@ class View extends Component
             $set = \App\Models\Set::create(
                 [
                     'name'        => $this->name,
-                    'description' => $this->description,
+                    'description' => $this->description['body'],
                     'user_id'     => Auth::id(),
                 ]
             );
             session()->flash('message', _i('Equipment set %s created', $set->name));
+
+            $this->showAddSetField = false;
         }
     }
 

@@ -16,7 +16,7 @@ class CreateSetTable extends Migration
         Schema::create('set', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
-            $table->string('description', 500);
+            $table->string('description', 1000);
             $table->unsignedInteger('user_id');
 
             $table->timestamps();

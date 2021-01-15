@@ -548,3 +548,12 @@
     --tw-bg-opacity: 1;
     background-color: rgba(149, 150, 151, var(--tw-bg-opacity));
 }
+
+[data-theme="night"] trix-toolbar .trix-button--icon::before {
+    background-color: red;
+}
+
+[data-theme="night"] trix-toolbar .trix-button--icon:disabled::before {
+    background-color: #770000;
+    opacity: 0.6;
+}

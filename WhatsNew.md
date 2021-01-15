@@ -2,6 +2,7 @@
 
 ## Functionality
 
++ A rich text editor can be used for some fields, like the description of an equipment set, the observations, the description of an observing list, ...
 + New menu structure
 + Improved responsivity of DeepskyLog by not reloading the whole page every time.
 + Added planets, moon (craters, maria, ...), and sun to the list of objects. Comets don't have a separate module anymore, but are now part of the main DeepskyLog module.

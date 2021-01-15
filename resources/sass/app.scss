@@ -8,11 +8,8 @@
 @import 'variables';
 
 // Tailwind
-@import "tailwindcss/base";
-
-// @import "tailwindcss/components";
-
-@import "tailwindcss/utilities";
+// @import "tailwindcss/base";
+// @import "tailwindcss/utilities";
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
@@ -32,6 +29,9 @@
 // flatpickr
 @import "~flatpickr/dist/flatpickr.css";
 @import "~flatpickr/dist/themes/dark.css";
+
+// trix rich text editor
+@import "~trix/dist/trix.css";
 
 .navbar-laravel {
   background-color: #fff;
