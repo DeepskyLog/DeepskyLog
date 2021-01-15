@@ -61,6 +61,7 @@ class View extends Component
             session()->flash('message', _i('Equipment set %s created', $set->name));
 
             $this->showAddSetField = false;
+            $this->emit('refreshLivewireDatatable');
         }
     }
 
