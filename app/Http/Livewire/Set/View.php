@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Set;
 
+use App\Models\Set;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,6 +12,10 @@ class View extends Component
     public $showAddSetField = false;
     public $name;
     public $description;
+
+    protected $listeners = [
+        'delete'   => 'delete',
+    ];
 
     protected $rules = [
         'name'        => 'required|max:100|min:4',
@@ -36,6 +41,19 @@ class View extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
+    }
+
+    public function delete($id)
+    {
+        $set = Set::where('id', $id)->first();
+
+        $set->delete();
+        $this->emit('refreshLivewireDatatable');
+
+        session()->flash(
+            'message',
+            _i('Equipment set %s deleted', $set->name)
+        );
     }
 
     /**
