@@ -81,14 +81,15 @@
             </tr>
             @endif
 
-
             @if (!Auth::guest())
             @if(Auth::user()->stdlocation != null)
+            @if(!$target->isMoon())
             <tr>
                 <td colspan="12">
                     {!! $target->getAltitudeGraph() !!}
                 </td>
             </tr>
+            @endif
             @endif
             @endif
 
@@ -163,8 +164,18 @@
 
             @if (\App\Models\TargetPartOf::isPartOf($target) || \App\Models\TargetPartOf::contains($target))
             <tr>
+                @if ($target->isNonSolarSystem())
                 <td colspan="3"> {{ _i("(Contains)/Part of") }}</td>
                 <td colspan="9">{!! \App\Models\TargetPartOf::partOfContains($target) !!}</td>
+                @else
+                @if ($target->isMoon())
+                <td colspan="3"> {{ _i("Moon of") }}</td>
+                <td colspan="9">{!! \App\Models\TargetPartOf::planet($target) !!}</td>
+                @else
+                <td colspan="3"> {{ _i("Moons") }}</td>
+                <td colspan="9">{!! \App\Models\TargetPartOf::moons($target) !!}</td>
+                @endif
+                @endif
             </tr>
             @endif
 
@@ -234,6 +245,11 @@
                 </span>
             </td>
             </tr>
+            @if ($target->isSolarSystem())
+            <tr>
+                {!! $target->getOpposition() !!}
+            </tr>
+            @else
             <tr>
                 <td>{{ _i('Highest From') }}</td>
                 <td colspan="3">{{ $target->highest_from }}</td>
@@ -242,6 +258,7 @@
                 <td>{{ _i('Highest To') }}</td>
                 <td colspan="3">{{ $target->highest_to }}</td>
             </tr>
+            @endif
             @endif
             @endif
             @endif
@@ -293,7 +310,6 @@
         <hr />
     </form>
 </div>
-
 @push('scripts')
 <script type="text/javascript" src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8">
 </script>

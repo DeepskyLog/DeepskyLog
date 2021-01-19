@@ -190,6 +190,9 @@ class Target extends Model
     {
         $rise = '-';
 
+        if ($this->isMoon()) {
+            return $rise;
+        }
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
                 if (!$this->_target) {
@@ -241,6 +244,11 @@ class Target extends Model
         }
 
         $transit = '-';
+
+        if ($this->isMoon()) {
+            return $transit;
+        }
+
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
                 $transit = $this->_target->getTransit() ? $this->_target->getTransit()
@@ -280,6 +288,11 @@ class Target extends Model
         }
 
         $set = '-';
+
+        if ($this->isMoon()) {
+            return $set;
+        }
+
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
                 $set = $this->_target->getSetting() ? $this->_target->getSetting()
@@ -320,6 +333,11 @@ class Target extends Model
         }
 
         $best = '-';
+
+        if ($this->isMoon()) {
+            return $best;
+        }
+
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
                 $best = $this->_target->getBestTimeToObserve() ?
@@ -343,6 +361,11 @@ class Target extends Model
         }
 
         $maxalt = '-';
+
+        if ($this->isMoon()) {
+            return $maxalt;
+        }
+
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
                 $maxalt = $this->_target->getMaxHeightAtNight() ?
@@ -382,6 +405,10 @@ class Target extends Model
             $this->getRiseSetTransit();
         }
         $high = '-';
+        if ($this->isMoon()) {
+            return $high;
+        }
+
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
                 $high = $this->_target->getMaxHeight() ?
@@ -405,6 +432,11 @@ class Target extends Model
         }
 
         $high = '-';
+
+        if ($this->isMoon()) {
+            return $high;
+        }
+
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
                 $high = $this->_highestFromToAround[0];
@@ -426,6 +458,11 @@ class Target extends Model
         }
 
         $high = '-';
+
+        if ($this->isMoon()) {
+            return $high;
+        }
+
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
                 $high = $this->_highestFromToAround[1];
@@ -447,6 +484,10 @@ class Target extends Model
         }
 
         $high = '-';
+        if ($this->isMoon()) {
+            return $high;
+        }
+
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
                 $high = $this->_highestFromToAround[2];
@@ -742,11 +783,21 @@ class Target extends Model
      */
     public function isSolarSystem(): bool
     {
-        return $this->_observationType['type'] == 'sun'
+        return !$this->isMoon() && ($this->_observationType['type'] == 'sun'
 //            || $this->_observationType['type'] == 'asteroids'
 //            || $this->_observationType['type'] == 'comets'
 //            || $this->_observationType['type'] == 'moon'
-            || $this->_observationType['type'] == 'planets';
+            || $this->_observationType['type'] == 'planets');
+    }
+
+    /**
+     *  Check if the target is a moon of a planet.
+     *
+     * @return bool true if the target is a moon
+     */
+    public function isMoon(): bool
+    {
+        return $this->_targetType['id'] == 'MOON';
     }
 
     /**
@@ -874,6 +925,9 @@ class Target extends Model
      */
     public function raDecToAladin(): string
     {
+        if (!$this->_target) {
+            return '';
+        }
         return str_replace(
             '  ',
             ' +',
@@ -921,6 +975,9 @@ class Target extends Model
             return $this->_ephemerides;
         }
         if (!auth()->user()->stdlocation) {
+            return $this->_ephemerides;
+        }
+        if ($this->isMoon()) {
             return $this->_ephemerides;
         }
         if (isset($this->_ephemerides)) {
@@ -1452,5 +1509,35 @@ class Target extends Model
     public function target_names()
     {
         return $this->hasMany('App\Models\TargetName', 'target_id');
+    }
+
+    /**
+     * Return the date of the next opposition or greatest elongation of the planet
+     *
+     * @return String The date for the best time to view the planet
+     */
+    public function getOpposition(): String
+    {
+        $datestr    = Session::get('date');
+        $date       = Carbon::createFromFormat('Y-m-d', $datestr);
+
+        if ($this->target_name == 'Venus' || $this->target_name == 'Mercury') {
+            return '<td colspan="3">'
+                . _i('Next evening elongation')
+                . '</td><td colspan="3">'
+                . $this->_target->greatest_eastern_elongation($date)->isoFormat('LL')
+                . '</td>' .
+                '<td colspan="3">'
+                . _i('Next morning elongation')
+                . '</td><td colspan="3">'
+                . $this->_target->greatest_western_elongation($date)->isoFormat('LL')
+                . '</td>';
+        } else {
+            return '<td colspan="3">'
+                . _i('Next opposition')
+                . '</td><td colspan="9">'
+                . $this->_target->opposition($date)->isoFormat('LL')
+                . '</td>';
+        }
     }
 }

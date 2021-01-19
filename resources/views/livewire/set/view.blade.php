@@ -105,6 +105,8 @@
         --}}
     {{-- The table should show the number of instruments, filters, ... --}}
     {{-- When a set is clicked, add the possibility to add and remove new Eyepieces, Instruments, ... and to change the name and description of the set.--}}
+    {{-- Show sets in detail of eyepiece, filter, ... --}}
+    {{-- Use sets in overview of observer, and in eyepiece view --}}
     {{-- Other users should not be able to see the sets --}}
     {{-- Translations --}}
     @endif

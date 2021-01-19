@@ -101,4 +101,61 @@ class TargetPartOf extends Model
 
         return $output;
     }
+
+    /**
+     * Returns the string with the information of the moons for this
+     * planet
+     *
+     * @param Target $target the planet
+     *
+     * @return string The string with the moons of the planet
+     */
+    public static function moons(Target $target): string
+    {
+        $output = '';
+
+        $contains = '';
+        if (self::contains($target)) {
+            foreach (self::where('partof_id', $target->id)->get() as $partOfObject) {
+                $containsName = \App\Models\Target::where('id', $partOfObject->target_id)
+                    ->first()->target_name;
+                $slug = \App\Models\Target::where('id', $partOfObject->target_id)
+                    ->first()->slug;
+                $contains .= ($contains ? '/' : '')
+                    . '<a href="/target/' . $slug . '">'
+                    . $containsName . '</a>';
+            }
+        } else {
+            $contains .= '-';
+        }
+        $output .= $contains;
+
+        return $output;
+    }
+
+    /**
+     * Returns the string with the name of the planet if the target is a moon.
+     *
+     * @param Target $target the target
+     *
+     * @return string The string with the planet
+     */
+    public static function planet(Target $target): string
+    {
+        $partOf = '';
+        if (self::isPartOf($target)) {
+            foreach (self::where('target_id', $target->id)->get() as $partOfObject) {
+                $partofname = \App\Models\Target::where('id', $partOfObject->partof_id)
+                    ->first()->target_name;
+                $slug = \App\Models\Target::where('id', $partOfObject->partof_id)
+                    ->first()->slug;
+                $partOf .= ($partOf ? '/' : '')
+                    . '<a href="/target/' . $slug . '">'
+                    . $partofname . '</a>';
+            }
+        } else {
+            $partOf .= '-';
+        }
+        return $partOf;
+    }
 }
