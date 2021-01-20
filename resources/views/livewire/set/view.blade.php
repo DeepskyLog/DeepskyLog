@@ -99,15 +99,15 @@
     <br /><br />
     <livewire:equipment-set-table hideable="select" exportable />
 
+    {{-- The bullets and numbered lists are not visible when adding a new description or in the table. --}}
     {{-- Use trix rich text editor for the description
         - To show the formatted text: class="trix-content"
         - Use trix for adding the about field for the observer
         --}}
-    {{-- The table should show the number of instruments, filters, ... --}}
     {{-- When a set is clicked, add the possibility to add and remove new Eyepieces, Instruments, ... and to change the name and description of the set.--}}
+    {{-- The table should show the number of instruments, filters, ... --}}
     {{-- Show sets in detail of eyepiece, filter, ... --}}
     {{-- Use sets in overview of observer, and in eyepiece view --}}
     {{-- Other users should not be able to see the sets --}}
-    {{-- Translations --}}
     @endif
 </div>

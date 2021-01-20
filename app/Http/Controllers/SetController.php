@@ -76,12 +76,15 @@ class SetController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\set  $set
+     * @param  \App\Models\set  $set The equipment set to show
      * @return \Illuminate\Http\Response
      */
-    public function show(set $set)
+    public function show(Set $set)
     {
-        //
+        return view(
+            'layout.set.show',
+            ['set' => $set]
+        );
     }
 
     /**

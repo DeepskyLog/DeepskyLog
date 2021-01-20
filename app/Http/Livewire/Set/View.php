@@ -19,7 +19,7 @@ class View extends Component
 
     protected $rules = [
         'name'        => 'required|max:100|min:4',
-        'description' => 'required|max:500',
+        'description' => 'required|max:1000',
     ];
 
     public function newSet()
