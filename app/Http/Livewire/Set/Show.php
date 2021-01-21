@@ -8,19 +8,23 @@ use Livewire\Component;
 class Show extends Component
 {
     public Set $set;
-    public String $title         = '';
-    public bool $showInstruments = false;
-    public bool $changeTitle     = false;
-    public $addInstrument        = [];
+    public String $title           = '';
+    public $description;
+    public String $origDescription = '';
+    public bool $showInstruments   = false;
+    public bool $changeTitle       = false;
+    public bool $changeDescription = false;
+    public $addInstrument          = [];
 
     protected $rules = [
         'title'        => 'required|max:100|min:4',
-        // 'description'  => 'required|max:1000',
+        'description'  => 'required|max:1000',
     ];
 
     public function mount()
     {
-        $this->title = $this->set->name;
+        $this->title               = $this->set->name;
+        $this->origDescription     = $this->set->description;
     }
 
     public function showInstruments()
@@ -45,6 +49,19 @@ class Show extends Component
         $this->set->update(['name' => $this->title]);
     }
 
+    public function adaptDescription()
+    {
+        $this->origDescription     = $this->set->description;
+        $this->changeDescription   = true;
+    }
+
+    public function save()
+    {
+        $this->changeDescription = false;
+        // Save the changes to the database
+        $this->set->update(['description' => $this->description['body']]);
+    }
+
     /**
      * Real time validation.
      *
@@ -56,6 +73,10 @@ class Show extends Component
     {
         if ($propertyName == 'title') {
             $this->validateOnly('title');
+        }
+
+        if ($propertyName == 'description.body') {
+            $this->validateOnly('description');
         }
 
         if ($propertyName == 'addInstrument') {

@@ -48,7 +48,7 @@
             </p>
         </div>
 
-        {{-- about the observer --}}
+        {{-- about the set --}}
         <div class="mb-4" wire:model.debounce.365ms="description.body">
             <div wire:ignore>
                 <label class="block" for="description">
