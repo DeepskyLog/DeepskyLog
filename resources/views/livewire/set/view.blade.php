@@ -99,7 +99,6 @@
     <br /><br />
     <livewire:equipment-set-table hideable="select" exportable />
 
-    {{-- The bullets and numbered lists are not visible when adding a new description or in the table. --}}
     {{-- Use trix rich text editor for the description
         - To show the formatted text: class="trix-content"
         - Use trix for adding the about field for the observer

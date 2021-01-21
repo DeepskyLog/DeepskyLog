@@ -619,3 +619,13 @@ a, a:visited, a:focus {
 }
 
 .trix-button-group--file-tools { display: none !important; }
+
+.trix-content ul {
+    margin-left: 0em;
+    list-style: disc outside;
+}
+
+.trix-content ol {
+    margin-left: 0em;
+    list-style: decimal outside;
+}
