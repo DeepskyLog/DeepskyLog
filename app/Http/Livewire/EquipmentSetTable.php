@@ -33,6 +33,19 @@ class EquipmentSetTable extends LivewireDatatable
                 return '<div class="trix-content">' . $description . '</div>';
             })->label(_i('Description'))
             ->searchable(),
+            Column::name('instruments')->callback(['description', 'id', 'name'], function ($description, $id, $name) {
+                $set = Set::where('id', $id)->first()->instruments()->get();
+                if ($set->count() == 0) {
+                    return '0';
+                } else {
+                    $toReturn = '<div class="trix-content"><ul>';
+                    foreach ($set as $instrument) {
+                        $toReturn .= '<li><a href="/instrument/' . $instrument->id . '">' . $instrument->name . '</a></li>';
+                    }
+                    $toReturn .= '</ul></div>';
+                    return $toReturn;
+                }
+            })->label(_i('Instruments')),
         ];
 
         if (auth()->user()->isAdmin()) {

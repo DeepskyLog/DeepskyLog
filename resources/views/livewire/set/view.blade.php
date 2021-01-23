@@ -104,9 +104,10 @@
         - Use trix for adding the about field for the observer
         --}}
     {{-- When a set is clicked, add the possibility to add and remove new Eyepieces, Instruments, ... and to change the name and description of the set.--}}
-    {{-- The table should show the number of instruments, filters, ... --}}
+    {{-- The table should show the number of filters, ... --}}
     {{-- Show sets in detail of eyepiece, filter, ... --}}
     {{-- Use sets in overview of observer, and in eyepiece view --}}
     {{-- Other users should not be able to see the sets --}}
+    {{-- Show all sets for the administrator --}}
     @endif
 </div>

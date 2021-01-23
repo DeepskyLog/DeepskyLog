@@ -65,6 +65,14 @@ class Instrument extends Model implements HasMedia
     }
 
     /**
+     * Get all of the sets for the instrument.
+     */
+    public function sets()
+    {
+        return $this->morphToMany(Set::class, 'set_info');
+    }
+
+    /**
      * Returns the name of the instrument type.
      *
      * @return string the name of the instrument type

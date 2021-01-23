@@ -101,6 +101,14 @@ class Eyepiece extends Model implements HasMedia
     }
 
     /**
+     * Get all of the sets for the eyepiece.
+     */
+    public function sets()
+    {
+        return $this->morphToMany(Set::class, 'set_info');
+    }
+
+    /**
      * Return all eyepieces for use in a selection.
      *
      * @return String the optgroup and option tags

@@ -24,4 +24,36 @@ class Set extends Model
         // Also method on user: eyepieces()
         return $this->belongsTo('App\Models\User');
     }
+
+    /**
+     * Get all of the eyepieces that are assigned this set.
+     */
+    public function eyepieces()
+    {
+        return $this->morphedByMany(Eyepiece::class, 'set_info');
+    }
+
+    /**
+     * Get all of the filters that are assigned this set.
+     */
+    public function filters()
+    {
+        return $this->morphedByMany(Filter::class, 'set_info');
+    }
+
+    /**
+     * Get all of the lenses that are assigned this set.
+     */
+    public function lenses()
+    {
+        return $this->morphedByMany(Lens::class, 'set_info');
+    }
+
+    /**
+     * Get all of the instruments that are assigned this set.
+     */
+    public function instruments()
+    {
+        return $this->morphedByMany(Instrument::class, 'set_info');
+    }
 }

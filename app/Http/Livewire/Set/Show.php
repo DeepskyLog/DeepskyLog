@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Set;
 
 use App\Models\Set;
 use Livewire\Component;
+use App\Models\Instrument;
 
 class Show extends Component
 {
@@ -25,6 +26,8 @@ class Show extends Component
     {
         $this->title               = $this->set->name;
         $this->origDescription     = $this->set->description;
+        // Populate the list with the instruments from the set
+        $this->addInstrument       = array_fill_keys($this->set->instruments()->get()->pluck('id')->toArray(), 1);
     }
 
     public function showInstruments()
@@ -79,12 +82,26 @@ class Show extends Component
             $this->validateOnly('description');
         }
 
-        if ($propertyName == 'addInstrument') {
-            // dd($this->set);
-            // Add to the set
-            // $this->addInstrument[0]
-            dd($this->addInstrument[0]);
-            // Delete to the set???
+        if (str_contains($propertyName, 'addInstrument')) {
+            $toRemove   = array_search(false, $this->addInstrument);
+
+            if ($toRemove) {
+                // We need to remove an instrument from the equipment set
+                $instrument = Instrument::find($toRemove);
+                $this->set->instruments()->detach($instrument);
+            } else {
+                // Add to the set
+                $currentInstruments = $this->set->instruments()->get()->pluck('id')->toArray();
+                foreach ($this->addInstrument as $instrument=>$value) {
+                    if (!in_array($instrument, $currentInstruments)) {
+                        $ins = Instrument::find($instrument);
+                        $this->set->instruments()->save($ins);
+                    }
+                }
+            }
+            $this->addInstrument       = array_fill_keys($this->set->instruments()->get()->pluck('id')->toArray(), 1);
+
+            $this->showInstruments = false;
         }
     }
 

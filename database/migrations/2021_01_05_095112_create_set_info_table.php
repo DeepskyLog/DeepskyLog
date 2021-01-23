@@ -13,12 +13,11 @@ class CreateSetInfoTable extends Migration
      */
     public function up()
     {
-        Schema::create('set_info', function (Blueprint $table) {
+        Schema::create('set_infos', function (Blueprint $table) {
             $table->unsignedInteger('set_id');
             $table->unsignedInteger('set_info_id');
             $table->string('set_info_type');
-
-            $table->timestamps();
+            $table->unique(['set_id', 'set_info_id', 'set_info_type']);
         });
     }
 

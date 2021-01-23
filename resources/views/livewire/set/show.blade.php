@@ -113,20 +113,23 @@
         @foreach (\App\Models\Instrument::where('user_id', Auth::id())->orderBy('diameter', 'desc')->get() as
         $instrument)
         <div class="form-group form-check">
-            <input type="checkbox" wire:model='addInstrument' class="form-check-input" value="{{ $instrument->id }}">
-            <label class="form-check-label" for="{{ $instrument->id }}">{{ $instrument->name }}</label>
+            <input type="checkbox" wire:model='addInstrument.{{ $instrument->id }}' class="form-check-input"
+                value="{{ $instrument->id }}">
+            <label class="form-check-label" for="{{ $instrument->id }}">{{ $instrument->name }} -
+                {{ $instrument->id }}</label>
         </div>
     </form>
     @endforeach
-    {{-- {{ $addInstrument }} --}}
     @else
     {{-- Show the selected instruments in the equipment set --}}
-
+    <div class="trix-content">
+        <ul>
+            @foreach (\App\Models\Set::where('id', $set->id)->first()->instruments()->get() as $instrument)
+            <li><a href="/instrument/{{ $instrument->id }}">{{ $instrument->name }}</a></li>
+            @endforeach
+        </ul>
+    </div>
     @endif
-
-    {{-- TODO: Use + button to add new instruments. Show the list with instruments in the set and with the instruments not in the set. --}}
-    {{-- TODO: Show the number of instruments in the equipment set? --}}
-    {{-- TODO: Show the current eyepieces --}}
     {{-- TODO: Add filters, lenses, eyepieces,  --}}
     <br />
     <h4>

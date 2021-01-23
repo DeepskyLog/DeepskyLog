@@ -62,6 +62,14 @@ class Lens extends Model implements HasMedia
         return $this->belongsTo('App\Models\User');
     }
 
+    /**
+     * Get all of the sets for the lens.
+     */
+    public function sets()
+    {
+        return $this->morphToMany(Set::class, 'set_info');
+    }
+
     // TODO: A lens belongs to one or more observations.
     //    public function observation()
     //    {

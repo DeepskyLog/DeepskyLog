@@ -63,6 +63,14 @@ class Filter extends Model implements HasMedia
     }
 
     /**
+     * Get all of the sets for the filter.
+     */
+    public function sets()
+    {
+        return $this->morphToMany(Set::class, 'set_info');
+    }
+
+    /**
      * Returns the name of the filter type.
      *
      * @return string the name of the filter type
