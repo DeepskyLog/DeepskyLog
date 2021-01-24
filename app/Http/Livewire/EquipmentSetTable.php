@@ -46,6 +46,45 @@ class EquipmentSetTable extends LivewireDatatable
                     return $toReturn;
                 }
             })->label(_i('Instruments')),
+            Column::name('eyepieces')->callback(['id', 'description', 'name'], function ($id, $description, $name) {
+                $set = Set::where('id', $id)->first()->eyepieces()->get();
+                if ($set->count() == 0) {
+                    return '0';
+                } else {
+                    $toReturn = '<div class="trix-content"><ul>';
+                    foreach ($set as $eyepiece) {
+                        $toReturn .= '<li><a href="/eyepiece/' . $eyepiece->id . '">' . $eyepiece->name . '</a></li>';
+                    }
+                    $toReturn .= '</ul></div>';
+                    return $toReturn;
+                }
+            })->label(_i('Eyepieces')),
+            Column::name('lenses')->callback(['id', 'name', 'description'], function ($id, $name, $description) {
+                $set = Set::where('id', $id)->first()->lenses()->get();
+                if ($set->count() == 0) {
+                    return '0';
+                } else {
+                    $toReturn = '<div class="trix-content"><ul>';
+                    foreach ($set as $lens) {
+                        $toReturn .= '<li><a href="/lens/' . $lens->id . '">' . $lens->name . '</a></li>';
+                    }
+                    $toReturn .= '</ul></div>';
+                    return $toReturn;
+                }
+            })->label(_i('Lenses')),
+            Column::name('filters')->callback(['id', 'name'], function ($id, $name) {
+                $set = Set::where('id', $id)->first()->filters()->get();
+                if ($set->count() == 0) {
+                    return '0';
+                } else {
+                    $toReturn = '<div class="trix-content"><ul>';
+                    foreach ($set as $filter) {
+                        $toReturn .= '<li><a href="/filter/' . $filter->id . '">' . $filter->name . '</a></li>';
+                    }
+                    $toReturn .= '</ul></div>';
+                    return $toReturn;
+                }
+            })->label(_i('Filters')),
         ];
 
         if (auth()->user()->isAdmin()) {

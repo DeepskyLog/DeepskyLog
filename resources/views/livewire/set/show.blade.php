@@ -115,8 +115,7 @@
         <div class="form-group form-check">
             <input type="checkbox" wire:model='addInstrument.{{ $instrument->id }}' class="form-check-input"
                 value="{{ $instrument->id }}">
-            <label class="form-check-label" for="{{ $instrument->id }}">{{ $instrument->name }} -
-                {{ $instrument->id }}</label>
+            <label class="form-check-label" for="{{ $instrument->id }}">{{ $instrument->name }}</label>
         </div>
     </form>
     @endforeach
@@ -130,29 +129,132 @@
         </ul>
     </div>
     @endif
-    {{-- TODO: Add filters, lenses, eyepieces,  --}}
     <br />
     <h4>
-        {{ _i('Eyepieces') }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+        {{ _i('Eyepieces') }}
+
+        @if ($showEyepieces)
+        <svg xmlns="http://www.w3.org/2000/svg" wire:click='hideEyepieces' width="16" height="16" fill="currentColor"
+            class="bi bi-check-circle-fill inline" viewBox="0 0 16 16">
+            <path
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+        </svg>
+        @else
+        <svg xmlns="http://www.w3.org/2000/svg" wire:click='showEyepieces' width="16" height="16" fill="currentColor"
             class="bi bi-plus-circle-fill inline" viewBox="0 0 16 16">
             <path
                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
         </svg>
+        @endif
     </h4>
+
+    @if ($showEyepieces)
+    {{ _i('Select eyepieces to add to the equipment set') }}
+
+    <br />
+    <form>
+        @foreach (\App\Models\Eyepiece::where('user_id', Auth::id())->orderBy('focalLength', 'desc')->get() as
+        $eyepiece)
+        <div class="form-group form-check">
+            <input type="checkbox" wire:model='addEyepieces.{{ $eyepiece->id }}' class="form-check-input"
+                value="{{ $eyepiece->id }}">
+            <label class="form-check-label" for="{{ $eyepiece->id }}">{{ $eyepiece->name }}</label>
+        </div>
+    </form>
+    @endforeach
+    @else
+    {{-- Show the selected eyepieces in the equipment set --}}
+    <div class="trix-content">
+        <ul>
+            @foreach (\App\Models\Set::where('id', $set->id)->first()->eyepieces()->get() as $eyepiece)
+            <li><a href="/eyepiece/{{ $eyepiece->id }}">{{ $eyepiece->name }}</a></li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <br />
     <h4>
-        {{ _i('Lenses') }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+        {{ _i('Lenses') }}
+
+        @if ($showLenses)
+        <svg xmlns="http://www.w3.org/2000/svg" wire:click='hideLenses' width="16" height="16" fill="currentColor"
+            class="bi bi-check-circle-fill inline" viewBox="0 0 16 16">
+            <path
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+        </svg>
+        @else
+        <svg xmlns="http://www.w3.org/2000/svg" wire:click='showLenses' width="16" height="16" fill="currentColor"
             class="bi bi-plus-circle-fill inline" viewBox="0 0 16 16">
             <path
                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
         </svg>
+        @endif
     </h4>
+
+    @if ($showLenses)
+    {{ _i('Select lenses to add to the equipment set') }}
+
+    <br />
+    <form>
+        @foreach (\App\Models\Lens::where('user_id', Auth::id())->get() as $lens)
+        <div class="form-group form-check">
+            <input type="checkbox" wire:model='addLenses.{{ $lens->id }}' class="form-check-input"
+                value="{{ $lens->id }}">
+            <label class="form-check-label" for="{{ $lens->id }}">{{ $lens->name }}</label>
+        </div>
+    </form>
+    @endforeach
+    @else
+    {{-- Show the selected lenses in the equipment set --}}
+    <div class="trix-content">
+        <ul>
+            @foreach (\App\Models\Set::where('id', $set->id)->first()->lenses()->get() as $lens)
+            <li><a href="/lens/{{ $lens->id }}">{{ $lens->name }}</a></li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <br />
     <h4>
-        {{ _i('Filters') }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+        {{ _i('Filters') }}
+
+        @if ($showFilters)
+        <svg xmlns="http://www.w3.org/2000/svg" wire:click='hideFilters' width="16" height="16" fill="currentColor"
+            class="bi bi-check-circle-fill inline" viewBox="0 0 16 16">
+            <path
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+        </svg>
+        @else
+        <svg xmlns="http://www.w3.org/2000/svg" wire:click='showFilters' width="16" height="16" fill="currentColor"
             class="bi bi-plus-circle-fill inline" viewBox="0 0 16 16">
             <path
                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
         </svg>
+        @endif
     </h4>
+
+    @if ($showFilters)
+    {{ _i('Select filters to add to the equipment set') }}
+
+    <br />
+    <form>
+        @foreach (\App\Models\Filter::where('user_id', Auth::id())->get() as $filter)
+        <div class="form-group form-check">
+            <input type="checkbox" wire:model='addFilters.{{ $filter->id }}' class="form-check-input"
+                value="{{ $filter->id }}">
+            <label class="form-check-label" for="{{ $filter->id }}">{{ $filter->name }}</label>
+        </div>
+    </form>
+    @endforeach
+    @else
+    {{-- Show the selected filters in the equipment set --}}
+    <div class="trix-content">
+        <ul>
+            @foreach (\App\Models\Set::where('id', $set->id)->first()->filters()->get() as $filter)
+            <li><a href="/filter/{{ $filter->id }}">{{ $filter->name }}</a></li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+    <br />
 </div>
