@@ -20,6 +20,7 @@ class UserSettings extends Component
     public User $user;
     public $country;
     public $about;
+    public String $origAbout = '';
     public $email;
     public $username;
     public $name;
@@ -46,7 +47,7 @@ class UserSettings extends Component
     protected $rules = [
         'name'      => 'required|max:64|min:4',
         'email'     => 'required|email',
-        'about'     => 'max:500',
+        'about'     => 'max:1000',
         'fstOffset' => 'numeric|min:-5.0|max:5.0',
         'copyright' => 'max:128',
     ];
@@ -61,9 +62,9 @@ class UserSettings extends Component
         $this->instrument       = Auth::user()->stdtelescope;
         $this->username         = $this->user->username;
         if ($this->user->about) {
-            $this->about            = $this->user->about;
+            $this->origAbout            = $this->user->about;
         } else {
-            $this->about = '';
+            $this->origAbout = '';
         }
         $this->name             = $this->user->name;
         $this->email            = $this->user->email;
@@ -129,7 +130,7 @@ class UserSettings extends Component
         $this->user->update(['email' => $this->email]);
         $this->user->update(['name' => $this->name]);
         $this->user->update(['country' => $this->country]);
-        $this->user->update(['about' => $this->about]);
+        $this->user->update(['about' => $this->about['body']]);
         $this->user->update(['sendMail' => $this->sendMail]);
         $this->user->update(['fstOffset' => $this->fstOffset]);
         $this->user->update(['copyright' => $this->copyright]);

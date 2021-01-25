@@ -471,16 +471,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v4.23.1",
+            "version": "v4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "19a4fdcdb9133e0a0a94c2b10c89460b4eedb966"
+                "reference": "e606ad38aafccb9c15a98010be14156f746096eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/19a4fdcdb9133e0a0a94c2b10c89460b4eedb966",
-                "reference": "19a4fdcdb9133e0a0a94c2b10c89460b4eedb966",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/e606ad38aafccb9c15a98010be14156f746096eb",
+                "reference": "e606ad38aafccb9c15a98010be14156f746096eb",
                 "shasum": ""
             },
             "require": {
@@ -529,7 +529,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.23.1"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.24"
             },
             "funding": [
                 {
@@ -537,7 +537,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-01-19T11:08:16+00:00"
+            "time": "2021-01-25T09:35:49+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
@@ -4883,17 +4883,17 @@
         },
         {
             "name": "spatie/laravel-medialibrary-pro",
-            "version": "1.12.9",
+            "version": "1.12.12",
             "source": {
                 "type": "git",
                 "url": "git@github.com:spatie/laravel-medialibrary-pro.git",
-                "reference": "b5a9e0159968f47aee0dc5c45424b06a19cc22de"
+                "reference": "48b9b4dd257f7a4125897abeb6a1ffcec55445a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-b5a9e0159968f47aee0dc5c45424b06a19cc22de-zip-f0385a.zip",
-                "reference": "b5a9e0159968f47aee0dc5c45424b06a19cc22de",
-                "shasum": "0de043ed862f11ff86561d9b89b08b3ebaeb30de"
+                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-48b9b4dd257f7a4125897abeb6a1ffcec55445a5-zip-59792b.zip",
+                "reference": "48b9b4dd257f7a4125897abeb6a1ffcec55445a5",
+                "shasum": "3838637b2f995d53ad9ab077e9cd35e9e2b4fb45"
             },
             "require": {
                 "ext-json": "*",
@@ -4958,10 +4958,10 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.12.9",
+                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.12.12",
                 "issues": "https://github.com/spatie/laravel-medialibrary-pro/issues"
             },
-            "time": "2021-01-13T13:46:46+00:00"
+            "time": "2021-01-25T11:59:06+00:00"
         },
         {
             "name": "spatie/laravel-translatable",

@@ -165,7 +165,7 @@ class Show extends Component
                     }
                 }
             }
-            $this->addEyepiece = array_fill_keys($this->set->eyepieces()->get()->pluck('id')->toArray(), 1);
+            $this->addEyepieces = array_fill_keys($this->set->eyepieces()->get()->pluck('id')->toArray(), 1);
 
             $this->showEyepieces = false;
         }

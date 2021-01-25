@@ -103,8 +103,7 @@
         - To show the formatted text: class="trix-content"
         - Use trix for adding the about field for the observer
         --}}
-    {{-- Show sets in detail of eyepiece, filter, ... --}}
-    {{-- Use sets in overview of observer, and in eyepiece view --}}
+    {{-- Use sets in eyepiece view --}}
     {{-- Translate --}}
     {{-- Other users should not be able to see the sets --}}
     {{-- Show all sets for the administrator --}}

@@ -86,13 +86,30 @@
         <p hidden>{{ $country }}</p>
         <p></p>
         {{-- about the observer --}}
-        <div class="form-group" name="about" id="about">
-            <label for="about">{{ _i('Let other people your astronomical interests') }}</label>
-            <textarea wire:model="about" required class="form-control @error('about') is-invalid @enderror" rows="5"
-                maxlength="500" name="about">{{ $user->about }}</textarea>
-            <p class="text-center {{ strlen($about) >= 485 ? 'text-danger' : '' }}">
+        <div class="mb-4" wire:model.debounce.365ms="about.body">
+            <div wire:ignore>
+                <label class="block" for="about">
+                    {{ _i('Let other people your astronomical interests') }}
+                </label>
+                <input id="body" value="{{ $origAbout }}" type="hidden" name="content">
+                <trix-editor class="trix-content" input="body"></trix-editor>
+            </div>
+            @error('about')
+            <p class="text-red-700 font-semibold mt-2">
+                {{$message}}
+            </p>
+            @enderror
+
+            @php
+            if ($about) {
+            $size = strlen(html_entity_decode(strip_tags($about['body'])));
+            } else {
+            $size = 0;
+            }
+            @endphp
+            <p class="text-center {{ $size >= 485 ? 'text-danger' : '' }}">
                 <small>
-                    {{ strlen($about) . '/500' }}
+                    {{ $size . '/500' }}
                 </small>
             </p>
         </div>

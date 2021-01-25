@@ -11,8 +11,8 @@
     @if ($user->about)
     <div class="col-8">
         <div class="card float-right">
-            <div class="card-body">
-                {{ $user->about }}
+            <div class="card-body trix-content">
+                {!! $user->about !!}
             </div>
         </div>
     </div>
@@ -159,6 +159,20 @@
                     <a href="{{ route('lens.index') }}">
                         @endif
                         {{ count($user->lenses) }}
+                        @if ($user->id === Auth::user()->id)
+                    </a>
+                    @endif
+                </td>
+            </tr>
+
+            <!-- Number of equipment sets -->
+            <tr>
+                <td> {{ _i('Number of equipment sets') }} </td>
+                <td>
+                    @if ($user->id === Auth::user()->id)
+                    <a href="{{ route('set.index') }}">
+                        @endif
+                        {{ $user->sets()->count() }}
                         @if ($user->id === Auth::user()->id)
                     </a>
                     @endif

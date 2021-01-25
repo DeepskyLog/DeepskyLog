@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2021-01-19 10:30+0100\n"
-"PO-Revision-Date: 2021-01-19 10:33+0100\n"
+"POT-Creation-Date: 2021-01-25 15:30+0100\n"
+"PO-Revision-Date: 2021-01-25 15:31+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: fr_FR\n"
@@ -998,14 +998,14 @@ msgstr "Unités par défaut"
 
 #: ../storage/framework/messages/001254d5f2ecc04c62802a708a363c9eb1a8ef40.php.php:179
 #: ../storage/framework/messages/aecbf78a8a9d8c89cd7f7a521cc3422e9c62c3d5.php.php:216
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:282
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:301
 msgid "Please fix the errors in the settings."
 msgstr "Veuillez corriger les erreurs dans les paramètres."
 
 #: ../storage/framework/messages/001254d5f2ecc04c62802a708a363c9eb1a8ef40.php.php:183
 #: ../storage/framework/messages/6f46c410517fb9d1a8996b261d3709c13d9eb1a0.php.php:115
 #: ../storage/framework/messages/aecbf78a8a9d8c89cd7f7a521cc3422e9c62c3d5.php.php:220
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:286
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:305
 msgid "Update"
 msgstr "Mettre à jour"
 
@@ -1018,9 +1018,11 @@ msgid "Equipment sets"
 msgstr "Ensembles d’équipement"
 
 #: ../storage/framework/messages/012d82c5af85a41fe7dfc5fa1900ff318bf0061a.php.php:12
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:106
 #: ../storage/framework/messages/7dacaaae69a58bd077c5e5b09fb383a2021b8e0c.php.php:13
 #: ../storage/framework/messages/e00011f5e245f44cc3f8917a9ebf80db213576cb.php.php:40
-#: Http/Livewire/UserTable.php:40
+#: ../storage/framework/messages/e9b536a0948211f0b9b3a46289c3db54267d860e.php.php:48
+#: Http/Livewire/EquipmentSetTable.php:48 Http/Livewire/UserTable.php:40
 msgid "Instruments"
 msgstr "Instruments"
 
@@ -1032,17 +1034,26 @@ msgid "Locations"
 msgstr "Emplacements"
 
 #: ../storage/framework/messages/012d82c5af85a41fe7dfc5fa1900ff318bf0061a.php.php:14
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:150
 #: ../storage/framework/messages/7dacaaae69a58bd077c5e5b09fb383a2021b8e0c.php.php:15
+#: ../storage/framework/messages/e9b536a0948211f0b9b3a46289c3db54267d860e.php.php:61
+#: Http/Livewire/EquipmentSetTable.php:61
 msgid "Eyepieces"
 msgstr "Oculaires"
 
 #: ../storage/framework/messages/012d82c5af85a41fe7dfc5fa1900ff318bf0061a.php.php:15
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:238
 #: ../storage/framework/messages/7dacaaae69a58bd077c5e5b09fb383a2021b8e0c.php.php:16
+#: ../storage/framework/messages/e9b536a0948211f0b9b3a46289c3db54267d860e.php.php:87
+#: Http/Livewire/EquipmentSetTable.php:87
 msgid "Filters"
 msgstr "Filtres"
 
 #: ../storage/framework/messages/012d82c5af85a41fe7dfc5fa1900ff318bf0061a.php.php:16
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:194
 #: ../storage/framework/messages/7dacaaae69a58bd077c5e5b09fb383a2021b8e0c.php.php:17
+#: ../storage/framework/messages/e9b536a0948211f0b9b3a46289c3db54267d860e.php.php:74
+#: Http/Livewire/EquipmentSetTable.php:74
 msgid "Lenses"
 msgstr "Lentilles"
 
@@ -1066,6 +1077,72 @@ msgstr "Instrument %s mis à jour"
 #, php-format
 msgid "Instrument %s created"
 msgstr "Instrument %s créé"
+
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:3
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:71
+#: ../storage/framework/messages/35d734841123544781c575390e7494b5ee974393.php.php:37
+#: ../storage/framework/messages/479e7d71795b044b36d6df793a1998705f852753.php.php:55
+#: ../storage/framework/messages/5a150219cf6a7bc89a2c4ab56435d5b943425949.php.php:29
+#: ../storage/framework/messages/65ac65000ac38110b139737f4ab9d44d52dcf334.php.php:93
+#: ../storage/framework/messages/6716d68c6ef2a5cd24094258f4001ad610fee57d.php.php:21
+#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:34
+#: ../storage/framework/messages/7fd2f31ded7daf3161a7616fafabff5775ec2bb7.php.php:44
+#: ../storage/framework/messages/98e3cf83943fc86efea15dcc268c5278b5f14478.php.php:38
+#: ../storage/framework/messages/ad9effd19dd9771c8200409f61b8a884b489bdb7.php.php:37
+#: ../storage/framework/messages/b8bfadaf5f86ee58710139fba8e832ba6cb2da2b.php.php:31
+#: ../storage/framework/messages/c41a947f19012905e2bc04a5eb6fb4b5eebe6701.php.php:33
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:112
+#: ../storage/framework/messages/e00011f5e245f44cc3f8917a9ebf80db213576cb.php.php:27
+#: ../storage/framework/messages/e48571d92404b51b87dc97599499cb7e05b2b8b3.php.php:35
+#: ../storage/framework/messages/e9b536a0948211f0b9b3a46289c3db54267d860e.php.php:30
+#: ../storage/framework/messages/fcc6a3b390e239051839e6120b7eafbca23639a6.php.php:33
+#: Http/Livewire/EquipmentSetTable.php:30 Http/Livewire/EyepieceTable.php:34
+#: Http/Livewire/FilterTable.php:33 Http/Livewire/InstrumentTable.php:31
+#: Http/Livewire/LensTable.php:29 Http/Livewire/LocationTable.php:33
+#: Http/Livewire/NearbyTable.php:55 Http/Livewire/UserTable.php:27
+msgid "Name"
+msgstr "Nom"
+
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:21
+msgid "Change name"
+msgstr "Modifier le nom"
+
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:27
+msgid "Equipment set: "
+msgstr "Ensemble d’équipement : "
+
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:38
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:90
+#: ../storage/framework/messages/65ac65000ac38110b139737f4ab9d44d52dcf334.php.php:212
+#: ../storage/framework/messages/e9b536a0948211f0b9b3a46289c3db54267d860e.php.php:34
+#: Http/Livewire/EquipmentSetTable.php:34
+msgid "Description"
+msgstr "Description"
+
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:43
+#: ../storage/framework/messages/7fd2f31ded7daf3161a7616fafabff5775ec2bb7.php.php:76
+msgid "Describe your equipment set"
+msgstr "Décrivez votre ensemble d’équipement"
+
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:84
+msgid "Change description"
+msgstr "Changer la description"
+
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:125
+msgid "Select instruments to add to the equipment set"
+msgstr "Sélectionnez des instruments à ajouter à l’ensemble d’équipement"
+
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:169
+msgid "Select eyepieces to add to the equipment set"
+msgstr "Sélectionnez des oculaires à ajouter à l’ensemble d’équipement"
+
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:213
+msgid "Select lenses to add to the equipment set"
+msgstr "Sélectionnez des lentilles à ajouter à l’ensemble d’équipement"
+
+#: ../storage/framework/messages/06df007dc375f40c4c8c7aafa44ca21143536db2.php.php:257
+msgid "Select filters to add to the equipment set"
+msgstr "Sélectionnez les filtres à ajouter à l’ensemble d’équipement"
 
 #: ../storage/framework/messages/0be2dacf003887bb50fe96c4ab12759f609d9165.php.php:1
 msgid "New message"
@@ -1115,13 +1192,13 @@ msgstr "Boîte aux lettres DeepskyLog"
 msgid "Log out"
 msgstr "Se déconnecter"
 
-#: ../storage/framework/messages/14281692a25c2468513b2420db54664225a3a3d7.php.php:91
-#: Models/Instrument.php:91
+#: ../storage/framework/messages/14281692a25c2468513b2420db54664225a3a3d7.php.php:99
+#: Models/Instrument.php:99
 msgid "No default instrument"
 msgstr "Aucun instrument par défaut"
 
-#: ../storage/framework/messages/14281692a25c2468513b2420db54664225a3a3d7.php.php:115
-#: Models/Instrument.php:115
+#: ../storage/framework/messages/14281692a25c2468513b2420db54664225a3a3d7.php.php:123
+#: Models/Instrument.php:123
 msgid "Add an instrument"
 msgstr "Rajouter un instrument"
 
@@ -1143,7 +1220,7 @@ msgstr "Démarrer une nouvelle conversation"
 
 #: ../storage/framework/messages/158d356aa1d32f3e10d4793f0f0163213975b184.php.php:64
 msgid "Mark all messages read"
-msgstr "Marquez tout comme lu."
+msgstr "Marquez tout comme lu"
 
 #: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:2
 #: ../storage/framework/messages/197901612e345bb86122cb693146f1c70794b374.php.php:7
@@ -1303,30 +1380,6 @@ msgstr "Observations par pays"
 msgid "DeepskyLog stars"
 msgstr "Étoiles de DeepskyLog"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:71
-#: ../storage/framework/messages/35d734841123544781c575390e7494b5ee974393.php.php:37
-#: ../storage/framework/messages/479e7d71795b044b36d6df793a1998705f852753.php.php:55
-#: ../storage/framework/messages/5a150219cf6a7bc89a2c4ab56435d5b943425949.php.php:29
-#: ../storage/framework/messages/65ac65000ac38110b139737f4ab9d44d52dcf334.php.php:93
-#: ../storage/framework/messages/6716d68c6ef2a5cd24094258f4001ad610fee57d.php.php:21
-#: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:34
-#: ../storage/framework/messages/7fd2f31ded7daf3161a7616fafabff5775ec2bb7.php.php:44
-#: ../storage/framework/messages/98e3cf83943fc86efea15dcc268c5278b5f14478.php.php:38
-#: ../storage/framework/messages/ad9effd19dd9771c8200409f61b8a884b489bdb7.php.php:37
-#: ../storage/framework/messages/b8bfadaf5f86ee58710139fba8e832ba6cb2da2b.php.php:31
-#: ../storage/framework/messages/c41a947f19012905e2bc04a5eb6fb4b5eebe6701.php.php:33
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:112
-#: ../storage/framework/messages/e00011f5e245f44cc3f8917a9ebf80db213576cb.php.php:27
-#: ../storage/framework/messages/e48571d92404b51b87dc97599499cb7e05b2b8b3.php.php:35
-#: ../storage/framework/messages/e9b536a0948211f0b9b3a46289c3db54267d860e.php.php:30
-#: ../storage/framework/messages/fcc6a3b390e239051839e6120b7eafbca23639a6.php.php:33
-#: Http/Livewire/EquipmentSetTable.php:30 Http/Livewire/EyepieceTable.php:34
-#: Http/Livewire/FilterTable.php:33 Http/Livewire/InstrumentTable.php:31
-#: Http/Livewire/LensTable.php:29 Http/Livewire/LocationTable.php:33
-#: Http/Livewire/NearbyTable.php:55 Http/Livewire/UserTable.php:27
-msgid "Name"
-msgstr "Nom"
-
 #: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:107
 msgid "Number of locations"
 msgstr "Nombre de locations"
@@ -1348,77 +1401,81 @@ msgid "Number of lenses"
 msgstr "Nombre de lentilles"
 
 #: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:182
+msgid "Number of equipment sets"
+msgstr "Nombre d’ensembles d’équipement"
+
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:197
 #: ../storage/framework/messages/97316988c82ba535142fd58eb00701e46bead4ca.php.php:154
 #: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:134
 msgid "Country of residence"
 msgstr "Pays de résidence"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:193
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:208
 #: ../storage/framework/messages/97316988c82ba535142fd58eb00701e46bead4ca.php.php:256
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:266
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:285
 msgid "Copyright notice"
 msgstr "Avis de Copyright"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:201
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:216
 #: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:220
 #: Http/Controllers/UserController.php:220
 msgid "Total"
 msgstr "Total"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:208
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:223
 #: ../storage/framework/messages/71157b6bcfce27a06ef73193c047db45859d12ec.php.php:95
-#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:45
-#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:70
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:75
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:63
+#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:61
+#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:86
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:91
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:89
 msgid "Number of observations"
 msgstr "Nombre d'observations"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:216
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:231
 msgid "Observations last year"
 msgstr "Observations l'an dernier"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:224
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:239
 msgid "Number of drawings"
 msgstr "Nombre de dessins"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:232
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:247
 msgid "Drawings last year"
 msgstr "Dessins l'an dernier"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:240
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:255
 msgid "Different objects"
 msgstr "Objects différents"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:254
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:269
 msgid "Messier objects"
 msgstr "Objets Messier"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:266
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:281
 msgid "Caldwell objects"
 msgstr "Objets Caldwell"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:278
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:293
 msgid "H400 objects"
 msgstr "Objets H400"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:290
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:305
 msgid "H400-II objects"
 msgstr "Objets H400-II"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:302
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:317
 msgid "Rank"
 msgstr "Classement"
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:319
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:334
 msgid "All observations of "
 msgstr "Toutes les observations de "
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:331
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:346
 msgid "All drawings of "
 msgstr "Tous les dessins de "
 
-#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:342
+#: ../storage/framework/messages/31ac68bd863807cae31154d644395a4f14fe7309.php.php:357
 msgid "Send message to "
 msgstr "Envoyer un message à "
 
@@ -1467,13 +1524,13 @@ msgstr "Activé"
 msgid "Not active"
 msgstr "Pas activé"
 
-#: ../storage/framework/messages/336331738befda39468a8d49a96c9e82c5a8db43.php.php:97
-#: Models/Lens.php:97
+#: ../storage/framework/messages/336331738befda39468a8d49a96c9e82c5a8db43.php.php:105
+#: Models/Lens.php:105
 msgid "No default lens"
 msgstr "Pas d’objectif par défaut"
 
-#: ../storage/framework/messages/336331738befda39468a8d49a96c9e82c5a8db43.php.php:108
-#: Models/Lens.php:108
+#: ../storage/framework/messages/336331738befda39468a8d49a96c9e82c5a8db43.php.php:116
+#: Models/Lens.php:116
 msgid "Add a lens"
 msgstr "Ajouter une lentille"
 
@@ -1494,19 +1551,19 @@ msgid "Filter type"
 msgstr "Type de filtre"
 
 #: ../storage/framework/messages/35d734841123544781c575390e7494b5ee974393.php.php:89
-#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:31
+#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:33
 #: ../storage/framework/messages/c41a947f19012905e2bc04a5eb6fb4b5eebe6701.php.php:42
 #: Http/Livewire/FilterTable.php:42
 msgid "Color"
 msgstr "Couleur"
 
 #: ../storage/framework/messages/35d734841123544781c575390e7494b5ee974393.php.php:111
-#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:38
+#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:40
 msgid "Wratten number"
 msgstr "Numéro Wratten"
 
 #: ../storage/framework/messages/35d734841123544781c575390e7494b5ee974393.php.php:136
-#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:45
+#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:47
 msgid "Schott number"
 msgstr "Numéro Schott"
 
@@ -1606,14 +1663,14 @@ msgstr "SB"
 #: ../storage/framework/messages/65ac65000ac38110b139737f4ab9d44d52dcf334.php.php:95
 #: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:126
 #: ../storage/framework/messages/71157b6bcfce27a06ef73193c047db45859d12ec.php.php:17
-#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:19
-#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:19
+#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:21
+#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:21
 #: ../storage/framework/messages/ad9effd19dd9771c8200409f61b8a884b489bdb7.php.php:200
 #: ../storage/framework/messages/b8bfadaf5f86ee58710139fba8e832ba6cb2da2b.php.php:36
 #: ../storage/framework/messages/c41a947f19012905e2bc04a5eb6fb4b5eebe6701.php.php:38
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:20
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:52
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:19
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:22
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:54
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:21
 #: Http/Livewire/EyepieceTable.php:126 Http/Livewire/FilterTable.php:38
 #: Http/Livewire/InstrumentTable.php:36 Http/Livewire/NearbyTable.php:64
 msgid "Type"
@@ -1953,7 +2010,7 @@ msgstr ""
 "actionURL)"
 
 #: ../storage/framework/messages/5a150219cf6a7bc89a2c4ab56435d5b943425949.php.php:34
-#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:24
+#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:26
 #: ../storage/framework/messages/e48571d92404b51b87dc97599499cb7e05b2b8b3.php.php:58
 #: Http/Livewire/LensTable.php:34
 msgid "Factor"
@@ -1963,9 +2020,9 @@ msgstr "Facteur"
 #: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:139
 #: ../storage/framework/messages/b8bfadaf5f86ee58710139fba8e832ba6cb2da2b.php.php:72
 #: ../storage/framework/messages/c41a947f19012905e2bc04a5eb6fb4b5eebe6701.php.php:53
-#: ../storage/framework/messages/e9b536a0948211f0b9b3a46289c3db54267d860e.php.php:43
+#: ../storage/framework/messages/e9b536a0948211f0b9b3a46289c3db54267d860e.php.php:95
 #: ../storage/framework/messages/fcc6a3b390e239051839e6120b7eafbca23639a6.php.php:116
-#: Http/Livewire/EquipmentSetTable.php:43 Http/Livewire/EyepieceTable.php:139
+#: Http/Livewire/EquipmentSetTable.php:95 Http/Livewire/EyepieceTable.php:139
 #: Http/Livewire/FilterTable.php:53 Http/Livewire/InstrumentTable.php:72
 #: Http/Livewire/LensTable.php:43 Http/Livewire/LocationTable.php:116
 msgid "User name"
@@ -1976,9 +2033,9 @@ msgstr "Nom d'utilisateur"
 #: ../storage/framework/messages/b8bfadaf5f86ee58710139fba8e832ba6cb2da2b.php.php:118
 #: ../storage/framework/messages/c41a947f19012905e2bc04a5eb6fb4b5eebe6701.php.php:84
 #: ../storage/framework/messages/e00011f5e245f44cc3f8917a9ebf80db213576cb.php.php:69
-#: ../storage/framework/messages/e9b536a0948211f0b9b3a46289c3db54267d860e.php.php:59
+#: ../storage/framework/messages/e9b536a0948211f0b9b3a46289c3db54267d860e.php.php:111
 #: ../storage/framework/messages/fcc6a3b390e239051839e6120b7eafbca23639a6.php.php:162
-#: Http/Livewire/EquipmentSetTable.php:59 Http/Livewire/EyepieceTable.php:170
+#: Http/Livewire/EquipmentSetTable.php:111 Http/Livewire/EyepieceTable.php:170
 #: Http/Livewire/FilterTable.php:84 Http/Livewire/InstrumentTable.php:118
 #: Http/Livewire/LensTable.php:74 Http/Livewire/LocationTable.php:162
 #: Http/Livewire/UserTable.php:69
@@ -2082,12 +2139,6 @@ msgstr "Lune de"
 msgid "Moons"
 msgstr "Lunes"
 
-#: ../storage/framework/messages/65ac65000ac38110b139737f4ab9d44d52dcf334.php.php:212
-#: ../storage/framework/messages/e9b536a0948211f0b9b3a46289c3db54267d860e.php.php:34
-#: Http/Livewire/EquipmentSetTable.php:34
-msgid "Description"
-msgstr "Description"
-
 #: ../storage/framework/messages/65ac65000ac38110b139737f4ab9d44d52dcf334.php.php:214
 msgid "NGC/IC, Dreyer codes"
 msgstr "NGC/IC, codes Dreyer"
@@ -2126,11 +2177,11 @@ msgid "Edit User"
 msgstr "Modifier utilisateur"
 
 #: ../storage/framework/messages/6716d68c6ef2a5cd24094258f4001ad610fee57d.php.php:7
-#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:59
-#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:84
+#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:75
+#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:100
 #: ../storage/framework/messages/bac600a65d87e2c10e06020c5a4e0bf4d606734c.php.php:16
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:89
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:110
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:105
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:135
 msgid "Edit"
 msgstr "Modifier"
 
@@ -2164,21 +2215,21 @@ msgstr "Informations sur les oculaires avec "
 #: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:38
 #: ../storage/framework/messages/98e3cf83943fc86efea15dcc268c5278b5f14478.php.php:144
 #: ../storage/framework/messages/b8bfadaf5f86ee58710139fba8e832ba6cb2da2b.php.php:55
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:30
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:41
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:32
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:45
 #: Http/Livewire/EyepieceTable.php:38 Http/Livewire/InstrumentTable.php:55
 msgid "Focal Length"
 msgstr "Longueur focale"
 
 #: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:46
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:41
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:43
 #: Http/Livewire/EyepieceTable.php:46
 msgid "Maximum Focal Length"
 msgstr "Longueur focale maximale"
 
 #: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:53
 #: ../storage/framework/messages/ad9effd19dd9771c8200409f61b8a884b489bdb7.php.php:98
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:35
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:37
 #: Http/Livewire/EyepieceTable.php:53
 msgid "Apparent Field of View"
 msgstr "Champ de vue apparent"
@@ -2199,7 +2250,7 @@ msgid "Pupil Size"
 msgstr "Taille de la pupille"
 
 #: ../storage/framework/messages/6c1385bb48c97dcd52b7fd9268f20dabff76dbbb.php.php:117
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:47
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:49
 #: Http/Livewire/EyepieceTable.php:117
 msgid "Brand"
 msgstr "Marque"
@@ -2277,10 +2328,10 @@ msgid "Location"
 msgstr "Endroit"
 
 #: ../storage/framework/messages/71157b6bcfce27a06ef73193c047db45859d12ec.php.php:22
-#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:41
-#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:66
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:71
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:59
+#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:57
+#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:82
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:87
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:65
 msgid "Owner"
 msgstr "Propriétaire"
 
@@ -2362,16 +2413,16 @@ msgid "Inner-city sky"
 msgstr "Ciel de centre-ville"
 
 #: ../storage/framework/messages/71157b6bcfce27a06ef73193c047db45859d12ec.php.php:65
-#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:30
-#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:54
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:59
+#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:46
+#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:70
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:75
 msgid "First observation"
 msgstr "Première observation"
 
 #: ../storage/framework/messages/71157b6bcfce27a06ef73193c047db45859d12ec.php.php:70
-#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:35
-#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:59
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:64
+#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:51
+#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:75
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:80
 msgid "Last observation"
 msgstr "Dernière observation"
 
@@ -2380,17 +2431,17 @@ msgid "Used instruments"
 msgstr "Instruments usagés"
 
 #: ../storage/framework/messages/71157b6bcfce27a06ef73193c047db45859d12ec.php.php:78
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:84
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:109
 msgid "Used eyepieces"
 msgstr "Oculaires usagés"
 
 #: ../storage/framework/messages/71157b6bcfce27a06ef73193c047db45859d12ec.php.php:83
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:89
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:114
 msgid "Used filters"
 msgstr "Filtres usagés"
 
 #: ../storage/framework/messages/71157b6bcfce27a06ef73193c047db45859d12ec.php.php:88
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:94
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:119
 msgid "Used lenses"
 msgstr "Lentilles usagées"
 
@@ -2408,7 +2459,7 @@ msgstr "Crépuscule civil aujourd’hui"
 
 #: ../storage/framework/messages/71157b6bcfce27a06ef73193c047db45859d12ec.php.php:118
 msgid "Today Nautical Darkness"
-msgstr "crépuscule nautique aujourd’hui"
+msgstr "Crépuscule nautique aujourd’hui"
 
 #: ../storage/framework/messages/71157b6bcfce27a06ef73193c047db45859d12ec.php.php:122
 msgid "Today Astronomical Darkness"
@@ -2457,9 +2508,16 @@ msgstr "Formulaires"
 msgid "Sorry, no threads."
 msgstr "Désolé, pas de discussions."
 
-#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:20
+#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:22
 msgid "Lens"
 msgstr "Lentille"
+
+#: ../storage/framework/messages/78f7ab1379dc1aa8413365e8d8580d61de245734.php.php:33
+#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:57
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:62
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:73
+msgid "In equipment sets"
+msgstr "Dans les ensembles d’équipement"
 
 #: ../storage/framework/messages/79620f926860028c292d5a856708ed250ded8560.php.php:2
 #: ../storage/framework/messages/79620f926860028c292d5a856708ed250ded8560.php.php:11
@@ -2484,11 +2542,11 @@ msgstr ""
 msgid "click here to request another"
 msgstr "cliquez ici pour demander un autre"
 
-#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:20
+#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:22
 msgid "Filter"
 msgstr "Filtre"
 
-#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:24
+#: ../storage/framework/messages/7b55e4d68f99c95bc5e5b015ea7e464d61b907d7.php.php:26
 msgid "Filter Type"
 msgstr "Type de filtre"
 
@@ -2544,10 +2602,6 @@ msgid ""
 msgstr ""
 "Lorsque vous ajoutez une observation, vous ne verrez que l’équipement défini "
 "dans l’ensemble d’équipement actif."
-
-#: ../storage/framework/messages/7fd2f31ded7daf3161a7616fafabff5775ec2bb7.php.php:76
-msgid "Describe your equipment set"
-msgstr "Décrivez votre ensemble d’équipement"
 
 #: ../storage/framework/messages/7fd2f31ded7daf3161a7616fafabff5775ec2bb7.php.php:115
 msgid "Please fix the errors."
@@ -2898,14 +2952,14 @@ msgid "Sponsor"
 msgstr "Sponsor"
 
 #: ../storage/framework/messages/97316988c82ba535142fd58eb00701e46bead4ca.php.php:40
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:226
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:227
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:245
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:246
 msgid "No license (Not recommended!)"
 msgstr "Pas de licence (non recommandé!)"
 
 #: ../storage/framework/messages/97316988c82ba535142fd58eb00701e46bead4ca.php.php:41
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:230
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:232
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:249
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:251
 msgid "Enter your own copyright text"
 msgstr "Entrez votre propre texte copyright"
 
@@ -2942,12 +2996,12 @@ msgid "Confirm Password"
 msgstr "Confirmer le mot de passe"
 
 #: ../storage/framework/messages/97316988c82ba535142fd58eb00701e46bead4ca.php.php:224
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:236
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:255
 msgid "License for drawings"
 msgstr "Licence pour les dessins"
 
 #: ../storage/framework/messages/97316988c82ba535142fd58eb00701e46bead4ca.php.php:245
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:255
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:274
 #, php-format
 msgid ""
 "It is important to select the correct license for your drawings!\n"
@@ -2989,7 +3043,7 @@ msgstr "Type d'instrument"
 
 #: ../storage/framework/messages/98e3cf83943fc86efea15dcc268c5278b5f14478.php.php:87
 #: ../storage/framework/messages/b8bfadaf5f86ee58710139fba8e832ba6cb2da2b.php.php:43
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:29
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:31
 #: Http/Livewire/InstrumentTable.php:43
 msgid "Diameter"
 msgstr "Diamètre"
@@ -2998,8 +3052,8 @@ msgstr "Diamètre"
 #: ../storage/framework/messages/98e3cf83943fc86efea15dcc268c5278b5f14478.php.php:160
 #: ../storage/framework/messages/b8bfadaf5f86ee58710139fba8e832ba6cb2da2b.php.php:39
 #: ../storage/framework/messages/b8bfadaf5f86ee58710139fba8e832ba6cb2da2b.php.php:48
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:31
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:43
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:33
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:47
 #: Http/Livewire/InstrumentTable.php:39 Http/Livewire/InstrumentTable.php:48
 msgid "inch"
 msgstr "pouce"
@@ -3008,10 +3062,10 @@ msgstr "pouce"
 #: ../storage/framework/messages/98e3cf83943fc86efea15dcc268c5278b5f14478.php.php:160
 #: ../storage/framework/messages/b8bfadaf5f86ee58710139fba8e832ba6cb2da2b.php.php:41
 #: ../storage/framework/messages/b8bfadaf5f86ee58710139fba8e832ba6cb2da2b.php.php:50
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:31
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:34
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:43
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:46
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:33
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:38
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:47
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:52
 #: Http/Livewire/InstrumentTable.php:41 Http/Livewire/InstrumentTable.php:50
 msgid "mm"
 msgstr "mm"
@@ -3028,7 +3082,7 @@ msgstr " ou "
 
 #: ../storage/framework/messages/98e3cf83943fc86efea15dcc268c5278b5f14478.php.php:175
 #: ../storage/framework/messages/b8bfadaf5f86ee58710139fba8e832ba6cb2da2b.php.php:62
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:53
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:59
 #: Http/Livewire/InstrumentTable.php:62
 msgid "Fixed Magnification"
 msgstr "Magnification fixe"
@@ -3348,7 +3402,7 @@ msgid "e.g. Televue 13mm Ethos"
 msgstr "(p. ex. Televue 13mm Ethos)"
 
 #: ../storage/framework/messages/ad9effd19dd9771c8200409f61b8a884b489bdb7.php.php:62
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:25
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:27
 msgid "Generic name"
 msgstr "Nom générique"
 
@@ -3535,13 +3589,13 @@ msgstr "Toutes les lentilles"
 msgid "Lenses of %s"
 msgstr "Lentilles de %s"
 
-#: ../storage/framework/messages/d9a0e22364855eb10e809a39ea780d59e56a1a16.php.php:117
-#: Models/Eyepiece.php:117
+#: ../storage/framework/messages/d9a0e22364855eb10e809a39ea780d59e56a1a16.php.php:125
+#: Models/Eyepiece.php:125
 msgid "No default eyepiece"
 msgstr "Aucun oculaire par défaut"
 
-#: ../storage/framework/messages/d9a0e22364855eb10e809a39ea780d59e56a1a16.php.php:128
-#: Models/Eyepiece.php:128
+#: ../storage/framework/messages/d9a0e22364855eb10e809a39ea780d59e56a1a16.php.php:136
+#: Models/Eyepiece.php:136
 msgid "Add an eyepiece"
 msgstr "Ajouter un oculaire"
 
@@ -3563,23 +3617,23 @@ msgstr ""
 "caractère non alphanumérique (!, @, #, $, %, ^, &,\n"
 "                ?, ou *)"
 
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:152
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:154
 msgid "Let other people your astronomical interests"
 msgstr "Faites savoir aux autres quels sont vos intérêts astronomiques"
 
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:171
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:190
 msgid "Change profile picture"
 msgstr "Modifier l'image du profil"
 
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:188
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:207
 msgid "Send emails"
 msgstr "Envoyer des e-mails"
 
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:193
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:212
 msgid "fstOffset"
 msgstr "fstOffset"
 
-#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:204
+#: ../storage/framework/messages/df26ba215672b61f7e9b95cc358dff5353afade2.php.php:223
 msgid "Offset between measured SQM value and the faintest visible star."
 msgstr ""
 "Différence entre les valeurs SQM mesurées et l’étoile la plus faible qui est "
@@ -3637,7 +3691,7 @@ msgstr "Chargement des informations du catalogue..."
 msgid "Select a list to view its details"
 msgstr "Sélectionnez une liste pour afficher ses détails"
 
-#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:21
+#: ../storage/framework/messages/f4b948f16ed1b6c25442e43c057689bb7aba9f8d.php.php:23
 msgid "Eyepiece"
 msgstr "Oculaire"
 
@@ -3696,23 +3750,23 @@ msgstr "Emplacement par Défaut"
 msgid "Add a new lens"
 msgstr "Ajouter une nouvelle lentille"
 
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:20
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:22
 msgid "Instrument"
 msgstr "Instrument"
 
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:24
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:26
 msgid "Instrument Type"
 msgstr "Type d'instrument"
 
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:72
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:97
 msgid "First light"
 msgstr "Première lumière"
 
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:77
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:102
 msgid "Last used on"
 msgstr "Dernière utilisation le"
 
-#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:99
+#: ../storage/framework/messages/ff81b56a5589b2a19dc6175e6e688e126809bc00.php.php:124
 msgid "Observed in the following locations"
 msgstr "Observé aux endroits suivants"
 
@@ -6092,9 +6146,6 @@ msgstr "Observé aux endroits suivants"
 #~ msgid "Remove the list"
 #~ msgstr "Supprimer la liste"
 
-#~ msgid "Change name"
-#~ msgstr "Modifier le nom"
-
 #~ msgid "Rename"
 #~ msgstr "Renommer"
 
@@ -6892,9 +6943,6 @@ msgstr "Observé aux endroits suivants"
 #~ msgid "The instrument is removed from your equipment list!"
 #~ msgstr "L'instrument est retiré de votre liste d'équipement!"
 
-#~ msgid "The instrument is added to your equipment list!"
-#~ msgstr "L'instrument est ajouté à votre liste d'équipement!"
-
 #~ msgid "The instrument details have been changed in your equipment list!"
 #~ msgstr ""
 #~ "Les détails de l'instrument ont été modifiés dans votre liste "
@@ -6905,9 +6953,6 @@ msgstr "Observé aux endroits suivants"
 
 #~ msgid "The filter is removed from your equipment list"
 #~ msgstr "Le filtre est retiré de votre liste d'équipement"
-
-#~ msgid "The filter is added to your equipment list"
-#~ msgstr "Le filtre est ajouté à votre liste d'équipements"
 
 #~ msgid "The filter is changed in your equipment list"
 #~ msgstr "Le filtre est modifié dans votre liste d'équipement"
@@ -6920,9 +6965,6 @@ msgstr "Observé aux endroits suivants"
 
 #~ msgid "The eyepiece is removed from your equipment list."
 #~ msgstr "L'oculaire est retiré de votre liste d'équipement."
-
-#~ msgid "The eyepiece is added to your equipment list"
-#~ msgstr "L'oculaire est ajouté à votre liste d'équipement"
 
 #~ msgid "The eyepiece is changed in your equipment list"
 #~ msgstr "L'oculaire est changé dans votre liste d'équipement"
