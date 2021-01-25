@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSetTable extends Migration
+class CreateEquipmentSetTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateSetTable extends Migration
      */
     public function up()
     {
-        Schema::create('set', function (Blueprint $table) {
+        Schema::create('equipment_set', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
             $table->string('description', 1000);
@@ -33,6 +33,6 @@ class CreateSetTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sets');
+        Schema::dropIfExists('equipment_set');
     }
 }

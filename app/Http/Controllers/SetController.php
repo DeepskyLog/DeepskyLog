@@ -76,21 +76,21 @@ class SetController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\set  $set The equipment set to show
+     * @param  int  $set The id of the equipment set to show
      * @return \Illuminate\Http\Response
      */
-    public function show(Set $set)
+    public function show(int $set)
     {
         return view(
             'layout.set.show',
-            ['set' => $set]
+            ['set' => \App\Models\Set::where('id', $set)->first()]
         );
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\set  $set
+     * @param  \App\Models\Set  $set
      * @return \Illuminate\Http\Response
      */
     public function edit(set $set)

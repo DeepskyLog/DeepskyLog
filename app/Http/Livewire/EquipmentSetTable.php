@@ -13,12 +13,12 @@ class EquipmentSetTable extends LivewireDatatable
     public function builder()
     {
         if (auth()->user()->isAdmin()) {
-            return Set::with('user')->select('set.*');
+            return Set::with('user')->select('equipment_set.*');
         } else {
             return Set::where(
                 'user_id',
                 auth()->user()->id
-            )->select('set.*');
+            )->select('equipment_set.*');
         }
     }
 

@@ -99,10 +99,6 @@
     <br /><br />
     <livewire:equipment-set-table hideable="select" exportable />
 
-    {{-- Use trix rich text editor for the description
-        - To show the formatted text: class="trix-content"
-        - Use trix for adding the about field for the observer
-        --}}
     {{-- Use sets in eyepiece view --}}
     {{-- Translate --}}
     {{-- Other users should not be able to see the sets --}}

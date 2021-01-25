@@ -26,6 +26,6 @@ use Illuminate\Database\Eloquent\Model;
 class ObjectNamesOld extends Model
 {
     protected $connection = 'mysqlOld';
-
+    public $timestamps = false;
     protected $table = 'objectnames';
 }
