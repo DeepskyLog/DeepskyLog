@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Set;
 use App\Models\Instrument;
 use Illuminate\Support\Facades\Auth;
 use Mediconesystems\LivewireDatatables\Column;
@@ -11,15 +12,37 @@ use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
 
 class InstrumentTable extends LivewireDatatable
 {
+    public $equipment;
+
+    protected $listeners = [
+        'updateLivewireDatatable' => 'updateLivewireDatatable',
+    ];
+
+    public function updateLivewireDatatable($equipment_set)
+    {
+        $this->equipment = $equipment_set;
+        $this->refreshLivewireDatatable();
+    }
+
     public function builder()
     {
         if (auth()->user()->isAdmin()) {
             return Instrument::with('user')->select('instruments.*');
         } else {
-            return Instrument::where(
-                'user_id',
-                auth()->user()->id
-            )->select('instruments.*');
+            // * 0 => all my instruments, -1 => all my active instruments, > 0 => the id of the equipment set
+            if ($this->equipment == 0) {
+                return Instrument::where(
+                    'user_id',
+                    auth()->user()->id
+                )->select('instruments.*');
+            } elseif ($this->equipment == -1) {
+                return Instrument::where(
+                    'user_id',
+                    auth()->user()->id
+                )->where('active', 1)->select('instruments.*');
+            } else {
+                return Set::where('id', $this->equipment)->first()->instruments();
+            }
         }
     }
 
