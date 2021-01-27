@@ -22,6 +22,19 @@
         {{ _i("Add filter") }}
     </a>
     <br /><br />
+    {{ _i('Show equipment') }}
+    @php
+    $equipment = '<option value="0">' . _i('All my equipment') . '</option>';
+    $equipment .= '<option value="-1">' . _i('All my active equipment') . '</option>';
+    foreach(\App\Models\User::where('id', Auth::id())->first()->sets()->get() as $set) {
+    $equipment .= '<option value="' . $set->id . '">' . _i('Equipment set') . ': ' . $set->name . '</option>';
+    }
+    @endphp
+    <div x-data=''>
+        <x-input.select-live-wire wire:model='equipment' prettyname='myequipment' :options='$equipment'
+            selected="('equipment')" />
+    </div>
+    <br />
 
     @if (strpos(Request::url(), 'admin') === false)
     <livewire:filter-table hideable="select" exportable />

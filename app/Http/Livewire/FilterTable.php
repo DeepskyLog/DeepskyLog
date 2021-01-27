@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Set;
 use App\Models\Filter;
 use Mediconesystems\LivewireDatatables\Column;
 use Mediconesystems\LivewireDatatables\NumberColumn;
@@ -12,16 +13,37 @@ class FilterTable extends LivewireDatatable
 {
     public $model = Filter::class;
     public $instrument;
+    public $equipment;
+
+    protected $listeners = [
+        'updateLivewireDatatable' => 'updateLivewireDatatable',
+    ];
+
+    public function updateLivewireDatatable($equipment_set)
+    {
+        $this->equipment = $equipment_set;
+        $this->refreshLivewireDatatable();
+    }
 
     public function builder()
     {
         if (auth()->user()->isAdmin()) {
             return Filter::with('user')->select('filters.*');
         } else {
-            return Filter::where(
-                'user_id',
-                auth()->user()->id
-            )->select('filters.*');
+            // * 0 => all my filters, -1 => all my active filters, > 0 => the id of the equipment set
+            if ($this->equipment == 0) {
+                return Filter::where(
+                    'user_id',
+                    auth()->user()->id
+                )->select('filters.*');
+            } elseif ($this->equipment == -1) {
+                return Filter::where(
+                    'user_id',
+                    auth()->user()->id
+                )->where('active', 1)->select('filters.*');
+            } else {
+                return Set::where('id', $this->equipment)->first()->filters();
+            }
         }
     }
 
