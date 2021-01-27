@@ -7,6 +7,8 @@ use Livewire\Component;
 
 class View extends Component
 {
+    public $equipment;
+
     protected $listeners = [
         'activate' => 'activate',
         'delete'   => 'delete',
@@ -48,6 +50,23 @@ class View extends Component
                 'message',
                 _i('Lens %s deleted', $lens->name)
             );
+        }
+    }
+
+    /**
+     * Real time validation.
+     *
+     * @param mixed $propertyName The name of the property
+     *
+     * @return void
+     */
+    public function updated($propertyName)
+    {
+        if ($propertyName == 'equipment') {
+            // * 0 => all my equipment, -1 => all my active equipment, > 0 => the id of the equipment set
+
+            // Update the list with the filters to only show the filters of the equipment set
+            $this->emit('updateLivewireDatatable', $this->equipment);
         }
     }
 

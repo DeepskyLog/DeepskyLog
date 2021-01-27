@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Set;
 use App\Models\Lens;
 use Mediconesystems\LivewireDatatables\Column;
 use Mediconesystems\LivewireDatatables\BooleanColumn;
@@ -9,15 +10,37 @@ use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
 
 class LensTable extends LivewireDatatable
 {
+    public $equipment;
+
+    protected $listeners = [
+        'updateLivewireDatatable' => 'updateLivewireDatatable',
+    ];
+
+    public function updateLivewireDatatable($equipment_set)
+    {
+        $this->equipment = $equipment_set;
+        $this->refreshLivewireDatatable();
+    }
+
     public function builder()
     {
         if (auth()->user()->isAdmin()) {
             return Lens::with('user')->select('lens.*');
         } else {
-            return Lens::where(
-                'user_id',
-                auth()->user()->id
-            )->select('lens.*');
+            // * 0 => all my lenses, -1 => all my active lenses, > 0 => the id of the equipment set
+            if ($this->equipment == 0) {
+                return Lens::where(
+                    'user_id',
+                    auth()->user()->id
+                )->select('lens.*');
+            } elseif ($this->equipment == -1) {
+                return Lens::where(
+                    'user_id',
+                    auth()->user()->id
+                )->where('active', 1)->select('lens.*');
+            } else {
+                return Set::where('id', $this->equipment)->first()->lenses();
+            }
         }
     }
 

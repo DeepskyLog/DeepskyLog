@@ -91,13 +91,23 @@ class Lens extends Model implements HasMedia
     /**
      * Return all lenses for use in a selection.
      *
+     * @param int $equipment_set The equipment set to use to find the instruments.  If 0, we want to see all equipment, if -1 we want to see all active instruments
+     *
      * @return String the option tags
      */
-    public static function getLensOptions(): string
+    public static function getLensOptions(int $equipment_set = 0): string
     {
-        $lenses = self::where(
-            ['user_id' => Auth::user()->id]
-        )->where(['active' => 1])->pluck('id', 'name');
+        if ($equipment_set == -1) {
+            $lenses = self::where(
+                ['user_id' => Auth::user()->id]
+            )->where(['active' => 1])->pluck('id', 'name');
+        } elseif ($equipment_set == 0) {
+            $lenses = self::where(
+                ['user_id' => Auth::user()->id]
+            )->pluck('id', 'name');
+        } else {
+            $lenses = Set::where('id', $equipment_set)->first()->lenses()->pluck('id', 'name');
+        }
 
         $toReturn = '';
 
@@ -113,7 +123,7 @@ class Lens extends Model implements HasMedia
                 }
             }
         } else {
-            $toReturn .= '<option>' . _i('Add a lens') . '</option>';
+            $toReturn .= '<option>' . _i('No lens available') . '</option>';
         }
         return $toReturn;
     }
