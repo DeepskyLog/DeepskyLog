@@ -115,8 +115,6 @@ class View extends Component
     public function updated($propertyName)
     {
         if ($propertyName == 'equipment') {
-            // TODO: 5. Add equipment set to the detail page for targets
-
             // Check if the instrument is part of the selected equipment -> else deselect the instrument
             // Check if the lens is part of the selected equipment -> else deselect the lens
             if ($this->equipment == -1) {
