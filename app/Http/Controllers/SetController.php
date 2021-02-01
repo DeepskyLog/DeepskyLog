@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\set;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SetController extends Controller
 {
@@ -81,10 +82,14 @@ class SetController extends Controller
      */
     public function show(int $set)
     {
-        return view(
-            'layout.set.show',
-            ['set' => \App\Models\Set::where('id', $set)->first()]
-        );
+        if (Set::find($set)['user_id'] == Auth::id()) {
+            return view(
+                'layout.set.show',
+                ['set' => \App\Models\Set::where('id', $set)->first()]
+            );
+        } else {
+            abort(401);
+        }
     }
 
     /**
