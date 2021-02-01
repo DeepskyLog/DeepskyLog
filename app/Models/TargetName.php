@@ -78,6 +78,34 @@ class TargetName extends Model
     }
 
     /**
+     * Get catalogs from the TargetName to use in the drop down menu.
+     *
+     * @return string The list with the different catalogs
+     */
+    public static function getCatalogsChoices(): String
+    {
+        // First get the deepsky catalogs
+        $catalogs = TargetName::where('catalog', '!=', '')
+            ->select('catalog')->distinct()->get()->pluck('catalog');
+
+        $toReturn = '<option value=""></option>';
+        $toReturn .= '<option value="M">M</option>';
+        $toReturn .= '<option value="NGC">NGC</option>';
+        $toReturn .= '<option value="Caldwell">Caldwell</option>';
+        $toReturn .= '<option value="H400">H400</option>';
+        $toReturn .= '<option value="H400-II">H400-II</option>';
+        $toReturn .= '<option value="IC">IC</option>';
+
+        foreach ($catalogs as $catalog) {
+            if ($catalog != 'M' && $catalog != 'NGC' && $catalog != 'Caldwell' && $catalog != 'H400' && $catalog != 'H400-II' && $catalog != 'IC') {
+                $toReturn .= '<option value="' . $catalog . '">' . $catalog . '</option>';
+            }
+        }
+
+        return $toReturn;
+    }
+
+    /**
      * Check if the object has alternative names.
      *
      * @param Target $target the target

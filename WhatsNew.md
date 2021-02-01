@@ -2,7 +2,8 @@
 
 ## Functionality
 
-+ Show date of next opposition for outer planets and for next greatest eastern / western elongation for innet planets.
++ Add equipment set to create a collection of instruments, eyepieces, filters and lenses.
++ Show date of next opposition for outer planets and for next greatest eastern / western elongation for inner planets.
 + A rich text editor can be used for some fields, like the description of an equipment set, the observations, the description of an observing list, ...
 + New menu structure
 + Improved responsivity of DeepskyLog by not reloading the whole page every time.

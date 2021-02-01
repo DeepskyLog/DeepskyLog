@@ -27,13 +27,24 @@ use deepskylog\LaravelGettext\Facades\LaravelGettext;
 class TargetController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Search page for the targets.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        return view('layout.target.search');
+    }
+
+    /**
+     * Search page for the targets.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        dump($request->catalog);
+        dd($request);
     }
 
     /**

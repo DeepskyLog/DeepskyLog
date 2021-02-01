@@ -211,6 +211,10 @@ Route::get('/target/{name}', 'TargetController@show')
 Route::get('/target/autocomplete', 'TargetController@dataAjax')
     ->name('target.dataAjax');
 
+Route::get('/target', 'TargetController@index')->name('target.search');
+
+Route::post('/target', 'TargetController@search');
+
 Route::get('/sponsors', function () {
     return view('layout.sponsors');
 });

@@ -1,6 +1,7 @@
 <div x-data x-init="() => {
 	var choices = new Choices($refs.{{ $attributes['prettyname'] }}, {
-		itemSelectText: '',
+        itemSelectText: '',
+        shouldSort: false
 	});
 	choices.passedElement.element.addEventListener(
 	  'change',
