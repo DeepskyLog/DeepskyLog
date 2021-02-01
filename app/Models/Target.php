@@ -797,7 +797,11 @@ class Target extends Model
      */
     public function isMoon(): bool
     {
-        return $this->_targetType['id'] == 'MOON';
+        if ($this->_targetType) {
+            return $this->_targetType['id'] == 'MOON';
+        } else {
+            return false;
+        }
     }
 
     /**

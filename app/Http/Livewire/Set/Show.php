@@ -145,8 +145,6 @@ class Show extends Component
                 }
             }
             $this->addInstrument       = array_fill_keys($this->set->instruments()->get()->pluck('id')->toArray(), 1);
-
-            $this->showInstruments = false;
         }
         if (str_contains($propertyName, 'addEyepiece')) {
             $toRemove   = array_search(false, $this->addEyepieces);
@@ -166,8 +164,6 @@ class Show extends Component
                 }
             }
             $this->addEyepieces = array_fill_keys($this->set->eyepieces()->get()->pluck('id')->toArray(), 1);
-
-            $this->showEyepieces = false;
         }
         if (str_contains($propertyName, 'addFilter')) {
             $toRemove   = array_search(false, $this->addFilters);
@@ -187,8 +183,6 @@ class Show extends Component
                 }
             }
             $this->addFilters = array_fill_keys($this->set->filters()->get()->pluck('id')->toArray(), 1);
-
-            $this->showFilters = false;
         }
         if (str_contains($propertyName, 'addLens')) {
             $toRemove   = array_search(false, $this->addLenses);
@@ -208,8 +202,6 @@ class Show extends Component
                 }
             }
             $this->addLenses = array_fill_keys($this->set->lenses()->get()->pluck('id')->toArray(), 1);
-
-            $this->showLenses = false;
         }
     }
 

@@ -1,3 +1,16 @@
+# ToDos
+
+## Targets
+
++ [ ] Work on search page
+  + [ ] First with the catalogs and the number
+  + [ ] Add + to add extra things to search for?
++ [ ] Make quick search work
+
+## PHP 8
+
+## Observing lists
+
 # ToDos for DeepskyLog
 
 + [ ] See GitHub: <https://github.com/DeepskyLog/DeepskyLog/issues>
