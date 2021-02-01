@@ -38,6 +38,9 @@ class EquipmentSetTable extends LivewireDatatable
                 if ($set->count() == 0) {
                     return '0';
                 } else {
+                    if (auth()->user()->isAdmin()) {
+                        return $set->count();
+                    }
                     $toReturn = '<div class="trix-content"><ul>';
                     foreach ($set as $instrument) {
                         $toReturn .= '<li><a href="/instrument/' . $instrument->id . '">' . $instrument->name . '</a></li>';
@@ -51,6 +54,9 @@ class EquipmentSetTable extends LivewireDatatable
                 if ($set->count() == 0) {
                     return '0';
                 } else {
+                    if (auth()->user()->isAdmin()) {
+                        return $set->count();
+                    }
                     $toReturn = '<div class="trix-content"><ul>';
                     foreach ($set as $eyepiece) {
                         $toReturn .= '<li><a href="/eyepiece/' . $eyepiece->id . '">' . $eyepiece->name . '</a></li>';
@@ -64,6 +70,9 @@ class EquipmentSetTable extends LivewireDatatable
                 if ($set->count() == 0) {
                     return '0';
                 } else {
+                    if (auth()->user()->isAdmin()) {
+                        return $set->count();
+                    }
                     $toReturn = '<div class="trix-content"><ul>';
                     foreach ($set as $lens) {
                         $toReturn .= '<li><a href="/lens/' . $lens->id . '">' . $lens->name . '</a></li>';
@@ -77,6 +86,9 @@ class EquipmentSetTable extends LivewireDatatable
                 if ($set->count() == 0) {
                     return '0';
                 } else {
+                    if (auth()->user()->isAdmin()) {
+                        return $set->count();
+                    }
                     $toReturn = '<div class="trix-content"><ul>';
                     foreach ($set as $filter) {
                         $toReturn .= '<li><a href="/filter/' . $filter->id . '">' . $filter->name . '</a></li>';

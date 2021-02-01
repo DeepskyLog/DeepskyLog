@@ -50,6 +50,10 @@ class UserTable extends LivewireDatatable
                 $user = \App\Models\User::where('username', $username)->first();
                 return count($user->filters);
             })->label(_i('Filters')),
+            NumberColumn::name('lenses')->callback(['username', 'overviewstars'], function ($username) {
+                $user = \App\Models\User::where('username', $username)->first();
+                return count($user->lenses);
+            })->label(_i('Lenses')),
             NumberColumn::name('sets')->callback(['username', 'detaildsos'], function ($username) {
                 $user = \App\Models\User::where('username', $username)->first();
                 return count($user->sets);

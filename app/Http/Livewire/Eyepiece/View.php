@@ -115,7 +115,6 @@ class View extends Component
     public function updated($propertyName)
     {
         if ($propertyName == 'equipment') {
-            // TODO: 4. Show all sets for the administrator
             // TODO: 5. Add equipment set to the detail page for targets
 
             // Check if the instrument is part of the selected equipment -> else deselect the instrument

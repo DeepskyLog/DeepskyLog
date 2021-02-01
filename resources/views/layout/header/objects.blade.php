@@ -8,5 +8,9 @@
         <a class="dropdown-item disabled" href="#">───────────────────</a>
         <a class="dropdown-item" href="/catalogs">{{ _i('Catalogs') }}</a>
         <a class="dropdown-item disabled" href="/object/create">{{ _i("Add object") }}</a>
+        @if (auth()->user()->isAdmin())
+        <a class="dropdown-item disabled" href="#">───────────────────</a>
+        <a class="dropdown-item" href="/object/check">{{ _i("Check Objects") }}</a>
+        @endif
     </div>
 </li>

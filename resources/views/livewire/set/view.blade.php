@@ -96,7 +96,7 @@
 
     </form>
     @endif
+    @endif
     <br /><br />
     <livewire:equipment-set-table hideable="select" exportable />
-    @endif
 </div>

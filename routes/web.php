@@ -224,11 +224,8 @@ Route::get('/downloads/forms', function () {
 });
 
 // Sets
-// Route::get('/set/create/{eyepiece}', 'SetController@create')
-//     ->middleware('verified');
-
-// Route::get('/set/admin', 'SetController@indexAdmin')
-//     ->name('set.indexAdmin');
+Route::get('/set/admin', 'SetController@indexAdmin')
+    ->name('set.indexAdmin');
 
 Route::resource(
     'set',

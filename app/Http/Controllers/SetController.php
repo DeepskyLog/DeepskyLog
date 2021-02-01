@@ -82,7 +82,7 @@ class SetController extends Controller
      */
     public function show(int $set)
     {
-        if (Set::find($set)['user_id'] == Auth::id()) {
+        if (Set::find($set)['user_id'] == Auth::id() || Auth::user()->isAdmin()) {
             return view(
                 'layout.set.show',
                 ['set' => \App\Models\Set::where('id', $set)->first()]
