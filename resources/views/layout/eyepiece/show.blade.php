@@ -86,7 +86,7 @@
 
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td><a href="{{ route('users.show', $eyepiece->user) }}">{{  $eyepiece->user->name }}</a></td>
+        <td><a href="{{ route('users.show', $eyepiece->user->slug) }}">{{  $eyepiece->user->name }}</a></td>
     </tr>
     <tr>
         <td>{{ _i("Number of observations") }}</td>

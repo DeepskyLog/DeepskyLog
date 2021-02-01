@@ -56,7 +56,7 @@
     @endauth
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td><a href="{{ route('users.show', $lens->user) }}">{{  $lens->user->name }}</a></td>
+        <td><a href="{{ route('users.show', $lens->user->slug) }}">{{  $lens->user->name }}</a></td>
     </tr>
     <tr>
         <td>{{ _i("Number of observations") }}</td>

@@ -20,7 +20,7 @@
 
         <tr>
             <td>{{ _i("Owner") }}</td>
-            <td><a href="{{ route('users.show', $location->user) }}">{{ $location->user->name }}</a></td>
+            <td><a href="{{ route('users.show', $location->user->slug) }}">{{ $location->user->name }}</a></td>
         </tr>
         <tr>
             <td>{{ _i("Country") }}</td>

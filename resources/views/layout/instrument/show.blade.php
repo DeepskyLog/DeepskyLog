@@ -62,7 +62,7 @@
 
     <tr>
         <td>{{ _i("Owner") }}</td>
-        <td><a href="{{ route('users.show', $instrument->user) }}">{{  $instrument->user->name }}</a></td>
+        <td><a href="{{ route('users.show', $instrument->user->slug) }}">{{  $instrument->user->name }}</a></td>
     </tr>
 
     @auth
