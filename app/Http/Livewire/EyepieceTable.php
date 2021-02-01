@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Set;
 use App\Models\Eyepiece;
+use Illuminate\Support\Facades\Auth;
 use Mediconesystems\LivewireDatatables\Column;
 use Mediconesystems\LivewireDatatables\NumberColumn;
 use Mediconesystems\LivewireDatatables\BooleanColumn;
@@ -12,17 +14,49 @@ use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
 class EyepieceTable extends LivewireDatatable
 {
     public $model = Eyepiece::class;
-    public $instrument;
+    public $instrument_id;
+    public $lens_id;
+    public $equipment     = 0;
+
+    protected $listeners = [
+        'updateLivewireDatatable' => 'updateLivewireDatatable',
+    ];
+
+    public function updateLivewireDatatable($equipment_set, $instrument_id, $lens_id)
+    {
+        $this->equipment     = $equipment_set;
+        $this->instrument_id = $instrument_id;
+        $this->lens_id       = $lens_id;
+        $this->refreshLivewireDatatable();
+    }
 
     public function builder()
     {
+        if ($this->equipment == 0) {
+            if (!$this->instrument_id) {
+                $this->instrument_id = Auth::user()->stdtelescope;
+            }
+            if (!$this->lens_id) {
+                $this->lens_id = Auth::user()->stdlens;
+            }
+        }
         if (auth()->user()->isAdmin()) {
             return Eyepiece::with('user')->select('eyepieces.*');
         } else {
-            return Eyepiece::where(
-                'user_id',
-                auth()->user()->id
-            )->select('eyepieces.*');
+            // * 0 => all my eyepieces, -1 => all my active eyepieces, > 0 => the id of the equipment set
+            if ($this->equipment == 0) {
+                return Eyepiece::where(
+                    'user_id',
+                    auth()->user()->id
+                )->select('eyepieces.*');
+            } elseif ($this->equipment == -1) {
+                return Eyepiece::where(
+                    'user_id',
+                    auth()->user()->id
+                )->where('active', 1)->select('eyepieces.*');
+            } else {
+                return Set::where('id', $this->equipment)->first()->eyepieces();
+            }
         }
     }
 
@@ -56,19 +90,19 @@ class EyepieceTable extends LivewireDatatable
                 $toReturn,
                 NumberColumn::callback(['apparentFOV', 'focalLength'], function ($apparentFOV, $focalLength) {
                     if ($apparentFOV) {
-                        if (auth()->user()->stdtelescope) {
-                            $instrument = \App\Models\Instrument::where('id', auth()->user()->stdtelescope)->first();
+                        if ($this->instrument_id) {
+                            $instrument = \App\Models\Instrument::where('id', $this->instrument_id)->first();
                             if ($instrument->fd) {
-                                if (auth()->user()->stdlens) {
-                                    $factor = \App\Models\Lens::where('id', auth()->user()->stdlens)->first()->factor;
+                                if ($this->lens_id) {
+                                    $factor = \App\Models\Lens::where('id', $this->lens_id)->first()->factor;
                                 } else {
                                     $factor = 1;
                                 }
                                 return (new Coordinate($apparentFOV / (($instrument->diameter * $instrument->fd * $factor / $focalLength))))->convertToShortDegrees();
                             }
+                        } else {
+                            return '';
                         }
-                    } else {
-                        return '';
                     }
                 })->label(_i('True Field of View'))
                 ->sortBy('apparentFOV * focalLength')
@@ -76,11 +110,11 @@ class EyepieceTable extends LivewireDatatable
             array_push(
                 $toReturn,
                 NumberColumn::callback(['focalLength', 'name'], function ($focalLength, $name) {
-                    if (auth()->user()->stdtelescope) {
-                        $instrument = \App\Models\Instrument::where('id', auth()->user()->stdtelescope)->first();
+                    if ($this->instrument_id) {
+                        $instrument = \App\Models\Instrument::where('id', $this->instrument_id)->first();
                         if ($instrument->fd) {
-                            if (auth()->user()->stdlens) {
-                                $factor = \App\Models\Lens::where('id', auth()->user()->stdlens)->first()->factor;
+                            if ($this->lens_id) {
+                                $factor = \App\Models\Lens::where('id', $this->lens_id)->first()->factor;
                             } else {
                                 $factor = 1;
                             }
@@ -95,10 +129,10 @@ class EyepieceTable extends LivewireDatatable
             array_push(
                 $toReturn,
                 NumberColumn::callback(['focalLength', 'name', 'apparentFOV'], function ($focalLength, $name, $apparentFOV) {
-                    if (auth()->user()->stdtelescope) {
-                        $instrument = \App\Models\Instrument::where('id', auth()->user()->stdtelescope)->first();
-                        if (auth()->user()->stdlens) {
-                            $factor = \App\Models\Lens::where('id', auth()->user()->stdlens)->first()->factor;
+                    if ($this->instrument_id) {
+                        $instrument = \App\Models\Instrument::where('id', $this->instrument_id)->first();
+                        if ($this->lens_id) {
+                            $factor = \App\Models\Lens::where('id', $this->lens_id)->first()->factor;
                         } else {
                             $factor = 1;
                         }

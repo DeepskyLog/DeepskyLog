@@ -127,4 +127,61 @@ class Lens extends Model implements HasMedia
         }
         return $toReturn;
     }
+
+    /**
+     * Return all lenses, to be used directly in choices.js
+     *
+     * @param int $equipment_set The equipment set to use to find the instruments.  If 0, we want to see all equipment, if -1 we want to see all active instruments
+     *
+     * @return array the array for choicesjs
+     */
+    public static function getLensOptionsChoices(int $equipment_set = 0): array
+    {
+        $returnArray = [];
+        if (!auth()->user()->stdlens) {
+            array_push($returnArray, 'NULL', _i('No default lens'), 0, 1);
+        }
+        if ($equipment_set == -1) {
+            $lenses = self::where(
+                ['user_id' => Auth::user()->id]
+            )->where(['active' => 1])->pluck('id', 'name');
+        } elseif ($equipment_set == 0) {
+            $lenses = self::where(
+                ['user_id' => Auth::user()->id]
+            )->pluck('id', 'name');
+        } else {
+            $lenses = Set::where('id', $equipment_set)->first()->lenses()->pluck('id', 'name');
+        }
+
+        $count     = 0;
+        $lensInSet = false;
+
+        if (count($lenses) > 0) {
+            foreach ($lenses as $name => $id) {
+                $count++;
+                array_push($returnArray, $id, htmlentities($name, ENT_QUOTES));
+                // Selected
+                if ($id == Auth::user()->stdlens) {
+                    $lensInSet = true;
+                    array_push($returnArray, 1);
+                } else {
+                    array_push($returnArray, 0);
+                }
+                // Disabled
+                array_push($returnArray, 0);
+            }
+        }
+
+        if ($lensInSet) {
+            array_unshift($returnArray, 0, htmlentities(_i('No lens'), ENT_QUOTES), 0, 0);
+        } else {
+            array_unshift($returnArray, 0, htmlentities(_i('No lens'), ENT_QUOTES), 1, 0);
+        }
+
+        if ($count === 0) {
+            array_push($returnArray, 'NULL', _i('No lens available'), 0, 1);
+        }
+
+        return $returnArray;
+    }
 }

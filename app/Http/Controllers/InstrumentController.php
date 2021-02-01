@@ -227,4 +227,9 @@ class InstrumentController extends Controller
 
         return redirect()->back();
     }
+
+    public function getinstrumentsAjax(int $id = 0)
+    {
+        return response()->json(Instrument::getInstrumentOptionsChoices($id));
+    }
 }

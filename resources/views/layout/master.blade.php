@@ -19,6 +19,7 @@
 
         <script type="text/javascript" src="{{ asset('/js/app.js') }}"></script>
         <script src="{{ mix("js/trix.js") }}"></script>
+        <script src="{{ mix("js/choices.js") }}"></script>
     </head>
 
     <body>
@@ -51,7 +52,6 @@
         <!-- /#wrapper -->
 
         <script src="{{ asset('/js/dark-mode-switch.js') }}"></script>
-        <script src="{{ mix("js/choices.js") }}"></script>
 
         <!-- App scripts -->
         @stack('scripts')

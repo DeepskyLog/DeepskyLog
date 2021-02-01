@@ -471,16 +471,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v4.24",
+            "version": "v4.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "e606ad38aafccb9c15a98010be14156f746096eb"
+                "reference": "0b341838ce625435c4b6c0ac969d5cd509587a9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/e606ad38aafccb9c15a98010be14156f746096eb",
-                "reference": "e606ad38aafccb9c15a98010be14156f746096eb",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/0b341838ce625435c4b6c0ac969d5cd509587a9d",
+                "reference": "0b341838ce625435c4b6c0ac969d5cd509587a9d",
                 "shasum": ""
             },
             "require": {
@@ -529,7 +529,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.24"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.25"
             },
             "funding": [
                 {
@@ -537,7 +537,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-01-25T09:35:49+00:00"
+            "time": "2021-02-01T10:30:10+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
@@ -3348,16 +3348,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.43.0",
+            "version": "2.44.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "d32c57d8389113742f4a88725a170236470012e2"
+                "reference": "e6ef33cb1f67a4bed831ed6d0f7e156739a5d8cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/d32c57d8389113742f4a88725a170236470012e2",
-                "reference": "d32c57d8389113742f4a88725a170236470012e2",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/e6ef33cb1f67a4bed831ed6d0f7e156739a5d8cd",
+                "reference": "e6ef33cb1f67a4bed831ed6d0f7e156739a5d8cd",
                 "shasum": ""
             },
             "require": {
@@ -3373,7 +3373,7 @@
                 "phpmd/phpmd": "^2.9",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.12.54",
-                "phpunit/phpunit": "^7.5 || ^8.0",
+                "phpunit/phpunit": "^7.5.20 || ^8.5.14",
                 "squizlabs/php_codesniffer": "^3.4"
             },
             "bin": [
@@ -3437,7 +3437,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-17T20:55:32+00:00"
+            "time": "2021-01-26T20:46:41+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -4703,16 +4703,16 @@
         },
         {
             "name": "spatie/laravel-cookie-consent",
-            "version": "2.12.11",
+            "version": "2.12.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-cookie-consent.git",
-                "reference": "655654a74e84e089c40cf112e4b213f4e0d92294"
+                "reference": "0837e40bba4ccb9e6d3aedbd85ac54232eda4f9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-cookie-consent/zipball/655654a74e84e089c40cf112e4b213f4e0d92294",
-                "reference": "655654a74e84e089c40cf112e4b213f4e0d92294",
+                "url": "https://api.github.com/repos/spatie/laravel-cookie-consent/zipball/0837e40bba4ccb9e6d3aedbd85ac54232eda4f9d",
+                "reference": "0837e40bba4ccb9e6d3aedbd85ac54232eda4f9d",
                 "shasum": ""
             },
             "require": {
@@ -4768,7 +4768,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-cookie-consent/issues",
-                "source": "https://github.com/spatie/laravel-cookie-consent/tree/2.12.11"
+                "source": "https://github.com/spatie/laravel-cookie-consent/tree/2.12.12"
             },
             "funding": [
                 {
@@ -4776,7 +4776,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2020-12-11T07:53:33+00:00"
+            "time": "2021-01-29T20:20:28+00:00"
         },
         {
             "name": "spatie/laravel-medialibrary",
@@ -4884,17 +4884,17 @@
         },
         {
             "name": "spatie/laravel-medialibrary-pro",
-            "version": "1.12.13",
+            "version": "1.12.14",
             "source": {
                 "type": "git",
                 "url": "git@github.com:spatie/laravel-medialibrary-pro.git",
-                "reference": "6ae9b96179c3aa980a5fadec2465da8deb3e50fb"
+                "reference": "97fb7179452498e0c427c82c5c9c08f3c50e2c04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-6ae9b96179c3aa980a5fadec2465da8deb3e50fb-zip-bca46e.zip",
-                "reference": "6ae9b96179c3aa980a5fadec2465da8deb3e50fb",
-                "shasum": "0c13286d664ec51f558d5c8bf2bf082d7a6af5ee"
+                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-97fb7179452498e0c427c82c5c9c08f3c50e2c04-zip-fcfe44.zip",
+                "reference": "97fb7179452498e0c427c82c5c9c08f3c50e2c04",
+                "shasum": "16ffa2f7ccc3558dc98272a79002ec8bcfed58d6"
             },
             "require": {
                 "ext-json": "*",
@@ -4959,10 +4959,10 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.12.13",
+                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.12.14",
                 "issues": "https://github.com/spatie/laravel-medialibrary-pro/issues"
             },
-            "time": "2021-01-26T12:03:54+00:00"
+            "time": "2021-01-31T12:07:49+00:00"
         },
         {
             "name": "spatie/laravel-translatable",

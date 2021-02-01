@@ -46,6 +46,8 @@ Route::get('/lens/{lens}/getImage', 'LensController@getImage')
 Route::post('/lens/{lens}/deleteImage', 'LensController@deleteImage')
     ->name('lens.deleteImage');
 
+Route::get('/getlenses/{id}', 'LensController@getlensesAjax');
+
 // Filters
 Route::get('/filter/create/{filter}', 'FilterController@create')
     ->middleware('verified');
@@ -109,6 +111,8 @@ Route::get('/instrument/{instrument}/getImage', 'InstrumentController@getImage')
 
 Route::post('/instrument/{instrument}/deleteImage', 'InstrumentController@deleteImage')
     ->name('instrument.deleteImage');
+
+Route::get('/getinstruments/{id}', 'InstrumentController@getinstrumentsAjax');
 
 // Locations
 Route::get('/location/create/{location}', 'LocationController@create')

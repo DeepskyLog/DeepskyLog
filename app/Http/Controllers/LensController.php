@@ -201,4 +201,9 @@ class LensController extends Controller
 
         return redirect()->back();
     }
+
+    public function getlensesAjax(int $id = 0)
+    {
+        return response()->json(Lens::getLensOptionsChoices($id));
+    }
 }

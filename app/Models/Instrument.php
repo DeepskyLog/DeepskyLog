@@ -86,9 +86,11 @@ class Instrument extends Model implements HasMedia
     /**
      * Return all instruments, sorted by type for use in a selection.
      *
+     * @param int $equipment_set The equipment set to use to find the instruments.  If 0, we want to see all equipment, if -1 we want to see all active instruments
+     *
      * @return String the optgroup and option tags
      */
-    public static function getInstrumentOptions(): string
+    public static function getInstrumentOptions(int $equipment_set = 0): string
     {
         // Loop over the instrument types and make separate groups.
         $types = DB::table('instrument_types')->get();
@@ -99,9 +101,17 @@ class Instrument extends Model implements HasMedia
             $toReturn .= '<optgroup><option value="NULL">' . _i('No default instrument') . '</option></optgroup>';
         }
         foreach ($types as $typeid => $type) {
-            $instruments = self::where(
-                ['user_id' => Auth::user()->id]
-            )->where(['type' => $typeid])->where(['active' => 1])->pluck('id', 'name');
+            if ($equipment_set == -1) {
+                $instruments = self::where(
+                    ['user_id' => Auth::user()->id]
+                )->where(['type' => $typeid])->where(['active' => 1])->pluck('id', 'name');
+            } elseif ($equipment_set == 0) {
+                $instruments = self::where(
+                    ['user_id' => Auth::user()->id]
+                )->where(['type' => $typeid])->pluck('id', 'name');
+            } else {
+                $instruments = Set::where('id', $equipment_set)->first()->instruments()->where(['type' => $typeid])->pluck('id', 'name');
+            }
 
             if (count($instruments) > 0) {
                 $toReturn .= '<optgroup label="' . _i($type->type) . '">';
@@ -120,41 +130,75 @@ class Instrument extends Model implements HasMedia
         }
 
         if ($count === 0) {
-            $toReturn = '<option>' . _i('Add an instrument') . '</option>';
+            $toReturn = '<option>' . _i('No instrument available') . '</option>';
         }
 
         return $toReturn;
     }
 
     /**
-     * Return all instruments, sorted by type for use in a selection.
+     * Return all instruments, to be used directly in choices.js
      *
-     * @return None the method print the optgroup and option tags
+     * @param int $equipment_set The equipment set to use to find the instruments.  If 0, we want to see all equipment, if -1 we want to see all active instruments
+     *
+     * @return array the array for choicesjs
      */
-    public static function getInstrumentOptions2()
+    public static function getInstrumentOptionsChoices(int $equipment_set = 0): array
     {
         // Loop over the instrument types and make separate groups.
-        $types      = DB::table('instrument_types')->get();
-        $count      = 0;
-        $instrument = [];
+        $types = DB::table('instrument_types')->get();
+        $count = 0;
+
+        $returnArray = [];
+        if (!auth()->user()->stdtelescope) {
+            array_push($returnArray, 'NULL', _i('No default instrument'), 0, 1);
+        }
+        $counter = 1;
+
+        $instrumentInSet = false;
 
         foreach ($types as $typeid => $type) {
-            $instruments = self::where(
-                ['user_id' => Auth::user()->id]
-            )->where(['type' => $typeid])->where(['active' => 1])->pluck('id', 'name');
+            if ($equipment_set == -1) {
+                $instruments = self::where(
+                    ['user_id' => Auth::user()->id]
+                )->where(['type' => $typeid])->where(['active' => 1])->pluck('id', 'name');
+            } elseif ($equipment_set == 0) {
+                $instruments = self::where(
+                    ['user_id' => Auth::user()->id]
+                )->where(['type' => $typeid])->pluck('id', 'name');
+            } else {
+                $instruments = Set::where('id', $equipment_set)->first()->instruments()->where(['type' => $typeid])->pluck('id', 'name');
+            }
 
             if (count($instruments) > 0) {
-//                echo '<optgroup label="' . _i($type->type) . '">';
+                $counter++;
 
                 foreach ($instruments as $name => $id) {
-                    $array[$id] = $name;
+                    $count++;
+                    array_push($returnArray, $id, htmlentities($name, ENT_QUOTES));
+                    // Selected
+                    if ($id == Auth::user()->stdtelescope) {
+                        $instrumentInSet = true;
+                        array_push($returnArray, 1);
+                    } else {
+                        array_push($returnArray, 0);
+                    }
+                    // Disabled
+                    array_push($returnArray, 0);
                 }
             }
         }
-        return $array;
-        // if ($count === 0) {
-        //     echo '<option>' . _i('Add an instrument') . '</option>';
-        // }
+        if ($instrumentInSet) {
+            array_unshift($returnArray, 0, htmlentities(_i('No instrument'), ENT_QUOTES), 0, 0);
+        } else {
+            array_unshift($returnArray, 0, htmlentities(_i('No instrument'), ENT_QUOTES), 1, 0);
+        }
+
+        if ($count === 0) {
+            array_push($returnArray, 'NULL', _i('No instrument available'), 0, 1);
+        }
+
+        return $returnArray;
     }
 
     // TODO: An instrument belongs to one or more observations.

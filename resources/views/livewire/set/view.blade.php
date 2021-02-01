@@ -98,10 +98,5 @@
     @endif
     <br /><br />
     <livewire:equipment-set-table hideable="select" exportable />
-
-    {{-- Use sets in eyepiece view --}}
-    {{-- Translate --}}
-    {{-- Other users should not be able to see the sets --}}
-    {{-- Show all sets for the administrator --}}
     @endif
 </div>
