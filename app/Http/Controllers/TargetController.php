@@ -13,7 +13,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Target;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use deepskylog\LaravelGettext\Facades\LaravelGettext;
 
 /**
@@ -43,8 +45,63 @@ class TargetController extends Controller
      */
     public function search(Request $request)
     {
-        dump($request->catalog);
-        dd($request);
+        // Build the query
+        $targetQuery = \App\Models\TargetName::query();
+        if ($request->number) {
+            if (Str::contains($request->number, '%')) {
+                $targetQuery->where('catindex', 'like', $request->number);
+            } else {
+                $targetQuery->where('catindex', $request->number);
+            }
+        }
+        if ($request->catalog) {
+            $targetQuery->where('catalog', $request->catalog);
+        }
+
+        $targetsToShow = $targetQuery->get();
+
+        if ($request->number) {
+            // Also search for translated strings
+            $translated_target = \App\Models\Target::where(
+                'target_name->' . LaravelGettext::getLocaleLanguage(),
+                'like',
+                $request->number
+            )->first();
+            if ($translated_target) {
+                $toAdd = \App\Models\TargetName::where('target_id', $translated_target->id)->first();
+                $targetsToShow->push($toAdd);
+            }
+        }
+
+        if (count($targetsToShow) == 1) {
+            // If there is only one target as a result of the query, show this target
+            $target_id = $targetsToShow->first()->target_id;
+
+            $target = \App\Models\Target::where('id', $target_id)->first();
+
+            return view(
+                'layout.target.show',
+                compact('target', $target)
+            );
+        } elseif (count($targetsToShow) > 1) {
+            // If there is more than one target, show a list with the targets.
+            $allTargets     = \App\Models\Target::whereIn('targets.id', $targetsToShow->pluck('target_id'));
+            $targetsToShow  = $allTargets->get();
+
+            // TODO: Very slow!  Not because of the time it takes to calculate everything for the table.
+            return view(
+                'layout.target.view',
+                compact('targetsToShow', $targetsToShow)
+            );
+        } else {
+            // Show the search page if no target was found
+            laraflash(_i('The requested target does not exist.'))->warning();
+
+            return redirect(route('target.search'));
+        }
+
+        // TODO: We can use the same request for the quick pick
+        // TODO: Adapt the search page to be able to add new search criteria (using a + in livewire).  Make it also possible to remove one of the criteria (using a -)
     }
 
     /**

@@ -576,7 +576,7 @@ class Target extends Model
         $deltaT = Time::deltaT($date);
 
         if ($this->isSolarSystem()) {
-            $nutation = Time::nutation($deltaT);
+            $nutation = Time::nutation(Time::getJd($date));
 
             if ($this->_observationType['type'] == 'sun') {
                 $this->_target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
@@ -1060,7 +1060,7 @@ class Target extends Model
                     if ($this->_observationType['type'] == 'sun') {
                         $deltaT     = Time::deltaT($date);
 
-                        $nutation = Time::nutation($deltaT);
+                        $nutation = Time::nutation(Time::getJd($date));
 
                         $target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
                         $target->calculateEphemerides(

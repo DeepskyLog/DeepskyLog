@@ -16,6 +16,7 @@ class NearbyTable extends LivewireDatatable
     private $_targets;
     private $_types;
     public $_constellations = [];
+    public $targetsToShow;
 
     protected $listeners = [
         'zoomUpdated' => 'zoomUpdated', 'locationChanged' => 'locationChanged', 'instrumentChanged' => 'locationChanged',
@@ -38,11 +39,15 @@ class NearbyTable extends LivewireDatatable
 
     public function builder()
     {
-        $targetname          = \App\Models\TargetName::where('slug', $this->slug)->with('target')->first();
-        $this->_targets      = $targetname->target->getNearbyObjects($this->zoom);
-        // TODO: The following line breaks the table: Only the first item is shown
-        //$this->_constellations = $this->_targets->groupBy('constellation')->get()->pluck('constellation')->flatten()->toArray();
+        if ($this->targetsToShow) {
+            $this->_targets = $this->targetsToShow->toQuery();
+        } else {
+            $targetname          = \App\Models\TargetName::where('slug', $this->slug)->with('target')->first();
+            $this->_targets      = $targetname->target->getNearbyObjects($this->zoom);
 
+            // TODO: The following line breaks the table: Only the first item is shown
+        //$this->_constellations = $this->_targets->groupBy('constellation')->get()->pluck('constellation')->flatten()->toArray();
+        }
         return $this->_targets;
     }
 
@@ -52,100 +57,100 @@ class NearbyTable extends LivewireDatatable
             Column::name('name')->callback(['name', 'id'], function ($name, $id) {
                 $this->_currentTarget = \App\Models\Target::where('id', $id)->first();
                 return '<a href="/target/' . $this->_currentTarget->slug . '">' . $name . '</a>';
-            })->label(_i('Name'))->searchable(),
-            Column::name('constellation.name')->label(_i('Constellation'))
-                ->filterable($this->constellations),
-            NumberColumn::name('mag')->label(_i('Mag'))->filterable(),
-            NumberColumn::name('subr')->label(_i('SB'))->filterable(),
-            Column::name('type.type')
-            ->callback(['type.type'], function ($type) {
-                return _i($type);
-            })
-            ->label(_i('Type'))->filterable($this->types),
-            Column::name('diam1')->callback(['id', 'pa'], function ($id, $pa) {
-                $this->_currentTarget = \App\Models\Target::where('id', $id)->first();
+            })->label(_i('Name'))->searchable(), ];//,
+        // Column::name('constellation.name')->label(_i('Constellation'))
+        //     ->filterable($this->constellations),
+        // NumberColumn::name('mag')->label(_i('Mag'))->filterable(),
+        // NumberColumn::name('subr')->label(_i('SB'))->filterable(),
+        // Column::name('type.type')
+        // ->callback(['type.type'], function ($type) {
+        //     return _i($type);
+        // })
+        // ->label(_i('Type'))->filterable($this->types),
+        // Column::name('diam1')->callback(['id', 'pa'], function ($id, $pa) {
+        //     $this->_currentTarget = \App\Models\Target::where('id', $id)->first();
 
-                if ($pa != 999) {
-                    return $this->_currentTarget->size() . '/' . $this->_currentTarget->pa . '°';
-                } else {
-                    return $this->_currentTarget->size();
-                }
-            })->sortBy('diam1*diam2')->label(_i('Size')),
-            Column::name('ra')->callback(['ra'], function ($ra) {
-                return (new Coordinate($ra))->convertToHours();
-            })->label(_i('RA')),
-            Column::name('decl')->callback(['decl'], function ($decl) {
-                return (new Coordinate($decl))->convertToDegrees();
-            })->label(_i('Decl')), ];
+        //     if ($pa != 999) {
+        //         return $this->_currentTarget->size() . '/' . $this->_currentTarget->pa . '°';
+        //     } else {
+        //         return $this->_currentTarget->size();
+        //     }
+        // })->sortBy('diam1*diam2')->label(_i('Size')),
+        // Column::name('ra')->callback(['ra'], function ($ra) {
+        //     return (new Coordinate($ra))->convertToHours();
+        // })->label(_i('RA')),
+        // Column::name('decl')->callback(['decl'], function ($decl) {
+        //     return (new Coordinate($decl))->convertToDegrees();
+        // })->label(_i('Decl')), ];
 
-        if (auth()->user()) {
-            array_push(
-                $toReturn,
-                Column::name(auth()->user()->standardAtlasCode)->label(_i(
-                    \App\Models\Atlas::where(
-                        'code',
-                        auth()->user()->standardAtlasCode
-                    )->first()->name
-                ))
-            );
-            array_push(
-                $toReturn,
-                NumberColumn::name('SBObj')->callback(['SBObj', 'id'], function ($SBObj, $id) {
-                    return '<span class="' . $this->_currentTarget->contrast_type
-                       . '" data-toggle="tooltip" data-placement="bottom" title="'
-                       . $this->_currentTarget->contrast_popup . '">' . $this->_currentTarget->contrast
-                       . '</span>';
-                })->filterable()->sortBy('contrast')->label(_i('Contrast Reserve'))
-            );
-            array_push(
-                $toReturn,
-                Column::name('SBObj')->callback(['SBObj', 'id', 'target_name'], function ($SBObj, $id, $target_name) {
-                    return $this->_currentTarget->prefMagEasy;
-                })->label(_i('Preferred Magnification'))
-            );
-            array_push(
-                $toReturn,
-                Column::name('rise')->callback(['SBObj', 'id', 'constellation'], function ($SBObj, $id, $constellation) {
-                    return '<span data-toggle="tooltip" data-placement="bottom" title="'
-                . $this->_currentTarget->rise_popup . '">' . $this->_currentTarget->rise . '</span>';
-                })->label(_i('Rise'))
-            );
-            // TODO: Add column with Seen
-            // TODO: Add column with Last Seen
-            array_push(
-                $toReturn,
-                Column::name('transit')->callback(['SBObj', 'id', 'ra'], function ($SBObj, $id, $ra) {
-                    return '<span data-toggle="tooltip" data-placement="bottom" title="'
-                . $this->_currentTarget->transit_popup . '">' . $this->_currentTarget->transit . '</span>';
-                })->label(_i('Transit'))
-            );
-            array_push(
-                $toReturn,
-                Column::name('set')->callback(['SBObj', 'id', 'decl'], function ($SBObj, $id, $decl) {
-                    return '<span data-toggle="tooltip" data-placement="bottom" title="'
-                . $this->_currentTarget->set_popup . '">' . $this->_currentTarget->set . '</span>';
-                })->label(_i('Set'))
-            );
-            array_push(
-                $toReturn,
-                Column::name('BestTime')->callback(['SBObj', 'id', 'mag'], function ($SBObj, $id, $mag) {
-                    return $this->_currentTarget->bestTime;
-                })->label(_i('Best Time'))
-            );
-            array_push(
-                $toReturn,
-                Column::name('MaxAlt')->callback(['SBObj', 'id', 'subr'], function ($SBObj, $id, $subr) {
-                    return '<span data-toggle="tooltip" data-placement="bottom" title="'
-                . $this->_currentTarget->maxAlt_popup . '">' . $this->_currentTarget->maxAlt . '</span>';
-                })->label(_i('Max Alt.'))
-            );
-            array_push(
-                $toReturn,
-                Column::name('HighestAlt')->callback(['SBObj', 'id', 'diam1'], function ($SBObj, $id, $diam1) {
-                    return $this->_currentTarget->highest_alt;
-                })->label(_i('Highest Alt.'))
-            );
-        };
+        // if (auth()->user()) {
+        //     array_push(
+        //         $toReturn,
+        //         Column::name(auth()->user()->standardAtlasCode)->label(_i(
+        //             \App\Models\Atlas::where(
+        //                 'code',
+        //                 auth()->user()->standardAtlasCode
+        //             )->first()->name
+        //         ))
+        //     );
+        //     array_push(
+        //         $toReturn,
+        //         NumberColumn::name('SBObj')->callback(['SBObj', 'id'], function ($SBObj, $id) {
+        //             return '<span class="' . $this->_currentTarget->contrast_type
+        //                . '" data-toggle="tooltip" data-placement="bottom" title="'
+        //                . $this->_currentTarget->contrast_popup . '">' . $this->_currentTarget->contrast
+        //                . '</span>';
+        //         })->filterable()->sortBy('contrast')->label(_i('Contrast Reserve'))
+        //     );
+        //     array_push(
+        //         $toReturn,
+        //         Column::name('SBObj')->callback(['SBObj', 'id', 'target_name'], function ($SBObj, $id, $target_name) {
+        //             return $this->_currentTarget->prefMagEasy;
+        //         })->label(_i('Preferred Magnification'))
+        //     );
+        //     array_push(
+        //         $toReturn,
+        //         Column::name('rise')->callback(['SBObj', 'id', 'constellation'], function ($SBObj, $id, $constellation) {
+        //             return '<span data-toggle="tooltip" data-placement="bottom" title="'
+        //         . $this->_currentTarget->rise_popup . '">' . $this->_currentTarget->rise . '</span>';
+        //         })->label(_i('Rise'))
+        //     );
+        //     // TODO: Add column with Seen
+        //     // TODO: Add column with Last Seen
+        //     array_push(
+        //         $toReturn,
+        //         Column::name('transit')->callback(['SBObj', 'id', 'ra'], function ($SBObj, $id, $ra) {
+        //             return '<span data-toggle="tooltip" data-placement="bottom" title="'
+        //         . $this->_currentTarget->transit_popup . '">' . $this->_currentTarget->transit . '</span>';
+        //         })->label(_i('Transit'))
+        //     );
+        //     array_push(
+        //         $toReturn,
+        //         Column::name('set')->callback(['SBObj', 'id', 'decl'], function ($SBObj, $id, $decl) {
+        //             return '<span data-toggle="tooltip" data-placement="bottom" title="'
+        //         . $this->_currentTarget->set_popup . '">' . $this->_currentTarget->set . '</span>';
+        //         })->label(_i('Set'))
+        //     );
+        //     array_push(
+        //         $toReturn,
+        //         Column::name('BestTime')->callback(['SBObj', 'id', 'mag'], function ($SBObj, $id, $mag) {
+        //             return $this->_currentTarget->bestTime;
+        //         })->label(_i('Best Time'))
+        //     );
+        //     array_push(
+        //         $toReturn,
+        //         Column::name('MaxAlt')->callback(['SBObj', 'id', 'subr'], function ($SBObj, $id, $subr) {
+        //             return '<span data-toggle="tooltip" data-placement="bottom" title="'
+        //         . $this->_currentTarget->maxAlt_popup . '">' . $this->_currentTarget->maxAlt . '</span>';
+        //         })->label(_i('Max Alt.'))
+        //     );
+        //     array_push(
+        //         $toReturn,
+        //         Column::name('HighestAlt')->callback(['SBObj', 'id', 'diam1'], function ($SBObj, $id, $diam1) {
+        //             return $this->_currentTarget->highest_alt;
+        //         })->label(_i('Highest Alt.'))
+        //     );
+        // };
 
         return $toReturn;
     }
