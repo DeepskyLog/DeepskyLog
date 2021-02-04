@@ -4,8 +4,11 @@ namespace App\Http\Livewire\Target;
 
 use App\Models\Target;
 use Livewire\Component;
+use App\Models\Astrolib;
+use App\Models\Location;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 
 class Detail extends Component
 {
@@ -85,6 +88,10 @@ class Detail extends Component
         }
         if ($propertyName == 'location') {
             Auth::user()->update(['stdlocation' => $this->location]);
+            $location = Location::where('id', $this->location)->first();
+            $coords   = new GeographicalCoordinates($location->longitude, $location->latitude);
+            Astrolib::getInstance()->getAstronomyLibrary()->setGeographicalCoordinates($coords);
+            Astrolib::getInstance()->setLocation($location);
             $this->emit('locationChanged');
         }
         if ($propertyName == 'eyepiece') {

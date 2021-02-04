@@ -16,6 +16,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\Astrolib;
+use App\Models\Location;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -41,11 +43,16 @@ class DeepskyLogChecks
      */
     public function handle($request, Closure $next)
     {
-        $datetime = new \Carbon\Carbon();
-        $date     = $datetime->format('Y-m-d');
-
         if (!Session::has('date')) {
+            $datetime = new \Carbon\Carbon();
+            $date     = $datetime->format('Y-m-d');
+
             Session::put('date', $date);
+            Astrolib::getInstance()->getAstronomyLibrary()->setDate($datetime);
+        }
+        if (Auth::user()->stdlocation) {
+            $location = Location::where('id', Auth::user()->stdlocation)->first();
+            Astrolib::getInstance()->setLocation($location);
         }
 
         if (!Auth::guest()) {

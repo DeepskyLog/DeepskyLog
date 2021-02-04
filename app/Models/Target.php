@@ -21,11 +21,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use deepskylog\AstronomyLibrary\Time;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Session;
 use Spatie\Translatable\HasTranslations;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
-use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 
 /**
  * Target eloquent model.
@@ -169,7 +167,7 @@ class Target extends Model
     public function getPrefMagEasyAttribute(): string
     {
         if (!auth()->guest()) {
-            if (auth()->user()->stdtelescope && auth()->user()->stdlocation && auth()->user()->stdlocation) {
+            if (auth()->user()->stdtelescope && auth()->user()->stdlocation) {
                 if (!isset($this->_contrast)) {
                     $this->_contrast = new \App\Models\Contrast($this);
                 }
@@ -549,34 +547,23 @@ class Target extends Model
         $this->_popup[2] = '-';
         $this->_popup[3] = '-';
 
-        $datestr    = Session::get('date');
-        $date       = Carbon::createFromFormat('Y-m-d', $datestr);
-        $date->hour = 12;
+        $astrolib = Astrolib::getInstance()->getAstronomyLibrary();
+        $date     = $astrolib->getDate();
 
         if (!Auth::guest() && Auth::user()->stdlocation) {
             if ($this->_location == null) {
-                $this->_location = \App\Models\Location::where(
-                    'id',
-                    Auth::user()->stdlocation
-                )->first();
+                $this->_location = Astrolib::getInstance()->getLocation();
             }
             $location = $this->_location;
-
-            $geo_coords = new GeographicalCoordinates(
-                $location->longitude,
-                $location->latitude
-            );
 
             $date->timezone($this->_location->timezone);
         }
 
-        $greenwichSiderialTime = Time::apparentSiderialTimeGreenwich(
-            $date
-        );
-        $deltaT = Time::deltaT($date);
+        $greenwichSiderialTime = $astrolib->getApparentSiderialTime();
+        $deltaT                = $astrolib->getDeltaT();
 
         if ($this->isSolarSystem()) {
-            $nutation = Time::nutation(Time::getJd($date));
+            $nutation = $astrolib->getNutation();
 
             if ($this->_observationType['type'] == 'sun') {
                 $this->_target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
@@ -590,7 +577,7 @@ class Target extends Model
                 if ($this->isNonSolarSystem() || $this->isSolarSystem()) {
                     // Calculate the ephemerids for the target
                     $this->_target->calculateEphemerides(
-                        $geo_coords,
+                        Astrolib::getInstance()->getAstronomyLibrary()->getGeographicalCoordinates(),
                         $greenwichSiderialTime,
                         $deltaT
                     );
@@ -613,7 +600,7 @@ class Target extends Model
                             $this->target_name,
                             $this->_target->getRising()
                                 ->timezone($location->timezone)->format('H:i'),
-                            $location->target_name
+                            $location->name
                         );
                         $popup[2] = sprintf(
                             _i('%s sets at %s in %s on ')
@@ -621,7 +608,7 @@ class Target extends Model
                             $this->target_name,
                             $this->_target->getSetting()
                                 ->timezone($location->timezone)->format('H:i'),
-                            $location->target_name
+                            $location->name
                         );
                     }
                     $popup[1] = sprintf(
@@ -630,7 +617,7 @@ class Target extends Model
                         $this->target_name,
                         $this->_target->getTransit()
                             ->timezone($location->timezone)->format('H:i'),
-                        $location->target_name
+                        $location->name
                     );
 
                     if ($this->_target->getMaxHeightAtNight()->getCoordinate() < 0) {
@@ -638,8 +625,7 @@ class Target extends Model
                             _i('%s does not rise above horizon in %s on ')
                                 . $date->isoFormat('LL'),
                             $this->target_name,
-                            $location->target_name,
-                            $datestr
+                            $location->name
                         );
                     } else {
                         $popup[3] = sprintf(
@@ -650,7 +636,7 @@ class Target extends Model
                                 $this->_target->getMaxHeightAtNight()
                                     ->convertToDegrees()
                             ),
-                            $location->target_name,
+                            $location->name,
                         );
                     }
                     $this->_popup = $popup;
@@ -988,18 +974,10 @@ class Target extends Model
             return $this->_ephemerides;
         } else {
             if ($this->_location == null) {
-                $this->_location = \App\Models\Location::where(
-                    'id',
-                    Auth::user()->stdlocation
-                )->first();
+                $this->_location = Astrolib::getInstance()->getLocation();
             }
             $location = $this->_location;
             $cnt      = 0;
-
-            $geo_coords = new GeographicalCoordinates(
-                $location->longitude,
-                $location->latitude
-            );
 
             if (!$this->_observationType) {
                 $this->_setObservationType();
@@ -1042,6 +1020,8 @@ class Target extends Model
                 $target->setEquatorialCoordinates($equa);
             }
 
+            $deltaT = Astrolib::getInstance()->getAstronomyLibrary()->getDeltaT();
+
             for ($i = 1; $i < 13; ++$i) {
                 for ($j = 1; $j < 16; $j = $j + 14) {
                     $datestr = sprintf('%02d', $j) . '/' . sprintf('%02d', $i) . '/'
@@ -1054,12 +1034,11 @@ class Target extends Model
                     $greenwichSiderialTime = Time::apparentSiderialTimeGreenwich(
                         $date
                     );
-                    $deltaT = Time::deltaT($date);
+
+                    $geo_coords = Astrolib::getInstance()->getAstronomyLibrary()->getGeographicalCoordinates();
 
                     // Calculate the ephemerids for the target
                     if ($this->_observationType['type'] == 'sun') {
-                        $deltaT     = Time::deltaT($date);
-
                         $nutation = Time::nutation(Time::getJd($date));
 
                         $target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
@@ -1069,8 +1048,6 @@ class Target extends Model
                             $deltaT
                         );
                     } elseif ($this->_observationType['type'] == 'planets') {
-                        $deltaT     = Time::deltaT($date);
-
                         $target->calculateEquatorialCoordinates($date);
                         $target->calculateEphemerides(
                             $geo_coords,
@@ -1408,26 +1385,14 @@ class Target extends Model
         }
 
         if ($this->_location == null) {
-            $this->_location = \App\Models\Location::where(
-                'id',
-                Auth::user()->stdlocation
-            )->first();
+            $this->_location = Astrolib::getInstance()->getLocation();
         }
         $location = $this->_location;
 
-        $geo_coords = new GeographicalCoordinates(
-            $location->longitude,
-            $location->latitude
-        );
-
-        $datestr      = Session::get('date');
-        $date         = Carbon::createFromFormat('Y-m-d', $datestr);
-        $date->hour   = 12;
-        $date->minute = 0;
-        $date->second = 0;
+        $date         = Astrolib::getInstance()->getAstronomyLibrary()->getDate();
         $date->timezone($location->timezone);
 
-        return $this->_target->altitudeGraph($geo_coords, $date);
+        return $this->_target->altitudeGraph(Astrolib::getInstance()->getAstronomyLibrary()->getGeographicalCoordinates(), $date);
     }
 
     /**
@@ -1522,8 +1487,7 @@ class Target extends Model
      */
     public function getOpposition(): String
     {
-        $datestr    = Session::get('date');
-        $date       = Carbon::createFromFormat('Y-m-d', $datestr);
+        $date       = Astrolib::getInstance()->getAstronomyLibrary()->getDate();
 
         if ($this->target_name == 'Venus' || $this->target_name == 'Mercury') {
             return '<td colspan="3">'
