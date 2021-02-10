@@ -72,11 +72,12 @@ class NearbyTable extends LivewireDatatable
 
     public function columns()
     {
+        // TODO: Natural sort on name
         $toReturn = [
             Column::name('name')->callback(['name', 'id'], function ($name, $id) {
                 $this->_currentTarget = \App\Models\Target::where('id', $id)->first();
                 return '<a href="/target/' . $this->_currentTarget->slug . '">' . $name . '</a>';
-            })->label(_i('Name'))->searchable(),
+            })->label(_i('Name'))->defaultSort('asc')->searchable(),
             Column::name('constellation.name')->label(_i('Constellation'))
                 ->filterable($this->constellations),
             NumberColumn::name('mag')->label(_i('Mag'))->filterable(),

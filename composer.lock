@@ -471,16 +471,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v4.26.1",
+            "version": "v4.26.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "613994b195e71f4a7812336c91334adf4d6cbb73"
+                "reference": "bb54d136c2122c1aa881c79c21555ee86aca914e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/613994b195e71f4a7812336c91334adf4d6cbb73",
-                "reference": "613994b195e71f4a7812336c91334adf4d6cbb73",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/bb54d136c2122c1aa881c79c21555ee86aca914e",
+                "reference": "bb54d136c2122c1aa881c79c21555ee86aca914e",
                 "shasum": ""
             },
             "require": {
@@ -529,7 +529,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.26.1"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.26.2"
             },
             "funding": [
                 {
@@ -537,7 +537,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-03T20:17:30+00:00"
+            "time": "2021-02-05T19:26:28+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
@@ -1625,16 +1625,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.26.1",
+            "version": "v8.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "275c78c97e007e4a9d771d4d1caa1c77ebfdcf94"
+                "reference": "a6680d98f9dadaa363aa7d5218517a08706cee64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/275c78c97e007e4a9d771d4d1caa1c77ebfdcf94",
-                "reference": "275c78c97e007e4a9d771d4d1caa1c77ebfdcf94",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/a6680d98f9dadaa363aa7d5218517a08706cee64",
+                "reference": "a6680d98f9dadaa363aa7d5218517a08706cee64",
                 "shasum": ""
             },
             "require": {
@@ -1789,7 +1789,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-02-02T14:07:24+00:00"
+            "time": "2021-02-09T15:14:54+00:00"
         },
         {
             "name": "laravel/helpers",
@@ -2508,16 +2508,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v2.3.14",
+            "version": "v2.3.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "3ead3ff1342d9b17c7fd3559fd1a5f880cf78f28"
+                "reference": "1a1d43ff365301ae99ed7f0ccf02c553d4eeba03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/3ead3ff1342d9b17c7fd3559fd1a5f880cf78f28",
-                "reference": "3ead3ff1342d9b17c7fd3559fd1a5f880cf78f28",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/1a1d43ff365301ae99ed7f0ccf02c553d4eeba03",
+                "reference": "1a1d43ff365301ae99ed7f0ccf02c553d4eeba03",
                 "shasum": ""
             },
             "require": {
@@ -2568,7 +2568,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v2.3.14"
+                "source": "https://github.com/livewire/livewire/tree/v2.3.17"
             },
             "funding": [
                 {
@@ -2576,7 +2576,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-03T23:14:23+00:00"
+            "time": "2021-02-09T15:15:49+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -2902,27 +2902,28 @@
         },
         {
             "name": "maxmind-db/reader",
-            "version": "v1.9.0",
+            "version": "v1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/MaxMind-DB-Reader-php.git",
-                "reference": "9ee9ba9ee287b119e9f5a8e8dbfea0b49647cec4"
+                "reference": "07f84d969cfc527ce49388558a366ad376f1f35c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/MaxMind-DB-Reader-php/zipball/9ee9ba9ee287b119e9f5a8e8dbfea0b49647cec4",
-                "reference": "9ee9ba9ee287b119e9f5a8e8dbfea0b49647cec4",
+                "url": "https://api.github.com/repos/maxmind/MaxMind-DB-Reader-php/zipball/07f84d969cfc527ce49388558a366ad376f1f35c",
+                "reference": "07f84d969cfc527ce49388558a366ad376f1f35c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2"
             },
             "conflict": {
-                "ext-maxminddb": "<1.9.0,>=2.0.0"
+                "ext-maxminddb": "<1.10.0,>=2.0.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "*",
                 "php-coveralls/php-coveralls": "^2.1",
+                "phpstan/phpstan": "*",
                 "phpunit/phpcov": ">=6.0.0",
                 "phpunit/phpunit": ">=8.0.0,<10.0.0",
                 "squizlabs/php_codesniffer": "3.*"
@@ -2960,9 +2961,9 @@
             ],
             "support": {
                 "issues": "https://github.com/maxmind/MaxMind-DB-Reader-php/issues",
-                "source": "https://github.com/maxmind/MaxMind-DB-Reader-php/tree/v1.9.0"
+                "source": "https://github.com/maxmind/MaxMind-DB-Reader-php/tree/v1.10.0"
             },
-            "time": "2021-01-07T21:15:29+00:00"
+            "time": "2021-02-09T17:52:47+00:00"
         },
         {
             "name": "maxmind/web-service-common",
@@ -3348,16 +3349,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.44.0",
+            "version": "2.45.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "e6ef33cb1f67a4bed831ed6d0f7e156739a5d8cd"
+                "reference": "e2ba3174ce869da1713c38340dbb36572dfacd5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/e6ef33cb1f67a4bed831ed6d0f7e156739a5d8cd",
-                "reference": "e6ef33cb1f67a4bed831ed6d0f7e156739a5d8cd",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/e2ba3174ce869da1713c38340dbb36572dfacd5a",
+                "reference": "e2ba3174ce869da1713c38340dbb36572dfacd5a",
                 "shasum": ""
             },
             "require": {
@@ -3437,7 +3438,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-26T20:46:41+00:00"
+            "time": "2021-02-07T21:35:59+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -4884,17 +4885,17 @@
         },
         {
             "name": "spatie/laravel-medialibrary-pro",
-            "version": "1.12.15",
+            "version": "1.12.16",
             "source": {
                 "type": "git",
                 "url": "git@github.com:spatie/laravel-medialibrary-pro.git",
-                "reference": "d60f4e86ea629057e4d57b2873fafd2b14384791"
+                "reference": "07d66cfd64e28517ed0a5839be5bc65aad883d1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-d60f4e86ea629057e4d57b2873fafd2b14384791-zip-2f903c.zip",
-                "reference": "d60f4e86ea629057e4d57b2873fafd2b14384791",
-                "shasum": "0795b9fa72de8fda6b683b390671dd3332fc54af"
+                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-07d66cfd64e28517ed0a5839be5bc65aad883d1c-zip-b4dca2.zip",
+                "reference": "07d66cfd64e28517ed0a5839be5bc65aad883d1c",
+                "shasum": "0dfd945b66637a3f1da20c42936892cb788324b1"
             },
             "require": {
                 "ext-json": "*",
@@ -4959,10 +4960,10 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/v1.1.9",
+                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.12.16",
                 "issues": "https://github.com/spatie/laravel-medialibrary-pro/issues"
             },
-            "time": "2021-02-03T16:11:05+00:00"
+            "time": "2021-02-07T12:51:05+00:00"
         },
         {
             "name": "spatie/laravel-translatable",
@@ -5159,22 +5160,22 @@
         },
         {
             "name": "stevebauman/location",
-            "version": "v6.0.0",
+            "version": "v6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stevebauman/location.git",
-                "reference": "d6f8b3d9142104b29bd11b9ead8f6613e50e2b7a"
+                "reference": "7f5085f23612aec628507c83c0913cc1d5ba8bdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stevebauman/location/zipball/d6f8b3d9142104b29bd11b9ead8f6613e50e2b7a",
-                "reference": "d6f8b3d9142104b29bd11b9ead8f6613e50e2b7a",
+                "url": "https://api.github.com/repos/stevebauman/location/zipball/7f5085f23612aec628507c83c0913cc1d5ba8bdb",
+                "reference": "7f5085f23612aec628507c83c0913cc1d5ba8bdb",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
-                "geoip2/geoip2": "^2.8.0",
+                "geoip2/geoip2": "^2.0",
                 "illuminate/support": "~5.0|~6.0|~7.0|~8.0",
                 "php": ">=7.0"
             },
@@ -5220,9 +5221,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stevebauman/location/issues",
-                "source": "https://github.com/stevebauman/location/tree/v6.0.0"
+                "source": "https://github.com/stevebauman/location/tree/v6.1.0"
             },
-            "time": "2021-01-03T22:54:48+00:00"
+            "time": "2021-02-07T14:43:34+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -8104,16 +8105,16 @@
         },
         {
             "name": "laravel/telescope",
-            "version": "v4.4.1",
+            "version": "v4.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/telescope.git",
-                "reference": "c21b0e38c3e1e7f12a391eb97f092de1d1f2bdd8"
+                "reference": "bb2b733a8ac5c8e5da8a935e15db5624ed998de9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/c21b0e38c3e1e7f12a391eb97f092de1d1f2bdd8",
-                "reference": "c21b0e38c3e1e7f12a391eb97f092de1d1f2bdd8",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/bb2b733a8ac5c8e5da8a935e15db5624ed998de9",
+                "reference": "bb2b733a8ac5c8e5da8a935e15db5624ed998de9",
                 "shasum": ""
             },
             "require": {
@@ -8162,9 +8163,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/telescope/issues",
-                "source": "https://github.com/laravel/telescope/tree/v4.4.1"
+                "source": "https://github.com/laravel/telescope/tree/v4.4.2"
             },
-            "time": "2021-01-26T20:11:13+00:00"
+            "time": "2021-02-09T16:47:39+00:00"
         },
         {
             "name": "maximebf/debugbar",

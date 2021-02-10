@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 
@@ -16,6 +17,9 @@ class Astrolib
 
     private AstronomyLibrary $_astrolib;
     private ?Location $_location = null;
+    private $_eyepieces          = null;
+    private $_lenses             = null;
+    private $_telescope          = null;
 
     // The constructor is private
     // to prevent initiation with outer code.
@@ -24,6 +28,14 @@ class Astrolib
         $date            = Carbon::now();
         $coords          = new GeographicalCoordinates(0.0, 0.0);
         $this->_astrolib = new AstronomyLibrary($date, $coords);
+        if (!Auth::guest()) {
+            $this->_eyepieces = \App\Models\Eyepiece::where('user_id', Auth::user()->id)->where('active', 1)->get();
+            $this->_lenses    = \App\Models\Lens::where('user_id', Auth::user()->id)->get();
+            $this->_telescope = \App\Models\Instrument::where(
+                'id',
+                Auth::user()->stdtelescope
+            )->get()->first();
+        }
     }
 
     public function getAstronomyLibrary(): AstronomyLibrary
@@ -39,6 +51,21 @@ class Astrolib
     public function getLocation(): ?Location
     {
         return $this->_location;
+    }
+
+    public function getEyepieces()
+    {
+        return $this->_eyepieces;
+    }
+
+    public function getLenses()
+    {
+        return $this->_lenses;
+    }
+
+    public function getTelescope()
+    {
+        return $this->_telescope;
     }
 
     // The object is created from within the class itself

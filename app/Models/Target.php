@@ -875,10 +875,7 @@ class Target extends Model
                 $factor = 1.0;
             }
             if (auth()->user()->stdtelescope) {
-                $instrument = Instrument::where(
-                    'id',
-                    auth()->user()->stdtelescope
-                )->first();
+                $instrument = Astrolib::getInstance()->getTelescope();
                 if ($instrument->fd) {
                     $focalLength = $instrument->diameter * $instrument->fd * $factor;
                     if (auth()->user()->stdeyepiece) {

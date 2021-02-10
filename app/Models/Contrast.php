@@ -46,15 +46,9 @@ class Contrast extends Model
      */
     public function __construct(Target $target)
     {
-        $this->_telescope = \App\Models\Instrument::where(
-            'id',
-            Auth::user()->stdtelescope
-        )->get()->first();
+        $this->_telescope = Astrolib::getInstance()->getTelescope();
 
-        $this->_location = \App\Models\Location::where(
-            'id',
-            Auth::user()->stdlocation
-        )->get()->first();
+        $this->_location = Astrolib::getInstance()->getLocation();
 
         $this->_target = $target;
 
@@ -99,8 +93,7 @@ class Contrast extends Model
                     // We are not setting $magnifications
                     $this->_magnifications = [];
                 } elseif ($instrument->fixedMagnification == 0) {
-                    $eyepieces = \App\Models\Eyepiece::where('user_id', Auth::user()->id)->where('active', 1)
-                        ->get();
+                    $eyepieces = Astrolib::getInstance()->getEyepieces();
                     foreach ($eyepieces as $eyepiece) {
                         if ($eyepiece->maxFocalLength != null) {
                             $fRange = $eyepiece->maxFocalLength
@@ -119,8 +112,7 @@ class Contrast extends Model
                             $this->_magnificationsName[] = $eyepiece->name;
                         }
                     }
-                    $lenses = \App\Models\Lens::where('user_id', Auth::user()->id)
-                        ->get();
+                    $lenses = Astrolib::getInstance()->getLenses();
                     if (count($lenses) > 0) {
                         $origmagnifications     = $this->_magnifications;
                         $origmagnificationsName = $this->_magnificationsName;
