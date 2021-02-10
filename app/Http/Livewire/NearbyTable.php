@@ -97,10 +97,19 @@ class NearbyTable extends LivewireDatatable
                 }
             })->sortBy('diam1*diam2')->label(_i('Size')),
             Column::name('ra')->callback(['ra'], function ($ra) {
-                return (new Coordinate($ra))->convertToHours();
+                // TODO: Show coordinates for planets, comets, ...
+                if ($ra) {
+                    return (new Coordinate($ra))->convertToHours();
+                } else {
+                    return '';
+                }
             })->label(_i('RA')),
             Column::name('decl')->callback(['decl'], function ($decl) {
-                return (new Coordinate($decl))->convertToDegrees();
+                if ($decl) {
+                    return (new Coordinate($decl))->convertToDegrees();
+                } else {
+                    return '';
+                }
             })->label(_i('Decl')), ];
 
         if (auth()->user()) {

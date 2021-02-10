@@ -45,31 +45,47 @@ class TargetController extends Controller
      */
     public function search(Request $request)
     {
-        // Build the query
-        $targetQuery = \App\Models\TargetName::query();
-        if ($request->number) {
-            if (Str::contains($request->number, '%')) {
-                $targetQuery->where('catindex', 'like', $request->number);
-            } else {
-                $targetQuery->where('catindex', $request->number);
-            }
-        }
-        if ($request->catalog) {
-            $targetQuery->where('catalog', $request->catalog);
-        }
+        if ($request['quickpick']) {
+            $targetQuery = \App\Models\TargetName::where('altname', 'like', $request['quickpick']);
 
-        $targetsToShow = $targetQuery->get();
+            $targetsToShow = $targetQuery->get();
 
-        if ($request->number) {
-            // Also search for translated strings
             $translated_target = \App\Models\Target::where(
                 'target_name->' . LaravelGettext::getLocaleLanguage(),
                 'like',
-                $request->number
+                $request->quickpick
             )->first();
             if ($translated_target) {
                 $toAdd = \App\Models\TargetName::where('target_id', $translated_target->id)->first();
                 $targetsToShow->push($toAdd);
+            }
+        } else {
+            // Build the query
+            $targetQuery = \App\Models\TargetName::query();
+            if ($request->number) {
+                if (Str::contains($request->number, '%')) {
+                    $targetQuery->where('catindex', 'like', $request->number);
+                } else {
+                    $targetQuery->where('catindex', $request->number);
+                }
+            }
+            if ($request->catalog) {
+                $targetQuery->where('catalog', $request->catalog);
+            }
+
+            $targetsToShow = $targetQuery->get();
+
+            if ($request->number) {
+                // Also search for translated strings
+                $translated_target = \App\Models\Target::where(
+                    'target_name->' . LaravelGettext::getLocaleLanguage(),
+                    'like',
+                    $request->number
+                )->first();
+                if ($translated_target) {
+                    $toAdd = \App\Models\TargetName::where('target_id', $translated_target->id)->first();
+                    $targetsToShow->push($toAdd);
+                }
             }
         }
 

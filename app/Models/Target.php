@@ -188,9 +188,14 @@ class Target extends Model
     {
         $rise = '-';
 
-        if ($this->isMoon()) {
+        if (!$this->_observationType) {
+            $this->_setObservationType();
+        }
+
+        if ($this->isMoon() || $this->_observationType['type'] == 'moon' || $this->_observationType['type'] == 'asteroids' || $this->_observationType['type'] == 'comets') {
             return $rise;
         }
+
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
                 if (!$this->_target) {
@@ -243,7 +248,7 @@ class Target extends Model
 
         $transit = '-';
 
-        if ($this->isMoon()) {
+        if ($this->isMoon() || $this->_observationType['type'] == 'moon' || $this->_observationType['type'] == 'asteroids' || $this->_observationType['type'] == 'comets') {
             return $transit;
         }
 
@@ -287,7 +292,7 @@ class Target extends Model
 
         $set = '-';
 
-        if ($this->isMoon()) {
+        if ($this->isMoon() || $this->_observationType['type'] == 'moon' || $this->_observationType['type'] == 'asteroids' || $this->_observationType['type'] == 'comets') {
             return $set;
         }
 
@@ -332,7 +337,7 @@ class Target extends Model
 
         $best = '-';
 
-        if ($this->isMoon()) {
+        if ($this->isMoon() || $this->_observationType['type'] == 'moon' || $this->_observationType['type'] == 'asteroids' || $this->_observationType['type'] == 'comets') {
             return $best;
         }
 
@@ -360,7 +365,7 @@ class Target extends Model
 
         $maxalt = '-';
 
-        if ($this->isMoon()) {
+        if ($this->isMoon() || $this->_observationType['type'] == 'moon' || $this->_observationType['type'] == 'asteroids' || $this->_observationType['type'] == 'comets') {
             return $maxalt;
         }
 
@@ -403,7 +408,7 @@ class Target extends Model
             $this->getRiseSetTransit();
         }
         $high = '-';
-        if ($this->isMoon()) {
+        if ($this->isMoon() || $this->_observationType['type'] == 'moon' || $this->_observationType['type'] == 'asteroids' || $this->_observationType['type'] == 'comets') {
             return $high;
         }
 
@@ -431,7 +436,7 @@ class Target extends Model
 
         $high = '-';
 
-        if ($this->isMoon()) {
+        if ($this->isMoon() || $this->_observationType['type'] == 'moon' || $this->_observationType['type'] == 'asteroids' || $this->_observationType['type'] == 'comets') {
             return $high;
         }
 
@@ -457,7 +462,7 @@ class Target extends Model
 
         $high = '-';
 
-        if ($this->isMoon()) {
+        if ($this->isMoon() || $this->_observationType['type'] == 'moon' || $this->_observationType['type'] == 'asteroids' || $this->_observationType['type'] == 'comets') {
             return $high;
         }
 
@@ -482,7 +487,7 @@ class Target extends Model
         }
 
         $high = '-';
-        if ($this->isMoon()) {
+        if ($this->isMoon() || $this->_observationType['type'] == 'moon' || $this->_observationType['type'] == 'asteroids' || $this->_observationType['type'] == 'comets') {
             return $high;
         }
 
@@ -535,6 +540,12 @@ class Target extends Model
                 default:
             break;
             }
+        } elseif ($this->_observationType['type'] == 'moon') {
+            $this->_target = new \deepskylog\AstronomyLibrary\Targets\Moon();
+        } elseif ($this->_observationType['type'] == 'asteroids') {
+            $this->_target = new \deepskylog\AstronomyLibrary\Targets\Elliptic();
+        } elseif ($this->_observationType['type'] == 'comets') {
+            $this->_target = new \deepskylog\AstronomyLibrary\Targets\Elliptic();
         } else {
             $this->_target = new \deepskylog\AstronomyLibrary\Targets\Target();
             $equa          = new EquatorialCoordinates($this->ra, $this->decl);
@@ -574,72 +585,74 @@ class Target extends Model
 
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {
-                if ($this->isNonSolarSystem() || $this->isSolarSystem()) {
-                    // Calculate the ephemerids for the target
-                    $this->_target->calculateEphemerides(
-                        Astrolib::getInstance()->getAstronomyLibrary()->getGeographicalCoordinates(),
-                        $greenwichSiderialTime,
-                        $deltaT
-                    );
-                    if ($this->_target->getMaxHeight()->getCoordinate() < 0.0) {
-                        $popup[0] = sprintf(
-                            _i('%s does not rise above horizon'),
-                            $this->target_name
+                if ($this->_observationType['type'] != 'moon') {
+                    if ($this->isNonSolarSystem() || $this->isSolarSystem()) {
+                        // Calculate the ephemerids for the target
+                        $this->_target->calculateEphemerides(
+                            Astrolib::getInstance()->getAstronomyLibrary()->getGeographicalCoordinates(),
+                            $greenwichSiderialTime,
+                            $deltaT
                         );
-                        $popup[2] = $popup[0];
-                    } elseif (!$this->_target->getRising()) {
-                        $popup[0] = sprintf(
-                            _i('%s is circumpolar'),
-                            $this->target_name
-                        );
-                        $popup[2] = $popup[0];
-                    } else {
-                        $popup[0] = sprintf(
-                            _i('%s rises at %s in %s on ')
+                        if ($this->_target->getMaxHeight()->getCoordinate() < 0.0) {
+                            $popup[0] = sprintf(
+                                _i('%s does not rise above horizon'),
+                                $this->target_name
+                            );
+                            $popup[2] = $popup[0];
+                        } elseif (!$this->_target->getRising()) {
+                            $popup[0] = sprintf(
+                                _i('%s is circumpolar'),
+                                $this->target_name
+                            );
+                            $popup[2] = $popup[0];
+                        } else {
+                            $popup[0] = sprintf(
+                                _i('%s rises at %s in %s on ')
                                 . $date->isoFormat('LL'),
-                            $this->target_name,
-                            $this->_target->getRising()
+                                $this->target_name,
+                                $this->_target->getRising()
                                 ->timezone($location->timezone)->format('H:i'),
-                            $location->name
-                        );
-                        $popup[2] = sprintf(
-                            _i('%s sets at %s in %s on ')
+                                $location->name
+                            );
+                            $popup[2] = sprintf(
+                                _i('%s sets at %s in %s on ')
                                 . $date->isoFormat('LL'),
-                            $this->target_name,
-                            $this->_target->getSetting()
+                                $this->target_name,
+                                $this->_target->getSetting()
                                 ->timezone($location->timezone)->format('H:i'),
-                            $location->name
-                        );
-                    }
-                    $popup[1] = sprintf(
-                        _i('%s transits at %s in %s on ')
+                                $location->name
+                            );
+                        }
+                        $popup[1] = sprintf(
+                            _i('%s transits at %s in %s on ')
                             . $date->isoFormat('LL'),
-                        $this->target_name,
-                        $this->_target->getTransit()
-                            ->timezone($location->timezone)->format('H:i'),
-                        $location->name
-                    );
-
-                    if ($this->_target->getMaxHeightAtNight()->getCoordinate() < 0) {
-                        $popup[3] = sprintf(
-                            _i('%s does not rise above horizon in %s on ')
-                                . $date->isoFormat('LL'),
                             $this->target_name,
+                            $this->_target->getTransit()
+                            ->timezone($location->timezone)->format('H:i'),
                             $location->name
                         );
-                    } else {
-                        $popup[3] = sprintf(
-                            _i('%s reaches an altitude of %s in %s on ')
+
+                        if ($this->_target->getMaxHeightAtNight()->getCoordinate() < 0) {
+                            $popup[3] = sprintf(
+                                _i('%s does not rise above horizon in %s on ')
                                 . $date->isoFormat('LL'),
-                            $this->target_name,
-                            trim(
-                                $this->_target->getMaxHeightAtNight()
+                                $this->target_name,
+                                $location->name
+                            );
+                        } else {
+                            $popup[3] = sprintf(
+                                _i('%s reaches an altitude of %s in %s on ')
+                                . $date->isoFormat('LL'),
+                                $this->target_name,
+                                trim(
+                                    $this->_target->getMaxHeightAtNight()
                                     ->convertToDegrees()
-                            ),
-                            $location->name,
-                        );
+                                ),
+                                $location->name,
+                            );
+                        }
+                        $this->_popup = $popup;
                     }
-                    $this->_popup = $popup;
                 }
             }
         }
@@ -772,7 +785,7 @@ class Target extends Model
         return !$this->isMoon() && ($this->_observationType['type'] == 'sun'
 //            || $this->_observationType['type'] == 'asteroids'
 //            || $this->_observationType['type'] == 'comets'
-//            || $this->_observationType['type'] == 'moon'
+           || $this->_observationType['type'] == 'moon'
             || $this->_observationType['type'] == 'planets');
     }
 
@@ -964,7 +977,7 @@ class Target extends Model
         if (!auth()->user()->stdlocation) {
             return $this->_ephemerides;
         }
-        if ($this->isMoon()) {
+        if ($this->isMoon() || $this->_observationType['type'] == 'moon' || $this->_observationType['type'] == 'asteroids' || $this->_observationType['type'] == 'comets') {
             return $this->_ephemerides;
         }
         if (isset($this->_ephemerides)) {
@@ -1006,9 +1019,11 @@ class Target extends Model
                         $target = new \deepskylog\AstronomyLibrary\Targets\Neptune();
                         break;
 
-                    default:
-                break;
-                }
+                        default:
+                        break;
+                    }
+            } elseif ($this->_observationType['type'] == 'moon') {
+                $target = new \deepskylog\AstronomyLibrary\Targets\Moon();
             } else {
                 $target = new
                 \deepskylog\AstronomyLibrary\Targets\Target();
