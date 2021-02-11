@@ -50,12 +50,12 @@ class DeepskyLogChecks
             Session::put('date', $date);
             Astrolib::getInstance()->getAstronomyLibrary()->setDate($datetime);
         }
-        if (Auth::user()->stdlocation) {
-            $location = Location::where('id', Auth::user()->stdlocation)->first();
-            Astrolib::getInstance()->setLocation($location);
-        }
-
         if (!Auth::guest()) {
+            if (Auth::user()->stdlocation) {
+                $location = Location::where('id', Auth::user()->stdlocation)->first();
+                Astrolib::getInstance()->setLocation($location);
+            }
+
             // Check if the observer has set a country of residence.
             if (Auth::user()->country === '') {
                 laraflash(

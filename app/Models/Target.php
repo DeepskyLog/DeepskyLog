@@ -579,7 +579,7 @@ class Target extends Model
             if ($this->_observationType['type'] == 'sun') {
                 $this->_target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
             } elseif ($this->_observationType['type'] == 'planets') {
-                $this->_target->calculateEquatorialCoordinates($date);
+                $this->_target->calculateEquatorialCoordinates($date, $astrolib->getGeographicalCoordinates(), $astrolib->getHeight());
             }
         }
 
@@ -1032,7 +1032,9 @@ class Target extends Model
                 $target->setEquatorialCoordinates($equa);
             }
 
-            $deltaT = Astrolib::getInstance()->getAstronomyLibrary()->getDeltaT();
+            $deltaT     = Astrolib::getInstance()->getAstronomyLibrary()->getDeltaT();
+            $height     = Astrolib::getInstance()->getHeight();
+            $geo_coords = Astrolib::getInstance()->getAstronomyLibrary()->getGeographicalCoordinates();
 
             for ($i = 1; $i < 13; ++$i) {
                 for ($j = 1; $j < 16; $j = $j + 14) {
@@ -1047,8 +1049,6 @@ class Target extends Model
                         $date
                     );
 
-                    $geo_coords = Astrolib::getInstance()->getAstronomyLibrary()->getGeographicalCoordinates();
-
                     // Calculate the ephemerids for the target
                     if ($this->_observationType['type'] == 'sun') {
                         $nutation = Time::nutation(Time::getJd($date));
@@ -1060,7 +1060,7 @@ class Target extends Model
                             $deltaT
                         );
                     } elseif ($this->_observationType['type'] == 'planets') {
-                        $target->calculateEquatorialCoordinates($date);
+                        $target->calculateEquatorialCoordinates($date, $geo_coords, $height);
                         $target->calculateEphemerides(
                             $geo_coords,
                             $greenwichSiderialTime,

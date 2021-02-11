@@ -4,12 +4,15 @@
         {{ _i('Observations') }}
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        @auth
         @if (!auth()->user()->isAdmin())
         <a class="dropdown-item disabled" href="/observation/create">{{ _i('Add observation') }}</a>
         <a class="dropdown-item disabled" href="#">───────────────────</a>
         @endif
+        @endauth
         <a class="dropdown-item disabled" href="/observation/search">{{ _i('Search observations') }}</a>
         <a class="dropdown-item disabled" href="#">───────────────────</a>
+        @auth
         @if (!auth()->user()->isAdmin())
         <a class="dropdown-item disabled" href="/observingList">{{ _i('Observing lists') }}</a>
         <a class="dropdown-item disabled" href="/session">{{ _i("Sessions") }}</a>
@@ -20,6 +23,7 @@
         <a class="dropdown-item disabled" href="/observingList/admin">{{ _i('Show all observing lists') }}</a>
         <a class="dropdown-item disabled" href="/session/admin">{{ _i("Show all sessions") }}</a>
         @endif
+        @endauth
         <a class="dropdown-item disabled" href="#">───────────────────</a>
         <a class="dropdown-item disabled" href="/observation/all">{{ _i('Show latest observations') }}</a>
         <a class="dropdown-item disabled" href="/drawings/all">{{ _i('Show latest drawings') }}</a>

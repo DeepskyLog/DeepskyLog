@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1707cb491dfaec57ead6b5cfab11314d",
+    "content-hash": "6f4114163fe4de2e9cda5e5d56a3be83",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -471,16 +471,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v4.26.2",
+            "version": "v5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "bb54d136c2122c1aa881c79c21555ee86aca914e"
+                "reference": "701e49180f8d82fd1e507bc4bc8194927da1fbe7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/bb54d136c2122c1aa881c79c21555ee86aca914e",
-                "reference": "bb54d136c2122c1aa881c79c21555ee86aca914e",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/701e49180f8d82fd1e507bc4bc8194927da1fbe7",
+                "reference": "701e49180f8d82fd1e507bc4bc8194927da1fbe7",
                 "shasum": ""
             },
             "require": {
@@ -529,7 +529,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v4.26.2"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v5.0"
             },
             "funding": [
                 {
@@ -537,7 +537,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-05T19:26:28+00:00"
+            "time": "2021-02-11T10:48:29+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
@@ -3349,16 +3349,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.45.0",
+            "version": "2.45.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "e2ba3174ce869da1713c38340dbb36572dfacd5a"
+                "reference": "528783b188bdb853eb21239b1722831e0f000a8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/e2ba3174ce869da1713c38340dbb36572dfacd5a",
-                "reference": "e2ba3174ce869da1713c38340dbb36572dfacd5a",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/528783b188bdb853eb21239b1722831e0f000a8d",
+                "reference": "528783b188bdb853eb21239b1722831e0f000a8d",
                 "shasum": ""
             },
             "require": {
@@ -3438,7 +3438,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-07T21:35:59+00:00"
+            "time": "2021-02-11T18:30:17+00:00"
         },
         {
             "name": "nikic/php-parser",

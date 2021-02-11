@@ -16,10 +16,11 @@ class Astrolib
     private static $instance = null;
 
     private AstronomyLibrary $_astrolib;
-    private ?Location $_location = null;
-    private $_eyepieces          = null;
-    private $_lenses             = null;
-    private $_telescope          = null;
+    private $_eyepieces                       = null;
+    private $_lenses                          = null;
+    private $_telescope                       = null;
+    private ?Location $_location              = null;
+    private float $_height                    = 0.0;
 
     // The constructor is private
     // to prevent initiation with outer code.
@@ -46,11 +47,23 @@ class Astrolib
     public function setLocation(Location $location)
     {
         $this->_location = $location;
+        $this->_height   = $location->elevation;
+        $this->_astrolib->setGeographicalCoordinates(new GeographicalCoordinates($location->longitude, $location->latitude));
     }
 
-    public function getLocation(): ?Location
+    public function getLocation():?Location
     {
         return $this->_location;
+    }
+
+    public function getGeographicalCoordinates(): ?GeographicalCoordinates
+    {
+        return $this->_astrolib->getGeographicalCoordinates();
+    }
+
+    public function getHeight(): float
+    {
+        return $this->_height;
     }
 
     public function getEyepieces()

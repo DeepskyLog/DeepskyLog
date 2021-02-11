@@ -13,7 +13,7 @@
         "cmgmyr/messenger": "^2.21",
         "coderello/laraflash": "^4.0",
         "cviebrock/eloquent-sluggable": "^8.0",
-        "deepskylog/laravel-astronomy-library": "^4.0",
+        "deepskylog/laravel-astronomy-library": "^5.0",
         "deepskylog/laravel-gettext": "^7.3",
         "dompdf/dompdf": "^1.0",
         "fideloper/proxy": "^4.0",
