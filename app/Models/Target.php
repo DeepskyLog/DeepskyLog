@@ -829,6 +829,44 @@ class Target extends Model
     }
 
     /**
+     * Returns the magnitude of a planet
+     *
+     * @return string The magnitude
+     */
+    public function magnitude(): string
+    {
+        $astrolib = Astrolib::getInstance()->getAstronomyLibrary();
+        if (!$this->_target) {
+            $this->getRiseSetTransit();
+        }
+
+        if ($this->type->type == 'Planet') {
+            return $this->_target->magnitude($astrolib->getDate());
+        } else {
+            return '-';
+        }
+    }
+
+    /**
+     * Returns the illuminated fraction of a planet
+     *
+     * @return string The illuminated fraction
+     */
+    public function illuminatedFraction(): string
+    {
+        $astrolib = Astrolib::getInstance()->getAstronomyLibrary();
+        if (!$this->_target) {
+            $this->getRiseSetTransit();
+        }
+
+        if ($this->type->type == 'Planet') {
+            return $this->_target->illuminatedFraction($astrolib->getDate());
+        } else {
+            return '-';
+        }
+    }
+
+    /**
      * Returns the size of the target as a human readable string.
      *
      * @return string The size
@@ -1408,7 +1446,7 @@ class Target extends Model
     }
 
     /**
-     * Returns the data from one catalog.
+    //  * Returns the data from one catalog.
      *
      * @param string $catalogname The name of the catalog
      *
@@ -1500,8 +1538,7 @@ class Target extends Model
     public function getOpposition(): String
     {
         $date       = Astrolib::getInstance()->getAstronomyLibrary()->getDate();
-
-        if ($this->target_name == 'Venus' || $this->target_name == 'Mercury') {
+        if ($this->getTranslation('target_name', 'en') == 'Venus' || $this->getTranslation('target_name', 'en') == 'Mercury') {
             return '<td colspan="3">'
                 . _i('Next evening elongation')
                 . '</td><td colspan="3">'

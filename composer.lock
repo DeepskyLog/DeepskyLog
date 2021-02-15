@@ -471,16 +471,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v5.0",
+            "version": "v5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "701e49180f8d82fd1e507bc4bc8194927da1fbe7"
+                "reference": "68e29d8c097f3c3a206ad9cdbdfa0e0fd8e5d94f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/701e49180f8d82fd1e507bc4bc8194927da1fbe7",
-                "reference": "701e49180f8d82fd1e507bc4bc8194927da1fbe7",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/68e29d8c097f3c3a206ad9cdbdfa0e0fd8e5d94f",
+                "reference": "68e29d8c097f3c3a206ad9cdbdfa0e0fd8e5d94f",
                 "shasum": ""
             },
             "require": {
@@ -529,7 +529,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v5.0"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v5.1"
             },
             "funding": [
                 {
@@ -537,7 +537,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-11T10:48:29+00:00"
+            "time": "2021-02-15T10:14:15+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",

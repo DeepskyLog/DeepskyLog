@@ -112,15 +112,20 @@
                 @endauth
             </tr>
 
-            @if ($target->isNonSolarSystem())
             <tr>
                 <td colspan="3">{{ _i('Magnitude') }}</td>
-                <td colspan="3">@if ($target->mag == null)
+                <td colspan="3">
+                    @if ($target->isNonSolarSystem())
+                    @if ($target->mag == null)
                     -
                     @else
                     {{ number_format($target->mag, 1) }}
                     @endif
+                    @else
+                    {{ $target->magnitude() }}
+                    @endif
                 </td>
+                @if ($target->isNonSolarSystem())
                 <td colspan="3"><span class="float-right">{{ _i('Surface brightness') }}</span></td>
                 <td colspan="3">@if ($target->subr == null)
                     -
@@ -128,8 +133,15 @@
                     {{ number_format($target->subr, 1) }}
                     @endif
                 </td>
+                @else
+                <td colspan="3"><span class="float-right">{{ _i('Illuminated fraction') }}</span></td>
+                <td colspan="3">
+                    {{ $target->illuminatedFraction() }}
+                </td>
+                @endif
             </tr>
 
+            @if ($target->isNonSolarSystem())
             <tr>
                 <td colspan="3">{{ _i("Size") }}</td>
                 <td colspan="3">{{ $target->size() }}</td>
