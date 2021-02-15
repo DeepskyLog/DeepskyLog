@@ -17,4 +17,21 @@ class Constellation extends Model
     {
         return $this->belongsTo('App\Models\Target', 'id', 'constellation');
     }
+
+    /**
+     * Get constellations to use in the drop down menu.
+     *
+     * @return string The list with the constellations
+     */
+    public static function getConstellationChoices(): String
+    {
+        $toReturn       = '<option value=""></option>';
+        $constellations = Constellation::all();
+
+        foreach ($constellations as $cons) {
+            $toReturn .= '<option value="' . $cons['id'] . '">' . $cons['name'] . '</option>';
+        }
+
+        return $toReturn;
+    }
 }

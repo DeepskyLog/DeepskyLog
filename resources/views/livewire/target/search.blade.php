@@ -21,6 +21,16 @@
                     class="form-control form-control-lg" name="number">
             </div>
         </div>
+
+        <div class="form-group row">
+            <label for="catalog" class="col-sm-2 col-form-label">{{ _('Constellation') }}</label>
+            <div class="col-sm-4">
+                <div x-data=''>
+                    <x-input.select id="constellation" :options="$constellations" name="constellation" />
+                </div>
+            </div>
+        </div>
+
         <div class="form-group row">
             <div class="col-sm-10">
                 <button type="submit" class="btn btn-primary">{{ _i('Search') }}</button>

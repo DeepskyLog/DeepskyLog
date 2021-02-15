@@ -7,11 +7,13 @@ use Livewire\Component;
 class Search extends Component
 {
     public String $allCatalogs;
+    public string $constellations;
     public $catalog;
 
     public function mount()
     {
-        $this->allCatalogs = \App\Models\TargetName::getCatalogsChoices();
+        $this->allCatalogs    = \App\Models\TargetName::getCatalogsChoices();
+        $this->constellations = \App\Models\Constellation::getConstellationChoices();
     }
 
     /**
@@ -23,9 +25,6 @@ class Search extends Component
      */
     public function updated($propertyName)
     {
-        if ($propertyName == 'catalog') {
-            dd($this->catalog);
-        }
     }
 
     public function render()

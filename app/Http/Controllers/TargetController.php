@@ -46,9 +46,9 @@ class TargetController extends Controller
     public function search(Request $request)
     {
         if ($request['quickpick']) {
-            $targetQuery = \App\Models\TargetName::where('altname', 'like', $request['quickpick']);
-
+            $targetQuery   = \App\Models\TargetName::where('altname', 'like', $request['quickpick']);
             $targetsToShow = $targetQuery->get();
+            $allTargets    = \App\Models\Target::whereIn('targets.id', $targetsToShow->pluck('target_id'));
 
             $translated_target = \App\Models\Target::where(
                 'target_name->' . LaravelGettext::getLocaleLanguage(),
@@ -56,44 +56,52 @@ class TargetController extends Controller
                 $request->quickpick
             )->first();
             if ($translated_target) {
-                $toAdd = \App\Models\TargetName::where('target_id', $translated_target->id)->first();
-                $targetsToShow->push($toAdd);
+                $allTargets->orWhere('id', $translated_target->id);
             }
         } else {
             // Build the query
             $targetQuery = \App\Models\TargetName::query();
-            if ($request->number) {
-                if (Str::contains($request->number, '%')) {
-                    $targetQuery->where('catindex', 'like', $request->number);
-                } else {
-                    $targetQuery->where('catindex', $request->number);
+            if ($request->number || $request->catalog) {
+                if ($request->number) {
+                    if (Str::contains($request->number, '%')) {
+                        $targetQuery->where('catindex', 'like', $request->number);
+                    } else {
+                        $targetQuery->where('catindex', $request->number);
+                    }
                 }
-            }
-            if ($request->catalog) {
-                $targetQuery->where('catalog', $request->catalog);
+                if ($request->catalog) {
+                    $targetQuery->where('catalog', $request->catalog);
+                }
+
+                $targetsToShow = $targetQuery->get();
+                $allTargets    = \App\Models\Target::whereIn('targets.id', $targetsToShow->pluck('target_id'));
+
+                if ($request->number) {
+                    // Also search for translated strings
+                    $translated_target = \App\Models\Target::where(
+                        'target_name->' . LaravelGettext::getLocaleLanguage(),
+                        'like',
+                        $request->number
+                    )->first();
+                    if ($translated_target) {
+                        $allTargets->orWhere('id', $translated_target->id);
+                    }
+                }
+            } else {
+                $allTargets = \App\Models\Target::query();
             }
 
-            $targetsToShow = $targetQuery->get();
-
-            if ($request->number) {
-                // Also search for translated strings
-                $translated_target = \App\Models\Target::where(
-                    'target_name->' . LaravelGettext::getLocaleLanguage(),
-                    'like',
-                    $request->number
-                )->first();
-                if ($translated_target) {
-                    $toAdd = \App\Models\TargetName::where('target_id', $translated_target->id)->first();
-                    $targetsToShow->push($toAdd);
-                }
+            if ($request->constellation) {
+                $allTargets = $allTargets->where('constellation', $request->constellation);
             }
+            // TODO: Add possibility to search for > 1 constellation
         }
+
+        $targetsToShow = $allTargets->get();
 
         if (count($targetsToShow) == 1) {
             // If there is only one target as a result of the query, show this target
-            $target_id = $targetsToShow->first()->target_id;
-
-            $target = \App\Models\Target::where('id', $target_id)->first();
+            $target = $targetsToShow->first();
 
             return view(
                 'layout.target.show',
@@ -101,8 +109,8 @@ class TargetController extends Controller
             );
         } elseif (count($targetsToShow) > 1) {
             // If there is more than one target, show a list with the targets.
-            $allTargets     = \App\Models\Target::whereIn('targets.id', $targetsToShow->pluck('target_id'));
-            $targetsToShow  = $allTargets->get();
+            // $allTargets     = \App\Models\Target::whereIn('targets.id', $targetsToShow->pluck('target_id'));
+            // $targetsToShow  = $allTargets->get();
 
             // TODO: Very slow!  Not because of the time it takes to calculate everything for the table.
             return view(
