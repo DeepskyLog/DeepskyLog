@@ -59,42 +59,103 @@ class TargetController extends Controller
                 $allTargets->orWhere('id', $translated_target->id);
             }
         } else {
+            $requestArray = array_keys($request->toArray());
+
+            // Check for all catalog entries in the request
+            $resultCatalogs = array_filter($requestArray, function ($value) {
+                return strpos($value, 'catalog') !== false;
+            });
+            // Check for all catalog entries in the request
+            $resultNumbers = array_filter($requestArray, function ($value) {
+                return strpos($value, 'numbers') !== false;
+            });
             // Build the query
             $targetQuery = \App\Models\TargetName::query();
-            if ($request->number || $request->catalog) {
-                if ($request->number) {
-                    if (Str::contains($request->number, '%')) {
-                        $targetQuery->where('catindex', 'like', $request->number);
-                    } else {
-                        $targetQuery->where('catindex', $request->number);
+            if (count($resultCatalogs) > 0 || count($resultNumbers) > 0) {
+                if (count($resultNumbers) > 0) {
+                    if (count($resultNumbers) == 1) {
+                        if (Str::contains($request->number, '%')) {
+                            $targetQuery->where('catindex', 'like', $request->number0);
+                        } else {
+                            $targetQuery->where('catindex', $request->number0);
+                        }
+                    } elseif (count($resultNumbers) > 1) {
+                        $targetQuery = $targetQuery->where(function ($query) use ($request, $resultNumbers) {
+                            if (Str::contains($request->number0, '%')) {
+                                $query->where('catindex', 'like', $request->number0);
+                            } else {
+                                $query->where('catindex', $request->number0);
+                            }
+
+                            foreach ($resultNumbers as $number) {
+                                if ($number != array_values($resultNumbers)[0]) {
+                                    $query->orWhere('constellation', $request[$number]);
+                                }
+                            }
+                        });
                     }
                 }
-                if ($request->catalog) {
-                    $targetQuery->where('catalog', $request->catalog);
+                if (count($resultCatalogs) > 0) {
+                    if (count($resultCatalogs) == 1) {
+                        $targetQuery->where('catalog', $request->catalog0);
+                    } elseif (count($resultCatalogs) > 1) {
+                        $targetQuery = $targetQuery->where(function ($query) use ($request, $resultCatalogs) {
+                            $query->where('catalog', $request[array_values($resultCatalogs)[0]]);
+                            foreach ($resultCatalogs as $res) {
+                                if ($res != array_values($resultCatalogs)[0]) {
+                                    $query->orWhere('catalog', $request[$res]);
+                                }
+                            }
+                        });
+                    }
                 }
 
                 $targetsToShow = $targetQuery->get();
                 $allTargets    = \App\Models\Target::whereIn('targets.id', $targetsToShow->pluck('target_id'));
 
-                if ($request->number) {
+                if (count($resultNumbers) > 0) {
                     // Also search for translated strings
-                    $translated_target = \App\Models\Target::where(
-                        'target_name->' . LaravelGettext::getLocaleLanguage(),
-                        'like',
-                        $request->number
-                    )->first();
-                    if ($translated_target) {
-                        $allTargets->orWhere('id', $translated_target->id);
+                    if (count($resultNumbers) == 1) {
+                        $translated_target = \App\Models\Target::where(
+                            'target_name->' . LaravelGettext::getLocaleLanguage(),
+                            'like',
+                            $request->number
+                        )->first();
+                        if ($translated_target) {
+                            $allTargets->orWhere('id', $translated_target->id);
+                        }
+                    } elseif (count($resultNumbers) > 1) {
+                        $allTargets = $allTargets->where(function ($query) use ($request, $resultNumbers) {
+                            $query->where('target_name->' . LaravelGettext::getLocaleLanguage(), 'like', $request[array_values($resultNumbers)[0]]);
+                            foreach ($resultNumbers as $num) {
+                                if ($num != array_values($resultNumbers)[0]) {
+                                    $query->orWhere('target_name->' . LaravelGettext::getLocaleLanguage(), 'like', $request[$num]);
+                                }
+                            }
+                        });
                     }
                 }
             } else {
                 $allTargets = \App\Models\Target::query();
             }
 
-            if ($request->constellation) {
-                $allTargets = $allTargets->where('constellation', $request->constellation);
+            // Check for all constellation entries in the request
+            $results = array_filter($requestArray, function ($value) {
+                return strpos($value, 'constellation') !== false;
+            });
+
+            if (count($results) == 1) {
+                $allTargets = $allTargets->where('constellation', $request->constellation0);
+            } elseif (count($results) > 1) {
+                $allTargets = $allTargets->where(function ($query) use ($request, $results) {
+                    $query->where('constellation', $request[array_values($results)[0]]);
+                    foreach ($results as $con) {
+                        if ($con != array_values($results)[0]) {
+                            $query->orWhere('constellation', $request[$con]);
+                        }
+                    }
+                });
             }
-            // TODO: Add possibility to search for > 1 constellation
         }
 
         $targetsToShow = $allTargets->get();
@@ -109,9 +170,6 @@ class TargetController extends Controller
             );
         } elseif (count($targetsToShow) > 1) {
             // If there is more than one target, show a list with the targets.
-            // $allTargets     = \App\Models\Target::whereIn('targets.id', $targetsToShow->pluck('target_id'));
-            // $targetsToShow  = $allTargets->get();
-
             // TODO: Very slow!  Not because of the time it takes to calculate everything for the table.
             return view(
                 'layout.target.view',
@@ -123,9 +181,6 @@ class TargetController extends Controller
 
             return redirect(route('target.search'));
         }
-
-        // TODO: We can use the same request for the quick pick
-        // TODO: Adapt the search page to be able to add new search criteria (using a + in livewire).  Make it also possible to remove one of the criteria (using a -)
     }
 
     /**
