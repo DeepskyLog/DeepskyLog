@@ -75,16 +75,16 @@ class TargetController extends Controller
                 if (count($resultNumbers) > 0) {
                     if (count($resultNumbers) == 1) {
                         if (Str::contains($request->number, '%')) {
-                            $targetQuery->where('catindex', 'like', $request->number0);
+                            $targetQuery->where('catindex', 'like', $request->number1);
                         } else {
-                            $targetQuery->where('catindex', $request->number0);
+                            $targetQuery->where('catindex', $request->number1);
                         }
                     } elseif (count($resultNumbers) > 1) {
                         $targetQuery = $targetQuery->where(function ($query) use ($request, $resultNumbers) {
-                            if (Str::contains($request->number0, '%')) {
-                                $query->where('catindex', 'like', $request->number0);
+                            if (Str::contains($request->number1, '%')) {
+                                $query->where('catindex', 'like', $request->number1);
                             } else {
-                                $query->where('catindex', $request->number0);
+                                $query->where('catindex', $request->number1);
                             }
 
                             foreach ($resultNumbers as $number) {
@@ -97,7 +97,7 @@ class TargetController extends Controller
                 }
                 if (count($resultCatalogs) > 0) {
                     if (count($resultCatalogs) == 1) {
-                        $targetQuery->where('catalog', $request->catalog0);
+                        $targetQuery->where('catalog', $request->catalog1);
                     } elseif (count($resultCatalogs) > 1) {
                         $targetQuery = $targetQuery->where(function ($query) use ($request, $resultCatalogs) {
                             $query->where('catalog', $request[array_values($resultCatalogs)[0]]);
@@ -119,7 +119,7 @@ class TargetController extends Controller
                         $translated_target = \App\Models\Target::where(
                             'target_name->' . LaravelGettext::getLocaleLanguage(),
                             'like',
-                            $request->number
+                            $request->number1
                         )->first();
                         if ($translated_target) {
                             $allTargets->orWhere('id', $translated_target->id);
@@ -145,13 +145,31 @@ class TargetController extends Controller
             });
 
             if (count($results) == 1) {
-                $allTargets = $allTargets->where('constellation', $request->constellation0);
+                $allTargets = $allTargets->where('constellation', $request->constellation1);
             } elseif (count($results) > 1) {
                 $allTargets = $allTargets->where(function ($query) use ($request, $results) {
                     $query->where('constellation', $request[array_values($results)[0]]);
                     foreach ($results as $con) {
                         if ($con != array_values($results)[0]) {
                             $query->orWhere('constellation', $request[$con]);
+                        }
+                    }
+                });
+            }
+
+            // Check for all type entries in the request
+            $results = array_filter($requestArray, function ($value) {
+                return strpos($value, 'type') !== false;
+            });
+
+            if (count($results) == 1) {
+                $allTargets = $allTargets->where('target_type', $request->type1);
+            } elseif (count($results) > 1) {
+                $allTargets = $allTargets->where(function ($query) use ($request, $results) {
+                    $query->where('target_type', $request[array_values($results)[0]]);
+                    foreach ($results as $typ) {
+                        if ($typ != array_values($results)[0]) {
+                            $query->orWhere('target_type', $request[$typ]);
                         }
                     }
                 });

@@ -106,7 +106,7 @@ class NearbyTable extends LivewireDatatable
             })->label(_i('RA')),
             Column::name('decl')->callback(['decl'], function ($decl) {
                 if ($decl) {
-                    return (new Coordinate($decl))->convertToDegrees();
+                    return (new Coordinate($decl, -90, 90))->convertToDegrees();
                 } else {
                     return '';
                 }

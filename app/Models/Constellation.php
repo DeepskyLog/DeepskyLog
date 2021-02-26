@@ -25,11 +25,10 @@ class Constellation extends Model
      */
     public static function getConstellationChoices(): String
     {
-        $toReturn       = '<option value=""></option>';
+        $toReturn       = "<option value=''></option>";
         $constellations = Constellation::all();
-
         foreach ($constellations as $cons) {
-            $toReturn .= '<option value="' . $cons['id'] . '">' . $cons['name'] . '</option>';
+            $toReturn .= "<option value='" . $cons['id'] . "'>" . $cons['name'] . '</option>';
         }
 
         return $toReturn;

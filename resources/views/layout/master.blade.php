@@ -64,6 +64,8 @@
             window.addEventListener("trix-file-accept", function(event) {
                 event.preventDefault()
             });
+
+            const choices = new Choices('.js-choice');
         </script>
 
         @include('cookieConsent::index')

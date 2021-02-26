@@ -50,4 +50,20 @@ class TargetType extends Model
     {
         return $this->hasOne('App\Models\ObservationType', 'type', 'observation_type');
     }
+
+    /**
+     * Get types to use in the drop down menu.
+     *
+     * @return string The list with the types
+     */
+    public static function getTypesChoices(): String
+    {
+        $toReturn       = "<option value=''></option>";
+        $types          = TargetType::all();
+        foreach ($types as $type) {
+            $toReturn .= "<option value='" . $type['id'] . "'>" . _i($type['type']) . '</option>';
+        }
+
+        return $toReturn;
+    }
 }
