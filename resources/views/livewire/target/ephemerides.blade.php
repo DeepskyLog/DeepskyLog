@@ -1,5 +1,5 @@
 <div>
-    @if (!$target->isMoon() && ($target->ra != null && $target->decl != null))
+    @if (!$target->isPlanetMoon() && ($target->ra != null && $target->decl != null))
     <div id="ephemeridesdiv">
 
         <h4>{{ _i("Ephemerides for %s in %s",

@@ -83,7 +83,7 @@
 
             @if (!Auth::guest())
             @if(Auth::user()->stdlocation != null)
-            @if(!$target->isMoon())
+            @if(!$target->isPlanetMoon())
             <tr>
                 <td colspan="12">
                     {!! $target->getAltitudeGraph() !!}
@@ -180,7 +180,7 @@
                 <td colspan="3"> {{ _i("(Contains)/Part of") }}</td>
                 <td colspan="9">{!! \App\Models\TargetPartOf::partOfContains($target) !!}</td>
                 @else
-                @if ($target->isMoon())
+                @if ($target->isPlanetMoon())
                 <td colspan="3"> {{ _i("Moon of") }}</td>
                 <td colspan="9">{!! \App\Models\TargetPartOf::planet($target) !!}</td>
                 @else
@@ -257,7 +257,7 @@
                 </span>
             </td>
             </tr>
-            @if ($target->isSolarSystem())
+            @if ($target->isPlanet())
             <tr>
                 {!! $target->getOpposition() !!}
             </tr>

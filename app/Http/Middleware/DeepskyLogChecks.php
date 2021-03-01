@@ -46,9 +46,14 @@ class DeepskyLogChecks
         if (!Session::has('date')) {
             $datetime = new \Carbon\Carbon();
             $date     = $datetime->format('Y-m-d');
-
             Session::put('date', $date);
             Astrolib::getInstance()->getAstronomyLibrary()->setDate($datetime);
+        } else {
+            $date       = $request->session()->get('date');
+            // $carbonDate = \Carbon\Carbon::parse($date)->format('Y-m-d');
+            $carbonDate = \Carbon\Carbon::createFromFormat('Y-m-d', $date);
+            // dd($carbonDate);
+            Astrolib::getInstance()->getAstronomyLibrary()->setDate($carbonDate);
         }
         if (!Auth::guest()) {
             if (Auth::user()->stdlocation) {

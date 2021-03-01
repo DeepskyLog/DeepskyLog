@@ -404,16 +404,16 @@
         },
         {
             "name": "cviebrock/eloquent-sluggable",
-            "version": "8.0.4",
+            "version": "8.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cviebrock/eloquent-sluggable.git",
-                "reference": "e1f27c7b48dc7cec352d12351a147e4032c43f60"
+                "reference": "69cd660715fc05a7e5a1cd51c88dc56128b0ca7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cviebrock/eloquent-sluggable/zipball/e1f27c7b48dc7cec352d12351a147e4032c43f60",
-                "reference": "e1f27c7b48dc7cec352d12351a147e4032c43f60",
+                "url": "https://api.github.com/repos/cviebrock/eloquent-sluggable/zipball/69cd660715fc05a7e5a1cd51c88dc56128b0ca7e",
+                "reference": "69cd660715fc05a7e5a1cd51c88dc56128b0ca7e",
                 "shasum": ""
             },
             "require": {
@@ -465,22 +465,22 @@
             ],
             "support": {
                 "issues": "https://github.com/cviebrock/eloquent-sluggable/issues",
-                "source": "https://github.com/cviebrock/eloquent-sluggable/tree/8.0.4"
+                "source": "https://github.com/cviebrock/eloquent-sluggable/tree/8.0.5"
             },
-            "time": "2021-01-20T16:25:06+00:00"
+            "time": "2021-02-28T20:03:09+00:00"
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v5.2",
+            "version": "v5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "1663c268c1495bc7b7bf4c3c6332275d6d12fa24"
+                "reference": "f0b1404d1c11f3457c1cf06331a3773bce2dd719"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/1663c268c1495bc7b7bf4c3c6332275d6d12fa24",
-                "reference": "1663c268c1495bc7b7bf4c3c6332275d6d12fa24",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/f0b1404d1c11f3457c1cf06331a3773bce2dd719",
+                "reference": "f0b1404d1c11f3457c1cf06331a3773bce2dd719",
                 "shasum": ""
             },
             "require": {
@@ -529,7 +529,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v5.2"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v5.3"
             },
             "funding": [
                 {
@@ -537,7 +537,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-22T10:43:34+00:00"
+            "time": "2021-03-01T11:43:25+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
@@ -4885,17 +4885,17 @@
         },
         {
             "name": "spatie/laravel-medialibrary-pro",
-            "version": "1.12.17",
+            "version": "1.12.18",
             "source": {
                 "type": "git",
                 "url": "git@github.com:spatie/laravel-medialibrary-pro.git",
-                "reference": "5fa7787fddc2c0ef2e4b90f9a463cbedf5771eb4"
+                "reference": "2f9d190ff238b70c8f0e62d7fc4717bb73d05f49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-5fa7787fddc2c0ef2e4b90f9a463cbedf5771eb4-zip-b04807.zip",
-                "reference": "5fa7787fddc2c0ef2e4b90f9a463cbedf5771eb4",
-                "shasum": "5bb1bd19f3c74ff2cfc2334ea157bff95be19d23"
+                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-2f9d190ff238b70c8f0e62d7fc4717bb73d05f49-zip-2e51a7.zip",
+                "reference": "2f9d190ff238b70c8f0e62d7fc4717bb73d05f49",
+                "shasum": "5b0deb70599968421133a3ed2922b4a036fa2545"
             },
             "require": {
                 "ext-json": "*",
@@ -4960,10 +4960,10 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.12.17",
+                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.12.18",
                 "issues": "https://github.com/spatie/laravel-medialibrary-pro/issues"
             },
-            "time": "2021-02-24T15:22:30+00:00"
+            "time": "2021-02-28T18:04:44+00:00"
         },
         {
             "name": "spatie/laravel-translatable",
