@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use deepskylog\AstronomyLibrary\Time;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
+use deepskylog\AstronomyLibrary\Targets\Earth;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 
@@ -559,7 +560,7 @@ class Target extends Model
         $this->_popup[3] = '-';
 
         $astrolib = Astrolib::getInstance()->getAstronomyLibrary();
-        $date     = $astrolib->getDate();
+        $date     = $astrolib->getDate()->copy();
 
         if (!Auth::guest() && Auth::user()->stdlocation) {
             if ($this->_location == null) {
@@ -570,7 +571,7 @@ class Target extends Model
             $date->timezone($this->_location->timezone);
         }
 
-        $greenwichSiderialTime = Time::apparentSiderialTimeGreenwich($date);
+        $greenwichSiderialTime = Time::apparentSiderialTimeGreenwich($date->subDay());
         $deltaT                = $astrolib->getDeltaT();
 
         if ($this->isSolarSystem()) {
@@ -579,7 +580,7 @@ class Target extends Model
             if ($this->_observationType['type'] == 'sun') {
                 $this->_target->calculateEquatorialCoordinatesHighAccuracy($date, $nutation);
             } elseif ($this->_observationType['type'] == 'planets' || $this->_observationType['type'] == 'moon') {
-                $this->_target->calculateEquatorialCoordinates($date, $astrolib->getGeographicalCoordinates(), $astrolib->getHeight());
+                $this->_target->calculateEquatorialCoordinates($date, $astrolib->getGeographicalCoordinates(), Astrolib::getInstance()->getHeight());
             }
         }
 
@@ -867,7 +868,7 @@ class Target extends Model
         }
 
         if ($this->type->type == 'Planet') {
-            return $this->_target->magnitude($astrolib->getDate());
+            return $this->_target->magnitude($astrolib->getDate()->copy());
         } else {
             return '-';
         }
@@ -886,7 +887,7 @@ class Target extends Model
         }
 
         if ($this->type->type == 'Planet') {
-            return $this->_target->illuminatedFraction($astrolib->getDate());
+            return $this->_target->illuminatedFraction($astrolib->getDate()->copy());
         } else {
             return '-';
         }
@@ -1465,7 +1466,7 @@ class Target extends Model
         }
         $location = $this->_location;
 
-        $date         = Astrolib::getInstance()->getAstronomyLibrary()->getDate();
+        $date         = Astrolib::getInstance()->getAstronomyLibrary()->getDate()->copy();
         $date->timezone($location->timezone);
 
         return $this->_target->altitudeGraph(Astrolib::getInstance()->getAstronomyLibrary()->getGeographicalCoordinates(), $date);
@@ -1563,7 +1564,7 @@ class Target extends Model
      */
     public function getOpposition(): String
     {
-        $date       = Astrolib::getInstance()->getAstronomyLibrary()->getDate();
+        $date       = Astrolib::getInstance()->getAstronomyLibrary()->getDate()->copy();
         if ($this->getTranslation('target_name', 'en') == 'Venus' || $this->getTranslation('target_name', 'en') == 'Mercury') {
             return '<td colspan="3">'
                 . _i('Next evening elongation')
@@ -1582,5 +1583,45 @@ class Target extends Model
                 . $this->_target->opposition($date)->isoFormat('LL')
                 . '</td>';
         }
+    }
+
+    /**
+     * Return the distance of the planet or the moon
+     *
+     * @return String The date for the distance
+     */
+    public function distance(): String
+    {
+        $date       = Astrolib::getInstance()->getAstronomyLibrary()->getDate()->copy();
+        $distance   = $this->_target->calculateHeliocentricCoordinates($date)[2];
+        $toReturn   = '<td colspan="3">';
+
+        if ($this->isMoon()) {
+            $toReturn .= _i('Distance from earth') . '</td>';
+            $toReturn .= '<td colspan="9">' . round($distance) . ' km';
+        } else {
+            $toReturn .= _i('Distance from sun') . '</td>';
+            $toReturn .= '<td colspan="3">' . round($distance, 2) . ' ' . _i('AU') . '</td>';
+
+            $helio_coords = $this->_target->calculateHeliocentricCoordinates($date);
+            $R            = $helio_coords[2];
+
+            $earth              = new Earth();
+            $helio_coords_earth = $earth->calculateHeliocentricCoordinates($date);
+            $R0                 = $helio_coords_earth[2];
+
+            $x = $helio_coords[2] * cos(deg2rad($helio_coords[1])) * cos(deg2rad($helio_coords[0])) -
+                        $helio_coords_earth[2] * cos(deg2rad($helio_coords_earth[1])) * cos(deg2rad($helio_coords_earth[0]));
+            $y = $helio_coords[2] * cos(deg2rad($helio_coords[1])) * sin(deg2rad($helio_coords[0])) -
+                        $helio_coords_earth[2] * cos(deg2rad($helio_coords_earth[1])) * sin(deg2rad($helio_coords_earth[0]));
+            $z = $helio_coords[2] * sin(deg2rad($helio_coords[1])) -
+                        $helio_coords_earth[2] * sin(deg2rad($helio_coords_earth[1]));
+            $delta = sqrt($x ** 2 + $y ** 2 + $z ** 2);
+
+            $toReturn .= '<td colspan="3"><span class="float-right">' . _i('Distance from earth') . '</span></td>';
+            $toReturn .= '<td colspan="3">' . round($delta, 2) . ' ' . _i('AU') . '</td>';
+        }
+        $toReturn .= '</td>';
+        return $toReturn;
     }
 }

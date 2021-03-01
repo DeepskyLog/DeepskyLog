@@ -138,6 +138,10 @@
                 <td colspan="3">
                     {{ $target->illuminatedFraction() }}
                 </td>
+            </tr>
+            <tr>
+                {!! $target->distance() !!}
+
                 @endif
             </tr>
 
@@ -261,7 +265,7 @@
             <tr>
                 {!! $target->getOpposition() !!}
             </tr>
-            @else
+            @elseif (!$target->isMoon())
             <tr>
                 <td>{{ _i('Highest From') }}</td>
                 <td colspan="3">{{ $target->highest_from }}</td>

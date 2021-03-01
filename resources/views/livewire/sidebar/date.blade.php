@@ -27,17 +27,20 @@
     @auth
     @if (Auth::user()->stdlocation != 0)
     @php
+    $astrolib = \App\Models\Astrolib::getInstance()->getAstronomyLibrary();
+    $date = $astrolib->getDate()->copy();
+
     $location = \App\Models\Location::where('id', Auth::user()->stdlocation)->first();
 
-    $objAstroCalc = new \App\Libraries\astrocalc(
-    $date,
-    $location->latitude,
-    $location->longitude,
-    $location->timezone
-    );
+    $greenwichSiderialTime = deepskylog\AstronomyLibrary\Time::apparentSiderialTimeGreenwich($date->subDay());
+    $deltaT = $astrolib->getDeltaT();
 
-    $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime();
+    $moon = new \deepskylog\AstronomyLibrary\Targets\Moon();
+    $moon->calculateEquatorialCoordinates($date, $astrolib->getGeographicalCoordinates(),
+    \App\Models\Astrolib::getInstance()->getHeight());
 
+    $moon->calculateEphemerides(\App\Models\Astrolib::getInstance()->getAstronomyLibrary()->getGeographicalCoordinates(),
+    $greenwichSiderialTime, $deltaT);
     @endphp
     <table class="table table-sm">
         <tr>
