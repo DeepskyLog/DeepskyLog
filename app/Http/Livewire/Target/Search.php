@@ -8,8 +8,9 @@ class Search extends Component
 {
     public bool $addExtraSearchParameter = false;
     public String $allCatalogs;
-    public string $constellations;
-    public string $types;
+    public String $allAtlases;
+    public String $constellations;
+    public String $types;
     public $catalog;
     // The list with all search criteria that can be used
     public String $searchCriteria;
@@ -22,16 +23,19 @@ class Search extends Component
     public $numberOfNames          = 0;
     public $constellation;
     public $numberOfSearchOptions = 0;
+    public $numberOfAtlases       = 0;
 
     public function mount()
     {
         $this->allCatalogs    = \App\Models\TargetName::getCatalogsChoices();
         $this->constellations = \App\Models\Constellation::getConstellationChoices();
         $this->types          = \App\Models\TargetType::getTypesChoices();
+        $this->allAtlases     = \App\Models\Atlas::getAtlasChoices();
         $this->searchCriteria = '<option value=""></option>';
         $this->searchCriteria .= '<option value="name">' . _i('Object name') . '</option>';
         $this->searchCriteria .= '<option value="constellation">' . _i('Constellation') . '</option>';
         $this->searchCriteria .= '<option value="type">' . _i('Object type') . '</option>';
+        $this->searchCriteria .= '<option value="atlas">' . _i('Atlas page') . '</option>';
     }
 
     /**
@@ -105,6 +109,44 @@ class Search extends Component
                 $searchString .= '</select>';
                 $searchString .= '</div>';
                 $searchString .= '</div>';
+                // $searchString .= '<div class="col-sm-1">';
+                // $searchString .= '<svg xmlns="http://www.w3.org/2000/svg" wire:click="removeSearch(' . $this->numberOfSearchOptions . ')" width="16" height="16" fill="currentColor" class="bi bi-dash-circle-fill inline" viewBox="0 0 16 16">
+                // <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                // </svg>';
+                // $searchString .= '</div>';
+                $searchString .= '</div>';
+            }
+            if ($this->criteria == 'atlas') {
+                $this->numberOfAtlases++;
+
+                $searchString = '<div class="form-group row">';
+                if ($this->numberOfAtlases == 1) {
+                    $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Atlas page') . '</div>';
+                } else {
+                    $searchString .= '<div class="col-sm-2 col-form-label">' . _i('or atlas page') . '</div>';
+                }
+                $searchString .= '<div class="col-sm-1">';
+                $searchString .= '<div x-data="" wire:ignore>';
+                $searchString .= '<select class="form-control form-control-sm" id="notAtlas' . $this->numberOfAtlases . '" name="notAtlas' . $this->numberOfAtlases . '">';
+                $searchString .= '<option value="0">' . _i('is') . '</option>';
+                $searchString .= '<option value="1">' . _i('is not') . '</option>';
+                $searchString .= '</select>';
+                $searchString .= '</div>';
+                $searchString .= '</div>';
+                $searchString .= '<div class="col-sm-3">';
+                $searchString .= '<input type="text" placeholder="' . _i('Enter page in atlas') . '" class="form-control form-control-lg" name="atlasPage' . $this->numberOfAtlases . '">';
+                $searchString .= '</div>';
+                $searchString .= '<div class="col-sm-1">';
+                $searchString .= _i('of');
+                $searchString .= '</div>';
+                $searchString .= '<div class="col-sm-4">';
+                $searchString .= '<div x-data="" wire:ignore>';
+                $searchString .= '<select class="form-control form-control-sm" id="atlas' . $this->numberOfAtlases . '" name="atlas' . $this->numberOfAtlases . '">';
+                $searchString .= $this->allAtlases;
+                $searchString .= '</select>';
+                $searchString .= '</div>';
+                $searchString .= '</div>';
+
                 // $searchString .= '<div class="col-sm-1">';
                 // $searchString .= '<svg xmlns="http://www.w3.org/2000/svg" wire:click="removeSearch(' . $this->numberOfSearchOptions . ')" width="16" height="16" fill="currentColor" class="bi bi-dash-circle-fill inline" viewBox="0 0 16 16">
                 // <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
@@ -186,7 +228,6 @@ class Search extends Component
     // TODO: Use the choices drop down
     // TODO: Remove one of the search criteria does not work yet
     // TODO: Add extra search criteria
-    // TODO:   Atlas
     // TODO:   Declination
     // TODO:   Right Ascension
     // TODO:   Magnitude

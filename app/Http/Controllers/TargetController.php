@@ -204,8 +204,44 @@ class TargetController extends Controller
                     }
                 });
             }
-        }
 
+            // Check for all atlas entries in the request
+            $results = array_filter($requestArray, function ($value) {
+                return strpos($value, 'atlasPage') !== false;
+            });
+
+            if (count($results) == 1) {
+                if ($request->notAtlas1) {
+                    $allTargets = $allTargets->where($request->atlas1, '!=', $request->atlasPage1);
+                } else {
+                    $allTargets = $allTargets->where($request->atlas1, $request->atlasPage1);
+                }
+            } elseif (count($results) > 1) {
+                $notResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'notAtlas') !== false;
+                });
+                $allTargets = $allTargets->where(function ($query) use ($request, $results, $notResults) {
+                    if ($request[array_values($notResults)[0]]) {
+                        $query->where($request->atlas1, '!=', $request[array_values($results)[0]]);
+                    } else {
+                        $query->where($request->atlas1, $request[array_values($results)[0]]);
+                    }
+                    $cnt = 0;
+                    foreach ($results as $atl) {
+                        $index  = str_replace('atlasPage', '', $atl);
+                        $atlas  = 'atlas' . $index;
+                        if ($atl != array_values($results)[0]) {
+                            if ($request[array_values($notResults)[$cnt]]) {
+                                $query->where($request[$atlas], '!=', $request[$atl]);
+                            } else {
+                                $query->orWhere($request[$atlas], $request[$atl]);
+                            }
+                        }
+                        $cnt++;
+                    }
+                });
+            }
+        }
         $targetsToShow = $allTargets->get();
 
         if (count($targetsToShow) == 1) {
