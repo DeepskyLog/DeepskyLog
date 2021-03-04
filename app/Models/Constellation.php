@@ -30,7 +30,6 @@ class Constellation extends Model
         foreach ($constellations as $cons) {
             $toReturn .= "<option value='" . $cons['id'] . "'>" . $cons['name'] . '</option>';
         }
-
         return $toReturn;
     }
 }

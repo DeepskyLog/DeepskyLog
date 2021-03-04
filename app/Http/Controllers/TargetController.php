@@ -13,7 +13,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Target;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use deepskylog\LaravelGettext\Facades\LaravelGettext;
@@ -67,74 +66,71 @@ class TargetController extends Controller
             });
             // Check for all catalog entries in the request
             $resultNumbers = array_filter($requestArray, function ($value) {
-                return strpos($value, 'numbers') !== false;
+                return strpos($value, 'number') !== false;
             });
             // Build the query
             $targetQuery = \App\Models\TargetName::query();
-            if (count($resultCatalogs) > 0 || count($resultNumbers) > 0) {
-                if (count($resultNumbers) > 0) {
-                    if (count($resultNumbers) == 1) {
-                        if (Str::contains($request->number, '%')) {
-                            $targetQuery->where('catindex', 'like', $request->number1);
-                        } else {
-                            $targetQuery->where('catindex', $request->number1);
-                        }
-                    } elseif (count($resultNumbers) > 1) {
-                        $targetQuery = $targetQuery->where(function ($query) use ($request, $resultNumbers) {
-                            if (Str::contains($request->number1, '%')) {
-                                $query->where('catindex', 'like', $request->number1);
-                            } else {
-                                $query->where('catindex', $request->number1);
-                            }
 
-                            foreach ($resultNumbers as $number) {
-                                if ($number != array_values($resultNumbers)[0]) {
-                                    $query->orWhere('constellation', $request[$number]);
-                                }
+            if (count($resultCatalogs) > 0 || count($resultNumbers) > 0) {
+                $cnt = 0;
+                foreach ($resultCatalogs as $cat) {
+                    $index  = str_replace('catalog', '', $cat);
+                    $number = 'number' . $index;
+                    $not    = 'notName' . $index;
+
+                    if ($request[$not]) {
+                        if ($request[$number]) {
+                            $translated_target = \App\Models\Target::where(
+                                'target_name->' . LaravelGettext::getLocaleLanguage(),
+                                'not like',
+                                ucwords($request[$number])
+                            )->first();
+                            if ($translated_target) {
+                                $targetQuery->where('target_id', $translated_target->id);
+                            } else {
+                                $targetQuery->where('altname', 'not like', $request[$cat] . ' ' . $request[$number]);
                             }
-                        });
-                    }
-                }
-                if (count($resultCatalogs) > 0) {
-                    if (count($resultCatalogs) == 1) {
-                        $targetQuery->where('catalog', $request->catalog1);
-                    } elseif (count($resultCatalogs) > 1) {
-                        $targetQuery = $targetQuery->where(function ($query) use ($request, $resultCatalogs) {
-                            $query->where('catalog', $request[array_values($resultCatalogs)[0]]);
-                            foreach ($resultCatalogs as $res) {
-                                if ($res != array_values($resultCatalogs)[0]) {
-                                    $query->orWhere('catalog', $request[$res]);
+                        } else {
+                            $targetQuery->where('altname', 'not like', $request[$cat] . ' %');
+                        }
+                    } else {
+                        if ($cnt == 0) {
+                            if ($request[$number]) {
+                                $translated_target = \App\Models\Target::where(
+                                    'target_name->' . LaravelGettext::getLocaleLanguage(),
+                                    'like',
+                                    ucwords($request[$number])
+                                )->first();
+                                if ($translated_target) {
+                                    $targetQuery->where('target_id', $translated_target->id);
+                                } else {
+                                    $targetQuery->where('altname', 'like', $request[$cat] . ' ' . $request[$number]);
                                 }
+                            } else {
+                                $targetQuery->where('altname', 'like', $request[$cat] . ' %');
                             }
-                        });
+                            $cnt++;
+                        } else {
+                            if ($request[$number]) {
+                                $targetQuery->orwhere('altname', 'like', $request[$cat] . ' ' . $request[$number]);
+
+                                $translated_target = \App\Models\Target::where(
+                                    'target_name->' . LaravelGettext::getLocaleLanguage(),
+                                    'like',
+                                    ucwords($request[$number])
+                                )->first();
+                                if ($translated_target) {
+                                    $targetQuery->orwhere('target_id', $translated_target->id);
+                                }
+                            } else {
+                                $targetQuery->orwhere('altname', 'like', $request[$cat] . ' %');
+                            }
+                        }
                     }
                 }
 
                 $targetsToShow = $targetQuery->get();
                 $allTargets    = \App\Models\Target::whereIn('targets.id', $targetsToShow->pluck('target_id'));
-
-                if (count($resultNumbers) > 0) {
-                    // Also search for translated strings
-                    if (count($resultNumbers) == 1) {
-                        $translated_target = \App\Models\Target::where(
-                            'target_name->' . LaravelGettext::getLocaleLanguage(),
-                            'like',
-                            $request->number1
-                        )->first();
-                        if ($translated_target) {
-                            $allTargets->orWhere('id', $translated_target->id);
-                        }
-                    } elseif (count($resultNumbers) > 1) {
-                        $allTargets = $allTargets->where(function ($query) use ($request, $resultNumbers) {
-                            $query->where('target_name->' . LaravelGettext::getLocaleLanguage(), 'like', $request[array_values($resultNumbers)[0]]);
-                            foreach ($resultNumbers as $num) {
-                                if ($num != array_values($resultNumbers)[0]) {
-                                    $query->orWhere('target_name->' . LaravelGettext::getLocaleLanguage(), 'like', $request[$num]);
-                                }
-                            }
-                        });
-                    }
-                }
             } else {
                 $allTargets = \App\Models\Target::query();
             }
@@ -145,14 +141,31 @@ class TargetController extends Controller
             });
 
             if (count($results) == 1) {
-                $allTargets = $allTargets->where('constellation', $request->constellation1);
+                if ($request->notConstellation1) {
+                    $allTargets = $allTargets->where('constellation', '!=', $request->constellation1);
+                } else {
+                    $allTargets = $allTargets->where('constellation', $request->constellation1);
+                }
             } elseif (count($results) > 1) {
-                $allTargets = $allTargets->where(function ($query) use ($request, $results) {
-                    $query->where('constellation', $request[array_values($results)[0]]);
+                $notResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'notConstellation') !== false;
+                });
+                $allTargets = $allTargets->where(function ($query) use ($request, $results, $notResults) {
+                    if ($request[array_values($notResults)[0]]) {
+                        $query->where('constellation', '!=', $request[array_values($results)[0]]);
+                    } else {
+                        $query->where('constellation', $request[array_values($results)[0]]);
+                    }
+                    $cnt = 0;
                     foreach ($results as $con) {
                         if ($con != array_values($results)[0]) {
-                            $query->orWhere('constellation', $request[$con]);
+                            if ($request[array_values($notResults)[$cnt]]) {
+                                $query->where('constellation', '!=', $request[$con]);
+                            } else {
+                                $query->orWhere('constellation', $request[$con]);
+                            }
                         }
+                        $cnt++;
                     }
                 });
             }
@@ -163,14 +176,31 @@ class TargetController extends Controller
             });
 
             if (count($results) == 1) {
-                $allTargets = $allTargets->where('target_type', $request->type1);
+                if ($request->notType1) {
+                    $allTargets = $allTargets->where('target_type', '!=', $request->type1);
+                } else {
+                    $allTargets = $allTargets->where('target_type', $request->type1);
+                }
             } elseif (count($results) > 1) {
-                $allTargets = $allTargets->where(function ($query) use ($request, $results) {
-                    $query->where('target_type', $request[array_values($results)[0]]);
+                $notResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'notType') !== false;
+                });
+                $allTargets = $allTargets->where(function ($query) use ($request, $results, $notResults) {
+                    if ($request[array_values($notResults)[0]]) {
+                        $query->where('target_type', '!=', $request[array_values($results)[0]]);
+                    } else {
+                        $query->where('target_type', $request[array_values($results)[0]]);
+                    }
+                    $cnt = 0;
                     foreach ($results as $typ) {
                         if ($typ != array_values($results)[0]) {
-                            $query->orWhere('target_type', $request[$typ]);
+                            if ($request[array_values($notResults)[$cnt]]) {
+                                $query->where('target_type', '!=', $request[$typ]);
+                            } else {
+                                $query->orWhere('target_type', $request[$typ]);
+                            }
                         }
+                        $cnt++;
                     }
                 });
             }

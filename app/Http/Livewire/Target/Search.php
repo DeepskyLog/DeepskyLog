@@ -52,6 +52,14 @@ class Search extends Component
                 } else {
                     $searchString .= '<div class="col-sm-2 col-form-label">' . _i('or in constellation') . '</div>';
                 }
+                $searchString .= '<div class="col-sm-1">';
+                $searchString .= '<div x-data="" wire:ignore>';
+                $searchString .= '<select class="form-control form-control-sm" id="notConstellation' . $this->numberOfConstellations . '" name="notConstellation' . $this->numberOfConstellations . '">';
+                $searchString .= '<option value="0">' . _i('is') . '</option>';
+                $searchString .= '<option value="1">' . _i('is not') . '</option>';
+                $searchString .= '</select>';
+                $searchString .= '</div>';
+                $searchString .= '</div>';
                 $searchString .= '<div class="col-sm-4">';
                 $searchString .= '<div x-data="" wire:ignore>';
 
@@ -78,6 +86,14 @@ class Search extends Component
                 } else {
                     $searchString .= '<div class="col-sm-2 col-form-label">' . _i('or object type') . '</div>';
                 }
+                $searchString .= '<div class="col-sm-1">';
+                $searchString .= '<div x-data="" wire:ignore>';
+                $searchString .= '<select class="form-control form-control-sm" id="notType' . $this->numberOfTypes . '" name="notType' . $this->numberOfTypes . '">';
+                $searchString .= '<option value="0">' . _i('is') . '</option>';
+                $searchString .= '<option value="1">' . _i('is not') . '</option>';
+                $searchString .= '</select>';
+                $searchString .= '</div>';
+                $searchString .= '</div>';
                 $searchString .= '<div class="col-sm-4">';
                 $searchString .= '<div x-data="" wire:ignore>';
 
@@ -105,6 +121,14 @@ class Search extends Component
                 } else {
                     $searchString .= '<div class="col-sm-2 col-form-label">' . _i('or object name') . '</div>';
                 }
+                $searchString .= '<div class="col-sm-1">';
+                $searchString .= '<div x-data="" wire:ignore>';
+                $searchString .= '<select class="form-control form-control-sm" id="notName' . $this->numberOfNames . '" name="notName' . $this->numberOfNames . '">';
+                $searchString .= '<option value="0">' . _i('is') . '</option>';
+                $searchString .= '<option value="1">' . _i('is not') . '</option>';
+                $searchString .= '</select>';
+                $searchString .= '</div>';
+                $searchString .= '</div>';
                 $searchString .= '<div class="col-sm-4">';
                 $searchString .= '<div x-data="" wire:ignore>';
                 $searchString .= '<select class="form-control form-control-sm" id="catalog' . $this->numberOfNames . '" name="catalog' . $this->numberOfNames . '">';
@@ -162,7 +186,6 @@ class Search extends Component
     // TODO: Use the choices drop down
     // TODO: Remove one of the search criteria does not work yet
     // TODO: Add extra search criteria
-    // TODO:   Except objects from certain catalog  -> Use not for type, name, constellation, atlas
     // TODO:   Atlas
     // TODO:   Declination
     // TODO:   Right Ascension
