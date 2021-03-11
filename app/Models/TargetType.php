@@ -63,7 +63,6 @@ class TargetType extends Model
         foreach ($types as $type) {
             $toReturn .= "<option value='" . $type['id'] . "'>" . _i($type['type']) . '</option>';
         }
-
         return $toReturn;
     }
 }

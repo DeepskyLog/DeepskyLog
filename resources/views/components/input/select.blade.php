@@ -10,8 +10,8 @@
 	  },
 	  false,
 	);
-	let selected = parseInt(@this.get{!! $attributes['selected'] !!}).toString();
-	choices.setChoiceByValue(selected);
+	{{-- let selected = parseInt(@this.get{!! $attributes['selected'] !!}).toString();
+	choices.setChoiceByValue(selected); --}}
     }">
     <select class="form-control form-control-sm" id="{{ $attributes['id'] }}" name="{{ $attributes['id'] }}"
         x-ref="{{ $attributes['id'] }}">

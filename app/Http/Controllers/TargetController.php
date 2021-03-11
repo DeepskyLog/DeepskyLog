@@ -241,6 +241,92 @@ class TargetController extends Controller
                     }
                 });
             }
+            // Check for all declination entries in the request
+            $results = array_filter($requestArray, function ($value) {
+                return strpos($value, 'declinationDegrees') !== false;
+            });
+
+            if (count($results) == 1) {
+                $decl = $request->declinationDegrees1 + $request->declinationMinutes1 / 60 + $request->declinationSeconds1 / 3600.0;
+                if ($request->compDeclination1) {
+                    $allTargets = $allTargets->where('decl', '<', $decl);
+                } else {
+                    $allTargets = $allTargets->where('decl', '>', $decl);
+                }
+            } elseif (count($results) > 1) {
+                $compResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'compDeclination') !== false;
+                });
+                $minResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'declinationMinutes') !== false;
+                });
+                $secResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'declinationSeconds') !== false;
+                });
+                $allTargets = $allTargets->where(function ($query) use ($request, $results, $compResults, $minResults, $secResults) {
+                    $decl = $request[array_values($results)[0]] + $request[array_values($minResults)[0]] / 60 + $request[array_values($secResults)[0]] / 3600.0;
+                    if ($request[array_values($compResults)[0]]) {
+                        $query->where('decl', '<', $decl);
+                    } else {
+                        $query->where('decl', '>', $decl);
+                    }
+                    $cnt = 0;
+                    foreach ($results as $dec) {
+                        $decl = $request[array_values($results)[$cnt]] + $request[array_values($minResults)[$cnt]] / 60 + $request[array_values($secResults)[$cnt]] / 3600.0;
+                        if ($dec != array_values($results)[0]) {
+                            if ($request[array_values($compResults)[$cnt]]) {
+                                $query->where('decl', '<', $decl);
+                            } else {
+                                $query->where('decl', '>', $decl);
+                            }
+                        }
+                        $cnt++;
+                    }
+                });
+            }
+            // Check for all ra entries in the request
+            $results = array_filter($requestArray, function ($value) {
+                return strpos($value, 'raHours') !== false;
+            });
+
+            if (count($results) == 1) {
+                $ra = $request->raHours1 + $request->raMinutes1 / 60 + $request->raSeconds1 / 3600.0;
+                if ($request->compRa1) {
+                    $allTargets = $allTargets->where('ra', '<', $ra);
+                } else {
+                    $allTargets = $allTargets->where('ra', '>', $ra);
+                }
+            } elseif (count($results) > 1) {
+                $compResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'compRa') !== false;
+                });
+                $minResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'raMinutes') !== false;
+                });
+                $secResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'raSeconds') !== false;
+                });
+                $allTargets = $allTargets->where(function ($query) use ($request, $results, $compResults, $minResults, $secResults) {
+                    $ra = $request[array_values($results)[0]] + $request[array_values($minResults)[0]] / 60 + $request[array_values($secResults)[0]] / 3600.0;
+                    if ($request[array_values($compResults)[0]]) {
+                        $query->where('ra', '<', $ra);
+                    } else {
+                        $query->where('ra', '>', $ra);
+                    }
+                    $cnt = 0;
+                    foreach ($results as $ra) {
+                        $ra = $request[array_values($results)[$cnt]] + $request[array_values($minResults)[$cnt]] / 60 + $request[array_values($secResults)[$cnt]] / 3600.0;
+                        if ($ra != array_values($results)[0]) {
+                            if ($request[array_values($compResults)[$cnt]]) {
+                                $query->where('ra', '<', $ra);
+                            } else {
+                                $query->where('ra', '>', $ra);
+                            }
+                        }
+                        $cnt++;
+                    }
+                });
+            }
         }
         $targetsToShow = $allTargets->get();
 

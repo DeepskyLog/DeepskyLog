@@ -24,18 +24,22 @@ class Search extends Component
     public $constellation;
     public $numberOfSearchOptions = 0;
     public $numberOfAtlases       = 0;
+    public $numberOfDeclinations  = 0;
+    public $numberOfRa            = 0;
 
     public function mount()
     {
-        $this->allCatalogs    = \App\Models\TargetName::getCatalogsChoices();
-        $this->constellations = \App\Models\Constellation::getConstellationChoices();
-        $this->types          = \App\Models\TargetType::getTypesChoices();
-        $this->allAtlases     = \App\Models\Atlas::getAtlasChoices();
         $this->searchCriteria = '<option value=""></option>';
         $this->searchCriteria .= '<option value="name">' . _i('Object name') . '</option>';
         $this->searchCriteria .= '<option value="constellation">' . _i('Constellation') . '</option>';
         $this->searchCriteria .= '<option value="type">' . _i('Object type') . '</option>';
         $this->searchCriteria .= '<option value="atlas">' . _i('Atlas page') . '</option>';
+        $this->searchCriteria .= '<option value="ra">' . _i('Right Ascension') . '</option>';
+        $this->searchCriteria .= '<option value="decl">' . _i('Declination') . '</option>';
+        $this->allCatalogs    = \App\Models\TargetName::getCatalogsChoices();
+        $this->constellations = \App\Models\Constellation::getConstellationChoices();
+        $this->types          = \App\Models\TargetType::getTypesChoices();
+        $this->allAtlases     = \App\Models\Atlas::getAtlasChoices();
     }
 
     /**
@@ -153,6 +157,88 @@ class Search extends Component
                 // </svg>';
                 // $searchString .= '</div>';
                 $searchString .= '</div>';
+            }
+            if ($this->criteria == 'decl') {
+                $this->numberOfDeclinations++;
+
+                if ($this->numberOfDeclinations > 2) {
+                    $searchString = '';
+                } else {
+                    $searchString = '<div class="form-group row">';
+                    if ($this->numberOfDeclinations == 1) {
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Declination') . '</div>';
+                    } else {
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and declination') . '</div>';
+                    }
+                    $searchString .= '<div class="col-sm-1">';
+                    $searchString .= '<div x-data="" wire:ignore>';
+                    $searchString .= '<select class="form-control form-control" id="compDeclination' . $this->numberOfDeclinations . '" name="compDeclination' . $this->numberOfDeclinations . '">';
+                    $searchString .= '<option value="0">' . _i('>') . '</option>';
+                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '</select>';
+                    $searchString .= '</div>';
+                    $searchString .= '</div>';
+                    $searchString .= '<div class="input-group col-sm-4">';
+                    $searchString .= '<input type="number" min="-90" max="90" class="form-control" name="declinationDegrees' . $this->numberOfDeclinations . '">';
+                    $searchString .= '<div class="input-group-append"><span class="input-group-text">°</span></div>';
+                    // $searchString .= '</div>';
+                    // $searchString .= '<div class="col-sm-1 inline">';
+                    $searchString .= '<input type="number" min="0" max="59" class="form-control" name="declinationMinutes' . $this->numberOfDeclinations . '">';
+                    $searchString .= '<div class="input-group-append"><span class="input-group-text">\'</span></div>';
+                    // $searchString .= '</div>';
+                    // $searchString .= '<div class="col-sm-1 inline">';
+                    $searchString .= '<input type="number" min="0" max="59" step="0.1" class="form-control" name="declinationSeconds' . $this->numberOfDeclinations . '">';
+                    $searchString .= '<div class="input-group-append"><span class="input-group-text">\'\'</span></div>';
+                    $searchString .= '</div>';
+
+                    // $searchString .= '<div class="col-sm-1">';
+                    // $searchString .= '<svg xmlns="http://www.w3.org/2000/svg" wire:click="removeSearch(' . $this->numberOfSearchOptions . ')" width="16" height="16" fill="currentColor" class="bi bi-dash-circle-fill inline" viewBox="0 0 16 16">
+                    // <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                    // </svg>';
+                    // $searchString .= '</div>';
+                    $searchString .= '</div>';
+                }
+            }
+            if ($this->criteria == 'ra') {
+                $this->numberOfRa++;
+
+                if ($this->numberOfRa > 2) {
+                    $searchString = '';
+                } else {
+                    $searchString = '<div class="form-group row">';
+                    if ($this->numberOfRa == 1) {
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Right Ascension') . '</div>';
+                    } else {
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and Right Ascension') . '</div>';
+                    }
+                    $searchString .= '<div class="col-sm-1">';
+                    $searchString .= '<div x-data="" wire:ignore>';
+                    $searchString .= '<select class="form-control form-control" id="compRa' . $this->numberOfRa . '" name="compRa' . $this->numberOfRa . '">';
+                    $searchString .= '<option value="0">' . _i('>') . '</option>';
+                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '</select>';
+                    $searchString .= '</div>';
+                    $searchString .= '</div>';
+                    $searchString .= '<div class="input-group col-sm-4">';
+                    $searchString .= '<input type="number" min="-90" max="90" class="form-control" name="raHours' . $this->numberOfRa . '">';
+                    $searchString .= '<div class="input-group-append"><span class="input-group-text">h</span></div>';
+                    // $searchString .= '</div>';
+                    // $searchString .= '<div class="col-sm-1 inline">';
+                    $searchString .= '<input type="number" min="0" max="59" class="form-control" name="raMinutes' . $this->numberOfRa . '">';
+                    $searchString .= '<div class="input-group-append"><span class="input-group-text">\'</span></div>';
+                    // $searchString .= '</div>';
+                    // $searchString .= '<div class="col-sm-1 inline">';
+                    $searchString .= '<input type="number" min="0" max="59" step="0.1" class="form-control" name="raSeconds' . $this->numberOfRa . '">';
+                    $searchString .= '<div class="input-group-append"><span class="input-group-text">\'\'</span></div>';
+                    $searchString .= '</div>';
+
+                    // $searchString .= '<div class="col-sm-1">';
+                    // $searchString .= '<svg xmlns="http://www.w3.org/2000/svg" wire:click="removeSearch(' . $this->numberOfSearchOptions . ')" width="16" height="16" fill="currentColor" class="bi bi-dash-circle-fill inline" viewBox="0 0 16 16">
+                    // <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                    // </svg>';
+                    // $searchString .= '</div>';
+                    $searchString .= '</div>';
+                }
             }
             if ($this->criteria == 'name') {
                 $this->numberOfNames++;

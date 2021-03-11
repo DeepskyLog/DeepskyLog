@@ -101,7 +101,6 @@ class TargetName extends Model
                 $toReturn .= '<option value="' . $catalog . '">' . $catalog . '</option>';
             }
         }
-
         return $toReturn;
     }
 
