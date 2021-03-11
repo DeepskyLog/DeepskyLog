@@ -314,9 +314,9 @@ class TargetController extends Controller
                         $query->where('ra', '>', $ra);
                     }
                     $cnt = 0;
-                    foreach ($results as $ra) {
+                    foreach ($results as $ras) {
                         $ra = $request[array_values($results)[$cnt]] + $request[array_values($minResults)[$cnt]] / 60 + $request[array_values($secResults)[$cnt]] / 3600.0;
-                        if ($ra != array_values($results)[0]) {
+                        if ($ras != array_values($results)[0]) {
                             if ($request[array_values($compResults)[$cnt]]) {
                                 $query->where('ra', '<', $ra);
                             } else {
@@ -328,6 +328,75 @@ class TargetController extends Controller
                 });
             }
         }
+        // Check for all magnitude entries in the request
+        $results = array_filter($requestArray, function ($value) {
+            return strpos($value, 'magnitude') !== false;
+        });
+
+        if (count($results) == 1) {
+            if ($request->compMagnitude1) {
+                $allTargets = $allTargets->where('mag', '<', $request->magnitude1);
+            } else {
+                $allTargets = $allTargets->where('mag', '>', $request->magnitude1);
+            }
+        } elseif (count($results) > 1) {
+            $compResults = array_filter($requestArray, function ($value) {
+                return strpos($value, 'compMagnitude') !== false;
+            });
+            $allTargets = $allTargets->where(function ($query) use ($request, $results, $compResults) {
+                if ($request[array_values($compResults)[0]]) {
+                    $query->where('mag', '<', $request[array_values($results)[0]]);
+                } else {
+                    $query->where('mag', '>', $request[array_values($results)[0]]);
+                }
+                $cnt = 0;
+                foreach ($results as $magnitude) {
+                    if ($magnitude != array_values($results)[0]) {
+                        if ($request[array_values($compResults)[$cnt]]) {
+                            $query->where('mag', '<', $request[array_values($results)[$cnt]]);
+                        } else {
+                            $query->where('mag', '>', $request[array_values($results)[$cnt]]);
+                        }
+                    }
+                    $cnt++;
+                }
+            });
+        }
+        // Check for all surface brightness entries in the request
+        $results = array_filter($requestArray, function ($value) {
+            return strpos($value, 'subr') !== false;
+        });
+
+        if (count($results) == 1) {
+            if ($request->compSubr1) {
+                $allTargets = $allTargets->where('subr', '<', $request->subr1);
+            } else {
+                $allTargets = $allTargets->where('subr', '>', $request->subr1);
+            }
+        } elseif (count($results) > 1) {
+            $compResults = array_filter($requestArray, function ($value) {
+                return strpos($value, 'compSubr') !== false;
+            });
+            $allTargets = $allTargets->where(function ($query) use ($request, $results, $compResults) {
+                if ($request[array_values($compResults)[0]]) {
+                    $query->where('subr', '<', $request[array_values($results)[0]]);
+                } else {
+                    $query->where('subr', '>', $request[array_values($results)[0]]);
+                }
+                $cnt = 0;
+                foreach ($results as $magnitude) {
+                    if ($magnitude != array_values($results)[0]) {
+                        if ($request[array_values($compResults)[$cnt]]) {
+                            $query->where('subr', '<', $request[array_values($results)[$cnt]]);
+                        } else {
+                            $query->where('subr', '>', $request[array_values($results)[$cnt]]);
+                        }
+                    }
+                    $cnt++;
+                }
+            });
+        }
+
         $targetsToShow = $allTargets->get();
 
         if (count($targetsToShow) == 1) {

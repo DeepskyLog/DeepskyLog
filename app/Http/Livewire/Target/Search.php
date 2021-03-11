@@ -26,6 +26,8 @@ class Search extends Component
     public $numberOfAtlases       = 0;
     public $numberOfDeclinations  = 0;
     public $numberOfRa            = 0;
+    public $numberOfMagnitude     = 0;
+    public $numberOfSubr          = 0;
 
     public function mount()
     {
@@ -36,6 +38,8 @@ class Search extends Component
         $this->searchCriteria .= '<option value="atlas">' . _i('Atlas page') . '</option>';
         $this->searchCriteria .= '<option value="ra">' . _i('Right Ascension') . '</option>';
         $this->searchCriteria .= '<option value="decl">' . _i('Declination') . '</option>';
+        $this->searchCriteria .= '<option value="magnitude">' . _i('Magnitude') . '</option>';
+        $this->searchCriteria .= '<option value="subr">' . _i('Surface Brightness') . '</option>';
         $this->allCatalogs    = \App\Models\TargetName::getCatalogsChoices();
         $this->constellations = \App\Models\Constellation::getConstellationChoices();
         $this->types          = \App\Models\TargetType::getTypesChoices();
@@ -56,9 +60,9 @@ class Search extends Component
                 $this->numberOfConstellations++;
                 $searchString = '<div class="form-group row">';
                 if ($this->numberOfConstellations == 1) {
-                    $searchString .= '<div class="col-sm-2 col-form-label">' . _i('In constellation') . '</div>';
+                    $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Constellation') . '</div>';
                 } else {
-                    $searchString .= '<div class="col-sm-2 col-form-label">' . _i('or in constellation') . '</div>';
+                    $searchString .= '<div class="col-sm-2 col-form-label">' . _i('or constellation') . '</div>';
                 }
                 $searchString .= '<div class="col-sm-1">';
                 $searchString .= '<div x-data="" wire:ignore>';
@@ -240,6 +244,70 @@ class Search extends Component
                     $searchString .= '</div>';
                 }
             }
+            if ($this->criteria == 'magnitude') {
+                $this->numberOfMagnitude++;
+
+                if ($this->numberOfMagnitude > 2) {
+                    $searchString = '';
+                } else {
+                    $searchString = '<div class="form-group row">';
+                    if ($this->numberOfMagnitude == 1) {
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Magnitude') . '</div>';
+                    } else {
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and Magnitude') . '</div>';
+                    }
+                    $searchString .= '<div class="col-sm-1">';
+                    $searchString .= '<div x-data="" wire:ignore>';
+                    $searchString .= '<select class="form-control form-control" id="compMagnitude' . $this->numberOfMagnitude . '" name="compMagnitude' . $this->numberOfMagnitude . '">';
+                    $searchString .= '<option value="0">' . _i('>') . '</option>';
+                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '</select>';
+                    $searchString .= '</div>';
+                    $searchString .= '</div>';
+                    $searchString .= '<div class="input-group col-sm-4">';
+                    $searchString .= '<input type="number" min="-8" max="20" step="0.1" class="form-control" name="magnitude' . $this->numberOfMagnitude . '">';
+                    $searchString .= '</div>';
+
+                    // $searchString .= '<div class="col-sm-1">';
+                    // $searchString .= '<svg xmlns="http://www.w3.org/2000/svg" wire:click="removeSearch(' . $this->numberOfSearchOptions . ')" width="16" height="16" fill="currentColor" class="bi bi-dash-circle-fill inline" viewBox="0 0 16 16">
+                    // <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                    // </svg>';
+                    // $searchString .= '</div>';
+                    $searchString .= '</div>';
+                }
+            }
+            if ($this->criteria == 'subr') {
+                $this->numberOfSubr++;
+
+                if ($this->numberOfSubr > 2) {
+                    $searchString = '';
+                } else {
+                    $searchString = '<div class="form-group row">';
+                    if ($this->numberOfSubr == 1) {
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Surface Brightness') . '</div>';
+                    } else {
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and Surface Brightness') . '</div>';
+                    }
+                    $searchString .= '<div class="col-sm-1">';
+                    $searchString .= '<div x-data="" wire:ignore>';
+                    $searchString .= '<select class="form-control form-control" id="compSubr' . $this->numberOfSubr . '" name="compSubr' . $this->numberOfSubr . '">';
+                    $searchString .= '<option value="0">' . _i('>') . '</option>';
+                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '</select>';
+                    $searchString .= '</div>';
+                    $searchString .= '</div>';
+                    $searchString .= '<div class="input-group col-sm-4">';
+                    $searchString .= '<input type="number" min="-8" max="20" step="0.1" class="form-control" name="subr' . $this->numberOfSubr . '">';
+                    $searchString .= '</div>';
+
+                    // $searchString .= '<div class="col-sm-1">';
+                    // $searchString .= '<svg xmlns="http://www.w3.org/2000/svg" wire:click="removeSearch(' . $this->numberOfSearchOptions . ')" width="16" height="16" fill="currentColor" class="bi bi-dash-circle-fill inline" viewBox="0 0 16 16">
+                    // <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                    // </svg>';
+                    // $searchString .= '</div>';
+                    $searchString .= '</div>';
+                }
+            }
             if ($this->criteria == 'name') {
                 $this->numberOfNames++;
 
@@ -314,11 +382,9 @@ class Search extends Component
     // TODO: Use the choices drop down
     // TODO: Remove one of the search criteria does not work yet
     // TODO: Add extra search criteria
-    // TODO:   Declination
-    // TODO:   Right Ascension
     // TODO:   Magnitude
     // TODO:   Surface brightness
-    // TODO:   Diameter
+    // TODO:   Diameter -> also diameter ratio (5 x 1)
     // TODO:   Contrast reserve
     // TODO:   Description contains / does not contain
     // TODO: Show the name of the catalog in the results -> search for Abell, we expect to have Abell names, not NGC...
