@@ -886,8 +886,8 @@ class Target extends Model
             $this->getRiseSetTransit();
         }
 
-        if ($this->type->type == 'Planet') {
-            return $this->_target->illuminatedFraction($astrolib->getDate()->copy());
+        if ($this->type->type == 'Planet' || $this->isMoon()) {
+            return ($this->_target->illuminatedFraction($astrolib->getDate()->copy())) * 100;
         } else {
             return '-';
         }

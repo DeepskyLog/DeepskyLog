@@ -134,9 +134,9 @@
                     @endif
                 </td>
                 @else
-                <td colspan="3"><span class="float-right">{{ _i('Illuminated fraction') }}</span></td>
+                <td colspan="3"><span class="float-right">{{ _i('Illuminated') }}</span></td>
                 <td colspan="3">
-                    {{ $target->illuminatedFraction() }}
+                    {{ $target->illuminatedFraction() }}%
                 </td>
             </tr>
             <tr>
