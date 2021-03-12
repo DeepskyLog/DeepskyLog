@@ -178,15 +178,15 @@ class Search extends Component
                 } else {
                     $searchString = '<div class="form-group row">';
                     if ($this->numberOfContrastReserve == 1) {
-                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Contrast Reserve') . '</div>';
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Contrast reserve') . '</div>';
                     } else {
                         $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and contrast reserve') . '</div>';
                     }
                     $searchString .= '<div class="col-sm-1">';
                     $searchString .= '<div x-data="" wire:ignore>';
                     $searchString .= '<select class="form-control form-control-sm" id="compContrast' . $this->numberOfContrastReserve . '" name="compContrast' . $this->numberOfContrastReserve . '">';
-                    $searchString .= '<option value="0">' . _i('>') . '</option>';
-                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '<option value="0">' . '>' . '</option>';
+                    $searchString .= '<option value="1">' . '<' . '</option>';
                     $searchString .= '</select>';
                     $searchString .= '</div>';
                     $searchString .= '</div>';
@@ -230,8 +230,8 @@ class Search extends Component
                     $searchString .= '<div class="col-sm-1">';
                     $searchString .= '<div x-data="" wire:ignore>';
                     $searchString .= '<select class="form-control form-control" id="compDeclination' . $this->numberOfDeclinations . '" name="compDeclination' . $this->numberOfDeclinations . '">';
-                    $searchString .= '<option value="0">' . _i('>') . '</option>';
-                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '<option value="0">' . '>' . '</option>';
+                    $searchString .= '<option value="1">' . '<' . '</option>';
                     $searchString .= '</select>';
                     $searchString .= '</div>';
                     $searchString .= '</div>';
@@ -271,8 +271,8 @@ class Search extends Component
                     $searchString .= '<div class="col-sm-1">';
                     $searchString .= '<div x-data="" wire:ignore>';
                     $searchString .= '<select class="form-control form-control" id="compDiameter' . $this->numberOfDiameter . '" name="compDiameter' . $this->numberOfDiameter . '">';
-                    $searchString .= '<option value="0">' . _i('>') . '</option>';
-                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '<option value="0">' . '>' . '</option>';
+                    $searchString .= '<option value="1">' . '<' . '</option>';
                     $searchString .= '</select>';
                     $searchString .= '</div>';
                     $searchString .= '</div>';
@@ -308,8 +308,8 @@ class Search extends Component
                     $searchString .= '<div class="col-sm-1">';
                     $searchString .= '<div x-data="" wire:ignore>';
                     $searchString .= '<select class="form-control form-control" id="compDiameterRatio' . $this->numberOfDiameterRatio . '" name="compDiameterRatio' . $this->numberOfDiameterRatio . '">';
-                    $searchString .= '<option value="0">' . _i('>') . '</option>';
-                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '<option value="0">' . '>' . '</option>';
+                    $searchString .= '<option value="1">' . '<' . '</option>';
                     $searchString .= '</select>';
                     $searchString .= '</div>';
                     $searchString .= '</div>';
@@ -361,15 +361,15 @@ class Search extends Component
                 } else {
                     $searchString = '<div class="form-group row">';
                     if ($this->numberOfRa == 1) {
-                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Right Ascension') . '</div>';
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Right ascension') . '</div>';
                     } else {
-                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and Right Ascension') . '</div>';
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and right ascension') . '</div>';
                     }
                     $searchString .= '<div class="col-sm-1">';
                     $searchString .= '<div x-data="" wire:ignore>';
                     $searchString .= '<select class="form-control form-control" id="compRa' . $this->numberOfRa . '" name="compRa' . $this->numberOfRa . '">';
-                    $searchString .= '<option value="0">' . _i('>') . '</option>';
-                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '<option value="0">' . '>' . '</option>';
+                    $searchString .= '<option value="1">' . '<' . '</option>';
                     $searchString .= '</select>';
                     $searchString .= '</div>';
                     $searchString .= '</div>';
@@ -404,13 +404,13 @@ class Search extends Component
                     if ($this->numberOfMagnitude == 1) {
                         $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Magnitude') . '</div>';
                     } else {
-                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and Magnitude') . '</div>';
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and magnitude') . '</div>';
                     }
                     $searchString .= '<div class="col-sm-1">';
                     $searchString .= '<div x-data="" wire:ignore>';
                     $searchString .= '<select class="form-control form-control" id="compMagnitude' . $this->numberOfMagnitude . '" name="compMagnitude' . $this->numberOfMagnitude . '">';
-                    $searchString .= '<option value="0">' . _i('>') . '</option>';
-                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '<option value="0">' . '>' . '</option>';
+                    $searchString .= '<option value="1">' . '<' . '</option>';
                     $searchString .= '</select>';
                     $searchString .= '</div>';
                     $searchString .= '</div>';
@@ -434,15 +434,15 @@ class Search extends Component
                 } else {
                     $searchString = '<div class="form-group row">';
                     if ($this->numberOfSubr == 1) {
-                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Surface Brightness') . '</div>';
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Surface brightness') . '</div>';
                     } else {
-                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and Surface Brightness') . '</div>';
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and surface brightness') . '</div>';
                     }
                     $searchString .= '<div class="col-sm-1">';
                     $searchString .= '<div x-data="" wire:ignore>';
                     $searchString .= '<select class="form-control form-control" id="compSubr' . $this->numberOfSubr . '" name="compSubr' . $this->numberOfSubr . '">';
-                    $searchString .= '<option value="0">' . _i('>') . '</option>';
-                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '<option value="0">' . '>' . '</option>';
+                    $searchString .= '<option value="1">' . '<' . '</option>';
                     $searchString .= '</select>';
                     $searchString .= '</div>';
                     $searchString .= '</div>';
