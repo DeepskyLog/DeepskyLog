@@ -327,74 +327,111 @@ class TargetController extends Controller
                     }
                 });
             }
-        }
-        // Check for all magnitude entries in the request
-        $results = array_filter($requestArray, function ($value) {
-            return strpos($value, 'magnitude') !== false;
-        });
+            // Check for all magnitude entries in the request
+            $results = array_filter($requestArray, function ($value) {
+                return strpos($value, 'magnitude') !== false;
+            });
 
-        if (count($results) == 1) {
-            if ($request->compMagnitude1) {
-                $allTargets = $allTargets->where('mag', '<', $request->magnitude1);
-            } else {
-                $allTargets = $allTargets->where('mag', '>', $request->magnitude1);
-            }
-        } elseif (count($results) > 1) {
-            $compResults = array_filter($requestArray, function ($value) {
-                return strpos($value, 'compMagnitude') !== false;
-            });
-            $allTargets = $allTargets->where(function ($query) use ($request, $results, $compResults) {
-                if ($request[array_values($compResults)[0]]) {
-                    $query->where('mag', '<', $request[array_values($results)[0]]);
+            if (count($results) == 1) {
+                if ($request->compMagnitude1) {
+                    $allTargets = $allTargets->where('mag', '<', $request->magnitude1);
                 } else {
-                    $query->where('mag', '>', $request[array_values($results)[0]]);
+                    $allTargets = $allTargets->where('mag', '>', $request->magnitude1);
                 }
-                $cnt = 0;
-                foreach ($results as $magnitude) {
-                    if ($magnitude != array_values($results)[0]) {
-                        if ($request[array_values($compResults)[$cnt]]) {
-                            $query->where('mag', '<', $request[array_values($results)[$cnt]]);
-                        } else {
-                            $query->where('mag', '>', $request[array_values($results)[$cnt]]);
-                        }
+            } elseif (count($results) > 1) {
+                $compResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'compMagnitude') !== false;
+                });
+                $allTargets = $allTargets->where(function ($query) use ($request, $results, $compResults) {
+                    if ($request[array_values($compResults)[0]]) {
+                        $query->where('mag', '<', $request[array_values($results)[0]]);
+                    } else {
+                        $query->where('mag', '>', $request[array_values($results)[0]]);
                     }
-                    $cnt++;
-                }
+                    $cnt = 0;
+                    foreach ($results as $magnitude) {
+                        if ($magnitude != array_values($results)[0]) {
+                            if ($request[array_values($compResults)[$cnt]]) {
+                                $query->where('mag', '<', $request[array_values($results)[$cnt]]);
+                            } else {
+                                $query->where('mag', '>', $request[array_values($results)[$cnt]]);
+                            }
+                        }
+                        $cnt++;
+                    }
+                });
+            }
+            // Check for all surface brightness entries in the request
+            $results = array_filter($requestArray, function ($value) {
+                return strpos($value, 'subr') !== false;
             });
-        }
-        // Check for all surface brightness entries in the request
-        $results = array_filter($requestArray, function ($value) {
-            return strpos($value, 'subr') !== false;
-        });
 
-        if (count($results) == 1) {
-            if ($request->compSubr1) {
-                $allTargets = $allTargets->where('subr', '<', $request->subr1);
-            } else {
-                $allTargets = $allTargets->where('subr', '>', $request->subr1);
-            }
-        } elseif (count($results) > 1) {
-            $compResults = array_filter($requestArray, function ($value) {
-                return strpos($value, 'compSubr') !== false;
-            });
-            $allTargets = $allTargets->where(function ($query) use ($request, $results, $compResults) {
-                if ($request[array_values($compResults)[0]]) {
-                    $query->where('subr', '<', $request[array_values($results)[0]]);
+            if (count($results) == 1) {
+                if ($request->compSubr1) {
+                    $allTargets = $allTargets->where('subr', '<', $request->subr1);
                 } else {
-                    $query->where('subr', '>', $request[array_values($results)[0]]);
+                    $allTargets = $allTargets->where('subr', '>', $request->subr1);
                 }
-                $cnt = 0;
-                foreach ($results as $magnitude) {
-                    if ($magnitude != array_values($results)[0]) {
-                        if ($request[array_values($compResults)[$cnt]]) {
-                            $query->where('subr', '<', $request[array_values($results)[$cnt]]);
-                        } else {
-                            $query->where('subr', '>', $request[array_values($results)[$cnt]]);
-                        }
+            } elseif (count($results) > 1) {
+                $compResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'compSubr') !== false;
+                });
+                $allTargets = $allTargets->where(function ($query) use ($request, $results, $compResults) {
+                    if ($request[array_values($compResults)[0]]) {
+                        $query->where('subr', '<', $request[array_values($results)[0]]);
+                    } else {
+                        $query->where('subr', '>', $request[array_values($results)[0]]);
                     }
-                    $cnt++;
-                }
+                    $cnt = 0;
+                    foreach ($results as $magnitude) {
+                        if ($magnitude != array_values($results)[0]) {
+                            if ($request[array_values($compResults)[$cnt]]) {
+                                $query->where('subr', '<', $request[array_values($results)[$cnt]]);
+                            } else {
+                                $query->where('subr', '>', $request[array_values($results)[$cnt]]);
+                            }
+                        }
+                        $cnt++;
+                    }
+                });
+            }
+            // Check for all diameter entries in the request
+            $results = array_filter($requestArray, function ($value) {
+                return strpos($value, 'diameterMinutes') !== false;
             });
+
+            if (count($results) == 1) {
+                if ($request->compDiameter1) {
+                    $allTargets = $allTargets->where('diam1', '<', $request->diameterMinutes1 * 60 + $request->diameterSeconds1);
+                } else {
+                    $allTargets = $allTargets->where('diam1', '>', $request->diameterMinutes1 * 60 + $request->diameterSeconds1);
+                }
+            } elseif (count($results) > 1) {
+                $compResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'compDiameter') !== false;
+                });
+                $secResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'diameterSeconds') !== false;
+                });
+                $allTargets = $allTargets->where(function ($query) use ($request, $results, $compResults, $secResults) {
+                    if ($request[array_values($compResults)[0]]) {
+                        $query->where('diam1', '<', $request[array_values($results)[0]] * 60 + $request[array_values($secResults)[0]]);
+                    } else {
+                        $query->where('diam1', '>', $request[array_values($results)[0]] * 60 + $request[array_values($secResults)[0]]);
+                    }
+                    $cnt = 0;
+                    foreach ($results as $diam) {
+                        if ($diam != array_values($results)[0]) {
+                            if ($request[array_values($compResults)[$cnt]]) {
+                                $query->where('diam1', '<', $request[array_values($results)[$cnt]] * 60 + $request[array_values($secResults)[$cnt]]);
+                            } else {
+                                $query->where('diam1', '>', $request[array_values($results)[$cnt]] * 60 + $request[array_values($secResults)[$cnt]]);
+                            }
+                        }
+                        $cnt++;
+                    }
+                });
+            }
         }
 
         $targetsToShow = $allTargets->get();

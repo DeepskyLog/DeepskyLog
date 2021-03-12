@@ -28,6 +28,7 @@ class Search extends Component
     public $numberOfRa            = 0;
     public $numberOfMagnitude     = 0;
     public $numberOfSubr          = 0;
+    public $numberOfDiameter      = 0;
 
     public function mount()
     {
@@ -40,6 +41,7 @@ class Search extends Component
         $this->searchCriteria .= '<option value="decl">' . _i('Declination') . '</option>';
         $this->searchCriteria .= '<option value="magnitude">' . _i('Magnitude') . '</option>';
         $this->searchCriteria .= '<option value="subr">' . _i('Surface Brightness') . '</option>';
+        $this->searchCriteria .= '<option value="diameter">' . _i('Diameter') . '</option>';
         $this->allCatalogs    = \App\Models\TargetName::getCatalogsChoices();
         $this->constellations = \App\Models\Constellation::getConstellationChoices();
         $this->types          = \App\Models\TargetType::getTypesChoices();
@@ -192,6 +194,43 @@ class Search extends Component
                     // $searchString .= '</div>';
                     // $searchString .= '<div class="col-sm-1 inline">';
                     $searchString .= '<input type="number" min="0" max="59" step="0.1" class="form-control" name="declinationSeconds' . $this->numberOfDeclinations . '">';
+                    $searchString .= '<div class="input-group-append"><span class="input-group-text">\'\'</span></div>';
+                    $searchString .= '</div>';
+
+                    // $searchString .= '<div class="col-sm-1">';
+                    // $searchString .= '<svg xmlns="http://www.w3.org/2000/svg" wire:click="removeSearch(' . $this->numberOfSearchOptions . ')" width="16" height="16" fill="currentColor" class="bi bi-dash-circle-fill inline" viewBox="0 0 16 16">
+                    // <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                    // </svg>';
+                    // $searchString .= '</div>';
+                    $searchString .= '</div>';
+                }
+            }
+            if ($this->criteria == 'diameter') {
+                $this->numberOfDiameter++;
+
+                if ($this->numberOfDiameter > 3) {
+                    $searchString = '';
+                } else {
+                    $searchString = '<div class="form-group row">';
+                    if ($this->numberOfDiameter == 1) {
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Diameter') . '</div>';
+                    } else {
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and diameter') . '</div>';
+                    }
+                    $searchString .= '<div class="col-sm-1">';
+                    $searchString .= '<div x-data="" wire:ignore>';
+                    $searchString .= '<select class="form-control form-control" id="compDiameter' . $this->numberOfDiameter . '" name="compDiameter' . $this->numberOfDiameter . '">';
+                    $searchString .= '<option value="0">' . _i('>') . '</option>';
+                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '</select>';
+                    $searchString .= '</div>';
+                    $searchString .= '</div>';
+                    $searchString .= '<div class="input-group col-sm-4">';
+                    $searchString .= '<input type="number" min="0" max="59" class="form-control" name="diameterMinutes' . $this->numberOfDiameter . '">';
+                    $searchString .= '<div class="input-group-append"><span class="input-group-text">\'</span></div>';
+                    // $searchString .= '</div>';
+                    // $searchString .= '<div class="col-sm-1 inline">';
+                    $searchString .= '<input type="number" min="0" max="59" step="0.1" class="form-control" name="diameterSeconds' . $this->numberOfDiameter . '">';
                     $searchString .= '<div class="input-group-append"><span class="input-group-text">\'\'</span></div>';
                     $searchString .= '</div>';
 
@@ -379,16 +418,11 @@ class Search extends Component
         $this->numberOfSearchOptions--;
     }
 
-    // TODO: Use the choices drop down
-    // TODO: Remove one of the search criteria does not work yet
     // TODO: Add extra search criteria
-    // TODO:   Magnitude
-    // TODO:   Surface brightness
-    // TODO:   Diameter -> also diameter ratio (5 x 1)
-    // TODO:   Contrast reserve
+    // TODO:   Diameter ratio (5 x 1)
+    //           select * from targets where constellation="LYR" and diam1/diam2 > 13;
     // TODO:   Description contains / does not contain
-    // TODO: Show the name of the catalog in the results -> search for Abell, we expect to have Abell names, not NGC...
-    // TODO: Save the search criteria?
+    // TODO:   Contrast reserve
     // TODO: Translate
 
     public function render()
