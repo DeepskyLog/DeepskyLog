@@ -30,6 +30,7 @@ class Search extends Component
     public $numberOfSubr          = 0;
     public $numberOfDiameter      = 0;
     public $numberOfDiameterRatio = 0;
+    public $numberOfDescription   = 0;
 
     public function mount()
     {
@@ -44,6 +45,7 @@ class Search extends Component
         $this->searchCriteria .= '<option value="subr">' . _i('Surface Brightness') . '</option>';
         $this->searchCriteria .= '<option value="diameter">' . _i('Diameter') . '</option>';
         $this->searchCriteria .= '<option value="diameterRatio">' . _i('Diameter ratio') . '</option>';
+        $this->searchCriteria .= '<option value="description">' . _i('Description') . '</option>';
         $this->allCatalogs    = \App\Models\TargetName::getCatalogsChoices();
         $this->constellations = \App\Models\Constellation::getConstellationChoices();
         $this->types          = \App\Models\TargetType::getTypesChoices();
@@ -275,6 +277,34 @@ class Search extends Component
                     // $searchString .= '</div>';
                     $searchString .= '</div>';
                 }
+            }
+            if ($this->criteria == 'description') {
+                $this->numberOfDescription++;
+
+                $searchString = '<div class="form-group row">';
+                if ($this->numberOfDescription == 1) {
+                    $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Description') . '</div>';
+                } else {
+                    $searchString .= '<div class="col-sm-2 col-form-label">' . _i('or description') . '</div>';
+                }
+                $searchString .= '<div class="col-sm-1">';
+                $searchString .= '<div x-data="" wire:ignore>';
+                $searchString .= '<select class="form-control form-control" id="compDescription' . $this->numberOfDescription . '" name="compDescription' . $this->numberOfDescription . '">';
+                $searchString .= '<option value="1">' . _i('contains') . '</option>';
+                $searchString .= '<option value="0">' . _i("doesn't contain") . '</option>';
+                $searchString .= '</select>';
+                $searchString .= '</div>';
+                $searchString .= '</div>';
+                $searchString .= '<div class="input-group col-sm-8">';
+                $searchString .= '<input type="text" class="form-control" name="description' . $this->numberOfDescription . '">';
+                $searchString .= '</div>';
+
+                // $searchString .= '<div class="col-sm-1">';
+                // $searchString .= '<svg xmlns="http://www.w3.org/2000/svg" wire:click="removeSearch(' . $this->numberOfSearchOptions . ')" width="16" height="16" fill="currentColor" class="bi bi-dash-circle-fill inline" viewBox="0 0 16 16">
+                // <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                // </svg>';
+                // $searchString .= '</div>';
+                $searchString .= '</div>';
             }
             if ($this->criteria == 'ra') {
                 $this->numberOfRa++;

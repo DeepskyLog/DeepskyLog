@@ -205,6 +205,41 @@ class TargetController extends Controller
                 });
             }
 
+            // Check for all description entries in the request
+            $results = array_filter($requestArray, function ($value) {
+                return strpos($value, 'description') !== false;
+            });
+
+            if (count($results) == 1) {
+                if ($request->compDescription1) {
+                    $allTargets = $allTargets->where('description', 'like', '%' . $request->description1 . '%');
+                } else {
+                    $allTargets = $allTargets->where('description', 'not like', '%' . $request->description1 . '%');
+                }
+            } elseif (count($results) > 1) {
+                $notResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'compDescription') !== false;
+                });
+                $allTargets = $allTargets->where(function ($query) use ($request, $results, $notResults) {
+                    if ($request[array_values($notResults)[0]]) {
+                        $query->where('description', 'like', '%' . $request[array_values($results)[0]] . '%');
+                    } else {
+                        $query->where('description', 'not like', '%' . $request[array_values($results)[0]] . '%');
+                    }
+                    $cnt = 0;
+                    foreach ($results as $desc) {
+                        if ($desc != array_values($results)[0]) {
+                            if ($request[array_values($notResults)[$cnt]]) {
+                                $query->where('description', 'like', $request[array_values($results)[$cnt]] . '%');
+                            } else {
+                                $query->orWhere('description', 'not like', $request[array_values($results)[$cnt]] . '%');
+                            }
+                        }
+                        $cnt++;
+                    }
+                });
+            }
+
             // Check for all atlas entries in the request
             $results = array_filter($requestArray, function ($value) {
                 return strpos($value, 'atlasPage') !== false;
