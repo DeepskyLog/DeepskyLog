@@ -432,6 +432,40 @@ class TargetController extends Controller
                     }
                 });
             }
+            // Check for all diameter ratio entries in the request
+            $results = array_filter($requestArray, function ($value) {
+                return strpos($value, 'diameterRatio') !== false;
+            });
+
+            if (count($results) == 1) {
+                if ($request->compDiameterRatio1) {
+                    $allTargets = $allTargets->whereRaw('diam1/diam2 < ?', [$request->diameterRatio1]);
+                } else {
+                    $allTargets = $allTargets->whereRaw('diam1/diam2 > ?', [$request->diameterRatio1]);
+                }
+            } elseif (count($results) > 1) {
+                $compResults = array_filter($requestArray, function ($value) {
+                    return strpos($value, 'compDiameterRatio') !== false;
+                });
+                $allTargets = $allTargets->where(function ($query) use ($request, $results, $compResults) {
+                    if ($request[array_values($compResults)[0]]) {
+                        $query->whereRaw('diam1/diam2 < ?', [$request[array_values($results)[0]]]);
+                    } else {
+                        $query->whereRaw('diam1/diam2 > ?', [$request[array_values($results)[0]]]);
+                    }
+                    $cnt = 0;
+                    foreach ($results as $diam) {
+                        if ($diam != array_values($results)[0]) {
+                            if ($request[array_values($compResults)[$cnt]]) {
+                                $query->whereRaw('diam1/diam2 < ?', [$request[array_values($results)[$cnt]]]);
+                            } else {
+                                $query->whereRaw('diam1/diam2 > ?', [$request[array_values($results)[$cnt]]]);
+                            }
+                        }
+                        $cnt++;
+                    }
+                });
+            }
         }
 
         $targetsToShow = $allTargets->get();
