@@ -22,15 +22,16 @@ class Search extends Component
     public $numberOfTypes          = 0;
     public $numberOfNames          = 0;
     public $constellation;
-    public $numberOfSearchOptions = 0;
-    public $numberOfAtlases       = 0;
-    public $numberOfDeclinations  = 0;
-    public $numberOfRa            = 0;
-    public $numberOfMagnitude     = 0;
-    public $numberOfSubr          = 0;
-    public $numberOfDiameter      = 0;
-    public $numberOfDiameterRatio = 0;
-    public $numberOfDescription   = 0;
+    public $numberOfSearchOptions   = 0;
+    public $numberOfAtlases         = 0;
+    public $numberOfDeclinations    = 0;
+    public $numberOfRa              = 0;
+    public $numberOfMagnitude       = 0;
+    public $numberOfSubr            = 0;
+    public $numberOfDiameter        = 0;
+    public $numberOfDiameterRatio   = 0;
+    public $numberOfDescription     = 0;
+    public $numberOfContrastReserve = 0;
 
     public function mount()
     {
@@ -46,6 +47,7 @@ class Search extends Component
         $this->searchCriteria .= '<option value="diameter">' . _i('Diameter') . '</option>';
         $this->searchCriteria .= '<option value="diameterRatio">' . _i('Diameter ratio') . '</option>';
         $this->searchCriteria .= '<option value="description">' . _i('Description') . '</option>';
+        $this->searchCriteria .= '<option value="contrastReserve">' . _i('Contrast Reserve') . '</option>';
         $this->allCatalogs    = \App\Models\TargetName::getCatalogsChoices();
         $this->constellations = \App\Models\Constellation::getConstellationChoices();
         $this->types          = \App\Models\TargetType::getTypesChoices();
@@ -167,6 +169,51 @@ class Search extends Component
                 // </svg>';
                 // $searchString .= '</div>';
                 $searchString .= '</div>';
+            }
+            if ($this->criteria == 'contrastReserve') {
+                $this->numberOfContrastReserve++;
+
+                if ($this->numberOfContrastReserve > 2) {
+                    $searchString = '';
+                } else {
+                    $searchString = '<div class="form-group row">';
+                    if ($this->numberOfContrastReserve == 1) {
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('Contrast Reserve') . '</div>';
+                    } else {
+                        $searchString .= '<div class="col-sm-2 col-form-label">' . _i('and contrast reserve') . '</div>';
+                    }
+                    $searchString .= '<div class="col-sm-1">';
+                    $searchString .= '<div x-data="" wire:ignore>';
+                    $searchString .= '<select class="form-control form-control-sm" id="compContrast' . $this->numberOfContrastReserve . '" name="compContrast' . $this->numberOfContrastReserve . '">';
+                    $searchString .= '<option value="0">' . _i('>') . '</option>';
+                    $searchString .= '<option value="1">' . _i('<') . '</option>';
+                    $searchString .= '</select>';
+                    $searchString .= '</div>';
+                    $searchString .= '</div>';
+                    $searchString .= '<div class="col-sm-1">';
+                    $searchString .= '<input type="number" min="-5" max="5" step="0.1" class="form-control form-control-lg" name="contrast' . $this->numberOfContrastReserve . '">';
+                    $searchString .= '</div>';
+                    // $searchString .= '<div class="col-sm-1">';
+                    // $searchString .= _i('with');
+                    // $searchString .= '</div>';
+                    // $searchString .= '<div class="col-sm-1">';
+                    // $searchString .= _i('in');
+                    // $searchString .= '</div>';
+                    // $searchString .= '<div class="col-sm-4">';
+                    // $searchString .= '<div x-data="" wire:ignore>';
+                    // $searchString .= '<select class="form-control form-control-sm" id="atlas' . $this->numberOfAtlases . '" name="atlas' . $this->numberOfAtlases . '">';
+                    // $searchString .= $this->allAtlases;
+                    // $searchString .= '</select>';
+                    // $searchString .= '</div>';
+                    // $searchString .= '</div>';
+
+                    // $searchString .= '<div class="col-sm-1">';
+                    // $searchString .= '<svg xmlns="http://www.w3.org/2000/svg" wire:click="removeSearch(' . $this->numberOfSearchOptions . ')" width="16" height="16" fill="currentColor" class="bi bi-dash-circle-fill inline" viewBox="0 0 16 16">
+                    // <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                    // </svg>';
+                    // $searchString .= '</div>';
+                    $searchString .= '</div>';
+                }
             }
             if ($this->criteria == 'decl') {
                 $this->numberOfDeclinations++;
@@ -481,11 +528,6 @@ class Search extends Component
         }
         $this->numberOfSearchOptions--;
     }
-
-    // TODO: Add extra search criteria
-    // TODO:   Description contains / does not contain
-    // TODO:   Contrast reserve
-    // TODO: Translate
 
     public function render()
     {
