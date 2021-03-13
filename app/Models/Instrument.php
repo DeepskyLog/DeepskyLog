@@ -208,19 +208,12 @@ class Instrument extends Model implements HasMedia
      */
     public static function getInstrumentOptionsChoicesDetail(): string
     {
-        if (!auth()->user()->stdtelescope) {
-            array_push($returnArray, 'NULL', _i('No default instrument'), 0, 1);
-        }
-        $counter = 1;
-
         $instruments = self::where(
             ['user_id' => Auth::user()->id]
         )->where(['active' => 1])->orderByDesc('diameter')->pluck('id', 'name', 'diameter');
 
         $toReturn = '';
         if (count($instruments) > 0) {
-            $counter++;
-
             foreach ($instruments as $name => $id) {
                 // Selected
                 $diameter = self::where(['id' => $id])->pluck('diameter')[0];
@@ -239,7 +232,7 @@ class Instrument extends Model implements HasMedia
         }
 
         if (count($instruments) === 0) {
-            array_push($returnArray, 'NULL', _i('No instrument available'), 0, 1);
+            $toReturn .= "<option value='0'>" . _i('No instrument available') . '</option>';
         }
 
         return $toReturn;

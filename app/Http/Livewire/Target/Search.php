@@ -12,6 +12,7 @@ class Search extends Component
     public String $constellations;
     public String $types;
     public String $allInstruments;
+    public String $allLocations;
     public $catalog;
     // The list with all search criteria that can be used
     public String $searchCriteria;
@@ -54,6 +55,7 @@ class Search extends Component
         $this->types          = \App\Models\TargetType::getTypesChoices();
         $this->allAtlases     = \App\Models\Atlas::getAtlasChoices();
         $this->allInstruments = \App\Models\Instrument::getInstrumentOptionsChoicesDetail();
+        $this->allLocations   = \App\Models\Location::getLocationOptionsChoicesDetail();
     }
 
     /**
@@ -205,16 +207,16 @@ class Search extends Component
                     $searchString .= '</select>';
                     $searchString .= '</div>';
                     $searchString .= '</div>';
-                    // $searchString .= '<div class="col-sm-1">';
-                    // $searchString .= _i('in');
-                    // $searchString .= '</div>';
-                    // $searchString .= '<div class="col-sm-4">';
-                    // $searchString .= '<div x-data="" wire:ignore>';
-                    // $searchString .= '<select class="form-control form-control-sm" id="atlas' . $this->numberOfAtlases . '" name="atlas' . $this->numberOfAtlases . '">';
-                    // $searchString .= $this->allAtlases;
-                    // $searchString .= '</select>';
-                    // $searchString .= '</div>';
-                    // $searchString .= '</div>';
+                    $searchString .= '<div class="col-sm-1">';
+                    $searchString .= _i('in');
+                    $searchString .= '</div>';
+                    $searchString .= '<div class="col-sm-2">';
+                    $searchString .= '<div x-data="" wire:ignore>';
+                    $searchString .= '<select class="form-control form-control-sm" id="contrastLocation' . $this->numberOfContrastReserve . '" name="contrastLocation' . $this->numberOfContrastReserve . '">';
+                    $searchString .= $this->allLocations;
+                    $searchString .= '</select>';
+                    $searchString .= '</div>';
+                    $searchString .= '</div>';
 
                     // $searchString .= '<div class="col-sm-1">';
                     // $searchString .= '<svg xmlns="http://www.w3.org/2000/svg" wire:click="removeSearch(' . $this->numberOfSearchOptions . ')" width="16" height="16" fill="currentColor" class="bi bi-dash-circle-fill inline" viewBox="0 0 16 16">

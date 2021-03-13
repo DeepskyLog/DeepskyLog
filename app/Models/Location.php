@@ -117,6 +117,37 @@ class Location extends Model implements HasMedia
     }
 
     /**
+     * Return all locations, to be used directly in choices.js
+     *
+     * @return string the string for choicesjs
+     */
+    public static function getLocationOptionsChoicesDetail(): string
+    {
+        $locations = self::where(
+            ['user_id' => Auth::user()->id]
+        )->where(['active' => 1])->whereNotNull(['skyBackground'])->orderByDesc('skyBackground')->pluck('id', 'name');
+
+        $toReturn = '';
+        if (count($locations) > 0) {
+            foreach ($locations as $name => $id) {
+                // Selected
+                $sqm = ' (' . round(self::where(['id' => $id])->pluck('skyBackground')[0], 2) . ')';
+                if ($id == Auth::user()->stdlocation) {
+                    $toReturn .= "<option selected='selected' value='" . $id . "'>" . htmlentities($name, ENT_QUOTES) . $sqm . '</option>';
+                } else {
+                    $toReturn .= "<option value='" . $id . "'>" . htmlentities($name, ENT_QUOTES) . $sqm . '</option>';
+                }
+            }
+        }
+
+        if (count($locations) === 0) {
+            $toReturn .= "<option value='0'>" . _i('No location available') . '</option>';
+        }
+
+        return $toReturn;
+    }
+
+    /**
      * Also store a thumbnail of the image.
      *
      * @param $media the media
