@@ -201,6 +201,50 @@ class Instrument extends Model implements HasMedia
         return $returnArray;
     }
 
+    /**
+     * Return all instruments, to be used directly in choices.js
+     *
+     * @return string the string for choicesjs
+     */
+    public static function getInstrumentOptionsChoicesDetail(): string
+    {
+        if (!auth()->user()->stdtelescope) {
+            array_push($returnArray, 'NULL', _i('No default instrument'), 0, 1);
+        }
+        $counter = 1;
+
+        $instruments = self::where(
+            ['user_id' => Auth::user()->id]
+        )->where(['active' => 1])->orderByDesc('diameter')->pluck('id', 'name', 'diameter');
+
+        $toReturn = '';
+        if (count($instruments) > 0) {
+            $counter++;
+
+            foreach ($instruments as $name => $id) {
+                // Selected
+                $diameter = self::where(['id' => $id])->pluck('diameter')[0];
+                if (Auth::user()->showInches) {
+                    $diameter       = round($diameter / 25.4, 2);
+                    $diameterString = ' (' . $diameter . "'')";
+                } else {
+                    $diameterString = ' (' . $diameter . 'mm)';
+                }
+                if ($id == Auth::user()->stdtelescope) {
+                    $toReturn .= "<option selected='selected' value='" . $id . "'>" . htmlentities($name, ENT_QUOTES) . $diameterString . '</option>';
+                } else {
+                    $toReturn .= "<option value='" . $id . "'>" . htmlentities($name, ENT_QUOTES) . $diameterString . '</option>';
+                }
+            }
+        }
+
+        if (count($instruments) === 0) {
+            array_push($returnArray, 'NULL', _i('No instrument available'), 0, 1);
+        }
+
+        return $toReturn;
+    }
+
     // TODO: An instrument belongs to one or more observations.
     //    public function observation()
     //    {

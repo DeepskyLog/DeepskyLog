@@ -11,6 +11,7 @@ class Search extends Component
     public String $allAtlases;
     public String $constellations;
     public String $types;
+    public String $allInstruments;
     public $catalog;
     // The list with all search criteria that can be used
     public String $searchCriteria;
@@ -52,6 +53,7 @@ class Search extends Component
         $this->constellations = \App\Models\Constellation::getConstellationChoices();
         $this->types          = \App\Models\TargetType::getTypesChoices();
         $this->allAtlases     = \App\Models\Atlas::getAtlasChoices();
+        $this->allInstruments = \App\Models\Instrument::getInstrumentOptionsChoicesDetail();
     }
 
     /**
@@ -193,9 +195,16 @@ class Search extends Component
                     $searchString .= '<div class="col-sm-1">';
                     $searchString .= '<input type="number" min="-5" max="5" step="0.1" class="form-control form-control-lg" name="contrast' . $this->numberOfContrastReserve . '">';
                     $searchString .= '</div>';
-                    // $searchString .= '<div class="col-sm-1">';
-                    // $searchString .= _i('with');
-                    // $searchString .= '</div>';
+                    $searchString .= '<div class="col-sm-1">';
+                    $searchString .= _i('with');
+                    $searchString .= '</div>';
+                    $searchString .= '<div class="col-sm-2">';
+                    $searchString .= '<div x-data="" wire:ignore>';
+                    $searchString .= '<select class="form-control form-control-sm" id="contrastInstrument' . $this->numberOfContrastReserve . '" name="contrastInstrument' . $this->numberOfContrastReserve . '">';
+                    $searchString .= $this->allInstruments;
+                    $searchString .= '</select>';
+                    $searchString .= '</div>';
+                    $searchString .= '</div>';
                     // $searchString .= '<div class="col-sm-1">';
                     // $searchString .= _i('in');
                     // $searchString .= '</div>';
