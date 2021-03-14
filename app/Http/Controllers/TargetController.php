@@ -15,6 +15,8 @@ namespace App\Http\Controllers;
 use App\Models\Target;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Collection;
 use deepskylog\LaravelGettext\Facades\LaravelGettext;
 
 /**
@@ -505,6 +507,38 @@ class TargetController extends Controller
 
         $targetsToShow = $allTargets->get();
 
+        // Check if we also search on contrast reserve
+        $results = array_filter($requestArray, function ($value) {
+            return strpos($value, 'contrast') !== false;
+        });
+        $compResults = array_filter($requestArray, function ($value) {
+            return strpos($value, 'compContrast') !== false;
+        });
+        if (count($results)) {
+            Auth::user()->update(['stdlocation' => $request->locationContrast1]);
+            Auth::user()->update(['stdtelescope' => $request->instrumentContrast1]);
+
+            $cnt = 0;
+            foreach ($results as $contr) {
+                $collection = new Collection();
+
+                foreach ($targetsToShow as $trgt) {
+                    if ($request[array_values($compResults)[$cnt]]) {
+                        if ($trgt->contrast < $request->$contr) {
+                            // Only use the targets with the correct contrast reserve in $targetsToShow
+                            $collection->add($trgt);
+                        }
+                    } else {
+                        if ($trgt->contrast > $request->$contr) {
+                            // Only use the targets with the correct contrast reserve in $targetsToShow
+                            $collection->add($trgt);
+                        }
+                    }
+                }
+                $targetsToShow = $collection;
+                $cnt++;
+            }
+        }
         if (count($targetsToShow) == 1) {
             // If there is only one target as a result of the query, show this target
             $target = $targetsToShow->first();

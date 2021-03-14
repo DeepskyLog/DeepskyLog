@@ -126,10 +126,13 @@
 
     <p>
         @php
-        $moon = new Solaris\MoonPhase($date);
-
-        $file = "img/moon/m" . round(($moon->getPhaseRatio()) * 40) . ".gif";
-        $illumination = round($moon->illumination() * 100) . "%";
+        if (Auth::user()) {
+        $date = $astrolib->getDate()->copy();
+        } else {
+        $moon = new \deepskylog\AstronomyLibrary\Targets\Moon();
+        }
+        $illumination = round($moon->illuminatedFraction($date) * 100) . "%";
+        $file = "img/moon/m" . round(($moon->getPhaseRatio($date)) * 40) . ".gif";
         @endphp
         <img src="{{ asset($file) }}" title={{ $illumination }} height="100px" width="100px" alt={{ $illumination }} />
 
@@ -138,6 +141,7 @@
     @php
     setlocale(LC_TIME, LaravelGettext::getLocale());
     // Next New moon
+    $moon = new Solaris\MoonPhase($date);
     $next = gmdate( 'j/m/Y', $moon->getNextNewMoon() );
 
     $nmdate = DateTime::createFromFormat('j/n/Y', $next);

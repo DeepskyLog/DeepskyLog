@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Target;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class Search extends Component
 {
@@ -49,13 +50,15 @@ class Search extends Component
         $this->searchCriteria .= '<option value="diameter">' . _i('Diameter') . '</option>';
         $this->searchCriteria .= '<option value="diameterRatio">' . _i('Diameter ratio') . '</option>';
         $this->searchCriteria .= '<option value="description">' . _i('Description') . '</option>';
-        $this->searchCriteria .= '<option value="contrastReserve">' . _i('Contrast Reserve') . '</option>';
+        if (Auth::user()) {
+            $this->searchCriteria .= '<option value="contrastReserve">' . _i('Contrast Reserve') . '</option>';
+            $this->allInstruments = \App\Models\Instrument::getInstrumentOptionsChoicesDetail();
+            $this->allLocations   = \App\Models\Location::getLocationOptionsChoicesDetail();
+        }
         $this->allCatalogs    = \App\Models\TargetName::getCatalogsChoices();
         $this->constellations = \App\Models\Constellation::getConstellationChoices();
         $this->types          = \App\Models\TargetType::getTypesChoices();
         $this->allAtlases     = \App\Models\Atlas::getAtlasChoices();
-        $this->allInstruments = \App\Models\Instrument::getInstrumentOptionsChoicesDetail();
-        $this->allLocations   = \App\Models\Location::getLocationOptionsChoicesDetail();
     }
 
     /**
@@ -197,27 +200,28 @@ class Search extends Component
                     $searchString .= '<div class="col-sm-1">';
                     $searchString .= '<input type="number" min="-5" max="5" step="0.1" class="form-control form-control-lg" name="contrast' . $this->numberOfContrastReserve . '">';
                     $searchString .= '</div>';
-                    $searchString .= '<div class="col-sm-1">';
-                    $searchString .= _i('with');
-                    $searchString .= '</div>';
-                    $searchString .= '<div class="col-sm-2">';
-                    $searchString .= '<div x-data="" wire:ignore>';
-                    $searchString .= '<select class="form-control form-control-sm" id="contrastInstrument' . $this->numberOfContrastReserve . '" name="contrastInstrument' . $this->numberOfContrastReserve . '">';
-                    $searchString .= $this->allInstruments;
-                    $searchString .= '</select>';
-                    $searchString .= '</div>';
-                    $searchString .= '</div>';
-                    $searchString .= '<div class="col-sm-1">';
-                    $searchString .= _i('in');
-                    $searchString .= '</div>';
-                    $searchString .= '<div class="col-sm-2">';
-                    $searchString .= '<div x-data="" wire:ignore>';
-                    $searchString .= '<select class="form-control form-control-sm" id="contrastLocation' . $this->numberOfContrastReserve . '" name="contrastLocation' . $this->numberOfContrastReserve . '">';
-                    $searchString .= $this->allLocations;
-                    $searchString .= '</select>';
-                    $searchString .= '</div>';
-                    $searchString .= '</div>';
-
+                    if ($this->numberOfContrastReserve == 1) {
+                        $searchString .= '<div class="col-sm-1">';
+                        $searchString .= _i('with');
+                        $searchString .= '</div>';
+                        $searchString .= '<div class="col-sm-2">';
+                        $searchString .= '<div x-data="" wire:ignore>';
+                        $searchString .= '<select class="form-control form-control-sm" id="instrumentContrast' . $this->numberOfContrastReserve . '" name="instrumentContrast' . $this->numberOfContrastReserve . '">';
+                        $searchString .= $this->allInstruments;
+                        $searchString .= '</select>';
+                        $searchString .= '</div>';
+                        $searchString .= '</div>';
+                        $searchString .= '<div class="col-sm-1">';
+                        $searchString .= _i('in');
+                        $searchString .= '</div>';
+                        $searchString .= '<div class="col-sm-2">';
+                        $searchString .= '<div x-data="" wire:ignore>';
+                        $searchString .= '<select class="form-control form-control-sm" id="locationContrast' . $this->numberOfContrastReserve . '" name="locationContrast' . $this->numberOfContrastReserve . '">';
+                        $searchString .= $this->allLocations;
+                        $searchString .= '</select>';
+                        $searchString .= '</div>';
+                        $searchString .= '</div>';
+                    }
                     // $searchString .= '<div class="col-sm-1">';
                     // $searchString .= '<svg xmlns="http://www.w3.org/2000/svg" wire:click="removeSearch(' . $this->numberOfSearchOptions . ')" width="16" height="16" fill="currentColor" class="bi bi-dash-circle-fill inline" viewBox="0 0 16 16">
                     // <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
