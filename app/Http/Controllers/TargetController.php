@@ -46,6 +46,7 @@ class TargetController extends Controller
      */
     public function search(Request $request)
     {
+        $requestArray = array_keys($request->toArray());
         if ($request['quickpick']) {
             $targetQuery   = \App\Models\TargetName::where('altname', 'like', $request['quickpick']);
             $targetsToShow = $targetQuery->get();
@@ -60,8 +61,6 @@ class TargetController extends Controller
                 $allTargets->orWhere('id', $translated_target->id);
             }
         } else {
-            $requestArray = array_keys($request->toArray());
-
             // Check for all catalog entries in the request
             $resultCatalogs = array_filter($requestArray, function ($value) {
                 return strpos($value, 'catalog') !== false;
