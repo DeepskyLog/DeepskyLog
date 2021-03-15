@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\set;
+use App\Models\Set;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -82,7 +82,7 @@ class SetController extends Controller
      */
     public function show(int $set)
     {
-        if (set::find($set)['user_id'] == Auth::id() || Auth::user()->isAdmin()) {
+        if (Set::find($set)['user_id'] == Auth::id() || Auth::user()->isAdmin()) {
             return view(
                 'layout.set.show',
                 ['set' => \App\Models\Set::where('id', $set)->first()]
