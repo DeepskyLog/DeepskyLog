@@ -1598,7 +1598,9 @@ class Target extends Model
 
         if ($this->isMoon()) {
             $toReturn .= _i('Distance from earth') . '</td>';
-            $toReturn .= '<td colspan="9">' . round($distance) . ' km';
+            $toReturn .= '<td colspan="3">' . round($distance) . ' km';
+            $toReturn .= '<td colspan="3"><span class="float-right">' . _i('New moon') . '</span></td>';
+            $toReturn .= '<td colspan="3">' . $this->_target->newMoonDate($date)->format('d/m/Y') . '</td>';
         } else {
             $toReturn .= _i('Distance from sun') . '</td>';
             $toReturn .= '<td colspan="3">' . round($distance, 2) . ' ' . _i('AU') . '</td>';
@@ -1608,7 +1610,6 @@ class Target extends Model
 
             $earth              = new Earth();
             $helio_coords_earth = $earth->calculateHeliocentricCoordinates($date);
-            $R0                 = $helio_coords_earth[2];
 
             $x = $helio_coords[2] * cos(deg2rad($helio_coords[1])) * cos(deg2rad($helio_coords[0])) -
                         $helio_coords_earth[2] * cos(deg2rad($helio_coords_earth[1])) * cos(deg2rad($helio_coords_earth[0]));

@@ -141,13 +141,9 @@
     @php
     setlocale(LC_TIME, LaravelGettext::getLocale());
     // Next New moon
-    $moon = new Solaris\MoonPhase($date);
-    $next = gmdate( 'j/m/Y', $moon->getNextNewMoon() );
-
-    $nmdate = DateTime::createFromFormat('j/n/Y', $next);
-    $newMoonDate = strftime("%e %b", $nmdate->getTimestamp());
+    $newMoonDate = $moon->newMoonDate($date);
     @endphp
-    {{ _i("New moon") }}: {{ $newMoonDate }}
+    {{ _i("New moon") }}: {{ $newMoonDate->format('d/m/Y') }}
 
 
     <script type="text/javascript" src="{{ URL::asset('js/degrees.js') }}"></script>

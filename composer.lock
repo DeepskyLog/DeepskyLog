@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6f4114163fe4de2e9cda5e5d56a3be83",
+    "content-hash": "b7bfe8b2381bdab11db2752875f1cc3d",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -471,16 +471,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v5.4.3",
+            "version": "v5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "b553d95b1808920c844782f05d087a0f70fdee7c"
+                "reference": "9a375fbfcca0360c2c3c7b66619595fac2a2c9c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/b553d95b1808920c844782f05d087a0f70fdee7c",
-                "reference": "b553d95b1808920c844782f05d087a0f70fdee7c",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/9a375fbfcca0360c2c3c7b66619595fac2a2c9c4",
+                "reference": "9a375fbfcca0360c2c3c7b66619595fac2a2c9c4",
                 "shasum": ""
             },
             "require": {
@@ -529,7 +529,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v5.4.3"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v5.5"
             },
             "funding": [
                 {
@@ -537,7 +537,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-11T14:24:55+00:00"
+            "time": "2021-03-15T11:04:25+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
@@ -1568,60 +1568,6 @@
                 "source": "https://github.com/Intervention/image/tree/master"
             },
             "time": "2019-11-02T09:15:47+00:00"
-        },
-        {
-            "name": "janbarasek/php-moon-phase",
-            "version": "v2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/janbarasek/php-moon-phase.git",
-                "reference": "6ce1335a81ca8bcdebbff2d9632821cab49fa835"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/janbarasek/php-moon-phase/zipball/6ce1335a81ca8bcdebbff2d9632821cab49fa835",
-                "reference": "6ce1335a81ca8bcdebbff2d9632821cab49fa835",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Solaris": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Erik Scheepers",
-                    "email": "e.scheepers@linkorb.com",
-                    "role": "Packaging for composer"
-                },
-                {
-                    "name": "Samir Shah",
-                    "email": "samir@rayofsolaris.net"
-                },
-                {
-                    "name": "Jan Barášek",
-                    "email": "jan@barasek.com"
-                }
-            ],
-            "description": "A PHP class for calculating the phase of the Moon.",
-            "homepage": "http://www.github.com/janbarasek/php-moon-phase",
-            "keywords": [
-                "moon",
-                "phase",
-                "php"
-            ],
-            "support": {
-                "source": "https://github.com/janbarasek/php-moon-phase/tree/master"
-            },
-            "time": "2018-10-30T10:15:40+00:00"
         },
         {
             "name": "laravel/framework",
@@ -4820,16 +4766,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "9.4.3",
+            "version": "9.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "2eae7416a6d7762e147f26f6cac7cf099eda109b"
+                "reference": "9d27d602351516dc09c8d6e01b1430c2d1c2a7df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/2eae7416a6d7762e147f26f6cac7cf099eda109b",
-                "reference": "2eae7416a6d7762e147f26f6cac7cf099eda109b",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/9d27d602351516dc09c8d6e01b1430c2d1c2a7df",
+                "reference": "9d27d602351516dc09c8d6e01b1430c2d1c2a7df",
                 "shasum": ""
             },
             "require": {
@@ -4908,7 +4854,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-medialibrary/issues",
-                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.4.3"
+                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.4.4"
             },
             "funding": [
                 {
@@ -4920,7 +4866,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-07T18:42:19+00:00"
+            "time": "2021-03-15T07:39:17+00:00"
         },
         {
             "name": "spatie/laravel-medialibrary-pro",
