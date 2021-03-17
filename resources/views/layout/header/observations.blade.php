@@ -14,7 +14,7 @@
         <a class="dropdown-item disabled" href="#">───────────────────</a>
         @auth
         @if (!auth()->user()->isAdmin())
-        <a class="dropdown-item disabled" href="/observingList">{{ _i('Observing lists') }}</a>
+        <a class="dropdown-item" href="/observationList">{{ _i('Observing lists') }}</a>
         <a class="dropdown-item disabled" href="/session">{{ _i("Sessions") }}</a>
         <a class="dropdown-item disabled" href="#">───────────────────</a>
         <a class="dropdown-item disabled" href="/observation/{{ Auth::id() }}">{{ _i('Show my observations') }}</a>

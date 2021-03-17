@@ -239,6 +239,22 @@ Route::resource(
 
 Route::get('/set/{set}', 'SetController@show')->name('set.show');
 
+// Observation lists
+Route::get('/observationList/create/{list}', 'ObservationListController@create')
+    ->middleware('verified');
+
+Route::get('/observationList/admin', 'ObservationListController@indexAdmin')
+    ->name('observationList.indexAdmin');
+
+Route::resource(
+    'observationList',
+    'ObservationListController',
+    ['parameters' => ['observationList' => 'observationList']]
+)->middleware('verified')->except('show');
+
+Route::get('/observationList/{list}', 'ObservationListController@show')
+    ->name('observationList.show');
+
 // Social log in
 Route::get('/login/github', [LoginController::class, 'redirectToGithub']);
 Route::get('/login/github/callback', [LoginController::class, 'handleGithubCallback']);
