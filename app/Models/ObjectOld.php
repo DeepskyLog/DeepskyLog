@@ -27,5 +27,9 @@ class ObjectOld extends Model
 {
     protected $connection = 'mysqlOld';
 
+    protected $fillable = ['description'];
+    protected $primaryKey = 'name';
+    public $timestamps = false;
+
     protected $table = 'objects';
 }
