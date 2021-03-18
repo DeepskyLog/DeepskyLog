@@ -142,9 +142,9 @@ class DeepskyLogChecks
             }
             if ($cnt > 0) {
                 laraflash(
+                    _i('At least one of your discoverable observing lists does not have a description.') . ' ' .
                     _i(
-                        'At least one of your discoverable observing lists does not have a description.
-                        Please add a description at the %sobserving list page%s.  This way, other observers can easily find your lists and subscribe to them.',
+                        'Please add a description at the %sobserving list page%s.  This way, other observers can easily find your lists and subscribe to them.',
                         '<a href="/observationList/">',
                         '</a>.'
                     )
