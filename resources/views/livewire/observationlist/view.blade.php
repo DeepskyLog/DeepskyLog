@@ -27,6 +27,11 @@
     <h4>
         {{ _i("Observation lists of %s", Auth::user()->name) }}
     </h4>
+    <hr />
+    <a class="btn btn-success float-right" href="/observationList/create">
+        {{ _i("Add observation list") }}
+    </a>
+    <br /><br />
     @endif
     <hr />
     <livewire:observation-list-table hideable="select" exportable />

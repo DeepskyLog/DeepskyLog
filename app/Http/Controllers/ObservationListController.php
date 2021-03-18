@@ -55,11 +55,16 @@ class ObservationListController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param ObservationList $list The observation list to fill out in the fields
+     *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(ObservationList $list)
     {
-        //
+        return view(
+            'layout.observationList.create',
+            ['observationList' => $list, 'update' => false]
+        );
     }
 
     /**
@@ -87,12 +92,18 @@ class ObservationListController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ObservationList  $observationList
+     * @param String $list The slug of the observation list to edit
+     *
      * @return \Illuminate\Http\Response
      */
-    public function edit(ObservationList $observationList)
+    public function edit(String $slug)
     {
-        //
+        $list  = \App\Models\ObservationList::where('slug', $slug)->first();
+
+        return view(
+            'layout.observationList.create',
+            ['observationList' => $list, 'update' => true]
+        );
     }
 
     /**

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
 "POT-Creation-Date: 2021-03-18 20:31+0100\n"
-"PO-Revision-Date: 2021-03-18 20:33+0100\n"
+"PO-Revision-Date: 2021-03-18 21:30+0100\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: nl_NL\n"
@@ -1301,7 +1301,7 @@ msgstr "Waarneemlijst %s is niet meer vindbaar voor andere waarnemers"
 #: Http/Livewire/Observationlist/View.php:65
 #, php-format
 msgid "Observation list %s deleted"
-msgstr "Observatielijst %s verwijderd"
+msgstr "Waarneemlijst %s verwijderd"
 
 #: ../storage/framework/messages/11f2aaffefa0ac59965c6ed368299414d51d160d.php.php:10
 msgid "Details"
@@ -3160,7 +3160,7 @@ msgstr "Toon mijn tekeningen"
 
 #: ../storage/framework/messages/95e8f2d9daa20ffaf64311ef3331ffd6fcc23e8d.php.php:24
 msgid "Show all observing lists"
-msgstr "Toon alle observatielijsten"
+msgstr "Toon alle waarneemlijsten"
 
 #: ../storage/framework/messages/95e8f2d9daa20ffaf64311ef3331ffd6fcc23e8d.php.php:25
 msgid "Show all sessions"
