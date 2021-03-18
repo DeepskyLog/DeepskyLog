@@ -165,6 +165,20 @@
                 </td>
             </tr>
 
+            <!-- Number of observing lists -->
+            <tr>
+                <td> {{ _i('Number of observing lists') }} </td>
+                <td>
+                    @if ($user->id === Auth::user()->id)
+                    <a href="{{ route('observationList.index') }}">
+                        @endif
+                        {{ count($user->observingLists) }}
+                        @if ($user->id === Auth::user()->id)
+                    </a>
+                    @endif
+                </td>
+            </tr>
+
             <!-- Number of equipment sets -->
             <tr>
                 <td> {{ _i('Number of equipment sets') }} </td>

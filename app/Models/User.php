@@ -176,6 +176,26 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
+     * Users can have one observing list.
+     *
+     * @return HasOne The eloquent relationship
+     */
+    public function observingList()
+    {
+        return $this->hasOne('App\Models\ObservationList', 'user_id');
+    }
+
+    /**
+     * Users can have more observing lists.
+     *
+     * @return HasMany The eloquent relationship
+     */
+    public function observingLists()
+    {
+        return $this->hasMany('App\Models\ObservationList', 'user_id');
+    }
+
+    /**
      * Returns the copyright information (including the image and the link).
      *
      * @return string The copyright information

@@ -33,7 +33,7 @@ class UserTable extends LivewireDatatable
             DateColumn::name('created_at')->label(_i('Date/Time Added')),
             Column::name('type')->label(_i('User Role')),
             // TODO: Observations
-            // TODO: Observation lists
+            // TODO: Sessions
             NumberColumn::name('instruments')->callback(['slug'], function ($slug) {
                 $user = \App\Models\User::where('slug', $slug)->first();
                 return count($user->instruments);
@@ -58,8 +58,11 @@ class UserTable extends LivewireDatatable
                 $user = \App\Models\User::where('username', $username)->first();
                 return count($user->sets);
             })->label(_i('Equipment Sets')),
+            NumberColumn::name('sets')->callback(['username', 'detaildsos', 'overviewstars'], function ($username) {
+                $user = \App\Models\User::where('username', $username)->first();
+                return count($user->observingLists);
+            })->label(_i('Equipment Sets')),
             Column::callback(['type', 'id', 'slug'], function ($type, $id, $slug) {
-                // TODO: Check for the number of observations with this eyepiece
                 $total = 0;
                 $user = \App\Models\User::where('slug', $slug)->first();
                 $total += count($user->instruments);
@@ -68,7 +71,7 @@ class UserTable extends LivewireDatatable
                 $total += count($user->lenses);
                 $total += count($user->filters);
                 $total += count($user->sets);
-                // TODO: Add number of observation lists
+                $total += count($user->observingLists);
                 // TODO: Add number of observations
                 // TODO: Add number of sessions
 
