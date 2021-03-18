@@ -11,8 +11,9 @@ class View extends Component
     public string $selected_list_slug = '';
 
     protected $listeners = [
-        'activate' => 'activate',
-        'delete'   => 'delete',
+        'activate'     => 'activate',
+        'delete'       => 'delete',
+        'discoverable' => 'discoverable',
     ];
 
     public function mount()
@@ -28,6 +29,24 @@ class View extends Component
         $this->selected_list_slug = $slug;
         Auth::user()->update(['activeList' => $slug]);
         $this->emit('refreshLivewireDatatable');
+    }
+
+    public function discoverable($id)
+    {
+        $list = ObservationList::where('id', $id)->first();
+        $list->toggleDiscoverable();
+
+        if ($list->discoverable) {
+            session()->flash(
+                'message',
+                _i('Observation list %s is now discoverable by other observers', $list->name)
+            );
+        } else {
+            session()->flash(
+                'message',
+                _i('Observation list %s is not discoverable by other observers anymore', $list->name)
+            );
+        }
     }
 
     public function delete($id)

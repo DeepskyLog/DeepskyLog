@@ -9,6 +9,24 @@ class ObservationList extends Pivot
 {
     use Sluggable;
 
+    protected $fillable = [
+        'user_id', 'name', 'description', 'discoverable',
+    ];
+
+    /**
+     * Toggle the discoverable status of the list.
+     *
+     * @return None
+     */
+    public function toggleDiscoverable()
+    {
+        if ($this->discoverable) {
+            $this->update(['discoverable' => 0]);
+        } else {
+            $this->update(['discoverable' => 1]);
+        }
+    }
+
     /**
      * Adds the link to the observer.
      *

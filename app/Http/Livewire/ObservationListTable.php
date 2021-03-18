@@ -83,8 +83,6 @@ class ObservationListTable extends LivewireDatatable
             })->label(_i('Delete'))
         );
 
-        // TODO: Delete list
-        // TODO: Add active list
         // TODO: Make clicking discoverable work
         // TODO: Add number of subscribers
         // TODO: Show number of objects in the list

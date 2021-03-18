@@ -131,6 +131,25 @@ class DeepskyLogChecks
                     )->warning();
                 }
             }
+            // Check if there are observing lists without a description
+            $lists       = \App\Models\ObservationList::where('user_id', Auth::user()->id)->where('discoverable', 1)->get();
+
+            $cnt = 0;
+            foreach ($lists as $list) {
+                if ($list->description == '') {
+                    $cnt++;
+                }
+            }
+            if ($cnt > 0) {
+                laraflash(
+                    _i(
+                        'At least one of your discoverable observing lists does not have a description.
+                        Please add a description at the %sobserving list page%s.  This way, other observers can easily find your lists and subscribe to them.',
+                        '<a href="/observationList/">',
+                        '</a>.'
+                    )
+                )->warning();
+            }
         }
 
         return $next($request);
