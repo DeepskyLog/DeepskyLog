@@ -145,10 +145,10 @@
                 @endif
             </tr>
 
-            @if ($target->isNonSolarSystem())
             <tr>
                 <td colspan="3">{{ _i("Size") }}</td>
                 <td colspan="3">{{ $target->size() }}</td>
+                @if ($target->isNonSolarSystem())
                 <td colspan="3"><span class="float-right">{{ _i("Position angle") }}</span></td>
                 <td colspan="3">@if ($target->pa > 900)
                     -
@@ -156,6 +156,8 @@
                     {{ $target->pa }}&deg;
                     @endif
                 </td>
+                @else
+                <td colspan="6">&nbsp;</td>
             </tr>
 
             @auth

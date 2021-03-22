@@ -567,16 +567,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v5.5",
+            "version": "v5.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "9a375fbfcca0360c2c3c7b66619595fac2a2c9c4"
+                "reference": "2de6196e197b4ffcb644ff69b65d541102268f9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/9a375fbfcca0360c2c3c7b66619595fac2a2c9c4",
-                "reference": "9a375fbfcca0360c2c3c7b66619595fac2a2c9c4",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/2de6196e197b4ffcb644ff69b65d541102268f9d",
+                "reference": "2de6196e197b4ffcb644ff69b65d541102268f9d",
                 "shasum": ""
             },
             "require": {
@@ -625,7 +625,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v5.5"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v5.6"
             },
             "funding": [
                 {
@@ -633,7 +633,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-15T11:04:25+00:00"
+            "time": "2021-03-22T11:50:04+00:00"
         },
         {
             "name": "deepskylog/laravel-gettext",
@@ -1518,16 +1518,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.7.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "53330f47520498c0ae1f61f7e2c90f55690c06a3"
+                "reference": "35ea11d335fd638b5882ff1725228b3d35496ab1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/53330f47520498c0ae1f61f7e2c90f55690c06a3",
-                "reference": "53330f47520498c0ae1f61f7e2c90f55690c06a3",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/35ea11d335fd638b5882ff1725228b3d35496ab1",
+                "reference": "35ea11d335fd638b5882ff1725228b3d35496ab1",
                 "shasum": ""
             },
             "require": {
@@ -1587,9 +1587,9 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/1.7.0"
+                "source": "https://github.com/guzzle/psr7/tree/1.8.1"
             },
-            "time": "2020-09-30T07:37:11+00:00"
+            "time": "2021-03-21T16:25:00+00:00"
         },
         {
             "name": "intervention/image",
@@ -5034,17 +5034,17 @@
         },
         {
             "name": "spatie/laravel-medialibrary-pro",
-            "version": "1.12.20",
+            "version": "1.12.21",
             "source": {
                 "type": "git",
                 "url": "git@github.com:spatie/laravel-medialibrary-pro.git",
-                "reference": "6bc9132ddccfdf7d579138d017118b5886200ac0"
+                "reference": "b1700e69193dc0bc2401683225389779443de5bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-6bc9132ddccfdf7d579138d017118b5886200ac0-zip-0d3c39.zip",
-                "reference": "6bc9132ddccfdf7d579138d017118b5886200ac0",
-                "shasum": "ad45f1d6b0d290ba35c3c4a0840261b23aff7848"
+                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-b1700e69193dc0bc2401683225389779443de5bc-zip-c749e9.zip",
+                "reference": "b1700e69193dc0bc2401683225389779443de5bc",
+                "shasum": "0f7b8a5eccc54fab0226e258d702fd828403d31b"
             },
             "require": {
                 "ext-json": "*",
@@ -5109,10 +5109,10 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.12.20",
+                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/v1.1.12",
                 "issues": "https://github.com/spatie/laravel-medialibrary-pro/issues"
             },
-            "time": "2021-03-18T10:25:57+00:00"
+            "time": "2021-03-22T11:10:56+00:00"
         },
         {
             "name": "spatie/laravel-tags",
@@ -8201,16 +8201,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.10.0",
+            "version": "2.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "6ecda5217bf048088b891f7403b262906be5a957"
+                "reference": "f6e14679f948d8a5cfb866fa7065a30c66bd64d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/6ecda5217bf048088b891f7403b262906be5a957",
-                "reference": "6ecda5217bf048088b891f7403b262906be5a957",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/f6e14679f948d8a5cfb866fa7065a30c66bd64d3",
+                "reference": "f6e14679f948d8a5cfb866fa7065a30c66bd64d3",
                 "shasum": ""
             },
             "require": {
@@ -8260,7 +8260,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.10.0"
+                "source": "https://github.com/filp/whoops/tree/2.11.0"
             },
             "funding": [
                 {
@@ -8268,7 +8268,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-16T12:00:00+00:00"
+            "time": "2021-03-19T12:00:00+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",

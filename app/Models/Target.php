@@ -837,6 +837,10 @@ class Target extends Model
      */
     public function isSun(): bool
     {
+        if (!$this->_observationType) {
+            $this->_setObservationType();
+        }
+
         return $this->_observationType['type'] == 'sun';
     }
 
@@ -901,6 +905,17 @@ class Target extends Model
     public function size(): string
     {
         $size = '-';
+        if ($this->isPlanet() || $this->isMoon() || $this->isSun()) {
+            $date       = Astrolib::getInstance()->getAstronomyLibrary()->getDate()->copy();
+            $this->_target->calculateDiameter($date);
+
+            $size = $this->_target->getDiameter()[0];
+            if ($size > 100) {
+                $size = sprintf("%.1f'", $size / 60.0);
+            } else {
+                $size = sprintf('%.1f"', $size);
+            }
+        }
         if ($this->diam1 != 0.0) {
             if ($this->diam1 >= 40.0) {
                 if (round($this->diam1 / 60.0) == ($this->diam1 / 60.0)) {
