@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ObservationList;
+use Illuminate\Support\Facades\Auth;
 
 class ObservationListController extends Controller
 {
@@ -84,9 +85,27 @@ class ObservationListController extends Controller
      * @param  \App\Models\ObservationList  $observationList
      * @return \Illuminate\Http\Response
      */
-    public function show(ObservationList $observationList)
+    public function show(String $slug)
     {
-        //
+        $list  = \App\Models\ObservationList::where('slug', $slug)->first();
+
+        if ($list->user_id != Auth::user()->id) {
+            if ($list->discoverable == 0) {
+                abort(401, _i('The requested observation list is not available.'));
+            }
+        }
+
+        $user = $list->user;
+        if (!$user->hasMedia('observer')) {
+            $this->addDefaultMedia($user);
+        }
+
+        $media = $user->getFirstMedia('observer');
+
+        return view(
+            'layout.observationList.show',
+            ['observationList' => $list, 'media' => $media]
+        );
     }
 
     /**

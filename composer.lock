@@ -2550,16 +2550,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "8055af7730938cd607616fde122825ed960a9b71"
+                "reference": "b0cb782674673a67ddfd5910d2fcb5308bb32857"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/8055af7730938cd607616fde122825ed960a9b71",
-                "reference": "8055af7730938cd607616fde122825ed960a9b71",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/b0cb782674673a67ddfd5910d2fcb5308bb32857",
+                "reference": "b0cb782674673a67ddfd5910d2fcb5308bb32857",
                 "shasum": ""
             },
             "require": {
@@ -2610,7 +2610,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v2.4.0"
+                "source": "https://github.com/livewire/livewire/tree/v2.4.1"
             },
             "funding": [
                 {
@@ -2618,7 +2618,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-23T17:44:50+00:00"
+            "time": "2021-03-22T14:03:36+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -5034,17 +5034,17 @@
         },
         {
             "name": "spatie/laravel-medialibrary-pro",
-            "version": "1.12.21",
+            "version": "1.12.22",
             "source": {
                 "type": "git",
                 "url": "git@github.com:spatie/laravel-medialibrary-pro.git",
-                "reference": "b1700e69193dc0bc2401683225389779443de5bc"
+                "reference": "1be1dda89914ee7b77fa7181a937ee41e4e3b758"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-b1700e69193dc0bc2401683225389779443de5bc-zip-c749e9.zip",
-                "reference": "b1700e69193dc0bc2401683225389779443de5bc",
-                "shasum": "0f7b8a5eccc54fab0226e258d702fd828403d31b"
+                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-1be1dda89914ee7b77fa7181a937ee41e4e3b758-zip-380eda.zip",
+                "reference": "1be1dda89914ee7b77fa7181a937ee41e4e3b758",
+                "shasum": "ce239fb3a7f309880fc55bb5a98d8baece44a71c"
             },
             "require": {
                 "ext-json": "*",
@@ -5109,10 +5109,10 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/v1.1.12",
+                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.12.22",
                 "issues": "https://github.com/spatie/laravel-medialibrary-pro/issues"
             },
-            "time": "2021-03-22T11:10:56+00:00"
+            "time": "2021-03-22T14:17:11+00:00"
         },
         {
             "name": "spatie/laravel-tags",
