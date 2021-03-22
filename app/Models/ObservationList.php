@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Spatie\Tags\HasTags;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class ObservationList extends Pivot
 {
     use Sluggable;
+    use HasTags;
 
     protected $fillable = [
         'user_id', 'name', 'description', 'discoverable',

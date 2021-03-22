@@ -43,8 +43,38 @@
             </p>
         </div>
 
+        {{-- Tags --}}
+        <div class="form-group type">
+            <label
+                for="type">{{ _i("Add tags to make your observation list easier to discover by other observers") }}</label>
+
+            @php
+            $allTags = \Spatie\Tags\Tag::where('type', 'ObservationList')->get()->pluck('name', 'name')->toArray();
+            $list = \App\Models\ObservationList::where('slug', $slug)->first();
+            if ($list) {
+            $tags = $list->tags()->get()->pluck('name')->flatten();
+            $selected = (json_encode($tags));
+            } else {
+            $selected = json_encode(['']);
+            }
+            @endphp
+
+            <div class="form">
+                <div x-data wire:ignore>
+                    <x-input.select-live-wire-multiple wire:model="tags" prettyname="tags" :options="$allTags"
+                        :selected="$selected" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="tagInput">{{ _i("You can also manually add a new tag") }}</label>
+            <input type="text" wire:model="newTag" placeholder="{{ _i("Add a new tag") }}"
+                class="form-control @error('newTag') is-invalid @enderror" name="newTag" size="30" />
+            @error('newTag') <span class="small text-error">{{ $message }}<br /></span> @enderror
+        </div>
+
         {{-- Discoverable --}}
-        <div class=" form-group form-check discoverable">
+        <div class="form-group form-check discoverable">
             <input type="checkbox" wire:model="discoverable" @if ($observationList->discoverable) checked @endif
             class="form-check-input @error('discoverable') is-invalid @enderror" name="discoverable"
             />

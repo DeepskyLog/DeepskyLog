@@ -37,11 +37,26 @@ class ObservationListTable extends LivewireDatatable
             ->searchable(),
         ];
 
+        // Tags
+        array_push(
+            $toReturn,
+            Column::name('user.name')->callback(['id', 'user_id', 'created_at'], function ($id) {
+                $list = \App\Models\ObservationList::where('id', $id)->first();
+                $tags = $list->tags();
+                $toReturn = '';
+                if ($tags->count() > 0) {
+                    foreach ($tags->get() as $tag) {
+                        $toReturn .= '<span class="badge badge-secondary">' . $tag->name . '</span>&nbsp;';
+                    }
+                }
+                return $toReturn;
+            })->label(_i('Tags'))
+        );
+
         if (auth()->user()->isAdmin()) {
             array_push(
                 $toReturn,
                 Column::name('user.name')->callback(['id', 'user_id'], function ($id, $user_id) {
-                    // dd(\App\Models\User::where('id', $user_id)->first());
                     return '<a href="/users/' . \App\Models\User::where('id', $user_id)->first()->slug . '">' . \App\Models\User::where('id', $user_id)->first()->name . '</a>';
                 })->label(_i('User name'))
             );
@@ -83,10 +98,10 @@ class ObservationListTable extends LivewireDatatable
             })->label(_i('Delete'))
         );
 
-        // TODO: Make clicking discoverable work
         // TODO: Add number of subscribers
         // TODO: Show number of objects in the list
         // TODO: Show tags
+        // $list->attachTag(\Spatie\Tags\Tag::findOrCreate('Deep-sky', 'ObservationList'));
         return $toReturn;
     }
 }
