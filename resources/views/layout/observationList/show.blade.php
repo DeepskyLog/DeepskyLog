@@ -14,6 +14,7 @@
     </a>
     @endif
 </h2>
+
 {{ _i('Observation list by ') }} <a
     href="/users/{{ $observationList->user->slug }}">{{ $observationList->user->name }}</a>
 <br /><br />
@@ -40,6 +41,9 @@
 {{ _i('No tags') }}
 @endif
 <br />
+
+<livewire:observationlist.show :observationList="$observationList" />
+
 @auth
 @if (Auth::user()->id == $observationList->user_id || Auth::user()->isAdmin())
 <br />
@@ -50,5 +54,6 @@
 </a>
 <br />
 @endif
+
 @endauth
 @endsection

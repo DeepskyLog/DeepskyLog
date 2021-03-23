@@ -23,6 +23,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Cog\Laravel\Love\Reacterable\Models\Traits\Reacterable;
+use Cog\Contracts\Love\Reacterable\Models\Reacterable as ReacterableInterface;
 
 /**
  * User eloquent model.
@@ -34,13 +36,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  *
  * @see     http://www.deepskylog.org
  */
-class User extends Authenticatable implements MustVerifyEmail, HasMedia
+class User extends Authenticatable implements MustVerifyEmail, HasMedia, ReacterableInterface
 {
     use Notifiable;
     use InteractsWithMedia;
     use Messagable;
     use HasFactory;
     use Sluggable;
+    use Reacterable;
 
     public const ADMIN_TYPE   = 'admin';
     public const DEFAULT_TYPE = 'default';
