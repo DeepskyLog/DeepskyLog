@@ -9,11 +9,9 @@ The like and dislike actions should be defined:
 ```bash
 php artisan love:reaction-type-add --default
 php artisan love:reaction-type-add --name=Subscribe --mass=5
-php artisan love:reaction-type-add --name=Unsubscribe --mass=-5
 php artisan love:reaction-type-add --name=Tag --mass=2
-php artisan love:reaction-type-add --name=Untag --mass=-2
 php artisan love:reaction-type-add --name=Tags --mass=5
-php artisan love:reaction-type-add --name=RemoveTags --mass=-5
+php artisan love:reaction-type-add --name=Description --mass=5
 ```
 
 ### Update database

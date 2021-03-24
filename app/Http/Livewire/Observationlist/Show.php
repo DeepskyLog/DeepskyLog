@@ -34,7 +34,6 @@ class Show extends Component
     public function like()
     {
         $reacterFacade   = Auth::user()->viaLoveReacter();
-        $reactantFacade  = $this->observationList->viaLoveReactant();
 
         // Check if the observation list is already liked by this user.
         if ($reacterFacade->hasReactedTo($this->observationList)) {

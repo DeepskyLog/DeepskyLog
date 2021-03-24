@@ -20,7 +20,6 @@ class Create extends Component
 
     protected $rules = [
         'name'               => ['required', 'min:6', 'max:100'],
-        'newTag'             => ['min:3'],
     ];
 
     public function mount()
@@ -77,9 +76,7 @@ class Create extends Component
             $this->observationList->update(['name' => $this->name]);
             $this->observationList->update(['description' => $this->description['body']]);
             $this->observationList->update(['discoverable' => $disc]);
-            if (sizeof($this->tags) > 0) {
-                $this->observationList->syncTagsWithType($this->tags, 'ObservationList');
-            }
+            $this->observationList->syncTagsWithType($this->tags, 'ObservationList');
             if ($this->newTag) {
                 $this->observationList->attachTag($addedTag);
             }
@@ -102,6 +99,44 @@ class Create extends Component
 
             Auth::user()->update(['activeList' => $list->slug]);
             laraflash(_i('Observation list %s created', $list->name))->success();
+        }
+
+        $reactantFacade  = $this->observationList->viaLoveReactant();
+        $reacterFacade   = Auth::user()->viaLoveReacter();
+
+        // Check the number of tags and make sure that the laravel-love sets the Tag or Tags reaction
+        if ($this->observationList->tags()->get()->count() == 0) {
+            if ($reactantFacade->isReactedBy(Auth::user(), 'Tag')) {
+                $reacterFacade->unreactTo($this->observationList, 'Tag');
+            }
+            if ($reactantFacade->isReactedBy(Auth::user(), 'Tags')) {
+                $reacterFacade->unreactTo($this->observationList, 'Tags');
+            }
+        } elseif ($this->observationList->tags()->get()->count() == 1) {
+            if (!$reactantFacade->isReactedBy(Auth::user(), 'Tag')) {
+                $reacterFacade->reactTo($this->observationList, 'Tag');
+            }
+            if ($reactantFacade->isReactedBy(Auth::user(), 'Tags')) {
+                $reacterFacade->unreactTo($this->observationList, 'Tags');
+            }
+        } else {
+            if ($reactantFacade->isReactedBy(Auth::user(), 'Tag')) {
+                $reacterFacade->unreactTo($this->observationList, 'Tag');
+            }
+            if (!$reactantFacade->isReactedBy(Auth::user(), 'Tags')) {
+                $reacterFacade->reactTo($this->observationList, 'Tags');
+            }
+        }
+
+        // Check if there is a description of the list and set the laravel-love reaction to Description
+        if (strlen($this->observationList->description) < 5) {
+            if ($reactantFacade->isReactedBy(Auth::user(), 'Description')) {
+                $reacterFacade->unreactTo($this->observationList, 'Description');
+            }
+        } else {
+            if (!$reactantFacade->isReactedBy(Auth::user(), 'Description')) {
+                $reacterFacade->reactTo($this->observationList, 'Description');
+            }
         }
 
         // View the page with all observation lists for the user
