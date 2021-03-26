@@ -23,8 +23,8 @@
         <a class="dropdown-item disabled" href="/observingList/admin">{{ _i('Show all observing lists') }}</a>
         <a class="dropdown-item disabled" href="/session/admin">{{ _i("Show all sessions") }}</a>
         @endif
-        @endauth
         <a class="dropdown-item disabled" href="#">───────────────────</a>
+        @endauth
         <a class="dropdown-item disabled" href="/observation/all">{{ _i('Show latest observations') }}</a>
         <a class="dropdown-item disabled" href="/drawings/all">{{ _i('Show latest drawings') }}</a>
     </div>

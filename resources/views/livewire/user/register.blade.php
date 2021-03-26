@@ -125,8 +125,8 @@ $allLicenses .= '<option value="7">' . _i('Enter your own copyright text') . '</
 
 
         <div class="col-md-6">
-            <div x-data=''>
-                <x-input.select-live-wire wire:model="country" prettyname="mycountry" :options="$allCountries"
+            <div x-data='' wire:ignore>
+                <x-input.select-live-wire wire:model="country" prettyname="country" :options="$allCountries"
                     selected="('country')" />
             </div>
             <p hidden>{{ $country }}</p>
@@ -138,8 +138,8 @@ $allLicenses .= '<option value="7">' . _i('Enter your own copyright text') . '</
             class="col-md-4 col-form-label text-md-right">{{ _i('Standard language for observations') }}</label>
 
         <div class="col-md-6">
-            <div x-data=''>
-                <x-input.select-live-wire wire:model="observationlanguage" prettyname="myobservationlanguage"
+            <div x-data='' wire:ignore>
+                <x-input.select-live-wire wire:model="observationlanguage" prettyname="observationlanguage"
                     :options="$allObservationLanguages" selected="('observationlanguage')" />
             </div>
             <p hidden>{{ $observationlanguage }}</p>
@@ -151,8 +151,8 @@ $allLicenses .= '<option value="7">' . _i('Enter your own copyright text') . '</
             class="col-md-4 col-form-label text-md-right">{{ _i('Language for user interface') }}</label>
 
         <div class="col-md-6">
-            <div x-data=''>
-                <x-input.select-live-wire wire:model="language" prettyname="myapplanguage" :options="$allAppLanguages"
+            <div x-data='' wire:ignore>
+                <x-input.select-live-wire wire:model="language" prettyname="language" :options="$allAppLanguages"
                     selected="('language')" />
             </div>
             <p hidden>{{ $language }}</p>
@@ -164,8 +164,8 @@ $allLicenses .= '<option value="7">' . _i('Enter your own copyright text') . '</
         <label for="cclicense" class="col-md-4 col-form-label text-md-right">{{ _i("License for drawings") }}</label>
 
         <div class="col-md-6">
-            <div x-data=''>
-                <x-input.select-live-wire wire:model="cclicense" prettyname="mylicense" :options="$allLicenses"
+            <div x-data='' wire:ignore>
+                <x-input.select-live-wire wire:model="cclicense" prettyname="license" :options="$allLicenses"
                     selected="('cclicense')" />
             </div>
             <p hidden>{{ $cclicense }}</p>

@@ -65,7 +65,7 @@
                 event.preventDefault()
             });
 
-            const choices = new Choices('.js-choice');
+            // const choices = new Choices('.js-choice');
         </script>
 
         @include('cookieConsent::index')
