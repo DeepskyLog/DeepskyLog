@@ -12,9 +12,9 @@
  * @link     http://www.deepskylog.org
  */
 
-use App\Models\CometObjectOld;
-use App\Models\ObjectOld;
 use App\Models\Target;
+use App\Models\ObjectOld;
+use App\Models\CometObjectOld;
 use Illuminate\Database\Seeder;
 
 /**
@@ -7507,7 +7507,7 @@ class TargetTableSeeder extends Seeder
                 $date = date('Y-m-d H:i:s');
             } else {
                 [$year, $month, $day, $hour, $minute, $second]
-                    = sscanf($oldObject->timestamp, '%4d%2d%2d%2d%2d%d');
+                      = sscanf($oldObject->timestamp, '%4d%2d%2d%2d%2d%d');
                 $date = date(
                     'Y-m-d H:i:s',
                     mktime($hour, $minute, $second, $month, $day, $year)
@@ -7544,41 +7544,40 @@ class TargetTableSeeder extends Seeder
             if ($subr > 80) {
                 $subr = null;
             }
-
             Target::create(
                 [
-                    'target_name' => $oldObject->name,
-                    'target_type' => $type,
-                    'constellation' => $oldObject->con,
-                    'ra' => $oldObject->ra,
-                    'decl' => $oldObject->decl,
-                    'mag' => $mag,
-                    'subr' => $subr,
-                    'diam1' => $oldObject->diam1,
-                    'diam2' => $oldObject->diam2,
-                    'pa' => $oldObject->pa,
-                    'SBObj' => $oldObject->SBObj,
-                    'datasource' => $oldObject->datasource,
-                    'description' => $oldObject->description,
-                    'urano' => $oldObject->urano,
-                    'urano_new' => $oldObject->urano_new,
-                    'sky' => $oldObject->sky,
-                    'millenium' => $oldObject->millenium,
-                    'taki' => $oldObject->taki,
-                    'psa' => $oldObject->psa,
-                    'torresB' => $oldObject->torresB,
-                    'torresBC' => $oldObject->torresBC,
-                    'torresC' => $oldObject->torresC,
-                    'milleniumbase' => $oldObject->milleniumbase,
-                    'DSLDL' => $oldObject->DSLDL,
-                    'DSLDP' => $oldObject->DSLDP,
-                    'DSLLL' => $oldObject->DSLLL,
-                    'DSLLP' => $oldObject->DSLLP,
-                    'DSLOL' => $oldObject->DSLOL,
-                    'DSLOP' => $oldObject->DSLOP,
-                    'DeepskyHunter' => $oldObject->DeepskyHunter,
+                    'target_name'    => $oldObject->name,
+                    'target_type'    => $type,
+                    'constellation'  => $oldObject->con,
+                    'ra'             => $oldObject->ra,
+                    'decl'           => $oldObject->decl,
+                    'mag'            => $mag,
+                    'subr'           => $subr,
+                    'diam1'          => $oldObject->diam1,
+                    'diam2'          => $oldObject->diam2,
+                    'pa'             => $oldObject->pa,
+                    'SBObj'          => $oldObject->SBObj,
+                    'datasource'     => $oldObject->datasource,
+                    'description'    => $oldObject->description,
+                    'urano'          => $oldObject->urano,
+                    'urano_new'      => $oldObject->urano_new,
+                    'sky'            => $oldObject->sky,
+                    'millenium'      => $oldObject->millenium,
+                    'taki'           => $oldObject->taki,
+                    'psa'            => $oldObject->psa,
+                    'torresB'        => $oldObject->torresB,
+                    'torresBC'       => $oldObject->torresBC,
+                    'torresC'        => $oldObject->torresC,
+                    'milleniumbase'  => $oldObject->milleniumbase,
+                    'DSLDL'          => $oldObject->DSLDL,
+                    'DSLDP'          => $oldObject->DSLDP,
+                    'DSLLL'          => $oldObject->DSLLL,
+                    'DSLLP'          => $oldObject->DSLLP,
+                    'DSLOL'          => $oldObject->DSLOL,
+                    'DSLOP'          => $oldObject->DSLOP,
+                    'DeepskyHunter'  => $oldObject->DeepskyHunter,
                     'Interstellarum' => $oldObject->Interstellarum,
-                    'created_at' => $date,
+                    'created_at'     => $date,
                 ]
             );
         }
@@ -7592,7 +7591,7 @@ class TargetTableSeeder extends Seeder
             } else {
                 [$year, $month, $day, $hour, $minute, $second]
                                = sscanf($comet->timestamp, '%4d%2d%2d%2d%2d%d');
-                $date = date(
+                $date          = date(
                     'Y-m-d H:i:s',
                     mktime($hour, $minute, $second, $month, $day, $year)
                 );
@@ -7602,7 +7601,7 @@ class TargetTableSeeder extends Seeder
                 [
                     'target_name' => html_entity_decode($comet->name),
                     'target_type' => 'COMET',
-                    'created_at' => $date,
+                    'created_at'  => $date,
                 ]
             );
         }

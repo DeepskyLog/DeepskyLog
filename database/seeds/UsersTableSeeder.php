@@ -50,6 +50,7 @@ class UsersTableSeeder extends Seeder
                 || $accountSingle->id === 'wvreeven'
                 || $accountSingle->id === 'Jef De Wit'
                 || $accountSingle->id === 'Bob Hogeveen'
+                || $accountSingle->id === 'yann_admin'
             ) {
                 $type = 'admin';
             }
@@ -108,6 +109,7 @@ class UsersTableSeeder extends Seeder
                 && $accountSingle->id !== 'wvreeven-admin'
                 && $accountSingle->id !== 'Jef Admin'
                 && $accountSingle->id !== 'adminbob'
+                && $accountSingle->id !== 'yann_admin'
             ) {
                 $user = User::create(
                     [

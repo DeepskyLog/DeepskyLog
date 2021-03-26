@@ -1,11 +1,9 @@
 <?php
 
-namespace Database\Seeders;
-
 use App\Models\Target;
 use Illuminate\Database\Seeder;
 
-class SBObjSeeder extends Seeder
+class SbObjSeeder extends Seeder
 {
     /**
      * Run the database seeds.

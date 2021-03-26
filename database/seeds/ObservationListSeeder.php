@@ -11,8 +11,6 @@
  * @link     http://www.deepskylog.org
  */
 
-namespace Database\Seeders;
-
 use Illuminate\Database\Seeder;
 
 /**

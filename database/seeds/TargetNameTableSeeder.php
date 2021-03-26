@@ -12,8 +12,8 @@
  * @link     http://www.deepskylog.org
  */
 
-use App\Models\ObjectNamesOld;
 use App\Models\TargetName;
+use App\Models\ObjectNamesOld;
 use Illuminate\Database\Seeder;
 
 /**
@@ -38,9 +38,9 @@ class TargetNameTableSeeder extends Seeder
                 \App\Models\TargetName::create(
                     [
                         'target_id' => $target->id,
-                        'catalog' => '',
-                        'catindex' => $target->target_name,
-                        'altname' => $target->target_name,
+                        'catalog'   => '',
+                        'catindex'  => $target->target_name,
+                        'altname'   => $target->target_name,
                     ]
                 );
             }
@@ -54,7 +54,7 @@ class TargetNameTableSeeder extends Seeder
                 $date = date('Y-m-d H:i:s');
             } else {
                 [$year, $month, $day, $hour, $minute, $second]
-                    = sscanf($oldObject->timestamp, '%4d%2d%2d%2d%2d%d');
+                      = sscanf($oldObject->timestamp, '%4d%2d%2d%2d%2d%d');
                 $date = date(
                     'Y-m-d H:i:s',
                     mktime($hour, $minute, $second, $month, $day, $year)
@@ -72,10 +72,10 @@ class TargetNameTableSeeder extends Seeder
                             'target_name->en',
                             $oldObject->objectname
                         )->first()->id,
-                        'altname' => $oldObject->altname
+                        'altname' => $oldObject->altname,
                     ]
                 );
-                $target->catalog = $oldObject->catalog;
+                $target->catalog  = $oldObject->catalog;
                 $target->catindex = $oldObject->catindex;
 
                 $target->created_at = $date;
