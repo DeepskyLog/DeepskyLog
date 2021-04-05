@@ -253,12 +253,12 @@
 
             <tr>
                 <td> {{ _i('Different objects') }} </td>
-                <td>240 / {{ \App\Models\Target::count() }}
-                    ({{ number_format((240.0 / \App\Models\Target::count()) * 100, 2) }}%)</td>
+                <td>0 / {{ \App\Models\Target::count() }}
+                    ({{ number_format((0 / \App\Models\Target::count()) * 100, 2) }}%)</td>
                 @foreach ($observationTypes as $type)
-                <td>40 / {{ $numberOfObjects[$type->type] }}
+                <td>0 / {{ $numberOfObjects[$type->type] }}
                     (@if ($numberOfObjects[$type->type] == 0) 0%) @else
-                    {{ number_format((40 / $numberOfObjects[$type->type]) * 100, 2) }}%) </beautify end=" @endif">
+                    {{ number_format((0 / $numberOfObjects[$type->type]) * 100, 2) }}%) </beautify end=" @endif">
                 </td>
                 @endforeach
             </tr>

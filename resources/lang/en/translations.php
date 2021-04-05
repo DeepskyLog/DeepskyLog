@@ -36,7 +36,7 @@ return [
     _i('Corrective filter'),
     _i('Deepsky'),
     _i('Comets'),
-    _i('Planets'),
+    _i('Planets and moons'),
     _i('Comet'),
     _i('Planet'),
     _i('Double Stars'),

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultilanguageLaravelApplication\n"
-"POT-Creation-Date: 2021-03-24 14:20+0100\n"
-"PO-Revision-Date: 2021-03-24 14:21+0100\n"
+"POT-Creation-Date: 2021-04-05 21:02+0200\n"
+"PO-Revision-Date: 2021-04-05 21:02+0200\n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: Wim De Meester <deepskywim@gmail.com>\n"
 "Language: fr_FR\n"
@@ -219,14 +219,10 @@ msgstr "Comètes"
 #: ../storage/framework/messages/39b4c973a80357f39b72c0549cd664422f85d438.php.php:39
 #: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:236
 #: ../storage/framework/messages/a08cd4bf4c97cdd8049482646f11adbdc9cd94f9.php.php:328
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1503
-#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1512
-#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:65
 #: Http/Controllers/UserController.php:236
-#: Http/Controllers/UserController.php:328 Models/Target.php:1503
-#: Models/Target.php:1512 Models/TargetName.php:65
-msgid "Planets"
-msgstr "Planètes"
+#: Http/Controllers/UserController.php:328
+msgid "Planets and moons"
+msgstr "Planètes et lunes"
 
 #: ../resources/lang/en/translations.php:40
 #: ../storage/framework/messages/39b4c973a80357f39b72c0549cd664422f85d438.php.php:40
@@ -1782,7 +1778,7 @@ msgstr "Conversation entre"
 #: ../storage/framework/messages/445c5a44e814ef3f76cc9c636c0d3222994ca4e7.php.php:13
 #: ../storage/framework/messages/468594b0fbdafcbd6c2a367dabf6de610b3b2966.php.php:3
 #: ../storage/framework/messages/632230a491fb209409ec2564c3bcf63171d54c01.php.php:49
-#: ../storage/framework/messages/97316988c82ba535142fd58eb00701e46bead4ca.php.php:296
+#: ../storage/framework/messages/97316988c82ba535142fd58eb00701e46bead4ca.php.php:302
 msgid "Register"
 msgstr "S'enregistrer"
 
@@ -1916,9 +1912,9 @@ msgid "User Administration"
 msgstr "Administration des utilisateurs"
 
 #: ../storage/framework/messages/48456bd3c3cc62c179c0c73fced91ea1840f3f23.php.php:140
-#: ../storage/framework/messages/b30fc59ca5b65018f6df9f4fca7c334ac55eebb7.php.php:191
+#: ../storage/framework/messages/b30fc59ca5b65018f6df9f4fca7c334ac55eebb7.php.php:192
 #: Http/Controllers/EyepieceController.php:140
-#: Http/Livewire/Eyepiece/Create.php:191
+#: Http/Livewire/Eyepiece/Create.php:192
 #, php-format
 msgid "Eyepiece %s created"
 msgstr "Oculaire %s cré"
@@ -3337,7 +3333,7 @@ msgstr ""
 "confidentialité%s et seront utilisées uniquement pour la gestion des "
 "utilisateurs et pour vous tenir au courant de nos activités."
 
-#: ../storage/framework/messages/97316988c82ba535142fd58eb00701e46bead4ca.php.php:289
+#: ../storage/framework/messages/97316988c82ba535142fd58eb00701e46bead4ca.php.php:295
 #: ../storage/framework/messages/f1f5586314ebc1f130697ea5f9c64512b5fcb795.php.php:60
 msgid "Please fix the errors in the form."
 msgstr "Veuillez corriger les erreurs dans les paramètres."
@@ -3626,6 +3622,13 @@ msgstr "mi-"
 msgid "begin"
 msgstr "début"
 
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1503
+#: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1512
+#: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:65
+#: Models/Target.php:1503 Models/Target.php:1512 Models/TargetName.php:65
+msgid "Planets"
+msgstr "Planètes"
+
 #: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1504
 #: ../storage/framework/messages/a3df7650ff727ad008e4014bfa5988d52fb0d921.php.php:1516
 #: ../storage/framework/messages/aa7f532326a7bda7d06df233000d4aad883113e7.php.php:67
@@ -3817,8 +3820,8 @@ msgstr "Photo 2"
 msgid "Font size printed atlas pages (6..9)"
 msgstr "Taille de la police dans l’atlas (6..9)"
 
-#: ../storage/framework/messages/b30fc59ca5b65018f6df9f4fca7c334ac55eebb7.php.php:173
-#: Http/Livewire/Eyepiece/Create.php:173
+#: ../storage/framework/messages/b30fc59ca5b65018f6df9f4fca7c334ac55eebb7.php.php:174
+#: Http/Livewire/Eyepiece/Create.php:174
 #, php-format
 msgid "Eyepiece %s updated"
 msgstr "Oculaire %s mis à jour"
@@ -3878,8 +3881,8 @@ msgstr "L'instrument %s est actif"
 msgid "Instrument %s is not longer active"
 msgstr "L'instrument %s n'est plus actif"
 
-#: ../storage/framework/messages/c8341998560c12a01dcc24c35450ac23e81b5150.php.php:150
-#: Http/Controllers/Auth/RegisterController.php:150
+#: ../storage/framework/messages/c8341998560c12a01dcc24c35450ac23e81b5150.php.php:152
+#: Http/Controllers/Auth/RegisterController.php:152
 #, php-format
 msgid "User \"%s\" successfully registered. You can now log in."
 msgstr ""

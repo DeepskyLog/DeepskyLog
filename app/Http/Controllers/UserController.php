@@ -233,7 +233,7 @@ class UserController extends Controller
                     'data' => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
                 ],
                 [
-                    'name' => _i('Planets'),
+                    'name' => _i('Planets and moons'),
                     'data' => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3],
                 ],
                 [
@@ -325,7 +325,7 @@ class UserController extends Controller
                     'data' => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 8],
                 ],
                 [
-                    'name' => _i('Planets'),
+                    'name' => _i('Planets and moons'),
                     'data' => [12, 3, 9, 22, 30, 0, 12, 18, 77, 18, 3, 9],
                 ],
                 [
