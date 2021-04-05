@@ -54,16 +54,17 @@ class ObservationListSeeder extends Seeder
                 $listname = $data->listname;
             }
 
-            \App\Models\ObservationList::create(
+            $list = \App\Models\ObservationList::create(
                 [
-                    'name'          => html_entity_decode($listname),
-                    'user_id'       => $observerid,
-                    'discoverable'  => $data->public,
-                    'created_at'    => $date,
-                    'updated_at'    => $date,
+                    'name'             => html_entity_decode($listname),
+                    'user_id'          => $observerid,
+                    'discoverable'     => $data->public,
+                    'created_at'       => $date,
+                    'updated_at'       => $date,
                 ]
             );
 
+            $list->save();
             $cnt++;
         }
         dump('Imported ' . $cnt . ' observing lists');

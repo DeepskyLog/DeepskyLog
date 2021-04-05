@@ -100,7 +100,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create(
+        $user = User::create(
             [
                 'username'            => $data['username'],
                 'name'                => $data['name'],
@@ -113,6 +113,8 @@ class RegisterController extends Controller
                 'type'                => User::DEFAULT_TYPE,
             ]
         );
+        $user->save();
+        return $user;
     }
 
     /**

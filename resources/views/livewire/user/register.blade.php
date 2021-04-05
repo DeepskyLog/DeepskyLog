@@ -210,6 +210,10 @@ $allLicenses .= '<option value="7">' . _i('Enter your own copyright text') . '</
     activities.", "<a href='/privacy'>", "</a>") . "<br /><br />";
     @endphp
 
+    <p hidden>
+        {{ $password }}
+        {{ $password_confirmation }}
+    </p>
     {{-- Submit button --}}
     <div>
         @if (!$errors->isEmpty())

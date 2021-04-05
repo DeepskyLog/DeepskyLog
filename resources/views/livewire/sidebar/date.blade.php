@@ -126,11 +126,11 @@
 
     <p>
         @php
+        $astrolib = \App\Models\Astrolib::getInstance()->getAstronomyLibrary();
         if (Auth::user()) {
         $date = $astrolib->getDate()->copy();
-        } else {
-        $moon = new \deepskylog\AstronomyLibrary\Targets\Moon();
         }
+        $moon = new \deepskylog\AstronomyLibrary\Targets\Moon();
         $illumination = round($moon->illuminatedFraction($date) * 100) . "%";
         $file = "img/moon/m" . round(($moon->getPhaseRatio($date)) * 40) . ".gif";
         @endphp

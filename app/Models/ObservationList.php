@@ -3,19 +3,21 @@
 namespace App\Models;
 
 use Spatie\Tags\HasTags;
+use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Cog\Laravel\Love\Reactable\Models\Traits\Reactable;
 use Cog\Contracts\Love\Reactable\Models\Reactable as ReactableInterface;
 
-class ObservationList extends Pivot implements ReactableInterface
+class ObservationList extends Model implements ReactableInterface
 {
     use Sluggable;
     use HasTags;
     use Reactable;
 
+    protected $table = 'observation_list';
+
     protected $fillable = [
-        'user_id', 'name', 'description', 'discoverable',
+        'user_id', 'name', 'description', 'discoverable', 'love_reactant_id',
     ];
 
     /**

@@ -96,9 +96,6 @@ class ObservationListController extends Controller
         }
 
         $user = $list->user;
-        if (!$user->hasMedia('observer')) {
-            $this->addDefaultMedia($user);
-        }
 
         $media = $user->getFirstMedia('observer');
 
