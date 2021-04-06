@@ -9,14 +9,14 @@
         $allLocations = App\Models\Location::getLocationOptions();
         @endphp
         {{ _i('Using') }}
-        <div x-data=''>
+        <div x-data='' wire:ignore>
             <x-input.select-live-wire wire:model="instrument" prettyname="myinstrument" :options="$allInstruments"
                 selected="('instrument')" />
         </div>
 
         {{ _i('at') }}
 
-        <div x-data=''>
+        <div x-data='' wire:ignore>
             <x-input.select-live-wire wire:model="location" prettyname="mylocation" :options="$allLocations"
                 selected="('location')" />
         </div>

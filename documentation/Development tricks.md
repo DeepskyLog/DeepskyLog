@@ -202,7 +202,7 @@ For a selection with a single input, the options shoud be given as a string, con
 For a selection with a single input using livewire, the options shoud be given as a string, containing the html code for the options.  The selection can be added the following way:
 
 ```blade
-<div x-data=''>
+<div x-data='' wire:ignore>
     <x-input.select-live-wire wire:model="eyepiece" prettyname="myeyepiece" :options="$allEyepieces" selected="('eyepiece')" />
 </div>
 ```

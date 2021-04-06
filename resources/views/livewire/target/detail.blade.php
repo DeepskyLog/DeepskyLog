@@ -11,14 +11,14 @@
         $allInstruments = \App\Models\Instrument::getInstrumentOptions();
         $allLocations = App\Models\Location::getLocationOptions();
         @endphp
-        <div x-data=''>
+        <div x-data='' wire:ignore>
             <x-input.select-live-wire wire:model="instrument" prettyname="myinstrument" :options="$allInstruments"
                 selected="('instrument')" />
         </div>
 
         {{ _i('at') }}
 
-        <div x-data=''>
+        <div x-data='' wire:ignore>
             <x-input.select-live-wire wire:model="location" prettyname="mylocation" :options="$allLocations"
                 selected="('location')" />
         </div>
@@ -107,7 +107,8 @@
                 @auth
                 <td colspan="3"><span class="float-right">
                         {{ App\Models\Atlas::where('code', Auth::user()->standardAtlasCode)->first()['name'] }}
-                        {{ _i(" page") }}</span></td>
+                        {{ _i(" page") }}</span>
+                </td>
                 <td colspan="3">{{ $target->atlaspage(Auth::user()->standardAtlasCode) }}</td>
                 @endauth
             </tr>
@@ -158,6 +159,7 @@
                 </td>
                 @else
                 <td colspan="6">&nbsp;</td>
+                @endif
             </tr>
 
             @auth
@@ -177,7 +179,6 @@
             </tr>
             @endif
             @endauth
-            @endif
             @endif
 
             @if (\App\Models\TargetPartOf::isPartOf($target) || \App\Models\TargetPartOf::contains($target))
@@ -287,7 +288,7 @@
                 <td colspan="3">Aladin<br /><br />
                     @auth
                     @if (count(auth()->user()->instruments) > 0)
-                    <div x-data=''>
+                    <div x-data='' wire:ignore>
                         <x-input.select-live-wire wire:model="instrument2" prettyname="myinstrument2"
                             :options="$allInstruments" selected="('instrument2')" />
                     </div>
@@ -297,12 +298,12 @@
                     $allLenses = App\Models\Lens::getLensOptions();
                     @endphp
                     @if (!$disabled)
-                    <div x-data=''>
+                    <div x-data='' wire:ignore>
                         <x-input.select-live-wire wire:model="eyepiece" prettyname="myeyepiece" :options="$allEyepieces"
                             selected="('eyepiece')" />
                     </div>
                     <br />
-                    <div x-data=''>
+                    <div x-data='' wire:ignore>
                         <x-input.select-live-wire wire:model="lens" prettyname="mylens" :options="$allLenses"
                             selected="('lens')" />
                     </div>

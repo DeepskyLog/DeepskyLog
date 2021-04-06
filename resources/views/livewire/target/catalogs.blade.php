@@ -6,7 +6,7 @@
     }
     @endphp
 
-    <div x-data=''>
+    <div x-data='' wire:ignore>
         <x-input.select-live-wire wire:model="selected_catalog" prettyname="mycatalog" :options="$allCatalogs"
             selected="('selected_catalog')" />
     </div>

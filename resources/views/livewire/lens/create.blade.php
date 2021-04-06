@@ -9,7 +9,7 @@
             $allLenses = [0 => ''] + \App\Models\Lens::all()->unique('name')->pluck('name', 'id')->toArray();
             @endphp
             <div class="form">
-                <div x-data=''>
+                <div x-data='' wire:ignore>
                     <x-input.select-live-wire-collection wire:model="sel_lens" prettyname="mylens" :options="$allLenses"
                         selected="('sel_lens')" />
                 </div>

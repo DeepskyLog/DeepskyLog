@@ -78,7 +78,7 @@
         </div>
 
         {{-- Country of residence --}}
-        <div x-data=''>
+        <div x-data='' wire:ignore>
             <label>{{ _i('Country of residence') }}</label>
             <x-input.select-live-wire wire:model="country" prettyname="mycountry" :options="$allCountries"
                 selected="('country')" />
@@ -159,7 +159,7 @@
         @endphp
         <div class="form-group">
             <label for="cclicense">{{ _i('License for drawings') }}</label>
-            <div x-data=''>
+            <div x-data='' wire:ignore>
                 <x-input.select-live-wire wire:model="cclicense" prettyname="mylicense" :options="$allLicenses"
                     selected="('cclicense')" />
             </div>

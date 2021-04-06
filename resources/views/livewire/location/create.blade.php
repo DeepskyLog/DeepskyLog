@@ -77,7 +77,7 @@
                     @error('skyBackground') <span class="small text-error">{{ $message }}<br /></span>
                     @enderror
                 </div>
-                <div class="col">
+                <div class="col" wire:ignore>
                     {{ _i("Bortle Scale") }}
                     @php
                     $bortleOptions = '

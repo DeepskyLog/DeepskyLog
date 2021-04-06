@@ -9,7 +9,7 @@
             $allFilters = [0 => ''] + \App\Models\Filter::all()->unique('name')->pluck('name', 'id')->toArray();
             @endphp
             <div class="form">
-                <div x-data=''>
+                <div x-data='' wire:ignore>
                     <x-input.select-live-wire-collection wire:model="sel_filter" prettyname="myfilter"
                         :options="$allFilters" selected="('sel_filter')" />
                 </div>
@@ -40,7 +40,7 @@
             $allFilterTypes = \App\Models\FilterType::all()->pluck('type', 'id')->toArray();
             @endphp
             <div class="form">
-                <div x-data=''>
+                <div x-data='' wire:ignore>
                     <x-input.select-live-wire-collection wire:model="type" prettyname="mytype"
                         :options="$allFilterTypes" selected="('type')" :first="$firsttype" />
                 </div>
@@ -50,7 +50,7 @@
 
         {{-- The color of the filter, only visible if type is 0 or 6 --}}
         @if (!$disableColorFields)
-        <div class="form-group">
+        <div class="form-group" wire:ignore>
             <label for="type">{{ _i("Color") }}</label>
 
             @php

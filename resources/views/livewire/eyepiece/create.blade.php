@@ -10,7 +10,7 @@
             $allEyepieces = [0 => ''] + \App\Models\Eyepiece::all()->unique('name')->pluck('name', 'id')->toArray();
             @endphp
             <div class="form">
-                <div x-data=''>
+                <div x-data='' wire:ignore>
                     <x-input.select-live-wire-collection wire:model="sel_eyepiece" prettyname="myeyepiece"
                         :options="$allEyepieces" selected="('sel_eyepiece')" />
                 </div>
@@ -91,11 +91,12 @@
             $allBrands = [0 => ''] + \App\Models\EyepieceBrand::all()->pluck('brand', 'brand')->toArray();
             @endphp
 
-            <div x-data=''>
+            <div x-data='' wire:ignore>
                 <x-input.select-live-wire-collection :first="$brand" wire:model="brand" prettyname="mybrand"
                     :options="$allBrands" selected="('brand')" />
             </div>
         </div>
+
         <div class="form-group">
             <label for="brandInput">{{ _i("or add a new brand") }}</label>
             <input type="text" wire:model="newBrand" placeholder="{{ _i("Add a new brand for the eyepiece") }}"

@@ -30,7 +30,7 @@
     $equipment .= '<option value="' . $set->id . '">' . _i('Equipment set') . ': ' . $set->name . '</option>';
     }
     @endphp
-    <div x-data=''>
+    <div x-data='' wire:ignore>
         <x-input.select-live-wire wire:model='equipment' prettyname='myequipment' :options='$equipment'
             selected="('equipment')" />
     </div>

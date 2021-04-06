@@ -76,12 +76,12 @@ $observationLanguages .= '<option value="' . $code . '"';
             @csrf
             @method('PATCH')
 
-            <div class="form-group">
+            <div class="form-group" wire:ignore>
                 <label for="language">{{ _i('Language for user interface') }}</label>
 
                 <x-input.select id="language" :options="$languages" />
             </div>
-            <div class="form-group">
+            <div class="form-group" wire:ignore>
                 <label for="observationlanguage">{{ _i('Standard language for observations') }}</label>
 
                 <x-input.select id="observationlanguage" :options="$observationLanguages" />

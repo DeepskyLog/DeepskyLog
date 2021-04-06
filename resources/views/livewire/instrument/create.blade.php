@@ -10,7 +10,7 @@
             $allInstruments = [0 => ''] + \App\Models\Instrument::all()->unique('name')->pluck('name', 'id')->toArray();
             @endphp
             <div class="form">
-                <div x-data=''>
+                <div x-data='' wire:ignore>
                     <x-input.select-live-wire-collection wire:model="sel_instrument" prettyname="myinstrument"
                         :options="$allInstruments" selected="('sel_instrument')" />
                 </div>
@@ -40,7 +40,7 @@
             @endphp
 
             <div class="form">
-                <div x-data=''>
+                <div x-data='' wire:ignore>
                     <x-input.select-live-wire-collection :first="$type" wire:model="type" prettyname="mytype"
                         :options="$allTypes" selected="('type')" />
                 </div>

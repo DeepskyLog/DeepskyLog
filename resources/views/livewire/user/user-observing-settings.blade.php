@@ -31,7 +31,7 @@
         {{-- Standard location --}}
         <div class="form-group">
             <label for="stdlocation">{{ _i('Default observing site') }}</label>
-            <div x-data=''>
+            <div x-data='' wire:ignore>
                 <div class="form-group">
                     <x-input.select-live-wire wire:model="stdlocation" prettyname="mylocation" :options="$allLocations"
                         selected="('stdlocation')" />
@@ -46,7 +46,7 @@
         {{-- Standard instrument --}}
         <div class="form-group">
             <label for="stdinstrument">{{ _i('Default instrument') }}</label>
-            <div x-data=''>
+            <div x-data='' wire:ignore>
                 <div class="form-group">
                     <x-input.select-live-wire wire:model="stdinstrument" prettyname="myinstrument"
                         :options="$allInstruments" selected="('stdinstrument')" />
@@ -61,7 +61,7 @@
         {{-- Standard eyepiece --}}
         <div class="form-group">
             <label for="stdeyepiece">{{ _i('Default eyepiece') }}</label>
-            <div x-data=''>
+            <div x-data='' wire:ignore>
                 <div class="form-group">
                     <x-input.select-live-wire wire:model="stdeyepiece" prettyname="myeyepiece" :options="$allEyepieces"
                         selected="('stdeyepiece')" />
@@ -76,7 +76,7 @@
         {{-- Standard lens --}}
         <div class="form-group">
             <label for="stdlens">{{ _i('Default lens') }}</label>
-            <div x-data=''>
+            <div x-data='' wire:ignore>
                 <div class="form-group">
                     <x-input.select-live-wire wire:model="stdlens" prettyname="mylens" :options="$allLenses"
                         selected="('stdlens')" />
@@ -91,7 +91,7 @@
         {{-- Standard atlas --}}
         <div class="form-group">
             <label for="stdatlas">{{ _i('Default atlas') }}</label>
-            <div x-data=''>
+            <div x-data='' wire:ignore>
                 <div class="form-group">
                     <x-input.select-live-wire wire:model="standardAtlasCode" prettyname="myatlas" :options="$allAtlases"
                         selected="('standardAtlasCode')" />
@@ -103,7 +103,7 @@
         {{-- Imperial or metric units  --}}
         <div class="form-group">
             <label for="showInches">{{ _i('Default units') }}</label>
-            <div x-data=''>
+            <div x-data='' wire:ignore>
                 <div class="form-group">
                     <x-input.select-live-wire wire:model="showInches" prettyname="myUnits" :options="$units"
                         selected="('showInches')" />
