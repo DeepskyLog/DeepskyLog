@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0ba474b24dd75781d3b459b4a89cd0e",
+    "content-hash": "54f5b8e86ca370dd22fb514bd36943dd",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -1668,16 +1668,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.35.1",
+            "version": "v8.36.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d118c0df39e7524131176aaf76493eae63a8a602"
+                "reference": "0debd8ad6b5aa1f61ccc73910adf049af4ca0444"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d118c0df39e7524131176aaf76493eae63a8a602",
-                "reference": "d118c0df39e7524131176aaf76493eae63a8a602",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/0debd8ad6b5aa1f61ccc73910adf049af4ca0444",
+                "reference": "0debd8ad6b5aa1f61ccc73910adf049af4ca0444",
                 "shasum": ""
             },
             "require": {
@@ -1832,7 +1832,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-03-30T21:34:17+00:00"
+            "time": "2021-04-07T12:37:22+00:00"
         },
         {
             "name": "laravel/helpers",
@@ -1892,16 +1892,16 @@
         },
         {
             "name": "laravel/socialite",
-            "version": "v5.2.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/socialite.git",
-                "reference": "8d25d574b4f2005411c0b9cb527ef5e745c1b07d"
+                "reference": "1960802068f81e44b2ae9793932181cf1cb91b5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/socialite/zipball/8d25d574b4f2005411c0b9cb527ef5e745c1b07d",
-                "reference": "8d25d574b4f2005411c0b9cb527ef5e745c1b07d",
+                "url": "https://api.github.com/repos/laravel/socialite/zipball/1960802068f81e44b2ae9793932181cf1cb91b5c",
+                "reference": "1960802068f81e44b2ae9793932181cf1cb91b5c",
                 "shasum": ""
             },
             "require": {
@@ -1957,7 +1957,7 @@
                 "issues": "https://github.com/laravel/socialite/issues",
                 "source": "https://github.com/laravel/socialite"
             },
-            "time": "2021-03-02T16:50:47+00:00"
+            "time": "2021-04-06T14:38:16+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -2623,16 +2623,16 @@
         },
         {
             "name": "maatwebsite/excel",
-            "version": "3.1.29",
+            "version": "3.1.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
-                "reference": "1e567e6e19a04fd65b5876d5bc92f4015f09fab4"
+                "reference": "aa5d2e4d25c5c8218ea0a15103da95f5f8728953"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/1e567e6e19a04fd65b5876d5bc92f4015f09fab4",
-                "reference": "1e567e6e19a04fd65b5876d5bc92f4015f09fab4",
+                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/aa5d2e4d25c5c8218ea0a15103da95f5f8728953",
+                "reference": "aa5d2e4d25c5c8218ea0a15103da95f5f8728953",
                 "shasum": ""
             },
             "require": {
@@ -2685,7 +2685,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Maatwebsite/Laravel-Excel/issues",
-                "source": "https://github.com/Maatwebsite/Laravel-Excel/tree/3.1.29"
+                "source": "https://github.com/Maatwebsite/Laravel-Excel/tree/3.1.30"
             },
             "funding": [
                 {
@@ -2697,7 +2697,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-16T11:56:39+00:00"
+            "time": "2021-04-06T17:17:02+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -4731,16 +4731,16 @@
         },
         {
             "name": "spatie/image",
-            "version": "1.10.4",
+            "version": "1.10.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/image.git",
-                "reference": "7ea129bc7b7521864c5a540e3b1c14ea194316d3"
+                "reference": "63a963d0200fb26f2564bf7201fc7272d9b22933"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/image/zipball/7ea129bc7b7521864c5a540e3b1c14ea194316d3",
-                "reference": "7ea129bc7b7521864c5a540e3b1c14ea194316d3",
+                "url": "https://api.github.com/repos/spatie/image/zipball/63a963d0200fb26f2564bf7201fc7272d9b22933",
+                "reference": "63a963d0200fb26f2564bf7201fc7272d9b22933",
                 "shasum": ""
             },
             "require": {
@@ -4750,7 +4750,7 @@
                 "league/glide": "^1.6",
                 "php": "^7.2|^8.0",
                 "spatie/image-optimizer": "^1.1",
-                "spatie/temporary-directory": "^1.0",
+                "spatie/temporary-directory": "^1.0|^2.0",
                 "symfony/process": "^3.0|^4.0|^5.0"
             },
             "require-dev": {
@@ -4784,7 +4784,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/image/issues",
-                "source": "https://github.com/spatie/image/tree/1.10.4"
+                "source": "https://github.com/spatie/image/tree/1.10.5"
             },
             "funding": [
                 {
@@ -4796,7 +4796,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-10T16:11:40+00:00"
+            "time": "2021-04-07T08:42:24+00:00"
         },
         {
             "name": "spatie/image-optimizer",
@@ -4931,16 +4931,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "9.5.1",
+            "version": "9.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "4c3e8ec7523ddc9360b5ecb58e90c7f0ceb35d8f"
+                "reference": "ebbc996db457adecc778db6030d22ef72b495d59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/4c3e8ec7523ddc9360b5ecb58e90c7f0ceb35d8f",
-                "reference": "4c3e8ec7523ddc9360b5ecb58e90c7f0ceb35d8f",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/ebbc996db457adecc778db6030d22ef72b495d59",
+                "reference": "ebbc996db457adecc778db6030d22ef72b495d59",
                 "shasum": ""
             },
             "require": {
@@ -4956,7 +4956,7 @@
                 "maennchen/zipstream-php": "^1.0|^2.0",
                 "php": "^7.4|^8.0",
                 "spatie/image": "^1.4.0",
-                "spatie/temporary-directory": "^1.1",
+                "spatie/temporary-directory": "^1.1|^2.0",
                 "symfony/console": "^4.4|^5.0"
             },
             "conflict": {
@@ -5019,7 +5019,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-medialibrary/issues",
-                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.5.1"
+                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.5.3"
             },
             "funding": [
                 {
@@ -5031,21 +5031,21 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-04-05T08:14:07+00:00"
+            "time": "2021-04-08T08:27:49+00:00"
         },
         {
             "name": "spatie/laravel-medialibrary-pro",
-            "version": "1.12.22",
+            "version": "1.12.24",
             "source": {
                 "type": "git",
                 "url": "git@github.com:spatie/laravel-medialibrary-pro.git",
-                "reference": "1be1dda89914ee7b77fa7181a937ee41e4e3b758"
+                "reference": "3f605c442e5ccfb5eeda6402b29023a35f297003"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-1be1dda89914ee7b77fa7181a937ee41e4e3b758-zip-380eda.zip",
-                "reference": "1be1dda89914ee7b77fa7181a937ee41e4e3b758",
-                "shasum": "ce239fb3a7f309880fc55bb5a98d8baece44a71c"
+                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-3f605c442e5ccfb5eeda6402b29023a35f297003-zip-f61125.zip",
+                "reference": "3f605c442e5ccfb5eeda6402b29023a35f297003",
+                "shasum": "324cfd56c16915582e20365855ed3ce9bc97be08"
             },
             "require": {
                 "ext-json": "*",
@@ -5110,10 +5110,10 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.12.22",
+                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/1.12.24",
                 "issues": "https://github.com/spatie/laravel-medialibrary-pro/issues"
             },
-            "time": "2021-03-22T14:17:11+00:00"
+            "time": "2021-04-08T21:16:36+00:00"
         },
         {
             "name": "spatie/laravel-tags",
@@ -8000,16 +8000,16 @@
     "packages-dev": [
         {
             "name": "barryvdh/laravel-debugbar",
-            "version": "v3.5.2",
+            "version": "v3.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-debugbar.git",
-                "reference": "cae0a8d1cb89b0f0522f65e60465e16d738e069b"
+                "reference": "6420113d90bb746423fa70b9940e9e7c26ebc121"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/cae0a8d1cb89b0f0522f65e60465e16d738e069b",
-                "reference": "cae0a8d1cb89b0f0522f65e60465e16d738e069b",
+                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/6420113d90bb746423fa70b9940e9e7c26ebc121",
+                "reference": "6420113d90bb746423fa70b9940e9e7c26ebc121",
                 "shasum": ""
             },
             "require": {
@@ -8069,7 +8069,7 @@
             ],
             "support": {
                 "issues": "https://github.com/barryvdh/laravel-debugbar/issues",
-                "source": "https://github.com/barryvdh/laravel-debugbar/tree/v3.5.2"
+                "source": "https://github.com/barryvdh/laravel-debugbar/tree/v3.5.5"
             },
             "funding": [
                 {
@@ -8077,7 +8077,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-01-06T14:21:44+00:00"
+            "time": "2021-04-07T11:19:20+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -8337,16 +8337,16 @@
         },
         {
             "name": "laravel/telescope",
-            "version": "v4.4.6",
+            "version": "v4.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/telescope.git",
-                "reference": "903c709b46b5f877c8434c657f964c7bdea7a6a4"
+                "reference": "45c7420f222d8ee1ffca4424afdf07f7c6a2fe91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/903c709b46b5f877c8434c657f964c7bdea7a6a4",
-                "reference": "903c709b46b5f877c8434c657f964c7bdea7a6a4",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/45c7420f222d8ee1ffca4424afdf07f7c6a2fe91",
+                "reference": "45c7420f222d8ee1ffca4424afdf07f7c6a2fe91",
                 "shasum": ""
             },
             "require": {
@@ -8395,9 +8395,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/telescope/issues",
-                "source": "https://github.com/laravel/telescope/tree/v4.4.6"
+                "source": "https://github.com/laravel/telescope/tree/v4.4.8"
             },
-            "time": "2021-03-11T13:32:54+00:00"
+            "time": "2021-04-06T20:46:24+00:00"
         },
         {
             "name": "maximebf/debugbar",
@@ -10437,7 +10437,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "mediconesystems/livewire-datatables": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

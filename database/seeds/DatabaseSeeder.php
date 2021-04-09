@@ -12,7 +12,23 @@
  * @link     http://www.deepskylog.org
  */
 
+use MoonSeeder;
+use SbObjSeeder;
+use LensTableSeeder;
+use UsersTableSeeder;
+use FilterTableSeeder;
+use TargetTableSeeder;
+use EyepieceTypeSeeder;
+use EyepieceBrandSeeder;
+use EyepieceTableSeeder;
+use LocationTableSeeder;
+use MessagesTableSeeder;
+use InstrumentTableSeeder;
+use ObservationListSeeder;
+use TargetNameTableSeeder;
+use TargetPartOfTableSeeder;
 use Illuminate\Database\Seeder;
+use Database\Seeders\updateCometNames;
 use Database\Seeders\AddTargetNameSeeder;
 
 /**
@@ -40,7 +56,8 @@ class DatabaseSeeder extends Seeder
                 LocationTableSeeder::class, TargetTableSeeder::class,
                 TargetNameTableSeeder::class, TargetPartOfTableSeeder::class,
                 MoonSeeder::class, SbObjSeeder::class, AddTargetNameSeeder::class,
-                ObservationListSeeder::class, ]
+                ObservationListSeeder::class,
+                updateCometNames::class, ]
         );
     }
 }

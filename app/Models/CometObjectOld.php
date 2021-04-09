@@ -28,4 +28,7 @@ class CometObjectOld extends Model
     protected $connection = 'mysqlOld';
 
     protected $table = 'cometobjects';
+
+    protected $fillable   = ['name'];
+    public $timestamps    = false;
 }

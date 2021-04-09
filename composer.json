@@ -25,7 +25,7 @@
         "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.0",
         "livewire/livewire": "^2.0",
-        "mediconesystems/livewire-datatables": "^0.4.3",
+        "mediconesystems/livewire-datatables": "@dev",
         "monarobase/country-list": "^3.0",
         "muhamadrezaar/highcharts": "^2.0",
         "petercoles/multilingual-language-list": "^1.15",
@@ -36,7 +36,7 @@
         "spatie/laravel-medialibrary-pro": "^1.0.0",
         "spatie/laravel-tags": "^3.1",
         "spatie/laravel-translatable": "^4.3",
-        "spatie/pdf-to-image": "^2.0",
+        "spatie/pdf-to-image": "^2.1",
         "stevebauman/location": "^6"
     },
     "require-dev": {

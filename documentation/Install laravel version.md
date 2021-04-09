@@ -2,6 +2,20 @@
 
 ## Prepare the database
 
+php artisan migrate
+
+### Fill the tables with the orbital elements for the comets and the asteroids
+
+```bash
+php artisan astronomy:updateOrbitalElements
+```
+
+### Update the table for delta t to the latest version
+
+```bash
+php artisan astronomy:updateDeltat
+```
+
 ### laravel-love
 
 The like and dislike actions should be defined:
@@ -14,11 +28,16 @@ php artisan love:reaction-type-add --name=Tags --mass=5
 php artisan love:reaction-type-add --name=Description --mass=5
 ```
 
-### Update database
-
-Update the database if the users are already seeded:
+### Seed the database
 
 ```bash
-php artisan love:register-reacters --model="App\Models\User"
-php artisan love:register-reactants --model="App\Models\ObservationList"
+php artisan db:seed
+```
+
+## Set up the crontab to download the orbital elements automatically
+
+Enter the following line in your crontab:
+
+```bash
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
 ```
