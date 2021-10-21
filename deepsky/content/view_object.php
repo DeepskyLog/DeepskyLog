@@ -510,7 +510,7 @@ function showObjectObservations()
     );
     $content1 .= '  ';
     $content1 .= '<a class="btn btn-primary" href="'.$baseURL.'observations.csv.php" rel="external"><span class="glyphicon glyphicon-download"></span> '._('CSV').'</a>  ';
-    $content1 .= '<a class="btn btn-primary" href="'.$baseURL.'observations.xml.php" rel="external"><span class="glyphicon glyphicon-download"></span> '._('<OAL>').'</a>';
+    $content1 .= '<a class="btn btn-primary" href="'.$baseURL.'observations.xml.php" rel="external"><span class="glyphicon glyphicon-download"></span> '.'&lt;OAL&gt;'.'</a>';
     echo $content1;
     echo '<hr />';
 }
