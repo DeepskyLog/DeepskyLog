@@ -159,7 +159,7 @@ function addXmlObservations()
                 }
             } elseif (strcasecmp(
                 html_entity_decode($deepskylog_username),
-                trim($name) . ' ' . trim($surname)
+                html_entity_decode(trim($name) . ' ' . trim($surname))
             ) == 0
             ) {
                 // If the name and surname of the oal user is the same as the user
