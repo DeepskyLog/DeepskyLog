@@ -3267,7 +3267,7 @@ Correct observations which have been imported will not be registered for a secon
                     }
                 }
                 if ($objUtil->checkPostKey('smallDiam')) {
-                    if (preg(
+                    if (preg_match(
                         '/([0-9]+)[.,]{0,1}([0-9]{0,1})/',
                         $_POST['smallDiam'], $matches
                     )
