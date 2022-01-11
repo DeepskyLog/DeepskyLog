@@ -1,11 +1,11 @@
 <?php
-/** 
- * The observers class collects all functions needed to enter, 
- * retrieve and adapt observer data from the database and functions 
+/**
+ * The observers class collects all functions needed to enter,
+ * retrieve and adapt observer data from the database and functions
  * to display the data.
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @category Common
  * @package  DeepskyLog
  * @author   DeepskyLog Developers <developers@deepskylog.be>
@@ -17,13 +17,13 @@ if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 }
 
-/** 
- * The observers class collects all functions needed to enter, 
- * retrieve and adapt observer data from the database and functions 
+/**
+ * The observers class collects all functions needed to enter,
+ * retrieve and adapt observer data from the database and functions
  * to display the data.
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @category Common
  * @package  DeepskyLog
  * @author   DeepskyLog Developers <developers@deepskylog.be>
@@ -32,38 +32,40 @@ if ((!isset($inIndex)) || (!$inIndex)) {
  */
 class Observers
 {
-    /** 
-     * Adds a new observer to the database. 
+    /**
+     * Adds a new observer to the database.
      * The new observer will not be able to log in yet.
-     * Before being able to do so, the administrator must validate 
+     * Before being able to do so, the administrator must validate
      * the new user.
-     * 
+     *
      * @param string $id        The id of the new user.
      * @param string $name      The last name of the observer.
      * @param string $firstname The first name of the observer.
      * @param string $email     The mail address of the observer.
      * @param string $password  The md5(...) encoded password.
-     * 
+     *
      * @return string The return string of the SQL command.
      */
     public function addObserver($id, $name, $firstname, $email, $password)
     {
-        global $objDatabase;
-        return $objDatabase->execSQL(
-            "INSERT INTO observers (id, name, firstname, email, password, role, language)" 
-            . " VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\"," 
-            . " \"$password\"," 
+        global $objDatabase, $objAccomplishments;
+        $toReturn = $objDatabase->execSQL(
+            "INSERT INTO observers (id, name, firstname, email, password, role, language)"
+            . " VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\","
+            . " \"$password\","
             . " \"" . ROLEWAITLIST . "\", \"" . $_SESSION['lang'] . "\")"
         );
+        $objAccomplishments->addObserver($id);
+        return $toReturn;
     }
-    /** 
+    /**
      * Returns the user id if the mail is given.
-     * 
+     *
      * @param string $mail The mail address of the observer.
-     * 
+     *
      * @return string The user id that belongs to the mail address.
      */
-    public function getUserIdFromEmail($mail) 
+    public function getUserIdFromEmail($mail)
     {
         global $objDatabase;
         return $objDatabase->selectSingleValue(
@@ -72,10 +74,10 @@ class Observers
     }
     /**
      * Returns an array with all administrators.
-     * 
+     *
      * @return array A list with all administrators.
      */
-    public function getAdministrators() 
+    public function getAdministrators()
     {
         global $objDatabase;
         return $objDatabase->selectSingleArray(
@@ -84,9 +86,9 @@ class Observers
     }
     /**
      * Returns the rank of the given observer in comet observations.
-     * 
+     *
      * @param string $observer The observerid
-     * 
+     *
      * @return string The rank of the observer in comet observations.
      */
     public function getCometRank($observer)
@@ -98,9 +100,9 @@ class Observers
     }
     /**
      * Returns the rank of the given observer in deepsky observations.
-     * 
+     *
      * @param string $observer The observerid
-     * 
+     *
      * @return string The rank of the observer in deepsky observations.
      */
     public function getDsRank($observer)
@@ -112,9 +114,9 @@ class Observers
     }
     /**
      * Returns the last version of DeepskyLog the observer has used.
-     * 
+     *
      * @param string $observer The observerid
-     * 
+     *
      * @return string The last version of DeepskyLog used.
      */
     public function getLastVersion($observer)
@@ -125,37 +127,37 @@ class Observers
             'version', '5.0.0'
         );
     }
-    /** 
+    /**
      * Returns the id of the last observation the observer has seen.
-     * 
+     *
      * @param string $observerid The observerid
-     * 
+     *
      * @return integer The id of the last read observation.
      */
-    public function getLastReadObservation($observerid) 
+    public function getLastReadObservation($observerid)
     {
         global $objDatabase;
         return $objDatabase->selectSingleValue(
-            "SELECT lastReadObservationId FROM observers WHERE id=\"" 
+            "SELECT lastReadObservationId FROM observers WHERE id=\""
             . $observerid . "\"", 'lastReadObservationId', 0
         );
     }
     /**
      * Returns a list of all StandardInstruments of all observers.
-     * 
+     *
      * @return Array A list of all standard instruments of all observers.
      */
     public function getListOfInstruments()
     {
         global $objDatabase;
         return $objDatabase->selectSingleArray(
-            "SELECT stdtelescope FROM observers GROUP BY stdtelescope", 
+            "SELECT stdtelescope FROM observers GROUP BY stdtelescope",
             'stdtelescope'
         );
     }
     /**
      * Returns a list of all StandardLocations of all observers.
-     * 
+     *
      * @return Array A list of all standard locations of all observers.
      */
     public function getListOfLocations()
@@ -167,130 +169,130 @@ class Observers
     }
     /**
      * Returns the number of comet observations for the given observerid.
-     * 
+     *
      * @param string $observerid The observerid
-     * 
+     *
      * @return integer The number of comet observations.
      */
     public function getNumberOfCometObservations($observerid)
     {
         global $objDatabase;
         return $objDatabase->selectSingleValue(
-            "SELECT COUNT(cometobservations.id) As Cnt FROM cometobservations " 
+            "SELECT COUNT(cometobservations.id) As Cnt FROM cometobservations "
             . ($observerid ? "WHERE observerid = \"" . $observerid . "\"" : ""),
             'Cnt', 0
         );
     }
     /**
      * Returns the number of comet drawings for the given observerid.
-     * 
+     *
      * @param string $observerid The observerid
-     * 
+     *
      * @return integer The number of drawings observations.
      */
     public function getNumberOfCometDrawings($observerid)
     {
         global $objDatabase;
         return $objDatabase->selectSingleValue(
-            "SELECT COUNT(cometobservations.id) As Cnt FROM cometobservations" 
-            . " WHERE hasDrawing=1" 
+            "SELECT COUNT(cometobservations.id) As Cnt FROM cometobservations"
+            . " WHERE hasDrawing=1"
             . ($observerid ? " AND observerid = \"" . $observerid . "\"" : ""),
             'Cnt', 0
         );
     }
     /**
      * Returns the number of deepsky observations for the given observerid.
-     * 
+     *
      * @param string $observerid The observerid
-     * 
+     *
      * @return integer The number of deepsky observations.
      */
     public function getNumberOfDsObservations($observerid)
     {
         global $objDatabase;
         return $objDatabase->selectSingleValue(
-            "SELECT COUNT(observations.id) As Cnt FROM observations " 
+            "SELECT COUNT(observations.id) As Cnt FROM observations "
             . ($observerid ? "WHERE observerid = \"" . $observerid . "\"" : ""),
             'Cnt', 0
         );
     }
     /**
      * Returns the number of deepsky drawings for the given observerid.
-     * 
+     *
      * @param string $observerid The observerid
-     * 
+     *
      * @return integer The number of deepsky drawings.
      */
     public function getNumberOfDsDrawings($observerid)
     {
         global $objDatabase;
         return $objDatabase->selectSingleValue(
-            "SELECT COUNT(observations.id) As Cnt FROM observations" 
-            . " WHERE hasDrawing=1" 
+            "SELECT COUNT(observations.id) As Cnt FROM observations"
+            . " WHERE hasDrawing=1"
             . ($observerid ? " AND observerid = \"" . $observerid . "\"" : ""),
             'Cnt', 0
         );
     }
     /**
      * Returns the requested property from the observer.
-     * 
+     *
      * @param string $id           The observer id.
      * @param string $property     The requested property.
      * @param string $defaultValue A default value if the requested property
      *                             is not known.
-     * 
+     *
      * @return The value of the requested property.
      */
-    public function getObserverProperty($id, $property, $defaultValue = '') 
+    public function getObserverProperty($id, $property, $defaultValue = '')
     {
         global $objDatabase;
         return $objDatabase->selectSingleValue(
-            "SELECT " . $property . " FROM observers WHERE id=\"" . $id . "\"", 
+            "SELECT " . $property . " FROM observers WHERE id=\"" . $id . "\"",
             $property, $defaultValue
         );
     }
     /**
      * Returns the requested property from the observer, in utf8
-     * 
+     *
      * @param string $id           The observer id.
      * @param string $property     The requested property.
      * @param string $defaultValue A default value if the requested property
      *                             is not known.
-     * 
+     *
      * @return The value of the requested property.
      */
     public function getObserverPropertyCS($id, $property, $defaultValue = '')
     {
         global $objDatabase;
         return $objDatabase->selectSingleValue(
-            "SELECT " . $property 
-            . " FROM observers WHERE id COLLATE utf8_bin =\"" . $id . "\"", 
+            "SELECT " . $property
+            . " FROM observers WHERE id COLLATE utf8_bin =\"" . $id . "\"",
             $property, $defaultValue
         );
     }
     /**
      * Returns an array with the ids(key) and names(value) of all active observers,
      * sorted by name
-     * 
+     *
      * @return Array Ids and names of all active observers.
      */
     public function getPopularObserversByName()
     {
         global $objDatabase;
         return $objDatabase->selectKeyValueArray(
-            "SELECT DISTINCT observers.id, " 
-            . "CONCAT(observers.firstname,' ',observers.name) " 
-            . "As observername, observers.name FROM observers " 
-            . "JOIN observations ON (observers.id = observations.observerid) " 
+            "SELECT DISTINCT observers.id, "
+            . "CONCAT(observers.firstname,' ',observers.name) "
+            . "As observername, observers.name FROM observers "
+            . "JOIN observations ON (observers.id = observations.observerid) "
             . "ORDER BY observers.name", 'id', 'observername'
         );
     }
     /**
-     * Returns an array with the ids of all observers, 
+     * Returns an array with the ids of all observers,
      * sorted by the column specified in $sort.
-     * 
+     *
      * @param string $sort The parameter to sort on.
-     * 
+     *
      * @return Array The array with the sorted observers.
      */
     public function getSortedObservers($sort)
@@ -301,60 +303,60 @@ class Observers
         );
     }
     /**
-     * Returns an array with the ids of all observers with a lot 
-     * of information for the administrators, 
+     * Returns an array with the ids of all observers with a lot
+     * of information for the administrators,
      * sorted by the column specified in $sort
-     * 
+     *
      * @param string $sort The parameter to sort on.
-     * 
+     *
      * @return Array The array with the sorted observers.
      */
     public function getSortedObserversAdmin($sort)
     {
         global $objDatabase;
         return $objDatabase->selectRecordsetArray(
-            "SELECT observers.*, B.instrumentCount, C.listCount, " 
-            . "D.obsCount, E.cometobsCount, " 
-            . "(IFNULL(B.instrumentCount,0) + IFNULL(C.listCount,0) " 
-            . "+ IFNULL(D.obsCount,0) + IFNULL(E.cometobsCount,0)) AS maxMax " 
-            . "FROM observers " 
-            . "LEFT JOIN (SELECT instruments.observer, COUNT(instruments.id) " 
-            . "AS instrumentCount FROM instruments GROUP BY instruments.observer) " 
+            "SELECT observers.*, B.instrumentCount, C.listCount, "
+            . "D.obsCount, E.cometobsCount, "
+            . "(IFNULL(B.instrumentCount,0) + IFNULL(C.listCount,0) "
+            . "+ IFNULL(D.obsCount,0) + IFNULL(E.cometobsCount,0)) AS maxMax "
+            . "FROM observers "
+            . "LEFT JOIN (SELECT instruments.observer, COUNT(instruments.id) "
+            . "AS instrumentCount FROM instruments GROUP BY instruments.observer) "
             . "AS B ON observers.id=B.observer "
-            . "LEFT JOIN (SELECT observerobjectlist.observerid, " 
-            . "COUNT(DISTINCT observerobjectlist.listname) AS listCount " 
-            . "FROM observerobjectlist GROUP BY observerobjectlist.observerid) " 
+            . "LEFT JOIN (SELECT observerobjectlist.observerid, "
+            . "COUNT(DISTINCT observerobjectlist.listname) AS listCount "
+            . "FROM observerobjectlist GROUP BY observerobjectlist.observerid) "
             . "AS C on observers.id=C.observerid "
-            . "LEFT JOIN (SELECT observations.observerid, COUNT(observations.id) " 
-            . "AS obsCount FROM observations GROUP BY observations.observerid) " 
+            . "LEFT JOIN (SELECT observations.observerid, COUNT(observations.id) "
+            . "AS obsCount FROM observations GROUP BY observations.observerid) "
             . "AS D on observers.id=D.observerid "
-            . "LEFT JOIN (SELECT cometobservations.observerid, " 
-            . "COUNT(cometobservations.id) AS cometobsCount FROM cometobservations " 
-            . "GROUP BY cometobservations.observerid) " 
+            . "LEFT JOIN (SELECT cometobservations.observerid, "
+            . "COUNT(cometobservations.id) AS cometobsCount FROM cometobservations "
+            . "GROUP BY cometobservations.observerid) "
             . "AS E on observers.id=E.observerid "
             . "GROUP BY observers.id ORDER BY " . $sort
         );
     }
     /**
      * Returns a list of all languages an observer is interested in.
-     * 
+     *
      * @param string $id The observerid
-     * 
+     *
      * @return Array All languages the observer is interested in.
      */
-    public function getUsedLanguages($id) 
+    public function getUsedLanguages($id)
     {
         global $objDatabase;
         return unserialize(
             $objDatabase->selectSingleValue(
-                "SELECT usedLanguages FROM observers WHERE id = \"$id\"", 
+                "SELECT usedLanguages FROM observers WHERE id = \"$id\"",
                 'usedLanguages', ''
             )
         );
     }
     /**
      * Mark all observations as read.
-     * 
+     *
      * @return None
      */
     public function markAllAsRead()
@@ -362,7 +364,7 @@ class Observers
         global $objDatabase, $loggedUser;
         if ($loggedUser) {
             $objDatabase->execSQL(
-                "UPDATE observers SET lastReadObservationId=" 
+                "UPDATE observers SET lastReadObservationId="
                 . $objDatabase->selectSingleValue(
                     "SELECT MAX(id) AS MaxID FROM observations", 'MaxID', 0
                 ) . " WHERE id=\"" . $loggedUser . "\""
@@ -371,17 +373,17 @@ class Observers
     }
     /**
      * Mark all observations till the given observationid as read.
-     * 
+     *
      * @param integer $themark The observationid of the last read observation.
-     * 
+     *
      * @return None
      */
-    public function markAsRead($themark) 
+    public function markAsRead($themark)
     {
         global $objDatabase, $loggedUser;
         if ($loggedUser) {
             $objDatabase->execSQL(
-                "UPDATE observers SET lastReadObservationId=" 
+                "UPDATE observers SET lastReadObservationId="
                 . $themark . " WHERE id=\"" . $loggedUser . "\""
             );
         }
@@ -389,49 +391,49 @@ class Observers
     }
     /**
      * Sets a new value for the given property of the observer.
-     * 
+     *
      * @param string $id            The observerid.
      * @param string $property      The property to set.
      * @param string $propertyValue The new value for the given property.
-     * 
+     *
      * @return None
      */
     public function setObserverProperty($id, $property, $propertyValue)
     {
         global $objDatabase;
         $objDatabase->execSQL(
-            "UPDATE observers SET " . $property . "=\"" 
+            "UPDATE observers SET " . $property . "=\""
             . $propertyValue . "\" WHERE id=\"" . $id . "\""
         );
     }
     /**
      * Sets all the used languages for the observer.
-     * 
+     *
      * @param string $id       The observerid.
      * @param string $language The languages to set.
-     * 
+     *
      * @return None
      */
     private function _setUsedLanguages($id, $language)
     {
         global $objDatabase;
         $objDatabase->execSQL(
-            "UPDATE observers SET usedLanguages = '" 
+            "UPDATE observers SET usedLanguages = '"
             . serialize($language) . "' WHERE id=\"$id\""
         );
     }
     /**
      * Returns the full name of the observer.
-     * 
+     *
      * @param string $id The observerid.
-     * 
+     *
      * @return string The full name.
      */
     public function getFullName($id)
     {
         global $objDatabase;
         $names = $objDatabase->selectRecordsetArray(
-            "SELECT firstname, name FROM observers WHERE id = \"" 
+            "SELECT firstname, name FROM observers WHERE id = \""
             . $id . "\""
         );
         $name = $names[0];
@@ -439,30 +441,30 @@ class Observers
     }
     /**
      * Shows a page with the top observers.
-     * 
+     *
      * @param string $catalog The catalog to sort on.
      * @param string $rank    The rank to use.
-     * 
+     *
      * @return string The page with the top observers.
      */
-    public function showTopObservers($catalog, $rank) 
+    public function showTopObservers($catalog, $rank)
     {
         global $baseURL, $objObservation, $objUtil, $objObserver;
         global $objObject, $DSOcatalogsLists;
         $outputtable = "";
         if ($catalog != "") {
             if (!strcmp($catalog, "-----------")) {
-                echo "<div>" 
-                    . "<table class=\"table sort-table table-condensed " 
+                echo "<div>"
+                    . "<table class=\"table sort-table table-condensed "
                     . "table-striped table-hover tablesorter custom-popup\">";
                 $catalog = "M";
             } else {
-                echo "<div><table data-sortlist=\"[[6,1]]\" " 
-                . "class=\"table sort-table table-condensed table-striped " 
+                echo "<div><table data-sortlist=\"[[6,1]]\" "
+                . "class=\"table sort-table table-condensed table-striped "
                 . "table-hover tablesorter custom-popup\">";
             }
         } else {
-            echo "<div><table class=\"table sort-table table-condensed " 
+            echo "<div><table class=\"table sort-table table-condensed "
                 . "table-striped table-hover tablesorter custom-popup\">";
             $catalog = "M";
         }
@@ -478,20 +480,20 @@ class Observers
         echo "<th>" . _("Observations last year") . "</th>";
         echo "<th>" . _("Drawings last year") . "</th>";
         echo "<th class=\"filter-false columnSelector-disable\">";
-        echo "<select class=\"form-control\" " 
-            . "onchange=\"location = this.options[this.selectedIndex].value;\" " 
+        echo "<select class=\"form-control\" "
+            . "onchange=\"location = this.options[this.selectedIndex].value;\" "
             . "name=\"catalog\">";
         foreach ($DSOcatalogsLists as $key=>$value) {
             if (!($value)) {
                 $value = "-----------";
             }
             if ($value == stripslashes($catalog)) {
-                echo "<option selected=\"selected\" value=\"" . $baseURL 
-                    . "index.php?indexAction=rank_observers&amp;catalog=" 
+                echo "<option selected=\"selected\" value=\"" . $baseURL
+                    . "index.php?indexAction=rank_observers&amp;catalog="
                     . urlencode($value) . "\">" . $value . "</option>";
             } else {
-                echo "<option value=\"" . $baseURL 
-                    . "index.php?indexAction=rank_observers&amp;catalog=" 
+                echo "<option value=\"" . $baseURL
+                    . "index.php?indexAction=rank_observers&amp;catalog="
                     . urlencode($value) . "\">" . $value . "</option>";
             }
         }
@@ -501,65 +503,65 @@ class Observers
         echo "</tr>";
         $numberOfObservations = $objObservation->getNumberOfDsObservations();
         $numberOfDrawings = $objObservation->getNumberOfDsDrawings();
-        $numberOfObservationsThisYear 
+        $numberOfObservationsThisYear
             = $objObservation->getObservationsLastYear('%');
         $numberOfDrawingsThisYear = $objObservation->getDrawingsLastYear('%');
         $numberOfDifferentObjects
             = $objObservation->getNumberOfDifferentObservedDSObjects();
         echo "</thead>";
         echo "<tfoot>";
-        echo "<tr><td>" . _("Total") . "</td><td></td>" 
-            . "<td class=\"centered\">$numberOfObservations</td>" 
-            . "<td class=\"centered\">$numberOfDrawings</td>" 
-            . "<td class=\"centered\">$numberOfObservationsThisYear</td>" 
-            . "<td class=\"centered\">$numberOfDrawingsThisYear</td>" 
-            . "<td class=\"centered\">" . $objectsInCatalog . "</td>" 
+        echo "<tr><td>" . _("Total") . "</td><td></td>"
+            . "<td class=\"centered\">$numberOfObservations</td>"
+            . "<td class=\"centered\">$numberOfDrawings</td>"
+            . "<td class=\"centered\">$numberOfObservationsThisYear</td>"
+            . "<td class=\"centered\">$numberOfDrawingsThisYear</td>"
+            . "<td class=\"centered\">" . $objectsInCatalog . "</td>"
             . "<td class=\"centered\">" . $numberOfDifferentObjects . "</td></tr>";
         echo "</tfoot>";
         echo "<tbody id=\"topobs_list\" class=\"tbody_obs\">";
         $count = 0;
-        // We get the full list of observers and observations from sql, 
+        // We get the full list of observers and observations from sql,
         // don't loop over the observers and do a mysql query always!
         $allDrawings = $objObservation->getDsDrawingsCount();
-        $allObservationsLastYear 
+        $allObservationsLastYear
             = $objObservation->getAllObservationsLastYearCount();
         $allDrawingsLastYear = $objObservation->getAllDrawingsLastYearCount();
         $allObjects = $objObservation->getNumberOfObjectsCount();
-        $allObjectsCount 
+        $allObjectsCount
             = $objObservation->getAllObservedCountFromCatalogOrList($catalog);
 
         foreach ($rank as $value) {
             $outputtable .= "<tr>";
-            $outputtable .= "<td>" . ($count + 1) 
-                . "</td><td> <a href=\"" . $baseURL 
-                . "index.php?indexAction=detail_observer&amp;user=" 
-                . urlencode($value["observerid"]) . "\">" 
+            $outputtable .= "<td>" . ($count + 1)
+                . "</td><td> <a href=\"" . $baseURL
+                . "index.php?indexAction=detail_observer&amp;user="
+                . urlencode($value["observerid"]) . "\">"
                 . $value["observername"] . "</a> </td>";
-            $outputtable .= "<td>" . $value["Cnt"] . "&nbsp;&nbsp;&nbsp;&nbsp;(" 
-                . sprintf("%.2f", (($value["Cnt"] / $numberOfObservations) * 100)) 
+            $outputtable .= "<td>" . $value["Cnt"] . "&nbsp;&nbsp;&nbsp;&nbsp;("
+                . sprintf("%.2f", (($value["Cnt"] / $numberOfObservations) * 100))
                 . "%)</td>";
             if (array_key_exists($value["observerid"], $allDrawings)) {
                 $value2 = $allDrawings [ $value["observerid"] ];
             } else {
                 $value2 = 0;
             }
-            $outputtable .= "<td> $value2 &nbsp;&nbsp;&nbsp;&nbsp;(" 
+            $outputtable .= "<td> $value2 &nbsp;&nbsp;&nbsp;&nbsp;("
                 . sprintf("%.2f", (($value2 / $numberOfDrawings) * 100)) . "%)</td>";
 
             if (array_key_exists($value["observerid"], $allObservationsLastYear)) {
-                $observationsThisYear 
+                $observationsThisYear
                     = $allObservationsLastYear[$value["observerid"]];
             } else {
                 $observationsThisYear = 0;
             }
             if ($numberOfObservationsThisYear != 0) {
-                $percentObservations = ($observationsThisYear 
+                $percentObservations = ($observationsThisYear
                     / $numberOfObservationsThisYear) * 100;
             } else {
                 $percentObservations = 0;
             }
-            $outputtable .= "<td>" . $observationsThisYear 
-                . "&nbsp;&nbsp;&nbsp;&nbsp;(" 
+            $outputtable .= "<td>" . $observationsThisYear
+                . "&nbsp;&nbsp;&nbsp;&nbsp;("
                 . sprintf("%.2f", $percentObservations) . "%)</td>";
 
             if (array_key_exists($value["observerid"], $allDrawingsLastYear)) {
@@ -568,12 +570,12 @@ class Observers
                 $drawingsThisYear = 0;
             }
             if ($numberOfDrawingsThisYear != 0) {
-                $percentDrawings = ($drawingsThisYear 
+                $percentDrawings = ($drawingsThisYear
                     / $numberOfDrawingsThisYear) * 100;
             } else {
                 $percentDrawings = 0;
             }
-            $outputtable .= "<td>" . $drawingsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(" 
+            $outputtable .= "<td>" . $drawingsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;("
                 . sprintf("%.2f", $percentDrawings) . "%)</td>";
 
             if (array_key_exists($value["observerid"], $allObjectsCount)) {
@@ -581,11 +583,11 @@ class Observers
             } else {
                 $objectsCount = 0;
             }
-            $outputtable .= "<td> <a href=\"" . $baseURL 
-                . "index.php?indexAction=view_observer_catalog&amp;catalog=" 
-                . urlencode($catalog) . "&amp;user=" 
-                . urlencode($value["observerid"]) . "\">" . $objectsCount . "</a> (" 
-                . sprintf("%.2f", (($objectsCount / $objectsInCatalog) * 100)) 
+            $outputtable .= "<td> <a href=\"" . $baseURL
+                . "index.php?indexAction=view_observer_catalog&amp;catalog="
+                . urlencode($catalog) . "&amp;user="
+                . urlencode($value["observerid"]) . "\">" . $objectsCount . "</a> ("
+                . sprintf("%.2f", (($objectsCount / $objectsInCatalog) * 100))
                 . "%)</td>";
 
             if (array_key_exists($value["observerid"], $allObjects)) {
@@ -593,7 +595,7 @@ class Observers
             } else {
                 $numberOfObjects = 0;
             }
-            $outputtable .= "<td>" . $numberOfObjects . "&nbsp;&nbsp;&nbsp;&nbsp;(" 
+            $outputtable .= "<td>" . $numberOfObjects . "&nbsp;&nbsp;&nbsp;&nbsp;("
                 . sprintf(
                     "%.2f", (($numberOfObjects / $numberOfDifferentObjects) * 100)
                 ) . "%)</td>";
@@ -610,10 +612,10 @@ class Observers
     }
     /**
      * Validates the account.
-     * 
+     *
      * @return None
      */
-    public function valideAccount() 
+    public function valideAccount()
     {
         global $entryMessage, $objUtil, $objLanguage, $objMessages;
         global $developversion, $loggedUser, $allLanguages, $mailTo;
@@ -628,7 +630,7 @@ class Observers
                     $_GET['indexAction'] = 'subscribe';
                 }
             }
-        } elseif (!$objUtil->checkPostKey('change') 
+        } elseif (!$objUtil->checkPostKey('change')
             && ($_POST['passwd'] != $_POST['passwd_again'])
         ) {
             $entryMessage .= _("Password not confirmed!");
@@ -640,7 +642,7 @@ class Observers
             } else {
                 $_GET['indexAction'] = 'subscribe';
             }
-        } elseif (array_key_exists('motivation', $_POST) 
+        } elseif (array_key_exists('motivation', $_POST)
             && $_POST['motivation'] == '' && !$loggedUser
         ) {
             $entryMessage .= _("The field 'Motivation' is not filled in.");
@@ -657,8 +659,8 @@ class Observers
             } else {
                 $_GET ['indexAction'] = 'subscribe';
             }
-        } elseif (array_key_exists('register', $_POST) 
-            && array_key_exists('deepskylog_id', $_POST) 
+        } elseif (array_key_exists('register', $_POST)
+            && array_key_exists('deepskylog_id', $_POST)
             && $_POST['register'] && $_POST['deepskylog_id']
         ) {
             // user doesn't exist yet
@@ -671,7 +673,7 @@ class Observers
                 }
             } else {
                 $this->addObserver(
-                    $_POST['deepskylog_id'], $_POST['name'], $_POST['firstname'], 
+                    $_POST['deepskylog_id'], $_POST['name'], $_POST['firstname'],
                     $_POST['email'], md5($_POST['passwd'])
                 );
                 // READ ALL THE LANGUAGES FROM THE CHECKBOXES
@@ -688,7 +690,7 @@ class Observers
                     $_POST['deepskylog_id'], 'copyright', $this->getPostedLicense()
                 );
                 $this->setObserverProperty(
-                    $_POST['deepskylog_id'], 'observationlanguage', 
+                    $_POST['deepskylog_id'], 'observationlanguage',
                     $_POST['description_language']
                 );
                 $this->setObserverProperty(
@@ -698,21 +700,21 @@ class Observers
                     $_POST['deepskylog_id'], 'registrationDate', date("Ymd H:i")
                 );
                 $body = _("Details deepskylog account") . ": <br /><br />" .                 // send mail to administrator
-                                "<table><tr><td><strong>" . _("Account name") 
+                                "<table><tr><td><strong>" . _("Account name")
                     . "</strong></td><td>" . $_POST['deepskylog_id'] . "</td></tr>"
-                    . "<tr><td><strong>" . _("Email") . "</strong></td><td>" 
+                    . "<tr><td><strong>" . _("Email") . "</strong></td><td>"
                     . $_POST['email'] . "</td></tr>"
-                    . "<tr><td><strong>" . _("Name") . "</strong></td><td>" 
-                    . html_entity_decode($_POST['firstname']) . " " 
+                    . "<tr><td><strong>" . _("Name") . "</strong></td><td>"
+                    . html_entity_decode($_POST['firstname']) . " "
                     . html_entity_decode($_POST['name']) . "</td></tr>"
-                    . "<tr><td><strong>" . _("Motivation") . "</strong></td><td>" 
-                    . html_entity_decode($_POST['motivation']) 
+                    . "<tr><td><strong>" . _("Motivation") . "</strong></td><td>"
+                    . html_entity_decode($_POST['motivation'])
                     . "</td></tr></table><br />"
-                    . _("This email has automatically been sent by the DeepskyLog application") 
+                    . _("This email has automatically been sent by the DeepskyLog application")
                     . "<br /><br />";
 
                 if (isset($developversion) && ($developversion == true)) {
-                    $entryMessage .= "On the live server, a mail would be sent with the subject: " 
+                    $entryMessage .= "On the live server, a mail would be sent with the subject: "
                         . _("DeepskyLog - registration") . ".<p>";
                 } else {
                     $objMessages->sendEmail(
@@ -720,9 +722,9 @@ class Observers
                     );
                 }
                 $entryMessage = _(
-                    "Your DeepskyLog account has been created. One of our developers will validate your account as soon as possible. You will receive an email confirmation when this happens. 
-                Please remember that DeepskyLog is the work of only a very small group of volunteers, and that it can take up to a day or so to get validated. 
-                On very rare occasions, all developers are on an astronomical observing session for a week. Normally, there is a backup person in these periods. 
+                    "Your DeepskyLog account has been created. One of our developers will validate your account as soon as possible. You will receive an email confirmation when this happens.
+                Please remember that DeepskyLog is the work of only a very small group of volunteers, and that it can take up to a day or so to get validated.
+                On very rare occasions, all developers are on an astronomical observing session for a week. Normally, there is a backup person in these periods.
                 If your account is not validated within 24 hours, you can send an email to developers at deepskylog.be to be sure."
                 );
                 $_GET['user'] = $_POST['deepskylog_id'];
@@ -808,13 +810,13 @@ class Observers
                     $loggedUser, 'copyright', $this->getPostedLicense()
                 );
                 $this->setObserverProperty(
-                    $loggedUser, 'UT', 
-                    ((array_key_exists('local_time', $_POST) 
+                    $loggedUser, 'UT',
+                    ((array_key_exists('local_time', $_POST)
                     && ($_POST['local_time'] == "on")) ? "0" : "1")
                 );
                 $this->setObserverProperty(
-                    $loggedUser, 'sendMail', 
-                    ((array_key_exists('send_mail', $_POST) 
+                    $loggedUser, 'sendMail',
+                    ((array_key_exists('send_mail', $_POST)
                     && ($_POST['send_mail'] == "on")) ? "1" : "0")
                 );
                 if ($_POST ['icq_name'] != "") {
@@ -844,17 +846,17 @@ class Observers
             }
         }
     }
-    /** 
+    /**
      * Returns the text string for the license the given observer has selected.
      * In case of one of the Creative Commons licenses, a picture and a link to the
      * license is returned.
      *
-     * @param string $observerid The observer for which the license should 
+     * @param string $observerid The observer for which the license should
      *                           be retrieved.
-     * 
+     *
      * @return string The text for the license.
      */
-    public function getCopyright($observerid) 
+    public function getCopyright($observerid)
     {
         $text = $this->getObserverProperty($observerid, 'copyright');
 
@@ -876,7 +878,7 @@ class Observers
 
         return $copyright;
     }
-    /** 
+    /**
      * Returns the text string that is posted using the form to change the
      * settings of the observer or to register. The returned string is one of the
      * Creative Common strings, empty or the copyright message the observer has
@@ -884,7 +886,7 @@ class Observers
      *
      * @return string The text for the license.
      */
-    public function getPostedLicense() 
+    public function getPostedLicense()
     {
         switch ($_POST['cclicense']) {
         case 0:
@@ -916,7 +918,7 @@ class Observers
     }
     /**
      * Deletes the user.
-     * 
+     *
      * @return string A message the the user was deleted.
      */
     public function validateDeleteObserver()
@@ -930,7 +932,7 @@ class Observers
             );
         }
         $objDatabase->execSQL(
-            "DELETE FROM observers WHERE id=\"" 
+            "DELETE FROM observers WHERE id=\""
             . ($id = $objUtil->checkGetKey('validateDelete')) . "\""
         );
         $id = html_entity_decode($id, ENT_QUOTES, "UTF-8");
@@ -939,8 +941,8 @@ class Observers
         } else {
             $objMessages->sendEmail(
                 "Deepskylog account deleted",
-                "The account for " . $id . " was deleted by " 
-                . $objObserver->getFullName($loggedUser) . "<br /><br />", 
+                "The account for " . $id . " was deleted by "
+                . $objObserver->getFullName($loggedUser) . "<br /><br />",
                 "developers"
             );
         }
@@ -949,7 +951,7 @@ class Observers
     }
     /**
      * Validates the user with the given id and gives the user the given role.
-     * 
+     *
      * @return string A message that the user is validated.
      */
     public function validateObserver()
@@ -962,11 +964,11 @@ class Observers
             );
         }
         $objDatabase->execSQL(
-            "UPDATE observers SET role = \"" . ($role = ROLEUSER) 
+            "UPDATE observers SET role = \"" . ($role = ROLEUSER)
             . "\" WHERE id=\"" . ($id = $objUtil->checkGetKey('validate')) . "\""
         );
         if ($role == ROLEADMIN) {
-            $ad = "<br /><br />" 
+            $ad = "<br /><br />"
                 . _("One of the administrators made you a new administrator.");
         } else {
             $ad = "";
@@ -975,22 +977,22 @@ class Observers
         $body = sprintf(
             _(
                 "Dear %s, <br /><br />Your application for a DeepskyLog account is approved."
-            ), 
-            html_entity_decode($this->getObserverProperty($id, 'firstname')) . ' ' . 
+            ),
+            html_entity_decode($this->getObserverProperty($id, 'firstname')) . ' ' .
             html_entity_decode($this->getObserverProperty($id, 'name'))
-        ) . "<br /><br />" 
+        ) . "<br /><br />"
         . sprintf(
             _("You can now log in using your userid %s and password."),
             "<strong>" . $id . "</strong>"
         ) . sprintf(
             _("Read the %sPrivacy Policy%s"),
             "<a href='http://www.deepskylog.org/index.php?indexAction=privacy'>", "</a>"
-        ) . "<br /><br /> " . $ad 
-        . _("Enjoy using <a href=\"http://www.deepskylog.org/\">DeepskyLog</a>. Greetings,") 
+        ) . "<br /><br /> " . $ad
+        . _("Enjoy using <a href=\"http://www.deepskylog.org/\">DeepskyLog</a>. Greetings,")
         . "<br /><br />" . _("The DeepskyLog Team") . "<br /><br />";
 
         if (isset($developversion) && ($developversion == 1)) {
-            $entryMessage .= "On the live server, a mail would be sent with the subject: " 
+            $entryMessage .= "On the live server, a mail would be sent with the subject: "
                 . _("DeepskyLog - account application approved") . ".<br />";
         } else {
             $objMessages->sendEmail(_("DeepskyLog - account application approved"), $body, $id, true);
@@ -1000,44 +1002,42 @@ class Observers
         $objMessages->removeAllMessages($id);
         // After registration, a welcome message is sent
         $objMessages->sendMessage(
-            "DeepskyLog", 
-            $id, 
+            "DeepskyLog",
+            $id,
             sprintf(
-                _('Welcome in DeepskyLog, %s!'), 
+                _('Welcome in DeepskyLog, %s!'),
                 $this->getObserverProperty($id, 'firstname')
-            ), 
+            ),
             sprintf(
                 _('Welcome in DeepskyLog, %s!') ."<br /><br />",
                 $this->getObserverProperty($id, 'firstname')
             )
-            . _('We hope you will have a lot of fun using DeepskyLog. You can already find some interesting links to get you started :') 
-            . '<br /><br />' 
-            . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_instrument\">" 
-            . _('Add an instrument') . '</a><br /><br />'
-            . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_location\">" 
-            . _('Add an observing site') . '</a><br />' 
-            . _('After entering a typical limiting magnitude or a typical SQM-value, DeepskyLog will calculate visibility of all objects! Do not forget to select a standard observation site!') 
+            . _('We hope you will have a lot of fun using DeepskyLog. You can already find some interesting links to get you started :')
             . '<br /><br />'
-            . "<a href=\"http://www.deepskylog.org/index.php?indexAction=change_account\">" 
-            . _('Set your standard observing atlas and set a picture of yourself.') 
-            . '</a><br /><br />' 
-            . _('A lot of fun using DeepskyLog!') . '<br /><br />' 
+            . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_instrument\">"
+            . _('Add an instrument') . '</a><br /><br />'
+            . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_location\">"
+            . _('Add an observing site') . '</a><br />'
+            . _('After entering a typical limiting magnitude or a typical SQM-value, DeepskyLog will calculate visibility of all objects! Do not forget to select a standard observation site!')
+            . '<br /><br />'
+            . "<a href=\"http://www.deepskylog.org/index.php?indexAction=change_account\">"
+            . _('Set your standard observing atlas and set a picture of yourself.')
+            . '</a><br /><br />'
+            . _('A lot of fun using DeepskyLog!') . '<br /><br />'
             . _('The DeepskyLog developers')
         );
 
-        $objAccomplishments->addObserver($id);
-
-        return _("The user has successfully been updated!") 
+        return _("The user has successfully been updated!")
             . ' <br />' . _("User updated.");
     }
     /**
      * Updates the password for the given user.
-     * 
+     *
      * @param string $login              The observerid.
      * @param string $passwd             The current password.
      * @param string $newPassword        The new password.
      * @param string $confirmNewPassword The confirmation of the new password.
-     * 
+     *
      * @return None
      */
     public function updatePassword(
@@ -1062,7 +1062,7 @@ class Observers
                     session_regenerate_id(true);
                     $cookietime = time() + (365 * 24 * 60 * 60); // 1 year
                     setcookie(
-                        "deepskylogsec", $newPassword . $login, 
+                        "deepskylogsec", $newPassword . $login,
                         $cookietime, "/", "", false
                     );
 
@@ -1078,14 +1078,14 @@ class Observers
     }
     /**
      * Updates the password of the observer using a token.
-     * 
+     *
      * @param string $login              The observerid.
      * @param string $newPassword        The new password.
      * @param string $confirmNewPassword The confirmation of the new password.
-     * 
+     *
      * @return None
      */
-    public function updatePasswordToken($login, $newPassword, $confirmNewPassword) 
+    public function updatePasswordToken($login, $newPassword, $confirmNewPassword)
     {
         global $entryMessage, $loggedUser;
         $passwd_db = $this->getObserverPropertyCS($login, "password");
@@ -1104,7 +1104,7 @@ class Observers
     /**
      * Request a new password. A mail will be send to the observer which
      * includes a token to change the password.
-     * 
+     *
      * @return None
      */
     public function requestNewPassword()
@@ -1119,7 +1119,7 @@ class Observers
             $email = $objUtil->checkPostKey('mail');
 
             if ($userid != "") {
-                // Check if the userid exists in the database, if this is not the case, 
+                // Check if the userid exists in the database, if this is not the case,
                 // show a message that the userid is not known by DeepskyLog.
                 $email = $this->getObserverProperty($userid, 'email');
 
@@ -1154,23 +1154,23 @@ class Observers
             $pass = new Password();
             $pass->storeToken($userid, $token);
 
-            $confirmLink = $baseURL . "index.php?indexAction=changeToken&amp;t=" 
+            $confirmLink = $baseURL . "index.php?indexAction=changeToken&amp;t="
                 . $token;
-            $cancelLink = $baseURL . "index.php?indexAction=removeToken&amp;t=" 
+            $cancelLink = $baseURL . "index.php?indexAction=removeToken&amp;t="
                 . $token;
 
             // Send nice looking mail
             $subject = _("DeepskyLog Change Password Request");
-            $message = "\n" 
+            $message = "\n"
                 . sprintf(
                     _(
                         "You have (or someone impersonating you has) requested to change your %s password.
                     <br />To complete the change, visit the following link:"
-                    ), 
+                    ),
                     "<a href=\"" . $baseURL . "\">DeepskyLog</a>"
                 ) . "<br /><br />";
             $message .= "<a href=\"" . $confirmLink . "\">" . $confirmLink . "</a>";
-            $message .= "<br /><br />" 
+            $message .= "<br /><br />"
                 . _("If you are not the person who made this request, or you wish to cancel this request, visit the following link:")
                 . "<br /><br />";
             $message .= "<a href=\"" . $cancelLink . "\">" . $cancelLink . "</a>";
@@ -1181,13 +1181,13 @@ class Observers
             $lang = new Language();
             $lang->setLocale();
 
-            $message .= "<br /><br />" 
+            $message .= "<br /><br />"
                 . sprintf(
-                    _("If you do nothing, the request will lapse after 24 hours (on %s) or when you log in successfully."), 
+                    _("If you do nothing, the request will lapse after 24 hours (on %s) or when you log in successfully."),
                     iconv('ISO-8859-1', 'UTF-8', strftime('%A %d %B %Y, %R UTC', time() + 24*60*60))
                 );
 
-            $message .= "<br /><h2><a href=\"mailto:developers@deepskylog.be\">" 
+            $message .= "<br /><h2><a href=\"mailto:developers@deepskylog.be\">"
                 . _("The DeepskyLog team") . "</a></h2>";
 
             // Send the mail
@@ -1196,7 +1196,7 @@ class Observers
             // Show message
             // Show which username and which email we use for requesting the new password
             $entryMessage = sprintf(
-                _("A token for changing the password of %s has been emailed to %s. Follow the instructions in that email to change your password."), 
+                _("A token for changing the password of %s has been emailed to %s. Follow the instructions in that email to change your password."),
                 "<strong>" . $userid . "</strong>",
                 "<strong>" . $email . "</strong>"
             );
