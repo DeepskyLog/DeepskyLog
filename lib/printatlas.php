@@ -124,7 +124,7 @@ class PrintAtlas
     );
 
     function astroDrawBRTNBObject($i)
-    { 
+    {
         $this->gridLDrad(
             $this->astroObjectsArr[$i]["ra"],
             $this->astroObjectsArr[$i]["decl"]
@@ -134,13 +134,13 @@ class PrintAtlas
         $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
         $this->pdf->rectangle($cx-$d1, $cy-$d1, $d1*2, $d1*2);
         $this->astroDrawObjectLabel(
-            $cx, $cy, $d1, $this->astroObjectsArr[$i]["name"], 
+            $cx, $cy, $d1, $this->astroObjectsArr[$i]["name"],
             $this->astroObjectsArr[$i]["seen"]
         );
     }
 
     function astroDrawCLANBObject($i)
-    { 
+    {
         $this->gridLDrad(
             $this->astroObjectsArr[$i]["ra"],
             $this->astroObjectsArr[$i]["decl"]
@@ -154,19 +154,19 @@ class PrintAtlas
         $this->pdf->rectangle($cx-$d1-1, $cy-$d1-1, $d1*2+2, $d1*2+2);
         $this->pdf->setLineStyle(0.5, '', '', array());
         $this->astroDrawObjectLabel(
-            $cx, $cy, $d1+1, 
+            $cx, $cy, $d1+1,
             $this->astroObjectsArr[$i]["name"],
             $this->astroObjectsArr[$i]["seen"]
         );
     }
 
     function astroDrawConstellations()
-    { 
+    {
         global $objConstellation;
         $this->pdf->setLineStyle(2, 'round');
         $this->conBoundries=$objConstellation->getAllBoundries();
         $cons = Array();
-        for ($i=0;$i<count($this->conBoundries);$i++) { 
+        for ($i=0;$i<count($this->conBoundries);$i++) {
             if ($this->gridDrawLongLineLD($this->conBoundries[$i]['ra0'], $this->conBoundries[$i]['decl0'], $this->conBoundries[$i]['ra1'], $this->conBoundries[$i]['decl1'])) {
                 if ((!in_array($this->conBoundries[$i]['con0'], $cons))
                     || (!in_array($this->conBoundries[$i]['con1'], $cons))
@@ -240,7 +240,7 @@ class PrintAtlas
     }
 
     function astroDrawDRKNBObject($i)
-    { 
+    {
         $this->gridLDrad($this->astroObjectsArr[$i]["ra"], $this->astroObjectsArr[$i]["decl"]);
         $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
         $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
@@ -1396,7 +1396,7 @@ class PrintAtlas
     $this->pdf->addText($sideborderIndexWidth, $this->canvasDimensionYpx-$topborderIndexWidth, 12, "Index");
     $this->pdf->line($sideborderIndexWidth,$this->canvasDimensionYpx-$topborderIndexWidth-5,$this->canvasDimensionXpx-$sideborderIndexWidth,$this->canvasDimensionYpx-$topborderIndexWidth-5);
     $this->pdf->newPage();
-    if(count($_SESSION['atlasPagesIndex'])>0)
+    if(isset($_SESSION['atlasPagesIndex']) && count($_SESSION['atlasPagesIndex'])>0)
     { $theindex=$_SESSION['atlasPagesIndex'];
         uksort($theindex,"strnatcmp");
 
@@ -1434,7 +1434,9 @@ class PrintAtlas
         }
     }
     else
+    {
       $this->pdf->addText(100,100,12,_("No index entries"));
+    }
     $this->pdf->ezStream();
   }
   public function pdfAtlasObjectSets($item,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
@@ -1544,16 +1546,16 @@ class PrintAtlas
               $dateTimeText0=substr($dateTimeText0,0,6);
           }
           $this->pdf->addTextWrap(
-              50, 
-              $liney, 
-              10, 
+              50,
+              $liney,
+              10,
               sprintf(
-                _("Ephemerides for %s in %s"), 
-                $dateTimeText0."-".$dateTimeText1, 
+                _("Ephemerides for %s in %s"),
+                $dateTimeText0."-".$dateTimeText1,
                 $objLocation->getLocationPropertyFromId(
                     $objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'
                 ). _(" in LOCAL TIME !")
-              ), 
+              ),
               600,
               'left'
             );
@@ -1580,16 +1582,16 @@ class PrintAtlas
         if($objObserver->getObserverProperty($loggedUser, 'stdLocation') && ($yearephemerides=='true'))
         { $this->pdf->addTextWrap(
             50,
-            $liney, 
+            $liney,
             10,
             sprintf(
-                _("Ephemerides for %s in %s"), 
-                $theShowname, 
+                _("Ephemerides for %s in %s"),
+                $theShowname,
                 $objLocation->getLocationPropertyFromId(
                     $objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'
                 ). _(" in LOCAL TIME !")
-            ),  
-            $this->canvasDimensionXpx-100, 
+            ),
+            $this->canvasDimensionXpx-100,
             'left'
         );
           $liney-=5;
@@ -2002,7 +2004,7 @@ class PrintAtlas
     $url='https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[0].'.0&w='.$thephotos[0].'&f=gif&c=none&fov=NONE&v3=';
     $this->pdf->addText(50, $liney-15, 10, " - ".$thephotos[0].'x'.$thephotos[0].' '._("arcminutes"));
     if($img=@imagecreatefromgif($url))
-    { 
+    {
         imagefilter($img, IMG_FILTER_NEGATE);
         $this->pdf->addImage($img,50,$liney,350);
 
@@ -2029,7 +2031,7 @@ class PrintAtlas
       $this->pdf->rectangle(48,$liney-2,354,354);
 
       if(is_array($thephotos) && array_key_exists(1,$thephotos) && ($thephotos[1]>0))
-      { 
+      {
           if($thephotos[1]>120) {
             $thephotos[1]=120;
           }
@@ -2045,7 +2047,7 @@ class PrintAtlas
 
           $this->pdf->setColor(0,0,0);
          $liney=$this->canvasDimensionYpx-50;
-      $this->pdf->addTextWrap( 50, $liney, 15, 
+      $this->pdf->addTextWrap( 50, $liney, 15,
         sprintf(
             _('Images for %s'),
             $theShowname
@@ -2251,9 +2253,9 @@ class PrintAtlas
                         { if($valueA[$dataelement['fieldname']])
                           { $this->pdf->addText(0,0,$fontSizeText,'<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($valueA['objectname']).'>');
                             $this->pdf->addTextWrap(
-                                $xbase+$dataelement['fieldposition'] , 
-                                $y-($deltaline*$dataelement['fieldline']),  
-                                $fontSizeText, 
+                                $xbase+$dataelement['fieldposition'] ,
+                                $y-($deltaline*$dataelement['fieldline']),
+                                $fontSizeText,
                                 $dataelement['fieldafter'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],
                                 $dataelement['fieldwidth'], $justification
                             );
@@ -2279,7 +2281,7 @@ class PrintAtlas
                               while($theText)
                                 { $y-=$deltaline;
                           if($y-($deltaline*$dataelement['fieldline'])<$bottom)
-                          { 
+                          {
                                 $objUtil->newpage(
                                     $y,$top,$bottom,$xbase,$xmid,
                                     $pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,
@@ -2300,7 +2302,7 @@ class PrintAtlas
                     { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']!=''))
                       { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
                               $theText= $this->pdf->addTextWrap(
-                                  $xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), 
+                                  $xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']),
                                   $fontSizeText, $theText,$dataelement['fieldwidth'] ,$justification
                                 );
                               while($theText)
@@ -2339,7 +2341,7 @@ class PrintAtlas
                         else
                         { if($valueA[$dataelement['fieldname']]!='')
                           { $this->pdf->addTextWrap(
-                              $xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']), 
+                              $xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),
                               $fontSizeText, $dataelement['fieldbefore'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],
                               $dataelement['fieldwidth'], $justification
                             );
