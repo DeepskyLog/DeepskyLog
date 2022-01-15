@@ -924,7 +924,7 @@ class Observers
     public function validateDeleteObserver()
     {
         global $objDatabase, $objUtil, $entryMessage, $loggedUser;
-        global $developversion, $mailTo, $mailFrom, $objMessages, $objObserver;
+        global $developversion, $mailTo, $mailFrom, $objMessages, $objObserver, $objAccomplishments;
 
         if (!($objUtil->checkSessionKey('admin') == 'yes')) {
             throw new Exception(
