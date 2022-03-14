@@ -1097,10 +1097,10 @@ class Objects
     {
         global $objDatabase;
 
-        $out = $objDatabase->execSQL('SELECT * from objectnames where objectname="' . $name . '" and catalog="' . $cat . '" and catindex="' . $catindex . '"');
+        $out = $objDatabase->selectRecordArray('SELECT * from objectnames where objectname="' . $name . '" and catalog="' . $cat . '" and catindex="' . $catindex . '"');
 
         // Only add to the database if the alternative name is not yet there.
-        if ($out->fetch ( PDO::FETCH_OBJ ) == null) {
+        if (sizeof($out) == 0) {
             return $objDatabase->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"".ucwords(trim($catindex)).'")))');
         } else {
             return;
