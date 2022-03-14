@@ -136,9 +136,9 @@ function showObjectDetails($object_ss)
 										<h4 class="modal-title" id="myModalLabel">'._('Force Remove Object').'</h4>
 									</div>
 									<div class="modal-body">'.
-                                    sprintf(_('Do you really want to delete %s?', '<strong>'.$object_ss.'</strong><br />')).
-                                    sprintf(_(', which has %s observations?', '<strong>'.
-                                     $obsCnt.'</strong>')).'
+                                    sprintf('Do you really want to delete %s?', '<strong>'.$object_ss.'</strong><br />').
+                                    sprintf(', which has %s observations?', '<strong>'.
+                                     $obsCnt.'</strong>').'
 									 <br />'._('All the observations will also be removed!').'
 				            <form action="'.$baseURL.'index.php?indexAction=deleteObject" method="post">
 				             <input type="hidden" name="indexAction" value="deleteObject" />
