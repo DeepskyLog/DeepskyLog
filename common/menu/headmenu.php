@@ -39,8 +39,8 @@ function headmenu() {
 	// Select the modules
 	echo "<ul class=\"nav navbar-nav navbar-right\">
 			  <li class=\"dropdown\">
-           <a href=\"http://" . $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] . 
-        "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . 
+           <a href=\"http://" . $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] .
+        "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" .
         $GLOBALS[$_SESSION['module']] . "<b class=\"caret\"></b></a>";
 	echo " <ul class=\"dropdown-menu\">";
 
@@ -78,7 +78,7 @@ function headmenu() {
 	} else {
 		// Let's make a sign in / register tab
 		echo "<span class=\"pull-right\">";
-		echo "<button type=\"button\" class=\"btn btn-default navbar-btn\" data-toggle=\"modal\" data-target=\"#login\">" . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . "&nbsp;" . _("Login") . "</button>&nbsp;";
+		echo "<button type=\"button\" class=\"btn btn-default navbar-btn\" data-toggle=\"modal\" data-target=\"#login\">" . "&nbsp;" . _("Login") . "</button>&nbsp;";
 		if ($register == "yes") { // includes register link
 			echo "<a class=\"btn btn-success navbar-btn\" href=\"" . $baseURL . "index.php?indexAction=subscribe&amp;title=" . urlencode(_("Register")) . "\">" . _("Register") . "</a>&nbsp;";
 		}
