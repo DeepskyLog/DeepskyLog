@@ -113,8 +113,11 @@ class Accomplishments
     */
     private function getNumberOfCategories($catalog)
     {
-        if ($catalog == "M" || $catalog == "Caldwell") {
+        if ($catalog == "M") {
             return 3;
+        } elseif  $catalog == "Caldwell") {
+            return 4;
+        }
         } elseif ($catalog == "H400" || $catalog == "HII" || $catalog == "H400-II") {
             return 5;
         }
@@ -134,6 +137,8 @@ class Accomplishments
     {
         if ($categories == 3) {
             return $this->accomplishments3($numberOfObjects);
+        } elseif ($categories == 4) {
+            return $this->accomplishments4($numberOfObjects);
         } elseif ($categories == 5) {
             return $this->accomplishments5($numberOfObjects);
         } else {
@@ -149,6 +154,16 @@ class Accomplishments
     {
         return array( $numberOfObjects >= 25 ? 1:0, $numberOfObjects >= 50 ? 1:0,
       $numberOfObjects >= 110 ? 1:0 );
+    }
+
+    /** Returns a boolean array with the accomplishments when there are 3 categories : [ bronze, silver, gold ]. This only works for catalogs with 109 objects.
+    @param $numberOfObjects The number of objects seen or drawn to use to calculate the accomplishments
+    @return boolean[] An array with the accomplishments: [ bronze, silver, gold ]
+    */
+    private function accomplishments4($numberOfObjects)
+    {
+        return array( $numberOfObjects >= 25 ? 1:0, $numberOfObjects >= 50 ? 1:0,
+      $numberOfObjects >= 109 ? 1:0 );
     }
 
     /** Returns a boolean array with the accomplishments when there are 5 categories : [ bronze, silver, gold, diamond, platina ]. This only works for catalogs with 400 objects.
@@ -354,7 +369,7 @@ class Accomplishments
         global $baseURL;
         return sprintf(
             _('Congratulations! You have observed %s and receive a DeepskyLog star! Check out your DeepskyLog stars at %s'),
-            round($numberOfObjects) . " " . $catalog, 
+            round($numberOfObjects) . " " . $catalog,
             $baseURL . "/index.php?indexAction=detail_observer&user=" . urlencode($observerId) . ""
         );
     }
@@ -381,9 +396,9 @@ class Accomplishments
     {
         global $baseURL;
         return sprintf(
-            _('Congratulations! You have drawn %s and receive a DeepskyLog star! Check out your DeepskyLog stars at %s'), 
-            round($numberOfObjects) . " " . $catalog, 
-            " " . $baseURL . "/index.php?indexAction=detail_observer&user=" 
+            _('Congratulations! You have drawn %s and receive a DeepskyLog star! Check out your DeepskyLog stars at %s'),
+            round($numberOfObjects) . " " . $catalog,
+            " " . $baseURL . "/index.php?indexAction=detail_observer&user="
             . urlencode($observerId) . ""
         );
     }
