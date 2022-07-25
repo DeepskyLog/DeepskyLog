@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DeepskyLog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-26 20:38+0200\n"
+"POT-Creation-Date: 2022-07-25 15:54+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Wim De Meester <deepskywim@gmail.com>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #: new_module/menu/change.php:4 comets/menu/change.php:16
 #: deepsky/menu/change.php:20
@@ -845,7 +845,7 @@ msgstr "Översikt över observatörer"
 
 #: common/content/overview_observers.php:25
 #: common/content/view_observer.php:210 common/content/view_observer.php:265
-#: common/content/register.php:103 common/content/change_account.php:169
+#: common/content/register.php:101 common/content/change_account.php:169
 msgid "Last Name"
 msgstr "Efternamn"
 
@@ -1137,18 +1137,18 @@ msgstr "Observationer per land"
 msgid "DeepskyLog stars"
 msgstr "DeepskyLog stjärnor"
 
-#: common/content/view_observer.php:183 common/content/register.php:77
+#: common/content/view_observer.php:183 common/content/register.php:75
 #: common/content/change_account.php:145 common/menu/headmenu.php:140
 msgid "Username"
 msgstr "Användarnamn"
 
-#: common/content/view_observer.php:189 common/content/register.php:87
+#: common/content/view_observer.php:189 common/content/register.php:85
 #: common/content/change_account.php:156 common/menu/headmenu.php:174
 msgid "Email address"
 msgstr "E-postadress"
 
 #: common/content/view_observer.php:198 common/content/view_observer.php:259
-#: common/content/register.php:96 common/content/change_account.php:163
+#: common/content/register.php:94 common/content/change_account.php:163
 msgid "First name"
 msgstr "Förnamn"
 
@@ -1156,7 +1156,7 @@ msgstr "Förnamn"
 msgid "Change email / firstname / name"
 msgstr "Ändra e-post/förnamn/namn"
 
-#: common/content/view_observer.php:219 common/content/register.php:120
+#: common/content/view_observer.php:219 common/content/register.php:118
 #: common/menu/headmenu.php:141
 msgid "Password"
 msgstr "Lösenord"
@@ -1171,7 +1171,7 @@ msgstr "Standardplats för observation"
 msgid "Default instrument"
 msgstr "Standardinstrument"
 
-#: common/content/view_observer.php:374 common/content/register.php:184
+#: common/content/view_observer.php:374 common/content/register.php:182
 #: common/content/change_account.php:295
 msgid "Copyright notice"
 msgstr "Copyrightmeddelande"
@@ -1191,12 +1191,12 @@ msgid "Drawings last year"
 msgstr "Ritningar förra året"
 
 #: common/content/view_observer.php:545 common/content/view_observer.php:1411
-#: lib/accomplishments.php:459
+#: lib/accomplishments.php:474
 msgid "Messier objects"
 msgstr "Messier-objekt"
 
 #: common/content/view_observer.php:554 common/content/view_observer.php:1459
-#: lib/accomplishments.php:461
+#: lib/accomplishments.php:476
 msgid "Caldwell objects"
 msgstr "Caldwell-objekt"
 
@@ -1349,12 +1349,12 @@ msgid "Observe at least 50 Caldwell objects to get this certificat!"
 msgstr "Observera minst 50 Caldwell objekt för att få denna Certificat!"
 
 #: common/content/view_observer.php:1473
-msgid "Golden Caldwell certificat! You observed all 110 Caldwell objects!"
-msgstr "Gyllene Caldwell Certificat! Du observerade alla 110 Caldwell objekt!"
+msgid "Golden Caldwell certificat! You observed all 109 Caldwell objects!"
+msgstr "Gyllene Caldwell Certificat! Du observerade alla 109 Caldwell objekt!"
 
 #: common/content/view_observer.php:1474
-msgid "Observe all 110 Caldwell objects to get this certificat!"
-msgstr "Observera alla 110 Caldwell objekt för att få denna Certificat!"
+msgid "Observe all 109 Caldwell objects to get this certificat!"
+msgstr "Observera alla 109 Caldwell objekt för att få denna Certificat!"
 
 #: common/content/view_observer.php:1480
 msgid "Drawings of Caldwell objects"
@@ -1377,15 +1377,15 @@ msgid "Draw at least 50 Caldwell objects to get this certificat!"
 msgstr "Rita minst 50 Caldwell objekt för att få denna Certificat!"
 
 #: common/content/view_observer.php:1497
-msgid "Golden Caldwell drawing-certificat! You drew all 110 Caldwell objects!"
+msgid "Golden Caldwell drawing-certificat! You drew all 109 Caldwell objects!"
 msgstr ""
-"Golden Caldwell ritning-Certificat! Du ritade alla 110 Caldwell objekt!"
+"Golden Caldwell ritning-Certificat! Du ritade alla 109 Caldwell objekt!"
 
 #: common/content/view_observer.php:1498
-msgid "Draw all 110 Caldwell objects to get this certificat!"
-msgstr "Rita alla 110 Caldwell objekt för att få denna Certificat!"
+msgid "Draw all 109 Caldwell objects to get this certificat!"
+msgstr "Rita alla 109 Caldwell objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1504 lib/accomplishments.php:463
+#: common/content/view_observer.php:1504 lib/accomplishments.php:478
 msgid "Herschel 400 objects"
 msgstr "Herschel 400 objekt"
 
@@ -1500,7 +1500,7 @@ msgstr ""
 msgid "Draw all 400 Herschel 400 objects to get this certificat!"
 msgstr "Rita alla 400 Herschel 400 objekt för att få denna Certificat!"
 
-#: common/content/view_observer.php:1576 lib/accomplishments.php:465
+#: common/content/view_observer.php:1576 lib/accomplishments.php:480
 msgid "Herschel II objects"
 msgstr "Herschel II-objekt"
 
@@ -1603,7 +1603,7 @@ msgstr "Rita alla 400 Herschel II objekt för att få denna Certificat!"
 msgid "Total number of drawings"
 msgstr "Totalt antal ritningar"
 
-#: common/content/view_observer.php:1694 lib/accomplishments.php:467
+#: common/content/view_observer.php:1694 lib/accomplishments.php:482
 msgid "Open clusters"
 msgstr "Öppna kluster"
 
@@ -1611,7 +1611,7 @@ msgstr "Öppna kluster"
 msgid "Drawings of open clusters"
 msgstr "Ritningar av öppna kluster"
 
-#: common/content/view_observer.php:1812 lib/accomplishments.php:469
+#: common/content/view_observer.php:1812 lib/accomplishments.php:484
 msgid "Globular clusters"
 msgstr "Stjärnhopar"
 
@@ -1619,7 +1619,7 @@ msgstr "Stjärnhopar"
 msgid "Drawings of globular clusters"
 msgstr "Ritningar av stjärnhopar"
 
-#: common/content/view_observer.php:1921 lib/accomplishments.php:471
+#: common/content/view_observer.php:1921 lib/accomplishments.php:486
 msgid "Planetary Nebulae"
 msgstr "Planetariska nebulosor"
 
@@ -1627,7 +1627,7 @@ msgstr "Planetariska nebulosor"
 msgid "Drawings of planetary nebulae"
 msgstr "Ritningar av planetariska nebulosor"
 
-#: common/content/view_observer.php:2044 lib/accomplishments.php:473
+#: common/content/view_observer.php:2044 lib/accomplishments.php:488
 msgid "Galaxies"
 msgstr "Galaxer"
 
@@ -1635,7 +1635,7 @@ msgstr "Galaxer"
 msgid "Drawings of galaxies"
 msgstr "Ritningar av galaxer"
 
-#: common/content/view_observer.php:2137 lib/accomplishments.php:475
+#: common/content/view_observer.php:2137 lib/accomplishments.php:490
 msgid "Nebulae"
 msgstr "Nebulosor"
 
@@ -1671,26 +1671,26 @@ msgstr ""
 msgid "Change lens"
 msgstr "Byt lins"
 
-#: common/content/register.php:68 common/content/register.php:69
-#: common/content/register.php:72 common/content/register.php:225
+#: common/content/register.php:66 common/content/register.php:67
+#: common/content/register.php:70 common/content/register.php:223
 #: common/menu/head.php:153 common/menu/headmenu.php:83
 #: common/menu/headmenu.php:146
 msgid "Register"
 msgstr "Registrera"
 
-#: common/content/register.php:82 common/content/change_account.php:153
+#: common/content/register.php:80 common/content/change_account.php:153
 msgid "This is the name you will use to log in"
 msgstr "Detta är det namn du ska använda för att logga in"
 
-#: common/content/register.php:92 common/content/change_account.php:160
+#: common/content/register.php:90 common/content/change_account.php:160
 msgid "Your email address will remain confidential"
 msgstr "Din e-postadress kommer att förbli konfidentiell"
 
-#: common/content/register.php:110 lib/observers.php:708
+#: common/content/register.php:108 lib/observers.php:708
 msgid "Motivation"
 msgstr "Motivation"
 
-#: common/content/register.php:115
+#: common/content/register.php:113
 msgid ""
 "Please tell us briefly why you register, this allows us to eliminate "
 "automatic registrations."
@@ -1698,44 +1698,44 @@ msgstr ""
 "Tala om för oss kortfattat varför du registrerar, detta gör att vi kan "
 "eliminera automatiska registreringar."
 
-#: common/content/register.php:125
+#: common/content/register.php:123
 msgid "This is not your email account's password"
 msgstr "Detta är inte ditt e-postkonto lösenord"
 
-#: common/content/register.php:129 common/content/change_account.php:448
+#: common/content/register.php:127 common/content/change_account.php:448
 #: common/content/change_password.php:26
 msgid "Confirm password"
 msgstr "Bekräfta lösenord"
 
-#: common/content/register.php:136 common/content/change_account.php:400
+#: common/content/register.php:134 common/content/change_account.php:400
 msgid "Standard language for observations"
 msgstr "Standard språk för observationer"
 
-#: common/content/register.php:139 common/content/change_account.php:403
+#: common/content/register.php:137 common/content/change_account.php:403
 msgid "The standard language to enter the observations"
 msgstr "Standardspråket för att skriva in observationerna"
 
-#: common/content/register.php:143 common/content/change_account.php:394
+#: common/content/register.php:141 common/content/change_account.php:394
 msgid "Default language"
 msgstr "Standardspråk"
 
-#: common/content/register.php:146 common/content/change_account.php:397
+#: common/content/register.php:144 common/content/change_account.php:397
 msgid "The language for DeepskyLog"
 msgstr "Språket för DeepskyLog"
 
-#: common/content/register.php:164 common/content/change_account.php:222
+#: common/content/register.php:162 common/content/change_account.php:222
 msgid "License for drawings"
 msgstr "Licens för ritningar"
 
-#: common/content/register.php:173 common/content/change_account.php:279
+#: common/content/register.php:171 common/content/change_account.php:279
 msgid "No license (Not recommended!)"
 msgstr "Ingen licens (rekommenderas inte!)"
 
-#: common/content/register.php:174 common/content/change_account.php:286
+#: common/content/register.php:172 common/content/change_account.php:286
 msgid "Enter your own copyright text"
 msgstr "Ange din egen Copyright-text"
 
-#: common/content/register.php:179 common/content/change_account.php:291
+#: common/content/register.php:177 common/content/change_account.php:291
 msgid ""
 "It is important to select the <strong>correct license for your drawings</"
 "strong>! For help, see the <a href=\"http://creativecommons.org/choose/"
@@ -1745,7 +1745,7 @@ msgstr ""
 "Om du vill ha hjälp, se <a href=\"http://creativecommons.org/choose/\"> "
 "Creative Commons-licens-välja verktyg </a>."
 
-#: common/content/register.php:193
+#: common/content/register.php:191
 msgid ""
 "You can specify a copyright notice that will appear under your observations "
 "and drawings."
@@ -1753,12 +1753,12 @@ msgstr ""
 "Du kan ange ett meddelande om upphovsrätt som visas under dina observationer "
 "och ritningar."
 
-#: common/content/register.php:201
+#: common/content/register.php:199
 #: deepsky/content/setup_observations_query.php:568
 msgid "Languages for observations"
 msgstr "Språk för observationer"
 
-#: common/content/register.php:221
+#: common/content/register.php:219
 #, php-format
 msgid ""
 "Your personal information will be processed in accordance with the %sprivacy "
@@ -2920,7 +2920,7 @@ msgid "Overview observed"
 msgstr "Översikt som observerats"
 
 #: common/menu/head.php:115 deepsky/content/details_observer_catalog.php:32
-#: lib/accomplishments.php:479 lib/accomplishments.php:495
+#: lib/accomplishments.php:494 lib/accomplishments.php:510
 msgid "objects"
 msgstr "objekt"
 
@@ -5882,12 +5882,12 @@ msgstr "Hämta DSS bild"
 msgid "Deepskylog chart"
 msgstr "Deepskylog diagram"
 
-#: lib/accomplishments.php:342
+#: lib/accomplishments.php:357
 #, php-format
 msgid "New DeepskyLog star! %s observed!"
 msgstr "Nya DeepskyLog Star! %s observerades!"
 
-#: lib/accomplishments.php:356
+#: lib/accomplishments.php:371
 #, php-format
 msgid ""
 "Congratulations! You have observed %s and receive a DeepskyLog star! Check "
@@ -5896,12 +5896,12 @@ msgstr ""
 "Grattis! Du har observerat %s och får en DeepskyLog stjärna! Kolla in dina "
 "DeepskyLog-stjärnor på %s"
 
-#: lib/accomplishments.php:370
+#: lib/accomplishments.php:385
 #, php-format
 msgid "New DeepskyLog star! %s drawn!"
 msgstr "Nya DeepskyLog Star! %s dras!"
 
-#: lib/accomplishments.php:384
+#: lib/accomplishments.php:399
 #, php-format
 msgid ""
 "Congratulations! You have drawn %s and receive a DeepskyLog star! Check out "
@@ -5910,42 +5910,42 @@ msgstr ""
 "Grattis! Du har dragit %s och får en DeepskyLog stjärna! Kolla in dina "
 "DeepskyLog-stjärnor på %s"
 
-#: lib/accomplishments.php:477 lib/accomplishments.php:493
-#: lib/accomplishments.php:575 lib/accomplishments.php:579
-#: lib/accomplishments.php:583 lib/accomplishments.php:587
-#: lib/accomplishments.php:591 lib/accomplishments.php:595
-#: lib/accomplishments.php:599 lib/accomplishments.php:603
-#: lib/accomplishments.php:607 lib/accomplishments.php:611
-#: lib/accomplishments.php:653 lib/accomplishments.php:657
-#: lib/accomplishments.php:661 lib/accomplishments.php:665
-#: lib/accomplishments.php:669 lib/accomplishments.php:673
-#: lib/accomplishments.php:677 lib/accomplishments.php:681
-#: lib/accomplishments.php:685 lib/accomplishments.php:689
-#: lib/accomplishments.php:731 lib/accomplishments.php:735
-#: lib/accomplishments.php:739 lib/accomplishments.php:743
-#: lib/accomplishments.php:747 lib/accomplishments.php:751
-#: lib/accomplishments.php:755 lib/accomplishments.php:759
-#: lib/accomplishments.php:763 lib/accomplishments.php:767
+#: lib/accomplishments.php:492 lib/accomplishments.php:508
+#: lib/accomplishments.php:590 lib/accomplishments.php:594
+#: lib/accomplishments.php:598 lib/accomplishments.php:602
+#: lib/accomplishments.php:606 lib/accomplishments.php:610
+#: lib/accomplishments.php:614 lib/accomplishments.php:618
+#: lib/accomplishments.php:622 lib/accomplishments.php:626
+#: lib/accomplishments.php:668 lib/accomplishments.php:672
+#: lib/accomplishments.php:676 lib/accomplishments.php:680
+#: lib/accomplishments.php:684 lib/accomplishments.php:688
+#: lib/accomplishments.php:692 lib/accomplishments.php:696
+#: lib/accomplishments.php:700 lib/accomplishments.php:704
+#: lib/accomplishments.php:746 lib/accomplishments.php:750
+#: lib/accomplishments.php:754 lib/accomplishments.php:758
+#: lib/accomplishments.php:762 lib/accomplishments.php:766
+#: lib/accomplishments.php:770 lib/accomplishments.php:774
+#: lib/accomplishments.php:778 lib/accomplishments.php:782
 msgid "object"
 msgstr "objekt"
 
-#: lib/accomplishments.php:483
+#: lib/accomplishments.php:498
 msgid "open cluster"
 msgstr "öppna kluster"
 
-#: lib/accomplishments.php:485
+#: lib/accomplishments.php:500
 msgid "globular cluster"
 msgstr "stjärnhopen"
 
-#: lib/accomplishments.php:487
+#: lib/accomplishments.php:502
 msgid "planetary nebula"
 msgstr "planetariska nebulosan"
 
-#: lib/accomplishments.php:489
+#: lib/accomplishments.php:504
 msgid "galaxy"
 msgstr "galaxy"
 
-#: lib/accomplishments.php:491
+#: lib/accomplishments.php:506
 msgid "nebula"
 msgstr "nebulosa"
 
