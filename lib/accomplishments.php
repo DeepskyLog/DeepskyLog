@@ -115,9 +115,8 @@ class Accomplishments
     {
         if ($catalog == "M") {
             return 3;
-        } elseif  $catalog == "Caldwell") {
+        } elseif  ($catalog == "Caldwell") {
             return 4;
-        }
         } elseif ($catalog == "H400" || $catalog == "HII" || $catalog == "H400-II") {
             return 5;
         }
