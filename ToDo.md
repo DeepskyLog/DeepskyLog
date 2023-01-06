@@ -1,0 +1,108 @@
+# ToDos
+
+## Combined version of old DeepskyLog and laravel DeepskyLog
+
+> /Users/wim/GitHub/DeepskyLog/laravel is http://laravel.test/, the old code is http://deepskylog.test/old/
+
++ deepskylog: uses laravel jetstream and socialstream for authentication
+
+### First version
+
++ [X] Add privacy policy
++ [X] Fix showing (and adding) profile picture
++ [X] Fix sending mails from socialstream
++ [X] Use DeepskyLog logo in mails
++ [ ] Install on test.deepskylog.org
++ [ ] Fix logging in using github, facebook, google and twitter
++ [X] Use DeepskyLog logo
++ [X] Make a dark version of all the socialstream pages
++ [ ] Investigate groups
+  + [ ] Don't create a new group for all new users
+  + [ ] Add all newly registered user to the group observer
+  + [ ] Use group administrators for the admins
++ [ ] Move all the old users to the new database
++ [ ] Check if logging in using the old accounts works
++ [ ] Add translations for the new log in pages
++ [ ] Use the old version of DeepskyLog alongside the new version
++ [ ] Fix the layout of the page to register a new user in the new version
++ [ ] Remove the page to register a new user in the old version
++ [ ] Check log in using the new version and try using one of the old pages as logged in user
+  + [ ] Change link in the old version
+  + [ ] Update the log in code in the old DeepskyLog
+
+```php
+include $_SERVER['DOCUMENT_ROOT'].'/../../vendor/autoload.php';
+
+$app = include $_SERVER['DOCUMENT_ROOT'].'/../../bootstrap/app.php';
+
+$kernel = $app->make('Illuminate\Contracts\Http\Kernel');
+
+$kernel->handle($request = Illuminate\Http\Request::capture());
+
+$id = (isset($_COOKIE[$app['config']['session.cookie']]) ? $app['encrypter']->decrypt($_COOKIE[$app['config']['session.cookie']], false) : null);
+
+if ($id) {
+    $app['session']->driver()->setId(explode('|', $id)[1]);
+    $app['session']->driver()->start();
+
+    // Session::all()
+    // $app['auth']->getSession() //  Illuminate\Session\Store
+    // Auth::user()
+    // $app['auth']->user()
+} else {
+    var_dump('NO SESSION ID');
+}
+```
+
++ Remove code from the old version of DeepskyLog:
+  + Log in
+  + Log out
+  + Reset password
++ Update the layout to show a similar design as the old DeepskyLog.
++ Update the routes.php file to only include the register and log in and log out pages.
++ Look into https://laravel-news.com/laravel-livewire-form-wizard
++ Release new version of DeepskyLog with new registration and login pages.
+
+### Next steps
+
++ Messages in DeepskyLog?
++ Index page
++ Instruments, locations, eyepieces, filters, lenses, ...
++ Sessions
+  + Overview page with all images
+  + Blog style?
++ Observing lists
+
+## Move to Tailwind
+
++ Create new menu
++ Create new footer
++ Create new sidebar
++ Fix all the rest
+
+## Eloquent
+
++ Check Target.php -> protected $with = ['type', 'constellation'];
+
+## PHP 8
+
++ Use new php 8 features
++ Update to use php 8 on the server
+
+## Observing lists
+
+# ToDos for DeepskyLog
+
++ [ ] See GitHub: <https://github.com/DeepskyLog/DeepskyLog/issues>
+
+## Interesting websites
+
++ [ ] Timezones with php: Carbon: <https://carbon.nesbot.com/docs/#api-timezone>
++ [ ] <https://jamesmills.co.uk/2019/02/28/laravel-timezone/> for timezones / date
++ [ ] CODE CLIMATE: <https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication>
++ [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
+  + [ ] See https://laraveldaily.teachable.com/courses/393790/lectures/6329089
++ [ ] <https://github.com/Te7a-Houdini/laravel-trix> for editor
+  + [ ] For observation lists and observations
++ [ ] Feeds: https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel
++ [ ] Check https://laravel-comments.com/ for commenting on observations, observing lists, ...
