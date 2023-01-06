@@ -1,0 +1,17 @@
+language: php
+
+sudo: false
+
+php:
+  - 7.4
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+script:
+  - composer install --prefer-dist --no-interaction --optimize-autoloader
+  - vendor/bin/phpunit --configuration phpunit.xml
+
+after_success:
+  - travis_retry php vendor/bin/coveralls -v
