@@ -14,7 +14,7 @@
         "eslint": "^7.20.0",
         "eslint-config-google": "^0.14.0",
         "lodash": "^4.17.19",
-        "postcss": "^8.2.6",
+        "postcss": "^8.2.10",
         "vue-template-compiler": "^2.6.12",
         "webpack-cli": "^4.0"
     },
