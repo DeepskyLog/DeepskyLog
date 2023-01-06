@@ -16,7 +16,7 @@
         "cybercog/laravel-love": "^8.7",
         "deepskylog/laravel-astronomy-library": "^6.0",
         "deepskylog/laravel-gettext": "^7.3",
-        "dompdf/dompdf": "^1.0",
+        "dompdf/dompdf": "^2.0",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^7.0",
         "laravel/framework": "^8.0",
