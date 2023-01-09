@@ -12,7 +12,9 @@
 + [X] Fix showing (and adding) profile picture
 + [X] Fix sending mails from socialstream
 + [X] Use DeepskyLog logo in mails
-+ [ ] Install on test.deepskylog.org
++ [X] Use php 8.2 on https://test.deepskylog.org/
++ [X] Install on test.deepskylog.org
++ [X] Send mail to verify mail account directly after registration
 + [ ] Fix logging in using github, facebook, google and twitter
 + [X] Use DeepskyLog logo
 + [X] Make a dark version of all the socialstream pages
@@ -24,8 +26,6 @@
 + [ ] Check if logging in using the old accounts works
 + [ ] Add translations for the new log in pages
 + [ ] Use the old version of DeepskyLog alongside the new version
-+ [ ] Fix the layout of the page to register a new user in the new version
-+ [ ] Remove the page to register a new user in the old version
 + [ ] Check log in using the new version and try using one of the old pages as logged in user
   + [ ] Change link in the old version
   + [ ] Update the log in code in the old DeepskyLog
@@ -87,7 +87,6 @@ if ($id) {
 ## PHP 8
 
 + Use new php 8 features
-+ Update to use php 8 on the server
 
 ## Observing lists
 
