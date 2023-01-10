@@ -15,15 +15,16 @@
 + [X] Use php 8.2 on https://test.deepskylog.org/
 + [X] Install on test.deepskylog.org
 + [X] Send mail to verify mail account directly after registration
-+ [ ] Fix logging in using github, facebook, google and twitter
++ [X] Fix logging in using Socialite
 + [X] Use DeepskyLog logo
 + [X] Make a dark version of all the socialstream pages
 + [ ] Investigate groups
   + [ ] Don't create a new group for all new users
-  + [ ] Add all newly registered user to the group observer
+  + [ ] Add all newly registered users to the group observer
   + [ ] Use group administrators for the admins
 + [ ] Move all the old users to the new database
 + [ ] Check if logging in using the old accounts works
++ [ ] Create the new user adminstrator page
 + [ ] Add translations for the new log in pages
 + [ ] Use the old version of DeepskyLog alongside the new version
 + [ ] Check log in using the new version and try using one of the old pages as logged in user
