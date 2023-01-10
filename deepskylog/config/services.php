@@ -34,25 +34,25 @@ return [
     'github' => [
         'client_id' => env('{PROVIDER}_CLIENT_ID'),
         'client_secret' => env('{PROVIDER}_CLIENT_SECRET'),
-        'redirect' => 'http://deepskylog.test/oauth/{provider}/callback',
+        'redirect' => env('{PROVIDER}_REDIRECT'),
     ],
 
     'facebook' => [
         'client_id' => env('{PROVIDER}_CLIENT_ID'),
         'client_secret' => env('{PROVIDER}_CLIENT_SECRET'),
-        'redirect' => 'http://deepskylog.test/oauth/{provider}/callback',
+        'redirect' => env('{PROVIDER}_REDIRECT'),
     ],
 
     'twitter' => [
         'client_id' => env('{PROVIDER}_CLIENT_ID'),
         'client_secret' => env('{PROVIDER}_CLIENT_SECRET'),
-        'redirect' => 'http://deepskylog.test/oauth/{provider}/callback',
+        'redirect' => env('{PROVIDER}_REDIRECT'),
     ],
 
     'google' => [
         'client_id' => env('{PROVIDER}_CLIENT_ID'),
         'client_secret' => env('{PROVIDER}_CLIENT_SECRET'),
-        'redirect' => 'http://deepskylog.test/oauth/{provider}/callback',
+        'redirect' => env('{PROVIDER}_REDIRECT'),
     ],
 
 ];
