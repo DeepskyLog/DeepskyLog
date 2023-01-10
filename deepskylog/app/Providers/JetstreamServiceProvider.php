@@ -50,12 +50,17 @@ class JetstreamServiceProvider extends ServiceProvider
             'read',
             'update',
             'delete',
+            'admin'
         ])->description('Administrator users can perform any action.');
 
-        Jetstream::role('editor', 'Editor', [
+        Jetstream::role('observer', 'Observer', [
             'read',
             'create',
             'update',
-        ])->description('Editor users have the ability to read, create, and update.');
+        ])->description('Observers can add instruments, locations, eyepieces, observing lists, observations, ...');
+
+        Jetstream::role('guest', 'Guest', [
+            'read',
+        ])->description('Guests or logged in users without a verified email address can only view everything.');
     }
 }
