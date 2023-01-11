@@ -19,12 +19,15 @@
 + [X] Use DeepskyLog logo
 + [X] Make a dark version of all the socialstream pages
 + [ ] Investigate groups
+  + [X] Add new role 'Guest'
+  + [ ] Add a new team Observers, Database Experts and Administrators.  Add all new users to the Observers team.  Remove the role admin.
   + [ ] Don't create a new group for all new users
-  + [ ] Add all newly registered users to the group observer
+  + [ ] Add all newly registered users to the Observers team
   + [ ] Use group administrators for the admins
 + [ ] Move all the old users to the new database
 + [ ] Check if logging in using the old accounts works
 + [ ] Create the new user adminstrator page
++ [ ] Check if the user belongs to the correct role / team
 + [ ] Add translations for the new log in pages
 + [ ] Use the old version of DeepskyLog alongside the new version
 + [ ] Check log in using the new version and try using one of the old pages as logged in user
