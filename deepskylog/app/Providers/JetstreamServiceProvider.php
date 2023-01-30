@@ -44,23 +44,5 @@ class JetstreamServiceProvider extends ServiceProvider
     protected function configurePermissions(): void
     {
         Jetstream::defaultApiTokenPermissions(['read']);
-
-        Jetstream::role('admin', 'Administrator', [
-            'create',
-            'read',
-            'update',
-            'delete',
-            'admin'
-        ])->description('Administrator users can perform any action.');
-
-        Jetstream::role('observer', 'Observer', [
-            'read',
-            'create',
-            'update',
-        ])->description('Observers can add instruments, locations, eyepieces, observing lists, observations, ...');
-
-        Jetstream::role('guest', 'Guest', [
-            'read',
-        ])->description('Guests or logged in users without a verified email address can only view everything.');
     }
 }

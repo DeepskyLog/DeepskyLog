@@ -1,5 +1,7 @@
 # ToDos
 
++ [ ] See GitHub: <https://github.com/DeepskyLog/DeepskyLog/issues>
+
 ## Combined version of old DeepskyLog and laravel DeepskyLog
 
 > /Users/wim/GitHub/DeepskyLog/laravel is http://laravel.test/, the old code is http://deepskylog.test/old/
@@ -20,10 +22,12 @@
 + [X] Make a dark version of all the socialstream pages
 + [ ] Investigate groups
   + [X] Add new role 'Guest'
-  + [ ] Add a new team Observers, Database Experts and Administrators.  Add all new users to the Observers team.  Remove the role admin.
-  + [ ] Don't create a new group for all new users
-  + [ ] Add all newly registered users to the Observers team
-  + [ ] Use group administrators for the admins
+  + [X] Add a new team Observers, Database Experts and Administrators.
+  + [X] Add all new users to the Observers team.  Remove the role admin.
+  + [X] Don't create a new group for all new users
+  + [X] Use group administrators for the admins
+  + [ ] Remove the possibility of creating a new team
+  + [ ] Don't show all users of the current team is the user is an Observer
 + [ ] Move all the old users to the new database
 + [ ] Check if logging in using the old accounts works
 + [ ] Create the new user adminstrator page
@@ -93,10 +97,6 @@ if ($id) {
 + Use new php 8 features
 
 ## Observing lists
-
-# ToDos for DeepskyLog
-
-+ [ ] See GitHub: <https://github.com/DeepskyLog/DeepskyLog/issues>
 
 ## Interesting websites
 
