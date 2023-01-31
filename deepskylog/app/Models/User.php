@@ -78,4 +78,51 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $this->getPhotoUrl();
     }
+
+    /**
+     * Overrides the methods from HasTeams.Switch the user's context to the given team.
+     *
+     * @param  mixed  $team
+     * @return bool
+     */
+    public function switchTeam($team)
+    {
+        $this->forceFill([
+            'current_team_id' => $team->id,
+        ])->save();
+
+        $this->setRelation('currentTeam', $team);
+
+        return true;
+    }
+
+    /**
+     * Checks if the user belongs to the administrators team
+     *
+     * @return string
+     */
+    public function isAdministrator(): bool
+    {
+        return $this->isCurrentTeam(Team::where('name', 'Administrators')->firstOrFail());
+    }
+
+    /**
+     * Checks if the user belongs to the team of Database experts
+     *
+     * @return string
+     */
+    public function isDatabaseExpert(): bool
+    {
+        return $this->isCurrentTeam(Team::where('name', 'Database Experts')->firstOrFail());
+    }
+
+    /**
+     * Checks if the user belongs to the team of Observers
+     *
+     * @return string
+     */
+    public function isObserver(): bool
+    {
+        return $this->isCurrentTeam(Team::where('name', 'Observers')->firstOrFail());
+    }
 }
