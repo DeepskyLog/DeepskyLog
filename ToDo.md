@@ -26,8 +26,10 @@
   + [X] Add all new users to the Observers team.  Remove the role admin.
   + [X] Don't create a new group for all new users
   + [X] Use group administrators for the admins
-  + [ ] Remove the possibility of creating a new team
-  + [ ] Don't show all users of the current team is the user is an Observer
+  + [X] Create isAdministrator() method
+  + [X] Write unit tests
+  + [X] Remove the possibility of creating a new team
+  + [X] Don't show all users of the current team is the user is an Observer
 + [ ] Move all the old users to the new database
 + [ ] Check if logging in using the old accounts works
 + [ ] Create the new user adminstrator page

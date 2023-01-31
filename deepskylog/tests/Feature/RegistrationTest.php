@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 use Laravel\Fortify\Features;
 use Laravel\Jetstream\Jetstream;
-use Tests\TestCase;
+use Database\Seeders\GroupSeeder;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RegistrationTest extends TestCase
 {
@@ -40,6 +41,8 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
+        $this->seed(GroupSeeder::class);
+
         if (! Features::enabled(Features::registration())) {
             $this->markTestSkipped('Registration support is not enabled.');
 

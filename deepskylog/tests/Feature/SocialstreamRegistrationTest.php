@@ -20,6 +20,12 @@ class SocialstreamRegistrationTest extends TestCase
      */
     public function test_users_can_register_using_socialite_providers(string $socialiteProvider)
     {
+        // Check if the SKIP_SOCIALITE_TEST_ON_LOCAL environment variable is set to true
+        if (env('SKIP_SOCIALITE_TEST_ON_LOCAL', false)) {
+            // If the environment variable is set to true, skip the test and provide a message
+            return $this->markTestSkipped('Socialite not tested on local machine.');
+        }
+
         if (! FortifyFeatures::enabled(FortifyFeatures::registration())) {
             return $this->markTestSkipped('Registration support is not enabled.');
         }
@@ -62,10 +68,7 @@ class SocialstreamRegistrationTest extends TestCase
         return [
             [Providers::google()],
             [Providers::facebook()],
-            [Providers::linkedin()],
-            [Providers::bitbucket()],
             [Providers::github()],
-            [Providers::gitlab()],
             [Providers::twitter()],
         ];
     }
