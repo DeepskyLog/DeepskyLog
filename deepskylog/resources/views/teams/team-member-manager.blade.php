@@ -158,19 +158,18 @@
                                         </div>
                                     @endif
 
-                                    <!-- Leave Team -->
-                                    @if ($this->user->id === $user->id)
-                                        <button class="cursor-pointer ml-6 text-sm text-red-500"
-                                            wire:click="$toggle('confirmingLeavingTeam')">
-                                            {{ __('Leave') }}
-                                        </button>
-
-                                        <!-- Remove Team Member -->
-                                    @elseif (Gate::check('removeTeamMember', $team))
-                                        <button class="cursor-pointer ml-6 text-sm text-red-500"
-                                            wire:click="confirmTeamMemberRemoval('{{ $user->id }}')">
-                                            {{ __('Remove') }}
-                                        </button>
+                                    <!-- Show when the user was added -->
+                                    <div class="ml-4">{{ $user->created_at->diffForHumans() }}</div>
+                                    <!-- Remove Team Member -->
+                                    @if (Gate::check('removeTeamMember', $team))
+                                        @if ($user->id != Auth::user()->id)
+                                            <button class="cursor-pointer ml-6 text-sm text-red-500"
+                                                wire:click="confirmTeamMemberRemoval('{{ $user->id }}')">
+                                                {{ __('Remove') }}
+                                            </button>
+                                        @else
+                                            <div class="ml-6 text-sm">Remove</div>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
