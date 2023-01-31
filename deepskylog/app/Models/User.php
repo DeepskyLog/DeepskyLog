@@ -113,7 +113,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasAdministratorPrivileges(): bool
     {
-        if ($this->teams()->where("name", "Administrators")->get()) {
+        if ($this->teams()->where("name", "Administrators")->count() > 0) {
             return true;
         } else {
             return false;
