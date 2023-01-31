@@ -1,66 +1,43 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+[![Logo](public/images/logo2.png)](https://www.deepskylog.org/)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# DeepskyLog
 
-## About Laravel
+> Attention all amateur astronomers! Are you tired of manually logging your astronomical observations and managing your equipment? Say hello to DeepskyLog - the one-stop solution for all your astronomical needs. With DeepskyLog, you can easily log your observations, manage your equipment and keep track of all your data in one convenient place. No more cluttered notebooks or missed observations - DeepskyLog is user-friendly and accessible from anywhere. Upgrade your astronomical experience with DeepskyLog. Try it now!
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* Visit [DeepskyLog](https://www.deepskylog.org) and start using a web application to prepare, log, and compare visual astronomical observations.
+* You can find more than 150,000 observations and 17,000 sketches in DeepskyLog. There are visual observations of
+  * Deep-sky objects
+  * Comets
+  * Planets
+  * Moon
+  * Sun
+* Photographic observations are unfortunately not allowed in DeepskyLog. A very good website to log your photographic observations is [Astrobin](https://www.astrobin.com/welcome/).
+* Be part of the community and start sharing your observations and sketches today!
+* DeepskyLog is free to use and will always be free to use. If you want to sponsor DeepskyLog, we will use it to upgrade our servers to improve the speed and the disk space. Sponsoring can be done by clicking the **Sponsor** button on top of the [GitHub page](https://github.com/DeepskyLog/DeepskyLog).
+* If you like DeepskyLog, give it a star. It means a lot to the people maintaining it.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Want to contribute?
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* Read our [Code of Conduct](CODE_OF_CONDUCT.md).
+* DeepskyLog is always looking for amateur astronomers to help improving DeepskyLog. You don't need to be a programmer to help us! We are also looking for Deep-sky database maintainers, translators, testers, bug triaging, documentation writers, ... As it is unfortunately not always clear to observe, amateur astronomers can still do astronomy by helping out the DeepskyLog team! Be part of the DeepskyLog community today!
+* If you want to help us improve, take a minute to read the [Contribution Guidelines](Contributing.md) first.
+* If you find a problem with the behavior, database or translation of DeepskyLog, please [open an issue](https://github.com/DeepskyLog/DeepskyLog/issues/new/choose).
 
-## Learning Laravel
+## Credits & Sponsors
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* This repository is maintained by the [DeepskyLog organization on GitHub](https://github.com/DeepskyLog).
+* Logos, names and trademarks are not to be used without the explicit consent of the maintainers or owners of the DeepskyLog organization.
+* Our website is running on a web server sponsored by [VVS - Vereniging voor Sterrenkunde](http://www.vvs.be/), the amateur astronomy assocation in Belgium.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## The DeepskyLog team
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+The first version of DeepskyLog was developed in 2004 by [Wim De Meester](https://github.com/WimDeMeester) and [Jan Vanautgaerden](https://github.com/orgs/DeepskyLog/people/janvanautgaerden). Over the years, a lot of developers helped in making DeepskyLog what it is today.
 
-## Laravel Sponsors
+The responsibilities in the DeepskyLog team are:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Responsibility | Who? |
+| -------------- | ---- |
+| Project Management | [WimDeMeester](https://github.com/WimDeMeester) |
+| Development | [WimDeMeester](https://github.com/WimDeMeester) |
+| Issues, Deepsky database | [TomCorstjens](https://github.com/TomCorstjens)
+| Documentation | [SkyNomad](https://github.com/SkyNomad) |
