@@ -109,7 +109,7 @@ class IsAdministratorTest extends TestCase
      * @param mixed $user The user.
      * @param string $teamName The name of the team to assign the user to.
      */
-    private function addUserToTeam(mixed $user, string $teamName)
+    private function addUserToTeam(mixed $user, string $teamName): void
     {
         // Get the team from the name
         $team = $this->getTeamFromString($teamName);
@@ -124,7 +124,7 @@ class IsAdministratorTest extends TestCase
      * @param mixed $user The user.
      * @param string $teamName The name of the team to assign the user to.
      */
-    private function switchUserToTeam(mixed $user, string $teamName)
+    private function switchUserToTeam(mixed $user, string $teamName): void
     {
         // Get the team from the name
         $team = $this->getTeamFromString($teamName);

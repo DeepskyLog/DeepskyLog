@@ -1,8 +1,12 @@
 # Tips and tricks
 
-## Installation
+## Installation on the server
 
 ```bash
+module load php8
+composer update
+npm update
+npm run build
 php artisan migrate:fresh
 php artisan db:seed
 ```
