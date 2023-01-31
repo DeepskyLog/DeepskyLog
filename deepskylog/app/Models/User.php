@@ -97,7 +97,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Checks if the user belongs to the administrators team
+     * Checks if the user's active team is the administrators team
      *
      * @return string
      */
@@ -107,7 +107,21 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Checks if the user belongs to the team of Database experts
+     * Checks if the user's active team is the administrators team
+     *
+     * @return string
+     */
+    public function hasAdministratorPrivileges(): bool
+    {
+        if ($this->teams()->where("name", "Administrators")->get()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if the user's active team is the team of Database experts
      *
      * @return string
      */
@@ -117,7 +131,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Checks if the user belongs to the team of Observers
+     * Checks if the user's active team is the team of Observers
      *
      * @return string
      */

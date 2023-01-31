@@ -20,7 +20,7 @@
 + [X] Fix logging in using Socialite
 + [X] Use DeepskyLog logo
 + [X] Make a dark version of all the socialstream pages
-+ [ ] Investigate groups
++ [X] Investigate groups
   + [X] Add new role 'Guest'
   + [X] Add a new team Observers, Database Experts and Administrators.
   + [X] Add all new users to the Observers team.  Remove the role admin.

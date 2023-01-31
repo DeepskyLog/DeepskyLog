@@ -28,7 +28,12 @@ php artisan test
 + Check if the user belongs to the correct team:
 
 ```php
+// If the current user's active group is the Administrators group
 return $user->isAdministrator();
+// If the current user's active group is the Database Expert group
 return $user->isDatabaseExpert();
+// If the current user's active group is the Observers group
 return $user->isObserver();
+// If the current user belongs to the Administrators group (does not need to be active)
+return $user->hasAdministratorPrivileges();
 ```

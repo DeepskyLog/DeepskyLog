@@ -23,7 +23,7 @@ class TeamPolicy
      */
     public function view(User $user, Team $team): bool
     {
-        return $user->belongsToTeam($team);
+        return $user->current_team_id == $team->id;
     }
 
     /**
