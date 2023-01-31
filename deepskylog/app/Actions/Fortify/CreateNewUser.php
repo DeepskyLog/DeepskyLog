@@ -40,7 +40,7 @@ class CreateNewUser implements CreatesNewUsers
     }
 
     /**
-     * Create a personal team for the user.
+     * Add the user to the given team.
      */
     protected function addToTeam(User $user, string $team): void
     {

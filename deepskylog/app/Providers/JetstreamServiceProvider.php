@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Actions\Jetstream\AddTeamMember;
-use App\Actions\Jetstream\CreateTeam;
 use App\Actions\Jetstream\DeleteTeam;
 use App\Actions\Jetstream\DeleteUser;
 use App\Actions\Jetstream\InviteTeamMember;
@@ -29,7 +28,6 @@ class JetstreamServiceProvider extends ServiceProvider
     {
         $this->configurePermissions();
 
-        Jetstream::createTeamsUsing(CreateTeam::class);
         Jetstream::updateTeamNamesUsing(UpdateTeamName::class);
         Jetstream::addTeamMembersUsing(AddTeamMember::class);
         Jetstream::inviteTeamMembersUsing(InviteTeamMember::class);

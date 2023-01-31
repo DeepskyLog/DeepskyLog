@@ -57,23 +57,18 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                     $this->createsConnectedAccounts->create($user, $provider, $providerUser)
                 );
 
-                $this->createTeam($user);
+                $this->addToTeam($user, "Observers");
             });
         });
     }
 
     /**
-     * Create a personal team for the user.
-     *
-     * @param  \App\Models\User  $user
-     * @return void
+     * Add the user to the given team.
      */
-    protected function createTeam(User $user)
+    protected function addToTeam(User $user, string $team): void
     {
-        $user->ownedTeams()->save(Team::forceCreate([
-            'user_id' => $user->id,
-            'name' => explode(' ', $user->name, 2)[0]."'s Team",
-            'personal_team' => true,
-        ]));
+        $team = Team::where("name", $team)->firstOrFail();
+        $user->teams()->attach($team);
+        $user->switchTeam($team);
     }
 }
