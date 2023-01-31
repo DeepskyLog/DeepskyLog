@@ -7,6 +7,12 @@ php artisan migrate:fresh
 php artisan db:seed
 ```
 
+## Unit testing
+
+```bash
+php artisan test
+```
+
 ## User authentication
 
 ### Teams
@@ -21,4 +27,8 @@ php artisan db:seed
 
 + Check if the user belongs to the correct team:
 
-```return $user->belongsToTeam(Team::::where("name", "Observers")->firstOrFail());```
+```php
+return $user->isAdministrator();
+return $user->isDatabaseExpert();
+return $user->isObserver();
+```
