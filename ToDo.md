@@ -30,7 +30,8 @@
   + [X] Write unit tests
   + [X] Remove the possibility of creating a new team
   + [X] Don't show all users of the current team is the user is an Observer
-+ [ ] Move all the old users to the new database
++ [X] Create migration to add all needed information to the users table, create unit test
++ [ ] Create seeder to move all the old users to the new database, create unit test
 + [ ] Check if logging in using the old accounts works
 + [ ] Create the new user adminstrator page
 + [ ] Check if the user belongs to the correct role / team
