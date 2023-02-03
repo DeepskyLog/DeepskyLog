@@ -14,7 +14,6 @@ return new class () extends Migration {
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('username')->after('id')->default('');
-            $table->string('type')->default('default');
             $table->string('country')->default('');
             $table->unsignedinteger('stdlocation')->nullable();
             $table->unsignedinteger('stdtelescope')->nullable();
@@ -40,10 +39,10 @@ return new class () extends Migration {
             $table->string('version')->default('2023.2');
             $table->boolean('showInches')->default(false);
 
-            $table->foreign('stdlocation')->nullable()->references('id')
-                ->on('deepskylog.locations');
-            $table->foreign('stdtelescope')->nullable()->references('id')
-                ->on('deepskylog.instruments');
+            // $table->foreign('stdlocation')->nullable()->references('id')
+            // ->on('deepskylog.locations');
+            // $table->foreign('stdtelescope')->nullable()->references('id')
+            // ->on('deepskylog.instruments');
             // $table->foreign('standardAtlasCode')->references('code')->on('deepskylog.atlases');
             $table->string('about', 1000)->nullable();
         });

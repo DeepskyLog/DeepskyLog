@@ -16,7 +16,6 @@ class UsersTableTest extends TestCase
 
         $this->assertTrue(Schema::hasColumns('users', [
             'username',
-            'type',
             'country',
             'stdlocation',
             'stdtelescope',
@@ -53,7 +52,6 @@ class UsersTableTest extends TestCase
 
         $this->assertFalse(Schema::hasColumns('users', [
             'username',
-            'type',
             'country',
             'stdlocation',
             'stdtelescope',
