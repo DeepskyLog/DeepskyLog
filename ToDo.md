@@ -31,9 +31,13 @@
   + [X] Remove the possibility of creating a new team
   + [X] Don't show all users of the current team is the user is an Observer
 + [X] Create migration to add all needed information to the users table, create unit test
-+ [ ] Create seeder to move all the old users to the new database, create unit test
 + [ ] Check if logging in using the old accounts works
-+ [ ] Create the new user adminstrator page
++ [ ] Make it possible to log in using the user id (and not using the password)
++ [ ] When registering, add the userid
++ [ ] Create seeder to move all the old users to the new database, create unit test
++ [ ] In the observer page, add all the extra information
++ [ ] Create a new page to see the observer details (when someone clicks on the observer)
++ [ ] Create the all users adminstrator page
 + [ ] Check if the user belongs to the correct role / team
 + [ ] Add translations for the new log in pages
 + [ ] Use the old version of DeepskyLog alongside the new version
