@@ -1,6 +1,6 @@
 <div class="p-6 sm:px-20 bg-gray-900 border-b border-gray-700">
     <div>
-        <x-jet-application-logo class="block h-12 w-auto" />
+        <x-application-logo class="block h-12 w-auto" />
     </div>
 
     <div class="mt-8 text-2xl">

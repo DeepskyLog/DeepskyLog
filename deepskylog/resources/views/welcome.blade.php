@@ -411,7 +411,7 @@
 
         <div>
             <div>
-                <x-jet-application-logo class="block h-12 w-auto" />
+                <x-application-logo class="block h-12 w-auto" />
             </div>
 
             <div class="bg-gray-900">
