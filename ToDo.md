@@ -39,8 +39,8 @@
   + [X] Check if the username is unique
   + [X] Add to the database
   + [X] Show the username (id) in the list with users of a group
-  + [ ] Update tests
-  + [ ] Check username when registering using socialstream
+  + [X] Update tests
+  + [ ] Check/create username when registering using socialstream
 + [ ] Create seeder to move all the old users to the new database, create unit test
 + [ ] In the observer page, add all the extra information
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
