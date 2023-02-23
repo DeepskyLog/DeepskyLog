@@ -61,7 +61,7 @@ class FortifyServiceProvider extends ServiceProvider
             if ($user &&
                 Hash::check($request->password, $user->password)) {
                 return $user;
-            } elseif ($user->password == md5(htmlentities($request->password))) {
+            } elseif ($user && $user->password == md5(htmlentities($request->password))) {
                 // Update to the new, more secure password.
                 $user->password = Hash::make($request->password);
                 $user->save();
