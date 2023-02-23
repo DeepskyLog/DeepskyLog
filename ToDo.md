@@ -35,9 +35,12 @@
 + [X] Make it possible to log in using the user id (and not using the mail address)
 + [X] Don't show the teams dropdown if the user only belongs to one team.
 + [ ] When registering, add the userid
-  + [ ] Update GUI
-  + [ ] Check if the username is unique
-  + [ ] Add to the database
+  + [X] Update GUI
+  + [X] Check if the username is unique
+  + [X] Add to the database
+  + [X] Show the username (id) in the list with users of a group
+  + [ ] Update tests
+  + [ ] Check username when registering using socialstream
 + [ ] Create seeder to move all the old users to the new database, create unit test
 + [ ] In the observer page, add all the extra information
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
