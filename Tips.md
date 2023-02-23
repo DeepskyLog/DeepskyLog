@@ -3,7 +3,9 @@
 ## Installation on the server
 
 ```bash
-module load php8
+cd /var/www/test.deepskylog.org/DeepskyLog/deepskylog
+git pull
+module load php82
 composer update
 npm update
 npm run build

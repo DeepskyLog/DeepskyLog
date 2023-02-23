@@ -33,12 +33,8 @@ class CreateUserFromProvider implements CreatesUserFromProvider
 
     /**
      * Create a new user from a social provider user.
-     *
-     * @param  string  $provider
-     * @param  \Laravel\Socialite\Contracts\User  $providerUser
-     * @return \App\Models\User
      */
-    public function create(string $provider, ProviderUserContract $providerUser)
+    public function create(string $provider, ProviderUserContract $providerUser): mixed
     {
         return DB::transaction(function () use ($provider, $providerUser) {
             return tap(User::create([
