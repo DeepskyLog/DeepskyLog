@@ -31,10 +31,14 @@
   + [X] Remove the possibility of creating a new team
   + [X] Don't show all users of the current team is the user is an Observer
 + [X] Create migration to add all needed information to the users table, create unit test
-+ [ ] Check if logging in using the old accounts works
-+ [ ] Make it possible to log in using the user id (and not using the password)
++ [X] Check if logging in using the old accounts works
++ [X] Make it possible to log in using the user id (and not using the mail address)
 + [ ] When registering, add the userid
+  + [ ] Update GUI
+  + [ ] Check if the username is unique
+  + [ ] Add to the database
 + [ ] Create seeder to move all the old users to the new database, create unit test
++ [ ] Don't show the teams dropdown if the user only belongs to one team.
 + [ ] In the observer page, add all the extra information
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
 + [ ] Create the all users adminstrator page
