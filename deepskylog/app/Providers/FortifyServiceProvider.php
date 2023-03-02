@@ -49,7 +49,7 @@ class FortifyServiceProvider extends ServiceProvider
             // Check for the correct user.  Use the mail address or the user id.
             $validator = Validator::make(['email' => $request->email], [
                 'email' => 'required|email'
-              ]);
+            ]);
 
             if ($validator->passes()) {
                 $user = User::where('email', $request->email)->first();
@@ -57,9 +57,10 @@ class FortifyServiceProvider extends ServiceProvider
                 $user = User::where('username', $request->email)->first();
             }
 
+            dd($user);
             // Check if the old password is still used
             if ($user &&
-                Hash::check($request->password, $user->password)) {
+            Hash::check($request->password, $user->password)) {
                 return $user;
             } elseif ($user && $user->password == md5(htmlentities($request->password))) {
                 // Update to the new, more secure password.

@@ -4,8 +4,8 @@ namespace App\Actions\Socialstream;
 
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Socialstream;
-use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Contracts\User;
+use Laravel\Socialite\Facades\Socialite;
 
 class ResolveSocialiteUser implements ResolvesSocialiteUsers
 {

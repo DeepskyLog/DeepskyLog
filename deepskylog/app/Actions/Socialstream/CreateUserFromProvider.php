@@ -5,6 +5,7 @@ namespace App\Actions\Socialstream;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Socialstream;
@@ -39,6 +40,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
         return DB::transaction(function () use ($provider, $providerUser) {
             return tap(User::create([
                 'name' => $providerUser->getName(),
+                'username' => Str::studly($providerUser->getName()),
                 'email' => $providerUser->getEmail(),
             ]), function (User $user) use ($provider, $providerUser) {
                 $user->markEmailAsVerified();
@@ -52,7 +54,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                 $user->switchConnectedAccount(
                     $this->createsConnectedAccounts->create($user, $provider, $providerUser)
                 );
-
+                $user->save();
                 $this->addToTeam($user, "Observers");
             });
         });

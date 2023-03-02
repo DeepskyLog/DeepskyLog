@@ -50,7 +50,9 @@ return [
     'features' => [
         Features::createAccountOnFirstLogin(),
         Features::generateMissingEmails(),
+        Features::loginOnRegistration(),
         Features::rememberSession(),
         Features::providerAvatars(),
+        Features::refreshOauthTokens(),
     ],
 ];
