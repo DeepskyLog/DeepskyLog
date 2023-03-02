@@ -57,7 +57,6 @@ class FortifyServiceProvider extends ServiceProvider
                 $user = User::where('username', $request->email)->first();
             }
 
-            dd($user);
             // Check if the old password is still used
             if ($user &&
             Hash::check($request->password, $user->password)) {
