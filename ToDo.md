@@ -40,11 +40,15 @@
   + [X] Add to the database
   + [X] Show the username (id) in the list with users of a group
   + [X] Update tests
-  + [ ] Check/create username when registering using socialstream
+  + [X] Check/create username when registering using socialstream
 + [ ] Create seeder to move all the old users to the new database, create unit test
+  + [X] Move all users
+  + [ ] Add pictures to the users.
 + [ ] In the observer page, add all the extra information
+  + [ ] Start with the username
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
-+ [ ] Create the all users adminstrator page
++ [ ] Create the all users administrator page
+  + [ ] Put in a table in stead of a normal list
 + [ ] Check if the user belongs to the correct role / team
 + [ ] Add translations for the new log in pages
 + [ ] Use the old version of DeepskyLog alongside the new version

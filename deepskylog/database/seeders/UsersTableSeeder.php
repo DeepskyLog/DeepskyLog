@@ -22,8 +22,6 @@ class UsersTableSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
         DB::table('users')->truncate();
 
-        $roles = ['vvs04478', 'Eric VdJ', 'vvs03296', 'wvreeven', 'Jef De Wit', 'Bob Hogeveen', 'yann_admin', 'wim', 'Albireo', 'J.W. van der Kouwe', 'SkyHeerlen'];
-
         $languages = ['en' => 'en_US', 'de' => 'de_DE', 'fr' => 'fr_FR', 'nl' => 'nl_NL', 'sv' => 'sv_SV', 'es' => 'es_ES'];
 
         $firstUser = $accountData->where('id', 'wim')[2];
@@ -113,60 +111,79 @@ class UsersTableSeeder extends Seeder
                 && $accountSingle->id !== 'admin'
                 && $accountSingle->id !== 'wim'
             ) {
-                // Set the groups of the users
-                // Can we already update the passwords to the new format?
-                // Write method to add user
-                // Write method to add user to group
-            //     $user = User::create(
-            //         [
-            //             'username'            => html_entity_decode($accountSingle->id),
-            //             'name'                => $name,
-            //             'email'               => $accountSingle->email,
-            //             'email_verified_at'   => $date,
-            //             'type'                => $type,
-            //             'stdlocation'         => $stdlocation,
-            //             'stdtelescope'        => $stdtelescope,
-            //             'language'            => $language,
-            //             'icqname'             => $accountSingle->icqname,
-            //             'observationlanguage' => $accountSingle->observationlanguage,
-            //             'standardAtlasCode'   => $atlas,
-            //             'fstOffset'           => $accountSingle->fstOffset,
-            //             'copyright'           => $accountSingle->copyright,
-            //             'overviewdsos'        => $accountSingle->overviewdsos,
-            //             'lookupdsos'          => $accountSingle->lookupdsos,
-            //             'detaildsos'          => $accountSingle->detaildsos,
-            //             'overviewstars'       => $accountSingle->overviewstars,
-            //             'lookupstars'         => $accountSingle->lookupstars,
-            //             'detailstars'         => $accountSingle->detailstars,
-            //             'atlaspagefont'       => $accountSingle->atlaspagefont,
-            //             'photosize1'          => $accountSingle->photosize1,
-            //             'overviewFoV'         => $accountSingle->overviewFoV,
-            //             'photosize2'          => $accountSingle->photosize2,
-            //             'lookupFoV'           => $accountSingle->lookupFoV,
-            //             'detailFoV'           => $accountSingle->detailFoV,
-            //             'sendMail'            => $accountSingle->sendMail,
-            //             'version'             => $accountSingle->version,
-            //             'showInches'          => $accountSingle->showInches,
-            //             'created_at'          => $date,
-            //         ]
-            //     );
-            //     $user->setMd5Password($accountSingle->password);
-            //     $user->save();
+                $user = User::create(
+                    [
+                        'username'            => html_entity_decode($accountSingle->id),
+                        'name'                => $name,
+                        'email'               => $accountSingle->email,
+                        'email_verified_at'   => $date,
+                        'stdlocation'         => $stdlocation,
+                        'stdtelescope'        => $stdtelescope,
+                        'language'            => $language,
+                        'icqname'             => $accountSingle->icqname,
+                        'observationlanguage' => $accountSingle->observationlanguage,
+                        'standardAtlasCode'   => $atlas,
+                        'fstOffset'           => $accountSingle->fstOffset,
+                        'copyright'           => $accountSingle->copyright,
+                        'overviewdsos'        => $accountSingle->overviewdsos,
+                        'lookupdsos'          => $accountSingle->lookupdsos,
+                        'detaildsos'          => $accountSingle->detaildsos,
+                        'overviewstars'       => $accountSingle->overviewstars,
+                        'lookupstars'         => $accountSingle->lookupstars,
+                        'detailstars'         => $accountSingle->detailstars,
+                        'atlaspagefont'       => $accountSingle->atlaspagefont,
+                        'photosize1'          => $accountSingle->photosize1 ? $accountSingle->photosize1 : 60,
+                        'overviewFoV'         => $accountSingle->overviewFoV ? $accountSingle->overviewFoV : 120,
+                        'photosize2'          => $accountSingle->photosize2 ? $accountSingle->photosize2 : 25,
+                        'lookupFoV'           => $accountSingle->lookupFoV ? $accountSingle->lookupFoV : 60,
+                        'detailFoV'           => $accountSingle->detailFoV ? $accountSingle->detailFoV : 15,
+                        'sendMail'            => $accountSingle->sendMail,
+                        'version'             => $accountSingle->version,
+                        'showInches'          => $accountSingle->showInches,
+                        'created_at'          => $date,
+                    ]
+                );
+                $user->password = $accountSingle->password;
+                $user->save();
 
-                if (in_array($accountSingle->id, $roles)) {
-                    $type = 'admin';
+                // Add the user to the correct teams
+                if ($accountSingle->id == 'vvs04478') {
+                    $team = Team::where('name', 'Administrators')->first();
+                    // Attach the user to the team
+                    $user->teams()->attach($team);
                 }
 
-            //     // TODO: Make sure to make a link to the correct directory!
-            //     $filename = 'observer_pics/'
-            //         . $user->username . '.jpg';
+                if ($accountSingle->id == 'vvs04478Admin' ||
+                    $accountSingle->id == 'Eric VdJ' ||
+                    $accountSingle->id == 'vvs03296' ||
+                    $accountSingle->id == 'wvreeven' ||
+                    $accountSingle->id == 'Albireo' ||
+                    $accountSingle->id == 'Jef De Wit' ||
+                    $accountSingle->id == 'yapo' ||
+                    $accountSingle->id == 'J.W. van der Kouwe' ||
+                    $accountSingle->id == 'SkyHeerlen' ||
+                    $accountSingle->id == 'Bob Hogeveen') {
+                    $team = Team::where('name', 'Database Experts')->first();
+                    // Attach the user to the team
+                    $user->teams()->attach($team);
+                }
+                $team = Team::where('name', 'Observers')->first();
+                // Attach the user to the team
+                $user->teams()->attach($team);
 
-            //     if (file_exists($filename)) {
-            //         $user
-            //             ->copyMedia($filename)
-            //             ->usingFileName($user->username . '.png')
-            //             ->toMediaCollection('observer');
-            //     }
+                // Switch the user to the specified team
+                $user->switchTeam($team);
+
+                // TODO: Make sure to make a link to the correct directory!
+                // $filename = 'observer_pics/'
+                //     . $user->username . '.jpg';
+
+                // if (file_exists($filename)) {
+                //     $user
+                //         ->copyMedia($filename)
+                //         ->usingFileName($user->username . '.png')
+                //         ->toMediaCollection('observer');
+                // }
             }
         }
     }
