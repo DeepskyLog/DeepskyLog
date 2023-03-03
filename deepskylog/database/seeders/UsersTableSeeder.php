@@ -4,9 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Team;
 use App\Models\User;
+use Illuminate\Http\File;
+use Illuminate\Support\Str;
 use App\Models\ObserversOld;
 use Illuminate\Database\Seeder;
-use Illuminate\Http\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -91,8 +92,8 @@ class UsersTableSeeder extends Seeder
         $filename = 'observer_pics/wim.jpg';
 
         if (file_exists($filename)) {
-            $path = Storage::putFile('profile-photos', new File($filename));
-            $user->profile_photo_path = $path;
+            $path = Storage::putFile('public/profile-photos', new File($filename));
+            $user->profile_photo_path = Str::replace('public/', '', $path);
             $user->save();
         }
         foreach ($accountData as $accountSingle) {
@@ -187,8 +188,8 @@ class UsersTableSeeder extends Seeder
                     . $user->username . '.jpg';
 
                 if (file_exists($filename)) {
-                    $path = Storage::putFile('profile-photos', new File($filename));
-                    $user->profile_photo_path = $path;
+                    $path = Storage::putFile('public/profile-photos', new File($filename));
+                    $user->profile_photo_path = Str::replace('public/', '', $path);
                     $user->save();
                 }
             }
