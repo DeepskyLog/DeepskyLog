@@ -175,15 +175,12 @@ class UsersTableSeeder extends Seeder
                 $user->switchTeam($team);
 
                 // TODO: Make sure to make a link to the correct directory!
-                // $filename = 'observer_pics/'
-                //     . $user->username . '.jpg';
+                $filename = 'observer_pics/'
+                    . $user->username . '.jpg';
 
-                // if (file_exists($filename)) {
-                //     $user
-                //         ->copyMedia($filename)
-                //         ->usingFileName($user->username . '.png')
-                //         ->toMediaCollection('observer');
-                // }
+                if (file_exists($filename)) {
+                    $user->updateProfilePhoto($filename);
+                }
             }
         }
     }
