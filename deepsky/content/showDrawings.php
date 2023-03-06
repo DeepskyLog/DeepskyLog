@@ -1,13 +1,13 @@
 <?php
 
-/** 
+/**
  * Shows a page with all drawings of the observer.
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @category Drawings
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     http://www.deepskylog.org
  */
@@ -17,9 +17,9 @@ if ((!isset($inIndex)) || (!$inIndex)) {
     showDrawings();
 }
 
-/** 
+/**
  * Shows a page with all drawings of the observer.
- * 
+ *
  * @return None
  */
 function showDrawings()
@@ -30,14 +30,14 @@ function showDrawings()
     $observations = $objObservation->getUserDrawings($_GET['user']);
     $numberOfDrawings = count($observations);
 
-    print '<h1>' 
+    print '<h1>'
         . sprintf(
-            _("Drawings of %s"), 
+            _("Drawings of %s"),
             $objObserver->getFullName($_GET['user'])
         ) . '</h1>';
 
     print '<div class="row">';
-    
+
     if ($numberOfDrawings == 0) {
         print '<h2>' . _("No drawings found") . '</h2>';
     }
@@ -54,17 +54,17 @@ function showDrawings()
             IntlDateFormatter::NONE
         );
 
-        print '<a href="' . $baseURL . 'deepsky/drawings/' 
-            . $observations[$i]['id'] . '.jpg' 
+        print '<a href="' . $baseURL . 'deepsky/drawings/'
+            . $observations[$i]['id'] . '.jpg'
             . '" data-lightbox="image-1" data-title="">
-                <img class="lazyload" data-src="' . $baseURL . 'deepsky/drawings/' 
-            . $observations[$i]['id'] 
+                <img class="lazyload" data-src="' . $baseURL . 'deepsky/drawings/'
+            . $observations[$i]['id']
             . '.jpg"' . ' alt="' . $i . '">
                </a>
                <div class="caption">
-                <h4><a href="' . $baseURL . '/index.php?indexAction=detail_observation&amp;observation=' . $observations[$i]['id'] . '&amp;dalm=D">' . $observations[$i]['objectname'] . '</a> - ' 
-            . $dateFormatter->format($datetime) . '</h4>' 
-            . $objInstrument->getInstrumentPropertyFromId($observations[$i]['instrumentid'], 'name') 
+                <h4><a href="' . $baseURL . '/index.php?indexAction=detail_observation&amp;observation=' . $observations[$i]['id'] . '&amp;dalm=D">' . $observations[$i]['objectname'] . '</a> - '
+            . $dateFormatter->format($datetime) . '</h4>'
+            . $objInstrument->getInstrumentPropertyFromId($observations[$i]['instrumentid'], 'name')
             . ', ' . $objLocation->getLocationPropertyFromId($observations[$i]['locationid'], 'name') . '
                </div>
               </div>

@@ -7,7 +7,7 @@
  *
  * @category Utilities/Deepsky
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     http://www.deepskylog.org
  */
@@ -23,7 +23,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
  *
  * @category Utilities/Deepsky
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     http://www.deepskylog.org
  */

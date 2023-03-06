@@ -2031,7 +2031,7 @@ msgstr ""
 #, php-format
 msgid ""
 "In case of questions or concerns regarding your personal data, do not "
-"hesitate to contact us at %sdevelopers@deepskylog.be%s."
+"hesitate to contact us at %sdeepskylog@groups.io%s."
 msgstr ""
 
 #: common/content/statistics.php:229

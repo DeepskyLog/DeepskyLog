@@ -1,12 +1,12 @@
 <?php
-/** 
+/**
  * Loads all libraries for further use in includeFile
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @category Utilities/Common
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     https://www.deepskylog.org
  */
@@ -27,7 +27,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
  *
  * @return None
  */
-function preludesA() 
+function preludesA()
 {
     global $language, $objDatabase, $objLanguage, $objObserver, $objSession;
     global $objMessages, $objUtil;
@@ -93,9 +93,9 @@ function preludesB()
         putenv("LC_ALL={$locale}"); // windows
         bindtextdomain("messages", ".\locale");
     }
-    
+
     textdomain("messages");
-    
+
     // We can only include vars.php here, because some of the vars
     // are internationalized.
     include_once "lib/setup/vars.php";
@@ -175,7 +175,7 @@ function preludesB()
             $_SESSION['globalDay'] = 28;
         }
         if (($_SESSION['globalDay'] == 31) && (($_SESSION['globalMonth'] == 4)
-            || ($_SESSION['globalMonth'] == 6) || ($_SESSION['globalMonth'] == 9) 
+            || ($_SESSION['globalMonth'] == 6) || ($_SESSION['globalMonth'] == 9)
             || ($_SESSION['globalMonth'] == 11))
         ) {
             $_SESSION['globalDay'] = 30;
@@ -210,7 +210,7 @@ function preludesB()
     $DSOcatalogs = $objObject->getCatalogs();
 }
 
-function Nz($arg) 
+function Nz($arg)
 {
     if ($arg) {
         return $arg;
@@ -219,7 +219,7 @@ function Nz($arg)
     }
 }
 
-function Nz0($arg) 
+function Nz0($arg)
 {
     if ($arg) {
         return $arg;
@@ -228,7 +228,7 @@ function Nz0($arg)
     }
 }
 
-function Nzx($arg, $default = "") 
+function Nzx($arg, $default = "")
 {
     if ($arg) {
         return $arg;
@@ -238,8 +238,8 @@ function Nzx($arg, $default = "")
 }
 
 // definition of the php fnmatch function for Windows environments
-if (! function_exists('fnmatch')) { 
-    function fnmatch($pattern, $string) 
+if (! function_exists('fnmatch')) {
+    function fnmatch($pattern, $string)
     {
         return @preg_match(
             '/^' . strtr(

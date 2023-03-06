@@ -8,7 +8,7 @@
  *
  * @category Common
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     https://www.deepskylog.org
  */
@@ -26,7 +26,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
  *
  * @category Common
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     https://www.deepskylog.org
  */
@@ -1187,7 +1187,7 @@ class Observers
                     iconv('ISO-8859-1', 'UTF-8', strftime('%A %d %B %Y, %R UTC', time() + 24*60*60))
                 );
 
-            $message .= "<br /><h2><a href=\"mailto:developers@deepskylog.be\">"
+            $message .= "<br /><h2><a href=\"mailto:deepskylog@groups.io\">"
                 . _("The DeepskyLog team") . "</a></h2>";
 
             // Send the mail

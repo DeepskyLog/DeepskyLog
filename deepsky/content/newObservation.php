@@ -6,7 +6,7 @@
  *
  * @category Deepsky
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     https://www.deepskylog.org
  */

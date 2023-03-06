@@ -4,7 +4,7 @@
  *
  * @category Deepsky/import
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     http://www.deepskylog.org
  */
@@ -99,7 +99,7 @@ function newObservationInvalidXml()
     $tmpFile = "/tmp/$uniqName";
 
     move_uploaded_file($_FILES['xml']['tmp_name'], $tmpFile);
-    
+
     echo '<hr />';
     echo '<form action="' . $baseURL . 'index.php?indexAction=addXmlObservations" enctype="multipart/form-data" method="post"><div>';
     echo '<input type="hidden" name="uniqName" value="' . $uniqName . '" />';

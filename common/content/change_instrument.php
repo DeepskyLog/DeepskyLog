@@ -1,13 +1,13 @@
 <?php
-/** 
+/**
  * Allows the instrument owner or an administrator to change an instrument
  * or another user to view the instrument details
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @category Utilities/Common
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io.be>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     https://www.deepskylog.org
  */
@@ -26,18 +26,18 @@ if ((!isset($inIndex)) || (!$inIndex)) {
     changeInstrument();
 }
 
-/** 
+/**
  * Change an instrument for the logged in user or administrator
  * or show the instrument for other users.
- * 
+ *
  * @return None
  */
-function changeInstrument() 
+function changeInstrument()
 {
-    global $baseURL, $instrumentid, $loggedUser, $objInstrument, $objPresentations; 
+    global $baseURL, $instrumentid, $loggedUser, $objInstrument, $objPresentations;
     global $objUtil;
     $disabled = " disabled=\"disabled\"";
-    if (($loggedUser) 
+    if (($loggedUser)
         && ($objUtil->checkAdminOrUserID(
             $objInstrument->getInstrumentPropertyFromId(
                 $instrumentid, 'observer', ''
@@ -46,39 +46,39 @@ function changeInstrument()
     ) {
         $disabled = "";
     }
-    $content = ($disabled 
-        ? "" : "<input type=\"submit\" class=\"btn btn-primary pull-right\" " 
-        . "name=\"change\" value=\"" . _("Change instrument") 
+    $content = ($disabled
+        ? "" : "<input type=\"submit\" class=\"btn btn-primary pull-right\" "
+        . "name=\"change\" value=\"" . _("Change instrument")
         . "\" />&nbsp;");
     $name = $objInstrument->getInstrumentPropertyFromId($instrumentid, 'name');
     echo "<div id=\"main\">";
-    echo "<form role=\"form\" action=\"" . $baseURL 
+    echo "<form role=\"form\" action=\"" . $baseURL
         . "index.php\" method=\"post\"><div>";
-    echo "<input type=\"hidden\" name=\"indexAction\" " 
+    echo "<input type=\"hidden\" name=\"indexAction\" "
         . "value=\"validate_instrument\" />";
     echo "<input type=\"hidden\" name=\"id\" value=\"" . $instrumentid . "\" />";
     echo "<h4>" . (($name == "Naked eye") ? _("Naked Eye") : $name) . "</h4>";
     echo "<hr />";
     echo $content;
-    
+
     echo "<div class=\"form-group\">
             <label for=\"filtername\">" . _("Instrument name") . "</label>";
-    echo "<input value=\"" . $name 
-        . "\" type=\"text\" required class=\"form-control\" maxlength=\"64\" " 
-        . "name=\"instrumentname\" size=\"30\" " . $disabled . " />"; 
+    echo "<input value=\"" . $name
+        . "\" type=\"text\" required class=\"form-control\" maxlength=\"64\" "
+        . "name=\"instrumentname\" size=\"30\" " . $disabled . " />";
     echo "</div>";
-    
+
     $diameter = round(
         $objInstrument->getInstrumentPropertyFromId(
             $instrumentid, 'diameter'
         ), 0
     );
-    $content = "<input value=\"" . $diameter . "\" type=\"number\" min=\"0.01\" " 
-        . "step=\"0.01\" " 
-        . "class=\"form-control\" required maxlength=\"64\" name=\"diameter\" " 
+    $content = "<input value=\"" . $diameter . "\" type=\"number\" min=\"0.01\" "
+        . "step=\"0.01\" "
+        . "class=\"form-control\" required maxlength=\"64\" name=\"diameter\" "
         . "id=\"diameter\" size=\"10\" " . $disabled . " />";
-    $content .= "<select name=\"diameterunits\" id=\"dunits\" size=\"10\" " 
-        . "class=\"form-control\"" 
+    $content .= "<select name=\"diameterunits\" id=\"dunits\" size=\"10\" "
+        . "class=\"form-control\""
         . $disabled . " >";
     $content .= "<option value=\"inch\">inch</option>";
     $content .= "<option value=\"mm\" selected=\"selected\">mm</option>";
@@ -90,8 +90,8 @@ function changeInstrument()
     echo $content;
     echo "</div>";
     echo "</div>";
-    
-    
+
+
     echo "<div class=\"form-group\">
             <label for=\"filtername\">" . _("Type") . "</label>";
     echo "<div class=\"form-inline\">";
@@ -101,9 +101,9 @@ function changeInstrument()
         ), $disabled
     );
     echo "</div></div>";
-    
+
     $fl = round(
-        $objInstrument->getInstrumentPropertyFromId($instrumentid, 'fd') 
+        $objInstrument->getInstrumentPropertyFromId($instrumentid, 'fd')
         * $objInstrument->getInstrumentPropertyFromId(
             $instrumentid, 'diameter'
         ), 0
@@ -114,20 +114,20 @@ function changeInstrument()
     } else {
         $fd = 0;
     }
-    $content = "<input value=\"" 
-        . ($fl ? $fl : "") 
-        . "\" type=\"number\" min=\"0.01\" step=\"0.01\" class=\"form-control\" " 
-        . "maxlength=\"64\" name=\"focallength\" id=\"focallength\" size=\"10\" " 
+    $content = "<input value=\""
+        . ($fl ? $fl : "")
+        . "\" type=\"number\" min=\"0.01\" step=\"0.01\" class=\"form-control\" "
+        . "maxlength=\"64\" name=\"focallength\" id=\"focallength\" size=\"10\" "
         . $disabled . " />";
-    $content .= "<select class=\"form-control\" size=\"10\" " 
+    $content .= "<select class=\"form-control\" size=\"10\" "
         . "name=\"focallengthunits\" id=\"funits\" "
         . $disabled . " >";
     $content .= "<option value=\"inch\">inch</option>";
     $content .= "<option value=\"mm\" selected=\"selected\">mm</option>";
     $content .= "</select>";
     $content .= ' ' . _("or F/D") . ' ';
-    $content .= "<input type=\"number\" min=\"0.01\" step=\"0.01\" size=\"10\" " 
-        . "class=\"form-control\" maxlength=\"64\" id=\"fd\" name=\"fd\" " 
+    $content .= "<input type=\"number\" min=\"0.01\" step=\"0.01\" size=\"10\" "
+        . "class=\"form-control\" maxlength=\"64\" id=\"fd\" name=\"fd\" "
         . "value=\"" . ($fd ? $fd : "") . "\" "
         . $disabled . " />";
 
@@ -136,20 +136,20 @@ function changeInstrument()
     echo "<div class=\"form-inline\">";
     echo $content;
     echo "</div></div>";
-    
+
     echo "<div class=\"form-group\">
             <label for=\"filtername\">" . _("Fixed magnification") . "</label>";
     echo "<div class=\"form-inline\">";
-    echo "<input value=\"" 
+    echo "<input value=\""
         . (($fm = $objInstrument->getInstrumentPropertyFromId(
             $instrumentid, 'fixedMagnification'
-        )) 
-        ? $fm : "") 
-        . "\" type=\"number\" min=\"0.1\" step=\"0.1\" " 
-        . "class=\"form-control\" maxlength=\"10\" " 
+        ))
+        ? $fm : "")
+        . "\" type=\"number\" min=\"0.1\" step=\"0.1\" "
+        . "class=\"form-control\" maxlength=\"10\" "
         . "name=\"fixedMagnification\" size=\"5\" " . $disabled . " />";
     echo "</div></div>";
-    
+
     echo "<hr />";
     echo "</div></form>";
     echo "</div>";
@@ -175,7 +175,7 @@ function changeInstrument()
             $("#focallength").val(Math.round(fd * diameter));
         });
 
-        // If the unit changes for the diameter, also change the unit for the 
+        // If the unit changes for the diameter, also change the unit for the
         // focal length and vice versa
         $("#dunits").change(function(){
             diameterUnits = $(this).find("option:selected").attr("value");

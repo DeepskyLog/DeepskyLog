@@ -1,12 +1,12 @@
 <?php
-/** 
+/**
  * Shows statistics per country.
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @category Utilities/Common
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     http://www.deepskylog.org
  */
@@ -16,10 +16,10 @@ if ((! isset($inIndex)) || (! $inIndex)) {
     statistics();
 }
 
-/** 
+/**
  * Shows the page with all information, and statistics of DeepskyLog.
  * Both for separate countries and for everything.
- * 
+ *
  * @return None
  */
 function statistics()
@@ -38,7 +38,7 @@ function statistics()
     $totalDSYearObservations = $objObservation->getObservationsLastYear('%');
     $totalDSobjects = $objObservation->getNumberOfDifferentObservedDSObjects();
     $totalCometObservations = $objCometObservation->getNumberOfObservations();
-    $totalCometYearObservations 
+    $totalCometYearObservations
         = $objCometObservation->getNumberOfObservationsThisYear();
     $totalCometobjects = $objCometObservation->getNumberOfDifferentObjects();
     $totalDSDrawings = $objObservation->getNumberOfDsDrawings();
@@ -57,15 +57,15 @@ function statistics()
             = $objObservation->getNumberOfDifferentObservedDSObjects(
                 $selectedCountry
             );
-        $totalCountryCometObservations 
+        $totalCountryCometObservations
             = $objCometObservation->getNumberOfObservations(
                 $selectedCountry
             );
-        $totalCountryCometYearObservations 
+        $totalCountryCometYearObservations
             = $objCometObservation->getNumberOfObservationsThisYear(
                 $selectedCountry
             );
-        $totalCountryCometobjects 
+        $totalCountryCometobjects
             = $objCometObservation->getNumberOfDifferentObjects(
                 $selectedCountry
             );
@@ -78,7 +78,7 @@ function statistics()
         $totalCountryCometDrawings = $objCometObservation->getNumberOfDrawings(
             $selectedCountry
         );
-        $totalCountryCometYearDrawings 
+        $totalCountryCometYearDrawings
             = $objCometObservation->getNumberOfDrawingsLastYear(
                 $selectedCountry
             );
@@ -95,30 +95,30 @@ function statistics()
                 $information[$i][3] = $totalDSDrawings;
                 $information[$i][4] = $totalDSYearDrawings;
             } else {
-                $information[$i][0] = $totalCountryDSObservations . " / " 
+                $information[$i][0] = $totalCountryDSObservations . " / "
                     . $totalDSObservations . "&nbsp;(" . sprintf(
-                        "%.2f", 
+                        "%.2f",
                         ($totalCountryDSObservations / $totalDSObservations) * 100
                     ) . "%)";
-                $information[$i][1] = $totalCountryDSYearObservations . " / " 
+                $information[$i][1] = $totalCountryDSYearObservations . " / "
                     . $totalDSYearObservations . "&nbsp;(" . sprintf(
-                        "%.2f", 
-                        $totalCountryDSYearObservations 
+                        "%.2f",
+                        $totalCountryDSYearObservations
                         / $totalDSYearObservations * 100
                     ) . "%)";
-                $information[$i][2] = $totalCountryDSobjects . " / " 
+                $information[$i][2] = $totalCountryDSobjects . " / "
                     . $totalDSobjects . "&nbsp;(" . sprintf(
                         "%.2f", $totalCountryDSobjects / $totalDSobjects * 100
                     ) . "%)";
-                $information[$i][3] = $totalCountryDSDrawings . " / " 
+                $information[$i][3] = $totalCountryDSDrawings . " / "
                     . $totalDSDrawings . "&nbsp;(" . sprintf(
-                        "%.2f", 
+                        "%.2f",
                         ($totalCountryDSDrawings / $totalDSDrawings) * 100
                     ) . "%)";
-                $information[$i][4] = $totalCountryDSYearDrawings . " / " 
+                $information[$i][4] = $totalCountryDSYearDrawings . " / "
                     . $totalDSYearDrawings . "&nbsp;(" . sprintf(
-                        "%.2f", 
-                        $totalCountryDSYearDrawings 
+                        "%.2f",
+                        $totalCountryDSYearDrawings
                         / $totalDSYearDrawings * 100
                     ) . "%)";
             }
@@ -131,40 +131,40 @@ function statistics()
                 $information[$i][3] = $totalCometDrawings;
                 $information[$i][4] = $totalCometYearDrawings;
             } else {
-                $information[$i][0] = $totalCountryCometObservations . " / " 
-                    . $totalCometObservations . " (" 
+                $information[$i][0] = $totalCountryCometObservations . " / "
+                    . $totalCometObservations . " ("
                     . sprintf(
-                        "%.2f", 
-                        $totalCountryCometObservations / $totalCometObservations 
+                        "%.2f",
+                        $totalCountryCometObservations / $totalCometObservations
                         * 100
                     ) . "%)";
                 $information[$i][1] = $totalCountryCometYearObservations . " / "
-                    . $totalCometYearObservations . "&nbsp;(" 
+                    . $totalCometYearObservations . "&nbsp;("
                     . sprintf(
-                        "%.2f", 
-                        $totalCountryCometYearObservations 
-                        / ($totalCometYearObservations 
-                        ? $totalCometYearObservations : 1) 
+                        "%.2f",
+                        $totalCountryCometYearObservations
+                        / ($totalCometYearObservations
+                        ? $totalCometYearObservations : 1)
                         * 100
                     ) . "%)";
-                $information[$i][2] = $totalCountryCometobjects . " / " 
+                $information[$i][2] = $totalCountryCometobjects . " / "
                     . $totalCometobjects . " (" . sprintf(
                         "%.2f", $totalCountryCometobjects / $totalCometobjects * 100
                     ) . "%)";
-                $information[$i][3] = $totalCountryCometDrawings . " / " 
-                    . $totalCometDrawings . " (" 
+                $information[$i][3] = $totalCountryCometDrawings . " / "
+                    . $totalCometDrawings . " ("
                     . sprintf(
-                        "%.2f", 
-                        $totalCountryCometDrawings / $totalCometDrawings 
+                        "%.2f",
+                        $totalCountryCometDrawings / $totalCometDrawings
                         * 100
                     ) . "%)";
                 $information[$i][4] = $totalCountryCometYearDrawings . " / "
-                    . $totalCometYearDrawings . "&nbsp;(" 
+                    . $totalCometYearDrawings . "&nbsp;("
                     . sprintf(
-                        "%.2f", 
-                        $totalCountryCometYearDrawings 
-                        / ($totalCometYearDrawings 
-                        ? $totalCometYearDrawings : 1) 
+                        "%.2f",
+                        $totalCountryCometYearDrawings
+                        / ($totalCometYearDrawings
+                        ? $totalCometYearDrawings : 1)
                         * 100
                     ) . "%)";
             }
@@ -192,14 +192,14 @@ function statistics()
     // First find a list of all countries
     $all = array_count_values(
         $objDatabase->selectSingleArray(
-            "select locations.country from observations " 
-            . "join locations on observations.locationid=locations.id", 
+            "select locations.country from observations "
+            . "join locations on observations.locationid=locations.id",
             "country"
         )
     );
     $allComets = array_count_values(
         $objDatabase->selectSingleArray(
-            "select locations.country from cometobservations " 
+            "select locations.country from cometobservations "
             . "join locations on cometobservations.locationid=locations.id",
             "country"
         )
@@ -225,7 +225,7 @@ function statistics()
     echo '<form action="' . $baseURL . 'index.php" method="post" class="form-inline">
                     <input type="hidden" name="indexAction" value="statistics" />
                   <div class="form-group">
-                        <label class="control-label">' 
+                        <label class="control-label">'
         . _("Select country") . '&nbsp;&nbsp;</label>';
 
     echo " <select  name=\"country\" class=\"form-control\" onchange=\"submit();\">";
@@ -239,7 +239,7 @@ function statistics()
             } else {
                 $select = "";
             }
-            echo "<option" . $select . " value=\"" . $key . "\">" 
+            echo "<option" . $select . " value=\"" . $key . "\">"
                 . $key . "</option>";
         }
     }
@@ -249,16 +249,16 @@ function statistics()
 
     // We make some tabs.
     echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">
-          <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">" 
+          <li class=\"active\"><a href=\"#info\" data-toggle=\"tab\">"
         . _("Info") . "</a></li>
-          <li><a href=\"#observationsPerYear\" data-toggle=\"tab\">" 
+          <li><a href=\"#observationsPerYear\" data-toggle=\"tab\">"
         . _("Observations per year") . "</a></li>
-                    <li><a href=\"#observationsPerMonth\" data-toggle=\"tab\">" 
+                    <li><a href=\"#observationsPerMonth\" data-toggle=\"tab\">"
         . _("Observations per month") . "</a></li>
-          <li><a href=\"#objectTypes\" data-toggle=\"tab\">" 
+          <li><a href=\"#objectTypes\" data-toggle=\"tab\">"
         . _("Object types observed") . "</a></li>";
     if (strcmp($selectedCountry, "All") == 0) {
-         echo "<li><a href=\"#countries\" data-toggle=\"tab\">" 
+         echo "<li><a href=\"#countries\" data-toggle=\"tab\">"
             . _("Observations per country") . "</a></li>";
     }
     echo "</ul>";
@@ -342,17 +342,17 @@ function statistics()
         );
     } else {
         $sql = $objDatabase->selectKeyValueArray(
-            "select YEAR(date),count(*) from observations " 
-            . "JOIN locations ON observations.locationid=locations.id " 
-            . "WHERE locations.country = \"" . $selectedCountry 
-            . "\" group by YEAR(date)", 
+            "select YEAR(date),count(*) from observations "
+            . "JOIN locations ON observations.locationid=locations.id "
+            . "WHERE locations.country = \"" . $selectedCountry
+            . "\" group by YEAR(date)",
             "YEAR(date)", "count(*)"
         );
         $sql2 = $objDatabase->selectKeyValueArray(
-            "select YEAR(date),count(*) from cometobservations " 
-            . "JOIN locations ON cometobservations.locationid=locations.id " 
-            . "WHERE locations.country = \"" . $selectedCountry 
-            . "\" group by YEAR(date);", 
+            "select YEAR(date),count(*) from cometobservations "
+            . "JOIN locations ON cometobservations.locationid=locations.id "
+            . "WHERE locations.country = \"" . $selectedCountry
+            . "\" group by YEAR(date);",
             "YEAR(date)", "count(*)"
         );
     }
@@ -469,19 +469,19 @@ function statistics()
                   formatter: function() {
                     if (this.series.name === \"" . _("Total") . "\") {
                         return '<b>'+ this.series.name +'</b><br/>'+
-                                this.x +': '+ this.y + ' (' + 
+                                this.x +': '+ this.y + ' (' +
                                 Highcharts.numberFormat(
                                     this.y / dataYearSum * 100
                                 ) + '%)';
                     } else if (this.series.name === \"" . _("Comets") . "\") {
                         return '<b>'+ this.series.name +'</b><br/>'+
-                            this.x +': '+ this.y + ' (' + 
+                            this.x +': '+ this.y + ' (' +
                             Highcharts.numberFormat(
                                 this.y / cometdataYearSum * 100
                             ) + '%)';
                     } else if (this.series.name === \"" . _("Deepsky") . "\") {
                             return '<b>'+ this.series.name +'</b><br/>'+
-                                    this.x +': '+ this.y + ' (' + 
+                                    this.x +': '+ this.y + ' (' +
                                     Highcharts.numberFormat(
                                         this.y / DSdataYearSum * 100
                                     ) + '%)';
@@ -498,15 +498,15 @@ function statistics()
                               borderWidth: 0
                 },
                               series: [{
-                                name: '" 
+                                name: '"
         . _("Total") . "',
                                   data: dataYear
                                 }, {
-                                name: '" 
+                                name: '"
         . _("Deepsky") . "',
                                   data: DSdataYear
                                 }, {
-                              name: '" 
+                              name: '"
         . _("Comets") . "',
                                 data: cometdataYear }]
                                 });
@@ -515,7 +515,7 @@ function statistics()
                                 </script>";
 
     // Show graph
-    echo "<div id=\"container\" " 
+    echo "<div id=\"container\" "
         . "style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
     echo "</div>";
 
@@ -529,23 +529,23 @@ function statistics()
             "MONTH(date)", "count(*)"
         );
         $sql2 = $objDatabase->selectKeyValueArray(
-            "select MONTH(date),count(*) from cometobservations " 
+            "select MONTH(date),count(*) from cometobservations "
             . "group by MONTH(date);",
             "MONTH(date)", "count(*)"
         );
     } else {
         $sql = $objDatabase->selectKeyValueArray(
-            "select MONTH(date),count(*) from observations " 
-            . "JOIN locations ON observations.locationid=locations.id " 
-            . "WHERE locations.country = \"" . $selectedCountry 
+            "select MONTH(date),count(*) from observations "
+            . "JOIN locations ON observations.locationid=locations.id "
+            . "WHERE locations.country = \"" . $selectedCountry
             . "\" group by MONTH(date)",
             "MONTH(date)", "count(*)"
         );
         $sql2 = $objDatabase->selectKeyValueArray(
-            "select MONTH(date),count(*) from cometobservations " 
-            . "JOIN locations ON cometobservations.locationid=locations.id " 
-            . "WHERE locations.country = \"" . $selectedCountry 
-            . "\" group by MONTH(date);", 
+            "select MONTH(date),count(*) from cometobservations "
+            . "JOIN locations ON cometobservations.locationid=locations.id "
+            . "WHERE locations.country = \"" . $selectedCountry
+            . "\" group by MONTH(date);",
             "MONTH(date)", "count(*)"
         );
     }
@@ -640,12 +640,12 @@ function statistics()
                   formatter: function() {
                     if (this.series.name === \"Deepsky\") {
                         return '<b>'+ this.series.name +'</b><br/>'+
-                            this.x +': '+ this.y + ' (' + 
+                            this.x +': '+ this.y + ' (' +
                             Highcharts.numberFormat(this.y / dataSum * 100) + '%)';
                     } else {
                         return '<b>'+ this.series.name +'</b><br/>'+
-                            this.x +': '+ this.y + ' (' + 
-                            Highcharts.numberFormat(this.y / cometdataSum * 100) + 
+                            this.x +': '+ this.y + ' (' +
+                            Highcharts.numberFormat(this.y / cometdataSum * 100) +
                             '%)';
                     }
                   },
@@ -664,11 +664,11 @@ function statistics()
                 stacking: 'normal'
                             } },
                               series: [{
-                                name: '" 
+                                name: '"
                             . _("Deepsky") . "',
                                   data: data
                                 }, {
-                              name: '" 
+                              name: '"
                             . _("Comets") . "',
                                 data: cometdata
                                                            }]
@@ -678,7 +678,7 @@ function statistics()
                                 </script>";
 
     // Show graph
-    echo "<div id=\"container3\" " 
+    echo "<div id=\"container3\" "
         . "style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
     echo "</div>";
 
@@ -687,9 +687,9 @@ function statistics()
     // Pie chart
     if (strcmp($selectedCountry, "All") == 0) {
         $deepskyobservations = $objDatabase->selectKeyValueArray(
-            "select objects.type,count(*) from observations" 
-            . " JOIN objects on observations.objectname=objects.name" 
-            . " group by objects.type;", 
+            "select objects.type,count(*) from observations"
+            . " JOIN objects on observations.objectname=objects.name"
+            . " group by objects.type;",
             "type", "count(*)"
         );
         $cometobservations = count(
@@ -697,17 +697,17 @@ function statistics()
         );
     } else {
         $deepskyobservations = $objDatabase->selectKeyValueArray(
-            "select objects.type,count(*) from observations" 
-            . " JOIN objects on observations.objectname=objects.name" 
-            . " JOIN locations on observations.locationid=locations.id" 
-            . " where locations.country=\"" . $selectedCountry 
-            . "\" group by objects.type;", 
+            "select objects.type,count(*) from observations"
+            . " JOIN objects on observations.objectname=objects.name"
+            . " JOIN locations on observations.locationid=locations.id"
+            . " where locations.country=\"" . $selectedCountry
+            . "\" group by objects.type;",
             "type", "count(*)"
         );
         $cometobservations = count(
             $objDatabase->selectRecordsetArray(
-                "select * from cometobservations" 
-                . " JOIN locations ON cometobservations.locationid=locations.id" 
+                "select * from cometobservations"
+                . " JOIN locations ON cometobservations.locationid=locations.id"
                 . " WHERE locations.country = \"" . $selectedCountry . "\""
             )
         );
@@ -992,7 +992,7 @@ function statistics()
                 },
                     tooltip: {
                         formatter: function() {
-                            return '<b>'+ this.point.name 
+                            return '<b>'+ this.point.name
                                 +'</b>: '
                                 + Math.round(this.percentage * 100) / 100 + '%';
                         },
@@ -1020,12 +1020,12 @@ function statistics()
 
     foreach ( $objectsArray as $key => $value ) {
         if ($key != "REST") {
-            print "{name: \"" 
-                . html_entity_decode($GLOBALS[$key], ENT_QUOTES, "UTF-8") 
+            print "{name: \""
+                . html_entity_decode($GLOBALS[$key], ENT_QUOTES, "UTF-8")
                 . "\", color: '" . $colors[$key] . "', y: " . $value . "}, ";
         } else {
-            print "{name: \"" 
-                . html_entity_decode($GLOBALS[$key], ENT_QUOTES, "UTF-8") 
+            print "{name: \""
+                . html_entity_decode($GLOBALS[$key], ENT_QUOTES, "UTF-8")
                 . "\", color: '" . $colors[$key] . "', y: " . $value . "}";
         }
     }
@@ -1036,7 +1036,7 @@ function statistics()
             });
 
         </script>";
-    echo "<div id=\"container2\" " 
+    echo "<div id=\"container2\" "
         . "style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
 
     echo "</div>";
@@ -1111,7 +1111,7 @@ function statistics()
     });
 
     </script>";
-        echo "<div id=\"containerCountry\" " 
+        echo "<div id=\"containerCountry\" "
             . "style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
 
         echo "</div>";

@@ -1,13 +1,13 @@
 <?php
 /**
- * The contrast class calculates the contrast and magnification of a certain object, 
+ * The contrast class calculates the contrast and magnification of a certain object,
  * with a certain instrument, under a certain sky.
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @category Utilities/Common
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     https://www.deepskylog.org
  */
@@ -17,15 +17,15 @@ if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 }
 
-/** 
- * The contrast class calculates the contrast and magnification of a certain object, 
+/**
+ * The contrast class calculates the contrast and magnification of a certain object,
  * with a certain instrument, under a certain sky.
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @category Utilities/Common
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     https://www.deepskylog.org
  */
@@ -33,13 +33,13 @@ class Contrast
 {
     /**
      * This function calculates the contrast of the object.
-     * 
+     *
      * @param float $objMag       The magnitude of the object.
      * @param float $SBObj        The surface brightness of the object.
      * @param float $minObjArcmin The size of the object in arcminutes.
      * @param float $maxObjArcmin The size of the object in arcminutes.
-     * 
-     * @return array Array with (Contrast Difference, minimum usefull magnification, 
+     *
+     * @return array Array with (Contrast Difference, minimum usefull magnification,
      *               Optimum detection magnification).
      *               If the contrast difference is < 0, the object is not visible.
      *               contrast difference < -0.2 : Not visible - Dark Gray : 777777
@@ -52,7 +52,7 @@ class Contrast
     public function calculateContrast($objMag, $SBObj, $minObjArcmin, $maxObjArcmin)
     {
         global $objObject;
-        
+
         if ($minObjArcmin > $maxObjArcmin) {
             $temp = $minObjArcmin;
             $minObjArcmin = $maxObjArcmin;
@@ -107,7 +107,7 @@ class Contrast
                 $SBB = $_SESSION['SBB1'] + $SBReduc;
                 $SBScopeAtX = $_SESSION['SBB2']  + $SBObj + $SBReduc;
                 /* surface brightness of object + background brightness */
-                $SBBBScopeAtX = $_SESSION['SBB2'] 
+                $SBBBScopeAtX = $_SESSION['SBB2']
                     - (0.4 * $SBObj * $_SESSION['initBB']) + $SBReduc;
 
                 /* 2 dimensional interpolation of LTC array */
@@ -141,32 +141,32 @@ class Contrast
                     $logAng = $_SESSION['angle'][0];
                 }
 
-                /* ie, if LogAng = 4 and Angle[I] = 3 and Angle[I+1] = 5, 
+                /* ie, if LogAng = 4 and Angle[I] = 3 and Angle[I+1] = 5,
                 InterpAngle = .5, or .5 of the way between Angle[I] and Angle{I+1] */
-                $interpAngle = ($logAng - $_SESSION['angle'][$I]) 
+                $interpAngle = ($logAng - $_SESSION['angle'][$I])
                     / ($_SESSION['angle'][$I + 1] - $_SESSION['angle'][$I]);
-                /* add 1 to I because first entry in LTC is 
+                /* add 1 to I because first entry in LTC is
                 sky background brightness */
-                $interpA = $_SESSION['LTC'][$SBIA][$I + 1] 
-                    + $interpAngle 
-                    * ($_SESSION['LTC'][$SBIA][$I + 2] 
+                $interpA = $_SESSION['LTC'][$SBIA][$I + 1]
+                    + $interpAngle
+                    * ($_SESSION['LTC'][$SBIA][$I + 2]
                     - $_SESSION['LTC'][$SBIA][$I + 1]);
-                $interpB = $_SESSION['LTC'][$SBIB][$I + 1] 
-                    + $interpAngle 
-                    * ($_SESSION['LTC'][$SBIB][$I + 2] 
+                $interpB = $_SESSION['LTC'][$SBIB][$I + 1]
+                    + $interpAngle
+                    * ($_SESSION['LTC'][$SBIB][$I + 2]
                     - $_SESSION['LTC'][$SBIB][$I + 1]);
                 if ($SB<$_SESSION['LTC'][0][0]) {
                     $SB = $_SESSION['LTC'][0][0];
                 }
                 if ($intSB >= $_SESSION['LTC'][$_SESSION['LTCSize'] - 1][0]) {
-                    $logThreshContrast = $interpB 
-                        + ($SB - $_SESSION['LTC'][$_SESSION['LTCSize'] - 1][0]) 
+                    $logThreshContrast = $interpB
+                        + ($SB - $_SESSION['LTC'][$_SESSION['LTCSize'] - 1][0])
                         * ($interpB - $interpA);
                 } else {
-                    $logThreshContrast = $interpA + ($SB - $intSB) 
+                    $logThreshContrast = $interpA + ($SB - $intSB)
                         * ($interpB - $interpA);
                 }
-    
+
                 if ($logThreshContrast > $maxLog) {
                     $logThreshContrast = $maxLog;
                 } else {
@@ -192,37 +192,37 @@ class Contrast
 
     /**
      * This function calculates the limiting magnitude if the sqm value is given.
-     * 
+     *
      * @param float $initBB The sqm value.
-     * 
+     *
      * @return float The limiting magnitude.
      */
     public function calculateLimitingMagnitudeFromSkyBackground($initBB)
-    { 
+    {
         return (7.97 - 5 * log10(1 + pow(10, 4.316 - $initBB / 5.0)));
     }
 
     /**
      * This function calculates the sqm if the limiting magnitude is given.
-     * 
+     *
      * @param float $limMag The limiting magnitude.
-     * 
+     *
      * @return float The sqm value.
      */
     public function calculateSkyBackgroundFromLimitingMagnitude($limMag)
-    { 
+    {
         return ((21.58 - 5 * log10(pow(10, (1.586 - $limMag / 5.0)) - 1.0)));
     }
 
     /**
      * This function calculates the bortle scale if the sqm value is given.
-     * 
+     *
      * @param float $sqm The sqm value.
-     * 
+     *
      * @return integer The bortle scale.
      */
     public function calculateBortleFromSQM($sqm)
-    { 
+    {
         if ($sqm <= 17.5) {
             return 9;
         } else if ($sqm <= 18.0) {

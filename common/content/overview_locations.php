@@ -1,12 +1,12 @@
 <?php
-/** 
+/**
  * Generates an overview of all locations (admin only).
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @category Utilities/Common
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     http://www.deepskylog.org
  */
@@ -22,7 +22,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 
 /**
  * Generates an overview of all locations (admin only).
- * 
+ *
  * @return None
  */
 function overviewLocations()
@@ -34,7 +34,7 @@ function overviewLocations()
     echo "<div id=\"main\">";
     echo "<h4>" . _("Locations overview") . "</h4>";
     echo "<hr />";
-    echo "<table class=\"table sort-table table-condensed table-striped " 
+    echo "<table class=\"table sort-table table-condensed table-striped "
         . "table-hover tablesorter custom-popup\">";
     echo "<thead><tr>";
     echo "<th>" . _("Location") . "</th>";
@@ -46,7 +46,7 @@ function overviewLocations()
     echo "<th>" . _("NELM") . "</th>";
     echo "<th>" . _("SQM") . "</th>";
     echo "<th>" . _("Observer") . "</th>";
-    echo "<th class=\"filter-false columnSelector-disable\"" 
+    echo "<th class=\"filter-false columnSelector-disable\""
         . " data-sorter=\"false\"></th>";
     echo "</tr></thead>";
 
@@ -65,7 +65,7 @@ function overviewLocations()
             );
         }
         if ($objLocation->getLocationPropertyFromId($value, 'latitude') > 0) {
-            $latitude = "&nbsp;" 
+            $latitude = "&nbsp;"
             . $objPresentations->decToString(
                 $objLocation->getLocationPropertyFromId($value, 'latitude')
             );
@@ -89,8 +89,8 @@ function overviewLocations()
         }
         if ($value != "1") {
             echo "<tr>";
-            echo "<td><a href=\"" . $baseURL 
-                . "index.php?indexAction=adapt_site&amp;location=" 
+            echo "<td><a href=\"" . $baseURL
+                . "index.php?indexAction=adapt_site&amp;location="
                 . urlencode($value) . "\">$sitename</a></td>";
             echo "<td>" . $country . "</td>";
             echo "<td>" . $longitude . "</td>";
@@ -109,9 +109,9 @@ function overviewLocations()
             );
             echo "<td>";
             if (!($objLocation->getLocationUsedFromId($value))) {
-                echo "<a href=\"" . $baseURL 
-                    . "index.php?indexAction=validate_delete_location" 
-                    . "&amp;locationid=" 
+                echo "<a href=\"" . $baseURL
+                    . "index.php?indexAction=validate_delete_location"
+                    . "&amp;locationid="
                     . urlencode($value) . "\">" . _("Delete") . "</a>";
             }
             echo "</td>";

@@ -1,13 +1,13 @@
 <?php
-/** 
+/**
  * Allows a site owner or an the administrator to change site details
  * or another user to view the site details
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @category Utilities/Common
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io.be>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     https://www.deepskylog.org
  */
@@ -17,8 +17,8 @@ if ((!isset($inIndex)) || (!$inIndex)) {
     throw new Exception(_("You wanted to change a location, but none is specified. Please contact the developers with this message."));
 } elseif (!($objLocation->getLocationPropertyFromId($locationid, 'name'))) {
     throw new Exception(
-        "Location not found in change_instrument.php, " 
-        . "please contact the developers with this message:" 
+        "Location not found in change_instrument.php, "
+        . "please contact the developers with this message:"
         . $locationid
     );
 } else {
@@ -27,15 +27,15 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 
 /**
  * Changes the site: limiting magnitude, surface brightness, latitude and longitude
- * 
+ *
  * @return None
  */
-function changeSite() 
+function changeSite()
 {
     global $baseURL, $locationid, $loggedUser, $objLocation, $objPresentations;
     global $objUtil, $objContrast;
     $disabled = " disabled=\"disabled\"";
-    if ($loggedUser 
+    if ($loggedUser
         && ($objUtil->checkAdminOrUserID(
             $objLocation->getLocationPropertyFromId($locationid, 'observer', '')
         ))
@@ -51,23 +51,23 @@ function changeSite()
     echo stripslashes($objLocation->getLocationPropertyFromId($locationid, 'name'));
     echo "</h4>";
     echo "<hr />";
-    echo "<a href=\"https://clearoutside.com/forecast/" 
+    echo "<a href=\"https://clearoutside.com/forecast/"
         . round($latitude, 2) . "/" . round($longitude, 2) . "\">
-                <img src=\"https://clearoutside.com/forecast_image_small/" 
+                <img src=\"https://clearoutside.com/forecast_image_small/"
         . round($latitude, 2) . "/" . round($longitude, 2) . "/forecast.png\" />
         </a>";
     echo "<br /><br />";
     echo "<form>";
     echo "<div class=\"form-inline\">
-             <input type=\"text\" class=\"form-control\" id=\"address\" " 
-            . " onkeypress=\"searchKeyPress(event);\" placeholder=\"" 
+             <input type=\"text\" class=\"form-control\" id=\"address\" "
+            . " onkeypress=\"searchKeyPress(event);\" placeholder=\""
             . stripslashes(
                 $objLocation->getLocationPropertyFromId($locationid, 'name')
             )
              . "\" autofocus></input>
-             <input type=\"button\" class=\"btn btn-primary\" id=\"btnSearch\"" 
-            . " value=\"" 
-            . _("Search location") 
+             <input type=\"button\" class=\"btn btn-primary\" id=\"btnSearch\""
+            . " value=\""
+            . _("Search location")
             . "\" onclick=\"codeAddress();\" ></input>
             </div>
           </form>
@@ -77,23 +77,23 @@ function changeSite()
     echo "<br /><form action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
     echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
     echo "<input type=\"hidden\" name=\"id\" value=\"" . $locationid . "\" />&nbsp;";
-    echo "<input type=\"hidden\" name=\"latitude\" id=\"latitude\"" 
+    echo "<input type=\"hidden\" name=\"latitude\" id=\"latitude\""
         . " value=\"" . $latitude . "\"/>";
-    echo "<input type=\"hidden\" name=\"longitude\" id=\"longitude\"" 
+    echo "<input type=\"hidden\" name=\"longitude\" id=\"longitude\""
         . " value=\"" . $longitude . "\"/>";
     echo "<input type=\"hidden\" name=\"country\" id=\"country\" />";
     echo "<input type=\"hidden\" name=\"elevation\" id=\"elevation\" />";
     echo "<input type=\"hidden\" name=\"timezone\" id=\"timezone\" />";
     echo "<div class=\"form-inline\">
-            <input type=\"text\" required class=\"form-control\" " 
-        . "name=\"locationname\" placeholder=\"" 
-        . _("Location name") . "\" value=\"" 
-        . stripslashes($objLocation->getLocationPropertyFromId($locationid, 'name')) 
+            <input type=\"text\" required class=\"form-control\" "
+        . "name=\"locationname\" placeholder=\""
+        . _("Location name") . "\" value=\""
+        . stripslashes($objLocation->getLocationPropertyFromId($locationid, 'name'))
         . "\"  " . $disabled . "></input>
              ";
-    $content = $disabled 
-        ? "" 
-        : "  <input type=\"submit\" class=\"btn btn-primary tour4\" name=\"change\"" 
+    $content = $disabled
+        ? ""
+        : "  <input type=\"submit\" class=\"btn btn-primary tour4\" name=\"change\""
         . " value=\"" . _("Change site") . "\" />";
     echo $content;
 
@@ -104,16 +104,16 @@ function changeSite()
                 <th>" . _("Typical naked eye limiting magnitude") . "</th>
                 <th>" . _("Sky Quality Meter (SQM) value") . "</th>
                 <th>" . _("Bortle Scale") . "</th>
-                <th><a class='btn btn-primary' href='#' role='button'" 
-            . " id='lightpollutioninfo'>" 
+                <th><a class='btn btn-primary' href='#' role='button'"
+            . " id='lightpollutioninfo'>"
             . _("Use value from lightpollutionmap.info") . "</a></th>
             </tr>";
 
     echo "  <tr>
                 <td><div class=\"form-inline\">";
-    echo "<input type=\"number\" min=\"0\" max=\"8.0\" step=\"0.1\" " 
+    echo "<input type=\"number\" min=\"0\" max=\"8.0\" step=\"0.1\" "
         . "class=\"form-control\" maxlength=\"5\" id=\"lm\""
-        . " name=\"lm\" size=\"5\" value=\"" 
+        . " name=\"lm\" size=\"5\" value=\""
         . (($lm > - 900) ? $lm : "") . "\"  " . $disabled . " />";
     echo "</div>";
     echo "</td>";
@@ -121,9 +121,9 @@ function changeSite()
     // SQM
     echo "<td>";
     echo "<div class=\"form-inline\">";
-    echo "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" " 
+    echo "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" "
         . "class=\"form-control\" maxlength=\"5\" id=\"sqm\""
-        . " name=\"sb\" size=\"5\" value=\"" 
+        . " name=\"sb\" size=\"5\" value=\""
         . (($sb > - 900) ? $sb : "") . "\"  " . $disabled . " />";
     echo "</div>";
     echo "</td>";
@@ -148,7 +148,7 @@ function changeSite()
           <td></td></table></ol></form><br /><br />";
 
     // Javascript to convert from limiting magnitude to sqm and bortle
-    echo '<script src="' . $baseURL 
+    echo '<script src="' . $baseURL
         . 'lib/javascript/sqm.js" type="text/javascript"></script>';
     echo '<script type="text/javascript">
         var bortleChange = 1;
@@ -164,7 +164,7 @@ function changeSite()
             bortleChange = 0;
             $("#bortle").val(sqmToBortle(sqm)).change();
         });
-  
+
         // Javascript to convert from sqm to limiting magnitude and bortle
         $("#sqm").on("keyup change", function(event) {
             sqm = event.target.value;
@@ -182,7 +182,7 @@ function changeSite()
         });
 
         // Javascript to convert from bortle to limiting magnitude and sqm
-        $(document).ready(function() {  
+        $(document).ready(function() {
             if ($("#sqm").val() != "") {
                 val = $("#sqm").val();
                 $("#sqm").val(val).change();
@@ -191,7 +191,7 @@ function changeSite()
                 val = $("#lm").val();
                 $("#lm").val(val).change();
             }
-    
+
             $("#bortle").change(function(){
                 bortle = $(this).find("option:selected").attr("value");
 
@@ -202,11 +202,11 @@ function changeSite()
                     bortleChange = 1;
                 }
             });
-            // Javascript to fill out the limiting magnitude, 
+            // Javascript to fill out the limiting magnitude,
             // SQM and Bortle automatically from lightpollutioninfo.info
             $("#lightpollutioninfo").on("click", function(event) {
                 // Prevent following the link
-                event.preventDefault(); 
+                event.preventDefault();
 
                 // Get the value from the lightpollution.info site
                 url = "/lightpollutionmap.php?longitude=" +
@@ -229,8 +229,8 @@ function changeSite()
         });
         </script>';
 
-    echo "<script type=\"text/javascript\"" 
-        . " src=\"https://maps.googleapis.com/maps/api/js" 
+    echo "<script type=\"text/javascript\""
+        . " src=\"https://maps.googleapis.com/maps/api/js"
         . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&v=3.exp&language=en"
         . "&libraries=places\"></script>";
 
@@ -272,9 +272,9 @@ function changeSite()
          geocoder.geocode( { 'address': address}, function(results, status) {
            if (status == google.maps.GeocoderStatus.OK) {
              map.setCenter(results[0].geometry.location);
-             document.getElementById('latitude').value = " 
+             document.getElementById('latitude').value = "
         . "results[0].geometry.location.lat();
-              document.getElementById('longitude').value = " 
+              document.getElementById('longitude').value = "
         . "results[0].geometry.location.lng();
              fillHiddenFields(results[0].geometry.location);
 
@@ -318,7 +318,7 @@ function changeSite()
               arrAddress = results[0].address_components;
               for (ac = 0; ac < arrAddress.length; ac++) {
                 if (arrAddress[ac].types[0] == \"country\") {
-                  document.getElementById('country').value = " 
+                  document.getElementById('country').value = "
                 . "arrAddress[ac].long_name;
                 }
               }
@@ -327,9 +327,9 @@ function changeSite()
           });
 
           // Find the timezone
-        url = 'https://maps.googleapis.com/maps/api/timezone/json" 
+        url = 'https://maps.googleapis.com/maps/api/timezone/json"
             . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&location='
-            + latLng.lat() + ',' + latLng.lng() + '&timestamp=' 
+            + latLng.lat() + ',' + latLng.lng() + '&timestamp='
             + new Date().getTime() / 1000;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
@@ -353,7 +353,7 @@ function changeSite()
            'locations': locations
           }
 
-        elevator.getElevationForLocations(positionalRequest, " 
+        elevator.getElevationForLocations(positionalRequest, "
         . "function(results, status) {
           if (status == google.maps.ElevationStatus.OK) {
               // Retrieve the first result
@@ -370,12 +370,12 @@ function changeSite()
         foreach ($objLocation->getSortedLocations("id", $loggedUser) as $location) {
             if ($location != $locationid) {
                 echo "// Let's add the existing locations to the map.
-                 var contentString = \"<strong>" 
+                 var contentString = \"<strong>"
                     . htmlspecialchars(
                         html_entity_decode(
                             $objLocation->getLocationPropertyFromId($location, "name")
                         )
-                    ) 
+                    )
                     . "</strong><br /><br />Limiting magnitude: ";
                 $limmag = $objLocation->getLocationPropertyFromId(
                     $location, 'limitingMagnitude'
@@ -385,7 +385,7 @@ function changeSite()
                 );
                 if (($limmag < - 900) && ($sb > 0)) {
                     $limmag = sprintf(
-                        "%.1f", 
+                        "%.1f",
                         $objContrast->calculateLimitingMagnitudeFromSkyBackground(
                             $sb
                         )
@@ -395,7 +395,7 @@ function changeSite()
                     $sb = "-";
                 } else {
                     $sb = sprintf(
-                        "%.1f", 
+                        "%.1f",
                         $objContrast->calculateSkyBackgroundFromLimitingMagnitude(
                             $limmag
                         )
@@ -417,8 +417,8 @@ function changeSite()
                  content: contentString
              });";
 
-                echo "newLocation = new google.maps.LatLng(" 
-                    . $objLocation->getLocationPropertyFromId($location, "latitude") 
+                echo "newLocation = new google.maps.LatLng("
+                    . $objLocation->getLocationPropertyFromId($location, "latitude")
                     . ", "
                     . $objLocation->getLocationPropertyFromId(
                         $location, "longitude"

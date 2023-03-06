@@ -1,12 +1,12 @@
 <?php
-/** 
+/**
  * Add a new location for the logged in user.
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @category Utilities/Common
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     https://www.deepskylog.org
  */
@@ -20,27 +20,27 @@ if ((!isset($inIndex)) || (!$inIndex)) {
     newLocation();
 }
 
-/** 
+/**
  * Add a new location for the logged in user.
- * 
+ *
  * @return None
  */
-function newLocation() 
+function newLocation()
 {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
     echo "<form>";
-    echo "<ol><li>" 
+    echo "<ol><li>"
         . sprintf(
-            _("Set your location on the map or by entering the name and pressing the %s button."), 
-            "<strong>\"" . _("Search location") 
+            _("Set your location on the map or by entering the name and pressing the %s button."),
+            "<strong>\"" . _("Search location")
             . "\"</strong>"
         ) . "<br /><br /></li>";
     echo "<div class=\"form-inline\">
-             <input type=\"text\" class=\"form-control\" id=\"address\" " 
-        . "onkeypress=\"searchKeyPress(event);\" placeholder=\"La Silla, Chile\"" 
+             <input type=\"text\" class=\"form-control\" id=\"address\" "
+        . "onkeypress=\"searchKeyPress(event);\" placeholder=\"La Silla, Chile\""
         . " autofocus></input>
-             <input type=\"button\" class=\"btn btn-primary\" id=\"btnSearch\"" 
-        . " value=\"" 
+             <input type=\"button\" class=\"btn btn-primary\" id=\"btnSearch\""
+        . " value=\""
         . _("Search location") . "\" onclick=\"codeAddress();\" ></input>
             </div>
            </form>
@@ -54,19 +54,19 @@ function newLocation()
     echo "<input type=\"hidden\" name=\"country\" id=\"country\" />";
     echo "<input type=\"hidden\" name=\"elevation\" id=\"elevation\" />";
     echo "<input type=\"hidden\" name=\"timezone\" id=\"timezone\" />";
-    echo "<li>" 
+    echo "<li>"
         . sprintf(
-            _("Define your own name for this location, eventually add a naked eye limiting magnitude (or SQM value) and press the %s button."),  
+            _("Define your own name for this location, eventually add a naked eye limiting magnitude (or SQM value) and press the %s button."),
             "<strong>\"" . _("Add site") . "\"</strong>"
         ) . "<br /><br /></li>";
     echo "<div class=\"form-inline\">
-            <input type=\"text\" required class=\"form-control\" " 
-        . "name=\"locationname\" placeholder=\"" 
+            <input type=\"text\" required class=\"form-control\" "
+        . "name=\"locationname\" placeholder=\""
         . _("Location name") . "\"></input>";
-    echo "  <input type=\"submit\" class=\"btn btn-success tour4\" " 
-        . "name=\"add\" value=\"" 
+    echo "  <input type=\"submit\" class=\"btn btn-success tour4\" "
+        . "name=\"add\" value=\""
         . _("Add site") . "\" />";
-        
+
     // Limiting magnitude
     echo "</div><br />
             <table class='table'>
@@ -74,14 +74,14 @@ function newLocation()
                 <th>" . _("Typical naked eye limiting magnitude") . "</th>
                 <th>" . _("Sky Quality Meter (SQM) value") . "</th>
                 <th>" . _("Bortle Scale") . "</th>
-                <th><a class='btn btn-primary' href='#' role='button'" 
-            . " id='lightpollutioninfo'>" 
+                <th><a class='btn btn-primary' href='#' role='button'"
+            . " id='lightpollutioninfo'>"
             . _("Use value from lightpollutionmap.info") . "</a></th>
             </tr>";
     echo "  <tr>
                 <td><div class=\"form-inline\">";
-    echo "<input type=\"number\" min=\"0\" max=\"8.0\" step=\"0.1\" " 
-        . "class=\"form-control\" maxlength=\"5\" id=\"lm\"" 
+    echo "<input type=\"number\" min=\"0\" max=\"8.0\" step=\"0.1\" "
+        . "class=\"form-control\" maxlength=\"5\" id=\"lm\""
         . " name=\"lm\" size=\"5\" />";
     echo "</div>";
     echo "</td>";
@@ -89,8 +89,8 @@ function newLocation()
     // SQM
     echo "<td>";
     echo "<div class=\"form-inline\">";
-    echo "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" " 
-        . "class=\"form-control\" maxlength=\"5\" id=\"sqm\"" 
+    echo "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" "
+        . "class=\"form-control\" maxlength=\"5\" id=\"sqm\""
         . " name=\"sb\" size=\"5\" />";
     echo "</div>";
     echo "</td>";
@@ -115,7 +115,7 @@ function newLocation()
           <td></td></table></ol></form><br /><br />";
 
     // Javascript to convert from limiting magnitude to sqm and bortle
-    echo '<script src="' . $baseURL 
+    echo '<script src="' . $baseURL
         . 'lib/javascript/sqm.js" type="text/javascript"></script>';
     echo '<script type="text/javascript">
         var bortleChange = 1;
@@ -131,7 +131,7 @@ function newLocation()
             bortleChange = 0;
             $("#bortle").val(sqmToBortle(sqm)).change();
         });
-  
+
         // Javascript to convert from sqm to limiting magnitude and bortle
         $("#sqm").on("keyup change", function(event) {
             sqm = event.target.value;
@@ -149,7 +149,7 @@ function newLocation()
         });
 
         // Javascript to convert from bortle to limiting magnitude and sqm
-        $(document).ready(function() {  
+        $(document).ready(function() {
             $("#bortle").change(function(){
                 bortle = $(this).find("option:selected").attr("value");
 
@@ -160,11 +160,11 @@ function newLocation()
                     bortleChange = 1;
                 }
             });
-            // Javascript to fill out the limiting magnitude, 
+            // Javascript to fill out the limiting magnitude,
             // SQM and Bortle automatically from lightpollutioninfo.info
             $("#lightpollutioninfo").on("click", function(event) {
                 // Prevent following the link
-                event.preventDefault(); 
+                event.preventDefault();
 
                 // Get the value from the lightpollution.info site
                 url = "/lightpollutionmap.php?longitude=" +
@@ -187,10 +187,10 @@ function newLocation()
         });
         </script>';
 
-    echo "<script type=\"text/javascript\" " 
-        . "src=\"https://maps.googleapis.com/maps/api/" 
-        . "js?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE" 
-        . "&v=3.exp&language=en&libraries=places\">" 
+    echo "<script type=\"text/javascript\" "
+        . "src=\"https://maps.googleapis.com/maps/api/"
+        . "js?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE"
+        . "&v=3.exp&language=en&libraries=places\">"
         . "</script>";
 
     echo "<script>
@@ -286,7 +286,7 @@ function newLocation()
               arrAddress = results[0].address_components;
               for (ac = 0; ac < arrAddress.length; ac++) {
                 if (arrAddress[ac].types[0] == \"country\") {
-                  document.getElementById('country').value = 
+                  document.getElementById('country').value =
                     arrAddress[ac].long_name;
                 }
               }
@@ -295,9 +295,9 @@ function newLocation()
           });
 
           // Find the timezone
-        url = 'https://maps.googleapis.com/maps/api/timezone/json" 
-            . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&location=' 
-            + latLng.lat() + ',' + latLng.lng() + '&timestamp=' 
+        url = 'https://maps.googleapis.com/maps/api/timezone/json"
+            . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&location='
+            + latLng.lat() + ',' + latLng.lng() + '&timestamp='
             + new Date().getTime() / 1000;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
@@ -351,9 +351,9 @@ function newLocation()
          geocoder.geocode( { 'address': address}, function(results, status) {
            if (status == google.maps.GeocoderStatus.OK) {
              map.setCenter(results[0].geometry.location);
-             document.getElementById('latitude').value = 
+             document.getElementById('latitude').value =
                 results[0].geometry.location.lat();
-             document.getElementById('longitude').value = 
+             document.getElementById('longitude').value =
                 results[0].geometry.location.lng();
              fillHiddenFields(results[0].geometry.location);
 
@@ -394,7 +394,7 @@ function newLocation()
 
     foreach ($objLocation->getSortedLocations("id", $loggedUser) as $location) {
         echo "// Let's add the existing locations to the map.
-                         var contentString = \"<strong>" 
+                         var contentString = \"<strong>"
             . htmlspecialchars(
                 html_entity_decode(
                     $objLocation->getLocationPropertyFromId($location, "name")
@@ -406,7 +406,7 @@ function newLocation()
         $sb = $objLocation->getLocationPropertyFromId($location, 'skyBackground');
         if (($limmag < - 900) && ($sb > 0)) {
             $limmag = sprintf(
-                "%.1f", 
+                "%.1f",
                 $objContrast->calculateLimitingMagnitudeFromSkyBackground($sb)
             );
         } elseif (($limmag < - 900) && ($sb < - 900)) {
@@ -414,7 +414,7 @@ function newLocation()
             $sb = "-";
         } else {
             $sb = sprintf(
-                "%.1f", 
+                "%.1f",
                 $objContrast->calculateSkyBackgroundFromLimitingMagnitude($limmag)
             );
         }
@@ -431,16 +431,16 @@ function newLocation()
                  content: contentString
              });";
 
-        echo "newLocation = new google.maps.LatLng(" 
-            . $objLocation->getLocationPropertyFromId($location, "latitude") 
-            . ", " 
+        echo "newLocation = new google.maps.LatLng("
+            . $objLocation->getLocationPropertyFromId($location, "latitude")
+            . ", "
             . $objLocation->getLocationPropertyFromId($location, "longitude") . ");
               marker = new google.maps.Marker({
               position: newLocation,
               icon: image,
               map: map,
               html: contentString,
-              title: \"" 
+              title: \""
             . htmlspecialchars(
                 html_entity_decode(
                     $objLocation->getLocationPropertyFromId($location, "name")

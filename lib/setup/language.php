@@ -1,12 +1,12 @@
 <?php
-/** 
+/**
  * The language class collects all functions needed to work with different languages.
- * 
+ *
  * PHP Version 7
- * 
+ *
  * @category Utilities/Common
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     https://www.deepskylog.org
  */
@@ -16,12 +16,12 @@ if ((!isset($inIndex))||(!$inIndex)) {
     include "../../redirect.php";
 }
 
-/** 
+/**
  * All functions needed to work with different languages.
- * 
+ *
  * @category Utilities/Deepsky
  * @package  DeepskyLog
- * @author   DeepskyLog Developers <developers@deepskylog.be>
+ * @author   DeepskyLog Developers <deepskylog@groups.io>
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     http://www.deepskylog.org
  */
@@ -33,11 +33,11 @@ class Language
      * @return array A list of all available translations
      */
     function getLanguages()
-    { 
+    {
         $mydir = opendir("locale/");
         $exclude = array("messages.pot", ".", "..", ".DS_Store");
         $langs = array();
-        
+
         while ($fn=readdir($mydir)) {
             if (!in_array($fn, $exclude)) {
                 $langs[] = $fn;
@@ -57,11 +57,11 @@ class Language
      * Returns all the available languages, in the given language.
      *
      * @param string $cur_language The current language.
-     * 
+     *
      * @return array A list of all available translations, in the given language.
      */
     function getAllLanguages($cur_language)
-    { 
+    {
         global $instDir;
         $xml = simplexml_load_file($instDir."lib/setup/language/languages.xml");
         $lang = $xml->lang;
@@ -79,12 +79,12 @@ class Language
      * Returns all keys of the available languages, in the given language.
      *
      * @param string $cur_language The current language.
-     * 
-     * @return array A list of all keys of the available translations, 
+     *
+     * @return array A list of all keys of the available translations,
      *               in the given language.
      */
     function getLanguageKeys($cur_language)
-    { 
+    {
         $xml = simplexml_load_file("lib/setup/language/languages.xml");
         $lang = $xml->lang;
         $countrylist = array();
@@ -103,7 +103,7 @@ class Language
     function setLocale()
     {
         // When adding a new language, also add the correct locale here!
-        // LOCALES: NL: nl_NL, EN: en_US, FR: fr_FR, 
+        // LOCALES: NL: nl_NL, EN: en_US, FR: fr_FR,
         //          DE: de_DE, ES: es_ES, SE: sv_SE
         if (strcmp($_SESSION['lang'], "nl") == 0) {
             setlocale(LC_ALL, 'nl_NL');
