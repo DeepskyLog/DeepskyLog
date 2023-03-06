@@ -34,24 +34,34 @@
 + [X] Check if logging in using the old accounts works
 + [X] Make it possible to log in using the user id (and not using the mail address)
 + [X] Don't show the teams dropdown if the user only belongs to one team.
-+ [ ] When registering, add the userid
++ [X] When registering, add the userid
   + [X] Update GUI
   + [X] Check if the username is unique
   + [X] Add to the database
   + [X] Show the username (id) in the list with users of a group
   + [X] Update tests
   + [X] Check/create username when registering using socialstream
-+ [ ] Create seeder to move all the old users to the new database, create unit test
-  + [X] Move all users
-  + [ ] Add pictures to the users.
++ [X] Create seeder to move all the old users to the new database
 + [ ] In the observer page, add all the extra information
-  + [ ] Start with the username
-+ [ ] Create a new page to see the observer details (when someone clicks on the observer)
+  + [X] Username
+  + [ ] Send emails
+  + [ ] Use local time
+  + [ ] ICQ code
+  + [ ] fstOffset
+  + [ ] License and copyright notice
+  + [ ] Observing page
+  + [ ] Atlases page
+  + [ ] Languages page
 + [ ] Create the all users administrator page
   + [ ] Put in a table in stead of a normal list
-+ [ ] Check if the user belongs to the correct role / team
++ [ ] Create a new page to see the observer details (when someone clicks on the observer)
 + [ ] Add translations for the new log in pages
++ [ ] Check if the user belongs to the correct role / team
 + [ ] Use the old version of DeepskyLog alongside the new version
+  + [ ] Add the code
+  + [ ] Fix the code for php 8.2
+  + [ ] Change the link to the user settings page.
++ [ ] Create menu for the new version
 + [ ] Check log in using the new version and try using one of the old pages as logged in user
   + [ ] Change link in the old version
   + [ ] Update the log in code in the old DeepskyLog
@@ -84,7 +94,6 @@ if ($id) {
   + Log in
   + Log out
   + Reset password
-+ Update the layout to show a similar design as the old DeepskyLog.
 + Update the routes.php file to only include the register and log in and log out pages.
 + Look into https://laravel-news.com/laravel-livewire-form-wizard
 + Release new version of DeepskyLog with new registration and login pages.

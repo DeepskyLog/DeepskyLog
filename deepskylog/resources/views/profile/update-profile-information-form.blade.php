@@ -83,6 +83,14 @@
                 @endif
             @endif
         </div>
+
+        <!-- Username -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="username" value="{{ __('Username') }}" />
+            <x-input id="username" disabled type="text" class="mt-1 block w-full"
+                value="{{ $this->user->username }}" />
+        </div>
+
     </x-slot>
 
     <x-slot name="actions">

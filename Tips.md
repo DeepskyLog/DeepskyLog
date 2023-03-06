@@ -11,7 +11,10 @@ composer update
 npm update
 npm run build
 php artisan migrate:fresh
+# To add all the profile images
+ln -s /var/www/www.deepskylog.be/common/observer_pics .
 php artisan db:seed
+chmod 777 storage/app/public/profile-photos
 ```
 
 ## Unit testing
