@@ -91,6 +91,18 @@
                 value="{{ $this->user->username }}" />
         </div>
 
+        <!-- Send messages as emails -->
+        <div class="col-span-6 sm:col-span-4">
+
+            @if ($this->user->sendMail)
+                <x-checkbox name="sendMail" id="sendMail" wire:model.defer="state.sendMail" checked />
+            @else
+                <x-checkbox name="sendMail" id="sendMail" wire:model.defer="state.sendMail" />
+            @endif
+            &nbsp;
+            {{ __('Send messages as email') }}
+        </div>
+
     </x-slot>
 
     <x-slot name="actions">

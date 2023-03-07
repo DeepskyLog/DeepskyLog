@@ -42,10 +42,12 @@
   + [X] Update tests
   + [X] Check/create username when registering using socialstream
 + [X] Create seeder to move all the old users to the new database
-+ [ ] In the observer page, add all the extra information
++ [ ] In the observer page, add all the extra information (old: user-settings.blade.php and UserSettings.php, new: UpdateUserProfileInformation.php)
   + [X] Username
-  + [ ] Send emails
+  + [X] Send emails
   + [ ] Use local time
+  + [ ] Country of residence
+  + [ ] About the observer
   + [ ] ICQ code
   + [ ] fstOffset
   + [ ] License and copyright notice
