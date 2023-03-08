@@ -67,9 +67,8 @@
             </x-slot>
 
             <x-slot name="footer">
-                <x-secondary-button wire:click="$toggle('confirmingRemove')" wire:loading.attr="disabled">
-                    {{ __('Nevermind') }}
-                </x-secondary-button>
+                <x-button type="submit" label="{{ __('Nevermind') }}" wire:click="$toggle('confirmingRemove')"
+                    wire:loading.attr="disabled" />
 
                 <x-danger-button class="ml-2" wire:click="removeConnectedAccount({{ $this->selectedAccountId }})"
                     wire:loading.attr="disabled">

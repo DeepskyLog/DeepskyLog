@@ -30,9 +30,8 @@
         </x-slot>
 
         <x-slot name="footer">
-            <x-secondary-button wire:click="stopConfirmingPassword" wire:loading.attr="disabled">
-                {{ __('Cancel') }}
-            </x-secondary-button>
+            <x-button type="submit" label="{{ __('Cancel') }}" wire:click="stopConfirmingPassword"
+                wire:loading.attr="disabled" />
 
             <x-button class="ml-3" dusk="confirm-password-button" wire:click="confirmPassword"
                 wire:loading.attr="disabled">

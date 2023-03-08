@@ -220,9 +220,8 @@
         </x-slot>
 
         <x-slot name="footer">
-            <x-secondary-button wire:click="stopManagingRole" wire:loading.attr="disabled">
-                {{ __('Cancel') }}
-            </x-secondary-button>
+            <x-button type="submit" label="{{ __('Cancel') }}" wire:click="stopManagingRole"
+                wire:loading.attr="disabled" />
 
             <x-button class="ml-3" wire:click="updateRole" wire:loading.attr="disabled">
                 {{ __('Save') }}
@@ -241,9 +240,8 @@
         </x-slot>
 
         <x-slot name="footer">
-            <x-secondary-button wire:click="$toggle('confirmingLeavingTeam')" wire:loading.attr="disabled">
-                {{ __('Cancel') }}
-            </x-secondary-button>
+            <x-button type="submit" label="{{ __('Cancel') }}" wire:click="$toggle('confirmingLeavingTeam')"
+                wire:loading.attr="disabled" />
 
             <x-danger-button class="ml-3" wire:click="leaveTeam" wire:loading.attr="disabled">
                 {{ __('Leave') }}
@@ -262,9 +260,8 @@
         </x-slot>
 
         <x-slot name="footer">
-            <x-secondary-button wire:click="$toggle('confirmingTeamMemberRemoval')" wire:loading.attr="disabled">
-                {{ __('Cancel') }}
-            </x-secondary-button>
+            <x-button type="submit" label="{{ __('Cancel') }}" wire:click="$toggle('confirmingTeamMemberRemoval')"
+                wire:loading.attr="disabled" />
 
             <x-danger-button class="ml-3" wire:click="removeTeamMember" wire:loading.attr="disabled">
                 {{ __('Remove') }}
