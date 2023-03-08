@@ -37,6 +37,7 @@
                     </span>
                 </div>
 
+                <br />
                 <x-button type="submit" label="{{ __('Select A New Photo') }}"
                     x-on:click.prevent="$refs.photo.click()" />
 

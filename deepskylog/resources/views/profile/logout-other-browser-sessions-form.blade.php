@@ -57,7 +57,7 @@
         @endif
 
         <div class="flex items-center mt-5">
-            <x-button wire:click="confirmLogout" wire:loading.attr="disabled">
+            <x-button secondary wire:click="confirmLogout" wire:loading.attr="disabled">
                 {{ __('Log Out Other Browser Sessions') }}
             </x-button>
 
@@ -67,31 +67,28 @@
         </div>
 
         <!-- Log Out Other Devices Confirmation Modal -->
-        <x-dialog-modal wire:model="confirmingLogout">
-            <x-slot name="title">
-                {{ __('Log Out Other Browser Sessions') }}
-            </x-slot>
+        <x-modal.card blur title="{{ __('Log Out Other Browser Sessions') }}" wire:model="confirmingLogout">
 
-            <x-slot name="content">
+            <div class="grid grid-cols-1 sm:grid-cols-1 gap-4">
                 {{ __('Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.') }}
 
-                <div class="mt-4" x-data="{}"
+                <div x-data="{}"
                     x-on:confirming-logout-other-browser-sessions.window="setTimeout(() => $refs.password.focus(), 250)">
-                    <x-input type="password" class="mt-1 block w-3/4" placeholder="{{ __('Password') }}"
+                    <x-inputs.password type="password" class="mt-1 block w-3/4" placeholder="{{ __('Password') }}"
                         x-ref="password" wire:model.defer="password" wire:keydown.enter="logoutOtherBrowserSessions" />
 
-                    <x-input-error for="password" class="mt-2" />
+                    <x-input-error for="password" />
                 </div>
-            </x-slot>
+            </div>
 
             <x-slot name="footer">
                 <x-button type="submit" label="{{ __('Cancel') }}" wire:click="$toggle('confirmingLogout')"
                     wire:loading.attr="disabled" />
 
-                <x-button class="ml-3" wire:click="logoutOtherBrowserSessions" wire:loading.attr="disabled">
+                <x-button secondary type="button" wire:click="logoutOtherBrowserSessions" wire:loading.attr="disabled">
                     {{ __('Log Out Other Browser Sessions') }}
                 </x-button>
             </x-slot>
-        </x-dialog-modal>
+        </x-modal.card>
     </x-slot>
 </x-action-section>
