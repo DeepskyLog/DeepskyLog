@@ -222,14 +222,13 @@
     </x-modal.card>
 
     <!-- Leave Team Confirmation Modal -->
-    <x-confirmation-modal wire:model="confirmingLeavingTeam">
-        <x-slot name="title">
-            {{ __('Leave Team') }}
-        </x-slot>
-
-        <x-slot name="content">
-            {{ __('Are you sure you would like to leave this team?') }}
-        </x-slot>
+    <x-modal.card blur title="{{ __('Leave Team') }}" wire:model="confirmingLeavingTeam">
+        <div class="flex col-span-1">
+            <x-icon name="exclamation-circle" class="w-10 h-10 text-red-600" />
+            <div class="py-2 px-4">
+                {{ __('Are you sure you would like to leave this team?') }}
+            </div>
+        </div>
 
         <x-slot name="footer">
             <x-button type="submit" label="{{ __('Cancel') }}" wire:click="$toggle('confirmingLeavingTeam')"
@@ -239,18 +238,16 @@
                 {{ __('Leave') }}
             </x-danger-button>
         </x-slot>
-    </x-confirmation-modal>
+    </x-modal.card>
 
     <!-- Remove Team Member Confirmation Modal -->
-    <x-confirmation-modal wire:model="confirmingTeamMemberRemoval">
-        <x-slot name="title">
-            {{ __('Remove Team Member') }}
-        </x-slot>
-
-        <x-slot name="content">
-            {{ __('Are you sure you would like to remove this person from the team?') }}
-        </x-slot>
-
+    <x-modal.card blur title="{{ __('Remove Team Member') }}" wire:model="confirmingTeamMemberRemoval">
+        <div class="flex col-span-1">
+            <x-icon name="exclamation-circle" class="w-10 h-10 text-red-600" />
+            <div class="py-2 px-4">
+                {{ __('Are you sure you would like to remove this person from the team?') }}
+            </div>
+        </div>
         <x-slot name="footer">
             <x-button type="submit" label="{{ __('Cancel') }}" wire:click="$toggle('confirmingTeamMemberRemoval')"
                 wire:loading.attr="disabled" />
@@ -259,5 +256,5 @@
                 {{ __('Remove') }}
             </x-danger-button>
         </x-slot>
-    </x-confirmation-modal>
+    </x-modal.card>
 </div>

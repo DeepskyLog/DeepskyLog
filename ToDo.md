@@ -43,9 +43,7 @@
   + [X] Check/create username when registering using socialstream
 + [X] Create seeder to move all the old users to the new database
 + [ ] Start using wireui
-  + [X] Change all x-input
-  + [ ] Change all x-button
-    + [ ] All secondary-buttons are already changed to x-button
+  + [X] Change all x-input, x-button, x-checkbox, x-confirmation-modal
   + [X] Remove x-dialog-modal
   + [X] Fix the menu
   + [ ] Remove all the old components

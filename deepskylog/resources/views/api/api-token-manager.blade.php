@@ -134,14 +134,13 @@
     </x-modal.card>
 
     <!-- Delete Token Confirmation Modal -->
-    <x-confirmation-modal wire:model="confirmingApiTokenDeletion">
-        <x-slot name="title">
-            {{ __('Delete API Token') }}
-        </x-slot>
-
-        <x-slot name="content">
-            {{ __('Are you sure you would like to delete this API token?') }}
-        </x-slot>
+    <x-modal.card blur title="{{ __('Delete API Token') }}" wire:model="confirmingApiTokenDeletion">
+        <div class="flex col-span-1">
+            <x-icon name="exclamation-circle" class="w-10 h-10 text-red-600" />
+            <div class="py-2 px-4">
+                {{ __('Are you sure you would like to delete this API token?') }}
+            </div>
+        </div>
 
         <x-slot name="footer">
             <x-button type="submit" label="{{ __('Cancel') }}" wire:click="$toggle('confirmingApiTokenDeletion')"
@@ -151,5 +150,5 @@
                 {{ __('Delete') }}
             </x-danger-button>
         </x-slot>
-    </x-confirmation-modal>
+    </x-modal.card>
 </div>
