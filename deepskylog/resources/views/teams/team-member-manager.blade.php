@@ -180,43 +180,36 @@
     @endif
 
     <!-- Role Management Modal -->
-    <x-dialog-modal wire:model="currentlyManagingRole">
-        <x-slot name="title">
-            {{ __('Manage Role') }}
-        </x-slot>
-
-        <x-slot name="content">
-            <div class="relative z-0 mt-1 border border-gray-200 rounded-lg cursor-pointer">
-                @foreach ($this->roles as $index => $role)
-                    <button type="button"
-                        class="relative px-4 py-3 inline-flex w-full rounded-lg focus:z-10 focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200 {{ $index > 0 ? 'border-t border-gray-200 rounded-t-none' : '' }} {{ !$loop->last ? 'rounded-b-none' : '' }}"
-                        wire:click="$set('currentRole', '{{ $role->key }}')">
-                        <div class="{{ $currentRole !== $role->key ? 'opacity-50' : '' }}">
-                            <!-- Role Name -->
-                            <div class="flex items-center">
-                                <div
-                                    class="text-sm text-gray-400 {{ $currentRole == $role->key ? 'font-semibold' : '' }}">
-                                    {{ $role->name }}
-                                </div>
-
-                                @if ($currentRole == $role->key)
-                                    <svg class="ml-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg"
-                                        fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                @endif
+    <x-modal.card blur title="{{ __('Manage Role') }}" wire:model="currentlyManagingRole">
+        <div class="relative z-0 mt-1 border border-gray-200 rounded-lg cursor-pointer">
+            @foreach ($this->roles as $index => $role)
+                <button type="button"
+                    class="relative px-4 py-3 inline-flex w-full rounded-lg focus:z-10 focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200 {{ $index > 0 ? 'border-t border-gray-200 rounded-t-none' : '' }} {{ !$loop->last ? 'rounded-b-none' : '' }}"
+                    wire:click="$set('currentRole', '{{ $role->key }}')">
+                    <div class="{{ $currentRole !== $role->key ? 'opacity-50' : '' }}">
+                        <!-- Role Name -->
+                        <div class="flex items-center">
+                            <div class="text-sm text-gray-400 {{ $currentRole == $role->key ? 'font-semibold' : '' }}">
+                                {{ $role->name }}
                             </div>
 
-                            <!-- Role Description -->
-                            <div class="mt-2 text-xs text-gray-400">
-                                {{ $role->description }}
-                            </div>
+                            @if ($currentRole == $role->key)
+                                <svg class="ml-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            @endif
                         </div>
-                    </button>
-                @endforeach
-            </div>
-        </x-slot>
+
+                        <!-- Role Description -->
+                        <div class="mt-2 text-xs text-gray-400">
+                            {{ $role->description }}
+                        </div>
+                    </div>
+                </button>
+            @endforeach
+        </div>
 
         <x-slot name="footer">
             <x-button type="submit" label="{{ __('Cancel') }}" wire:click="stopManagingRole"
@@ -226,7 +219,7 @@
                 {{ __('Save') }}
             </x-button>
         </x-slot>
-    </x-dialog-modal>
+    </x-modal.card>
 
     <!-- Leave Team Confirmation Modal -->
     <x-confirmation-modal wire:model="confirmingLeavingTeam">

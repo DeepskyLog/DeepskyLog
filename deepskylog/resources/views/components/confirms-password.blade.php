@@ -11,23 +11,16 @@
 </span>
 
 @once
-    <x-dialog-modal wire:model="confirmingPassword">
-        <x-slot name="title">
-            {{ $title }}
-        </x-slot>
+    <x-modal.card blur title="{{ $title }}" wire:model="confirmingPassword">
+        {{ $content }}
 
-        <x-slot name="content">
-            {{ $content }}
+        <div class="mt-4" x-data="{}"
+            x-on:confirming-password.window="setTimeout(() => $refs.confirmable_password.focus(), 250)">
+            <x-inputs.password type="password" class="mt-1 block w-3/4" placeholder="{{ __('Password') }}"
+                x-ref="confirmable_password" wire:model.defer="confirmablePassword" wire:keydown.enter="confirmPassword" />
 
-            <div class="mt-4" x-data="{}"
-                x-on:confirming-password.window="setTimeout(() => $refs.confirmable_password.focus(), 250)">
-                <x-inputs.password type="password" class="mt-1 block w-3/4" placeholder="{{ __('Password') }}"
-                    x-ref="confirmable_password" wire:model.defer="confirmablePassword"
-                    wire:keydown.enter="confirmPassword" />
-
-                <x-input-error for="confirmable_password" class="mt-2" />
-            </div>
-        </x-slot>
+            <x-input-error for="confirmable_password" class="mt-2" />
+        </div>
 
         <x-slot name="footer">
             <x-button type="submit" label="{{ __('Cancel') }}" wire:click="stopConfirmingPassword"
@@ -38,5 +31,5 @@
                 {{ $button }}
             </x-button>
         </x-slot>
-    </x-dialog-modal>
+    </x-modal.card>
 @endonce

@@ -43,11 +43,10 @@
   + [X] Check/create username when registering using socialstream
 + [X] Create seeder to move all the old users to the new database
 + [ ] Start using wireui
-  + [ ] Change all x-input
+  + [X] Change all x-input
   + [ ] Change all x-button
-    + [ ] All secondary-buttons are laready changed to x-button
-  + [ ] Remove x-dialog-modal
-    + [ ] Already done for logout-other-browser-sessions-form.blade.php
+    + [ ] All secondary-buttons are already changed to x-button
+  + [X] Remove x-dialog-modal
   + [X] Fix the menu
   + [ ] Remove all the old components
 + [ ] In the observer page, add all the extra information (old: user-settings.blade.php and UserSettings.php, new: UpdateUserProfileInformation.php)

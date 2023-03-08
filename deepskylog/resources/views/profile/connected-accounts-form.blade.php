@@ -57,14 +57,8 @@
         </div>
 
         <!-- Logout Other Devices Confirmation Modal -->
-        <x-dialog-modal wire:model="confirmingRemove">
-            <x-slot name="title">
-                {{ __('Remove Connected Account') }}
-            </x-slot>
-
-            <x-slot name="content">
-                {{ __('Please confirm your removal of this account - this action cannot be undone.') }}
-            </x-slot>
+        <x-modal.card blur title="{{ __('Remove Connected Account') }}" wire:model="confirmingRemove">
+            {{ __('Please confirm your removal of this account - this action cannot be undone.') }}
 
             <x-slot name="footer">
                 <x-button type="submit" label="{{ __('Nevermind') }}" wire:click="$toggle('confirmingRemove')"
@@ -75,6 +69,6 @@
                     {{ __('Remove Connected Account') }}
                 </x-danger-button>
             </x-slot>
-        </x-dialog-modal>
+        </x-modal.card>
     </x-slot>
 </x-action-section>
