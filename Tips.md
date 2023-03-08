@@ -10,6 +10,7 @@ php artisan storage:link
 composer update
 npm update
 npm run build
+php artisan view:clear
 php artisan migrate:fresh
 # To add all the profile images
 ln -s /var/www/www.deepskylog.be/common/observer_pics .
@@ -22,6 +23,10 @@ chmod 777 storage/app/public/profile-photos
 ```bash
 php artisan test
 ```
+
+## GUI components
+
+- For all components, we use wireui.  For the tables, we use livewire-powergrid
 
 ## User authentication
 

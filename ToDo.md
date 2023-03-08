@@ -42,20 +42,24 @@
   + [X] Update tests
   + [X] Check/create username when registering using socialstream
 + [X] Create seeder to move all the old users to the new database
++ [ ] Start using wireui
+  + [ ] Change all x-input
+  + [ ] Change all x-button
+    + [ ] Make the click on the button work
+  + [ ] Fix the menu
+  + [ ] Remove all the old components
 + [ ] In the observer page, add all the extra information (old: user-settings.blade.php and UserSettings.php, new: UpdateUserProfileInformation.php)
   + [X] Username
   + [X] Send emails
-  + [ ] Use local time
   + [ ] Country of residence
-  + [ ] About the observer
-  + [ ] ICQ code
+  + [ ] About the observer: Use Trix2
   + [ ] fstOffset
   + [ ] License and copyright notice
   + [ ] Observing page
   + [ ] Atlases page
   + [ ] Languages page
 + [ ] Create the all users administrator page
-  + [ ] Put in a table in stead of a normal list
+  + [ ] Put in a table instead of a normal list: Use Power-Components/livewire-powergrid
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
 + [ ] Add translations for the new log in pages
 + [ ] Check if the user belongs to the correct role / team
