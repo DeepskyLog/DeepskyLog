@@ -47,7 +47,7 @@
                         {{ __('Use an authentication code') }}
                     </button>
 
-                    <x-button class="ml-4">
+                    <x-button class="ml-4 type="submit">
                         {{ __('Log in') }}
                     </x-button>
                 </div>

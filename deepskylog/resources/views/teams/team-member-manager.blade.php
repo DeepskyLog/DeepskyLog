@@ -74,7 +74,7 @@
                         {{ __('Added.') }}
                     </x-action-message>
 
-                    <x-button>
+                    <x-button type="submit">
                         {{ __('Add') }}
                     </x-button>
                 </x-slot>

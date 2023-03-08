@@ -85,7 +85,7 @@
                 <x-button type="submit" label="{{ __('Cancel') }}" wire:click="$toggle('confirmingLogout')"
                     wire:loading.attr="disabled" />
 
-                <x-button secondary type="button" wire:click="logoutOtherBrowserSessions" wire:loading.attr="disabled">
+                <x-button type="submit" secondary wire:click="logoutOtherBrowserSessions" wire:loading.attr="disabled">
                     {{ __('Log Out Other Browser Sessions') }}
                 </x-button>
             </x-slot>

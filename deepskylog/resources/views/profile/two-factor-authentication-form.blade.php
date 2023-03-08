@@ -77,7 +77,7 @@
         <div class="mt-5">
             @if (!$this->enabled)
                 <x-confirms-password wire:then="enableTwoFactorAuthentication">
-                    <x-button secondary type="button" wire:loading.attr="disabled">
+                    <x-button type="submit" secondary wire:loading.attr="disabled">
                         {{ __('Enable') }}
                     </x-button>
                 </x-confirms-password>
