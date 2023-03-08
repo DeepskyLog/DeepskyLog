@@ -38,30 +38,22 @@
                                 </span>
                             </x-slot>
 
-                            <x-slot name="content">
-                                <div class="w-60">
-                                    <!-- Team Management -->
-                                    <div class="block px-4 py-2 text-xs text-gray-400">
-                                        {{ __('Manage Team') }}
-                                    </div>
+                            <!-- Team Management -->
+                            <x-dropdown.header label="{{ __('Manage Team') }}">
 
-                                    <!-- Team Settings -->
-                                    <x-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
-                                        {{ __('Team Settings') }}
-                                    </x-dropdown-link>
+                                <!-- Team Settings -->
+                                <x-dropdown.item label="{{ __('Team Settings') }}"
+                                    href="{{ route('teams.show', Auth::user()->currentTeam->id) }}" />
 
-                                    <div class="border-t border-gray-400"></div>
+                            </x-dropdown.header>
 
-                                    <!-- Team Switcher -->
-                                    <div class="block px-4 py-2 text-xs text-gray-400">
-                                        {{ __('Switch Teams') }}
-                                    </div>
+                            <!-- Team Switcher -->
+                            <x-dropdown.header label="{{ __('Switch Teams') }}">
 
-                                    @foreach (Auth::user()->allTeams() as $team)
-                                        <x-switchable-team :team="$team" />
-                                    @endforeach
-                                </div>
-                            </x-slot>
+                                @foreach (Auth::user()->allTeams() as $team)
+                                    <x-switchable-team :team="$team" />
+                                @endforeach
+                            </x-dropdown.header>
                         </x-dropdown>
                     </div>
                 @endif
@@ -71,11 +63,8 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                                <button
-                                    class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                                    <img class="h-8 w-8 rounded-full object-cover"
-                                        src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
-                                </button>
+                                <x-avatar sm src="{{ Auth::user()->profile_photo_url }}"
+                                    alt="{{ Auth::user()->name }}" />
                             @else
                                 <span class="inline-flex rounded-md">
                                     <button type="button"
@@ -92,33 +81,25 @@
                             @endif
                         </x-slot>
 
-                        <x-slot name="content">
+                        <x-dropdown.header label="{{ __('Manage Account') }}">
                             <!-- Account Management -->
-                            <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Account') }}
-                            </div>
 
-                            <x-dropdown-link href="{{ route('profile.show') }}">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
+                            <x-dropdown.item icon="cog" href="{{ route('profile.show') }}"
+                                label="{{ __('Profile') }}" />
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                                <x-dropdown-link href="{{ route('api-tokens.index') }}">
-                                    {{ __('API Tokens') }}
-                                </x-dropdown-link>
+                                <x-dropdown.item label="{{ __('API Tokens') }}"
+                                    href="{{ route('api-tokens.index') }}" />
                             @endif
-
-                            <div class="border-t border-gray-400"></div>
 
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}" x-data>
                                 @csrf
 
-                                <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
-                                    {{ __('Log Out') }}
-                                </x-dropdown-link>
+                                <x-dropdown.item separator href="{{ route('logout') }}"
+                                    @click.prevent="$root.submit();" label="{{ __('Log Out') }}" />
                             </form>
-                        </x-slot>
+                        </x-dropdown.header>
                     </x-dropdown>
                 </div>
             </div>

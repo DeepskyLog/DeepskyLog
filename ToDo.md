@@ -45,8 +45,10 @@
 + [ ] Start using wireui
   + [ ] Change all x-input
   + [ ] Change all x-button
-    + [ ] Make the click on the button work
-  + [ ] Fix the menu
+    + [ ] All secondary-buttons are laready changed to x-button
+  + [ ] Remove x-dialog-modal
+    + [ ] Already done for logout-other-browser-sessions-form.blade.php
+  + [X] Fix the menu
   + [ ] Remove all the old components
 + [ ] In the observer page, add all the extra information (old: user-settings.blade.php and UserSettings.php, new: UpdateUserProfileInformation.php)
   + [X] Username
