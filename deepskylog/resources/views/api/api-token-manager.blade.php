@@ -146,9 +146,9 @@
             <x-button type="submit" label="{{ __('Cancel') }}" wire:click="$toggle('confirmingApiTokenDeletion')"
                 wire:loading.attr="disabled" />
 
-            <x-danger-button class="ml-3" wire:click="deleteApiToken" wire:loading.attr="disabled">
+            <x-button negative class="ml-3" wire:click="deleteApiToken" wire:loading.attr="disabled">
                 {{ __('Delete') }}
-            </x-danger-button>
+            </x-button>
         </x-slot>
     </x-modal.card>
 </div>

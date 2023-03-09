@@ -234,9 +234,9 @@
             <x-button type="submit" label="{{ __('Cancel') }}" wire:click="$toggle('confirmingLeavingTeam')"
                 wire:loading.attr="disabled" />
 
-            <x-danger-button class="ml-3" wire:click="leaveTeam" wire:loading.attr="disabled">
+            <x-button negative class="ml-3" wire:click="leaveTeam" wire:loading.attr="disabled">
                 {{ __('Leave') }}
-            </x-danger-button>
+            </x-button>
         </x-slot>
     </x-modal.card>
 
@@ -252,9 +252,9 @@
             <x-button type="submit" label="{{ __('Cancel') }}" wire:click="$toggle('confirmingTeamMemberRemoval')"
                 wire:loading.attr="disabled" />
 
-            <x-danger-button class="ml-3" wire:click="removeTeamMember" wire:loading.attr="disabled">
+            <x-button negative class="ml-3" wire:click="removeTeamMember" wire:loading.attr="disabled">
                 {{ __('Remove') }}
-            </x-danger-button>
+            </x-button>
         </x-slot>
     </x-modal.card>
 </div>

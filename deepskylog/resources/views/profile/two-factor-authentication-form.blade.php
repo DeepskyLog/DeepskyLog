@@ -106,9 +106,9 @@
                     </x-confirms-password>
                 @else
                     <x-confirms-password wire:then="disableTwoFactorAuthentication">
-                        <x-danger-button wire:loading.attr="disabled">
+                        <x-button type="submit" negative wire:loading.attr="disabled">
                             {{ __('Disable') }}
-                        </x-danger-button>
+                        </x-button>
                     </x-confirms-password>
                 @endif
 

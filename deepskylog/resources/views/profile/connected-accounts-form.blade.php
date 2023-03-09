@@ -39,10 +39,10 @@
                                 @endif
 
                                 @if ($this->accounts->count() > 1 || !is_null($this->user->password))
-                                    <x-danger-button wire:click="confirmRemove({{ $account->id }})"
+                                    <x-button negative wire:click="confirmRemove({{ $account->id }})"
                                         wire:loading.attr="disabled">
                                         {{ __('Remove') }}
-                                    </x-danger-button>
+                                    </x-button>
                                 @endif
                             </div>
                         @else
@@ -64,10 +64,10 @@
                 <x-button type="submit" label="{{ __('Nevermind') }}" wire:click="$toggle('confirmingRemove')"
                     wire:loading.attr="disabled" />
 
-                <x-danger-button class="ml-2" wire:click="removeConnectedAccount({{ $this->selectedAccountId }})"
+                <x-button negative class="ml-2" wire:click="removeConnectedAccount({{ $this->selectedAccountId }})"
                     wire:loading.attr="disabled">
                     {{ __('Remove Connected Account') }}
-                </x-danger-button>
+                </x-button>
             </x-slot>
         </x-modal.card>
     </x-slot>
