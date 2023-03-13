@@ -101,18 +101,10 @@
 
         </div>
 
-        {{-- @php
-        $allInstruments = \App\Models\Instrument::getInstrumentOptions();
-
-        $allCountries = '<option value="">&nbsp;</option>';
-        foreach (\Countries::getList(LaravelGettext::getLocaleLanguage()) as $code => $mycountry) {
-        $allCountries .= '<option ';
-            if ($code == $user->country) {
-                $allCountries .= ' selected="selected" ';
-            }
-            $allCountries .= ' value="' . $code . '">' . $mycountry . '</option>';
-        }
-        @endphp --}}
+        <div class="col-span-6 sm:col-span-4">
+            <x-select label="{{ __('Country of residence') }}" wire:model.defer="state.country" :async-data="route('countries.index')"
+                option-label="name" option-value="id" />
+        </div>
 
     </x-slot>
 
