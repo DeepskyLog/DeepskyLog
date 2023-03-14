@@ -7,6 +7,22 @@
         {{ __('Update your account\'s profile information and email address.') }}
     </x-slot>
 
+    @if (auth()->user()->country == '')
+        @push('scripts')
+            <script>
+                window.onload = function() {
+                    var title = '{{ __('Missing information!') }}';
+                    var description = '{{ __('Your country of residence is not set. Please set it on this page!') }}';
+                    window.$wireui.notify({
+                        title: title,
+                        description: description,
+                        icon: 'warning'
+                    })
+                }
+            </script>
+        @endpush
+    @endif
+
     <x-slot name="form">
         <!-- Profile Photo -->
         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())

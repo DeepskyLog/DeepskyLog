@@ -43,7 +43,7 @@
   + [X] Check/create username when registering using socialstream
 + [X] Create seeder to move all the old users to the new database
 + [X] Start using wireui
-+ [ ] Show message when logged in and the country (or the about) is not set.
++ [X] Show message when logged in and the country (or the about) is not set.
 + [ ] In the observer page, add all the extra information (old: user-settings.blade.php and UserSettings.php, new: UpdateUserProfileInformation.php)
   + [X] Username
   + [X] Send emails
@@ -56,6 +56,7 @@
   + [ ] Languages page
 + [ ] Create the all users administrator page
   + [ ] Put in a table instead of a normal list: Use Power-Components/livewire-powergrid
++ [ ] Move to slugs for the username
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
 + [ ] Add translations for the new log in pages
   + [ ] Also adapt the code in api.php to translate the country names.

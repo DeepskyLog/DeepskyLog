@@ -23,12 +23,15 @@
     <div class="min-h-screen bg-gray-800 text-gray-300">
         @livewire('navigation-menu')
 
+        <x-notifications />
+
         <!-- Page Content -->
         <main>
             {{ $slot }}
         </main>
     </div>
 
+    @stack('scripts')
     @stack('modals')
 
     @livewireScripts

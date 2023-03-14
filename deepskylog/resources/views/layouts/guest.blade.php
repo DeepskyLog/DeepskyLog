@@ -17,9 +17,14 @@
 </head>
 
 <body>
+
     <div class="font-sans bg-gray-800 text-gray-300 antialiased">
+        <x-notifications />
         {{ $slot }}
     </div>
+
+    @stack('scripts')
+
 </body>
 
 </html>
