@@ -1,5 +1,13 @@
 # Tips and tricks
 
+- [Tips and tricks](#tips-and-tricks)
+  - [Installation on the server](#installation-on-the-server)
+  - [Unit testing](#unit-testing)
+  - [GUI components](#gui-components)
+    - [Rich text editing](#rich-text-editing)
+  - [User authentication](#user-authentication)
+    - [Teams](#teams)
+
 ## Installation on the server
 
 ```bash
@@ -27,6 +35,10 @@ php artisan test
 ## GUI components
 
 - For all components, we use wireui.  For the tables, we use livewire-powergrid
+
+### Rich text editing
+
+- TinyMCE is used for the rich text editing forms.  An example on how to use this in the code can be found in resources/view/profile/update-profile-information-form.php
 
 ## User authentication
 

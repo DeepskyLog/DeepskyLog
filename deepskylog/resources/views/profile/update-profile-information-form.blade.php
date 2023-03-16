@@ -21,6 +21,20 @@
                 }
             </script>
         @endpush
+    @elseif (auth()->user()->about == '')
+        @push('scripts')
+            <script>
+                window.onload = function() {
+                    var title = '{{ __('Missing information!') }}';
+                    var description = '{{ __('Please provide some information about your astronomical interests!') }}';
+                    window.$wireui.notify({
+                        title: title,
+                        description: description,
+                        icon: 'warning'
+                    })
+                }
+            </script>
+        @endpush
     @endif
 
     <x-slot name="form">
@@ -117,11 +131,19 @@
 
         </div>
 
+        {{-- Country of residence --}}
         <div class="col-span-6 sm:col-span-4">
             <x-select label="{{ __('Country of residence') }}" wire:model.defer="state.country" :async-data="route('countries.index')"
                 option-label="name" option-value="id" />
         </div>
 
+        {{-- About --}}
+        <div class="col-span-6 sm:col-span-5 text-sm text-gray-400">
+            {{ __('Tell something about your astronomical interests') }}
+        </div>
+        <div class="col-span-6 sm:col-span-5" wire:ignore>
+            <textarea wire:model="state.about" class="min-h-fit h-48 " name="message" id="message"></textarea>
+        </div>
     </x-slot>
 
     <x-slot name="actions">
@@ -133,3 +155,29 @@
             wire:target="photo" />
     </x-slot>
 </x-form-section>
+
+@push('scripts')
+    <script src="{{ asset('js/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#message', // Replace this CSS selector to match the placeholder element for TinyMCE
+            plugins: 'lists emoticons quickbars wordcount',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | emoticons | wordcount',
+            menubar: false,
+            quickbars_insert_toolbar: false,
+            quickbars_image_toolbar: false,
+            quickbars_selection_toolbar: 'bold italic',
+            skin: "oxide-dark",
+            content_css: "dark",
+            forced_root_block: false,
+            setup: function(editor) {
+                editor.on('init change', function() {
+                    editor.save();
+                });
+                editor.on('change', function(e) {
+                    @this.set("state.about", editor.getContent());
+                });
+            }
+        });
+    </script>
+@endpush

@@ -48,7 +48,7 @@
   + [X] Username
   + [X] Send emails
   + [X] Country of residence
-  + [ ] About the observer: Use Trix2
+  + [X] About the observer: Use TinyMCE
   + [ ] fstOffset
   + [ ] License and copyright notice
   + [ ] Observing page
