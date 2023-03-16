@@ -49,7 +49,7 @@
   + [X] Send emails
   + [X] Country of residence
   + [X] About the observer: Use TinyMCE
-  + [ ] fstOffset
+  + [X] fstOffset
   + [ ] License and copyright notice
   + [ ] Observing page
   + [ ] Atlases page

@@ -144,6 +144,15 @@
         <div class="col-span-6 sm:col-span-5" wire:ignore>
             <textarea wire:model="state.about" class="min-h-fit h-48 " name="message" id="message"></textarea>
         </div>
+
+        <!-- Name -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-inputs.number step=".01" min="-5.0" max="5.0" id="fstOffset"
+                label="{{ __('Offset between measured SQM value and the faintest visible star.') }}" type="number"
+                class="mt-1 block w-full" wire:model.defer="state.fstOffset" autocomplete="fstOffset" />
+            <x-input-error for="fstOffset" class="mt-2" />
+        </div>
+
     </x-slot>
 
     <x-slot name="actions">

@@ -24,6 +24,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'sendMail' => ['boolean'],
             'country' => ['string'],
             'about' => ['string'],
+            'fstOffset' => ['numeric', 'min:-5.0', 'max:5.0']
         ])->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
@@ -40,6 +41,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'sendMail' => $input['sendMail'],
                 'country' => $input['country'],
                 'about' => $input['about'],
+                'fstOffset' => $input['fstOffset']
             ])->save();
         }
     }
