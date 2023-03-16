@@ -80,14 +80,14 @@
         @endif
 
         <!-- Name -->
-        <div class="col-span-6 sm:col-span-4">
+        <div class="col-span-6 sm:col-span-5">
             <x-input id="name" label="{{ __('Name') }}" type="text" class="mt-1 block w-full"
                 wire:model.defer="state.name" autocomplete="name" />
             <x-input-error for="name" class="mt-2" />
         </div>
 
         <!-- Email -->
-        <div class="col-span-6 sm:col-span-4">
+        <div class="col-span-6 sm:col-span-5">
             <x-input id="email" label="{{ __('Email') }}" type="email" class="mt-1 block w-full"
                 wire:model.defer="state.email" />
             <x-input-error for="email" class="mt-2" />
@@ -112,13 +112,13 @@
         </div>
 
         <!-- Username -->
-        <div class="col-span-6 sm:col-span-4">
+        <div class="col-span-6 sm:col-span-5">
             <x-input id="username" label="{{ __('Username') }}" disabled type="text" class="mt-1 block w-full"
                 value="{{ $this->user->username }}" />
         </div>
 
         <!-- Send messages as emails -->
-        <div class="col-span-6 sm:col-span-4">
+        <div class="col-span-6 sm:col-span-5">
 
             @if ($this->user->sendMail)
                 <x-toggle label="{{ __('Send messages as email') }}" name="sendMail" id="sendMail"
@@ -132,7 +132,7 @@
         </div>
 
         {{-- Country of residence --}}
-        <div class="col-span-6 sm:col-span-4">
+        <div class="col-span-6 sm:col-span-5">
             <x-select label="{{ __('Country of residence') }}" wire:model.defer="state.country" :async-data="route('countries.index')"
                 option-label="name" option-value="id" />
         </div>
@@ -146,7 +146,7 @@
         </div>
 
         <!-- Name -->
-        <div class="col-span-6 sm:col-span-4">
+        <div class="col-span-6 sm:col-span-5">
             <x-inputs.number step=".01" min="-5.0" max="5.0" id="fstOffset"
                 label="{{ __('Offset between measured SQM value and the faintest visible star.') }}" type="number"
                 class="mt-1 block w-full" wire:model.defer="state.fstOffset" autocomplete="fstOffset" />
