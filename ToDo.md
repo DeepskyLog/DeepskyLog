@@ -50,6 +50,7 @@
   + [X] Country of residence
   + [X] About the observer: Use TinyMCE
   + [X] fstOffset
+  + [x] If the about is empty and nothing is written in the field, the form can not be saved.
   + [ ] License and copyright notice
   + [ ] Observing page
   + [ ] Atlases page

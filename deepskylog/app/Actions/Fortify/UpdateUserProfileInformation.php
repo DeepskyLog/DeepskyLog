@@ -23,7 +23,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
             'sendMail' => ['boolean'],
             'country' => ['string'],
-            'about' => ['string'],
+            'about' => ['string', 'nullable'],
             'fstOffset' => ['numeric', 'min:-5.0', 'max:5.0']
         ])->validateWithBag('updateProfileInformation');
 
