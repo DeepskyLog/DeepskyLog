@@ -21,6 +21,15 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        $licenses = [
+            'Attribution CC BY',
+            'Attribution-ShareAlike CC BY-SA',
+            'Attribution-NoDerivs CC BY-ND',
+            'Attribution-NonCommercial CC BY-NC',
+            'Attribution-NonCommercial-ShareAlike CC BY-NC-SA',
+            'Attribution-NonCommercial-NoDerivs CC BY-NC-ND',
+        ];
+
         $accountData = ObserversOld::all();
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
         DB::table('users')->truncate();
@@ -51,6 +60,7 @@ class UsersTableSeeder extends Seeder
                 'observationlanguage' => $firstUser->observationlanguage,
                 'standardAtlasCode'   => $atlas,
                 'fstOffset'           => $firstUser->fstOffset,
+                'copyrightSelection'  => $firstUser->copyright,
                 'copyright'           => $firstUser->copyright,
                 'overviewdsos'        => $firstUser->overviewdsos,
                 'lookupdsos'          => $firstUser->lookupdsos,
@@ -120,6 +130,16 @@ class UsersTableSeeder extends Seeder
                 && $accountSingle->id !== 'admin'
                 && $accountSingle->id !== 'wim'
             ) {
+                if ($accountSingle->copyright === '') {
+                    $copyrightSelection = 'No license (Not recommended)';
+                    $copyright = '';
+                } elseif (in_array($accountSingle->copyright, $licenses)) {
+                    $copyrightSelection = $accountSingle->copyright;
+                    $copyright = $accountSingle->copyright;
+                } else {
+                    $copyrightSelection = 'Enter your own copyright text';
+                    $copyright = $accountSingle->copyright;
+                }
                 $user = User::create(
                     [
                         'username'            => html_entity_decode($accountSingle->id),
@@ -133,7 +153,8 @@ class UsersTableSeeder extends Seeder
                         'observationlanguage' => $accountSingle->observationlanguage,
                         'standardAtlasCode'   => $atlas,
                         'fstOffset'           => $accountSingle->fstOffset,
-                        'copyright'           => $accountSingle->copyright,
+                        'copyrightSelection'  => $copyrightSelection,
+                        'copyright'           => $copyright,
                         'overviewdsos'        => $accountSingle->overviewdsos,
                         'lookupdsos'          => $accountSingle->lookupdsos,
                         'detaildsos'          => $accountSingle->detaildsos,

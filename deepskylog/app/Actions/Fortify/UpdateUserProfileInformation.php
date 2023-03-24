@@ -35,13 +35,20 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user instanceof MustVerifyEmail) {
             $this->updateVerifiedUser($user, $input);
         } else {
+            if ($input['copyrightSelection'] === "Enter your own copyright text") {
+                $copyright = $input['copyright'];
+            } else {
+                $copyright = $input['copyrightSelection'];
+            }
             $user->forceFill([
                 'name' => $input['name'],
                 'email' => $input['email'],
                 'sendMail' => $input['sendMail'],
                 'country' => $input['country'],
                 'about' => $input['about'],
-                'fstOffset' => $input['fstOffset']
+                'fstOffset' => $input['fstOffset'],
+                'copyright' => $copyright,
+                'copyrightSelection' => $input['copyrightSelection']
             ])->save();
         }
     }

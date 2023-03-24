@@ -23,6 +23,7 @@ return new class () extends Migration {
             $table->string('standardAtlasCode', 191)->default('urano');
             $table->float('fstOffset')->default(0.0);
             $table->string('copyright')->default('');
+            $table->string('copyrightSelection')->default('No license (Not recommended)');
             $table->string('overviewdsos')->default(10);
             $table->string('lookupdsos')->default(12);
             $table->string('detaildsos')->default(15);

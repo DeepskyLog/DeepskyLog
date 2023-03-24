@@ -39,3 +39,40 @@ Route::get('countries.index', function (Request $request) {
 
     return $allCountries;
 })->name('countries.index');
+
+Route::get('licenses.index', function (Request $request) {
+    $licenses = [
+        'Attribution CC BY',
+        'Attribution-ShareAlike CC BY-SA',
+        'Attribution-NoDerivs CC BY-ND',
+        'Attribution-NonCommercial CC BY-NC',
+        'Attribution-NonCommercial-ShareAlike CC BY-NC-SA',
+        'Attribution-NonCommercial-NoDerivs CC BY-NC-ND',
+        'No license (Not recommended)',
+        'Enter your own copyright text'
+    ];
+
+    $allLicenses = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        if (in_array(auth()->user()->copyrightSelection, $licenses)) {
+            $text = auth()->user()->copyrightSelection;
+        } elseif (auth()->user()->copyrightSelection === 'No license (Not recommended)') {
+            $text = 'No license (Not recommended)';
+        } else {
+            $text = 'Enter your own copyright text';
+        }
+        $allLicenses[] = [
+            'name' => $text
+        ];
+    }
+    foreach ($licenses as $text) {
+        if ($request->search == '' || Str::contains(Str::lower($text), Str::lower($request->search))) {
+            $allLicenses[] = [
+                'name' => $text,
+            ];
+        }
+    }
+
+    return $allLicenses;
+})->name('licenses.index');

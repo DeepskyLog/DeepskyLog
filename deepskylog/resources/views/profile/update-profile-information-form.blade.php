@@ -145,7 +145,7 @@
             <textarea wire:model="state.about" class="min-h-fit h-48 " name="message" id="message"></textarea>
         </div>
 
-        <!-- Name -->
+        <!-- fstOffset -->
         <div class="col-span-6 sm:col-span-5">
             <x-inputs.number step=".01" min="-5.0" max="5.0" id="fstOffset"
                 label="{{ __('Offset between measured SQM value and the faintest visible star.') }}" type="number"
@@ -153,6 +153,20 @@
             <x-input-error for="fstOffset" class="mt-2" />
         </div>
 
+        {{-- License --}}
+        <div class="col-span-6 sm:col-span-5">
+            {{-- <div x-data='' wire:ignore> --}}
+            <x-select label="{{ __('License for drawings') }}" wire:model="state.copyrightSelection" :async-data="route('licenses.index')"
+                option-label="name" option-value="name" />
+        </div>
+
+        {{-- Copyright notice --}}
+        @if ($state['copyrightSelection'] === 'Enter your own copyright text')
+            <div class="col-span-6 sm:col-span-5">
+                <x-input id="copyright" label="{{ __('Copyright notice') }}" type="text" class="mt-1 block w-full"
+                    wire:model.defer="state.copyright" value="{{ auth()->user()->copyright }}" />
+            </div>
+        @endif
     </x-slot>
 
     <x-slot name="actions">
