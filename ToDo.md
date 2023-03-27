@@ -52,9 +52,10 @@
   + [X] fstOffset
   + [X] If the about is empty and nothing is written in the field, the form can not be saved.
   + [X] License and copyright notice
-  + [ ] Observing page
+  + [ ] Observing page -> last, because we need information from the old database...
   + [ ] Atlases page
   + [ ] Languages page
++ [ ] Add sponsors page
 + [ ] Create the all users administrator page
   + [ ] Put in a table instead of a normal list: Use Power-Components/livewire-powergrid
 + [ ] Move to slugs for the username
@@ -69,6 +70,7 @@
 + [ ] Create menu for the new version
 + [ ] Check log in using the new version and try using one of the old pages as logged in user
   + [ ] Change link in the old version
+  + [ ] Add the sponsor page
   + [ ] Update the log in code in the old DeepskyLog
 
 ```php

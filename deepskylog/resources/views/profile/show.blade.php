@@ -57,6 +57,11 @@
                     @livewire('profile.delete-user-form')
                 </div>
             @endif
+
+            <x-section-border />
+
+            @livewire('profile.update-user-atlas-information')
+
         </div>
     </div>
 </x-app-layout>
