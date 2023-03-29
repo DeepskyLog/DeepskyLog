@@ -7,9 +7,11 @@ use Livewire\Component;
 class UpdateUserObservingInformation extends Component
 {
     public $stdlocation;
+    public $stdtelescope;
 
     protected $rules = [
         'stdlocation' => 'numeric',
+        'stdtelescope' => 'numeric',
     ];
     /**
      * Sets the database values.
@@ -19,6 +21,7 @@ class UpdateUserObservingInformation extends Component
     public function mount()
     {
         $this->stdlocation = auth()->user()->stdlocation;
+        $this->stdtelescope = auth()->user()->stdtelescope;
     }
 
     /**
@@ -28,7 +31,6 @@ class UpdateUserObservingInformation extends Component
     public function updateObservingInformation(): void
     {
         $this->validate();
-        // dd($this->stdlocation);
 
         if ($this->stdlocation == 0) {
             auth()->user()->forceFill([
@@ -37,6 +39,15 @@ class UpdateUserObservingInformation extends Component
         } else {
             auth()->user()->forceFill([
                 'stdlocation' => $this->stdlocation,
+            ])->save();
+        }
+        if ($this->stdtelescope == 0) {
+            auth()->user()->forceFill([
+                'stdtelescope' => null,
+            ])->save();
+        } else {
+            auth()->user()->forceFill([
+                'stdtelescope' => $this->stdtelescope,
             ])->save();
         }
 

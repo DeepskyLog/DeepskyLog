@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\InstrumentsOld;
 use App\Models\LocationsOld;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -106,3 +107,32 @@ Route::get('locations.index', function (Request $request) {
 
     return $allLocations;
 })->name('locations.index');
+
+Route::get('instruments.index', function (Request $request) {
+    $allInstruments = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $allInstruments[] = [
+            'id' => auth()->user()->stdtelescope,
+            'name' => InstrumentsOld::where('id', auth()->user()->stdtelescope)->first()->name,
+        ];
+    }
+
+    // Get the instrument, but they should be active
+    $instruments = InstrumentsOld::where('observer', auth()->user()->username)->where('instrumentactive', 1)->get();
+
+    foreach ($instruments as $instrument) {
+        if ($request->search == '' || Str::contains(Str::lower($instrument->name), Str::lower($request->search))) {
+            $allInstruments[] = [
+                'id' => $instrument->id,
+                'name' => $instrument->name,
+            ];
+        }
+    }
+    $allInstruments[] = [
+        'id' => 0,
+        'name' => 'No standard instrument (Not recommended)'
+    ];
+
+    return $allInstruments;
+})->name('instruments.index');

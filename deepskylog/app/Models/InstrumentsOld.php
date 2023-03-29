@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Old locations eloquent model.
+ * Old instruments eloquent model.
  */
 
 namespace App\Models;
@@ -9,13 +9,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Old locations eloquent model.
+ * Old instruments eloquent model.
  */
-class LocationsOld extends Model
+class InstrumentsOld extends Model
 {
     protected $casts = ['id' => 'string'];
 
     protected $connection = 'mysqlOld';
 
-    protected $table = 'locations';
+    protected $table = 'instruments';
 }

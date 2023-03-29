@@ -47,6 +47,12 @@
                 option-label="name" option-value="id" />
         </div>
 
+        {{-- Default instrument --}}
+        <div class="col-span-6 sm:col-span-5">
+            <x-select label="{{ __('Default instrument') }}" wire:model.defer="stdtelescope" :async-data="route('instruments.index')"
+                option-label="name" option-value="id" />
+        </div>
+
     </x-slot>
 
     <x-slot name="actions">
