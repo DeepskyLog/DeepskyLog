@@ -52,7 +52,7 @@
   + [X] fstOffset
   + [X] If the about is empty and nothing is written in the field, the form can not be saved.
   + [X] License and copyright notice
-  + [ ] Observing page -> last, because we need information from the old database...
+  + [ ] Observing page
   + [ ] Languages page
   + [X] Atlases page
 + [ ] Add sponsors page

@@ -1,8 +1,9 @@
 <?php
 
+use App\Models\LocationsOld;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,3 +77,32 @@ Route::get('licenses.index', function (Request $request) {
 
     return $allLicenses;
 })->name('licenses.index');
+
+Route::get('locations.index', function (Request $request) {
+    $allLocations = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $allLocations[] = [
+            'id' => auth()->user()->stdlocation,
+            'name' => LocationsOld::where('id', auth()->user()->stdlocation)->first()->name,
+        ];
+    }
+
+    // Get the location, but they should be active
+    $locations = LocationsOld::where('observer', auth()->user()->username)->where('locationactive', 1)->get();
+
+    foreach ($locations as $location) {
+        if ($request->search == '' || Str::contains(Str::lower($location->name), Str::lower($request->search))) {
+            $allLocations[] = [
+                'id' => $location->id,
+                'name' => $location->name,
+            ];
+        }
+    }
+    $allLocations[] = [
+        'id' => 0,
+        'name' => 'No standard location (Not recommended)'
+    ];
+
+    return $allLocations;
+})->name('locations.index');
