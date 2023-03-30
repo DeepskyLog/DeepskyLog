@@ -2,6 +2,7 @@
 
 use App\Models\InstrumentsOld;
 use App\Models\LocationsOld;
+use App\Models\Atlas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -136,3 +137,26 @@ Route::get('instruments.index', function (Request $request) {
 
     return $allInstruments;
 })->name('instruments.index');
+
+Route::get('atlas.index', function (Request $request) {
+    $allAtlases = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $allAtlases[] = [
+            'id' => auth()->user()->standardAtlasCode,
+            'name' => Atlas::where('code', auth()->user()->standardAtlasCode)->first()->name,
+        ];
+    }
+
+    // Get the atlases
+    foreach (Atlas::all() as $atlas) {
+        if ($request->search == '' || Str::contains(Str::lower($atlas->name), Str::lower($request->search))) {
+            $allAtlases[] = [
+                'id' => $atlas->code,
+                'name' => $atlas->name,
+            ];
+        }
+    }
+
+    return $allAtlases;
+})->name('atlas.index');

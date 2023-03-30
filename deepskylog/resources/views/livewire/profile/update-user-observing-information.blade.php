@@ -53,6 +53,12 @@
                 option-label="name" option-value="id" />
         </div>
 
+        {{-- Default atlas --}}
+        <div class="col-span-6 sm:col-span-5">
+            <x-select label="{{ __('Default atlas') }}" wire:model.defer="standardAtlasCode" :async-data="route('atlas.index')"
+                option-label="name" option-value="id" />
+        </div>
+
     </x-slot>
 
     <x-slot name="actions">
