@@ -9,6 +9,7 @@ class UpdateUserObservingInformation extends Component
     public $stdlocation;
     public $stdtelescope;
     public $standardAtlasCode;
+    public $showInches;
 
     protected $rules = [
         'stdlocation' => 'numeric',
@@ -24,6 +25,7 @@ class UpdateUserObservingInformation extends Component
         $this->stdlocation = auth()->user()->stdlocation;
         $this->stdtelescope = auth()->user()->stdtelescope;
         $this->standardAtlasCode = auth()->user()->standardAtlasCode;
+        $this->showInches = auth()->user()->showInches;
     }
 
     /**
@@ -54,6 +56,7 @@ class UpdateUserObservingInformation extends Component
         }
         auth()->user()->forceFill([
             'standardAtlasCode' => $this->standardAtlasCode,
+            'showInches' => $this->showInches,
         ])->save();
 
         $this->emit('saved');

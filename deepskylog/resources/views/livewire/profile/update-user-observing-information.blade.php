@@ -59,6 +59,17 @@
                 option-label="name" option-value="id" />
         </div>
 
+        {{-- Units for instrument diameter --}}
+        <div class="col-span-6 sm:col-span-5">
+
+            @if (auth()->user()->sendMail)
+                <x-toggle label="{{ __('Show instrument diameter in inch') }}" name="showInches" id="showInches"
+                    wire:model.defer="showInches" checked />
+            @else
+                <x-toggle label="{{ __('Show instrument diameter in inch') }}" name="showInches" id="showInches"
+                    wire:model.defer="showInches" />
+            @endif
+        </div>
     </x-slot>
 
     <x-slot name="actions">

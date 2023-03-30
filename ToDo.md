@@ -21,26 +21,11 @@
 + [X] Use DeepskyLog logo
 + [X] Make a dark version of all the socialstream pages
 + [X] Investigate groups
-  + [X] Add new role 'Guest'
-  + [X] Add a new team Observers, Database Experts and Administrators.
-  + [X] Add all new users to the Observers team.  Remove the role admin.
-  + [X] Don't create a new group for all new users
-  + [X] Use group administrators for the admins
-  + [X] Create isAdministrator() method
-  + [X] Write unit tests
-  + [X] Remove the possibility of creating a new team
-  + [X] Don't show all users of the current team is the user is an Observer
 + [X] Create migration to add all needed information to the users table, create unit test
 + [X] Check if logging in using the old accounts works
 + [X] Make it possible to log in using the user id (and not using the mail address)
 + [X] Don't show the teams dropdown if the user only belongs to one team.
 + [X] When registering, add the userid
-  + [X] Update GUI
-  + [X] Check if the username is unique
-  + [X] Add to the database
-  + [X] Show the username (id) in the list with users of a group
-  + [X] Update tests
-  + [X] Check/create username when registering using socialstream
 + [X] Create seeder to move all the old users to the new database
 + [X] Start using wireui
 + [X] Show message when logged in and the country (or the about) is not set.
@@ -50,9 +35,8 @@
   + [X] Country of residence
   + [X] About the observer: Use TinyMCE
   + [X] fstOffset
-  + [X] If the about is empty and nothing is written in the field, the form can not be saved.
   + [X] License and copyright notice
-  + [ ] Observing page
+  + [X] Observing page
   + [ ] Languages page
   + [X] Atlases page
 + [ ] Add sponsors page
@@ -126,20 +110,13 @@ if ($id) {
 
 + Check Target.php -> protected $with = ['type', 'constellation'];
 
-## PHP 8
-
-+ Use new php 8 features
-
 ## Observing lists
 
 ## Interesting websites
 
 + [ ] Timezones with php: Carbon: <https://carbon.nesbot.com/docs/#api-timezone>
 + [ ] <https://jamesmills.co.uk/2019/02/28/laravel-timezone/> for timezones / date
-+ [ ] CODE CLIMATE: <https://codeclimate.com/github/WimDeMeester/DeepskyLog.laravel/issues?category=duplication&engine_name%5B%5D=structure&engine_name%5B%5D=duplication>
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
   + [ ] See https://laraveldaily.teachable.com/courses/393790/lectures/6329089
-+ [ ] <https://github.com/Te7a-Houdini/laravel-trix> for editor
-  + [ ] For observation lists and observations
 + [ ] Feeds: https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel
 + [ ] Check https://laravel-comments.com/ for commenting on observations, observing lists, ...
