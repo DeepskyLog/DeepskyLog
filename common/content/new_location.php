@@ -281,33 +281,33 @@ function newLocation()
       function fillHiddenFields(latLng) {
         // Do reverse geocoding:
         geocoder.geocode({'latLng': latLng}, function(results, status) {
-          if (status == google.maps.GeocoderStatus.OK) {
-              if (results[0]) {
-              arrAddress = results[0].address_components;
-              for (ac = 0; ac < arrAddress.length; ac++) {
-                if (arrAddress[ac].types[0] == \"country\") {
-                  document.getElementById('country').value =
-                    arrAddress[ac].long_name;
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    arrAddress = results[0].address_components;
+                    for (ac = 0; ac < arrAddress.length; ac++) {
+                        if (arrAddress[ac].types[0] == \"country\") {
+                            document.getElementById('country').value = arrAddress[ac].long_name;
+                        }
+                    }
                 }
-              }
             }
-           }
-          });
+        });
 
           // Find the timezone
-        url = 'https://maps.googleapis.com/maps/api/timezone/json"
-            . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&location='
-            + latLng.lat() + ',' + latLng.lng() + '&timestamp='
-            + new Date().getTime() / 1000;
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var myArr = JSON.parse(xmlhttp.responseText);
-            document.getElementById('timezone').value = myArr.timeZoneId;
-          }
-        }
-        xmlhttp.open('GET', url, true);
-        xmlhttp.send();
+          var requestOptions = {
+            method: 'GET',
+          };
+
+          url = 'https://api.geoapify.com/v1/geocode/reverse?lat=' + latLng.lat() + '&lon=' + latLng.lng() +'&apiKey=7bdf49488a0e4e22b7f7227b775282db';
+          var tz = 'undefined';
+          fetch(url, requestOptions).then(resp => resp.json()).then((result) => {
+            try {
+                tz = result['features'][0]['properties']['timezone']['name'];
+            } catch (error) {
+                tz = 'UTC';
+            }
+            document.getElementById('timezone').value = tz;
+          });
 
           // Find the elevation
         elevator = new google.maps.ElevationService();
