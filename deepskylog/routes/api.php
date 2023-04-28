@@ -160,3 +160,50 @@ Route::get('atlas.index', function (Request $request) {
 
     return $allAtlases;
 })->name('atlas.index');
+
+Route::get('ui_languages.index', function (Request $request) {
+    $allLanguages = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $allLanguages[] = [
+            'id' => auth()->user()->standardAtlasCode,
+            'name' => Atlas::where('code', auth()->user()->standardAtlasCode)->first()->name,
+        ];
+    }
+
+    // Get the languages
+    foreach (Atlas::all() as $atlas) {
+        if ($request->search == '' || Str::contains(Str::lower($atlas->name), Str::lower($request->search))) {
+            $allLanguages[] = [
+                'id' => $atlas->code,
+                'name' => $atlas->name,
+            ];
+        }
+    }
+
+    return $allLanguages;
+})->name('ui_languages.index');
+
+// Make a list of all possible languages for the observations in DeepskyLog.
+Route::get('observation_languages.index', function (Request $request) {
+    $allLanguages = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $allLanguages[] = [
+             'id' => auth()->user()->observationlanguage,
+             'name' => Languages::lookup([auth()->user()->observationlanguage], 'mixed')->values()[0],
+         ];
+    }
+
+    // Get the languages
+    foreach (Languages::lookup(['bg', 'hr', 'cs', 'da', 'nl', 'en', 'eo', 'fi', 'fr', 'de', 'el', 'is', 'it', 'no', 'pl', 'pt', 'es', 'sv'], 'mixed') as $key => $language) {
+        if ($request->search == '' || Str::contains(Str::lower($language), Str::lower($request->search))) {
+            $allLanguages[] = [
+                'id' => $key,
+                'name' => $language,
+            ];
+        }
+    }
+
+    return $allLanguages;
+})->name('observation_languages.index');

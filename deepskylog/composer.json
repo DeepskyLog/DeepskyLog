@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.11",
         "monarobase/country-list": "^3.4",
+        "petercoles/multilingual-language-list": "^1.16",
         "symfony/http-client": "^6.2",
         "symfony/mailgun-mailer": "^6.2",
         "tinymce/tinymce": "^6.4",

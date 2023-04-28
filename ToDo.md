@@ -37,15 +37,15 @@
   + [X] fstOffset
   + [X] License and copyright notice
   + [X] Observing page
-  + [ ] Languages page
   + [X] Atlases page
+  + [ ] Languages page
 + [ ] Add sponsors page
 + [ ] Create the all users administrator page
   + [ ] Put in a table instead of a normal list: Use Power-Components/livewire-powergrid
 + [ ] Move to slugs for the username
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
 + [ ] Add translations for the new log in pages
-  + [ ] Also adapt the code in api.php to translate the country names.
+  + [ ] Also adapt the code in api.php to translate the country names, and the language names.
 + [ ] Check if the user belongs to the correct role / team
 + [ ] Use the old version of DeepskyLog alongside the new version
   + [ ] Add the code
@@ -54,7 +54,6 @@
 + [ ] Create menu for the new version
 + [ ] Check log in using the new version and try using one of the old pages as logged in user
   + [ ] Change link in the old version
-  + [ ] Add the sponsor page
   + [ ] Update the log in code in the old DeepskyLog
 
 ```php
