@@ -29,7 +29,7 @@ class UpdateUserLanguageInformation extends Component
     {
         auth()->user()->forceFill([
             'observationlanguage' => $this->observationlanguage,
-            // 'language' => $this->language,
+            'language' => $this->language,
         ])->save();
 
         $this->emit('saved');

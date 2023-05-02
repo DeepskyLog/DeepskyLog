@@ -29,16 +29,7 @@
 + [X] Create seeder to move all the old users to the new database
 + [X] Start using wireui
 + [X] Show message when logged in and the country (or the about) is not set.
-+ [ ] In the observer page, add all the extra information (old: user-settings.blade.php and UserSettings.php, new: UpdateUserProfileInformation.php)
-  + [X] Username
-  + [X] Send emails
-  + [X] Country of residence
-  + [X] About the observer: Use TinyMCE
-  + [X] fstOffset
-  + [X] License and copyright notice
-  + [X] Observing page
-  + [X] Atlases page
-  + [ ] Languages page
++ [X] In the observer page, add all the extra information
 + [ ] Add sponsors page
 + [ ] Create the all users administrator page
   + [ ] Put in a table instead of a normal list: Use Power-Components/livewire-powergrid
@@ -46,6 +37,7 @@
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
 + [ ] Add translations for the new log in pages
   + [ ] Also adapt the code in api.php to translate the country names, and the language names.
+  + [ ] Automatically cvhange the language of the UI when the language settings are changed
 + [ ] Check if the user belongs to the correct role / team
 + [ ] Use the old version of DeepskyLog alongside the new version
   + [ ] Add the code
@@ -80,13 +72,11 @@ if ($id) {
 }
 ```
 
-+ Remove code from the old version of DeepskyLog:
-  + Log in
-  + Log out
-  + Reset password
-+ Update the routes.php file to only include the register and log in and log out pages.
-+ Look into https://laravel-news.com/laravel-livewire-form-wizard
-+ Release new version of DeepskyLog with new registration and login pages.
++ [ ] Remove code from the old version of DeepskyLog:
+  + [ ] Log in
+  + [ ] Log out
+  + [ ] Reset password
++ [ ] Release new version of DeepskyLog with new registration and login pages.
 
 ### Next steps
 

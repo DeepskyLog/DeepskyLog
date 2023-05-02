@@ -34,8 +34,6 @@ class UsersTableSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
         DB::table('users')->truncate();
 
-        $languages = ['en' => 'en_US', 'de' => 'de_DE', 'fr' => 'fr_FR', 'nl' => 'nl_NL', 'sv' => 'sv_SV', 'es' => 'es_ES'];
-
         $firstUser = $accountData->where('id', 'wim')[2];
 
         [$year, $month, $day, $hour, $minute] = sscanf($firstUser->registrationDate, '%4d%2d%2d %2d:%2d');
@@ -44,7 +42,7 @@ class UsersTableSeeder extends Seeder
         $atlas = $firstUser->standardAtlasCode == '' ? 'Interstellarum' : $firstUser->standardAtlasCode;
         $stdlocation = $firstUser->stdlocation == 0 ? null : $firstUser->stdlocation;
         $stdtelescope = $firstUser->stdtelescope == 0 ? null : $firstUser->stdtelescope;
-        $language = $languages[$firstUser->language] ?? 'en_US';
+        $language = 'en';
 
         // First add user wim
         $user = User::create(
@@ -107,7 +105,18 @@ class UsersTableSeeder extends Seeder
             $user->save();
         }
         foreach ($accountData as $accountSingle) {
-            $language = $languages[$accountSingle->language] ?? 'en_US';
+            $language = $accountSingle->language;
+            if ($language == 'de_DE') {
+                $language = 'de';
+            } elseif ($language == 'en_US') {
+                $language = 'en';
+            } elseif ($language == 'fr_FR') {
+                $language = 'fr';
+            } elseif ($language == 'nl_NL') {
+                $language = 'nl';
+            } elseif ($language == 'sv_SV') {
+                $language = 'sv';
+            }
             [$year, $month, $day, $hour, $minute] = sscanf($accountSingle->registrationDate, '%4d%2d%2d %2d:%2d');
             $date = date('Y-m-d H:i:s', mktime($hour, $minute, 0, $month, $day, $year));
 

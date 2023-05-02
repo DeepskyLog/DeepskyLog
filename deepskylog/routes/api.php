@@ -166,17 +166,17 @@ Route::get('ui_languages.index', function (Request $request) {
     // Show the selected option
     if ($request->exists('selected')) {
         $allLanguages[] = [
-            'id' => auth()->user()->standardAtlasCode,
-            'name' => Atlas::where('code', auth()->user()->standardAtlasCode)->first()->name,
-        ];
+             'id' => auth()->user()->language,
+             'name' => Languages::lookup([auth()->user()->language], 'mixed')->values()[0],
+         ];
     }
 
     // Get the languages
-    foreach (Atlas::all() as $atlas) {
-        if ($request->search == '' || Str::contains(Str::lower($atlas->name), Str::lower($request->search))) {
+    foreach (Languages::lookup(['nl', 'es', 'fr', 'sv', 'de', 'en'], 'mixed') as $key => $language) {
+        if ($request->search == '' || Str::contains(Str::lower($language), Str::lower($request->search))) {
             $allLanguages[] = [
-                'id' => $atlas->code,
-                'name' => $atlas->name,
+                'id' => $key,
+                'name' => $language,
             ];
         }
     }
