@@ -26,3 +26,7 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::get('/sponsors', function () {
+    return view('layouts.sponsors');
+});

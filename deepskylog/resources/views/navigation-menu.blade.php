@@ -16,6 +16,31 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+
+
+                <!-- Help Dropdown -->
+                <div class="hidden sm:flex sm:items-center sm:ml-6">
+                    <div class="mr-3 relative">
+                        <x-dropdown align="right" width="48">
+                            <x-slot name="trigger">Help
+                                </svg>
+                            </x-slot>
+
+                            <x-dropdown.item icon="question-mark-circle" href="mailto:deepskylog@groups.io"
+                                label="{{ __('Ask a question') }}" />
+                            <x-dropdown.item icon="at-symbol" href="https://groups.io/g/deepskylog"
+                                label="{{ __('Subscribe to mailing list') }}" />
+                            <x-dropdown.item icon="cash" href="/sponsors" label="{{ __('Sponsor DeepskyLog') }}" />
+                            <x-dropdown.item icon="lightning-bolt"
+                                href="https://github.com/DeepskyLog/DeepskyLog/issues"
+                                label="{{ __('Report issue') }}" />
+                            <x-dropdown.item icon="rss"
+                                href="https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog"
+                                label="{{ __('New in DeepskyLog') }}" />
+                        </x-dropdown>
+                    </div>
+                </div>
+
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">

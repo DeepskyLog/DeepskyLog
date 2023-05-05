@@ -30,7 +30,7 @@
 + [X] Start using wireui
 + [X] Show message when logged in and the country (or the about) is not set.
 + [X] In the observer page, add all the extra information
-+ [ ] Add sponsors page
++ [X] Add sponsors page
 + [ ] Create the all users administrator page
   + [ ] Put in a table instead of a normal list: Use Power-Components/livewire-powergrid
 + [ ] Move to slugs for the username
@@ -44,8 +44,9 @@
   + [ ] Fix the code for php 8.2
   + [ ] Change the link to the user settings page.
 + [ ] Create menu for the new version
+  + [ ] Add the sponsor page to the old version!
 + [ ] Check log in using the new version and try using one of the old pages as logged in user
-  + [ ] Change link in the old version
+  + [ ] Change links in the old version, also for the sponsor page (http://deepskylog.test/sponsors)
   + [ ] Update the log in code in the old DeepskyLog
 
 ```php
