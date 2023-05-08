@@ -136,6 +136,9 @@
                 <!-- Team Member List -->
                 <x-slot name="content">
                     <div class="space-y-6">
+                        {{-- Powergrid with all the users in this group --}}
+                        <livewire:admin-user-table />
+
                         @foreach ($team->users->sortBy('name') as $user)
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center">

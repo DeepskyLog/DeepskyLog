@@ -32,8 +32,13 @@
 + [X] In the observer page, add all the extra information
 + [X] Add sponsors page
 + [ ] Create the all users administrator page
-  + [ ] Put in a table instead of a normal list: Use Power-Components/livewire-powergrid
-+ [ ] Move to slugs for the username
+  + [X] Use Power-Components/livewire-powergrid
+  + [ ] Use dark theme for the table
+  + [ ] Show created at as human readable dates
+  + [ ] Fix export to xlsx and cvs
+  + [ ] Only show the correct users
+  + [ ] Add links or buttons to remove observer from the team
++ [ ] Move to slugs for the username and the team names
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
 + [ ] Add translations for the new log in pages
   + [ ] Also adapt the code in api.php to translate the country names, and the language names.
