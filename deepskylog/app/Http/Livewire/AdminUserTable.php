@@ -6,14 +6,15 @@ use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
 final class AdminUserTable extends PowerGridComponent
 {
     use ActionButton;
+    public bool $multiSort = true;
 
     /*
     |--------------------------------------------------------------------------
@@ -24,13 +25,15 @@ final class AdminUserTable extends PowerGridComponent
     */
     public function setUp(): array
     {
-        $this->showCheckBox();
+        // $this->showCheckBox();
+
+        $this->persist(['columns', 'filters']);
 
         return [
             Exportable::make('export')
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
-            Header::make()->showSearchInput(),
+            Header::make()->showSearchInput()->showToggleColumns(),
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
@@ -89,9 +92,11 @@ final class AdminUserTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
+            ->addColumn('username')
+            ->addColumn('email')
             ->addColumn('name_lower', fn (User $model) => strtolower(e($model->name)))
             ->addColumn('created_at')
-            ->addColumn('created_at_formatted', fn (User $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
+            ->addColumn('created_at_formatted', fn (User $model) => Carbon::parse($model->created_at)->diffForHumans());
     }
 
     /*
@@ -119,11 +124,20 @@ final class AdminUserTable extends PowerGridComponent
                 ->searchable()
                 ->sortable(),
 
+            Column::make('User name', 'username')
+                ->searchable()
+                ->sortable(),
+
+            Column::make('Email', 'email')
+                ->searchable()
+                ->sortable(),
+
             Column::make('Created at', 'created_at')
                 ->hidden(),
 
             Column::make('Created at', 'created_at_formatted', 'created_at')
                 ->searchable()
+                ->sortable()
         ];
     }
 
@@ -136,6 +150,7 @@ final class AdminUserTable extends PowerGridComponent
     {
         return [
             Filter::inputText('name'),
+            Filter::inputText('username'),
             Filter::datepicker('created_at_formatted', 'created_at'),
         ];
     }

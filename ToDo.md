@@ -34,7 +34,7 @@
 + [ ] Create the all users administrator page
   + [X] Use Power-Components/livewire-powergrid
   + [ ] Use dark theme for the table
-  + [ ] Show created at as human readable dates
+  + [X] Show created at as human readable dates
   + [ ] Fix export to xlsx and cvs
   + [ ] Only show the correct users
   + [ ] Add links or buttons to remove observer from the team
