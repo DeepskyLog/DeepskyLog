@@ -10,10 +10,12 @@ use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
+use PowerComponents\LivewirePowerGrid\Traits\withExport;
 
 final class AdminUserTable extends PowerGridComponent
 {
     use ActionButton;
+    use withExport;
     public bool $multiSort = true;
 
     /*
@@ -25,7 +27,7 @@ final class AdminUserTable extends PowerGridComponent
     */
     public function setUp(): array
     {
-        // $this->showCheckBox();
+        $this->showCheckBox();
 
         $this->persist(['columns', 'filters']);
 

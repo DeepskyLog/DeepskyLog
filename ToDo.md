@@ -35,10 +35,12 @@
   + [X] Use Power-Components/livewire-powergrid
   + [ ] Use dark theme for the table
   + [X] Show created at as human readable dates
-  + [ ] Fix export to xlsx and cvs
+  + [X] Fix export to xlsx and cvs
   + [ ] Only show the correct users
   + [ ] Add links or buttons to remove observer from the team
+  + [ ] Add extra columns?
 + [ ] Move to slugs for the username and the team names
++ [ ] Add team member should show a list of observers, not just an option to add a person using an email address.
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
 + [ ] Add translations for the new log in pages
   + [ ] Also adapt the code in api.php to translate the country names, and the language names.
