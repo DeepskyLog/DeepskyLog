@@ -163,6 +163,7 @@ final class AdminUserTable extends PowerGridComponent
         return [
             Filter::inputText('name'),
             Filter::inputText('username'),
+            Filter::inputText('email'),
             Filter::datepicker('created_at_formatted', 'created_at'),
         ];
     }
