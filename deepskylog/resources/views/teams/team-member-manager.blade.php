@@ -137,45 +137,8 @@
                 <x-slot name="content">
                     <div class="space-y-6">
                         {{-- Powergrid with all the users in this group --}}
-                        <livewire:admin-user-table />
+                        <livewire:admin-user-table team="{{ $team->id }}" />
 
-                        @foreach ($team->users->sortBy('name') as $user)
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <img class="w-8 h-8 rounded-full" src="{{ $user->profile_photo_url }}"
-                                        alt="{{ $user->name }}">
-                                    <div class="ml-4">{{ $user->name }} ({{ $user->username }})</div>
-                                </div>
-
-                                <div class="flex items-center">
-                                    <!-- Manage Team Member Role -->
-                                    @if (Gate::check('addTeamMember', $team) && Laravel\Jetstream\Jetstream::hasRoles())
-                                        <button class="ml-2 text-sm text-gray-400 underline"
-                                            wire:click="manageRole('{{ $user->id }}')">
-                                            {{ Laravel\Jetstream\Jetstream::findRole($user->membership->role)->name }}
-                                        </button>
-                                    @elseif (Laravel\Jetstream\Jetstream::hasRoles())
-                                        <div class="ml-2 text-sm text-gray-400">
-                                            {{ Laravel\Jetstream\Jetstream::findRole($user->membership->role)->name }}
-                                        </div>
-                                    @endif
-
-                                    <!-- Show when the user was added -->
-                                    <div class="ml-4">{{ $user->created_at->diffForHumans() }}</div>
-                                    <!-- Remove Team Member -->
-                                    @if (Gate::check('removeTeamMember', $team))
-                                        @if ($user->id != Auth::user()->id)
-                                            <button class="cursor-pointer ml-6 text-sm text-red-500"
-                                                wire:click="confirmTeamMemberRemoval('{{ $user->id }}')">
-                                                {{ __('Remove') }}
-                                            </button>
-                                        @else
-                                            <div class="ml-6 text-sm">Remove</div>
-                                        @endif
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
                     </div>
                 </x-slot>
             </x-action-section>

@@ -3,20 +3,25 @@
 namespace App\Http\Livewire;
 
 use App\Models\User;
+use App\Models\TeamUser;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
+use PowerComponents\LivewirePowerGrid\Traits\withExport;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
-use PowerComponents\LivewirePowerGrid\Traits\withExport;
 
 final class AdminUserTable extends PowerGridComponent
 {
     use ActionButton;
     use withExport;
     public bool $multiSort = true;
+    public $team;
+
+    protected $listeners = ['remove' => 'remove'];
 
     /*
     |--------------------------------------------------------------------------
@@ -53,11 +58,16 @@ final class AdminUserTable extends PowerGridComponent
     /**
      * PowerGrid datasource.
      *
-     * @return Builder<\App\Models\User>
+     * @return Builder<\App\Models\TeamUser>
      */
     public function datasource(): Builder
     {
-        return User::query();
+        // 2 = Administrator
+        // 3 = Database experts
+        // 1 = Observer
+        return \App\Models\TeamUser::query()->where('team_id', $this->team)->join('users', function ($users) {
+            $users->on('team_user.user_id', '=', 'users.id');
+        })->select('users.id', 'users.username', 'users.name', 'users.email', 'users.created_at');
     }
 
     /*
@@ -96,9 +106,9 @@ final class AdminUserTable extends PowerGridComponent
             ->addColumn('name')
             ->addColumn('username')
             ->addColumn('email')
-            ->addColumn('name_lower', fn (User $model) => strtolower(e($model->name)))
+            ->addColumn('name_lower', fn (TeamUser $model) => strtolower(e($model->name)))
             ->addColumn('created_at')
-            ->addColumn('created_at_formatted', fn (User $model) => Carbon::parse($model->created_at)->diffForHumans());
+            ->addColumn('created_at_formatted', fn (TeamUser $model) => Carbon::parse($model->created_at)->diffForHumans());
     }
 
     /*
@@ -171,21 +181,17 @@ final class AdminUserTable extends PowerGridComponent
      * @return array<int, Button>
      */
 
-    /*
     public function actions(): array
     {
-       return [
-           Button::make('edit', 'Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('user.edit', ['user' => 'id']),
-
-           Button::make('destroy', 'Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('user.destroy', ['user' => 'id'])
-               ->method('delete')
-        ];
+        return [
+            Button::make('destroy', __('Remove'))
+                ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+                ->tooltip(__('Remove user from team'))
+                ->emit('remove', ['key' => 'id'])
+                // ->route('user.destroy', ['user' => 'id'])
+                // ->method('delete')
+         ];
     }
-    */
 
     /*
     |--------------------------------------------------------------------------
@@ -201,16 +207,28 @@ final class AdminUserTable extends PowerGridComponent
      * @return array<int, RuleActions>
      */
 
-    /*
     public function actionRules(): array
     {
-       return [
+        return [
 
-           //Hide button edit for ID 1
-            Rule::button('edit')
-                ->when(fn($user) => $user->id === 1)
-                ->hide(),
-        ];
+            //Hide button edit for ID 1
+            Rule::button('destroy')
+                 ->when(fn ($user) => $user->id == 1)
+                 ->hide(),
+            Rule::button('destroy')
+                 ->when(fn ($user) => $user->id == Auth::user()->id)
+                 ->hide(),
+         ];
     }
-    */
+
+   /**
+     * Removes a user from the team
+     * @return void
+     */
+    public function remove($id)
+    {
+        // wire:click="confirmTeamMemberRemoval('{{ $user->id }}')">
+
+        dd('TEST' . $id);
+    }
 }

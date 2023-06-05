@@ -33,10 +33,10 @@
 + [X] Add sponsors page
 + [ ] Create the all users administrator page
   + [X] Use Power-Components/livewire-powergrid
-  + [ ] Use dark theme for the table
+  + [X] Use dark theme for the table
   + [X] Show created at as human readable dates
   + [X] Fix export to xlsx and cvs
-  + [ ] Only show the correct users
+  + [X] Only show the correct users
   + [ ] Add links or buttons to remove observer from the team
   + [ ] Add extra columns?
 + [ ] Move to slugs for the username and the team names

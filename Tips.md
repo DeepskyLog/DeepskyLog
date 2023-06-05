@@ -64,3 +64,9 @@ return $user->isObserver();
 // If the current user belongs to the Administrators group (does not need to be active)
 return $user->hasAdministratorPrivileges();
 ```
+
++ Get the currently logged in user:
+
+```php
+Auth::user()
+```
