@@ -37,11 +37,13 @@
   + [X] Show created at as human readable dates
   + [X] Fix export to xlsx and cvs
   + [X] Only show the correct users
-  + [ ] Add links or buttons to remove observer from the team
-  + [ ] Add extra columns?
-+ [ ] Move to slugs for the username and the team names
+  + [X] Add links or buttons to remove observer from the team
 + [ ] Add team member should show a list of observers, not just an option to add a person using an email address.
++ [ ] Move to slugs for the username and the team names
+  + [ ] Add slug to the columns in the user administrator page
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
+  + [ ] Add link to the rows in the user administrator page to go directly to the observer
+  + [ ] Add administrator only options
 + [ ] Add translations for the new log in pages
   + [ ] Also adapt the code in api.php to translate the country names, and the language names.
   + [ ] Automatically cvhange the language of the UI when the language settings are changed

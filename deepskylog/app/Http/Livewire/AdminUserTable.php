@@ -21,7 +21,17 @@ final class AdminUserTable extends PowerGridComponent
     public bool $multiSort = true;
     public $team;
 
-    protected $listeners = ['remove' => 'remove'];
+    // protected $listeners = ['remove' => 'remove'];
+
+    protected function getListeners(): array
+    {
+        return array_merge(
+            parent::getListeners(),
+            [
+                'remove',
+            ]
+        );
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -185,12 +195,11 @@ final class AdminUserTable extends PowerGridComponent
     public function actions(): array
     {
         return [
-            Button::make('destroy', __('Remove'))
+            Button::add('destroy')
+                ->caption('Remove')
                 ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
                 ->tooltip(__('Remove user from team'))
                 ->emit('remove', ['key' => 'id'])
-                // ->route('user.destroy', ['user' => 'id'])
-                // ->method('delete')
          ];
     }
 
@@ -228,8 +237,7 @@ final class AdminUserTable extends PowerGridComponent
      */
     public function remove($id)
     {
-        // wire:click="confirmTeamMemberRemoval('{{ $user->id }}')">
-
-        dd('TEST' . $id);
+        $teamuser = TeamUser::where("team_id", "=", $this->team)->where("user_id", "=", $id['key'])->first();
+        $teamuser->delete();
     }
 }
