@@ -21,6 +21,8 @@ final class AdminUserTable extends PowerGridComponent
     public bool $multiSort = true;
     public $team;
 
+    public string $primaryKey = 'users.id';
+
     protected function getListeners(): array
     {
         return array_merge(
@@ -70,9 +72,6 @@ final class AdminUserTable extends PowerGridComponent
      */
     public function datasource(): Builder
     {
-        // 2 = Administrator
-        // 3 = Database experts
-        // 1 = Observer
         return \App\Models\TeamUser::query()->where('team_id', $this->team)->join('users', function ($users) {
             $users->on('team_user.user_id', '=', 'users.id');
         })->select('users.id', 'users.username', 'users.name', 'users.email', 'users.created_at');
