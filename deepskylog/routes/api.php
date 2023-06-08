@@ -1,9 +1,10 @@
 <?php
 
-use App\Models\InstrumentsOld;
-use App\Models\LocationsOld;
+use App\Models\User;
 use App\Models\Atlas;
+use App\Models\LocationsOld;
 use Illuminate\Http\Request;
+use App\Models\InstrumentsOld;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -207,3 +208,20 @@ Route::get('observation_languages.index', function (Request $request) {
 
     return $allLanguages;
 })->name('observation_languages.index');
+
+// Make a list of all users to add to a team.
+Route::get('addUserToTeam.index', function (Request $request) {
+    $allUsers = [];
+
+    // Get the languages
+    foreach (User::all() as $user) {
+        if ($request->search == '' || Str::contains(Str::lower($user->name), Str::lower($request->search)) || Str::contains(Str::lower($user->email), Str::lower($request->search))) {
+            $allUsers[] = [
+                'id' => $user->email,
+                'name' => $user->name . ' (' . $user->email . ')',
+            ];
+        }
+    }
+
+    return $allUsers;
+})->name('addUserToTeam.index');

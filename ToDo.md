@@ -32,7 +32,7 @@
 + [X] In the observer page, add all the extra information
 + [X] Add sponsors page
 + [X] Create the all users administrator page
-+ [ ] Add team member should show a list of observers, not just an option to add a person using an email address.
++ [X] Add team member should show a list of observers, not just an option to add a person using an email address.
 + [ ] Move to slugs for the username and the team names
   + [ ] Add slug to the columns in the user administrator page
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)

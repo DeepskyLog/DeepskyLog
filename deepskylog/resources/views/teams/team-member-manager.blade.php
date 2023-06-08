@@ -16,15 +16,14 @@
                 <x-slot name="form">
                     <div class="col-span-6">
                         <div class="max-w-xl text-sm text-gray-400">
-                            {{ __('Please provide the email address of the person you would like to add to this team.') }}
+                            {{ __('Please provide the name of the person you would like to add to this team.') }}
                         </div>
                     </div>
 
-                    <!-- Member Email -->
-                    <div class="col-span-6 sm:col-span-4">
-                        <x-input label="{{ __('Email') }}" id="email" type="email" class="mt-1 block w-full"
-                            wire:model.defer="addTeamMemberForm.email" />
-                        <x-input-error for="email" class="mt-2" />
+                    <!-- Member Name -->
+                    <div class="col-span-6 sm:col-span-5">
+                        <x-select label="{{ __('Name') }}" wire:model.defer="addTeamMemberForm.email" :async-data="route('addUserToTeam.index')"
+                            option-label="name" option-value="id" />
                     </div>
 
                     <!-- Role -->
