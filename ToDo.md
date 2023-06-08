@@ -31,13 +31,7 @@
 + [X] Show message when logged in and the country (or the about) is not set.
 + [X] In the observer page, add all the extra information
 + [X] Add sponsors page
-+ [ ] Create the all users administrator page
-  + [X] Use Power-Components/livewire-powergrid
-  + [X] Use dark theme for the table
-  + [X] Show created at as human readable dates
-  + [X] Fix export to xlsx and cvs
-  + [X] Only show the correct users
-  + [X] Add links or buttons to remove observer from the team
++ [X] Create the all users administrator page
 + [ ] Add team member should show a list of observers, not just an option to add a person using an email address.
 + [ ] Move to slugs for the username and the team names
   + [ ] Add slug to the columns in the user administrator page
