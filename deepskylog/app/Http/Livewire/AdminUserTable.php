@@ -74,7 +74,7 @@ final class AdminUserTable extends PowerGridComponent
     {
         return \App\Models\TeamUser::query()->where('team_id', $this->team)->join('users', function ($users) {
             $users->on('team_user.user_id', '=', 'users.id');
-        })->select('users.id', 'users.username', 'users.name', 'users.email', 'users.created_at');
+        })->select('users.id', 'users.username', 'users.name', 'users.email', 'users.slug', 'users.created_at');
     }
 
     /*
@@ -114,6 +114,7 @@ final class AdminUserTable extends PowerGridComponent
             ->addColumn('username')
             ->addColumn('email')
             ->addColumn('name_lower', fn (TeamUser $model) => strtolower(e($model->name)))
+            ->addColumn('slug')
             ->addColumn('created_at')
             ->addColumn('created_at_formatted', fn (TeamUser $model) => Carbon::parse($model->created_at)->diffForHumans());
     }
@@ -139,22 +140,26 @@ final class AdminUserTable extends PowerGridComponent
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Name', 'name')
+            Column::make(__('Name'), 'name')
                 ->searchable()
                 ->sortable(),
 
-            Column::make('User name', 'username')
+            Column::make(__('User name'), 'username')
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Email', 'email')
+            Column::make(__('Email'), 'email')
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Created at', 'created_at')
+            Column::make(__('Slug'), 'slug')
+                ->searchable()
+                ->sortable(),
+
+            Column::make(__('Created at'), 'created_at')
                 ->hidden(),
 
-            Column::make('Created at', 'created_at_formatted', 'created_at')
+            Column::make(__('Created at'), 'created_at_formatted', 'created_at')
                 ->searchable()
                 ->sortable()
         ];
