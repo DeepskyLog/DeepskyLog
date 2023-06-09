@@ -68,7 +68,7 @@
 
                                 <!-- Team Settings -->
                                 <x-dropdown.item label="{{ __('Team Settings') }}"
-                                    href="{{ route('teams.show', Auth::user()->currentTeam->id) }}" />
+                                    href="{{ route('teams.show', Auth::user()->currentTeam->slug) }}" />
 
                             </x-dropdown.header>
 
@@ -199,7 +199,7 @@
                     </div>
 
                     <!-- Team Settings -->
-                    <x-responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}"
+                    <x-responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->slug) }}"
                         :active="request()->routeIs('teams.show')">
                         {{ __('Team Settings') }}
                     </x-responsive-nav-link>
