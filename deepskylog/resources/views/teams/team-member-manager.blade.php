@@ -73,7 +73,7 @@
                         {{ __('Added.') }}
                     </x-action-message>
 
-                    <x-button type="submit">
+                    <x-button type="submit" wire:click="$emitTo('admin-user-table', 'updateTable')">
                         {{ __('Add') }}
                     </x-button>
                 </x-slot>

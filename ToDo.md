@@ -34,15 +34,15 @@
 + [X] Create the all users administrator page
 + [X] Add team member should show a list of observers, not just an option to add a person using an email address.
 + [X] Move to slugs for the username and the team names
-+ [ ] Update table with members of the team automatically when adding a new user
++ [X] Update table with members of the team automatically when adding a new user
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
   + [ ] Use the slug to go to the observer page
   + [ ] Add link to the rows in the user administrator page to go directly to the observer
   + [ ] Add administrator only options
 + [ ] Test on Phone
-+ [ ] Add translations for the new log in pages
++ [ ] Add translations for the new version
   + [ ] Also adapt the code in api.php to translate the country names, and the language names.
-  + [ ] Automatically cvhange the language of the UI when the language settings are changed
+  + [ ] Automatically change the language of the UI when the language settings are changed
 + [ ] Check if the user belongs to the correct role / team
 + [ ] Use the old version of DeepskyLog alongside the new version
   + [ ] Add the code
@@ -82,11 +82,14 @@ if ($id) {
   + [ ] Log in
   + [ ] Log out
   + [ ] Reset password
+  + [ ] User information page
+  + [ ] User profile update
 + [ ] Release new version of DeepskyLog with new registration and login pages.
 
 ### Next steps
 
 + Messages in DeepskyLog?
+  + Also messages for everyone // like a forum
 + Index page
 + Instruments, locations, eyepieces, filters, lenses, ...
 + Sessions
@@ -94,18 +97,9 @@ if ($id) {
   + Blog style?
 + Observing lists
 
-## Move to Tailwind
-
-+ Create new menu
-+ Create new footer
-+ Create new sidebar
-+ Fix all the rest
-
 ## Eloquent
 
 + Check Target.php -> protected $with = ['type', 'constellation'];
-
-## Observing lists
 
 ## Interesting websites
 

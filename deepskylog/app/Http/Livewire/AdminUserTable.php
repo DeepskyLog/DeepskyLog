@@ -29,6 +29,7 @@ final class AdminUserTable extends PowerGridComponent
             parent::getListeners(),
             [
                 'remove',
+                'updateTable',
             ]
         );
     }
@@ -241,5 +242,16 @@ final class AdminUserTable extends PowerGridComponent
     {
         $teamuser = TeamUser::where("team_id", "=", $this->team)->where("user_id", "=", $id['key'])->first();
         $teamuser->delete();
+    }
+
+    /**
+     *  Updates the table (after adding a new user to a group).
+     *
+     * @return void
+     */
+    public function updateTable()
+    {
+        sleep(1);
+        $this->fillData();
     }
 }
