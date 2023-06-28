@@ -262,5 +262,34 @@ class User extends Authenticatable implements MustVerifyEmail
         return AccomplishmentsOld::where('observer', $this->username)->first()['messierBronze'];
     }
 
+    /**
+     * Checks if the user has drawn all 110 messier objects
+     *
+     * @return bool
+     */
+    public function hasMessierGoldDrawing(): bool
+    {
+
+        return AccomplishmentsOld::where('observer', $this->username)->first()['messierDrawingsGold'];
+    }
+
+    /**
+     * Checks if the user has drawn 50 different messier objects
+     *
+     * @return bool
+     */
+    public function hasMessierSilverDrawing(): bool
+    {
+        return AccomplishmentsOld::where('observer', $this->username)->first()['messierDrawingsSilver'];
+    }
+    /**
+     * Checks if the user has drawn 25 different messier objects
+     *
+     * @return bool
+     */
+    public function hasMessierBronzeDrawing(): bool
+    {
+        return AccomplishmentsOld::where('observer', $this->username)->first()['messierDrawingsBronze'];
+    }
 
 }

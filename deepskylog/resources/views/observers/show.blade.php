@@ -61,6 +61,13 @@
                             @elseif ($user->hasMessierBronze())
                                 <x-trophy.messierBronze class="h-20 w-20" />
                             @endif
+                            @if ($user->hasMessierGoldDrawing())
+                                <x-trophy.messierGoldDrawing class="h-20 w-20" />
+                            @elseif ($user->hasMessierSilverDrawing())
+                                <x-trophy.messierSilverDrawing class="h-20 w-20" />
+                            @elseif ($user->hasMessierBronzeDrawing())
+                                <x-trophy.messierBronzeDrawing class="h-20 w-20" />
+                            @endif
 
                         </div>
                     </x-card>
