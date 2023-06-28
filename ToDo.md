@@ -36,12 +36,11 @@
 + [X] Move to slugs for the username and the team names
 + [X] Update table with members of the team automatically when adding a new user
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
-  + [ ] Use the slug to go to the observer page
   + [ ] Add link to the rows in the user administrator page to go directly to the observer
   + [ ] Add administrator only options
 + [ ] Test on Phone
 + [ ] Add translations for the new version
-  + [ ] Also adapt the code in api.php to translate the country names, and the language names.
+  + [ ] Also adapt the code in api.php and User.php to translate the country names, and the language names.
   + [ ] Automatically change the language of the UI when the language settings are changed
 + [ ] Check if the user belongs to the correct role / team
 + [ ] Use the old version of DeepskyLog alongside the new version
