@@ -27,7 +27,11 @@ Route::middleware([
     })->name('dashboard');
 });
 
+// Teams
 Route::get('/teams/{team}', 'App\Http\Controllers\DeepskyLogTeamController@show')->name('teams.show');
+
+// Observers
+Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@show')->name('observer.show');
 
 Route::get('/sponsors', function () {
     return view('layouts.sponsors');
