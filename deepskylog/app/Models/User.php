@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\ObservationsOld;
+use Carbon\Carbon;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
 use Illuminate\Notifications\Notifiable;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -13,7 +16,6 @@ use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Cviebrock\EloquentSluggable\Sluggable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -115,68 +117,150 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string
      */
-        public function isAdministrator(): bool
-        {
-            return $this->isCurrentTeam(Team::where('name', 'Administrators')->firstOrFail());
+    public function isAdministrator(): bool
+    {
+        return $this->isCurrentTeam(Team::where('name', 'Administrators')->firstOrFail());
+    }
+
+    /**
+     * Checks if the user's active team is the administrators team
+     *
+     * @return bool
+     */
+    public function hasAdministratorPrivileges(): bool
+    {
+        if ($this->teams()->where("name", "Administrators")->count() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if the user's active team is the team of Database experts
+     *
+     * @return bool
+     */
+    public function isDatabaseExpert(): bool
+    {
+        return $this->isCurrentTeam(Team::where('name', 'Database Experts')->firstOrFail());
+    }
+
+    /**
+     * Checks if the user's active team is the team of Observers
+     *
+     * @return bool
+     */
+    public function isObserver(): bool
+    {
+        return $this->isCurrentTeam(Team::where('name', 'Observers')->firstOrFail());
+    }
+
+    /**
+     * Returns the copyright information (including the image and the link).
+     *
+     * @return string The copyright information
+     */
+    public function getCopyright()
+    {
+        $text = $this->copyright;
+
+        if (strcmp($text, 'Attribution-NoDerivs CC BY-ND') === 0) {
+            $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons Attribution-NoDerivatives 4.0 International License</a>.';
+        } elseif (strcmp($text, 'Attribution CC BY') === 0) {
+            $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.';
+        } elseif (strcmp($text, 'Attribution-NonCommercial CC BY-NC') === 0) {
+            $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.';
+        } elseif (strcmp($text, 'Attribution-NonCommercial-ShareAlike CC BY-NC-SA') === 0) {
+            $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.';
+        } elseif (strcmp($text, 'Attribution-NonCommercial-NoDerivs CC BY-NC-ND') === 0) {
+            $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.';
+        } else {
+            $copyright = $text;
         }
 
-        /**
-         * Checks if the user's active team is the administrators team
-         *
-         * @return string
-         */
-        public function hasAdministratorPrivileges(): bool
-        {
-            if ($this->teams()->where("name", "Administrators")->count() > 0) {
-                return true;
-            } else {
-                return false;
-            }
+        return $copyright;
+    }
+
+    /**
+     * Checks if the user is one of the first DeepskyLog users (registered in 2004 or 2005)
+     *
+     * @return bool
+     */
+    public function isEarlyAdopter(): bool
+    {
+        $earlyAdopterDate = Carbon::createFromFormat('d/m/Y', '31/12/2005');
+        $registrationDate = $this->created_at;
+        return $registrationDate->lt($earlyAdopterDate);
+    }
+
+    /**
+     * Returns the date and the id of the first observation
+     *
+     * @return array
+     */
+    public function firstObservationDate(): array
+    {
+        // TODO: Change to the selected language!
+        $language = 'nl_NL';
+
+        $firstObservation = ObservationsOld::where('observerid', $this->username)->min('date');
+        if ($firstObservation == null) {
+            return [null, null];
         }
+        $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
+        $id = ObservationsOld::where('observerid', $this->username)->where('date', $firstObservation)->first()['id'];
+        return [$date, $id];
+    }
 
-        /**
-         * Checks if the user's active team is the team of Database experts
-         *
-         * @return string
-         */
-        public function isDatabaseExpert(): bool
-        {
-            return $this->isCurrentTeam(Team::where('name', 'Database Experts')->firstOrFail());
+    /**
+     * Returns the date and the id of the most recent observation
+     *
+     * @return array
+     */
+    public function lastObservationDate(): array
+    {
+        // TODO: Change to the selected language!
+        $language = 'nl_NL';
+
+        $firstObservation = ObservationsOld::where('observerid', $this->username)->max('date');
+        if ($firstObservation == null) {
+            return [null, null];
         }
+        $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
+        $id = ObservationsOld::where('observerid', $this->username)->where('date', $firstObservation)->first()['id'];
+        return [$date, $id];
+    }
 
-        /**
-         * Checks if the user's active team is the team of Observers
-         *
-         * @return string
-         */
-        public function isObserver(): bool
-        {
-            return $this->isCurrentTeam(Team::where('name', 'Observers')->firstOrFail());
-        }
+    /**
+     * Checks if the user has observed all 110 messier objects
+     *
+     * @return bool
+     */
+    public function hasMessierGold(): bool
+    {
 
-        /**
-         * Returns the copyright information (including the image and the link).
-         *
-         * @return string The copyright information
-         */
-        public function getCopyright()
-        {
-            $text = $this->copyright;
+        return AccomplishmentsOld::where('observer', $this->username)->first()['messierGold'];
+    }
 
-            if (strcmp($text, 'Attribution-NoDerivs CC BY-ND') === 0) {
-                $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons Attribution-NoDerivatives 4.0 International License</a>.';
-            } elseif (strcmp($text, 'Attribution CC BY') === 0) {
-                $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.';
-            } elseif (strcmp($text, 'Attribution-NonCommercial CC BY-NC') === 0) {
-                $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.';
-            } elseif (strcmp($text, 'Attribution-NonCommercial-ShareAlike CC BY-NC-SA') === 0) {
-                $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.';
-            } elseif (strcmp($text, 'Attribution-NonCommercial-NoDerivs CC BY-NC-ND') === 0) {
-                $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.';
-            } else {
-                $copyright = $text;
-            }
+    /**
+     * Checks if the user has observed 50 different messier objects
+     *
+     * @return bool
+     */
+    public function hasMessierSilver(): bool
+    {
+        return AccomplishmentsOld::where('observer', $this->username)->first()['messierSilver'];
+    }
+    /**
+     * Checks if the user has observed 25 different messier objects
+     *
+     * @return bool
+     */
+    public function hasMessierBronze(): bool
+    {
+        return AccomplishmentsOld::where('observer', $this->username)->first()['messierBronze'];
+    }
 
-            return $copyright;
-        }
+
 }
