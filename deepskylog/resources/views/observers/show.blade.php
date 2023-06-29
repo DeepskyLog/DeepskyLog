@@ -84,6 +84,29 @@
                             @elseif ($user->hasCaldwellBronzeDrawing())
                                 <x-trophy.caldwellBronzeDrawing class="h-20 w-20" />
                             @endif
+                            {{-- HERSCHEL 400 --}}
+                            @if ($user->hasHerschel400Platinum())
+                                <x-trophy.herschel400Platinum class="h-20 w-20" />
+                            @elseif ($user->hasHerschel400Diamond())
+                                <x-trophy.herschel400Diamond class="h-20 w-20" />
+                            @elseif ($user->hasHerschel400Gold())
+                                <x-trophy.herschel400Gold class="h-20 w-20" />
+                            @elseif ($user->hasHerschel400Silver())
+                                <x-trophy.herschel400Silver class="h-20 w-20" />
+                            @elseif ($user->hasHerschel400Bronze())
+                                <x-trophy.herschel400Bronze class="h-20 w-20" />
+                            @endif
+                            @if ($user->hasHerschel400PlatinumDrawing())
+                                <x-trophy.herschel400PlatinumDrawing class="h-20 w-20" />
+                            @elseif ($user->hasHerschel400DiamondDrawing())
+                                <x-trophy.herschel400DiamondDrawing class="h-20 w-20" />
+                            @elseif ($user->hasHerschel400GoldDrawing())
+                                <x-trophy.herschel400GoldDrawing class="h-20 w-20" />
+                            @elseif ($user->hasHerschel400SilverDrawing())
+                                <x-trophy.herschel400SilverDrawing class="h-20 w-20" />
+                            @elseif ($user->hasHerschel400BronzeDrawing())
+                                <x-trophy.herschel400BronzeDrawing class="h-20 w-20" />
+                            @endif
 
                         </div>
                     </x-card>
