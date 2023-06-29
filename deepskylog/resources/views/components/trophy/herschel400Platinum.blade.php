@@ -7,7 +7,7 @@
         <text transform="matrix(1, 0, 0, 1, 415, 471.5)">
             <tspan x="-299.854" y="-42.5" font-family="Chalkboard" font-size="96" fill="#BE4040">HERSCHEL 400
             </tspan>
-            <tspan x="-270.736" y="141.5" font-family="Chalkboard" font-size="128" fill="#BE4040">PLATINUM
+            <tspan x="-270.736" y="141.5" font-family="Chalkboard" font-size="128" fill="#BE4040">400/400
             </tspan>
         </text>
     </g>

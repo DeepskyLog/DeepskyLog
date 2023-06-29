@@ -7,7 +7,8 @@
         <text transform="matrix(1, 0, 0, 1, 415, 471.5)">
             <tspan x="-299.854" y="-42.5" font-family="Chalkboard" font-size="96" fill="#BE4040">HERSCHEL II
             </tspan>
-            <tspan x="-183.222" y="141.5" font-family="Chalkboard" font-size="144" fill="#BE4040">GOLD</tspan>
+            <tspan x="-243.222" y="141.5" font-family="Chalkboard" font-size="144" fill="#BE4040">100/400
+            </tspan>
         </text>
     </g>
 </svg>

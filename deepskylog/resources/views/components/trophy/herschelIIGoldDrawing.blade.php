@@ -7,7 +7,7 @@
         <text transform="matrix(1, 0, 0, 1, 415, 471.5)">
             <tspan x="-299.854" y="-42.5" font-family="Chalkboard" font-size="96" fill="#BE4040">HERSCHEL II
             </tspan>
-            <tspan x="-183.222" y="141.5" font-family="Chalkboard" font-size="144" fill="#BE4040">GOLD</tspan>
+            <tspan x="-243.222" y="141.5" font-family="Chalkboard" font-size="144" fill="#BE4040">100/400</tspan>
         </text>
         <path
             d="M596.713,164.938 L571.999,220 L626.824,195.036 L626.936,195.155 L596.625,164.813 L596.713,164.938 z M600.778,160.642 L726.048,35.377 L756.371,65.694 L631.095,190.965 L600.778,160.642 z M765.126,26.053 C751.969,13.778 737.061,25.078 737.061,25.078 L767.396,55.364 C767.384,55.357 779.141,41.274 765.126,26.053 z"
