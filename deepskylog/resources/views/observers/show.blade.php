@@ -54,6 +54,7 @@
                             @if ($user->isEarlyAdopter())
                                 <x-trophy.earlyAdopter class="h-20 w-20" />
                             @endif
+                            {{-- MESSIER --}}
                             @if ($user->hasMessierGold())
                                 <x-trophy.messierGold class="h-20 w-20" />
                             @elseif ($user->hasMessierSilver())
@@ -67,6 +68,21 @@
                                 <x-trophy.messierSilverDrawing class="h-20 w-20" />
                             @elseif ($user->hasMessierBronzeDrawing())
                                 <x-trophy.messierBronzeDrawing class="h-20 w-20" />
+                            @endif
+                            {{-- CALDWELL --}}
+                            @if ($user->hasCaldwellGold())
+                                <x-trophy.caldwellGold class="h-20 w-20" />
+                            @elseif ($user->hasCaldwellSilver())
+                                <x-trophy.caldwellSilver class="h-20 w-20" />
+                            @elseif ($user->hasCaldwellBronze())
+                                <x-trophy.caldwellBronze class="h-20 w-20" />
+                            @endif
+                            @if ($user->hasCaldwellGoldDrawing())
+                                <x-trophy.caldwellGoldDrawing class="h-20 w-20" />
+                            @elseif ($user->hasCaldwellSilverDrawing())
+                                <x-trophy.caldwellSilverDrawing class="h-20 w-20" />
+                            @elseif ($user->hasCaldwellBronzeDrawing())
+                                <x-trophy.caldwellBronzeDrawing class="h-20 w-20" />
                             @endif
 
                         </div>

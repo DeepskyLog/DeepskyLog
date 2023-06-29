@@ -292,4 +292,63 @@ class User extends Authenticatable implements MustVerifyEmail
         return AccomplishmentsOld::where('observer', $this->username)->first()['messierDrawingsBronze'];
     }
 
+    /**
+     * Checks if the user has observed all 110 caldwell objects
+     *
+     * @return bool
+     */
+    public function hasCaldwellGold(): bool
+    {
+
+        return AccomplishmentsOld::where('observer', $this->username)->first()['caldwellGold'];
+    }
+
+    /**
+     * Checks if the user has observed 50 different caldwell objects
+     *
+     * @return bool
+     */
+    public function hasCaldwellSilver(): bool
+    {
+        return AccomplishmentsOld::where('observer', $this->username)->first()['caldwellSilver'];
+    }
+    /**
+     * Checks if the user has observed 25 different caldwell objects
+     *
+     * @return bool
+     */
+    public function hasCaldwellBronze(): bool
+    {
+        return AccomplishmentsOld::where('observer', $this->username)->first()['caldwellBronze'];
+    }
+
+    /**
+     * Checks if the user has drawn all 110 caldwell objects
+     *
+     * @return bool
+     */
+    public function hasCaldwellGoldDrawing(): bool
+    {
+
+        return AccomplishmentsOld::where('observer', $this->username)->first()['caldwelldrawingsGold'];
+    }
+
+    /**
+     * Checks if the user has drawn 50 different caldwell objects
+     *
+     * @return bool
+     */
+    public function hasCaldwellSilverDrawing(): bool
+    {
+        return AccomplishmentsOld::where('observer', $this->username)->first()['caldwellDrawingsSilver'];
+    }
+    /**
+     * Checks if the user has drawn 25 different caldwell objects
+     *
+     * @return bool
+     */
+    public function hasCaldwellBronzeDrawing(): bool
+    {
+        return AccomplishmentsOld::where('observer', $this->username)->first()['caldwellDrawingsBronze'];
+    }
 }
