@@ -455,4 +455,108 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return AccomplishmentsOld::where('observer', $this->username)->first()['herschelDrawingsBronze'];
     }
+
+    /**
+     * Checks if the user has observed all 400 herschelII objects
+     *
+     * @return bool
+     */
+    public function hasHerschelIIPlatinum(): bool
+    {
+
+        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIPlatina'];
+    }
+
+    /**
+     * Checks if the user has observed 200 herschelII objects
+     *
+     * @return bool
+     */
+    public function hasHerschelIIDiamond(): bool
+    {
+
+        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDiamond'];
+    }
+
+    /**
+     * Checks if the user has observed 100 herschelII objects
+     *
+     * @return bool
+     */
+    public function hasHerschelIIGold(): bool
+    {
+
+        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIGold'];
+    }
+
+    /**
+     * Checks if the user has observed 50 different herschelII objects
+     *
+     * @return bool
+     */
+    public function hasHerschelIISilver(): bool
+    {
+        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIISilver'];
+    }
+    /**
+     * Checks if the user has observed 25 different herschelII objects
+     *
+     * @return bool
+     */
+    public function hasHerschelIIBronze(): bool
+    {
+        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIBronze'];
+    }
+
+    /**
+     * Checks if the user has drawn all 400 herschelII objects
+     *
+     * @return bool
+     */
+    public function hasHerschelIIPlatinumDrawing(): bool
+    {
+
+        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDrawingsPlatina'];
+    }
+
+    /**
+     * Checks if the user has drawn 200 herschelII objects
+     *
+     * @return bool
+     */
+    public function hasHerschelIIDiamondDrawing(): bool
+    {
+
+        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDrawingsDiamond'];
+    }
+
+    /**
+     * Checks if the user has drawn 100 herschelII objects
+     *
+     * @return bool
+     */
+    public function hasHerschelIIGoldDrawing(): bool
+    {
+
+        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDrawingsGold'];
+    }
+
+    /**
+     * Checks if the user has drawn 50 different herschelII objects
+     *
+     * @return bool
+     */
+    public function hasHerschelIISilverDrawing(): bool
+    {
+        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDrawingsSilver'];
+    }
+    /**
+     * Checks if the user has drawn 25 different herschelII objects
+     *
+     * @return bool
+     */
+    public function hasHerschelIIBronzeDrawing(): bool
+    {
+        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDrawingsBronze'];
+    }
 }
