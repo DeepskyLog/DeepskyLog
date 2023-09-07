@@ -331,7 +331,7 @@ function changeSite()
           };
 
           url = 'https://api.geoapify.com/v1/geocode/reverse?lat=' + latLng.lat() + '&lon=' + latLng.lng() +'&apiKey=7bdf49488a0e4e22b7f7227b775282db';
-          var tz = 'undefined';
+          var tz = 'UTC';
           fetch(url, requestOptions).then(resp => resp.json()).then((result) => {
             try {
                 tz = result['features'][0]['properties']['timezone']['name'];
