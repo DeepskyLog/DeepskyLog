@@ -51,7 +51,7 @@ function menu_moon()
 	$nextNewMoonText=_("New moon").": ";
 	$phases = array();
 	$phases = phasehunt(strtotime($date));
-	$nextNewMoonText.=date("j M", $phases[4]);
+	$nextNewMoonText.=date("j M", (int)$phases[4]);
 
 	// Convert $MoonIllum to percent and round to whole percent.
 	$MoonIllum = round( $MoonIllum, 2 );

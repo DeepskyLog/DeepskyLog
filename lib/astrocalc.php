@@ -260,7 +260,7 @@ class AstroCalc
     $ra2 = $ra2 / 15;
 
     date_default_timezone_set ("UTC");
-    $temptime=jdtogregorian($jd+1);
+    $temptime=jdtogregorian((int)$jd+1);
     $temppos=strpos($temptime,"/");
     $tempmonth=substr($temptime,0,$temppos);
     $temptime=substr($temptime,$temppos+1);
@@ -288,7 +288,7 @@ class AstroCalc
     $nautend = ($hour + $minute / 60.0);
 
     if ($transit > 0) {
-      $transit = $transit % 24.0 + ($transit - floor($transit));
+      $transit = fmod($transit, 24.0) + ($transit - floor($transit));
     } else {
       $toAdd = floor(-$transit / 24.0) + 1;
       $transit = $transit + 24.0 * $toAdd;
@@ -305,14 +305,14 @@ class AstroCalc
         // Check the rise time for $astroend and for $astrobegin
         $theta0w = $theta0 + ($astrobegin * 1.00273790935);
         if ($theta0w > 0) {
-          $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w));
+          $theta0w = fmod($theta0w, 24.0) + ($theta0w - floor($theta0w));
         } else {
           $toAdd = floor(-$theta0w / 24.0) + 1;
           $theta0w = $theta0w + 24.0 * $toAdd;
         }
         $H = ($theta0w - $longitude / 15 - $ra2) * 15.0;
         if ($H > 0) {
-          $H = $H % 360.0 + ($H - floor($H));
+          $H = fmod($H, 360.0) + ($H - floor($H));
         } else {
           $toAdd = floor(-$H / 360.0) + 1;
           $H = $H + 360.0 * $toAdd;
@@ -325,14 +325,14 @@ class AstroCalc
 
       $theta0 = $theta0 + ($transit * 1.00273790935);
       if ($theta0 > 0) {
-        $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0));
+        $theta0 = fmod($theta0, 24.0) + ($theta0 - floor($theta0));
       } else {
         $toAdd = floor(-$theta0 / 24.0) + 1;
         $theta0 = $theta0 + 24.0 * $toAdd;
       }
       $H = ($theta0 - $longitude / 15 - $ra2) * 15.0;
       if ($H > 0) {
-        $H = $H % 360.0 + ($H - floor($H));
+        $H = fmod($H, 360.0) + ($H - floor($H));
       } else {
         $toAdd = floor(-$H / 360.0) + 1;
         $H = $H + 360.0 * $toAdd;
@@ -416,14 +416,14 @@ class AstroCalc
 	        // Check the rise time for $nautend and for $nautbegin
 	        $theta0w = $theta0 + ($nautbegin * 1.00273790935);
 	        if ($theta0w > 0) {
-	          $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w));
+	          $theta0w = fmod($theta0w, 24.0) + ($theta0w - floor($theta0w));
 	        } else {
 	          $toAdd = floor(-$theta0w / 24.0) + 1;
 	          $theta0w = $theta0w + 24.0 * $toAdd;
 	        }
 	        $H = ($theta0w - $longitude / 15 - $ra2) * 15.0;
 	        if ($H > 0) {
-	          $H = $H % 360.0 + ($H - floor($H));
+	          $H = fmod($H, 360.0) + ($H - floor($H));
 	        } else {
 	          $toAdd = floor(-$H / 360.0) + 1;
 	          $H = $H + 360.0 * $toAdd;
@@ -436,14 +436,14 @@ class AstroCalc
 
 	      $theta0 = $theta0 + ($transit * 1.00273790935);
 	      if ($theta0 > 0) {
-	        $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0));
+	        $theta0 = fmod($theta0, 24.0) + ($theta0 - floor($theta0));
 	      } else {
 	        $toAdd = floor(-$theta0 / 24.0) + 1;
 	        $theta0 = $theta0 + 24.0 * $toAdd;
 	      }
 	      $H = ($theta0 - $longitude / 15 - $ra2) * 15.0;
 	      if ($H > 0) {
-	        $H = $H % 360.0 + ($H - floor($H));
+	        $H = fmod($H, 360.0) + ($H - floor($H));
 	      } else {
 	        $toAdd = floor(-$H / 360.0) + 1;
 	        $H = $H + 360.0 * $toAdd;

@@ -331,7 +331,7 @@ class Objects
         return $result;
     }
 
-    public function getNearbyObjectsForCheck($ra = 0, $decl = 0, $dist)
+    public function getNearbyObjectsForCheck($ra = 0, $decl = 0, $dist = 0.05)
     {
         global $objDatabase;
         $dra = 0.0011 * $dist / cos($decl / 180 * 3.1415926535);
