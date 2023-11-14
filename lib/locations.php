@@ -45,7 +45,12 @@ class Locations
      * @return integer The id of the new location
      */
     public function addLocation(
-        $name, $longitude, $latitude, $country, $timezone, $elevation
+        $name,
+        $longitude,
+        $latitude,
+        $country,
+        $timezone,
+        $elevation
     ) {
         global $objDatabase;
         $objDatabase->execSQL(
@@ -55,7 +60,8 @@ class Locations
             . "\"$country\", \"$timezone\", \"$elevation\", 1)"
         );
         return $objDatabase->selectSingleValue(
-            "SELECT id FROM locations ORDER BY id DESC LIMIT 1", 'id'
+            "SELECT id FROM locations ORDER BY id DESC LIMIT 1",
+            'id'
         );
     }
     /**
@@ -73,8 +79,10 @@ class Locations
         return $objDatabase->selectSingleArray(
             "SELECT id FROM locations WHERE name = \""
             . $objDatabase->selectSingleValue(
-                "SELECT name FROM locations WHERE id = \"" . $id . "\"", 'name'
-            ) . "\"", 'id'
+                "SELECT name FROM locations WHERE id = \"" . $id . "\"",
+                'name'
+            ) . "\"",
+            'id'
         );
     }
 
@@ -91,7 +99,9 @@ class Locations
         global $objDatabase;
         return $objDatabase->selectSingleValue(
             "SELECT id FROM locations where name=\""
-            . ($name) . "\" and observer=\"" . $observer . "\"", 'id', -1
+            . ($name) . "\" and observer=\"" . $observer . "\"",
+            'id',
+            -1
         );
     }
 
@@ -109,7 +119,9 @@ class Locations
         global $objDatabase;
         return $objDatabase->selectSingleValue(
             "SELECT " . $property . " FROM locations WHERE id = \""
-            . $id . "\"", $property, $defaultValue
+            . $id . "\"",
+            $property,
+            $defaultValue
         );
     }
 
@@ -136,10 +148,14 @@ class Locations
         global $objDatabase;
         return $objDatabase->selectSingleValue(
             "SELECT count(id) as ObsCnt FROM observations WHERE locationid=\""
-            . $id . "\"", 'ObsCnt', 0
+            . $id . "\"",
+            'ObsCnt',
+            0
         ) + $objDatabase->selectSingleValue(
             "SELECT count(id) as ObsCnt FROM cometobservations WHERE locationid=\""
-            . $id . "\"", 'ObsCnt', 0
+            . $id . "\"",
+            'ObsCnt',
+            0
         );
     }
     /**
@@ -158,10 +174,11 @@ class Locations
     {
         global $objDatabase;
         return $objDatabase->selectSingleArray(
-            "SELECT id, name FROM locations "
+            "SELECT MAX(id) id, name FROM locations "
             . ($observer ? "WHERE observer LIKE \"" . $observer . "\" "
             . ($active ? " AND locationactive=" . $active : "") : " GROUP BY name")
-            . " ORDER BY " . $sort . ", name", 'id'
+            . " ORDER BY " . $sort . ", name",
+            'id'
         );
     }
 
@@ -180,12 +197,13 @@ class Locations
     public function getSortedLocationsList($sort, $observer = "", $active = '')
     {
         global $objDatabase;
-        $new_sites = array ();
+        $new_sites = array();
         $sites = $objDatabase->selectRecordsetArray(
             "SELECT id, name FROM locations "
             . ($observer ? "WHERE observer LIKE \"" . $observer . "\" "
             . ($active ? " AND locationactive=" . $active : "") : " GROUP BY name")
-            . " ORDER BY " . $sort . ",name", 'id'
+            . " ORDER BY " . $sort . ",name",
+            'id'
         );
         $previous = "fdgsdg";
         for ($i = 0; $i < count($sites); $i++) {
@@ -233,7 +251,8 @@ class Locations
         global $objDatabase;
         $sites = $objDatabase->selectRecordsetArray(
             "SELECT id FROM locations where observer = \""
-            . $observer . "\" AND checked=\"0\"", 'id'
+            . $observer . "\" AND checked=\"0\"",
+            'id'
         );
 
         return $sites;
@@ -255,10 +274,12 @@ class Locations
                 foreach ($locationsToCheck as $location) {
                     // We adapt the timezone, elevation and country
                     $latitude = $objLocation->getLocationPropertyFromId(
-                        $location ['id'], "latitude"
+                        $location ['id'],
+                        "latitude"
                     );
                     $longitude = $objLocation->getLocationPropertyFromId(
-                        $location ['id'], "longitude"
+                        $location ['id'],
+                        "longitude"
                     );
 
                     $url = "https://maps.googleapis.com/maps/"
@@ -269,7 +290,9 @@ class Locations
                     $obj = json_decode($json);
                     if ($obj->status == "OK") {
                         $objLocation->setLocationProperty(
-                            $location['id'], "timezone", $obj->timeZoneId
+                            $location['id'],
+                            "timezone",
+                            $obj->timeZoneId
                         );
 
                         // Get the elevation
@@ -283,7 +306,8 @@ class Locations
                         if ($obj->status == "OK") {
                             $results = $obj->results[0];
                             $objLocation->setLocationProperty(
-                                $location['id'], "elevation",
+                                $location['id'],
+                                "elevation",
                                 ((int) $results->elevation)
                             );
 
@@ -299,14 +323,17 @@ class Locations
                             if ($obj->status == "OK") {
                                 $results = $obj->results[0];
                                 $components = $results->address_components;
-                                for ($ac = 0; $ac < sizeof($components); $ac ++) {
+                                for ($ac = 0; $ac < sizeof($components); $ac++) {
                                     if ($components [$ac]->types [0] == "country") {
                                         $objLocation->setLocationProperty(
-                                            $location['id'], "country",
+                                            $location['id'],
+                                            "country",
                                             $components[$ac]->long_name
                                         );
                                         $objLocation->setLocationProperty(
-                                            $location['id'], "checked", 1
+                                            $location['id'],
+                                            "checked",
+                                            1
                                         );
                                     }
                                 }
@@ -345,25 +372,28 @@ class Locations
             echo "<th>" . _("Number of observations") . "</th>";
             echo "</tr></thead>";
             $count = 0;
-            foreach ($sites as $key=>$value) {
+            foreach ($sites as $key => $value) {
                 $sitename = stripslashes(
                     $objLocation->getLocationPropertyFromId($value, 'name')
                 );
                 $country = $objLocation->getLocationPropertyFromId(
-                    $value, 'country'
+                    $value,
+                    'country'
                 );
                 $long = $objLocation->getLocationPropertyFromId($value, 'longitude');
                 if ($long > 0) {
                     $longitude = "&nbsp;"
                         . $objPresentations->decToString(
                             $objLocation->getLocationPropertyFromId(
-                                $value, 'longitude'
+                                $value,
+                                'longitude'
                             )
                         );
                 } else {
                     $longitude = $objPresentations->decToString(
                         $objLocation->getLocationPropertyFromId(
-                            $value, 'longitude'
+                            $value,
+                            'longitude'
                         )
                     );
                 }
@@ -372,39 +402,46 @@ class Locations
                     $latitude = "&nbsp;"
                         . $objPresentations->decToString(
                             $objLocation->getLocationPropertyFromId(
-                                $value, 'latitude'
+                                $value,
+                                'latitude'
                             )
                         );
                 } else {
                     $latitude = $objPresentations->decToString(
                         $objLocation->getLocationPropertyFromId(
-                            $value, 'latitude'
+                            $value,
+                            'latitude'
                         )
                     );
                 }
                 $elevation = $objLocation->getLocationPropertyFromId(
-                    $value, 'elevation'
+                    $value,
+                    'elevation'
                 );
                 $timezone = $objLocation->getLocationPropertyFromId(
-                    $value, 'timezone'
+                    $value,
+                    'timezone'
                 );
                 $observer = $objLocation->getLocationPropertyFromId(
-                    $value, 'observer'
+                    $value,
+                    'observer'
                 );
                 $limmag = $objLocation->getLocationPropertyFromId(
-                    $value, 'limitingMagnitude'
+                    $value,
+                    'limitingMagnitude'
                 );
                 $sb = $objLocation->getLocationPropertyFromId(
-                    $value, 'skyBackground'
+                    $value,
+                    'skyBackground'
                 );
-                if (($limmag < - 900) && ($sb > 0)) {
+                if (($limmag < -900) && ($sb > 0)) {
                     $limmag = sprintf(
                         "%.1f",
                         $objContrast->calculateLimitingMagnitudeFromSkyBackground(
                             $sb
                         )
                     );
-                } elseif (($limmag < - 900) && ($sb < - 900)) {
+                } elseif (($limmag < -900) && ($sb < -900)) {
                     $limmag = "&nbsp;";
                     $sb = "&nbsp;";
                 } else {
@@ -423,11 +460,13 @@ class Locations
 
                     echo "<td>" . "<span class=\"hidden\">"
                         . $objLocation->getLocationPropertyFromId(
-                            $value, 'locationactive'
+                            $value,
+                            'locationactive'
                         ) . "</span><input id=\"locationactive" . $value
                         . "\" type=\"checkbox\" "
                         . ($objLocation->getLocationPropertyFromId(
-                            $value, 'locationactive'
+                            $value,
+                            'locationactive'
                         ) ? " checked=\"checked\" " : "")
                         . " onclick=\"setactivation('location'," . $value
                         . ");var order = this.checked ? '1' : '0';"
@@ -440,24 +479,32 @@ class Locations
                     echo "<td><a href=\"http://clearoutside.com/forecast/"
                         . round(
                             $objLocation->getLocationPropertyFromId(
-                                $value, 'latitude'
-                            ), 2
+                                $value,
+                                'latitude'
+                            ),
+                            2
                         ) . "/"
                         . round(
                             $objLocation->getLocationPropertyFromId(
-                                $value, 'longitude'
-                            ), 2
+                                $value,
+                                'longitude'
+                            ),
+                            2
                         ) . "\">"
                         . "<img src=\"http://clearoutside.com/forecast_image_small/"
                         . round(
                             $objLocation->getLocationPropertyFromId(
-                                $value, 'latitude'
-                            ), 2
+                                $value,
+                                'latitude'
+                            ),
+                            2
                         ) . "/"
                         . round(
                             $objLocation->getLocationPropertyFromId(
-                                $value, 'longitude'
-                            ), 2
+                                $value,
+                                'longitude'
+                            ),
+                            2
                         ) . "/forecast.png\" /></a></td>";
                     echo "<td>" . $country . "</td>";
                     echo "<td>" . $elevation . "m</td>";
@@ -468,13 +515,14 @@ class Locations
                         . $value
                         . "\""
                         . ($value == $objObserver->getObserverProperty(
-                            $loggedUser, 'stdlocation'
+                            $loggedUser,
+                            'stdlocation'
                         )
                         ? " checked=\"checked\" " : "") . " onclick=\"submit();\""
                         . " />&nbsp;<br /></td>";
                     // Make it possible to delete the lenses
                     echo "<td>";
-                    if (! ($obsCnt = $objLocation->getLocationUsedFromId($value))) {
+                    if (!($obsCnt = $objLocation->getLocationUsedFromId($value))) {
                         echo "<a href=\"" . $baseURL
                             . "index.php?indexAction=validate_delete_location"
                             . "&amp;locationid="
@@ -508,11 +556,11 @@ class Locations
         }
     }
 
-     /**
-      * Validates and deletes a location (set in the locationid Get keyword)
-      *
-      * @return string The message that the location was deleted.
-      */
+    /**
+     * Validates and deletes a location (set in the locationid Get keyword)
+     *
+     * @return string The message that the location was deleted.
+     */
     public function validateDeleteLocation()
     {
         global $loggedUser, $objUtil, $objDatabase, $objObserver;
@@ -520,11 +568,12 @@ class Locations
             && $objUtil->checkAdminOrUserID(
                 $this->getLocationPropertyFromId($locationid, 'observer')
             )
-            && (! ($this->getLocationUsedFromId($locationid)))
+            && (!($this->getLocationUsedFromId($locationid)))
         ) {
             if ($loggedUser
                 && $objObserver->getObserverProperty(
-                    $loggedUser, 'stdlocation'
+                    $loggedUser,
+                    'stdlocation'
                 ) == $locationid
             ) {
                 $objObserver->setObserverProperty($loggedUser, 'stdlocation', 0);
@@ -536,23 +585,26 @@ class Locations
         }
     }
 
-     /**
-      * Validates and saves a location (set in the locationid Get keyword)
-      *
-      * @return string The message that the location was saved.
-      */
+    /**
+     * Validates and saves a location (set in the locationid Get keyword)
+     *
+     * @return string The message that the location was saved.
+     */
     public function validateSaveLocation()
     {
         global $objPresentations, $objUtil, $objDatabase, $objObserver, $loggedUser;
         if (($objUtil->checkPostKey('adaptStandardLocation') == 1)
             && $objUtil->checkUserID(
                 $this->getLocationPropertyFromId(
-                    $objUtil->checkPostKey('stdlocation'), 'observer'
+                    $objUtil->checkPostKey('stdlocation'),
+                    'observer'
                 )
             )
         ) {
             $objObserver->setObserverProperty(
-                $loggedUser, 'stdlocation', $_POST ['stdlocation']
+                $loggedUser,
+                'stdlocation',
+                $_POST ['stdlocation']
             );
         } elseif ($objUtil->checkPostKey('locationname')
             && $objUtil->checkPostKey('country')
@@ -567,15 +619,21 @@ class Locations
 
             if ($objUtil->checkPostKey('add')) {
                 $id = $this->addLocation(
-                    $locationname, $longitude, $latitude,
-                    $country, $timezone, $elevation
+                    $locationname,
+                    $longitude,
+                    $latitude,
+                    $country,
+                    $timezone,
+                    $elevation
                 );
                 if (array_key_exists('sb', $_POST) && $_POST['sb']) {
                     $this->setLocationProperty($id, 'skyBackground', $_POST['sb']);
                     $this->setLocationProperty($id, 'limitingMagnitude', -999);
-                } else if (array_key_exists('lm', $_POST) && $_POST['lm']) {
+                } elseif (array_key_exists('lm', $_POST) && $_POST['lm']) {
                     $this->setLocationProperty(
-                        $id, 'limitingMagnitude', $_POST['lm']
+                        $id,
+                        'limitingMagnitude',
+                        $_POST['lm']
                     );
                     $this->setLocationProperty($id, 'skyBackground', -999);
                 } else {
@@ -589,15 +647,20 @@ class Locations
             if ($objUtil->checkPostKey('change')
                 && $objUtil->checkAdminOrUserID(
                     $this->getLocationPropertyFromId(
-                        $objUtil->checkPostKey('id'), 'observer'
+                        $objUtil->checkPostKey('id'),
+                        'observer'
                     )
                 )
             ) {
                 $this->setLocationProperty(
-                    $_POST['id'], 'name', $_POST['locationname']
+                    $_POST['id'],
+                    'name',
+                    $_POST['locationname']
                 );
                 $this->setLocationProperty(
-                    $_POST['id'], 'country', $_POST['country']
+                    $_POST['id'],
+                    'country',
+                    $_POST['country']
                 );
                 $this->setLocationProperty($_POST['id'], 'longitude', $longitude);
                 $this->setLocationProperty($_POST['id'], 'latitude', $latitude);
@@ -607,20 +670,28 @@ class Locations
                 $this->setLocationProperty($_POST['id'], 'checked', 1);
                 if ($objUtil->checkPostKey('sb')) {
                     $this->setLocationProperty(
-                        $_POST['id'], 'skyBackground', $_POST['sb']
+                        $_POST['id'],
+                        'skyBackground',
+                        $_POST['sb']
                     );
                     $this->setLocationProperty(
-                        $_POST['id'], 'limitingMagnitude', -999
+                        $_POST['id'],
+                        'limitingMagnitude',
+                        -999
                     );
-                } else if ($objUtil->checkPostKey('lm')) {
+                } elseif ($objUtil->checkPostKey('lm')) {
                     $this->setLocationProperty(
-                        $_POST['id'], 'limitingMagnitude', $_POST['lm']
+                        $_POST['id'],
+                        'limitingMagnitude',
+                        $_POST['lm']
                     );
                     $this->setLocationProperty($_POST['id'], 'skyBackground', -999);
                 } else {
                     $this->setLocationProperty($_POST['id'], 'skyBackground', -999);
                     $this->setLocationProperty(
-                        $_POST['id'], 'limitingMagnitude', -999
+                        $_POST['id'],
+                        'limitingMagnitude',
+                        -999
                     );
                 }
                 return _("The location is changed in the database");
@@ -630,4 +701,3 @@ class Locations
         }
     }
 }
-?>
