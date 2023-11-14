@@ -802,7 +802,7 @@ function addXmlObservations()
     }
 
     // Add the sessions
-    while (list($key, $value) = each($sessionArray)) {
+	foreach ($sessionArray as $key => $value)
         if (count(
             $objDatabase->selectRecordArray(
                 'SELECT * from sessions where begindate = "'

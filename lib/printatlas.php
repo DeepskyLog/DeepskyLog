@@ -1402,7 +1402,7 @@ class PrintAtlas
 
         $j=0;
         $columnX=0;
-        while(list($theobject,$theobjectdata)=each($theindex))
+        foreach ($theindex as $theobject => $theobjectdata)
         { if($this->canvasDimensionYpx-$topborderIndexWidth-($j*10)<$topborderIndexWidth)
           { $j=0;
             $columnX+=($columnIndexWidth+$columnIndexSeparation);
@@ -2181,11 +2181,11 @@ class PrintAtlas
             $this->pdf->addText($xbase, $y, $fontSizeSection, 'Chart '.($j+1));
             $y-=$deltaline+$deltalineSection;
             $result=$astroObjects[$j];
-            while(list($key, $valueA) = each($result))
+            foreach ($result as $key => $valueA)
             { $con = $valueA['objectconstellation'];
               $deltaymax=0;
               reset($reportdata);
-                  while(list($key,$dataelement)=each($reportdata))
+                foreach ($reportdata as $key => $dataelement)
                   { if($dataelement['fieldwidth'])
                     { if(($dataelement['fieldname']=="objectlistdescription"))
                     { if(array_key_exists('objectlistdescription',$valueA) && $valueA['objectlistdescription'])
@@ -2230,7 +2230,7 @@ class PrintAtlas
               }
                     reset($reportdata);
                     $deltaymax=0;
-                    while(list($key,$dataelement)=each($reportdata))
+                    foreach ($reportdata as $key => $dataelement)
                     { if($dataelement['fieldwidth'])
                       { if($y-($deltaline*$dataelement['fieldline'])<$bottom)
                   { $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
@@ -2363,8 +2363,8 @@ class PrintAtlas
                 { $base=$xmid;
                   $objUtil->newpage($y,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,"","",$showelements,$reportdata);
                   $this->pdf->setLineStyle(0.5);
-              $y=$top;
-                    while(list($key,$value)=each($indexlist))
+                    $y=$top;
+                    foreach ($indexlist as $key => $value)
                     { $this->pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
                 $this->pdf->addTextWrap($xbase,$y,$fontSizeText,$key,50, 'left');
                 $this->pdf->addTextWrap($xbase+$SectionBarWidth-$sectionBarSpace-50,$y,$fontSizeText,trim($value),50,'right');

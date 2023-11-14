@@ -136,7 +136,7 @@ if ($loggedUser == "") {
 };
 
 foreach ($result as $key=>$value) {
-    while(list($k, $v) = each($value)){
+    foreach ($value as $k=>$v) {
         //add profilepic
         if ($k == "observerid") {
             $result[$key]['observerimage'] = getObserverImage($v);

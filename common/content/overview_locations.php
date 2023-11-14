@@ -50,7 +50,7 @@ function overviewLocations()
         . " data-sorter=\"false\"></th>";
     echo "</tr></thead>";
 
-    while (list($key, $value) = each($sites)) {
+    foreach ($sites as $key => $value) {
         $sitename = stripslashes(
             $objLocation->getLocationPropertyFromId($value, 'name')
         );
@@ -78,13 +78,14 @@ function overviewLocations()
         $elevation = $objLocation->getLocationPropertyFromId($value, 'elevation');
         $observer = $objLocation->getLocationPropertyFromId($value, 'observer');
         $limmag = $objLocation->getLocationPropertyFromId(
-            $value, 'limitingMagnitude'
+            $value,
+            'limitingMagnitude'
         );
-        if ($limmag < - 900) {
+        if ($limmag < -900) {
             $limmag = "&nbsp;";
         }
         $sb = $objLocation->getLocationPropertyFromId($value, 'skyBackground');
-        if ($sb < - 900) {
+        if ($sb < -900) {
             $sb = "&nbsp;";
         }
         if ($value != "1") {
@@ -101,11 +102,14 @@ function overviewLocations()
             echo "<td>" . $sb . "</td>";
             echo "<td>" . $observer . "</td>";
             // check if there are no observations made from this location
-            $queries = array (
+            $queries = array(
                     "location" => $value
             );
             $obs = $objObservation->getObservationFromQuery(
-                $queries, "", "1", "False"
+                $queries,
+                "",
+                "1",
+                "False"
             );
             echo "<td>";
             if (!($objLocation->getLocationUsedFromId($value))) {
@@ -123,4 +127,3 @@ function overviewLocations()
     echo "</div>";
     $objUtil->addPager("", 50);
 }
-?>

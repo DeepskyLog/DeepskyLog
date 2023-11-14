@@ -86,6 +86,7 @@ function preludesB()
 
     if (defined('LC_MESSAGES')) {
         setlocale(LC_MESSAGES, $locale); // Linux
+        putenv("LC_ALL={$locale}");
         bindtextdomain("messages", "./locale");
         textdomain("messages");
         bind_textdomain_codeset("messages", 'UTF-8');

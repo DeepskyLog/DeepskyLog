@@ -1,47 +1,50 @@
 <?php
+
 // selected_observations.php
 // generates an overview of selected observations in the database
 global $inIndex, $loggedUser, $objUtil;
-if ((! isset ( $inIndex )) || (! $inIndex))
-	include "../../redirect.php";
-else
-	selected_observation ();
-function selected_observation() {
-	global $instDir, $baseURL, $dateformat, $step, $loggedUser, $objUtil, $objPresentations;
-	// creation of objects
+if ((!isset($inIndex)) || (!$inIndex)) {
+    include "../../redirect.php";
+} else {
+    selected_observation();
+}
+function selected_observation()
+{
+    global $instDir, $baseURL, $dateformat, $step, $loggedUser, $objUtil, $objPresentations;
+    // creation of objects
 
-	$observations = new CometObservations ();
-	$instruments = new Instruments ();
-	$observers = new Observers ();
-	$objects = new CometObjects ();
-	$util = $objUtil;
+    $observations = new CometObservations();
+    $instruments = new Instruments();
+    $observers = new Observers();
+    $objects = new CometObjects();
+    $util = $objUtil;
 
-	// selection of all observations of one object
+    // selection of all observations of one object
 
-	echo "<div id=\"main\">";
-	if (isset ( $_GET ['objectname'] )) {
-		$queries = array (
-				"object" => $objects->getName ( $_GET ['objectname'] )
-		); // sql query
-		$sort = "id"; // standard sort on insertion date
-		$obs = $observations->getObservationFromQuery ( $queries );
-		if (sizeof ( $obs ) > 0) {
-			krsort ( $obs );
-		}
+    echo "<div id=\"main\">";
+    if (isset($_GET ['objectname'])) {
+        $queries = array(
+                "object" => $objects->getName($_GET ['objectname'])
+        ); // sql query
+        $sort = "id"; // standard sort on insertion date
+        $obs = $observations->getObservationFromQuery($queries);
+        if (sizeof($obs) > 0) {
+            krsort($obs);
+        }
 
-		// save $obs as a session variable
+        // save $obs as a session variable
 
-		$_SESSION ['obs'] = $obs;
-		$_SESSION ['observation_query'] = $obs;
+        $_SESSION ['obs'] = $obs;
+        $_SESSION ['observation_query'] = $obs;
 
-		$count = 0; // counter for altering table colors
+        $count = 0; // counter for altering table colors
 
-		$link = "" . $baseURL . "index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET ['objectname'];
-		echo "<h4>" . sprintf(_("Overview of all observations of %s"), $objects->getName($_GET['objectname'])) . "</h4>";
-		echo "<hr />";
+        $link = "" . $baseURL . "index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET ['objectname'];
+        echo "<h4>" . sprintf(_("Overview of all observations of %s"), $objects->getName($_GET['objectname'])) . "</h4>";
+        echo "<hr />";
 
-		if (sizeof ( $obs ) > 0) {
-			echo "<table class=\"table sort-tablecometobservations table-condensed table-striped table-hover tablesorter custom-popup\">
+        if (sizeof($obs) > 0) {
+            echo "<table class=\"table sort-tablecometobservations table-condensed table-striped table-hover tablesorter custom-popup\">
 	      <thead>
 		  <tr>
 	      <th>" . _("Object name") . "</th>
@@ -56,157 +59,155 @@ function selected_observation() {
 	      </tr>
 	      </thead>";
 
-			while ( list ( $key, $value ) = each ( $obs ) ) 			// go through observations array
-			{
-				// OBJECT
+            foreach ($obs as $key => $value) { 			// go through observations array
+                // OBJECT
 
-				$object = $observations->getObjectId ( $value ); // overhead as this is every time the same object?!
+                $object = $observations->getObjectId($value); // overhead as this is every time the same object?!
 
-				// OUTPUT
+                // OUTPUT
 
-				echo ("<tr>
-	            <td><a href=\"" . $baseURL . "index.php?indexAction=comets_detail_object&amp;object=" . urlencode ( $object ) . "\">" . $objects->getName ( $object ) . "</a></td>");
+                echo("<tr>
+	            <td><a href=\"" . $baseURL . "index.php?indexAction=comets_detail_object&amp;object=" . urlencode($object) . "\">" . $objects->getName($object) . "</a></td>");
 
-				// OBSERVER
+                // OBSERVER
 
-				$observer = $observations->getObserverId ( $value );
+                $observer = $observations->getObserverId($value);
 
-				echo ("<td>");
+                echo("<td>");
 
-				echo ("<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode ( $observer ) . "\">" . $observers->getObserverProperty ( $observer, 'firstname' ) . "&nbsp;" . $observers->getObserverProperty ( $observer, 'name' ) . "</a>");
+                echo("<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getObserverProperty($observer, 'firstname') . "&nbsp;" . $observers->getObserverProperty($observer, 'name') . "</a>");
 
-				echo ("</td>");
+                echo("</td>");
 
-				// DATE
+                // DATE
 
-				if ($observers->getObserverProperty ( $loggedUser, 'UT' )) {
-					$date = sscanf ( $observations->getDate ( $value ), "%4d%2d%2d" );
-				} else {
-					$date = sscanf ( $observations->getLocalDate ( $value ), "%4d%2d%2d" );
-				}
+                if ($observers->getObserverProperty($loggedUser, 'UT')) {
+                    $date = sscanf($observations->getDate($value), "%4d%2d%2d");
+                } else {
+                    $date = sscanf($observations->getLocalDate($value), "%4d%2d%2d");
+                }
 
-				echo ("<td>");
+                echo("<td>");
 
-				echo date ( $dateformat, mktime ( 0, 0, 0, $date [1], $date [2], $date [0] ) );
+                echo date($dateformat, mktime(0, 0, 0, $date [1], $date [2], $date [0]));
 
-				// TIME
+                // TIME
 
-				echo (" (");
+                echo(" (");
 
-				if ($observers->getObserverProperty ( $loggedUser, 'UT' )) {
-					$time = sscanf ( sprintf ( "%04d", $observations->getTime ( $value ) ), "%2d%2d" );
-				} else {
-					$time = sscanf ( sprintf ( "%04d", $observations->getLocalTime ( $value ) ), "%2d%2d" );
-				}
+                if ($observers->getObserverProperty($loggedUser, 'UT')) {
+                    $time = sscanf(sprintf("%04d", $observations->getTime($value)), "%2d%2d");
+                } else {
+                    $time = sscanf(sprintf("%04d", $observations->getLocalTime($value)), "%2d%2d");
+                }
 
-				printf ( "%02d", $time [0] );
-				echo (":");
+                printf("%02d", $time [0]);
+                echo(":");
 
-				printf ( "%02d", $time [1] );
+                printf("%02d", $time [1]);
 
-				$time = sscanf ( sprintf ( "%04d", $observations->getTime ( $value ) ), "%2d%2d" );
+                $time = sscanf(sprintf("%04d", $observations->getTime($value)), "%2d%2d");
 
-				echo (")</td>");
+                echo(")</td>");
 
-				// INSTRUMENT
+                // INSTRUMENT
 
-				$temp = $observations->getInstrumentId ( $value );
-				$instrument = $instruments->getInstrumentPropertyFromId ( $temp, 'name' );
-				$instrumentsize = $instruments->getInstrumentPropertyFromId ( $temp, 'diameter' );
-				if ($instrument == "Naked eye") {
-					$instrument = _("Naked Eye");
-				}
+                $temp = $observations->getInstrumentId($value);
+                $instrument = $instruments->getInstrumentPropertyFromId($temp, 'name');
+                $instrumentsize = $instruments->getInstrumentPropertyFromId($temp, 'diameter');
+                if ($instrument == "Naked eye") {
+                    $instrument = _("Naked Eye");
+                }
 
-				// MAGNITUDE
+                // MAGNITUDE
 
-				$mag = $observations->getMagnitude ( $value );
+                $mag = $observations->getMagnitude($value);
 
-				if ($mag < - 90) {
-					$mag = '';
-				} else {
-					$mag = sprintf ( "%01.1f", $observations->getMagnitude ( $value ) );
-				}
+                if ($mag < -90) {
+                    $mag = '';
+                } else {
+                    $mag = sprintf("%01.1f", $observations->getMagnitude($value));
+                }
 
-				// COMA
+                // COMA
 
-				$coma = $observations->getComa ( $value );
-				if ($coma < - 90) {
-					$coma = '';
-				} else {
-					$coma = $coma . "'";
-				}
+                $coma = $observations->getComa($value);
+                if ($coma < -90) {
+                    $coma = '';
+                } else {
+                    $coma = $coma . "'";
+                }
 
-				// DC
+                // DC
 
-				$dc = $observations->getDc ( $value );
+                $dc = $observations->getDc($value);
 
-				if ($dc < - 90) {
-					$dc = '';
-				}
+                if ($dc < -90) {
+                    $dc = '';
+                }
 
-				// TAIL
+                // TAIL
 
-				$tail = $observations->getTail ( $value );
-				if ($tail < - 90) {
-					$tail = '';
-				} else {
-					$tail = $tail . "'";
-				}
+                $tail = $observations->getTail($value);
+                if ($tail < -90) {
+                    $tail = '';
+                } else {
+                    $tail = $tail . "'";
+                }
 
-				if ($instrument != _("Naked Eye") && $instrument != "") {
-					$instrument = $instrument . " (" . $instrumentsize . "&nbsp;mm" . ")";
-				}
+                if ($instrument != _("Naked Eye") && $instrument != "") {
+                    $instrument = $instrument . " (" . $instrumentsize . "&nbsp;mm" . ")";
+                }
 
-				echo (" <td>$mag</td>
+                echo(" <td>$mag</td>
 	            <td>$instrument</td>
 	            <td>$coma</td>
 	            <td>$dc</td>
 	            <td>$tail</td>");
 
-				// DETAILS
+                // DETAILS
 
-				echo ("<td><a href=\"" . $baseURL . "index.php?indexAction=comets_detail_observation&amp;observation=" . $value . "\">details");
+                echo("<td><a href=\"" . $baseURL . "index.php?indexAction=comets_detail_observation&amp;observation=" . $value . "\">details");
 
-				// LINK TO DRAWING (IF AVAILABLE)
+                // LINK TO DRAWING (IF AVAILABLE)
 
-				echo ("</a></td></tr>");
-			}
+                echo("</a></td></tr>");
+            }
 
-			echo ("</table>");
-			$objUtil->addPager ( "cometobservations", sizeof ( $obs ) );
+            echo("</table>");
+            $objUtil->addPager("cometobservations", sizeof($obs));
 
-			echo "<hr />";
-			echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "cometobservations.pdf.php\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . _("pdf") . "</a>";
-			echo "<br /><br />";
-		} else 		// no observations of object
-		{
-			echo _("No observations available");
-		}
-		echo "</div>";
-	} elseif ($_GET ['user']) 	// selection of all observations of one observer
-	{
-		$query = array (
-				"observer" => $_GET ['user']
-		);
-		$obs = $observations->getObservationFromQuery ( $query);
-		if (sizeof ( $obs ) > 0)
-			krsort ( $obs );
-			// save $obs as a session variable
-		$_SESSION ['obs'] = $obs;
-		$_SESSION ['observation_query'] = $obs;
-		$link = "" . $baseURL . "index.php?indexAction=comets_result_query_observations&amp;user=" . $_GET ['user'];
-        echo "<h4>" . 
+            echo "<hr />";
+            echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "cometobservations.pdf.php\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . _("pdf") . "</a>";
+            echo "<br /><br />";
+        } else { 		// no observations of object
+            echo _("No observations available");
+        }
+        echo "</div>";
+    } elseif ($_GET ['user']) { 	// selection of all observations of one observer
+        $query = array(
+                    "observer" => $_GET ['user']
+            );
+        $obs = $observations->getObservationFromQuery($query);
+        if (sizeof($obs) > 0) {
+            krsort($obs);
+        }
+        // save $obs as a session variable
+        $_SESSION ['obs'] = $obs;
+        $_SESSION ['observation_query'] = $obs;
+        $link = "" . $baseURL . "index.php?indexAction=comets_result_query_observations&amp;user=" . $_GET ['user'];
+        echo "<h4>" .
             sprintf(
-                _("Overview of all observations of %s"), 
-                $observers->getObserverProperty($_GET['user'], 'firstname') . 
+                _("Overview of all observations of %s"),
+                $observers->getObserverProperty($_GET['user'], 'firstname') .
                 "&nbsp;" . $observers->getObserverProperty($_GET['user'], 'name')
             ) . "</h4>";
-		echo "<hr />";
+        echo "<hr />";
 
-		// NEW BEGIN
+        // NEW BEGIN
 
-		if (sizeof ( $obs ) > 0) { // OBJECT TABLE HEADERS
-			echo "<table class=\"table sort-tablecometobservations table-condensed table-striped table-hover tablesorter custom-popup\">
+        if (sizeof($obs) > 0) { // OBJECT TABLE HEADERS
+            echo "<table class=\"table sort-tablecometobservations table-condensed table-striped table-hover tablesorter custom-popup\">
 			      <thead>
 				  <tr>
 			      <th>" . _("Object name") . "</th>
@@ -220,123 +221,121 @@ function selected_observation() {
 			      </thead>
 			      </tr>";
 
-			while ( list ( $key, $value ) = each ( $obs ) ) 			// go through observations array
-			{
-				// OBJECT
+            foreach ($obs as $key => $value) { 			// go through observations array
+                // OBJECT
 
-				$object = $observations->getObjectId ( $value );
+                $object = $observations->getObjectId($value);
 
-				// OUTPUT
+                // OUTPUT
 
-				echo ("<tr>
-			            <td><a href=\"" . $baseURL . "index.php?indexAction=comets_detail_object&amp;object=" . urlencode ( $object ) . "\">" . $objects->getName ( $object ) . "</a></td>
+                echo("<tr>
+			            <td><a href=\"" . $baseURL . "index.php?indexAction=comets_detail_object&amp;object=" . urlencode($object) . "\">" . $objects->getName($object) . "</a></td>
 			            <td>");
 
-				// DATE
+                // DATE
 
-				if ($observers->getObserverProperty ( $loggedUser, 'UT' )) {
-					$date = sscanf ( $observations->getDate ( $value ), "%4d%2d%2d" );
-				} else {
-					$date = sscanf ( $observations->getLocalDate ( $value ), "%4d%2d%2d" );
-				}
+                if ($observers->getObserverProperty($loggedUser, 'UT')) {
+                    $date = sscanf($observations->getDate($value), "%4d%2d%2d");
+                } else {
+                    $date = sscanf($observations->getLocalDate($value), "%4d%2d%2d");
+                }
 
-				echo date ( $dateformat, mktime ( 0, 0, 0, $date [1], $date [2], $date [0] ) );
+                echo date($dateformat, mktime(0, 0, 0, $date [1], $date [2], $date [0]));
 
-				// TIME
+                // TIME
 
-				echo ("&nbsp;(");
+                echo("&nbsp;(");
 
-				if ($observers->getObserverProperty ( $loggedUser, 'UT' )) {
-					$time = sscanf ( sprintf ( "%04d", $observations->getTime ( $value ) ), "%2d%2d" );
-				} else {
-					$time = sscanf ( sprintf ( "%04d", $observations->getLocalTime ( $value ) ), "%2d%2d" );
-				}
+                if ($observers->getObserverProperty($loggedUser, 'UT')) {
+                    $time = sscanf(sprintf("%04d", $observations->getTime($value)), "%2d%2d");
+                } else {
+                    $time = sscanf(sprintf("%04d", $observations->getLocalTime($value)), "%2d%2d");
+                }
 
-				printf ( "%02d", $time [0] );
+                printf("%02d", $time [0]);
 
-				echo (":");
+                echo(":");
 
-				printf ( "%02d", $time [1] );
+                printf("%02d", $time [1]);
 
-				echo (")</td>");
+                echo(")</td>");
 
-				// INSTRUMENT
+                // INSTRUMENT
 
-				$temp = $observations->getInstrumentId ( $value );
-				$instrument = $instruments->getInstrumentPropertyFromId ( $temp, 'name' );
-				if ($instrument == "Naked eye") {
-					$instrument = _("Naked Eye");
-				}
+                $temp = $observations->getInstrumentId($value);
+                $instrument = $instruments->getInstrumentPropertyFromId($temp, 'name');
+                if ($instrument == "Naked eye") {
+                    $instrument = _("Naked Eye");
+                }
 
-				// MAGNITUDE
+                // MAGNITUDE
 
-				$mag = $observations->getMagnitude ( $value );
+                $mag = $observations->getMagnitude($value);
 
-				if ($mag < - 90) {
-					$mag = '';
-				}
+                if ($mag < -90) {
+                    $mag = '';
+                }
 
-				// COMA
+                // COMA
 
-				$coma = $observations->getComa ( $value );
-				if ($coma < - 90) {
-					$coma = '';
-				} else {
-					$coma = $coma . "'";
-				}
+                $coma = $observations->getComa($value);
+                if ($coma < -90) {
+                    $coma = '';
+                } else {
+                    $coma = $coma . "'";
+                }
 
-				// DC
+                // DC
 
-				$dc = $observations->getDc ( $value );
+                $dc = $observations->getDc($value);
 
-				if ($dc < - 90) {
-					$dc = '';
-				}
+                if ($dc < -90) {
+                    $dc = '';
+                }
 
-				// TAIL
+                // TAIL
 
-				$tail = $observations->getTail ( $value );
-				if ($tail < - 90) {
-					$tail = '';
-				} else {
-					$tail = $tail . "'";
-				}
+                $tail = $observations->getTail($value);
+                if ($tail < -90) {
+                    $tail = '';
+                } else {
+                    $tail = $tail . "'";
+                }
 
-				echo (" <td>$mag</td>
+                echo(" <td>$mag</td>
 			            <td>$instrument</td>
 			            <td>$coma</td>
 			            <td>$dc</td>
 			            <td>$tail</td>");
 
-				// DETAILS
+                // DETAILS
 
-				echo ("<td><a href=\"" . $baseURL . "index.php?indexAction=comets_detail_observation&amp;observation=" . $value . "\">details");
+                echo("<td><a href=\"" . $baseURL . "index.php?indexAction=comets_detail_observation&amp;observation=" . $value . "\">details");
 
-				// LINK TO DRAWING (IF AVAILABLE)
+                // LINK TO DRAWING (IF AVAILABLE)
 
-				$upload_dir = 'cometdrawings';
-				$dir = opendir ( $instDir . "comets/" . $upload_dir );
+                $upload_dir = 'cometdrawings';
+                $dir = opendir($instDir . "comets/" . $upload_dir);
 
-				while ( FALSE !== ($file = readdir ( $dir )) ) {
-					if ("." == $file or ".." == $file) {
-						continue; // skip current directory and directory above
-					}
-					if (fnmatch ( $value . "_resized.gif", $file ) || fnmatch ( $value . "_resized.jpg", $file ) || fnmatch ( $value . "_resized.png", $file )) {
-						echo ("&nbsp;+&nbsp;");
-						echo _("drawing");
-					}
-				}
-				echo ("</a></td></tr>");
-			}
-			echo ("</table>");
-			$objUtil->addPager ( "cometobservations", sizeof ( $obs ) );
+                while (false !== ($file = readdir($dir))) {
+                    if ("." == $file or ".." == $file) {
+                        continue; // skip current directory and directory above
+                    }
+                    if (fnmatch($value . "_resized.gif", $file) || fnmatch($value . "_resized.jpg", $file) || fnmatch($value . "_resized.png", $file)) {
+                        echo("&nbsp;+&nbsp;");
+                        echo _("drawing");
+                    }
+                }
+                echo("</a></td></tr>");
+            }
+            echo("</table>");
+            $objUtil->addPager("cometobservations", sizeof($obs));
 
-			echo "<hr />";
-			$_SESSION ['observation_query'] = $obs;
-			echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "cometobservations.pdf.php\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . _("pdf") . "</a>";
-		}
-		echo "<br /><br />";
-		echo "</div>";
-	}
+            echo "<hr />";
+            $_SESSION ['observation_query'] = $obs;
+            echo "<a class=\"btn btn-success\" href=\"" . $baseURL . "cometobservations.pdf.php\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . _("pdf") . "</a>";
+        }
+        echo "<br /><br />";
+        echo "</div>";
+    }
 }
-?>

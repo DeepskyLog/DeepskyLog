@@ -1,53 +1,63 @@
 <?php
+
 // reportslayout.php
 // allows to specify a report layout
 
-if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!($loggedUser)) throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
-else reportsLayout();
+if((!isset($inIndex)) || (!$inIndex)) {
+    include "../../redirect.php";
+} elseif(!($loggedUser)) {
+    throw new Exception(_("You need to be logged in as an administrator to execute these operations."));
+} else {
+    reportsLayout();
+}
 
 function reportsLayout()
-{ global $baseURL,$objPresentations,$objReportLayout,$objUtil,$loggedUserName;
-  echo   "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/reportlayouts.js\"></script>";
-  $reportName=$objUtil->checkGetKey('reportname');
-  $reportTitle=$objUtil->checkGetKey('reporttitle');
-  echo "<div id=\"main\">";
-  echo "<h4>"._("Reports Layout for ").constant($reportTitle)."</h4>";
-  echo "<hr />";
-  echo "<div class=\"form-inline\">";
-  $defaults=$objReportLayout->getLayoutListDefault($reportName);
-  echo _("Known layouts");
-  echo " ("._('show all')." "."<input id=\"showallcheckbox\" type=\"checkbox\" onchange=\"showSelectOptions('".$reportName."');\" />"."):&nbsp;";
-  echo "<select id=\"reportlayoutselect\" name=\"reportlayoutselect\" class=\"form-control\" onchange=\"setLayoutPage('".$loggedUserName."');\">";
-  while(list($key, $value) = each($defaults))
-    if($value['observerid']=="Deepskylog default")
-      echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
-  echo "<option value=\"\" selected=\"selected\" >"."-----"."</option>";
-  reset($defaults);
-  while(list($key, $value) = each($defaults))
-    if($value['observerid']==$loggedUserName)
-      echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
-  /*
-  echo "<option value=\"\" selected=\"selected\" >"."-----"."</option>";
-  reset($defaults);
-  while(list($key, $value) = each($defaults))
-    if(($value['observerid']!="Deepskylog default")&&($value['observerid']!=$loggedUserName))
-      echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
-  */
-  echo "</select>";
-  echo "&nbsp;";
-  echo "<input type=\"button\" class=\"btn btn-primary\" onclick=\"saveAndGeneratePdf('".$baseURL."report.pdf.php','".$reportName."','".$objUtil->checkRequestKey('pdfTtile',"DeepskyLog")."','".$_GET['SID']."');\" value=\""
-    . _("Save and Generate pdf") ."\"/>";
-  echo "&nbsp;<input type=\"button\" class=\"btn btn-primary\" onclick=\"saveAsLayoutPage('".$reportName."');\" value=\""
-    . _("Save as...") ."\"/>";
-  echo "&nbsp;<input type=\"button\" class=\"btn btn-primary hidden\" id=\"deletelayout\" onclick=\"deleteLayoutPage('".$reportName."');\" value=\""
-    . _("Delete") ."\"/>";
-  echo "<input type=\"hidden\" id=\"tempname\" value=\"\" />";
-  echo "<input type=\"hidden\" id=\"tempobserver\" value=\"".$loggedUserName."\" />";
-  echo "</div>";
-  echo "<div id=\"reportlayout\">";
-  echo "</div>";
-	echo "<script type=\"text/javascript\">
+{
+    global $baseURL,$objPresentations,$objReportLayout,$objUtil,$loggedUserName;
+    echo   "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/reportlayouts.js\"></script>";
+    $reportName = $objUtil->checkGetKey('reportname');
+    $reportTitle = $objUtil->checkGetKey('reporttitle');
+    echo "<div id=\"main\">";
+    echo "<h4>"._("Reports Layout for ").constant($reportTitle)."</h4>";
+    echo "<hr />";
+    echo "<div class=\"form-inline\">";
+    $defaults = $objReportLayout->getLayoutListDefault($reportName);
+    echo _("Known layouts");
+    echo " ("._('show all')." "."<input id=\"showallcheckbox\" type=\"checkbox\" onchange=\"showSelectOptions('".$reportName."');\" />"."):&nbsp;";
+    echo "<select id=\"reportlayoutselect\" name=\"reportlayoutselect\" class=\"form-control\" onchange=\"setLayoutPage('".$loggedUserName."');\">";
+    foreach ($defaults as $key => $value) {
+        if($value['observerid'] == "Deepskylog default") {
+            echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
+        }
+    }
+    echo "<option value=\"\" selected=\"selected\" >"."-----"."</option>";
+    reset($defaults);
+    foreach ($defaults as $key => $value) {
+        if($value['observerid'] == $loggedUserName) {
+            echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
+        }
+    }
+    /*
+    echo "<option value=\"\" selected=\"selected\" >"."-----"."</option>";
+    reset($defaults);
+    while(list($key, $value) = each($defaults))
+      if(($value['observerid']!="Deepskylog default")&&($value['observerid']!=$loggedUserName))
+        echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
+    */
+    echo "</select>";
+    echo "&nbsp;";
+    echo "<input type=\"button\" class=\"btn btn-primary\" onclick=\"saveAndGeneratePdf('".$baseURL."report.pdf.php','".$reportName."','".$objUtil->checkRequestKey('pdfTtile', "DeepskyLog")."','".$_GET['SID']."');\" value=\""
+      . _("Save and Generate pdf") ."\"/>";
+    echo "&nbsp;<input type=\"button\" class=\"btn btn-primary\" onclick=\"saveAsLayoutPage('".$reportName."');\" value=\""
+      . _("Save as...") ."\"/>";
+    echo "&nbsp;<input type=\"button\" class=\"btn btn-primary hidden\" id=\"deletelayout\" onclick=\"deleteLayoutPage('".$reportName."');\" value=\""
+      . _("Delete") ."\"/>";
+    echo "<input type=\"hidden\" id=\"tempname\" value=\"\" />";
+    echo "<input type=\"hidden\" id=\"tempobserver\" value=\"".$loggedUserName."\" />";
+    echo "</div>";
+    echo "<div id=\"reportlayout\">";
+    echo "</div>";
+    echo "<script type=\"text/javascript\">
 	      /* <![CDATA[ */
 	      var titles=new Array();
         titles['ReportFieldname']='"._("Field name")."';
@@ -121,6 +131,5 @@ function reportsLayout()
 	      setLayoutPage();
 	      /* ]]> */
 	      </script>";
-	echo "</div>";
+    echo "</div>";
 }
-?>

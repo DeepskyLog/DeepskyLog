@@ -24,7 +24,7 @@ class Observerqueries
   { global $objDatabase,$loggedUser;
     reset($_GET);
     $temp="";
-    while(list($key,$value)=each($_GET))
+    foreach ($_GET as $key => $value)
       $temp=$temp.$key."=".$value."&";
     $sql="INSERT INTO observerqueries(observerid,observerquerytype,observerqueryname,observerquery) 
                              VALUES (\"".$loggedUser."\", 

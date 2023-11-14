@@ -37,7 +37,7 @@ function comets_execute_query_objects() {
 			// enable the sorting on seen.
 				echo "<th>" . _("Seen") . "</th>";
 			echo "</tr></thead>";
-			while ( list ( $key, $value ) = each ( $result ) ) {
+			foreach ($result as $key => $value) {
 				// NAME
 				$name = $value;
 				$icqname = $objCometObject->getIcqname ( $objCometObject->getId ( $value ) );

@@ -217,7 +217,7 @@ class Presentations {
 		$layoutList = $objFormLayout->getLayoutList ( $formName );
 		$list = "<select name=\"loadLayout\" class=\"\" onchange=\"location.href='" . $javaLink . "&amp;layoutName='+this.options[this.selectedIndex].value; \">";
 		$list .= "<option value=\"\">-----</option>";
-		while ( list ( $key, $value ) = each ( $layoutList ) )
+		foreach ($layoutList as $key => $value)
 			$list .= "<option value=\"" . $value . "\">" . $value . "</option>";
 		$list .= "</select>";
 		return $list;
@@ -369,7 +369,7 @@ class Presentations {
 	}
 	public function searchAndLinkCatalogsInText($theText) {
 		global $baseURL;
-		$theText = mb_convert_encoding ( $theText, "HTML-ENTITIES", "UTF-8" );
+		$theText = mb_encode_numericentity ( $theText, [0x80, 0x10FFFF, 0, ~0], "UTF-8" );
 		$patterns [0] = "/\s+(M)\s*(\d+)/";
 		$replacements [0] = "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
 		$patterns [1] = "/(NGC|Ngc|ngc)\s*(\d+\w+)/";

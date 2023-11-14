@@ -57,32 +57,44 @@ class Objects
                 if ($contrastCalc[0] < -0.2) {
                     $popup = sprintf(
                         _('%s is not visible from %s with your %s'),
-                        $showname, $_SESSION['location'], $_SESSION['telescope']
+                        $showname,
+                        $_SESSION['location'],
+                        $_SESSION['telescope']
                     );
                 } elseif ($contrastCalc[0] < 0.1) {
                     $popup = sprintf(
                         _('Visibility of %s is questionable from %s with your %s'),
-                        $showname, $_SESSION['location'], $_SESSION['telescope']
+                        $showname,
+                        $_SESSION['location'],
+                        $_SESSION['telescope']
                     );
                 } elseif ($contrastCalc[0] < 0.35) {
                     $popup = sprintf(
                         _('%s is difficult to see from %s with your %s'),
-                        $showname, $_SESSION['location'], $_SESSION['telescope']
+                        $showname,
+                        $_SESSION['location'],
+                        $_SESSION['telescope']
                     );
                 } elseif ($contrastCalc[0] < 0.5) {
                     $popup = sprintf(
                         _('%s is quite difficult to see from %s with your %s'),
-                        $showname, $_SESSION['location'], $_SESSION['telescope']
+                        $showname,
+                        $_SESSION['location'],
+                        $_SESSION['telescope']
                     );
                 } elseif ($contrastCalc[0] < 1.0) {
                     $popup = sprintf(
                         _('%s is easy to see from %s with your %s'),
-                        $showname, $_SESSION['location'], $_SESSION['telescope']
+                        $showname,
+                        $_SESSION['location'],
+                        $_SESSION['telescope']
                     );
                 } else {
                     $popup = sprintf(
                         _('%s is very easy to see from %s with your %s'),
-                        $showname, $_SESSION['location'], $_SESSION['telescope']
+                        $showname,
+                        $_SESSION['location'],
+                        $_SESSION['telescope']
                     );
                 }
                 $contrast = $contrastCalc[0];
@@ -410,7 +422,7 @@ class Objects
         $sqland .= (array_key_exists('descriptioncontains', $queries) && $queries['descriptioncontains']) ? ' AND(objects.description LIKE "%'.$queries['descriptioncontains'].'%")' : '';
         $sqland .= (array_key_exists('atlas', $queries) && $queries['atlas'] && array_key_exists('atlasPageNumber', $queries) && $queries['atlasPageNumber']) ? ' AND (objects.'.$queries['atlas'].'="'.$queries['atlasPageNumber'].'")' : '';
         // if(array_key_exists('excl',$queries)&&($excl=$queries['excl']))
-        // { while(list($key,$value)=each($excl))
+        // { foreach($excl as $key => $value)
         // $sqland.=" AND (objects.name NOT LIKE '".$value." %')";
         // }
         $sqland = substr($sqland, 4);
@@ -457,34 +469,26 @@ class Objects
         }
         $obs = $this->getSeenObjectDetails($obs, $seen);
         if (array_key_exists('minContrast', $queries) && $queries['minContrast']) {
-            for ($new_obs = $obs, $obs = []; list($key, $value) = each($new_obs);) {
-                if ($value['objectcontrast'] >= $queries['minContrast']) {
-                    $obs[] = $value;
-                }
-            }
+            $obs = array_filter($obs, function ($value) use ($queries) {
+                return $value['objectcontrast'] >= $queries['minContrast'];
+            });
         }
         if (array_key_exists('maxContrast', $queries) && $queries['maxContrast']) {
-            for ($new_obs = $obs, $obs = []; list($key, $value) = each($new_obs);) {
-                if ($value['objectcontrast'] <= $queries['maxContrast']) {
-                    $obs[] = $value;
-                }
-            }
+            $obs = array_filter($obs, function ($value) use ($queries) {
+                return $value['objectcontrast'] <= $queries['maxContrast'];
+            });
         }
         if (array_key_exists('exclexceptseen', $queries) && ($queries['exclexceptseen'] == 'on')) {
             if (array_key_exists('excl', $queries) && ($excl = $queries['excl'])) {
-                for ($new_obs = $obs, $obs = []; list($key, $value) = each($new_obs);) {
-                    if (($value['objectseen'] != '-') || (!(in_array(substr($value['objectname'], 0, strpos($value['objectname'], ' ')), $excl)))) {
-                        $obs[] = $value;
-                    }
-                }
+                $obs = array_filter($obs, function ($value) use ($excl) {
+                    return ($value['objectseen'] !== '-') || (!in_array(substr($value['objectname'], 0, strpos($value['objectname'], ' ')), $excl));
+                });
             }
         } else {
             if (array_key_exists('excl', $queries) && ($excl = $queries['excl'])) {
-                for ($new_obs = $obs, $obs = []; list($key, $value) = each($new_obs);) {
-                    if (!(in_array(substr($value['objectname'], 0, strpos($value['objectname'], ' ')), $excl))) {
-                        $obs[] = $value;
-                    }
-                }
+                $obs = array_filter($obs, function ($value) use ($excl) {
+                    return !in_array(substr($value['objectname'], 0, strpos($value['objectname'], ' ')), $excl);
+                });
             }
         }
 
@@ -778,7 +782,7 @@ class Objects
                 echo ' <tr>';
                 echo '  <td>'._('Number of own observations').'</td>';
                 if ($cat) {
-                echo '  <td><a href="'.$baseURL.'index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog='.$cat.'&number='.rawurlencode($number).'&observer='.$loggedUser.'">'.$get3->PersObsCnt.'</a></td>';
+                    echo '  <td><a href="'.$baseURL.'index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog='.$cat.'&number='.rawurlencode($number).'&observer='.$loggedUser.'">'.$get3->PersObsCnt.'</a></td>';
                 } else {
                     echo '  <td>0</td>';
                 }
@@ -1617,10 +1621,12 @@ class Objects
                 $containstip .= ($containstip ? '/' : '').addslashes(trim($value));
             }
         }
-        while ((count($partof)) && (list($key, $value) = each($partof))) {
-            if (trim($value) != trim($object)) {
-                $partoft .= ($partoft ? '/' : '').'<a href="'.$baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode(trim($value)).'">'.trim($value).'</a>';
-                $partoftip .= ($partoftip ? '/' : '').trim($value);
+        if (count($partof)) {
+            foreach ($partof as $key => $value) {
+                if (trim($value) != trim($object)) {
+                    $partoft .= ($partoft ? '/' : '').'<a href="'.$baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode(trim($value)).'">'.trim($value).'</a>';
+                    $partoftip .= ($partoftip ? '/' : '').trim($value);
+                }
             }
         }
         $raDSS = $objPresentations->raToStringDSS($this->getDsoProperty($object, 'ra'));
@@ -2285,9 +2291,10 @@ class Objects
                 $catalog = trim($_POST['catalog']);
                 $catalogs = $objObject->getCatalogs();
                 $foundcatalog = '';
-                while ((list($key, $value) = each($catalogs)) && (!$foundcatalog)) {
+                foreach ($catalogs as $key => $value) {
                     if (strtoupper($value) == strtoupper($catalog)) {
                         $foundcatalog = $value;
+                        break;
                     }
                 }
                 if ($foundcatalog) {

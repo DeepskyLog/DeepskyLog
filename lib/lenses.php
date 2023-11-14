@@ -61,7 +61,7 @@ class Lenses {
 			echo "<th>" . _("Number of observations") . "</th>";
 			echo "</tr></thead>";
 			$count = 0;
-			while ( list ( $key, $value ) = each ( $lns ) ) {
+			foreach ($lns as $key => $value) {
 				$name = stripslashes ( $objLens->getLensPropertyFromId ( $value, 'name' ) );
 				$factor = $objLens->getLensPropertyFromId ( $value, 'factor' );
 				echo "<tr>";

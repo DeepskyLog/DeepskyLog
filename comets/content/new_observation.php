@@ -31,7 +31,7 @@ function new_observation() {
 	else
 		$objID = $objUtil->checkSessionKey ( 'observedobject', $objUtil->checkGetKey ( 'observedobject', - 1 ) );
 	$catalogs = $objCometObject->getSortedObjects ( "name" );
-	while ( list ( $key, $value ) = each ( $catalogs ) )
+	foreach ($catalogs as $key => $value)
 		$content .= "<option value=\"" . $value [0] . "\"" . (($objID == $objCometObject->getId ( $value [0] )) ? " selected=\"selected\" " : "") . ">" . $value [0] . "</option>";
 	$content .= "</select>";
 	echo "<strong>" . _("Object name") . "&nbsp;*</strong><br />";
@@ -78,7 +78,7 @@ function new_observation() {
 	$content2 = "<select name=\"instrument\" class=\"form-control\">";
 	$instr = $objInstrument->getSortedInstrumentsList ( "name", $loggedUser );
 	$content2 .= "<option value=\"\">&nbsp;</option>";
-	while ( list ( $key, $value ) = each ( $instr ) ) 	// go through instrument array
+	foreach ($instr as $key => $value) 	// go through instrument array
 	{
 		$instrumentname = $value;
 		if ($adapt)
@@ -101,7 +101,7 @@ function new_observation() {
 	$content1 = _("Magnitude method key");
 	$content2 = "<select name=\"icq_method\" class=\"form-control\">";
 	$content2 .= "<option value=\"\">&nbsp;</option>";
-	while ( list ( $key, $value ) = each ( $methods ) )
+	foreach ($methods as $key => $value)
 		$content2 .= "<option value=\"" . $value . "\"" . ($adapt ? ($objCometObservation->getMethode ( $obsid ) == $value ? " selected=\"selected\" " : "") : "") . ">" . $value . " - " . $ICQMETHODS->getDescription ( $value ) . "</option>";
 	$content2 .= "</select>";
 	$content3 = "<a href=\"http://cfa-www.harvard.edu/icq/ICQKeys.html\" rel=\"external\">" . _("More info about the codes") . "</a>";
@@ -114,7 +114,7 @@ function new_observation() {
 	$content1 = _("Magnitude reference key");
 	$content2 = "<select name=\"icq_reference_key\" class=\"form-control\">";
 	$content2 .= "<option value=\"\">&nbsp;</option>";
-	while ( list ( $key, $value ) = each ( $methods ) )
+	foreach ($methods as $key => $value)
 		$content2 .= "<option value=\"$value\"" . ($adapt ? ($objCometObservation->getChart ( $obsid ) == $value ? " selected=\"selected\" " : "") : "") . ">" . $value . " - " . $ICQREFERENCEKEYS->getDescription ( $value ) . "</option>";
 	$content2 .= "</select>";
 	$content3 = "<a href=\"http://cfa-www.harvard.edu/icq/ICQRec.html\" rel=\"external\">" . _("More info about the codes") . "</a>";

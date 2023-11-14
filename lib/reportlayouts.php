@@ -88,7 +88,7 @@ class reportLayouts
   { //echo $reportdata;
     //return;
     $reportdata=eval('return '.$reportdata.';');
-    while(list($key,$data)=each($reportdata)) {
+    foreach ($reportdata as $key => $value) {
       $this->saveLayoutField($reportname,$reportlayout,$data['fieldname'],$data['fieldline'],$data['fieldposition'],$data['fieldwidth'],$data['fieldheight'],$data['fieldstyle'],$data['fieldbefore'],$data['fieldafter'],$data['fieldlegend']);
     }
     return $this->getLayoutListJavascript($reportname);

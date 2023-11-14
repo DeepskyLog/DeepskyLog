@@ -56,7 +56,7 @@ function showButtons($theLocation, $viewobjectdetails, $viewobjectephemerides, $
                     _('Ephemerides for %s in %s'),
                     $object_ss,
                     $objLocation->getLocationPropertyFromId($theLocation, 'name')
-                 )."\"
+                )."\"
 		               onclick=\"location='".$baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey('zoom', 30).'&amp;SID=Qobj&amp;viewobjectephemerides=hidden'."';\"/>";
         }
     }
@@ -110,9 +110,11 @@ function showObjectDetails($object_ss)
 									</div>
                                     <div class="modal-body">'.
                                     sprintf(_('Do you really want to delete %s?', '<strong>'.$object_ss.'</strong><br />')).
-                                    sprintf(_('There are no observations of %s, so removing %s should be relatively safe.',
+                                    sprintf(_(
+                                        'There are no observations of %s, so removing %s should be relatively safe.',
                                         '<strong>'.$object_ss.'</strong>',
-                                        '<strong>'.$object_ss.'</strong>')).'
+                                        '<strong>'.$object_ss.'</strong>'
+                                    )).'
 										<form action="'.$baseURL.'index.php?indexAction=deleteObject" method="post">
 										 <input type="hidden" name="indexAction" value="deleteObject" />
 										 <input type="hidden" name="object" value="'.$object_ss.'" />
@@ -264,7 +266,7 @@ function showObjectEphemerides($theLocation)
             _('Ephemerides for %s in %s'),
             stripslashes($object),
             $objLocation->getLocationPropertyFromId($theLocation, 'name')
-         ).'</h4>';
+        ).'</h4>';
     echo '<hr />';
     echo '<table class="table table-condensed">';
     echo '<tr class="type10">';
@@ -505,8 +507,10 @@ function showObjectObservations()
     }
     $content1 = '<a class="btn btn-primary" href="'.$baseURL.'index.php?indexAction=query_objects&amp;source=observation_query">'._('Filter objects').'</a>  ';
     $content1 .= $objPresentations->promptWithLinkText(
-        _('Please enter a title'), _('DeepskyLog observations'),
-        $baseURL.'observations.pdf.php?SID=Qobs', _('pdf')
+        _('Please enter a title'),
+        _('DeepskyLog observations'),
+        $baseURL.'observations.pdf.php?SID=Qobs',
+        _('pdf')
     );
     $content1 .= '  ';
     $content1 .= '<a class="btn btn-primary" href="'.$baseURL.'observations.csv.php" rel="external"><span class="glyphicon glyphicon-download"></span> '._('CSV').'</a>  ';
@@ -542,7 +546,7 @@ function showAdminObjectFunctions()
     echo '</select>';
     echo '<select class="form-control" name="newcatalog">';
     echo '<option value="">&nbsp;</option>';
-    while (list($key, $value) = each($DSOcatalogs)) {
+    foreach ($DSOcatalogs as $key => $value) {
         echo "<option value=\"$value\">".$value.'</option>';
     }
     echo '</select>';

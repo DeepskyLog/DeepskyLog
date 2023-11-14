@@ -320,7 +320,7 @@ class Sessions {
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\"></th>";
 			echo "</thead>";
 			$count=0;
-			while ( list ( $key, $value ) = each ( $sessions ) ) {
+			foreach ($sessions as $key => $value) {
 				$session = $this->getSessionPropertiesFromId ( $value ['id'] );
 				echo "<tr>";
 				echo "<td style=\"vertical-align: middle\">" . $session ['name'] . "</td>";

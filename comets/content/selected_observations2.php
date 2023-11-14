@@ -135,7 +135,7 @@ function selected_observations()
 
                 $new_obs = [];
 
-                while (list($key, $value) = each($obs)) { 				// go through observations array
+                foreach ($obs as $key => $value) { 				// go through observations array
                     $newdate = $observations->getLocalDate($value);
 
                     if ($mindate != '' && $maxdate != '') {
@@ -197,7 +197,7 @@ function selected_observations()
             echo '<th class="filter-false columnSelector-disable" data-sorter="false"></th></tr></thead>';
             $count = 0;
 
-            while (list($key, $value) = each($obs)) { 			// go through observations array
+            foreach ($obs as $key => $value) { 			// go through observations array
                 // OBJECT
 
                 $object = $observations->getObjectId($value);
