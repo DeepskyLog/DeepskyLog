@@ -49,19 +49,21 @@ The database is open for consultation and already contains tens of thousands obs
     ) . "<br /><br />"
         . sprintf(
             _("To start recording your observations and share your observations with other observers, you are kindly requested to %sregister%s to DeepskyLog."),
-            "<a href='" . $baseURL . "/index.php?indexAction=subscribe&title=Register'>", "</a>"
-        )
+            "<a href='" . $baseURL . "/index.php?indexAction=subscribe&title=Register'>",
+            "</a>"
+        ) . " "
         . sprintf(
             _("Your personal data will be handled in accordance with our %sprivacy policy%s. "),
-            "<a href='" . $baseURL . "/index.php?indexAction=privacy'>", "</a>"
+            "<a href='" . $baseURL . "/index.php?indexAction=privacy'>",
+            "</a>"
         )
         . _(
-            "This registration allows access to a variety of useful tools, including information on the objects observed and sketches made. You can consult and create observing lists with different deepsky objects and see suggestions for objects visible in your instruments and from your observation sites.
-You can create your own file with maps and DSS images of the objects and have access to an interactive and detailed free star atlas."
+            "This registration allows access to a variety of useful tools, including information on the objects observed and sketches made. You can consult and create observing lists with different deepsky objects and see suggestions for objects visible in your instruments and from your observation sites. You can create your own file with maps and DSS images of the objects and have access to an interactive and detailed free star atlas."
         ) . "<br /><br />"
         . sprintf(
             _("Please contact the %sDeepskyLog developers%s if you encounter problems or have questions."),
-            '<a href="mailto:deepskylog@groups.io">', '</a>'
+            '<a href="mailto:deepskylog@groups.io">',
+            '</a>'
         );
     echo "<br /><br />";
 }
@@ -198,4 +200,3 @@ echo '<a class="twitter-timeline"
   data-tweet-limit="3">
 Tweets by @DeepskyLog
 </a>';
-?>
