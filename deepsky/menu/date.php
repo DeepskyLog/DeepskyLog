@@ -1,37 +1,44 @@
 <?php
+
 // date.php
 // menu which allows the user to change the date
 global $inIndex, $loggedUser, $objUtil;
 
-if ((! isset ( $inIndex )) || (! $inIndex))
-	include "../../redirect.php";
-elseif (! ($objUtil->checkAdminOrUserID ( $loggedUser )))
-	throw new Exception(_("You need to be logged in to execute these operations."));
-else
-	menu_date ();
-function menu_date() {
-	global $baseURL, $loggedUser, $thisDay, $thisMonth, $thisYear;
-	$link = $baseURL . "index.php?";
-	reset ( $_GET );
-	foreach ($_GET as $key=>$value)
-		if (! (in_array ( $key, array (
-				'changeDay',
-				'changeMonth',
-				'changeYear'
-		) )))
-			$link .= $key . '=' . urlencode ( $value ) . '&amp;';
-	$link2 = "index.php?";
-	reset ( $_GET );
-	foreach ($_GET as $key=>$value)
-		if (! (in_array ( $key, array (
-				'changeDay',
-				'changeMonth',
-				'changeYear'
-		) )))
-			$link2 .= $key . '=' . urlencode ( $value ) . '&';
-	$link2 = substr ( $link2, 0, strlen ( $link2 ) - 1 );
+if ((!isset($inIndex)) || (!$inIndex)) {
+    include "../../redirect.php";
+} elseif (!($objUtil->checkAdminOrUserID($loggedUser))) {
+    throw new Exception(_("You need to be logged in to execute these operations."));
+} else {
+    menu_date();
+}
+function menu_date()
+{
+    global $baseURL, $loggedUser, $thisDay, $thisMonth, $thisYear;
+    $link = $baseURL . "index.php?";
+    reset($_GET);
+    foreach ($_GET as $key => $value) {
+        if (!(in_array($key, array(
+                'changeDay',
+                'changeMonth',
+                'changeYear'
+        )))) {
+            $link .= $key . '=' . urlencode($value) . '&amp;';
+        }
+    }
+    $link2 = "index.php?";
+    reset($_GET);
+    foreach ($_GET as $key => $value) {
+        if (!(in_array($key, array(
+                'changeDay',
+                'changeMonth',
+                'changeYear'
+        )))) {
+            $link2 .= $key . '=' . urlencode($value) . '&';
+        }
+    }
+    $link2 = substr($link2, 0, strlen($link2) - 1);
 
-	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/degrees.js\"></script>
+    echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/degrees.js\"></script>
           <script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/astro.js\"></script>
           <script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/moon.js\"></script>
 
@@ -73,21 +80,21 @@ function menu_date() {
           		  eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
 			    },
 			    beforeShow: function() {";
-			      // Calculate the new moons for the selected month
-			      // We calculated the new moon from the first of the month and from the 15th of the month.
-	              $phases = array();
-	              $date = $_SESSION['globalYear'] . "-" . $_SESSION ['globalMonth'] . "-01";
-	              $phases = phasehunt(strtotime($date));
-			      $newmoon = date("m/d/Y", $phases[4]);
-			      echo "
+    // Calculate the new moons for the selected month
+    // We calculated the new moon from the first of the month and from the 15th of the month.
+    $phases = array();
+    $date = $_SESSION['globalYear'] . "-" . $_SESSION ['globalMonth'] . "-01";
+    $phases = phasehunt(strtotime($date));
+    $newmoon = date("m/d/Y", (int)$phases[4]);
+    echo "
 			      eventDates[ new Date( '" . $newmoon . "' )] = 1;";
 
-			      $phases = array();
-			      $date = $_SESSION['globalYear'] . "-" . $_SESSION ['globalMonth'] . "-15";
-			      $phases = phasehunt(strtotime($date));
-			      $newmoon = date("m/d/Y", $phases[4]);
+    $phases = array();
+    $date = $_SESSION['globalYear'] . "-" . $_SESSION ['globalMonth'] . "-15";
+    $phases = phasehunt(strtotime($date));
+    $newmoon = date("m/d/Y", (int)$phases[4]);
 
-			      echo "
+    echo "
                   eventDates[ new Date( '" . $newmoon . "' )] = 1;
 			    },
 			    beforeShowDay: function(date) {
@@ -110,16 +117,15 @@ function menu_date() {
               });
         	});
 	  		</script>";
-	echo "<form class=\"nav navbar-nav navbar-right\">";
+    echo "<form class=\"nav navbar-nav navbar-right\">";
 
- 	echo "<div class=\"form-group\">";
- 	echo "<p class=\"navbar-text\">" . _('Date') . " ";
+    echo "<div class=\"form-group\">";
+    echo "<p class=\"navbar-text\">" . _('Date') . " ";
     echo "<span class=\"form-inline\">";
-	echo "<input class=\"form-control\" type=\"text\" value=\"" . $_SESSION ['globalDay'] . "/" . $_SESSION ['globalMonth'] . "/" . $_SESSION ['globalYear'] . "\" id=\"datepicker\" size=\"10\" >";
-	echo "</span>";
- 	echo "</p>";
- 	echo "</div>";
-	echo "</form>";
-	$link = "";
+    echo "<input class=\"form-control\" type=\"text\" value=\"" . $_SESSION ['globalDay'] . "/" . $_SESSION ['globalMonth'] . "/" . $_SESSION ['globalYear'] . "\" id=\"datepicker\" size=\"10\" >";
+    echo "</span>";
+    echo "</p>";
+    echo "</div>";
+    echo "</form>";
+    $link = "";
 }
-?>
