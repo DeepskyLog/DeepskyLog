@@ -174,7 +174,7 @@ class Locations
     {
         global $objDatabase;
         return $objDatabase->selectSingleArray(
-            "SELECT MAX(id) id, name FROM locations "
+            "SELECT " . ($observer ? "" : "MAX(id)") . " id, name FROM locations "
             . ($observer ? "WHERE observer LIKE \"" . $observer . "\" "
             . ($active ? " AND locationactive=" . $active : "") : " GROUP BY name")
             . " ORDER BY " . $sort . ", name",

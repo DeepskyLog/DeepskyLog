@@ -10,7 +10,7 @@
  * @license  GPL2 <https://opensource.org/licenses/gpl-2.0.php>
  * @link     http://www.deepskylog.org
  */
-if ((! isset($inIndex)) || (! $inIndex)) {
+if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 } else {
     statistics();
@@ -51,7 +51,8 @@ function statistics()
             $selectedCountry
         );
         $totalCountryDSYearObservations = $objObservation->getObservationsLastYear(
-            '%', $selectedCountry
+            '%',
+            $selectedCountry
         );
         $totalCountryDSobjects
             = $objObservation->getNumberOfDifferentObservedDSObjects(
@@ -73,7 +74,8 @@ function statistics()
             $selectedCountry
         );
         $totalCountryDSYearDrawings = $objObservation->getDrawingsLastYear(
-            '%', $selectedCountry
+            '%',
+            $selectedCountry
         );
         $totalCountryCometDrawings = $objCometObservation->getNumberOfDrawings(
             $selectedCountry
@@ -108,7 +110,8 @@ function statistics()
                     ) . "%)";
                 $information[$i][2] = $totalCountryDSobjects . " / "
                     . $totalDSobjects . "&nbsp;(" . sprintf(
-                        "%.2f", $totalCountryDSobjects / $totalDSobjects * 100
+                        "%.2f",
+                        $totalCountryDSobjects / $totalDSobjects * 100
                     ) . "%)";
                 $information[$i][3] = $totalCountryDSDrawings . " / "
                     . $totalDSDrawings . "&nbsp;(" . sprintf(
@@ -149,7 +152,8 @@ function statistics()
                     ) . "%)";
                 $information[$i][2] = $totalCountryCometobjects . " / "
                     . $totalCometobjects . " (" . sprintf(
-                        "%.2f", $totalCountryCometobjects / $totalCometobjects * 100
+                        "%.2f",
+                        $totalCountryCometobjects / $totalCometobjects * 100
                     ) . "%)";
                 $information[$i][3] = $totalCountryCometDrawings . " / "
                     . $totalCometDrawings . " ("
@@ -178,11 +182,11 @@ function statistics()
     $information[count($modules)][4] = 0;
 
     for ($i = 0; $i < count($modules); $i++) {
-        $information[count($modules)][0] += $information[$i][0];
-        $information[count($modules)][1] += $information[$i][1];
-        $information[count($modules)][2] += $information[$i][2];
-        $information[count($modules)][3] += $information[$i][3];
-        $information[count($modules)][4] += $information[$i][4];
+        $information[count($modules)][0] += intval($information[$i][0]);
+        $information[count($modules)][1] += intval($information[$i][1]);
+        $information[count($modules)][2] += intval($information[$i][2]);
+        $information[count($modules)][3] += intval($information[$i][3]);
+        $information[count($modules)][4] += intval($information[$i][4]);
     }
 
     echo "<div>";
@@ -258,8 +262,8 @@ function statistics()
           <li><a href=\"#objectTypes\" data-toggle=\"tab\">"
         . _("Object types observed") . "</a></li>";
     if (strcmp($selectedCountry, "All") == 0) {
-         echo "<li><a href=\"#countries\" data-toggle=\"tab\">"
-            . _("Observations per country") . "</a></li>";
+        echo "<li><a href=\"#countries\" data-toggle=\"tab\">"
+           . _("Observations per country") . "</a></li>";
     }
     echo "</ul>";
 
@@ -270,7 +274,7 @@ function statistics()
     echo " <tr>";
     echo "  <th></th>";
     echo "  <th>" . _("Total") . "</th>";
-    for ($i = 0; $i < count($modules); $i ++) {
+    for ($i = 0; $i < count($modules); $i++) {
         echo " <th>" . $GLOBALS[$modules[$i]];
         echo " </th>";
     }
@@ -279,7 +283,7 @@ function statistics()
     echo " <tr>";
     echo "  <td>" . _("Number of observations") . "</td>";
     echo "  <td>" . $information[count($modules)][0] . "</td>";
-    for ($i = 0; $i < count($modules); $i ++) {
+    for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . $information[$i][0];
         echo " </td>";
     }
@@ -288,7 +292,7 @@ function statistics()
     echo " <tr>";
     echo "  <td>" . _("Observations last year") . "</td>";
     echo "  <td>" . $information[count($modules)][1] . "</td>";
-    for ($i = 0; $i < count($modules); $i ++) {
+    for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . $information[$i][1];
         echo " </td>";
     }
@@ -297,7 +301,7 @@ function statistics()
     echo " <tr>";
     echo "  <td>" . _("Number of drawings") . "</td>";
     echo "  <td>" . $information[count($modules)][3] . "</td>";
-    for ($i = 0; $i < count($modules); $i ++) {
+    for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . $information[$i][3];
         echo " </td>";
     }
@@ -306,7 +310,7 @@ function statistics()
     echo " <tr>";
     echo "  <td>" . _("Drawings last year") . "</td>";
     echo "  <td>" . $information[count($modules)][4] . "</td>";
-    for ($i = 0; $i < count($modules); $i ++) {
+    for ($i = 0; $i < count($modules); $i++) {
         echo " <td>" . $information[$i][4];
         echo " </td>";
     }
@@ -334,11 +338,13 @@ function statistics()
     if (strcmp($selectedCountry, "All") == 0) {
         $sql = $objDatabase->selectKeyValueArray(
             "select YEAR(date),count(*) from observations group by YEAR(date)",
-            "YEAR(date)", "count(*)"
+            "YEAR(date)",
+            "count(*)"
         );
         $sql2 = $objDatabase->selectKeyValueArray(
             "select YEAR(date),count(*) from cometobservations group by YEAR(date);",
-            "YEAR(date)", "count(*)"
+            "YEAR(date)",
+            "count(*)"
         );
     } else {
         $sql = $objDatabase->selectKeyValueArray(
@@ -346,19 +352,21 @@ function statistics()
             . "JOIN locations ON observations.locationid=locations.id "
             . "WHERE locations.country = \"" . $selectedCountry
             . "\" group by YEAR(date)",
-            "YEAR(date)", "count(*)"
+            "YEAR(date)",
+            "count(*)"
         );
         $sql2 = $objDatabase->selectKeyValueArray(
             "select YEAR(date),count(*) from cometobservations "
             . "JOIN locations ON cometobservations.locationid=locations.id "
             . "WHERE locations.country = \"" . $selectedCountry
             . "\" group by YEAR(date);",
-            "YEAR(date)", "count(*)"
+            "YEAR(date)",
+            "count(*)"
         );
     }
     if (sizeof($sql) == 0) {
         $startYear = min(array_keys($sql2));
-    } else if (sizeof($sql2) == 0) {
+    } elseif (sizeof($sql2) == 0) {
         $startYear = min(array_keys($sql));
     } else {
         $startYear = min([min(array_keys($sql)), min(array_keys($sql2))]);
@@ -369,7 +377,7 @@ function statistics()
 
                 var chart;
                         var DSdataYear = [";
-    for ($i = $startYear; $i <= $currentYear; $i ++) {
+    for ($i = $startYear; $i <= $currentYear; $i++) {
         if (array_key_exists($i, $sql)) {
             $obs = $sql[$i];
         } else {
@@ -383,7 +391,7 @@ function statistics()
     }
     echo "];
                         var cometdataYear = [";
-    for ($i = $startYear; $i <= $currentYear; $i ++) {
+    for ($i = $startYear; $i <= $currentYear; $i++) {
         if (array_key_exists($i, $sql2)) {
             $obs = $sql2[$i];
         } else {
@@ -397,7 +405,7 @@ function statistics()
     }
     echo "];
                         var dataYear = [";
-    for ($i = $startYear; $i <= $currentYear; $i ++) {
+    for ($i = $startYear; $i <= $currentYear; $i++) {
         $obs = 0;
         if (array_key_exists($i, $sql2)) {
             $obs += $sql2[$i];
@@ -444,7 +452,7 @@ function statistics()
                   xAxis: {
                     categories: [";
 
-    for ($i = $startYear; $i <= $currentYear; $i ++) {
+    for ($i = $startYear; $i <= $currentYear; $i++) {
         if ($i != $currentYear) {
             echo "'" . $i . "', ";
         } else {
@@ -526,12 +534,14 @@ function statistics()
     if (strcmp($selectedCountry, "All") == 0) {
         $sql = $objDatabase->selectKeyValueArray(
             "select MONTH(date),count(*) from observations group by MONTH(date)",
-            "MONTH(date)", "count(*)"
+            "MONTH(date)",
+            "count(*)"
         );
         $sql2 = $objDatabase->selectKeyValueArray(
             "select MONTH(date),count(*) from cometobservations "
             . "group by MONTH(date);",
-            "MONTH(date)", "count(*)"
+            "MONTH(date)",
+            "count(*)"
         );
     } else {
         $sql = $objDatabase->selectKeyValueArray(
@@ -539,21 +549,23 @@ function statistics()
             . "JOIN locations ON observations.locationid=locations.id "
             . "WHERE locations.country = \"" . $selectedCountry
             . "\" group by MONTH(date)",
-            "MONTH(date)", "count(*)"
+            "MONTH(date)",
+            "count(*)"
         );
         $sql2 = $objDatabase->selectKeyValueArray(
             "select MONTH(date),count(*) from cometobservations "
             . "JOIN locations ON cometobservations.locationid=locations.id "
             . "WHERE locations.country = \"" . $selectedCountry
             . "\" group by MONTH(date);",
-            "MONTH(date)", "count(*)"
+            "MONTH(date)",
+            "count(*)"
         );
     }
     echo "<script type=\"text/javascript\">
                 var chart;
                         var data = [";
 
-    for ($i = 1; $i <= 12; $i ++) {
+    for ($i = 1; $i <= 12; $i++) {
         if (array_key_exists($i, $sql)) {
             $obs = $sql[$i];
         } else {
@@ -567,7 +579,7 @@ function statistics()
     }
     echo "];
                         var cometdata = [";
-    for ($i = 1; $i <= 12; $i ++) {
+    for ($i = 1; $i <= 12; $i++) {
         if (array_key_exists($i, $sql2)) {
             $obs = $sql2[$i];
         } else {
@@ -608,22 +620,22 @@ function statistics()
                   xAxis: {
                     categories: [ ";
 
-                                global $Month1Short, $Month2Short, $Month3Short;
-                                global $Month4Short, $Month5Short, $Month6Short;
-                                global $Month7Short, $Month8Short, $Month9Short;
-                                global $Month10Short, $Month11Short, $Month12Short;
-                                echo '"' . $Month1Short . '", ';
-                                echo '"' . $Month2Short . '", ';
-                                echo '"' . $Month3Short . '", ';
-                                echo '"' . $Month4Short . '", ';
-                                echo '"' . $Month5Short . '", ';
-                                echo '"' . $Month6Short . '", ';
-                                echo '"' . $Month7Short . '", ';
-                                echo '"' . $Month8Short . '", ';
-                                echo '"' . $Month9Short . '", ';
-                                echo '"' . $Month10Short . '", ';
-                                echo '"' . $Month11Short . '", ';
-                                echo '"' . $Month12Short . "\"]
+    global $Month1Short, $Month2Short, $Month3Short;
+    global $Month4Short, $Month5Short, $Month6Short;
+    global $Month7Short, $Month8Short, $Month9Short;
+    global $Month10Short, $Month11Short, $Month12Short;
+    echo '"' . $Month1Short . '", ';
+    echo '"' . $Month2Short . '", ';
+    echo '"' . $Month3Short . '", ';
+    echo '"' . $Month4Short . '", ';
+    echo '"' . $Month5Short . '", ';
+    echo '"' . $Month6Short . '", ';
+    echo '"' . $Month7Short . '", ';
+    echo '"' . $Month8Short . '", ';
+    echo '"' . $Month9Short . '", ';
+    echo '"' . $Month10Short . '", ';
+    echo '"' . $Month11Short . '", ';
+    echo '"' . $Month12Short . "\"]
                             },
                   yAxis: {
                     title: {
@@ -690,7 +702,8 @@ function statistics()
             "select objects.type,count(*) from observations"
             . " JOIN objects on observations.objectname=objects.name"
             . " group by objects.type;",
-            "type", "count(*)"
+            "type",
+            "count(*)"
         );
         $cometobservations = count(
             $objDatabase->selectRecordsetArray("select * from cometobservations")
@@ -702,7 +715,8 @@ function statistics()
             . " JOIN locations on observations.locationid=locations.id"
             . " where locations.country=\"" . $selectedCountry
             . "\" group by objects.type;",
-            "type", "count(*)"
+            "type",
+            "count(*)"
         );
         $cometobservations = count(
             $objDatabase->selectRecordsetArray(
@@ -804,7 +818,7 @@ function statistics()
     }
 
     $objectsArray = array();
-    $colors = Array();
+    $colors = array();
 
     $all = array_sum($deepskyobservations) + $cometobservations;
     if ($all == 0) {
@@ -1018,7 +1032,7 @@ function statistics()
                         name: 'Objects seen',
                         data: [";
 
-    foreach ( $objectsArray as $key => $value ) {
+    foreach ($objectsArray as $key => $value) {
         if ($key != "REST") {
             print "{name: \""
                 . html_entity_decode($GLOBALS[$key], ENT_QUOTES, "UTF-8")
@@ -1119,4 +1133,3 @@ function statistics()
     echo "</div>";
     echo "</div>";
 }
-?>

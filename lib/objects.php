@@ -1028,6 +1028,8 @@ class Objects
                         $result2[$j]['objectmaxaltmidtext'] = '-';
                         $result2[$j]['objectmaxaltendtext'] = '-';
                         if ($maxalt != '-') {
+                            $maxaltstart = floatval($maxaltstart);
+                            $maxaltend = floatval($maxaltend);
                             $result2[$j]['objectmaxaltstart'] = 100 * ($maxaltstart + 1);
                             $result2[$j]['objectmaxaltend'] = 100 * ($maxaltend + 1);
                             if ($maxaltstart > $maxaltend) {

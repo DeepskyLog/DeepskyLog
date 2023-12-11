@@ -52,7 +52,12 @@ class Instruments
      * @return integer The id of the new instrument
      */
     public function addInstrument(
-        $name, $diameter, $fd, $type, $fixedMagnification, $observer
+        $name,
+        $diameter,
+        $fd,
+        $type,
+        $fixedMagnification,
+        $observer
     ) {
         global $objDatabase;
         $objDatabase->execSQL(
@@ -62,7 +67,8 @@ class Instruments
             . "\"$fixedMagnification\", \"$observer\")"
         );
         return $objDatabase->selectSingleValue(
-            "SELECT id FROM instruments ORDER BY id DESC LIMIT 1", 'id'
+            "SELECT id FROM instruments ORDER BY id DESC LIMIT 1",
+            'id'
         );
     }
 
@@ -82,8 +88,10 @@ class Instruments
             "SELECT id FROM instruments WHERE name = \""
             . ($objDatabase->selectSingleValue(
                 "SELECT name FROM instruments WHERE id = \""
-                . addslashes($id) . "\"", 'name'
-            )) . "\"", 'id'
+                . addslashes($id) . "\"",
+                'name'
+            )) . "\"",
+            'id'
         );
     }
     /**
@@ -97,23 +105,23 @@ class Instruments
     {
         if ($instrumentType == INSTRUMENTNAKEDEYE) {
             return _("Naked Eye");
-        } else if ($instrumentType == INSTRUMENTBINOCULARS) {
+        } elseif ($instrumentType == INSTRUMENTBINOCULARS) {
             return _("Binoculars");
-        } else if ($instrumentType == INSTRUMENTFINDERSCOPE) {
+        } elseif ($instrumentType == INSTRUMENTFINDERSCOPE) {
             return _("Finderscope");
-        } else if ($instrumentType == INSTRUMENTREFLECTOR) {
+        } elseif ($instrumentType == INSTRUMENTREFLECTOR) {
             return _("Reflector");
-        } else if ($instrumentType == INSTRUMENTREFRACTOR) {
+        } elseif ($instrumentType == INSTRUMENTREFRACTOR) {
             return _("Refractor");
-        } else if ($instrumentType == INSTRUMENTREST) {
+        } elseif ($instrumentType == INSTRUMENTREST) {
             return _("Other");
-        } else if ($instrumentType == INSTRUMENTCASSEGRAIN) {
+        } elseif ($instrumentType == INSTRUMENTCASSEGRAIN) {
             return _("Cassegrain");
-        } else if ($instrumentType == INSTRUMENTSCHMIDTCASSEGRAIN) {
+        } elseif ($instrumentType == INSTRUMENTSCHMIDTCASSEGRAIN) {
             return _("Schmidt Cassegrain");
-        } else if ($instrumentType == INSTRUMENTKUTTER) {
+        } elseif ($instrumentType == INSTRUMENTKUTTER) {
             return _("Kutter");
-        } else if ($instrumentType == INSTRUMENTMAKSUTOV) {
+        } elseif ($instrumentType == INSTRUMENTMAKSUTOV) {
             return _("Maksutov");
         } else {
             return "unkown instrument type";
@@ -186,7 +194,8 @@ class Instruments
         return $objDatabase->selectSingleValue(
             "SELECT id FROM instruments where name=\"" . $name
                 . "\" and observer=\"" . $observer . "\"",
-            'id', - 1
+            'id',
+            -1
         );
     }
     /**
@@ -204,7 +213,8 @@ class Instruments
         global $objDatabase;
         return $objDatabase->selectSingleValue(
             "SELECT " . $property . " FROM instruments WHERE id = \"" . $id . "\"",
-            $property, $defaultValue
+            $property,
+            $defaultValue
         );
     }
     /**
@@ -220,11 +230,13 @@ class Instruments
         return $objDatabase->selectSingleValue(
             "SELECT count(id) as ObsCnt FROM observations "
             . "WHERE instrumentid=\"" . $id . "\"",
-            'ObsCnt', 0
+            'ObsCnt',
+            0
         ) + $objDatabase->selectSingleValue(
             "SELECT count(id) as ObsCnt FROM cometobservations "
             . "WHERE instrumentid=\"" . $id . "\"",
-            'ObsCnt', 0
+            'ObsCnt',
+            0
         );
     }
     /**
@@ -238,7 +250,8 @@ class Instruments
     {
         global $objDatabase;
         return $objDatabase->selectSingleValue(
-            "SELECT observer FROM instruments WHERE id = \"" . $id . "\"", 'observer'
+            "SELECT observer FROM instruments WHERE id = \"" . $id . "\"",
+            'observer'
         );
     }
     /**
@@ -256,9 +269,11 @@ class Instruments
         global $objDatabase;
         return $objDatabase->selectSingleArray(
             "SELECT id, name FROM instruments "
-            . ($observer ? "WHERE observer LIKE \"" . $observer . "\" "
+            . (
+                $observer ? "WHERE observer LIKE \"" . $observer . "\" "
             . ($active ? " AND instrumentactive=" . $active : "") : " GROUP BY name"
-            ) . " ORDER BY " . $sort . ", name", 'id'
+            ) . " ORDER BY " . $sort . ", name",
+            'id'
         );
     }
     /**
@@ -275,10 +290,12 @@ class Instruments
     {
         global $objDatabase;
         return $objDatabase->selectKeyValueArray(
-            "SELECT id, name FROM instruments "
+            "SELECT " . ($observer ? "" : "MAX(id)") . " id, name FROM instruments "
             . ($observer ? "WHERE observer LIKE \"" . $observer . "\" "
             . ($active ? " AND instrumentactive=" . $active : "") : " GROUP BY name")
-            . " ORDER BY " . $sort . ", name", 'id', 'name'
+            . " ORDER BY " . $sort . ", name",
+            'id',
+            'name'
         );
     }
     /**
@@ -334,32 +351,36 @@ class Instruments
             echo "<th>" . _("Delete") . "</th>";
             echo "<th>" . _("Number of observations") . "</th>";
             echo "</thead>";
-            $count=0;
-            foreach ($insts as $key=>$value) {
+            $count = 0;
+            foreach ($insts as $key => $value) {
                 $name = $objInstrument->getInstrumentPropertyFromId($value, 'name');
                 $diameter = round(
                     $objInstrument->getInstrumentPropertyFromId($value, 'diameter'),
                     0
                 );
                 $fd = round(
-                    $objInstrument->getInstrumentPropertyFromId($value, 'fd'), 1
+                    $objInstrument->getInstrumentPropertyFromId($value, 'fd'),
+                    1
                 );
                 if ($fd == "0") {
                     $fd = "-";
                 }
                 $type = $objInstrument->getInstrumentPropertyFromId($value, 'type');
                 $fixedMagnification = $objInstrument->getInstrumentPropertyFromId(
-                    $value, 'fixedMagnification'
+                    $value,
+                    'fixedMagnification'
                 );
                 echo "<tr>";
 
                 echo "<td>" . "<span class=\"hidden\">"
                     .  $objInstrument->getInstrumentPropertyFromId(
-                        $value, 'instrumentactive'
+                        $value,
+                        'instrumentactive'
                     ) . "</span><input id=\"instrumentactive" . $value
                     . "\" type=\"checkbox\" "
                     . ($objInstrument->getInstrumentPropertyFromId(
-                        $value, 'instrumentactive'
+                        $value,
+                        'instrumentactive'
                     ) ? " checked=\"checked\" " : "")
                     . " onclick=\"setactivation('instrument'," . $value
                     . "); var order = this.checked ? '1' : '0';
@@ -379,9 +400,9 @@ class Instruments
                 echo "<td>$fd</td>";
                 echo "<td>";
                 if ($fixedMagnification > 0) {
-                    echo ($fixedMagnification);
+                    echo($fixedMagnification);
                 } else {
-                    echo ("-");
+                    echo("-");
                 }
                 echo "</td>";
                 echo "<td>";
@@ -391,16 +412,17 @@ class Instruments
 
                 // Radio button for the standard instrument
                 if ($value == $objObserver->getObserverProperty(
-                    $loggedUser, 'stdtelescope'
+                    $loggedUser,
+                    'stdtelescope'
                 )
                 ) {
-                    echo ("<input type=\"radio\" name=\"stdtelescope\" value=\""
+                    echo("<input type=\"radio\" name=\"stdtelescope\" value=\""
                         . $value
                         . "\" checked=\"checked\" onclick=\"submit();\" />"
                         . "&nbsp;<br />"
                     );
                 } else {
-                    echo ("<input type=\"radio\" name=\"stdtelescope\" value=\""
+                    echo("<input type=\"radio\" name=\"stdtelescope\" value=\""
                         . $value . "\" onclick=\"submit();\"/>&nbsp;<br />"
                     );
                 }
@@ -408,7 +430,7 @@ class Instruments
 
                 // Make it possible to delete the instrument.
                 echo "<td>";
-                if (! ($obsCnt = $objInstrument->getInstrumentUsedFromId($value))) {
+                if (!($obsCnt = $objInstrument->getInstrumentUsedFromId($value))) {
                     echo "<a href=\"" . $baseURL
                         . "index.php?indexAction=validate_delete_instrument"
                         . "&amp;instrumentid=" . urlencode($value)
@@ -450,7 +472,7 @@ class Instruments
         if (($instrumentid = $objUtil->checkGetKey('instrumentid'))
             && $objUtil->checkAdminOrUserID(
                 $this->getObserverFromInstrument($instrumentid)
-            ) && (! ($this->getInstrumentUsedFromId($instrumentid)))
+            ) && (!($this->getInstrumentUsedFromId($instrumentid)))
         ) {
             $objDatabase->execSQL(
                 "DELETE FROM instruments WHERE id=\"" . $instrumentid . "\""
@@ -476,7 +498,9 @@ class Instruments
             )
         ) {
             $objObserver->setObserverProperty(
-                $loggedUser, 'stdtelescope', $_POST['stdtelescope']
+                $loggedUser,
+                'stdtelescope',
+                $_POST['stdtelescope']
             );
             return;
         }
@@ -502,7 +526,7 @@ class Instruments
                     && array_key_exists('type', $_POST)
                 ) {
                     $fd = $objUtil->checkPostKey('fd', 1.0);
-                } else if ($_POST['focallength']) {
+                } elseif ($_POST['focallength']) {
                     $focallength = $_POST['focallength'];
                     if (array_key_exists('focallengthunits', $_POST)
                         && $_POST['focallengthunits'] == "inch"
@@ -525,8 +549,12 @@ class Instruments
                     $fd = 0.0;
                 }
                 $this->addInstrument(
-                    $instrumentname, $diameter, $fd, $type,
-                    $fixedMag, $loggedUser
+                    $instrumentname,
+                    $diameter,
+                    $fd,
+                    $type,
+                    $fixedMag,
+                    $loggedUser
                 );
                 return _("The instrument is added to your equipment list!");
             }
@@ -542,12 +570,15 @@ class Instruments
                 if ($fd > 1.0) {
                     $this->setInstrumentProperty($_POST['id'], 'fd', $fd);
                     $this->setInstrumentProperty(
-                        $_POST['id'], 'fixedMagnification', 0
+                        $_POST['id'],
+                        'fixedMagnification',
+                        0
                     );
                 } else {
                     $this->setInstrumentProperty($_POST['id'], 'fd', 0);
                     $this->setInstrumentProperty(
-                        $_POST['id'], 'fixedMagnification',
+                        $_POST['id'],
+                        'fixedMagnification',
                         $objUtil->checkPostKey('fixedMagnification')
                     );
                 }
@@ -560,4 +591,3 @@ class Instruments
         }
     }
 }
-?>

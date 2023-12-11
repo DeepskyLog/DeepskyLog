@@ -11,7 +11,7 @@
  * @link     http://www.deepskylog.org
  */
 global $inIndex;
-if ((! isset($inIndex)) || (!$inIndex)) {
+if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 }
 
@@ -26,18 +26,18 @@ if ((! isset($inIndex)) || (!$inIndex)) {
  */
 class Utils
 {
-     /**
-      * Returns a printable time
-      *
-      * @param string $thetime The string to print for the time.
-      *
-      * @return double The value of the time. -1 is not visible, else the time.
-      */
+    /**
+     * Returns a printable time
+     *
+     * @param string $thetime The string to print for the time.
+     *
+     * @return double The value of the time. -1 is not visible, else the time.
+     */
     public function hourminuteTimeToValue($thetime)
     {
         if ($thetime == "-") {
             return -1;
-        } else if ($thetime == ":") {
+        } elseif ($thetime == ":") {
             return -1;
         }
         if (($thepos = strpos($thetime, ":")) === false) {
@@ -46,26 +46,28 @@ class Utils
         if (strpos($thetime, "(") === "0") {
             $thetime = substr($thetime, 1);
         }
-        if (! (is_numeric($thehour = substr($thetime, 0, $thepos)))) {
+        if (!(is_numeric($thehour = substr($thetime, 0, $thepos)))) {
             return -1;
         }
-        if (! (is_numeric($theminute = substr($thetime, $thepos + 1, 2)))) {
+        if (!(is_numeric($theminute = substr($thetime, $thepos + 1, 2)))) {
             return -1;
         }
         return 1 * (($thehour * 100) + $theminute);
     }
 
-     /**
-      * Checks if the $theHour is between the two other hours.
-      *
-      * @param integer $thehour   The hour to check.
-      * @param integer $firsthour The hour to check.
-      * @param integer $lasthour  The hour to check.
-      *
-      * @return bool True if the time is between the two other times.
-      */
+    /**
+     * Checks if the $theHour is between the two other hours.
+     *
+     * @param integer $thehour   The hour to check.
+     * @param integer $firsthour The hour to check.
+     * @param integer $lasthour  The hour to check.
+     *
+     * @return bool True if the time is between the two other times.
+     */
     public function checkNightHourMinuteBetweenOthers(
-        $thehour, $firsthour, $lasthour
+        $thehour,
+        $firsthour,
+        $lasthour
     ) {
         $thehourvalue = $this->hourminuteTimeToValue($thehour);
         $thefirstvalue = $this->hourminuteTimeToValue($firsthour);
@@ -102,18 +104,21 @@ class Utils
         }
     }
 
-     /**
-      * Checks if there is an overlap between the two given time periods
-      *
-      * @param integer $firststart  The start of the first time interval.
-      * @param integer $firstend    The end of the first time interval.
-      * @param integer $secondstart The start of the second time interval.
-      * @param integer $secondend   The end of the second time interval.
-      *
-      * @return bool True if the two time intervals overlap.
-      */
+    /**
+     * Checks if there is an overlap between the two given time periods
+     *
+     * @param integer $firststart  The start of the first time interval.
+     * @param integer $firstend    The end of the first time interval.
+     * @param integer $secondstart The start of the second time interval.
+     * @param integer $secondend   The end of the second time interval.
+     *
+     * @return bool True if the two time intervals overlap.
+     */
     public function checkNightHourMinutePeriodOverlap(
-        $firststart, $firstend, $secondstart, $secondend
+        $firststart,
+        $firstend,
+        $secondstart,
+        $secondend
     ) {
         $firststartvalue = $this->hourminuteTimeToValue($firststart);
         $firstendvalue = $this->hourminuteTimeToValue($firstend);
@@ -141,63 +146,68 @@ class Utils
         }
     }
 
-     /**
-      * The constructor
-      */
+    /**
+     * The constructor
+     */
     public function __construct()
     {
-        foreach ( $_POST as $foo => $bar ) {
-            if (! is_array($_POST [$foo])) {
+        foreach ($_POST as $foo => $bar) {
+            if (!is_array($_POST [$foo])) {
                 $_POST [$foo] = htmlentities(
-                    stripslashes($bar), ENT_COMPAT, "UTF-8", 0
+                    stripslashes($bar),
+                    ENT_COMPAT,
+                    "UTF-8",
+                    0
                 );
             }
         }
-        foreach ( $_GET as $foo => $bar ) {
+        foreach ($_GET as $foo => $bar) {
             $_GET [$foo] = htmlentities(stripslashes($bar), ENT_COMPAT, "UTF-8", 0);
         }
     }
 
 
-     /**
-      * Creates an argo navis file from an array of objects.
-      *
-      * @param array $result The array with the objects.
-      *
-      * @return string A file that can be imported into the Argo Navis
-      */
+    /**
+     * Creates an argo navis file from an array of objects.
+     *
+     * @param array $result The array with the objects.
+     *
+     */
     public function argoObjects($result)
     {
         global $objObserver, $loggedUser, $objPresentations, $objAtlas;
         $result = $this->sortResult($result);
+        $atlas = $objObserver->getObserverProperty(
+            $loggedUser,
+            'standardAtlasCode',
+            'urano'
+        );
 
-        foreach ($result as $key=>$valueA) {
+        foreach ($result as $key => $valueA) {
             echo "DSL " . $valueA ['objectname'] . "|" .
                     $objPresentations->raArgoToString($valueA['objectra']) .
                     "|" . $objPresentations->decToArgoString(
-                        $valueA['objectdecl'], 0
+                        $valueA['objectdecl']
                     ) . "|" . $GLOBALS["argo" . $valueA['objecttype']] .
                     "|" . $objPresentations->presentationInt(
-                        $valueA ['objectmagnitude'], 99.9, ''
+                        $valueA ['objectmagnitude'],
+                        99.9,
+                        ''
                     ) . "|" . $valueA ['objectsize'] . ";" .
-                    $objAtlas->atlasCodes[(
-                        $atlas = $objObserver->getObserverProperty(
-                            $loggedUser, 'standardAtlasCode', 'urano'
-                        )
-                    )] . " " .
+                    $objAtlas->atlasCodes[$atlas] . " " .
                     $valueA[$atlas] . ";" . "CR " . $valueA['objectcontrast']. ";" .
                     $valueA['objectseen'] . ";" .
                     $valueA['objectlastseen'] . "\n";
         }
     }
 
-     /**
-      * Check if the given user is an admin.
-      *
-      * @param string $toCheck The userid to check.
-      *
-      * @return boolean True id the given user is an admin.
-      */
+    /**
+     * Check if the given user is an admin.
+     *
+     * @param string $toCheck The userid to check.
+     *
+     * @return boolean True id the given user is an admin.
+     */
     public function checkAdminOrUserID($toCheck)
     {
         global $loggedUser;
@@ -205,34 +215,34 @@ class Utils
             && ($_SESSION['admin'] == "yes")) || ($loggedUser == $toCheck));
     }
 
-     /**
-      * Check if the key exist in the given array.
-      *
-      * @param array  $theArray The array to check.
-      * @param string $key      The key to check.
-      * @param string $default  The default to return if the key was not found.
-      *                         The standard value is an empty string.
-      *
-      * @return string The value of the found key, or the standard value.
-      */
+    /**
+     * Check if the key exist in the given array.
+     *
+     * @param array  $theArray The array to check.
+     * @param string $key      The key to check.
+     * @param string $default  The default to return if the key was not found.
+     *                         The standard value is an empty string.
+     *
+     * @return string The value of the found key, or the standard value.
+     */
     public function checkArrayKey($theArray, $key, $default = '')
     {
         return (array_key_exists($key, $theArray) && ($theArray[$key] != ''))
             ? $theArray [$key] : $default;
     }
 
-     /**
-      * Returns a date string YYYYMMDD or MMDD if the date given year or month
-      * equals the year or month in the $GET keys.
-      *
-      * @param integer $year  The year to check.
-      * @param integer $month The month to check.
-      * @param integer $day   The day to check.
-      *
-      * @return string The value of the date, in YYYYMMDD format if
-      *                $year == GET[$year]
-      *                or MMDD if $month == $GET[$month].
-      */
+    /**
+     * Returns a date string YYYYMMDD or MMDD if the date given year or month
+     * equals the year or month in the $GET keys.
+     *
+     * @param integer $year  The year to check.
+     * @param integer $month The month to check.
+     * @param integer $day   The day to check.
+     *
+     * @return string The value of the date, in YYYYMMDD format if
+     *                $year == GET[$year]
+     *                or MMDD if $month == $GET[$month].
+     */
     public function checkGetDate($year, $month, $day)
     {
         if ($year = $this->checkGetKey($year)) {
@@ -246,52 +256,53 @@ class Utils
         return '';
     }
 
-     /**
-      * Returns a localized date. This means MMDDYYYY for US and DDMMYYYY for Europe
-      *
-      * @param integer $date The date to convert.
-      *
-      * @return string The date in localized form.
-      */
+    /**
+     * Returns a localized date. This means MMDDYYYY for US and DDMMYYYY for Europe
+     *
+     * @param integer $date The date to convert.
+     *
+     * @return string The date in localized form.
+     */
     public function getLocalizedDate($date)
     {
         global $dateformat;
         $date = sscanf($date, "%4d%2d%2d");
         $dateTimeText = date(
-            $dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0])
+            $dateformat,
+            mktime(0, 0, 0, $date[1], $date[2], $date[0])
         );
 
         return $dateTimeText;
     }
 
-     /**
-      * Returns the key from the $GET array. If the key is not found, the $default
-      * value is returned.
-      *
-      * @param string $key     The key to look for.
-      * @param string $default The value to return if the key does not exist.
-      *                        Default value is ''.
-      *
-      * @return string The key from the $GET array. If the key is not found,
-      *                the $default value is returned.
-      */
+    /**
+     * Returns the key from the $GET array. If the key is not found, the $default
+     * value is returned.
+     *
+     * @param string $key     The key to look for.
+     * @param string $default The value to return if the key does not exist.
+     *                        Default value is ''.
+     *
+     * @return string The key from the $GET array. If the key is not found,
+     *                the $default value is returned.
+     */
     public function checkGetKey($key, $default = '')
     {
         return (array_key_exists($key, $_GET) && ($_GET [$key] != ''))
             ? $_GET[$key] : $default;
     }
 
-     /**
-      * Returns time or coordinate when the hr, min and sec are in the $GET array.
-      * If the keys are not found,  is returned.
-      *
-      * @param string $hr  The key describing the number of hours.
-      * @param string $min The key describing the number of minutes.
-      * @param string $sec The key describing the number of seconds.
-      *
-      * @return integer The time if the hr, min and sec keys exists in the $GET
-      *                 array. If the keys are not found, '' is returned.
-      */
+    /**
+     * Returns time or coordinate when the hr, min and sec are in the $GET array.
+     * If the keys are not found,  is returned.
+     *
+     * @param string $hr  The key describing the number of hours.
+     * @param string $min The key describing the number of minutes.
+     * @param string $sec The key describing the number of seconds.
+     *
+     * @return integer The time if the hr, min and sec keys exists in the $GET
+     *                 array. If the keys are not found, '' is returned.
+     */
     public function checkGetTimeOrDegrees($hr, $min, $sec)
     {
         $test = $this->checkGetKey($hr) . $this->checkGetKey($min) .
@@ -311,48 +322,48 @@ class Utils
         }
     }
 
-     /**
-      * Checks if the value is in the limits.
-      *
-      * @param double $value The value to check.
-      * @param double $low   The lower limit.
-      * @param double $high  The higher limit.
-      *
-      * @return boolean Checks if the given value lies inside the given limits.
-      */
+    /**
+     * Checks if the value is in the limits.
+     *
+     * @param double $value The value to check.
+     * @param double $low   The lower limit.
+     * @param double $high  The higher limit.
+     *
+     * @return boolean Checks if the given value lies inside the given limits.
+     */
     public function checkLimitsInclusive($value, $low, $high)
     {
         return (($value >= $low) && ($value <= $high));
     }
 
-     /**
-      * Returns the key from the $POST array. If the key is not found, the $default
-      * value is returned.
-      *
-      * @param string $key     The key to look for.
-      * @param string $default The value to return if the key does not exist.
-      *                        Default value is ''.
-      *
-      * @return string The key from the $POST array. If the key is not found,
-      *                the $default value is returned.
-      */
+    /**
+     * Returns the key from the $POST array. If the key is not found, the $default
+     * value is returned.
+     *
+     * @param string $key     The key to look for.
+     * @param string $default The value to return if the key does not exist.
+     *                        Default value is ''.
+     *
+     * @return string The key from the $POST array. If the key is not found,
+     *                the $default value is returned.
+     */
     public function checkPostKey($key, $default = '')
     {
         return (array_key_exists($key, $_POST) && ($_POST[$key] != ''))
             ? $_POST[$key] : $default;
     }
 
-     /**
-      * Returns the key from the $REQUEST array. If the key is not found,
-      * the POST and GET arrays are checked.
-      *
-      * @param string $key     The key to look for.
-      * @param string $default The value to return if the key does not exist.
-      *                        Default value is ''.
-      *
-      * @return string The key from the $REQUEST array. If the key is not found,
-      *                the POST and GET arrays are checked.
-      */
+    /**
+     * Returns the key from the $REQUEST array. If the key is not found,
+     * the POST and GET arrays are checked.
+     *
+     * @param string $key     The key to look for.
+     * @param string $default The value to return if the key does not exist.
+     *                        Default value is ''.
+     *
+     * @return string The key from the $REQUEST array. If the key is not found,
+     *                the POST and GET arrays are checked.
+     */
     public function checkRequestKey($key, $default = '')
     {
         return ((array_key_exists($key, $_REQUEST) && ($_REQUEST[$key] != ''))
@@ -363,55 +374,55 @@ class Utils
             ? $_GET [$key] : $default)));
     }
 
-     /**
-      * Returns the key from the $SESSION array. If the key is not found,
-      * the $default value is returned.
-      *
-      * @param string $key     The key to look for.
-      * @param string $default The value to return if the key does not exist.
-      *                        Default value is ''.
-      *
-      * @return string The key from the $SESSION array. If the key is not found,
-      *                the $default value is returned.
-      */
+    /**
+     * Returns the key from the $SESSION array. If the key is not found,
+     * the $default value is returned.
+     *
+     * @param string $key     The key to look for.
+     * @param string $default The value to return if the key does not exist.
+     *                        Default value is ''.
+     *
+     * @return string The key from the $SESSION array. If the key is not found,
+     *                the $default value is returned.
+     */
     public function checkSessionKey($key, $default = '')
     {
         return (array_key_exists($key, $_SESSION) && ($_SESSION [$key] != ''))
             ? $_SESSION [$key] : $default;
     }
 
-     /**
-      * Checks if the given user is logged in.
-      *
-      * @param string $toCheck The userid to check.
-      *
-      * @return boolean True is the given user is logged in.
-      */
+    /**
+     * Checks if the given user is logged in.
+     *
+     * @param string $toCheck The userid to check.
+     *
+     * @return boolean True is the given user is logged in.
+     */
     public function checkUserID($toCheck)
     {
         global $loggedUser;
         return ($loggedUser == $toCheck);
     }
 
-     /**
-      * Encodes the html decoded string to utf8.
-      *
-      * @param string $string The string to encode.
-      *
-      * @return string The utf8 encoded string.
-      */
+    /**
+     * Encodes the html decoded string to utf8.
+     *
+     * @param string $string The string to encode.
+     *
+     * @return string The utf8 encoded string.
+     */
     public function safeEncode($string)
     {
-        return utf8_encode(html_entity_decode($string));
+        return mb_convert_encoding(html_entity_decode($string), 'ISO-8859-1', 'UTF-8');
     }
 
-     /**
-      * Corrects the name for XML export. Changes all unwanted characters to _.
-      *
-      * @param string $value The string to correct.
-      *
-      * @return string The corrected string for XML export.
-      */
+    /**
+     * Corrects the name for XML export. Changes all unwanted characters to _.
+     *
+     * @param string $value The string to correct.
+     *
+     * @return string The corrected string for XML export.
+     */
     public function correctForXmlExport($value)
     {
         $correctedValue = $this->safeEncode(
@@ -439,33 +450,33 @@ class Utils
         return $correctedValue;
     }
 
-     /**
-      * Returns the color for the component of a double star.
-      *
-      * @param string $component The component to use.
-      *
-      * @return string The string with the color or the empty string if there
-      *                were no colors entered.
-      */
+    /**
+     * Returns the color for the component of a double star.
+     *
+     * @param string $component The component to use.
+     *
+     * @return string The string with the color or the empty string if there
+     *                were no colors entered.
+     */
     public function getColorForOalExport($component)
     {
-        if ($obs[$component] > 0) {
-            if ($obs[$component] == 1) {
+        if ($component > 0) {
+            if ($component == 1) {
                 $col = "white";
             }
-            if ($obs[$component] == 2) {
+            if ($component == 2) {
                 $col = "red";
             }
-            if ($obs[$component] == 3) {
+            if ($component == 3) {
                 $col = "orange";
             }
-            if ($obs[$component] == 4) {
+            if ($component == 4) {
                 $col = "yellow";
             }
-            if ($obs[$component] == 5) {
+            if ($component == 5) {
                 $col = "green";
             }
-            if ($obs[$component] == 6) {
+            if ($component == 6) {
                 $col = "blue";
             } else {
                 $col = "";
@@ -503,13 +514,13 @@ class Utils
 
         $dom = new DomDocument('1.0', 'UTF-8');
 
-        $observers = array ();
-        $sites = array ();
-        $objects = array ();
-        $scopes = array ();
-        $eyepieces = array ();
-        $lenses = array ();
-        $filters = array ();
+        $observers = array();
+        $sites = array();
+        $objects = array();
+        $scopes = array();
+        $eyepieces = array();
+        $lenses = array();
+        $filters = array();
 
         $cntObservers = 0;
         $cntSites = 0;
@@ -521,7 +532,7 @@ class Utils
 
         $allObs = $result;
 
-        foreach ($result as $key=>$value) {
+        foreach ($result as $key => $value) {
             $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
             $objectname = $obs['objectname'];
             $observerid = $obs['observerid'];
@@ -607,7 +618,7 @@ class Utils
         // add root - <observers>
         $observersDom = $fcgaDom->appendChild($dom->createElement('observers'));
 
-        foreach ($observers as $key=>$value) {
+        foreach ($observers as $key => $value) {
             $observer2 = $dom->createElement('observer');
             $observerChild = $observersDom->appendChild($observer2);
             $attr = $dom->createAttribute("id");
@@ -657,7 +668,7 @@ class Utils
         // add root - <sites>
         $observersDom = $fcgaDom->appendChild($dom->createElement('sites'));
 
-        foreach ($sites as $key=>$value) {
+        foreach ($sites as $key => $value) {
             $site2 = $dom->createElement('site');
             $siteChild = $observersDom->appendChild($site2);
             $attr = $dom->createAttribute("id");
@@ -721,7 +732,7 @@ class Utils
 
             $tz = $location->getLocationPropertyFromId($value, 'timezone');
             if (strncmp($tz, "Etc/GMT", 7) == 0) {
-                $timedifference = - $timedifference;
+                $timedifference = -$timedifference;
             }
 
             $timezone->appendChild($dom->createTextNode($timedifference));
@@ -733,9 +744,9 @@ class Utils
         if ($loggedUser != "") {
             $sessions = $objSession->getAllSessionsForUser($loggedUser);
 
-             $usedSessions = Array();
+            $usedSessions = array();
             // Only add session for which the location is also exported
-            for ($scnt = 0; $scnt < count($sessions); $scnt ++) {
+            for ($scnt = 0; $scnt < count($sessions); $scnt++) {
                 if (in_array($sessions [$scnt]['locationid'], $sites)) {
                     $session = $dom->createElement('session');
                     $sessionChild = $observersDom->appendChild($session);
@@ -806,7 +817,7 @@ class Utils
         // add root - <targets>
         $observersDom = $fcgaDom->appendChild($dom->createElement('targets'));
 
-        foreach ($objects as $key=>$value) {
+        foreach ($objects as $key => $value) {
             $object2 = $dom->createElement('target');
             $objectChild = $observersDom->appendChild($object2);
             $attr = $dom->createAttribute("id");
@@ -824,23 +835,23 @@ class Utils
             $type = $object["type"];
             if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC") {
                 $type = "oal:deepSkyOC";
-            } else if ($type == "GALXY") {
+            } elseif ($type == "GALXY") {
                 $type = "oal:deepSkyGX";
-            } else if ($type == "GALCL") {
+            } elseif ($type == "GALCL") {
                 $type = "oal:deepSkyCG";
-            } else if ($type == "PLNNB") {
+            } elseif ($type == "PLNNB") {
                 $type = "oal:deepSkyPN";
-            } else if ($type == "ASTER" || $type == "AA1STAR"
+            } elseif ($type == "ASTER" || $type == "AA1STAR"
                 || $type == "AA3STAR" || $type == "AA4STAR" || $type == "AA8STAR"
             ) {
                 $type = "oal:deepSkyAS";
-            } else if ($type == "DS") {
+            } elseif ($type == "DS") {
                 $type = "oal:deepSkyDS";
-            } else if ($type == "GLOCL" || $type == "GXAGC" || $type == "LMCGC"
+            } elseif ($type == "GLOCL" || $type == "GXAGC" || $type == "LMCGC"
                 || $type == "SMCGC"
             ) {
                 $type = "oal:deepSkyGC";
-            } else if ($type == "BRTNB" || $type == "CLANB" || $type == "EMINB"
+            } elseif ($type == "BRTNB" || $type == "CLANB" || $type == "EMINB"
                 || $type == "ENRNN" || $type == "ENSTR"
                 || $type == "GXADN" || $type == "GACAN" || $type == "HII"
                 || $type == "LMCCN" || $type == "LMCDN" || $type == "REFNB"
@@ -848,11 +859,11 @@ class Utils
                 || $type == "SNREM" || $type == "STNEB" || $type == "WRNEB"
             ) {
                 $type = "oal:deepSkyGN";
-            } else if ($type == "QUASR") {
+            } elseif ($type == "QUASR") {
                 $type = "oal:deepSkyQS";
-            } else if ($type == "DRKNB") {
+            } elseif ($type == "DRKNB") {
                 $type = "oal:deepSkyDN";
-            } else if ($type == "NONEX") {
+            } elseif ($type == "NONEX") {
                 $type = "oal:deepSkyNA";
             }
             $attrText = $dom->createTextNode($type);
@@ -871,7 +882,7 @@ class Utils
             );
 
             $altnames = $GLOBALS['objObject']->getAlternativeNames($value);
-            foreach ($altnames as $key2=>$value2) {
+            foreach ($altnames as $key2 => $value2) {
                 // go through names array
                 if (trim($value2) != trim($value)) {
                     if (trim($value2) != "") {
@@ -971,13 +982,15 @@ class Utils
         // add root - <scopes>
         $observersDom = $fcgaDom->appendChild($dom->createElement('scopes'));
 
-        foreach ($scopes as $key=>$value) {
+        foreach ($scopes as $key => $value) {
             $fixMag = $GLOBALS ['objInstrument']->getInstrumentPropertyFromId(
-                $value, 'fixedMagnification'
+                $value,
+                'fixedMagnification'
             );
             if ($fixMag != 1) {
                 $inName = $GLOBALS ['objInstrument']->getInstrumentPropertyFromId(
-                    $value, 'name'
+                    $value,
+                    'name'
                 );
                 if ($inName != "") {
                     $scope2 = $dom->createElement('scope');
@@ -992,7 +1005,8 @@ class Utils
                     $scope2->appendChild($attr);
 
                     $fixMag = $GLOBALS['objInstrument']->getInstrumentPropertyFromId(
-                        $value, 'fixedMagnification'
+                        $value,
+                        'fixedMagnification'
                     );
                     if ($fixMag > 0) {
                         $typeLong = "oal:fixedMagnificationOpticsType";
@@ -1000,27 +1014,28 @@ class Utils
                         $typeLong = "oal:scopeType";
                     }
                     $tp = $GLOBALS ['objInstrument']->getInstrumentPropertyFromId(
-                        $value, 'type'
+                        $value,
+                        'type'
                     );
                     if ($tp == INSTRUMENTOTHER || $tp == INSTRUMENTREST) {
                         $typeShort = "";
-                    } else if ($tp == INSTRUMENTNAKEDEYE) {
+                    } elseif ($tp == INSTRUMENTNAKEDEYE) {
                         $typeShort = "A";
-                    } else if ($tp == INSTRUMENTBINOCULARS
+                    } elseif ($tp == INSTRUMENTBINOCULARS
                         || $tp == INSTRUMENTFINDERSCOPE
                     ) {
                         $typeShort = "B";
-                    } else if ($tp == INSTRUMENTREFRACTOR) {
+                    } elseif ($tp == INSTRUMENTREFRACTOR) {
                         $typeShort = "R";
-                    } else if ($tp == INSTRUMENTREFLECTOR) {
+                    } elseif ($tp == INSTRUMENTREFLECTOR) {
                         $typeShort = "N";
-                    } else if ($tp == INSTRUMENTCASSEGRAIN) {
+                    } elseif ($tp == INSTRUMENTCASSEGRAIN) {
                         $typeShort = "C";
-                    } else if ($tp == INSTRUMENTKUTTER) {
+                    } elseif ($tp == INSTRUMENTKUTTER) {
                         $typeShort = "K";
-                    } else if ($tp == INSTRUMENTMAKSUTOV) {
+                    } elseif ($tp == INSTRUMENTMAKSUTOV) {
                         $typeShort = "M";
-                    } else if ($tp == INSTRUMENTSCHMIDTCASSEGRAIN) {
+                    } elseif ($tp == INSTRUMENTSCHMIDTCASSEGRAIN) {
                         $typeShort = "S";
                     }
 
@@ -1036,7 +1051,8 @@ class Utils
                             $this->safeEncode(
                                 $GLOBALS['objInstrument']->
                                 getInstrumentPropertyFromId(
-                                    $value, 'name'
+                                    $value,
+                                    'name'
                                 )
                             )
                         )
@@ -1051,13 +1067,15 @@ class Utils
                     $aperture->appendChild(
                         $dom->createTextNode(
                             $GLOBALS['objInstrument']->getInstrumentPropertyFromId(
-                                $value, 'diameter'
+                                $value,
+                                'diameter'
                             )
                         )
                     );
 
                     $fixMag = $GLOBALS['objInstrument']->getInstrumentPropertyFromId(
-                        $value, 'fixedMagnification'
+                        $value,
+                        'fixedMagnification'
                     );
                     if ($fixMag > 0) {
                         $magnification = $siteChild->appendChild(
@@ -1067,7 +1085,8 @@ class Utils
                             $dom->createTextNode(
                                 $GLOBALS ['objInstrument']->
                                 getInstrumentPropertyFromId(
-                                    $value, 'fixedMagnification'
+                                    $value,
+                                    'fixedMagnification'
                                 )
                             )
                         );
@@ -1085,10 +1104,12 @@ class Utils
                                 $dom->createTextNode(
                                     $GLOBALS['objInstrument']->
                                     getInstrumentPropertyFromId(
-                                        $value, 'fd'
+                                        $value,
+                                        'fd'
                                     ) * $GLOBALS['objInstrument']
                                         ->getInstrumentPropertyFromId(
-                                            $value, 'diameter'
+                                            $value,
+                                            'diameter'
                                         )
                                 )
                             );
@@ -1101,7 +1122,7 @@ class Utils
         // add root - <eyepieces>
         $observersDom = $fcgaDom->appendChild($dom->createElement('eyepieces'));
 
-        foreach ($eyepieces as $key=>$value) {
+        foreach ($eyepieces as $key => $value) {
             if ($value != "" && $value > 0) {
                 $eyepiece2 = $dom->createElement('eyepiece');
                 $eyepieceChild = $observersDom->appendChild($eyepiece2);
@@ -1116,7 +1137,8 @@ class Utils
                     $dom->createCDATASection(
                         $this->safeEncode(
                             $GLOBALS['objEyepiece']->getEyepiecePropertyFromId(
-                                $value, 'name'
+                                $value,
+                                'name'
                             )
                         )
                     )
@@ -1128,13 +1150,15 @@ class Utils
                 $focalLength->appendChild(
                     $dom->createTextNode(
                         $GLOBALS['objEyepiece']->getEyepiecePropertyFromId(
-                            $value, 'focalLength'
+                            $value,
+                            'focalLength'
                         )
                     )
                 );
 
                 $mfl = $GLOBALS['objEyepiece']->getEyepiecePropertyFromId(
-                    $value, 'maxFocalLength'
+                    $value,
+                    'maxFocalLength'
                 );
                 if ($mfl > 0) {
                     $maxFocalLength = $eyepieceChild->appendChild(
@@ -1143,7 +1167,8 @@ class Utils
                     $maxFocalLength->appendChild(
                         $dom->createTextNode(
                             $GLOBALS['objEyepiece']->getEyepiecePropertyFromId(
-                                $value, 'maxFocalLength'
+                                $value,
+                                'maxFocalLength'
                             )
                         )
                     );
@@ -1155,7 +1180,8 @@ class Utils
                 $apparentFOV->appendChild(
                     $dom->createTextNode(
                         $GLOBALS['objEyepiece']->getEyepiecePropertyFromId(
-                            $value, 'apparentFOV'
+                            $value,
+                            'apparentFOV'
                         )
                     )
                 );
@@ -1171,7 +1197,7 @@ class Utils
         // add root - <lenses>
         $observersDom = $fcgaDom->appendChild($dom->createElement('lenses'));
 
-        foreach ($lenses as $key=>$value) {
+        foreach ($lenses as $key => $value) {
             if ($value != "" && $value > 0) {
                 $lens2 = $dom->createElement('lens');
                 $lensChild = $observersDom->appendChild($lens2);
@@ -1186,7 +1212,8 @@ class Utils
                     $dom->createCDATASection(
                         $this->safeEncode(
                             $GLOBALS['objLens']->getLensPropertyFromId(
-                                $value, 'name'
+                                $value,
+                                'name'
                             )
                         )
                     )
@@ -1204,7 +1231,7 @@ class Utils
         // add root - <filters>
         $observersDom = $fcgaDom->appendChild($dom->createElement('filters'));
 
-        foreach ($filters as $key=>$value) {
+        foreach ($filters as $key => $value) {
             if ($value != "" && $value > 0) {
                 $filter2 = $dom->createElement('filter');
                 $filterChild = $observersDom->appendChild($filter2);
@@ -1219,7 +1246,8 @@ class Utils
                     $dom->createCDATASection(
                         $this->safeEncode(
                             $GLOBALS['objFilter']->getFilterPropertyFromId(
-                                $value, 'name'
+                                $value,
+                                'name'
                             )
                         )
                     )
@@ -1228,21 +1256,21 @@ class Utils
                 $tp = $GLOBALS['objFilter']->getFilterPropertyFromId($value, 'type');
                 if ($tp == 0) {
                     $filType = "other";
-                } else if ($tp == 1) {
+                } elseif ($tp == 1) {
                     $filType = "broad band";
-                } else if ($tp == 2) {
+                } elseif ($tp == 2) {
                     $filType = "narrow band";
-                } else if ($tp == 3) {
+                } elseif ($tp == 3) {
                     $filType = "O-III";
-                } else if ($tp == 4) {
+                } elseif ($tp == 4) {
                     $filType = "H-beta";
-                } else if ($tp == 5) {
+                } elseif ($tp == 5) {
                     $filType = "H-alpha";
-                } else if ($tp == 6) {
+                } elseif ($tp == 6) {
                     $filType = "color";
-                } else if ($tp == 7) {
+                } elseif ($tp == 7) {
                     $filType = "neutral";
-                } else if ($tp == 8) {
+                } elseif ($tp == 8) {
                     $filType = "corrective";
                 }
 
@@ -1251,37 +1279,38 @@ class Utils
 
                 if ($filType == "color") {
                     $col = $GLOBALS['objFilter']->getFilterPropertyFromId(
-                        $value, 'color'
+                        $value,
+                        'color'
                     );
                     if ($col == 1) {
                         $colName = "light red";
-                    } else if ($col == 2) {
+                    } elseif ($col == 2) {
                         $colName = "red";
-                    } else if ($col == 3) {
+                    } elseif ($col == 3) {
                         $colName = "deep red";
-                    } else if ($col == 4) {
+                    } elseif ($col == 4) {
                         $colName = "orange";
-                    } else if ($col == 5) {
+                    } elseif ($col == 5) {
                         $colName = "light yellow";
-                    } else if ($col == 6) {
+                    } elseif ($col == 6) {
                         $colName = "deep yellow";
-                    } else if ($col == 7) {
+                    } elseif ($col == 7) {
                         $colName = "yellow";
-                    } else if ($col == 8) {
+                    } elseif ($col == 8) {
                         $colName = "yellow-green";
-                    } else if ($col == 9) {
+                    } elseif ($col == 9) {
                         $colName = "light green";
-                    } else if ($col == 10) {
+                    } elseif ($col == 10) {
                         $colName = "green";
-                    } else if ($col == 11) {
+                    } elseif ($col == 11) {
                         $colName = "medium blue";
-                    } else if ($col == 12) {
+                    } elseif ($col == 12) {
                         $colName = "pale blue";
-                    } else if ($col == 13) {
+                    } elseif ($col == 13) {
                         $colName = "blue";
-                    } else if ($col == 14) {
+                    } elseif ($col == 14) {
                         $colName = "deep blue";
-                    } else if ($col == 15) {
+                    } elseif ($col == 15) {
                         $colName = "violet";
                     }
                     if ($colName != "") {
@@ -1292,7 +1321,8 @@ class Utils
                     }
 
                     $wf = $GLOBALS['objFilter']->getFilterPropertyFromId(
-                        $value, 'wratten'
+                        $value,
+                        'wratten'
                     );
                     if ($wf != "") {
                         $wratten = $filterChild->appendChild(
@@ -1301,14 +1331,16 @@ class Utils
                         $wratten->appendChild(
                             $dom->createCDATASection(
                                 $GLOBALS['objFilter']->getFilterPropertyFromId(
-                                    $value, 'wratten'
+                                    $value,
+                                    'wratten'
                                 )
                             )
                         );
                     }
 
                     $sf = $GLOBALS ['objFilter']->getFilterPropertyFromId(
-                        $value, 'schott'
+                        $value,
+                        'schott'
                     );
                     if ($sf != "") {
                         $schott = $filterChild->appendChild(
@@ -1317,7 +1349,8 @@ class Utils
                         $schott->appendChild(
                             $dom->createCDATASection(
                                 $GLOBALS['objFilter']->getFilterPropertyFromId(
-                                    $value, 'schott'
+                                    $value,
+                                    'schott'
                                 )
                             )
                         );
@@ -1330,7 +1363,7 @@ class Utils
         $observersDom = $fcgaDom->appendChild($dom->createElement('imagers'));
 
         // Add the observations.
-        foreach ($allObs as $key=>$value) {
+        foreach ($allObs as $key => $value) {
             $obs = $GLOBALS['objObservation']->getAllInfoDsObservation(
                 $value['observationid']
             );
@@ -1362,7 +1395,7 @@ class Utils
             $site->appendChild($dom->createTextNode("site_" . $loc));
 
             // Check whether this observation is part of a session...
-            for ($scnt = 0; $scnt < count($usedSessions); $scnt ++) {
+            for ($scnt = 0; $scnt < count($usedSessions); $scnt++) {
                 $sessionObs = $objDatabase->selectRecordsetArray(
                     "select * from sessionObservations where sessionid = \"" .
                     $usedSessions [$scnt] . "\" and observationid = \"" .
@@ -1403,7 +1436,7 @@ class Utils
             $day = ( int ) (($obs ["date"] - $year * 10000 - $month * 100));
             if ($day == 0) {
                 $day = 1;
-            } else if ($day > 31) {
+            } elseif ($day > 31) {
                 $day = 31;
             }
             $date = sprintf("%4d-%02d-%02d", $year, $month, $day);
@@ -1424,7 +1457,7 @@ class Utils
 
                 $attrText = $dom->createTextNode("mags-per-squarearcsec");
                 $attr->appendChild($attrText);
-            } else if ($obs["limmag"] > 0) {
+            } elseif ($obs["limmag"] > 0) {
                 $faintestStar = $observation->appendChild(
                     $dom->createElement('faintestStar')
                 );
@@ -1437,7 +1470,8 @@ class Utils
             }
 
             $fm = $GLOBALS['objInstrument']->getInstrumentPropertyFromId(
-                $inst, 'fixedMagnification'
+                $inst,
+                'fixedMagnification'
             );
             if ($fm != 1) {
                 $scope = $observation->appendChild($dom->createElement('scope'));
@@ -1463,32 +1497,38 @@ class Utils
 
             $magni = 0;
             $fm = $GLOBALS['objInstrument']->getInstrumentPropertyFromId(
-                $inst, 'fixedMagnification'
+                $inst,
+                'fixedMagnification'
             );
             if ($fm > 0) {
                 $magni = $GLOBALS['objInstrument']->getInstrumentPropertyFromId(
-                    $inst, 'fixedMagnification'
+                    $inst,
+                    'fixedMagnification'
                 );
-            } else if ($obs["magnification"] > 0) {
+            } elseif ($obs["magnification"] > 0) {
                 $magni = $obs["magnification"];
-            } else if ($eyep > 0 && $fm != 0) {
+            } elseif ($eyep > 0 && $fm != 0) {
                 $factor = 1.0;
                 $lf = $GLOBALS['objLens']->getFilterPropertyFromId($lns, 'factor');
                 if ($lf > 0) {
                     $factor = $GLOBALS['objLens']->getFilterPropertyFromId(
-                        $lns, 'factor'
+                        $lns,
+                        'factor'
                     );
                 }
                 $magni = sprintf(
                     "%.2f",
                     $GLOBALS['objInstrument']->getInstrumentPropertyFromId(
-                        $inst, 'fixedMagnification'
+                        $inst,
+                        'fixedMagnification'
                     )
                     * $GLOBALS['objInstrument']->getInstrumentPropertyFromId(
-                        $inst, 'diameter'
+                        $inst,
+                        'diameter'
                     )
                     * $factor / $GLOBALS['objEyepiece']->getEyepiecePropertyFromId(
-                        $eyep, 'focalLength'
+                        $eyep,
+                        'focalLength'
                     )
                 );
             }
@@ -1625,7 +1665,7 @@ class Utils
             $type = $object["type"];
             if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC") {
                 $type = "oal:findingsDeepSkyOCType";
-            } else if ($type == "DS") {
+            } elseif ($type == "DS") {
                 $type = "oal:findingsDeepSkyDSType";
             } else {
                 $type = "oal:findingsDeepSkyType";
@@ -1636,10 +1676,12 @@ class Utils
             $description = $result->appendChild($dom->createElement('description'));
             $description->appendChild(
                 $dom->createCDATASection(
-                    utf8_encode(
+                    mb_convert_encoding(
                         $objPresentations->br2nl(
                             html_entity_decode($obs["description"])
-                        )
+                        ),
+                        'ISO-8859-1',
+                        'UTF-8'
                     )
                 )
             );
@@ -1692,29 +1734,29 @@ class Utils
 
         // generate xml
         $dom->formatOutput = true; // set the formatOutput attribute of
-                                   // domDocument to true
-                                   // save XML as string or file
+        // domDocument to true
+        // save XML as string or file
         $xmloutput = $dom->saveXML();  // put string in test1
 
         print $xmloutput;
     }
 
-     /**
-      * Creates a csv file from an array of objects.
-      *
-      * @param array $result The array of objects.
-      *
-      * @return string The string with csv file with the objects.
-      */
+    /**
+     * Creates a csv file from an array of objects.
+     *
+     * @param array $result The array of objects.
+     *
+     * @return string The string with csv file with the objects.
+     */
     public function csvObjects($result)
     {
         global $objObject, $objPresentations, $objObserver, $loggedUser;
         $result = $this->sortResult($result);
         echo html_entity_decode(_("Name;Altname;RA;Decl;Constellation;Type;Magnitude;SurfaceBrightness;Diameter;Position Angle;Page;ContrastReserve;OptimalMagnification;Seen;Last Seen")) . "\n";
-        foreach ($result as $key=>$valueA) {
+        foreach ($result as $key => $valueA) {
             $alt = "";
             $alts = $objObject->getAlternativeNames($valueA['objectname']);
-            foreach ($alts as $key=>$value) {
+            foreach ($alts as $key => $value) {
                 if ($value != $valueA['objectname']) {
                     $alt .= " - " . trim($value);
                 }
@@ -1726,14 +1768,20 @@ class Utils
                 . ";" . $GLOBALS[$valueA['objectconstellation']] . ";"
                 . $GLOBALS[$valueA['objecttype']] . ";"
                 . $objPresentations->presentationInt1(
-                    $valueA['objectmagnitude'], 99.9, ''
+                    $valueA['objectmagnitude'],
+                    99.9,
+                    ''
                 ) . ";" . $objPresentations->presentationInt1(
-                    $valueA['objectsurfacebrightness'], 99.9, ''
+                    $valueA['objectsurfacebrightness'],
+                    99.9,
+                    ''
                 ) . ";"
                 . $valueA['objectsize'] . ";"
                 . $objPresentations->presentationInt($valueA['objectpa'], 999, '')
                 . ";" . $valueA[$objObserver->getObserverProperty(
-                    $loggedUser, 'standardAtlasCode', 'urano'
+                    $loggedUser,
+                    'standardAtlasCode',
+                    'urano'
                 )] . ";" . $valueA['objectcontrast'] . ";"
                 . trim(
                     preg_replace('/\s+/', ' ', $valueA['objectoptimalmagnification'])
@@ -1743,13 +1791,13 @@ class Utils
         }
     }
 
-     /**
-      * Creates a skylist file from an array of objects.
-      *
-      * @param array $result The array of objects.
-      *
-      * @return string The string with skySafari file with the objects.
-      */
+    /**
+     * Creates a skylist file from an array of objects.
+     *
+     * @param array $result The array of objects.
+     *
+     * @return string The string with skySafari file with the objects.
+     */
     public function skylistObjects($result)
     {
         global $objObject, $objPresentations, $objObserver, $loggedUser;
@@ -1757,7 +1805,7 @@ class Utils
 
         echo "SkySafariObservingListVersion=3.0\n";
 
-        foreach ($result as $key=>$row) {
+        foreach ($result as $key => $row) {
             echo "\n";
             echo "SkyObject=BeginObject\n";
 
@@ -1767,7 +1815,7 @@ class Utils
             $objectNames = $this->getObjectNames($row, $objectId);
 
             echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
-            foreach ($objectNames as $key=>$objectName) {
+            foreach ($objectNames as $key => $objectName) {
                 echo "   CatalogNumber=" . $objectName . "\n";
             }
 
@@ -1787,7 +1835,7 @@ class Utils
      *
      * @return array An array with the object names.
      */
-    function getObjectNames($row, &$objectId)
+    public function getObjectNames($row, &$objectId)
     {
         global $objObject;
 
@@ -1802,7 +1850,7 @@ class Utils
         // Get all the alternative names for the given object.
         $altNames = $objObject->getAlternativeNames($row['objectname']);
         // Loop over all the alternative names
-        foreach ($altNames as $key=>$altName) {
+        foreach ($altNames as $key => $altName) {
             // Fix the names
             $altName = $this->fixObjectName(trim($altName), $objectId);
             // If name is not the same as the objectname, we add the alternative
@@ -1815,12 +1863,12 @@ class Utils
         $objectName = "";
         reset($names);
         // We loop over the names array.
-        foreach ($names as $key=>$name) {
+        foreach ($names as $key => $name) {
             if (preg_match("/(?i)^(M|NGC|IC|C|Cr|Tr|STF|STFA|HD)\s*\d+$/", $name)) {
                 // These catalogs are best known to Skysafari
                 $objectName = $name;
                 break;
-            } else if (preg_match("/(?i)^(Mel|SAO)\s*\d+$/", $name)) {
+            } elseif (preg_match("/(?i)^(Mel|SAO)\s*\d+$/", $name)) {
                 // Then these
                 $objectName = $name;
                 break;
@@ -1835,7 +1883,7 @@ class Utils
         } else {
             reset($names);
             // Loop over the objectnames and add all names and alternative names.
-            foreach ($names as $key=>$name) {
+            foreach ($names as $key => $name) {
                 array_push($objectNames, $name);
             }
         }
@@ -1843,16 +1891,16 @@ class Utils
         return $objectNames;
     }
 
-     /**
-      * Returns the corrected name of the object. Used in the export to skylist
-      * format (SkySafari).
-      *
-      * @param string  $objectName The name of the object.
-      * @param integer $objectId   The id of the type of the object in SkySafari.
-      *
-      * @return string The corrected name of the object.
-      */
-    function fixObjectName($objectName, &$objectId)
+    /**
+     * Returns the corrected name of the object. Used in the export to skylist
+     * format (SkySafari).
+     *
+     * @param string  $objectName The name of the object.
+     * @param integer $objectId   The id of the type of the object in SkySafari.
+     *
+     * @return string The corrected name of the object.
+     */
+    public function fixObjectName($objectName, &$objectId)
     {
         $regexPK = "/(?i)^PK(\s*)(\d+)(\+|-)(\d+)(\.)(0*)(\d*)/";
         $regexMi = "/(?i)^Mi\s*(\d+)-(\d+)$/";
@@ -1862,15 +1910,15 @@ class Utils
 
         if (preg_match($regexPK, $objectName)) {
             $objectName = preg_replace($regexPK, "PK $2$3$4$5$7", $objectName);
-        } else if (preg_match($regexMi, $objectName)) {
+        } elseif (preg_match($regexMi, $objectName)) {
             $objectName = preg_replace($regexMi, "Minkowski $1-$2", $objectName);
-        } else if (preg_match($regexSteph, $objectName)) {
+        } elseif (preg_match($regexSteph, $objectName)) {
             $objectName = preg_replace($regexSteph, "Stephenson $1", $objectName);
-        } else if ($objectName == "Beta Cyg") {
+        } elseif ($objectName == "Beta Cyg") {
             $objectName = "Beta1 Cygni";
-        } else if ($objectName == "Dddm 1") {
+        } elseif ($objectName == "Dddm 1") {
             $objectName = "KO 1";
-        } else if ($objectName == "Stephenson 1") {
+        } elseif ($objectName == "Stephenson 1") {
             $objectName = "HD 175426";
             $objectId = 2;
         }
@@ -1887,7 +1935,7 @@ class Utils
      *
      * @return boolean True if the haystack starts with the needle.
      */
-    function startsWith($haystack, $needle)
+    public function startsWith($haystack, $needle)
     {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
@@ -1901,11 +1949,11 @@ class Utils
      *
      * @return integer 2 for double / multiple star, 4 for deepsky.
      */
-    function getSkyListObjectId($objectType)
+    public function getSkyListObjectId($objectType)
     {
         if (preg_match("/(?i)^AA\d+STAR$/", $objectType)) {
             return 2;
-        } else if ($objectType == "DS") {
+        } elseif ($objectType == "DS") {
             return 2;
         } else {
             return 4;
@@ -1920,7 +1968,7 @@ class Utils
      *
      * @return integer The julian day.
      */
-    function getJulianDay($dateYYYYMMDD, $timeHHMM = null)
+    public function getJulianDay($dateYYYYMMDD, $timeHHMM = null)
     {
         $dateStrArray = sscanf($dateYYYYMMDD, "%4d%2d%2d");
         $dateStr = $dateStrArray[2] . "-" . $dateStrArray[1] . "-"
@@ -1937,7 +1985,7 @@ class Utils
                 $timeStr = "";
             }
             $time = strtotime($timeStr);
-            $dayFraction = -0.5 + ($time % (24*60*60)) / (24*60*60);
+            $dayFraction = -0.5 + ($time % (24 * 60 * 60)) / (24 * 60 * 60);
         } else {
             $dayFraction = 0;
         }
@@ -1956,7 +2004,7 @@ class Utils
     {
         global $objLens, $objFilter, $objEyepiece, $objLocation, $objPresentations;
         global $objObservation, $objObserver, $objInstrument;
-        foreach ($result as $key=>$value) {
+        foreach ($result as $key => $value) {
             $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
             $date = sscanf($obs ['date'], "%4d%2d%2d");
             $time = $obs['time'];
@@ -1970,23 +2018,28 @@ class Utils
             echo html_entity_decode($obs['objectname'])
                 . ";" . html_entity_decode(
                     $objObserver->getObserverProperty(
-                        $obs['observerid'], 'firstname'
+                        $obs['observerid'],
+                        'firstname'
                     ) . " " . $objObserver->getObserverProperty(
-                        $obs['observerid'], 'name'
+                        $obs['observerid'],
+                        'name'
                     )
                 ) . ";"
                 . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";"
                 . html_entity_decode(
                     $objLocation->getLocationPropertyFromId(
-                        $obs['locationid'], 'name'
+                        $obs['locationid'],
+                        'name'
                     )
                 ) . ";" . html_entity_decode(
                     $objInstrument->getInstrumentPropertyFromId(
-                        $obs['instrumentid'], 'name'
+                        $obs['instrumentid'],
+                        'name'
                     )
                 ) . ";" . html_entity_decode(
                     $objEyepiece->getEyepiecePropertyFromId(
-                        $obs['eyepieceid'], 'name'
+                        $obs['eyepieceid'],
+                        'name'
                     )
                 )
                 . ";" . html_entity_decode(
@@ -1997,11 +2050,19 @@ class Utils
                 . $objPresentations->presentationInt($obs['visibility'], "0", "")
                 . ";" . $obs['language'] . ";"
                 . preg_replace(
-                    "/(\")/", "", preg_replace(
-                        "/(\r\n|\n|\r)/", "", preg_replace(
-                            "/;/", ",", $objPresentations->br2nl(
+                    "/(\")/",
+                    "",
+                    preg_replace(
+                        "/(\r\n|\n|\r)/",
+                        "",
+                        preg_replace(
+                            "/;/",
+                            ",",
+                            $objPresentations->br2nl(
                                 html_entity_decode(
-                                    $obs['description'], ENT_COMPAT, 'UTF-8'
+                                    $obs['description'],
+                                    ENT_COMPAT,
+                                    'UTF-8'
                                 )
                             )
                         )
@@ -2010,13 +2071,13 @@ class Utils
         }
     }
 
-     /**
-      * Creates a skylist file from an array of observations.
-      *
-      * @param array $result The array of objects.
-      *
-      * @return string The string with skySafari file with the observations.
-      */
+    /**
+     * Creates a skylist file from an array of observations.
+     *
+     * @param array $result The array of objects.
+     *
+     * @return string The string with skySafari file with the observations.
+     */
     public function skylistObservations($result)
     {
         global $objLens, $objFilter, $objEyepiece, $objLocation, $objPresentations;
@@ -2024,7 +2085,7 @@ class Utils
 
         echo "SkySafariObservingListVersion=3.0\n";
 
-        foreach ($result as $key=>$value) {
+        foreach ($result as $key => $value) {
             $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
 
             echo "\n";
@@ -2034,7 +2095,7 @@ class Utils
             echo "   ObjectID=" . $objectId . ",-1,-1" . "\n";
 
             $objectNames = $this->getObjectNames($obs, $objectId);
-            foreach ($objectNames as $key=>$objectName) {
+            foreach ($objectNames as $key => $objectName) {
                 echo "   CatalogNumber=" . $objectName . "\n";
             }
 
@@ -2043,15 +2104,24 @@ class Utils
             echo "   Location="
                 . html_entity_decode(
                     $objLocation->getLocationPropertyFromId(
-                        $obs['locationid'], 'name'
+                        $obs['locationid'],
+                        'name'
                     )
                 ) . "\n";
             echo "   Comment=" . preg_replace(
-                "/(\")/", "", preg_replace(
-                    "/(\r\n|\n|\r)/", "", preg_replace(
-                        "/;/", ",", $objPresentations->br2nl(
+                "/(\")/",
+                "",
+                preg_replace(
+                    "/(\r\n|\n|\r)/",
+                    "",
+                    preg_replace(
+                        "/;/",
+                        ",",
+                        $objPresentations->br2nl(
                             html_entity_decode(
-                                $obs['description'], ENT_COMPAT, 'UTF-8'
+                                $obs['description'],
+                                ENT_COMPAT,
+                                'UTF-8'
                             )
                         )
                     )
@@ -2059,7 +2129,8 @@ class Utils
             ) . "\n";
             $instrument = html_entity_decode(
                 $objInstrument->getInstrumentPropertyFromId(
-                    $obs['instrumentid'], 'name'
+                    $obs['instrumentid'],
+                    'name'
                 )
             );
             $eyepiece = html_entity_decode(
@@ -2081,19 +2152,19 @@ class Utils
             if (!empty($filter)) {
                 echo ", " . $filter;
             }
-            echo ("\n");
+            echo("\n");
 
             echo "EndObject=SkyObject\n";
         }
     }
 
-     /**
-      * Creates a pdf file from an array of comet observations.
-      *
-      * @param array $result The array of comet observations.
-      *
-      * @return string The pdf file with the comet observations.
-      */
+    /**
+     * Creates a pdf file from an array of comet observations.
+     *
+     * @param array $result The array of comet observations.
+     *
+     * @return string The pdf file with the comet observations.
+     */
     public function pdfCometObservations($result)
     {
         include_once "cometobjects.php";
@@ -2123,9 +2194,9 @@ class Utils
 
         $fontdir = $instDir . 'lib/fonts/Helvetica.afm';
         $pdf->selectFont($fontdir);
-        $pdf->ezText(utf8_decode(html_entity_decode(_("DeepskyLog Comet Observations"))) . "\n");
+        $pdf->ezText(mb_convert_encoding((html_entity_decode(_("DeepskyLog Comet Observations"))) . "\n", 'ISO-8859-1', 'UTF-8'));
 
-        foreach ($result as $key=>$value) {
+        foreach ($result as $key => $value) {
             $objectname = $objCometObject->getName(
                 $observation->getObjectId($value)
             );
@@ -2144,7 +2215,8 @@ class Utils
             $hour = (int) ($time / 100);
             $minute = $time - $hour * 100;
             $formattedDate = date(
-                $dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0])
+                $dateformat,
+                mktime(0, 0, 0, $date[1], $date[2], $date[0])
             );
 
             if ($minute < 10) {
@@ -2170,7 +2242,8 @@ class Utils
                 ) {
                     $locationname = _("Location") . " : "
                         . $location->getLocationPropertyFromId(
-                            $observation->getLocationId($value), 'name'
+                            $observation->getLocationId($value),
+                            'name'
                         );
                     $extra = ", ";
                 } else {
@@ -2179,7 +2252,8 @@ class Utils
 
                 if ($observation->getInstrumentId($value) != 0) {
                     $instr = $instrument->getInstrumentPropertyFromId(
-                        $observation->getInstrumentId($value), 'name'
+                        $observation->getInstrumentId($value),
+                        'name'
                     );
                     if ($instr == "Naked eye") {
                         $instr = _("Naked Eye");
@@ -2222,7 +2296,7 @@ class Utils
             // Magnitude
             $magnitude = $observation->getMagnitude($value);
 
-            if ($magnitude != - 99.9) {
+            if ($magnitude != -99.9) {
                 $magstr = "";
 
                 if ($observation->getMagnitudeWeakerThan($value)) {
@@ -2245,7 +2319,7 @@ class Utils
             $dcstr = "";
             $extra = "";
 
-            if (strcmp($dc, "") != 0 || $coma != - 99) {
+            if (strcmp($dc, "") != 0 || $coma != -99) {
                 if (strcmp($dc, "") != 0) {
                     $dcstr = $dcstr . html_entity_decode(_("Degree of condensation")) . " : "
                         . $dc;
@@ -2253,7 +2327,7 @@ class Utils
                 }
 
                 // Coma
-                if ($coma != - 99) {
+                if ($coma != -99) {
                     $dcstr = $dcstr . $extra . html_entity_decode(_("Coma"))
                         . " : " . $coma . "'";
                 }
@@ -2268,14 +2342,14 @@ class Utils
             $tailstr = "";
             $extra = "";
 
-            if ($tail != - 99 || $pa != - 99) {
-                if ($tail != - 99) {
+            if ($tail != -99 || $pa != -99) {
+                if ($tail != -99) {
                     $tailstr = $tailstr . html_entity_decode(_("Tail length"))
                         . " : " . $tail . "'";
                     $extra = ", ";
                 }
 
-                if ($pa != - 99) {
+                if ($pa != -99) {
                     $tailstr = $tailstr . $extra
                         . html_entity_decode(_("Position angle of tail"))
                         . " : " . $pa . "";
@@ -2304,7 +2378,11 @@ class Utils
                     || fnmatch($value . ".png", $file)
                 ) {
                     $pdf->ezImage(
-                        $upload_dir . "/" . $value . ".jpg", 0, 500, "none", "left"
+                        $upload_dir . "/" . $value . ".jpg",
+                        0,
+                        500,
+                        "none",
+                        "left"
                     );
                 }
             }
@@ -2315,21 +2393,21 @@ class Utils
         $pdf->ezStream();
     }
 
-     /**
-      * Creates a pdf document from an array of objects.
-      *
-      * @param array $result The array of objects.
-      *
-      * @return string The pdf file with the object.
-      */
+    /**
+     * Creates a pdf document from an array of objects.
+     *
+     * @param array $result The array of objects.
+     *
+     * @return string The pdf file with the object.
+     */
     public function pdfObjectnames($result)
     {
         global $instDir;
         $page = 1;
         $i = 0;
         $result = $this->sortResult($result);
-        foreach ($result as $key=>$valueA) {
-            $obs1[] = array (
+        foreach ($result as $key => $valueA) {
+            $obs1[] = array(
                $valueA['showname']
             );
         }
@@ -2337,11 +2415,14 @@ class Utils
         $pdf = new Cezpdf('a4', 'landscape');
         $pdf->ezStartPageNumbers(450, 15, 10);
         $pdf->selectFont($instDir . 'lib/fonts/Helvetica.afm');
-        $pdf->ezText(utf8_decode(html_entity_decode($_GET['pdfTitle'])), 18);
+        $pdf->ezText(mb_convert_encoding(html_entity_decode($_GET['pdfTitle']), 'ISO-8859-1', 'UTF-8'), 18);
         $pdf->ezText("\n", 5);
         $pdf->ezColumnsStart(array('num' => 10));
         $pdf->ezTable(
-            $obs1, '', '', array(
+            $obs1,
+            '',
+            '',
+            array(
             "width" => "750",
             "cols" => array(
                 array(
@@ -2386,17 +2467,19 @@ class Utils
                 if (!isset($v[$sName])) {
                     $sName = 'objectname';
                 }
-                if ($v[$sName] == "") {
+                if (is_array($v) && $v[$sName] == "") {
                     if ($sortOrder[$cnt] == 1) {
                         $sort[$sName][$k] = -99.0;
                     } else {
                         $sort[$sName][$k] = +99.0;
                     }
                 } else {
-                    $sort[$sName][$k] = $v[$sName];
+                    if (is_array($v)) {
+                        $sort[$sName][$k] = $v[$sName];
+                    }
                 }
             }
-            $cnt ++;
+            $cnt++;
         }
         $cnt = 0;
         $dynamicSort = array();
@@ -2433,26 +2516,33 @@ class Utils
 
         $result = $this->sortResult($result);
 
-        foreach ($result as $key=>$valueA) {
+        foreach ($result as $key => $valueA) {
             $obs1[] = array(
                 "Name" => $valueA['showname'],
                 "ra" => $objPresentations->raToString($valueA['objectra']),
                 "decl" => $objPresentations->decToString($valueA['objectdecl'], 0),
                 "mag" => $objPresentations->presentationInt1(
-                    $valueA['objectmagnitude'], 99.9, ''
+                    $valueA['objectmagnitude'],
+                    99.9,
+                    ''
                 ),
                 "sb" => $objPresentations->presentationInt1(
-                    $valueA['objectsurfacebrightness'], 99.9, ''
+                    $valueA['objectsurfacebrightness'],
+                    99.9,
+                    ''
                 ),
                 "con" => $GLOBALS[$valueA['objectconstellation']],
                 "diam" => $valueA['objectsize'],
                 "pa" => $objPresentations->presentationInt(
-                    $valueA['objectpa'], 999, "-"
+                    $valueA['objectpa'],
+                    999,
+                    "-"
                 ),
                 "type" => $GLOBALS[$valueA['objecttype']],
                 "page" => $valueA[$objObserver->getObserverProperty(
                     $this->checkSessionKey('deepskylog_id', ''),
-                    'standardAtlasCode', 'urano'
+                    'standardAtlasCode',
+                    'urano'
                 )],
                 "contrast" => $valueA['objectcontrast'],
                 "magnification" => $valueA['objectoptimalmagnificationvalue'],
@@ -2466,7 +2556,8 @@ class Utils
         $fontdir = $instDir . 'lib/fonts/Helvetica.afm';
         $pdf->selectFont($fontdir);
         $pdf->ezTable(
-            $obs1, array(
+            $obs1,
+            array(
                 "Name" => html_entity_decode(_("Name")),
                 "ra" => html_entity_decode(_("Right Ascension")),
                 "decl" => html_entity_decode(_("Declination")),
@@ -2478,15 +2569,18 @@ class Utils
                 "pa" => html_entity_decode(_("Pos. Angle")),
                 "page" => html_entity_decode(
                     $objAtlas->atlasCodes[$objObserver->getObserverProperty(
-                        $loggedUser, 'standardAtlasCode', 'urano'
+                        $loggedUser,
+                        'standardAtlasCode',
+                        'urano'
                     )]
                 ),
                 "contrast" => html_entity_decode(_("Contr. res.")),
                 "magnification" => html_entity_decode(_("Opt. mag.")),
                 "seen" => html_entity_decode(_("Seen")),
                 "seendate" => html_entity_decode(_("Last Seen"))
-            ), utf8_decode(html_entity_decode($_GET['pdfTitle'])),
-            array (
+            ),
+            mb_convert_encoding(html_entity_decode($_GET['pdfTitle']), 'ISO-8859-1', 'UTF-8'),
+            array(
             "width" => "750",
             "cols" => array(
                   "Name" => array(
@@ -2589,22 +2683,27 @@ class Utils
         $SectionBarWidth = 400 + $sectionBarSpace;
 
         $theDate = date('d/m/Y');
-        $pdf->addTextWrap($xleft, $header, 8, utf8_decode($theDate), 100);
+        $pdf->addTextWrap($xleft, $header, 8, mb_convert_encoding($theDate, 'ISO-8859-1', 'UTF-8'), 100);
 
         if ($loggedUser
             && $objObserver->getObserverProperty($loggedUser, 'name')
             && $objLocation->getLocationPropertyFromId(
-                $objObserver->getObserverProperty($loggedUser, 'stdlocation'), 'name'
+                $objObserver->getObserverProperty($loggedUser, 'stdlocation'),
+                'name'
             )
             && $objInstrument->getInstrumentPropertyFromId(
                 $objObserver->getObserverProperty(
-                    $loggedUser, 'stdtelescope'
-                ), 'name'
+                    $loggedUser,
+                    'stdtelescope'
+                ),
+                'name'
             )
         ) {
             $pdf->addTextWrap(
-                $xleft, $footer, 8,
-                utf8_decode(
+                $xleft,
+                $footer,
+                8,
+                mb_convert_encoding(
                     html_entity_decode(
                         sprintf(
                             _("Prepared for %s with %s at %s"),
@@ -2613,92 +2712,132 @@ class Utils
                             $objObserver->getObserverProperty($loggedUser, 'name'),
                             $objInstrument->getInstrumentPropertyFromId(
                                 $objObserver->getObserverProperty(
-                                    $loggedUser, 'stdtelescope'
-                                ), 'name'
+                                    $loggedUser,
+                                    'stdtelescope'
+                                ),
+                                'name'
                             ),
                             $objLocation->getLocationPropertyFromId(
                                 $objObserver->getObserverProperty(
-                                    $loggedUser, 'stdlocation'
+                                    $loggedUser,
+                                    'stdlocation'
                                 ),
                                 'name'
                             )
                         )
-                    )
-                ), $xmid + $SectionBarWidth, 'center'
+                    ),
+                    'ISO-8859-1',
+                    'UTF-8'
+                ),
+                $xmid + $SectionBarWidth,
+                'center'
             );
         }
         $pdf->addTextWrap(
-            $xleft, $header, 10,
-            utf8_decode(html_entity_decode($_GET['pdfTitle'])),
-            $xmid + $SectionBarWidth, 'center'
+            $xleft,
+            $header,
+            10,
+            mb_convert_encoding(html_entity_decode($_GET['pdfTitle']), 'ISO-8859-1', 'UTF-8'),
+            $xmid + $SectionBarWidth,
+            'center'
         );
 
         $pdf->addTextWrap(
-            $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 8,
-            utf8_decode(_("Page ") . '1'), 100, 'right'
+            $xmid + $SectionBarWidth - $sectionBarSpace - 100,
+            $header,
+            8,
+            mb_convert_encoding(_("Page ") . '1', 'ISO-8859-1', 'UTF-8'),
+            100,
+            'right'
         );
-        foreach ($result as $key=>$valueA) {
+        foreach ($result as $key => $valueA) {
             $con = $valueA['objectconstellation'];
             if ($y < $bottom) {
                 $y = $top;
                 if ($xbase == $xmid) {
-                    if ($pagenr ++) {
+                    if ($pagenr++) {
                         $pdf->newPage();
                         $pdf->addTextWrap(
-                            $xleft, $header, 8, utf8_decode($theDate), 100
+                            $xleft,
+                            $header,
+                            8,
+                            mb_convert_encoding($theDate, 'ISO-8859-1', 'UTF-8'),
+                            100
                         );
                         if ($loggedUser
                             && $objObserver->getObserverProperty(
-                                $loggedUser, 'name'
+                                $loggedUser,
+                                'name'
                             )
                             && $objLocation->getLocationPropertyFromId(
                                 $objObserver->getObserverProperty(
-                                    $loggedUser, 'stdlocation'
-                                ), 'name'
+                                    $loggedUser,
+                                    'stdlocation'
+                                ),
+                                'name'
                             )
                             && $objInstrument->getInstrumentPropertyFromId(
                                 $objObserver->getObserverProperty(
-                                    $loggedUser, 'stdtelescope'
-                                ), 'name'
+                                    $loggedUser,
+                                    'stdtelescope'
+                                ),
+                                'name'
                             )
                         ) {
                             $pdf->addTextWrap(
-                                $xleft, $footer, 8,
-                                utf8_decode(
+                                $xleft,
+                                $footer,
+                                8,
+                                mb_convert_encoding(
                                     html_entity_decode(
                                         sprintf(
                                             _("Prepared for %s with %s at %s"),
                                             $objObserver->getObserverProperty(
-                                                $loggedUser, 'name'
+                                                $loggedUser,
+                                                'name'
                                             ) . ' ' .
                                             $objObserver->getObserverProperty(
-                                                $loggedUser, 'firstname'
+                                                $loggedUser,
+                                                'firstname'
                                             ),
                                             $objInstrument->getInstrumentPropertyFromId(
                                                 $objObserver->getObserverProperty(
-                                                    $loggedUser, 'stdtelescope'
-                                                ), 'name'
+                                                    $loggedUser,
+                                                    'stdtelescope'
+                                                ),
+                                                'name'
                                             ),
                                             $objLocation->getLocationPropertyFromId(
                                                 $objObserver->getObserverProperty(
-                                                    $loggedUser, 'stdlocation'
-                                                ), 'name'
+                                                    $loggedUser,
+                                                    'stdlocation'
+                                                ),
+                                                'name'
                                             )
                                         )
-                                    )
+                                    ),
+                                    'ISO-8859-1',
+                                    'UTF-8'
                                 ),
-                                $xmid + $SectionBarWidth, 'center'
+                                $xmid + $SectionBarWidth,
+                                'center'
                             );
                         }
                         $pdf->addTextWrap(
-                            $xleft, $header, 10,
-                            utf8_decode(html_entity_decode($_GET['pdfTitle'])),
-                            $xmid + $SectionBarWidth, 'center'
+                            $xleft,
+                            $header,
+                            10,
+                            mb_convert_encoding(html_entity_decode($_GET['pdfTitle']), 'ISO-8859-1', 'UTF-8'),
+                            $xmid + $SectionBarWidth,
+                            'center'
                         );
                         $pdf->addTextWrap(
                             $xmid + $SectionBarWidth - $sectionBarSpace - 100,
-                            $header, 8, utf8_decode(_("Page ") . $pagenr),
-                            100, 'right'
+                            $header,
+                            8,
+                            mb_convert_encoding(_("Page ") . $pagenr, 'ISO-8859-1', 'UTF-8'),
+                            100,
+                            'right'
                         );
                     }
                     $xbase = $xleft;
@@ -2706,52 +2845,88 @@ class Utils
                     $xbase = $xmid;
                 }
             }
-            $pdf->addTextWrap($xbase, $y, $fontSizeText, utf8_decode($valueA['objectseen']), 45); // seen
-            $pdf->addTextWrap($xbase + 45, $y, $fontSizeText, utf8_decode($valueA['objectlastseen']), 55); // last seen
+            $pdf->addTextWrap($xbase, $y, $fontSizeText, mb_convert_encoding($valueA['objectseen'], 'ISO-8859-1', 'UTF-8'), 45); // seen
+            $pdf->addTextWrap($xbase + 45, $y, $fontSizeText, mb_convert_encoding($valueA['objectlastseen'], 'ISO-8859-1', 'UTF-8'), 55); // last seen
             $pdf->addTextWrap(
-                $xbase + 85, $y, $fontSizeText,
-                utf8_decode(
-                    $valueA['showname']
-                ), 85
+                $xbase + 85,
+                $y,
+                $fontSizeText,
+                mb_convert_encoding(
+                    $valueA['showname'],
+                    'ISO-8859-1',
+                    'UTF-8'
+                ),
+                85
             ); // object
-            $pdf->addTextWrap($xbase + 150, $y, $fontSizeText, utf8_decode($valueA['objecttype']), 30); // type
-            $pdf->addTextWrap($xbase + 180, $y, $fontSizeText, utf8_decode($valueA['objectconstellation']), 20); // constellation
-            $pdf->addTextWrap($xbase + 200, $y, $fontSizeText, utf8_decode($objPresentations->presentationInt1($valueA['objectmagnitude'], 99.9, '')), 17, 'left'); // mag
-            $pdf->addTextWrap($xbase + 217, $y, $fontSizeText, utf8_decode($objPresentations->presentationInt1($valueA['objectsurfacebrightness'], 99.9, '')), 18, 'left'); // sb
+            $pdf->addTextWrap($xbase + 150, $y, $fontSizeText, mb_convert_encoding($valueA['objecttype'], 'ISO-8859-1', 'UTF-8'), 30); // type
+            $pdf->addTextWrap($xbase + 180, $y, $fontSizeText, mb_convert_encoding($valueA['objectconstellation'], 'ISO-8859-1', 'UTF-8'), 20); // constellation
+            $pdf->addTextWrap($xbase + 200, $y, $fontSizeText, mb_convert_encoding($objPresentations->presentationInt1($valueA['objectmagnitude'], 99.9, ''), 'ISO-8859-1', 'UTF-8'), 17, 'left'); // mag
+            $pdf->addTextWrap($xbase + 217, $y, $fontSizeText, mb_convert_encoding($objPresentations->presentationInt1($valueA['objectsurfacebrightness'], 99.9, ''), 'ISO-8859-1', 'UTF-8'), 18, 'left'); // sb
             $pdf->addTextWrap(
-                $xbase + 235, $y, $fontSizeText, utf8_decode(
+                $xbase + 235,
+                $y,
+                $fontSizeText,
+                mb_convert_encoding(
                     $objPresentations->raToStringHM($valueA ['objectra']) . ' ' .
-                    $objPresentations->decToString($valueA['objectdecl'], 0)
-                ), 60
+                    $objPresentations->decToString($valueA['objectdecl'], 0),
+                    'ISO-8859-1',
+                    'UTF-8'
+                ),
+                60
             ); // ra - decl
             $pdf->addTextWrap(
-                $xbase + 295, $y, $fontSizeText,
-                utf8_decode(
+                $xbase + 295,
+                $y,
+                $fontSizeText,
+                mb_convert_encoding(
                     $valueA['objectsize'] . '/' .
-                    $objPresentations->presentationInt($valueA['objectpa'], 999, "-")
-                ), 55
+                    $objPresentations->presentationInt($valueA['objectpa'], 999, "-"),
+                    'ISO-8859-1',
+                    'UTF-8'
+                ),
+                55
             ); // size
             $pdf->addTextWrap(
-                $xbase + 351, $y, $fontSizeText,
-                utf8_decode(
+                $xbase + 351,
+                $y,
+                $fontSizeText,
+                mb_convert_encoding(
                     $objPresentations->presentationInt1(
-                        $valueA['objectcontrast'], '', ''
-                    )
-                ), 17, 'left'
+                        $valueA['objectcontrast'],
+                        '',
+                        ''
+                    ),
+                    'ISO-8859-1',
+                    'UTF-8'
+                ),
+                17,
+                'left'
             ); // contrast
             $pdf->addTextWrap(
-                $xbase + 368, $y, $fontSizeText,
-                utf8_decode((int) $valueA['objectoptimalmagnification']), 17, 'left'
+                $xbase + 368,
+                $y,
+                $fontSizeText,
+                mb_convert_encoding((int) $valueA['objectoptimalmagnification'], 'ISO-8859-1', 'UTF-8'),
+                17,
+                'left'
             ); // magnification
             $pdf->addTextWrap(
-                $xbase + 380, $y, $fontSizeText,
-                utf8_decode(
+                $xbase + 380,
+                $y,
+                $fontSizeText,
+                mb_convert_encoding(
                     '<b>'
                     . $valueA[($loggedUser ? $objObserver->getObserverProperty(
-                        $loggedUser, 'standardAtlasCode', 'urano'
+                        $loggedUser,
+                        'standardAtlasCode',
+                        'urano'
                     ) : 'urano')]
-                    . '</b>'
-                ), 20, 'right'
+                    . '</b>',
+                    'ISO-8859-1',
+                    'UTF-8'
+                ),
+                20,
+                'right'
             ); // atlas page
 
             $y -= $deltaline;
@@ -2762,8 +2937,10 @@ class Utils
                     $valueA['objectlistdescription']
                 );
                 $theText = $pdf->addTextWrap(
-                    $xbase + $descriptionLeadingSpace, $y,
-                    $fontSizeText, '<i>' . utf8_decode($theText),
+                    $xbase + $descriptionLeadingSpace,
+                    $y,
+                    $fontSizeText,
+                    '<i>' . mb_convert_encoding($theText, 'ISO-8859-1', 'UTF-8'),
                     $xmid - $xleft - $descriptionLeadingSpace - 10
                 );
                 $y -= $deltaline;
@@ -2771,38 +2948,51 @@ class Utils
                     if ($y < $bottomsection) {
                         $y = $top;
                         if ($xbase == $xmid) {
-                            if ($pagenr ++) {
+                            if ($pagenr++) {
                                 $pdf->newPage();
                                 $pdf->addTextWrap(
-                                    $xleft, $header, 8, utf8_decode($theDate), 100
+                                    $xleft,
+                                    $header,
+                                    8,
+                                    mb_convert_encoding($theDate, 'ISO-8859-1', 'UTF-8'),
+                                    100
                                 );
                                 if ($objObserver->getObserverProperty(
-                                    $loggedUser, 'name'
+                                    $loggedUser,
+                                    'name'
                                 )
                                     && $objLocation->getLocationPropertyFromId(
                                         $objObserver->getObserverProperty(
-                                            $loggedUser, 'stdlocation'
-                                        ), 'name'
+                                            $loggedUser,
+                                            'stdlocation'
+                                        ),
+                                        'name'
                                     )
                                     && $objInstrument->getInstrumentPropertyFromId(
                                         $objObserver->getObserverProperty(
-                                            $loggedUser, 'stdtelescope'
-                                        ), 'name'
+                                            $loggedUser,
+                                            'stdtelescope'
+                                        ),
+                                        'name'
                                     )
                                 ) {
                                     $pdf->addTextWrap(
-                                        $xleft, $footer, 8,
-                                        utf8_decode(
+                                        $xleft,
+                                        $footer,
+                                        8,
+                                        mb_convert_encoding(
                                             html_entity_decode(
                                                 sprintf(
                                                     _("Prepared for %s with %s at %s"),
                                                     $objObserver
                                                         ->getObserverProperty(
-                                                            $loggedUser, 'name'
+                                                            $loggedUser,
+                                                            'name'
                                                         ) . ' ' .
                                                     $objObserver
                                                         ->getObserverProperty(
-                                                            $loggedUser, 'firstname'
+                                                            $loggedUser,
+                                                            'firstname'
                                                         ),
                                                     $objInstrument
                                                         ->getInstrumentPropertyFromId(
@@ -2810,7 +3000,8 @@ class Utils
                                                             ->getObserverProperty(
                                                                 $loggedUser,
                                                                 'stdtelescope'
-                                                            ), 'name'
+                                                            ),
+                                                            'name'
                                                         ),
                                                     $objLocation
                                                         ->getLocationPropertyFromId(
@@ -2818,62 +3009,50 @@ class Utils
                                                                 ->getObserverProperty(
                                                                     $loggedUser,
                                                                     'stdlocation'
-                                                                ), 'name'
+                                                                ),
+                                                            'name'
                                                         )
                                                 )
-                                            )
+                                            ),
+                                            'ISO-8859-1',
+                                            'UTF-8'
                                         ),
-                                        $xmid + $SectionBarWidth, 'center'
+                                        $xmid + $SectionBarWidth,
+                                        'center'
                                     );
                                 }
                                 $pdf->addTextWrap(
-                                    $xleft, $header, 10, utf8_decode(
-                                        html_entity_decode($_GET['pdfTitle'])
+                                    $xleft,
+                                    $header,
+                                    10,
+                                    mb_convert_encoding(
+                                        html_entity_decode($_GET['pdfTitle']),
+                                        'ISO-8859-1',
+                                        'UTF-8'
                                     ),
-                                    $xmid + $SectionBarWidth, 'center'
+                                    $xmid + $SectionBarWidth,
+                                    'center'
                                 );
                                 $pdf->addTextWrap(
                                     $xmid + $SectionBarWidth - $sectionBarSpace
                                     - 100,
-                                    $header, 8,
-                                    utf8_decode(_("Page ") . $pagenr),
-                                    100, 'right'
+                                    $header,
+                                    8,
+                                    mb_convert_encoding(_("Page ") . $pagenr, 'ISO-8859-1', 'UTF-8'),
+                                    100,
+                                    'right'
                                 );
                             }
                             $xbase = $xleft;
-                            if ($sort) {
-                                $y -= $deltalineSection;
-                                $pdf->rectangle(
-                                    $xbase - $sectionBarSpace,
-                                    $y - $sectionBarSpace,
-                                    $SectionBarWidth, $sectionBarHeight
-                                );
-                                $pdf->addText(
-                                    $xbase, $y, $fontSizeSection,
-                                    utf8_decode($GLOBALS[$$sort])
-                                );
-                                $y -= $deltaline + $deltalineSection;
-                            }
                         } else {
                             $xbase = $xmid;
-                            if ($sort) {
-                                $y -= $deltalineSection;
-                                $pdf->rectangle(
-                                    $xbase - $sectionBarSpace,
-                                    $y - $sectionBarSpace,
-                                    $SectionBarWidth, $sectionBarHeight
-                                );
-                                $pdf->addText(
-                                    $xbase, $y, $fontSizeSection,
-                                    utf8_decode($GLOBALS[$$sort])
-                                );
-                                $y -= $deltaline + $deltalineSection;
-                            }
                         }
                     }
                     $theText = $pdf->addTextWrap(
-                        $xbase + $descriptionLeadingSpace, $y, $fontSizeText,
-                        utf8_decode($theText),
+                        $xbase + $descriptionLeadingSpace,
+                        $y,
+                        $fontSizeText,
+                        mb_convert_encoding($theText, 'ISO-8859-1', 'UTF-8'),
                         $xmid - $xleft - $descriptionLeadingSpace - 10
                     );
                     $y -= $deltaline;
@@ -2884,8 +3063,11 @@ class Utils
             ) {
                 $theText = $objPresentations->br2nl($valueA['objectdescription']);
                 $theText = $pdf->addTextWrap(
-                    $xbase + $descriptionLeadingSpace, $y, $fontSizeText, '<i>' .
-                    utf8_decode($theText),
+                    $xbase + $descriptionLeadingSpace,
+                    $y,
+                    $fontSizeText,
+                    '<i>' .
+                    mb_convert_encoding($theText, 'ISO-8859-1', 'UTF-8'),
                     $xmid - $xleft - $descriptionLeadingSpace - 10
                 );
                 $y -= $deltaline;
@@ -2893,37 +3075,49 @@ class Utils
                     if ($y < $bottomsection) {
                         $y = $top;
                         if ($xbase == $xmid) {
-                            if ($pagenr ++) {
+                            if ($pagenr++) {
                                 $pdf->newPage();
                                 $pdf->addTextWrap(
-                                    $xleft, $header, 8,
-                                    utf8_decode($theDate), 100
+                                    $xleft,
+                                    $header,
+                                    8,
+                                    mb_convert_encoding($theDate, 'ISO-8859-1', 'UTF-8'),
+                                    100
                                 );
                                 if ($objObserver->getObserverProperty(
-                                    $loggedUser, 'name'
+                                    $loggedUser,
+                                    'name'
                                 )
                                     && $objLocation->getLocationPropertyFromId(
                                         $objObserver->getObserverProperty(
-                                            $loggedUser, 'stdlocation'
-                                        ), 'name'
+                                            $loggedUser,
+                                            'stdlocation'
+                                        ),
+                                        'name'
                                     )
                                     && $objInstrument->getInstrumentPropertyFromId(
                                         $objObserver->getObserverProperty(
-                                            $loggedUser, 'stdtelescope'
-                                        ), 'name'
+                                            $loggedUser,
+                                            'stdtelescope'
+                                        ),
+                                        'name'
                                     )
                                 ) {
                                     $pdf->addTextWrap(
-                                        $xleft, $footer, 8,
-                                        utf8_decode(
+                                        $xleft,
+                                        $footer,
+                                        8,
+                                        mb_convert_encoding(
                                             html_entity_decode(
                                                 sprintf(
                                                     _("Prepared for %s with %s at %s"),
                                                     $objObserver->getObserverProperty(
-                                                        $loggedUser, 'firstname'
+                                                        $loggedUser,
+                                                        'firstname'
                                                     ) . ' ' .
                                                     $objObserver->getObserverProperty(
-                                                        $loggedUser, 'name'
+                                                        $loggedUser,
+                                                        'name'
                                                     ),
                                                     $objInstrument
                                                         ->getInstrumentPropertyFromId(
@@ -2931,7 +3125,8 @@ class Utils
                                                                 ->getObserverProperty(
                                                                     $loggedUser,
                                                                     'stdtelescope'
-                                                                ), 'name'
+                                                                ),
+                                                            'name'
                                                         ),
                                                     $objLocation
                                                         ->getLocationPropertyFromId(
@@ -2939,61 +3134,50 @@ class Utils
                                                                 ->getObserverProperty(
                                                                     $loggedUser,
                                                                     'stdlocation'
-                                                                ), 'name'
+                                                                ),
+                                                            'name'
                                                         )
                                                 )
-                                            )
+                                            ),
+                                            'ISO-8859-1',
+                                            'UTF-8'
                                         ),
-                                        $xmid + $SectionBarWidth, 'center'
+                                        $xmid + $SectionBarWidth,
+                                        'center'
                                     );
                                 }
                                 $pdf->addTextWrap(
-                                    $xleft, $header, 10,
-                                    utf8_decode(
-                                        html_entity_decode($_GET ['pdfTitle'])
-                                    ), $xmid + $SectionBarWidth, 'center'
+                                    $xleft,
+                                    $header,
+                                    10,
+                                    mb_convert_encoding(
+                                        html_entity_decode($_GET ['pdfTitle']),
+                                        'ISO-8859-1',
+                                        'UTF-8'
+                                    ),
+                                    $xmid + $SectionBarWidth,
+                                    'center'
                                 );
                                 $pdf->addTextWrap(
                                     $xmid + $SectionBarWidth - $sectionBarSpace
-                                    - 100, $header, 8,
-                                    utf8_decode(_("Page ") . $pagenr),
-                                    100, 'right'
+                                    - 100,
+                                    $header,
+                                    8,
+                                    mb_convert_encoding(_("Page ") . $pagenr, 'ISO-8859-1', 'UTF-8'),
+                                    100,
+                                    'right'
                                 );
                             }
                             $xbase = $xleft;
-                            if ($sort) {
-                                $y -= $deltalineSection;
-                                $pdf->rectangle(
-                                    $xbase - $sectionBarSpace,
-                                    $y - $sectionBarSpace,
-                                    $SectionBarWidth, $sectionBarHeight
-                                );
-                                $pdf->addText(
-                                    $xbase, $y, $fontSizeSection,
-                                    utf8_decode($GLOBALS[$$sort])
-                                );
-                                $y -= $deltaline + $deltalineSection;
-                            }
                         } else {
                             $xbase = $xmid;
-                            if ($sort) {
-                                $y -= $deltalineSection;
-                                $pdf->rectangle(
-                                    $xbase - $sectionBarSpace,
-                                    $y - $sectionBarSpace,
-                                    $SectionBarWidth, $sectionBarHeight
-                                );
-                                $pdf->addText(
-                                    $xbase, $y, $fontSizeSection,
-                                    utf8_decode($GLOBALS[$$sort])
-                                );
-                                $y -= $deltaline + $deltalineSection;
-                            }
                         }
                     }
                     $theText = $pdf->addTextWrap(
-                        $xbase + $descriptionLeadingSpace, $y,
-                        $fontSizeText, utf8_decode($theText),
+                        $xbase + $descriptionLeadingSpace,
+                        $y,
+                        $fontSizeText,
+                        mb_convert_encoding($theText, 'ISO-8859-1', 'UTF-8'),
                         $xmid - $xleft - $descriptionLeadingSpace - 10
                     );
                     $y -= $deltaline;
@@ -3035,15 +3219,35 @@ class Utils
      * @return None
      */
     public function firstpage(
-        &$y, $top, &$xbase, $xmid, &$pagenr, $pdf, $xleft, $header, $fontSizeText,
-        $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $deltalineSection,
-        $sectionBarHeight, $fontSizeSection, $deltaline, $showelements, $reportdata
+        &$y,
+        $top,
+        &$xbase,
+        $xmid,
+        &$pagenr,
+        $pdf,
+        $xleft,
+        $header,
+        $fontSizeText,
+        $theDate,
+        $footer,
+        $SectionBarWidth,
+        $sectionBarSpace,
+        $deltalineSection,
+        $sectionBarHeight,
+        $fontSizeSection,
+        $deltaline,
+        $showelements,
+        $reportdata
     ) {
         global $objObserver, $loggedUser, $objLocation, $objInstrument;
         $y = $top;
         $xbase = $xleft;
         $pdf->addTextWrap(
-            $xleft, $header, $fontSizeText, utf8_decode($theDate), 100
+            $xleft,
+            $header,
+            $fontSizeText,
+            mb_convert_encoding($theDate, 'ISO-8859-1', 'UTF-8'),
+            100
         );
         if ($objObserver->getObserverProperty($loggedUser, 'name')
             && $objLocation->getLocationPropertyFromId(
@@ -3055,8 +3259,10 @@ class Utils
             ) && (strpos($showelements, 'h') !== false)
         ) {
             $pdf->addTextWrap(
-                $xleft, $footer, $fontSizeText,
-                utf8_decode(
+                $xleft,
+                $footer,
+                $fontSizeText,
+                mb_convert_encoding(
                     html_entity_decode(
                         sprintf(
                             _("Prepared for %s with %s at %s"),
@@ -3065,21 +3271,29 @@ class Utils
                             $objObserver->getObserverProperty($loggedUser, 'name'),
                             $objInstrument->getInstrumentPropertyFromId(
                                 $objObserver->getObserverProperty(
-                                    $loggedUser, 'stdtelescope'
-                                ), 'name'
+                                    $loggedUser,
+                                    'stdtelescope'
+                                ),
+                                'name'
                             ),
                             $objLocation->getLocationPropertyFromId(
                                 $objObserver->getObserverProperty(
-                                    $loggedUser, 'stdlocation'
-                                ), 'name'
+                                    $loggedUser,
+                                    'stdlocation'
+                                ),
+                                'name'
                             ) .
                             _(' on ') . $this->checkSessionKey('globalDay')
                             . ' ' .
                             $GLOBALS ['Month' . $this->checkSessionKey('globalMonth')]
                             . ' ' . $this->checkSessionKey('globalYear')
                         )
-                    )
-                ), $xmid + $SectionBarWidth, 'center'
+                    ),
+                    'ISO-8859-1',
+                    'UTF-8'
+                ),
+                $xmid + $SectionBarWidth,
+                'center'
             );
         }
         if ($objObserver->getObserverProperty($loggedUser, 'name')
@@ -3090,8 +3304,10 @@ class Utils
             && (strpos($showelements, 'e') !== false)
         ) {
             $pdf->addTextWrap(
-                $xleft, $footer - $deltaline, $fontSizeText,
-                utf8_decode(
+                $xleft,
+                $footer - $deltaline,
+                $fontSizeText,
+                mb_convert_encoding(
                     _('Sun down: ') . $_SESSION['efemerides']['sset'] . _(' to ') .
                     $_SESSION['efemerides']['srise'] . " - "
                         . _('Nautical night: ') .
@@ -3101,33 +3317,44 @@ class Utils
                     $_SESSION['efemerides']['astroe'] . _(' to ') .
                     $_SESSION['efemerides']['astrob'] . " - " . _('Moon up: ') .
                     $_SESSION['efemerides']['moon0'] . _(' to ') .
-                    $_SESSION['efemerides']['moon2']
-                ), $xmid + $SectionBarWidth, 'center'
+                    $_SESSION['efemerides']['moon2'],
+                    'ISO-8859-1',
+                    'UTF-8'
+                ),
+                $xmid + $SectionBarWidth,
+                'center'
             );
         }
         if (strpos($showelements, 'p') !== false) {
             $pdf->addTextWrap(
                 $xmid + $SectionBarWidth - $sectionBarSpace - 100,
-                $header, $fontSizeText,
-                utf8_decode(_("Page ") . $pagenr),
-                100, 'right'
+                $header,
+                $fontSizeText,
+                mb_convert_encoding(_("Page ") . $pagenr, 'ISO-8859-1', 'UTF-8'),
+                100,
+                'right'
             );
         }
         if (strpos($showelements, 't') !== false) {
             $pdf->addTextWrap(
-                $xleft, $header, 10,
-                utf8_decode(html_entity_decode($this->checkRequestKey('pdfTitle'))),
-                $xmid + $SectionBarWidth, 'center'
+                $xleft,
+                $header,
+                10,
+                mb_convert_encoding(html_entity_decode($this->checkRequestKey('pdfTitle')), 'ISO-8859-1', 'UTF-8'),
+                $xmid + $SectionBarWidth,
+                'center'
             );
         }
         if (strpos($showelements, 'l') !== false) {
             $pdf->line(
-                $xbase - $sectionBarSpace, $y + $fontSizeText + $sectionBarSpace,
-                $xbase + $SectionBarWidth, $y + $fontSizeText + $sectionBarSpace
+                $xbase - $sectionBarSpace,
+                $y + $fontSizeText + $sectionBarSpace,
+                $xbase + $SectionBarWidth,
+                $y + $fontSizeText + $sectionBarSpace
             );
             reset($reportdata);
             $deltaymax = 0;
-            foreach ($reportdata as $key=>$dataelement) {
+            foreach ($reportdata as $key => $dataelement) {
                 if ($dataelement['fieldwidth']) {
                     $justification = 'left';
                     if (strpos($dataelement['fieldstyle'], 'r') !== false) {
@@ -3145,8 +3372,10 @@ class Utils
                     $pdf->addTextWrap(
                         $xbase + $dataelement['fieldposition'],
                         $y - ($deltaline * $dataelement['fieldline']),
-                        $fontSizeText, utf8_decode($dataelement['fieldlegend']),
-                        $dataelement['fieldwidth'], $justification
+                        $fontSizeText,
+                        mb_convert_encoding($dataelement['fieldlegend'], 'ISO-8859-1', 'UTF-8'),
+                        $dataelement['fieldwidth'],
+                        $justification
                     );
                     $deltaymax = max($deltaymax, $dataelement['fieldline']);
                     if (strpos($dataelement['fieldstyle'], 'b') !== false) {
@@ -3159,8 +3388,10 @@ class Utils
             }
             $y -= $deltaline * ($deltaymax);
             $pdf->line(
-                $xbase - $sectionBarSpace, $y - $sectionBarSpace,
-                $xbase + $SectionBarWidth, $y - $sectionBarSpace
+                $xbase - $sectionBarSpace,
+                $y - $sectionBarSpace,
+                $xbase + $SectionBarWidth,
+                $y - $sectionBarSpace
             );
             $y -= ($deltaline + $sectionBarSpace);
         }
@@ -3203,10 +3434,30 @@ class Utils
      * @return None
      */
     public function newpage(
-        &$y, $top, $bottom, &$xbase, $xmid, &$pagenr, $pdf, $xleft, $header,
-        $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace,
-        $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection,
-        $deltaline, $i, $b, $showelements, $reportdata
+        &$y,
+        $top,
+        $bottom,
+        &$xbase,
+        $xmid,
+        &$pagenr,
+        $pdf,
+        $xleft,
+        $header,
+        $fontSizeText,
+        $theDate,
+        $footer,
+        $SectionBarWidth,
+        $sectionBarSpace,
+        $sort,
+        $con,
+        $deltalineSection,
+        $sectionBarHeight,
+        $fontSizeSection,
+        $deltaline,
+        $i,
+        $b,
+        $showelements,
+        $reportdata
     ) {
         global $objObserver, $loggedUser, $objLocation, $objInstrument;
         if ($i) {
@@ -3217,44 +3468,60 @@ class Utils
         }
         $y = $top;
         if ($xbase == $xmid) {
-            if ($pagenr ++) {
+            if ($pagenr++) {
                 $pdf->newPage();
                 $pdf->addTextWrap(
-                    $xleft, $header, $fontSizeText, utf8_decode($theDate), 100
+                    $xleft,
+                    $header,
+                    $fontSizeText,
+                    mb_convert_encoding($theDate, 'ISO-8859-1', 'UTF-8'),
+                    100
                 );
                 if ($objObserver->getObserverProperty($loggedUser, 'name')
                     && $objLocation->getLocationPropertyFromId(
                         $objObserver->getObserverProperty(
-                            $loggedUser, 'stdlocation'
-                        ), 'name'
+                            $loggedUser,
+                            'stdlocation'
+                        ),
+                        'name'
                     )
                     && $objInstrument->getInstrumentPropertyFromId(
                         $objObserver->getObserverProperty(
-                            $loggedUser, 'stdtelescope'
-                        ), 'name'
+                            $loggedUser,
+                            'stdtelescope'
+                        ),
+                        'name'
                     )
                     && (strpos($showelements, 'h') !== false)
                 ) {
                     $pdf->addTextWrap(
-                        $xleft, $footer, $fontSizeText,
-                        utf8_decode(
+                        $xleft,
+                        $footer,
+                        $fontSizeText,
+                        mb_convert_encoding(
                             html_entity_decode(
                                 sprintf(
                                     _("Prepared for %s with %s at %s"),
                                     $objObserver->getObserverProperty(
-                                        $loggedUser, 'firstname'
+                                        $loggedUser,
+                                        'firstname'
                                     ) . ' ' . $objObserver->getObserverProperty(
-                                        $loggedUser, 'name'
+                                        $loggedUser,
+                                        'name'
                                     ),
                                     $objInstrument->getInstrumentPropertyFromId(
                                         $objObserver->getObserverProperty(
-                                            $loggedUser, 'stdtelescope'
-                                        ), 'name'
+                                            $loggedUser,
+                                            'stdtelescope'
+                                        ),
+                                        'name'
                                     ),
                                     $objLocation->getLocationPropertyFromId(
                                         $objObserver->getObserverProperty(
-                                            $loggedUser, 'stdlocation'
-                                        ), 'name'
+                                            $loggedUser,
+                                            'stdlocation'
+                                        ),
+                                        'name'
                                     ) .
                                     _(' on ') .
                                     $this->checkSessionKey('globalDay') . ' ' .
@@ -3262,21 +3529,29 @@ class Utils
                                     $this->checkSessionKey('globalMonth')]
                                     . ' ' . $this->checkSessionKey('globalYear')
                                 )
-                            )
-                        ), $xmid + $SectionBarWidth, 'center'
+                            ),
+                            'ISO-8859-1',
+                            'UTF-8'
+                        ),
+                        $xmid + $SectionBarWidth,
+                        'center'
                     );
                 }
                 if ($objObserver->getObserverProperty($loggedUser, 'name')
                     && $objLocation->getLocationPropertyFromId(
                         $objObserver->getObserverProperty(
-                            $loggedUser, 'stdlocation'
-                        ), 'name'
+                            $loggedUser,
+                            'stdlocation'
+                        ),
+                        'name'
                     )
                     && (strpos($showelements, 'e') !== false)
                 ) {
                     $pdf->addTextWrap(
-                        $xleft, $footer - $deltaline, $fontSizeText,
-                        utf8_decode(
+                        $xleft,
+                        $footer - $deltaline,
+                        $fontSizeText,
+                        mb_convert_encoding(
                             _('Sun down: ') . $_SESSION['efemerides']['sset'] .
                             _(' to ') . $_SESSION['efemerides']['srise'] . " - " .
                             _('Nautical night: ') .
@@ -3287,24 +3562,36 @@ class Utils
                             $_SESSION['efemerides']['astrob'] . " - " .
                             _('Moon up: ') .
                             $_SESSION['efemerides']['moon0'] . _(' to ') .
-                            $_SESSION['efemerides']['moon2']
-                        ), $xmid + $SectionBarWidth, 'center'
+                            $_SESSION['efemerides']['moon2'],
+                            'ISO-8859-1',
+                            'UTF-8'
+                        ),
+                        $xmid + $SectionBarWidth,
+                        'center'
                     );
                 }
                 if (strpos($showelements, 'p') !== false) {
                     $pdf->addTextWrap(
                         $xmid + $SectionBarWidth - $sectionBarSpace - 100,
-                        $header, $fontSizeText,
-                        utf8_decode(_("Page ") . $pagenr), 100, 'right'
+                        $header,
+                        $fontSizeText,
+                        mb_convert_encoding(_("Page ") . $pagenr, 'ISO-8859-1', 'UTF-8'),
+                        100,
+                        'right'
                     );
                 }
                 if (strpos($showelements, 't') !== false) {
                     $pdf->addTextWrap(
-                        $xleft, $header, 10,
-                        utf8_decode(
-                            html_entity_decode($this->checkRequestKey('pdfTitle'))
+                        $xleft,
+                        $header,
+                        10,
+                        mb_convert_encoding(
+                            html_entity_decode($this->checkRequestKey('pdfTitle')),
+                            'ISO-8859-1',
+                            'UTF-8'
                         ),
-                        $xmid + $SectionBarWidth, 'center'
+                        $xmid + $SectionBarWidth,
+                        'center'
                     );
                 }
             }
@@ -3322,12 +3609,14 @@ class Utils
         }
         if (strpos($showelements, 'l') !== false) {
             $pdf->line(
-                $xbase - $sectionBarSpace, $y + $fontSizeText + $sectionBarSpace,
-                $xbase + $SectionBarWidth, $y + $fontSizeText + $sectionBarSpace
+                $xbase - $sectionBarSpace,
+                $y + $fontSizeText + $sectionBarSpace,
+                $xbase + $SectionBarWidth,
+                $y + $fontSizeText + $sectionBarSpace
             );
             reset($reportdata);
             $deltaymax = 0;
-            foreach ($reportdata as $key=>$dataelement) {
+            foreach ($reportdata as $key => $dataelement) {
                 if ($dataelement['fieldwidth']) {
                     $justification = 'left';
                     if (strpos($dataelement['fieldstyle'], 'r') !== false) {
@@ -3346,8 +3635,9 @@ class Utils
                         $xbase + $dataelement['fieldposition'],
                         $y - ($deltaline * $dataelement['fieldline']),
                         $fontSizeText,
-                        utf8_decode($dataelement['fieldlegend']),
-                        $dataelement['fieldwidth'], $justification
+                        mb_convert_encoding($dataelement['fieldlegend'], 'ISO-8859-1', 'UTF-8'),
+                        $dataelement['fieldwidth'],
+                        $justification
                     );
                     $deltaymax = max($deltaymax, $dataelement ['fieldline']);
                     if (strpos($dataelement['fieldstyle'], 'b') !== false) {
@@ -3360,19 +3650,26 @@ class Utils
             }
             $y -= $deltaline * ($deltaymax);
             $pdf->line(
-                $xbase - $sectionBarSpace, $y - $sectionBarSpace,
-                $xbase + $SectionBarWidth, $y - $sectionBarSpace
+                $xbase - $sectionBarSpace,
+                $y - $sectionBarSpace,
+                $xbase + $SectionBarWidth,
+                $y - $sectionBarSpace
             );
             $y -= ($deltaline + $sectionBarSpace);
         }
         if ($sort) {
             $y -= $deltalineSection;
             $pdf->rectangle(
-                $xbase - $sectionBarSpace, $y - $sectionBarSpace,
-                $SectionBarWidth, $sectionBarHeight
+                $xbase - $sectionBarSpace,
+                $y - $sectionBarSpace,
+                $SectionBarWidth,
+                $sectionBarHeight
             );
             $pdf->addText(
-                $xbase, $y, $fontSizeSection, utf8_decode($GLOBALS[$$sort])
+                $xbase,
+                $y,
+                $fontSizeSection,
+                mb_convert_encoding($GLOBALS[$$sort], 'ISO-8859-1', 'UTF-8')
             );
             $y -= $deltaline + $deltalineSection;
         }
@@ -3396,7 +3693,11 @@ class Utils
      * @return None
      */
     public function pdfReportPersonalised(
-        $reportuser, $reportname, $reportlayout, $result, $sort = ''
+        $reportuser,
+        $reportname,
+        $reportlayout,
+        $result,
+        $sort = ''
     ) {
         global $objReportLayout, $dateformat, $baseURL, $instDir, $objObserver;
         global $loggedUser, $objLocation, $objInstrument, $objPresentations;
@@ -3404,7 +3705,9 @@ class Utils
         $result = $this->sortResult($result);
 
         $reportdata = $objReportLayout->getReportData(
-            $reportuser, $reportname, $reportlayout
+            $reportuser,
+            $reportname,
+            $reportlayout
         );
         if ($sort == 'objectconstellation') {
             $sort = 'con';
@@ -3414,58 +3717,112 @@ class Utils
         $indexlist = array();
 
         $pagesize = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'pagesize'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'pagesize'
         );
         $pageorientation = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'pageorientation'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'pageorientation'
         );
         $bottom = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'bottom'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'bottom'
         );
         $top = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'top'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'top'
         );
         $header = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'header'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'header'
         );
         $footer = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'footer'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'footer'
         );
         $xleft = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'xleft'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'xleft'
         );
         $xmid = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'xmid'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'xmid'
         );
         $fontSizeSection = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'fontSizeSection'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'fontSizeSection'
         );
         $fontSizeText = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'fontSizeText'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'fontSizeText'
         );
         $sectionBarSpace = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'sectionbarspace'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'sectionbarspace'
         );
         $deltalineSection = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'deltalineSection'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'deltalineSection'
         );
         $deltaline = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'deltalineExtra'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'deltalineExtra'
         ) + $fontSizeText;
         $deltaobjectline = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'deltaobjectline'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'deltaobjectline'
         );
         $pagenr = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'startpagenumber'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'startpagenumber'
         );
         $sectionBarHeight = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'sectionBarHeightextra'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'sectionBarHeightextra'
         ) + $fontSizeSection;
         $SectionBarWidth = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'SectionBarWidthbase'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'SectionBarWidthbase'
         ) + $sectionBarSpace;
         $showelements = $objReportLayout->getLayoutFieldPosition(
-            $reportuser, $reportname, $reportlayout, 'showelements'
+            $reportuser,
+            $reportname,
+            $reportlayout,
+            'showelements'
         );
 
         $pdf = new Cezpdf($pagesize, $pageorientation);
@@ -3474,17 +3831,32 @@ class Utils
         $actualsort = '';
         $theDate = date('d/m/Y');
         $this->firstpage(
-            $y, $top, $xbase, $xmid, $pagenr, $pdf, $xleft, $header,
-            $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace,
-            $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline,
-            $showelements, $reportdata
+            $y,
+            $top,
+            $xbase,
+            $xmid,
+            $pagenr,
+            $pdf,
+            $xleft,
+            $header,
+            $fontSizeText,
+            $theDate,
+            $footer,
+            $SectionBarWidth,
+            $sectionBarSpace,
+            $deltalineSection,
+            $sectionBarHeight,
+            $fontSizeSection,
+            $deltaline,
+            $showelements,
+            $reportdata
         );
 
-        foreach ($result as $key=>$valueA) {
+        foreach ($result as $key => $valueA) {
             $con = $valueA['objectconstellation'];
             $deltaymax = 0;
             reset($reportdata);
-            foreach ($reportdata as $key=>$dataelement) {
+            foreach ($reportdata as $key => $dataelement) {
                 if ($dataelement['fieldwidth']) {
                     if (($dataelement['fieldname'] == "objectlistdescription")) {
                         if (array_key_exists('objectlistdescription', $valueA)
@@ -3506,19 +3878,57 @@ class Utils
             $deltaymax++;
             if (($y - ($deltaline * $deltaymax) < $bottom) && $sort) {
                 $this->newpage(
-                    $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft,
-                    $header, $fontSizeText, $theDate, $footer, $SectionBarWidth,
-                    $sectionBarSpace, $sort, $con, $deltalineSection,
-                    $sectionBarHeight, $fontSizeSection, $deltaline, "", "",
-                    $showelements, $reportdata
+                    $y,
+                    $top,
+                    $bottom,
+                    $xbase,
+                    $xmid,
+                    $pagenr,
+                    $pdf,
+                    $xleft,
+                    $header,
+                    $fontSizeText,
+                    $theDate,
+                    $footer,
+                    $SectionBarWidth,
+                    $sectionBarSpace,
+                    $sort,
+                    $con,
+                    $deltalineSection,
+                    $sectionBarHeight,
+                    $fontSizeSection,
+                    $deltaline,
+                    "",
+                    "",
+                    $showelements,
+                    $reportdata
                 );
-            } elseif (($y - ($deltaline * $deltaymax) < $bottom) && (! ($sort))) {
+            } elseif (($y - ($deltaline * $deltaymax) < $bottom) && (!($sort))) {
                 $this->newpage(
-                    $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft,
-                    $header, $fontSizeText, $theDate, $footer, $SectionBarWidth,
-                    $sectionBarSpace, $sort, $con, $deltalineSection,
-                    $sectionBarHeight, $fontSizeSection, $deltaline, "", "",
-                    $showelements, $reportdata
+                    $y,
+                    $top,
+                    $bottom,
+                    $xbase,
+                    $xmid,
+                    $pagenr,
+                    $pdf,
+                    $xleft,
+                    $header,
+                    $fontSizeText,
+                    $theDate,
+                    $footer,
+                    $SectionBarWidth,
+                    $sectionBarSpace,
+                    $sort,
+                    $con,
+                    $deltalineSection,
+                    $sectionBarHeight,
+                    $fontSizeSection,
+                    $deltaline,
+                    "",
+                    "",
+                    $showelements,
+                    $reportdata
                 );
                 if (strpos($showelements, 's') !== false) {
                     $pdf->setLineStyle(0.5);
@@ -3535,25 +3945,49 @@ class Utils
                     $sectionBarSpace - $deltalineSection;
                 if ($ycalc < $bottom) {
                     $this->newpage(
-                        $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft,
-                        $header, $fontSizeText, $theDate, $footer, $SectionBarWidth,
-                        $sectionBarSpace, $sort, $con, $deltalineSection,
-                        $sectionBarHeight, $fontSizeSection, $deltaline, "", "",
-                        $showelements, $reportdata
+                        $y,
+                        $top,
+                        $bottom,
+                        $xbase,
+                        $xmid,
+                        $pagenr,
+                        $pdf,
+                        $xleft,
+                        $header,
+                        $fontSizeText,
+                        $theDate,
+                        $footer,
+                        $SectionBarWidth,
+                        $sectionBarSpace,
+                        $sort,
+                        $con,
+                        $deltalineSection,
+                        $sectionBarHeight,
+                        $fontSizeSection,
+                        $deltaline,
+                        "",
+                        "",
+                        $showelements,
+                        $reportdata
                     );
                 } else {
                     $y -= $deltalineSection;
                     $pdf->rectangle(
-                        $xbase - $sectionBarSpace, $y - $sectionBarSpace,
-                        $SectionBarWidth, $sectionBarHeight
+                        $xbase - $sectionBarSpace,
+                        $y - $sectionBarSpace,
+                        $SectionBarWidth,
+                        $sectionBarHeight
                     );
                     $pdf->addText(
-                        $xbase, $y, $fontSizeSection, utf8_decode($GLOBALS[$$sort])
+                        $xbase,
+                        $y,
+                        $fontSizeSection,
+                        mb_convert_encoding($GLOBALS[$$sort], 'ISO-8859-1', 'UTF-8')
                     );
                     $y -= $deltaline + $deltalineSection;
                 }
                 $indexlist [$$sort] = $pagenr;
-            } else if (strpos($showelements, 's') !== false) {
+            } elseif (strpos($showelements, 's') !== false) {
                 $pdf->setLineStyle(0.5);
                 $pdf->line(
                     $xbase - $sectionBarSpace,
@@ -3565,15 +3999,34 @@ class Utils
             }
             reset($reportdata);
             $deltaymax = 0;
-            foreach ($reportdata as $key=>$dataelement) {
+            foreach ($reportdata as $key => $dataelement) {
                 if ($dataelement['fieldwidth']) {
                     if ($y - ($deltaline * $dataelement['fieldline']) < $bottom) {
                         $this->newpage(
-                            $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft,
-                            $header, $fontSizeText, $theDate, $footer,
-                            $SectionBarWidth, $sectionBarSpace, $sort, $con,
-                            $deltalineSection, $sectionBarHeight, $fontSizeSection,
-                            $deltaline, "", "", $showelements, $reportdata
+                            $y,
+                            $top,
+                            $bottom,
+                            $xbase,
+                            $xmid,
+                            $pagenr,
+                            $pdf,
+                            $xleft,
+                            $header,
+                            $fontSizeText,
+                            $theDate,
+                            $footer,
+                            $SectionBarWidth,
+                            $sectionBarSpace,
+                            $sort,
+                            $con,
+                            $deltalineSection,
+                            $sectionBarHeight,
+                            $fontSizeSection,
+                            $deltaline,
+                            "",
+                            "",
+                            $showelements,
+                            $reportdata
                         );
                     }
                     $justification = 'left';
@@ -3599,31 +4052,39 @@ class Utils
                                 $xbase + $dataelement['fieldposition'],
                                 $y - ($deltaline * $dataelement['fieldline']),
                                 $fontSizeText,
-                                utf8_decode(
+                                mb_convert_encoding(
                                     $dataelement['fieldafter'] .
                                     html_entity_decode(
                                         $valueA[$dataelement['fieldname']]
-                                    ) . $dataelement['fieldafter']
+                                    ) . $dataelement['fieldafter'],
+                                    'ISO-8859-1',
+                                    'UTF-8'
                                 ),
-                                $dataelement['fieldwidth'], $justification
+                                $dataelement['fieldwidth'],
+                                $justification
                             );
                             $deltaymax = max($deltaymax, $dataelement['fieldline']);
                         }
-                    } else if ($dataelement['fieldname'] == "objectuseratlaspage") {
+                    } elseif ($dataelement['fieldname'] == "objectuseratlaspage") {
                         $pdf->addTextWrap(
                             $xbase + $dataelement['fieldposition'],
                             $y - ($deltaline * $dataelement['fieldline']),
                             $fontSizeText,
-                            utf8_decode(
+                            mb_convert_encoding(
                                 $dataelement ['fieldbefore'] .
                                 html_entity_decode(
                                     $valueA[($loggedUser
                                         ? $objObserver->getObserverProperty(
-                                            $loggedUser, 'standardAtlasCode', 'urano'
+                                            $loggedUser,
+                                            'standardAtlasCode',
+                                            'urano'
                                         ) : 'urano')]
-                                ) . $dataelement ['fieldafter']
+                                ) . $dataelement ['fieldafter'],
+                                'ISO-8859-1',
+                                'UTF-8'
                             ),
-                            $dataelement ['fieldwidth'], $justification
+                            $dataelement ['fieldwidth'],
+                            $justification
                         );
                         $deltaymax = max($deltaymax, $dataelement['fieldline']);
                     } elseif ($dataelement['fieldname'] == "objectlistdescription") {
@@ -3640,31 +4101,50 @@ class Utils
                                 $xbase + $dataelement['fieldposition'],
                                 $y - ($deltaline * $dataelement['fieldline']),
                                 $fontSizeText,
-                                utf8_decode($theText),
+                                mb_convert_encoding($theText, 'ISO-8859-1', 'UTF-8'),
                                 $dataelement['fieldwidth'],
                                 $justification
                             );
-                            while ( $theText ) {
+                            while ($theText) {
                                 $y -= $deltaline;
                                 $ycalc = $y -
                                     ($deltaline * $dataelement['fieldline']);
                                 if ($ycalc < $bottom) {
                                     $this->newpage(
-                                        $y, $top, $bottom, $xbase, $xmid, $pagenr,
-                                        $pdf, $xleft, $header, $fontSizeText,
-                                        $theDate, $footer, $SectionBarWidth,
-                                        $sectionBarSpace, $sort, $con,
-                                        $deltalineSection, $sectionBarHeight,
-                                        $fontSizeSection, $deltaline, $i, $b,
-                                        $showelements, $reportdata
+                                        $y,
+                                        $top,
+                                        $bottom,
+                                        $xbase,
+                                        $xmid,
+                                        $pagenr,
+                                        $pdf,
+                                        $xleft,
+                                        $header,
+                                        $fontSizeText,
+                                        $theDate,
+                                        $footer,
+                                        $SectionBarWidth,
+                                        $sectionBarSpace,
+                                        $sort,
+                                        $con,
+                                        $deltalineSection,
+                                        $sectionBarHeight,
+                                        $fontSizeSection,
+                                        $deltaline,
+                                        $i,
+                                        $b,
+                                        $showelements,
+                                        $reportdata
                                     );
                                     $y += ($deltaline * $dataelement['fieldline']);
                                 }
                                 $theText = $pdf->addTextWrap(
                                     $xbase + $dataelement['fieldposition'],
                                     $y - ($deltaline * $dataelement['fieldline']),
-                                    $fontSizeText, utf8_decode($theText),
-                                    $dataelement['fieldwidth'], $justification
+                                    $fontSizeText,
+                                    mb_convert_encoding($theText, 'ISO-8859-1', 'UTF-8'),
+                                    $dataelement['fieldwidth'],
+                                    $justification
                                 );
                             }
                             $deltaymax = max($deltaymax, $dataelement['fieldline']);
@@ -3683,23 +4163,40 @@ class Utils
                                 $xbase + $dataelement['fieldposition'],
                                 $y - ($deltaline * $dataelement['fieldline']),
                                 $fontSizeText,
-                                utf8_decode($theText),
+                                mb_convert_encoding($theText, 'ISO-8859-1', 'UTF-8'),
                                 $dataelement['fieldwidth'],
                                 $justification
                             );
-                            while ( $theText ) {
+                            while ($theText) {
                                 $y -= $deltaline;
                                 $yCalc = $y -
                                     ($deltaline * $dataelement['fieldline']);
                                 if ($yCalc < $bottom) {
                                     $this->newpage(
-                                        $y, $top, $bottom, $xbase, $xmid, $pagenr,
-                                        $pdf, $xleft, $header, $fontSizeText,
-                                        $theDate, $footer, $SectionBarWidth,
-                                        $sectionBarSpace, $sort, $con,
-                                        $deltalineSection, $sectionBarHeight,
-                                        $fontSizeSection, $deltaline, $i, $b,
-                                        $showelements, $reportdata
+                                        $y,
+                                        $top,
+                                        $bottom,
+                                        $xbase,
+                                        $xmid,
+                                        $pagenr,
+                                        $pdf,
+                                        $xleft,
+                                        $header,
+                                        $fontSizeText,
+                                        $theDate,
+                                        $footer,
+                                        $SectionBarWidth,
+                                        $sectionBarSpace,
+                                        $sort,
+                                        $con,
+                                        $deltalineSection,
+                                        $sectionBarHeight,
+                                        $fontSizeSection,
+                                        $deltaline,
+                                        $i,
+                                        $b,
+                                        $showelements,
+                                        $reportdata
                                     );
                                     $y += ($deltaline * $dataelement['fieldline']);
                                 }
@@ -3707,13 +4204,13 @@ class Utils
                                     $xbase + $dataelement['fieldposition'],
                                     $y - ($deltaline * $dataelement['fieldline']),
                                     $fontSizeText,
-                                    utf8_decode($theText),
+                                    mb_convert_encoding($theText, 'ISO-8859-1', 'UTF-8'),
                                     $dataelement['fieldwidth'],
                                     $justification
                                 );
                             }
                             $deltaymax = max($deltaymax, $dataelement['fieldline']);
-                        } else if (array_key_exists('objectdescription', $valueA)
+                        } elseif (array_key_exists('objectdescription', $valueA)
                             && ($valueA['objectdescription'] != '')
                         ) {
                             $theText = $dataelement ['fieldbefore'] .
@@ -3726,7 +4223,7 @@ class Utils
                                 $xbase + $dataelement['fieldposition'],
                                 $y - ($deltaline * $dataelement ['fieldline']),
                                 $fontSizeText,
-                                utf8_decode($theText),
+                                mb_convert_encoding($theText, 'ISO-8859-1', 'UTF-8'),
                                 $dataelement['fieldwidth'],
                                 $justification
                             );
@@ -3736,21 +4233,40 @@ class Utils
                                     ($deltaline * $dataelement['fieldline']);
                                 if ($ycalc < $bottom) {
                                     $this->newpage(
-                                        $y, $top, $bottom, $xbase, $xmid, $pagenr,
-                                        $pdf, $xleft, $header, $fontSizeText,
-                                        $theDate, $footer, $SectionBarWidth,
-                                        $sectionBarSpace, $sort, $con,
-                                        $deltalineSection, $sectionBarHeight,
-                                        $fontSizeSection, $deltaline, $i, $b,
-                                        $showelements, $reportdata
+                                        $y,
+                                        $top,
+                                        $bottom,
+                                        $xbase,
+                                        $xmid,
+                                        $pagenr,
+                                        $pdf,
+                                        $xleft,
+                                        $header,
+                                        $fontSizeText,
+                                        $theDate,
+                                        $footer,
+                                        $SectionBarWidth,
+                                        $sectionBarSpace,
+                                        $sort,
+                                        $con,
+                                        $deltalineSection,
+                                        $sectionBarHeight,
+                                        $fontSizeSection,
+                                        $deltaline,
+                                        $i,
+                                        $b,
+                                        $showelements,
+                                        $reportdata
                                     );
                                     $y += ($deltaline * $dataelement['fieldline']);
                                 }
                                 $theText = $pdf->addTextWrap(
                                     $xbase + $dataelement['fieldposition'],
                                     $y - ($deltaline * $dataelement['fieldline']),
-                                    $fontSizeText, utf8_decode($theText),
-                                    $dataelement['fieldwidth'], $justification
+                                    $fontSizeText,
+                                    mb_convert_encoding($theText, 'ISO-8859-1', 'UTF-8'),
+                                    $dataelement['fieldwidth'],
+                                    $justification
                                 );
                             }
                             $deltaymax = max($deltaymax, $dataelement['fieldline']);
@@ -3761,12 +4277,14 @@ class Utils
                                 $xbase + $dataelement['fieldposition'],
                                 $y - ($deltaline * $dataelement['fieldline']),
                                 $fontSizeText,
-                                utf8_decode(
+                                mb_convert_encoding(
                                     html_entity_decode(
                                         $dataelement['fieldbefore'] .
                                         $valueA[$dataelement['fieldname']] .
                                         $dataelement['fieldafter']
-                                    )
+                                    ),
+                                    'ISO-8859-1',
+                                    'UTF-8'
                                 ),
                                 $dataelement['fieldwidth'],
                                 $justification
@@ -3793,14 +4311,34 @@ class Utils
         ) {
             $base = $xmid;
             $this->newpage(
-                $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft,
-                $header, $fontSizeText, $theDate, $footer, $SectionBarWidth,
-                $sectionBarSpace, '', '', $deltalineSection, $sectionBarHeight,
-                $fontSizeSection, $deltaline, "", "", $showelements, $reportdata
+                $y,
+                $top,
+                $bottom,
+                $xbase,
+                $xmid,
+                $pagenr,
+                $pdf,
+                $xleft,
+                $header,
+                $fontSizeText,
+                $theDate,
+                $footer,
+                $SectionBarWidth,
+                $sectionBarSpace,
+                '',
+                '',
+                $deltalineSection,
+                $sectionBarHeight,
+                $fontSizeSection,
+                $deltaline,
+                "",
+                "",
+                $showelements,
+                $reportdata
             );
             $pdf->setLineStyle(0.5);
             $y = $top;
-            foreach ($indexlist as $key=>$value) {
+            foreach ($indexlist as $key => $value) {
                 $pdf->line(
                     $xbase - $sectionBarSpace,
                     $y + (($deltaline + $deltaobjectline) * .75),
@@ -3808,21 +4346,49 @@ class Utils
                     $y + (($deltaline + $deltaobjectline) * .75)
                 );
                 $pdf->addTextWrap(
-                    $xbase, $y, $fontSizeText, utf8_decode($key), 50, 'left'
+                    $xbase,
+                    $y,
+                    $fontSizeText,
+                    mb_convert_encoding($key, 'ISO-8859-1', 'UTF-8'),
+                    50,
+                    'left'
                 );
                 $pdf->addTextWrap(
-                    $xbase + $SectionBarWidth - $sectionBarSpace - 50, $y,
-                    $fontSizeText, utf8_decode(trim($value)), 50, 'right'
+                    $xbase + $SectionBarWidth - $sectionBarSpace - 50,
+                    $y,
+                    $fontSizeText,
+                    mb_convert_encoding(trim($value), 'ISO-8859-1', 'UTF-8'),
+                    50,
+                    'right'
                 );
 
                 $y -= ($deltaline + $deltaobjectline);
                 if (($y - ($deltaline + $deltaobjectline)) < $bottom) {
                     $this->newpage(
-                        $y, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft,
-                        $header, $fontSizeText, $theDate, $footer, $SectionBarWidth,
-                        $sectionBarSpace, '', '', $deltalineSection,
-                        $sectionBarHeight, $fontSizeSection, $deltaline, "", "",
-                        $showelements, $reportdata
+                        $y,
+                        $top,
+                        $bottom,
+                        $xbase,
+                        $xmid,
+                        $pagenr,
+                        $pdf,
+                        $xleft,
+                        $header,
+                        $fontSizeText,
+                        $theDate,
+                        $footer,
+                        $SectionBarWidth,
+                        $sectionBarSpace,
+                        '',
+                        '',
+                        $deltalineSection,
+                        $sectionBarHeight,
+                        $fontSizeSection,
+                        $deltaline,
+                        "",
+                        "",
+                        $showelements,
+                        $reportdata
                     );
                     $pdf->setLineStyle(0.5);
                 }
@@ -3848,10 +4414,10 @@ class Utils
         $pdf = new Cezpdf('a4', 'portrait');
         $pdf->ezStartPageNumbers(300, 30, 10);
         $pdf->selectFont($instDir . 'lib/fonts/Helvetica.afm');
-        $pdf->ezText(utf8_decode(html_entity_decode($_GET['pdfTitle'])) . "\n");
+        $pdf->ezText(mb_convert_encoding(html_entity_decode($_GET['pdfTitle']) . "\n", 'ISO-8859-1', 'UTF-8'));
         $i = 0;
-        foreach ($result as $key=>$value) {
-            if ($i ++ > 0) {
+        foreach ($result as $key => $value) {
+            if ($i++ > 0) {
                 $pdf->ezNewPage();
             }
             $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
@@ -3863,15 +4429,16 @@ class Utils
             } else {
                 $date = sscanf($obs["localdate"], "%4d%2d%2d");
             }
-            if ($obs['seeing'] > - 1) {
+            if ($obs['seeing'] > -1) {
                 $seeing = true;
             } else {
                 $seeing = false;
             }
             $formattedDate = date(
-                $dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0])
+                $dateformat,
+                mktime(0, 0, 0, $date[1], $date[2], $date[0])
             );
-            $temp = array (
+            $temp = array(
                 "Name" => html_entity_decode(_("Name")) . " : "
                     . $obs['objectname'],
                 "altname" => html_entity_decode(_("Alternative name")) . " : "
@@ -3891,12 +4458,14 @@ class Utils
                     . " : "
                     . $objFilter->getFilterPropertyFromId($obs['filterid'], 'name'))
                     : ''),
-                "eyepiece" => (($obs['eyepieceid']) ? (_("Eyepiece")
+                "eyepiece" => (($obs['eyepieceid']) ? (
+                    _("Eyepiece")
                     . " : "
                     . $objEyepiece->getEyepiecePropertyFromId(
-                        $obs['eyepieceid'], 'name'
+                        $obs['eyepieceid'],
+                        'name'
                     )
-                    )
+                )
                     : ''),
                 "lens" => (($obs['lensid'])
                     ? (_("Lens") . " : "
@@ -3905,7 +4474,8 @@ class Utils
                     sprintf(
                         _("Observed by %s on %s"),
                         $objObserver->getObserverProperty(
-                            $obs['observerid'], 'firstname'
+                            $obs['observerid'],
+                            'firstname'
                         )
                         . " "
                         . $objObserver->getObserverProperty($obs['observerid'], 'name'),
@@ -3914,11 +4484,13 @@ class Utils
                 ),
                 "instrument" => html_entity_decode(_("Instrument")) . " : "
                     . $objInstrument->getInstrumentPropertyFromId(
-                        $obs['instrumentid'], 'name'
+                        $obs['instrumentid'],
+                        'name'
                     ),
                 "location" => html_entity_decode(_("Location")) . " : "
                     . $objLocation->getLocationPropertyFromId(
-                        $obs['locationid'], 'name'
+                        $obs['locationid'],
+                        'name'
                     ),
                 "description" => $objPresentations->br2nl(
                     html_entity_decode($obs['description'])
@@ -3931,15 +4503,17 @@ class Utils
                 $nm = $nm . " (" . $object["altname"] . ")";
             }
             $pdf->ezText($nm, "14");
-            $tmp = array (
-                array (
+            $tmp = array(
+                array(
                     "type" => $temp ["type"]
                 )
             );
             $pdf->ezTable(
-                $tmp, array(
-                    "type" => utf8_decode(html_entity_decode(_("Type")))
-                ), "",
+                $tmp,
+                array(
+                    "type" => mb_convert_encoding(html_entity_decode(_("Type")), 'ISO-8859-1', 'UTF-8')
+                ),
+                "",
                 array(
                     "width" => "500",
                     "showHeadings" => "0",
@@ -3947,8 +4521,8 @@ class Utils
                     "shaded" => "0"
                 )
             );
-            $tmp = array (
-                array (
+            $tmp = array(
+                array(
                     "location" => $temp["location"],
                     "instrument" => $temp["instrument"]
                )
@@ -3956,9 +4530,11 @@ class Utils
             $pdf->ezTable(
                 $tmp,
                 array(
-                    "location" => utf8_decode(html_entity_decode(_("Name"))),
-                    "instrument" => utf8_decode(html_entity_decode(_("Alternative name")))
-                ), "", array(
+                    "location" => mb_convert_encoding(html_entity_decode(_("Name")), 'ISO-8859-1', 'UTF-8'),
+                    "instrument" => mb_convert_encoding(html_entity_decode(_("Alternative name")), 'ISO-8859-1', 'UTF-8')
+                ),
+                "",
+                array(
                     "width" => "500",
                     "showHeadings" => "0",
                     "showLines" => "0",
@@ -3975,7 +4551,9 @@ class Utils
                     $tmp,
                     array(
                         "eyepiece" => "test"
-                    ), "", array(
+                    ),
+                    "",
+                    array(
                         "width" => "500",
                         "showHeadings" => "0",
                         "showLines" => "0",
@@ -3990,9 +4568,12 @@ class Utils
             );
             if ($obs['filterid']) {
                 $pdf->ezTable(
-                    $tmp, array(
+                    $tmp,
+                    array(
                         "filter" => "test"
-                    ), "", array (
+                    ),
+                    "",
+                    array(
                         "width" => "500",
                         "showHeadings" => "0",
                         "showLines" => "0",
@@ -4007,9 +4588,12 @@ class Utils
             );
             if ($obs['lensid']) {
                 $pdf->ezTable(
-                    $tmp, array(
+                    $tmp,
+                    array(
                         "lens" => "test"
-                    ), "", array (
+                    ),
+                    "",
+                    array(
                         "width" => "500",
                         "showHeadings" => "0",
                         "showLines" => "0",
@@ -4024,9 +4608,12 @@ class Utils
             );
             if ($seeing) {
                 $pdf->ezTable(
-                    $tmp, array(
+                    $tmp,
+                    array(
                         "seeing" => "test"
-                    ), "", array(
+                    ),
+                    "",
+                    array(
                         "width" => "500",
                         "showHeadings" => "0",
                         "showLines" => "0",
@@ -4041,9 +4628,12 @@ class Utils
             );
             if ($obs['limmag']) {
                 $pdf->ezTable(
-                    $tmp, array(
+                    $tmp,
+                    array(
                         "limmag" => "test"
-                    ), "", array(
+                    ),
+                    "",
+                    array(
                         "width" => "500",
                         "showHeadings" => "0",
                         "showLines" => "0",
@@ -4058,9 +4648,12 @@ class Utils
             );
             if ($obs['visibility']) {
                 $pdf->ezTable(
-                    $tmp, array(
+                    $tmp,
+                    array(
                         "visibility" => "test"
-                    ), "", array(
+                    ),
+                    "",
+                    array(
                         "width" => "500",
                         "showHeadings" => "0",
                         "showLines" => "0",
@@ -4074,9 +4667,12 @@ class Utils
                 )
             );
             $pdf->ezTable(
-                $tmp, array(
-                    "observer" => utf8_decode(html_entity_decode(_("Name")))
-                ), "", array(
+                $tmp,
+                array(
+                    "observer" => mb_convert_encoding(html_entity_decode(_("Name")), 'ISO-8859-1', 'UTF-8')
+                ),
+                "",
+                array(
                     "width" => "500",
                     "showHeadings" => "0",
                     "showLines" => "0",
@@ -4085,7 +4681,7 @@ class Utils
             );
             $pdf->ezText("");
 
-            $pdf->ezText(utf8_decode(_("Description")), "12");
+            $pdf->ezText(mb_convert_encoding(_("Description"), 'ISO-8859-1', 'UTF-8'), "12");
             $pdf->ezText("");
             $tmp = array(
                 array(
@@ -4096,8 +4692,10 @@ class Utils
             $pdf->ezTable(
                 $tmp,
                 array(
-                    "description" => utf8_decode(html_entity_decode(_("Name")))
-                ), "", array (
+                    "description" => mb_convert_encoding(html_entity_decode(_("Name")), 'ISO-8859-1', 'UTF-8')
+                ),
+                "",
+                array(
                     "width" => "500",
                     "showHeadings" => "0",
                     "showLines" => "0",
@@ -4105,13 +4703,18 @@ class Utils
                 )
             );
             $hasDrawing = $objObservation->getDsObservationProperty(
-                $value['observationid'], 'hasDrawing'
+                $value['observationid'],
+                'hasDrawing'
             );
             if ($hasDrawing) {
                 $pdf->ezText("");
                 $pdf->ezImage(
                     $instDir . "deepsky/drawings/" . $value['observationid']
-                    . ".jpg", 0, 500, "none", "left"
+                    . ".jpg",
+                    0,
+                    500,
+                    "none",
+                    "left"
                 );
             }
             $pdf->ezText("");
@@ -4146,7 +4749,7 @@ class Utils
                 $_order = SORT_ASC;
                 $_mode = SORT_REGULAR;
                 $_i -= 2;
-            } else if (3 > $_argList[($_i + 1)]) {
+            } elseif (3 > $_argList[($_i + 1)]) {
                 $_order = SORT_ASC;
                 $_mode = $_argList[($_i + 1)];
                 $_i--;
@@ -4162,17 +4765,17 @@ class Utils
                 }
             }
             $_mode = (($_mode != SORT_NUMERIC)
-                ? (($_argLis[($_i + 2)] != SORT_STRING)
+                ? (($_argList[($_i + 2)] != SORT_STRING)
                     ? SORT_REGULAR : SORT_STRING)
                 : SORT_NUMERIC);
-            $_rules[] = array (
+            $_rules[] = array(
                 'name' => $_name,
                 'order' => $_order,
                 'mode' => $_mode
             );
         }
-        foreach ( $_data as $_k => $_row ) {
-            foreach ( $_rules as $_rule ) {
+        foreach ($_data as $_k => $_row) {
+            foreach ($_rules as $_rule) {
                 if (!isset($_cols[$_rule['name']])) {
                     $_cols[$_rule['name']] = array();
                     $_params[] = &$_cols[$_rule['name']];
@@ -4296,14 +4899,14 @@ class Utils
         $_GET['minmonth'] = substr($theDate, 4, 2);
         $_GET['minday'] = substr($theDate, 6, 2);
 
-        $query = array (
+        $query = array(
             "catalog" => '%',
             "mindate" => $objUtil->checkGetDate('minyear', 'minmonth', 'minday')
         );
 
         $result = $objObservation->getObservationFromQuery($query, 'A');
 
-        foreach ($result as $key=>$value) {
+        foreach ($result as $key => $value) {
             // add root - <channel> - <item>
             $itemDom = $channelDom->appendChild($dom->createElement('item'));
 
@@ -4313,13 +4916,16 @@ class Utils
                     $value['observername'] . " : " . $value['objectname']
                     . " with " . htmlspecialchars_decode(
                         $objInstrument->getInstrumentPropertyFromId(
-                            $value['instrumentid'], 'name'
+                            $value['instrumentid'],
+                            'name'
                         )
                     ) . " from " .
                     $objLocation->getLocationPropertyFromId(
                         $objObservation->getDsObservationProperty(
-                            $value['observationid'], 'locationid'
-                        ), 'name'
+                            $value['observationid'],
+                            'locationid'
+                        ),
+                        'name'
                     )
                 )
             );
@@ -4336,7 +4942,7 @@ class Utils
             $descDom->appendChild(
                 $dom->createCDATASection(
                     $objPresentations->br2nl(
-                        utf8_encode($value['observationdescription'])
+                        mb_convert_encoding($value['observationdescription'], 'ISO-8859-1', 'UTF-8')
                     )
                 )
             );
@@ -4405,7 +5011,7 @@ class Utils
 
         $cometsResult = $observation->getObservationFromQuery($query);
 
-        foreach ($cometsResult as $key=>$value) {
+        foreach ($cometsResult as $key => $value) {
             $objectname = $objCometObject->getName(
                 $observation->getObjectId($value)
             );
@@ -4422,7 +5028,8 @@ class Utils
                 $title = $title . " from " .
                     htmlspecialchars_decode(
                         $location->getLocationPropertyFromId(
-                            $observation->getLocationId($value), 'name'
+                            $observation->getLocationId($value),
+                            'name'
                         )
                     );
             }
@@ -4431,7 +5038,8 @@ class Utils
                 $title = $title . " with " .
                     htmlspecialchars_decode(
                         $instrument->getInstrumentPropertyFromId(
-                            $observation->getInstrumentId($value), 'name'
+                            $observation->getInstrumentId($value),
+                            'name'
                         )
                     );
             }
@@ -4454,7 +5062,7 @@ class Utils
                 $descDom = $itemDom->appendChild($dom->createElement('description'));
                 $descDom->appendChild(
                     $dom->createCDATASection(
-                        $objPresentations->br2nl(utf8_encode($description))
+                        $objPresentations->br2nl(mb_convert_encoding($description, 'ISO-8859-1', 'UTF-8'))
                     )
                 );
             } else {
@@ -4464,7 +5072,8 @@ class Utils
 
             $observerid = $observation->getObserverId($value);
             $observername = $observer->getObserverProperty(
-                $observerid, 'firstname'
+                $observerid,
+                'firstname'
             ) . " " . $observer->getObserverProperty($observerid, 'name');
 
             $authorDom = $itemDom->appendChild($dom->createElement('dc:creator'));
@@ -4501,8 +5110,8 @@ class Utils
 
         // generate xml
         $dom->formatOutput = true; // set the formatOutput attribute of
-                                   // domDocument to true
-                                   // save XML as string or file
+        // domDocument to true
+        // save XML as string or file
         $out = $dom->saveXML();   // put string in test1
 
         print $out;
@@ -4565,9 +5174,9 @@ class Utils
             $_GET['minmonth'] = substr($theDate, 4, 2);
             $_GET['minday'] = substr($theDate, 6, 2);
             $lastReadObservation = ($loggedUser
-                ? $objObserver->getLastReadObservation($loggedUser) : - 1);
+                ? $objObserver->getLastReadObservation($loggedUser) : -1);
             return 'deepsky/content/main.php';
-        } else if ($_SESSION['module'] == 'comets') {
+        } elseif ($_SESSION['module'] == 'comets') {
             $theDate = date('Ymd', strtotime('-1 year'));
             $_GET['minyear'] = substr($theDate, 0, 4);
             $_GET['minmonth'] = substr($theDate, 4, 2);
@@ -4609,7 +5218,7 @@ class Utils
         if (array_key_exists('admin', $_SESSION)
             && ($_SESSION['admin'] == "yes")
         ) {
-                $admin = true;
+            $admin = true;
         }
 
         $action = "";
@@ -4618,348 +5227,348 @@ class Utils
         }
 
         switch ($action) {
-        case 'add_csv':
-            if ($loggedUser) {
-                return 'deepsky/content/new_observationcsv.php';
-            }
-            break;
-        case 'add_xml':
-            if ($loggedUser) {
-                return 'deepsky/content/newObservationXml.php';
-            }
-            break;
-        case 'add_xml_invalid':
-            if ($loggedUser) {
-                return 'deepsky/content/newObservationXmlInvalid.php';
-            }
-            break;
-        case 'add_object':
-            if ($loggedUser) {
-                return 'deepsky/content/new_object.php';
-            }
-            break;
-        case 'add_observation':
-            if ($loggedUser) {
-                return 'deepsky/content/newObservation.php';
-            }
-            break;
-        case 'detail_object':
-            return 'deepsky/content/view_object.php';
-            break;
-        case 'changeToken':
-            return 'common/content/change_password.php';
-            break;
-        case 'detail_observation':
-            return 'deepsky/content/view_observation.php';
-            break;
-        case 'view_catalogs':
-            return 'deepsky/content/view_catalogs.php';
-            break;
-        case 'atlaspage':
-            return 'deepsky/content/dsatlas.php';
-            break;
-        case 'downloadAstroImageCatalogs':
-            return 'deepsky/content/downloadastroimagecatalogs.php';
-            break;
-        case 'import_csv_list':
-            if ($loggedUser) {
-                return 'deepsky/content/new_listdatacsv.php';
-            }
-            break;
-        case 'listaction':
-            return 'deepsky/content/tolist.php';
-            break;
-        case 'manage_csv_object':
-            if ($loggedUser && $admin) {
-                return 'deepsky/content/manage_objects_csv.php';
-            }
-            break;
-        case 'query_objects':
-            return 'deepsky/content/setup_objects_query.php';
-            break;
-        case 'query_observations':
-            return 'deepsky/content/setup_observations_query.php';
-            break;
-        case 'rank_objects':
-            return 'deepsky/content/top_objects.php';
-            break;
-        case 'rank_observers':
-            return 'deepsky/content/top_observers.php';
-            break;
-        case 'statistics':
-            return 'common/content/statistics.php';
-            break;
-        case 'view_lenses':
-            return 'common/content/view_lenses.php';
-            break;
-        case 'overview_lenses':
-            if ($loggedUser && $admin) {
-                return 'common/content/overview_lenses.php';
-            }
-            break;
-        case 'result_query_objects':
-            return 'deepsky/content/selected_objects.php';
-            break;
-        case 'result_selected_observations':
-            return 'deepsky/content/selected_observations.php';
-            break;
-        case 'show_drawings':
-            return 'deepsky/content/showDrawings.php';
-            break;
-        case 'result_selected_sessions':
-            return 'deepsky/content/selected_sessions.php';
-            break;
-        case 'result_my_sessions':
-            return 'deepsky/content/my_sessions.php';
-            break;
-        case 'view_observer_catalog':
-            return 'deepsky/content/details_observer_catalog.php';
-            break;
-        case 'objectsSets':
-            return 'common/content/objectsSets.php';
-            break;
-        case 'view_atlaspages':
-            return 'common/content/atlasPages.php';
-            break;
-        case 'change_account':
-            if ($loggedUser) {
-                return 'common/content/change_account.php';
-            }
-            break;
-        case 'adapt_eyepiece':
-            if ($loggedUser) {
+            case 'add_csv':
+                if ($loggedUser) {
+                    return 'deepsky/content/new_observationcsv.php';
+                }
+                break;
+            case 'add_xml':
+                if ($loggedUser) {
+                    return 'deepsky/content/newObservationXml.php';
+                }
+                break;
+            case 'add_xml_invalid':
+                if ($loggedUser) {
+                    return 'deepsky/content/newObservationXmlInvalid.php';
+                }
+                break;
+            case 'add_object':
+                if ($loggedUser) {
+                    return 'deepsky/content/new_object.php';
+                }
+                break;
+            case 'add_observation':
+                if ($loggedUser) {
+                    return 'deepsky/content/newObservation.php';
+                }
+                break;
+            case 'detail_object':
+                return 'deepsky/content/view_object.php';
+                break;
+            case 'changeToken':
+                return 'common/content/change_password.php';
+                break;
+            case 'detail_observation':
+                return 'deepsky/content/view_observation.php';
+                break;
+            case 'view_catalogs':
+                return 'deepsky/content/view_catalogs.php';
+                break;
+            case 'atlaspage':
+                return 'deepsky/content/dsatlas.php';
+                break;
+            case 'downloadAstroImageCatalogs':
+                return 'deepsky/content/downloadastroimagecatalogs.php';
+                break;
+            case 'import_csv_list':
+                if ($loggedUser) {
+                    return 'deepsky/content/new_listdatacsv.php';
+                }
+                break;
+            case 'listaction':
+                return 'deepsky/content/tolist.php';
+                break;
+            case 'manage_csv_object':
+                if ($loggedUser && $admin) {
+                    return 'deepsky/content/manage_objects_csv.php';
+                }
+                break;
+            case 'query_objects':
+                return 'deepsky/content/setup_objects_query.php';
+                break;
+            case 'query_observations':
+                return 'deepsky/content/setup_observations_query.php';
+                break;
+            case 'rank_objects':
+                return 'deepsky/content/top_objects.php';
+                break;
+            case 'rank_observers':
+                return 'deepsky/content/top_observers.php';
+                break;
+            case 'statistics':
+                return 'common/content/statistics.php';
+                break;
+            case 'view_lenses':
+                return 'common/content/view_lenses.php';
+                break;
+            case 'overview_lenses':
+                if ($loggedUser && $admin) {
+                    return 'common/content/overview_lenses.php';
+                }
+                break;
+            case 'result_query_objects':
+                return 'deepsky/content/selected_objects.php';
+                break;
+            case 'result_selected_observations':
+                return 'deepsky/content/selected_observations.php';
+                break;
+            case 'show_drawings':
+                return 'deepsky/content/showDrawings.php';
+                break;
+            case 'result_selected_sessions':
+                return 'deepsky/content/selected_sessions.php';
+                break;
+            case 'result_my_sessions':
+                return 'deepsky/content/my_sessions.php';
+                break;
+            case 'view_observer_catalog':
+                return 'deepsky/content/details_observer_catalog.php';
+                break;
+            case 'objectsSets':
+                return 'common/content/objectsSets.php';
+                break;
+            case 'view_atlaspages':
+                return 'common/content/atlasPages.php';
+                break;
+            case 'change_account':
+                if ($loggedUser) {
+                    return 'common/content/change_account.php';
+                }
+                break;
+            case 'adapt_eyepiece':
+                if ($loggedUser) {
+                    return 'common/content/change_eyepiece.php';
+                }
+                break;
+            case 'adapt_filter':
+                if ($loggedUser) {
+                    return 'common/content/change_filter.php';
+                }
+                break;
+            case 'adapt_instrument':
+                if ($loggedUser) {
+                    return 'common/content/change_instrument.php';
+                }
+                break;
+            case 'adapt_lens':
+                if ($loggedUser) {
+                    return 'common/content/change_lens.php';
+                }
+                break;
+            case 'adapt_site':
+                if ($loggedUser) {
+                    return 'common/content/change_site.php';
+                }
+                break;
+            case 'adapt_session':
+                if ($loggedUser) {
+                    return 'deepsky/content/change_session.php';
+                }
+                break;
+            case 'add_session':
+                if ($loggedUser) {
+                    return 'deepsky/content/new_session.php';
+                }
+                break;
+            case 'add_eyepiece':
+                if ($loggedUser) {
+                    return 'common/content/new_eyepiece.php';
+                }
+                break;
+            case 'add_filter':
+                if ($loggedUser) {
+                    return 'common/content/new_filter.php';
+                }
+                break;
+            case 'add_instrument':
+                if ($loggedUser) {
+                    return 'common/content/new_instrument.php';
+                }
+                break;
+            case 'add_lens':
+                if ($loggedUser) {
+                    return 'common/content/new_lens.php';
+                }
+                break;
+            case 'view_sites':
+                if ($loggedUser) {
+                    return 'common/content/locations.php';
+                }
+                break;
+            case 'view_lists':
+                if ($loggedUser) {
+                    return 'deepsky/content/view_list.php';
+                }
+                break;
+            case 'detail_eyepiece':
                 return 'common/content/change_eyepiece.php';
-            }
-            break;
-        case 'adapt_filter':
-            if ($loggedUser) {
+                break;
+            case 'detail_filter':
                 return 'common/content/change_filter.php';
-            }
-            break;
-        case 'adapt_instrument':
-            if ($loggedUser) {
+                break;
+            case 'detail_instrument':
                 return 'common/content/change_instrument.php';
-            }
-            break;
-        case 'adapt_lens':
-            if ($loggedUser) {
+                break;
+            case 'detail_lens':
                 return 'common/content/change_lens.php';
-            }
-            break;
-        case 'adapt_site':
-            if ($loggedUser) {
+                break;
+            case 'detail_location':
                 return 'common/content/change_site.php';
-            }
-            break;
-        case 'adapt_session':
-            if ($loggedUser) {
-                return 'deepsky/content/change_session.php';
-            }
-            break;
-        case 'add_session':
-            if ($loggedUser) {
-                return 'deepsky/content/new_session.php';
-            }
-            break;
-        case 'add_eyepiece':
-            if ($loggedUser) {
-                return 'common/content/new_eyepiece.php';
-            }
-            break;
-        case 'add_filter':
-            if ($loggedUser) {
-                return 'common/content/new_filter.php';
-            }
-            break;
-        case 'add_instrument':
-            if ($loggedUser) {
-                return 'common/content/new_instrument.php';
-            }
-            break;
-        case 'add_lens':
-            if ($loggedUser) {
-                return 'common/content/new_lens.php';
-            }
-            break;
-        case 'view_sites':
-            if ($loggedUser) {
-                return 'common/content/locations.php';
-            }
-            break;
-        case 'view_lists':
-            if ($loggedUser) {
-                return 'deepsky/content/view_list.php';
-            }
-            break;
-        case 'detail_eyepiece':
-            return 'common/content/change_eyepiece.php';
-            break;
-        case 'detail_filter':
-            return 'common/content/change_filter.php';
-            break;
-        case 'detail_instrument':
-            return 'common/content/change_instrument.php';
-            break;
-        case 'detail_lens':
-            return 'common/content/change_lens.php';
-            break;
-        case 'detail_location':
-            return 'common/content/change_site.php';
-            break;
-        case 'detail_observer':
-            return 'common/content/view_observer.php';
-            break;
-        case 'message':
-            return 'common/content/message.php';
-            break;
-        case 'reportsLayout':
-            if ($loggedUser) {
-                return 'common/content/reportslayout.php';
-            }
-            break;
-        case 'site_result':
-            if ($loggedUser) {
-                return 'common/content/getLocation.php';
-            }
-            break;
-        case 'subscribe':
-            return 'common/content/register.php';
-            break;
-        case 'privacy':
-            return 'common/content/privacy.php';
-            break;
-        case 'overview_eyepieces':
-            if ($loggedUser) {
-                return 'common/content/overview_eyepieces.php';
-            }
-            break;
-        case 'view_eyepieces':
-            if ($loggedUser) {
-                return 'common/content/view_eyepieces.php';
-            }
-            break;
-        case 'view_filters':
-            if ($loggedUser) {
-                return 'common/content/view_filters.php';
-            }
-            break;
-        case 'overview_filters':
-            if ($loggedUser) {
-                return 'common/content/overview_filters.php';
-            }
-            break;
-        case 'view_instruments':
-            if ($loggedUser) {
-                return 'common/content/view_instruments.php';
-            }
-            break;
-        case 'overview_instruments':
-            if ($loggedUser) {
-                return 'common/content/overview_instruments.php';
-            }
-            break;
-        case 'view_lenses':
-            if ($loggedUser) {
-                return 'common/content/overview_lenses.php';
-            }
-            break;
-        case 'overview_locations':
-            if ($loggedUser) {
-                return 'common/content/overview_locations.php';
-            }
-            break;
-        case 'add_location':
-            if ($loggedUser) {
-                return 'common/content/new_location.php';
-            }
-            break;
-        case 'view_observers':
-            if ($loggedUser) {
-                return 'common/content/overview_observers.php';
-            }
-            break;
-        case 'show_messages':
-            return 'common/content/messages.php';
-            break;
-        case 'view_message':
-            return 'common/content/view_message.php';
-            break;
-        case 'new_message':
-            return 'common/content/new_message.php';
-            break;
-        case 'admin_check_objects':
-            if ($loggedUser) {
-                return 'deepsky/control/admincheckobjects.php';
-            }
-            break;
-        case 'comets_all_observations':
-            return 'comets/content/overview_observations.php';
-            break;
-        case 'comets_detail_object':
-            return 'comets/content/view_object.php';
-            break;
-        case 'comets_detail_observation':
-            return 'comets/content/view_observation.php';
-            break;
-        case 'comets_adapt_observation':
-            if ($loggedUser) {
-                return 'comets/content/new_observation.php';
-            }
-            break;
-        case 'comets_add_observation':
-            if ($loggedUser) {
-                return 'comets/content/new_observation.php';
-            }
-            break;
-        case 'comets_result_query_observations':
-            return 'comets/content/selected_observations.php';
-            break;
-        case 'comets_detail_observation':
-            return 'comets/content/view_observation.php';
-            break;
-        case 'comets_add_object':
-            if ($loggedUser) {
-                return 'comets/content/new_object.php';
-            }
-            break;
-        case 'comets_detail_object':
-            return 'comets/content/view_object.php';
-            break;
-        case 'comets_view_objects':
-            return 'comets/content/overview_objects.php';
-            break;
-        case 'comets_all_observations':
-            return 'comets/content/overview_observations.php';
-            break;
-        case 'comets_result_query_objects':
-            return 'comets/content/execute_query_objects.php';
-            break;
-        case 'comets_result_selected_observations':
-            return 'comets/content/selected_observations2.php';
-            break;
-        case 'comets_rank_observers':
-            return 'comets/content/top_observers.php';
-            break;
-        case 'comets_rank_objects':
-            return 'comets/content/top_objects.php';
-            break;
-        case 'comets_query_observations':
-            return 'comets/content/setup_observations_query.php';
-            break;
-        case 'comets_query_objects':
-            return 'comets/content/setup_objects_query.php';
-            break;
-        case 'main':
-            return 'deepsky/content/main.php';
-            break;
-        case 'downloadForms':
-            return 'common/content/downloadForms.php';
-            break;
-        case 'quickpick':
-            return $this->_utilitiesCheckIndexActionDSquickPick();
-            break;
-        default:
-            return $this->_utilitiesGetIndexActionDefaultAction();
+                break;
+            case 'detail_observer':
+                return 'common/content/view_observer.php';
+                break;
+            case 'message':
+                return 'common/content/message.php';
+                break;
+            case 'reportsLayout':
+                if ($loggedUser) {
+                    return 'common/content/reportslayout.php';
+                }
+                break;
+            case 'site_result':
+                if ($loggedUser) {
+                    return 'common/content/getLocation.php';
+                }
+                break;
+            case 'subscribe':
+                return 'common/content/register.php';
+                break;
+            case 'privacy':
+                return 'common/content/privacy.php';
+                break;
+            case 'overview_eyepieces':
+                if ($loggedUser) {
+                    return 'common/content/overview_eyepieces.php';
+                }
+                break;
+            case 'view_eyepieces':
+                if ($loggedUser) {
+                    return 'common/content/view_eyepieces.php';
+                }
+                break;
+            case 'view_filters':
+                if ($loggedUser) {
+                    return 'common/content/view_filters.php';
+                }
+                break;
+            case 'overview_filters':
+                if ($loggedUser) {
+                    return 'common/content/overview_filters.php';
+                }
+                break;
+            case 'view_instruments':
+                if ($loggedUser) {
+                    return 'common/content/view_instruments.php';
+                }
+                break;
+            case 'overview_instruments':
+                if ($loggedUser) {
+                    return 'common/content/overview_instruments.php';
+                }
+                break;
+            case 'view_lenses':
+                if ($loggedUser) {
+                    return 'common/content/overview_lenses.php';
+                }
+                break;
+            case 'overview_locations':
+                if ($loggedUser) {
+                    return 'common/content/overview_locations.php';
+                }
+                break;
+            case 'add_location':
+                if ($loggedUser) {
+                    return 'common/content/new_location.php';
+                }
+                break;
+            case 'view_observers':
+                if ($loggedUser) {
+                    return 'common/content/overview_observers.php';
+                }
+                break;
+            case 'show_messages':
+                return 'common/content/messages.php';
+                break;
+            case 'view_message':
+                return 'common/content/view_message.php';
+                break;
+            case 'new_message':
+                return 'common/content/new_message.php';
+                break;
+            case 'admin_check_objects':
+                if ($loggedUser) {
+                    return 'deepsky/control/admincheckobjects.php';
+                }
+                break;
+            case 'comets_all_observations':
+                return 'comets/content/overview_observations.php';
+                break;
+            case 'comets_detail_object':
+                return 'comets/content/view_object.php';
+                break;
+            case 'comets_detail_observation':
+                return 'comets/content/view_observation.php';
+                break;
+            case 'comets_adapt_observation':
+                if ($loggedUser) {
+                    return 'comets/content/new_observation.php';
+                }
+                break;
+            case 'comets_add_observation':
+                if ($loggedUser) {
+                    return 'comets/content/new_observation.php';
+                }
+                break;
+            case 'comets_result_query_observations':
+                return 'comets/content/selected_observations.php';
+                break;
+            case 'comets_detail_observation':
+                return 'comets/content/view_observation.php';
+                break;
+            case 'comets_add_object':
+                if ($loggedUser) {
+                    return 'comets/content/new_object.php';
+                }
+                break;
+            case 'comets_detail_object':
+                return 'comets/content/view_object.php';
+                break;
+            case 'comets_view_objects':
+                return 'comets/content/overview_objects.php';
+                break;
+            case 'comets_all_observations':
+                return 'comets/content/overview_observations.php';
+                break;
+            case 'comets_result_query_objects':
+                return 'comets/content/execute_query_objects.php';
+                break;
+            case 'comets_result_selected_observations':
+                return 'comets/content/selected_observations2.php';
+                break;
+            case 'comets_rank_observers':
+                return 'comets/content/top_observers.php';
+                break;
+            case 'comets_rank_objects':
+                return 'comets/content/top_objects.php';
+                break;
+            case 'comets_query_observations':
+                return 'comets/content/setup_observations_query.php';
+                break;
+            case 'comets_query_objects':
+                return 'comets/content/setup_objects_query.php';
+                break;
+            case 'main':
+                return 'deepsky/content/main.php';
+                break;
+            case 'downloadForms':
+                return 'common/content/downloadForms.php';
+                break;
+            case 'quickpick':
+                return $this->_utilitiesCheckIndexActionDSquickPick();
+                break;
+            default:
+                return $this->_utilitiesGetIndexActionDefaultAction();
         }
     }
 
@@ -5378,7 +5987,7 @@ class Utils
      *
      * @return string The html code to add a pager for the table.
      */
-    function addPager($name, $count, $tableSelector = true)
+    public function addPager($name, $count, $tableSelector = true)
     {
         // We limit the number of rows in a table to 1000.
         $max = 1000;
@@ -5396,4 +6005,3 @@ class Utils
         }
     }
 }
-?>
