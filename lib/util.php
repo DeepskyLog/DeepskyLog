@@ -2134,7 +2134,7 @@ class Utils
                 )
             );
             $eyepiece = html_entity_decode(
-                $objEyepiece->getEyepiecePropertyFromId($obs['$eyepieceid'], 'name')
+                $objEyepiece->getEyepiecePropertyFromId($obs['eyepieceid'], 'name')
             );
             $lens = html_entity_decode(
                 $objLens->getLensPropertyFromId($obs['lensid'], 'name')

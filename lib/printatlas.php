@@ -550,7 +550,10 @@ class PrintAtlas
                     $this->astroDrawBRTNBObject($i);
                 }
                 if((isset($_SESSION['atlasPagesIndex'])) && (!(in_array($this->astroObjectsArr[$i]["type"], array('AA1STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS'))))) {
-                    $indexDistance = sqrt((abs((int)($this->gridD0rad - $this->gridDyRad))) ^ 2 + ((abs((int)($this->gridL0rad - $this->gridLxRad) * cos($this->gridLxRad))) ^ 2));
+                    $indexDistance = sqrt(
+                        ((int)($this->gridD0rad - $this->gridDyRad)) ^ 2 +
+                        ((int)(($this->gridL0rad - $this->gridLxRad) * cos($this->gridLxRad)) ^ 2)
+                    );
                     if(!(in_array($this->astroObjectsArr[$i]["name"], $_SESSION['atlasPagesIndex']))) {
                         $_SESSION['atlasPagesIndex'][$this->astroObjectsArr[$i]["name"]] = array($indexDistance,$this->theItemPage);
                     } else {

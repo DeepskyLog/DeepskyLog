@@ -29,12 +29,12 @@ if ((!isset($inIndex)) || (!$inIndex)) {
  */
 class Observations
 {
-     /**
-      * Adds observations to DeepskyLog from a CSV file.
-      *
-      * @return string The status of the import. How many observations where
-      *                imported, ...
-      */
+    /**
+     * Adds observations to DeepskyLog from a CSV file.
+     *
+     * @return string The status of the import. How many observations where
+     *                imported, ...
+     */
     public function addCSVobservations()
     {
         global $objPresentations, $messageLines, $objObject, $objLocation;
@@ -62,23 +62,33 @@ class Observations
             );
             $locations[$i] = htmlentities(
                 $objUtil->checkArrayKey($parts_array[$i], 4, ''),
-                ENT_COMPAT, "UTF-8", 0
+                ENT_COMPAT,
+                "UTF-8",
+                0
             );
             $instruments[$i] = htmlentities(
                 $objUtil->checkArrayKey($parts_array[$i], 5, ''),
-                ENT_COMPAT, "UTF-8", 0
+                ENT_COMPAT,
+                "UTF-8",
+                0
             );
             $filters[$i] = htmlentities(
                 $objUtil->checkArrayKey($parts_array[$i], 7, ''),
-                ENT_COMPAT, "UTF-8", 0
+                ENT_COMPAT,
+                "UTF-8",
+                0
             );
             $eyepieces[$i] = htmlentities(
                 $objUtil->checkArrayKey($parts_array[$i], 6, ''),
-                ENT_COMPAT, "UTF-8", 0
+                ENT_COMPAT,
+                "UTF-8",
+                0
             );
             $lenses[$i] = htmlentities(
                 $objUtil->checkArrayKey($parts_array[$i], 8, ''),
-                ENT_COMPAT, "UTF-8", 0
+                ENT_COMPAT,
+                "UTF-8",
+                0
             );
         }
 
@@ -114,7 +124,8 @@ class Observations
             for ($i = 0, $j = 0, $temploc = ''; $i < count($locations); $i++) {
                 if ((!trim($locations[$i])) || ($temploc != trim($locations[$i]))
                     && ($objLocation->getLocationId(
-                        trim($locations[$i]), $loggedUser
+                        trim($locations[$i]),
+                        $loggedUser
                     ) == -1)
                 ) {
                     if (!in_array($locations[$i], $locationsMissing)) {
@@ -132,8 +143,9 @@ class Observations
             for ($i = 0, $j = 0, $tempinst = ''; $i < count($instruments); $i++) {
                 if ((!trim($instruments[$i]))
                     || ($objInstrument->getInstrumentId(
-                        trim($instruments[$i]), $loggedUser
-                    ) == - 1)
+                        trim($instruments[$i]),
+                        $loggedUser
+                    ) == -1)
                 ) {
                     if (!in_array(trim($instruments[$i]), $instrumentsMissing)) {
                         $instrumentsMissing[$j++] = trim($instruments[$i]);
@@ -150,7 +162,9 @@ class Observations
             for ($i = 0, $j = 0; $i < count($eyepieces); $i++) {
                 if (trim($eyepieces[$i])
                     && (!($objEyepiece->getEyepieceObserverPropertyFromName(
-                        trim($eyepieces[$i]), $loggedUser, 'id'
+                        trim($eyepieces[$i]),
+                        $loggedUser,
+                        'id'
                     )))
                 ) {
                     if (!in_array(trim($eyepieces[$i]), $eyepiecesMissing)) {
@@ -166,7 +180,9 @@ class Observations
             for ($i = 0, $j = 0; $i < count($filters); $i++) {
                 if (trim($filters[$i])
                     && (!($objFilter->getFilterObserverPropertyFromName(
-                        trim($filters[$i]), $loggedUser, 'id'
+                        trim($filters[$i]),
+                        $loggedUser,
+                        'id'
                     )))
                 ) {
                     if (!in_array(trim($filters[$i]), $filtersMissing)) {
@@ -181,7 +197,9 @@ class Observations
             // Check for the existence of the lenses
             for ($i = 0, $j = 0; $i < count($lenses); $i++) {
                 if (trim($lenses[$i]) && (!$objLens->getLensObserverPropertyFromName(
-                    trim($lenses[$i]), $loggedUser, 'id'
+                    trim($lenses[$i]),
+                    $loggedUser,
+                    'id'
                 ))
                 ) {
                     if (!in_array(trim($lenses[$i]), $lensesMissing)) {
@@ -314,7 +332,7 @@ class Observations
                     $errormessage .= "<ul><li>"
                         . _("The following eyepieces are not available in DeepskyLog")
                         . " : <ul>";
-                    for ($i = 0; $i < count($eyepiecesMissing); $i ++) {
+                    for ($i = 0; $i < count($eyepiecesMissing); $i++) {
                         // Only show the first 10 eyepieces missing,
                         // then add the number of other eyepieces missing
                         if ($i == 10) {
@@ -357,7 +375,7 @@ class Observations
                 }
 
                 unset($_SESSION['csvImportErrorData']);
-                foreach ($errorlist as $key=>$j) {
+                foreach ($errorlist as $key => $j) {
                     $_SESSION['csvImportErrorData'][$key] = $parts_array[$j];
                 }
                 $messageLines = "<h4>"
@@ -383,28 +401,40 @@ Correct observations which have been imported will not be registered for a secon
                 . " " . $objObserver->getObserverProperty($loggedUser, 'name');
             $added = 0;
             $double = 0;
-            for ($i = 0; $i < count($parts_array); $i ++) {
+            for ($i = 0; $i < count($parts_array); $i++) {
                 if (!in_array($i, $errorlist)) {
                     $observername = $objObserver->getObserverProperty(
-                        htmlentities(trim($parts_array[$i][1])), 'firstname'
+                        htmlentities(trim($parts_array[$i][1])),
+                        'firstname'
                     ) . " " . $objObserver->getObserverProperty(
-                        htmlentities(trim($parts_array[$i][1])), 'name'
+                        htmlentities(trim($parts_array[$i][1])),
+                        'name'
                     );
                     if (trim($parts_array[$i][1]) == $username) {
                         $instrum = $objInstrument->getInstrumentId(
                             htmlentities(
-                                trim($parts_array[$i][5]), ENT_COMPAT, "UTF-8", 0
-                            ), $loggedUser
+                                trim($parts_array[$i][5]),
+                                ENT_COMPAT,
+                                "UTF-8",
+                                0
+                            ),
+                            $loggedUser
                         );
                         $locat = $objLocation->getLocationId(
                             htmlentities(
-                                trim($parts_array[$i][4]), ENT_COMPAT, "UTF-8", 0
-                            ), $loggedUser
+                                trim($parts_array[$i][4]),
+                                ENT_COMPAT,
+                                "UTF-8",
+                                0
+                            ),
+                            $loggedUser
                         );
                         $parsed_date = date_parse_from_format("d-m-Y", $dates[$i]);
                         $date = sprintf(
-                            "%04d%02d%02d", $parsed_date["year"],
-                            $parsed_date["month"], $parsed_date["day"]
+                            "%04d%02d%02d",
+                            $parsed_date["year"],
+                            $parsed_date["month"],
+                            $parsed_date["day"]
                         );
                         if ($parts_array[$i][3]) {
                             $times = sscanf(trim($parts_array[$i][3]), "%2d%c%2d");
@@ -420,15 +450,23 @@ Correct observations which have been imported will not be registered for a secon
                         $eyepieceProp = Nz0(
                             $objEyepiece->getEyepieceObserverPropertyFromName(
                                 htmlentities(trim($parts_array[$i][6])),
-                                $loggedUser, 'id'
+                                $loggedUser,
+                                'id'
                             )
                         );
                         $obsid = $this->addDSObservation2(
-                            $correctedObjects[$i], $loggedUser, $instrum, $locat,
-                            $date, $time, $language,
+                            $correctedObjects[$i],
+                            $loggedUser,
+                            $instrum,
+                            $locat,
+                            $date,
+                            $time,
+                            $language,
                             htmlentities(trim($parts_array[$i][9])),
                             str_replace(
-                                ',', '.', htmlentities(trim($parts_array[$i][10]))
+                                ',',
+                                '.',
+                                htmlentities(trim($parts_array[$i][10]))
                             ),
                             htmlentities(
                                 ((trim($parts_array[$i][11]) == "")
@@ -441,14 +479,16 @@ Correct observations which have been imported will not be registered for a secon
                                 ? Nz0(
                                     $objFilter->getFilterObserverPropertyFromName(
                                         htmlentities(trim($parts_array[$i][7])),
-                                        $loggedUser, 'id'
+                                        $loggedUser,
+                                        'id'
                                     )
                                 ) : 0),
                             ((trim($parts_array[$i][8]) != "")
                                 ? Nz0(
                                     $objLens->getLensObserverPropertyFromName(
                                         htmlentities(trim($parts_array[$i][8])),
-                                        $loggedUser, 'id'
+                                        $loggedUser,
+                                        'id'
                                     )
                                 ) : 0)
                         );
@@ -479,43 +519,52 @@ Correct observations which have been imported will not be registered for a secon
         }
     }
 
-     /**
-      * Adds a new observation to the database. The name, observerid, instrumentid,
-      * locationid, date, time, description, seeing and limiting magnitude should be
-      * given as parameters. The id of the latest observation is returned.
-      * If the time and date are given in local time, you should execute
-      * setLocalDateAndTime after inserting the observation!
-      *
-      * @param string $objectname   The name of the object.
-      * @param string $observerid   The id of the observer.
-      * @param int    $instrumentid The id of the instrument.
-      * @param int    $locationid   The id of the location.
-      * @param int    $date         The date of the observation in YYYYMMDD format.
-      * @param int    $time         The time of the observation in HHMM format. If
-      *                             the time and date are given in local time, you
-      *                             should execute setLocalDateAndTime after
-      *                             inserting the observation!
-      * @param string $description  The description of the observation.
-      * @param int    $seeing       The seeing: 1 for Excellent, 2 for Good,
-      *                             3 for Moderate, 4 for Poor and 5 for Bad.
-      * @param float  $limmag       The limiting magnitude during the observation.
-      * @param int    $visibility   How easy the object was visible:
-      *                             1 for Very simple, prominent object,
-      *                             2 for Object easily percepted with direct
-      *                             vision,
-      *                             3 for Object perceptable with direct vision,
-      *                             4 for Averted vision required to percept object,
-      *                             5 for Object barely perceptable with averted
-      *                             vision,
-      *                             6 for Perception of object is very questionable,
-      *                             and 7 for Object definitely not seen.
-      * @param string $language     The short name of the language:
-      *                             e.g. en for English, nl for Dutch, ...
-      *
-      * @return integer The id of the observation.
-      */
-    public function addDSObservation($objectname, $observerid, $instrumentid,
-        $locationid, $date, $time, $description, $seeing, $limmag, $visibility,
+    /**
+     * Adds a new observation to the database. The name, observerid, instrumentid,
+     * locationid, date, time, description, seeing and limiting magnitude should be
+     * given as parameters. The id of the latest observation is returned.
+     * If the time and date are given in local time, you should execute
+     * setLocalDateAndTime after inserting the observation!
+     *
+     * @param string $objectname   The name of the object.
+     * @param string $observerid   The id of the observer.
+     * @param int    $instrumentid The id of the instrument.
+     * @param int    $locationid   The id of the location.
+     * @param int    $date         The date of the observation in YYYYMMDD format.
+     * @param int    $time         The time of the observation in HHMM format. If
+     *                             the time and date are given in local time, you
+     *                             should execute setLocalDateAndTime after
+     *                             inserting the observation!
+     * @param string $description  The description of the observation.
+     * @param int    $seeing       The seeing: 1 for Excellent, 2 for Good,
+     *                             3 for Moderate, 4 for Poor and 5 for Bad.
+     * @param float  $limmag       The limiting magnitude during the observation.
+     * @param int    $visibility   How easy the object was visible:
+     *                             1 for Very simple, prominent object,
+     *                             2 for Object easily percepted with direct
+     *                             vision,
+     *                             3 for Object perceptable with direct vision,
+     *                             4 for Averted vision required to percept object,
+     *                             5 for Object barely perceptable with averted
+     *                             vision,
+     *                             6 for Perception of object is very questionable,
+     *                             and 7 for Object definitely not seen.
+     * @param string $language     The short name of the language:
+     *                             e.g. en for English, nl for Dutch, ...
+     *
+     * @return integer The id of the observation.
+     */
+    public function addDSObservation(
+        $objectname,
+        $observerid,
+        $instrumentid,
+        $locationid,
+        $date,
+        $time,
+        $description,
+        $seeing,
+        $limmag,
+        $visibility,
         $language
     ) {
         global $objDatabase;
@@ -545,52 +594,64 @@ Correct observations which have been imported will not be registered for a secon
             \"$description\", $seeing, $limmag, $visibility, \"$language\")"
         );
         return $objDatabase->selectSingleValue(
-            "SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id'
+            "SELECT id FROM observations ORDER BY id DESC LIMIT 1",
+            'id'
         );
     }
 
-     /**
-      * Adds a new observation to the database. The name, observerid, instrumentid,
-      * locationid, date, time, description, seeing and limiting magnitude should
-      * be given as parameters. The id of the latest observation is returned.
-      * If the observation is already in the database, we don't add this observation
-      * again. We return 0 as object id.
-      *
-      * @param string $objectname   The name of the object.
-      * @param string $observerid   The id of the observer.
-      * @param int    $instrumentid The id of the instrument.
-      * @param int    $locationid   The id of the location.
-      * @param int    $date         The date of the observation in YYYYMMDD format.
-      * @param int    $time         The time of the observation in HHMM format.
-      *                             If the time and date are given in local time,
-      *                             you should execute setLocalDateAndTime after
-      *                             inserting the observation!
-      * @param string $description  The description of the observation.
-      * @param int    $seeing       The seeing: 1 for Excellent, 2 for Good,
-      *                             3 for Moderate, 4 for Poor and 5 for Bad.
-      * @param float  $limmag       The limiting magnitude during the observation.
-      * @param int    $visibility   How easy the object was visible:
-      *                             1 for Very simple, prominent object,
-      *                             2 for Object easily percepted with direct vision
-      *                             3 for Object perceptable with direct vision,
-      *                             4 for Averted vision required to percept object,
-      *                             5 for Object barely perceptable with averted
-      *                             vision,
-      *                             6 for Perception of object is very questionable,
-      *                             and 7 for Object definitely not seen.
-      * @param string $language     The short name of the language:
-      *                             e.g. en for English, nl for Dutch, ...
-      * @param int    $eyepieceid   The id of the eyepiece
-      * @param int    $filterid     The id of the filter
-      * @param int    $lensid       The id of the lens
-      *
-      * @return integer The id of the observation, or 0 if the observation was
-      *                 already in the database.
-      */
+    /**
+     * Adds a new observation to the database. The name, observerid, instrumentid,
+     * locationid, date, time, description, seeing and limiting magnitude should
+     * be given as parameters. The id of the latest observation is returned.
+     * If the observation is already in the database, we don't add this observation
+     * again. We return 0 as object id.
+     *
+     * @param string $objectname   The name of the object.
+     * @param string $observerid   The id of the observer.
+     * @param int    $instrumentid The id of the instrument.
+     * @param int    $locationid   The id of the location.
+     * @param int    $date         The date of the observation in YYYYMMDD format.
+     * @param int    $time         The time of the observation in HHMM format.
+     *                             If the time and date are given in local time,
+     *                             you should execute setLocalDateAndTime after
+     *                             inserting the observation!
+     * @param string $description  The description of the observation.
+     * @param int    $seeing       The seeing: 1 for Excellent, 2 for Good,
+     *                             3 for Moderate, 4 for Poor and 5 for Bad.
+     * @param float  $limmag       The limiting magnitude during the observation.
+     * @param int    $visibility   How easy the object was visible:
+     *                             1 for Very simple, prominent object,
+     *                             2 for Object easily percepted with direct vision
+     *                             3 for Object perceptable with direct vision,
+     *                             4 for Averted vision required to percept object,
+     *                             5 for Object barely perceptable with averted
+     *                             vision,
+     *                             6 for Perception of object is very questionable,
+     *                             and 7 for Object definitely not seen.
+     * @param string $language     The short name of the language:
+     *                             e.g. en for English, nl for Dutch, ...
+     * @param int    $eyepieceid   The id of the eyepiece
+     * @param int    $filterid     The id of the filter
+     * @param int    $lensid       The id of the lens
+     *
+     * @return integer The id of the observation, or 0 if the observation was
+     *                 already in the database.
+     */
     public function addDSObservation2(
-        $objectname, $observerid, $instrumentid, $locationid, $date, $time,
-        $description, $seeing, $limmag, $visibility, $language, $eyepieceid,
-        $filterid, $lensid
+        $objectname,
+        $observerid,
+        $instrumentid,
+        $locationid,
+        $date,
+        $time,
+        $description,
+        $seeing,
+        $limmag,
+        $visibility,
+        $language,
+        $eyepieceid,
+        $filterid,
+        $lensid
     ) {
         global $objDatabase, $objPresentations;
         if (($seeing == "-1") || ($seeing == "")
@@ -630,7 +691,9 @@ Correct observations which have been imported will not be registered for a secon
                                                 language=\"$language\" AND
                                                 eyepieceid=$eyepieceid AND
                                                 filterid=$filterid AND
-                                                lensid=$lensid", 'id', 0
+                                                lensid=$lensid",
+            'id',
+            0
         )
         ) {
             return 0;
@@ -668,27 +731,28 @@ Correct observations which have been imported will not be registered for a secon
                                             $sqm)"
             );
         }
-            // Return the obsid
+        // Return the obsid
         return $objDatabase->selectSingleValue(
-            "SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id'
+            "SELECT id FROM observations ORDER BY id DESC LIMIT 1",
+            'id'
         );
     }
 
-     /**
-      * Returns all information of an observation with the given id.
-      *
-      * @param int $id The id of the observation.
-      *
-      * @return array An array with all information. This is: 'id', 'objectname',
-      *               'observerid', 'instrumentid', 'locationid', 'date',
-      *               'localdate', 'time', 'localtime', 'description', 'seeing',
-      *               'limmag', 'visibility', 'language', 'eyepieceid', 'filterid',
-      *               'lensid', 'smallDiameter', 'largeDiameter', 'stellar',
-      *               'extended', 'resolved', 'mottled', 'clusterType',
-      *               'unusualShape', 'partlyUnresolved', 'colorContrasts', 'SQM',
-      *               'hasDrawing', 'dateDec', 'magnification', 'equalBrightness',
-      *               'niceField', 'component1', 'component2'.
-      */
+    /**
+     * Returns all information of an observation with the given id.
+     *
+     * @param int $id The id of the observation.
+     *
+     * @return array An array with all information. This is: 'id', 'objectname',
+     *               'observerid', 'instrumentid', 'locationid', 'date',
+     *               'localdate', 'time', 'localtime', 'description', 'seeing',
+     *               'limmag', 'visibility', 'language', 'eyepieceid', 'filterid',
+     *               'lensid', 'smallDiameter', 'largeDiameter', 'stellar',
+     *               'extended', 'resolved', 'mottled', 'clusterType',
+     *               'unusualShape', 'partlyUnresolved', 'colorContrasts', 'SQM',
+     *               'hasDrawing', 'dateDec', 'magnification', 'equalBrightness',
+     *               'niceField', 'component1', 'component2'.
+     */
     public function getAllInfoDsObservation($id)
     {
         global $objDatabase;
@@ -702,21 +766,22 @@ Correct observations which have been imported will not be registered for a secon
         return $obs;
     }
 
-     /**
-      * Returns all observation id's of the observations of the same object.
-      *
-      * @param string $object         The object name.
-      * @param int    $notobservation The observation id to exclude.
-      *
-      * @return array An array with all id's of the other observations of the
-      *               same object.
-      */
+    /**
+     * Returns all observation id's of the observations of the same object.
+     *
+     * @param string $object         The object name.
+     * @param int    $notobservation The observation id to exclude.
+     *
+     * @return array An array with all id's of the other observations of the
+     *               same object.
+     */
     public function getAOObservationsId($object, $notobservation)
     {
         global $objDatabase;
         return $objDatabase->selectSingleArray(
             "SELECT observations.id FROM observations WHERE objectname=\"" . $object
-            . "\" AND id!=\"" . $notobservation . "\" ORDER BY id DESC", 'id'
+            . "\" AND id!=\"" . $notobservation . "\" ORDER BY id DESC",
+            'id'
         );
     }
 
@@ -742,7 +807,8 @@ Correct observations which have been imported will not be registered for a secon
             if ($time >= 0) {
                 $date = sscanf($get->date, "%4d%2d%2d");
                 $timezone = $objLocation->getLocationPropertyFromId(
-                    $get->locationid, 'timezone'
+                    $get->locationid,
+                    'timezone'
                 );
                 $dateTimeZone = new DateTimeZone($timezone);
                 $time = sscanf(sprintf("%04d", $time), "%2d%2d");
@@ -782,7 +848,8 @@ Correct observations which have been imported will not be registered for a secon
             if ($time >= 0) {
                 $date = sscanf($get->date, "%4d%2d%2d");
                 $timezone = $objLocation->getLocationPropertyFromId(
-                    $get->locationid, 'timezone'
+                    $get->locationid,
+                    'timezone'
                 );
                 $dateTimeZone = new DateTimeZone($timezone);
                 $time = sscanf(sprintf("%04d", $time), "%2d%2d");
@@ -816,7 +883,8 @@ Correct observations which have been imported will not be registered for a secon
         global $objDatabase;
         return $objDatabase->selectSingleValue(
             "SELECT " . $property . " FROM observations WHERE id=\"" . $id . "\"",
-            $property, $defaultvalue
+            $property,
+            $defaultvalue
         );
     }
 
@@ -833,7 +901,9 @@ Correct observations which have been imported will not be registered for a secon
         return $objDatabase->selectSingleValue(
             "SELECT COUNT(*) as Cnt FROM observations "
             . "WHERE observations.observerid = \"$observerid\""
-            . " and visibility != 7 AND hasDrawing=1", "Cnt", 0
+            . " and visibility != 7 AND hasDrawing=1",
+            "Cnt",
+            0
         );
     }
 
@@ -850,7 +920,9 @@ Correct observations which have been imported will not be registered for a secon
         return $objDatabase->selectSingleValue(
             "SELECT COUNT(*) as Cnt FROM observations "
             . "WHERE observations.observerid = \"$observerid\""
-            . " and visibility != 7 ", "Cnt", 0
+            . " and visibility != 7 ",
+            "Cnt",
+            0
         );
     }
 
@@ -871,7 +943,9 @@ Correct observations which have been imported will not be registered for a secon
         return $objDatabase->selectSingleValue(
             "SELECT id FROM observations WHERE objectname=\"" . $objectname
             . "\" and observerid=\"" . $userid . "\" and id!=\""
-            . $notobservation . "\" ORDER BY date DESC", 'id', 0
+            . $notobservation . "\" ORDER BY date DESC",
+            'id',
+            0
         );
     }
 
@@ -884,7 +958,9 @@ Correct observations which have been imported will not be registered for a secon
     {
         global $objDatabase;
         return $objDatabase->selectSingleValue(
-            'SELECT MAX(observations.id) as MaxCnt FROM observations', 'MaxCnt', 0
+            'SELECT MAX(observations.id) as MaxCnt FROM observations',
+            'MaxCnt',
+            0
         );
     }
 
@@ -904,7 +980,8 @@ Correct observations which have been imported will not be registered for a secon
         return $objDatabase->selectSingleArray(
             "SELECT observations.id FROM observations WHERE objectname=\"" . $object
             . "\" and observerid=\"" . $userid . "\" AND id!=\"" . $notobservation
-            . "\" ORDER BY id DESC", 'id'
+            . "\" ORDER BY id DESC",
+            'id'
         );
     }
 
@@ -923,14 +1000,17 @@ Correct observations which have been imported will not be registered for a secon
         if (strcmp($country, "") == 0) {
             return $objDatabase->selectSingleValue(
                 "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations "
-                . "WHERE visibility != 7 ", 'Cnt'
+                . "WHERE visibility != 7 ",
+                'Cnt'
             );
         } else {
             return $objDatabase->selectSingleValue(
                 "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations "
                 . "JOIN locations ON observations.locationid=locations.id "
                 . "WHERE observations.visibility != 7 and "
-                . "locations.country=\"" . $country . "\"", 'Cnt', 0
+                . "locations.country=\"" . $country . "\"",
+                'Cnt',
+                0
             );
         }
     }
@@ -944,20 +1024,24 @@ Correct observations which have been imported will not be registered for a secon
      *
      * @return int The number of drawings in DeepskyLog.
      */
-    public function getNumberOfDsDrawings($country="")
+    public function getNumberOfDsDrawings($country = "")
     {
         global $objDatabase;
         if (strcmp($country, "") == 0) {
             return $objDatabase->selectSingleValue(
                 "SELECT COUNT(objectname) As Cnt FROM observations "
-                . "WHERE visibility != 7 AND hasDrawing=1", 'Cnt', 0
+                . "WHERE visibility != 7 AND hasDrawing=1",
+                'Cnt',
+                0
             );
         } else {
             return $objDatabase->selectSingleValue(
                 "SELECT COUNT(objectname) As Cnt FROM observations "
                 . "JOIN locations ON observations.locationid=locations.id "
                 . "WHERE visibility != 7 AND hasDrawing=1 and locations.country=\""
-                . $country . "\"", 'Cnt', 0
+                . $country . "\"",
+                'Cnt',
+                0
             );
         }
     }
@@ -969,7 +1053,7 @@ Correct observations which have been imported will not be registered for a secon
      *
      * @return array The drawings in DeepskyLog.
      */
-    public function getUserDrawings($userid="")
+    public function getUserDrawings($userid = "")
     {
         global $objDatabase;
 
@@ -991,20 +1075,24 @@ Correct observations which have been imported will not be registered for a secon
      *             country == "", then the number of observations in DeepskyLog
      *             is returned).
      */
-    public function getNumberOfDsObservations($country="")
+    public function getNumberOfDsObservations($country = "")
     {
         global $objDatabase;
         if (strcmp($country, "") == 0) {
             return $objDatabase->selectSingleValue(
                 "SELECT COUNT(objectname) As Cnt FROM observations "
-                . "WHERE visibility != 7 ", 'Cnt', 0
+                . "WHERE visibility != 7 ",
+                'Cnt',
+                0
             );
         } else {
             return $objDatabase->selectSingleValue(
                 "SELECT COUNT(objectname) As Cnt FROM observations "
                 . "JOIN locations ON observations.locationid=locations.id "
                 . "WHERE visibility != 7 and locations.country=\""
-                . $country . "\"", 'Cnt', 0
+                . $country . "\"",
+                'Cnt',
+                0
             );
         }
     }
@@ -1022,7 +1110,9 @@ Correct observations which have been imported will not be registered for a secon
         return $objDatabase->selectSingleValue(
             "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations "
             . "WHERE observerid=\"" . $observerid
-            . "\" AND visibility != 7 ", 'Cnt', 0
+            . "\" AND visibility != 7 ",
+            'Cnt',
+            0
         );
     }
 
@@ -1039,7 +1129,9 @@ Correct observations which have been imported will not be registered for a secon
         return $objDatabase->selectSingleValue(
             "SELECT COUNT(DISTINCT objectname) As Cnt FROM observations "
             . "WHERE observerid=\"" . $observerid
-            . "\" AND visibility != 7 and hasDrawing = 1", 'Cnt', 0
+            . "\" AND visibility != 7 and hasDrawing = 1",
+            'Cnt',
+            0
         );
     }
 
@@ -1058,7 +1150,7 @@ Correct observations which have been imported will not be registered for a secon
         $objects = array();
         $i = 0;
 
-        foreach ($observations as $key=>$observation) {
+        foreach ($observations as $key => $observation) {
             if (!array_key_exists($observation['objectname'], $objects)) {
                 $objects[$observation['objectname']] = array(
                         $i++,
@@ -1217,7 +1309,7 @@ Correct observations which have been imported will not be registered for a secon
                 $insts = $objInstrument->getAllInstrumentsIds(
                     $queries["instrument"]
                 );
-                foreach ($insts as $key=>$value) {
+                foreach ($insts as $key => $value) {
                     $sqland .= " || observations.instrumentid = \"" . $value . "\" ";
                 }
             }
@@ -1228,7 +1320,7 @@ Correct observations which have been imported will not be registered for a secon
                 . $queries ["eyepiece"] . "\" ";
             if (!$exact) {
                 $eyeps = $objEyepiece->getAllEyepiecesIds($queries["eyepiece"]);
-                foreach ($eyeps as $key=>$value) {
+                foreach ($eyeps as $key => $value) {
                     $sqland .= " || observations.eyepieceid = \"" . $value . "\" ";
                 }
             }
@@ -1239,7 +1331,7 @@ Correct observations which have been imported will not be registered for a secon
                 . $queries["filter"] . "\" ";
             if (!$exact) {
                 $filts = $objFilter->getAllFiltersIds($queries["filter"]);
-                foreach ($filts as $key=>$value) {
+                foreach ($filts as $key => $value) {
                     $sqland .= " || observations.filterid = \"" . $value . "\" ";
                 }
             }
@@ -1249,7 +1341,7 @@ Correct observations which have been imported will not be registered for a secon
             $sqland .= "AND (observations.lensid = \"" . $queries["lens"] . "\" ";
             if (!$exact) {
                 $lns = $objLens->getAllLensesIds($queries["lens"]);
-                foreach ($lns as $key=>$value) {
+                foreach ($lns as $key => $value) {
                     $sqland .= " || observations.lensid = \"" . $value . "\" ";
                 }
             }
@@ -1259,7 +1351,7 @@ Correct observations which have been imported will not be registered for a secon
             $sqland .= "AND (observations.locationid=" . $queries["location"] . " ";
             if (!$exact) {
                 $locs = $objLocation->getAllLocationsIds($queries["location"]);
-                foreach ($locs as $key=>$value) {
+                foreach ($locs as $key => $value) {
                     if ($value != $queries["location"]) {
                         $sqland .= " || observations.locationid = " . $value . " ";
                     }
@@ -1505,14 +1597,15 @@ Correct observations which have been imported will not be registered for a secon
                         "SELECT observations.id FROM observations "
                             . "WHERE objectname = \""
                             . $get->objectname . "\" AND observerid = \""
-                            . $loggedUser . "\"", 'id'
+                            . $loggedUser . "\"",
+                        'id'
                     )
                     ) {
                         $seentype = "Y";
                     }
                 }
                 if (($seenpar == "A") || ($seenpar == $seentype)) {
-                    foreach ($get as $key=>$value) {
+                    foreach ($get as $key => $value) {
                         $result[$j][$key] = $value;
                     }
                     $j++;
@@ -1546,7 +1639,9 @@ Correct observations which have been imported will not be registered for a secon
                 . "WHERE observations.observerid LIKE \""
                 . $id . "\" AND observations.date > \""
                 . date('Ymd', strtotime('-1 year'))
-                . "\" AND hasDrawing=1 ", 'Cnt', 0
+                . "\" AND hasDrawing=1 ",
+                'Cnt',
+                0
             );
         } else {
             return $objDatabase->selectSingleValue(
@@ -1556,7 +1651,9 @@ Correct observations which have been imported will not be registered for a secon
                 . date('Ymd', strtotime('-1 year'))
                 . "\" AND hasDrawing=1 AND observations.visibility != 7 and "
                 . "locations.country=\""
-                . $country . "\"", 'Cnt', 0
+                . $country . "\"",
+                'Cnt',
+                0
             );
         }
     }
@@ -1583,7 +1680,9 @@ Correct observations which have been imported will not be registered for a secon
                 . "WHERE observations.observerid LIKE \""
                 . $id . "\" AND observations.date > \""
                 . date('Ymd', strtotime('-1 year'))
-                . "\" AND observations.visibility != 7 ", 'Cnt', 0
+                . "\" AND observations.visibility != 7 ",
+                'Cnt',
+                0
             );
         } else {
             return $objDatabase->selectSingleValue(
@@ -1592,7 +1691,9 @@ Correct observations which have been imported will not be registered for a secon
                 . "WHERE observations.date > \""
                 . date('Ymd', strtotime('-1 year'))
                 . "\" AND observations.visibility != 7 and locations.country=\""
-                . $country . "\"", 'Cnt', 0
+                . $country . "\"",
+                'Cnt',
+                0
             );
         }
     }
@@ -1763,8 +1864,8 @@ Correct observations which have been imported will not be registered for a secon
         );
         $i = 1;
         while ($run->fetch(PDO::FETCH_OBJ)) {
-            $numberOfObservations [$get->objectname] = array (
-                    $i ++,
+            $numberOfObservations [$get->objectname] = array(
+                    $i++,
                     $get->objectname
             );
         }
@@ -1952,12 +2053,14 @@ Correct observations which have been imported will not be registered for a secon
         global $objDatabase, $objLocation;
         if ($time >= 0) {
             $timezone = $objLocation->getLocationPropertyFromId(
-                $this->getDsObservationProperty($id, 'locationid'), 'timezone'
+                $this->getDsObservationProperty($id, 'locationid'),
+                'timezone'
             );
 
             $time = intval($time / 100) . ":" . ($time % 100);
             $date = new DateTime(
-                $date . " " . $time, new DateTimeZone($timezone)
+                $date . " " . $time,
+                new DateTimeZone($timezone)
             );
             $date->setTimezone(new DateTimeZone('UTC'));
 
@@ -1989,7 +2092,8 @@ Correct observations which have been imported will not be registered for a secon
 
         return $objDatabase->selectRecordsetArray(
             "SELECT id, objectname, observerid, date FROM observations "
-                ."ORDER BY id DESC LIMIT " . $number . ";", 'id'
+                ."ORDER BY id DESC LIMIT " . $number . ";",
+            'id'
         );
     }
 
@@ -2031,7 +2135,7 @@ Correct observations which have been imported will not be registered for a secon
         parse_str($parsed, $query);
 
         if (array_key_exists('object', $query)) {
-            $queries = array (
+            $queries = array(
                     "object" => $query['object']
             );
             $_SESSION['Qobs'] = $objObservation->getObservationFromQuery($queries);
@@ -2082,7 +2186,7 @@ Correct observations which have been imported will not be registered for a secon
         if (!array_key_exists('Qobs', $_SESSION)) {
             $_SESSION['Qobs'] = $objObservation->getLastObservations();
         }
-        foreach ($_SESSION['Qobs'] as $key=>$value) {
+        foreach ($_SESSION['Qobs'] as $key => $value) {
             $obsKey = $key;
             $LOid = "";
             $LOinstrumentsize = '';
@@ -2092,7 +2196,7 @@ Correct observations which have been imported will not be registered for a secon
             $value = $_SESSION['Qobs'][$obsKey];
             $alt = "";
             $altnames = $objObject->getAlternativeNames($value['objectname']);
-            foreach ($altnames as $key=>$altvalue) {
+            foreach ($altnames as $key => $altvalue) {
                 if (trim($altvalue) != trim($value['objectname'])) {
                     $alt .= "<br />" . trim($altvalue);
                 }
@@ -2119,25 +2223,32 @@ Correct observations which have been imported will not be registered for a secon
             );
 
             $LOid = $this->getLOObservationId(
-                $value['objectname'], $loggedUser, $value ['observationid']
+                $value['objectname'],
+                $loggedUser,
+                $value ['observationid']
             );
             if ($LOid && ($lco == "O")) {
                 $LOdescription = $objPresentations->searchAndLinkCatalogsInText(
                     preg_replace(
-                        "/&amp;/", "&",
+                        "/&amp;/",
+                        "&",
                         $this->getDsObservationProperty($LOid, 'description')
                     )
                 );
                 $LOinstrumentId = $this->getDsObservationProperty(
-                    $LOid, 'instrumentid'
+                    $LOid,
+                    'instrumentid'
                 );
                 $LOinstrument = $objInstrument->getInstrumentPropertyFromId(
-                    $LOinstrumentId, 'name'
+                    $LOinstrumentId,
+                    'name'
                 );
                 $LOinstrumentsize = round(
                     $objInstrument->getInstrumentPropertyFromId(
-                        $LOinstrumentId, 'diameter'
-                    ), 0
+                        $LOinstrumentId,
+                        'diameter'
+                    ),
+                    0
                 );
             }
             if ($LOinstrument == "Naked eye") {
@@ -2151,19 +2262,25 @@ Correct observations which have been imported will not be registered for a secon
                     "%4d%2d%2d"
                 );
                 if ($lco == "O") {
-                    $LOdate = sscanf(
-                        $this->getDsObservationLocalDate($LOid), "%4d%2d%2d"
-                    );
+                    if ($this->getDsObservationLocalDate($LOid)) {
+                        $LOdate = sscanf(
+                            $this->getDsObservationLocalDate($LOid),
+                            "%4d%2d%2d"
+                        );
+                    }
                 }
             } else {
                 $date = sscanf(
                     $this->getDsObservationProperty(
-                        $value ['observationid'], 'date'
-                    ), "%4d%2d%2d"
+                        $value ['observationid'],
+                        'date'
+                    ),
+                    "%4d%2d%2d"
                 );
                 if ($lco == "O") {
                     $LOdate = sscanf(
-                        $this->getDsObservationProperty($LOid, 'date'), "%4d%2d%2d"
+                        $this->getDsObservationProperty($LOid, 'date'),
+                        "%4d%2d%2d"
                     );
                 }
             }
@@ -2184,22 +2301,24 @@ Correct observations which have been imported will not be registered for a secon
             } else {
                 $rowspan = 2;
                 $hasDrawing = $this->getDsObservationProperty(
-                    $value['observationid'], 'hasDrawing'
+                    $value['observationid'],
+                    'hasDrawing'
                 );
                 if ($hasDrawing) {
-                    $rowspan ++;
+                    $rowspan++;
                 }
                 $copyright = $objObserver->getObserverProperty(
-                    $value['observerid'], 'copyright'
+                    $value['observerid'],
+                    'copyright'
                 );
                 if ((($lco == "C") || ($lco == "O"))
                     && ($objUtil->checkGetKey('expand') != $value['observationid'])
                     && $copyright
                 ) {
-                    $rowspan ++;
+                    $rowspan++;
                 }
                 if ($objUtil->checkGetKey('expand') == $value['observationid']) {
-                    $rowspan --;
+                    $rowspan--;
                 }
             }
             echo "<td rowspan=\"" . $rowspan . "\" class=\"centered\">";
@@ -2232,7 +2351,9 @@ Correct observations which have been imported will not be registered for a secon
                     "SELECT Count(observerobjectlist.objectname) As ObjCnt "
                     . "FROM observerobjectlist WHERE observerid = \"" . $loggedUser
                     . "\" AND objectname=\"" . $value['objectname'] . "\" AND "
-                    . "listname=\"" . $listname . "\"", 'ObjCnt', 0
+                    . "listname=\"" . $listname . "\"",
+                    'ObjCnt',
+                    0
                 ) > 0
                 ) {
                     echo "<a  href=\"" . $link . "&amp;addObservationToList="
@@ -2320,7 +2441,8 @@ Correct observations which have been imported will not be registered for a secon
                     . " &nbsp;(" . round($value['instrumentdiameter'], 0)
                     . "&nbsp;mm)") . "</a></td>";
                 echo "<td>" . date(
-                    $dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0])
+                    $dateformat,
+                    mktime(0, 0, 0, $date[1], $date[2], $date[0])
                 ) . "</td>";
                 if ($lco == "O") {
                     echo "<td>" . (($LOid) ? "<a  href=\"" . $baseURL
@@ -2345,7 +2467,8 @@ Correct observations which have been imported will not be registered for a secon
                     . "&amp;dalm=D\" title=\""
                     . _("Details of this observation") . "\">" . "D"
                     . (($this->getDsObservationProperty(
-                        $value['observationid'], 'hasDrawing'
+                        $value['observationid'],
+                        'hasDrawing'
                     )) ? "D" : "")
                     . "</a>&nbsp;";
                 echo "<a  href=\"" . $baseURL
@@ -2380,7 +2503,8 @@ Correct observations which have been imported will not be registered for a secon
                         $toClose = false;
                         if ($loggedUser != "") {
                             if ($usedLang != $this->getDsObservationProperty(
-                                $value['observationid'], 'language'
+                                $value['observationid'],
+                                'language'
                             )
                             ) {
                                 $toClose = true;
@@ -2404,7 +2528,8 @@ Correct observations which have been imported will not be registered for a secon
                         $toClose = false;
                         if ($loggedUser != "") {
                             if ($usedLang != $this->getDsObservationProperty(
-                                $value['observationid'], 'language'
+                                $value['observationid'],
+                                'language'
                             )
                             ) {
                                 $toClose = true;
@@ -2426,7 +2551,8 @@ Correct observations which have been imported will not be registered for a secon
                         $toClose = false;
                         if ($loggedUser != "") {
                             if ($usedLang != $this->getDsObservationProperty(
-                                $LOid, 'language'
+                                $LOid,
+                                'language'
                             )
                             ) {
                                 $toClose = true;
@@ -2452,7 +2578,8 @@ Correct observations which have been imported will not be registered for a secon
                     if ($lco == "C") {
                         echo "<td colspan=\"7\">"
                             . (($this->getDsObservationProperty(
-                                $value['observationid'], 'hasDrawing'
+                                $value['observationid'],
+                                'hasDrawing'
                             ))
                             ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/"
                             . $value['observationid']
@@ -2473,7 +2600,8 @@ Correct observations which have been imported will not be registered for a secon
                                 echo "<td> &nbsp; </td>
                                       <td colspan=\"6\">"
                                     . (($this->getDsObservationProperty(
-                                        $value['observationid'], 'hasDrawing'
+                                        $value['observationid'],
+                                        'hasDrawing'
                                     ))
                                       ? "<p>"
                                       . "<a href=\"" . $baseURL
@@ -2494,7 +2622,8 @@ Correct observations which have been imported will not be registered for a secon
                             } else {
                                 echo "<td colspan=\"6\">"
                                     . ($this->getDsObservationProperty(
-                                        $value['observationid'], 'hasDrawing'
+                                        $value['observationid'],
+                                        'hasDrawing'
                                     )
                                     ? "<p>"
                                     . "<a  href=\"" . $baseURL . "deepsky/drawings/"
@@ -2530,7 +2659,7 @@ Correct observations which have been imported will not be registered for a secon
                 echo "<tr class=\"copyright tablesorter-childRow\"><td colspan=\""
                     . (($lco == "O") ? 8 : 6) . "\">" . $copyright . "</td></tr>";
             }
-            $count ++;
+            $count++;
         }
 
         echo "</tbody>";
@@ -2557,11 +2686,12 @@ Correct observations which have been imported will not be registered for a secon
         $link = $baseURL . "index.php?";
         $linkamp = "";
         reset($_GET);
-        foreach ($_GET as $key=>$value) {
+        foreach ($_GET as $key => $value) {
             $linkamp .= $key . "=" . urlencode($value) . "&amp;";
         }
         $inst = $objInstrument->getInstrumentPropertyFromId(
-            $this->getDsObservationProperty($LOid, 'instrumentid'), 'name'
+            $this->getDsObservationProperty($LOid, 'instrumentid'),
+            'name'
         );
         if ($inst == "Naked eye") {
             $inst = _("Naked Eye");
@@ -2573,13 +2703,15 @@ Correct observations which have been imported will not be registered for a secon
             $date = sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
         } else {
             $date = sscanf(
-                $this->getDsObservationProperty($LOid, 'date'), "%4d%2d%2d"
+                $this->getDsObservationProperty($LOid, 'date'),
+                "%4d%2d%2d"
             );
         }
         $time = "";
         $dateTimeLabelText = "";
         $dateTimeText = date(
-            $dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0])
+            $dateformat,
+            mktime(0, 0, 0, $date[1], $date[2], $date[0])
         );
         if ($this->getDsObservationProperty($LOid, 'time') >= 0) {
             if ($loggedUser
@@ -2614,14 +2746,16 @@ Correct observations which have been imported will not be registered for a secon
             if ($largeDiameter > 60) {
                 $diameterText = sprintf("%.1f ", $largeDiameter / 60.0)
                     . (($smallDiameter = $this->getDsObservationProperty(
-                        $LOid, 'smalldiameter'
+                        $LOid,
+                        'smalldiameter'
                     ))
                     ? sprintf("x %.1f ", $smallDiameter / 60.0) : '')
                     . _("arcminutes");
             } else {
                 $diameterText = sprintf("%.1f ", $largeDiameter)
                     . (($smallDiameter = $this->getDsObservationProperty(
-                        $LOid, 'smalldiameter'
+                        $LOid,
+                        'smalldiameter'
                     ))
                     ? sprintf("x %.1f ", $smallDiameter) : '')
                     . _("arcseconds");
@@ -2701,7 +2835,8 @@ Correct observations which have been imported will not be registered for a secon
         $object = $this->getDsObservationProperty($LOid, 'objectname');
         $object_ss = stripslashes($object);
         if (in_array(
-            $objObject->getDsoProperty($object, 'type'), array (
+            $objObject->getDsoProperty($object, 'type'),
+            array(
                 "ASTER",
                 "CLANB",
                 "DS",
@@ -2728,9 +2863,11 @@ Correct observations which have been imported will not be registered for a secon
             . urlencode($observer)
             . "&amp;back=index.php?indexAction=detail_observation\">"
             . $objObserver->getObserverProperty(
-                $this->getDsObservationProperty($LOid, 'observerid'), 'firstname'
+                $this->getDsObservationProperty($LOid, 'observerid'),
+                'firstname'
             ) . "&nbsp;" . $objObserver->getObserverProperty(
-                $this->getDsObservationProperty($LOid, 'observerid'), 'name'
+                $this->getDsObservationProperty($LOid, 'observerid'),
+                'name'
             ) . "</a>";
 
         // Show the picture of the observer
@@ -2786,10 +2923,12 @@ Correct observations which have been imported will not be registered for a secon
         } else {
             // Get location
             $longitude = $objLocation->getLocationPropertyFromId(
-                $this->getDsObservationProperty($LOid, 'locationid'), 'longitude'
+                $this->getDsObservationProperty($LOid, 'locationid'),
+                'longitude'
             );
             $latitude = $objLocation->getLocationPropertyFromId(
-                $this->getDsObservationProperty($LOid, 'locationid'), 'latitude'
+                $this->getDsObservationProperty($LOid, 'locationid'),
+                'latitude'
             );
 
             // Calculate altitude of the moon for this date, time and location
@@ -2797,7 +2936,8 @@ Correct observations which have been imported will not be registered for a secon
             $jd = gregoriantojd($month, $day, $year);
 
             $timezone = $objLocation->getLocationPropertyFromId(
-                $this->getDsObservationProperty($LOid, 'locationid'), 'timezone'
+                $this->getDsObservationProperty($LOid, 'locationid'),
+                'timezone'
             );
             $dateTimeZone = new DateTimeZone($timezone);
 
@@ -2814,7 +2954,10 @@ Correct observations which have been imported will not be registered for a secon
             }
             // Calculate the rise and set time of the moon
             $moonCalc = $objAstroCalc->calculateMoonRiseTransitSettingTime(
-                $jd, $longitude, $latitude, $timedifference
+                $jd,
+                $longitude,
+                $latitude,
+                $timedifference
             );
 
             // Now we know when the moon rises and sets.
@@ -2862,7 +3005,8 @@ Correct observations which have been imported will not be registered for a secon
             . "index.php?indexAction=detail_location&amp;location="
             . urlencode($this->getDsObservationProperty($LOid, 'locationid'))
             . "\">" . $objLocation->getLocationPropertyFromId(
-                $this->getDsObservationProperty($LOid, 'locationid'), 'name'
+                $this->getDsObservationProperty($LOid, 'locationid'),
+                'name'
             ) . "</a></td>";
         echo "<td></td>";
         echo "<td></td>";
@@ -2873,7 +3017,7 @@ Correct observations which have been imported will not be registered for a secon
             . _("SQM") . "</td>";
         $limmag = $this->getDsObservationProperty($LOid, 'limmag');
         echo "<td>" . ($limmag ? sprintf("%1.1f", $limmag) : "-") . "/"
-            . ((($sqm = $this->getDsObservationProperty($LOid, 'SQM')) != - 1)
+            . ((($sqm = $this->getDsObservationProperty($LOid, 'SQM')) != -1)
             ? sprintf("%2.1f", $sqm) : '-') . "</td>";
         echo "<td>" . _("Seeing") . "</td>";
         echo "<td>" . (($seeing) ? $GLOBALS ['Seeing' . $seeing] : "-") . "</td>";
@@ -2913,7 +3057,7 @@ Correct observations which have been imported will not be registered for a secon
         echo "</tr>";
 
         $objType = $objObject->getDsoProperty($object, 'type');
-        if (in_array($objType, array ("DS"))) {
+        if (in_array($objType, array("DS"))) {
             echo "<tr>";
             echo "<td>" . _("Visibility") . "</td>";
             $visibility = $this->getDsObservationProperty($LOid, 'visibility');
@@ -3001,7 +3145,9 @@ Correct observations which have been imported will not be registered for a secon
                 "SELECT Count(observerobjectlist.objectname) As ObjCnt"
                 . " FROM observerobjectlist WHERE observerid = \"" . $loggedUser
                 . "\" AND objectname=\"" . $object . "\" AND listname=\""
-                . $listname . "\"", 'ObjCnt', 0
+                . $listname . "\"",
+                'ObjCnt',
+                0
             ) > 0
             ) {
                 $bottomline .= "&nbsp;<a class=\"btn btn-danger\" href=\"" . $link
@@ -3087,12 +3233,12 @@ Correct observations which have been imported will not be registered for a secon
             throw new Exception(
                 _("You need to be logged in to validate an observation.")
             );
-        } elseif ($addObs != $objUtil->checkPostKey('timestamp', - 1)) {
+        } elseif ($addObs != $objUtil->checkPostKey('timestamp', -1)) {
             $_GET ['indexAction'] = "default_action";
             $_GET ['dalm'] = 'D';
         } elseif ((!$_POST['day']) || (!$_POST['month']) || (!$_POST['year'])
-            || ($_POST['site'] == "1") || (! $_POST['instrument'])
-            || (! $_POST['description'])
+            || ($_POST['site'] == "1") || (!$_POST['instrument'])
+            || (!$_POST['description'])
         ) {
             $entryMessage .= _("You did not fill in a required field!");
             $_GET['indexAction'] = 'add_observation';
@@ -3124,7 +3270,7 @@ Correct observations which have been imported will not be registered for a secon
             } elseif ($date > date('Ymd')) {
                 $entryMessage .= _("You filled in a future date!");
                 $_GET['indexAction'] = 'add_observation';
-            } elseif (($time > - 9999) && ((!is_numeric($_POST['hours']))
+            } elseif (($time > -9999) && ((!is_numeric($_POST['hours']))
                 || (!is_numeric($_POST['minutes'])) || ($_POST['hours'] < 0)
                 || ($_POST['hours'] > 23) || ($_POST['minutes'] < 0)
                 || ($_POST['minutes'] > 59))
@@ -3135,11 +3281,12 @@ Correct observations which have been imported will not be registered for a secon
                 if ($objUtil->checkPostKey('limit')) {
                     if (preg_match(
                         '/([0-9]{1})[.,]{0,1}([0-9]{0,1})/',
-                        $_POST['limit'], $matches
+                        $_POST['limit'],
+                        $matches
                     )
                     ) {
-                         // limiting magnitude like X.X or X,X with X a number
-                         // between 0 and 9
+                        // limiting magnitude like X.X or X,X with X a number
+                        // between 0 and 9
                         $_POST['limit'] = $matches[1] . "."
                             . (($matches[2]) ? $matches[2] : "0");
                     } else {
@@ -3151,14 +3298,15 @@ Correct observations which have been imported will not be registered for a secon
                     if (preg_match(
                         '/([0-9]{1})([0-9]{1})[.,]'
                         . '{0,1}([0-9]{0,1}){0,1}([0-9]{0,1})/',
-                        $_POST['sqm'], $matches
+                        $_POST['sqm'],
+                        $matches
                     )
                     ) {
-                         // limiting magnitude like X.X or X,X with X a number
-                         // between 0 and 9
-                         $_POST['sqm'] = $matches[1] . $matches[2] . "."
-                            . (($matches[3]) ? $matches[3] : "0")
-                            . (($matches[4]) ? $matches[4] : "0");
+                        // limiting magnitude like X.X or X,X with X a number
+                        // between 0 and 9
+                        $_POST['sqm'] = $matches[1] . $matches[2] . "."
+                           . (($matches[3]) ? $matches[3] : "0")
+                           . (($matches[4]) ? $matches[4] : "0");
                     } else {
                         // clear current magnitude limit
                         $_POST['sqm'] = "";
@@ -3168,7 +3316,8 @@ Correct observations which have been imported will not be registered for a secon
                     $current_observation = $_POST['observationid'];
                     if (!($objUtil->checkAdminOrUserID(
                         $objObservation->getDsObservationProperty(
-                            $current_observation, 'observerid'
+                            $current_observation,
+                            'observerid'
                         )
                     ))
                     ) {
@@ -3176,47 +3325,67 @@ Correct observations which have been imported will not be registered for a secon
                         return;
                     } else {
                         $objObservation->setDsObservationProperty(
-                            $current_observation, 'instrumentid',
+                            $current_observation,
+                            'instrumentid',
                             $_POST['instrument']
                         );
                         $objObservation->setDsObservationProperty(
-                            $current_observation, 'locationid', $_POST['site']
+                            $current_observation,
+                            'locationid',
+                            $_POST['site']
                         );
                         $objObservation->setDsObservationProperty(
-                            $current_observation, 'date', $date
+                            $current_observation,
+                            'date',
+                            $date
                         );
                         $objObservation->setDsObservationProperty(
-                            $current_observation, 'time', $time
+                            $current_observation,
+                            'time',
+                            $time
                         );
                         $objObservation->setDsObservationProperty(
-                            $current_observation, 'description',
+                            $current_observation,
+                            'description',
                             nl2br($_POST['description'])
                         );
                         $objObservation->setDsObservationProperty(
-                            $current_observation, 'seeing', $_POST['seeing']
+                            $current_observation,
+                            'seeing',
+                            $_POST['seeing']
                         );
                         $objObservation->setDsObservationProperty(
-                            $current_observation, 'limmag',
+                            $current_observation,
+                            'limmag',
                             $objUtil->checkPostKey('limit', 0)
                         );
                         $objObservation->setDsObservationProperty(
-                            $current_observation, 'sqm',
+                            $current_observation,
+                            'sqm',
                             $objUtil->checkPostKey('sqm', 0)
                         );
                         $objObservation->setDsObservationProperty(
-                            $current_observation, 'visibility',
+                            $current_observation,
+                            'visibility',
                             $objUtil->checkPostKey('visibility')
                         );
                         $objObservation->setDsObservationProperty(
-                            $current_observation, 'language',
+                            $current_observation,
+                            'language',
                             $_POST['description_language']
                         );
                     }
                 } else {
                     $current_observation = $objObservation->addDSObservation(
-                        $_POST['object'], $loggedUser, $_POST['instrument'],
-                        $_POST['site'], $date, $time, nl2br($_POST['description']),
-                        $_POST['seeing'], $_POST['limit'],
+                        $_POST['object'],
+                        $loggedUser,
+                        $_POST['instrument'],
+                        $_POST['site'],
+                        $date,
+                        $time,
+                        nl2br($_POST['description']),
+                        $_POST['seeing'],
+                        $_POST['limit'],
                         $objUtil->checkPostKey('visibility'),
                         $_POST['description_language']
                     );
@@ -3227,11 +3396,12 @@ Correct observations which have been imported will not be registered for a secon
                 if ($objUtil->checkPostKey('limit')) {
                     if (preg_match(
                         '/([0-9]{1})[.,]{0,1}([0-9]{0,1})/',
-                        $_POST['limit'], $matches
+                        $_POST['limit'],
+                        $matches
                     )
                     ) {
-                         // limiting magnitude like X.X or X,X with X a number
-                         // between 0 and 9
+                        // limiting magnitude like X.X or X,X with X a number
+                        // between 0 and 9
                         $_POST['limit'] = $matches[1] . "."
                             . (($matches[2]) ? $matches[2] : "0");
                     } else {
@@ -3242,7 +3412,8 @@ Correct observations which have been imported will not be registered for a secon
                 if ($objUtil->checkPostKey('sqm')) {
                     if (preg_match(
                         '/([0-9]{1})([0-9]{0,1})[.,]{0,1}([0-9]{0,1})/',
-                        $_POST['sqm'], $matches
+                        $_POST['sqm'],
+                        $matches
                     )
                     ) {
                         // sqm value
@@ -3255,7 +3426,8 @@ Correct observations which have been imported will not be registered for a secon
                 if ($objUtil->checkPostKey('largeDiam')) {
                     if (preg_match(
                         '/([0-9]+)[.,]{0,1}([0-9]{0,1})/',
-                        $_POST['largeDiam'], $matches
+                        $_POST['largeDiam'],
+                        $matches
                     )
                     ) {
                         // large diameter
@@ -3269,7 +3441,8 @@ Correct observations which have been imported will not be registered for a secon
                 if ($objUtil->checkPostKey('smallDiam')) {
                     if (preg_match(
                         '/([0-9]+)[.,]{0,1}([0-9]{0,1})/',
-                        $_POST['smallDiam'], $matches
+                        $_POST['smallDiam'],
+                        $matches
                     )
                     ) {
                         // large diameter
@@ -3299,148 +3472,202 @@ Correct observations which have been imported will not be registered for a secon
                 }
                 if ($_POST['sqm']) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'SQM',
+                        $current_observation,
+                        'SQM',
                         preg_replace("/,/", ".", $objUtil->checkPostKey('sqm', -1))
                     );
                 }
                 if ($_POST['limit']) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'limmag',
+                        $current_observation,
+                        'limmag',
                         preg_replace("/,/", ".", $objUtil->checkPostKey('limit', 0))
                     );
                 }
                 if ($_POST['smallDiam']) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'smallDiameter', $_POST ['smallDiam']
+                        $current_observation,
+                        'smallDiameter',
+                        $_POST ['smallDiam']
                     );
                 }
                 if ($_POST['largeDiam']) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'largeDiameter', $_POST ['largeDiam']
+                        $current_observation,
+                        'largeDiameter',
+                        $_POST ['largeDiam']
                     );
                 }
                 if (array_key_exists('stellarextended', $_POST)
                     && ($_POST ['stellarextended'] == "stellar")
                 ) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'stellar', 1
+                        $current_observation,
+                        'stellar',
+                        1
                     );
                 } else {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'stellar', -1
+                        $current_observation,
+                        'stellar',
+                        -1
                     );
                 }
                 if (array_key_exists('stellarextended', $_POST)
                     && ($_POST ['stellarextended'] == "extended")
                 ) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'extended', 1
+                        $current_observation,
+                        'extended',
+                        1
                     );
                 } else {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'extended', -1
+                        $current_observation,
+                        'extended',
+                        -1
                     );
                 }
                 if (array_key_exists('resolved', $_POST)) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'resolved', 1
+                        $current_observation,
+                        'resolved',
+                        1
                     );
                 } else {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'resolved', -1
+                        $current_observation,
+                        'resolved',
+                        -1
                     );
                 }
                 if (array_key_exists('mottled', $_POST)) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'mottled', 1
+                        $current_observation,
+                        'mottled',
+                        1
                     );
                 } else {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'mottled', -1
+                        $current_observation,
+                        'mottled',
+                        -1
                     );
                 }
                 if (array_key_exists('unusualShape', $_POST)) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'unusualShape', 1
+                        $current_observation,
+                        'unusualShape',
+                        1
                     );
                 } else {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'unusualShape', -1
+                        $current_observation,
+                        'unusualShape',
+                        -1
                     );
                 }
                 if (array_key_exists('partlyUnresolved', $_POST)) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'partlyUnresolved', 1
+                        $current_observation,
+                        'partlyUnresolved',
+                        1
                     );
                 } else {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'partlyUnresolved', -1
+                        $current_observation,
+                        'partlyUnresolved',
+                        -1
                     );
                 }
                 if (array_key_exists('colorContrasts', $_POST)) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'colorContrasts', 1
+                        $current_observation,
+                        'colorContrasts',
+                        1
                     );
                 } else {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'colorContrasts', -1
+                        $current_observation,
+                        'colorContrasts',
+                        -1
                     );
                 }
                 if (array_key_exists('equalBrightness', $_POST)) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'equalBrightness', 1
+                        $current_observation,
+                        'equalBrightness',
+                        1
                     );
                 } else {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'equalBrightness', -1
+                        $current_observation,
+                        'equalBrightness',
+                        -1
                     );
                 }
                 if (array_key_exists('niceField', $_POST)) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'niceField', 1
+                        $current_observation,
+                        'niceField',
+                        1
                     );
                 } else {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'niceField', -1
+                        $current_observation,
+                        'niceField',
+                        -1
                     );
                 }
                 if ($_POST['filter']) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'filterid', $_POST['filter']
+                        $current_observation,
+                        'filterid',
+                        $_POST['filter']
                     );
                 }
                 if ($_POST['lens']) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'lensid', $_POST['lens']
+                        $current_observation,
+                        'lensid',
+                        $_POST['lens']
                     );
                 }
                 if ($_POST['eyepiece']) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'eyepieceid', $_POST['eyepiece']
+                        $current_observation,
+                        'eyepieceid',
+                        $_POST['eyepiece']
                     );
                 }
                 if ($_POST['magnification']) {
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'magnification',
+                        $current_observation,
+                        'magnification',
                         $_POST['magnification']
                     );
                 }
                 if (!($objObserver->getObserverProperty($loggedUser, 'UT'))) {
                     $objObservation->setLocalDateAndTime(
-                        $current_observation, $date, $time
+                        $current_observation,
+                        $date,
+                        $time
                     );
                 }
                 $objObservation->setDsObservationProperty(
-                    $current_observation, 'clusterType',
+                    $current_observation,
+                    'clusterType',
                     $objUtil->checkPostKey('clusterType')
                 );
                 $objObservation->setDsObservationProperty(
-                    $current_observation, 'component1',
-                    $objUtil->checkPostKey('component1', - 1)
+                    $current_observation,
+                    'component1',
+                    $objUtil->checkPostKey('component1', -1)
                 );
                 $objObservation->setDsObservationProperty(
-                    $current_observation, 'component2',
-                    $objUtil->checkPostKey('component2', - 1)
+                    $current_observation,
+                    'component2',
+                    $objUtil->checkPostKey('component2', -1)
                 );
                 if ($_FILES['drawing']['tmp_name'] != "") {
                     // drawing to upload
@@ -3452,14 +3679,21 @@ Correct observations which have been imported will not be registered for a secon
                     include_once $instDir
                         . "common/control/resize.php"; // resize code
                     $new_image = image_createThumb(
-                        $original_image, $destination_image, 490, 490, 100
+                        $original_image,
+                        $destination_image,
+                        490,
+                        490,
+                        100
                     );
                     move_uploaded_file(
-                        $_FILES['drawing']['tmp_name'], $upload_dir . "/"
+                        $_FILES['drawing']['tmp_name'],
+                        $upload_dir . "/"
                         . $current_observation . ".jpg"
                     );
                     $objObservation->setDsObservationProperty(
-                        $current_observation, 'hasDrawing', 1
+                        $current_observation,
+                        'hasDrawing',
+                        1
                     );
                 }
 
@@ -3500,8 +3734,8 @@ Correct observations which have been imported will not be registered for a secon
         global $objDatabase;
         return $objDatabase->selectRecordsetArray(
             "SELECT id, objectname, observerid, date FROM observations "
-            . "WHERE hasDrawing=\"1\" ORDER BY id DESC LIMIT 4", 'id'
+            . "WHERE hasDrawing=\"1\" ORDER BY id DESC LIMIT 4",
+            'id'
         );
     }
 }
-?>
