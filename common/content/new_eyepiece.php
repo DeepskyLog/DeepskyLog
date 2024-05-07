@@ -19,7 +19,7 @@ function new_eyepiece()
     if ($mfl < 0) {
         $mfl = '';
     }
-    $eyeps = $objEyepiece->getSortedEyepieces('focalLength');
+    $eyeps = $objEyepiece->getSortedEyepieces('MAX(focalLength)');
     echo "<form role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
     echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_eyepiece\" />";
     $content1b = "<select class=\"form-control\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";

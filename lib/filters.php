@@ -164,7 +164,7 @@ class Filters
     public function getSortedFilters($sort, $observer = "", $active = '') // returns an array with the ids of all filters, sorted by the column specified in $sort
     {
         global $objDatabase;
-        return $objDatabase->selectSingleArray("SELECT id, name FROM filters " . ($observer ? "WHERE observer LIKE \"" . $observer . "\" " . ($active ? " AND filteractive=" . $active : '') : " GROUP BY name") . " ORDER BY " . $sort . ", name", 'id');
+        return $objDatabase->selectSingleArray("SELECT " . ($observer ? "" : "MAX(id)") . "  id, name FROM filters " . ($observer ? "WHERE observer LIKE \"" . $observer . "\" " . ($active ? " AND filteractive=" . $active : '') : " GROUP BY name") . " ORDER BY " . $sort . ", name", 'id');
     }
     public function setFilterProperty($id, $property, $propertyValue) // sets the property to the specified value for the given filter
     {

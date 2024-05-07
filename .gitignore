@@ -7,3 +7,10 @@ bootstrap/
 vendor/
 storage/
 node_modules/
+.idea/dataSources.xml
+.idea/DeepskyLog.iml
+.idea/jsLibraryMappings.xml
+.idea/modules.xml
+.idea/php.xml
+.idea/sqldialects.xml
+.idea/vcs.xml

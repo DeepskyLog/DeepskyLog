@@ -11,7 +11,7 @@
  * @link     http://www.deepskylog.org
  */
 
-global $baseURL, $objDatabase, $objObservations, $objObserver, $objUtil;
+global $baseURL, $objDatabase, $objObservations, $objObserver, $objUtil, $loggedUser, $objObservation;
 
 echo "<div class=\"container-fluid\">";
 if ($loggedUser) {
@@ -23,7 +23,7 @@ if ($loggedUser) {
             . " \" href=\"https://github.com/DeepskyLog/DeepskyLog/"
             . "wiki/What's-New-in-DeepskyLog\">";
         echo "<img class=\"img-responsive img-rounded\" src=\""
-            . $baseURL . "images/logo.png\">
+            . $baseURL . "images/logo.png\" alt='DeepskyLog Logo'>
                 </a>";
         $objDatabase->execSQL(
             "UPDATE observers SET version=\"" . VERSIONINFO
@@ -35,7 +35,7 @@ if ($loggedUser) {
         . " \" href=\"https://github.com/DeepskyLog/DeepskyLog/"
         . "wiki/What's-New-in-DeepskyLog\">";
     echo "<img class=\"img-responsive img-rounded\" src=\""
-        . $baseURL . "images/logo.png\">
+        . $baseURL . "images/logo.png\" alt='DeepskyLog logo'>
         </a>";
 }
 echo "</div>";
@@ -44,7 +44,7 @@ echo "<br />";
 if (!$loggedUser) {
     echo _(
         "<h2>Welcome to DeepskyLog!</h2>
-DeepskyLog is an extended, comprehensive and free database for deepsky objects and has been developed by the Deepsky section of the Astronomical Society of Belgium (<a href=\"http://www.vvs.be\">Vereniging Voor Sterrenkunde (VVS)</a>).
+DeepskyLog is an extended, comprehensive and free database for deepsky objects and has been developed by the Deepsky section of the Astronomical Society of Belgium (<a href=\"https://www.vvs.be\">Vereniging Voor Sterrenkunde (VVS)</a>).
 The database is open for consultation and already contains tens of thousands observations and thousands of sketches and drawings made by amateur astronomers around the world."
     ) . "<br /><br />"
         . sprintf(
@@ -177,26 +177,10 @@ foreach ($drawings as $drawing => $key) {
 echo "</div>";
 
 echo "<h2>Tweets</h2>";
-echo '<script>window.twttr = (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0],
-      t = window.twttr || {};
-    if (d.getElementById(id)) return t;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = "https://platform.twitter.com/widgets.js";
-    fjs.parentNode.insertBefore(js, fjs);
 
-    t._e = [];
-    t.ready = function(f) {
-      t._e.push(f);
-    };
+echo "<a class='twitter-timeline' data-handle='DeepskyLog' data-height='750' data-width='750' data-theme='dark' ></a>";
+echo "<script src='https://www.athabasca.dev/content/scripts/widget.js'></script>";
 
-    return t;
-  }(document, "script", "twitter-wjs"));</script>';
-echo '<a class="twitter-timeline"
-  href="https://twitter.com/DeepskyLog"
-  data-width="500"
-  data-height="300"
-  data-tweet-limit="3">
-Tweets by @DeepskyLog
-</a>';
+//echo '<a class="twitter-timeline" data-width="750" data-height="750" data-theme="dark" href="https://twitter.com/DeepskyLog?ref_src=twsrc%5Etfw">
+//    Tweets by DeepskyLog</a>';
+//echo '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>';

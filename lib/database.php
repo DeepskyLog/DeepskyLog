@@ -18,7 +18,6 @@ class Database
             $entryMessage = "A database error occured!"; // user friendly message
             print $entryMessage;
         }
-
         return $run;
     }
     public function execSQL($sql)
@@ -27,8 +26,7 @@ class Database
             echo "Database connection lost...";
             $this->newLogin();
         }
-        $run = $this->mysql_query_encaps($sql);
-        return $run;
+        $this->mysql_query_encaps($sql);
     }
     public function selectKeyValueArray($sql, $key, $value)
     {
@@ -133,7 +131,6 @@ class Database
         }
 
         $result = array();
-
         while ($get = $run->fetch(PDO::FETCH_OBJ)) {
             $result [] = $get->$name;
         }

@@ -27,14 +27,14 @@ class Lenses {
 		return $objDatabase->selectSingleValue ( "SELECT " . $property . " FROM lenses where name=\"" . $name . "\" and observer=\"" . $observer . "\"", $property );
 	}
 	public function getLensPropertyFromId($id, $property, $defaultValue = '') // returns the property of the given lens
-{
+	{
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT " . $property . " FROM lenses WHERE id = \"" . $id . "\"", $property, $defaultValue );
 	}
 	public function getSortedLenses($sort, $observer = "", $active = '') // returns an array with the ids of all lenses, sorted by the column specified in $sort
-{
+	{
 		global $objDatabase;
-		return $objDatabase->selectSingleArray ( "SELECT id, name FROM lenses " . ($observer ? "WHERE observer LIKE \"" . $observer . "\" " . ($active ? " AND lensactive=" . $active : "") : " GROUP BY name") . " ORDER BY " . $sort . ", name", 'id' );
+		return $objDatabase->selectSingleArray ( "SELECT " . ($observer ? "" : "MAX(id)") . " id, name FROM lenses " . ($observer ? "WHERE observer LIKE \"" . $observer . "\" " . ($active ? " AND lensactive=" . $active : "") : " GROUP BY name") . " ORDER BY " . $sort . ", name", 'id' );
 	}
 	public function setLensProperty($id, $property, $propertyValue) // sets the property to the specified value for the given lens
 {
@@ -66,7 +66,7 @@ class Lenses {
 				$factor = $objLens->getLensPropertyFromId ( $value, 'factor' );
 				echo "<tr>";
 				
-				echo "<td>" . "<span class=\"hidden\">" . $objLens->getLensPropertyFromId ( $value, 'lensactive' ) . "</span><input id=\"lensactive" . $value . "\" type=\"checkbox\" " . ($objLens->getLensPropertyFromId ( $value, 'lensactive' ) ? " checked=\"checked\" " : "") . " onclick=\"setactivation('lens'," . $value . ");;var order = this.checked ? '1' : '0'; $(this).prev().html(order);$(this).parents('table').trigger('update');\" />" . "</td>";
+				echo "<td>" . "<span class=\"hidden\">" . $objLens->getLensPropertyFromId ( $value, 'lensactive' ) . "</span><input id=\"lensactive" . $value . "\" type=\"checkbox\" " . ($objLens->getLensPropertyFromId ( $value, 'lensactive' ) ? " checked=\"checked\" " : "") . " onclick=\"setactivation('lens'," . $value . "); var order = this.checked ? '1' : '0'; $(this).prev().html(order);$(this).parents('table').trigger('update');\" />" . "</td>";
 				echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_lens&amp;lens=" . urlencode ( $value ) . "\">" . $name . "</a></td>";
 				echo "<td>" . $factor . "</td>";
 				// Make it possible to delete the lenses

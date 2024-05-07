@@ -467,26 +467,34 @@ function viewObserver()
 
     echo " <tr>";
     echo "  <td>" . _("Observations last year") . "</td>";
-    echo " <td>" . $information[count($modules)][1]  . " / "
-        . $information[count($modules)][11] . " ("
-        . sprintf(
-            "%.2f",
-            $information[count($modules)][1]
-            / $information[count($modules)][11] * 100
-        ) . "%)";
-    for ($i = 0; $i < count($modules); $i++) {
-        echo " <td>" . $information[$i][1]  . " / "
-            . $information[$i][11] . " ("
+    if ($information[count($modules)][11] == 0) {
+        echo " <td>" . $information[count($modules)][1]  . " / 0";
+    } else {
+        echo " <td>" . $information[count($modules)][1] . " / "
+            . $information[count($modules)][11] . " ("
             . sprintf(
-                "%.2f", $information[$i][1] / $information[$i][11] * 100
+                "%.2f",
+                $information[count($modules)][1]
+                / $information[count($modules)][11] * 100
             ) . "%)";
+    }
+    for ($i = 0; $i < count($modules); $i++) {
+        if ($information[$i][11] == 0) {
+            echo " <td>" . $information[$i][1]  . " / 0";
+        } else {
+            echo " <td>" . $information[$i][1] . " / "
+                . $information[$i][11] . " ("
+                . sprintf(
+                    "%.2f", $information[$i][1] / $information[$i][11] * 100
+                ) . "%)";
+        }
         echo " </td>";
     }
     echo " </tr>";
 
     echo " <tr>";
     echo "  <td>" . _("Number of drawings") . "</td>";
-    echo " <td>" . $information[count($modules)][5]  . " / "
+    echo " <td>" . $information[count($modules)][5] . " / "
         . $information[count($modules)][15] . " ("
         . sprintf(
             "%.2f",
@@ -494,17 +502,24 @@ function viewObserver()
             / $information[count($modules)][15] * 100
         ) . "%)";
     for ($i = 0; $i < count($modules); $i++) {
-        echo " <td>" . $information[$i][5]  . " / "
-            . $information[$i][15] . " ("
-            . sprintf(
-                "%.2f", $information[$i][5] / $information[$i][15] * 100
-            ) . "%)";
+        if ($information[count($modules)][15] == 0) {
+            echo " <td>" . $information[$i][5]  . " / 0";
+        } else {
+            echo " <td>" . $information[$i][5] . " / "
+                . $information[$i][15] . " ("
+                . sprintf(
+                    "%.2f", $information[$i][5] / $information[$i][15] * 100
+                ) . "%)";
+        }
         echo " </td>";
     }
     echo " </tr>";
 
     echo " <tr>";
     echo "  <td>" . _("Drawings last year") . "</td>";
+    if ($information[count($modules)][16] == 0) {
+        echo " <td>" . $information[count($modules)][6]  . " / 0";
+    } else {
     echo " <td>" . $information[count($modules)][6]  . " / "
         . $information[count($modules)][16] . " ("
         . sprintf(
@@ -512,12 +527,17 @@ function viewObserver()
             $information[count($modules)][6]
             / $information[count($modules)][16] * 100
         ) . "%)";
+    }
     for ($i = 0; $i < count($modules); $i++) {
-        echo " <td>" . $information[$i][6]  . " / "
-            . $information[$i][16] . " ("
-            . sprintf(
-                "%.2f", $information[$i][6] / $information[$i][16] * 100
-            ) . "%)";
+        if ($information[$i][16] == 0) {
+            echo " <td>" . $information[$i][6]  . " / 0";
+        } else {
+            echo " <td>" . $information[$i][6] . " / "
+                . $information[$i][16] . " ("
+                . sprintf(
+                    "%.2f", $information[$i][6] / $information[$i][16] * 100
+                ) . "%)";
+        }
         echo " </td>";
     }
     echo " </tr>";

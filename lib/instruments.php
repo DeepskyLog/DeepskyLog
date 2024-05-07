@@ -268,7 +268,7 @@ class Instruments
     {
         global $objDatabase;
         return $objDatabase->selectSingleArray(
-            "SELECT id, name FROM instruments "
+            "SELECT " . ($observer ? "" : "MAX(id)") . " id, name FROM instruments "
             . (
                 $observer ? "WHERE observer LIKE \"" . $observer . "\" "
             . ($active ? " AND instrumentactive=" . $active : "") : " GROUP BY name"
