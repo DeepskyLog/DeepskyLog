@@ -97,33 +97,53 @@ function statistics()
                 $information[$i][3] = $totalDSDrawings;
                 $information[$i][4] = $totalDSYearDrawings;
             } else {
-                $information[$i][0] = $totalCountryDSObservations . " / "
-                    . $totalDSObservations . "&nbsp;(" . sprintf(
-                        "%.2f",
-                        ($totalCountryDSObservations / $totalDSObservations) * 100
-                    ) . "%)";
-                $information[$i][1] = $totalCountryDSYearObservations . " / "
-                    . $totalDSYearObservations . "&nbsp;(" . sprintf(
-                        "%.2f",
-                        $totalCountryDSYearObservations
-                        / $totalDSYearObservations * 100
-                    ) . "%)";
-                $information[$i][2] = $totalCountryDSobjects . " / "
-                    . $totalDSobjects . "&nbsp;(" . sprintf(
-                        "%.2f",
-                        $totalCountryDSobjects / $totalDSobjects * 100
-                    ) . "%)";
-                $information[$i][3] = $totalCountryDSDrawings . " / "
-                    . $totalDSDrawings . "&nbsp;(" . sprintf(
-                        "%.2f",
-                        ($totalCountryDSDrawings / $totalDSDrawings) * 100
-                    ) . "%)";
-                $information[$i][4] = $totalCountryDSYearDrawings . " / "
-                    . $totalDSYearDrawings . "&nbsp;(" . sprintf(
-                        "%.2f",
-                        $totalCountryDSYearDrawings
+                if ($totalDSObservations == 0) {
+                    $information[$i][0] = "0 / 0 (0%)";
+                } else {
+                    $information[$i][0] = $totalCountryDSObservations . " / "
+                        . $totalDSObservations . "&nbsp;(" . sprintf(
+                            "%.2f",
+                            ($totalCountryDSObservations / $totalDSObservations) * 100
+                        ) . "%)";
+                }
+                if ($totalDSYearObservations == 0) {
+                    $information[$i][1] = "0 / 0 (0%)";
+                } else {
+                    $information[$i][1] = $totalCountryDSYearObservations . " / "
+                        . $totalDSYearObservations . "&nbsp;(" . sprintf(
+                            "%.2f",
+                            $totalCountryDSYearObservations
+                            / $totalDSYearObservations * 100
+                        ) . "%)";
+                }
+                if ($totalDSobjects == 0) {
+                    $information[$i][2] = "0 / 0 (0%)";
+                } else {
+                    $information[$i][2] = $totalCountryDSobjects . " / "
+                        . $totalDSobjects . "&nbsp;(" . sprintf(
+                            "%.2f",
+                            $totalCountryDSobjects / $totalDSobjects * 100
+                        ) . "%)";
+                }
+                if ($totalDSDrawings == 0) {
+                    $information[$i][3] = "0 / 0 (0%)";
+                } else {
+                    $information[$i][3] = $totalCountryDSDrawings . " / "
+                        . $totalDSDrawings . "&nbsp;(" . sprintf(
+                            "%.2f",
+                            ($totalCountryDSDrawings / $totalDSDrawings) * 100
+                        ) . "%)";
+                }
+                if ($totalDSYearDrawings == 0) {
+                    $information[$i][4] = "0 / 0 (0%)";
+                } else {
+                    $information[$i][4] = $totalCountryDSYearDrawings . " / "
+                        . $totalDSYearDrawings . "&nbsp;(" . sprintf(
+                            "%.2f",
+                            $totalCountryDSYearDrawings
                         / $totalDSYearDrawings * 100
-                    ) . "%)";
+                        ) . "%)";
+                }
             }
         }
         if (strcmp(${$modules[$i]}, $comets) == 0) {
