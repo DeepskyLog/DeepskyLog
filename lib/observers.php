@@ -334,7 +334,7 @@ class Observers
             . "COUNT(cometobservations.id) AS cometobsCount FROM cometobservations "
             . "GROUP BY cometobservations.observerid) "
             . "AS E on observers.id=E.observerid "
-            . "GROUP BY observers.id ORDER BY " . $sort
+            . " ORDER BY " . $sort
         );
     }
     /**
@@ -1181,10 +1181,14 @@ class Observers
             $lang = new Language();
             $lang->setLocale();
 
+            $datetime = new DateTime();
+            $datetime->add(new DateInterval('PT24H'));
+            $formattedDate = $datetime->format('l jS F Y, H:i:s');
+
             $message .= "<br /><br />"
                 . sprintf(
                     _("If you do nothing, the request will lapse after 24 hours (on %s) or when you log in successfully."),
-                    iconv('ISO-8859-1', 'UTF-8', strftime('%A %d %B %Y, %R UTC', time() + 24*60*60))
+                    $formattedDate
                 );
 
             $message .= "<br /><h2><a href=\"mailto:deepskylog@groups.io\">"

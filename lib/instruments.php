@@ -276,6 +276,7 @@ class Instruments
             'id'
         );
     }
+
     /**
      * Returns a sorted list of the instruments (for a given observer).
      *
