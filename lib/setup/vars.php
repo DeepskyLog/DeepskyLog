@@ -15,7 +15,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
     include "../../redirect.php";
 }
 
-define("VERSIONINFO", "2024.1");
+define("VERSIONINFO", "2024.2");
 define("COPYRIGHTINFO", "©2004 - 2024");
 define("DSLINFO", "DeepskyLog");
 define("OBJECTINFO", "NGC/IC database by <a href='http://www.klima-luft.de/steinicke/index_e.htm'>Steinicke</a>, stars Tycho2+ &amp; USNO-UCAC3");
