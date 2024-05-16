@@ -248,7 +248,7 @@ class Messages {
     		// We get the mailaddress and the full name from the userid
 	    	if (strcmp($userid, "developers") == 0) {
 		    	$fullName = "DeepskyLog Team";
-			    $mailAddress = $mailFrom;
+			    $mailAddress = $mailTo;
 		    } else {
 			    $fullName = $objObserver->getFullName($userid);
 			    $mailAddress = $objObserver->getObserverProperty($userid, "email", '');
