@@ -255,10 +255,10 @@ class Messages {
 		    }
 
     		$mail->AddAddress($mailAddress, $fullName);    //To Address
-	    	$mail->AddReplyTo($mailFrom, "DeepskyLog Team"); //Reply-To Address
+	    	$mail->AddReplyTo($mailTo, "DeepskyLog Team"); //Reply-To Address
 
     		if ($cc) {
-	    		$mail->AddCC( $mailFrom );
+	    		$mail->AddCC( $mailTo );
 		    }
 
 		    $mail->WordWrap = 50;    // set word wrap to 50 characters
