@@ -207,7 +207,7 @@ class Messages {
 	public function sendEmail($subject, $message, $userid, $cc = false) {
 		// Sends a html mail to the given userid. If $userid == "developers", then we send a mail to the DeepskyLog team.
 		// If $cc is true, we also send a CC to the developers.
-		global $mailFrom, $instDir, $objObserver, $developversion, $entryMessage, $mailFromMailGun;
+		global $mailFrom, $instDir, $objObserver, $developversion, $entryMessage, $mailTo;
 		global $mailHost, $mailSMTPAuth, $mailServerUsername, $mailServerPassword, $mailSMTPSecure, $mailPort;
 
         if (isset($developversion) 
@@ -221,7 +221,7 @@ class Messages {
     		require_once('PHPMailer/class.phpmailer.php');
 
 	    	// Making the headers for the html mail
-		    $headers = "From: " . $mailFromMailGun . "\r\n";
+		    $headers = "From: " . $mailFrom . "\r\n";
 		    $headers .= "Reply-To: ". $mailFrom . "\r\n";
     		$headers .= "MIME-Version: 1.0\r\n";
 	    	$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
