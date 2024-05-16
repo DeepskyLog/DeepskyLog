@@ -725,7 +725,7 @@ class Observers
                     "Your DeepskyLog account has been created. One of our developers will validate your account as soon as possible. You will receive an email confirmation when this happens.
                 Please remember that DeepskyLog is the work of only a very small group of volunteers, and that it can take up to a day or so to get validated.
                 On very rare occasions, all developers are on an astronomical observing session for a week. Normally, there is a backup person in these periods.
-                If your account is not validated within 24 hours, you can send an email to developers at deepskylog.be to be sure."
+                If your account is not validated within 24 hours, you can send an email to deepskywim at gmail.com to be sure."
                 );
                 $_GET['user'] = $_POST['deepskylog_id'];
                 $_GET['indexAction'] = 'detail_observer';
