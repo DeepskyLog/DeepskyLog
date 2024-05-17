@@ -24,16 +24,6 @@
 + [X] Add team member should show a list of observers, not just an option to add a person using an email address.
 + [X] Move to slugs for the username and the team names
 + [ ] Make code work again with new version of laravel, livewire, ...
-    + [X] composer fails with JetStream error
-    + [X] npm run build does not work anymore
-    + [X] Menu does not work anymore
-    + [X] Team Settings does not work anymore
-        + [X] Add empty team member crashes the application
-        + [X] Remove user from list
-        + [X] AddColumn method is deprecated
-        + [X] Rename Team -> not longer administrator for this team
-    + [ ] Test connection to GitHub, Google or Facebook online
-    + [ ] Glitch in wireui (in the register page)
     + [ ] Information of observer does not work when not logged in
     + [ ] Test as normal user...
 + [ ] Rewrite tests to use PEST (see ExampleTest.php)
