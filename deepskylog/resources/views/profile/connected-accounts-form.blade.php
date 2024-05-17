@@ -46,7 +46,7 @@
                                 @if ($this->accounts->count() > 1 || ! is_null($this->user->password))
                                     <x-button
                                         negative
-                                        wire:click="confirmRemove({{ $account->id }})"
+                                        wire:click="confirmRemoveAccount({{ $account->id }})"
                                         wire:loading.attr="disabled"
                                     >
                                         {{ __("Remove") }}
