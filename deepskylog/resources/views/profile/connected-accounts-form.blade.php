@@ -64,5 +64,50 @@
                 </x-connected-account>
             @endforeach
         </div>
+
+        <!-- Logout Other Devices Confirmation Modal -->
+        <x-modal.card
+            blur
+            title="{{ __('Are you sure you want to remove this account?') }}"
+            wire:model.live="confirmingAccountRemoval"
+        >
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
+                {{ __("Please enter your password to confirm you would like to remove this account.") }}
+
+                <div
+                    x-data="{}"
+                    x-on:confirming-logout-other-browser-sessions.window="setTimeout(() => $refs.password.focus(), 250)"
+                >
+                    <x-inputs.password
+                        type="password"
+                        class="mt-1 block w-3/4"
+                        placeholder="{{ __('Password') }}"
+                        x-ref="password"
+                        wire:model.live="password"
+                        wire:keydown.enter="removeConnectedAccount"
+                    />
+
+                    <x-input-error for="password" />
+                </div>
+            </div>
+
+            <x-slot name="footer">
+                <x-button
+                    type="submit"
+                    label="{{ __('Cancel') }}"
+                    wire:click="$toggle('confirmingAccountRemoval')"
+                    wire:loading.attr="disabled"
+                />
+
+                <x-button
+                    type="submit"
+                    secondary
+                    wire:click="removeConnectedAccount"
+                    wire:loading.attr="disabled"
+                >
+                    {{ __("Remove Account") }}
+                </x-button>
+            </x-slot>
+        </x-modal.card>
     </x-slot>
 </x-action-section>
