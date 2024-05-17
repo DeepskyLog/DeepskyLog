@@ -4,7 +4,7 @@
     </x-slot>
 
     <x-slot name="description">
-        {{ __("Manage and remove your connect accounts.") }}
+        {{ __("Connect your social media accounts to enable Sign In with OAuth.") }}
     </x-slot>
 
     <x-slot name="content">
@@ -55,7 +55,7 @@
                             </div>
                         @else
                             <x-action-link
-                                href="{{ route('oauth.redirect', ['provider' => $provider]) }}"
+                                href="{{ route('oauth.redirect', ['provider' => $provider['id']]) }}"
                             >
                                 {{ __("Connect") }}
                             </x-action-link>
@@ -64,32 +64,5 @@
                 </x-connected-account>
             @endforeach
         </div>
-
-        <!-- Logout Other Devices Confirmation Modal -->
-        {{-- <x-modal.card --}}
-        {{-- blur --}}
-        {{-- title="{{ __('Remove Connected Account') }}" --}}
-        {{-- wire:model.live="confirmingRemove" --}}
-        {{-- > --}}
-        {{-- {{ __("Please confirm your removal of this account - this action cannot be undone.") }} --}}
-
-        {{-- <x-slot name="footer"> --}}
-        {{-- <x-button --}}
-        {{-- type="submit" --}}
-        {{-- label="{{ __('Nevermind') }}" --}}
-        {{-- wire:click="$toggle('confirmingRemove')" --}}
-        {{-- wire:loading.attr="disabled" --}}
-        {{-- /> --}}
-
-        {{-- <x-button --}}
-        {{-- negative --}}
-        {{-- class="ml-2" --}}
-        {{-- wire:click="removeConnectedAccount({{ $this->selectedAccountId }})" --}}
-        {{-- wire:loading.attr="disabled" --}}
-        {{-- > --}}
-        {{-- {{ __("Remove Connected Account") }} --}}
-        {{-- </x-button> --}}
-        {{-- </x-slot> --}}
-        {{-- </x-modal.card> --}}
     </x-slot>
 </x-action-section>

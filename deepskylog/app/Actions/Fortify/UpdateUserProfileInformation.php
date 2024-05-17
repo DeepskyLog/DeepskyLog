@@ -5,6 +5,7 @@ namespace App\Actions\Fortify;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 
@@ -23,7 +24,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
             'sendMail' => ['boolean'],
             'country' => ['string'],
-            'about' => ['string', 'nullable'],
+            'about' => ['string:max:1000', 'nullable'],
             'fstOffset' => ['numeric', 'min:-5.0', 'max:5.0'],
         ])->validateWithBag('updateProfileInformation');
 
@@ -45,7 +46,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'email' => $input['email'],
                 'sendMail' => $input['sendMail'],
                 'country' => $input['country'],
-                'about' => $input['about'],
+                'about' => Str::limit($input['about'], 1000),
                 'fstOffset' => $input['fstOffset'],
                 'copyright' => $copyright,
                 'copyrightSelection' => $input['copyrightSelection'],

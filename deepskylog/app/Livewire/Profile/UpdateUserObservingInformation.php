@@ -17,14 +17,14 @@ class UpdateUserObservingInformation extends Component
     protected $rules = [
         'stdlocation' => 'numeric',
         'stdtelescope' => 'numeric',
+        'showInches' => 'boolean',
+
     ];
 
     /**
      * Sets the database values.
-     *
-     * @return void
      */
-    public function mount()
+    public function mount(): void
     {
         $this->stdlocation = auth()->user()->stdlocation;
         $this->stdtelescope = auth()->user()->stdtelescope;

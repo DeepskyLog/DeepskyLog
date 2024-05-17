@@ -26,15 +26,14 @@
 + [ ] Make code work again with new version of laravel, livewire, ...
     + [X] composer fails with JetStream error
     + [X] npm run build does not work anymore
-    + [ ] Glitch in wireui (in the register page)
     + [X] Menu does not work anymore
     + [X] Team Settings does not work anymore
         + [X] Add empty team member crashes the application
         + [X] Remove user from list
         + [X] AddColumn method is deprecated
         + [X] Rename Team -> not longer administrator for this team
-    + [ ] Profile does not work anymore
-        + [ ] Compare with RemoveTeamMember.php
+    + [ ] Test connection to GitHub, Google or Facebook online
+    + [ ] Glitch in wireui (in the register page)
     + [ ] Information of observer does not work when not logged in
     + [ ] Test as normal user...
 + [ ] Rewrite tests to use PEST (see ExampleTest.php)
@@ -55,7 +54,7 @@
     + [ ] Change the link to the user settings page.
 + [ ] Create menu for the new version
     + [ ] Add the sponsor page to the old version!
-+ [ ] Check log in using the new version and try using one of the old pages as logged in user
++ [ ] Check log in using the new version and try using one of the old pages as logged-in user
     + [ ] Change links in the old version, also for the sponsor page (http://deepskylog.test/sponsors)
     + [ ] Update the log in code in the old DeepskyLog
 
