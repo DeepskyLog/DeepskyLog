@@ -28,7 +28,7 @@ class ObserverController extends Controller
      */
     public function show(string $slug)
     {
-        $user = User::where("slug", $slug)->firstOrFail();
+        $user = User::where('slug', $slug)->firstOrFail();
 
         return view('observers.show', [
             'user' => $user,

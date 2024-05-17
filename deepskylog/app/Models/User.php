@@ -2,35 +2,34 @@
 
 namespace App\Models;
 
-use App\Models\ObservationsOld;
 use Carbon\Carbon;
-use Laravel\Jetstream\HasTeams;
-use Laravel\Sanctum\HasApiTokens;
-use Laravel\Jetstream\HasProfilePhoto;
-use Illuminate\Notifications\Notifiable;
 use Cviebrock\EloquentSluggable\Sluggable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use JoelButcher\Socialstream\HasConnectedAccounts;
-use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use JoelButcher\Socialstream\HasConnectedAccounts;
+use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Jetstream\HasProfilePhoto;
+use Laravel\Jetstream\HasTeams;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
+    use HasConnectedAccounts;
     use HasFactory;
-    use SetsProfilePhotoFromUrl;
     use HasProfilePhoto {
         profilePhotoUrl as getPhotoUrl;
     }
     use HasTeams;
-    use HasConnectedAccounts;
     use Notifiable;
     use SetsProfilePhotoFromUrl;
-    use TwoFactorAuthenticatable;
+    use SetsProfilePhotoFromUrl;
     use Sluggable;
+    use TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -38,7 +37,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'username', 'sendMail', 'about'
+        'name', 'email', 'password', 'username', 'sendMail', 'about',
     ];
 
     /**
@@ -73,15 +72,13 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Return the sluggable configuration array for this model.
-     *
-     * @return array
      */
     public function sluggable(): array
     {
         return [
             'slug' => [
-                'source' => 'name'
-            ]
+                'source' => 'name',
+            ],
         ];
     }
 
@@ -99,9 +96,8 @@ class User extends Authenticatable implements MustVerifyEmail
      * Overrides the methods from HasTeams.Switch the user's context to the given team.
      *
      * @param  mixed  $team
-     * @return bool
      */
-    public function switchTeam($team)
+    public function switchTeam($team): bool
     {
         $this->forceFill([
             'current_team_id' => $team->id,
@@ -114,8 +110,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user's active team is the administrators team
-     *
-     * @return string
      */
     public function isAdministrator(): bool
     {
@@ -124,12 +118,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user's active team is the administrators team
-     *
-     * @return bool
      */
     public function hasAdministratorPrivileges(): bool
     {
-        if ($this->teams()->where("name", "Administrators")->count() > 0) {
+        if ($this->teams()->where('name', 'Administrators')->count() > 0) {
             return true;
         } else {
             return false;
@@ -138,8 +130,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user's active team is the team of Database experts
-     *
-     * @return bool
      */
     public function isDatabaseExpert(): bool
     {
@@ -148,8 +138,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user's active team is the team of Observers
-     *
-     * @return bool
      */
     public function isObserver(): bool
     {
@@ -184,20 +172,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user is one of the first DeepskyLog users (registered in 2004 or 2005)
-     *
-     * @return bool
      */
     public function isEarlyAdopter(): bool
     {
         $earlyAdopterDate = Carbon::createFromFormat('d/m/Y', '31/12/2005');
         $registrationDate = $this->created_at;
+
         return $registrationDate->lt($earlyAdopterDate);
     }
 
     /**
      * Returns the date and the id of the first observation
-     *
-     * @return array
      */
     public function firstObservationDate(): array
     {
@@ -210,13 +195,12 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
         $id = ObservationsOld::where('observerid', $this->username)->where('date', $firstObservation)->first()['id'];
+
         return [$date, $id];
     }
 
     /**
      * Returns the date and the id of the most recent observation
-     *
-     * @return array
      */
     public function lastObservationDate(): array
     {
@@ -229,33 +213,30 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
         $id = ObservationsOld::where('observerid', $this->username)->where('date', $firstObservation)->first()['id'];
+
         return [$date, $id];
     }
 
     /**
      * Checks if the user has observed all 110 messier objects
-     *
-     * @return bool
      */
     public function hasMessierGold(): bool
     {
-
+        // TODO: Refactor this method to make it more general.
+        // See https://laracasts.com/series/phpstorm-for-laravel-developers/episodes/11 for more information
         return AccomplishmentsOld::where('observer', $this->username)->first()['messierGold'];
     }
 
     /**
      * Checks if the user has observed 50 different messier objects
-     *
-     * @return bool
      */
     public function hasMessierSilver(): bool
     {
         return AccomplishmentsOld::where('observer', $this->username)->first()['messierSilver'];
     }
+
     /**
      * Checks if the user has observed 25 different messier objects
-     *
-     * @return bool
      */
     public function hasMessierBronze(): bool
     {
@@ -264,8 +245,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has drawn all 110 messier objects
-     *
-     * @return bool
      */
     public function hasMessierGoldDrawing(): bool
     {
@@ -275,17 +254,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has drawn 50 different messier objects
-     *
-     * @return bool
      */
     public function hasMessierSilverDrawing(): bool
     {
         return AccomplishmentsOld::where('observer', $this->username)->first()['messierDrawingsSilver'];
     }
+
     /**
      * Checks if the user has drawn 25 different messier objects
-     *
-     * @return bool
      */
     public function hasMessierBronzeDrawing(): bool
     {
@@ -294,8 +270,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has observed all 110 caldwell objects
-     *
-     * @return bool
      */
     public function hasCaldwellGold(): bool
     {
@@ -305,17 +279,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has observed 50 different caldwell objects
-     *
-     * @return bool
      */
     public function hasCaldwellSilver(): bool
     {
         return AccomplishmentsOld::where('observer', $this->username)->first()['caldwellSilver'];
     }
+
     /**
      * Checks if the user has observed 25 different caldwell objects
-     *
-     * @return bool
      */
     public function hasCaldwellBronze(): bool
     {
@@ -324,8 +295,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has drawn all 110 caldwell objects
-     *
-     * @return bool
      */
     public function hasCaldwellGoldDrawing(): bool
     {
@@ -335,17 +304,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has drawn 50 different caldwell objects
-     *
-     * @return bool
      */
     public function hasCaldwellSilverDrawing(): bool
     {
         return AccomplishmentsOld::where('observer', $this->username)->first()['caldwellDrawingsSilver'];
     }
+
     /**
      * Checks if the user has drawn 25 different caldwell objects
-     *
-     * @return bool
      */
     public function hasCaldwellBronzeDrawing(): bool
     {
@@ -354,8 +320,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has observed all 400 herschel objects
-     *
-     * @return bool
      */
     public function hasHerschel400Platinum(): bool
     {
@@ -365,8 +329,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has observed 200 herschel objects
-     *
-     * @return bool
      */
     public function hasHerschel400Diamond(): bool
     {
@@ -376,8 +338,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has observed 100 herschel objects
-     *
-     * @return bool
      */
     public function hasHerschel400Gold(): bool
     {
@@ -387,17 +347,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has observed 50 different herschel objects
-     *
-     * @return bool
      */
     public function hasHerschel400Silver(): bool
     {
         return AccomplishmentsOld::where('observer', $this->username)->first()['herschelSilver'];
     }
+
     /**
      * Checks if the user has observed 25 different herschel objects
-     *
-     * @return bool
      */
     public function hasHerschel400Bronze(): bool
     {
@@ -406,8 +363,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has drawn all 400 herschel objects
-     *
-     * @return bool
      */
     public function hasHerschel400PlatinumDrawing(): bool
     {
@@ -417,8 +372,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has drawn 200 herschel objects
-     *
-     * @return bool
      */
     public function hasHerschel400DiamondDrawing(): bool
     {
@@ -428,8 +381,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has drawn 100 herschel objects
-     *
-     * @return bool
      */
     public function hasHerschel400GoldDrawing(): bool
     {
@@ -439,17 +390,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has drawn 50 different herschel objects
-     *
-     * @return bool
      */
     public function hasHerschel400SilverDrawing(): bool
     {
         return AccomplishmentsOld::where('observer', $this->username)->first()['herschelDrawingsSilver'];
     }
+
     /**
      * Checks if the user has drawn 25 different herschel objects
-     *
-     * @return bool
      */
     public function hasHerschel400BronzeDrawing(): bool
     {
@@ -458,8 +406,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has observed all 400 herschelII objects
-     *
-     * @return bool
      */
     public function hasHerschelIIPlatinum(): bool
     {
@@ -469,8 +415,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has observed 200 herschelII objects
-     *
-     * @return bool
      */
     public function hasHerschelIIDiamond(): bool
     {
@@ -480,8 +424,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has observed 100 herschelII objects
-     *
-     * @return bool
      */
     public function hasHerschelIIGold(): bool
     {
@@ -491,17 +433,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has observed 50 different herschelII objects
-     *
-     * @return bool
      */
     public function hasHerschelIISilver(): bool
     {
         return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIISilver'];
     }
+
     /**
      * Checks if the user has observed 25 different herschelII objects
-     *
-     * @return bool
      */
     public function hasHerschelIIBronze(): bool
     {
@@ -510,8 +449,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has drawn all 400 herschelII objects
-     *
-     * @return bool
      */
     public function hasHerschelIIPlatinumDrawing(): bool
     {
@@ -521,8 +458,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has drawn 200 herschelII objects
-     *
-     * @return bool
      */
     public function hasHerschelIIDiamondDrawing(): bool
     {
@@ -532,8 +467,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has drawn 100 herschelII objects
-     *
-     * @return bool
      */
     public function hasHerschelIIGoldDrawing(): bool
     {
@@ -543,17 +476,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user has drawn 50 different herschelII objects
-     *
-     * @return bool
      */
     public function hasHerschelIISilverDrawing(): bool
     {
         return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDrawingsSilver'];
     }
+
     /**
      * Checks if the user has drawn 25 different herschelII objects
-     *
-     * @return bool
      */
     public function hasHerschelIIBronzeDrawing(): bool
     {

@@ -30,10 +30,10 @@ return [
         'flatpickr' => [
             'locales' => [
                 'pt_BR' => [
-                    'locale'     => 'pt',
+                    'locale' => 'pt',
                     'dateFormat' => 'd/m/Y H:i',
                     'enableTime' => true,
-                    'time_24hr'  => true,
+                    'time_24hr' => true,
                 ],
             ],
         ],
@@ -114,14 +114,14 @@ return [
     */
 
     'exportable' => [
-        'default'      => 'openspout_v4',
+        'default' => 'openspout_v4',
         'openspout_v4' => [
-            'xlsx' => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v4\ExportToXLS::class,
-            'csv'  => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v4\ExportToCsv::class,
+            'xlsx' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToXLS::class,
+            'csv' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToCsv::class,
         ],
         'openspout_v3' => [
-            'xlsx' => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v3\ExportToXLS::class,
-            'csv'  => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v3\ExportToCsv::class,
+            'xlsx' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v3\ExportToXLS::class,
+            'csv' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v3\ExportToCsv::class,
         ],
     ],
 ];

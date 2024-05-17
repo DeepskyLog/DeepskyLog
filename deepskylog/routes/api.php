@@ -1,11 +1,10 @@
 <?php
 
-use App\Models\User;
 use App\Models\Atlas;
-use App\Models\LocationsOld;
-use Illuminate\Http\Request;
 use App\Models\InstrumentsOld;
-use Illuminate\Support\Facades\Auth;
+use App\Models\LocationsOld;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,7 +52,7 @@ Route::get('licenses.index', function (Request $request) {
         'Attribution-NonCommercial-ShareAlike CC BY-NC-SA',
         'Attribution-NonCommercial-NoDerivs CC BY-NC-ND',
         'No license (Not recommended)',
-        'Enter your own copyright text'
+        'Enter your own copyright text',
     ];
 
     $allLicenses = [];
@@ -67,7 +66,7 @@ Route::get('licenses.index', function (Request $request) {
             $text = 'Enter your own copyright text';
         }
         $allLicenses[] = [
-            'name' => $text
+            'name' => $text,
         ];
     }
     foreach ($licenses as $text) {
@@ -104,7 +103,7 @@ Route::get('locations.index', function (Request $request) {
     }
     $allLocations[] = [
         'id' => 0,
-        'name' => 'No standard location (Not recommended)'
+        'name' => 'No standard location (Not recommended)',
     ];
 
     return $allLocations;
@@ -133,7 +132,7 @@ Route::get('instruments.index', function (Request $request) {
     }
     $allInstruments[] = [
         'id' => 0,
-        'name' => 'No standard instrument (Not recommended)'
+        'name' => 'No standard instrument (Not recommended)',
     ];
 
     return $allInstruments;
@@ -167,9 +166,9 @@ Route::get('ui_languages.index', function (Request $request) {
     // Show the selected option
     if ($request->exists('selected')) {
         $allLanguages[] = [
-             'id' => auth()->user()->language,
-             'name' => Languages::lookup([auth()->user()->language], 'mixed')->values()[0],
-         ];
+            'id' => auth()->user()->language,
+            'name' => Languages::lookup([auth()->user()->language], 'mixed')->values()[0],
+        ];
     }
 
     // Get the languages
@@ -191,9 +190,9 @@ Route::get('observation_languages.index', function (Request $request) {
     // Show the selected option
     if ($request->exists('selected')) {
         $allLanguages[] = [
-             'id' => auth()->user()->observationlanguage,
-             'name' => Languages::lookup([auth()->user()->observationlanguage], 'mixed')->values()[0],
-         ];
+            'id' => auth()->user()->observationlanguage,
+            'name' => Languages::lookup([auth()->user()->observationlanguage], 'mixed')->values()[0],
+        ];
     }
 
     // Get the languages
@@ -218,7 +217,7 @@ Route::get('addUserToTeam.index', function (Request $request) {
         if ($request->search == '' || Str::contains(Str::lower($user->name), Str::lower($request->search)) || Str::contains(Str::lower($user->email), Str::lower($request->search))) {
             $allUsers[] = [
                 'id' => $user->email,
-                'name' => $user->name . ' (' . $user->email . ')',
+                'name' => $user->name.' ('.$user->email.')',
             ];
         }
     }

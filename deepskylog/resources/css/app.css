@@ -1,7 +1,9 @@
+@import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 a {
     @apply font-bold;
-  }
+}

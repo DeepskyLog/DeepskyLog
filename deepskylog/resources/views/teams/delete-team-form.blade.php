@@ -19,7 +19,7 @@
         </div>
 
         <!-- Delete Team Confirmation Modal -->
-        <x-modal.card blur title="{{ __('Delete Team') }}" wire:model="confirmingTeamDeletion">
+        <x-modal.card blur title="{{ __('Delete Team') }}" wire:model.live="confirmingTeamDeletion">
             <div class="flex col-span-1">
                 <x-icon name="exclamation-circle" class="w-10 h-10 text-red-600" />
                 <div class="py-2 px-4">

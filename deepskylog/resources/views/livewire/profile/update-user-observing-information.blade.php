@@ -43,19 +43,19 @@
     <x-slot name="form">
         {{-- Default observing site --}}
         <div class="col-span-6 sm:col-span-5">
-            <x-select label="{{ __('Default observing site') }}" wire:model.defer="stdlocation" :async-data="route('locations.index')"
+            <x-select label="{{ __('Default observing site') }}" wire:model.live="stdlocation" :async-data="route('locations.index')"
                 option-label="name" option-value="id" />
         </div>
 
         {{-- Default instrument --}}
         <div class="col-span-6 sm:col-span-5">
-            <x-select label="{{ __('Default instrument') }}" wire:model.defer="stdtelescope" :async-data="route('instruments.index')"
+            <x-select label="{{ __('Default instrument') }}" wire:model.live="stdtelescope" :async-data="route('instruments.index')"
                 option-label="name" option-value="id" />
         </div>
 
         {{-- Default atlas --}}
         <div class="col-span-6 sm:col-span-5">
-            <x-select label="{{ __('Default atlas') }}" wire:model.defer="standardAtlasCode" :async-data="route('atlas.index')"
+            <x-select label="{{ __('Default atlas') }}" wire:model.live="standardAtlasCode" :async-data="route('atlas.index')"
                 option-label="name" option-value="id" />
         </div>
 
@@ -64,10 +64,10 @@
 
             @if (auth()->user()->sendMail)
                 <x-toggle label="{{ __('Show instrument diameter in inch') }}" name="showInches" id="showInches"
-                    wire:model.defer="showInches" checked />
+                    wire:model.live="showInches" checked />
             @else
                 <x-toggle label="{{ __('Show instrument diameter in inch') }}" name="showInches" id="showInches"
-                    wire:model.defer="showInches" />
+                    wire:model.live="showInches" />
             @endif
         </div>
     </x-slot>

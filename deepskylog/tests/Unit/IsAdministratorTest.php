@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
 use App\Models\Team;
 use App\Models\User;
 use Database\Seeders\GroupSeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class IsAdministratorTest extends TestCase
 {
@@ -34,7 +34,7 @@ class IsAdministratorTest extends TestCase
     {
         // Create a user and assign it to the Administrators team
         $user = $this->createUserAndAssignToTeam('Administrators');
-        $this->addUserToTeam($user, "Observers");
+        $this->addUserToTeam($user, 'Observers');
 
         // Assert that the isAdministrator method returns true
         $this->assertTrue($user->isAdministrator());
@@ -42,14 +42,14 @@ class IsAdministratorTest extends TestCase
         $this->assertFalse($user->isObserver());
 
         // Switch to Observers team
-        $this->switchUserToTeam($user, "Observers");
+        $this->switchUserToTeam($user, 'Observers');
 
         $this->assertFalse($user->isAdministrator());
         $this->assertFalse($user->isDatabaseExpert());
         $this->assertTrue($user->isObserver());
 
         // Switch to Admin team
-        $this->switchUserToTeam($user, "Administrators");
+        $this->switchUserToTeam($user, 'Administrators');
         // Assert that the isAdministrator method returns true
         $this->assertTrue($user->isAdministrator());
         $this->assertFalse($user->isDatabaseExpert());
@@ -69,12 +69,12 @@ class IsAdministratorTest extends TestCase
         $this->assertFalse($user->isDatabaseExpert());
         $this->assertTrue($user->isObserver());
 
-        $this->addUserToTeam($user, "Database Experts");
+        $this->addUserToTeam($user, 'Database Experts');
         $this->assertFalse($user->isAdministrator());
         $this->assertFalse($user->isDatabaseExpert());
         $this->assertTrue($user->isObserver());
 
-        $this->switchUserToTeam($user, "Database Experts");
+        $this->switchUserToTeam($user, 'Database Experts');
         $this->assertFalse($user->isAdministrator());
         $this->assertTrue($user->isDatabaseExpert());
         $this->assertFalse($user->isObserver());
@@ -83,7 +83,7 @@ class IsAdministratorTest extends TestCase
     /**
      * Create a user and assign it to the specified team.
      *
-     * @param string $teamName The name of the team to assign the user to.
+     * @param  string  $teamName  The name of the team to assign the user to.
      * @return User The created user.
      */
     private function createUserAndAssignToTeam(string $teamName): User
@@ -106,8 +106,8 @@ class IsAdministratorTest extends TestCase
     /**
      * Add a user to a specified team.
      *
-     * @param mixed $user The user.
-     * @param string $teamName The name of the team to assign the user to.
+     * @param  mixed  $user  The user.
+     * @param  string  $teamName  The name of the team to assign the user to.
      */
     private function addUserToTeam(mixed $user, string $teamName): void
     {
@@ -121,8 +121,8 @@ class IsAdministratorTest extends TestCase
     /**
      * Add a user to a specified team.
      *
-     * @param mixed $user The user.
-     * @param string $teamName The name of the team to assign the user to.
+     * @param  mixed  $user  The user.
+     * @param  string  $teamName  The name of the team to assign the user to.
      */
     private function switchUserToTeam(mixed $user, string $teamName): void
     {
@@ -136,7 +136,7 @@ class IsAdministratorTest extends TestCase
     /**
      * Return the team from the team name.
      *
-     * @param string $teamName The name of the team.
+     * @param  string  $teamName  The name of the team.
      * @return Team The team.
      */
     private function getTeamFromString(string $teamName): Team
@@ -145,7 +145,7 @@ class IsAdministratorTest extends TestCase
         $team = Team::where('name', $teamName)->first();
 
         // If the team does not exist, seed the groups and try again
-        if (!$team) {
+        if (! $team) {
             $this->seed(GroupSeeder::class);
             $team = Team::where('name', $teamName)->firstOrFail();
         }

@@ -3,9 +3,9 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 
 class UpdateUserProfileInformation implements UpdatesUserProfileInformation
@@ -24,7 +24,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'sendMail' => ['boolean'],
             'country' => ['string'],
             'about' => ['string', 'nullable'],
-            'fstOffset' => ['numeric', 'min:-5.0', 'max:5.0']
+            'fstOffset' => ['numeric', 'min:-5.0', 'max:5.0'],
         ])->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
@@ -35,7 +35,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user instanceof MustVerifyEmail) {
             $this->updateVerifiedUser($user, $input);
         } else {
-            if ($input['copyrightSelection'] === "Enter your own copyright text") {
+            if ($input['copyrightSelection'] === 'Enter your own copyright text') {
                 $copyright = $input['copyright'];
             } else {
                 $copyright = $input['copyrightSelection'];
@@ -48,7 +48,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'about' => $input['about'],
                 'fstOffset' => $input['fstOffset'],
                 'copyright' => $copyright,
-                'copyrightSelection' => $input['copyrightSelection']
+                'copyrightSelection' => $input['copyrightSelection'],
             ])->save();
         }
     }

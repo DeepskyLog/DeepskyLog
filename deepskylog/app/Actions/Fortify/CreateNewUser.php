@@ -36,7 +36,7 @@ class CreateNewUser implements CreatesNewUsers
                 'email' => $input['email'],
                 'password' => Hash::make($input['password']),
             ]), function (User $user) {
-                $this->addToTeam($user, "Observers");
+                $this->addToTeam($user, 'Observers');
             });
         });
     }
@@ -46,7 +46,7 @@ class CreateNewUser implements CreatesNewUsers
      */
     protected function addToTeam(User $user, string $team): void
     {
-        $team = Team::where("name", $team)->firstOrFail();
+        $team = Team::where('name', $team)->firstOrFail();
         $user->teams()->attach($team);
         $user->switchTeam($team);
     }

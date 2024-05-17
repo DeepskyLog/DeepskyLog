@@ -42,7 +42,7 @@
         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
             <div x-data="{ photoName: null, photoPreview: null }" class="col-span-6 sm:col-span-4">
                 <!-- Profile Photo File Input -->
-                <input type="file" class="hidden" wire:model="photo" x-ref="photo"
+                <input type="file" class="hidden" wire:model.live="photo" x-ref="photo"
                     x-on:change="
                                     photoName = $refs.photo.files[0].name;
                                     const reader = new FileReader();
@@ -82,14 +82,14 @@
         <!-- Name -->
         <div class="col-span-6 sm:col-span-5">
             <x-input id="name" label="{{ __('Name') }}" type="text" class="mt-1 block w-full"
-                wire:model.defer="state.name" autocomplete="name" />
+                wire:model.live="state.name" autocomplete="name" />
             <x-input-error for="name" class="mt-2" />
         </div>
 
         <!-- Email -->
         <div class="col-span-6 sm:col-span-5">
             <x-input id="email" label="{{ __('Email') }}" type="email" class="mt-1 block w-full"
-                wire:model.defer="state.email" />
+                wire:model.live="state.email" />
             <x-input-error for="email" class="mt-2" />
 
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()) &&
@@ -122,10 +122,10 @@
 
             @if ($this->user->sendMail)
                 <x-toggle label="{{ __('Send messages as email') }}" name="sendMail" id="sendMail"
-                    wire:model.defer="state.sendMail" checked />
+                    wire:model.live="state.sendMail" checked />
             @else
                 <x-toggle label="{{ __('Send messages as email') }}" name="sendMail" id="sendMail"
-                    wire:model.defer="state.sendMail" />
+                    wire:model.live="state.sendMail" />
             @endif
             &nbsp;
 
@@ -133,7 +133,7 @@
 
         {{-- Country of residence --}}
         <div class="col-span-6 sm:col-span-5">
-            <x-select label="{{ __('Country of residence') }}" wire:model.defer="state.country" :async-data="route('countries.index')"
+            <x-select label="{{ __('Country of residence') }}" wire:model.live="state.country" :async-data="route('countries.index')"
                 option-label="name" option-value="id" />
         </div>
 
@@ -142,21 +142,21 @@
             {{ __('Tell something about your astronomical interests') }}
         </div>
         <div class="col-span-6 sm:col-span-5" wire:ignore>
-            <textarea wire:model="state.about" class="min-h-fit h-48 " name="message" id="message"></textarea>
+            <textarea wire:model.live="state.about" class="min-h-fit h-48 " name="message" id="message"></textarea>
         </div>
 
         <!-- fstOffset -->
         <div class="col-span-6 sm:col-span-5">
             <x-inputs.number step=".01" min="-5.0" max="5.0" id="fstOffset"
                 label="{{ __('Offset between measured SQM value and the faintest visible star.') }}" type="number"
-                class="mt-1 block w-full" wire:model.defer="state.fstOffset" autocomplete="fstOffset" />
+                class="mt-1 block w-full" wire:model.live="state.fstOffset" autocomplete="fstOffset" />
             <x-input-error for="fstOffset" class="mt-2" />
         </div>
 
         {{-- License --}}
         <div class="col-span-6 sm:col-span-5">
             {{-- <div x-data='' wire:ignore> --}}
-            <x-select label="{{ __('License for drawings') }}" wire:model="state.copyrightSelection" :async-data="route('licenses.index')"
+            <x-select label="{{ __('License for drawings') }}" wire:model.live="state.copyrightSelection" :async-data="route('licenses.index')"
                 option-label="name" option-value="name" />
         </div>
 
@@ -164,7 +164,7 @@
         @if ($state['copyrightSelection'] === 'Enter your own copyright text')
             <div class="col-span-6 sm:col-span-5">
                 <x-input id="copyright" label="{{ __('Copyright notice') }}" type="text" class="mt-1 block w-full"
-                    wire:model.defer="state.copyright" value="{{ auth()->user()->copyright }}" />
+                    wire:model.live="state.copyright" value="{{ auth()->user()->copyright }}" />
             </div>
         @endif
     </x-slot>

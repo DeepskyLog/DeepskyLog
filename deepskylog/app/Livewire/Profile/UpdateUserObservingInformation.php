@@ -1,20 +1,24 @@
 <?php
 
-namespace App\Http\Livewire\Profile;
+namespace App\Livewire\Profile;
 
 use Livewire\Component;
 
 class UpdateUserObservingInformation extends Component
 {
     public $stdlocation;
+
     public $stdtelescope;
+
     public $standardAtlasCode;
+
     public $showInches;
 
     protected $rules = [
         'stdlocation' => 'numeric',
         'stdtelescope' => 'numeric',
     ];
+
     /**
      * Sets the database values.
      *
@@ -30,7 +34,6 @@ class UpdateUserObservingInformation extends Component
 
     /**
      * Validate and update the given user's observing information.
-     *
      */
     public function updateObservingInformation(): void
     {
@@ -59,7 +62,7 @@ class UpdateUserObservingInformation extends Component
             'showInches' => $this->showInches,
         ])->save();
 
-        $this->emit('saved');
+        $this->dispatch('saved');
     }
 
     public function render()

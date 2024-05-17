@@ -1,29 +1,34 @@
 <div>
-    @if (Gate::check('addTeamMember', $team))
+    @if (Gate::check("addTeamMember", $team))
         <x-section-border />
 
         <!-- Add Team Member -->
         <div class="mt-10 sm:mt-0">
             <x-form-section submit="addTeamMember">
                 <x-slot name="title">
-                    {{ __('Add Team Member') }}
+                    {{ __("Add Team Member") }}
                 </x-slot>
 
                 <x-slot name="description">
-                    {{ __('Add a new team member to your team, allowing them to collaborate with you.') }}
+                    {{ __("Add a new team member to your team, allowing them to collaborate with you.") }}
                 </x-slot>
 
                 <x-slot name="form">
                     <div class="col-span-6">
                         <div class="max-w-xl text-sm text-gray-400">
-                            {{ __('Please provide the name of the person you would like to add to this team.') }}
+                            {{ __("Please provide the name of the person you would like to add to this team.") }}
                         </div>
                     </div>
 
                     <!-- Member Name -->
                     <div class="col-span-6 sm:col-span-5">
-                        <x-select label="{{ __('Name') }}" wire:model.defer="addTeamMemberForm.email" :async-data="route('addUserToTeam.index')"
-                            option-label="name" option-value="id" />
+                        <x-select
+                            label="{{ __('Name') }}"
+                            wire:model.live="addTeamMemberForm.email"
+                            :async-data="route('addUserToTeam.index')"
+                            option-label="name"
+                            option-value="id"
+                        />
                     </div>
 
                     <!-- Role -->
@@ -32,32 +37,48 @@
                             <x-label for="role" value="{{ __('Role') }}" />
                             <x-input-error for="role" class="mt-2" />
 
-                            <div class="relative z-0 mt-1 border border-gray-300 rounded-lg cursor-pointer">
+                            <div
+                                class="relative z-0 mt-1 cursor-pointer rounded-lg border border-gray-300"
+                            >
                                 @foreach ($this->roles as $index => $role)
-                                    <button type="button"
-                                        class="relative px-4 py-3 inline-flex w-full rounded-lg focus:z-10 focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200 {{ $index > 0 ? 'border-t border-gray-400 rounded-t-none' : '' }} {{ !$loop->last ? 'rounded-b-none' : '' }}"
-                                        wire:click="$set('addTeamMemberForm.role', '{{ $role->key }}')">
+                                    <button
+                                        type="button"
+                                        class="{{ $index > 0 ? "rounded-t-none border-t border-gray-400" : "" }} {{ ! $loop->last ? "rounded-b-none" : "" }} relative inline-flex w-full rounded-lg px-4 py-3 focus:z-10 focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-200"
+                                        wire:click="$set('addTeamMemberForm.role', '{{ $role->key }}')"
+                                    >
                                         <div
-                                            class="{{ isset($addTeamMemberForm['role']) && $addTeamMemberForm['role'] !== $role->key ? 'opacity-50' : '' }}">
+                                            class="{{ isset($addTeamMemberForm["role"]) && $addTeamMemberForm["role"] !== $role->key ? "opacity-50" : "" }}"
+                                        >
                                             <!-- Role Name -->
                                             <div class="flex items-center">
                                                 <div
-                                                    class="text-sm text-gray-400 {{ $addTeamMemberForm['role'] == $role->key ? 'font-semibold' : '' }}">
+                                                    class="{{ $addTeamMemberForm["role"] == $role->key ? "font-semibold" : "" }} text-sm text-gray-400"
+                                                >
                                                     {{ $role->name }}
                                                 </div>
 
-                                                @if ($addTeamMemberForm['role'] == $role->key)
-                                                    <svg class="ml-2 h-5 w-5 text-green-400"
-                                                        xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                @if ($addTeamMemberForm["role"] == $role->key)
+                                                    <svg
+                                                        class="ml-2 h-5 w-5 text-green-400"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke-width="1.5"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                        />
                                                     </svg>
                                                 @endif
                                             </div>
 
                                             <!-- Role Description -->
-                                            <div class="mt-2 text-xs text-gray-400 text-left">
+                                            <div
+                                                class="mt-2 text-left text-xs text-gray-400"
+                                            >
                                                 {{ $role->description }}
                                             </div>
                                         </div>
@@ -70,43 +91,50 @@
 
                 <x-slot name="actions">
                     <x-action-message class="mr-3" on="saved">
-                        {{ __('Added.') }}
+                        {{ __("Added.") }}
                     </x-action-message>
 
-                    <x-button type="submit" wire:click="$emitTo('admin-user-table', 'updateTable')">
-                        {{ __('Add') }}
+                    <x-button
+                        type="submit"
+                        wire:click="$dispatch('pg:eventRefresh-AdminUserTable')"
+                    >
+                        {{ __("Add") }}
                     </x-button>
                 </x-slot>
             </x-form-section>
         </div>
     @endif
 
-    @if ($team->teamInvitations->isNotEmpty() && Gate::check('addTeamMember', $team))
+    @if ($team->teamInvitations->isNotEmpty() && Gate::check("addTeamMember", $team))
         <x-section-border />
 
         <!-- Team Member Invitations -->
         <div class="mt-10 sm:mt-0">
             <x-action-section>
                 <x-slot name="title">
-                    {{ __('Pending Team Invitations') }}
+                    {{ __("Pending Team Invitations") }}
                 </x-slot>
 
                 <x-slot name="description">
-                    {{ __('These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.') }}
+                    {{ __("These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.") }}
                 </x-slot>
 
                 <x-slot name="content">
                     <div class="space-y-6">
                         @foreach ($team->teamInvitations as $invitation)
                             <div class="flex items-center justify-between">
-                                <div class="text-gray-400">{{ $invitation->email }}</div>
+                                <div class="text-gray-400">
+                                    {{ $invitation->email }}
+                                </div>
 
                                 <div class="flex items-center">
-                                    @if (Gate::check('removeTeamMember', $team))
+                                    @if (Gate::check("removeTeamMember", $team))
                                         <!-- Cancel Team Invitation -->
-                                        <button class="cursor-pointer ml-6 text-sm text-red-500 focus:outline-none"
-                                            wire:click="cancelTeamInvitation({{ $invitation->id }})">
-                                            {{ __('Cancel') }}
+                                        <button
+                                            class="ml-6 cursor-pointer text-sm text-red-500 focus:outline-none"
+                                            wire:click="cancelTeamInvitation({{ $invitation->id }})"
+                                        >
+                                            {{ __("Cancel") }}
                                         </button>
                                     @endif
                                 </div>
@@ -125,11 +153,11 @@
         <div class="mt-10 sm:mt-0">
             <x-action-section>
                 <x-slot name="title">
-                    {{ __('Team Members') }}
+                    {{ __("Team Members") }}
                 </x-slot>
 
                 <x-slot name="description">
-                    {{ __('All of the people that are part of this team.') }}
+                    {{ __("All of the people that are part of this team.") }}
                 </x-slot>
 
                 <!-- Team Member List -->
@@ -137,7 +165,6 @@
                     <div class="space-y-6">
                         {{-- Powergrid with all the users in this group --}}
                         <livewire:admin-user-table team="{{ $team->id }}" />
-
                     </div>
                 </x-slot>
             </x-action-section>
@@ -145,24 +172,45 @@
     @endif
 
     <!-- Role Management Modal -->
-    <x-modal.card blur title="{{ __('Manage Role') }}" wire:model="currentlyManagingRole">
-        <div class="relative z-0 mt-1 border border-gray-200 rounded-lg cursor-pointer">
+    <x-modal.card
+        blur
+        title="{{ __('Manage Role') }}"
+        wire:model.live="currentlyManagingRole"
+    >
+        <div
+            class="relative z-0 mt-1 cursor-pointer rounded-lg border border-gray-200"
+        >
             @foreach ($this->roles as $index => $role)
-                <button type="button"
-                    class="relative px-4 py-3 inline-flex w-full rounded-lg focus:z-10 focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200 {{ $index > 0 ? 'border-t border-gray-200 rounded-t-none' : '' }} {{ !$loop->last ? 'rounded-b-none' : '' }}"
-                    wire:click="$set('currentRole', '{{ $role->key }}')">
-                    <div class="{{ $currentRole !== $role->key ? 'opacity-50' : '' }}">
+                <button
+                    type="button"
+                    class="{{ $index > 0 ? "rounded-t-none border-t border-gray-200" : "" }} {{ ! $loop->last ? "rounded-b-none" : "" }} relative inline-flex w-full rounded-lg px-4 py-3 focus:z-10 focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-200"
+                    wire:click="$set('currentRole', '{{ $role->key }}')"
+                >
+                    <div
+                        class="{{ $currentRole !== $role->key ? "opacity-50" : "" }}"
+                    >
                         <!-- Role Name -->
                         <div class="flex items-center">
-                            <div class="text-sm text-gray-400 {{ $currentRole == $role->key ? 'font-semibold' : '' }}">
+                            <div
+                                class="{{ $currentRole == $role->key ? "font-semibold" : "" }} text-sm text-gray-400"
+                            >
                                 {{ $role->name }}
                             </div>
 
                             @if ($currentRole == $role->key)
-                                <svg class="ml-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <svg
+                                    class="ml-2 h-5 w-5 text-green-400"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
                                 </svg>
                             @endif
                         </div>
@@ -177,48 +225,82 @@
         </div>
 
         <x-slot name="footer">
-            <x-button type="submit" label="{{ __('Cancel') }}" wire:click="stopManagingRole"
-                wire:loading.attr="disabled" />
+            <x-button
+                type="submit"
+                label="{{ __('Cancel') }}"
+                wire:click="stopManagingRole"
+                wire:loading.attr="disabled"
+            />
 
-            <x-button class="ml-3" wire:click="updateRole" wire:loading.attr="disabled">
-                {{ __('Save') }}
+            <x-button
+                class="ml-3"
+                wire:click="updateRole"
+                wire:loading.attr="disabled"
+            >
+                {{ __("Save") }}
             </x-button>
         </x-slot>
     </x-modal.card>
 
     <!-- Leave Team Confirmation Modal -->
-    <x-modal.card blur title="{{ __('Leave Team') }}" wire:model="confirmingLeavingTeam">
-        <div class="flex col-span-1">
-            <x-icon name="exclamation-circle" class="w-10 h-10 text-red-600" />
-            <div class="py-2 px-4">
-                {{ __('Are you sure you would like to leave this team?') }}
+    <x-modal.card
+        blur
+        title="{{ __('Leave Team') }}"
+        wire:model.live="confirmingLeavingTeam"
+    >
+        <div class="col-span-1 flex">
+            <x-icon name="exclamation-circle" class="h-10 w-10 text-red-600" />
+            <div class="px-4 py-2">
+                {{ __("Are you sure you would like to leave this team?") }}
             </div>
         </div>
 
         <x-slot name="footer">
-            <x-button type="submit" label="{{ __('Cancel') }}" wire:click="$toggle('confirmingLeavingTeam')"
-                wire:loading.attr="disabled" />
+            <x-button
+                type="submit"
+                label="{{ __('Cancel') }}"
+                wire:click="$toggle('confirmingLeavingTeam')"
+                wire:loading.attr="disabled"
+            />
 
-            <x-button negative class="ml-3" wire:click="leaveTeam" wire:loading.attr="disabled">
-                {{ __('Leave') }}
+            <x-button
+                negative
+                class="ml-3"
+                wire:click="leaveTeam"
+                wire:loading.attr="disabled"
+            >
+                {{ __("Leave") }}
             </x-button>
         </x-slot>
     </x-modal.card>
 
     <!-- Remove Team Member Confirmation Modal -->
-    <x-modal.card blur title="{{ __('Remove Team Member') }}" wire:model="confirmingTeamMemberRemoval">
-        <div class="flex col-span-1">
-            <x-icon name="exclamation-circle" class="w-10 h-10 text-red-600" />
-            <div class="py-2 px-4">
-                {{ __('Are you sure you would like to remove this person from the team?') }}
+    <x-modal.card
+        blur
+        title="{{ __('Remove Team Member') }}"
+        wire:model.live="confirmingTeamMemberRemoval"
+    >
+        <div class="col-span-1 flex">
+            <x-icon name="exclamation-circle" class="h-10 w-10 text-red-600" />
+            <div class="px-4 py-2">
+                {{ __("Are you sure you would like to remove this person from the team?") }}
             </div>
         </div>
         <x-slot name="footer">
-            <x-button type="submit" label="{{ __('Cancel') }}" wire:click="$toggle('confirmingTeamMemberRemoval')"
-                wire:loading.attr="disabled" />
+            <x-button
+                type="submit"
+                label="{{ __('Cancel') }}"
+                wire:click="$toggle('confirmingTeamMemberRemoval')"
+                wire:loading.attr="disabled"
+            />
 
-            <x-button negative class="ml-3" wire:click="removeTeamMember" wire:loading.attr="disabled">
-                {{ __('Remove') }}
+            <x-button
+                negative
+                class="ml-3"
+                wire:click="removeTeamMember"
+                wire:loading.attr="disabled"
+            >
+                {{ __("Remove") }}
             </x-button>
         </x-slot>
     </x-modal.card>

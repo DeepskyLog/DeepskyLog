@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Profile;
+namespace App\Livewire\Profile;
 
 use App\Models\User;
 use Livewire\Component;
@@ -8,31 +8,42 @@ use Livewire\Component;
 class UpdateUserAtlasInformation extends Component
 {
     protected $rules = [
-        'overviewFoV'                               => 'required|numeric|max:3600|min:1',
-        'lookupFoV'                                 => 'required|numeric|max:3600|min:1',
-        'detailFoV'                                 => 'required|numeric|max:3600|min:1',
-        'overviewdsos'                              => 'required|numeric|max:20.0|min:1.0',
-        'lookupdsos'                                => 'required|numeric|max:20.0|min:1.0',
-        'detaildsos'                                => 'required|numeric|max:20.0|min:1.0',
-        'overviewstars'                             => 'required|numeric|max:20.0|min:1.0',
-        'lookupstars'                               => 'required|numeric|max:20.0|min:1.0',
-        'detailstars'                               => 'required|numeric|max:20.0|min:1.0',
-        'photosize1'                                => 'required|numeric|max:3600|min:1',
-        'photosize2'                                => 'required|numeric|max:3600|min:1',
-        'atlaspagefont'                             => 'required|numeric|max:9|min:6',
+        'overviewFoV' => 'required|numeric|max:3600|min:1',
+        'lookupFoV' => 'required|numeric|max:3600|min:1',
+        'detailFoV' => 'required|numeric|max:3600|min:1',
+        'overviewdsos' => 'required|numeric|max:20.0|min:1.0',
+        'lookupdsos' => 'required|numeric|max:20.0|min:1.0',
+        'detaildsos' => 'required|numeric|max:20.0|min:1.0',
+        'overviewstars' => 'required|numeric|max:20.0|min:1.0',
+        'lookupstars' => 'required|numeric|max:20.0|min:1.0',
+        'detailstars' => 'required|numeric|max:20.0|min:1.0',
+        'photosize1' => 'required|numeric|max:3600|min:1',
+        'photosize2' => 'required|numeric|max:3600|min:1',
+        'atlaspagefont' => 'required|numeric|max:9|min:6',
     ];
 
     public $overviewFoV;
+
     public $lookupFoV;
+
     public $detailFoV;
+
     public $overviewdsos;
+
     public $lookupdsos;
+
     public $detaildsos;
+
     public $overviewstars;
+
     public $lookupstars;
+
     public $detailstars;
+
     public $photosize1;
+
     public $photosize2;
+
     public $atlaspagefont;
 
     /**
@@ -79,6 +90,7 @@ class UpdateUserAtlasInformation extends Component
         $this->photosize2 = auth()->user()->photosize2;
         $this->atlaspagefont = auth()->user()->atlaspagefont;
     }
+
     /**
      * Validate and update the given user's atlas information.
      *
@@ -100,10 +112,10 @@ class UpdateUserAtlasInformation extends Component
             'detailstars' => $this->detailstars,
             'photosize1' => $this->photosize1,
             'photosize2' => $this->photosize2,
-            'atlaspagefont' => $this->atlaspagefont
+            'atlaspagefont' => $this->atlaspagefont,
         ])->save();
 
-        $this->emit('saved');
+        $this->dispatch('saved');
     }
 
     public function render()

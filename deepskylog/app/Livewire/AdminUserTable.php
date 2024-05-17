@@ -1,46 +1,32 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
-use App\Models\User;
 use App\Models\TeamUser;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
+use Illuminate\Support\Facades\Auth;
+use PowerComponents\LivewirePowerGrid\Button;
+use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Exportable;
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
+use PowerComponents\LivewirePowerGrid\Facades\Rule;
+use PowerComponents\LivewirePowerGrid\Footer;
+use PowerComponents\LivewirePowerGrid\Header;
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
-use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
 final class AdminUserTable extends PowerGridComponent
 {
-    use ActionButton;
     use WithExport;
+
     public bool $multiSort = true;
+
     public $team;
 
     public string $primaryKey = 'users.id';
 
-    protected function getListeners(): array
-    {
-        return array_merge(
-            parent::getListeners(),
-            [
-                'remove',
-                'updateTable',
-            ]
-        );
-    }
+    public string $tableName = 'AdminUserTable';
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Features Setup
-    |--------------------------------------------------------------------------
-    | Setup Table's general features
-    |
-    */
     public function setUp(): array
     {
         $this->showCheckBox();
@@ -60,29 +46,29 @@ final class AdminUserTable extends PowerGridComponent
 
     /*
     |--------------------------------------------------------------------------
-    |  Datasource
+    |  Features Setup
     |--------------------------------------------------------------------------
-    | Provides data to your Table using a Model or Collection
+    | Setup Table's general features
     |
     */
 
     /**
      * PowerGrid datasource.
      *
-     * @return Builder<\App\Models\TeamUser>
+     * @return Builder<TeamUser>
      */
     public function datasource(): Builder
     {
-        return \App\Models\TeamUser::query()->where('team_id', $this->team)->join('users', function ($users) {
+        return TeamUser::query()->where('team_id', $this->team)->join('users', function ($users) {
             $users->on('team_user.user_id', '=', 'users.id');
         })->select('users.id', 'users.username', 'users.name', 'users.email', 'users.slug', 'users.created_at');
     }
 
     /*
     |--------------------------------------------------------------------------
-    |  Relationship Search
+    |  Datasource
     |--------------------------------------------------------------------------
-    | Configure here relationships to be used by the Search and Table Filters.
+    | Provides data to your Table using a Model or Collection
     |
     */
 
@@ -105,27 +91,6 @@ final class AdminUserTable extends PowerGridComponent
     |
     | ❗ IMPORTANT: When using closures, you must escape any value coming from
     |    the database using the `e()` Laravel Helper function.
-    |
-    */
-    public function addColumns(): PowerGridEloquent
-    {
-        return PowerGrid::eloquent()
-            ->addColumn('id')
-            ->addColumn('name')
-            ->addColumn('username')
-            ->addColumn('email')
-            ->addColumn('name_lower', fn (TeamUser $model) => strtolower(e($model->name)))
-            ->addColumn('slug')
-            ->addColumn('created_at')
-            ->addColumn('created_at_formatted', fn (TeamUser $model) => Carbon::parse($model->created_at)->diffForHumans());
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    |  Include Columns
-    |--------------------------------------------------------------------------
-    | Include the columns added columns, making them visible on the Table.
-    | Each column can be configured with properties, filters, actions...
     |
     */
 
@@ -162,9 +127,20 @@ final class AdminUserTable extends PowerGridComponent
 
             Column::make(__('Created at'), 'created_at_formatted', 'created_at')
                 ->searchable()
-                ->sortable()
+                ->sortable(),
+
+            Column::action('Action'),
         ];
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Include Columns
+    |--------------------------------------------------------------------------
+    | Include the columns added columns, making them visible on the Table.
+    | Each column can be configured with properties, filters, actions...
+    |
+    */
 
     /**
      * PowerGrid Filters.
@@ -177,7 +153,23 @@ final class AdminUserTable extends PowerGridComponent
             Filter::inputText('name'),
             Filter::inputText('username'),
             Filter::inputText('email'),
-            Filter::datepicker('created_at_formatted', 'created_at'),
+            Filter::inputText('slug'),
+        ];
+    }
+
+    /**
+     * PowerGrid User Action Buttons.
+     *
+     * @return array<int, Button>
+     */
+    public function actions($row): array
+    {
+        return [
+            Button::add('destroy')
+                ->slot('Remove')
+                ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+                ->tooltip(__('Remove user from team'))
+                ->dispatch('remove', [$row->id]),
         ];
     }
 
@@ -190,20 +182,20 @@ final class AdminUserTable extends PowerGridComponent
     */
 
     /**
-     * PowerGrid User Action Buttons.
-     *
-     * @return array<int, Button>
+     * PowerGrid User Action Rules.
      */
-
-    public function actions(): array
+    public function actionRules(): array
     {
         return [
-            Button::add('destroy')
-                ->caption('Remove')
-                ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->tooltip(__('Remove user from team'))
-                ->emit('remove', ['key' => 'id'])
-         ];
+
+            //Hide button edit for ID 1
+            Rule::button('destroy')
+                ->when(fn ($user) => $user->id == 1)
+                ->hide(),
+            Rule::button('destroy')
+                ->when(fn ($user) => $user->id == Auth::user()->id)
+                ->hide(),
+        ];
     }
 
     /*
@@ -215,43 +207,21 @@ final class AdminUserTable extends PowerGridComponent
     */
 
     /**
-     * PowerGrid User Action Rules.
-     *
-     * @return array<int, RuleActions>
-     */
-
-    public function actionRules(): array
-    {
-        return [
-
-            //Hide button edit for ID 1
-            Rule::button('destroy')
-                 ->when(fn ($user) => $user->id == 1)
-                 ->hide(),
-            Rule::button('destroy')
-                 ->when(fn ($user) => $user->id == Auth::user()->id)
-                 ->hide(),
-         ];
-    }
-
-   /**
      * Removes a user from the team
-     * @return void
      */
-    public function remove($id)
+    public function remove($id): void
     {
-        $teamuser = TeamUser::where("team_id", "=", $this->team)->where("user_id", "=", $id['key'])->first();
+        $teamuser = TeamUser::where('team_id', '=', $this->team)->where('user_id', '=', $id);
         $teamuser->delete();
     }
 
-    /**
-     *  Updates the table (after adding a new user to a group).
-     *
-     * @return void
-     */
-    public function updateTable()
+    protected function getListeners(): array
     {
-        sleep(1);
-        $this->fillData();
+        return array_merge(
+            parent::getListeners(),
+            [
+                'remove',
+            ]
+        );
     }
 }

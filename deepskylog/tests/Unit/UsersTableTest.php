@@ -1,9 +1,9 @@
 <?php
 
-use Tests\TestCase;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schema;
+use Tests\TestCase;
 
 class UsersTableTest extends TestCase
 {

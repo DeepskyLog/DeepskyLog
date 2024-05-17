@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Profile;
+namespace App\Livewire\Profile;
 
 use Livewire\Component;
 
@@ -23,7 +23,6 @@ class UpdateUserLanguageInformation extends Component
 
     /**
      * Validate and update the given user's language information.
-     *
      */
     public function updateLanguageInformation(): void
     {
@@ -32,7 +31,7 @@ class UpdateUserLanguageInformation extends Component
             'language' => $this->language,
         ])->save();
 
-        $this->emit('saved');
+        $this->dispatch('saved');
     }
 
     public function render()

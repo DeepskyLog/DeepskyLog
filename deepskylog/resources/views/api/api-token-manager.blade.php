@@ -13,7 +13,7 @@
             <!-- Token Name -->
             <div class="col-span-6 sm:col-span-4">
                 <x-input label="{{ __('Token Name') }}" id="name" type="text" class="mt-1 block w-full"
-                    wire:model.defer="createApiTokenForm.name" autofocus />
+                    wire:model.live="createApiTokenForm.name" autofocus />
                 <x-input-error for="name" class="mt-2" />
             </div>
 
@@ -25,7 +25,7 @@
                     <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                         @foreach (Laravel\Jetstream\Jetstream::$permissions as $permission)
                             <label class="flex items-center">
-                                <x-checkbox wire:model.defer="createApiTokenForm.permissions" :value="$permission" />
+                                <x-checkbox wire:model.live="createApiTokenForm.permissions" :value="$permission" />
                                 <span class="ml-2 text-sm text-gray-600">{{ $permission }}</span>
                             </label>
                         @endforeach
@@ -96,7 +96,7 @@
     @endif
 
     <!-- Token Value Modal -->
-    <x-modal.card blur title="{{ __('API Token') }}" wire:model="displayingToken">
+    <x-modal.card blur title="{{ __('API Token') }}" wire:model.live="displayingToken">
         <div>
             {{ __('Please copy your new API token. For your security, it won\'t be shown again.') }}
         </div>
@@ -113,11 +113,11 @@
     </x-modal.card>
 
     <!-- API Token Permissions Modal -->
-    <x-modal.card blur title="{{ __('API Token Permissions') }}" wire:model="managingApiTokenPermissions">
+    <x-modal.card blur title="{{ __('API Token Permissions') }}" wire:model.live="managingApiTokenPermissions">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @foreach (Laravel\Jetstream\Jetstream::$permissions as $permission)
                 <label class="flex items-center">
-                    <x-checkbox wire:model.defer="updateApiTokenForm.permissions" :value="$permission" />
+                    <x-checkbox wire:model.live="updateApiTokenForm.permissions" :value="$permission" />
                     <span class="ml-2 text-sm text-gray-600">{{ $permission }}</span>
                 </label>
             @endforeach
@@ -134,7 +134,7 @@
     </x-modal.card>
 
     <!-- Delete Token Confirmation Modal -->
-    <x-modal.card blur title="{{ __('Delete API Token') }}" wire:model="confirmingApiTokenDeletion">
+    <x-modal.card blur title="{{ __('Delete API Token') }}" wire:model.live="confirmingApiTokenDeletion">
         <div class="flex col-span-1">
             <x-icon name="exclamation-circle" class="w-10 h-10 text-red-600" />
             <div class="py-2 px-4">

@@ -10,13 +10,13 @@
     <x-slot name="form">
         {{-- DeepskyLog language --}}
         <div class="col-span-6 sm:col-span-5">
-            <x-select label="{{ __('DeepskyLog UI language') }}" wire:model.defer="language" :async-data="route('ui_languages.index')"
+            <x-select label="{{ __('DeepskyLog UI language') }}" wire:model.live="language" :async-data="route('ui_languages.index')"
                 option-label="name" option-value="id" />
         </div>
 
         {{-- Standard language of observations --}}
         <div class="col-span-6 sm:col-span-5">
-            <x-select label="{{ __('Standard language for observations') }}" wire:model.defer="observationlanguage"
+            <x-select label="{{ __('Standard language for observations') }}" wire:model.live="observationlanguage"
                 :async-data="route('observation_languages.index')" option-label="name" option-value="id" />
         </div>
     </x-slot>

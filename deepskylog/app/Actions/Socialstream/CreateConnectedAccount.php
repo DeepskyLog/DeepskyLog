@@ -6,7 +6,6 @@ use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Contracts\User as ProviderUser;
-use Illuminate\Support\Str;
 
 class CreateConnectedAccount implements CreatesConnectedAccounts
 {

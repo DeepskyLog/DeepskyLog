@@ -11,13 +11,13 @@
 </span>
 
 @once
-    <x-modal.card blur title="{{ $title }}" wire:model="confirmingPassword">
+    <x-modal.card blur title="{{ $title }}" wire:model.live="confirmingPassword">
         {{ $content }}
 
         <div class="mt-4" x-data="{}"
             x-on:confirming-password.window="setTimeout(() => $refs.confirmable_password.focus(), 250)">
             <x-inputs.password type="password" class="mt-1 block w-3/4" placeholder="{{ __('Password') }}"
-                x-ref="confirmable_password" wire:model.defer="confirmablePassword" wire:keydown.enter="confirmPassword" />
+                x-ref="confirmable_password" wire:model.live="confirmablePassword" wire:keydown.enter="confirmPassword" />
 
             <x-input-error for="confirmable_password" class="mt-2" />
         </div>

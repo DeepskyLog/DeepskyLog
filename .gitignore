@@ -24,3 +24,5 @@ storage/framework/messages/
 /laravel/storage/framework/messages
 .dccache
 .editorconfig
+/vendor/*
+/.idea/*

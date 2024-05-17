@@ -14,44 +14,50 @@
 + [X] Fix showing (and adding) profile picture
 + [X] Fix sending mails from socialstream
 + [X] Use DeepskyLog logo in mails
-+ [X] Use php 8.2 on https://test.deepskylog.org/
-+ [X] Install on test.deepskylog.org
 + [X] Send mail to verify mail account directly after registration
-+ [X] Fix logging in using Socialite
-+ [X] Use DeepskyLog logo
 + [X] Make a dark version of all the socialstream pages
-+ [X] Investigate groups
-+ [X] Create migration to add all needed information to the users table, create unit test
-+ [X] Check if logging in using the old accounts works
-+ [X] Make it possible to log in using the user id (and not using the mail address)
 + [X] Don't show the teams dropdown if the user only belongs to one team.
-+ [X] When registering, add the userid
-+ [X] Create seeder to move all the old users to the new database
-+ [X] Start using wireui
 + [X] Show message when logged in and the country (or the about) is not set.
 + [X] In the observer page, add all the extra information
 + [X] Add sponsors page
 + [X] Create the all users administrator page
 + [X] Add team member should show a list of observers, not just an option to add a person using an email address.
 + [X] Move to slugs for the username and the team names
-+ [X] Update table with members of the team automatically when adding a new user
++ [ ] Make code work again with new version of laravel, livewire, ...
+    + [X] composer fails with JetStream error
+    + [X] npm run build does not work anymore
+    + [ ] Glitch in wireui (in the register page)
+    + [X] Menu does not work anymore
+    + [X] Team Settings does not work anymore
+        + [X] Add empty team member crashes the application
+        + [X] Remove user from list
+        + [X] AddColumn method is deprecated
+        + [X] Rename Team -> not longer administrator for this team
+    + [ ] Profile does not work anymore
+        + [ ] Compare with RemoveTeamMember.php
+    + [ ] Information of observer does not work when not logged in
+    + [ ] Test as normal user...
++ [ ] Rewrite tests to use PEST (see ExampleTest.php)
++ [ ] Refactor the accomplishment methods to make them more general.
+    + [ ] Look for a composer packages to add achievements
+    + [ ] See https://laracasts.com/series/phpstorm-for-laravel-developers/episodes/11 for more information
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
-  + [ ] Add link to the rows in the user administrator page to go directly to the observer
-  + [ ] Add administrator only options
+    + [ ] Add link to the rows in the user administrator page to go directly to the observer
+    + [ ] Add administrator only options
 + [ ] Test on Phone
 + [ ] Add translations for the new version
-  + [ ] Also adapt the code in api.php and User.php to translate the country names, and the language names.
-  + [ ] Automatically change the language of the UI when the language settings are changed
+    + [ ] Also adapt the code in api.php and User.php to translate the country names, and the language names.
+    + [ ] Automatically change the language of the UI when the language settings are changed
 + [ ] Check if the user belongs to the correct role / team
 + [ ] Use the old version of DeepskyLog alongside the new version
-  + [ ] Add the code
-  + [ ] Fix the code for php 8.2
-  + [ ] Change the link to the user settings page.
+    + [ ] Add the code
+    + [X] Fix the code for php 8.3
+    + [ ] Change the link to the user settings page.
 + [ ] Create menu for the new version
-  + [ ] Add the sponsor page to the old version!
+    + [ ] Add the sponsor page to the old version!
 + [ ] Check log in using the new version and try using one of the old pages as logged in user
-  + [ ] Change links in the old version, also for the sponsor page (http://deepskylog.test/sponsors)
-  + [ ] Update the log in code in the old DeepskyLog
+    + [ ] Change links in the old version, also for the sponsor page (http://deepskylog.test/sponsors)
+    + [ ] Update the log in code in the old DeepskyLog
 
 ```php
 include $_SERVER['DOCUMENT_ROOT'].'/../../vendor/autoload.php';
@@ -78,33 +84,37 @@ if ($id) {
 ```
 
 + [ ] Remove code from the old version of DeepskyLog:
-  + [ ] Log in
-  + [ ] Log out
-  + [ ] Reset password
-  + [ ] User information page
-  + [ ] User profile update
+    + [ ] Log in
+    + [ ] Log out
+    + [ ] Reset password
+    + [ ] User information page
+    + [ ] User profile update
 + [ ] Release new version of DeepskyLog with new registration and login pages.
 
 ### Next steps
 
 + Messages in DeepskyLog?
-  + Also messages for everyone // like a forum
+    + Also messages for everyone // like a forum
 + Index page
 + Instruments, locations, eyepieces, filters, lenses, ...
 + Sessions
-  + Overview page with all images
-  + Blog style?
+    + Overview page with all images
+    + Blog style?
 + Observing lists
 
 ## Eloquent
 
 + Check Target.php -> protected $with = ['type', 'constellation'];
 
+## Small issues
+
++ [ ] In Team Settings page: Automatically update table if new user is added (only works when next user is added)
+
 ## Interesting websites
 
 + [ ] Timezones with php: Carbon: <https://carbon.nesbot.com/docs/#api-timezone>
 + [ ] <https://jamesmills.co.uk/2019/02/28/laravel-timezone/> for timezones / date
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
-  + [ ] See https://laraveldaily.teachable.com/courses/393790/lectures/6329089
+    + [ ] See https://laraveldaily.teachable.com/courses/393790/lectures/6329089
 + [ ] Feeds: https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel
 + [ ] Check https://laravel-comments.com/ for commenting on observations, observing lists, ...

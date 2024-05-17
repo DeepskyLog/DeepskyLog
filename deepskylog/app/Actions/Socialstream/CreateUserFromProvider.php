@@ -24,8 +24,6 @@ class CreateUserFromProvider implements CreatesUserFromProvider
 
     /**
      * Create a new action instance.
-     *
-     * @param  \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts  $createsConnectedAccounts
      */
     public function __construct(CreatesConnectedAccounts $createsConnectedAccounts)
     {
@@ -55,7 +53,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                     $this->createsConnectedAccounts->create($user, $provider, $providerUser)
                 );
                 $user->save();
-                $this->addToTeam($user, "Observers");
+                $this->addToTeam($user, 'Observers');
             });
         });
     }
@@ -65,7 +63,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
      */
     protected function addToTeam(User $user, string $team): void
     {
-        $team = Team::where("name", $team)->firstOrFail();
+        $team = Team::where('name', $team)->firstOrFail();
         $user->teams()->attach($team);
         $user->switchTeam($team);
     }

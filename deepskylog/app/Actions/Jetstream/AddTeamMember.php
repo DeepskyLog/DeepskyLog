@@ -18,21 +18,24 @@ class AddTeamMember implements AddsTeamMembers
     /**
      * Add a new team member to the given team.
      */
-    public function add(User $user, Team $team, string $email, string $role = null): void
+    public function add(User $user, Team $team, ?string $email, ?string $role = null): void
     {
-        Gate::forUser($user)->authorize('addTeamMember', $team);
+        if ($email) {
+            Gate::forUser($user)->authorize('addTeamMember', $team);
 
-        $this->validate($team, $email, $role);
+            $this->validate($team, $email, $role);
 
-        $newTeamMember = Jetstream::findUserByEmailOrFail($email);
+            $newTeamMember = Jetstream::findUserByEmailOrFail($email);
 
-        AddingTeamMember::dispatch($team, $newTeamMember);
+            AddingTeamMember::dispatch($team, $newTeamMember);
 
-        $team->users()->attach(
-            $newTeamMember, ['role' => $role]
-        );
+            $team->users()->attach(
+                $newTeamMember, ['role' => $role]
+            );
 
-        TeamMemberAdded::dispatch($team, $newTeamMember);
+            TeamMemberAdded::dispatch($team, $newTeamMember);
+
+        }
     }
 
     /**

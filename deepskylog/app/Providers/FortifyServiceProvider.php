@@ -2,18 +2,18 @@
 
 namespace App\Providers;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use Laravel\Fortify\Fortify;
-use Illuminate\Support\Facades\Hash;
 use App\Actions\Fortify\CreateNewUser;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Support\Facades\Validator;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
-use Illuminate\Support\Facades\RateLimiter;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Models\User;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\ServiceProvider;
+use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -48,7 +48,7 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::authenticateUsing(function (Request $request) {
             // Check for the correct user.  Use the mail address or the user id.
             $validator = Validator::make(['email' => $request->email], [
-                'email' => 'required|email'
+                'email' => 'required|email',
             ]);
 
             if ($validator->passes()) {
@@ -65,6 +65,7 @@ class FortifyServiceProvider extends ServiceProvider
                 // Update to the new, more secure password.
                 $user->password = Hash::make($request->password);
                 $user->save();
+
                 return $user;
             }
         });

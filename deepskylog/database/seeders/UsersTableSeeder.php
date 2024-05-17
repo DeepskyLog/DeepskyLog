@@ -2,15 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\ObserversOld;
 use App\Models\Team;
 use App\Models\User;
-use Illuminate\Http\File;
-use Illuminate\Support\Str;
-use App\Models\ObserversOld;
 use Illuminate\Database\Seeder;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Str;
 
 class UsersTableSeeder extends Seeder
 {
@@ -38,7 +37,7 @@ class UsersTableSeeder extends Seeder
 
         [$year, $month, $day, $hour, $minute] = sscanf($firstUser->registrationDate, '%4d%2d%2d %2d:%2d');
         $date = date('Y-m-d H:i:s', mktime($hour, $minute, 0, $month, $day, $year));
-        $name = html_entity_decode($firstUser->firstname) . ' ' . html_entity_decode($firstUser->name);
+        $name = html_entity_decode($firstUser->firstname).' '.html_entity_decode($firstUser->name);
         $atlas = $firstUser->standardAtlasCode == '' ? 'Interstellarum' : $firstUser->standardAtlasCode;
         $stdlocation = $firstUser->stdlocation == 0 ? null : $firstUser->stdlocation;
         $stdtelescope = $firstUser->stdtelescope == 0 ? null : $firstUser->stdtelescope;
@@ -47,35 +46,35 @@ class UsersTableSeeder extends Seeder
         // First add user wim
         $user = User::create(
             [
-                'username'            => html_entity_decode($firstUser->id),
-                'name'                => $name,
-                'email'               => $firstUser->email,
-                'email_verified_at'   => $date,
-                'stdlocation'         => $stdlocation,
-                'stdtelescope'        => $stdtelescope,
-                'language'            => $language,
-                'icqname'             => $firstUser->icqname,
+                'username' => html_entity_decode($firstUser->id),
+                'name' => $name,
+                'email' => $firstUser->email,
+                'email_verified_at' => $date,
+                'stdlocation' => $stdlocation,
+                'stdtelescope' => $stdtelescope,
+                'language' => $language,
+                'icqname' => $firstUser->icqname,
                 'observationlanguage' => $firstUser->observationlanguage,
-                'standardAtlasCode'   => $atlas,
-                'fstOffset'           => $firstUser->fstOffset,
-                'copyrightSelection'  => $firstUser->copyright,
-                'copyright'           => $firstUser->copyright,
-                'overviewdsos'        => $firstUser->overviewdsos,
-                'lookupdsos'          => $firstUser->lookupdsos,
-                'detaildsos'          => $firstUser->detaildsos,
-                'overviewstars'       => $firstUser->overviewstars,
-                'lookupstars'         => $firstUser->lookupstars,
-                'detailstars'         => $firstUser->detailstars,
-                'atlaspagefont'       => $firstUser->atlaspagefont,
-                'photosize1'          => $firstUser->photosize1,
-                'overviewFoV'         => $firstUser->overviewFoV,
-                'photosize2'          => $firstUser->photosize2,
-                'lookupFoV'           => $firstUser->lookupFoV,
-                'detailFoV'           => $firstUser->detailFoV,
-                'sendMail'            => $firstUser->sendMail,
-                'version'             => $firstUser->version,
-                'showInches'          => $firstUser->showInches,
-                'created_at'          => $date,
+                'standardAtlasCode' => $atlas,
+                'fstOffset' => $firstUser->fstOffset,
+                'copyrightSelection' => $firstUser->copyright,
+                'copyright' => $firstUser->copyright,
+                'overviewdsos' => $firstUser->overviewdsos,
+                'lookupdsos' => $firstUser->lookupdsos,
+                'detaildsos' => $firstUser->detaildsos,
+                'overviewstars' => $firstUser->overviewstars,
+                'lookupstars' => $firstUser->lookupstars,
+                'detailstars' => $firstUser->detailstars,
+                'atlaspagefont' => $firstUser->atlaspagefont,
+                'photosize1' => $firstUser->photosize1,
+                'overviewFoV' => $firstUser->overviewFoV,
+                'photosize2' => $firstUser->photosize2,
+                'lookupFoV' => $firstUser->lookupFoV,
+                'detailFoV' => $firstUser->detailFoV,
+                'sendMail' => $firstUser->sendMail,
+                'version' => $firstUser->version,
+                'showInches' => $firstUser->showInches,
+                'created_at' => $date,
             ]
         );
 
@@ -120,7 +119,7 @@ class UsersTableSeeder extends Seeder
             [$year, $month, $day, $hour, $minute] = sscanf($accountSingle->registrationDate, '%4d%2d%2d %2d:%2d');
             $date = date('Y-m-d H:i:s', mktime($hour, $minute, 0, $month, $day, $year));
 
-            $name = html_entity_decode($accountSingle->firstname) . ' ' . html_entity_decode($accountSingle->name);
+            $name = html_entity_decode($accountSingle->firstname).' '.html_entity_decode($accountSingle->name);
 
             $atlas = $accountSingle->standardAtlasCode == '' ? 'Interstellarum' : $accountSingle->standardAtlasCode;
             $stdlocation = $accountSingle->stdlocation == 0 ? null : $accountSingle->stdlocation;
@@ -151,35 +150,35 @@ class UsersTableSeeder extends Seeder
                 }
                 $user = User::create(
                     [
-                        'username'            => html_entity_decode($accountSingle->id),
-                        'name'                => $name,
-                        'email'               => $accountSingle->email,
-                        'email_verified_at'   => $date,
-                        'stdlocation'         => $stdlocation,
-                        'stdtelescope'        => $stdtelescope,
-                        'language'            => $language,
-                        'icqname'             => $accountSingle->icqname,
+                        'username' => html_entity_decode($accountSingle->id),
+                        'name' => $name,
+                        'email' => $accountSingle->email,
+                        'email_verified_at' => $date,
+                        'stdlocation' => $stdlocation,
+                        'stdtelescope' => $stdtelescope,
+                        'language' => $language,
+                        'icqname' => $accountSingle->icqname,
                         'observationlanguage' => $accountSingle->observationlanguage,
-                        'standardAtlasCode'   => $atlas,
-                        'fstOffset'           => $accountSingle->fstOffset,
-                        'copyrightSelection'  => $copyrightSelection,
-                        'copyright'           => $copyright,
-                        'overviewdsos'        => $accountSingle->overviewdsos,
-                        'lookupdsos'          => $accountSingle->lookupdsos,
-                        'detaildsos'          => $accountSingle->detaildsos,
-                        'overviewstars'       => $accountSingle->overviewstars,
-                        'lookupstars'         => $accountSingle->lookupstars,
-                        'detailstars'         => $accountSingle->detailstars,
-                        'atlaspagefont'       => $accountSingle->atlaspagefont,
-                        'photosize1'          => $accountSingle->photosize1 ? $accountSingle->photosize1 : 60,
-                        'overviewFoV'         => $accountSingle->overviewFoV ? $accountSingle->overviewFoV : 120,
-                        'photosize2'          => $accountSingle->photosize2 ? $accountSingle->photosize2 : 25,
-                        'lookupFoV'           => $accountSingle->lookupFoV ? $accountSingle->lookupFoV : 60,
-                        'detailFoV'           => $accountSingle->detailFoV ? $accountSingle->detailFoV : 15,
-                        'sendMail'            => $accountSingle->sendMail,
-                        'version'             => $accountSingle->version,
-                        'showInches'          => $accountSingle->showInches,
-                        'created_at'          => $date,
+                        'standardAtlasCode' => $atlas,
+                        'fstOffset' => $accountSingle->fstOffset,
+                        'copyrightSelection' => $copyrightSelection,
+                        'copyright' => $copyright,
+                        'overviewdsos' => $accountSingle->overviewdsos,
+                        'lookupdsos' => $accountSingle->lookupdsos,
+                        'detaildsos' => $accountSingle->detaildsos,
+                        'overviewstars' => $accountSingle->overviewstars,
+                        'lookupstars' => $accountSingle->lookupstars,
+                        'detailstars' => $accountSingle->detailstars,
+                        'atlaspagefont' => $accountSingle->atlaspagefont,
+                        'photosize1' => $accountSingle->photosize1 ? $accountSingle->photosize1 : 60,
+                        'overviewFoV' => $accountSingle->overviewFoV ? $accountSingle->overviewFoV : 120,
+                        'photosize2' => $accountSingle->photosize2 ? $accountSingle->photosize2 : 25,
+                        'lookupFoV' => $accountSingle->lookupFoV ? $accountSingle->lookupFoV : 60,
+                        'detailFoV' => $accountSingle->detailFoV ? $accountSingle->detailFoV : 15,
+                        'sendMail' => $accountSingle->sendMail,
+                        'version' => $accountSingle->version,
+                        'showInches' => $accountSingle->showInches,
+                        'created_at' => $date,
                     ]
                 );
                 $user->password = $accountSingle->password;
@@ -215,7 +214,7 @@ class UsersTableSeeder extends Seeder
 
                 // TODO: Make sure to make a link to the correct directory!
                 $filename = 'observer_pics/'
-                    . $user->username . '.jpg';
+                    .$user->username.'.jpg';
 
                 if (file_exists($filename)) {
                     $path = Storage::putFile('public/profile-photos', new File($filename));
