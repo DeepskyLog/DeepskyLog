@@ -23,13 +23,13 @@
 + [X] Create the all users administrator page
 + [X] Add team member should show a list of observers, not just an option to add a person using an email address.
 + [X] Move to slugs for the username and the team names
-+ [ ] Make code work again with new version of laravel, livewire, ...
-    + [ ] Information of observer does not work when not logged in
-    + [ ] Test as normal user...
++ [X] Make code work again with new version of laravel, livewire, ...
 + [ ] Rewrite tests to use PEST (see ExampleTest.php)
 + [ ] Refactor the accomplishment methods to make them more general.
     + [ ] Look for a composer packages to add achievements
     + [ ] See https://laracasts.com/series/phpstorm-for-laravel-developers/episodes/11 for more information
++ [ ] We also need the login menu in the app.blade.php -> Remove guest.blade.php
++ [ ] Finish observer detail page
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
     + [ ] Add link to the rows in the user administrator page to go directly to the observer
     + [ ] Add administrator only options
