@@ -8,8 +8,6 @@ use Laravel\Fortify\Features;
 it('reset password link screen can be rendered', function () {
     if (! Features::enabled(Features::resetPasswords())) {
         $this->markTestSkipped('Password updates are not enabled.');
-
-        return;
     }
 
     $response = $this->get('/forgot-password');
@@ -20,8 +18,6 @@ it('reset password link screen can be rendered', function () {
 it('reset password link can be requested', function () {
     if (! Features::enabled(Features::resetPasswords())) {
         $this->markTestSkipped('Password updates are not enabled.');
-
-        return;
     }
 
     Notification::fake();
@@ -38,8 +34,6 @@ it('reset password link can be requested', function () {
 it('reset password screen can be rendered', function () {
     if (! Features::enabled(Features::resetPasswords())) {
         $this->markTestSkipped('Password updates are not enabled.');
-
-        return;
     }
 
     Notification::fake();
@@ -62,8 +56,6 @@ it('reset password screen can be rendered', function () {
 it('password can be reset with valid token', function () {
     if (! Features::enabled(Features::resetPasswords())) {
         $this->markTestSkipped('Password updates are not enabled.');
-
-        return;
     }
 
     Notification::fake();

@@ -10,8 +10,6 @@ use Laravel\Fortify\Features;
 test('email verification screen can be rendered', function () {
     if (! Features::enabled(Features::emailVerification())) {
         $this->markTestSkipped('Email verification not enabled.');
-
-        return;
     }
 
     $user = User::factory()->withPersonalTeam()->unverified()->create();
@@ -24,8 +22,6 @@ test('email verification screen can be rendered', function () {
 test('email can be verified', function () {
     if (! Features::enabled(Features::emailVerification())) {
         $this->markTestSkipped('Email verification not enabled.');
-
-        return;
     }
 
     Event::fake();
@@ -49,8 +45,6 @@ test('email can be verified', function () {
 test('email can not verified with invalid hash', function () {
     if (! Features::enabled(Features::emailVerification())) {
         $this->markTestSkipped('Email verification not enabled.');
-
-        return;
     }
 
     $user = User::factory()->unverified()->create();

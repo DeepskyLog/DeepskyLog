@@ -26,14 +26,14 @@
                         @if (! is_null($user->firstObservationDate()[0]))
                             {{ __("First observation on ") }}
                             <a
-                                href="{{ env("OLD_APP_URL") }}/index.php?indexAction=detail_observation&observation={{ $user->firstObservationDate()[1] }}"
+                                href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $user->firstObservationDate()[1] }}"
                             >
                                 {{ $user->firstObservationDate()[0] }}
                             </a>
                             <br />
                             {{ __("Most recent observation on ") }}
                             <a
-                                href="{{ env("OLD_APP_URL") }}/index.php?indexAction=detail_observation&observation={{ $user->lastObservationDate()[1] }}"
+                                href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $user->lastObservationDate()[1] }}"
                             >
                                 {{ $user->lastObservationDate()[0] }}
                             </a>
@@ -198,7 +198,7 @@
                         <td>
                             @if ($user->stdlocation)
                                 <a
-                                    href="{{ env("OLD_APP_URL") }}/index.php?indexAction=detail_location&location={{ $user->stdlocation }}"
+                                    href="{{ config("app.old_url") }}/index.php?indexAction=detail_location&location={{ $user->stdlocation }}"
                                 >
                                     {!! \App\Models\LocationsOld::where(["id" => $user->stdlocation])->first()->name !!}
                                 </a>
@@ -212,7 +212,7 @@
                         <td>
                             @if ($user->stdtelescope)
                                 <a
-                                    href="{{ env('OLD_APP_URL') }}/index.php?indexAction=detail_instrument&instrument={{ $user->stdtelescope }}"
+                                    href="{{ config('app.old_url') }}/index.php?indexAction=detail_instrument&instrument={{ $user->stdtelescope }}"
                                 >
                                     {!! \App\Models\InstrumentsOld::where(["id" => $user->stdtelescope])->first()->name !!}
                                 </a>
@@ -225,7 +225,7 @@
                         <td>{{ __("Number of locations") }}</td>
                         <td>
                             @if ($user->id === Auth::user()->id)
-                                <a href="{{ env('OLD_APP_URL') }}/index.php?indexAction=view_sites">
+                                <a href="{{ config('app.old_url') }}/index.php?indexAction=view_sites">
                                     @endif
                                     {{ \App\Models\LocationsOld::where(["observer" => $user->username])->count() }}
                                     @if ($user->id === Auth::user()->id)
@@ -238,15 +238,13 @@
                     <tr>
                         <td>{{ __("Number of instruments") }}</td>
                         <td>
-                            {{--
-                                @if ($user->id === Auth::user()->id)
-                                <a href="{{ route('instrument.index') }}">
-                                @endif
-                                {{ count($user->instruments) }}
-                                @if ($user->id === Auth::user()->id)
+                            @if ($user->id === Auth::user()->id)
+                                <a href="{{ config('app.old_url') }}/index.php?indexAction=view_instruments">
+                                    @endif
+                                    {{ \App\Models\InstrumentsOld::where(["observer" => $user->username])->count() }}
+                                    @if ($user->id === Auth::user()->id)
                                 </a>
-                                @endif
-                            --}}
+                            @endif
                         </td>
                     </tr>
 
@@ -254,15 +252,13 @@
                     <tr>
                         <td>{{ __("Number of eyepieces") }}</td>
                         <td>
-                            {{--
-                                @if ($user->id === Auth::user()->id)
-                                <a href="{{ route('eyepiece.index') }}">
-                                @endif
-                                {{ count($user->eyepieces) }}
-                                @if ($user->id === Auth::user()->id)
+                            @if ($user->id === Auth::user()->id)
+                                <a href="{{ config('app.old_url') }}/index.php?indexAction=view_eyepieces">
+                                    @endif
+                                    {{ \App\Models\EyepiecesOld::where(["observer" => $user->username])->count() }}
+                                    @if ($user->id === Auth::user()->id)
                                 </a>
-                                @endif
-                            --}}
+                            @endif
                         </td>
                     </tr>
 

@@ -8,8 +8,6 @@ use Livewire\Livewire;
 it('two factor authentication can be enabled', function () {
     if (! Features::canManageTwoFactorAuthentication()) {
         $this->markTestSkipped('Two factor authentication is not enabled.');
-
-        return;
     }
 
     $this->actingAs($user = User::factory()->create());
@@ -28,8 +26,6 @@ it('two factor authentication can be enabled', function () {
 it('recovery codes can be regenerated', function () {
     if (! Features::canManageTwoFactorAuthentication()) {
         $this->markTestSkipped('Two factor authentication is not enabled.');
-
-        return;
     }
 
     $this->actingAs($user = User::factory()->create());
@@ -51,8 +47,6 @@ it('recovery codes can be regenerated', function () {
 it('two factor authentication can be disabled', function () {
     if (! Features::canManageTwoFactorAuthentication()) {
         $this->markTestSkipped('Two factor authentication is not enabled.');
-
-        return;
     }
 
     $this->actingAs($user = User::factory()->create());

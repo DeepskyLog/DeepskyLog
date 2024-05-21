@@ -8,8 +8,6 @@ use Laravel\Jetstream\Jetstream;
 it('registration screen can be rendered', function () {
     if (! Features::enabled(Features::registration())) {
         $this->markTestSkipped('Registration support is not enabled.');
-
-        return;
     }
 
     $response = $this->get('/register');
@@ -22,8 +20,6 @@ it('new users can register', function () {
 
     if (! Features::enabled(Features::registration())) {
         $this->markTestSkipped('Registration support is not enabled.');
-
-        return;
     }
 
     $response = $this->post('/register', [
