@@ -197,13 +197,11 @@
                         <td>{{ __("Default observing site") }}</td>
                         <td>
                             @if ($user->stdlocation)
-                                {{--
-                                    @if (\App\Models\Location::where(['id' => $user->stdlocation])->first())
-                                    <a href="{{ route('location.show', $user->stdlocation) }}">
-                                    {{ \App\Models\Location::where(['id' => $user->stdlocation])->first()->name }}
-                                    </a>
-                                    @endif
-                                --}}
+                                <a
+                                    href="{{ env("OLD_APP_URL") }}/index.php?indexAction=detail_location&location={{ $user->stdlocation }}"
+                                >
+                                    {!! \App\Models\LocationsOld::where(["id" => $user->stdlocation])->first()->name !!}
+                                </a>
                             @endif
                         </td>
                     </tr>
@@ -213,13 +211,11 @@
                         <td>{{ __("Default instrument") }}</td>
                         <td>
                             @if ($user->stdtelescope)
-                                {{--
-                                    @if (\App\Models\Instrument::where(['id' => $user->stdtelescope])->first())
-                                    <a href="{{ route('instrument.show', $user->stdtelescope) }}">
-                                    {{ \App\Models\Instrument::where(['id' => $user->stdtelescope])->first()->name }}
-                                    </a>
-                                    @endif
-                                --}}
+                                <a
+                                    href="{{ env('OLD_APP_URL') }}/index.php?indexAction=detail_instrument&instrument={{ $user->stdtelescope }}"
+                                >
+                                    {!! \App\Models\InstrumentsOld::where(["id" => $user->stdtelescope])->first()->name !!}
+                                </a>
                             @endif
                         </td>
                     </tr>
@@ -228,15 +224,13 @@
                     <tr>
                         <td>{{ __("Number of locations") }}</td>
                         <td>
-                            {{--
-                                @if ($user->id === Auth::user()->id)
-                                <a href="{{ route('location.index') }}">
-                                @endif
-                                {{ count($user->locations) }}
-                                @if ($user->id === Auth::user()->id)
+                            @if ($user->id === Auth::user()->id)
+                                <a href="{{ env('OLD_APP_URL') }}/index.php?indexAction=view_sites">
+                                    @endif
+                                    {{ \App\Models\LocationsOld::where(["observer" => $user->username])->count() }}
+                                    @if ($user->id === Auth::user()->id)
                                 </a>
-                                @endif
-                            --}}
+                            @endif
                         </td>
                     </tr>
 

@@ -1,64 +1,40 @@
 <?php
 
-namespace Tests\Feature;
-
 use App\Providers\RouteServiceProvider;
 use Database\Seeders\GroupSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Fortify\Features;
 use Laravel\Jetstream\Jetstream;
-use Tests\TestCase;
 
-class RegistrationTest extends TestCase
-{
-    use RefreshDatabase;
+it('registration screen can be rendered', function () {
+    if (! Features::enabled(Features::registration())) {
+        $this->markTestSkipped('Registration support is not enabled.');
 
-    public function test_registration_screen_can_be_rendered(): void
-    {
-        if (! Features::enabled(Features::registration())) {
-            $this->markTestSkipped('Registration support is not enabled.');
-
-            return;
-        }
-
-        $response = $this->get('/register');
-
-        $response->assertStatus(200);
+        return;
     }
 
-    public function test_registration_screen_cannot_be_rendered_if_support_is_disabled(): void
-    {
-        if (Features::enabled(Features::registration())) {
-            $this->markTestSkipped('Registration support is enabled.');
+    $response = $this->get('/register');
 
-            return;
-        }
+    $response->assertStatus(200);
+});
 
-        $response = $this->get('/register');
+it('new users can register', function () {
+    $this->seed(GroupSeeder::class);
 
-        $response->assertStatus(404);
+    if (! Features::enabled(Features::registration())) {
+        $this->markTestSkipped('Registration support is not enabled.');
+
+        return;
     }
 
-    public function test_new_users_can_register(): void
-    {
-        $this->seed(GroupSeeder::class);
+    $response = $this->post('/register', [
+        'name' => 'Test User',
+        'username' => 'TestUser',
+        'email' => 'test@example.com',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+        'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+    ]);
 
-        if (! Features::enabled(Features::registration())) {
-            $this->markTestSkipped('Registration support is not enabled.');
-
-            return;
-        }
-
-        $response = $this->post('/register', [
-            'name' => 'Test User',
-            'username' => 'TestUser',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
-        ]);
-
-        $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
-    }
-}
+    $this->assertAuthenticated();
+    $response->assertRedirect(RouteServiceProvider::HOME);
+});

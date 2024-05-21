@@ -31,9 +31,11 @@
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "*",
         "laravel/sail": "^1.0.1",
-        "mockery/mockery": "^1.4.4",
+        "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.1",
         "pestphp/pest": "*",
+        "pestphp/pest-plugin-drift": "^2.6",
+        "pestphp/pest-plugin-laravel": "^2.4",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {

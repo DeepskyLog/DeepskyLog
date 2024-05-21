@@ -1,82 +1,70 @@
 <?php
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
-use Tests\TestCase;
 
-class UsersTableTest extends TestCase
-{
-    use RefreshDatabase;
+it('has all the expected columns after migrating up', function () {
+    Artisan::call('migrate');
 
-    /** @test */
-    public function it_has_all_the_expected_columns_after_migrating_up()
-    {
-        Artisan::call('migrate');
+    expect(Schema::hasColumns('users', [
+        'username',
+        'country',
+        'stdlocation',
+        'stdtelescope',
+        'language',
+        'icqname',
+        'observationlanguage',
+        'standardAtlasCode',
+        'fstOffset',
+        'copyright',
+        'overviewdsos',
+        'lookupdsos',
+        'detaildsos',
+        'overviewstars',
+        'lookupstars',
+        'detailstars',
+        'atlaspagefont',
+        'photosize1',
+        'overviewFoV',
+        'photosize2',
+        'lookupFoV',
+        'detailFoV',
+        'sendMail',
+        'version',
+        'showInches',
+        'about',
+    ]))->toBeTrue();
+});
+it('drops all the columns after migrating down', function () {
+    Artisan::call('migrate');
+    Artisan::call('migrate:rollback');
 
-        $this->assertTrue(Schema::hasColumns('users', [
-            'username',
-            'country',
-            'stdlocation',
-            'stdtelescope',
-            'language',
-            'icqname',
-            'observationlanguage',
-            'standardAtlasCode',
-            'fstOffset',
-            'copyright',
-            'overviewdsos',
-            'lookupdsos',
-            'detaildsos',
-            'overviewstars',
-            'lookupstars',
-            'detailstars',
-            'atlaspagefont',
-            'photosize1',
-            'overviewFoV',
-            'photosize2',
-            'lookupFoV',
-            'detailFoV',
-            'sendMail',
-            'version',
-            'showInches',
-            'about',
-        ]));
-    }
-
-    /** @test */
-    public function it_drops_all_the_columns_after_migrating_down()
-    {
-        Artisan::call('migrate');
-        Artisan::call('migrate:rollback');
-
-        $this->assertFalse(Schema::hasColumns('users', [
-            'username',
-            'country',
-            'stdlocation',
-            'stdtelescope',
-            'language',
-            'icqname',
-            'observationlanguage',
-            'standardAtlasCode',
-            'fstOffset',
-            'copyright',
-            'overviewdsos',
-            'lookupdsos',
-            'detaildsos',
-            'overviewstars',
-            'lookupstars',
-            'detailstars',
-            'atlaspagefont',
-            'photosize1',
-            'overviewFoV',
-            'photosize2',
-            'lookupFoV',
-            'detailFoV',
-            'sendMail',
-            'version',
-            'showInches',
-            'about',
-        ]));
-    }
-}
+    expect(Schema::hasColumns('users', [
+        'username',
+        'country',
+        'stdlocation',
+        'stdtelescope',
+        'language',
+        'icqname',
+        'observationlanguage',
+        'standardAtlasCode',
+        'fstOffset',
+        'copyright',
+        'overviewdsos',
+        'lookupdsos',
+        'detaildsos',
+        'overviewstars',
+        'lookupstars',
+        'detailstars',
+        'atlaspagefont',
+        'photosize1',
+        'overviewFoV',
+        'photosize2',
+        'lookupFoV',
+        'detailFoV',
+        'sendMail',
+        'version',
+        'showInches',
+        'about',
+    ]))->toBeFalse();
+});

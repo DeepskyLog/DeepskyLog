@@ -24,9 +24,8 @@
 + [X] Add team member should show a list of observers, not just an option to add a person using an email address.
 + [X] Move to slugs for the username and the team names
 + [X] Make code work again with new version of laravel, livewire, ...
-+ [ ] Rewrite tests to use PEST (see ExampleTest.php)
 + [ ] Refactor the accomplishment methods to make them more general.
-    + [ ] Look for a composer packages to add achievements
+    + [ ] Look for a composer package to add achievements
     + [ ] See https://laracasts.com/series/phpstorm-for-laravel-developers/episodes/11 for more information
 + [ ] We also need the login menu in the app.blade.php -> Remove guest.blade.php
 + [ ] Finish observer detail page
