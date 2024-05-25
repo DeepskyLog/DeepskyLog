@@ -105,29 +105,31 @@ function showObjectDetails($object_ss)
 							<div class="modal-dialog">
 								<div class="modal-content">
 									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title" id="myModalLabel">'._('Remove Object').'</h4>
-									</div>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">'._('Remove Object').'</h4>
+                                    </div>
                                     <div class="modal-body">'.
-                                    sprintf(_('Do you really want to delete %s?', '<strong>'.$object_ss.'</strong><br />')).
-                                    sprintf(_(
-                                        'There are no observations of %s, so removing %s should be relatively safe.',
-                                        '<strong>'.$object_ss.'</strong>',
-                                        '<strong>'.$object_ss.'</strong>'
-                                    )).'
-										<form action="'.$baseURL.'index.php?indexAction=deleteObject" method="post">
-										 <input type="hidden" name="indexAction" value="deleteObject" />
-										 <input type="hidden" name="object" value="'.$object_ss.'" />
-										</div>
-										<div class="modal-footer">
-										<button type="button" class="btn btn-success" data-dismiss="modal">'._('Keep Object').'</button>
-										<input class="btn btn-danger" type="submit" name="objectToDelete" value="'._('Remove Object').'!" />
-							 </form>
+
+                                        sprintf(_('Do you really want to delete %s?'), '<strong>'.$object_ss.'</strong><br />').
+
+                                        sprintf(_(
+                                            'There are no observations of %s, so removing %s should be relatively safe.'),
+                                                    '<strong>'.$object_ss.'</strong>',
+                                                    '<strong>'.$object_ss.'</strong>').
+                                    '<form action="'.$baseURL.'index.php?indexAction=deleteObject" method="post">
+                                        			 <input type="hidden" name="indexAction" value="deleteObject" />
+                                        			 <input type="hidden" name="object" value="'.$object_ss.'" />
+                                        			</div>
+                                        			<div class="modal-footer">
+                                        			<button type="button" class="btn btn-success" data-dismiss="modal">'._('Keep Object').'</button>
+                                        			<input class="btn btn-danger" type="submit" name="objectToDelete" value="'._('Remove Object').'!" />
+                                         </form>
 									</div>
 								 </div><!-- /.modal-content -->
 								</div><!-- /.modal-dialog -->
 							 </div><!-- /.modal -->';
-        } else {
+
+                            } else {
             echo '&nbsp;&nbsp;&nbsp;<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#forceRemoveObject">'._('Force Remove Object').'</button>';
 
             echo '<div class="modal fade" id="forceRemoveObject" tabindex="-1">

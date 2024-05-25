@@ -2273,7 +2273,7 @@ class Objects
 
     public function validateObject() // checks if the add new object form is correctly filled in and eventually adds the object to the database
     {
-        global $objUtil, $objObject, $objObserver, $entryMessage, $loggedUser, $developversion, $mailTo, $mailFrom, $objMessage;
+        global $objUtil, $objObject, $objObserver, $entryMessage, $loggedUser, $developversion, $mailTo, $mailFrom, $objMessages;
         if (!($loggedUser)) {
             new Exception(_('You need to be logged in to add an object.'));
         }
@@ -2347,14 +2347,17 @@ class Objects
             }
             if ($check) { // position angle
                 $posangle = '999';
-                if (!$objUtil->checkLimitsInclusive('posangle', 0, 359)) {
-                    $entryMessage = _('Wrong position angle!');
-                    $_GET['indexAction'] = 'add_object';
-                    $check = false;
-                } elseif ($objUtil->checkPostKey('posangle')) {
-                    $posangle = $_POST['posangle'];
+                if ($_POST['posangle']) {
+                    if (!$objUtil->checkLimitsInclusive('posangle', 0, 359)) {
+                        $entryMessage = _('Wrong position angle!');
+                        $_GET['indexAction'] = 'add_object';
+                        $check = false;
+                    } elseif ($objUtil->checkPostKey('posangle')) {
+                        $posangle = $_POST['posangle'];
+                    }
                 }
             }
+
             if ($check) { // surface brightness
                 $sb = '99.9';
                 if ($_POST['sb'] && preg_match('/^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$/', $_POST['sb'], $matches)) {
@@ -2366,6 +2369,7 @@ class Objects
                     }
                 }
             }
+
             if ($check) { // check diam1
                 $diam1 = 0.0;
                 if ($objUtil->checkPostKey('size_x') && $objUtil->checkPostKey('size_x_units')) {
@@ -2401,7 +2405,7 @@ class Objects
                 if (isset($developversion) && ($developversion == 1)) {
                     $entryMessage .= 'On the live server, a mail would be sent with the subject: '._('DeepskyLog - New Object ').' '.$name.'.<br />';
                 } else {
-                    $objMessage->sendEmail(_('DeepskyLog - New Object ').' '.$name, $body, 'developers');
+                    $objMessages->sendEmail(_('DeepskyLog - New Object ').' '.$name, $body, 'developers');
                 }
 
                 $_GET['indexAction'] = 'detail_object';

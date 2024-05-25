@@ -189,7 +189,7 @@ class Messages {
                 $senderName = $sender;
             }
             $message = sprintf(_("DeepskyLog message from %s:"), $senderName) . "<br /><br />" . $message . "<br /><br />";
-            
+
             $this->sendEmail($subject, $message, $receiver);
 		}
 
@@ -210,12 +210,12 @@ class Messages {
 		global $mailFrom, $instDir, $objObserver, $developversion, $entryMessage, $mailTo;
 		global $mailHost, $mailSMTPAuth, $mailServerUsername, $mailServerPassword, $mailSMTPSecure, $mailPort;
 
-        if (isset($developversion) 
+        if (isset($developversion)
         && ($developversion == 1)
         ) {
-            $entryMessage .= "On the live server, " 
+            $entryMessage .= "On the live server, "
                 . "a mail would be sent with the"
-                . " subject: " . $subject 
+                . " subject: " . $subject
                 . ".<br />";
         } else {
     		require_once('PHPMailer/class.phpmailer.php');
