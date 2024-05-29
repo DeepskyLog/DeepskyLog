@@ -25,12 +25,18 @@
 + [X] Move to slugs for the username and the team names
 + [X] Make code work again with new version of laravel, livewire, ...
 + [ ] Refactor the accomplishment methods to make them more general.
-    + [ ] Look for a composer package to add achievements
-    + [ ] See https://laracasts.com/series/phpstorm-for-laravel-developers/episodes/11 for more information
+    + [X] Add achievements in the database seeder
+    + [X] Run script every 30 minutes to update the achievements
+    + [X] Sketch of the week -> If negative -> cometobservation!
+    + [X] Top 10 observer
 + [ ] We also need the login menu in the app.blade.php -> Remove guest.blade.php
 + [ ] Finish observer detail page
+    + [ ] Add number of unique objects seen and drawn
+    + [ ] Add total number of observations
+    + [ ] Add all DeepskyLog sketches of the Week / Month to the observer detail page
 + [ ] Create a new page to see the observer details (when someone clicks on the observer)
     + [ ] Add link to the rows in the user administrator page to go directly to the observer
+    + [ ] Make sure that users which have observations, ... can not be deleted in the user administrator page
     + [ ] Add administrator only options
 + [ ] Test on Phone
 + [ ] Add translations for the new version
@@ -41,8 +47,8 @@
     + [ ] Add the code
     + [X] Fix the code for php 8.3
     + [ ] Change the link to the user settings page.
+    + [ ] Change the link to the user information page
 + [ ] Create menu for the new version
-    + [ ] Add the sponsor page to the old version!
 + [ ] Check log in using the new version and try using one of the old pages as logged-in user
     + [ ] Change links in the old version, also for the sponsor page (http://deepskylog.test/sponsors)
     + [ ] Update the log in code in the old DeepskyLog

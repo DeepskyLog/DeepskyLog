@@ -8,17 +8,17 @@ use Laravel\Socialite\Two\User;
 
 test('users can register using socialite providers', function (string $socialiteProvider) {
     // Check if the SKIP_SOCIALITE_TEST_ON_LOCAL environment variable is set to true
-    if (env('SKIP_SOCIALITE_TEST_ON_LOCAL', false)) {
+    if (config('SKIP_SOCIALITE_TEST_ON_LOCAL', false)) {
         // If the environment variable is set to true, skip the test and provide a message
-        return $this->markTestSkipped('Socialite not tested on local machine.');
+        $this->markTestSkipped('Socialite not tested on local machine.');
     }
 
     if (! FortifyFeatures::enabled(FortifyFeatures::registration())) {
-        return $this->markTestSkipped('Registration support is not enabled.');
+        $this->markTestSkipped('Registration support is not enabled.');
     }
 
     if (! Providers::enabled($socialiteProvider)) {
-        return $this->markTestSkipped("Registration support with the $socialiteProvider provider is not enabled.");
+        $this->markTestSkipped("Registration support with the $socialiteProvider provider is not enabled.");
     }
 
     $user = (new User())

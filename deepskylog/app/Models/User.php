@@ -9,15 +9,18 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use LevelUp\Experience\Concerns\HasAchievements;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
+    use HasAchievements;
     use HasApiTokens;
     use HasConnectedAccounts;
     use HasFactory;
@@ -72,6 +75,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Return the sluggable configuration array for this model.
+     *
+     * @return array The sluggable configuration array
      */
     public function sluggable(): array
     {
@@ -84,6 +89,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Get the URL to the user's profile photo.
+     *
+     * @return Attribute The URL to the user's profile photo
      */
     public function profilePhotoUrl(): Attribute
     {
@@ -95,7 +102,8 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Overrides the methods from HasTeams.Switch the user's context to the given team.
      *
-     * @param  mixed  $team
+     * @param  mixed  $team  The team to switch to
+     * @return bool True if the team was switched
      */
     public function switchTeam($team): bool
     {
@@ -110,6 +118,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user's active team is the administrators team
+     *
+     * @return bool True if the user's active team is the administrators team
      */
     public function isAdministrator(): bool
     {
@@ -118,6 +128,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user's active team is the administrators team
+     *
+     * @return bool True if the user's active team is the administrators team
      */
     public function hasAdministratorPrivileges(): bool
     {
@@ -130,6 +142,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user's active team is the team of Database experts
+     *
+     * @return bool True if the user's active team is the team of Database experts
      */
     public function isDatabaseExpert(): bool
     {
@@ -138,6 +152,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user's active team is the team of Observers
+     *
+     * @return bool True if the user's active team is the team of Observers
      */
     public function isObserver(): bool
     {
@@ -149,20 +165,20 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string The copyright information
      */
-    public function getCopyright()
+    public function getCopyright(): string
     {
         $text = $this->copyright;
 
         if (strcmp($text, 'Attribution-NoDerivs CC BY-ND') === 0) {
-            $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons Attribution-NoDerivatives 4.0 International License</a>.';
+            $copyright = '<a rel="license" href="https://creativecommons.org/licenses/by-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nd/4.0/">Creative Commons Attribution-NoDerivatives 4.0 International License</a>.';
         } elseif (strcmp($text, 'Attribution CC BY') === 0) {
-            $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.';
+            $copyright = '<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.';
         } elseif (strcmp($text, 'Attribution-NonCommercial CC BY-NC') === 0) {
-            $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.';
+            $copyright = '<a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.';
         } elseif (strcmp($text, 'Attribution-NonCommercial-ShareAlike CC BY-NC-SA') === 0) {
-            $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.';
+            $copyright = '<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.';
         } elseif (strcmp($text, 'Attribution-NonCommercial-NoDerivs CC BY-NC-ND') === 0) {
-            $copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.';
+            $copyright = '<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.';
         } else {
             $copyright = $text;
         }
@@ -172,6 +188,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Checks if the user is one of the first DeepskyLog users (registered in 2004 or 2005)
+     *
+     * @return bool True if the user is one of the first DeepskyLog users
      */
     public function isEarlyAdopter(): bool
     {
@@ -183,6 +201,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Returns the date and the id of the first observation
+     *
+     * @return array The date and the id of the first observation
      */
     public function firstObservationDate(): array
     {
@@ -201,6 +221,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Returns the date and the id of the most recent observation
+     *
+     * @return array The date and the id of the last observation
      */
     public function lastObservationDate(): array
     {
@@ -218,275 +240,361 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Checks if the user has observed all 110 messier objects
+     * Retrieves the count of observed objects from the specified catalog.
+     *
+     * @param  string  $catalog  The catalog to retrieve the observed count from.
+     * @return int The count of observed objects from the specified catalog.
      */
-    public function hasMessierGold(): bool
+    public function getObservedCountFromCatalog(string $catalog): int
     {
-        // TODO: Refactor this method to make it more general.
-        // See https://laracasts.com/series/phpstorm-for-laravel-developers/episodes/11 for more information
-        return AccomplishmentsOld::where('observer', $this->username)->first()['messierGold'];
+        return DB::connection('mysqlOld')->table('objectnames')
+            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
+            ->where('observations.observerid', $this->username)
+            ->where('observations.visibility', '!=', 7)
+            ->where('objectnames.catalog', $catalog)
+            ->addSelect('objectnames.catindex')->distinct()->get()->count();
     }
 
     /**
-     * Checks if the user has observed 50 different messier objects
+     * Retrieves the count of drawings from the specified catalog.
+     *
+     * @param  string  $catalog  The catalog to retrieve the drawing count from.
+     * @return int The count of drawings from the specified catalog.
      */
-    public function hasMessierSilver(): bool
+    public function getDrawingCountFromCatalog(string $catalog): int
     {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['messierSilver'];
+        return DB::connection('mysqlOld')->table('objectnames')
+            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
+            ->where('observations.observerid', $this->username)
+            ->where('observations.visibility', '!=', 7)
+            ->where('objectnames.catalog', $catalog)
+            ->where('observations.hasDrawing', 1)
+            ->addSelect('objectnames.catindex')->distinct()->get()->count();
     }
 
     /**
-     * Checks if the user has observed 25 different messier objects
+     * Retrieves the count of open cluster observations for the current user.
+     *
+     * This function queries the 'mysqlOld' database connection and selects distinct
+     * object names from the 'objects' and 'observations' tables where the object
+     * name matches the observation object name, is of type "OPNCL" or "CLANB",
+     * and belongs to the current user. The count of these distinct object names is
+     * returned as the total number of open cluster observations for the current user.
+     *
+     * @return int The total number of open cluster observations for the current user.
      */
-    public function hasMessierBronze(): bool
+    public function getOpenClusterObservations(): int
     {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['messierBronze'];
+        $total = count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objects.name) from objects,observations
+                              where objects.name = observations.objectname
+                                and objects.type = "OPNCL" and observations.observerid = "'.$this->username.'"'));
+
+        return $total + count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objects.name) from objects,observations
+                              where objects.name = observations.objectname
+                                and objects.type = "CLANB" and observations.observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has drawn all 110 messier objects
+     * Retrieves the count of open cluster drawings for the current user.
+     *
+     * This function queries the 'mysqlOld' database connection and selects distinct
+     * object names from the 'objects' and 'observations' tables where the object
+     * name matches the observation object name, has a drawing, is of type "OPNCL" or
+     * "CLANB", and belongs to the current user. The count of these distinct object
+     * names is returned as the total number of open cluster drawings for the current
+     * user.
+     *
+     * @return int The total number of open cluster drawings for the current user.
      */
-    public function hasMessierGoldDrawing(): bool
+    public function getOpenClusterDrawings(): int
     {
+        $total = count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objects.name) from objects,observations
+                              where objects.name = observations.objectname and hasDrawing = 1
+                                and objects.type = "OPNCL" and observations.observerid = "'.$this->username.'"'));
 
-        return AccomplishmentsOld::where('observer', $this->username)->first()['messierDrawingsGold'];
+        return $total + count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objects.name) from objects,observations
+                              where objects.name = observations.objectname and hasDrawing = 1
+                                and objects.type = "CLANB" and observations.observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has drawn 50 different messier objects
+     * Retrieves the count of globular cluster observations for the current user.
+     *
+     * This function queries the 'mysqlOld' database connection and selects distinct
+     * object names from the 'objects' and 'observations' tables where the object
+     * name matches the observation object name, is of type "GLOCL", and belongs to the
+     * current user. The count of these distinct object names is returned as the total
+     * number of globular cluster observations for the current user.
+     *
+     * @return int The total number of globular cluster observations for the current user.
      */
-    public function hasMessierSilverDrawing(): bool
+    public function getGlobularClusterObservations(): int
     {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['messierDrawingsSilver'];
+        return count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objects.name) from objects,observations
+                              where objects.name = observations.objectname
+                                and objects.type = "GLOCL" and observations.observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has drawn 25 different messier objects
+     * Retrieves the count of globular cluster drawings for the current user.
+     *
+     * This function queries the 'mysqlOld' database connection and selects distinct
+     * object names from the 'objects' and 'observations' tables where the object
+     * name matches the observation object name, has a drawing, is of type "GLOCL",
+     * and belongs to the current user. The count of these distinct object names is
+     * returned as the total number of globular cluster drawings for the current user.
+     *
+     * @return int The total number of globular cluster drawings for the current user.
      */
-    public function hasMessierBronzeDrawing(): bool
+    public function getGlobularClusterDrawings(): int
     {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['messierDrawingsBronze'];
+        return count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objects.name) from objects,observations
+                              where objects.name = observations.objectname and hasDrawing = 1
+                                and objects.type = "GLOCL" and observations.observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has observed all 110 caldwell objects
+     * Retrieves the count of planetary nebula observations for the current user.
+     *
+     * This function queries the 'mysqlOld' database connection and selects distinct
+     * object names from the 'objects' and 'observations' tables where the object
+     * name matches the observation object name, is of type "PLNNB", and belongs to
+     * the current user. The count of these distinct object names is returned as the
+     * total number of planetary nebula observations for the current user.
+     *
+     * @return int The total number of planetary nebula observations for the current user.
      */
-    public function hasCaldwellGold(): bool
+    public function getPlanetaryNebulaObservations(): int
     {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['caldwellGold'];
+        return count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objects.name) from objects,observations
+                              where objects.name = observations.objectname
+                                and objects.type = "PLNNB" and observations.observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has observed 50 different caldwell objects
+     * Retrieves the count of planetary nebula drawings for the current user.
+     *
+     * This function queries the 'mysqlOld' database connection and selects distinct
+     * object names from the 'objects' and 'observations' tables where the object
+     * name matches the observation object name, has a drawing, is of type "PLNNB",
+     * and belongs to the current user. The count of these distinct object names is
+     * returned as the total number of planetary nebula drawings for the current user.
+     *
+     * @return int The total number of planetary nebula drawings for the current user.
      */
-    public function hasCaldwellSilver(): bool
+    public function getPlanetaryNebulaDrawings(): int
     {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['caldwellSilver'];
+        return count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objects.name) from objects,observations
+                              where objects.name = observations.objectname and hasDrawing = 1
+                                and objects.type = "PLNNB" and observations.observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has observed 25 different caldwell objects
+     * Retrieves the count of galaxy observations for the current user.
+     *
+     * This function queries the 'mysqlOld' database connection and selects distinct
+     * object names from the 'objects' and 'observations' tables where the object
+     * name matches the observation object name, is of type "GALXY", and belongs to
+     * the current user. The count of these distinct object names is returned as
+     * the total number of galaxy observations for the current user.
+     *
+     * @return int The total number of galaxy observations for the current user.
      */
-    public function hasCaldwellBronze(): bool
+    public function getGalaxyObservations(): int
     {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['caldwellBronze'];
+        return count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objects.name) from objects,observations
+                              where objects.name = observations.objectname
+                                and objects.type = "GALXY" and observations.observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has drawn all 110 caldwell objects
+     * Retrieves the count of galaxy drawings for the current user.
+     *
+     * This function queries the 'mysqlOld' database connection and selects distinct
+     * object names from the 'objects' and 'observations' tables where the object
+     * name matches the observation object name, has a drawing, is of type "GALXY",
+     * and belongs to the current user. The count of these distinct object names is
+     * returned as the total number of galaxy drawings for the current user.
+     *
+     * @return int The total number of galaxy drawings for the current user.
      */
-    public function hasCaldwellGoldDrawing(): bool
+    public function getGalaxyDrawings(): int
     {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['caldwelldrawingsGold'];
+        return count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objects.name) from objects,observations
+                              where objects.name = observations.objectname and hasDrawing = 1
+                                and objects.type = "GALXY" and observations.observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has drawn 50 different caldwell objects
+     * Retrieves the count of nebula observations for the current user.
+     *
+     * This function queries the 'mysqlOld' database connection and selects distinct
+     * object names from the 'objects' and 'observations' tables where the object
+     * name matches the observation object name and belongs to one of the following
+     * object types: "EMINB", "ENRNN", "ENSTR", "REFNB", "RNHII", "HII", "SNREM",
+     * or "WRNEB". The count of these distinct object names is returned as the total
+     * number of nebula observations for the current user.
+     *
+     * @return int The total number of nebula observations for the current user.
      */
-    public function hasCaldwellSilverDrawing(): bool
+    public function getNebulaObservations(): int
     {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['caldwellDrawingsSilver'];
+        $objectTypes = [
+            'EMINB', 'ENRNN', 'ENSTR', 'REFNB', 'RNHII', 'HII', 'SNREM', 'WRNEB',
+        ];
+
+        $total = 0;
+
+        foreach ($objectTypes as $objectType) {
+            $query = 'SELECT DISTINCT(objects.name) FROM objects,observations
+                  WHERE objects.name = observations.objectname
+                  AND objects.type = ?
+                  AND observations.observerid = ?';
+            $results = DB::connection('mysqlOld')->select($query, [$objectType, $this->username]);
+            $total += count($results);
+        }
+
+        return $total;
     }
 
     /**
-     * Checks if the user has drawn 25 different caldwell objects
+     * Retrieves the count of nebula drawings for the current user.
+     *
+     * This function queries the 'mysqlOld' database connection and selects distinct
+     * object names from the 'objects' and 'observations' tables where the object
+     * name matches the observation object name, has a drawing, and belongs to one of
+     * the following object types: "EMINB", "ENRNN", "ENSTR", "REFNB", "RNHII",
+     * "HII", or "SNREM". The count of these distinct object names is returned as
+     * the total count of nebula drawings for the current user.
+     *
+     * @return int The count of nebula drawings for the current user.
      */
-    public function hasCaldwellBronzeDrawing(): bool
+    public function getNebulaDrawings(): int
     {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['caldwellDrawingsBronze'];
+        $objectTypes = [
+            'EMINB', 'ENRNN', 'ENSTR', 'REFNB', 'RNHII', 'HII', 'SNREM', 'WRNEB',
+        ];
+
+        $total = 0;
+
+        foreach ($objectTypes as $objectType) {
+            $query = 'SELECT DISTINCT(objects.name) FROM objects,observations
+                  WHERE objects.name = observations.objectname
+                  AND objects.type = ?
+                  AND observations.observerid = ?
+                  AND hasDrawing = 1';
+            $results = DB::connection('mysqlOld')->select($query, [$objectType, $this->username]);
+            $total += count($results);
+        }
+
+        return $total;
     }
 
     /**
-     * Checks if the user has observed all 400 herschel objects
+     * Retrieves the count of unique objects with observations made by the user.
+     *
+     * @return int The count of unique objects with observations.
      */
-    public function hasHerschel400Platinum(): bool
+    public function getUniqueObjectsObservations(): int
     {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelPlatina'];
+        return count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objects.name) from objects,observations
+                              where objects.name = observations.objectname
+                                and observations.observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has observed 200 herschel objects
+     * Retrieves the count of unique objects with drawings made by the user.
+     *
+     * @return int The count of unique objects with drawings.
      */
-    public function hasHerschel400Diamond(): bool
+    public function getUniqueObjectsDrawings(): int
     {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelDiamond'];
+        return count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objects.name) from objects,observations
+                              where objects.name = observations.objectname and hasDrawing = 1
+                                and observations.observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has observed 100 herschel objects
+     * Retrieves the count of comet observations made by the user.
+     *
+     * @return int The count of comet observations.
      */
-    public function hasHerschel400Gold(): bool
+    public function getCometObservations(): int
     {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelGold'];
+        return count(DB::connection('mysqlOld')
+            ->select('select * from cometobservations
+                              where observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has observed 50 different herschel objects
+     * Retrieves the count of comet drawings made by the user.
+     *
+     * @return int The count of comet drawings.
      */
-    public function hasHerschel400Silver(): bool
+    public function getCometDrawings(): int
     {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelSilver'];
+        return count(DB::connection('mysqlOld')
+            ->select('select * from cometobservations where hasDrawing = 1
+                              and observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has observed 25 different herschel objects
+     * Retrieves the count of unique comet observations made by the user.
+     *
+     * @return int The count of unique comet observations.
      */
-    public function hasHerschel400Bronze(): bool
+    public function getUniqueCometObservations(): int
     {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelBronze'];
+        return count(DB::connection('mysqlOld')
+            ->select('select DISTINCT(objectid) from cometobservations
+                              where observerid = "'.$this->username.'"'));
     }
 
     /**
-     * Checks if the user has drawn all 400 herschel objects
+     * Retrieves the total number of drawings for the current user.
+     *
+     * This function queries the 'observations' table in the 'mysqlOld' database
+     * to count the number of rows where the 'observerid' column matches the
+     * current user's username and the 'hasDrawing' column is 1.
+     *
+     * @return int The total number of drawings for the current user.
      */
-    public function hasHerschel400PlatinumDrawing(): bool
+    public function getTotalNumberOfDrawings(): int
     {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelDrawingsPlatina'];
+        return DB::connection('mysqlOld')->table('observations')
+            ->where('observerid', $this->username)
+            ->where('hasDrawing', 1)->get()->count();
     }
 
-    /**
-     * Checks if the user has drawn 200 herschel objects
-     */
-    public function hasHerschel400DiamondDrawing(): bool
+    public function isInTopTenOfObservers(): bool
     {
+        // Get all the count of all observations combined per user
+        $allObservations = DB::connection('mysqlOld')->table('observations')
+            ->select(DB::raw('count(*) as count, observerid'))
+            ->groupBy('observerid')
+            ->orderBy('count', 'desc')
+            ->get();
 
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelDrawingsDiamond'];
-    }
+        $userIndex = 0;
+        foreach ($allObservations as $user) {
+            if ($user->observerid == $this->username) {
+                break;
+            }
+            $userIndex++;
+        }
 
-    /**
-     * Checks if the user has drawn 100 herschel objects
-     */
-    public function hasHerschel400GoldDrawing(): bool
-    {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelDrawingsGold'];
-    }
-
-    /**
-     * Checks if the user has drawn 50 different herschel objects
-     */
-    public function hasHerschel400SilverDrawing(): bool
-    {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelDrawingsSilver'];
-    }
-
-    /**
-     * Checks if the user has drawn 25 different herschel objects
-     */
-    public function hasHerschel400BronzeDrawing(): bool
-    {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelDrawingsBronze'];
-    }
-
-    /**
-     * Checks if the user has observed all 400 herschelII objects
-     */
-    public function hasHerschelIIPlatinum(): bool
-    {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIPlatina'];
-    }
-
-    /**
-     * Checks if the user has observed 200 herschelII objects
-     */
-    public function hasHerschelIIDiamond(): bool
-    {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDiamond'];
-    }
-
-    /**
-     * Checks if the user has observed 100 herschelII objects
-     */
-    public function hasHerschelIIGold(): bool
-    {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIGold'];
-    }
-
-    /**
-     * Checks if the user has observed 50 different herschelII objects
-     */
-    public function hasHerschelIISilver(): bool
-    {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIISilver'];
-    }
-
-    /**
-     * Checks if the user has observed 25 different herschelII objects
-     */
-    public function hasHerschelIIBronze(): bool
-    {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIBronze'];
-    }
-
-    /**
-     * Checks if the user has drawn all 400 herschelII objects
-     */
-    public function hasHerschelIIPlatinumDrawing(): bool
-    {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDrawingsPlatina'];
-    }
-
-    /**
-     * Checks if the user has drawn 200 herschelII objects
-     */
-    public function hasHerschelIIDiamondDrawing(): bool
-    {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDrawingsDiamond'];
-    }
-
-    /**
-     * Checks if the user has drawn 100 herschelII objects
-     */
-    public function hasHerschelIIGoldDrawing(): bool
-    {
-
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDrawingsGold'];
-    }
-
-    /**
-     * Checks if the user has drawn 50 different herschelII objects
-     */
-    public function hasHerschelIISilverDrawing(): bool
-    {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDrawingsSilver'];
-    }
-
-    /**
-     * Checks if the user has drawn 25 different herschelII objects
-     */
-    public function hasHerschelIIBronzeDrawing(): bool
-    {
-        return AccomplishmentsOld::where('observer', $this->username)->first()['herschelIIDrawingsBronze'];
+        return $userIndex < 10;
     }
 }

@@ -40,312 +40,210 @@
                         @else
                             {{ __("No observations added!") }}
                         @endif
+
+                        <br />
+                        <br />
+
+                        <table class="table-auto">
+                            <!-- Default location -->
+                            <tr>
+                                <td>{{ __("Default observing site") }}</td>
+                                <td>
+                                    @if ($user->stdlocation)
+                                        <a
+                                            href="{{ config("app.old_url") }}/index.php?indexAction=detail_location&location={{ $user->stdlocation }}"
+                                        >
+                                            {!! \App\Models\LocationsOld::where(["id" => $user->stdlocation])->first()->name !!}
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <!-- Default instrument -->
+                            <tr>
+                                <td>{{ __("Default instrument") }}</td>
+                                <td>
+                                    @if ($user->stdtelescope)
+                                        <a
+                                            href="{{ config('app.old_url') }}/index.php?indexAction=detail_instrument&instrument={{ $user->stdtelescope }}"
+                                        >
+                                            {!! \App\Models\InstrumentsOld::where(["id" => $user->stdtelescope])->first()->name !!}
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <!-- Number of locations -->
+                            <tr>
+                                <td>{{ __("Number of locations") }}</td>
+                                <td>
+                                    @if (Auth::user() && $user->id === Auth::user()->id)
+                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_sites">
+                                            @endif
+                                            {{ \App\Models\LocationsOld::where(["observer" => $user->username])->count() }}
+                                            @if (Auth::user() && $user->id === Auth::user()->id)
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <!-- Number of instruments -->
+                            <tr>
+                                <td>{{ __("Number of instruments") }}</td>
+                                <td>
+                                    @if (Auth::user() && $user->id === Auth::user()->id)
+                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_instruments">
+                                            @endif
+                                            {{ \App\Models\InstrumentsOld::where(["observer" => $user->username])->count() }}
+                                            @if (Auth::user() && $user->id === Auth::user()->id)
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <!-- Number of eyepieces -->
+                            <tr>
+                                <td>{{ __("Number of eyepieces") }}</td>
+                                <td>
+                                    @if (Auth::user() && $user->id === Auth::user()->id)
+                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_eyepieces">
+                                            @endif
+                                            {{ \App\Models\EyepiecesOld::where(["observer" => $user->username])->count() }}
+                                            @if (Auth::user() && $user->id === Auth::user()->id)
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <!-- Number of filters -->
+                            <tr>
+                                <td>{{ __("Number of filters") }}</td>
+                                <td>
+                                    @if (Auth::user() && $user->id === Auth::user()->id)
+                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_filters">
+                                            @endif
+                                            {{ \App\Models\FiltersOld::where(["observer" => $user->username])->count() }}
+                                            @if (Auth::user() && $user->id === Auth::user()->id)
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <!-- Number of lenses -->
+                            <tr>
+                                <td>{{ __("Number of lenses") }}</td>
+                                <td>
+                                    @if (Auth::user() && $user->id === Auth::user()->id)
+                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_lenses">
+                                            @endif
+                                            {{ \App\Models\LensesOld::where(["observer" => $user->username])->count() }}
+                                            @if (Auth::user() && $user->id === Auth::user()->id)
+                                        </a>
+                                    @endif
+                                    {{--
+                                        @if ($user->id === Auth::user()->id)
+                                        <a href="{{ route('lens.index') }}">
+                                        @endif
+                                        {{ count($user->lenses) }}
+                                        @if ($user->id === Auth::user()->id)
+                                        </a>
+                                        @endif
+                                    --}}
+                                </td>
+                            </tr>
+
+                            <!-- Number of observing lists -->
+                            <tr>
+                                <td>{{ __("Number of observing lists") }}</td>
+                                <td>
+                                    {{--
+                                        @if ($user->id === Auth::user()->id)
+                                        <a href="{{ route('observationList.index') }}">
+                                        @endif
+                                        {{ count($user->observingLists) }}
+                                        @if ($user->id === Auth::user()->id)
+                                        </a>
+                                        @endif
+                                    --}}
+                                </td>
+                            </tr>
+
+                            <!-- Number of equipment sets -->
+                            <tr>
+                                <td>{{ __("Number of equipment sets") }}</td>
+                                <td>
+                                    {{--
+                                        @if ($user->id === Auth::user()->id)
+                                        <a href="{{ route('set.index') }}">
+                                        @endif
+                                        {{ $user->sets()->count() }}
+                                        @if ($user->id === Auth::user()->id)
+                                        </a>
+                                        @endif
+                                    --}}
+                                </td>
+                            </tr>
+
+                            <!-- Country of residence -->
+                            <tr>
+                                <td>{{ __("Country of residence") }}</td>
+                                <td>
+                                    {{--
+                                        @if ($user->country != '')
+                                        {{ Countries::getOne($user->country, LaravelGettext::getLocaleLanguage()) }}
+                                        @endif
+                                    --}}
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
-                @if ($user->about)
-                    <div class="col-span-1 row-span-2">
-                        <div class="col-span-1">
+                <div class="col-span-1 row-span-2">
+                    <div class="col-span-1">
+                        @if ($user->about)
                             <x-card class="prose max-w-none dark:prose-invert">
                                 {!! $user->about !!}
                             </x-card>
-                        </div>
+                            <br />
+                        @endif
+                        <x-card>
+                            <h2 class="mb-2 mt-2 text-xl font-bold">
+                                {{ __("DeepskyLog Trophy Gallery") }}
+                            </h2>
+
+                            <div class="flex flex-wrap gap-x-6 gap-y-4">
+                                @if ($user->achievements->count() > 0)
+                                    @foreach($user->achievements as $achievement)
+                                        <div title="{{ $achievement->description }}">
+                                            <svg width="100" height="100">
+                                                <image xlink:href="{{ $achievement->image }}"
+                                                       src="{{ $achievement->image }}"
+                                                       width="100" height="100" />
+                                            </svg>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </x-card>
+
                     </div>
-                @endif
+                </div>
             </div>
 
             <br />
 
-            <div class="grid grid-cols-2">
-                <div class="col-span-1">
-                    {{-- TODO: Add extra information --}}
-                </div>
-                <div class="col-span-1">
-                    {{-- Show DeepskyLog stars: Throphee Gallery --}}
-                    <x-card>
-                        <h2 class="mb-2 mt-2 text-xl font-bold">
-                            {{ __("DeepskyLog Trophy Gallery") }}
-                        </h2>
-                        <div class="flex flex-wrap gap-x-6 gap-y-4">
-                            @if ($user->isEarlyAdopter())
-                                <x-trophy.earlyAdopter class="h-20 w-20" />
-                            @endif
-
-                            {{-- MESSIER --}}
-                            @if ($user->hasMessierGold())
-                                <x-trophy.messierGold class="h-20 w-20" />
-                            @elseif ($user->hasMessierSilver())
-                                <x-trophy.messierSilver class="h-20 w-20" />
-                            @elseif ($user->hasMessierBronze())
-                                <x-trophy.messierBronze class="h-20 w-20" />
-                            @endif
-                            @if ($user->hasMessierGoldDrawing())
-                                <x-trophy.messierGoldDrawing
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasMessierSilverDrawing())
-                                <x-trophy.messierSilverDrawing
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasMessierBronzeDrawing())
-                                <x-trophy.messierBronzeDrawing
-                                    class="h-20 w-20"
-                                />
-                            @endif
-                            {{-- CALDWELL --}}
-                            @if ($user->hasCaldwellGold())
-                                <x-trophy.caldwellGold class="h-20 w-20" />
-                            @elseif ($user->hasCaldwellSilver())
-                                <x-trophy.caldwellSilver class="h-20 w-20" />
-                            @elseif ($user->hasCaldwellBronze())
-                                <x-trophy.caldwellBronze class="h-20 w-20" />
-                            @endif
-                            @if ($user->hasCaldwellGoldDrawing())
-                                <x-trophy.caldwellGoldDrawing
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasCaldwellSilverDrawing())
-                                <x-trophy.caldwellSilverDrawing
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasCaldwellBronzeDrawing())
-                                <x-trophy.caldwellBronzeDrawing
-                                    class="h-20 w-20"
-                                />
-                            @endif
-                            {{-- HERSCHEL 400 --}}
-                            @if ($user->hasHerschel400Platinum())
-                                <x-trophy.herschel400Platinum
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasHerschel400Diamond())
-                                <x-trophy.herschel400Diamond
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasHerschel400Gold())
-                                <x-trophy.herschel400Gold class="h-20 w-20" />
-                            @elseif ($user->hasHerschel400Silver())
-                                <x-trophy.herschel400Silver class="h-20 w-20" />
-                            @elseif ($user->hasHerschel400Bronze())
-                                <x-trophy.herschel400Bronze class="h-20 w-20" />
-                            @endif
-                            @if ($user->hasHerschel400PlatinumDrawing())
-                                <x-trophy.herschel400PlatinumDrawing
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasHerschel400DiamondDrawing())
-                                <x-trophy.herschel400DiamondDrawing
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasHerschel400GoldDrawing())
-                                <x-trophy.herschel400GoldDrawing
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasHerschel400SilverDrawing())
-                                <x-trophy.herschel400SilverDrawing
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasHerschel400BronzeDrawing())
-                                <x-trophy.herschel400BronzeDrawing
-                                    class="h-20 w-20"
-                                />
-                            @endif
-                            {{-- HERSCHEL II --}}
-                            @if ($user->hasHerschelIIPlatinum())
-                                <x-trophy.herschelIIPlatinum
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasHerschelIIDiamond())
-                                <x-trophy.herschelIIDiamond class="h-20 w-20" />
-                            @elseif ($user->hasHerschelIIGold())
-                                <x-trophy.herschelIIGold class="h-20 w-20" />
-                            @elseif ($user->hasHerschelIISilver())
-                                <x-trophy.herschelIISilver class="h-20 w-20" />
-                            @elseif ($user->hasHerschelIIBronze())
-                                <x-trophy.herschelIIBronze class="h-20 w-20" />
-                            @endif
-                            @if ($user->hasHerschelIIPlatinumDrawing())
-                                <x-trophy.herschelIIPlatinumDrawing
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasHerschelIIDiamondDrawing())
-                                <x-trophy.herschelIIDiamondDrawing
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasHerschelIIGoldDrawing())
-                                <x-trophy.herschelIIGoldDrawing
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasHerschelIISilverDrawing())
-                                <x-trophy.herschelIISilverDrawing
-                                    class="h-20 w-20"
-                                />
-                            @elseif ($user->hasHerschelIIBronzeDrawing())
-                                <x-trophy.herschelIIBronzeDrawing
-                                    class="h-20 w-20"
-                                />
-                            @endif
-                        </div>
-                    </x-card>
-                </div>
-            </div>
-
             <!-- Personal tab -->
             <div class="tab-pane active" id="info">
-                <table class="table-auto">
-                    <!-- Default location -->
-                    <tr>
-                        <td>{{ __("Default observing site") }}</td>
-                        <td>
-                            @if ($user->stdlocation)
-                                <a
-                                    href="{{ config("app.old_url") }}/index.php?indexAction=detail_location&location={{ $user->stdlocation }}"
-                                >
-                                    {!! \App\Models\LocationsOld::where(["id" => $user->stdlocation])->first()->name !!}
-                                </a>
-                            @endif
-                        </td>
-                    </tr>
 
-                    <!-- Default instrument -->
-                    <tr>
-                        <td>{{ __("Default instrument") }}</td>
-                        <td>
-                            @if ($user->stdtelescope)
-                                <a
-                                    href="{{ config('app.old_url') }}/index.php?indexAction=detail_instrument&instrument={{ $user->stdtelescope }}"
-                                >
-                                    {!! \App\Models\InstrumentsOld::where(["id" => $user->stdtelescope])->first()->name !!}
-                                </a>
-                            @endif
-                        </td>
-                    </tr>
-
-                    <!-- Number of locations -->
-                    <tr>
-                        <td>{{ __("Number of locations") }}</td>
-                        <td>
-                            @if ($user->id === Auth::user()->id)
-                                <a href="{{ config('app.old_url') }}/index.php?indexAction=view_sites">
-                                    @endif
-                                    {{ \App\Models\LocationsOld::where(["observer" => $user->username])->count() }}
-                                    @if ($user->id === Auth::user()->id)
-                                </a>
-                            @endif
-                        </td>
-                    </tr>
-
-                    <!-- Number of instruments -->
-                    <tr>
-                        <td>{{ __("Number of instruments") }}</td>
-                        <td>
-                            @if ($user->id === Auth::user()->id)
-                                <a href="{{ config('app.old_url') }}/index.php?indexAction=view_instruments">
-                                    @endif
-                                    {{ \App\Models\InstrumentsOld::where(["observer" => $user->username])->count() }}
-                                    @if ($user->id === Auth::user()->id)
-                                </a>
-                            @endif
-                        </td>
-                    </tr>
-
-                    <!-- Number of eyepieces -->
-                    <tr>
-                        <td>{{ __("Number of eyepieces") }}</td>
-                        <td>
-                            @if ($user->id === Auth::user()->id)
-                                <a href="{{ config('app.old_url') }}/index.php?indexAction=view_eyepieces">
-                                    @endif
-                                    {{ \App\Models\EyepiecesOld::where(["observer" => $user->username])->count() }}
-                                    @if ($user->id === Auth::user()->id)
-                                </a>
-                            @endif
-                        </td>
-                    </tr>
-
-                    <!-- Number of filters -->
-                    <tr>
-                        <td>{{ __("Number of filters") }}</td>
-                        <td>
-                            {{--
-                                @if ($user->id === Auth::user()->id)
-                                <a href="{{ route('filter.index') }}">
-                                @endif
-                                {{ count($user->filters) }}
-                                @if ($user->id === Auth::user()->id)
-                                </a>
-                                @endif
-                            --}}
-                        </td>
-                    </tr>
-
-                    <!-- Number of lenses -->
-                    <tr>
-                        <td>{{ __("Number of lenses") }}</td>
-                        <td>
-                            {{--
-                                @if ($user->id === Auth::user()->id)
-                                <a href="{{ route('lens.index') }}">
-                                @endif
-                                {{ count($user->lenses) }}
-                                @if ($user->id === Auth::user()->id)
-                                </a>
-                                @endif
-                            --}}
-                        </td>
-                    </tr>
-
-                    <!-- Number of observing lists -->
-                    <tr>
-                        <td>{{ __("Number of observing lists") }}</td>
-                        <td>
-                            {{--
-                                @if ($user->id === Auth::user()->id)
-                                <a href="{{ route('observationList.index') }}">
-                                @endif
-                                {{ count($user->observingLists) }}
-                                @if ($user->id === Auth::user()->id)
-                                </a>
-                                @endif
-                            --}}
-                        </td>
-                    </tr>
-
-                    <!-- Number of equipment sets -->
-                    <tr>
-                        <td>{{ __("Number of equipment sets") }}</td>
-                        <td>
-                            {{--
-                                @if ($user->id === Auth::user()->id)
-                                <a href="{{ route('set.index') }}">
-                                @endif
-                                {{ $user->sets()->count() }}
-                                @if ($user->id === Auth::user()->id)
-                                </a>
-                                @endif
-                            --}}
-                        </td>
-                    </tr>
-
-                    <!-- Country of residence -->
-                    <tr>
-                        <td>{{ __("Country of residence") }}</td>
-                        <td>
-                            {{--
-                                @if ($user->country != '')
-                                {{ Countries::getOne($user->country, LaravelGettext::getLocaleLanguage()) }}
-                                @endif
-                            --}}
-                        </td>
-                    </tr>
-
+                <table class="table-striped table-sm table">
                     <!-- Copyright notice -->
                     <tr>
                         <td>{{ __("Copyright notice") }}</td>
                         <td>{!! $user->getCopyright() !!}</td>
                     </tr>
-                </table>
-
-                <table class="table-striped table-sm table">
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
                     <tr>
                         <th></th>
                         <th>{{ __("Total") }}</th>
