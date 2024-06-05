@@ -24,31 +24,33 @@
 + [X] Add team member should show a list of observers, not just an option to add a person using an email address.
 + [X] Move to slugs for the username and the team names
 + [X] Make code work again with new version of laravel, livewire, ...
-+ [ ] Refactor the accomplishment methods to make them more general.
-    + [X] Add achievements in the database seeder
-    + [X] Run script every 30 minutes to update the achievements
-    + [X] Sketch of the week -> If negative -> cometobservation!
-    + [X] Top 10 observer
-+ [ ] We also need the login menu in the app.blade.php -> Remove guest.blade.php
++ [X] Refactor the accomplishment methods to make them more general.
++ [ ] Create menu for the new version
+    + [X] Create all menus
+    + [ ] Create Download Magazines page
+    + [ ] Menu for small screens
+    + [ ] Add observing list does not work...
+    + [ ] Is observing lists selection needed?
 + [ ] Finish observer detail page
     + [ ] Add number of unique objects seen and drawn
     + [ ] Add total number of observations
     + [ ] Add all DeepskyLog sketches of the Week / Month to the observer detail page
-+ [ ] Create a new page to see the observer details (when someone clicks on the observer)
     + [ ] Add link to the rows in the user administrator page to go directly to the observer
     + [ ] Make sure that users which have observations, ... can not be deleted in the user administrator page
     + [ ] Add administrator only options
+    + [ ] Add https://laravel-comments.com/ (not free), https://github.com/ryangjchandler/laravel-comments,
+      or https://github.com/anilkumarthakur60/Commentable/ for commenting on observer?
 + [ ] Test on Phone
 + [ ] Add translations for the new version
     + [ ] Also adapt the code in api.php and User.php to translate the country names, and the language names.
     + [ ] Automatically change the language of the UI when the language settings are changed
-+ [ ] Check if the user belongs to the correct role / team
 + [ ] Use the old version of DeepskyLog alongside the new version
     + [ ] Add the code
     + [X] Fix the code for php 8.3
-    + [ ] Change the link to the user settings page.
+    + [ ] Change the link to the user settings page
     + [ ] Change the link to the user information page
-+ [ ] Create menu for the new version
+    + [ ] Check if the user belongs to the correct role / team
+    + [ ] Change the link to the observer detail page
 + [ ] Check log in using the new version and try using one of the old pages as logged-in user
     + [ ] Change links in the old version, also for the sponsor page (http://deepskylog.test/sponsors)
     + [ ] Update the log in code in the old DeepskyLog

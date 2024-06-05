@@ -1,14 +1,15 @@
-<x-guest-layout>
-    <div class="pt-4 bg-gray-900 text-gray-300">
-        <div class="min-h-screen flex flex-col items-center pt-6 sm:pt-0">
+<x-app-layout>
+    <div class="bg-gray-900 pt-4 text-gray-300">
+        <div class="flex min-h-screen flex-col items-center pt-6 sm:pt-0">
             <div>
                 <x-authentication-card-logo />
             </div>
 
             <div
-                class="w-full sm:max-w-2xl mt-6 p-6 bg-gray-800 shadow-md overflow-hidden sm:rounded-lg prose prose-invert text-gray-300">
+                class="prose prose-invert mt-6 w-full overflow-hidden bg-gray-800 p-6 text-gray-300 shadow-md sm:max-w-2xl sm:rounded-lg"
+            >
                 {!! $policy !!}
             </div>
         </div>
     </div>
-</x-guest-layout>
+</x-app-layout>

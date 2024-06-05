@@ -27,6 +27,10 @@ Route::middleware([
     })->name('dashboard');
 });
 
+Route::get('/privacy', function () {
+    return view('privacy');
+})->name('privacy');
+
 // Teams
 Route::get('/teams/{team}', 'App\Http\Controllers\DeepskyLogTeamController@show')->name('teams.show');
 
