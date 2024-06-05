@@ -27,10 +27,11 @@
 + [X] Refactor the accomplishment methods to make them more general.
 + [ ] Create menu for the new version
     + [X] Create all menus
-    + [ ] Create Download Magazines page
+    + [X] Create Download Magazines page
     + [ ] Menu for small screens
     + [ ] Add observing list does not work...
     + [ ] Is observing lists selection needed?
+    + [ ] Test on Phone
 + [ ] Finish observer detail page
     + [ ] Add number of unique objects seen and drawn
     + [ ] Add total number of observations
@@ -40,7 +41,6 @@
     + [ ] Add administrator only options
     + [ ] Add https://laravel-comments.com/ (not free), https://github.com/ryangjchandler/laravel-comments,
       or https://github.com/anilkumarthakur60/Commentable/ for commenting on observer?
-+ [ ] Test on Phone
 + [ ] Add translations for the new version
     + [ ] Also adapt the code in api.php and User.php to translate the country names, and the language names.
     + [ ] Automatically change the language of the UI when the language settings are changed
@@ -49,6 +49,7 @@
     + [X] Fix the code for php 8.3
     + [ ] Change the link to the user settings page
     + [ ] Change the link to the user information page
+    + [ ] Add the link to download the Deep-sky magazines
     + [ ] Check if the user belongs to the correct role / team
     + [ ] Change the link to the observer detail page
 + [ ] Check log in using the new version and try using one of the old pages as logged-in user
@@ -89,10 +90,10 @@ if ($id) {
 
 ### Next steps
 
-+ Messages in DeepskyLog?
++ Messages in DeepskyLog
     + Also messages for everyone // like a forum
 + Index page
-+ Instruments, locations, eyepieces, filters, lenses, ...
++ Instruments, locations, eyepieces, filters, lenses, sets, ...
 + Sessions
     + Overview page with all images
     + Blog style?

@@ -6,11 +6,11 @@
             </h2>
             <br />
 
-            {{ "DeepskyLog is a free web application, and we want to keep DeepskyLog ad-free forever.  There are however some costs involved in the development and maintenance of DeepskyLog." }}
+            {{ __("DeepskyLog is a free web application, and we want to keep DeepskyLog ad-free forever.  There are however some costs involved in the development and maintenance of DeepskyLog.") }}
             <br />
-            {{ "Everybody who sponsors DeepskyLog will appear with his / her the company name on this page." }}
+            {{ __("Everybody who sponsors DeepskyLog will appear with his / her the company name on this page.") }}
             <br />
-            {{ "You can get more information on sponsoring DeepskyLog by sending us a mail:" }}
+            {{ __("You can get more information on sponsoring DeepskyLog by sending us a mail:") }}
             <br />
             <br />
             <a href="mailto:deepskylog@groups.io">
@@ -23,7 +23,7 @@
             </a>
             <br />
             <br />
-            <h5>Main Sponsors</h5>
+            <h5>{{ __("Main Sponsors") }}</h5>
             <hr />
             <br />
             <a href="https://www.vvs.be/">

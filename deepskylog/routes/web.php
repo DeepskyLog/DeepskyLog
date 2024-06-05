@@ -40,3 +40,8 @@ Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@sho
 Route::get('/sponsors', function () {
     return view('layouts.sponsors');
 });
+
+// Downloads
+Route::get('/downloads/magazines', function () {
+    return view('layouts.downloads.magazines');
+});
