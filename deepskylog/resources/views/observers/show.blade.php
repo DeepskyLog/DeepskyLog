@@ -389,13 +389,13 @@
                 </table>
 
                 <br />
-                <x-button gray icon="eye"
+                <x-button gray icon="eye" class="mb-2"
                           href='{{ config("app.old_url") }}/index.php?indexAction=result_selected_observations&observer={{ $user->username }}'
                 >
                     {{ __("All observations of ") . $user->name }}
                 </x-button>
 
-                <x-button gray icon="pencil"
+                <x-button gray icon="pencil" class="mb-2"
                           href="{{ config('app.old_url') }}/index.php?indexAction=show_drawings&user={{ $user->username }}"
                 >
 
@@ -403,7 +403,7 @@
                 </x-button>
 
                 @if (Auth::user() && $user->id != Auth::user()->id)
-                    <x-button gray icon="mail"
+                    <x-button gray icon="mail" class="mb-2"
                               href="{{ config('app.old_url') }}/index.php?indexAction=new_message&receiver={{ $user->username }}"
                     >
                         {{ __("Send message to ") . $user->name }}
