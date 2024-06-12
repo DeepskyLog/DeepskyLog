@@ -1,6 +1,6 @@
 <nav x-data="{ open: false }" class="border-b border-gray-700 bg-gray-900">
     <!-- Primary Navigation Menu -->
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 justify-between">
             <div class="flex">
                 <!-- Navigation Links -->
