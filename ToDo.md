@@ -29,18 +29,19 @@
     + [X] Create all menus
     + [X] Create Download Magazines page
     + [ ] Menu for small screens
+    + [ ] Test on Phone
     + [ ] Add observing list does not work...
     + [ ] Is observing lists selection needed?
-    + [ ] Test on Phone
 + [ ] Finish observer detail page
-    + [ ] Add number of unique objects seen and drawn
-    + [ ] Add total number of observations
+    + [X] Add number of unique objects seen and drawn
     + [ ] Add all DeepskyLog sketches of the Week / Month to the observer detail page
+    + [ ] Speed up the observer detail page
+    + [ ] Add https://laravel-comments.com/ (not free), https://github.com/ryangjchandler/laravel-comments,
+      or https://github.com/anilkumarthakur60/Commentable/ for commenting on observer?
++ [ ] User administration page
     + [ ] Add link to the rows in the user administrator page to go directly to the observer
     + [ ] Make sure that users which have observations, ... can not be deleted in the user administrator page
     + [ ] Add administrator only options
-    + [ ] Add https://laravel-comments.com/ (not free), https://github.com/ryangjchandler/laravel-comments,
-      or https://github.com/anilkumarthakur60/Commentable/ for commenting on observer?
 + [ ] Add translations for the new version
     + [ ] Also adapt the code in api.php and User.php to translate the country names, and the language names.
     + [ ] Automatically change the language of the UI when the language settings are changed

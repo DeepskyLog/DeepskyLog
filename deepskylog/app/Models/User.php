@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
@@ -578,6 +579,11 @@ class User extends Authenticatable implements MustVerifyEmail
             ->where('hasDrawing', 1)->get()->count();
     }
 
+    /**
+     * Get whether the user is in the top ten of observers based on the count of their observations.
+     *
+     * @return bool Whether the user is in the top ten of observers.
+     */
     public function isInTopTenOfObservers(): bool
     {
         // Get all the count of all observations combined per user
@@ -596,5 +602,141 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $userIndex < 10;
+    }
+
+    /**
+     * Retrieves the list names of the user's observing lists.
+     *
+     * @return Collection The collection of distinct list names.
+     */
+    public function getObservingLists(): Collection
+    {
+        // Get the distinct list names of the user's observing lists
+        return ObserverListOld::where('observerid', $this->username)->distinct('listname')->get('listname');
+    }
+
+    /**
+     * Retrieves the list names of the user's public observing lists.
+     *
+     * @return Collection The collection of distinct list names.
+     */
+    public function getPublicObservingLists(): Collection
+    {
+        // Get the distinct list names of the user's observing lists
+        return ObserverListOld::where('observerid', $this->username)->where('public', 1)->distinct('listname')->get('listname');
+    }
+
+    /**
+     * Retrieves the count of deep sky observations made by the user in the last year.
+     *
+     * This method calculates the total number of deep sky observations made by the user in the last year.
+     * It first retrieves the current year and subtracts one to get the previous year.
+     * It then queries the 'observations' table for entries where the 'date' column's year is greater than or equal to the last year
+     * and the 'observerid' matches the current user's username.
+     *
+     * The count of these entries is returned, representing the total number of deep sky observations made by the user in the last year.
+     *
+     * @return int The total number of deep sky observations made by the user in the last year.
+     */
+    public function getDeepskyObservationsLastYear(): int
+    {
+        // Get the observations from the last year
+        $lastYear = date('Ymd') - 10000;
+
+        return ObservationsOld::where('date', '>=', $lastYear)->where('observerid', $this->username)->count();
+    }
+
+    /**
+     * Retrieves the count of comet observations made by the user in the last year.
+     *
+     * This method calculates the total number of comet observations made by the user in the last year.
+     * It first retrieves the current year and subtracts one to get the previous year.
+     * It then queries the 'cometobservations' table for entries where the 'date' column's year is greater than or equal to the last year
+     * and the 'observerid' matches the current user's username.
+     *
+     * The count of these entries is returned, representing the total number of comet observations made by the user in the last year.
+     *
+     * @return int The total number of comet observations made by the user in the last year.
+     */
+    public function getCometObservationsLastYear(): int
+    {
+        // Get the observations from the last year
+        $lastYear = date('Ymd') - 10000;
+
+        return CometObservationsOld::where('date', '>=', $lastYear)->where('observerid', $this->username)->count();
+    }
+
+    /**
+     * Retrieves the count of deep sky drawings made by the user in the last year.
+     *
+     * This method calculates the total number of deep sky drawings made by the user in the last year.
+     * It first retrieves the current year and subtracts one to get the previous year.
+     * It then queries the 'observations' table for entries where the 'date' column's year is greater than or equal to the last year,
+     * the 'observerid' matches the current user's username, and the 'hasDrawing' column is set to 1 (indicating that the observation has a drawing).
+     *
+     * The count of these entries is returned, representing the total number of deep sky drawings made by the user in the last year.
+     *
+     * @return int The total number of deep sky drawings made by the user in the last year.
+     */
+    public function getDeepskyDrawingsLastYear(): int
+    {
+        // Get the observations from the last year
+        $lastYear = date('Ymd') - 10000;
+
+        return ObservationsOld::where('date', '>=', $lastYear)->where('observerid', $this->username)->where('hasDrawing', 1)->count();
+    }
+
+    /**
+     * Retrieves the count of comet drawings made by the user in the last year.
+     *
+     * This method calculates the total number of comet drawings made by the user in the last year.
+     * It first retrieves the current year and subtracts one to get the previous year.
+     * It then queries the 'cometobservations' table for entries where the 'date' column's year is greater than or equal to the last year,
+     * the 'observerid' matches the current user's username, and the 'hasDrawing' column is set to 1 (indicating that the observation has a drawing).
+     *
+     * The count of these entries is returned, representing the total number of comet drawings made by the user in the last year.
+     *
+     * @return int The total number of comet drawings made by the user in the last year.
+     */
+    public function getCometDrawingsLastYear(): int
+    {
+        // Get the observations from the last year
+        $lastYear = date('Ymd') - 10000;
+
+        return CometObservationsOld::where('date', '>=', $lastYear)->where('observerid', $this->username)->where('hasDrawing', 1)->count();
+    }
+
+    /**
+     * Retrieves the rank of the user based on the count of their observations.
+     *
+     * This method calculates the rank of the user among all users based on the count of their observations.
+     * It first retrieves the count of all observations made by each user from the 'observations' table,
+     * groups them by 'observerid', and orders them in descending order of count.
+     *
+     * It then iterates over these grouped observations, incrementing a user index until it finds the current user's username.
+     * The user index at this point represents the rank of the user among all users based on the count of their observations.
+     *
+     * The rank is returned as an integer. Note that the rank is zero-based, so a rank of 0 means the user has the highest count of observations.
+     *
+     * @return int The rank of the user based on the count of their observations.
+     */
+    public function getRank(): int
+    {
+        // Get all the count of all observations combined per user
+        $allObservations = DB::connection('mysqlOld')->table('observations')
+            ->select(DB::raw('count(*) as count, observerid'))
+            ->groupBy('observerid')
+            ->orderBy('count', 'desc')
+            ->get();
+
+        $userIndex = 0;
+        foreach ($allObservations as $user) {
+            if ($user->observerid == $this->username) {
+                break;
+            }
+            $userIndex++;
+        }
+
+        return $userIndex;
     }
 }

@@ -29,6 +29,7 @@
         "wireui/wireui": "^1"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.13",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "*",
         "laravel/sail": "^1.0.1",

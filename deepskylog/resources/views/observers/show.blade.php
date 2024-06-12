@@ -140,59 +140,61 @@
                                             @if (Auth::user() && $user->id === Auth::user()->id)
                                         </a>
                                     @endif
-                                    {{--
-                                        @if ($user->id === Auth::user()->id)
-                                        <a href="{{ route('lens.index') }}">
-                                        @endif
-                                        {{ count($user->lenses) }}
-                                        @if ($user->id === Auth::user()->id)
-                                        </a>
-                                        @endif
-                                    --}}
                                 </td>
                             </tr>
 
                             <!-- Number of observing lists -->
                             <tr>
-                                <td>{{ __("Number of observing lists") }}</td>
+                                <td>{{ __("Total number of observing lists") }}</td>
                                 <td>
-                                    {{--
-                                        @if ($user->id === Auth::user()->id)
-                                        <a href="{{ route('observationList.index') }}">
-                                        @endif
-                                        {{ count($user->observingLists) }}
-                                        @if ($user->id === Auth::user()->id)
+                                    @if (Auth::user() && $user->id === Auth::user()->id)
+                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_lists">
+                                            @endif
+                                            {{ $user->getObservingLists()->count() }}
+                                            @if (Auth::user() && $user->id === Auth::user()->id)
                                         </a>
-                                        @endif
-                                    --}}
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <!-- Number of observing lists -->
+                            <tr>
+                                <td>{{ __("Public observing lists") }}</td>
+                                <td>
+                                    @if (Auth::user() && $user->id === Auth::user()->id)
+                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_lists">
+                                            @endif
+                                            {{ $user->getPublicObservingLists()->count() }}
+                                            @if (Auth::user() && $user->id === Auth::user()->id)
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
 
                             <!-- Number of equipment sets -->
-                            <tr>
-                                <td>{{ __("Number of equipment sets") }}</td>
-                                <td>
-                                    {{--
-                                        @if ($user->id === Auth::user()->id)
-                                        <a href="{{ route('set.index') }}">
-                                        @endif
-                                        {{ $user->sets()->count() }}
-                                        @if ($user->id === Auth::user()->id)
-                                        </a>
-                                        @endif
-                                    --}}
-                                </td>
-                            </tr>
+                            {{--                            <tr>--}}
+                            {{--                                <td>{{ __("Number of equipment sets") }}</td>--}}
+                            {{--                                <td>--}}
+                            {{--
+                                @if ($user->id === Auth::user()->id)
+                                <a href="{{ route('set.index') }}">
+                                @endif
+                                {{ $user->sets()->count() }}
+                                @if ($user->id === Auth::user()->id)
+                                </a>
+                                @endif
+                            --}}
+                            {{--                                </td>--}}
+                            {{--                            </tr>--}}
 
                             <!-- Country of residence -->
                             <tr>
                                 <td>{{ __("Country of residence") }}</td>
                                 <td>
-                                    {{--
-                                        @if ($user->country != '')
-                                        {{ Countries::getOne($user->country, LaravelGettext::getLocaleLanguage()) }}
-                                        @endif
-                                    --}}
+                                    @if ($user->country != '')
+                                        {{ Countries::getOne($user->country) }}
+                                        {{--                                        {{ Countries::getOne($user->country, LaravelGettext::getLocaleLanguage()) }}--}}
+                                    @endif
                                 </td>
                             </tr>
                         </table>
@@ -202,38 +204,42 @@
                     <div class="col-span-1">
                         @if ($user->about)
                             <x-card class="prose max-w-none dark:prose-invert">
-                                {!! $user->about !!}
+                                <h2 class="mb-2 mt-2 text-xl px-5 font-bold">
+                                    {{ __("About me") }}
+                                </h2>
+                                <div class="px-5 ">
+                                    {!! $user->about !!}
+                                </div>
                             </x-card>
                             <br />
                         @endif
-                        <x-card>
-                            <h2 class="mb-2 mt-2 text-xl font-bold">
-                                {{ __("DeepskyLog Trophy Gallery") }}
-                            </h2>
-
-                            <div class="flex flex-wrap gap-x-6 gap-y-4">
-                                @if ($user->achievements->count() > 0)
-                                    @foreach($user->achievements as $achievement)
-                                        <div title="{{ $achievement->description }}">
-                                            <svg width="100" height="100">
-                                                <image xlink:href="{{ $achievement->image }}"
-                                                       src="{{ $achievement->image }}"
-                                                       width="100" height="100" />
-                                            </svg>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </x-card>
-
                     </div>
                 </div>
             </div>
 
             <br />
 
+            <x-card>
+                <h2 class="mb-2 mt-2 text-xl px-5 font-bold">
+                    {{ __("DeepskyLog Trophy Gallery") }}
+                </h2>
+
+                <div class="flex flex-wrap gap-x-6 gap-y-4 px-5">
+                    @if ($user->achievements->count() > 0)
+                        @foreach($user->achievements as $achievement)
+                            <div title="{{ $achievement->description }}">
+                                <svg width="100" height="100">
+                                    <image xlink:href="{{ $achievement->image }}"
+                                           src="{{ $achievement->image }}"
+                                           width="100" height="100" />
+                                </svg>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+            </x-card>
             <!-- Personal tab -->
-            <div class="tab-pane active" id="info">
+            <div class="py-4">
 
                 <table class="table-striped table-sm table">
                     <!-- Copyright notice -->
@@ -244,209 +250,164 @@
                     <tr>
                         <td>&nbsp;</td>
                     </tr>
+                </table>
+                <table class="table-auto">
                     <tr>
                         <th></th>
                         <th>{{ __("Total") }}</th>
-                        {{--
-                            @foreach ($observationTypes as $type)
-                            <th>{{ __($type->name) }}</th>
-                            @endforeach
-                        --}}
+                        <th>{{ __("Deepsky") }}</th>
+                        <th>{{ __("Comets") }}</th>
                     </tr>
 
                     <tr>
                         <td>{{ __("Number of observations") }}</td>
-                        <td>36 / 6000 (0.06%)</td>
-                        {{--
-                            @foreach ($observationTypes as $type)
-                            <td>6 / 1000 (0.06%)</td>
-                            @endforeach
-                        --}}
+                        <td>{{ \App\Models\ObservationsOld::where("observerid", $user->username)->count() + \App\Models\CometObservationsOld::where("observerid", $user->username)->count() }}
+                            / {{ \App\Models\ObservationsOld::getTotalObservations() + \App\Models\CometObservationsOld::getTotalObservations() }}
+                        </td>
+                        <td>{{ \App\Models\ObservationsOld::where("observerid", $user->username)->count() }}
+                            / {{ \App\Models\ObservationsOld::getTotalObservations() }}
+                        </td>
+                        <td>{{ \App\Models\CometObservationsOld::where("observerid", $user->username)->count() }}
+                            / {{ \App\Models\CometObservationsOld::getTotalObservations() }}
+                        </td>
                     </tr>
 
                     <tr>
                         <td>{{ __("Observations last year") }}</td>
-                        <td>30 / 300 (10.0%)</td>
-                        {{--
-                            @foreach ($observationTypes as $type)
-                            <td>5 / 50 (10.0%)</td>
-                            @endforeach
-                        --}}
+                        <td>{{ $user->getDeepskyObservationsLastYear() + $user->getCometObservationsLastYear() }} /
+                            {{ \App\Models\ObservationsOld::getTotalObservationsLastYear() + \App\Models\CometObservationsOld::getTotalObservationsLastYear()}}
+                        </td>
+                        <td>{{ $user->getDeepskyObservationsLastYear() }}
+                            / {{ \App\Models\ObservationsOld::getTotalObservationsLastYear() }}
+                        </td>
+                        <td>{{ $user->getCometObservationsLastYear() }}
+                            / {{ \App\Models\CometObservationsOld::getTotalObservationsLastYear() }}
+                        </td>
                     </tr>
 
                     <tr>
                         <td>{{ __("Number of drawings") }}</td>
-                        <td>24 / 1200 (0.5%)</td>
-                        {{--
-                            @foreach ($observationTypes as $type)
-                            <td>4 / 2000 (0.5%)</td>
-                            @endforeach
-                        --}}
+                        <td>{{ \App\Models\ObservationsOld::where("observerid", $user->username)->where("hasDrawing", 1)->count()
+                                + \App\Models\CometObservationsOld::where("observerid", $user->username)->where("hasDrawing", 1)->count()}}
+                            /
+                            {{ \App\Models\ObservationsOld::where("hasDrawing", 1)->count() + \App\Models\CometObservationsOld::where("hasDrawing", 1)->count() }}
+                        </td>
+                        <td>{{ \App\Models\ObservationsOld::where("observerid", $user->username)->where("hasDrawing", 1)->count() }}
+                            /
+                            {{ \App\Models\ObservationsOld::where("hasDrawing", 1)->count() }}
+                        </td>
+                        <td>{{ \App\Models\CometObservationsOld::where("observerid", $user->username)->where("hasDrawing", 1)->count() }}
+                            /
+                            {{ \App\Models\CometObservationsOld::where("hasDrawing", 1)->count() }}
+                        </td>
                     </tr>
 
                     <tr>
                         <td>{{ __("Drawings last year") }}</td>
-                        <td>6 / 60 (1.0%)</td>
-                        {{--
-                            @foreach ($observationTypes as $type)
-                            <td>1 / 10 (1.0%)</td>
-                            @endforeach
-                        --}}
+                        <td>{{ $user->getDeepskyDrawingsLastYear() + $user->getCometDrawingsLastYear() }} /
+                            {{ \App\Models\ObservationsOld::getTotalDrawingsLastYear() + \App\Models\CometObservationsOld::getTotalDrawingsLastYear()}}
+                        </td>
+                        <td>{{ $user->getDeepskyDrawingsLastYear() }}
+                            / {{ \App\Models\ObservationsOld::getTotalDrawingsLastYear() }}
+                        </td>
+                        <td>{{ $user->getCometDrawingsLastYear() }}
+                            / {{ \App\Models\CometObservationsOld::getTotalDrawingsLastYear() }}
+                        </td>
                     </tr>
 
                     <tr>
                         <td>{{ __("Different objects") }}</td>
-                        {{--
-                            <td>0 / {{ \App\Models\Target::count() }}
-                            ({{ number_format((0 / \App\Models\Target::count()) * 100, 2) }}%)</td>
-                            @foreach ($observationTypes as $type)
-                            <td>0 / {{ $numberOfObjects[$type->type] }}
-                            (@if ($numberOfObjects[$type->type] == 0)
-                            0%)
-                            @else
-                            {{ number_format((0 / $numberOfObjects[$type->type]) * 100, 2) }}%) </beautify
-                            end="
-                            @endif">
-                            </td>
-                            @endforeach
-                        --}}
+                        <td>{{ $user->getUniqueObjectsObservations() + $user->getUniqueCometObservations() }} /
+                            {{ \App\Models\ObservationsOld::getUniqueObjectsObserved() }}</td>
+                        <td>{{ $user->getUniqueObjectsObservations() }}
+                            / {{ \App\Models\ObservationsOld::getUniqueObjectsObserved() }}</td>
+                        <td>{{ $user->getUniqueCometObservations() }} /
+                            {{ \App\Models\CometObservationsOld::getUniqueObjectsObserved() }}</td>
                     </tr>
 
                     <tr>
                         <td>{{ __("Messier objects") }}</td>
                         <td></td>
-                        {{--
-                            @foreach ($observationTypes as $type)
-                            @if ($type->type == 'ds')
-                            <td>110 / 110 (100%)</td>
-                            @else
-                            <td></td>
-                            @endif
-                            @endforeach
-                        --}}
+                        <td>{{ $user->getObservedCountFromCatalog('M') }} / 110</td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>{{ __("Drawings of Messier objects") }}</td>
+                        <td></td>
+                        <td>{{ $user->getDrawingCountFromCatalog('M') }} / 110</td>
+                        <td></td>
                     </tr>
 
                     <tr>
                         <td>{{ __("Caldwell objects") }}</td>
                         <td></td>
-                        {{--
-                            @foreach ($observationTypes as $type)
-                            @if ($type->type == 'ds')
-                            <td>11 / 110 (10%)</td>
-                            @else
-                            <td></td>
-                            @endif
-                            @endforeach
-                        --}}
+                        <td>{{ $user->getObservedCountFromCatalog('Caldwell') }} / 109</td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>{{ __("Drawings of Caldwell objects") }}</td>
+                        <td></td>
+                        <td>{{ $user->getDrawingCountFromCatalog('Caldwell') }} / 109</td>
+                        <td></td>
                     </tr>
 
                     <tr>
                         <td>{{ __("H400 objects") }}</td>
                         <td></td>
-                        {{--
-                            @foreach ($observationTypes as $type)
-                            @if ($type->type == 'ds')
-                            <td>48 / 400 (1.2%)</td>
-                            @else
-                            <td></td>
-                            @endif
-                            @endforeach
-                        --}}
+                        <td>{{ $user->getObservedCountFromCatalog('H400') }} / 400</td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>{{ __("Drawings of H400 objects") }}</td>
+                        <td></td>
+                        <td>{{ $user->getDrawingCountFromCatalog('H400') }} / 400</td>
+                        <td></td>
                     </tr>
 
                     <tr>
                         <td>{{ __("H400-II objects") }}</td>
                         <td></td>
-                        {{--
-                            @foreach ($observationTypes as $type)
-                            @if ($type->type == 'ds')
-                            <td>24 / 400 (0.6%)</td>
-                            @else
-                            <td></td>
-                            @endif
-                            @endforeach
-                        --}}
+                        <td>{{ $user->getObservedCountFromCatalog('H400-II') }} / 400</td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>{{ __("Drawings of H400-II objects") }}</td>
+                        <td></td>
+                        <td>{{ $user->getDrawingCountFromCatalog('H400-II') }} / 400</td>
+                        <td></td>
                     </tr>
 
                     <tr>
                         <td>{{ __("Rank") }}</td>
-                        <td>17 / 255</td>
-                        {{--
-                            @foreach ($observationTypes as $type)
-                            <td>12 / 123</td>
-                            @endforeach
-                        --}}
+                        <td>{{ $user->getRank() }} / {{ \App\Models\User::count() }} </td>
+                        <td></td>
                     </tr>
                 </table>
 
                 <br />
-                <a
-                    class="btn btn-success"
-                    href="/observations/user/{{ $user->slug }}"
+                <x-button gray icon="eye"
+                          href='{{ config("app.old_url") }}/index.php?indexAction=result_selected_observations&observer={{ $user->username }}'
                 >
-                    <svg
-                        width="1.1em"
-                        height="1.1em"
-                        viewBox="0 1 16 16"
-                        class="bi bi-eye-fill inline"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"
-                        />
-                        <path
-                            fill-rule="evenodd"
-                            d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"
-                        />
-                    </svg>
-                    &nbsp;{{ __("All observations of ") . $user->name }}
-                </a>
+                    {{ __("All observations of ") . $user->name }}
+                </x-button>
 
-                <a
-                    class="btn btn-success"
-                    href="/observations/drawings/user/{{ $user->slug }}"
+                <x-button gray icon="pencil"
+                          href="{{ config('app.old_url') }}/index.php?indexAction=show_drawings&user={{ $user->username }}"
                 >
-                    <svg
-                        width="1em"
-                        height="1em"
-                        viewBox="0 1 16 16"
-                        class="bi bi-pencil inline"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M11.293 1.293a1 1 0 0 1 1.414 0l2 2a1 1 0 0 1 0 1.414l-9 9a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z"
-                        />
-                        <path
-                            fill-rule="evenodd"
-                            d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 0 0 .5.5H4v.5a.5.5 0 0 0 .5.5H5v.5a.5.5 0 0 0 .5.5H6v-1.5a.5.5 0 0 0-.5-.5H5v-.5a.5.5 0 0 0-.5-.5H3z"
-                        />
-                    </svg>
-                    &nbsp;{{ __("All drawings of ") . $user->name }}
-                </a>
+
+                    {{ __("All drawings of ") . $user->name }}
+                </x-button>
 
                 @if (Auth::user() && $user->id != Auth::user()->id)
-                    <a
-                        class="btn btn-primary"
-                        href="/messages/create/{{ $user->id }}"
+                    <x-button gray icon="mail"
+                              href="{{ config('app.old_url') }}/index.php?indexAction=new_message&receiver={{ $user->username }}"
                     >
-                        <svg
-                            width="1em"
-                            height="1em"
-                            viewBox="0 1 16 16"
-                            class="bi bi-envelope inline"
-                            fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383l-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"
-                            />
-                        </svg>
-                        &nbsp;{{ __("Send message to ") . $user->name }}
-                    </a>
+                        {{ __("Send message to ") . $user->name }}
+                    </x-button>
                 @endif
             </div>
 

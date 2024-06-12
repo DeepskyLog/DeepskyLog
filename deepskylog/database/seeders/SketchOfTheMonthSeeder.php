@@ -10,7 +10,8 @@ class SketchOfTheMonthSeeder extends Seeder
 {
     // Static list of ids for the DeepskyLog sketch of the month
     protected static array $sketchOfTheMonth = [
-        138098 => 20240508, 175079 => 20240308, 136494 => 20240208, 173323 => 20240108, 119453 => 20231208, 78913 => 20231107,
+        44239 => 20240608, 138098 => 20240508, 175079 => 20240308, 136494 => 20240208, 173323 => 20240108,
+        119453 => 20231208, 78913 => 20231107,
     ];
 
     public function run(): void
