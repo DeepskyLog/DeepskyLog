@@ -411,18 +411,21 @@
                 @endif
             </div>
 
+            <!-- The observations per year chart -->
             <div class="tab-pane" id="observationsPerYear">
-                <div id="observationsPerYear"></div>
-
-                {{-- {!! $observationsPerYear !!} --}}
+                {!! $chart->container() !!}
             </div>
 
             <!-- The observations per month page -->
             <div class="tab-pane" id="observationsPerMonth">
                 <div id="observationsPerMonth"></div>
-
                 {{-- {!! $observationsPerMonth !!} --}}
             </div>
         </div>
     </div>
+
+    <script src="{{ $chart->cdn() }}"></script>
+
+    {{ $chart->script() }}
+
 </x-app-layout>

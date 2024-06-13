@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Charts\ObservationsPerYearChart;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -26,12 +27,13 @@ class ObserverController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $slug)
+    public function show(string $slug, ObservationsPerYearChart $chart)
     {
         $user = User::where('slug', $slug)->firstOrFail();
 
         return view('observers.show', [
             'user' => $user,
+            'chart' => $chart->build($user),
         ]);
 
     }
