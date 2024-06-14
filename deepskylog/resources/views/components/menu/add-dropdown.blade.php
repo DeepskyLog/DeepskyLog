@@ -2,7 +2,7 @@
 @if (! Auth::guest() && ! Auth::user()->isAdministrator() && ! Auth::user()->isDatabaseExpert())
     <div class="hidden sm:ml-6 sm:flex sm:items-center">
         <div class="relative mr-3 text-sm">
-            <x-dropdown position="bottom-start">
+            <x-dropdown height="max-h-[22rem]" position="bottom-start">
                 <x-slot name="trigger">
                     {{ __("Add") }}
                 </x-slot>
