@@ -10,7 +10,7 @@
 
                     @if (Auth::user()->isAdministrator())
                         <x-dropdown.item
-                            icon="mail"
+                            icon="envelope-open"
                             href="{{ config('app.old_url') }}/index.php?indexAction=new_message&receiver=all"
                             label="{{ __('Send message to all') }}"
                         />

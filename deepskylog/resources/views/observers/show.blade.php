@@ -403,7 +403,7 @@
                 </x-button>
 
                 @if (Auth::user() && $user->id != Auth::user()->id)
-                    <x-button gray icon="mail" class="mb-2"
+                    <x-button gray icon="envelope-open" class="mb-2"
                               href="{{ config('app.old_url') }}/index.php?indexAction=new_message&receiver={{ $user->username }}"
                     >
                         {{ __("Send message to ") . $user->name }}
