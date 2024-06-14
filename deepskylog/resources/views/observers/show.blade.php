@@ -420,13 +420,20 @@
             <div>
                 {!! $observationsPerMonthChart->container() !!}
             </div>
+
+            <!-- The object types seen chart -->
+            <div>
+                {!! $objectTypesChart->container() !!}
+            </div>
         </div>
     </div>
 
     <script src="{{ $observationsPerYearChart->cdn() }}"></script>
     <script src="{{ $observationsPerMonthChart->cdn() }}"></script>
+    <script src="{{ $objectTypesChart->cdn() }}"></script>
 
     {{ $observationsPerYearChart->script() }}
     {{ $observationsPerMonthChart->script() }}
+    {{ $objectTypesChart->script() }}
 
 </x-app-layout>
