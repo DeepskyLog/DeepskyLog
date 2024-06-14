@@ -6,13 +6,13 @@
                 {{ __("Search") }}
             </x-slot>
             <x-dropdown.item
-                icon="search"
+                icon="magnifying-glass"
                 href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&searchObjectQuickPickQuickPick"
                 label="{{ __('Search object') }}"
             />
 
             <x-dropdown.item
-                icon="search"
+                icon="globe-europe-africa"
                 href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&myLanguages=true&searchObservationsQuickPick"
                 label="{{ __('Search Observations') }}"
             />

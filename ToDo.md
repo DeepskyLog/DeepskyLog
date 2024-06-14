@@ -25,6 +25,7 @@
 + [X] Move to slugs for the username and the team names
 + [X] Make code work again with new version of laravel, livewire, ...
 + [X] Refactor the accomplishment methods to make them more general.
++ [X] Update to wireui 2.0
 + [ ] Create menu for the new version
     + [X] Create all menus
     + [X] Create Download Magazines page

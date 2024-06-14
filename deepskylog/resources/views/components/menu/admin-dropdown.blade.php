@@ -33,7 +33,7 @@
 
                     @if (Auth::user()->isAdministrator())
                         <x-dropdown.item
-                            icon="globe"
+                            icon="globe-europe-africa"
                             separator
                             href="{{ config('app.old_url') }}/index.php?indexAction=overview_locations"
                             label="{{ __('Locations') }}"

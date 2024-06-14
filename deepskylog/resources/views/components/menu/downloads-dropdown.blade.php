@@ -7,12 +7,12 @@
             </x-slot>
 
             <x-dropdown.item
-                icon="collection"
+                icon="rectangle-stack"
                 href="{{ config('app.old_url') }}/index.php?indexAction=downloadAstroImageCatalogs"
                 label="{{ __('Image catalogs') }}"
             />
             <x-dropdown.item
-                icon="download"
+                icon="arrow-down-tray"
                 href="{{ config('app.old_url') }}/index.php?indexAction=view_atlaspages"
                 label="{{ __('Atlases') }}"
             />

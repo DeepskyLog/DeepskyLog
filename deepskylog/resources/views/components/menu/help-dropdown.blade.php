@@ -17,12 +17,12 @@
                 label="{{ __('Subscribe to mailing list') }}"
             />
             <x-dropdown.item
-                icon="cash"
+                icon="banknotes"
                 href="/sponsors"
                 label="{{ __('Sponsor DeepskyLog') }}"
             />
             <x-dropdown.item
-                icon="lightning-bolt"
+                icon="bolt"
                 href="https://github.com/DeepskyLog/DeepskyLog/issues"
                 label="{{ __('Report issue') }}"
             />

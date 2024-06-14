@@ -8,20 +8,20 @@
                 </x-slot>
 
                 <x-dropdown.item
-                    icon="user-add"
+                    icon="user-plus"
                     href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming"
                     label="{{ __('Observation') }}"
                 />
 
                 <x-dropdown.item
                     separator
-                    icon="view-list"
+                    icon="bars-4"
                     href=""
                     label="{{ __('Observing list') }}"
                 />
 
                 <x-dropdown.item
-                    icon="user-add"
+                    icon="user-plus"
                     href="{{ config('app.old_url') }}/index.php?indexAction=add_session"
                     label="{{ __('Sessions') }}"
                 />
@@ -34,7 +34,7 @@
                 />
 
                 <x-dropdown.item
-                    icon="globe"
+                    icon="globe-europe-africa"
                     href="{{ config('app.old_url') }}/index.php?indexAction=add_location"
                     label="{{ __('Locations') }}"
                 />

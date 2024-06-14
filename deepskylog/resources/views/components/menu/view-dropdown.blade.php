@@ -8,20 +8,20 @@
 
             @if (! Auth::guest() && Auth::user()->isObserver())
                 <x-dropdown.item
-                    icon="menu-alt-1"
+                    icon="bars-3-center-left"
                     href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&observer={{  Auth::user()->username }}"
                     label="{{ __('My observations') }}"
                 />
 
                 <x-dropdown.item
-                    icon="pencil-alt"
+                    icon="pencil-square"
                     href="{{ config('app.old_url') }}/index.php?indexAction=show_drawings&user={{ Auth::user()->username }}"
                     label="{{ __('My drawings') }}"
                 />
 
                 <x-dropdown.item
                     separator
-                    icon="menu-alt-1"
+                    icon="bars-3-center-left"
                     href="{{ config('app.old_url') }}/index.php?indexAction=view_lists"
                     label="{{ __('My observing lists') }}"
                 />
@@ -38,7 +38,7 @@
                 />
 
                 <x-dropdown.item
-                    icon="globe"
+                    icon="globe-europe-africa"
                     href="{{ config('app.old_url') }}/index.php?indexAction=view_sites"
                     label="{{ __('My locations') }}"
                 />

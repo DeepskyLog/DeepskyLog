@@ -27,7 +27,7 @@
         "symfony/http-client": "^7",
         "symfony/mailgun-mailer": "^7",
         "tinymce/tinymce": "^7",
-        "wireui/wireui": "^1"
+        "wireui/wireui": "^2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",

@@ -422,6 +422,7 @@
             </div>
         </div>
     </div>
+
     <script src="{{ $observationsPerYearChart->cdn() }}"></script>
     <script src="{{ $observationsPerMonthChart->cdn() }}"></script>
 

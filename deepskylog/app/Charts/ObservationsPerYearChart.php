@@ -28,32 +28,40 @@ class ObservationsPerYearChart
     public function build(User $user): OriginalLineChart
     {
         // Get the first observation of user.
-        $firstObservation = ObservationsOld::where('observerid', $user->username)
-            ->orderBy('date', 'asc')
-            ->first()->date;
+        $query = ObservationsOld::where('observerid', $user->username)
+            ->orderBy('date', 'asc');
 
-        // Drop last 4 characters of the integer to get the year.
-        $firstObservation = intval(substr($firstObservation, 0, -4));
+        if ($query->count() == 0) {
+            $deepsky_observations = [];
+            $comet_observations = [];
+            $observations = [];
+            $x_axis = [];
+        } else {
+            $firstObservation = $query->first()->date;
 
-        $deepsky_observations = [];
-        $comet_observations = [];
-        $observations = [];
-        $x_axis = [];
+            // Drop last 4 characters of the integer to get the year.
+            $firstObservation = intval(substr($firstObservation, 0, -4));
 
-        // Get the count of observations of the user for each year
-        for ($year = $firstObservation; $year <= intval(date('Y')); $year++) {
-            $deepsky = ObservationsOld::where('observerid', $user->username)
-                ->where('date', '>=', $year.'0101')
-                ->where('date', '<=', $year.'1231')
-                ->count();
-            $comets = CometObservationsOld::where('observerid', $user->username)
-                ->where('date', '>=', $year.'0101')
-                ->where('date', '<=', $year.'1231')
-                ->count();
-            $deepsky_observations[] = $deepsky;
-            $comet_observations[] = $comets;
-            $observations[] = $deepsky + $comets;
-            $x_axis[] = $year;
+            $deepsky_observations = [];
+            $comet_observations = [];
+            $observations = [];
+            $x_axis = [];
+
+            // Get the count of observations of the user for each year
+            for ($year = $firstObservation; $year <= intval(date('Y')); $year++) {
+                $deepsky = ObservationsOld::where('observerid', $user->username)
+                    ->where('date', '>=', $year.'0101')
+                    ->where('date', '<=', $year.'1231')
+                    ->count();
+                $comets = CometObservationsOld::where('observerid', $user->username)
+                    ->where('date', '>=', $year.'0101')
+                    ->where('date', '<=', $year.'1231')
+                    ->count();
+                $deepsky_observations[] = $deepsky;
+                $comet_observations[] = $comets;
+                $observations[] = $deepsky + $comets;
+                $x_axis[] = $year;
+            }
         }
 
         return (new OriginalLineChart)

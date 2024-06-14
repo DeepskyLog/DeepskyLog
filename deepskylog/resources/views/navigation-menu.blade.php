@@ -70,7 +70,8 @@
                         >
                             <div class="flex space-x-2">
                                 <x-icon name="inbox" class="h-5 w-5" />
-                                <x-badge.circle
+                                <x-mini-badge
+                                    rounded
                                     secondary
                                     label="{{ App\Models\MessagesOld::getNumberOfUnreadMails(Auth::user()->username) }}"
                                 />
