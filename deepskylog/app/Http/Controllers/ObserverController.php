@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Charts\CountriesChart;
 use App\Charts\ObjectTypesChart;
 use App\Charts\ObservationsPerMonthChart;
 use App\Charts\ObservationsPerYearChart;
@@ -29,7 +30,8 @@ class ObserverController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $slug, ObservationsPerYearChart $chart, ObservationsPerMonthChart $chart2, ObjectTypesChart $chart3)
+    public function show(string $slug, ObservationsPerYearChart $chart, ObservationsPerMonthChart $chart2,
+        ObjectTypesChart $chart3, CountriesChart $chart4)
     {
         $user = User::where('slug', $slug)->firstOrFail();
 
@@ -38,6 +40,7 @@ class ObserverController extends Controller
             'observationsPerYearChart' => $chart->build($user),
             'observationsPerMonthChart' => $chart2->build($user),
             'objectTypesChart' => $chart3->build($user),
+            'countriesChart' => $chart4->build($user),
         ]);
 
     }

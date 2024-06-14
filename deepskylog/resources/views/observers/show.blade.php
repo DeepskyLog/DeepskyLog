@@ -425,15 +425,23 @@
             <div>
                 {!! $objectTypesChart->container() !!}
             </div>
+
+            <br />
+            <!-- The countries chart -->
+            <div>
+                {!! $countriesChart->container() !!}
+            </div>
         </div>
     </div>
 
     <script src="{{ $observationsPerYearChart->cdn() }}"></script>
     <script src="{{ $observationsPerMonthChart->cdn() }}"></script>
     <script src="{{ $objectTypesChart->cdn() }}"></script>
+    <script src="{{ $countriesChart->cdn() }}"></script>
 
     {{ $observationsPerYearChart->script() }}
     {{ $observationsPerMonthChart->script() }}
     {{ $objectTypesChart->script() }}
+    {{ $countriesChart->script() }}
 
 </x-app-layout>
