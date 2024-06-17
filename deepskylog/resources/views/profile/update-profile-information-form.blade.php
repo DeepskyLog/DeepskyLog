@@ -215,7 +215,7 @@
 
         <!-- fstOffset -->
         <div class="col-span-6 sm:col-span-5">
-            <x-inputs.number
+            <x-number
                 step=".01"
                 min="-5.0"
                 max="5.0"

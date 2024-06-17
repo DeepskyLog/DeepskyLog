@@ -29,7 +29,7 @@
             </div>
 
             <div class="mt-4">
-                <x-inputs.password
+                <x-password
                     label="{{ __('Password') }}"
                     id="password"
                     class="mt-1 block w-full"
@@ -41,7 +41,7 @@
             </div>
 
             <div class="mt-4">
-                <x-inputs.password
+                <x-password
                     label="{{ __('Confirm Password') }}"
                     id="password_confirmation"
                     class="mt-1 block w-full"

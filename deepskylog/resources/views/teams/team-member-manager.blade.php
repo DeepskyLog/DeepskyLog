@@ -172,7 +172,7 @@
     @endif
 
     <!-- Role Management Modal -->
-    <x-modal.card
+    <x-modal-card
         blur
         title="{{ __('Manage Role') }}"
         wire:model.live="currentlyManagingRole"
@@ -240,10 +240,10 @@
                 {{ __("Save") }}
             </x-button>
         </x-slot>
-    </x-modal.card>
+    </x-modal-card>
 
     <!-- Leave Team Confirmation Modal -->
-    <x-modal.card
+    <x-modal-card
         blur
         title="{{ __('Leave Team') }}"
         wire:model.live="confirmingLeavingTeam"
@@ -272,10 +272,10 @@
                 {{ __("Leave") }}
             </x-button>
         </x-slot>
-    </x-modal.card>
+    </x-modal-card>
 
     <!-- Remove Team Member Confirmation Modal -->
-    <x-modal.card
+    <x-modal-card
         blur
         title="{{ __('Remove Team Member') }}"
         wire:model.live="confirmingTeamMemberRemoval"
@@ -303,5 +303,5 @@
                 {{ __("Remove") }}
             </x-button>
         </x-slot>
-    </x-modal.card>
+    </x-modal-card>
 </div>

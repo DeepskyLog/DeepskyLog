@@ -95,7 +95,7 @@
         </div>
 
         <!-- Log Out Other Devices Confirmation Modal -->
-        <x-modal.card
+        <x-modal-card
             blur
             title="{{ __('Log Out Other Browser Sessions') }}"
             wire:model.live="confirmingLogout"
@@ -107,7 +107,7 @@
                     x-data="{}"
                     x-on:confirming-logout-other-browser-sessions.window="setTimeout(() => $refs.password.focus(), 250)"
                 >
-                    <x-inputs.password
+                    <x-password
                         type="password"
                         class="mt-1 block w-3/4"
                         placeholder="{{ __('Password') }}"
@@ -137,6 +137,6 @@
                     {{ __("Log Out Other Browser Sessions") }}
                 </x-button>
             </x-slot>
-        </x-modal.card>
+        </x-modal-card>
     </x-slot>
 </x-action-section>

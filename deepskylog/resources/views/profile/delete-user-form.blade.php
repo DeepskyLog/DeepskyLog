@@ -23,7 +23,7 @@
         </div>
 
         <!-- Delete User Confirmation Modal -->
-        <x-modal.card
+        <x-modal-card
             blur
             title="{{ __('Delete Account') }}"
             wire:model.live="confirmingUserDeletion"
@@ -35,7 +35,7 @@
                 x-data="{}"
                 x-on:confirming-delete-user.window="setTimeout(() => $refs.password.focus(), 250)"
             >
-                <x-inputs.password
+                <x-password
                     type="password"
                     class="mt-1 block w-3/4"
                     placeholder="{{ __('Password') }}"
@@ -64,6 +64,6 @@
                     {{ __("Delete Account") }}
                 </x-button>
             </x-slot>
-        </x-modal.card>
+        </x-modal-card>
     </x-slot>
 </x-action-section>

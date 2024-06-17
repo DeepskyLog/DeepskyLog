@@ -14,7 +14,7 @@
             @csrf
 
             <div>
-                <x-inputs.password
+                <x-password
                     label="{{ __('Password') }}"
                     id="password"
                     class="mt-1 block w-full"

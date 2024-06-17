@@ -9,7 +9,7 @@
 
     <x-slot name="form">
         <div class="col-span-6 sm:col-span-4">
-            <x-inputs.password
+            <x-password
                 label="{{ __('Current Password') }}"
                 id="current_password"
                 type="password"
@@ -21,7 +21,7 @@
         </div>
 
         <div class="col-span-6 sm:col-span-4">
-            <x-inputs.password
+            <x-password
                 label="{{ __('New Password') }}"
                 id="password"
                 type="password"
@@ -33,7 +33,7 @@
         </div>
 
         <div class="col-span-6 sm:col-span-4">
-            <x-inputs.password
+            <x-password
                 label="{{ __('Confirm Password') }}"
                 id="password_confirmation"
                 type="password"
