@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Old observers eloquent model.
@@ -83,5 +84,31 @@ class ObservationsOld extends Model
     public static function getUniqueObjectsObserved(): int
     {
         return ObservationsOld::distinct('objectname')->count('objectname');
+    }
+
+    /**
+     * Establishes a relationship between the ObservationsOld model and the SketchOfTheWeek model.
+     *
+     * This method sets the database connection to 'mysql' and defines a one-to-one relationship between the ObservationsOld model and the SketchOfTheWeek model.
+     * The relationship is established based on the 'id' attribute of the ObservationsOld model and the 'observation_id' attribute of the SketchOfTheWeek model.
+     *
+     * @return BelongsTo The relationship between the ObservationsOld model and the SketchOfTheWeek model.
+     */
+    public function sketchOfTheWeek(): BelongsTo
+    {
+        return $this->setConnection('mysql')->belongsTo(SketchOfTheWeek::class, 'id', 'observation_id');
+    }
+
+    /**
+     * Establishes a relationship between the ObservationsOld model and the SketchOfTheMonth model.
+     *
+     * This method sets the database connection to 'mysql' and defines a one-to-one relationship between the ObservationsOld model and the SketchOfTheMonth model.
+     * The relationship is established based on the 'id' attribute of the ObservationsOld model and the 'observation_id' attribute of the SketchOfTheMonth model.
+     *
+     * @return BelongsTo The relationship between the ObservationsOld model and the SketchOfTheMonth model.
+     */
+    public function sketchOfTheMonth(): BelongsTo
+    {
+        return $this->setConnection('mysql')->belongsTo(SketchOfTheMonth::class, 'id', 'observation_id');
     }
 }

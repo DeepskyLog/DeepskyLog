@@ -7,6 +7,8 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
@@ -611,6 +613,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getObservingLists(): Collection
     {
+        // TODO: Need a pivot table here
         // Get the distinct list names of the user's observing lists
         return ObserverListOld::where('observerid', $this->username)->distinct('listname')->get('listname');
     }
@@ -738,5 +741,96 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $userIndex;
+    }
+
+    /**
+     * Establishes a relationship between the User model and the LocationsOld model.
+     *
+     * This method defines a one-to-one relationship between the User model and the LocationsOld model.
+     * The relationship is established based on the 'stdlocation' attribute of the User model and the 'id' attribute of the LocationsOld model.
+     *
+     * @return HasOne The relationship between the User model and the LocationsOld model.
+     */
+    public function standardLocation(): HasOne
+    {
+        return $this->hasOne(related: LocationsOld::class, foreignKey: 'id', localKey: 'stdlocation');
+    }
+
+    /**
+     * Establishes a relationship between the User model and the InstrumentsOld model.
+     *
+     * This method defines a one-to-one relationship between the User model and the InstrumentsOld model.
+     * The relationship is established based on the 'stdtelescope' attribute of the User model and the 'id' attribute of the InstrumentsOld model.
+     *
+     * @return HasOne The relationship between the User model and the InstrumentsOld model.
+     */
+    public function standardInstrument(): HasOne
+    {
+        return $this->hasOne(related: InstrumentsOld::class, foreignKey: 'id', localKey: 'stdtelescope');
+    }
+
+    /**
+     * Establishes a relationship between the User model and the LocationsOld model.
+     *
+     * This method defines a one-to-many relationship between the User model and the LocationsOld model.
+     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the LocationsOld model.
+     *
+     * @return HasMany The relationship between the User model and the LocationsOld model.
+     */
+    public function locations(): HasMany
+    {
+        return $this->hasMany(related: LocationsOld::class, foreignKey: 'observer', localKey: 'username');
+    }
+
+    /**
+     * Establishes a relationship between the User model and the InstrumentsOld model.
+     *
+     * This method defines a one-to-many relationship between the User model and the InstrumentsOld model.
+     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the InstrumentsOld model.
+     *
+     * @return HasMany The relationship between the User model and the InstrumentsOld model.
+     */
+    public function instruments(): HasMany
+    {
+        return $this->hasMany(related: InstrumentsOld::class, foreignKey: 'observer', localKey: 'username');
+    }
+
+    /**
+     * Establishes a relationship between the User model and the EyepiecesOld model.
+     *
+     * This method defines a one-to-many relationship between the User model and the EyepiecesOld model.
+     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the EyepiecesOld model.
+     *
+     * @return HasMany The relationship between the User model and the EyepiecesOld model.
+     */
+    public function eyepieces(): HasMany
+    {
+        return $this->hasMany(related: EyepiecesOld::class, foreignKey: 'observer', localKey: 'username');
+    }
+
+    /**
+     * Establishes a relationship between the User model and the FiltersOld model.
+     *
+     * This method defines a one-to-many relationship between the User model and the FiltersOld model.
+     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the FiltersOld model.
+     *
+     * @return HasMany The relationship between the User model and the FiltersOld model.
+     */
+    public function filters(): HasMany
+    {
+        return $this->hasMany(related: FiltersOld::class, foreignKey: 'observer', localKey: 'username');
+    }
+
+    /**
+     * Establishes a relationship between the User model and the LensesOld model.
+     *
+     * This method defines a one-to-many relationship between the User model and the LensesOld model.
+     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the LensesOld model.
+     *
+     * @return HasMany The relationship between the User model and the LensesOld model.
+     */
+    public function lenses(): HasMany
+    {
+        return $this->hasMany(related: LensesOld::class, foreignKey: 'observer', localKey: 'username');
     }
 }

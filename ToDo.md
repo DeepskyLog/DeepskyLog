@@ -33,12 +33,14 @@
     + [ ] Test on Phone
     + [ ] Add observing list does not work...
     + [ ] Is observing lists selection needed?
-+ [ ] Finish observer detail page
++ [X] Finish observer detail page
     + [X] Add number of unique objects seen and drawn
     + [ ] Add all DeepskyLog sketches of the Week / Month to the observer detail page
-    + [ ] Speed up the observer detail page
+    + [ ] Speed up the observer detail page (6.48s)
+        + [ ] By making the connections between the database tables
     + [ ] Add https://laravel-comments.com/ (not free), https://github.com/ryangjchandler/laravel-comments,
       or https://github.com/anilkumarthakur60/Commentable/ for commenting on observer?
+    + [ ] Add the possibility to like an observer?
 + [ ] User administration page
     + [ ] Add link to the rows in the user administrator page to go directly to the observer
     + [ ] Make sure that users which have observations, ... can not be deleted in the user administrator page
@@ -96,6 +98,7 @@ if ($id) {
     + Also messages for everyone // like a forum
 + Index page
 + Instruments, locations, eyepieces, filters, lenses, sets, ...
+    + Can start the the details page of locations, ...
 + Sessions
     + Overview page with all images
     + Blog style?

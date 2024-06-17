@@ -53,7 +53,7 @@
                                         <a
                                             href="{{ config("app.old_url") }}/index.php?indexAction=detail_location&location={{ $user->stdlocation }}"
                                         >
-                                            {!! \App\Models\LocationsOld::where(["id" => $user->stdlocation])->first()->name !!}
+                                            {!! $user->standardLocation->name !!}
                                         </a>
                                     @endif
                                 </td>
@@ -67,7 +67,7 @@
                                         <a
                                             href="{{ config('app.old_url') }}/index.php?indexAction=detail_instrument&instrument={{ $user->stdtelescope }}"
                                         >
-                                            {!! \App\Models\InstrumentsOld::where(["id" => $user->stdtelescope])->first()->name !!}
+                                            {!! $user->standardInstrument->name !!}
                                         </a>
                                     @endif
                                 </td>
@@ -80,7 +80,7 @@
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="{{ config('app.old_url') }}/index.php?indexAction=view_sites">
                                             @endif
-                                            {{ \App\Models\LocationsOld::where(["observer" => $user->username])->count() }}
+                                            {{ $user->locations->count() }}
                                             @if (Auth::user() && $user->id === Auth::user()->id)
                                         </a>
                                     @endif
@@ -94,7 +94,7 @@
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="{{ config('app.old_url') }}/index.php?indexAction=view_instruments">
                                             @endif
-                                            {{ \App\Models\InstrumentsOld::where(["observer" => $user->username])->count() }}
+                                            {{ $user->instruments->count() }}
                                             @if (Auth::user() && $user->id === Auth::user()->id)
                                         </a>
                                     @endif
@@ -108,7 +108,7 @@
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="{{ config('app.old_url') }}/index.php?indexAction=view_eyepieces">
                                             @endif
-                                            {{ \App\Models\EyepiecesOld::where(["observer" => $user->username])->count() }}
+                                            {{ $user->eyepieces->count() }}
                                             @if (Auth::user() && $user->id === Auth::user()->id)
                                         </a>
                                     @endif
@@ -122,7 +122,7 @@
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="{{ config('app.old_url') }}/index.php?indexAction=view_filters">
                                             @endif
-                                            {{ \App\Models\FiltersOld::where(["observer" => $user->username])->count() }}
+                                            {{ $user->filters->count() }}
                                             @if (Auth::user() && $user->id === Auth::user()->id)
                                         </a>
                                     @endif
@@ -136,7 +136,7 @@
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="{{ config('app.old_url') }}/index.php?indexAction=view_lenses">
                                             @endif
-                                            {{ \App\Models\LensesOld::where(["observer" => $user->username])->count() }}
+                                            {{ $user->lenses->count() }}
                                             @if (Auth::user() && $user->id === Auth::user()->id)
                                         </a>
                                     @endif
@@ -241,7 +241,7 @@
             <!-- Personal tab -->
             <div class="py-4">
 
-                <table class="table-striped table-sm table">
+                <table>
                     <!-- Copyright notice -->
                     <tr>
                         <td>{{ __("Copyright notice") }}</td>
@@ -252,13 +252,16 @@
                     </tr>
                 </table>
                 <table class="table-auto">
-                    <tr>
+                    <thead>
+                    <tr class="align-left">
                         <th></th>
                         <th>{{ __("Total") }}</th>
                         <th>{{ __("Deepsky") }}</th>
                         <th>{{ __("Comets") }}</th>
                     </tr>
+                    </thead>
 
+                    <tbody>
                     <tr>
                         <td>{{ __("Number of observations") }}</td>
                         <td>{{ \App\Models\ObservationsOld::where("observerid", $user->username)->count() + \App\Models\CometObservationsOld::where("observerid", $user->username)->count() }}
@@ -386,6 +389,7 @@
                         <td>{{ $user->getRank() }} / {{ \App\Models\User::count() }} </td>
                         <td></td>
                     </tr>
+                    </tbody>
                 </table>
 
                 <br />
