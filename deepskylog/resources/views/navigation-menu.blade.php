@@ -32,7 +32,8 @@
 
                 <!-- Help Dropdown -->
                 <x-menu.help-dropdown />
-
+            </div>
+            <div class="flex">
                 <div class="hidden sm:ml-6 sm:flex sm:items-center">
                     <!-- Teams Dropdown -->
                     <x-menu.team-dropdown />
@@ -61,7 +62,8 @@
                         @endif
                     </div>
                 @endif
-
+            </div>
+            <div class="flex">
                 {{-- Post box --}}
                 @if (! Auth::guest())
                     <div class="space-x-2 sm:ml-6 sm:flex sm:items-center">
