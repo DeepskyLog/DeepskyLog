@@ -1465,7 +1465,7 @@ class Objects
                 $_SESSION['magnifications'] = $magnifications;
                 $_SESSION['magnificationsName'] = $magnificationsName;
                 $_SESSION['fov'] = $fov;
-                if (count($magnifications) == 0) {
+                if (!$magnifications || count($magnifications) == 0) {
                     $popup = _('Contrast reserve can only be calculate when the standard instrument has a fixed magnification or when there are eyepieces defined...');
                 } else {
                     $sql6 = 'SELECT limitingMagnitude, skyBackground, name from locations where id = "'.$get5->stdlocation.'"';
