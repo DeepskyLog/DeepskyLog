@@ -9,6 +9,8 @@ class SketchOfTheMonth extends Model
 {
     public $timestamps = false;
 
+    protected $with = ['observation', 'user'];
+
     protected $table = 'sketch_of_the_month';
 
     /**
@@ -21,7 +23,24 @@ class SketchOfTheMonth extends Model
      */
     public function observation(): HasOne
     {
+        if ($this->observation_id < 0) {
+            return $this->hasOne(related: CometObservationsOld::class, foreignKey: 'id', localKey: 'observation_id');
+        }
+
         return $this->hasOne(related: ObservationsOld::class, foreignKey: 'id', localKey: 'observation_id');
+    }
+
+    /**
+     * Establishes a relationship between the SketchOfTheMonth model and the User model.
+     *
+     * This method defines a one-to-one relationship between the SketchOfTheMonth model and the User model.
+     * The relationship is established based on the 'user_id' attribute of the SketchOfTheMonth model and the 'id' attribute of the User model.
+     *
+     * @return HasOne The relationship between the SketchOfTheMonth model and the User model.
+     */
+    public function user(): HasOne
+    {
+        return $this->hasOne(related: User::class, foreignKey: 'id', localKey: 'user_id');
     }
 
     protected function casts(): array

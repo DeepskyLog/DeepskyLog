@@ -13,10 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -27,21 +23,13 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('/privacy', function () {
-    return view('privacy');
-})->name('privacy');
-
 // Teams
 Route::get('/teams/{team}', 'App\Http\Controllers\DeepskyLogTeamController@show')->name('teams.show');
 
 // Observers
 Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@show')->name('observer.show');
 
-Route::get('/sponsors', function () {
-    return view('layouts.sponsors');
-});
-
-// Downloads
-Route::get('/downloads/magazines', function () {
-    return view('layouts.downloads.magazines');
-});
+Route::view('/', 'welcome');
+Route::view('/privacy', 'privacy')->name('privacy');
+Route::view('/sponsors', 'layouts.sponsors');
+Route::view('/downloads/magazines', 'layouts.downloads.magazines');

@@ -10,10 +10,8 @@ return new class extends Migration
     {
         Schema::create('sketch_of_the_month', function (Blueprint $table) {
             $table->id();
-            $table->Integer('observation_id');
-            // Foreign key observation_id references observation.id
-            //            $table->foreign('observation_id')->references('id')->on('observations')->onDelete('cascade');
-
+            $table->BigInteger('observation_id');
+            $table->foreignId('user_id')->constrained();
             $table->date('date');
         });
     }

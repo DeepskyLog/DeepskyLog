@@ -307,11 +307,14 @@
 
                     <tr>
                         <td>{{ __("Drawings last year") }}</td>
+                        @php
+                            $totalDrawings = \App\Models\ObservationsOld::getTotalDrawingsLastYear();
+                        @endphp
                         <td>{{ $user->getDeepskyDrawingsLastYear() + $user->getCometDrawingsLastYear() }} /
-                            {{ \App\Models\ObservationsOld::getTotalDrawingsLastYear() + \App\Models\CometObservationsOld::getTotalDrawingsLastYear()}}
+                            {{ $totalDrawings + \App\Models\CometObservationsOld::getTotalDrawingsLastYear()}}
                         </td>
                         <td>{{ $user->getDeepskyDrawingsLastYear() }}
-                            / {{ \App\Models\ObservationsOld::getTotalDrawingsLastYear() }}
+                            / {{ $totalDrawings }}
                         </td>
                         <td>{{ $user->getCometDrawingsLastYear() }}
                             / {{ \App\Models\CometObservationsOld::getTotalDrawingsLastYear() }}
@@ -435,6 +438,92 @@
             <div>
                 {!! $countriesChart->container() !!}
             </div>
+
+            @if ($user->sketchOfTheWeek->count() > 0)
+                <div class="mt-6">
+                    <x-card>
+                        <h2 class="mb-2 mt-2 text-xl px-5 font-bold">
+                            {{ __("DeepskyLog sketches of the week") }}
+                        </h2>
+                        <div class="px-5 flex flex-wrap">
+                            @foreach($user->sketchOfTheWeek as $sketch)
+                                <div class="max-w-xl mt-3 pr-3">
+                                    {{-- Show the correct drawing --}}
+                                    @if($sketch->observation_id < 0)
+                                        <a class="no-underline"
+                                           href="{{ config('app.old_url') }}/index.php?indexAction=comets_detail_observation&observation={{ -$sketch->observation_id }}">
+                                            <x-avatar borderless="true" size="w-80 h-80" rounded="md"
+                                                      src="/images/cometdrawings/{{ -$sketch->observation_id }}.jpg"
+                                                      primary />
+                                            <div class="text-center">
+                                                {{ \App\Models\CometObservationsOld::find(-$sketch->observation_id)->object->name }}
+                                                -
+                                                {{ \Carbon\Carbon::create($sketch->date)->format('j M Y') }}
+                                            </div>
+                                        </a>
+                                    @else
+                                        <a
+                                            href="{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $sketch->observation_id }}">
+                                            <x-avatar borderless="true" rounded="md" size="w-80 h-80"
+                                                      src="/images/drawings/{{ $sketch->observation_id }}.jpg"
+                                                      primary />
+
+                                            <div class="text-center">
+                                                {{ $sketch->observation->objectname }}
+                                                - {{ \Carbon\Carbon::create($sketch->date)->format('j M Y') }}
+                                            </div>
+                                        </a>
+
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </x-card>
+                </div>
+            @endif
+
+            @if ($user->sketchOfTheMonth->count() > 0)
+                <div class="mt-6">
+                    <x-card>
+                        <h2 class="mb-2 mt-2 text-xl px-5 font-bold">
+                            {{ __("DeepskyLog sketches of the month") }}
+                        </h2>
+                        <div class="px-5 flex flex-wrap">
+                            @foreach($user->sketchOfTheMonth as $sketch)
+                                <div class="max-w-xl mt-3 pr-3">
+                                    {{-- Show the correct drawing --}}
+                                    @if($sketch->observation_id < 0)
+                                        <a class="no-underline"
+                                           href="{{ config('app.old_url') }}/index.php?indexAction=comets_detail_observation&observation={{ -$sketch->observation_id }}">
+                                            <x-avatar borderless="true" size="w-80 h-80" rounded="md"
+                                                      src="/images/cometdrawings/{{ -$sketch->observation_id }}.jpg"
+                                                      primary />
+                                            <div class="text-center">
+                                                {{ \App\Models\CometObservationsOld::find(-$sketch->observation_id)->object->name }}
+                                                -
+                                                {{ \Carbon\Carbon::create($sketch->date)->format('j M Y') }}
+                                            </div>
+                                        </a>
+                                    @else
+                                        <a
+                                            href="{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $sketch->observation_id }}">
+                                            <x-avatar borderless="true" rounded="md" size="w-80 h-80"
+                                                      src="/images/drawings/{{ $sketch->observation_id }}.jpg"
+                                                      primary />
+
+                                            <div class="text-center">
+                                                {{ $sketch->observation->objectname }}
+                                                - {{ \Carbon\Carbon::create($sketch->date)->format('j M Y') }}
+                                            </div>
+                                        </a>
+
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </x-card>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -442,6 +531,7 @@
     <script src="{{ $observationsPerMonthChart->cdn() }}"></script>
     <script src="{{ $objectTypesChart->cdn() }}"></script>
     <script src="{{ $countriesChart->cdn() }}"></script>
+
 
     {{ $observationsPerYearChart->script() }}
     {{ $observationsPerMonthChart->script() }}

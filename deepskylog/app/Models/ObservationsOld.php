@@ -48,6 +48,7 @@ class ObservationsOld extends Model
         // Get the observations from the last year
         $lastYear = date('Ymd') - 10000;
 
+        //        TODO: SLOW!!!
         return ObservationsOld::where('date', '>=', $lastYear)->count();
     }
 
@@ -68,7 +69,7 @@ class ObservationsOld extends Model
         // Get the drawings from the last year
         $lastYear = date('Ymd') - 10000;
 
-        return ObservationsOld::where('date', '>=', $lastYear)->where('hasDrawing', 1)->count();
+        return ObservationsOld::where('hasDrawing', 1)->where('date', '>=', $lastYear)->count();
     }
 
     /**

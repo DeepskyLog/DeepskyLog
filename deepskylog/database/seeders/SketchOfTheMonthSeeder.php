@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\CometObservationsOld;
+use App\Models\ObservationsOld;
 use App\Models\SketchOfTheMonth;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 
@@ -26,8 +29,19 @@ class SketchOfTheMonthSeeder extends Seeder
             // Put the year, month and day in a date object
             $date = Carbon::create($year, $month, $day, 0, 0, 0, 'UTC');
 
+            if ($observationId < 0) {
+                $username = CometObservationsOld::find(-$observationId);
+            } else {
+                // Get the corresponding username
+                $username = ObservationsOld::find($observationId);
+            }
+
+            // Get the corresponding user id
+            $userId = User::where('username', $username)->first()->id;
+
             SketchOfTheMonth::create([
                 'observation_id' => $observationId,
+                'user_id' => $userId,
                 'date' => $date,
             ]);
         }

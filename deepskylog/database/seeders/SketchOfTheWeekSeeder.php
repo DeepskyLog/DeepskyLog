@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\CometObservationsOld;
+use App\Models\ObservationsOld;
 use App\Models\SketchOfTheWeek;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 
@@ -64,10 +67,22 @@ class SketchOfTheWeekSeeder extends Seeder
             // Put the year, month and day in a date object
             $date = Carbon::create($year, $month, $day, 0, 0, 0, 'UTC');
 
-            SketchOfTheWeek::create([
-                'observation_id' => $observationId,
-                'date' => $date,
-            ]);
+            if ($observationId < 0) {
+                $username = CometObservationsOld::find(-$observationId);
+            } else {
+                // Get the corresponding username
+                $username = ObservationsOld::find($observationId);
+            }
+            if ($username) {
+                // Get the corresponding user id
+                $userId = User::where('username', $username->observerid)->first()->id;
+
+                SketchOfTheWeek::create([
+                    'observation_id' => $observationId,
+                    'user_id' => $userId,
+                    'date' => $date,
+                ]);
+            }
         }
     }
 }

@@ -833,4 +833,30 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(related: LensesOld::class, foreignKey: 'observer', localKey: 'username');
     }
+
+    /**
+     * Establishes a relationship between the User model and the SketchOfTheWeek model.
+     *
+     * This method defines a one-to-many relationship between the User model and the SketchOfTheWeek model.
+     * The relationship is established based on the 'id' attribute of the User model and the 'user_id' attribute of the SketchOfTheWeek model.
+     *
+     * @return HasMany The relationship between the User model and the SketchOfTheWeek model.
+     */
+    public function sketchOfTheWeek(): HasMany
+    {
+        return $this->hasMany(related: SketchOfTheWeek::class, foreignKey: 'user_id', localKey: 'id');
+    }
+
+    /**
+     * Establishes a relationship between the User model and the SketchOfTheMonth model.
+     *
+     * This method defines a one-to-many relationship between the User model and the SketchOfTheMonth model.
+     * The relationship is established based on the 'id' attribute of the User model and the 'user_id' attribute of the SketchOfTheMonth model.
+     *
+     * @return HasMany The relationship between the User model and the SketchOfTheMonth model.
+     */
+    public function sketchOfTheMonth(): HasMany
+    {
+        return $this->hasMany(related: SketchOfTheMonth::class, foreignKey: 'user_id', localKey: 'id');
+    }
 }

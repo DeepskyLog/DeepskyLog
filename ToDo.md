@@ -35,7 +35,7 @@
     + [ ] Is observing lists selection needed?
 + [X] Finish observer detail page
     + [X] Add number of unique objects seen and drawn
-    + [ ] Add all DeepskyLog sketches of the Week / Month to the observer detail page
+    + [X] Add all DeepskyLog sketches of the Week / Month to the observer detail page
     + [ ] Speed up the observer detail page (6.48s)
         + [ ] By making the connections between the database tables
     + [ ] Add https://laravel-comments.com/ (not free), https://github.com/ryangjchandler/laravel-comments,
@@ -98,7 +98,7 @@ if ($id) {
     + Also messages for everyone // like a forum
 + Index page
 + Instruments, locations, eyepieces, filters, lenses, sets, ...
-    + Can start the the details page of locations, ...
+    + Can start the details page of locations, ...
 + Sessions
     + Overview page with all images
     + Blog style?

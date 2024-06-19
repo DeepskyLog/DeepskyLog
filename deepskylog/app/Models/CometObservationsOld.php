@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CometObservationsOld extends Model
 {
@@ -76,5 +77,10 @@ class CometObservationsOld extends Model
     public static function getUniqueObjectsObserved(): int
     {
         return CometObservationsOld::distinct('objectid')->count('objectid');
+    }
+
+    public function object(): HasOne
+    {
+        return $this->hasOne(CometObjectsOld::class, 'id', 'objectid');
     }
 }
