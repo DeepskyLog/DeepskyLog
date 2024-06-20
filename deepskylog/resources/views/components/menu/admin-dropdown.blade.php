@@ -1,7 +1,7 @@
 <!-- Administration Dropdown -->
 @if (! Auth::guest())
     @if (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
-        <div class="hidden sm:ml-6 sm:flex sm:items-center">
+        <div class="hidden lg:ml-6 lg:flex lg:items-center">
             <div class="relative mr-3 text-sm">
                 <x-dropdown position="bottom-start" width="48">
                     <x-slot name="trigger">
@@ -18,14 +18,14 @@
 
                     @if (Auth::user()->isAdministrator())
                         <x-dropdown.item
-                            icon="badge-check"
+                            icon="check-badge"
                             separator
                             href="{{ config('app.old_url') }}/index.php?indexAction=admin_check_objects"
                             label="{{ __('Check Objects') }}"
                         />
                     @else
                         <x-dropdown.item
-                            icon="badge-check"
+                            icon="check-badge"
                             href="{{ config('app.old_url') }}/index.php?indexAction=admin_check_objects"
                             label="{{ __('Check Objects') }}"
                         />

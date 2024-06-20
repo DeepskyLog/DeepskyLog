@@ -4,7 +4,8 @@
         <div class="flex h-16 justify-between">
             <div class="flex">
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+
+                <div class="-my-px ml-10 flex h-16 items-center space-x-8">
                     <x-nav-link
                         href="{{ route('dashboard') }}"
                         :active="request()->routeIs('dashboard')"
@@ -34,7 +35,7 @@
                 <x-menu.help-dropdown />
             </div>
             <div class="flex">
-                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                <div class="hidden lg:ml-6 lg:flex lg:items-center">
                     <!-- Teams Dropdown -->
                     <x-menu.team-dropdown />
 
@@ -44,29 +45,32 @@
 
                 <!-- Login / Register dropdown -->
                 @if (Auth::guest())
-                    <div class="space-x-44 sm:ml-6 sm:flex sm:items-center">
-                        <a
-                            href="{{ route("login") }}"
-                            class="text-sm text-gray-700 underline dark:text-gray-500"
-                        >
-                            Log in
-                        </a>
-
-                        @if (Route::has("register"))
+                    <div class="flex h-16 items-center justify-between">
+                        <!-- Navigation Links -->
+                        <div class="space-x-8 sm:-my-px sm:ml-10 sm:flex-none">
                             <a
-                                href="{{ route("register") }}"
-                                class="ml-4 text-sm text-gray-700 underline dark:text-gray-500"
+                                href="{{ route("login") }}"
+                                class="text-sm text-gray-700 underline dark:text-gray-500"
                             >
-                                Register
+                                {{ __("Log in") }}
                             </a>
-                        @endif
+
+                            @if (Route::has("register"))
+                                <a
+                                    href="{{ route("register") }}"
+                                    class="ml-4 text-sm text-gray-700 underline dark:text-gray-500"
+                                >
+                                    {{ __("Register") }}
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 @endif
             </div>
-            <div class="flex">
+            <div class="flex items-center">
                 {{-- Post box --}}
                 @if (! Auth::guest())
-                    <div class="space-x-2 sm:ml-6 sm:flex sm:items-center">
+                    <div class="space-x-2 lg:ml-6 lg:flex lg:items-center">
                         <x-nav-link
                             href="{{ config('app.old_url') }}/index.php?indexAction=show_messages"
                         >
@@ -83,7 +87,7 @@
                 @endif
 
                 <!-- Module Dropdown -->
-                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                <div class="hidden lg:ml-6 lg:flex lg:items-center">
                     <div class="relative mr-3 text-sm">
                         <x-dropdown width="48" position="bottom-start">
                             <x-slot name="trigger">
@@ -98,7 +102,7 @@
                 </div>
 
                 <!-- Hamburger -->
-                <div class="-mr-2 flex items-center sm:hidden">
+                <div class="-mr-2 flex items-center lg:hidden">
                     <button
                         @click="open = ! open"
                         class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"

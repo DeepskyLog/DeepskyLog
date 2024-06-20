@@ -1,5 +1,5 @@
 <!-- View Dropdown -->
-<div class="hidden sm:ml-6 sm:flex sm:items-center">
+<div class="hidden lg:ml-6 lg:flex lg:items-center">
     <div class="relative mr-3 text-sm">
         <x-dropdown height="max-h-[22rem]" position="bottom-start">
             <x-slot name="trigger">

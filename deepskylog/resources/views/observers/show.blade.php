@@ -1,6 +1,6 @@
 <x-app-layout>
     <div>
-        <div class="mx-auto max-w-7xl bg-gray-900 py-10 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-screen bg-gray-900 py-10 sm:px-6 lg:px-8">
             <div class="grids-rows-2 grid grid-cols-2">
                 <div class="col-span-1">
                     <!-- Current Profile Photo -->

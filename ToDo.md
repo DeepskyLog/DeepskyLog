@@ -31,7 +31,9 @@
     + [X] Create Download Magazines page
     + [X] Create a page for the DeepskyLog sketch of the month and the week
     + [ ] Menu for small screens
-    + [ ] Test on Phone
+        + [ ] Footer is just below the screen
+        + [X] Make content take all the width of the screen
+        + [ ] Add all menus to the hamburger menu
     + [ ] Add observing list does not work...
     + [ ] Is observing lists selection needed?
 + [X] Finish observer detail page

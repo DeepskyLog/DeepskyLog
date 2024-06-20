@@ -1,6 +1,6 @@
 <x-app-layout>
     <div>
-        <div class="mx-auto max-w-7xl bg-gray-900 py-10 sm:px-6 lg:px-8">
+        <div class="max-w-screen mx-auto bg-gray-900 py-10 sm:px-6 lg:px-8">
             <h2 class="text-xl font-semibold leading-tight">
                 {{ __("Deep-sky Magazines") }}
             </h2>
@@ -68,7 +68,7 @@ __("Distant Targets was the French magazine for Deep-sky observers. 67 editions 
                     <div>
                         {{
                             __("Interstellarum was a German magazine for Deep-sky observers. The first 19 editions were purely focused on Deep-sky observing, later editions were focused on visual observations (of all objects). All editions are in German.
-                                                                                     Interstellarum was published from 1994 to 2015.")
+                                                                                                                 Interstellarum was published from 1994 to 2015.")
                         }}
                     </div>
                 </div>
