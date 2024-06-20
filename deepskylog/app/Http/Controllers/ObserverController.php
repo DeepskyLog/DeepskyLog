@@ -6,6 +6,7 @@ use App\Charts\CountriesChart;
 use App\Charts\ObjectTypesChart;
 use App\Charts\ObservationsPerMonthChart;
 use App\Charts\ObservationsPerYearChart;
+use App\Models\ObservationsOld;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -35,8 +36,26 @@ class ObserverController extends Controller
     {
         $user = User::where('slug', $slug)->firstOrFail();
 
+        $observationsOld = ObservationsOld::where('observerid', $user->username)->get();
+        $totalObservations = ObservationsOld::getTotalObservations();
+
+        // Get the observations from the last year
+        $lastYear = date('Ymd') - 10000;
+
+        $observationsLastYear = ObservationsOld::where('date', '>=', $lastYear)->where('observerid', $user->username)->count();
+        $totalObservationsLastYear = ObservationsOld::where('date', '>=', $lastYear)->count();
+
+        $totalNumberOfDrawings = ObservationsOld::where('hasDrawing', 1)->count();
+        $totalUniqueObjects = \App\Models\ObservationsOld::getUniqueObjectsObserved();
+
         return view('observers.show', [
             'user' => $user,
+            'observations' => $observationsOld,
+            'totalObservations' => $totalObservations,
+            'observationsLastYear' => $observationsLastYear,
+            'totalObservationsLastYear' => $totalObservationsLastYear,
+            'totalNumberOfDrawings' => $totalNumberOfDrawings,
+            'totalUniqueObjects' => $totalUniqueObjects,
             'observationsPerYearChart' => $chart->build($user),
             'observationsPerMonthChart' => $chart2->build($user),
             'objectTypesChart' => $chart3->build($user),

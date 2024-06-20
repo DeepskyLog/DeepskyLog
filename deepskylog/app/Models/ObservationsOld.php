@@ -48,7 +48,6 @@ class ObservationsOld extends Model
         // Get the observations from the last year
         $lastYear = date('Ymd') - 10000;
 
-        //        TODO: SLOW!!!
         return ObservationsOld::where('date', '>=', $lastYear)->count();
     }
 

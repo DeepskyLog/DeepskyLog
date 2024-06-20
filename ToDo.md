@@ -37,8 +37,7 @@
 + [X] Finish observer detail page
     + [X] Add number of unique objects seen and drawn
     + [X] Add all DeepskyLog sketches of the Week / Month to the observer detail page
-    + [ ] Speed up the observer detail page (6.48s)
-        + [ ] By making the connections between the database tables
+    + [X] Speed up the observer detail page (6.48s)
     + [ ] Add https://laravel-comments.com/ (not free), https://github.com/ryangjchandler/laravel-comments,
       or https://github.com/anilkumarthakur60/Commentable/ for commenting on observer?
     + [ ] Add the possibility to like an observer?

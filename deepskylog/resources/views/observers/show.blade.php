@@ -264,11 +264,11 @@
                     <tbody>
                     <tr>
                         <td>{{ __("Number of observations") }}</td>
-                        <td>{{ \App\Models\ObservationsOld::where("observerid", $user->username)->count() + \App\Models\CometObservationsOld::where("observerid", $user->username)->count() }}
-                            / {{ \App\Models\ObservationsOld::getTotalObservations() + \App\Models\CometObservationsOld::getTotalObservations() }}
+                        <td>{{ $observations->count() + \App\Models\CometObservationsOld::where("observerid", $user->username)->count() }}
+                            / {{ $totalObservations + \App\Models\CometObservationsOld::getTotalObservations() }}
                         </td>
-                        <td>{{ \App\Models\ObservationsOld::where("observerid", $user->username)->count() }}
-                            / {{ \App\Models\ObservationsOld::getTotalObservations() }}
+                        <td>{{ $observations->count() }}
+                            / {{ $totalObservations }}
                         </td>
                         <td>{{ \App\Models\CometObservationsOld::where("observerid", $user->username)->count() }}
                             / {{ \App\Models\CometObservationsOld::getTotalObservations() }}
@@ -277,11 +277,11 @@
 
                     <tr>
                         <td>{{ __("Observations last year") }}</td>
-                        <td>{{ $user->getDeepskyObservationsLastYear() + $user->getCometObservationsLastYear() }} /
-                            {{ \App\Models\ObservationsOld::getTotalObservationsLastYear() + \App\Models\CometObservationsOld::getTotalObservationsLastYear()}}
+                        <td>{{ $observationsLastYear + $user->getCometObservationsLastYear() }} /
+                            {{ $totalObservationsLastYear + \App\Models\CometObservationsOld::getTotalObservationsLastYear()}}
                         </td>
-                        <td>{{ $user->getDeepskyObservationsLastYear() }}
-                            / {{ \App\Models\ObservationsOld::getTotalObservationsLastYear() }}
+                        <td>{{ $observationsLastYear }}
+                            / {{ $totalObservationsLastYear }}
                         </td>
                         <td>{{ $user->getCometObservationsLastYear() }}
                             / {{ \App\Models\CometObservationsOld::getTotalObservationsLastYear() }}
@@ -290,14 +290,14 @@
 
                     <tr>
                         <td>{{ __("Number of drawings") }}</td>
-                        <td>{{ \App\Models\ObservationsOld::where("observerid", $user->username)->where("hasDrawing", 1)->count()
+                        <td>{{ $observations->where("hasDrawing", 1)->count()
                                 + \App\Models\CometObservationsOld::where("observerid", $user->username)->where("hasDrawing", 1)->count()}}
                             /
-                            {{ \App\Models\ObservationsOld::where("hasDrawing", 1)->count() + \App\Models\CometObservationsOld::where("hasDrawing", 1)->count() }}
+                            {{ $totalNumberOfDrawings + \App\Models\CometObservationsOld::where("hasDrawing", 1)->count() }}
                         </td>
-                        <td>{{ \App\Models\ObservationsOld::where("observerid", $user->username)->where("hasDrawing", 1)->count() }}
+                        <td>{{ $observations->where("hasDrawing", 1)->count() }}
                             /
-                            {{ \App\Models\ObservationsOld::where("hasDrawing", 1)->count() }}
+                            {{ $totalNumberOfDrawings }}
                         </td>
                         <td>{{ \App\Models\CometObservationsOld::where("observerid", $user->username)->where("hasDrawing", 1)->count() }}
                             /
@@ -324,9 +324,9 @@
                     <tr>
                         <td>{{ __("Different objects") }}</td>
                         <td>{{ $user->getUniqueObjectsObservations() + $user->getUniqueCometObservations() }} /
-                            {{ \App\Models\ObservationsOld::getUniqueObjectsObserved() }}</td>
+                            {{ $totalUniqueObjects + \App\Models\CometObservationsOld::getUniqueObjectsObserved() }}</td>
                         <td>{{ $user->getUniqueObjectsObservations() }}
-                            / {{ \App\Models\ObservationsOld::getUniqueObjectsObserved() }}</td>
+                            / {{ $totalUniqueObjects }}</td>
                         <td>{{ $user->getUniqueCometObservations() }} /
                             {{ \App\Models\CometObservationsOld::getUniqueObjectsObserved() }}</td>
                     </tr>
