@@ -37,7 +37,7 @@ class SketchOfTheMonthSeeder extends Seeder
             }
 
             // Get the corresponding user id
-            $userId = User::where('username', $username)->first()->id;
+            $userId = User::where('username', $username->observerid)->first()->id;
 
             SketchOfTheMonth::create([
                 'observation_id' => $observationId,

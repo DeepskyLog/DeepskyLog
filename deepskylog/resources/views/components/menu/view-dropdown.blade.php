@@ -18,7 +18,21 @@
                     href="{{ config('app.old_url') }}/index.php?indexAction=show_drawings&user={{ Auth::user()->username }}"
                     label="{{ __('My drawings') }}"
                 />
+            @endif
 
+            <x-dropdown.item
+                icon="sparkles"
+                href="/sketch-of-the-week"
+                label="{{ __('Sketch of the Week') }}"
+            />
+
+            <x-dropdown.item
+                icon="sparkles"
+                href="/sketch-of-the-month"
+                label="{{ __('Sketch of the Month') }}"
+            />
+
+            @if (! Auth::guest() && Auth::user()->isObserver())
                 <x-dropdown.item
                     separator
                     icon="bars-3-center-left"

@@ -29,6 +29,7 @@
 + [ ] Create menu for the new version
     + [X] Create all menus
     + [X] Create Download Magazines page
+    + [X] Create a page for the DeepskyLog sketch of the month and the week
     + [ ] Menu for small screens
     + [ ] Test on Phone
     + [ ] Add observing list does not work...
@@ -54,6 +55,7 @@
     + [ ] Change the link to the user settings page
     + [ ] Change the link to the user information page
     + [ ] Add the link to download the Deep-sky magazines
+    + [ ] Add the link to the DeepskyLog sketch of the week and the month
     + [ ] Check if the user belongs to the correct role / team
     + [ ] Change the link to the observer detail page
 + [ ] Check log in using the new version and try using one of the old pages as logged-in user
