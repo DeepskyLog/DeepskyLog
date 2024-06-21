@@ -4,7 +4,7 @@
 
 ## Combined version of old DeepskyLog and laravel DeepskyLog
 
-> /Users/wim/GitHub/DeepskyLog/laravel is http://laravel.test/, the old code is http://deepskylog.test/old/
+> /Users/wim/GitHub/DeepskyLog/deepskylog is http://deepskylog.test/, the old code is http://deepskylog.test/old/
 
 + deepskylog: uses laravel jetstream and socialstream for authentication
 
@@ -30,12 +30,10 @@
     + [X] Create all menus
     + [X] Create Download Magazines page
     + [X] Create a page for the DeepskyLog sketch of the month and the week
-    + [ ] Menu for small screens
-        + [ ] Footer is just below the screen
-        + [X] Make content take all the width of the screen
-        + [ ] Add all menus to the hamburger menu
+    + [X] Menu for small screens
     + [ ] Add observing list does not work...
     + [ ] Is observing lists selection needed?
+    + [ ] Is selection of date needed?
 + [X] Finish observer detail page
     + [X] Add number of unique objects seen and drawn
     + [X] Add all DeepskyLog sketches of the Week / Month to the observer detail page
@@ -54,7 +52,7 @@
     + [ ] Add the code
     + [X] Fix the code for php 8.3
     + [ ] Change the link to the user settings page
-    + [ ] Change the link to the user information page
+    + [ ] Change the link to the user information page (in a lot of places!)
     + [ ] Add the link to download the Deep-sky magazines
     + [ ] Add the link to the DeepskyLog sketch of the week and the month
     + [ ] Check if the user belongs to the correct role / team

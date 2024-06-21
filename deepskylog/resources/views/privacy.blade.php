@@ -1,6 +1,8 @@
 <x-app-layout>
     <div>
-        <div class="max-w-screen mx-auto bg-gray-900 py-10 sm:px-6 lg:px-8">
+        <div
+            class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8"
+        >
             <h2 class="text-xl font-semibold leading-tight">
                 {{ __("DeepskyLog Privacy Policy") }}
             </h2>

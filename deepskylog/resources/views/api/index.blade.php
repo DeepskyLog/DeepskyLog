@@ -6,7 +6,7 @@
     </x-slot>
 
     <div>
-        <div class="max-w-screen mx-auto py-10 sm:px-6 lg:px-8">
+        <div class="max-w-screen mx-auto px-2 py-10 sm:px-6 lg:px-8">
             @livewire("api.api-token-manager")
         </div>
     </div>

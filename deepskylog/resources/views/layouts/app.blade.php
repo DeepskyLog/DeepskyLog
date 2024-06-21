@@ -22,7 +22,7 @@
     </head>
 
     <body class="font-sans antialiased dark">
-        <div class="min-h-screen bg-gray-800 text-gray-300">
+        <div class="min-h-[calc(100vh-56px)] bg-gray-800 text-gray-300">
             @livewire("navigation-menu")
 
             <x-notifications />
