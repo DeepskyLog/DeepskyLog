@@ -41,6 +41,7 @@
     + [ ] Add https://laravel-comments.com/ (not free), https://github.com/ryangjchandler/laravel-comments,
       or https://github.com/anilkumarthakur60/Commentable/ for commenting on observer?
     + [ ] Add the possibility to like an observer?
++ [ ] Add 'My Drawings' page
 + [ ] User administration page
     + [ ] Add link to the rows in the user administrator page to go directly to the observer
     + [ ] Make sure that users which have observations, ... can not be deleted in the user administrator page

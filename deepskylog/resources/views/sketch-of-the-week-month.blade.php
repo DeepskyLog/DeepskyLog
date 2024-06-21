@@ -12,18 +12,24 @@
                         @foreach ($sketches as $sketch)
                             <div class="mt-3 max-w-xl pr-3">
                                 {{-- Show the correct drawing --}}
+                                @php
+                                    if ($sketch->observation_id < 0) {
+                                        $sketch_id = -$sketch->observation_id;
+                                    } else {
+                                        $sketch_id = $sketch->observation_id;
+                                    }
+                                @endphp
+
                                 @if ($sketch->observation_id < 0)
                                     <a
                                         class="no-underline"
                                         href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ -$sketch->observation_id }}"
                                     >
-                                        <x-avatar
-                                            borderless="true"
-                                            size="w-80 h-80"
-                                            rounded="md"
+                                        <img
+                                            width="400"
                                             src="/images/cometdrawings/{{ -$sketch->observation_id }}.jpg"
-                                            primary
                                         />
+
                                         <div class="text-center">
                                             {{ $sketch->user->name }} -
                                             {{ \App\Models\CometObservationsOld::find(-$sketch->observation_id)->object->name }}
@@ -35,12 +41,9 @@
                                     <a
                                         href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $sketch->observation_id }}"
                                     >
-                                        <x-avatar
-                                            borderless="true"
-                                            rounded="md"
-                                            size="w-80 h-80"
+                                        <img
+                                            width="400"
                                             src="/images/drawings/{{ $sketch->observation_id }}.jpg"
-                                            primary
                                         />
 
                                         <div class="text-center">

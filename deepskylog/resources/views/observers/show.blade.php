@@ -452,9 +452,10 @@
                                     @if($sketch->observation_id < 0)
                                         <a class="no-underline"
                                            href="{{ config('app.old_url') }}/index.php?indexAction=comets_detail_observation&observation={{ -$sketch->observation_id }}">
-                                            <x-avatar borderless="true" size="w-80 h-80" rounded="md"
-                                                      src="/images/cometdrawings/{{ -$sketch->observation_id }}.jpg"
-                                                      primary />
+                                            <img
+                                                width="400"
+                                                src="/images/cometdrawings/{{ -$sketch->observation_id }}.jpg"
+                                            />
                                             <div class="text-center">
                                                 {{ \App\Models\CometObservationsOld::find(-$sketch->observation_id)->object->name }}
                                                 -
@@ -464,9 +465,10 @@
                                     @else
                                         <a
                                             href="{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $sketch->observation_id }}">
-                                            <x-avatar borderless="true" rounded="md" size="w-80 h-80"
-                                                      src="/images/drawings/{{ $sketch->observation_id }}.jpg"
-                                                      primary />
+                                            <img
+                                                width="400"
+                                                src="/images/drawings/{{ $sketch->observation_id }}.jpg"
+                                            />
 
                                             <div class="text-center">
                                                 {{ $sketch->observation->objectname }}
@@ -495,9 +497,10 @@
                                     @if($sketch->observation_id < 0)
                                         <a class="no-underline"
                                            href="{{ config('app.old_url') }}/index.php?indexAction=comets_detail_observation&observation={{ -$sketch->observation_id }}">
-                                            <x-avatar borderless="true" size="w-80 h-80" rounded="md"
-                                                      src="/images/cometdrawings/{{ -$sketch->observation_id }}.jpg"
-                                                      primary />
+                                            <img
+                                                width="400"
+                                                src="/images/cometdrawings/{{ -$sketch->observation_id }}.jpg"
+                                            />
                                             <div class="text-center">
                                                 {{ \App\Models\CometObservationsOld::find(-$sketch->observation_id)->object->name }}
                                                 -
@@ -507,9 +510,10 @@
                                     @else
                                         <a
                                             href="{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $sketch->observation_id }}">
-                                            <x-avatar borderless="true" rounded="md" size="w-80 h-80"
-                                                      src="/images/drawings/{{ $sketch->observation_id }}.jpg"
-                                                      primary />
+                                            <img
+                                                width="400"
+                                                src="/images/drawings/{{ $sketch->observation_id }}.jpg"
+                                            />
 
                                             <div class="text-center">
                                                 {{ $sketch->observation->objectname }}
