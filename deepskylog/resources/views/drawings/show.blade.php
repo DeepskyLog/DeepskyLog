@@ -5,16 +5,31 @@
         >
             <div class="flex items-center justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
-                    {{ __("Sketches of " . $user->name) }}
+                    @if ($user == "")
+                        {{ __("Sketches") }}
+                    @else
+                        {{ __("Sketches of " . $user->name) }}
+                    @endif
                 </h2>
-                <x-button
-                    gray
-                    icon="eye"
-                    class="mb-2"
-                    href="/cometdrawings/{{ $user->slug }}"
-                >
-                    {{ __("Show comet sketches") }}
-                </x-button>
+                @if ($user == "")
+                    <x-button
+                        gray
+                        icon="eye"
+                        class="mb-2"
+                        href="/cometdrawings"
+                    >
+                        {{ __("Show comet sketches") }}
+                    </x-button>
+                @else
+                    <x-button
+                        gray
+                        icon="eye"
+                        class="mb-2"
+                        href="/cometdrawings/{{ $user->slug }}"
+                    >
+                        {{ __("Show comet sketches") }}
+                    </x-button>
+                @endif
             </div>
             <div class="mt-2">
                 <x-card>
@@ -37,6 +52,11 @@
                                     />
 
                                     <div class="text-center">
+                                        @if ($user == "")
+                                            {{ \App\Models\User::where("username", $sketch->observerid)->first()->name }}
+                                            -
+                                        @endif
+
                                         {{ $sketch->objectname }}
                                         -
                                         {{

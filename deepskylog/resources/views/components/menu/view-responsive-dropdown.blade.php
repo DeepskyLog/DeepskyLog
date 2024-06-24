@@ -87,6 +87,12 @@
                 />
             @endif
             <x-dropdown.item
+                icon="pencil-square"
+                href="/drawings"
+                label="{{ __('All drawings') }}"
+            />
+
+            <x-dropdown.item
                 separator
                 icon="user-group"
                 href="{{ config('app.old_url') }}/index.php?indexAction=rank_observers"

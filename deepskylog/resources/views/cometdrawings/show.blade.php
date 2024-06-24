@@ -5,16 +5,26 @@
         >
             <div class="flex items-center justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
-                    {{ __("Comet sketches of " . $user->name) }}
+                    @if ($user == "")
+                        {{ __("Comet sketches") }}
+                    @else
+                        {{ __("Comet sketches of " . $user->name) }}
+                    @endif
                 </h2>
-                <x-button
-                    gray
-                    icon="eye"
-                    class="mb-2"
-                    href="/drawings/{{ $user->slug }}"
-                >
-                    {{ __("Show deep-sky sketches") }}
-                </x-button>
+                @if ($user == "")
+                    <x-button gray icon="eye" class="mb-2" href="/drawings">
+                        {{ __("Show deep-sky sketches") }}
+                    </x-button>
+                @else
+                    <x-button
+                        gray
+                        icon="eye"
+                        class="mb-2"
+                        href="/drawings/{{ $user->slug }}"
+                    >
+                        {{ __("Show deep-sky sketches") }}
+                    </x-button>
+                @endif
             </div>
             <div class="mt-2">
                 <x-card>
@@ -36,6 +46,11 @@
                                     />
 
                                     <div class="text-center">
+                                        @if ($user == "")
+                                            {{ \App\Models\User::where("username", $sketch->observerid)->first()->name }}
+                                            -
+                                        @endif
+
                                         {{ $sketch->object->name }}
                                         -
                                         {{

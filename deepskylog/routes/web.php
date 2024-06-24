@@ -32,6 +32,8 @@ Route::get('/teams/{team}', 'App\Http\Controllers\DeepskyLogTeamController@show'
 Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@show')->name('observer.show');
 
 // Drawings
+Route::get('/drawings', 'App\Http\Controllers\DrawingController@index')->name('drawings.index');
+Route::get('/cometdrawings', 'App\Http\Controllers\CometDrawingController@index')->name('cometdrawings.index');
 Route::get('/drawings/{observer}', 'App\Http\Controllers\DrawingController@show')->name('drawings.show');
 Route::get('/cometdrawings/{observer}', 'App\Http\Controllers\CometDrawingController@show')->name('cometdrawings.show');
 

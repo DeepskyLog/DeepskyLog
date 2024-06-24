@@ -35,14 +35,8 @@
     + [ ] Is observing lists selection needed?
     + [ ] Is selection of date needed?
 + [X] Finish observer detail page
-    + [X] Add number of unique objects seen and drawn
-    + [X] Add all DeepskyLog sketches of the Week / Month to the observer detail page
-    + [X] Speed up the observer detail page (6.48s)
-    + [ ] Add https://laravel-comments.com/ (not free), https://github.com/ryangjchandler/laravel-comments,
-      or https://github.com/anilkumarthakur60/Commentable/ for commenting on observer?
-    + [ ] Add the possibility to like an observer?
 + [X] Add 'My Drawings' page
-+ [ ] Add all drawings page
++ [X] Add all drawings page
 + [ ] User administration page
     + [ ] Add link to the rows in the user administrator page to go directly to the observer
     + [ ] Make sure that users which have observations, ... can not be deleted in the user administrator page
