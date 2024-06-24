@@ -18,7 +18,7 @@
 
                 <x-dropdown.item
                     icon="pencil-square"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=show_drawings&user={{ Auth::user()->username }}"
+                    href="/drawings/{{ Auth::user()->slug }}"
                     label="{{__('My drawings') }}" />
             @endif
 

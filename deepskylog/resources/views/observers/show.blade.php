@@ -403,7 +403,7 @@
                 </x-button>
 
                 <x-button gray icon="pencil" class="mb-2"
-                          href="{{ config('app.old_url') }}/index.php?indexAction=show_drawings&user={{ $user->username }}"
+                          href="/drawings/{{ $user->slug }}"
                 >
 
                     {{ __("All drawings of ") . $user->name }}

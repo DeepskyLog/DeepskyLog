@@ -41,7 +41,8 @@
     + [ ] Add https://laravel-comments.com/ (not free), https://github.com/ryangjchandler/laravel-comments,
       or https://github.com/anilkumarthakur60/Commentable/ for commenting on observer?
     + [ ] Add the possibility to like an observer?
-+ [ ] Add 'My Drawings' page
++ [X] Add 'My Drawings' page
++ [ ] Add all drawings page
 + [ ] User administration page
     + [ ] Add link to the rows in the user administrator page to go directly to the observer
     + [ ] Make sure that users which have observations, ... can not be deleted in the user administrator page
@@ -54,8 +55,10 @@
     + [X] Fix the code for php 8.3
     + [ ] Change the link to the user settings page
     + [ ] Change the link to the user information page (in a lot of places!)
+    + [ ] Change the link to the drawing page of an observer
     + [ ] Add the link to download the Deep-sky magazines
     + [ ] Add the link to the DeepskyLog sketch of the week and the month
+    + [ ] Add the link to the all Drawings page
     + [ ] Check if the user belongs to the correct role / team
     + [ ] Change the link to the observer detail page
 + [ ] Check log in using the new version and try using one of the old pages as logged-in user

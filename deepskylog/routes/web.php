@@ -31,6 +31,10 @@ Route::get('/teams/{team}', 'App\Http\Controllers\DeepskyLogTeamController@show'
 // Observers
 Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@show')->name('observer.show');
 
+// Drawings
+Route::get('/drawings/{observer}', 'App\Http\Controllers\DrawingController@show')->name('drawings.show');
+Route::get('/cometdrawings/{observer}', 'App\Http\Controllers\CometDrawingController@show')->name('cometdrawings.show');
+
 // Sketch of the week / month
 Route::view('/sketch-of-the-week', 'sketch-of-the-week-month', ['sketches' => SketchOfTheWeek::paginate(20), 'week_month' => __('Week')])->name('sketch-of-the-week');
 Route::view('/sketch-of-the-month', 'sketch-of-the-week-month', ['sketches' => SketchOfTheMonth::paginate(20), 'week_month' => __('Month')])->name('sketch-of-the-month');

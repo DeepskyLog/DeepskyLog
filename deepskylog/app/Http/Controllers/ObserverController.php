@@ -46,7 +46,7 @@ class ObserverController extends Controller
         $totalObservationsLastYear = ObservationsOld::where('date', '>=', $lastYear)->count();
 
         $totalNumberOfDrawings = ObservationsOld::where('hasDrawing', 1)->count();
-        $totalUniqueObjects = \App\Models\ObservationsOld::getUniqueObjectsObserved();
+        $totalUniqueObjects = ObservationsOld::getUniqueObjectsObserved();
 
         return view('observers.show', [
             'user' => $user,

@@ -11,6 +11,8 @@ class CometObservationsOld extends Model
 
     protected $table = 'cometobservations';
 
+    protected $with = ['object'];
+
     /**
      * Get the total number of comet observations.
      *
