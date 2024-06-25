@@ -29,6 +29,7 @@ Route::middleware([
 Route::get('/teams/{team}', 'App\Http\Controllers\DeepskyLogTeamController@show')->name('teams.show');
 
 // Observers
+Route::get('/observers/admin', 'App\Http\Controllers\ObserverController@admin')->name('observers.admin')->can('delete', App\Models\User::class);
 Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@show')->name('observer.show');
 
 // Drawings

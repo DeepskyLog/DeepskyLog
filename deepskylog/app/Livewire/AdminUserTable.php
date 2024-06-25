@@ -12,7 +12,9 @@ use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\Footer;
 use PowerComponents\LivewirePowerGrid\Header;
+use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class AdminUserTable extends PowerGridComponent
@@ -80,6 +82,24 @@ final class AdminUserTable extends PowerGridComponent
     public function relationSearch(): array
     {
         return [];
+    }
+
+    /**
+     * Defines the fields for the PowerGrid.
+     *
+     * This method adds a 'slug' field to the PowerGrid. The value of the 'slug' field is a hyperlink that points to the observer's page.
+     * The hyperlink is created using the 'observer.show' route and the observer's slug.
+     *
+     * @return PowerGridFields The fields for the PowerGrid.
+     */
+    public function fields(): PowerGridFields
+    {
+        return PowerGrid::fields()
+            ->add('name', function ($row) {
+                return sprintf('<a href="%s">%s</a>', route('observer.show', $row->slug), $row->name);
+            })->add('created_at_formatted', function ($row) {
+                return $row->created_at->format('Y-m-d');
+            });
     }
 
     /*
@@ -187,7 +207,6 @@ final class AdminUserTable extends PowerGridComponent
     public function actionRules(): array
     {
         return [
-
             //Hide button edit for ID 1
             Rule::button('destroy')
                 ->when(fn ($user) => $user->id == 1)

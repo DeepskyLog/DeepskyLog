@@ -36,7 +36,7 @@ class ObserverController extends Controller
     {
         $user = User::where('slug', $slug)->firstOrFail();
 
-        $observationsOld = ObservationsOld::where('observerid', $user->username)->get();
+        $observationsOld = $user->observations();
         $totalObservations = ObservationsOld::getTotalObservations();
 
         // Get the observations from the last year
@@ -78,5 +78,10 @@ class ObserverController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function admin()
+    {
+        return view('observers.admin');
     }
 }

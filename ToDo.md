@@ -33,14 +33,12 @@
     + [X] Menu for small screens
     + [ ] Add observing list does not work...
     + [ ] Is observing lists selection needed?
-    + [ ] Is selection of date needed?
+    + [ ] Is selection of date, location and instrument needed?
 + [X] Finish observer detail page
 + [X] Add 'My Drawings' page
 + [X] Add all drawings page
-+ [ ] User administration page
-    + [ ] Add link to the rows in the user administrator page to go directly to the observer
-    + [ ] Make sure that users which have observations, ... can not be deleted in the user administrator page
-    + [ ] Add administrator only options
++ [X] User administration page
++ [ ] Add administrator / database administrator function to add a sketch of the week and the month
 + [ ] Add translations for the new version
     + [ ] Also adapt the code in api.php and User.php to translate the country names, and the language names.
     + [ ] Automatically change the language of the UI when the language settings are changed
@@ -89,6 +87,7 @@ if ($id) {
     + [ ] Reset password
     + [ ] User information page
     + [ ] User profile update
+    + [ ] My Drawings
 + [ ] Release new version of DeepskyLog with new registration and login pages.
 
 ### Next steps

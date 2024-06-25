@@ -3,7 +3,11 @@
     @if (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
         <div class="hidden lg:ml-6 lg:flex lg:items-center">
             <div class="relative mr-3 text-sm">
-                <x-dropdown position="bottom-start" width="48">
+                <x-dropdown
+                    position="bottom-start"
+                    height="max-h-[18rem]"
+                    width="48"
+                >
                     <x-slot name="trigger">
                         {{ __("Administration") }}
                     </x-slot>
@@ -13,6 +17,13 @@
                             icon="envelope-open"
                             href="{{ config('app.old_url') }}/index.php?indexAction=new_message&receiver=all"
                             label="{{ __('Send message to all') }}"
+                        />
+
+                        <x-dropdown.item
+                            icon="users"
+                            separator
+                            href="/observers/admin"
+                            label="{{ __('Observers') }}"
                         />
                     @endif
 

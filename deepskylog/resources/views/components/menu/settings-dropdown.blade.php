@@ -38,7 +38,7 @@
 
             <!-- Account Management -->
             <x-dropdown.item
-                href="{{ config('app.old_url') }}/index.php?indexAction=detail_observer&user={{ Auth::user()->username }}"
+                href="/observers/{{ Auth::user()->slug }}"
                 label="{{ __('Details') }}"
             />
 

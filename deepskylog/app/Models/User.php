@@ -76,6 +76,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
+    protected $with = ['locations', 'instruments', 'eyepieces', 'filters', 'lenses'];
+
     /**
      * Return the sluggable configuration array for this model.
      *
@@ -767,6 +769,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function standardInstrument(): HasOne
     {
         return $this->hasOne(related: InstrumentsOld::class, foreignKey: 'id', localKey: 'stdtelescope');
+    }
+
+    public function observationsCount(): float
+    {
+        return $this->observations()->count();
+    }
+
+    public function observations(): HasMany
+    {
+        return $this->hasMany(related: ObservationsOld::class, foreignKey: 'observerid', localKey: 'username');
     }
 
     /**

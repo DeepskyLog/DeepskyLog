@@ -12,7 +12,7 @@ class MessagesOld extends Model
 
     public static function getNumberOfUnreadMails($id): int
     {
-        $allMails = MessagesOld::where('receiver', $id)->orWhere('receiver', 'all')->pluck('id');
+        $allMails = MessagesOld::where('receiver', $id)->pluck('id');
         $deletedMails = MessagesDeletedOld::where('receiver', $id)->pluck('id');
         $readMails = MessagesReadOld::where('receiver', $id)->pluck('id');
 

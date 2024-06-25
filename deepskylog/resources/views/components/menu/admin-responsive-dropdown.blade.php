@@ -17,6 +17,13 @@
                             href="{{ config('app.old_url') }}/index.php?indexAction=new_message&receiver=all"
                             label="{{ __('Send message to all') }}"
                         />
+
+                        <x-dropdown.item
+                            icon="users"
+                            separator
+                            href="/observers/admin"
+                            label="{{ __('Observers') }}"
+                        />
                     @endif
 
                     @if (Auth::user()->isAdministrator())

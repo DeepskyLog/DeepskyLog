@@ -162,6 +162,11 @@
                     </div>
 
                     <div class="mt-3 space-y-1">
+                        <x-dropdown.item
+                            href="/observers/{{ Auth::user()->slug }}"
+                            label="{{ __('Details') }}"
+                        />
+
                         <!-- Account Management -->
                         <x-dropdown.item
                             href="{{ route('profile.show') }}"
