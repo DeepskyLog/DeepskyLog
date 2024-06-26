@@ -39,6 +39,9 @@
 + [X] Add all drawings page
 + [X] User administration page
 + [ ] Add administrator / database administrator function to add a sketch of the week and the month
+    + [X] Add page
+    + [ ] Create text to use on Facebook, X, and Instagram
+    + [ ] Automatically add to Facebook, X, and Instagram
 + [ ] Add translations for the new version
     + [ ] Also adapt the code in api.php and User.php to translate the country names, and the language names.
     + [ ] Automatically change the language of the UI when the language settings are changed
