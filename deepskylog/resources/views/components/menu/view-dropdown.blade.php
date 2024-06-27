@@ -1,7 +1,7 @@
 <!-- View Dropdown -->
 <div class="hidden lg:ml-6 lg:flex lg:items-center">
     <div class="relative mr-3 text-sm">
-        <x-dropdown height="max-h-[18rem]" position="bottom-start">
+        <x-dropdown height="max-h-[12rem]" position="bottom-start">
             <x-slot name="trigger">
                 {{ __("View") }}
             </x-slot>

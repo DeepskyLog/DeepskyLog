@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\CometObservationsOld;
+use App\Models\Constellation;
+use App\Models\ObjectsOld;
 use App\Models\ObservationsOld;
 use App\Models\SketchOfTheWeek;
 use App\Models\User;
@@ -38,6 +40,38 @@ class SketchOfTheWeekController extends Controller
         // Get the user id
         $userId = User::where('username', $observation->observerid)->first()->id;
 
+        // Create text for Facebook, X
+        $text = 'As new #deepskylog sketch of the week, we selected this sketch of ';
+
+        if ($request['observation_id'] > 0) {
+            $object = ObjectsOld::where('name', ObservationsOld::first()->objectname)->get()[0];
+            $type = $object->long_type();
+
+            $text .= 'the '.$type.' ';
+
+            $text .= $observation->objectname;
+
+            $constellation = Constellation::where('id', $object->con)->first()->name;
+
+            $text .= ' in '.$constellation;
+        } else {
+            $text .= 'comet '.$observation->object->name;
+        }
+        $text .= ' by '.User::where('username', $observation->observerid)->first()->name.'.';
+        $text .= '
+More information can be found here:
+
+';
+        if ($request['observation_id'] > 0) {
+            $text .= 'https://www.deepskylog.org/index.php?indexAction=detail_observation&observation='.$request['observation_id'];
+        } else {
+            $text .= 'https://www.deepskylog.org/index.php?indexAction=comets_detail_observation&observation='.-$request['observation_id'];
+        }
+
+        $text .= '
+
+#sketch #sketchoftheweek #deepsky #astronomy #deepskydrawing #sketches';
+
         $sketch = new SketchOfTheWeek;
         $sketch->observation_id = $request['observation_id'];
         $sketch->date = $request->date;
@@ -46,6 +80,8 @@ class SketchOfTheWeekController extends Controller
         $sketch->save();
 
         // Redirect to the sketch of the week page
-        return redirect()->route('sketch-of-the-week');
+        return view('/sketch-of-the-week-month/detail', [
+            'share' => $text, 'observation_id' => $request['observation_id'], 'date' => $request->date, 'week_month' => 'week',
+        ]);
     }
 }

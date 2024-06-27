@@ -38,10 +38,8 @@
 + [X] Add 'My Drawings' page
 + [X] Add all drawings page
 + [X] User administration page
-+ [ ] Add administrator / database administrator function to add a sketch of the week and the month
-    + [X] Add page
-    + [ ] Create text to use on Facebook, X, and Instagram
-    + [ ] Automatically add to Facebook, X, and Instagram
++ [X] Add share buttons for Facebook, X, link, mail, WhatsApp
++ [X] Add administrator / database administrator function to add a sketch of the week and the month
 + [ ] Add translations for the new version
     + [ ] Also adapt the code in api.php and User.php to translate the country names, and the language names.
     + [ ] Automatically change the language of the UI when the language settings are changed
@@ -91,6 +89,7 @@ if ($id) {
     + [ ] User information page
     + [ ] User profile update
     + [ ] My Drawings
++ [ ] On the server, make sure to run the queue workers: https://laravel.com/docs/11.x/queues#running-the-queue-worker
 + [ ] Release new version of DeepskyLog with new registration and login pages.
 
 ### Next steps

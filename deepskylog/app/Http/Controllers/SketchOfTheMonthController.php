@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\CometObservationsOld;
+use App\Models\Constellation;
+use App\Models\ObjectsOld;
 use App\Models\ObservationsOld;
 use App\Models\SketchOfTheMonth;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -37,6 +40,44 @@ class SketchOfTheMonthController extends Controller
 
         // Get the user id
         $userId = User::where('username', $observation->observerid)->first()->id;
+        // Create text for Facebook, X and Instagram
+        $carbon_date = Carbon::createFromFormat('Y-m-d', $request['date'])->subMonth();
+
+        $monthName = $carbon_date->format('F');
+        $year = $carbon_date->format('Y');
+        $text = 'The #deepskylog sketch of '.$monthName.' '.$year.' is this sketch of ';
+
+        if ($request['observation_id'] > 0) {
+            $object = ObjectsOld::where('name', ObservationsOld::first()->objectname)->get()[0];
+            $type = $object->long_type();
+
+            $text .= 'the '.$type.' ';
+
+            $text .= $observation->objectname;
+
+            $constellation = Constellation::where('id', $object->con)->first()->name;
+
+            $text .= ' in '.$constellation;
+        } else {
+            $text .= 'comet '.$observation->object->name;
+        }
+        $text .= ' by '.User::where('username', $observation->observerid)->first()->name.'.';
+        $text .= '
+Congratulations, '.explode(' ', User::where('username', $observation->observerid)->first()->name)[0].'!';
+
+        $text .= '
+More information can be found here:
+
+';
+        if ($request['observation_id'] > 0) {
+            $text .= 'https://www.deepskylog.org/index.php?indexAction=detail_observation&observation='.$request['observation_id'];
+        } else {
+            $text .= 'https://www.deepskylog.org/index.php?indexAction=comets_detail_observation&observation='.-$request['observation_id'];
+        }
+
+        $text .= '
+
+#sketch #sketchofthemonth #deepsky #astronomy #deepskydrawing #sketches';
 
         $sketch = new SketchOfTheMonth;
         $sketch->observation_id = $request['observation_id'];
@@ -46,6 +87,8 @@ class SketchOfTheMonthController extends Controller
         $sketch->save();
 
         // Redirect to the sketch of the month page
-        return redirect()->route('sketch-of-the-month');
+        return view('/sketch-of-the-week-month/detail', [
+            'share' => $text, 'observation_id' => $request['observation_id'], 'date' => $request->date, 'week_month' => 'month',
+        ]);
     }
 }

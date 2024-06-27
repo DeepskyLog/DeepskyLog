@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2fa222d4435abb99ec4579a8a7cac726",
+    "content-hash": "39e9ac5149ff2d9e8c15be6b160420df",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1522,6 +1522,76 @@
             "time": "2024-06-24T06:29:10+00:00"
         },
         {
+            "name": "kudashevs/laravel-share-buttons",
+            "version": "v5.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kudashevs/laravel-share-buttons.git",
+                "reference": "ebea8b7750433e10893c45fdc74cd6d893860e62"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kudashevs/laravel-share-buttons/zipball/ebea8b7750433e10893c45fdc74cd6d893860e62",
+                "reference": "ebea8b7750433e10893c45fdc74cd6d893860e62",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.27|^7.0|^8.0|^9.0",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^9.1|^10.0|^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Kudashevs\\ShareButtons\\Providers\\ShareButtonsServiceProvider"
+                    ],
+                    "aliases": {
+                        "ShareButtons": "Kudashevs\\ShareButtons\\Facades\\ShareButtonsFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kudashevs\\ShareButtons\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sergey Kudashev",
+                    "email": "kudashevs@gmail.com",
+                    "homepage": "https://kudashevs.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Joren Van Hocht",
+                    "email": "joren@codeswitch.be",
+                    "homepage": "https://codeswitch.be",
+                    "role": "Creator"
+                }
+            ],
+            "description": "A laravel social media share buttons package.",
+            "homepage": "https://github.com/kudashevs/laravel-share-buttons",
+            "keywords": [
+                "laravel",
+                "share",
+                "share buttons",
+                "social links"
+            ],
+            "support": {
+                "issues": "https://github.com/kudashevs/laravel-share-buttons/issues",
+                "source": "https://github.com/kudashevs/laravel-share-buttons/tree/v5.1.0"
+            },
+            "time": "2024-04-15T21:03:59+00:00"
+        },
+        {
             "name": "laravel/fortify",
             "version": "v1.21.3",
             "source": {
@@ -1588,16 +1658,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v11.12.0",
+            "version": "v11.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "9a6d9cea83cfa6b9e8eda05c89741d0411d8ebe8"
+                "reference": "92deaa4f037ff100e36809443811301819a8cf84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/9a6d9cea83cfa6b9e8eda05c89741d0411d8ebe8",
-                "reference": "9a6d9cea83cfa6b9e8eda05c89741d0411d8ebe8",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/92deaa4f037ff100e36809443811301819a8cf84",
+                "reference": "92deaa4f037ff100e36809443811301819a8cf84",
                 "shasum": ""
             },
             "require": {
@@ -1789,7 +1859,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-06-25T19:33:56+00:00"
+            "time": "2024-06-27T09:04:50+00:00"
         },
         {
             "name": "laravel/jetstream",
@@ -10917,16 +10987,16 @@
         },
         {
             "name": "spatie/error-solutions",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/error-solutions.git",
-                "reference": "d60d4d2ef4b7701c86134ded959667cac6215233"
+                "reference": "9782ba6e25cb026cc653619e01ca695d428b3f03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/error-solutions/zipball/d60d4d2ef4b7701c86134ded959667cac6215233",
-                "reference": "d60d4d2ef4b7701c86134ded959667cac6215233",
+                "url": "https://api.github.com/repos/spatie/error-solutions/zipball/9782ba6e25cb026cc653619e01ca695d428b3f03",
+                "reference": "9782ba6e25cb026cc653619e01ca695d428b3f03",
                 "shasum": ""
             },
             "require": {
@@ -10979,7 +11049,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/error-solutions/issues",
-                "source": "https://github.com/spatie/error-solutions/tree/1.0.1"
+                "source": "https://github.com/spatie/error-solutions/tree/1.0.2"
             },
             "funding": [
                 {
@@ -10987,7 +11057,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-21T10:09:00+00:00"
+            "time": "2024-06-26T13:09:17+00:00"
         },
         {
             "name": "spatie/flare-client-php",

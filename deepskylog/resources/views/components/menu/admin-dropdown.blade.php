@@ -5,7 +5,7 @@
             <div class="relative mr-3 text-sm">
                 <x-dropdown
                     position="bottom-start"
-                    height="max-h-[18rem]"
+                    height="max-h-[12rem]"
                     width="48"
                 >
                     <x-slot name="trigger">

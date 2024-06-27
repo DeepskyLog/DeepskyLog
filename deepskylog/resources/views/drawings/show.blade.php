@@ -67,6 +67,26 @@
                                             )->format("j M Y")
                                         }}
                                     </div>
+
+                                    <div class="text-center">
+                                        {!!
+                                            ShareButtons::page(
+                                                "https://www.deepskylog.org/deepsky/drawings/" . $sketch->id . ".jpg",
+                                                __("Look at this sketch of " . $sketch->objectname . __(" by ") . \App\Models\User::where("username", $sketch->observerid)->first()->name . __(" on #deepskylog")),
+                                                [
+                                                    "title" => __("Share this sketch"),
+                                                    "class" => "text-gray-500 hover:text-gray-700",
+                                                    "rel" => "nofollow noopener noreferrer",
+                                                ],
+                                            )
+                                                ->facebook(["class" => "hover", "rel" => "follow"])
+                                                ->twitter(["class" => "hover", "rel" => "follow"])
+                                                ->copylink()
+                                                ->mailto(["class" => "hover", "rel" => "nofollow"])
+                                                ->whatsapp()
+                                                ->render();
+                                        !!}
+                                    </div>
                                 </a>
                             </div>
                         @endforeach

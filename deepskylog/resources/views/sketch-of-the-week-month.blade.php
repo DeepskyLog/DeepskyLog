@@ -36,6 +36,25 @@
                                             -
                                             {{ \Carbon\Carbon::create($sketch->date)->format("j M Y") }}
                                         </div>
+                                        <div class="text-center">
+                                            {!!
+                                                ShareButtons::page(
+                                                    "https://www.deepskylog.org/comets/cometdrawings/" . -$sketch->observation_id . ".jpg",
+                                                    __("Look at this sketch of " . \App\Models\CometObservationsOld::find(-$sketch->observation_id)->object->name . __(" by ") . $sketch->user->name . __(" on #deepskylog")),
+                                                    [
+                                                        "title" => __("Share this sketch"),
+                                                        "class" => "text-gray-500 hover:text-gray-700",
+                                                        "rel" => "nofollow noopener noreferrer",
+                                                    ],
+                                                )
+                                                    ->facebook(["class" => "hover", "rel" => "follow"])
+                                                    ->twitter(["class" => "hover", "rel" => "follow"])
+                                                    ->copylink()
+                                                    ->mailto(["class" => "hover", "rel" => "nofollow"])
+                                                    ->whatsapp()
+                                                    ->render();
+                                            !!}
+                                        </div>
                                     </a>
                                 @else
                                     <a
@@ -51,6 +70,26 @@
                                             {{ $sketch->observation->objectname }}
                                             -
                                             {{ \Carbon\Carbon::create($sketch->date)->format("j M Y") }}
+                                        </div>
+
+                                        <div class="text-center">
+                                            {!!
+                                                ShareButtons::page(
+                                                    "https://www.deepskylog.org/deepsky/drawings/" . $sketch->observation_id . ".jpg",
+                                                    __("Look at this sketch of " . $sketch->observation->objectname . __(" by ") . $sketch->user->name . __(" on #deepskylog")),
+                                                    [
+                                                        "title" => __("Share this sketch"),
+                                                        "class" => "text-gray-500 hover:text-gray-700",
+                                                        "rel" => "nofollow noopener noreferrer",
+                                                    ],
+                                                )
+                                                    ->facebook(["class" => "hover", "rel" => "follow"])
+                                                    ->twitter(["class" => "hover", "rel" => "follow"])
+                                                    ->copylink()
+                                                    ->mailto(["class" => "hover", "rel" => "nofollow"])
+                                                    ->whatsapp()
+                                                    ->render();
+                                            !!}
                                         </div>
                                     </a>
                                 @endif
