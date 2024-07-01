@@ -194,7 +194,7 @@
             <x-select
                 label="{{ __('Country of residence') }}"
                 wire:model.live="state.country"
-                :async-data="route('countries.index')"
+                :async-data="route('countries.index', ['lang' => app()->getLocale()])"
                 option-label="name"
                 option-value="id"
             />

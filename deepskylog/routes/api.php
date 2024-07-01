@@ -28,10 +28,10 @@ Route::get('countries.index', function (Request $request) {
     if ($request->exists('selected')) {
         $allCountries[] = [
             'id' => auth()->user()->country,
-            'name' => \Countries::getOne(auth()->user()->country, 'en'),
+            'name' => \Countries::getOne(auth()->user()->country, $request->lang),
         ];
     }
-    foreach (\Countries::getList('en') as $code => $name) {
+    foreach (\Countries::getList($request->lang) as $code => $name) {
         if ($request->search == '' || Str::contains(Str::lower($name), Str::lower($request->search))) {
             $allCountries[] = [
                 'id' => $code,

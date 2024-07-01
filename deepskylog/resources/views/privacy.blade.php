@@ -9,7 +9,7 @@
             <br />
 
             {{ __("The majority of information on this site can be accessed without providing any personal information.") }}
-            {{ __("In case users want to record observations and get acces to a variety of useful tools, the user is asked to register and provide personal information including name, first name and email address.") }}
+            {{ __("In case users want to record observations and get access to a variety of useful tools, the user is asked to register and provide personal information including name, first name and email address.") }}
 
             {{ __("This information will be used only for user management and to keep you informed about our activities.") }}
 
@@ -24,11 +24,7 @@
             <br />
 
             @php
-                echo sprintf(
-                    __("In case of questions or concerns regarding your personal data, do not hesitate to contact us at %sdevelopers@deepskylog.be%s."),
-                    "<a href='mailto:developers@deepskylog.be'>",
-                    "</a>",
-                );
+                echo sprintf(__("In case of questions or concerns regarding your personal data, do not hesitate to contact us at %sdeepskylog@groups.io%s."), "<a href='mailto:deepskylog@groups.io'>", "</a>");
             @endphp
         </div>
     </div>

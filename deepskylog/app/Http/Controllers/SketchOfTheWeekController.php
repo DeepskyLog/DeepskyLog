@@ -13,7 +13,9 @@ use Illuminate\Validation\ValidationException;
 
 class SketchOfTheWeekController extends Controller
 {
-    public function index() {}
+    public function index()
+    {
+    }
 
     public function create()
     {
@@ -44,7 +46,7 @@ class SketchOfTheWeekController extends Controller
         $text = 'As new #deepskylog sketch of the week, we selected this sketch of ';
 
         if ($request['observation_id'] > 0) {
-            $object = ObjectsOld::where('name', ObservationsOld::first()->objectname)->get()[0];
+            $object = ObjectsOld::where('name', $observation->objectname)->get()[0];
             $type = $object->long_type();
 
             $text .= 'the '.$type.' ';
@@ -72,7 +74,7 @@ More information can be found here:
 
 #sketch #sketchoftheweek #deepsky #astronomy #deepskydrawing #sketches';
 
-        $sketch = new SketchOfTheWeek;
+        $sketch = new SketchOfTheWeek();
         $sketch->observation_id = $request['observation_id'];
         $sketch->date = $request->date;
         $sketch->user_id = $userId;

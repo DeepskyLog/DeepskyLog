@@ -1,12 +1,12 @@
 # Tips and tricks
 
 - [Tips and tricks](#tips-and-tricks)
-  - [Installation on the server](#installation-on-the-server)
-  - [Unit testing](#unit-testing)
-  - [GUI components](#gui-components)
-    - [Rich text editing](#rich-text-editing)
-  - [User authentication](#user-authentication)
-    - [Teams](#teams)
+    - [Installation on the server](#installation-on-the-server)
+    - [Unit testing](#unit-testing)
+    - [GUI components](#gui-components)
+        - [Rich text editing](#rich-text-editing)
+    - [User authentication](#user-authentication)
+        - [Teams](#teams)
 
 ## Installation on the server
 
@@ -26,6 +26,16 @@ php artisan db:seed
 chmod 777 storage/app/public/profile-photos
 ```
 
+## Translation
+
+When new strings were added, the translation files need to be updated. This can be done with the following command:
+
+```bash
+php artisan localize nl
+```
+
+Other languages can be added by changing the language code (nl) to the correct language code.
+
 ## Unit testing
 
 ```bash
@@ -34,23 +44,24 @@ php artisan test
 
 ## GUI components
 
-- For all components, we use wireui.  For the tables, we use livewire-powergrid
+- For all components, we use wireui. For the tables, we use livewire-powergrid
 
 ### Rich text editing
 
-- TinyMCE is used for the rich text editing forms.  An example on how to use this in the code can be found in resources/view/profile/update-profile-information-form.php
+- TinyMCE is used for the rich text editing forms. An example on how to use this in the code can be found in
+  resources/view/profile/update-profile-information-form.php
 
 ## User authentication
 
 ### Teams
 
-+ There are two teams in DeepskyLog.  Extra teams can be added later (for example moderators, social media team, ...):
++ There are two teams in DeepskyLog. Extra teams can be added later (for example moderators, social media team, ...):
 
-|Team             |Description                                    |
-|-----------------|-----------------------------------------------|
-|Observers        | All observers and guest are part of this team |
-|Administrators   | Members of this team can do everything        |
-|Database Experts | Members of this team can do everything with the databases |
+| Team             | Description                                               |
+|------------------|-----------------------------------------------------------|
+| Observers        | All observers and guest are part of this team             |
+| Administrators   | Members of this team can do everything                    |
+| Database Experts | Members of this team can do everything with the databases |
 
 + Check if the user belongs to the correct team:
 

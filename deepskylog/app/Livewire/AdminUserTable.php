@@ -98,7 +98,7 @@ final class AdminUserTable extends PowerGridComponent
             ->add('name', function ($row) {
                 return sprintf('<a href="%s">%s</a>', route('observer.show', $row->slug), $row->name);
             })->add('created_at_formatted', function ($row) {
-                return $row->created_at->format('Y-m-d');
+                return $row->created_at->translatedFormat('Y-m-d');
             });
     }
 
@@ -186,7 +186,7 @@ final class AdminUserTable extends PowerGridComponent
     {
         return [
             Button::add('destroy')
-                ->slot('Remove')
+                ->slot(__('Remove'))
                 ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
                 ->tooltip(__('Remove user from team'))
                 ->dispatch('remove', [$row->id]),

@@ -211,8 +211,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function firstObservationDate(): array
     {
-        // TODO: Change to the selected language!
-        $language = 'nl_NL';
+        $language = app()->getLocale();
 
         $firstObservation = ObservationsOld::where('observerid', $this->username)->min('date');
         if ($firstObservation == null) {
@@ -231,15 +230,14 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function lastObservationDate(): array
     {
-        // TODO: Change to the selected language!
-        $language = 'nl_NL';
+        $language = app()->getLocale();
 
-        $firstObservation = ObservationsOld::where('observerid', $this->username)->max('date');
-        if ($firstObservation == null) {
+        $lastObservation = ObservationsOld::where('observerid', $this->username)->max('date');
+        if ($lastObservation == null) {
             return [null, null];
         }
-        $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
-        $id = ObservationsOld::where('observerid', $this->username)->where('date', $firstObservation)->first()['id'];
+        $date = Carbon::createFromFormat('Ymd', $lastObservation)->locale($language)->isoFormat('LL');
+        $id = ObservationsOld::where('observerid', $this->username)->where('date', $lastObservation)->first()['id'];
 
         return [$date, $id];
     }

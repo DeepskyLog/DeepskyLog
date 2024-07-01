@@ -50,7 +50,7 @@ class ObservationsPerMonthChart
         }
 
         return (new OriginalBarChart)
-            ->setTitle(__('Number of observations per month: '.$user->name))
+            ->setTitle(__('Number of observations per month: ').$user->name)
             ->setSubtitle(__('Source: ').config('app.old_url'))
             ->setColors(['#00E396', '#feb019'])
             ->addData(__('Deepsky'), $deepsky)

@@ -3,8 +3,10 @@
 namespace App\Charts;
 
 use App\Models\CometObservationsOld;
+use App\Models\Country;
 use App\Models\ObservationsOld;
 use App\Models\User;
+use Countries;
 use Illuminate\Support\Facades\DB;
 use marineusde\LarapexCharts\Charts\PieChart as OriginalPieChart;
 
@@ -44,22 +46,23 @@ class CountriesChart
 
         $deepsky->map(function ($item) use (&$countries, &$values) {
             return [
-                array_push($countries, $item->country),
+                array_push($countries, Countries::getOne(Country::where('country', $item->country)->first()->code, app()->getLocale())),
                 array_push($values, $item->count),
             ];
         });
 
         foreach ($comets as $comet) {
-            if (in_array($comet->country, $countries)) {
-                $values[array_search($comet->country, $countries)] += $comet->count;
+            $country = Countries::getOne(Country::where('country', $comet->country)->first()->code, app()->getLocale());
+            if (in_array($country, $countries)) {
+                $values[array_search($country, $countries)] += $comet->count;
             } else {
-                $countries[] = $comet->country;
+                $countries[] = $country;
                 $values[] = $comet->count;
             }
         }
 
         return (new OriginalPieChart)
-            ->setTitle(__('Observations per country: '.$user->name))
+            ->setTitle(__('Observations per country: ').$user->name)
             ->setSubtitle(__('Source: ').config('app.old_url'))
             ->addData($values)
             ->setLabels($countries)

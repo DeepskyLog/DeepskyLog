@@ -64,15 +64,15 @@ final class RemoveUserTable extends PowerGridComponent
             Column::make('Id', 'id')
                 ->sortable(),
 
-            Column::make('Name', 'name')
+            Column::make(__('Name'), 'name')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Username', 'username')
+            Column::make(__('Username'), 'username')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Email', 'email')
+            Column::make(__('Email'), 'email')
                 ->sortable()
                 ->searchable(),
 
@@ -105,7 +105,7 @@ final class RemoveUserTable extends PowerGridComponent
     {
         return [
             Button::add('destroy')
-                ->slot('Delete')
+                ->slot(__('Delete'))
                 ->id()
                 ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
                 ->dispatch('destroy', ['id' => $row->id]),

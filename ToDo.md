@@ -11,21 +11,15 @@
 ### First version
 
 + [X] Add privacy policy
-+ [X] Fix showing (and adding) profile picture
-+ [X] Fix sending mails from socialstream
 + [X] Use DeepskyLog logo in mails
 + [X] Send mail to verify mail account directly after registration
-+ [X] Make a dark version of all the socialstream pages
-+ [X] Don't show the teams dropdown if the user only belongs to one team.
 + [X] Show message when logged in and the country (or the about) is not set.
 + [X] In the observer page, add all the extra information
 + [X] Add sponsors page
 + [X] Create the all users administrator page
 + [X] Add team member should show a list of observers, not just an option to add a person using an email address.
 + [X] Move to slugs for the username and the team names
-+ [X] Make code work again with new version of laravel, livewire, ...
 + [X] Refactor the accomplishment methods to make them more general.
-+ [X] Update to wireui 2.0
 + [ ] Create menu for the new version
     + [X] Create all menus
     + [X] Create Download Magazines page
@@ -34,15 +28,18 @@
     + [ ] Add observing list does not work...
     + [ ] Is observing lists selection needed?
     + [ ] Is selection of date, location and instrument needed?
-+ [X] Finish observer detail page
 + [X] Add 'My Drawings' page
 + [X] Add all drawings page
++ [X] Add Sketch of the week and the month page
 + [X] User administration page
 + [X] Add share buttons for Facebook, X, link, mail, WhatsApp
 + [X] Add administrator / database administrator function to add a sketch of the week and the month
 + [ ] Add translations for the new version
-    + [ ] Also adapt the code in api.php and User.php to translate the country names, and the language names.
+    + [X] Make all translations
+    + [X] Add missing translations
     + [ ] Automatically change the language of the UI when the language settings are changed
+    + [X] Also adapt the code in api.php and User.php to translate the country names, and the language names.
+    + [ ] Switch language if not logged in.
 + [ ] Use the old version of DeepskyLog alongside the new version
     + [ ] Add the code
     + [X] Fix the code for php 8.3

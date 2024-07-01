@@ -14,7 +14,9 @@ use Illuminate\Validation\ValidationException;
 
 class SketchOfTheMonthController extends Controller
 {
-    public function index() {}
+    public function index()
+    {
+    }
 
     public function create()
     {
@@ -48,7 +50,7 @@ class SketchOfTheMonthController extends Controller
         $text = 'The #deepskylog sketch of '.$monthName.' '.$year.' is this sketch of ';
 
         if ($request['observation_id'] > 0) {
-            $object = ObjectsOld::where('name', ObservationsOld::first()->objectname)->get()[0];
+            $object = ObjectsOld::where('name', $observation->objectname)->get()[0];
             $type = $object->long_type();
 
             $text .= 'the '.$type.' ';
@@ -79,7 +81,7 @@ More information can be found here:
 
 #sketch #sketchofthemonth #deepsky #astronomy #deepskydrawing #sketches';
 
-        $sketch = new SketchOfTheMonth;
+        $sketch = new SketchOfTheMonth();
         $sketch->observation_id = $request['observation_id'];
         $sketch->date = $request->date;
         $sketch->user_id = $userId;

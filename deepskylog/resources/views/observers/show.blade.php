@@ -192,8 +192,7 @@
                                 <td>{{ __("Country of residence") }}</td>
                                 <td>
                                     @if ($user->country != '')
-                                        {{ Countries::getOne($user->country) }}
-                                        {{--                                        {{ Countries::getOne($user->country, LaravelGettext::getLocaleLanguage()) }}--}}
+                                        {{ Countries::getOne($user->country, app()->getLocale()) }}
                                     @endif
                                 </td>
                             </tr>
@@ -459,7 +458,7 @@
                                             <div class="text-center">
                                                 {{ \App\Models\CometObservationsOld::find(-$sketch->observation_id)->object->name }}
                                                 -
-                                                {{ \Carbon\Carbon::create($sketch->date)->format('j M Y') }}
+                                                {{ \Carbon\Carbon::create($sketch->date)->translatedFormat('j M Y') }}
                                             </div>
                                         </a>
                                     @else
@@ -472,7 +471,7 @@
 
                                             <div class="text-center">
                                                 {{ $sketch->observation->objectname }}
-                                                - {{ \Carbon\Carbon::create($sketch->date)->format('j M Y') }}
+                                                - {{ \Carbon\Carbon::create($sketch->date)->translatedFormat('j M Y') }}
                                             </div>
                                         </a>
 
@@ -504,7 +503,7 @@
                                             <div class="text-center">
                                                 {{ \App\Models\CometObservationsOld::find(-$sketch->observation_id)->object->name }}
                                                 -
-                                                {{ \Carbon\Carbon::create($sketch->date)->format('j M Y') }}
+                                                {{ \Carbon\Carbon::create($sketch->date)->translatedFormat('j M Y') }}
                                             </div>
                                         </a>
                                     @else
@@ -517,7 +516,7 @@
 
                                             <div class="text-center">
                                                 {{ $sketch->observation->objectname }}
-                                                - {{ \Carbon\Carbon::create($sketch->date)->format('j M Y') }}
+                                                - {{ \Carbon\Carbon::create($sketch->date)->translatedFormat('j M Y') }}
                                             </div>
                                         </a>
 

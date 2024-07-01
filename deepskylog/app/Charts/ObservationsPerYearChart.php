@@ -65,11 +65,11 @@ class ObservationsPerYearChart
         }
 
         return (new OriginalLineChart)
-            ->setTitle(__('Number of observations per year: '.$user->name))
+            ->setTitle(__('Number of observations per year: ').$user->name)
             ->setSubtitle(__('Source: ').config('app.old_url'))
-            ->addData('Total', $observations)
-            ->addData('Deepsky', $deepsky_observations)
-            ->addData('Comets', $comet_observations)
+            ->addData(__('Total'), $observations)
+            ->addData(__('Deepsky'), $deepsky_observations)
+            ->addData(__('Comets'), $comet_observations)
             ->setXAxis($x_axis)
             ->setTheme('dark')
             ->setFontColor('#bbbbbb')

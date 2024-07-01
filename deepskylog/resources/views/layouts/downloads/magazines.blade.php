@@ -4,7 +4,7 @@
             class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8"
         >
             <h2 class="text-xl font-semibold leading-tight">
-                {{ __("Deep-sky Magazines") }}
+                {{ __("Deep-sky magazines") }}
             </h2>
             <br />
 
@@ -29,8 +29,9 @@
                     </div>
                     <div>
                         {{
-__("Distant Targets was the magazine of the Deep-sky working group of the Belgian Astronomical Association (VVS). 32 editions were published, in Dutch, from 1996 to 2003.
-                            A lot of useful information is still available.  Besides Deep-sky, there are also articles about Amateur Telescope Making.")
+                            __("Distant Targets was the magazine of the Deep-sky working group of the Belgian Astronomical Association (VVS). 32 editions were published, in Dutch, from 1996 to 2003.") .
+                                " " .
+                                __("A lot of useful information is still available.  Besides Deep-sky, there are also articles about Amateur Telescope Making.")
                         }}
                     </div>
                 </div>
@@ -50,8 +51,9 @@ __("Distant Targets was the magazine of the Deep-sky working group of the Belgia
                     </div>
                     <div>
                         {{
-__("Distant Targets was the French magazine for Deep-sky observers. 67 editions were published, in French, from 1996 to October 2012.
-                            A lot of useful information is still available.  This magazine are full of pure Deep-sky information.")
+                            __("Ciel Extrême was the French magazine for Deep-sky observers. 67 editions were published, in French, from 1996 to October 2012.") .
+                                " " .
+                                __("A lot of useful information is still available.  This magazine is full of pure Deep-sky information.")
                         }}
                     </div>
                 </div>
@@ -69,8 +71,7 @@ __("Distant Targets was the French magazine for Deep-sky observers. 67 editions 
                     </div>
                     <div>
                         {{
-                            __("Interstellarum was a German magazine for Deep-sky observers. The first 19 editions were purely focused on Deep-sky observing, later editions were focused on visual observations (of all objects). All editions are in German.
-                                                                                                                                                                                                                                 Interstellarum was published from 1994 to 2015.")
+                            __("Interstellarum was a German magazine for Deep-sky observers. The first 19 editions were purely focused on Deep-sky observing, later editions were focused on visual observations (of all objects). All editions are in German.") . " " . __("Interstellarum was published from 1994 to 2015.")
                         }}
                     </div>
                 </div>
