@@ -1,16 +1,16 @@
 <x-form-section submit="updateTeamName">
     <x-slot name="title">
-        {{ __("Team Name") }}
+        {!! __("Team Name") !!}
     </x-slot>
 
     <x-slot name="description">
-        {{ __('The team\'s name and owner information.') }}
+        {!! __('The team\'s name and owner information.') !!}
     </x-slot>
 
     <x-slot name="form">
         <!-- Team Owner Information -->
         <div class="col-span-6">
-            <x-label value="{{ __('Team Owner') }}" />
+            <x-label value="{!! __('Team Owner') !!}" />
 
             <div class="mt-2 flex items-center">
                 <img

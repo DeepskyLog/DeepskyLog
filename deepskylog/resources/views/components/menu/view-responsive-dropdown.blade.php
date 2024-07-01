@@ -40,7 +40,7 @@
                     separator
                     icon="bars-3-center-left"
                     href="{{ config('app.old_url') }}/index.php?indexAction=view_lists"
-                    label="{{ __('My observing lists') }}"
+                    label="{!! __('My observing lists') !!}"
                 />
 
                 <x-dropdown.item

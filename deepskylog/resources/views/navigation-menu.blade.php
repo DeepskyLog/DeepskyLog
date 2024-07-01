@@ -40,6 +40,9 @@
                     <x-menu.settings-dropdown />
                 </div>
 
+                <!-- Language selection -->
+                <x-language_selection />
+
                 <!-- Login / Register dropdown -->
                 @if (Auth::guest())
                     <div class="flex h-16 items-center justify-between">
@@ -57,7 +60,7 @@
                                     href="{{ route("register") }}"
                                     class="ml-4 text-sm text-gray-700 underline dark:text-gray-500"
                                 >
-                                    {{ __("Register") }}
+                                    {!! __("Register") !!}
                                 </a>
                             @endif
                         </div>
@@ -200,21 +203,21 @@
                             <div class="border-t border-gray-400"></div>
 
                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __("Manage Team") }}
+                                {!! __("Manage Team") !!}
                             </div>
 
                             <!-- Team Settings -->
                             <x-dropdown.item
                                 href="{{ route('teams.show', Auth::user()->currentTeam->slug) }}"
                                 :active="request()->routeIs('teams.show')"
-                                label='{{ __("Team Settings") }}'
+                                label='{!! __("Team Settings") !!}'
                             />
 
                             <div class="border-t border-gray-400"></div>
 
                             <!-- Team Switcher -->
                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __("Switch Teams") }}
+                                {!! __("Switch Teams") !!}
                             </div>
 
                             @foreach (Auth::user()->allTeams() as $team)

@@ -17,7 +17,7 @@
 
             <div>
                 <x-input
-                    label="{{ __('Email or user ID') }}"
+                    label="{!! __('Email or user ID') !!}"
                     id="email"
                     class="mt-1 block w-full"
                     type="text"

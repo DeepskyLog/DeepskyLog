@@ -4,7 +4,7 @@
     </x-slot>
 
     <x-slot name="description">
-        {{ __('Update your account\'s profile information and email address.') }}
+        {!! __('Update your account\'s profile information and email address.') !!}
     </x-slot>
 
     @if (auth()->user()->country == "")
@@ -13,7 +13,7 @@
                 window.onload = function () {
                     const title = '{{ __("Missing information!") }}';
                     const description =
-                        '{{ __("Your country of residence is not set. Please set it on this page!") }}';
+                        '{!! __("Your country of residence is not set. Please set it on this page!") !!}';
                     window.$wireui.notify({
                         title: title,
                         description: description,
@@ -134,14 +134,14 @@
                     Laravel\Fortify\Features::emailVerification()
                 ) && ! $this->user->hasVerifiedEmail()            )
                 <p class="mt-2 text-sm">
-                    {{ __("Your email address is unverified.") }}
+                    {!! __("Your email address is unverified.") !!}
 
                     <button
                         type="button"
                         class="text-sm text-gray-400 underline hover:text-gray-500"
                         wire:click.prevent="sendEmailVerification"
                     >
-                        {{ __("Click here to re-send the verification email.") }}
+                        {!! __("Click here to re-send the verification email.") !!}
                     </button>
                 </p>
 
@@ -160,7 +160,7 @@
         <div class="col-span-6 sm:col-span-5">
             <x-input
                 id="username"
-                label="{{ __('Username') }}"
+                label="{!! __('Username') !!}"
                 disabled
                 type="text"
                 class="mt-1 block w-full"
@@ -220,7 +220,7 @@
                 min="-5.0"
                 max="5.0"
                 id="fstOffset"
-                label="{{ __('Offset between measured SQM value and the faintest visible star.') }}"
+                label="{!! __('Offset between measured SQM value and the faintest visible star.') !!}"
                 type="number"
                 class="mt-1 block w-full"
                 wire:model.live="state.fstOffset"

@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Profile;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Livewire\Component;
 
 class UpdateUserLanguageInformation extends Component
@@ -31,7 +33,12 @@ class UpdateUserLanguageInformation extends Component
             'language' => $this->language,
         ])->save();
 
+        App::setLocale($this->language);
+        Carbon::setLocale($this->language);
+
         $this->dispatch('saved');
+
+        $this->redirect('/language/'.$this->language);
     }
 
     public function render()

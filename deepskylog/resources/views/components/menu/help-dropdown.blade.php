@@ -14,7 +14,7 @@
             <x-dropdown.item
                 icon="at-symbol"
                 href="https://groups.io/g/deepskylog"
-                label="{{ __('Subscribe to mailing list') }}"
+                label="{!! __('Subscribe to mailing list') !!}"
             />
             <x-dropdown.item
                 icon="banknotes"

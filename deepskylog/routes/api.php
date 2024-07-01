@@ -172,7 +172,8 @@ Route::get('ui_languages.index', function (Request $request) {
     }
 
     // Get the languages
-    foreach (Languages::lookup(['nl', 'es', 'fr', 'sv', 'de', 'en'], 'mixed') as $key => $language) {
+    foreach (config('app.available_locales') as $language => $key) {
+        $language = Languages::lookup([$key], $key)[$key];
         if ($request->search == '' || Str::contains(Str::lower($language), Str::lower($request->search))) {
             $allLanguages[] = [
                 'id' => $key,

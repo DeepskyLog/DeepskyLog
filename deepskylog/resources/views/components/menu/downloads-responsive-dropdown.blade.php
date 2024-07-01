@@ -12,7 +12,7 @@
             <x-dropdown.item
                 icon="rectangle-stack"
                 href="{{ config('app.old_url') }}/index.php?indexAction=downloadAstroImageCatalogs"
-                label="{{ __('Image catalogs') }}"
+                label="{!! __('Image catalogs') !!}"
             />
             <x-dropdown.item
                 icon="arrow-down-tray"

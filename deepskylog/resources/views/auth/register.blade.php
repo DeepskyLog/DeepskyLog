@@ -25,7 +25,7 @@
 
             <div class="mt-4">
                 <x-input
-                    label="{{ __('User name') }}"
+                    label="{!! __('User name') !!}"
                     id="username"
                     class="mt-1 block w-full"
                     type="text"
@@ -105,7 +105,7 @@
                 </a>
 
                 <x-button type="submit" class="ml-4">
-                    {{ __("Register") }}
+                    {!! __("Register") !!}
                 </x-button>
             </div>
         </form>

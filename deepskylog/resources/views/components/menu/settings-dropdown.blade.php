@@ -50,7 +50,7 @@
 
             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                 <x-dropdown.item
-                    label="{{ __('API Tokens') }}"
+                    label="{!! __('API Tokens') !!}"
                     href="{{ route('api-tokens.index') }}"
                 />
             @endif

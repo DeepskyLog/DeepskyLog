@@ -1,6 +1,6 @@
 <x-action-section>
     <x-slot name="title">
-        {{ __("Delete Team") }}
+        {!! __("Delete Team") !!}
     </x-slot>
 
     <x-slot name="description">
@@ -18,14 +18,14 @@
                 wire:click="$toggle('confirmingTeamDeletion')"
                 wire:loading.attr="disabled"
             >
-                {{ __("Delete Team") }}
+                {!! __("Delete Team") !!}
             </x-button>
         </div>
 
         <!-- Delete Team Confirmation Modal -->
         <x-modal-card
             blur
-            title="{{ __('Delete Team') }}"
+            title="{!! __('Delete Team') !!}"
             wire:model.live="confirmingTeamDeletion"
         >
             <div class="col-span-1 flex">
@@ -52,7 +52,7 @@
                     wire:click="deleteTeam"
                     wire:loading.attr="disabled"
                 >
-                    {{ __("Delete Team") }}
+                    {!! __("Delete Team") !!}
                 </x-button>
             </x-slot>
         </x-modal-card>

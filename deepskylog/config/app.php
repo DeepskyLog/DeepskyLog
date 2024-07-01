@@ -98,6 +98,15 @@ return [
 
     'fallback_locale' => 'en',
 
+    'available_locales' => [
+        'English' => 'en',
+        'German' => 'de',
+        'French' => 'fr',
+        'Spanish' => 'es',
+        'Dutch' => 'nl',
+        'Swedish' => 'sv',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Faker Locale
@@ -208,7 +217,7 @@ return [
     |
     | This array of class aliases will be registered when this application
     | is started. However, feel free to register as many as you wish as
-    | the aliases are "lazy" loaded so they don't hinder performance.
+    | the aliases are "lazy" loaded, so they don't hinder performance.
     |
     */
 

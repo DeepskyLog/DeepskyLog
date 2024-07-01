@@ -47,7 +47,7 @@
                         <table class="table-auto">
                             <!-- Default location -->
                             <tr>
-                                <td>{{ __("Default observing site") }}</td>
+                                <td>{!! __("Default observing site") !!}</td>
                                 <td>
                                     @if ($user->stdlocation)
                                         <a
@@ -75,7 +75,7 @@
 
                             <!-- Number of locations -->
                             <tr>
-                                <td>{{ __("Number of locations") }}</td>
+                                <td>{!! __("Number of locations") !!}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="{{ config('app.old_url') }}/index.php?indexAction=view_sites">
@@ -89,7 +89,7 @@
 
                             <!-- Number of instruments -->
                             <tr>
-                                <td>{{ __("Number of instruments") }}</td>
+                                <td>{!! __("Number of instruments") !!}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="{{ config('app.old_url') }}/index.php?indexAction=view_instruments">
@@ -103,7 +103,7 @@
 
                             <!-- Number of eyepieces -->
                             <tr>
-                                <td>{{ __("Number of eyepieces") }}</td>
+                                <td>{!! __("Number of eyepieces") !!}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="{{ config('app.old_url') }}/index.php?indexAction=view_eyepieces">
@@ -145,7 +145,7 @@
 
                             <!-- Number of observing lists -->
                             <tr>
-                                <td>{{ __("Total number of observing lists") }}</td>
+                                <td>{!! __("Total number of observing lists") !!}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="{{ config('app.old_url') }}/index.php?indexAction=view_lists">
@@ -159,7 +159,7 @@
 
                             <!-- Number of observing lists -->
                             <tr>
-                                <td>{{ __("Public observing lists") }}</td>
+                                <td>{!! __("Public observing lists") !!}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="{{ config('app.old_url') }}/index.php?indexAction=view_lists">
@@ -173,7 +173,7 @@
 
                             <!-- Number of equipment sets -->
                             {{--                            <tr>--}}
-                            {{--                                <td>{{ __("Number of equipment sets") }}</td>--}}
+                            {{--                                <td>{!! __("Number of equipment sets") !!}</td>--}}
                             {{--                                <td>--}}
                             {{--
                                 @if ($user->id === Auth::user()->id)
@@ -243,7 +243,7 @@
                 <table>
                     <!-- Copyright notice -->
                     <tr>
-                        <td>{{ __("Copyright notice") }}</td>
+                        <td>{!! __("Copyright notice") !!}</td>
                         <td>{!! $user->getCopyright() !!}</td>
                     </tr>
                     <tr>
@@ -262,7 +262,7 @@
 
                     <tbody>
                     <tr>
-                        <td>{{ __("Number of observations") }}</td>
+                        <td>{!! __("Number of observations") !!}</td>
                         <td>{{ $observations->count() + \App\Models\CometObservationsOld::where("observerid", $user->username)->count() }}
                             / {{ $totalObservations + \App\Models\CometObservationsOld::getTotalObservations() }}
                         </td>
@@ -275,7 +275,7 @@
                     </tr>
 
                     <tr>
-                        <td>{{ __("Observations last year") }}</td>
+                        <td>{!! __("Observations last year") !!}</td>
                         <td>{{ $observationsLastYear + $user->getCometObservationsLastYear() }} /
                             {{ $totalObservationsLastYear + \App\Models\CometObservationsOld::getTotalObservationsLastYear()}}
                         </td>
@@ -305,7 +305,7 @@
                     </tr>
 
                     <tr>
-                        <td>{{ __("Drawings last year") }}</td>
+                        <td>{!! __("Drawings last year") !!}</td>
                         @php
                             $totalDrawings = \App\Models\ObservationsOld::getTotalDrawingsLastYear();
                         @endphp
@@ -338,7 +338,7 @@
                     </tr>
 
                     <tr>
-                        <td>{{ __("Drawings of Messier objects") }}</td>
+                        <td>{!! __("Drawings of Messier objects") !!}</td>
                         <td></td>
                         <td>{{ $user->getDrawingCountFromCatalog('M') }} / 110</td>
                         <td></td>
@@ -352,7 +352,7 @@
                     </tr>
 
                     <tr>
-                        <td>{{ __("Drawings of Caldwell objects") }}</td>
+                        <td>{!! __("Drawings of Caldwell objects") !!}</td>
                         <td></td>
                         <td>{{ $user->getDrawingCountFromCatalog('Caldwell') }} / 109</td>
                         <td></td>
@@ -366,7 +366,7 @@
                     </tr>
 
                     <tr>
-                        <td>{{ __("Drawings of H400 objects") }}</td>
+                        <td>{!! __("Drawings of H400 objects") !!}</td>
                         <td></td>
                         <td>{{ $user->getDrawingCountFromCatalog('H400') }} / 400</td>
                         <td></td>
@@ -380,7 +380,7 @@
                     </tr>
 
                     <tr>
-                        <td>{{ __("Drawings of H400-II objects") }}</td>
+                        <td>{!! __("Drawings of H400-II objects") !!}</td>
                         <td></td>
                         <td>{{ $user->getDrawingCountFromCatalog('H400-II') }} / 400</td>
                         <td></td>

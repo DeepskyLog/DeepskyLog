@@ -9,7 +9,7 @@
             <div class="mt-2">
                 <x-card>
                     <div class="mb-4 flex flex-wrap">
-                        {{ __("At this moment, this form is very basic.  If a comet sketch is the sketch of the month, enter the negative ID.  In the future, the option to add a DeepskyLog sketch of the month will be included in the details of an observation.") }}
+                        {!! __("At this moment, this form is very basic.  If a comet sketch is the sketch of the month, enter the negative ID.  In the future, the option to add a DeepskyLog sketch of the month will be included in the details of an observation.") !!}
                     </div>
                     <form
                         role="form"
@@ -20,7 +20,7 @@
                         <div class="col-span-6 sm:col-span-5">
                             <x-input
                                 name="observation_id"
-                                label="{{ __('Observation ID') }}"
+                                label="{!! __('Observation ID') !!}"
                                 type="number"
                                 class="mt-1 block w-full"
                                 required

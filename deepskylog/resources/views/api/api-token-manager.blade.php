@@ -2,11 +2,11 @@
     <!-- Generate API Token -->
     <x-form-section submit="createApiToken">
         <x-slot name="title">
-            {{ __("Create API Token") }}
+            {!! __("Create API Token") !!}
         </x-slot>
 
         <x-slot name="description">
-            {{ __("API tokens allow third-party services to authenticate with our application on your behalf.") }}
+            {!! __("API tokens allow third-party services to authenticate with our application on your behalf.") !!}
         </x-slot>
 
         <x-slot name="form">
@@ -66,11 +66,11 @@
         <div class="mt-10 sm:mt-0">
             <x-action-section>
                 <x-slot name="title">
-                    {{ __("Manage API Tokens") }}
+                    {!! __("Manage API Tokens") !!}
                 </x-slot>
 
                 <x-slot name="description">
-                    {{ __("You may delete any of your existing tokens if they are no longer needed.") }}
+                    {!! __("You may delete any of your existing tokens if they are no longer needed.") !!}
                 </x-slot>
 
                 <!-- API Token List -->
@@ -121,7 +121,7 @@
         wire:model.live="displayingToken"
     >
         <div>
-            {{ __('Please copy your new API token. For your security, it won\'t be shown again.') }}
+            {!! __('Please copy your new API token. For your security, it won\'t be shown again.') !!}
         </div>
 
         <x-input
@@ -151,7 +151,7 @@
     <!-- API Token Permissions Modal -->
     <x-modal-card
         blur
-        title="{{ __('API Token Permissions') }}"
+        title="{!! __('API Token Permissions') !!}"
         wire:model.live="managingApiTokenPermissions"
     >
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -189,13 +189,13 @@
     <!-- Delete Token Confirmation Modal -->
     <x-modal-card
         blur
-        title="{{ __('Delete API Token') }}"
+        title="{!! __('Delete API Token') !!}"
         wire:model.live="confirmingApiTokenDeletion"
     >
         <div class="col-span-1 flex">
             <x-icon name="exclamation-circle" class="h-10 w-10 text-red-600" />
             <div class="px-4 py-2">
-                {{ __("Are you sure you would like to delete this API token?") }}
+                {!! __("Are you sure you would like to delete this API token?") !!}
             </div>
         </div>
 

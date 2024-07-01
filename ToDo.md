@@ -14,7 +14,7 @@
 + [X] Use DeepskyLog logo in mails
 + [X] Send mail to verify mail account directly after registration
 + [X] Show message when logged in and the country (or the about) is not set.
-+ [X] In the observer page, add all the extra information
++ [X] Make new observer page
 + [X] Add sponsors page
 + [X] Create the all users administrator page
 + [X] Add team member should show a list of observers, not just an option to add a person using an email address.
@@ -34,12 +34,7 @@
 + [X] User administration page
 + [X] Add share buttons for Facebook, X, link, mail, WhatsApp
 + [X] Add administrator / database administrator function to add a sketch of the week and the month
-+ [ ] Add translations for the new version
-    + [X] Make all translations
-    + [X] Add missing translations
-    + [ ] Automatically change the language of the UI when the language settings are changed
-    + [X] Also adapt the code in api.php and User.php to translate the country names, and the language names.
-    + [ ] Switch language if not logged in.
++ [X] Add translations for the new version
 + [ ] Use the old version of DeepskyLog alongside the new version
     + [ ] Add the code
     + [X] Fix the code for php 8.3

@@ -6,7 +6,7 @@
         <div class="mt-10 sm:mt-0">
             <x-form-section submit="addTeamMember">
                 <x-slot name="title">
-                    {{ __("Add Team Member") }}
+                    {!! __("Add Team Member") !!}
                 </x-slot>
 
                 <x-slot name="description">
@@ -112,11 +112,11 @@
         <div class="mt-10 sm:mt-0">
             <x-action-section>
                 <x-slot name="title">
-                    {{ __("Pending Team Invitations") }}
+                    {!! __("Pending Team Invitations") !!}
                 </x-slot>
 
                 <x-slot name="description">
-                    {{ __("These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.") }}
+                    {!! __("These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.") !!}
                 </x-slot>
 
                 <x-slot name="content">
@@ -153,7 +153,7 @@
         <div class="mt-10 sm:mt-0">
             <x-action-section>
                 <x-slot name="title">
-                    {{ __("Team Members") }}
+                    {!! __("Team Members") !!}
                 </x-slot>
 
                 <x-slot name="description">
@@ -245,7 +245,7 @@
     <!-- Leave Team Confirmation Modal -->
     <x-modal-card
         blur
-        title="{{ __('Leave Team') }}"
+        title="{!! __('Leave Team') !!}"
         wire:model.live="confirmingLeavingTeam"
     >
         <div class="col-span-1 flex">
@@ -277,13 +277,13 @@
     <!-- Remove Team Member Confirmation Modal -->
     <x-modal-card
         blur
-        title="{{ __('Remove Team Member') }}"
+        title="{!! __('Remove Team Member') !!}"
         wire:model.live="confirmingTeamMemberRemoval"
     >
         <div class="col-span-1 flex">
             <x-icon name="exclamation-circle" class="h-10 w-10 text-red-600" />
             <div class="px-4 py-2">
-                {{ __("Are you sure you would like to remove this person from the team?") }}
+                {!! __("Are you sure you would like to remove this person from the team?") !!}
             </div>
         </div>
         <x-slot name="footer">

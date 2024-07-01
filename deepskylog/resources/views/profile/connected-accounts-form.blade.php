@@ -10,14 +10,14 @@
     <x-slot name="content">
         <h3 class="text-lg font-medium text-gray-200">
             @if (count($this->accounts) == 0)
-                {{ __("You have no connected accounts.") }}
+                {!! __("You have no connected accounts.") !!}
             @else
                 {{ __("Your connected accounts.") }}
             @endif
         </h3>
 
         <div class="mt-3 max-w-xl text-sm text-gray-300">
-            {{ __("You are free to connect any social accounts to your profile and may remove any connected accounts at any time. If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.") }}
+            {!! __("You are free to connect any social accounts to your profile and may remove any connected accounts at any time. If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.") !!}
         </div>
 
         <div class="mt-5 space-y-6">
@@ -39,7 +39,7 @@
                                         class="ml-6 cursor-pointer text-sm text-gray-500 focus:outline-none"
                                         wire:click="setAvatarAsProfilePhoto({{ $account->id }})"
                                     >
-                                        {{ __("Use Avatar as Profile Photo") }}
+                                        {!! __("Use Avatar as Profile Photo") !!}
                                     </button>
                                 @endif
 

@@ -12,7 +12,7 @@
             <br />
             {{ __("Everybody who sponsors DeepskyLog will appear with his / her the company name on this page.") }}
             <br />
-            {{ __("You can get more information on sponsoring DeepskyLog by sending us a mail:") }}
+            {!! __("You can get more information on sponsoring DeepskyLog by sending us a mail:") !!}
             <br />
             <br />
             <a href="mailto:deepskylog@groups.io">

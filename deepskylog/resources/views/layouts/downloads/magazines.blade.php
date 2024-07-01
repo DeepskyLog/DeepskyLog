@@ -8,7 +8,7 @@
             </h2>
             <br />
 
-            {{ __("During the previous years, a lot of interesting information about Deep-Sky observing has been published.  Many of the magazines do not exist anymore, but can be downloaded for free.  If you know about other magazines, please let us know (") }}
+            {!! __("During the previous years, a lot of interesting information about Deep-Sky observing has been published.  Many of the magazines do not exist anymore, but can be downloaded for free.  If you know about other magazines, please let us know (") !!}
             <a href="mailto:deepskylog@groups.io">
                 {{ "deepskylog@groups.io" }}
             </a>
@@ -28,11 +28,11 @@
                         </a>
                     </div>
                     <div>
-                        {{
+                        {!!
                             __("Distant Targets was the magazine of the Deep-sky working group of the Belgian Astronomical Association (VVS). 32 editions were published, in Dutch, from 1996 to 2003.") .
                                 " " .
                                 __("A lot of useful information is still available.  Besides Deep-sky, there are also articles about Amateur Telescope Making.")
-                        }}
+                        !!}
                     </div>
                 </div>
             </x-card>
@@ -70,9 +70,7 @@
                         </a>
                     </div>
                     <div>
-                        {{
-                            __("Interstellarum was a German magazine for Deep-sky observers. The first 19 editions were purely focused on Deep-sky observing, later editions were focused on visual observations (of all objects). All editions are in German.") . " " . __("Interstellarum was published from 1994 to 2015.")
-                        }}
+                        {!! __("Interstellarum was a German magazine for Deep-sky observers. The first 19 editions were purely focused on Deep-sky observing, later editions were focused on visual observations (of all objects). All editions are in German.") . " " . __("Interstellarum was published from 1994 to 2015.") !!}
                     </div>
                 </div>
             </x-card>

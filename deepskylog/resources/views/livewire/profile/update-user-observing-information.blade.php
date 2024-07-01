@@ -1,10 +1,10 @@
 <x-form-section submit="updateObservingInformation">
     <x-slot name="title">
-        {{ __("Observing Settings") }}
+        {!! __("Observing Settings") !!}
     </x-slot>
 
     <x-slot name="description">
-        {{ __("Update the settings for observing.") }}
+        {!! __("Update the settings for observing.") !!}
     </x-slot>
 
     @if (! auth()->user()->stdlocation)
@@ -13,7 +13,7 @@
                 window.onload = function () {
                     const title = '{{ __("Missing information!") }}';
                     const description =
-                        '{{ __('You haven\'t selected a standard location for your observations! DeepskyLog can only calculate how easy an object can be seen if the standard location is set.') }}';
+                        '{!! __('You haven\'t selected a standard location for your observations! DeepskyLog can only calculate how easy an object can be seen if the standard location is set.') !!}';
                     window.$wireui.notify({
                         title: title,
                         description: description,
@@ -28,7 +28,7 @@
                 window.onload = function () {
                     const title = '{{ __("Missing information!") }}';
                     const description =
-                        '{{ __('You haven\'t selected a standard instrument for your observations! DeepskyLog can only calculate how easy an object can be seen if the standard instrument is set.') }}';
+                        '{!! __('You haven\'t selected a standard instrument for your observations! DeepskyLog can only calculate how easy an object can be seen if the standard instrument is set.') !!}';
                     window.$wireui.notify({
                         title: title,
                         description: description,
@@ -43,7 +43,7 @@
         {{-- Default observing site --}}
         <div class="col-span-6 sm:col-span-5">
             <x-select
-                label="{{ __('Default observing site') }}"
+                label="{!! __('Default observing site') !!}"
                 wire:model.live="stdlocation"
                 :async-data="route('locations.index')"
                 option-label="name"
@@ -77,7 +77,7 @@
         <div class="col-span-6 sm:col-span-5">
             @if (auth()->user()->showInches)
                 <x-toggle
-                    label="{{ __('Show instrument diameter in inch') }}"
+                    label="{!! __('Show instrument diameter in inch') !!}"
                     name="showInches"
                     id="showInches"
                     wire:model.live="showInches"
@@ -85,7 +85,7 @@
                 />
             @else
                 <x-toggle
-                    label="{{ __('Show instrument diameter in inch') }}"
+                    label="{!! __('Show instrument diameter in inch') !!}"
                     name="showInches"
                     id="showInches"
                     wire:model.live="showInches"

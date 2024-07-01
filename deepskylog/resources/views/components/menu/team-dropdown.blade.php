@@ -29,16 +29,16 @@
             </x-slot>
 
             <!-- Team Management -->
-            <x-dropdown.header label="{{ __('Manage Team') }}">
+            <x-dropdown.header label="{!! __('Manage Team') !!}">
                 <!-- Team Settings -->
                 <x-dropdown.item
-                    label="{{ __('Team Settings') }}"
+                    label="{!! __('Team Settings') !!}"
                     href="{{ route('teams.show', Auth::user()->currentTeam->slug) }}"
                 />
             </x-dropdown.header>
 
             <!-- Team Switcher -->
-            <x-dropdown.header label="{{ __('Switch Teams') }}">
+            <x-dropdown.header label="{!! __('Switch Teams') !!}">
                 @foreach (Auth::user()->allTeams() as $team)
                     <x-switchable-team :team="$team" />
                 @endforeach
