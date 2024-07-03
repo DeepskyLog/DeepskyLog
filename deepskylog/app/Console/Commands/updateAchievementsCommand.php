@@ -863,7 +863,7 @@ class updateAchievementsCommand extends Command
             $observation = ObservationsOld::where('id', $sketch->observation_id)->first();
         }
         // Get observerid from the observation
-        $observerid = $observation->observerid;
+        $observerid = html_entity_decode($observation->observerid);
 
         // Get user from the observerid
         return User::where('username', $observerid)->first();

@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Navigation Links -->
 
-                <div class="-my-px ml-10 flex h-16 items-center space-x-8">
+                <div class="-my-px flex h-16 items-center space-x-8">
                     <x-nav-link href="{{ route('dashboard') }}">
                         <div class="text-xl font-bold">
                             {{ __("DeepskyLog") }}

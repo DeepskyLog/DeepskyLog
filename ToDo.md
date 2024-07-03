@@ -20,14 +20,7 @@
 + [X] Add team member should show a list of observers, not just an option to add a person using an email address.
 + [X] Move to slugs for the username and the team names
 + [X] Refactor the accomplishment methods to make them more general.
-+ [ ] Create menu for the new version
-    + [X] Create all menus
-    + [X] Create Download Magazines page
-    + [X] Create a page for the DeepskyLog sketch of the month and the week
-    + [X] Menu for small screens
-    + [ ] Add observing list does not work...
-    + [ ] Is observing lists selection needed?
-    + [ ] Is selection of date, location and instrument needed?
++ [X] Create menu for the new version, also for small screens
 + [X] Add 'My Drawings' page
 + [X] Add all drawings page
 + [X] Add Sketch of the week and the month page
@@ -35,6 +28,8 @@
 + [X] Add share buttons for Facebook, X, link, mail, WhatsApp
 + [X] Add administrator / database administrator function to add a sketch of the week and the month
 + [X] Add translations for the new version
++ [X] Add new index page, with latest sketch of the week and the month, 10 latest drawings, 10 latest observers, 10
+  latest observations
 + [ ] Use the old version of DeepskyLog alongside the new version
     + [ ] Add the code
     + [X] Fix the code for php 8.3

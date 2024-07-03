@@ -13,9 +13,7 @@ use Illuminate\Validation\ValidationException;
 
 class SketchOfTheWeekController extends Controller
 {
-    public function index()
-    {
-    }
+    public function index() {}
 
     public function create()
     {
@@ -40,7 +38,7 @@ class SketchOfTheWeekController extends Controller
         }
 
         // Get the user id
-        $userId = User::where('username', $observation->observerid)->first()->id;
+        $userId = User::where('username', html_entity_decode($observation->observerid))->first()->id;
 
         // Create text for Facebook, X
         $text = 'As new #deepskylog sketch of the week, we selected this sketch of ';
@@ -59,7 +57,7 @@ class SketchOfTheWeekController extends Controller
         } else {
             $text .= 'comet '.$observation->object->name;
         }
-        $text .= ' by '.User::where('username', $observation->observerid)->first()->name.'.';
+        $text .= ' by '.User::where('username', html_entity_decode($observation->observerid))->first()->name.'.';
         $text .= '
 More information can be found here:
 

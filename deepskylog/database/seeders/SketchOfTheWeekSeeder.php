@@ -76,7 +76,7 @@ class SketchOfTheWeekSeeder extends Seeder
             }
             if ($username) {
                 // Get the corresponding user id
-                $userId = User::where('username', $username->observerid)->first()->id;
+                $userId = User::where('username', html_entity_decode($username->observerid))->first()->id;
 
                 SketchOfTheWeek::create([
                     'observation_id' => $observationId,

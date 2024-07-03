@@ -14,9 +14,7 @@ use Illuminate\Validation\ValidationException;
 
 class SketchOfTheMonthController extends Controller
 {
-    public function index()
-    {
-    }
+    public function index() {}
 
     public function create()
     {
@@ -41,7 +39,7 @@ class SketchOfTheMonthController extends Controller
         }
 
         // Get the user id
-        $userId = User::where('username', $observation->observerid)->first()->id;
+        $userId = User::where('username', html_entity_decode($observation->observerid))->first()->id;
         // Create text for Facebook, X and Instagram
         $carbon_date = Carbon::createFromFormat('Y-m-d', $request['date'])->subMonth();
 
@@ -65,7 +63,7 @@ class SketchOfTheMonthController extends Controller
         }
         $text .= ' by '.User::where('username', $observation->observerid)->first()->name.'.';
         $text .= '
-Congratulations, '.explode(' ', User::where('username', $observation->observerid)->first()->name)[0].'!';
+Congratulations, '.explode(' ', User::where('username', html_entity_decode($observation->observerid))->first()->name)[0].'!';
 
         $text .= '
 More information can be found here:

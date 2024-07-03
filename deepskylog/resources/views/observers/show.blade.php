@@ -447,35 +447,7 @@
                         <div class="px-5 flex flex-wrap">
                             @foreach($user->sketchOfTheWeek as $sketch)
                                 <div class="max-w-xl mt-3 pr-3">
-                                    {{-- Show the correct drawing --}}
-                                    @if($sketch->observation_id < 0)
-                                        <a class="no-underline"
-                                           href="{{ config('app.old_url') }}/index.php?indexAction=comets_detail_observation&observation={{ -$sketch->observation_id }}">
-                                            <img
-                                                width="400"
-                                                src="/images/cometdrawings/{{ -$sketch->observation_id }}.jpg"
-                                            />
-                                            <div class="text-center">
-                                                {{ \App\Models\CometObservationsOld::find(-$sketch->observation_id)->object->name }}
-                                                -
-                                                {{ \Carbon\Carbon::create($sketch->date)->translatedFormat('j M Y') }}
-                                            </div>
-                                        </a>
-                                    @else
-                                        <a
-                                            href="{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $sketch->observation_id }}">
-                                            <img
-                                                width="400"
-                                                src="/images/drawings/{{ $sketch->observation_id }}.jpg"
-                                            />
-
-                                            <div class="text-center">
-                                                {{ $sketch->observation->objectname }}
-                                                - {{ \Carbon\Carbon::create($sketch->date)->translatedFormat('j M Y') }}
-                                            </div>
-                                        </a>
-
-                                    @endif
+                                    <x-sketch :sketch="$sketch" />
                                 </div>
                             @endforeach
                         </div>
@@ -493,34 +465,7 @@
                             @foreach($user->sketchOfTheMonth as $sketch)
                                 <div class="max-w-xl mt-3 pr-3">
                                     {{-- Show the correct drawing --}}
-                                    @if($sketch->observation_id < 0)
-                                        <a class="no-underline"
-                                           href="{{ config('app.old_url') }}/index.php?indexAction=comets_detail_observation&observation={{ -$sketch->observation_id }}">
-                                            <img
-                                                width="400"
-                                                src="/images/cometdrawings/{{ -$sketch->observation_id }}.jpg"
-                                            />
-                                            <div class="text-center">
-                                                {{ \App\Models\CometObservationsOld::find(-$sketch->observation_id)->object->name }}
-                                                -
-                                                {{ \Carbon\Carbon::create($sketch->date)->translatedFormat('j M Y') }}
-                                            </div>
-                                        </a>
-                                    @else
-                                        <a
-                                            href="{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $sketch->observation_id }}">
-                                            <img
-                                                width="400"
-                                                src="/images/drawings/{{ $sketch->observation_id }}.jpg"
-                                            />
-
-                                            <div class="text-center">
-                                                {{ $sketch->observation->objectname }}
-                                                - {{ \Carbon\Carbon::create($sketch->date)->translatedFormat('j M Y') }}
-                                            </div>
-                                        </a>
-
-                                    @endif
+                                    <x-sketch :sketch="$sketch" />
                                 </div>
                             @endforeach
                         </div>

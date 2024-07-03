@@ -16,12 +16,12 @@
                     label="{{ __('Observation') }}"
                 />
 
-                <x-dropdown.item
-                    separator
-                    icon="bars-4"
-                    href=""
-                    label="{!! __('Observing list') !!}"
-                />
+                {{-- <x-dropdown.item --}}
+                {{-- separator --}}
+                {{-- icon="bars-4" --}}
+                {{-- href="" --}}
+                {{-- label="{!! __('Observing list') !!}" --}}
+                {{-- /> --}}
 
                 <x-dropdown.item
                     icon="user-plus"

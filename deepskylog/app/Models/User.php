@@ -740,7 +740,7 @@ class User extends Authenticatable implements MustVerifyEmail
             $userIndex++;
         }
 
-        return $userIndex;
+        return $userIndex + 1;
     }
 
     /**

@@ -3,7 +3,7 @@
         $lang = Languages::lookup([config("app.locale")], config("app.locale"))[config("app.locale")];
     @endphp
 
-    <div {{ $attributes->class(["mt-3 object-center"]) }}>
+    <div class="mr-2 mt-3 object-center">
         <x-select
             x-on:selected="window.location.href = '/language/' + $event.detail.value;"
             placeholder="{{ $lang }}"

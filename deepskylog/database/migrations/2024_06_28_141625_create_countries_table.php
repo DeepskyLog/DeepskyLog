@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+return new class() extends Migration
 {
     public function up(): void
     {
@@ -249,6 +249,7 @@ return new class extends Migration
         DB::table('countries')->insert(['country' => 'United Arab Emirates', 'code' => 'AE']);
         DB::table('countries')->insert(['country' => 'United Kingdom of Great Britain and Northern Ireland', 'code' => 'GB']);
         DB::table('countries')->insert(['country' => 'United States of America', 'code' => 'US']);
+        DB::table('countries')->insert(['country' => 'United States', 'code' => 'US']);
         DB::table('countries')->insert(['country' => 'United States Minor Outlying Islands', 'code' => 'UM']);
         DB::table('countries')->insert(['country' => 'Uruguay', 'code' => 'UY']);
         DB::table('countries')->insert(['country' => 'Uzbekistan', 'code' => 'UZ']);
