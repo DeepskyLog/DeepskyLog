@@ -31,13 +31,22 @@ class ObservationsPerYearChart
         $query = ObservationsOld::where('observerid', $user->username)
             ->orderBy('date', 'asc');
 
-        if ($query->count() == 0) {
+        $cometQuery = CometObservationsOld::where('observerid', $user->username)
+            ->orderBy('date', 'asc');
+
+        if ($query->count() == 0 && $cometQuery->count() == 0) {
             $deepsky_observations = [];
             $comet_observations = [];
             $observations = [];
             $x_axis = [];
         } else {
-            $firstObservation = $query->first()->date;
+            if ($query->count() == 0) {
+                $firstObservation = $cometQuery->first()->date;
+            } elseif ($cometQuery->count() == 0) {
+                $firstObservation = $query->first()->date;
+            } else {
+                $firstObservation = min($query->first()->date, $cometQuery->first()->date);
+            }
 
             // Drop last 4 characters of the integer to get the year.
             $firstObservation = intval(substr($firstObservation, 0, -4));
