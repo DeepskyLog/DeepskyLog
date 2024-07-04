@@ -24,7 +24,7 @@
         {{ __(' from ') }}
         <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_location&location={{ $observation->locationid }}"
            class="font-bold hover:underline">
-            {{ \App\Models\LocationsOld::where('id', $observation->locationid)->first()->name }}
+            {{ html_entity_decode(\App\Models\LocationsOld::where('id', $observation->locationid)->first()->name) }}
         </a>
 
         {{-- Seeing --}}
@@ -51,7 +51,7 @@
         {{ __('Used instrument was ') }}
         <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_instrument&instrument={{ $observation->instrumentid }}"
            class="font-bold hover:underline">
-            {!! \App\Models\InstrumentsOld::where('id', $observation->instrumentid)->first()->name !!}
+            {!! html_entity_decode(\App\Models\InstrumentsOld::where('id', $observation->instrumentid)->first()->name) !!}
         </a>
         @if ($observation->magnification > 0)
             {{ __(' with a magnification of ') }}
@@ -61,14 +61,14 @@
             {{ __(' using a ') }}
             <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_eyepiece&eyepiece={{ $observation->eyepieceid }}"
                class="font-bold hover:underline">
-                {{ \App\Models\EyepiecesOld::where('id', $observation->eyepieceid)->first()->name }}
+                {{ html_entity_decode(\App\Models\EyepiecesOld::where('id', $observation->eyepieceid)->first()->name) }}
             </a>
             {{ __(' eyepiece') }}
             @if ($observation->filterid > 0)
                 {{ __(' and a ') }}
                 <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_filter&filter={{ $observation->filterid }}"
                    class="font-bold hover:underline">
-                    {{ \App\Models\FiltersOld::where('id', $observation->filterid)->first()->name }}
+                    {{ html_entity_decode(\App\Models\FiltersOld::where('id', $observation->filterid)->first()->name) }}
                 </a>
                 {{ __(' filter') }}
             @endif
@@ -76,7 +76,7 @@
             {{ __(' using a ') }}
             <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_filter&filter={{ $observation->filterid }}"
                class="font-bold hover:underline">
-                {{ \App\Models\FiltersOld::where('id', $observation->filterid)->first()->name }}
+                {{ html_entity_decode(\App\Models\FiltersOld::where('id', $observation->filterid)->first()->name) }}
             </a>
             {{ __(' filter') }}
         @endif
