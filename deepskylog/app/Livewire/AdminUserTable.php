@@ -186,6 +186,7 @@ final class AdminUserTable extends PowerGridComponent
     {
         return [
             Button::add('destroy')
+                ->confirm(__('Are you sure you want to remove the user from the team?'))
                 ->slot(__('Remove'))
                 ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
                 ->tooltip(__('Remove user from team'))

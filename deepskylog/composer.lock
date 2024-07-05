@@ -3994,16 +3994,16 @@
         },
         {
             "name": "power-components/livewire-powergrid",
-            "version": "v5.8.1",
+            "version": "v5.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Power-Components/livewire-powergrid.git",
-                "reference": "1899b415b1b88d8c1100a1d02db6ac2bf077ad90"
+                "reference": "d9ff65d2cb1b43a85310ca16ceafaf9f108bcf4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/1899b415b1b88d8c1100a1d02db6ac2bf077ad90",
-                "reference": "1899b415b1b88d8c1100a1d02db6ac2bf077ad90",
+                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/d9ff65d2cb1b43a85310ca16ceafaf9f108bcf4b",
+                "reference": "d9ff65d2cb1b43a85310ca16ceafaf9f108bcf4b",
                 "shasum": ""
             },
             "require": {
@@ -4063,7 +4063,7 @@
             "homepage": "https://github.com/power-components/livewire-powergrid",
             "support": {
                 "issues": "https://github.com/Power-Components/livewire-powergrid/issues",
-                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v5.8.1"
+                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v5.9.0"
             },
             "funding": [
                 {
@@ -4071,7 +4071,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-18T09:29:52+00:00"
+            "time": "2024-07-04T18:08:29+00:00"
         },
         {
             "name": "pragmarx/google2fa",
