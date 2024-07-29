@@ -56,7 +56,7 @@ Route::view('/sketch-of-the-month', 'sketch-of-the-week-month',
         'week_month' => __('Month')])->name('sketch-of-the-month');
 Route::get('/sketch-of-the-week/create', 'App\Http\Controllers\SketchOfTheWeekController@create')->name('sketch-of-the-week.create')->can('add_sketch', User::class);
 Route::post('/sketch-of-the-week', 'App\Http\Controllers\SketchOfTheWeekController@store')->name('sketch-of-the-week.store')->can('add_sketch', User::class);
-Route::get('/sketch-of-the-month/create', 'App\Http\Controllers\SketchOftheMonthController@create')->name('sketch-of-the-month.create')->can('add_sketch', User::class);
+Route::get('/sketch-of-the-month/create', 'App\Http\Controllers\SketchOfTheMonthController@create')->name('sketch-of-the-month.create')->can('add_sketch', User::class);
 Route::post('/sketch-of-the-month', 'App\Http\Controllers\SketchOfTheMonthController@store')->name('sketch-of-the-month.store')->can('add_sketch', User::class);
 
 Route::view('/', 'welcome');
