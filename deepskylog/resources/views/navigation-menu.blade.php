@@ -6,7 +6,7 @@
                 <!-- Navigation Links -->
 
                 <div class="-my-px flex h-16 items-center space-x-8">
-                    <x-nav-link href="{{ route('dashboard') }}">
+                    <x-nav-link href="/">
                         <div class="text-xl font-bold">
                             {{ __("DeepskyLog") }}
                         </div>

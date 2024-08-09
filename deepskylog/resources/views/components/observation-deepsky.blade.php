@@ -4,6 +4,8 @@
         $date = $observation->date;
         $observation_date = substr($date, 0, 4) . '-' . substr($date, 4, 2) . '-' . substr($date, 6, 2);
         $user = \App\Models\User::where('username', html_entity_decode($observation->observerid))->first();
+        $object = \App\Models\ObjectsOld::where('name', $observation->objectname)->first();
+        $constellation = \App\Models\Constellation::where('id', $object->con)->first()->name;
     @endphp
 
     <div class="mr-4">
@@ -17,7 +19,10 @@
         @php
             $link = config('app.old_url') . "/index.php?indexAction=detail_object&object=" . $observation->objectname;
         @endphp
-        {!! __(' observed :object', ['object' => '<a href="' . $link . '" class="font-bold hover:underline">' . $observation->objectname . '</a>']) !!}
+
+        {!! __(' observed :object', ['object' => Str::lower(__($object->long_type())) . ' <a href="' . $link . '" class="font-bold hover:underline">' . $observation->objectname . '</a>']) !!}
+
+        {{ __(' in ') . $constellation }}
 
         {{ __(' on ') }}
         {{ \Carbon\Carbon::create($observation_date)->translatedFormat('j M Y') }}

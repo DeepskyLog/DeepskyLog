@@ -30,19 +30,24 @@
 + [X] Add translations for the new version
 + [X] Add new index page, with latest sketch of the week and the month, 10 latest drawings, 10 latest observers, 10
   latest observations
++ [X] Add object type and constellation to the list of 10 newest observations
++ [ ] Translate the descriptions using Google Translate
 + [ ] Use the old version of DeepskyLog alongside the new version
-    + [ ] Add the code
+    + [X] Add the code
     + [X] Fix the code for php 8.3
+    + [X] Change the link to the login / register page
     + [ ] Change the link to the user settings page
     + [ ] Change the link to the user information page (in a lot of places!)
     + [ ] Change the link to the drawing page of an observer
-    + [ ] Add the link to download the Deep-sky magazines
-    + [ ] Add the link to the DeepskyLog sketch of the week and the month
-    + [ ] Add the link to the all Drawings page
+    + [X] Add the link to download the Deep-sky magazines
+    + [X] Add the link to the sponsor page
+    + [X] Add the link to the DeepskyLog sketch of the week and the month
+    + [X] Add the link to the all Drawings page
     + [ ] Check if the user belongs to the correct role / team
-    + [ ] Change the link to the observer detail page
+    + [ ] Rewrite the observer class in utils
+    + [ ] Translate new strings
 + [ ] Check log in using the new version and try using one of the old pages as logged-in user
-    + [ ] Change links in the old version, also for the sponsor page (http://deepskylog.test/sponsors)
+    + [ ] Change links in the old version
     + [ ] Update the log in code in the old DeepskyLog
 
 ```php
@@ -76,6 +81,8 @@ if ($id) {
     + [ ] User information page
     + [ ] User profile update
     + [ ] My Drawings
+    + [ ] Entries in instructions.php?
++ [ ] On the server, set up the apache / nginx configuration to use the old version of DeepskyLog
 + [ ] On the server, make sure to run the queue workers: https://laravel.com/docs/11.x/queues#running-the-queue-worker
 + [ ] Release new version of DeepskyLog with new registration and login pages.
 
