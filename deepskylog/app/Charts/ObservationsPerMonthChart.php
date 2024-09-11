@@ -5,6 +5,7 @@ namespace App\Charts;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use marineusde\LarapexCharts\Charts\BarChart as OriginalBarChart;
+use marineusde\LarapexCharts\Options\XAxisOption;
 
 /**
  * Class ObservationsPerMonthChart
@@ -55,7 +56,7 @@ class ObservationsPerMonthChart
             ->setColors(['#00E396', '#feb019'])
             ->addData(__('Deepsky'), $deepsky)
             ->addData(__('Comets'), $comets)
-            ->setXAxis([__('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December')])
+            ->setXAxisOption(new XAxisOption([__('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December')]))
             ->setTheme('dark')
             ->setFontColor('#bbbbbb')
             ->setStacked(true)

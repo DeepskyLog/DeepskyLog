@@ -6,6 +6,7 @@ use App\Models\CometObservationsOld;
 use App\Models\ObservationsOld;
 use App\Models\User;
 use marineusde\LarapexCharts\Charts\LineChart as OriginalLineChart;
+use marineusde\LarapexCharts\Options\XAxisOption;
 
 /**
  * Class ObservationsPerYearChart
@@ -79,7 +80,7 @@ class ObservationsPerYearChart
             ->addData(__('Total'), $observations)
             ->addData(__('Deepsky'), $deepsky_observations)
             ->addData(__('Comets'), $comet_observations)
-            ->setXAxis($x_axis)
+            ->setXAxisOption(new XAxisOption($x_axis))
             ->setTheme('dark')
             ->setFontColor('#bbbbbb')
             ->setToolbar(true);
