@@ -20,7 +20,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^3",
-        "marineusde/larapex-charts": "^1.3",
+        "marineusde/larapex-charts": "^1.4",
         "monarobase/country-list": "^3.4",
         "openspout/openspout": "^4.13",
         "petercoles/multilingual-language-list": "^1.16",

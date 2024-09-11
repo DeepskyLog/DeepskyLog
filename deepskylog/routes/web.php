@@ -48,12 +48,16 @@ Route::get('/drawings/{observer}', 'App\Http\Controllers\DrawingController@show'
 Route::get('/cometdrawings/{observer}', 'App\Http\Controllers\CometDrawingController@show')->name('cometdrawings.show');
 
 // Sketch of the week / month
-Route::view('/sketch-of-the-week', 'sketch-of-the-week-month',
-    ['sketches' => SketchOfTheWeek::orderBy('date', 'desc')->paginate(20),
-        'week_month' => __('Week')])->name('sketch-of-the-week');
-Route::view('/sketch-of-the-month', 'sketch-of-the-week-month',
-    ['sketches' => SketchOfTheMonth::orderBy('date', 'desc')->paginate(20),
-        'week_month' => __('Month')])->name('sketch-of-the-month');
+Route::get('/sketch-of-the-week', function() {
+    return view('sketch-of-the-week-month',
+        ['sketches' => SketchOfTheWeek::orderBy('date', 'desc')->paginate(20),
+            'week_month' => __('Week')]);
+    })->name('sketch-of-the-week');
+Route::get('/sketch-of-the-month', function() {
+    return view('sketch-of-the-week-month',
+        ['sketches' => SketchOfTheMonth::orderBy('date', 'desc')->paginate(20),
+            'week_month' => __('Month')]);
+})->name('sketch-of-the-month');
 Route::get('/sketch-of-the-week/create', 'App\Http\Controllers\SketchOfTheWeekController@create')->name('sketch-of-the-week.create')->can('add_sketch', User::class);
 Route::post('/sketch-of-the-week', 'App\Http\Controllers\SketchOfTheWeekController@store')->name('sketch-of-the-week.store')->can('add_sketch', User::class);
 Route::get('/sketch-of-the-month/create', 'App\Http\Controllers\SketchOfTheMonthController@create')->name('sketch-of-the-month.create')->can('add_sketch', User::class);
