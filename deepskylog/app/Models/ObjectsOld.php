@@ -14,6 +14,6 @@ class ObjectsOld extends Model
 
     public function long_type(): string
     {
-        return __('' . TargetType::where('id', $this->type)->first()->type . '');
+        return __(''.TargetType::where('id', $this->type)->first()->type.'');
     }
 }

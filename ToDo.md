@@ -4,48 +4,68 @@
 
 ## Combined version of old DeepskyLog and laravel DeepskyLog
 
-> /Users/wim/GitHub/DeepskyLog/deepskylog is http://deepskylog.localhost/, the old code is http://deepskylog.test/old/
+> /Users/wim/GitHub/DeepskyLog/deepskylog is http://deepskylog.localhost/, the old code
+> is http://deepskylog.localhost/old/
 
 + deepskylog: uses laravel jetstream and socialstream for authentication
 
 ### Next steps
 
-+ [ ] Create instruments and eyepieces (and lenses) tables in the new version of DeepskyLog.
-  + [ ]  Write script to populate the tables from the old database.
-  + [ ]  Write script to update the tables from the old database. Execute every 15 minutes.
-  + [ ]  Create API to get the eyepieces, lenses and instruments from a given user.
-  + [ ]  Add all pages for adding, viewing, editing, deleting, instruments, eyepieces, filters, lensen, instrument sets.  TO DO AFTER adding the contrast reserve to PiFinder
++ [X] Create API for retrieving instruments and eyepieces from the old database tables
++ [ ] Create documentation for the API
++ [X] Create instruments tables in the new version of DeepskyLog.
+    + [X]  Write script to populate the tables from the old database.
+    + [X]  Update user model to use the instruments from the new database.
+    + [X]  Test website.
+    + [ ]  Write script to update the tables from the old database. Execute every 15 minutes.
+    + [ ]  Create API to get the instruments from a given user.
+    + [ ]  Add all pages for adding, viewing, editing, deleting instruments. Also update user overview page. TO DO AFTER
+      adding the contrast reserve to PiFinder
++ [ ] Create eyepieces tables in the new version of DeepskyLog.
+    + [ ]  Write script to populate the tables from the old database.
+    + [ ]  Update user model to use the eyepieces from the new database.
+    + [ ]  Write script to update the tables from the old database. Execute every 15 minutes.
+    + [ ]  Create API to get the eyepieces from a given user.
+    + [ ]  Add all pages for adding, viewing, editing, deleting eyepieces. Also update user overview page. TO DO AFTER
+      adding the contrast reserve to PiFinder
++ [ ] Create lenses tables in the new version of DeepskyLog.
+    + [ ]  Write script to populate the tables from the old database.
+    + [ ]  Update user model to use the lenses from the new database.
+    + [ ]  Write script to update the tables from the old database. Execute every 15 minutes.
+    + [ ]  Create API to get the lenses from a given user.
+    + [ ]  Add all pages for adding, viewing, editing, deleting lenses, filters, instrument sets. Also update user
+      overview page. TO DO AFTER adding the contrast reserve to PiFinder
 + [ ] Translate the descriptions using Google Translate
 
 ### Distant future
 
 + [ ] Messages in DeepskyLog
-  + [ ] Also messages for everyone // like a forum
+    + [ ] Also messages for everyone // like a forum
 + [ ] Sessions
-  + [ ] Overview page with all images
-  + [ ] Blog style?
+    + [ ] Overview page with all images
+    + [ ] Blog style?
 + [ ] Targets
 + [ ] Observing lists
 
 ### Combination of old and new DeepskyLog
 
 + [ ] Use the old version of DeepskyLog alongside the new version
-  + [X] Add the code
-  + [X] Fix the code for php 8.3
-  + [X] Change the link to the login / register page
-  + [ ] Change the link to the user settings page
-  + [ ] Change the link to the user information page (in a lot of places!)
-  + [ ] Change the link to the drawing page of an observer
-  + [X] Add the link to download the Deep-sky magazines
-  + [X] Add the link to the sponsor page
-  + [X] Add the link to the DeepskyLog sketch of the week and the month
-  + [X] Add the link to the all Drawings page
-  + [ ] Check if the user belongs to the correct role / team
-  + [ ] Rewrite the observer class in utils
-  + [ ] Translate new strings
+    + [X] Add the code
+    + [X] Fix the code for php 8.3
+    + [X] Change the link to the login / register page
+    + [ ] Change the link to the user settings page
+    + [ ] Change the link to the user information page (in a lot of places!)
+    + [ ] Change the link to the drawing page of an observer
+    + [X] Add the link to download the Deep-sky magazines
+    + [X] Add the link to the sponsor page
+    + [X] Add the link to the DeepskyLog sketch of the week and the month
+    + [X] Add the link to the all Drawings page
+    + [ ] Check if the user belongs to the correct role / team
+    + [ ] Rewrite the observer class in utils
+    + [ ] Translate new strings
 + [ ] Check log in using the new version and try using one of the old pages as logged-in user
-  + [ ] Change links in the old version
-  + [ ] Update the log in code in the old DeepskyLog
+    + [ ] Change links in the old version
+    + [ ] Update the log in code in the old DeepskyLog
 
 ```php
 include $_SERVER['DOCUMENT_ROOT'].'/../../vendor/autoload.php';
@@ -72,13 +92,13 @@ if ($id) {
 ```
 
 + [ ] Remove code from the old version of DeepskyLog:
-  + [ ] Log in
-  + [ ] Log out
-  + [ ] Reset password
-  + [ ] User information page
-  + [ ] User profile update
-  + [ ] My Drawings
-  + [ ] Entries in instructions.php?
+    + [ ] Log in
+    + [ ] Log out
+    + [ ] Reset password
+    + [ ] User information page
+    + [ ] User profile update
+    + [ ] My Drawings
+    + [ ] Entries in instructions.php?
 + [ ] On the server, set up the apache / nginx configuration to use the old version of DeepskyLog
 + [ ] On the server, make sure to run the queue workers: https://laravel.com/docs/11.x/queues#running-the-queue-worker
 + [ ] Release new version of DeepskyLog with new registration and login pages.

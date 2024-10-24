@@ -19,3 +19,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command(\App\Console\Commands\updateAchievementsCommand::class)->everySixHours();
+Schedule::command(\App\Console\Commands\updateInstrumentTableCommand::class)->everyFifteenMinutes();

@@ -766,7 +766,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function standardInstrument(): HasOne
     {
-        return $this->hasOne(related: InstrumentsOld::class, foreignKey: 'id', localKey: 'stdtelescope');
+        return $this->hasOne(related: Instrument::class, foreignKey: 'id', localKey: 'stdtelescope');
     }
 
     public function observationsCount(): float
@@ -802,7 +802,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function instruments(): HasMany
     {
-        return $this->hasMany(related: InstrumentsOld::class, foreignKey: 'observer', localKey: 'username');
+        return $this->hasMany(related: Instrument::class);
     }
 
     /**

@@ -48,12 +48,12 @@ Route::get('/drawings/{observer}', 'App\Http\Controllers\DrawingController@show'
 Route::get('/cometdrawings/{observer}', 'App\Http\Controllers\CometDrawingController@show')->name('cometdrawings.show');
 
 // Sketch of the week / month
-Route::get('/sketch-of-the-week', function() {
+Route::get('/sketch-of-the-week', function () {
     return view('sketch-of-the-week-month',
         ['sketches' => SketchOfTheWeek::orderBy('date', 'desc')->paginate(20),
             'week_month' => __('Week')]);
-    })->name('sketch-of-the-week');
-Route::get('/sketch-of-the-month', function() {
+})->name('sketch-of-the-week');
+Route::get('/sketch-of-the-month', function () {
     return view('sketch-of-the-week-month',
         ['sketches' => SketchOfTheMonth::orderBy('date', 'desc')->paginate(20),
             'week_month' => __('Month')]);

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\EyepieceController;
+use App\Http\Controllers\InstrumentController;
 use App\Models\Atlas;
 use App\Models\InstrumentsOld;
 use App\Models\LocationsOld;
@@ -28,10 +30,10 @@ Route::get('countries.index', function (Request $request) {
     if ($request->exists('selected')) {
         $allCountries[] = [
             'id' => auth()->user()->country,
-            'name' => \Countries::getOne(auth()->user()->country, $request->lang),
+            'name' => Countries::getOne(auth()->user()->country, $request->lang),
         ];
     }
-    foreach (\Countries::getList($request->lang) as $code => $name) {
+    foreach (Countries::getList($request->lang) as $code => $name) {
         if ($request->search == '' || Str::contains(Str::lower($name), Str::lower($request->search))) {
             $allCountries[] = [
                 'id' => $code,
@@ -225,3 +227,6 @@ Route::get('addUserToTeam.index', function (Request $request) {
 
     return $allUsers;
 })->name('addUserToTeam.index');
+
+Route::get('/instruments/{userid}', [InstrumentController::class, 'show_from_user']);
+Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);

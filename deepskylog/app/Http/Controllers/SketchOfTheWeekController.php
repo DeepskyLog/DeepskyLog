@@ -72,7 +72,7 @@ More information can be found here:
 
 #sketch #sketchoftheweek #deepsky #astronomy #deepskydrawing #sketches';
 
-        $sketch = new SketchOfTheWeek();
+        $sketch = new SketchOfTheWeek;
         $sketch->observation_id = $request['observation_id'];
         $sketch->date = $request->date;
         $sketch->user_id = $userId;

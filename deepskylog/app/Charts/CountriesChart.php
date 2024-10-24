@@ -61,7 +61,7 @@ class CountriesChart
             }
         }
 
-        return (new OriginalPieChart())
+        return (new OriginalPieChart)
             ->setTitle(__('Observations per country: ').$user->name)
             ->setSubtitle(__('Source: ').config('app.old_url'))
             ->addData($values)

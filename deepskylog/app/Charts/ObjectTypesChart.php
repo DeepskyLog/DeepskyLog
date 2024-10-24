@@ -2,12 +2,11 @@
 
 namespace App\Charts;
 
-use App\Models\User;
-use App\Models\TargetType;
-use App\Models\ObservationsOld;
-use Illuminate\Support\Facades\DB;
 use App\Models\CometObservationsOld;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\ObservationsOld;
+use App\Models\TargetType;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use marineusde\LarapexCharts\Charts\PieChart as OriginalPieChart;
 
 /**
@@ -62,7 +61,7 @@ class ObjectTypesChart
         // Loop through the deep sky observations and add the count and type to the respective arrays
         foreach ($deepskyobservations as $key => $value) {
             $observations[$key + 1] = $value->count;
-            $value->type = __('' . TargetType::where('id', $value->type)->first()->type . '');
+            $value->type = __(''.TargetType::where('id', $value->type)->first()->type.'');
             $names[$key + 1] = $value->type;
         }
 
@@ -87,7 +86,7 @@ class ObjectTypesChart
         }
 
         // Create the pie chart and return it
-        return (new OriginalPieChart())
+        return (new OriginalPieChart)
             ->setTitle(__('Object types seen: ').$user->name)
             ->setSubtitle(__('Source: ').config('app.old_url'))
             ->addData($observations)

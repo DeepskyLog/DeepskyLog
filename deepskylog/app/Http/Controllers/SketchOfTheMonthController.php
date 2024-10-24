@@ -79,7 +79,7 @@ More information can be found here:
 
 #sketch #sketchofthemonth #deepsky #astronomy #deepskydrawing #sketches';
 
-        $sketch = new SketchOfTheMonth();
+        $sketch = new SketchOfTheMonth;
         $sketch->observation_id = $request['observation_id'];
         $sketch->date = $request->date;
         $sketch->user_id = $userId;
