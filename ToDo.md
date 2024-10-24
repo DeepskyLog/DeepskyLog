@@ -11,21 +11,19 @@
 
 ### Next steps
 
-+ [X] Create API for retrieving instruments and eyepieces from the old database tables
-+ [ ] Create documentation for the API
 + [X] Create instruments tables in the new version of DeepskyLog.
     + [X]  Write script to populate the tables from the old database.
     + [X]  Update user model to use the instruments from the new database.
     + [X]  Test website.
     + [ ]  Write script to update the tables from the old database. Execute every 15 minutes.
-    + [ ]  Create API to get the instruments from a given user.
+    + [ ]  Change API to get the instruments from the new table.
     + [ ]  Add all pages for adding, viewing, editing, deleting instruments. Also update user overview page. TO DO AFTER
       adding the contrast reserve to PiFinder
 + [ ] Create eyepieces tables in the new version of DeepskyLog.
     + [ ]  Write script to populate the tables from the old database.
     + [ ]  Update user model to use the eyepieces from the new database.
     + [ ]  Write script to update the tables from the old database. Execute every 15 minutes.
-    + [ ]  Create API to get the eyepieces from a given user.
+    + [ ]  Change API to get the eyepieces from the new table.
     + [ ]  Add all pages for adding, viewing, editing, deleting eyepieces. Also update user overview page. TO DO AFTER
       adding the contrast reserve to PiFinder
 + [ ] Create lenses tables in the new version of DeepskyLog.
