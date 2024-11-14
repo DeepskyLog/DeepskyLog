@@ -48,14 +48,16 @@
             </a>
         @endif
         <br/>
+        @if ($observation->instrumentid > 0)
         {{ __("Used instrument was ") }}
-        <a
-            href="{{ config("app.old_url") }}/index.php?indexAction=detail_instrument&instrument={{ $observation->instrumentid }}"
-            class="font-bold hover:underline"
-        >
-            {!! html_entity_decode(InstrumentsOld::where("id", $observation->instrumentid)->first()->name) !!}
-            .
-        </a>
+            <a
+                href="{{ config("app.old_url") }}/index.php?indexAction=detail_instrument&instrument={{ $observation->instrumentid }}"
+                class="font-bold hover:underline"
+            >
+                {!! html_entity_decode(InstrumentsOld::where("id", $observation->instrumentid)->first()->name) !!}
+                .
+            </a>
+        @endif
 
         @if ($observation->description != "")
             <br/>
