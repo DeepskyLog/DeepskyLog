@@ -12,26 +12,38 @@
 ### Next steps
 
 + [X] Create instruments tables in the new version of DeepskyLog.
-    + [X]  Write script to populate the tables from the old database.
-    + [X]  Update user model to use the instruments from the new database.
-    + [X]  Test website.
-    + [ ]  Write script to update the tables from the old database. Execute every 15 minutes.
-    + [ ]  Change API to get the instruments from the new table.
-    + [ ]  Add all pages for adding, viewing, editing, deleting instruments. Also update user overview page. TO DO AFTER
+    + [ ] Write script to populate the tables from the old database.
+    + [ ] Update user model to use the instruments from the new database.
+    + [ ] Add make
+    + [ ] Write script to update the tables from the old database. Execute every 15 minutes.
+    + [ ] Change API to get the instruments from the new table.
+    + [ ] Add all pages for adding, viewing, editing, deleting instruments. Also update user overview page. TO DO AFTER
       adding the contrast reserve to PiFinder
 + [ ] Create eyepieces tables in the new version of DeepskyLog.
-    + [ ]  Write script to populate the tables from the old database.
-    + [ ]  Update user model to use the eyepieces from the new database.
-    + [ ]  Write script to update the tables from the old database. Execute every 15 minutes.
-    + [ ]  Change API to get the eyepieces from the new table.
-    + [ ]  Add all pages for adding, viewing, editing, deleting eyepieces. Also update user overview page. TO DO AFTER
+    + [ ] Write script to populate the tables from the old database.
+    + [ ] Update user model to use the eyepieces from the new database.
+    + [ ] Add Field stop: tfov = eyepiece.field_stop / telescope.focal_length_mm * 57.2958
+        + 31mm Nagler: 42mm
+        + 21mm Ethos: 36.2mm
+        + 20mm Nagler: 27.4mm
+        + 19mm Panoptic: 21.3mm
+        + 13mm Ethos: 22.3mm
+        + 13mm Nagler: 17.6mm
+        + 8mm Ethos: 13.9mm
+        + 8mm Radian: 8.3mm
+        + 5mm Nagler: 7mm
+        + Baader 3.5mm Hyperion: 3.9mm
+        + Baader 36mm Aspheric: 44mm
+    + [ ] Write script to update the tables from the old database. Execute every 15 minutes.
+    + [ ] Change API to get the eyepieces from the new table.
+    + [ ] Add all pages for adding, viewing, editing, deleting eyepieces. Also update user overview page. TO DO AFTER
       adding the contrast reserve to PiFinder
 + [ ] Create lenses tables in the new version of DeepskyLog.
-    + [ ]  Write script to populate the tables from the old database.
-    + [ ]  Update user model to use the lenses from the new database.
-    + [ ]  Write script to update the tables from the old database. Execute every 15 minutes.
-    + [ ]  Create API to get the lenses from a given user.
-    + [ ]  Add all pages for adding, viewing, editing, deleting lenses, filters, instrument sets. Also update user
+    + [ ] Write script to populate the tables from the old database.
+    + [ ] Update user model to use the lenses from the new database.
+    + [ ] Write script to update the tables from the old database. Execute every 15 minutes.
+    + [ ] Create API to get the lenses from a given user.
+    + [ ] Add all pages for adding, viewing, editing, deleting lenses, filters, instrument sets. Also update user
       overview page. TO DO AFTER adding the contrast reserve to PiFinder
 + [ ] Translate the descriptions using Google Translate
 

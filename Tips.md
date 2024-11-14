@@ -13,7 +13,7 @@
 ```bash
 cd /var/www/test.deepskylog.org/DeepskyLog/deepskylog
 git pull
-module load php82
+module load php83
 php artisan storage:link
 composer update
 npm update

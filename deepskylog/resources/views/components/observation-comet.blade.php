@@ -1,3 +1,8 @@
+@php use App\Models\User; @endphp
+@php use App\Models\CometObjectsOld; @endphp
+@php use Carbon\Carbon; @endphp
+@php use App\Models\LocationsOld; @endphp
+@php use App\Models\InstrumentsOld; @endphp
 @props([
     "observation",
 ])
@@ -5,7 +10,7 @@
     @php
         $date = $observation->date;
         $observation_date = substr($date, 0, 4) . "-" . substr($date, 4, 2) . "-" . substr($date, 6, 2);
-        $user = \App\Models\User::where("username", html_entity_decode($observation->observerid))->first();
+        $user = User::where("username", html_entity_decode($observation->observerid))->first();
     @endphp
 
     <div class="mr-4">
@@ -28,32 +33,34 @@
             $link = config("app.old_url") . "/index.php?indexAction=comets_detail_object&object=" . $observation->objectid;
         @endphp
 
-        {!! __(" observed :object", ["object" => '<a href="' . $link . '" class="font-bold hover:underline">' . \App\Models\CometObjectsOld::where("id", $observation->objectid)->first()->name . "</a>"]) !!}
+        {!! __(" observed :object", ["object" => '<a href="' . $link . '" class="font-bold hover:underline">' . CometObjectsOld::where("id", $observation->objectid)->first()->name . "</a>"]) !!}
 
         {{ __(" on ") }}
-        {{ \Carbon\Carbon::create($observation_date)->translatedFormat("j M Y") }}
-        {{ __(" from ") }}
-        <a
-            href="{{ config("app.old_url") }}/index.php?indexAction=detail_location&location={{ $observation->locationid }}"
-            class="font-bold hover:underline"
-        >
-            {{ html_entity_decode(\App\Models\LocationsOld::where("id", $observation->locationid)->first()->name) }}.
-        </a>
-
-        <br />
+        {{ Carbon::create($observation_date)->translatedFormat("j M Y") }}
+        @if ($observation->locationid > 0)
+            {{ __(" from ") }}
+            <a
+                href="{{ config("app.old_url") }}/index.php?indexAction=detail_location&location={{ $observation->locationid }}"
+                class="font-bold hover:underline"
+            >
+                {{ html_entity_decode(LocationsOld::where("id", $observation->locationid)->first()->name) }}
+                .
+            </a>
+        @endif
+        <br/>
         {{ __("Used instrument was ") }}
         <a
             href="{{ config("app.old_url") }}/index.php?indexAction=detail_instrument&instrument={{ $observation->instrumentid }}"
             class="font-bold hover:underline"
         >
-            {!! html_entity_decode(\App\Models\InstrumentsOld::where("id", $observation->instrumentid)->first()->name) !!}
+            {!! html_entity_decode(InstrumentsOld::where("id", $observation->instrumentid)->first()->name) !!}
             .
         </a>
 
         @if ($observation->description != "")
-            <br />
+            <br/>
             {{ __(" The following notes where made: ") }}
-            <br />
+            <br/>
             <div class="my-2 rounded bg-gray-900 px-4 py-4">
                 {!! html_entity_decode($observation->description) !!}
             </div>
