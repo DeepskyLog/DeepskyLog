@@ -13,27 +13,37 @@
                             @if ($observation_id < 0)
                                 <a
                                     href="{{ config('app.old_url') }}/index.php?indexAction=comets_detail_observation&observation={{ -$observation_id }}">
-                                    <img width="400" src="/images/cometdrawings/{{ -$observation_id }}.jpg" />
+                                    <img width="400" src="/images/cometdrawings/{{ -$observation_id }}.jpg"/>
 
                                     <div class="text-center">
-                                        {!! ShareButtons::page('https://www.deepskylog.org/comets/cometdrawings/' . -$observation_id . '.jpg', $share, [
+                                        {!! ShareButtons::page("", $share, [
                                             'title' => __('Share this sketch'),
                                             'class' => 'text-gray-500 hover:text-gray-700',
                                             'rel' => 'nofollow noopener noreferrer',
-                                        ])->facebook(['class' => 'hover', 'rel' => 'follow'])->twitter(['class' => 'hover', 'rel' => 'follow'])->copylink()->mailto(['class' => 'hover', 'rel' => 'nofollow'])->whatsapp()->render() !!}
+                                        ])->facebook(['class' => 'hover', 'rel' => 'follow'])
+                                        ->twitter(['class' => 'hover', 'rel' => 'follow'])
+                                        ->copylink()
+                                        ->mailto(['class' => 'hover', 'rel' => 'nofollow'])
+                                        ->whatsapp()->bluesky(["class" => "hover", "rel" => "follow"])
+                                        ->render() !!}
                                     </div>
                                 </a>
                             @else
                                 <a
                                     href="{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $observation_id }}">
-                                    <img width="400" src="/images/drawings/{{ $observation_id }}.jpg" />
+                                    <img width="400" src="/images/drawings/{{ $observation_id }}.jpg"/>
 
                                     <div class="text-center">
-                                        {!! ShareButtons::page('https://www.deepskylog.org/deepsky/drawings/' . $observation_id . '.jpg', $share, [
+                                        {!! ShareButtons::page("", $share, [
                                             'title' => __('Share this sketch'),
                                             'class' => 'text-gray-500 hover:text-gray-700',
                                             'rel' => 'nofollow noopener noreferrer',
-                                        ])->facebook(['class' => 'hover', 'rel' => 'follow'])->twitter(['class' => 'hover', 'rel' => 'follow'])->copylink()->mailto(['class' => 'hover', 'rel' => 'nofollow'])->whatsapp()->render() !!}
+                                        ])->facebook(['class' => 'hover', 'rel' => 'follow'])
+                                        ->twitter(['class' => 'hover', 'rel' => 'follow'])
+                                        ->copylink()
+                                        ->mailto(['class' => 'hover', 'rel' => 'nofollow'])
+                                        ->bluesky(["class" => "hover", "rel" => "follow"])
+                                        ->whatsapp()->render() !!}
                                     </div>
                                 </a>
                             @endif

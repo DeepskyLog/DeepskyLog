@@ -37,6 +37,10 @@ return [
     */
 
     'buttons' => [
+        'bluesky' => [
+            'url' => 'https://bsky.app/intent/compose?text=:url%20:text',
+            'text' => 'Default share text',
+        ],
         'copylink' => [
             'url' => ':url',
             'extra' => [
@@ -65,6 +69,10 @@ return [
         ],
         'mailto' => [
             'url' => 'mailto:?subject=:text&body=:url',
+            'text' => 'Default share text',
+        ],
+        'mastodon' => [
+            'url' => 'https://mastodon.social/share?text=:text&url=:url',
             'text' => 'Default share text',
         ],
         'pinterest' => [
@@ -115,18 +123,20 @@ return [
     */
 
     'templates' => [
+        'bluesky' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-square-bluesky"></span></a>',
         'copylink' => '<a href=":url" class="social-button:class" id="clip":title:rel><span class="fas fa-share"></span></a>',
         'evernote' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-evernote"></span></a>',
         'facebook' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-facebook-square"></span></a>',
         'hackernews' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-hacker-news"></span></a>',
         'linkedin' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-linkedin"></span></a>',
         'mailto' => '<a href=":url" class="social-button:class":id:title:rel><span class="fas fa-envelope"></span></a>',
+        'mastodon' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-mastodon"></span></a>',
         'pinterest' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-pinterest"></span></a>',
         'pocket' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-get-pocket"></span></a>',
         'reddit' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-reddit"></span></a>',
         'skype' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-skype"></span></a>',
         'telegram' => '<a href=":url" class="social-button:class":id:title:rel target="_blank"><span class="fab fa-telegram"></span></a>',
-        'twitter' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-twitter"></span></a>',
+        'twitter' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-square-x-twitter"></span></a>',
         'vkontakte' => '<a href=":url" class="social-button:class":id:title:rel><span class="fab fa-vk"></span></a>',
         'whatsapp' => '<a href=":url" class="social-button:class":id:title:rel target="_blank"><span class="fab fa-square-whatsapp"></span></a>',
         'xing' => '<a href=":url" class="social-button:class":id:title:rel target="_blank"><span class="fab fa-square-xing"></span></a>',
