@@ -75,22 +75,12 @@
 
         {{-- Units for instrument diameter --}}
         <div class="col-span-6 sm:col-span-5">
-            @if (auth()->user()->showInches)
-                <x-toggle
-                    label="{!! __('Show instrument diameter in inch') !!}"
-                    name="showInches"
-                    id="showInches"
-                    wire:model.live="showInches"
-                    checked
-                />
-            @else
-                <x-toggle
-                    label="{!! __('Show instrument diameter in inch') !!}"
-                    name="showInches"
-                    id="showInches"
-                    wire:model.live="showInches"
-                />
-            @endif
+            <x-toggle
+                label="{!! __('Show instrument diameter in inch') !!}"
+                name="showInches"
+                id="showInches"
+                wire:model.live="showInches"
+            />
         </div>
     </x-slot>
 

@@ -3,7 +3,6 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -22,7 +21,6 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
-            'sendMail' => ['boolean'],
             'country' => ['string'],
             'about' => ['string:max:1000', 'nullable'],
             'fstOffset' => ['numeric', 'min:-5.0', 'max:5.0'],
@@ -32,8 +30,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->updateProfilePhoto($input['photo']);
         }
 
-        if ($input['email'] !== $user->email &&
-            $user instanceof MustVerifyEmail) {
+        if ($input['email'] !== $user->email) {
             $this->updateVerifiedUser($user, $input);
         } else {
             if ($input['copyrightSelection'] === 'Enter your own copyright text') {
@@ -44,7 +41,6 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->forceFill([
                 'name' => $input['name'],
                 'email' => $input['email'],
-                'sendMail' => $input['sendMail'],
                 'country' => $input['country'],
                 'about' => Str::limit($input['about'], 1000),
                 'fstOffset' => $input['fstOffset'],

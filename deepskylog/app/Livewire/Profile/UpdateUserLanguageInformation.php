@@ -12,6 +12,17 @@ class UpdateUserLanguageInformation extends Component
 
     public $language;
 
+    public $translate;
+
+    public $sendMail;
+
+    protected $rules = [
+        'observationlanguage' => 'string',
+        'language' => 'string',
+        'translate' => 'boolean',
+        'sendMail' => 'boolean',
+    ];
+
     /**
      * Sets the database values.
      *
@@ -21,6 +32,8 @@ class UpdateUserLanguageInformation extends Component
     {
         $this->observationlanguage = auth()->user()->observationlanguage;
         $this->language = auth()->user()->language;
+        $this->translate = boolval(auth()->user()->translate);
+        $this->sendMail = boolval(auth()->user()->sendMail);
     }
 
     /**
@@ -31,6 +44,8 @@ class UpdateUserLanguageInformation extends Component
         auth()->user()->forceFill([
             'observationlanguage' => $this->observationlanguage,
             'language' => $this->language,
+            'translate' => $this->translate,
+            'sendMail' => $this->sendMail,
         ])->save();
 
         App::setLocale($this->language);

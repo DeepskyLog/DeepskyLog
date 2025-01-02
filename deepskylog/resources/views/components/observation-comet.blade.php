@@ -11,6 +11,9 @@
         $date = $observation->date;
         $observation_date = substr($date, 0, 4) . "-" . substr($date, 4, 2) . "-" . substr($date, 6, 2);
         $user = User::where("username", html_entity_decode($observation->observerid))->first();
+        use Stichoza\GoogleTranslate\GoogleTranslate;
+
+        $tr = new GoogleTranslate(auth()->user()->language);
     @endphp
 
     <div class="mr-4">
@@ -49,7 +52,7 @@
         @endif
         <br/>
         @if ($observation->instrumentid > 0)
-        {{ __("Used instrument was ") }}
+            {{ __("Used instrument was ") }}
             <a
                 href="{{ config("app.old_url") }}/index.php?indexAction=detail_instrument&instrument={{ $observation->instrumentid }}"
                 class="font-bold hover:underline"
@@ -64,7 +67,11 @@
             {{ __(" The following notes where made: ") }}
             <br/>
             <div class="my-2 rounded bg-gray-900 px-4 py-4">
-                {!! html_entity_decode($observation->description) !!}
+                @if (auth()->user()->translate)
+                    {!! ($translated = $tr->translate(html_entity_decode($observation->description))) == null ? html_entity_decode($observation->description): $translated !!}
+                @else
+                    {!! html_entity_decode($observation->description) !!}
+                @endif
             </div>
         @endif
 

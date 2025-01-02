@@ -11,12 +11,14 @@
 
 ### Next steps
 
++ [ ] Pagination on the index page
 + [X] Create instruments tables in the new version of DeepskyLog.
     + [ ] Write script to populate the tables from the old database.
     + [ ] Update user model to use the instruments from the new database.
     + [ ] Add make
     + [ ] Write script to update the tables from the old database. Execute every 15 minutes.
     + [ ] Change API to get the instruments from the new table.
+    + [ ] Use database from the new version in the old version of DeepskyLog
     + [ ] Add all pages for adding, viewing, editing, deleting instruments. Also update user overview page. TO DO AFTER
       adding the contrast reserve to PiFinder
 + [ ] Create eyepieces tables in the new version of DeepskyLog.
@@ -45,7 +47,6 @@
     + [ ] Create API to get the lenses from a given user.
     + [ ] Add all pages for adding, viewing, editing, deleting lenses, filters, instrument sets. Also update user
       overview page. TO DO AFTER adding the contrast reserve to PiFinder
-+ [ ] Translate the descriptions using Google Translate
 
 ### Distant future
 

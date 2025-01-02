@@ -29,6 +29,27 @@
                 option-value="id"
             />
         </div>
+
+        {{-- Translate all the descriptions? --}}
+        <div class="col-span-6 sm:col-span-5">
+            <x-toggle
+                label="{!! __('Translate all the observations to the language of the UI') !!}"
+                name="translate"
+                id="translate"
+                wire:model.live="translate"
+            />
+        </div>
+
+        <!-- Send messages as emails -->
+        <div class="col-span-6 sm:col-span-5">
+            <x-toggle
+                label="{{ __('Send messages as email') }}"
+                name="sendMail"
+                id="sendMail"
+                wire:model.live="sendMail"
+            />&nbsp;
+        </div>
+
     </x-slot>
 
     <x-slot name="actions">

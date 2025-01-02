@@ -1,15 +1,27 @@
 @props(['observation'])
 <div class="justify-left mt-5 flex">
     @php
+        use App\Models\Constellation;
+        use App\Models\EyepiecesOld;
+        use App\Models\FiltersOld;
+        use App\Models\InstrumentsOld;
+        use App\Models\LocationsOld;
+        use App\Models\ObjectsOld;
+        use App\Models\User;
+        use Carbon\Carbon;
+        use Stichoza\GoogleTranslate\GoogleTranslate;
+
         $date = $observation->date;
         $observation_date = substr($date, 0, 4) . '-' . substr($date, 4, 2) . '-' . substr($date, 6, 2);
-        $user = \App\Models\User::where('username', html_entity_decode($observation->observerid))->first();
-        $object = \App\Models\ObjectsOld::where('name', $observation->objectname)->first();
-        $constellation = \App\Models\Constellation::where('id', $object->con)->first()->name;
+        $user = User::where('username', html_entity_decode($observation->observerid))->first();
+        $object = ObjectsOld::where('name', $observation->objectname)->first();
+        $constellation = Constellation::where('id', $object->con)->first()->name;
+
+        $tr = new GoogleTranslate(auth()->user()->language);
     @endphp
 
     <div class="mr-4">
-        <img src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" class="h-20 w-20 rounded-full object-cover" />
+        <img src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" class="h-20 w-20 rounded-full object-cover"/>
     </div>
 
     <div class="max-w-[calc(100%-7rem)]">
@@ -25,11 +37,11 @@
         {{ __(' in ') . $constellation }}
 
         {{ __(' on ') }}
-        {{ \Carbon\Carbon::create($observation_date)->translatedFormat('j M Y') }}
+        {{ Carbon::create($observation_date)->translatedFormat('j M Y') }}
         {{ __(' from ') }}
         <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_location&location={{ $observation->locationid }}"
            class="font-bold hover:underline">
-            {{ html_entity_decode(\App\Models\LocationsOld::where('id', $observation->locationid)->first()->name) }}
+            {{ html_entity_decode(LocationsOld::where('id', $observation->locationid)->first()->name) }}
         </a>
 
         {{-- Seeing --}}
@@ -52,11 +64,11 @@
                 {{ __('bad') }}
             @endif
             {{ __('seeing') }}
-        @endif.<br />
+        @endif.<br/>
         {{ __('Used instrument was ') }}
         <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_instrument&instrument={{ $observation->instrumentid }}"
            class="font-bold hover:underline">
-            {!! html_entity_decode(\App\Models\InstrumentsOld::where('id', $observation->instrumentid)->first()->name) !!}
+            {!! html_entity_decode(InstrumentsOld::where('id', $observation->instrumentid)->first()->name) !!}
         </a>
         @if ($observation->magnification > 0)
             {{ __(' with a magnification of ') }}
@@ -66,14 +78,14 @@
             {{ __(' using a ') }}
             <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_eyepiece&eyepiece={{ $observation->eyepieceid }}"
                class="font-bold hover:underline">
-                {{ html_entity_decode(\App\Models\EyepiecesOld::where('id', $observation->eyepieceid)->first()->name) }}
+                {{ html_entity_decode(EyepiecesOld::where('id', $observation->eyepieceid)->first()->name) }}
             </a>
             {{ __(' eyepiece') }}
             @if ($observation->filterid > 0)
                 {{ __(' and a ') }}
                 <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_filter&filter={{ $observation->filterid }}"
                    class="font-bold hover:underline">
-                    {{ html_entity_decode(\App\Models\FiltersOld::where('id', $observation->filterid)->first()->name) }}
+                    {{ html_entity_decode(FiltersOld::where('id', $observation->filterid)->first()->name) }}
                 </a>
                 {{ __(' filter') }}
             @endif
@@ -81,17 +93,21 @@
             {{ __(' using a ') }}
             <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_filter&filter={{ $observation->filterid }}"
                class="font-bold hover:underline">
-                {{ html_entity_decode(\App\Models\FiltersOld::where('id', $observation->filterid)->first()->name) }}
+                {{ html_entity_decode(FiltersOld::where('id', $observation->filterid)->first()->name) }}
             </a>
             {{ __(' filter') }}
         @endif
         .
 
-        <br />
+        <br/>
         {{ __(' The following notes where made: ') }}
-        <br />
+        <br/>
         <div class="px-4 py-3 rounded bg-gray-900">
-            {!! html_entity_decode($observation->description) !!}
+            @if (auth()->user()->translate)
+                {!! ($translated = $tr->translate(html_entity_decode($observation->description))) == null ? html_entity_decode($observation->description): $translated !!}
+            @else
+                {!! html_entity_decode($observation->description) !!}
+            @endif
         </div>
 
         <x-button gray icon="eye" class="mb-2 mt-2"

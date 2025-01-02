@@ -62,7 +62,7 @@
                     "
                 />
 
-                <x-label for="photo" value="{{ __('Photo') }}" />
+                <x-label for="photo" value="{{ __('Photo') }}"/>
 
                 <!-- Current Profile Photo -->
                 <div class="mt-2" x-show="! photoPreview">
@@ -85,7 +85,7 @@
                     ></span>
                 </div>
 
-                <br />
+                <br/>
                 <x-button
                     type="submit"
                     label="{{ __('Select A New Photo') }}"
@@ -100,7 +100,7 @@
                     />
                 @endif
 
-                <x-input-error for="photo" class="mt-2" />
+                <x-input-error for="photo" class="mt-2"/>
             </div>
         @endif
 
@@ -114,7 +114,7 @@
                 wire:model.live="state.name"
                 autocomplete="name"
             />
-            <x-input-error for="name" class="mt-2" />
+            <x-input-error for="name" class="mt-2"/>
         </div>
 
         <!-- Email -->
@@ -126,7 +126,7 @@
                 class="mt-1 block w-full"
                 wire:model.live="state.email"
             />
-            <x-input-error for="email" class="mt-2" />
+            <x-input-error for="email" class="mt-2"/>
 
             @if (
 
@@ -168,27 +168,6 @@
             />
         </div>
 
-        <!-- Send messages as emails -->
-        <div class="col-span-6 sm:col-span-5">
-            @if ($this->user->sendMail)
-                <x-toggle
-                    label="{{ __('Send messages as email') }}"
-                    name="sendMail"
-                    id="sendMail"
-                    wire:model.live="state.sendMail"
-                    checked
-                />
-            @else
-                <x-toggle
-                    label="{{ __('Send messages as email') }}"
-                    name="sendMail"
-                    id="sendMail"
-                    wire:model.live="state.sendMail"
-                />
-            @endif
-            &nbsp;
-        </div>
-
         {{-- Country of residence --}}
         <div class="col-span-6 sm:col-span-5">
             <x-select
@@ -226,7 +205,7 @@
                 wire:model.live="state.fstOffset"
                 autocomplete="fstOffset"
             />
-            <x-input-error for="fstOffset" class="mt-2" />
+            <x-input-error for="fstOffset" class="mt-2"/>
         </div>
 
         {{-- License --}}
@@ -288,12 +267,13 @@
             skin: "oxide-dark",
             content_css: "dark",
             forced_root_block: false,
-            setup: function(editor) {
-                editor.on("init change", function() {
+            setup: function (editor) {
+                editor.on("init change", function () {
                     editor.save();
                 });
-                editor.on("change", function() {
-                    @this.                    set("state.about", editor.getContent());
+                editor.on("change", function () {
+                    @this.
+                    set("state.about", editor.getContent());
                 });
             }
         });
