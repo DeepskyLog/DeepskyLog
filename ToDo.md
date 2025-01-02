@@ -11,8 +11,8 @@
 
 ### Next steps
 
-+ [ ] Pagination on the index page
-+ [X] Create instruments tables in the new version of DeepskyLog.
++ [ ] Create instruments tables in the new version of DeepskyLog.
+    + [ ] Add Make and flip options to the instruments (see PiFinder model)
     + [ ] Write script to populate the tables from the old database.
     + [ ] Update user model to use the instruments from the new database.
     + [ ] Add make
