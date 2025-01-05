@@ -67,7 +67,7 @@
             {{ __(" The following notes where made: ") }}
             <br/>
             <div class="my-2 rounded bg-gray-900 px-4 py-4">
-                @if (auth()->user()->translate)
+                @if (auth() && auth()->user()->translate)
                     {!! ($translated = $tr->translate(html_entity_decode($observation->description))) == null ? html_entity_decode($observation->description): $translated !!}
                 @else
                     {!! html_entity_decode($observation->description) !!}
