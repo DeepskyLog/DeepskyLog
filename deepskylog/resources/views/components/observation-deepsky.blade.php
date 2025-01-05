@@ -17,7 +17,9 @@
         $object = ObjectsOld::where('name', $observation->objectname)->first();
         $constellation = Constellation::where('id', $object->con)->first()->name;
 
-        $tr = new GoogleTranslate(auth()->user()->language);
+        if (auth()->user()) {
+            $tr = new GoogleTranslate(auth()->user()->language);
+        }
     @endphp
 
     <div class="mr-4">
@@ -103,7 +105,7 @@
         {{ __(' The following notes where made: ') }}
         <br/>
         <div class="px-4 py-3 rounded bg-gray-900">
-            @if (auth() && auth()->user()->translate)
+            @if (auth()->user() && auth()->user()->translate)
                 {!! ($translated = $tr->translate(html_entity_decode($observation->description))) == null ? html_entity_decode($observation->description): $translated !!}
             @else
                 {!! html_entity_decode($observation->description) !!}
