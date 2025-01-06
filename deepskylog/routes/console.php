@@ -1,5 +1,7 @@
 <?php
 
+use App\Console\Commands\updateAchievementsCommand;
+use App\Console\Commands\updateUserTableCommand;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 
@@ -18,5 +20,5 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command(\App\Console\Commands\updateAchievementsCommand::class)->everySixHours();
-Schedule::command(\App\Console\Commands\updateInstrumentTableCommand::class)->everyFifteenMinutes();
+Schedule::command(updateAchievementsCommand::class)->everySixHours();
+Schedule::command(updateUserTableCommand::class)->everyFiveMinutes();
