@@ -12,15 +12,25 @@
 ### Next steps
 
 + [ ] Create instruments tables in the new version of DeepskyLog.
-    + [ ] Add Make and flip options to the instruments (see PiFinder model)
-    + [ ] Write script to populate the tables from the old database.
-    + [ ] Update user model to use the instruments from the new database.
-    + [ ] Add make
-    + [ ] Write script to update the tables from the old database. Execute every 15 minutes.
+    + [X] Add Make and flip options to the instruments (see PiFinder model)
+    + [X] Write script to populate the tables from the old database.
+    + [X] Use database from the new version in the old version of DeepskyLog.
+    + [X] Update user table every 5 minutes with new users from www.deepskylog.org
+    + [X] Make a table for the instrument makes and add some standard makes (like SkyWatcher, Celestron, ...)
+    + [X] Update user model to use the instruments from the new database.
+    + [ ] Add page to see the details of an instrument
     + [ ] Change API to get the instruments from the new table.
-    + [ ] Use database from the new version in the old version of DeepskyLog
-    + [ ] Add all pages for adding, viewing, editing, deleting instruments. Also update user overview page. TO DO AFTER
-      adding the contrast reserve to PiFinder
+    + [ ] Add all pages for adding, viewing, editing, deleting instruments. Also update user overview page.
+    + [ ] Add page for administrator (only for the instrument_makes table)
+    + Add obstruction_perc:
+        + Obsession 18'': 17.2% (3.1'' / 18'')
+        + Obsession 15'': 17.3% (2.6'' / 15'') ?
+        + 20cm Reise-Teleskop: 25% (5cm / 20cm)
+        + Zelfbouw: 21,4% (75mm / 350mm)
+        + 30cm Orion Skyquest XT12i IntelliScope: 23%
+    + [ ] Install updates on the server (for the old DeepskyLog and the new one)
+    + [ ] Release new version of pyDeepskyLog
+    + [ ] Change requirement in pifinder code
 + [ ] Create eyepieces tables in the new version of DeepskyLog.
     + [ ] Write script to populate the tables from the old database.
     + [ ] Update user model to use the eyepieces from the new database.
@@ -36,17 +46,19 @@
         + 5mm Nagler: 7mm
         + Baader 3.5mm Hyperion: 3.9mm
         + Baader 36mm Aspheric: 44mm
-    + [ ] Write script to update the tables from the old database. Execute every 15 minutes.
+    + [ ] Use database from the new version in the old version of DeepskyLog.
     + [ ] Change API to get the eyepieces from the new table.
     + [ ] Add all pages for adding, viewing, editing, deleting eyepieces. Also update user overview page. TO DO AFTER
       adding the contrast reserve to PiFinder
 + [ ] Create lenses tables in the new version of DeepskyLog.
     + [ ] Write script to populate the tables from the old database.
     + [ ] Update user model to use the lenses from the new database.
-    + [ ] Write script to update the tables from the old database. Execute every 15 minutes.
+    + [ ] Use database from the new version in the old version of DeepskyLog.
     + [ ] Create API to get the lenses from a given user.
     + [ ] Add all pages for adding, viewing, editing, deleting lenses, filters, instrument sets. Also update user
       overview page. TO DO AFTER adding the contrast reserve to PiFinder
++ [ ] Create filters tables in the new version of DeepskyLog
++ [ ] Create instrument sets tables in the new version of DeepskyLog
 
 ### Distant future
 
@@ -61,55 +73,7 @@
 ### Combination of old and new DeepskyLog
 
 + [ ] Use the old version of DeepskyLog alongside the new version
-    + [X] Add the code
-    + [X] Fix the code for php 8.3
-    + [X] Change the link to the login / register page
-    + [ ] Change the link to the user settings page
-    + [ ] Change the link to the user information page (in a lot of places!)
-    + [ ] Change the link to the drawing page of an observer
-    + [X] Add the link to download the Deep-sky magazines
-    + [X] Add the link to the sponsor page
-    + [X] Add the link to the DeepskyLog sketch of the week and the month
-    + [X] Add the link to the all Drawings page
-    + [ ] Check if the user belongs to the correct role / team
-    + [ ] Rewrite the observer class in utils
-    + [ ] Translate new strings
-+ [ ] Check log in using the new version and try using one of the old pages as logged-in user
-    + [ ] Change links in the old version
-    + [ ] Update the log in code in the old DeepskyLog
-
-```php
-include $_SERVER['DOCUMENT_ROOT'].'/../../vendor/autoload.php';
-
-$app = include $_SERVER['DOCUMENT_ROOT'].'/../../bootstrap/app.php';
-
-$kernel = $app->make('Illuminate\Contracts\Http\Kernel');
-
-$kernel->handle($request = Illuminate\Http\Request::capture());
-
-$id = (isset($_COOKIE[$app['config']['session.cookie']]) ? $app['encrypter']->decrypt($_COOKIE[$app['config']['session.cookie']], false) : null);
-
-if ($id) {
-    $app['session']->driver()->setId(explode('|', $id)[1]);
-    $app['session']->driver()->start();
-
-    // Session::all()
-    // $app['auth']->getSession() //  Illuminate\Session\Store
-    // Auth::user()
-    // $app['auth']->user()
-} else {
-    var_dump('NO SESSION ID');
-}
-```
-
-+ [ ] Remove code from the old version of DeepskyLog:
-    + [ ] Log in
-    + [ ] Log out
-    + [ ] Reset password
-    + [ ] User information page
-    + [ ] User profile update
-    + [ ] My Drawings
-    + [ ] Entries in instructions.php?
++ [ ] Use the new database tables in the old version of DeepskyLog
 + [ ] On the server, set up the apache / nginx configuration to use the old version of DeepskyLog
 + [ ] On the server, make sure to run the queue workers: https://laravel.com/docs/11.x/queues#running-the-queue-worker
 + [ ] Release new version of DeepskyLog with new registration and login pages.
@@ -137,6 +101,7 @@ if ($id) {
 + [X] Add new index page, with latest sketch of the week and the month, 10 latest drawings, 10 latest observers, 10
   latest observations
 + [X] Add object type and constellation to the list of 10 newest observations
++ [X] Automatically translate the descriptions.
 
 ## Eloquent
 

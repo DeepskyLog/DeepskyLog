@@ -3,7 +3,7 @@
 use App\Http\Controllers\EyepieceController;
 use App\Http\Controllers\InstrumentController;
 use App\Models\Atlas;
-use App\Models\InstrumentsOld;
+use App\Models\Instrument;
 use App\Models\LocationsOld;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -117,18 +117,18 @@ Route::get('instruments.index', function (Request $request) {
     if ($request->exists('selected')) {
         $allInstruments[] = [
             'id' => auth()->user()->stdtelescope,
-            'name' => InstrumentsOld::where('id', auth()->user()->stdtelescope)->first()->name,
+            'name' => Instrument::where('id', auth()->user()->stdtelescope)->first()->fullName(),
         ];
     }
 
     // Get the instrument, but they should be active
-    $instruments = InstrumentsOld::where('observer', auth()->user()->username)->where('instrumentactive', 1)->get();
+    $instruments = Instrument::where('observer', auth()->user()->username)->where('active', 1)->get();
 
     foreach ($instruments as $instrument) {
-        if ($request->search == '' || Str::contains(Str::lower($instrument->name), Str::lower($request->search))) {
+        if ($request->search == '' || Str::contains(Str::lower($instrument->fullName()), Str::lower($request->search))) {
             $allInstruments[] = [
                 'id' => $instrument->id,
-                'name' => $instrument->name,
+                'name' => $instrument->fullName(),
             ];
         }
     }

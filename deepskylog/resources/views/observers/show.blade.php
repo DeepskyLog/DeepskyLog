@@ -1,3 +1,6 @@
+@php use App\Models\ObservationsOld; @endphp
+@php use App\Models\CometObservationsOld; @endphp
+@php use App\Models\User; @endphp
 <x-app-layout>
     <div>
         <div class="mx-auto max-w-screen bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
@@ -20,7 +23,7 @@
                             echo Carbon\Carbon::createFromFormat("Y-m-d H:i:s", $user->created_at)->format("Y");
                         @endphp
 
-                        <br />
+                        <br/>
                         {{-- First observation on / last observation on --}}
 
                         @if (! is_null($user->firstObservationDate()[0]))
@@ -30,7 +33,7 @@
                             >
                                 {{ $user->firstObservationDate()[0] }}
                             </a>
-                            <br />
+                            <br/>
                             {{ __("Most recent observation on ") }}
                             <a
                                 href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $user->lastObservationDate()[1] }}"
@@ -41,8 +44,8 @@
                             {{ __("No observations added!") }}
                         @endif
 
-                        <br />
-                        <br />
+                        <br/>
+                        <br/>
 
                         <table class="table-auto">
                             <!-- Default location -->
@@ -67,7 +70,7 @@
                                         <a
                                             href="{{ config('app.old_url') }}/index.php?indexAction=detail_instrument&instrument={{ $user->stdtelescope }}"
                                         >
-                                            {!! $user->standardInstrument->name !!}
+                                            {!! $user->standardInstrument->fullName() !!}
                                         </a>
                                     @endif
                                 </td>
@@ -210,13 +213,13 @@
                                     {!! $user->about !!}
                                 </div>
                             </x-card>
-                            <br />
+                            <br/>
                         @endif
                     </div>
                 </div>
             </div>
 
-            <br />
+            <br/>
 
             <x-card>
                 <h2 class="mb-2 mt-2 text-xl px-5 font-bold">
@@ -230,7 +233,7 @@
                                 <svg width="100" height="100">
                                     <image xlink:href="{{ $achievement->image }}"
                                            src="{{ $achievement->image }}"
-                                           width="100" height="100" />
+                                           width="100" height="100"/>
                                 </svg>
                             </div>
                         @endforeach
@@ -263,71 +266,71 @@
                     <tbody>
                     <tr>
                         <td>{!! __("Number of observations") !!}</td>
-                        <td>{{ $observations->count() + \App\Models\CometObservationsOld::where("observerid", $user->username)->count() }}
-                            / {{ $totalObservations + \App\Models\CometObservationsOld::getTotalObservations() }}
+                        <td>{{ $observations->count() + CometObservationsOld::where("observerid", $user->username)->count() }}
+                            / {{ $totalObservations + CometObservationsOld::getTotalObservations() }}
                         </td>
                         <td>{{ $observations->count() }}
                             / {{ $totalObservations }}
                         </td>
-                        <td>{{ \App\Models\CometObservationsOld::where("observerid", $user->username)->count() }}
-                            / {{ \App\Models\CometObservationsOld::getTotalObservations() }}
+                        <td>{{ CometObservationsOld::where("observerid", $user->username)->count() }}
+                            / {{ CometObservationsOld::getTotalObservations() }}
                         </td>
                     </tr>
 
                     <tr>
                         <td>{!! __("Observations last year") !!}</td>
                         <td>{{ $observationsLastYear + $user->getCometObservationsLastYear() }} /
-                            {{ $totalObservationsLastYear + \App\Models\CometObservationsOld::getTotalObservationsLastYear()}}
+                            {{ $totalObservationsLastYear + CometObservationsOld::getTotalObservationsLastYear()}}
                         </td>
                         <td>{{ $observationsLastYear }}
                             / {{ $totalObservationsLastYear }}
                         </td>
                         <td>{{ $user->getCometObservationsLastYear() }}
-                            / {{ \App\Models\CometObservationsOld::getTotalObservationsLastYear() }}
+                            / {{ CometObservationsOld::getTotalObservationsLastYear() }}
                         </td>
                     </tr>
 
                     <tr>
                         <td>{{ __("Number of drawings") }}</td>
                         <td>{{ $observations->where("hasDrawing", 1)->count()
-                                + \App\Models\CometObservationsOld::where("observerid", $user->username)->where("hasDrawing", 1)->count()}}
+                                + CometObservationsOld::where("observerid", $user->username)->where("hasDrawing", 1)->count()}}
                             /
-                            {{ $totalNumberOfDrawings + \App\Models\CometObservationsOld::where("hasDrawing", 1)->count() }}
+                            {{ $totalNumberOfDrawings + CometObservationsOld::where("hasDrawing", 1)->count() }}
                         </td>
                         <td>{{ $observations->where("hasDrawing", 1)->count() }}
                             /
                             {{ $totalNumberOfDrawings }}
                         </td>
-                        <td>{{ \App\Models\CometObservationsOld::where("observerid", $user->username)->where("hasDrawing", 1)->count() }}
+                        <td>{{ CometObservationsOld::where("observerid", $user->username)->where("hasDrawing", 1)->count() }}
                             /
-                            {{ \App\Models\CometObservationsOld::where("hasDrawing", 1)->count() }}
+                            {{ CometObservationsOld::where("hasDrawing", 1)->count() }}
                         </td>
                     </tr>
 
                     <tr>
                         <td>{!! __("Drawings last year") !!}</td>
                         @php
-                            $totalDrawings = \App\Models\ObservationsOld::getTotalDrawingsLastYear();
+                            $totalDrawings = ObservationsOld::getTotalDrawingsLastYear();
                         @endphp
                         <td>{{ $user->getDeepskyDrawingsLastYear() + $user->getCometDrawingsLastYear() }} /
-                            {{ $totalDrawings + \App\Models\CometObservationsOld::getTotalDrawingsLastYear()}}
+                            {{ $totalDrawings + CometObservationsOld::getTotalDrawingsLastYear()}}
                         </td>
                         <td>{{ $user->getDeepskyDrawingsLastYear() }}
                             / {{ $totalDrawings }}
                         </td>
                         <td>{{ $user->getCometDrawingsLastYear() }}
-                            / {{ \App\Models\CometObservationsOld::getTotalDrawingsLastYear() }}
+                            / {{ CometObservationsOld::getTotalDrawingsLastYear() }}
                         </td>
                     </tr>
 
                     <tr>
                         <td>{{ __("Different objects") }}</td>
                         <td>{{ $user->getUniqueObjectsObservations() + $user->getUniqueCometObservations() }} /
-                            {{ $totalUniqueObjects + \App\Models\CometObservationsOld::getUniqueObjectsObserved() }}</td>
+                            {{ $totalUniqueObjects + CometObservationsOld::getUniqueObjectsObserved() }}</td>
                         <td>{{ $user->getUniqueObjectsObservations() }}
                             / {{ $totalUniqueObjects }}</td>
                         <td>{{ $user->getUniqueCometObservations() }} /
-                            {{ \App\Models\CometObservationsOld::getUniqueObjectsObserved() }}</td>
+                            {{ CometObservationsOld::getUniqueObjectsObserved() }}</td>
                     </tr>
 
                     <tr>
@@ -388,13 +391,13 @@
 
                     <tr>
                         <td>{{ __("Rank") }}</td>
-                        <td>{{ $user->getRank() }} / {{ \App\Models\User::count() }} </td>
+                        <td>{{ $user->getRank() }} / {{ User::count() }} </td>
                         <td></td>
                     </tr>
                     </tbody>
                 </table>
 
-                <br />
+                <br/>
                 <x-button gray icon="eye" class="mb-2"
                           href='{{ config("app.old_url") }}/index.php?indexAction=result_selected_observations&observer={{ $user->username }}'
                 >
@@ -432,7 +435,7 @@
                 {!! $objectTypesChart->container() !!}
             </div>
 
-            <br />
+            <br/>
             <!-- The countries chart -->
             <div>
                 {!! $countriesChart->container() !!}
@@ -447,7 +450,7 @@
                         <div class="px-5 flex flex-wrap">
                             @foreach($user->sketchOfTheWeek as $sketch)
                                 <div class="max-w-xl mt-3 pr-3">
-                                    <x-sketch :sketch="$sketch" />
+                                    <x-sketch :sketch="$sketch"/>
                                 </div>
                             @endforeach
                         </div>
@@ -465,7 +468,7 @@
                             @foreach($user->sketchOfTheMonth as $sketch)
                                 <div class="max-w-xl mt-3 pr-3">
                                     {{-- Show the correct drawing --}}
-                                    <x-sketch :sketch="$sketch" />
+                                    <x-sketch :sketch="$sketch"/>
                                 </div>
                             @endforeach
                         </div>

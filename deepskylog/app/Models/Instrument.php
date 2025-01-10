@@ -12,6 +12,8 @@ class Instrument extends Model
         'fd', 'fixedMagnification', 'active',
     ];
 
+    protected $with = ['make', 'mount_type', 'instrument_type'];
+
     /**
      * Adds the link to the observer.
      *
@@ -19,7 +21,6 @@ class Instrument extends Model
      */
     public function user(): BelongsTo
     {
-        // Also method on user: instruments()
         return $this->belongsTo('App\Models\User');
     }
 
@@ -28,8 +29,23 @@ class Instrument extends Model
      *
      * @return string the name of the instrument type
      */
-    public function typeName(): string
+    public function fullName(): string
     {
-        return InstrumentType::where('id', $this->type)->value('type');
+        return ltrim($this->make->name.' '.$this->name);
+    }
+
+    public function make(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\InstrumentMake');
+    }
+
+    public function mount_type(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\MountType');
+    }
+
+    public function instrument_type(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\InstrumentType');
     }
 }

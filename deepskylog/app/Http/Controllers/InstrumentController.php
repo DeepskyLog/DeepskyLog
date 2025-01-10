@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\InstrumentsOld;
+use App\Models\Instrument;
 
 class InstrumentController extends Controller
 {
     public function index()
     {
-        return InstrumentsOld::all();
+        return Instrument::all();
     }
     //
     //    public function store(Request $request)
@@ -22,7 +22,7 @@ class InstrumentController extends Controller
 
     public function show_from_user(string $user_id)
     {
-        return InstrumentsOld::where('observer', $user_id)->get();
+        return Instrument::where('observer', $user_id)->get();
     }
     //
     //

@@ -757,12 +757,12 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Establishes a relationship between the User model and the InstrumentsOld model.
+     * Establishes a relationship between the User model and the Instruments model.
      *
-     * This method defines a one-to-one relationship between the User model and the InstrumentsOld model.
-     * The relationship is established based on the 'stdtelescope' attribute of the User model and the 'id' attribute of the InstrumentsOld model.
+     * This method defines a one-to-one relationship between the User model and the Instruments model.
+     * The relationship is established based on the 'stdtelescope' attribute of the User model and the 'id' attribute of the Instruments model.
      *
-     * @return HasOne The relationship between the User model and the InstrumentsOld model.
+     * @return HasOne The relationship between the User model and the Instruments model.
      */
     public function standardInstrument(): HasOne
     {
@@ -793,12 +793,12 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Establishes a relationship between the User model and the InstrumentsOld model.
+     * Establishes a relationship between the User model and the Instruments model.
      *
-     * This method defines a one-to-many relationship between the User model and the InstrumentsOld model.
-     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the InstrumentsOld model.
+     * This method defines a one-to-many relationship between the User model and the Instruments model.
+     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the Instruments model.
      *
-     * @return HasMany The relationship between the User model and the InstrumentsOld model.
+     * @return HasMany The relationship between the User model and the Instruments model.
      */
     public function instruments(): HasMany
     {

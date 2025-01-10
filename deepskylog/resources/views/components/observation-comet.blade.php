@@ -2,7 +2,7 @@
 @php use App\Models\CometObjectsOld; @endphp
 @php use Carbon\Carbon; @endphp
 @php use App\Models\LocationsOld; @endphp
-@php use App\Models\InstrumentsOld; @endphp
+@php use App\Models\Instrument; @endphp
 @props([
     "observation",
 ])
@@ -59,7 +59,7 @@
                 href="{{ config("app.old_url") }}/index.php?indexAction=detail_instrument&instrument={{ $observation->instrumentid }}"
                 class="font-bold hover:underline"
             >
-                {!! html_entity_decode(InstrumentsOld::where("id", $observation->instrumentid)->first()->name) !!}
+                {!! html_entity_decode(Instrument::where("id", $observation->instrumentid)->first()->fullName()) !!}
                 .
             </a>
         @endif

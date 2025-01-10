@@ -4,7 +4,7 @@
         use App\Models\Constellation;
         use App\Models\EyepiecesOld;
         use App\Models\FiltersOld;
-        use App\Models\InstrumentsOld;
+        use App\Models\Instrument;
         use App\Models\LocationsOld;
         use App\Models\ObjectsOld;
         use App\Models\User;
@@ -70,7 +70,7 @@
         {{ __('Used instrument was ') }}
         <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_instrument&instrument={{ $observation->instrumentid }}"
            class="font-bold hover:underline">
-            {!! html_entity_decode(InstrumentsOld::where('id', $observation->instrumentid)->first()->name) !!}
+            {!! html_entity_decode(Instrument::where('id', $observation->instrumentid)->first()->fullName()) !!}
         </a>
         @if ($observation->magnification > 0)
             {{ __(' with a magnification of ') }}
