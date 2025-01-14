@@ -67,3 +67,27 @@ Route::view('/', 'welcome');
 Route::view('/privacy', 'privacy')->name('privacy');
 Route::view('/sponsors', 'layouts.sponsors');
 Route::view('/downloads/magazines', 'layouts.downloads.magazines');
+
+// Instruments
+// Route::get('/instrument/create/{instrument}', 'App\Http\Controllers\InstrumentController@create')
+//    ->middleware('verified');
+//
+// Route::get('/instrument/admin', 'App\Http\Controllers\InstrumentController@indexAdmin')
+//    ->name('instrument.indexAdmin');
+//
+// Route::resource(
+//    'instrument',
+//    'App\Http\Controllers\InstrumentController',
+//    ['parameters' => ['instrument' => 'instrument']]
+// )->middleware('verified')->except('show');
+
+Route::get('/instrument/{instrument}', 'App\Http\Controllers\InstrumentController@show')
+    ->name('instrument.show');
+
+// Route::get('/instrument/{instrument}/getImage', 'App\Http\Controllers\InstrumentController@getImage')
+//    ->name('instrument.getImage');
+
+// Route::post('/instrument/{instrument}/deleteImage', 'App\Http\Controllers\InstrumentController@deleteImage')
+//    ->name('instrument.deleteImage');
+
+// Route::get('/getinstruments/{id}', 'App\Http\Controllers\InstrumentController@getinstrumentsAjax');

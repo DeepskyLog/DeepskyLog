@@ -24,13 +24,18 @@ class InstrumentController extends Controller
     {
         return Instrument::where('observer', $user_id)->get();
     }
-    //
-    //
-    //    public function show(Instrument $instrument)
-    //    {
-    //        return $instrument;
-    //    }
-    //
+
+    public function show(Instrument $instrument)
+    {
+        // TODO: Check if there is an image for this instrument
+        $image = '/images/telescope.png';
+
+        return view(
+            'instrument.show',
+            ['instrument' => $instrument, 'image' => $image]
+        );
+    }
+
     //    public function update(Request $request, Instrument $instrument)
     //    {
     //        $data = $request->validate([

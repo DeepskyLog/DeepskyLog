@@ -18,9 +18,10 @@
     + [X] Update user table every 5 minutes with new users from www.deepskylog.org
     + [X] Make a table for the instrument makes and add some standard makes (like SkyWatcher, Celestron, ...)
     + [X] Update user model to use the instruments from the new database.
-    + [ ] Add page to see the details of an instrument
+    + [X] Add page to see the details of an instrument
+    + [ ] Add page to view all instruments of an observer
     + [ ] Change API to get the instruments from the new table.
-    + [ ] Add all pages for adding, viewing, editing, deleting instruments. Also update user overview page.
+    + [ ] Add all pages for adding, editing, deleting instruments. Also update user overview page.
     + [ ] Add page for administrator (only for the instrument_makes table)
     + Add obstruction_perc:
         + Obsession 18'': 17.2% (3.1'' / 18'')
@@ -43,6 +44,7 @@
         + 13mm Nagler: 17.6mm
         + 8mm Ethos: 13.9mm
         + 8mm Radian: 8.3mm
+        + 6mm Ethos: 10.4mm
         + 5mm Nagler: 7mm
         + Baader 3.5mm Hyperion: 3.9mm
         + Baader 36mm Aspheric: 44mm

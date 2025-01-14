@@ -28,18 +28,34 @@
 
                         @if (! is_null($user->firstObservationDate()[0]))
                             {{ __("First observation on ") }}
-                            <a
-                                href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $user->firstObservationDate()[1] }}"
-                            >
-                                {{ $user->firstObservationDate()[0] }}
-                            </a>
+                            @if ($user->firstObservationDate()[1] > 0)
+                                <a
+                                    href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $user->firstObservationDate()[1] }}"
+                                >
+                                    {{ $user->firstObservationDate()[0] }}
+                                </a>
+                            @else
+                                <a
+                                    href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ -$user->firstObservationDate()[1] }}"
+                                >
+                                    {{ $user->firstObservationDate()[0] }}
+                                </a>
+                            @endif
                             <br/>
                             {{ __("Most recent observation on ") }}
-                            <a
-                                href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $user->lastObservationDate()[1] }}"
-                            >
-                                {{ $user->lastObservationDate()[0] }}
-                            </a>
+                            @if ($user->lastObservationDate()[1] > 0)
+                                <a
+                                    href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $user->lastObservationDate()[1] }}"
+                                >
+                                    {{ $user->lastObservationDate()[0] }}
+                                </a>
+                            @else
+                                <a
+                                    href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ -$user->lastObservationDate()[1] }}"
+                                >
+                                    {{ $user->lastObservationDate()[0] }}
+                                </a>
+                            @endif
                         @else
                             {{ __("No observations added!") }}
                         @endif
@@ -68,7 +84,7 @@
                                 <td>
                                     @if ($user->stdtelescope)
                                         <a
-                                            href="{{ config('app.old_url') }}/index.php?indexAction=detail_instrument&instrument={{ $user->stdtelescope }}"
+                                            href="/instrument/{{ $user->stdtelescope }}"
                                         >
                                             {!! $user->standardInstrument->fullName() !!}
                                         </a>
@@ -90,9 +106,9 @@
                                 </td>
                             </tr>
 
-                            <!-- Number of instruments -->
+                            <!-- Number of instrument -->
                             <tr>
-                                <td>{!! __("Number of instruments") !!}</td>
+                                <td>{!! __("Number of instrument") !!}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="{{ config('app.old_url') }}/index.php?indexAction=view_instruments">

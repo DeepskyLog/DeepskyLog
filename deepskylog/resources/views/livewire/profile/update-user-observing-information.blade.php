@@ -56,7 +56,7 @@
             <x-select
                 label="{{ __('Default instrument') }}"
                 wire:model.live="stdtelescope"
-                :async-data="route('instruments.index')"
+                :async-data="route('instrument.index')"
                 option-label="name"
                 option-value="id"
             />

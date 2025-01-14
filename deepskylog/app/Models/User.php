@@ -213,12 +213,20 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $language = app()->getLocale();
 
-        $firstObservation = ObservationsOld::where('observerid', $this->username)->min('date');
+        $firstDeepskyObservation = ObservationsOld::where('observerid', $this->username)->min('date');
+        $firstCometObservation = CometObservationsOld::where('observerid', $this->username)->min('date');
+
+        $firstObservation = min($firstDeepskyObservation, $firstCometObservation);
+
         if ($firstObservation == null) {
             return [null, null];
         }
         $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
-        $id = ObservationsOld::where('observerid', $this->username)->where('date', $firstObservation)->first()['id'];
+        if ($firstObservation == $firstDeepskyObservation) {
+            $id = ObservationsOld::where('observerid', $this->username)->where('date', $firstObservation)->first()['id'];
+        } else {
+            $id = -CometObservationsOld::where('observerid', $this->username)->where('date', $firstObservation)->first()['id'];
+        }
 
         return [$date, $id];
     }
@@ -232,12 +240,20 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $language = app()->getLocale();
 
-        $lastObservation = ObservationsOld::where('observerid', $this->username)->max('date');
+        $lastDeepskyObservation = ObservationsOld::where('observerid', $this->username)->max('date');
+        $lastCometObservation = CometObservationsOld::where('observerid', $this->username)->min('date');
+
+        $lastObservation = max($lastDeepskyObservation, $lastCometObservation);
+
         if ($lastObservation == null) {
             return [null, null];
         }
         $date = Carbon::createFromFormat('Ymd', $lastObservation)->locale($language)->isoFormat('LL');
-        $id = ObservationsOld::where('observerid', $this->username)->where('date', $lastObservation)->first()['id'];
+        if ($lastObservation == $lastDeepskyObservation) {
+            $id = ObservationsOld::where('observerid', $this->username)->where('date', $lastObservation)->first()['id'];
+        } else {
+            $id = -CometObservationsOld::where('observerid', $this->username)->where('date', $lastObservation)->first()['id'];
+        }
 
         return [$date, $id];
     }

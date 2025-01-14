@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Old instruments eloquent model.
+ * Old instrument eloquent model.
  */
 
 namespace App\Models;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Old instruments eloquent model.
+ * Old instrument eloquent model.
  */
 class InstrumentsOld extends Model
 {
@@ -18,7 +18,7 @@ class InstrumentsOld extends Model
 
     protected $connection = 'mysqlOld';
 
-    protected $table = 'instruments';
+    protected $table = 'instrument';
 
     /**
      * Establishes a relationship between the InstrumentsOld model and the User model.

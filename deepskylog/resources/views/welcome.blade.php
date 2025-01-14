@@ -27,7 +27,7 @@
                     !!}
                     {{ __("This registration allows access to a variety of useful tools, including information on the objects observed and sketches made.") }}
                     <br/>
-                    {{ __("You can consult and create observing lists with different deepsky objects and see suggestions for objects visible in your instruments and from your observation sites. ") }}
+                    {{ __("You can consult and create observing lists with different deepsky objects and see suggestions for objects visible in your instrument and from your observation sites. ") }}
                     {{ __("You can create your own file with maps and DSS images of the objects and have access to an interactive and detailed free star atlas. ") }}
                     {{ __("You can also consult the observations and sketches of other observers and share your own observations and sketches with the community.") }}
                     <br/>

@@ -44,7 +44,7 @@ return new class extends Migration
             // $table->foreign('stdlocation')->nullable()->references('id')
             // ->on('deepskylog.locations');
             // $table->foreign('stdtelescope')->nullable()->references('id')
-            // ->on('deepskylog.instruments');
+            // ->on('deepskylog.instrument');
             // $table->foreign('standardAtlasCode')->references('code')->on('deepskylog.atlases');
             $table->string('about', 1000)->nullable();
         });

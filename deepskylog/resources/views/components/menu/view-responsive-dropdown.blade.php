@@ -1,3 +1,4 @@
+@php use Carbon\Carbon; @endphp
 <div>
     <div class="border-t border-gray-400 pb-1 pt-4">
         <div class="flex items-center px-4">
@@ -14,12 +15,12 @@
                 <x-dropdown.item
                     icon="bars-3-center-left"
                     href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&observer={{  Auth::user()->username }}"
-                    label="{{ __("My observations") }}" />
+                    label="{{ __("My observations") }}"/>
 
                 <x-dropdown.item
                     icon="pencil-square"
                     href="/drawings/{{ Auth::user()->slug }}"
-                    label="{{__('My drawings') }}" />
+                    label="{{__('My drawings') }}"/>
             @endif
 
             <!-- Team Management -->
@@ -77,12 +78,12 @@
 
                 <x-dropdown.item
                     separator
-                    href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&myLanguages=true&catalog=%&minyear={{ \Carbon\Carbon::now()->year - 1 }}&minmonth={{ \Carbon\Carbon::now()->month }}&minday={{ \Carbon\Carbon::now()->day }}&newobservations=true"
+                    href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&myLanguages=true&catalog=%&minyear={{ Carbon::now()->year - 1 }}&minmonth={{ Carbon::now()->month }}&minday={{ Carbon::now()->day }}&newobservations=true"
                     label="{{ __('Latest observations') }}"
                 />
             @else
                 <x-dropdown.item
-                    href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&myLanguages=true&catalog=%&minyear={{ \Carbon\Carbon::now()->year - 1 }}&minmonth={{ \Carbon\Carbon::now()->month }}&minday={{ \Carbon\Carbon::now()->day }}&newobservations=true"
+                    href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&myLanguages=true&catalog=%&minyear={{ Carbon::now()->year - 1 }}&minmonth={{ Carbon::now()->month }}&minday={{ Carbon::now()->day }}&newobservations=true"
                     label="{{ __('Latest observations') }}"
                 />
             @endif

@@ -111,7 +111,7 @@ Route::get('locations.index', function (Request $request) {
     return $allLocations;
 })->name('locations.index');
 
-Route::get('instruments.index', function (Request $request) {
+Route::get('instrument.index', function (Request $request) {
     $allInstruments = [];
     // Show the selected option
     if ($request->exists('selected')) {
@@ -138,7 +138,7 @@ Route::get('instruments.index', function (Request $request) {
     ];
 
     return $allInstruments;
-})->name('instruments.index');
+})->name('instrument.index');
 
 Route::get('atlas.index', function (Request $request) {
     $allAtlases = [];
@@ -228,5 +228,5 @@ Route::get('addUserToTeam.index', function (Request $request) {
     return $allUsers;
 })->name('addUserToTeam.index');
 
-Route::get('/instruments/{userid}', [InstrumentController::class, 'show_from_user']);
+Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user']);
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);
