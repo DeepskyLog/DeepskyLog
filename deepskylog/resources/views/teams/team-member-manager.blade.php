@@ -43,7 +43,7 @@
                                 @foreach ($this->roles as $index => $role)
                                     <button
                                         type="button"
-                                        class="{{ $index > 0 ? "rounded-t-none border-t border-gray-400" : "" }} {{ ! $loop->last ? "rounded-b-none" : "" }} relative inline-flex w-full rounded-lg px-4 py-3 focus:z-10 focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-200"
+                                        class="{{ $index > 0 ? "rounded-t-none border-t border-gray-400" : "" }} {{ ! $loop->last ? "rounded-b-none" : "" }} relative inline-flex w-full rounded-lg px-4 py-3 focus:z-10 focus:border-blue-300 focus:outline-hidden focus:ring-3 focus:ring-blue-200"
                                         wire:click="$set('addTeamMemberForm.role', '{{ $role->key }}')"
                                     >
                                         <div
@@ -131,7 +131,7 @@
                                     @if (Gate::check("removeTeamMember", $team))
                                         <!-- Cancel Team Invitation -->
                                         <button
-                                            class="ml-6 cursor-pointer text-sm text-red-500 focus:outline-none"
+                                            class="ml-6 cursor-pointer text-sm text-red-500 focus:outline-hidden"
                                             wire:click="cancelTeamInvitation({{ $invitation->id }})"
                                         >
                                             {{ __("Cancel") }}
@@ -183,7 +183,7 @@
             @foreach ($this->roles as $index => $role)
                 <button
                     type="button"
-                    class="{{ $index > 0 ? "rounded-t-none border-t border-gray-200" : "" }} {{ ! $loop->last ? "rounded-b-none" : "" }} relative inline-flex w-full rounded-lg px-4 py-3 focus:z-10 focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-200"
+                    class="{{ $index > 0 ? "rounded-t-none border-t border-gray-200" : "" }} {{ ! $loop->last ? "rounded-b-none" : "" }} relative inline-flex w-full rounded-lg px-4 py-3 focus:z-10 focus:border-blue-300 focus:outline-hidden focus:ring-3 focus:ring-blue-200"
                     wire:click="$set('currentRole', '{{ $role->key }}')"
                 >
                     <div

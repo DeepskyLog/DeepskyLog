@@ -104,7 +104,7 @@
         <br/>
         {{ __(' The following notes where made: ') }}
         <br/>
-        <div class="px-4 py-3 rounded bg-gray-900">
+        <div class="px-4 py-3 rounded-sm bg-gray-900">
             @if (auth()->user() && auth()->user()->translate)
                 {!! ($translated = $tr->translate(html_entity_decode($observation->description))) == null ? html_entity_decode($observation->description): $translated !!}
             @else

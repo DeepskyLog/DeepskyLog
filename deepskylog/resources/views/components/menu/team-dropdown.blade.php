@@ -6,7 +6,7 @@
                 <span class="inline-flex rounded-md">
                     <button
                         type="button"
-                        class="inline-flex items-center rounded-md border border-transparent bg-gray-700 px-3 py-2 text-sm font-medium leading-4 text-gray-300 transition hover:bg-gray-500 hover:text-gray-200 focus:bg-gray-500 focus:outline-none active:bg-gray-500"
+                        class="inline-flex items-center rounded-md border border-transparent bg-gray-700 px-3 py-2 text-sm font-medium leading-4 text-gray-300 transition hover:bg-gray-500 hover:text-gray-200 focus:bg-gray-500 focus:outline-hidden active:bg-gray-500"
                     >
                         {{ Auth::user()->currentTeam->name }}
 

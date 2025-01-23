@@ -91,7 +91,7 @@
             <div class="-mr-2 flex items-center lg:hidden">
                 <button
                     @click="open = ! open"
-                    class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition hover:bg-gray-800 hover:text-gray-500 focus:bg-gray-800 focus:text-gray-500 focus:outline-none"
+                    class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition hover:bg-gray-800 hover:text-gray-500 focus:bg-gray-800 focus:text-gray-500 focus:outline-hidden"
                 >
                     <svg
                         class="h-6 w-6"

@@ -36,7 +36,7 @@
                             <div class="flex items-center space-x-6">
                                 @if (Laravel\Jetstream\Jetstream::managesProfilePhotos() && ! is_null($account->avatar_path))
                                     <button
-                                        class="ml-6 cursor-pointer text-sm text-gray-500 focus:outline-none"
+                                        class="ml-6 cursor-pointer text-sm text-gray-500 focus:outline-hidden"
                                         wire:click="setAvatarAsProfilePhoto({{ $account->id }})"
                                     >
                                         {!! __("Use Avatar as Profile Photo") !!}

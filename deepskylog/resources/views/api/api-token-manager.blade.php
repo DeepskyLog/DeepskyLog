@@ -129,7 +129,7 @@
             type="text"
             readonly
             :value="$plainTextToken"
-            class="mt-4 w-full break-all rounded bg-gray-100 px-4 py-2 font-mono text-sm text-gray-500"
+            class="mt-4 w-full break-all rounded-sm bg-gray-100 px-4 py-2 font-mono text-sm text-gray-500"
             autofocus
             autocomplete="off"
             autocorrect="off"

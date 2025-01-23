@@ -13,7 +13,7 @@
                     <span class="inline-flex rounded-md">
                         <button
                             type="button"
-                            class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition hover:text-gray-700 focus:bg-gray-50 focus:outline-none active:bg-gray-50"
+                            class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition hover:text-gray-700 focus:bg-gray-50 focus:outline-hidden active:bg-gray-50"
                         >
                             {{ Auth::user()->name }}
 

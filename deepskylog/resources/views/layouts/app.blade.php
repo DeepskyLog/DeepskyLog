@@ -33,8 +33,8 @@
             </main>
         </div>
 
-        <footer class="bg-gray-800 shadow">
-            <div class="mx-auto flex max-w-screen-xl p-4">
+        <footer class="bg-gray-800 shadow-sm">
+            <div class="mx-auto flex max-w-(--breakpoint-xl) p-4">
                 <div class="w-full md:flex md:items-center md:justify-between">
                     <span
                         class="text-sm text-gray-500 dark:text-gray-400 sm:text-center"
