@@ -25,7 +25,6 @@
         + [X] Add Actions to delete
         + [X] Activate / deactivate instrument
         + [ ] Make default instrument
-            + [ ] Make default instrument from observer profile
         + [X] Show in inch or cm depending on the user's settings
     + [ ] Change API to get the instruments from the new table.
     + [ ] Add all pages for adding, editing, deleting instruments. Also update user overview page.

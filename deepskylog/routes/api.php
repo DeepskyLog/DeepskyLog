@@ -82,7 +82,7 @@ Route::get('licenses.index', function (Request $request) {
     return $allLicenses;
 })->name('licenses.index');
 
-Route::get('locations.index', function (Request $request) {
+Route::get('locations.api', function (Request $request) {
     $allLocations = [];
     // Show the selected option
     if ($request->exists('selected')) {
@@ -109,13 +109,11 @@ Route::get('locations.index', function (Request $request) {
     ];
 
     return $allLocations;
-})->name('locations.index');
+})->name('locations.api');
 
-Route::get('instrument.index', function (Request $request) {
+Route::get('instrument.api', function (Request $request) {
     $allInstruments = [];
     // Show the selected option
-    //    $user = User::find(1);
-
     if ($request->exists('selected')) {
         $allInstruments[] = [
             'id' => auth()->user()->stdtelescope,
@@ -125,10 +123,6 @@ Route::get('instrument.index', function (Request $request) {
 
     // Get the instruments, but they should be active
     $instruments = Instrument::where('observer', auth()->user()->username)->where('active', 1)->get();
-
-    //    $instrument = Instrument::where('observer', $user->username)->where('active', 1)->first();
-    //    dd($instrument->fullName());
-    //    dd($user->stdtelescope, Instrument::where('observer', $user->username)->where('active', 1)->get());
 
     foreach ($instruments as $instrument) {
         if ($request->search == '' || Str::contains(Str::lower($instrument->fullName()), Str::lower($request->search))) {
@@ -144,7 +138,7 @@ Route::get('instrument.index', function (Request $request) {
     ];
 
     return $allInstruments;
-})->name('instrument.index');
+})->name('instrument.api');
 
 Route::get('atlas.index', function (Request $request) {
     $allAtlases = [];

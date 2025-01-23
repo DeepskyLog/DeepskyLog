@@ -45,7 +45,7 @@
             <x-select
                 label="{!! __('Default observing site') !!}"
                 wire:model.live="stdlocation"
-                :async-data="route('locations.index')"
+                :async-data="route('locations.api')"
                 option-label="name"
                 option-value="id"
             />
@@ -56,7 +56,7 @@
             <x-select
                 label="{{ __('Default instrument') }}"
                 wire:model.live="stdtelescope"
-                :async-data="route('instrument.index')"
+                :async-data="route('instrument.api')"
                 option-label="name"
                 option-value="id"
             />
