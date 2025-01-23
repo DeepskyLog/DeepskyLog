@@ -106,9 +106,9 @@
                                 </td>
                             </tr>
 
-                            <!-- Number of instrument -->
+                            <!-- Number of instruments -->
                             <tr>
-                                <td>{!! __("Number of instrument") !!}</td>
+                                <td>{!! __("Number of instruments") !!}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="{{ config('app.old_url') }}/index.php?indexAction=view_instruments">

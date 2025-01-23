@@ -98,7 +98,11 @@ class InstrumentTable extends PowerGridComponent
                 }
             })
             ->add('mount', function ($instrument) {
-                return __($instrument->mount_type->name);
+                if ($instrument->instrument_type->name == 'Naked Eye' || $instrument->instrument_type->name == 'Binoculars' || $instrument->instrument_type->name == 'Finderscope') {
+                    return '';
+                } else {
+                    return $instrument->mount_type->name;
+                }
             })
             ->add('created_at_formatted', fn ($dish) => Carbon::parse($dish->created_at)->format('M j, Y'));
     }
@@ -162,7 +166,7 @@ class InstrumentTable extends PowerGridComponent
 
     public function actionsFromView($row): View
     {
-        return view('actions.delete-instrument', ['row' => $row]);
+        return view('actions.instrument', ['row' => $row]);
     }
 
     public function onUpdatedToggleable($id, $field, $value): void
@@ -177,5 +181,13 @@ class InstrumentTable extends PowerGridComponent
     {
         $instrument = Instrument::where('id', '=', $id);
         $instrument->delete();
+    }
+
+    #[On('clickToMakeDefault')]
+    public function clickToMakeDefault(int $id): void
+    {
+        auth()->user()->forceFill([
+            'stdtelescope' => $id,
+        ])->save();
     }
 }

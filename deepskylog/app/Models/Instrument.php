@@ -11,7 +11,7 @@ class Instrument extends Model
 {
     protected $fillable = [
         'user_id', 'name', 'diameter', 'type',
-        'fd', 'fixedMagnification', 'active',
+        'fd', 'fixedMagnification', 'active', 'stdtelescope',
     ];
 
     protected $with = ['make', 'mount_type', 'instrument_type'];

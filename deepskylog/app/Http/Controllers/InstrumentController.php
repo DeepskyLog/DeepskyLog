@@ -10,6 +10,14 @@ class InstrumentController extends Controller
     {
         return view('instrument.index');
     }
+
+    public function create()
+    {
+        dd('Create new Instrument');
+
+        return view('instrument.create');
+    }
+
     //
     //    public function store(Request $request)
     //    {

@@ -19,15 +19,11 @@
     + [X] Make a table for the instrument makes and add some standard makes (like SkyWatcher, Celestron, ...)
     + [X] Update user model to use the instruments from the new database.
     + [X] Add page to see the details of an instrument
-    + [ ] Add page to view all instruments of an observer
+    + [X] Add page to view all instruments of an observer
         + [ ] Add a button to add a new instrument
-        + [ ] Mount should not be given for Naked Eye (and Binoculars)
-        + [X] Add Actions to delete
-        + [X] Activate / deactivate instrument
-        + [ ] Make default instrument
-        + [X] Show in inch or cm depending on the user's settings
+    + [ ] Add page to add / edit instruments.
     + [ ] Change API to get the instruments from the new table.
-    + [ ] Add all pages for adding, editing, deleting instruments. Also update user overview page.
+    + [ ] Add all pages for adding, editing, deleting instruments.
     + [ ] Add page for administrator (only for the instrument_makes table)
     + Add obstruction_perc:
         + Obsession 18'': 17.2% (3.1'' / 18'')
