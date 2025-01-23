@@ -52,25 +52,6 @@ class Instrument extends Model
     }
 
     /**
-     * Calculates the total number of observations for the instrument.
-     *
-     * This method counts the number of observations from two different sources:
-     * - ObservationsOld
-     * - CometObservationsOld
-     *
-     * It sums the counts from both sources and returns the total.
-     *
-     * @return int The total number of observations for the instrument.
-     */
-    public function number_of_observations(): int
-    {
-        $observations = ObservationsOld::where('instrumentid', $this->id)->count();
-        $cometObservations = CometObservationsOld::where('instrumentid', $this->id)->count();
-
-        return $observations + $cometObservations;
-    }
-
-    /**
      * Retrieves the date of the first observation made with the instrument.
      *
      * This method calculates the earliest observation date for the instrument from two sources:

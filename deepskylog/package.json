@@ -23,6 +23,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^6.5.2",
-        "flatpickr": "^4.6.13"
+        "flatpickr": "^4.6.13",
+        "tinymce": "^7.6.1"
     }
 }

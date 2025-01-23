@@ -8,7 +8,7 @@ class InstrumentController extends Controller
 {
     public function index()
     {
-        return Instrument::all();
+        return view('instrument.index');
     }
     //
     //    public function store(Request $request)

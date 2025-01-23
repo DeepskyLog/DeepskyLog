@@ -75,11 +75,11 @@ Route::view('/downloads/magazines', 'layouts.downloads.magazines');
 // Route::get('/instrument/admin', 'App\Http\Controllers\InstrumentController@indexAdmin')
 //    ->name('instrument.indexAdmin');
 //
-// Route::resource(
-//    'instrument',
-//    'App\Http\Controllers\InstrumentController',
-//    ['parameters' => ['instrument' => 'instrument']]
-// )->middleware('verified')->except('show');
+Route::resource(
+    'instrument',
+    'App\Http\Controllers\InstrumentController',
+    ['parameters' => ['instrument' => 'instrument']]
+)->middleware('verified')->except('show');
 
 Route::get('/instrument/{instrument}', 'App\Http\Controllers\InstrumentController@show')
     ->name('instrument.show');

@@ -35,6 +35,7 @@ final class RemoveUserTable extends PowerGridComponent
             PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount(),
+            PowerGrid::responsive()->fixedColumns('name'),
         ];
     }
 

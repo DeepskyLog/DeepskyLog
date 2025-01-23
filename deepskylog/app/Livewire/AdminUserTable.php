@@ -41,6 +41,7 @@ final class AdminUserTable extends PowerGridComponent
             PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount(),
+            PowerGrid::responsive()->fixedColumns('name'),
         ];
     }
 
@@ -206,7 +207,7 @@ final class AdminUserTable extends PowerGridComponent
     public function actionRules(): array
     {
         return [
-            //Hide button edit for ID 1
+            // Hide button edit for ID 1
             Rule::button('destroy')
                 ->when(fn ($user) => $user->id == 1)
                 ->hide(),

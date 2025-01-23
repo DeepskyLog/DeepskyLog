@@ -20,6 +20,13 @@
     + [X] Update user model to use the instruments from the new database.
     + [X] Add page to see the details of an instrument
     + [ ] Add page to view all instruments of an observer
+        + [ ] Add a button to add a new instrument
+        + [ ] Mount should not be given for Naked Eye (and Binoculars)
+        + [X] Add Actions to delete
+        + [X] Activate / deactivate instrument
+        + [ ] Make default instrument
+            + [ ] Make default instrument from observer profile
+        + [X] Show in inch or cm depending on the user's settings
     + [ ] Change API to get the instruments from the new table.
     + [ ] Add all pages for adding, editing, deleting instruments. Also update user overview page.
     + [ ] Add page for administrator (only for the instrument_makes table)
@@ -29,6 +36,7 @@
         + 20cm Reise-Teleskop: 25% (5cm / 20cm)
         + Zelfbouw: 21,4% (75mm / 350mm)
         + 30cm Orion Skyquest XT12i IntelliScope: 23%
+    + [ ] Translate the new strings
     + [ ] Install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog
     + [ ] Change requirement in pifinder code
@@ -61,6 +69,8 @@
       overview page. TO DO AFTER adding the contrast reserve to PiFinder
 + [ ] Create filters tables in the new version of DeepskyLog
 + [ ] Create instrument sets tables in the new version of DeepskyLog
+    + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into
+      account the Barlow and other lenses)
 
 ### Distant future
 

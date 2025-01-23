@@ -94,7 +94,7 @@
                             <td>{{ __("Number of observations") }}</td>
                             <td>
                                 {{--                                    <a href="/observation/instrument/{{ $instrument->id }}">--}}
-                                {{  $instrument->number_of_observations() }}
+                                {{  $instrument->observations }}
                                 {{--                                    </a>--}}
                             </td>
                         </tr>

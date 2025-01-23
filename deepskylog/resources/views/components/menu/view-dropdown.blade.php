@@ -29,7 +29,7 @@
                                  label="{{ __('My sessions') }}"/>
 
                 <x-dropdown.item separator
-                                 href="{{ config('app.old_url') }}/index.php?indexAction=view_instruments"
+                                 href="/instrument"
                                  label="{{ __('My instruments') }}"/>
 
                 <x-dropdown.item icon="globe-europe-africa"

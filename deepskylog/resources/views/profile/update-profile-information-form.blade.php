@@ -261,12 +261,12 @@
             plugins: "lists emoticons quickbars wordcount",
             toolbar: "undo redo | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | emoticons | wordcount",
             menubar: false,
+            license_key: 'gpl',
             quickbars_insert_toolbar: false,
             quickbars_image_toolbar: false,
             quickbars_selection_toolbar: "bold italic",
             skin: "oxide-dark",
             content_css: "dark",
-            forced_root_block: false,
             setup: function (editor) {
                 editor.on("init change", function () {
                     editor.save();
