@@ -127,6 +127,126 @@ return new class extends Migration
                 'name' => 'Hofheim Instruments',
             ]
         );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Coronado',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Omegon',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'APM',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Bresser',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'GSO',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Canon',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Sumerian',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Zeiss',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Swarovski',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'ZWO',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Nikon',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'TMB',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Fujinon',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Pentax',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'SVBony',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Polarex',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Lichtenknecker',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Leica',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Intes',
+            ]
+        );
+
+        DB::table('instrument_makes')->insert(
+            [
+                'name' => 'Dark Star',
+            ]
+        );
     }
 
     public function down(): void

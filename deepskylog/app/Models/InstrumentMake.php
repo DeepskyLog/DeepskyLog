@@ -10,7 +10,7 @@ class InstrumentMake extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'make',
+        'name',
     ];
 
     public function instruments(): hasMany

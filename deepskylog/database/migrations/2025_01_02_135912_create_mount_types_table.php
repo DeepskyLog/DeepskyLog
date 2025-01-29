@@ -25,6 +25,12 @@ return new class extends Migration
                 'name' => 'Equatorial',
             ]
         );
+
+        DB::table('mount_types')->insert(
+            [
+                'name' => '',
+            ]
+        );
     }
 
     public function down(): void

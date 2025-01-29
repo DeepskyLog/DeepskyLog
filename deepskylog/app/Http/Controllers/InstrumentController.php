@@ -13,20 +13,8 @@ class InstrumentController extends Controller
 
     public function create()
     {
-        dd('Create new Instrument');
-
         return view('instrument.create');
     }
-
-    //
-    //    public function store(Request $request)
-    //    {
-    //        $data = $request->validate([
-    //
-    //        ]);
-    //
-    //        return Instrument::create($data);
-    //    }
 
     public function show_from_user(string $user_id)
     {
@@ -35,8 +23,12 @@ class InstrumentController extends Controller
 
     public function show(Instrument $instrument)
     {
-        // TODO: Check if there is an image for this instrument
-        $image = '/images/telescope.png';
+        // Check if there is an image for this instrument
+        if ($instrument->picture != null) {
+            $image = '/storage/'.asset($instrument->picture);
+        } else {
+            $image = '/images/telescope.png';
+        }
 
         return view(
             'instrument.show',

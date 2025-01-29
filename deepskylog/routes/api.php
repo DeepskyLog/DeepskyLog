@@ -4,7 +4,10 @@ use App\Http\Controllers\EyepieceController;
 use App\Http\Controllers\InstrumentController;
 use App\Models\Atlas;
 use App\Models\Instrument;
+use App\Models\InstrumentMake;
+use App\Models\InstrumentType;
 use App\Models\LocationsOld;
+use App\Models\MountType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -227,6 +230,72 @@ Route::get('addUserToTeam.index', function (Request $request) {
 
     return $allUsers;
 })->name('addUserToTeam.index');
+
+Route::get('instrument_makes.api', function (Request $request) {
+    $allMakes = [];
+    // Show the selected option
+    //    if ($request->exists('selected')) {
+    //        $allCountries[] = [
+    //            'id' => auth()->user()->country,
+    //            'name' => Countries::getOne(auth()->user()->country, $request->lang),
+    //        ];
+    //    }
+    $makes = InstrumentMake::get();
+    foreach ($makes as $make) {
+        if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
+            $allMakes[] = [
+                'id' => $make->id,
+                'name' => $make->name,
+            ];
+        }
+    }
+
+    return $allMakes;
+})->name('instrument_makes.api');
+
+Route::get('instrument_types.api', function (Request $request) {
+    $allTypes = [];
+    // Show the selected option
+    //    if ($request->exists('selected')) {
+    //        $allCountries[] = [
+    //            'id' => auth()->user()->country,
+    //            'name' => Countries::getOne(auth()->user()->country, $request->lang),
+    //        ];
+    //    }
+    $types = InstrumentType::get();
+    foreach ($types as $type) {
+        if ($request->search == '' || Str::contains(Str::lower($type->name), Str::lower($request->search))) {
+            $allTypes[] = [
+                'id' => $type->id,
+                'name' => $type->name,
+            ];
+        }
+    }
+
+    return $allTypes;
+})->name('instrument_types.api');
+
+Route::get('mount_types.api', function (Request $request) {
+    $allTypes = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $allTypes[] = [
+            'id' => old('mount_type_id'),
+            'name' => MountType::where('id', old('mount_type_id'))->first()->name,
+        ];
+    }
+    $types = MountType::get();
+    foreach ($types as $type) {
+        if ($request->search == '' || Str::contains(Str::lower($type->name), Str::lower($request->search))) {
+            $allTypes[] = [
+                'id' => $type->id,
+                'name' => $type->name,
+            ];
+        }
+    }
+
+    return $allTypes;
+})->name('mount_types.api');
 
 Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user']);
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);

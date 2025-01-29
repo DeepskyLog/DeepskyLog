@@ -20,19 +20,26 @@
     + [X] Update user model to use the instruments from the new database.
     + [X] Add page to see the details of an instrument
     + [X] Add page to view all instruments of an observer
-        + [ ] Add a button to add a new instrument
     + [ ] Add page to add / edit instruments.
+        + [X] Automatically change flipped / flopped when type is changed
+        + [X] Check entries and add the new instrument to the database
+        + [ ] Show old values when an error occurred (Adapt api for the drop down lists)
+        + [X] Add a large list of instrument makes to the database
+        + [X] Add a picture to the instrument
+        + [ ] Add edit page for the instruments
+    + [ ] Move to a better url: /wim-de-meester/coronado-solarmax-40mm
+    + [ ] Check if the create instrument and the list instruments page can only be seen if logged in.
     + [ ] Change API to get the instruments from the new table.
-    + [ ] Add all pages for adding, editing, deleting instruments.
     + [ ] Add page for administrator (only for the instrument_makes table)
+    + [ ] Translate the new strings
+    + [ ] Install updates on the server (for the old DeepskyLog and the new one)
     + Add obstruction_perc:
         + Obsession 18'': 17.2% (3.1'' / 18'')
-        + Obsession 15'': 17.3% (2.6'' / 15'') ?
+        + Obsession 15'': 17.3% (2.6'' / 15'')
         + 20cm Reise-Teleskop: 25% (5cm / 20cm)
         + Zelfbouw: 21,4% (75mm / 350mm)
         + 30cm Orion Skyquest XT12i IntelliScope: 23%
-    + [ ] Translate the new strings
-    + [ ] Install updates on the server (for the old DeepskyLog and the new one)
+    + [ ] Add Coronado SolarMax 40mm to the database
     + [ ] Release new version of pyDeepskyLog
     + [ ] Change requirement in pifinder code
 + [ ] Create eyepieces tables in the new version of DeepskyLog.

@@ -32,7 +32,7 @@
                 <x-dropdown.item
                     separator
                     icon="plus-circle"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=add_instrument"
+                    href="{{ route('instrument.create') }}"
                     label="{{ __('Instruments') }}"
                 />
 
