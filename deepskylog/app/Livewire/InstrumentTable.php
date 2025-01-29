@@ -64,7 +64,7 @@ class InstrumentTable extends PowerGridComponent
             ->add('makestr', function ($instrument) {
                 return $instrument->make->name;
             })->add('name_link', function ($instrument) {
-                return '<a href="/instrument/'.$instrument->id.'">'.$instrument->name.'</a>';
+                return '<a href="/instrument/'.Auth()->user()->slug.'/'.$instrument->slug.'">'.$instrument->name.'</a>';
             })
             ->add('aperture_mm', function ($instrument) {
                 if (Auth::user()->showInches) {

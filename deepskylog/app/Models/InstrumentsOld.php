@@ -18,7 +18,7 @@ class InstrumentsOld extends Model
 
     protected $connection = 'mysqlOld';
 
-    protected $table = 'instrument';
+    protected $table = 'instruments';
 
     /**
      * Establishes a relationship between the InstrumentsOld model and the User model.

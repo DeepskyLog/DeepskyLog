@@ -56,7 +56,7 @@
         @if ($observation->instrumentid > 0)
             {{ __("Used instrument was ") }}
             <a
-                href="/instrument/{{ $observation->instrumentid }}"
+                href="/instrument/{{ $user->slug }}/{{ Instrument::where("id", $observation->instrumentid)->first()->slug }}"
                 class="font-bold hover:underline"
             >
                 {!! html_entity_decode(Instrument::where("id", $observation->instrumentid)->first()->fullName()) !!}

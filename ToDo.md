@@ -27,7 +27,7 @@
         + [X] Add a large list of instrument makes to the database
         + [X] Add a picture to the instrument
         + [ ] Add edit page for the instruments
-    + [ ] Move to a better url: /wim-de-meester/coronado-solarmax-40mm
+    + [X] Move to a better url: /wim-de-meester/coronado-solarmax-40mm
     + [ ] Check if the create instrument and the list instruments page can only be seen if logged in.
     + [ ] Change API to get the instruments from the new table.
     + [ ] Add page for administrator (only for the instrument_makes table)

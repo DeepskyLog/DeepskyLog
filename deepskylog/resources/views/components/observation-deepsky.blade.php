@@ -68,7 +68,7 @@
             {{ __('seeing') }}
         @endif.<br/>
         {{ __('Used instrument was ') }}
-        <a href="/instrument/{{ $observation->instrumentid }}"
+        <a href="/instrument/{{ $user->slug }}/{{ Instrument::where('id', $observation->instrumentid)->first()->slug }}"
            class="font-bold hover:underline">
             {!! html_entity_decode(Instrument::where('id', $observation->instrumentid)->first()->fullName()) !!}
         </a>

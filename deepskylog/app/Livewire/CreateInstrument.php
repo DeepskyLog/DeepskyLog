@@ -143,7 +143,7 @@ class CreateInstrument extends Component
 
         $instrument = Instrument::create($data);
 
-        session()->flash('message', _('Instrument created successfully.'));
+        session()->flash('message', __('Instrument created successfully.'));
 
         // Return to /instrument/{id} page
         return redirect()->route('instrument.show', ['instrument' => $instrument->id]);

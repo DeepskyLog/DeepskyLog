@@ -81,7 +81,7 @@ Route::resource(
     ['parameters' => ['instrument' => 'instrument']]
 )->middleware('verified')->except('show');
 
-Route::get('/instrument/{instrument}', 'App\Http\Controllers\InstrumentController@show')
+Route::get('/instrument/{user}/{instrument}', 'App\Http\Controllers\InstrumentController@show')
     ->name('instrument.show');
 
 // Route::get('/instrument/{instrument}/getImage', 'App\Http\Controllers\InstrumentController@getImage')

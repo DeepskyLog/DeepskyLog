@@ -84,7 +84,7 @@
                                 <td>
                                     @if ($user->stdtelescope)
                                         <a
-                                            href="/instrument/{{ $user->stdtelescope }}"
+                                            href="/instrument/{{ $user->slug }}/{{ $user->standardInstrument->slug }}"
                                         >
                                             {!! $user->standardInstrument->fullName() !!}
                                         </a>

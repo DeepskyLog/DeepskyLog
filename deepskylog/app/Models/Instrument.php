@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 
 class Instrument extends Model
 {
+    use Sluggable;
+
     protected $fillable = [
         'user_id', 'name', 'aperture_mm', 'type', 'instrument_type_id', 'make_id', 'mount_type_id',
         'focal_length_mm', 'fixedMagnification', 'active', 'observer', 'flip_image', 'flop_image',
@@ -16,6 +19,16 @@ class Instrument extends Model
     ];
 
     protected $with = ['make', 'mount_type', 'instrument_type'];
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name',
+                'unique' => false,
+            ],
+        ];
+    }
 
     /**
      * Adds the link to the observer.

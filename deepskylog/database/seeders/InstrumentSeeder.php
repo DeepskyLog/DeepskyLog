@@ -15,7 +15,7 @@ class InstrumentSeeder extends Seeder
     {
         $instrumentData = InstrumentsOld::all();
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        DB::table('instrument')->truncate();
+        DB::table('instruments')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         foreach ($instrumentData as $instrument) {

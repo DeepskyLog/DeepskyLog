@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Instrument;
+use App\Models\User;
 
 class InstrumentController extends Controller
 {
@@ -21,8 +22,11 @@ class InstrumentController extends Controller
         return Instrument::where('observer', $user_id)->get();
     }
 
-    public function show(Instrument $instrument)
+    public function show(string $user_slug, string $instrument_slug)
     {
+        $user_id = User::where('slug', $user_slug)->first()->id;
+        $instrument = Instrument::where('slug', $instrument_slug)->where('user_id', $user_id)->first();
+
         // Check if there is an image for this instrument
         if ($instrument->picture != null) {
             $image = '/storage/'.asset($instrument->picture);
@@ -36,6 +40,10 @@ class InstrumentController extends Controller
         );
     }
 
+    public function edit(Instrument $instrument)
+    {
+        return view('instrument.create', ['instrument' => $instrument]);
+    }
     //    public function update(Request $request, Instrument $instrument)
     //    {
     //        $data = $request->validate([

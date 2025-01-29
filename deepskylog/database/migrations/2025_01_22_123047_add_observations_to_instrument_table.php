@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::table('instruments', function (Blueprint $table) {
             $table->integer('observations', unsigned: true)->default(0);
             $table->string('picture')->nullable();
+            $table->string('slug');
         });
     }
 
@@ -19,6 +20,7 @@ return new class extends Migration
         Schema::table('instruments', function (Blueprint $table) {
             $table->dropColumn('observations');
             $table->dropColumn('picture');
+            $table->dropColumn('slug');
         });
     }
 };
