@@ -103,16 +103,6 @@ class CreateInstrument extends Component
 
     public function save()
     {
-        $photoPath = null;
-        if ($this->photo) {
-            $upload_name = Str::slug(
-                Auth()->user()->slug.' '.$make.' '.$this->name,
-                '-'
-            ).'.'.$this->photo->getClientOriginalExtension();
-            // Make a slug from the upload_name
-            $photoPath = $this->photo->storePubliclyAs('photos/instruments', $upload_name, 'public');
-        }
-
         if ($this->instrument_make != 1 && $this->instrument_make) {
             $make = $this->instrument_make;
         } elseif ($this->instrument_new_make != '') {
@@ -125,6 +115,16 @@ class CreateInstrument extends Component
             $make = InstrumentMake::create(['name' => $make_name])->id;
         } else {
             $make = 1;
+        }
+
+        $photoPath = null;
+        if ($this->photo) {
+            $upload_name = Str::slug(
+                Auth()->user()->slug.' '.$make.' '.$this->name,
+                '-'
+            ).'.'.$this->photo->getClientOriginalExtension();
+            // Make a slug from the upload_name
+            $photoPath = $this->photo->storePubliclyAs('photos/instruments', $upload_name, 'public');
         }
 
         if ($this->focal_length_mm == '') {
