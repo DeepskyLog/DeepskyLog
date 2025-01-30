@@ -62,7 +62,7 @@ class InstrumentTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('makestr', function ($instrument) {
-                return $instrument->make->name;
+                return $instrument->instrument_make->name;
             })->add('name_link', function ($instrument) {
                 return '<a href="/instrument/'.Auth()->user()->slug.'/'.$instrument->slug.'">'.$instrument->name.'</a>';
             })

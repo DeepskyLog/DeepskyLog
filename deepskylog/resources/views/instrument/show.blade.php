@@ -189,13 +189,11 @@
                     </table>
 
                     @auth
-                        {{--        @if (Auth::user()->id == $instrument->user_id || Auth::user()->isAdmin())--}}
-                        {{--            <a href="{{ route('instrument.edit', $instrument) }}">--}}
-                        {{--                <button type="button" class="btn btn-sm btn-primary">--}}
-                        {{--                    {{ __('Edit') }} {{  $instrument->name }}--}}
-                        {{--                </button>--}}
-                        {{--            </a>--}}
-                        {{--        @endif--}}
+                        @if (Auth::user()->id == $instrument->user_id || Auth::user()->isAdministrator())
+                            <a href="/instrument/{{$instrument->user->slug}}/{{$instrument->slug }}/edit">
+                                <x-button type="submit" secondary label="{{ __('Edit') }} {!! $instrument->name !!}"/>
+                            </a>
+                        @endif
                     @endauth
                 </div>
             </div>

@@ -49,7 +49,7 @@ return [
     'features' => [
         Features::createAccountOnFirstLogin(),
         Features::generateMissingEmails(),
-        Features::loginOnRegistration(),
+        Features::authExistingUnlinkedUsers(),
         Features::rememberSession(),
         Features::providerAvatars(),
         Features::refreshOauthTokens(),

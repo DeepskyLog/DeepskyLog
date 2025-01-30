@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Instrument;
+use App\Models\InstrumentMake;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class InstrumentController extends Controller
 {
@@ -14,7 +16,7 @@ class InstrumentController extends Controller
 
     public function create()
     {
-        return view('instrument.create');
+        return view('instrument.create', ['update' => false]);
     }
 
     public function show_from_user(string $user_id)
@@ -40,25 +42,39 @@ class InstrumentController extends Controller
         );
     }
 
-    public function edit(Instrument $instrument)
+    public function edit(string $user_slug, string $instrument_slug)
     {
-        return view('instrument.create', ['instrument' => $instrument]);
+        $user_id = User::where('slug', $user_slug)->first()->id;
+        $instrument = Instrument::where('slug', $instrument_slug)->where('user_id', $user_id)->first();
+
+        return view(
+            'instrument.create',
+            ['instrument' => $instrument, 'update' => true]
+        );
     }
-    //    public function update(Request $request, Instrument $instrument)
-    //    {
-    //        $data = $request->validate([
-    //
-    //        ]);
-    //
-    //        $instrument->update($data);
-    //
-    //        return $instrument;
-    //    }
-    //
-    //    public function destroy(Instrument $instrument)
-    //    {
-    //        $instrument->delete();
-    //
-    //        return response()->json();
-    //    }
+
+    public function indexAdmin()
+    {
+        return view('instrument-admin.index');
+    }
+
+    public function editMake(InstrumentMake $make)
+    {
+        return view('instrument-admin.edit-make', ['make' => $make]);
+    }
+
+    public function storeMake(Request $request)
+    {
+        InstrumentMake::where('id', $request->id)->update(['name' => $request->instrument_make]);
+
+        return redirect()->route('instrument.indexAdmin');
+    }
+
+    public function destroyMake(Request $request)
+    {
+        Instrument::where('make_id', $request->id)->update(['make_id' => $request->new_make]);
+        InstrumentMake::where('id', $request->id)->delete();
+
+        return redirect()->route('instrument.indexAdmin');
+    }
 }

@@ -31,7 +31,11 @@ chmod 777 storage/app/public/profile-photos
 When new strings were added, the translation files need to be updated. This can be done with the following command:
 
 ```bash
-php artisan localize nl
+php artisan localize nl 
+php artisan localize fr 
+php artisan localize de 
+php artisan localize es 
+php artisan localize sv
 ```
 
 Other languages can be added by changing the language code (nl) to the correct language code.

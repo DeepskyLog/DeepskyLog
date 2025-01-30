@@ -69,12 +69,6 @@ Route::view('/sponsors', 'layouts.sponsors');
 Route::view('/downloads/magazines', 'layouts.downloads.magazines');
 
 // Instruments
-// Route::get('/instrument/create/{instrument}', 'App\Http\Controllers\InstrumentController@create')
-//    ->middleware('verified');
-//
-// Route::get('/instrument/admin', 'App\Http\Controllers\InstrumentController@indexAdmin')
-//    ->name('instrument.indexAdmin');
-//
 Route::resource(
     'instrument',
     'App\Http\Controllers\InstrumentController',
@@ -84,10 +78,17 @@ Route::resource(
 Route::get('/instrument/{user}/{instrument}', 'App\Http\Controllers\InstrumentController@show')
     ->name('instrument.show');
 
-// Route::get('/instrument/{instrument}/getImage', 'App\Http\Controllers\InstrumentController@getImage')
-//    ->name('instrument.getImage');
+Route::get('/instrument/{user}/{instrument}/edit', 'App\Http\Controllers\InstrumentController@edit')
+    ->name('instrument.edit')->middleware('auth');
 
-// Route::post('/instrument/{instrument}/deleteImage', 'App\Http\Controllers\InstrumentController@deleteImage')
-//    ->name('instrument.deleteImage');
+Route::get('/admin/instrument', 'App\Http\Controllers\InstrumentController@indexAdmin')
+    ->name('instrument.indexAdmin')->can('add_sketch', User::class);
 
-// Route::get('/getinstruments/{id}', 'App\Http\Controllers\InstrumentController@getinstrumentsAjax');
+Route::get('admin/instrument_make/{make}/edit', 'App\Http\Controllers\InstrumentController@editMake')
+    ->name('instrument.editMake')->can('add_sketch', User::class);
+
+Route::post('admin/instrument_make/store', 'App\Http\Controllers\InstrumentController@storeMake')
+    ->name('instrumentmake.store')->can('add_sketch', User::class);
+
+Route::post('admin/instrument_make/destroy', 'App\Http\Controllers\InstrumentController@destroyMake')
+    ->name('instrumentmake.destroy')->can('add_sketch', User::class);

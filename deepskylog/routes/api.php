@@ -234,12 +234,12 @@ Route::get('addUserToTeam.index', function (Request $request) {
 Route::get('instrument_makes.api', function (Request $request) {
     $allMakes = [];
     // Show the selected option
-    //    if ($request->exists('selected')) {
-    //        $allCountries[] = [
-    //            'id' => auth()->user()->country,
-    //            'name' => Countries::getOne(auth()->user()->country, $request->lang),
-    //        ];
-    //    }
+    if ($request->exists('selected')) {
+        $allMakes[] = [
+            'id' => InstrumentMake::where('id', $request->selected)->first()->id,
+            'name' => InstrumentMake::where('id', $request->selected)->first()->name,
+        ];
+    }
     $makes = InstrumentMake::get();
     foreach ($makes as $make) {
         if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
@@ -256,12 +256,12 @@ Route::get('instrument_makes.api', function (Request $request) {
 Route::get('instrument_types.api', function (Request $request) {
     $allTypes = [];
     // Show the selected option
-    //    if ($request->exists('selected')) {
-    //        $allCountries[] = [
-    //            'id' => auth()->user()->country,
-    //            'name' => Countries::getOne(auth()->user()->country, $request->lang),
-    //        ];
-    //    }
+    if ($request->exists('selected')) {
+        $allTypes[] = [
+            'id' => InstrumentType::where('id', $request->selected)->first()->id,
+            'name' => InstrumentType::where('id', $request->selected)->first()->name,
+        ];
+    }
     $types = InstrumentType::get();
     foreach ($types as $type) {
         if ($request->search == '' || Str::contains(Str::lower($type->name), Str::lower($request->search))) {
@@ -280,9 +280,10 @@ Route::get('mount_types.api', function (Request $request) {
     // Show the selected option
     if ($request->exists('selected')) {
         $allTypes[] = [
-            'id' => old('mount_type_id'),
-            'name' => MountType::where('id', old('mount_type_id'))->first()->name,
+            'id' => MountType::where('id', $request->selected)->first()->id,
+            'name' => MountType::where('id', $request->selected)->first()->name,
         ];
+
     }
     $types = MountType::get();
     foreach ($types as $type) {

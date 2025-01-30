@@ -15,6 +15,6 @@ class InstrumentMake extends Model
 
     public function instruments(): hasMany
     {
-        return $this->hasMany('App\Models\Instruments');
+        return $this->hasMany(Instrument::class, 'make_id');
     }
 }

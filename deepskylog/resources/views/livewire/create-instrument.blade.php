@@ -4,7 +4,11 @@
             class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8"
         >
             <h2 class="text-xl font-semibold leading-tight">
-                {{ __("Create a new instrument") }}
+                @if ($update)
+                    {{ __("Update ") . $name }}
+                @else
+                    {{ __("Create a new instrument") }}
+                @endif
             </h2>
             <div class="mt-2">
                 <x-card>
@@ -18,14 +22,14 @@
                         <div class="col-span-6 sm:col-span-5">
                             <x-select
                                 label="{{ __('Select the make of the instrument, if the make is not in the list, add a new make in the next field.') }}"
-                                wire:model.live="instrument_make"
+                                wire:model="instrument_make"
                                 x-on:selected="updateMake($event.detail.value)"
                                 :async-data="route('instrument_makes.api')"
                                 option-label="name"
                                 option-value="id"
                             />
 
-                            {{-- Or create a new make --}}
+                            {{-- Or create a new make--}}
                             <x-input
                                 name="instrument_new_make"
                                 label="{!! __('Only add a make for the instrument here if the correct make is not available in the dropdown above.') !!}"
@@ -36,7 +40,7 @@
                                 id="instrument_new_make"
                             />
 
-                            {{-- Enter the name of the instrument --}}
+                            {{-- Enter the name of the instrument--}}
                             <x-input
                                 name="name"
                                 label="{!! __('Name of the instrument') !!}"
@@ -45,23 +49,24 @@
                                 class="mt-1 block w-full"
                                 value="{{ old('name') }}"/>
 
-                            {{-- Enter the type of the instrument --}}
+                            {{-- Enter the type of the instrument--}}
                             <x-select class="mt-2"
                                       label="{{ __('Select the type of the instrument.') }}"
-                                      wire:model.live="instrument_type_id"
+                                      wire:model="instrument_type_id"
                                       x-on:selected="$wire.updateFlipFlop"
                                       :async-data="route('instrument_types.api')"
                                       option-label="name"
                                       option-value="id"
                                       id="instrument_type_id"
+                                      name="instrument_type_id"
                             />
 
-                            {{-- Add the aperture of the instrument --}}
+                            {{-- Add the aperture of the instrument--}}
                             @php if (auth()->user()->showInches) {
-                              $mm_or_inch = __('Aperture of the instrument') . __(' (in inch).');
-                        } else {
-                              $mm_or_inch = __('Aperture of the instrument') . __(' (in mm).');
-                        }
+                                  $mm_or_inch = __('Aperture of the instrument') . __(' (in inch).');
+                            } else {
+                                  $mm_or_inch = __('Aperture of the instrument') . __(' (in mm).');
+                            }
                             @endphp
 
                             <x-input
@@ -77,12 +82,12 @@
                                 value="{{ old('aperture') }}"
                             />
 
-                            {{-- Add the focal length of the instrument --}}
+                            {{-- Add the focal length of the instrument--}}
                             @php if (auth()->user()->showInches) {
-                              $mm_or_inch = __('Focal length of the instrument') . __(' (in inch).');
-                        } else {
-                              $mm_or_inch = __('Focal length of the instrument') . __(' (in mm).');
-                        }
+                                  $mm_or_inch = __('Focal length of the instrument') . __(' (in inch).');
+                            } else {
+                                  $mm_or_inch = __('Focal length of the instrument') . __(' (in mm).');
+                            }
                             @endphp
 
                             <x-input
@@ -96,7 +101,7 @@
                                 x-on:input="$wire.updateFd"
                                 value="{{ old('focal_length') }}"/>
 
-                            {{-- Add the F/D of the instrument --}}
+                            {{-- Add the F/D of the instrument--}}
                             <x-input
                                 name="f_d"
                                 label="{!! __('F/D of the instrument') !!}"
@@ -109,7 +114,7 @@
                                 value="{{ old('f_d') }}"
                             />
 
-                            {{-- Add the fixed magnification of the instrument --}}
+                            {{-- Add the fixed magnification of the instrument--}}
                             <x-input
                                 name="fixed_mag"
                                 label="{!! __('Fixed magnification of the instrument (for examples for finderscopes / binoculars)') !!}"
@@ -119,7 +124,7 @@
                                 value="{{ old('fixed_mag') }}"
                             />
 
-                            {{-- Add the obstruction of the instrument --}}
+                            {{-- Add the obstruction of the instrument--}}
                             <x-input
                                 name="obstruction_perc"
                                 label="{!! __('Obstruction of the instrument (in %)') !!}"
@@ -131,16 +136,16 @@
                                 value="{{ old('obstruction_perc') }}"
                             />
 
-                            {{-- Add the mount type of the instrument --}}
+                            {{-- Add the mount type of the instrument--}}
                             <x-select class="mt-2"
                                       label="{!! __('Select the mount type of the instrument') !!}"
-                                      wire:model.live="mount_type_id"
+                                      wire:model="mount_type_id"
                                       :async-data="route('mount_types.api')"
                                       option-label="name"
                                       option-value="id"
                             />
 
-                            {{-- Add a toggle to set if the image is flipped --}}
+                            {{-- Add a toggle to set if the image is flipped--}}
                             <x-toggle class="mt-2"
                                       name="flipped_image"
                                       label="{!! __('Is the image flipped (mirrored top-bottom)?') !!}"
@@ -149,7 +154,7 @@
                                       id="flipped_image"
                             />
 
-                            {{-- Add a toggle to set if the image is flopped --}}
+                            {{-- Add a toggle to set if the image is flopped--}}
                             <x-toggle class="mt-2"
                                       name="flopped_image"
                                       label="{!! __('Is the image flopped (mirrored left-right)?') !!}"
@@ -166,6 +171,15 @@
 
                             @error('photo') <span class="error">{{ $message }}</span> @enderror
 
+                            @if ($update)
+                                @if($instrument->picture)
+                                    <img
+                                        alt="{{ __('Picture of instrument') }}"
+                                        class="mt-2 h-40 w-40 object-cover"
+                                        src="{{ '/storage/'.asset($instrument->picture) }}">
+
+                                @endif
+                            @endif
                             @if ($photo)
                                 <img
                                     alt="{{ __('Picture of instrument') }}"
@@ -176,11 +190,22 @@
 
                         <br/>
 
-                        <x-button class="mt-5"
-                                  type="submit"
-                                  secondary
-                                  label="{{ __('Add new instrument') }}"
-                        />
+                        @if($update)
+
+                            <x-button class="mt-5"
+                                      type="submit"
+                                      secondary
+                                      label="{{ __('Update instrument') }}"
+                            />
+
+                        @else
+
+                            <x-button class="mt-5"
+                                      type="submit"
+                                      secondary
+                                      label="{{ __('Add new instrument') }}"
+                            />
+                        @endif
                     </form>
                 </x-card>
             </div>

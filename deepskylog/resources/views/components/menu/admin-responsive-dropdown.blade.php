@@ -63,7 +63,7 @@
                         />
 
                         <x-dropdown.item
-                            href="{{ config('app.old_url') }}/index.php?indexAction=overview_instruments"
+                            href="/admin/instrument"
                             label="{{ __('Instruments') }}"
                         />
 

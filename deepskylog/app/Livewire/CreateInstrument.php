@@ -18,6 +18,8 @@ class CreateInstrument extends Component
 {
     use WithFileUploads;
 
+    public $instrument;
+
     public $name;
 
     public $instrument_make;
@@ -45,9 +47,36 @@ class CreateInstrument extends Component
     #[Validate('image')]
     public $photo;
 
+    public function mount(): void
+    {
+        if ($this->instrument) {
+            $this->name = $this->instrument->name;
+
+            if (Auth::user()->showInches) {
+                $this->aperture_mm = round($this->instrument->aperture_mm / 25.4, 1);
+                $this->focal_length_mm = round($this->instrument->focal_length_mm / 25.4, 1);
+            } else {
+                $this->aperture_mm = $this->instrument->aperture_mm;
+                $this->focal_length_mm = $this->instrument->focal_length_mm;
+            }
+            $this->f_d = round(floatval($this->focal_length_mm) / floatval($this->aperture_mm), 1);
+            $this->fixed_mag = $this->instrument->fixedMagnification;
+            $this->obstruction_perc = $this->instrument->obstruction_perc;
+            $this->flipped_image = boolval($this->instrument->flip_image);
+            $this->flopped_image = boolval($this->instrument->flop_image);
+            $this->mount_type_id = $this->instrument->mount_type_id;
+            $this->instrument_make = $this->instrument->make_id;
+            $this->instrument_type_id = $this->instrument->instrument_type_id;
+        }
+    }
+
     public function render(): Application|Factory|\Illuminate\Contracts\View\View|View
     {
-        return view('livewire.create-instrument');
+        if ($this->instrument) {
+            return view('livewire.create-instrument', ['update' => true]);
+        }
+
+        return view('livewire.create-instrument', ['update' => false]);
     }
 
     public function updateAperture(): void
@@ -76,13 +105,6 @@ class CreateInstrument extends Component
     {
         $photoPath = null;
         if ($this->photo) {
-            if ($this->instrument_make != 1 && $this->instrument_make) {
-                $make = InstrumentMake::where('id', $this->instrument_make)->first()->name;
-            } elseif ($this->instrument_new_make) {
-                $make = $this->instrument_new_make;
-            } else {
-                $make = '';
-            }
             $upload_name = Str::slug(
                 Auth()->user()->slug.' '.$make.' '.$this->name,
                 '-'
@@ -91,9 +113,9 @@ class CreateInstrument extends Component
             $photoPath = $this->photo->storePubliclyAs('photos/instruments', $upload_name, 'public');
         }
 
-        if ($this->instrument_make) {
+        if ($this->instrument_make != 1 && $this->instrument_make) {
             $make = $this->instrument_make;
-        } else {
+        } elseif ($this->instrument_new_make != '') {
             if (! $this->instrument_new_make) {
                 return redirect()->back()->withErrors(['instrument_new_make' => 'Please select a make or enter a new one']);
             }
@@ -101,6 +123,12 @@ class CreateInstrument extends Component
 
             // Create a new make
             $make = InstrumentMake::create(['name' => $make_name])->id;
+        } else {
+            $make = 1;
+        }
+
+        if ($this->focal_length_mm == '') {
+            $this->focal_length_mm = 0;
         }
 
         // Check if aperture and focal length are set in inches
@@ -141,11 +169,20 @@ class CreateInstrument extends Component
             $data['picture'] = $photoPath;
         }
 
-        $instrument = Instrument::create($data);
+        if ($this->instrument) {
+            $this->instrument->update($data);
+            session()->flash('message', __('Instrument updated successfully.'));
 
-        session()->flash('message', __('Instrument created successfully.'));
+            // Return to /instrument/{user-slug}/{instrument-slug} page
+            return redirect('/instrument/'.Auth()->user()->slug.'/'.$this->instrument->slug);
+        } else {
+            $instrument = Instrument::create($data);
 
-        // Return to /instrument/{id} page
-        return redirect()->route('instrument.show', ['instrument' => $instrument->id]);
+            session()->flash('message', __('Instrument created successfully.'));
+
+            // Return to /instrument/{user-slug}/{instrument-slug} page
+            return redirect('/instrument/'.Auth()->user()->slug.'/'.$instrument->slug);
+        }
+
     }
 }

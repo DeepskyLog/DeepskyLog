@@ -18,7 +18,7 @@ class Instrument extends Model
         'obstruction_perc', 'picture',
     ];
 
-    protected $with = ['make', 'mount_type', 'instrument_type'];
+    protected $with = ['instrument_make', 'mount_type', 'instrument_type'];
 
     public function sluggable(): array
     {
@@ -47,12 +47,13 @@ class Instrument extends Model
      */
     public function fullName(): string
     {
-        return ltrim($this->make->name.' '.$this->name);
+        return ltrim($this->instrument_make->name.' '.$this->name);
     }
 
-    public function make(): BelongsTo
+    // Add a belongsTo relationship to the InstrumentMake model
+    public function instrument_make(): BelongsTo
     {
-        return $this->belongsTo('App\Models\InstrumentMake');
+        return $this->belongsTo(InstrumentMake::class, 'make_id');
     }
 
     public function mount_type(): BelongsTo
