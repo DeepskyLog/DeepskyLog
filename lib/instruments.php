@@ -54,19 +54,35 @@ class Instruments
     public function addInstrument(
         $name,
         $diameter,
-        $fd,
+        $focalLength,
         $type,
         $fixedMagnification,
         $observer
     ) {
-        global $objDatabase;
-        $objDatabase->execSQL(
-            "INSERT INTO instruments "
-            . "(name, diameter, fd, type, fixedMagnification, observer) VALUES "
-            . "(\"$name\", \"$diameter\", \"$fd\", \"$type\", "
-            . "\"$fixedMagnification\", \"$observer\")"
+        global $objDatabase_new;
+
+        $user_id = $objDatabase_new->selectSingleValue(
+            "SELECT id FROM users WHERE username = \"" . $observer . "\"",
+            'id'
         );
-        return $objDatabase->selectSingleValue(
+        // Create a slug from the name
+        $slug = $str = strtolower($name);
+
+        // Replace special characters
+        // and spaces with hyphens
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+
+        // Trim hyphens from the beginning
+        // and ending of String
+        $slug = trim($slug, '-');
+
+        $objDatabase_new->execSQL(
+            "INSERT INTO instruments "
+            . "(make_id, name, aperture_mm, focal_length_mm, instrument_type_id, fixedMagnification, user_id, observer, mount_type_id, slug) VALUES "
+            . "(1, \"$name\", \"$diameter\", \"$focalLength\", \"$type\", "
+            . "\"$fixedMagnification\", \"$user_id\", \"$observer\", 1, \"$slug\")"
+        );
+        return $objDatabase_new->selectSingleValue(
             "SELECT id FROM instruments ORDER BY id DESC LIMIT 1",
             'id'
         );
@@ -83,10 +99,10 @@ class Instruments
      */
     public function getAllInstrumentsIds($id)
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleArray(
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleArray(
             "SELECT id FROM instruments WHERE name = \""
-            . ($objDatabase->selectSingleValue(
+            . ($objDatabase_new->selectSingleValue(
                 "SELECT name FROM instruments WHERE id = \""
                 . addslashes($id) . "\"",
                 'name'
@@ -190,8 +206,8 @@ class Instruments
      */
     public function getInstrumentId($name, $observer)
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleValue(
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleValue(
             "SELECT id FROM instruments where name=\"" . $name
                 . "\" and observer=\"" . $observer . "\"",
             'id',
@@ -210,8 +226,8 @@ class Instruments
      */
     public function getInstrumentPropertyFromId($id, $property, $defaultValue = '')
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleValue(
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleValue(
             "SELECT " . $property . " FROM instruments WHERE id = \"" . $id . "\"",
             $property,
             $defaultValue
@@ -248,8 +264,8 @@ class Instruments
      */
     public function getObserverFromInstrument($id)
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleValue(
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleValue(
             "SELECT observer FROM instruments WHERE id = \"" . $id . "\"",
             'observer'
         );
@@ -266,8 +282,8 @@ class Instruments
      */
     public function getSortedInstruments($sort, $observer = "", $active = '')
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleArray(
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleArray(
             "SELECT " . ($observer ? "" : "MAX(id)") . " id, name FROM instruments "
             . (
                 $observer ? "WHERE observer LIKE \"" . $observer . "\" "
@@ -289,8 +305,8 @@ class Instruments
      */
     public function getSortedInstrumentsList($sort, $observer = "", $active = '')
     {
-        global $objDatabase;
-        return $objDatabase->selectKeyValueArray(
+        global $objDatabase_new;
+        return $objDatabase_new->selectKeyValueArray(
             "SELECT " . ($observer ? "" : "MAX(id)") . " id, name FROM instruments "
             . ($observer ? "WHERE observer LIKE \"" . $observer . "\" "
             . ($active ? " AND instrumentactive=" . $active : "") : " GROUP BY name")
@@ -310,8 +326,8 @@ class Instruments
      */
     public function setInstrumentProperty($id, $property, $propertyValue)
     {
-        global $objDatabase;
-        $objDatabase->execSQL(
+        global $objDatabase_new;
+        $objDatabase_new->execSQL(
             "UPDATE instruments SET " . $property . " = \""
             . $propertyValue . "\" WHERE id = \"" . $id . "\""
         );
@@ -469,13 +485,13 @@ class Instruments
      */
     public function validateDeleteInstrument()
     {
-        global $objUtil, $objDatabase;
+        global $objUtil, $objDatabase_new;
         if (($instrumentid = $objUtil->checkGetKey('instrumentid'))
             && $objUtil->checkAdminOrUserID(
                 $this->getObserverFromInstrument($instrumentid)
             ) && (!($this->getInstrumentUsedFromId($instrumentid)))
         ) {
-            $objDatabase->execSQL(
+            $objDatabase_new->execSQL(
                 "DELETE FROM instruments WHERE id=\"" . $instrumentid . "\""
             );
             return _("The instrument is removed from your equipment list!");
@@ -489,7 +505,7 @@ class Instruments
      */
     public function validateSaveInstrument()
     {
-        global $objUtil, $objDatabase, $objObserver, $loggedUser;
+        global $objUtil, $objDatabase_new, $objObserver, $loggedUser;
         if (($objUtil->checkPostKey('adaption') == 1)
             && $objUtil->checkPostKey('stdtelescope')
             && $objUtil->checkUserID(
@@ -527,6 +543,7 @@ class Instruments
                     && array_key_exists('type', $_POST)
                 ) {
                     $fd = $objUtil->checkPostKey('fd', 1.0);
+                    $focallength = $diameter * $fd;
                 } elseif ($_POST['focallength']) {
                     $focallength = $_POST['focallength'];
                     if (array_key_exists('focallengthunits', $_POST)
@@ -552,7 +569,7 @@ class Instruments
                 $this->addInstrument(
                     $instrumentname,
                     $diameter,
-                    $fd,
+                    $focallength,
                     $type,
                     $fixedMag,
                     $loggedUser
@@ -565,11 +582,11 @@ class Instruments
                 )
             ) {
                 $id = $_POST['id'];
-                $this->setInstrumentProperty($_POST['id'], 'type', $type);
+                $this->setInstrumentProperty($_POST['id'], 'instrument_type', intval($type) + 1);
                 $this->setInstrumentProperty($_POST['id'], 'name', $instrumentname);
-                $this->setInstrumentProperty($_POST['id'], 'diameter', $diameter);
+                $this->setInstrumentProperty($_POST['id'], 'aperture_mm', $diameter);
                 if ($fd > 1.0) {
-                    $this->setInstrumentProperty($_POST['id'], 'fd', $fd);
+                    $this->setInstrumentProperty($_POST['id'], 'focal_length_mm', $focallength);
                     $this->setInstrumentProperty(
                         $_POST['id'],
                         'fixedMagnification',

@@ -29,7 +29,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
  */
 function preludesA()
 {
-    global $language, $objDatabase, $objLanguage, $objObserver, $objSession;
+    global $language, $objDatabase, $objDatabase_new, $objLanguage, $objObserver, $objSession;
     global $objMessages, $objUtil;
 
     // Start the session
@@ -40,6 +40,8 @@ function preludesA()
     include_once "lib/setup/databaseInfo.php";
     include_once "lib/database.php";
     $objDatabase = new Database();
+    include_once "lib/databaseNew.php";
+    $objDatabase_new = new database_new();
     include_once "lib/util.php";
     $objUtil = new Utils();
     include_once "lib/setup/language.php";

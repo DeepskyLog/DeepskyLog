@@ -584,14 +584,16 @@ Correct observations which have been imported will not be registered for a secon
             $limmag = "$limmag";
         }
         $description = preg_replace("/(\")/", "", $description);
+        // Create a timestamp
+        $timestamp = date("YmdHis");
 
         $objDatabase->execSQL(
             "INSERT INTO observations (objectname, observerid, instrumentid,
             locationid, date, time, description, seeing, limmag,
-            visibility, language) "
+            visibility, language, timestamp) "
             . "VALUES (\"$objectname\", \"$observerid\", \"$instrumentid\",
             \"$locationid\", \"$date\", \"$time\",
-            \"$description\", $seeing, $limmag, $visibility, \"$language\")"
+            \"$description\", $seeing, $limmag, $visibility, \"$language\", \"$timestamp\")"
         );
         return $objDatabase->selectSingleValue(
             "SELECT id FROM observations ORDER BY id DESC LIMIT 1",
