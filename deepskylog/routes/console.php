@@ -23,4 +23,4 @@ Artisan::command('inspire', function () {
 
 Schedule::command(updateAchievementsCommand::class)->everySixHours();
 Schedule::command(updateUserTableCommand::class)->everyFiveMinutes();
-Schedule::command(updateObservationsCommand::class)->everyFifteenMinutes();
+Schedule::command(updateObservationsCommand::class)->daily();
