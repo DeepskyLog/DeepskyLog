@@ -101,18 +101,22 @@
                         <tr>
                             <td>{{ __("First light") }}</td>
                             <td>
-                                @if (! is_null($instrument->first_observation_date()[0]))
-                                    @if ($instrument->first_observation_date()[1] > 0)
+                                @php
+                                    $first_observation_date = $instrument->first_observation_date();
+                                    $last_observation_date = $instrument->last_observation_date();
+                                @endphp
+                                @if (! is_null($first_observation_date[0]))
+                                    @if ($first_observation_date[1] > 0)
                                         <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $instrument->first_observation_date()[1] }}"
+                                            href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $first_observation_date[1] }}"
                                         >
-                                            {{ $instrument->first_observation_date()[0] }}
+                                            {{$first_observation_date[0] }}
                                         </a>
                                     @else
                                         <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ -$instrument->first_observation_date()[1] }}"
+                                            href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ -$first_observation_date[1] }}"
                                         >
-                                            {{ $instrument->first_observation_date()[0] }}
+                                            {{ $first_observation_date[0] }}
                                         </a>
                                     @endif
                                 @else
@@ -124,18 +128,18 @@
                         <tr>
                             <td>{{ __("Last used on") }}</td>
                             <td>
-                                @if (! is_null($instrument->last_observation_date()[0]))
-                                    @if ($instrument->last_observation_date()[1] > 0)
+                                @if (! is_null($last_observation_date[0]))
+                                    @if ($last_observation_date[1] > 0)
                                         <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $instrument->last_observation_date()[1] }}"
+                                            href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $last_observation_date[1] }}"
                                         >
-                                            {{ $instrument->last_observation_date()[0] }}
+                                            {{ $last_observation_date[0] }}
                                         </a>
                                     @else
                                         <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ -$instrument->last_observation_date()[1] }}"
+                                            href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ -$last_observation_date[1] }}"
                                         >
-                                            {{ $instrument->last_observation_date()[0] }}
+                                            {{ $last_observation_date[0] }}
                                         </a>
                                     @endif
                                 @else
