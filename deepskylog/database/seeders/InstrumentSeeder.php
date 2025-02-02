@@ -19,7 +19,7 @@ class InstrumentSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         foreach ($instrumentData as $instrument) {
-            $observer = User::where('username', $instrument->observer)->pluck('id');
+            $observer = User::where('username', html_entity_decode($instrument->observer))->pluck('id');
             if (count($observer) > 0) {
                 if ($instrument->timestamp == '') {
                     $date = date('Y-m-d H:i:s');
