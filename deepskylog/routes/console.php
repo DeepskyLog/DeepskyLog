@@ -2,6 +2,7 @@
 
 use App\Console\Commands\updateAchievementsCommand;
 use App\Console\Commands\updateObservationsCommand;
+use App\Console\Commands\updateOldInstrumentTableCommand;
 use App\Console\Commands\updateUserTableCommand;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
@@ -24,3 +25,4 @@ Artisan::command('inspire', function () {
 Schedule::command(updateAchievementsCommand::class)->everySixHours();
 Schedule::command(updateUserTableCommand::class)->everyFiveMinutes();
 Schedule::command(updateObservationsCommand::class)->daily();
+Schedule::command(updateOldInstrumentTableCommand::class)->everyFiveMinutes();

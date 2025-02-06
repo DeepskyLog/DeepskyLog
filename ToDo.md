@@ -11,11 +11,10 @@
 
 ### Next steps
 
-+ [ ] Create instruments tables in the new version of DeepskyLog.
++ [X] Create instruments tables in the new version of DeepskyLog.
     + [X] Add Make and flip options to the instruments (see PiFinder model)
     + [X] Write script to populate the tables from the old database.
     + [X] Use database from the new version in the old version of DeepskyLog.
-    + [X] Update user table every 5 minutes with new users from www.deepskylog.org
     + [X] Make a table for the instrument makes and add some standard makes (like SkyWatcher, Celestron, ...)
     + [X] Update user model to use the instruments from the new database.
     + [X] Add page to see the details of an instrument
@@ -26,31 +25,28 @@
     + [X] Add page for administrator (only for the instrument_makes table)
     + [X] Translate the new strings
     + [X] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
-    + Add obstruction_perc:
-        + Obsession 18'': 17.2% (3.1'' / 18'')
-        + Obsession 15'': 17.3% (2.6'' / 15'')
-        + 20cm Reise-Teleskop: 25% (5cm / 20cm)
-        + Zelfbouw: 21,4% (75mm / 350mm)
-        + 30cm Orion Skyquest XT12i IntelliScope: 23%
-    + [X] Add Coronado SolarMax 40mm to the database
-    + [ ] Release new version of pyDeepskyLog
-    + [ ] Change pifinder code
+    + [X] Release new version of pyDeepskyLog
+    + [X] Change pifinder code
 + [ ] Create eyepieces tables in the new version of DeepskyLog.
-    + [ ] Write script to populate the tables from the old database.
+    + [X] Create eyepiece makes table
+    + [X] Create eyepiece type table
+    + [ ] Create eyepiece table
+    + [ ] Write script to populate the eyepiece table from the old database.
     + [ ] Update user model to use the eyepieces from the new database.
     + [ ] Add Field stop: tfov = eyepiece.field_stop / telescope.focal_length_mm * 57.2958
-        + 31mm Nagler: 42mm
+        + 31mm Nagler: 44,4mm
         + 21mm Ethos: 36.2mm
         + 20mm Nagler: 27.4mm
-        + 19mm Panoptic: 21.3mm
-        + 13mm Ethos: 22.3mm
-        + 13mm Nagler: 17.6mm
-        + 8mm Ethos: 13.9mm
+        + 19mm Panoptic: 22.5mm
+        + 13mm Ethos: 22.7mm
+        + 13mm Nagler: 18.6mm
+        + 8mm Ethos: 14.0mm
         + 8mm Radian: 8.3mm
-        + 6mm Ethos: 10.4mm
-        + 5mm Nagler: 7mm
+        + 6mm Ethos: 10.5mm
+        + 5mm Nagler: 7,2mm
         + Baader 3.5mm Hyperion: 3.9mm
-        + Baader 36mm Aspheric: 44mm
+        + Baader 36mm Aspheric: 45.2mm
+    + [ ] Calculate the Exit pupil and magnification
     + [ ] Use database from the new version in the old version of DeepskyLog.
     + [ ] Change API to get the eyepieces from the new table.
     + [ ] Add all pages for adding, viewing, editing, deleting eyepieces. Also update user overview page. TO DO AFTER
