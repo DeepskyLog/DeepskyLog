@@ -62,7 +62,7 @@ class Instruments
         global $objDatabase_new;
 
         $user_id = $objDatabase_new->selectSingleValue(
-            "SELECT id FROM users WHERE username = \"" . $observer . "\"",
+            "SELECT id FROM users WHERE username = \"" . html_entity_decode($observer) . "\"",
             'id'
         );
         // Create a slug from the name
