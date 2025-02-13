@@ -76,11 +76,14 @@ class Instruments
         // and ending of String
         $slug = trim($slug, '-');
 
+        $created_at = date('Y-m-d H:i:s');
+        $updated_at = date('Y-m-d H:i:s');
+
         $objDatabase_new->execSQL(
             "INSERT INTO instruments "
-            . "(make_id, name, aperture_mm, focal_length_mm, instrument_type_id, fixedMagnification, user_id, observer, mount_type_id, slug) VALUES "
+            . "(make_id, name, aperture_mm, focal_length_mm, instrument_type_id, fixedMagnification, user_id, observer, mount_type_id, slug, created_at, updated_at) VALUES "
             . "(1, \"$name\", \"$diameter\", \"$focalLength\", \"$type\", "
-            . "\"$fixedMagnification\", \"$user_id\", \"$observer\", 1, \"$slug\")"
+            . "\"$fixedMagnification\", \"$user_id\", \"$observer\", 1, \"$slug\", \"$created_at\", \"$updated_at\")"
         );
         return $objDatabase_new->selectSingleValue(
             "SELECT id FROM instruments ORDER BY id DESC LIMIT 1",
