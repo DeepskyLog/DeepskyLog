@@ -2046,7 +2046,7 @@ class Utils
                     $objFilter->getFilterPropertyFromId($obs['filterid'], 'name')
                 ) . ";" . html_entity_decode(
                     $objLens->getLensPropertyFromId($obs['lensid'], 'name')
-                ) . ";" . $obs['seeing'] . ";" . $obs['limmag'] . ";"
+                ) . ";" . $obs['seeing'] . ";" . $obs['limmag'] . ";" . $obs['SQM'] . ";"
                 . $objPresentations->presentationInt($obs['visibility'], "0", "")
                 . ";" . $obs['language'] . ";"
                 . preg_replace(
