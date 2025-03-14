@@ -111,7 +111,7 @@
                                 <td>{!! __("Number of instruments") !!}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
-                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_instruments">
+                                        <a href="/instrument">
                                             @endif
                                             {{ $user->instruments->count() }}
                                             @if (Auth::user() && $user->id === Auth::user()->id)
@@ -125,7 +125,7 @@
                                 <td>{!! __("Number of eyepieces") !!}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
-                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_eyepieces">
+                                        <a href="/eyepiece">
                                             @endif
                                             {{ $user->eyepieces->count() }}
                                             @if (Auth::user() && $user->id === Auth::user()->id)

@@ -2,7 +2,7 @@
 <div class="justify-left mt-5 flex">
     @php
         use App\Models\Constellation;
-        use App\Models\EyepiecesOld;
+        use App\Models\Eyepiece;
         use App\Models\FiltersOld;
         use App\Models\Instrument;
         use App\Models\LocationsOld;
@@ -78,9 +78,9 @@
         @endif
         @if ($observation->eyepieceid > 0)
             {{ __(' using a ') }}
-            <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_eyepiece&eyepiece={{ $observation->eyepieceid }}"
+            <a href="/eyepiece/{{ $user->slug }}/{{ Eyepiece::where('id', $observation->eyepieceid)->first()->slug }}"
                class="font-bold hover:underline">
-                {{ html_entity_decode(EyepiecesOld::where('id', $observation->eyepieceid)->first()->name) }}
+                {{ html_entity_decode(Eyepiece::where('id', $observation->eyepieceid)->first()->fullName()) }}
             </a>
             {{ __(' eyepiece') }}
             @if ($observation->filterid > 0)

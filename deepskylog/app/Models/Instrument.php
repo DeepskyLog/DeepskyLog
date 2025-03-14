@@ -40,21 +40,12 @@ class Instrument extends Model
         return $this->belongsTo('App\Models\User');
     }
 
-    /**
-     * Returns the name of the instrument type.
-     *
-     * @return string the name of the instrument type
-     */
-    public function fullName(): string
-    {
-        return ltrim($this->instrument_make->name.' '.$this->name);
-    }
-
-    // Add a belongsTo relationship to the InstrumentMake model
     public function instrument_make(): BelongsTo
     {
         return $this->belongsTo(InstrumentMake::class, 'make_id');
     }
+
+    // Add a belongsTo relationship to the InstrumentMake model
 
     public function mount_type(): BelongsTo
     {
@@ -157,8 +148,9 @@ class Instrument extends Model
             if ($eyepiece == 0) {
                 continue;
             }
-            $to_return .= "<a href='".config('app.old_url').'index.php?indexAction=detail_eyepiece&eyepiece='.$eyepiece."'>".
-                EyepiecesOld::where('id', $eyepiece)->pluck('name')[0].'</a>'.', ';
+            $ep = Eyepiece::where('id', $eyepiece)->first();
+            $to_return .= "<a href='/eyepiece/".$ep->user->slug.'/'.$ep->slug."'>".
+                $ep->fullName().'</a>'.', ';
         }
 
         // Remove the trailing comma and space
@@ -168,6 +160,16 @@ class Instrument extends Model
     public function get_used_eyepieces(): Collection
     {
         return ObservationsOld::where('instrumentid', $this->id)->groupby('eyepieceid')->distinct()->pluck('eyepieceid');
+    }
+
+    /**
+     * Returns the name of the instrument type.
+     *
+     * @return string the name of the instrument type
+     */
+    public function fullName(): string
+    {
+        return ltrim($this->instrument_make->name.' '.$this->name);
     }
 
     public function get_used_filters_as_string(): string
@@ -237,5 +239,44 @@ class Instrument extends Model
     public function get_used_locations(): Collection
     {
         return ObservationsOld::where('instrumentid', $this->id)->groupby('locationid')->distinct()->pluck('locationid');
+    }
+
+    public function magnification(Eyepiece $eyepiece): string
+    {
+        return round($this->focal_length_mm / $eyepiece->focal_length_mm).'x';
+    }
+
+    public function field_of_view(Eyepiece $eyepiece): string
+    {
+        if ($eyepiece->field_stop_mm != 0) {
+            $tfov = $eyepiece->field_stop_mm / $this->focal_length_mm * 57.2958;
+            // Convert $tfov to degrees and minutes and return as a string
+            $degrees = floor($tfov);
+            $minutes = round(($tfov - $degrees) * 60);
+            if ($minutes < 10) {
+                $minutes = '0'.$minutes;
+            }
+            $tfov = $degrees.'° '.$minutes."'";
+        } elseif ($eyepiece->apparentFOV > 10) {
+            // Calculate the true field of view
+            $tfov = $eyepiece->apparentFOV / ($this->focal_length_mm / $eyepiece->focal_length_mm);
+            // Convert $tfov to degrees and minutes and return as a string
+            $degrees = floor($tfov);
+            $minutes = round(($tfov - $degrees) * 60);
+            // Add a 0 to the minutes if it is less than 10
+            if ($minutes < 10) {
+                $minutes = '0'.$minutes;
+            }
+            $tfov = $degrees.'° '.$minutes."'";
+        } else {
+            $tfov = __('Unknown');
+        }
+
+        return $tfov;
+    }
+
+    public function exit_pupil(Eyepiece $eyepiece): string
+    {
+        return round($this->aperture_mm / ($this->focal_length_mm / $eyepiece->focal_length_mm), 1).'mm';
     }
 }
