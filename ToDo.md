@@ -39,8 +39,7 @@
     + [X] Add page to see the details of an eyepiece
     + [X] Add table with all instruments and calculate the magnification, field of view, exit pupil, ...
     + [X] Do the same in the detail page for the instrument.
-    + [ ] Adapt instrument edit -> fixed magnification is set to 0, should not be filled. Name of instrument doesn't
-      have double quotes.
+    + [X] Adapt instrument edit -> fixed magnification is set to 0, should not be filled.
     + [ ] Add page to add / edit eyepieces.
     + [ ] Check if the create eyepiece and the list eyepieces page can only be seen if logged in.
     + [ ] Add page for administrator (only for the eyepiece_makes table)

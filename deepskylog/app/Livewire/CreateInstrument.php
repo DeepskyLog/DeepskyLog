@@ -61,7 +61,9 @@ class CreateInstrument extends Component
             }
             $this->f_d = round(floatval($this->focal_length_mm) / floatval($this->aperture_mm), 1);
             $this->fixed_mag = $this->instrument->fixedMagnification;
-            $this->obstruction_perc = $this->instrument->obstruction_perc;
+            if ($this->instrument->obstruction_perc != 0) {
+                $this->obstruction_perc = $this->instrument->obstruction_perc;
+            }
             $this->flipped_image = boolval($this->instrument->flip_image);
             $this->flopped_image = boolval($this->instrument->flop_image);
             $this->mount_type_id = $this->instrument->mount_type_id;

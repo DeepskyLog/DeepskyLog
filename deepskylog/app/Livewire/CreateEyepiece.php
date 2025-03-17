@@ -28,6 +28,8 @@ class CreateEyepiece extends Component
 
     public $max_focal_length_mm;
 
+    public $field_stop_mm;
+
     public $apparentFOV;
 
     public function mount(): void
@@ -48,12 +50,14 @@ class CreateEyepiece extends Component
             if ($this->eyepiece->apparentFOV > 0) {
                 $this->apparentFOV = $this->eyepiece->apparentFOV;
             }
+
+            if ($this->eyepiece->field_stop_mm > 0) {
+                $this->field_stop_mm = $this->eyepiece->field_stop_mm;
+            }
         }
 
-        // TODO: Add missing input fields
         // TODO: If make is selected, disable the new make input
         // TODO: If type is selected, disable the new type input
-        // TODO: If new eyepiece is added, adapt the name automatically to the proposed name
         // TODO: Add the Save button
         // TODO: Write the Save method
     }
@@ -74,6 +78,7 @@ class CreateEyepiece extends Component
 
     public function updateProposedName(): void
     {
+        $this->proposed_name = '';
         $make = EyepieceMake::find($this->eyepiece_make);
         $type = EyepieceType::find($this->eyepiece_type);
 
@@ -82,7 +87,16 @@ class CreateEyepiece extends Component
         } else {
             $fl = $this->focal_length_mm;
         }
-        $this->proposed_name = $make->name.' '.$fl.'mm '.$type->name;
+
+        if ($make) {
+            $this->proposed_name .= $make->name.' ';
+        }
+        if ($this->focal_length_mm) {
+            $this->proposed_name .= $fl.'mm ';
+        }
+        if ($type) {
+            $this->proposed_name .= $type->name;
+        }
     }
 
     public function updateType(): void

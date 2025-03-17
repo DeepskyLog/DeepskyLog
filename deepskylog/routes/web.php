@@ -103,7 +103,7 @@ Route::resource(
 Route::get('/eyepiece/{user}/{eyepiece}', 'App\Http\Controllers\EyepieceController@show')
     ->name('eyepiece.show');
 
-Route::get('/eyepiece/{user}/{instrument}/edit', 'App\Http\Controllers\EyepieceController@edit')
+Route::get('/eyepiece/{user}/{eyepiece}/edit', 'App\Http\Controllers\EyepieceController@edit')
     ->name('eyepiece.edit')->middleware('auth');
 
 // Route::get('/admin/instrument', 'App\Http\Controllers\InstrumentController@indexAdmin')

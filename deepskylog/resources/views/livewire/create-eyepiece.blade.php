@@ -90,7 +90,7 @@
 
                             <x-input
                                 name="apparentFOV"
-                                label="{!! __('Apparent Field Of View (in degrees') !!}"
+                                label="{!! __('Apparent Field Of View (in degrees)') !!}"
                                 type="number"
                                 class="mt-1 block w-full"
                                 wire:model.live="apparentFOV"
@@ -99,6 +99,19 @@
                                 max="150"
                                 required
                                 value="{{ old('apparentFOV') }}"
+                            />
+
+                            <x-input
+                                name="field_stop_mm"
+                                label="{!! __('Field stop (in mm)') !!}"
+                                type="number"
+                                class="mt-1 block w-full"
+                                wire:model.live="field_stop_mm"
+                                step="0.1"
+                                min="0"
+                                max="99.9"
+                                required
+                                value="{{ old('field_stop_mm') }}"
                             />
 
                             {{-- Enter the name of the eyepiece--}}
