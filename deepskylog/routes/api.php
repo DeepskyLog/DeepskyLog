@@ -357,5 +357,4 @@ Route::get('eyepiece_type.api', function (Request $request) {
 })->name('eyepiece_types.api');
 
 Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user']);
-Route::get('/instruments/{userid}', [InstrumentController::class, 'show_from_user']);
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);
