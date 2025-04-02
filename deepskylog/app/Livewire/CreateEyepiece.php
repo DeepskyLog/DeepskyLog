@@ -20,6 +20,8 @@ class CreateEyepiece extends Component
 
     public $eyepiece_make;
 
+    public $eyepiece_new_make;
+
     public $eyepiece_type;
 
     public $proposed_name;
@@ -73,13 +75,18 @@ class CreateEyepiece extends Component
 
     public function updateMake(): void
     {
+        dump('test');
         $this->updateProposedName();
     }
 
     public function updateProposedName(): void
     {
         $this->proposed_name = '';
-        $make = EyepieceMake::find($this->eyepiece_make);
+        if ($this->eyepiece_make == null || $this->eyepiece_make == 1) {
+            $make = $this->eyepiece_new_make;
+        } else {
+            $make = EyepieceMake::find($this->eyepiece_make)->name;
+        }
         $type = EyepieceType::find($this->eyepiece_type);
 
         if ($this->max_focal_length_mm > 0) {
@@ -89,7 +96,7 @@ class CreateEyepiece extends Component
         }
 
         if ($make) {
-            $this->proposed_name .= $make->name.' ';
+            $this->proposed_name .= $make.' ';
         }
         if ($this->focal_length_mm) {
             $this->proposed_name .= $fl.'mm ';

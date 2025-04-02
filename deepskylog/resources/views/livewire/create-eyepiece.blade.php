@@ -31,15 +31,33 @@
                             />
 
                             {{-- Or create a new make--}}
-                            <x-input
-                                name="eyepiece_new_make"
-                                label="{!! __('Only add a make for the eyepiece here if the correct make is not available in the dropdown above.') !!}"
-                                type="text"
-                                wire:model.live="eyepiece_new_make"
-                                class="mt-1 block w-full"
-                                value=""
-                                id="eyepiece_new_make"
-                            />
+                            @if ($eyepiece_make == null || $eyepiece_make == 1)
+                                <x-input
+                                    name="eyepiece_new_make"
+                                    label="{!! __('Only add a make for the eyepiece here if the correct make is not available in the dropdown above.') !!}"
+                                    type="text"
+                                    wire:model="eyepiece_new_make"
+                                    class="mt-1 block w-full"
+                                    value=""
+                                    x-on:selected="$wire.updateMake"
+                                    id="eyepiece_new_make"
+                                    name="eyepiece_new_make"
+                                />
+                            @else
+                                <x-input
+                                    name="eyepiece_new_make"
+                                    label="{!! __('Only add a make for the eyepiece here if the correct make is not available in the dropdown above.') !!}"
+                                    type="text"
+                                    wire:model="eyepiece_new_make"
+                                    class="mt-1 block w-full"
+                                    value=""
+                                    id="eyepiece_new_make"
+                                    name="eyepiece_new_make"
+                                    readonly
+                                />
+                            @endif
+
+                            {{ $eyepiece_new_make }}
 
                             <br/>
                             <x-select
